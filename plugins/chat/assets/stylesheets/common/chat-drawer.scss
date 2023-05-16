@@ -94,7 +94,9 @@ html.rtl {
     height: auto !important;
   }
 
-  .chat-live-pane {
+  .chat-channel,
+  .chat-thread,
+  .chat-thread-list {
     height: 100%;
   }
 }
@@ -204,8 +206,9 @@ a.chat-drawer-header__title {
   }
 
   &__close-btn,
-  &__return-to-channels-btn,
+  &__back-btn,
   &__full-screen-btn,
+  &__thread-list-btn,
   &__expand-btn {
     height: 30px;
     width: 30px;
@@ -220,6 +223,7 @@ a.chat-drawer-header__title {
 
     .d-icon {
       color: var(--primary-low-mid);
+      margin-right: 0;
     }
 
     &:visited {
@@ -251,4 +255,5 @@ a.chat-drawer-header__title {
   height: 100%;
   min-height: 1px;
   padding-bottom: 0.25em;
+  position: relative;
 }

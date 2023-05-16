@@ -64,7 +64,6 @@ fa_IR:
       click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
       close: "بستن"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
-      deleted: "یک پیام حذف شد. [view]"
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"
       edited: "ویرایش شده"
@@ -117,6 +116,7 @@ fa_IR:
       save: "ذخیره"
       select: "انتخاب کنید"
       return_to_list: "بازگشت به فهرست کانال‌ها"
+      return_to_threads_list: "بازگشت به گفتگوی جاری"
       scroll_to_bottom: "حرکت به پایین"
       scroll_to_new_messages: "مشاهده پیام‌های جدید"
       sound:
@@ -205,6 +205,7 @@ fa_IR:
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "
+        send: "ارسال"
       quote:
         copy_success: "نقل قول گفتگو در کلیپ‌بورد کپی شد"
       notification_levels:
@@ -277,6 +278,18 @@ fa_IR:
         flags: "پرچم‌ها"
         symbols: "نشانه ها"
         no_results: "هیج نتیجه‌ای نداشت"
+      thread:
+        title: "عنوان"
+        view_thread: مشاهده موضوع
+        default_title: "موضوع #%{thread_id}"
+        replies:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
+        original_message:
+          started_by: "شروع شده توسط"
+        settings: "تنظیمات"
+      threads:
+        list: "گفتگوهای در حال انجام"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"

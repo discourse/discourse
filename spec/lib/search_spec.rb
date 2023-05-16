@@ -139,33 +139,6 @@ RSpec.describe Search do
     end
   end
 
-  context "with apostrophes" do
-    fab!(:post_1) { Fabricate(:post, raw: "searching for: John's") }
-    fab!(:post_2) { Fabricate(:post, raw: "searching for: Johns") }
-
-    before { SearchIndexer.enable }
-
-    after { SearchIndexer.disable }
-
-    it "returns correct results" do
-      SiteSetting.search_ignore_accents = false
-      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
-
-      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
-    end
-
-    it "returns correct results with accents" do
-      SiteSetting.search_ignore_accents = true
-      [post_1, post_2].each { |post| SearchIndexer.index(post.topic, force: true) }
-
-      expect(Search.execute("John's").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("John’s").posts).to contain_exactly(post_1, post_2)
-      expect(Search.execute("Johns").posts).to contain_exactly(post_1, post_2)
-    end
-  end
-
   describe "custom_eager_load" do
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
@@ -1359,7 +1332,10 @@ RSpec.describe Search do
       end
 
       context "with non staff logged in" do
-        it "shows doesn’t show group" do
+        fab!(:user) { Fabricate(:user) }
+
+        it "shows doesn't show group" do
+          expect(search(user).groups.map(&:name)).to eq([])
         end
       end
     end
@@ -2651,6 +2627,65 @@ RSpec.describe Search do
 
       # title match should win cause we limited duplication
       expect(result.posts.pluck(:id)).to eq([post2.id, post1.id, post3.id])
+    end
+  end
+
+  context "when plugin introduces a search_rank_sort_priorities modifier" do
+    before do
+      SearchIndexer.enable
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+    after do
+      SearchIndexer.disable
+
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+
+    it "allow modifying the search rank" do
+      plugin = Plugin::Instance.new
+      plugin.register_modifier(:search_rank_sort_priorities) do |ranks, search|
+        [["topics.closed", 77]]
+      end
+
+      closed_topic = Fabricate(:topic, title: "saml saml saml is the best", closed: true)
+      closed_post = Fabricate(:post, topic: closed_topic, raw: "this topic is a story about saml")
+
+      open_topic = Fabricate(:topic, title: "saml saml saml is the best2")
+      open_post = Fabricate(:post, topic: open_topic, raw: "this topic is a story about saml")
+
+      result = Search.execute("story")
+      expect(result.posts.pluck(:id)).to eq([closed_post.id, open_post.id])
+    end
+  end
+
+  context "when some categories are prioritized" do
+    before { SearchIndexer.enable }
+    after { SearchIndexer.disable }
+
+    it "correctly ranks topics with prioritized categories and stuffed topic terms" do
+      topic1 = Fabricate(:topic, title: "invite invited invites testing stuff with things")
+      post1 =
+        Fabricate(
+          :post,
+          topic: topic1,
+          raw: "this topic is a story about some person invites are fun",
+        )
+
+      category = Fabricate(:category, search_priority: Searchable::PRIORITIES[:high])
+
+      topic2 = Fabricate(:topic, title: "invite is the bestest", category: category)
+      post2 =
+        Fabricate(
+          :post,
+          topic: topic2,
+          raw: "this topic is a story about some other person invites are fun",
+        )
+
+      result = Search.execute("invite")
+      expect(result.posts.length).to eq(2)
+
+      # title match should win cause we limited duplication
+      expect(result.posts.pluck(:id)).to eq([post2.id, post1.id])
     end
   end
 

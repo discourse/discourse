@@ -99,6 +99,25 @@ RSpec.describe SeedData::Categories do
       expect(SiteSetting.default_composer_category).to eq(Category.last.id)
     end
 
+    it "does not overwrite permissions on the General category" do
+      create_category("general_category_id")
+      expect(Category.last.name).to eq("General")
+      category = Category.last
+
+      expect(category.category_groups.count).to eq(0)
+
+      category.set_permissions(staff: :full)
+      category.save!
+
+      expect(category.category_groups.count).to eq(1)
+
+      expect { create_category("general_category_id") }.not_to change { CategoryGroup.count }
+
+      category.reload
+      expect(category.category_groups.count).to eq(1)
+      expect(category.category_groups.first).to have_attributes(permissions(:staff, :full))
+    end
+
     it "adds default categories SiteSetting.default_sidebar_categories" do
       create_category("staff_category_id")
       staff_category = Category.last

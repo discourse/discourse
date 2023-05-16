@@ -213,8 +213,6 @@ function logQUnit() {
 
   console.log("\nRunning: " + JSON.stringify(QUnit.urlParams) + "\n");
 
-  QUnit.config.testTimeout = 10000;
-
   let durations = {};
 
   let inTest = false;

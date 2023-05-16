@@ -12,6 +12,7 @@ export default class ChatMessagesManager {
   }
 
   clearMessages() {
+    this.messages.forEach((message) => (message.manager = null));
     this.messages.clear();
 
     this.canLoadMoreFuture = null;
@@ -19,6 +20,10 @@ export default class ChatMessagesManager {
   }
 
   addMessages(messages = []) {
+    messages.forEach((message) => {
+      message.manager = this;
+    });
+
     this.messages = this.messages
       .concat(messages)
       .uniqBy("id")
@@ -39,5 +44,9 @@ export default class ChatMessagesManager {
     return this.messages.find(
       (message) => message.staged && message.id === stagedMessageId
     );
+  }
+
+  findIndexOfMessage(id) {
+    return this.messages.findIndex((m) => m.id === id);
   }
 }

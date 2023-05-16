@@ -1,3 +1,4 @@
+//appears in: header of chat pane, channel info, preview card
 .chat-channel-title-wrapper {
   display: flex;
   align-items: center;
@@ -8,6 +9,10 @@
   display: flex;
   align-items: center;
   @include ellipsis;
+
+  .chat-channel-preview-card & {
+    max-width: 100%;
+  }
 
   &__user-info {
     overflow: hidden;

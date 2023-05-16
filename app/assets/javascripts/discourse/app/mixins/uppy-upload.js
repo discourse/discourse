@@ -318,6 +318,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _triggerInProgressUploadsEvent() {
+    this.onProgressUploadsChanged?.(this.inProgressUploads);
     this.appEvents.trigger(
       `upload-mixin:${this.id}:in-progress-uploads`,
       this.inProgressUploads

@@ -23,6 +23,11 @@ RSpec.describe Emoji do
   end
 
   describe ".lookup_unicode" do
+    before do
+      SiteSetting.emoji_deny_list = "peach"
+      Emoji.clear_cache
+    end
+
     it "should return the emoji" do
       expect(Emoji.lookup_unicode("blonde_man")).to eq("👱")
     end
@@ -33,6 +38,10 @@ RSpec.describe Emoji do
 
     it "should return a skin toned emoji" do
       expect(Emoji.lookup_unicode("blonde_woman:t6")).to eq("👱🏿‍♀️")
+    end
+
+    it "should not return a fu emoji when emoji is in emoji deny list site setting" do
+      expect(Emoji.lookup_unicode("peach")).not_to eq("🍑")
     end
   end
 

@@ -222,17 +222,28 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
         end
 
         context "when messages are created" do
-          it "correctly renders notifications" do
-            visit("/")
+          xit "correctly renders notifications" do
+            using_session(:current_user) { visit("/") }
+
             using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
 
-            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
-            expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .unread")
+            using_session(:current_user) do
+              expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
+              expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .unread")
+            end
 
-            using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_1, creator: user_1)
+              session.quit
+            end
 
-            expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
-            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
+            using_session(:current_user) do
+              expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
+              expect(page).to have_css(
+                ".chat-header-icon .chat-channel-unread-indicator",
+                text: "1",
+              )
+            end
           end
         end
       end

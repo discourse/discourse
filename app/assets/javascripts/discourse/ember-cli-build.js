@@ -13,8 +13,8 @@ const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("./lib/deprecation-silencer");
 
 module.exports = function (defaults) {
-  let discourseRoot = resolve("../../../..");
-  let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+  const discourseRoot = resolve("../../../..");
+  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   const ui = defaults.project.ui;
@@ -24,7 +24,7 @@ module.exports = function (defaults) {
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
 
-  let app = new EmberApp(defaults, {
+  const app = new EmberApp(defaults, {
     autoRun: false,
     "ember-qunit": {
       insertContentForTestBody: false,
@@ -36,9 +36,6 @@ module.exports = function (defaults) {
       enabled: true,
     },
     autoImport: {
-      alias: {
-        "virtual-dom": "@discourse/virtual-dom",
-      },
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
       webpack: {
@@ -127,7 +124,7 @@ module.exports = function (defaults) {
       annotation: "TreeMerger (appTestTrees)",
     });
 
-    let tests = concat(appTestTrees, {
+    const tests = concat(appTestTrees, {
       inputFiles: ["**/tests/**/*-test.js"],
       headerFiles: ["vendor/ember-cli/tests-prefix.js"],
       footerFiles: ["vendor/ember-cli/app-config.js"],
@@ -136,7 +133,7 @@ module.exports = function (defaults) {
       sourceMapConfig: false,
     });
 
-    let testHelpers = concat(appTestTrees, {
+    const testHelpers = concat(appTestTrees, {
       inputFiles: [
         "**/tests/test-boot-ember-cli.js",
         "**/tests/helpers/**/*.js",

@@ -23,6 +23,41 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.count).to eq(0)
     end
 
+    it "Allows figure and figcaption HTML tags" do
+      html = <<~HTML
+        <html>
+        <head>
+           <title>Some title</title>
+        </head>
+        <body>
+          <div class='content'>
+            <p>some content</p>
+            <figure>
+              <img src="/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </div>
+        </body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      # div inception is inserted by the readability gem
+      expected = <<~HTML
+        <div><div>
+          <div>
+            <p>some content</p>
+            <figure>
+              <img src="https://blog.discourse.com/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </figure></figure></div>
+        </div></div>
+      HTML
+      expect(parsed.body.strip).to eq(expected.strip)
+    end
+
     context "when creating a post" do
       let!(:post) { TopicEmbed.import(user, url, title, contents) }
       let(:topic_embed) { TopicEmbed.find_by(post: post) }
@@ -456,6 +491,16 @@ RSpec.describe TopicEmbed do
 
       I18n.locale = :de
       expect(TopicEmbed.imported_from_html("some_url")).to eq(expected_html)
+    end
+
+    it "normalize_encodes the url" do
+      html =
+        TopicEmbed.imported_from_html(
+          'http://www.discourse.org/%23<%2Fa><img%20src%3Dx%20onerror%3Dalert("document.domain")%3B>',
+        )
+      expected_html =
+        "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
+      expect(html).to eq(expected_html)
     end
   end
 end

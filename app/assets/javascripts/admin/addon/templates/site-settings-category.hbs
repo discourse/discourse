@@ -7,7 +7,10 @@
       />
     {{/each}}
     {{#if this.category.hasMore}}
-      <p class="warning">{{i18n "admin.site_settings.more_than_30_results"}}</p>
+      <p class="warning">{{i18n
+          "admin.site_settings.more_site_setting_results"
+          count=this.category.maxResults
+        }}</p>
     {{/if}}
   </DSection>
 {{else}}

@@ -26,7 +26,7 @@ import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
-  const url = `${getURL("/t/")}${topic.id}`;
+  const url = `/t/${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;

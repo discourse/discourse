@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Badge do
+  describe "Validations" do
+    subject(:badge) { Fabricate.build(:badge) }
+
+    it { is_expected.to validate_length_of(:name).is_at_most(100) }
+    it { is_expected.to validate_length_of(:description).is_at_most(500) }
+    it { is_expected.to validate_length_of(:long_description).is_at_most(1000) }
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:badge_type) }
+    it { is_expected.to validate_uniqueness_of(:name) }
+  end
+
   it "has a valid system attribute for new badges" do
     expect(Badge.create!(name: "test", badge_type_id: 1).system?).to be false
   end

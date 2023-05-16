@@ -21,14 +21,50 @@ describe Chat::ChannelUnreadsQuery do
       ).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
     end
 
+    context "when the membership has been muted" do
+      before do
+        channel_1
+          .user_chat_channel_memberships
+          .find_by(user_id: current_user.id)
+          .update!(muted: true)
+      end
+
+      it "returns a zeroed unread count" do
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
+      end
+    end
+
+    context "for unread messages in a thread" do
+      fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel_1) }
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }
+
+      it "does include the original message in the unread count" do
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+      end
+
+      it "does not include other thread messages in the unread count" do
+        Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+        Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+      end
+    end
+
     context "for multiple channels" do
       fab!(:channel_2) { Fabricate(:category_channel) }
 
-      it "returns accurate counts" do
+      before do
         channel_2.add(current_user)
         Fabricate(:chat_message, chat_channel: channel_2)
         Fabricate(:chat_message, chat_channel: channel_2)
+      end
 
+      it "returns accurate counts" do
         expect(
           described_class.call(
             channel_ids: [channel_1.id, channel_2.id],
@@ -40,6 +76,41 @@ describe Chat::ChannelUnreadsQuery do
             { mention_count: 0, unread_count: 2, channel_id: channel_2.id },
           ],
         )
+      end
+
+      context "for channels where the user has no membership" do
+        before do
+          current_user
+            .user_chat_channel_memberships
+            .where(chat_channel_id: channel_2.id)
+            .destroy_all
+        end
+
+        it "does not return counts for the channels" do
+          expect(
+            described_class.call(
+              channel_ids: [channel_1.id, channel_2.id],
+              user_id: current_user.id,
+            ).map(&:to_h),
+          ).to match_array([{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }])
+        end
+
+        context "when include_missing_memberships is true" do
+          it "does return zeroed counts for the channels" do
+            expect(
+              described_class.call(
+                channel_ids: [channel_1.id, channel_2.id],
+                user_id: current_user.id,
+                include_missing_memberships: true,
+              ).map(&:to_h),
+            ).to match_array(
+              [
+                { mention_count: 0, unread_count: 1, channel_id: channel_1.id },
+                { mention_count: 0, unread_count: 0, channel_id: channel_2.id },
+              ],
+            )
+          end
+        end
       end
     end
   end
@@ -64,6 +135,28 @@ describe Chat::ChannelUnreadsQuery do
       expect(
         described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
       ).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
+    end
+
+    context "for unread mentions in a thread" do
+      fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel_1) }
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }
+
+      it "does include the original message in the mention count" do
+        create_mention(thread_om, channel_1)
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
+      end
+
+      it "does not include other thread messages in the mention count" do
+        thread_message_1 = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+        thread_message_2 = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
+        create_mention(thread_message_1, channel_1)
+        create_mention(thread_message_2, channel_1)
+        expect(
+          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
+        ).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
+      end
     end
 
     context "for multiple channels" do

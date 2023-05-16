@@ -1,4 +1,3 @@
-import afterTransition from "discourse/lib/after-transition";
 import { propertyEqual } from "discourse/lib/computed";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -59,6 +58,7 @@ export default Component.extend(KeyEnterEscape, {
   editPost: null,
   _popper: null,
   popperPlacement: "top-start",
+  popperOffset: [0, 3],
 
   _isFastEditable: false,
   _displayFastEditInput: false,
@@ -165,12 +165,14 @@ export default Component.extend(KeyEnterEscape, {
       if (this._canEditPost) {
         const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
         const matches = cooked.innerHTML.match(regexp);
+        const non_ascii_regex = /[^\x00-\x7F]/;
 
         if (
           quoteState.buffer.length < 1 ||
           quoteState.buffer.includes("|") || // tables are too complex
           quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-          matches?.length > 1 // duplicates are too complex
+          matches?.length > 1 || // duplicates are too complex
+          non_ascii_regex.test(quoteState.buffer) // non-ascii chars break fast-edit
         ) {
           this.set("_isFastEditable", false);
           this.set("_fastEditInitialSelection", null);
@@ -199,6 +201,7 @@ export default Component.extend(KeyEnterEscape, {
 
     if (showAtEnd) {
       this.popperPlacement = "bottom-start";
+      this.popperOffset = [0, 25];
     }
 
     // change the position of the button
@@ -222,7 +225,7 @@ export default Component.extend(KeyEnterEscape, {
           {
             name: "offset",
             options: {
-              offset: [0, 3],
+              offset: this.popperOffset,
             },
           },
         ],
@@ -405,25 +408,27 @@ export default Component.extend(KeyEnterEscape, {
 
           this.editPost(postModel);
 
-          afterTransition(document.querySelector("#reply-control"), () => {
-            const textarea = document.querySelector(".d-editor-input");
-            if (!textarea || this.isDestroyed || this.isDestroying) {
-              return;
-            }
+          document
+            .querySelector("#reply-control")
+            ?.addEventListener("transitionend", () => {
+              const textarea = document.querySelector(".d-editor-input");
+              if (!textarea || this.isDestroyed || this.isDestroying) {
+                return;
+              }
 
-            // best index brings us to one row before as slice start from 1
-            // we add 1 to be at the beginning of next line, unless we start from top
-            setCaretPosition(
-              textarea,
-              rows.slice(0, bestIndex).join("\n").length +
-                (bestIndex > 0 ? 1 : 0)
-            );
+              // best index brings us to one row before as slice start from 1
+              // we add 1 to be at the beginning of next line, unless we start from top
+              setCaretPosition(
+                textarea,
+                rows.slice(0, bestIndex).join("\n").length +
+                  (bestIndex > 0 ? 1 : 0)
+              );
 
-            // ensures we correctly scroll to caret and reloads composer
-            // if we do another selection/edit
-            textarea.blur();
-            textarea.focus();
-          });
+              // ensures we correctly scroll to caret and reloads composer
+              // if we do another selection/edit
+              textarea.blur();
+              textarea.focus();
+            });
         }
       );
     }

@@ -6,17 +6,20 @@ module Chat
       chat_messages_query
         .in_batches(of: batch_size)
         .each do |relation|
-          destroyed_ids = relation.destroy_all.pluck(:id)
-          reset_last_read(destroyed_ids)
-          delete_flags(destroyed_ids)
+          destroyed_ids = relation.destroy_all.pluck(:id, :chat_channel_id)
+          destroyed_message_ids = destroyed_ids.map(&:first).uniq
+          destroyed_message_channel_ids = destroyed_ids.map(&:second).uniq
+          reset_last_read(destroyed_message_ids, destroyed_message_channel_ids)
+          delete_flags(destroyed_message_ids)
         end
     end
 
     private
 
-    def reset_last_read(message_ids)
-      Chat::UserChatChannelMembership.where(last_read_message_id: message_ids).update_all(
-        last_read_message_id: nil,
+    def reset_last_read(destroyed_message_ids, destroyed_message_channel_ids)
+      ::Chat::Action::ResetUserLastReadChannelMessage.call(
+        destroyed_message_ids,
+        destroyed_message_channel_ids,
       )
     end
 

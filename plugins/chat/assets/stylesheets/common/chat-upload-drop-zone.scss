@@ -1,0 +1,77 @@
+.chat-upload-drop-zone {
+  position: absolute;
+  visibility: hidden;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: z("max");
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background: rgba(var(--always-black-rgb), 0.85);
+
+  .uppy-is-drag-over & {
+    visibility: visible;
+  }
+
+  &__content {
+    position: relative;
+    width: 50%;
+    height: 50%;
+  }
+
+  &__background {
+    svg {
+      transform: scale(0.1);
+      transition: transform 200ms ease-in-out;
+      height: 80px;
+
+      .uppy-is-drag-over & {
+        transform: scale(1);
+      }
+    }
+
+    position: absolute;
+    top: 0;
+    left: calc(50% - 100px / 2);
+    z-index: 1;
+  }
+
+  &__illustration {
+    svg {
+      transform: scale(0.1);
+      transition: transform 200ms ease-in-out;
+      height: 80px;
+
+      .uppy-is-drag-over & {
+        transform: scale(1);
+      }
+    }
+
+    position: absolute;
+    top: 0;
+    left: calc(50% - 100px / 2);
+    z-index: 1;
+  }
+
+  &__text {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+
+    &__title {
+      width: 100%;
+      font-weight: 600;
+      text-align: center;
+      font-size: var(--font-up-2);
+      padding-inline: 1rem;
+      color: var(--secondary-or-primary);
+    }
+  }
+}

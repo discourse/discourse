@@ -3,7 +3,7 @@
 module Chat
   class EmojisController < ::Chat::BaseController
     def index
-      emojis = Emoji.all.group_by(&:group)
+      emojis = Emoji.allowed.group_by(&:group)
       render json: MultiJson.dump(emojis)
     end
   end

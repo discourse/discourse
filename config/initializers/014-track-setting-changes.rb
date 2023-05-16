@@ -63,4 +63,24 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if name == :reviewable_low_priority_threshold && Reviewable.min_score_for_priority(:medium) > 0
     Reviewable.set_priorities(low: new_value)
   end
+
+  Emoji.clear_cache && Discourse.request_refresh! if name == :emoji_deny_list
+
+  if (name == :title || name == :site_description) &&
+       topic = Topic.find_by(id: SiteSetting.welcome_topic_id)
+    PostRevisor.new(topic.first_post, topic).revise!(
+      Discourse.system_user,
+      {
+        title: I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
+        raw:
+          I18n.t(
+            "discourse_welcome_topic.body",
+            base_path: Discourse.base_path,
+            site_title: SiteSetting.title,
+            site_description: SiteSetting.site_description,
+          ),
+      },
+      skip_revision: true,
+    )
+  end
 end

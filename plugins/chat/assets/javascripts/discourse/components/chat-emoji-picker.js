@@ -51,13 +51,15 @@ export default class ChatEmojiPicker extends Component {
   get groups() {
     const emojis = this.chatEmojiPickerManager.emojis;
     const favorites = {
-      favorites: this.chatEmojiReactionStore.favorites.map((name) => {
-        return {
-          name,
-          group: "favorites",
-          url: emojiUrlFor(name),
-        };
-      }),
+      favorites: this.chatEmojiReactionStore.favorites
+        .filter((f) => !this.site.denied_emojis?.includes(f))
+        .map((name) => {
+          return {
+            name,
+            group: "favorites",
+            url: emojiUrlFor(name),
+          };
+        }),
     };
 
     return {
@@ -356,14 +358,6 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  didFocusFirstEmoji(event) {
-    event.preventDefault();
-    const section = event.target.closest(".chat-emoji-picker__section").dataset
-      .section;
-    this.didRequestSection(section);
-  }
-
-  @action
   didRequestSection(section) {
     const scrollableContent = document.querySelector(
       ".chat-emoji-picker__scrollable-content"
@@ -386,12 +380,10 @@ export default class ChatEmojiPicker extends Component {
 
     schedule("afterRender", () => {
       document
-        .querySelector(`.chat-emoji-picker__section[data-section="${section}"]`)
-        .scrollIntoView({
-          behavior: "auto",
-          block: "start",
-          inline: "start",
-        });
+        .querySelector(
+          `.chat-emoji-picker__section[data-section="${section}"] .emoji:nth-child(1)`
+        )
+        .focus();
 
       later(() => {
         // iOS hack to avoid blank div when requesting section during momentum

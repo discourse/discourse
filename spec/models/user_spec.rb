@@ -131,7 +131,7 @@ RSpec.describe User do
       it "should not create any sidebar section link records for staged users" do
         user = Fabricate(:user, staged: true)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should create sidebar section link records when user has been unstaged" do
@@ -144,7 +144,7 @@ RSpec.describe User do
       it "should not create any sidebar section link records for non human users" do
         user = Fabricate(:user, id: -Time.now.to_i)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should not create any tag sidebar section link records when tagging is disabled" do
@@ -2135,17 +2135,11 @@ RSpec.describe User do
       expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
     end
 
-    it "does not update category preferences if already set by group" do
-      user_id = 123
-
-      CategoryUser.create!(
-        user_id: user_id,
-        category_id: category2.id,
-        notification_level: CategoryUser.notification_levels[:normal],
-      )
-      user = Fabricate(:user, id: user_id, trust_level: 1)
-
-      expect(CategoryUser.lookup(user, :normal).pluck(:category_id)).to include(category2.id)
+    it "does not error on duplicate categories for set_default_categories_preferences" do
+      SiteSetting.default_categories_normal = category4.id.to_s + "|" + category4.id.to_s
+      user = nil
+      expect { user = Fabricate(:user, trust_level: 1) }.not_to raise_error
+      expect(CategoryUser.lookup(user, :normal).pluck(:category_id)).to include(category4.id)
     end
 
     it "does not set category preferences for staged users" do

@@ -129,6 +129,31 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
             href: "/chat/c/#{channel_1.slug}/#{channel_1.id}/#{message.id}",
           )
         end
+
+        it "shows a mention notification when the message is in a thread" do
+          Jobs.run_immediately!
+
+          message =
+            Chat::MessageCreator.create(
+              chat_channel: channel_1,
+              user: other_user,
+              content: "this is fine @#{current_user.username}",
+              thread_id: Fabricate(:chat_thread, channel: channel_1).id,
+            ).chat_message
+
+          visit("/")
+
+          find(".header-dropdown-toggle.current-user").click
+          within("#user-menu-button-chat-notifications") do |panel|
+            expect(panel).to have_content(1)
+            panel.click
+          end
+
+          expect(find("#quick-access-chat-notifications")).to have_link(
+            I18n.t("js.notifications.popup.chat_mention.direct", channel: channel_1.name),
+            href: "/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{message.thread_id}",
+          )
+        end
       end
 
       context "when @all" do

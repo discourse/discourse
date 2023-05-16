@@ -29,8 +29,8 @@ RSpec.describe Tag do
 
       expect { tag_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(3).to(1)
-      expect(SidebarSectionLink.first).to eq(category_sidebar_section_link)
+      }.from(12).to(10)
+      expect(SidebarSectionLink.last).to eq(category_sidebar_section_link)
     end
   end
 

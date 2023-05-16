@@ -182,7 +182,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
-          "Chat with @&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
+          "Chat in @&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
         )
       end
     end

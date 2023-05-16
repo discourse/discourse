@@ -1016,7 +1016,6 @@ sk:
     default_categories_watching: "Štandardný zoznam kategórií, ktoré sú pozerané."
     default_categories_tracking: "Štandardný zoznam kategórií, ktoré sú sledované."
     default_categories_muted: "Štandardný zoznam kategórií, ktoré sú vypnuté."
-    min_trust_level_for_user_api_key: "Stupeň dôvery potrebný na generovanie používateľských API kľúčov"
     min_trust_to_create_tag: "Minimálny stupeň dôvery potrebný na vytvorenie štítku"
     min_trust_level_to_tag_topics: "Minimálny stupeň dôvery potrebný na štítkovanie tém"
     errors:

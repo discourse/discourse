@@ -2,7 +2,6 @@
 
 class SidebarSectionsController < ApplicationController
   requires_login
-  before_action :check_if_member_of_group
   before_action :check_access_if_public
 
   def index
@@ -20,11 +19,7 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_create_public_sidebar_section(sidebar_section)
-      MessageBus.publish(
-        "/refresh-sidebar-sections",
-        nil,
-        group_ids: SiteSetting.enable_custom_sidebar_sections_map,
-      )
+      MessageBus.publish("/refresh-sidebar-sections", nil)
       Site.clear_anon_cache!
     end
 
@@ -44,11 +39,7 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_update_public_sidebar_section(sidebar_section)
-      MessageBus.publish(
-        "/refresh-sidebar-sections",
-        nil,
-        group_ids: SiteSetting.enable_custom_sidebar_sections_map,
-      )
+      MessageBus.publish("/refresh-sidebar-sections", nil)
       Site.clear_anon_cache!
     end
 
@@ -86,11 +77,7 @@ class SidebarSectionsController < ApplicationController
 
     if sidebar_section.public?
       StaffActionLogger.new(current_user).log_destroy_public_sidebar_section(sidebar_section)
-      MessageBus.publish(
-        "/refresh-sidebar-sections",
-        nil,
-        group_ids: SiteSetting.enable_custom_sidebar_sections_map,
-      )
+      MessageBus.publish("/refresh-sidebar-sections", nil)
     end
     render json: SidebarSectionSerializer.new(sidebar_section)
   rescue Discourse::InvalidAccess
@@ -109,14 +96,6 @@ class SidebarSectionsController < ApplicationController
 
   def reorder_params
     params.permit(:sidebar_section_id, links_order: [])
-  end
-
-  def check_if_member_of_group
-    ### TODO remove when enable_custom_sidebar_sections SiteSetting is removed
-    if !SiteSetting.enable_custom_sidebar_sections.present? ||
-         !current_user.in_any_groups?(SiteSetting.enable_custom_sidebar_sections_map)
-      raise Discourse::InvalidAccess
-    end
   end
 
   private

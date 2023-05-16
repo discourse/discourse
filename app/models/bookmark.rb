@@ -22,7 +22,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.valid_bookmarkable_types
-    Bookmark.registered_bookmarkables.map { |bm| bm.model.to_s }
+    Bookmark.registered_bookmarkables.map { |bm| bm.model.polymorphic_name }
   end
 
   belongs_to :user

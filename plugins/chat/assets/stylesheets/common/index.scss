@@ -1,6 +1,8 @@
+@import "chat-height-mixin";
 @import "base-common";
 @import "sidebar-extensions";
 @import "chat-browse";
+@import "chat-channel";
 @import "chat-channel-card";
 @import "chat-channel-info";
 @import "chat-channel-preview-card";
@@ -12,6 +14,7 @@
 @import "chat-composer-upload";
 @import "chat-composer-uploads";
 @import "chat-composer";
+@import "chat-composer-button";
 @import "chat-draft-channel";
 @import "chat-drawer";
 @import "chat-emoji-picker";
@@ -35,6 +38,8 @@
 @import "chat-skeleton";
 @import "chat-tabs";
 @import "chat-thread";
+@import "chat-side-panel-resizer";
+@import "chat-upload-drop-zone";
 @import "chat-transcript";
 @import "core-extensions";
 @import "create-channel-modal";
@@ -44,3 +49,6 @@
 @import "full-page-chat-header";
 @import "incoming-chat-webhooks";
 @import "reviewable-chat-message";
+@import "chat-thread-list-item";
+@import "chat-threads-list";
+@import "chat-thread-original-message";

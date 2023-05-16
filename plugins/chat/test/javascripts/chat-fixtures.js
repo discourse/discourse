@@ -27,7 +27,6 @@ export const directMessageChannels = [
       id: 75,
       title: "@hawk",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -63,7 +62,6 @@ export const directMessageChannels = [
       id: 76,
       title: "@eviltrout, @markvanlan",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -112,7 +110,6 @@ export const chatChannels = {
       allow_channel_wide_mentions: true,
       last_message_sent_at: "2021-07-24T08:14:16.950Z",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -132,7 +129,6 @@ export const chatChannels = {
       allow_channel_wide_mentions: true,
       last_message_sent_at: "2021-07-15T08:14:16.950Z",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -152,7 +148,6 @@ export const chatChannels = {
       allow_channel_wide_mentions: true,
       last_message_sent_at: "2021-07-14T08:14:16.950Z",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -172,7 +167,6 @@ export const chatChannels = {
       allow_channel_wide_mentions: true,
       last_message_sent_at: "2021-07-10T08:14:16.950Z",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -192,7 +186,6 @@ export const chatChannels = {
       allow_channel_wide_mentions: true,
       last_message_sent_at: "2021-07-21T08:14:16.950Z",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -212,7 +205,6 @@ export const chatChannels = {
       allow_channel_wide_mentions: true,
       last_message_sent_at: "2021-07-25T08:14:16.950Z",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -232,7 +224,6 @@ export const chatChannels = {
       allow_channel_wide_mentions: true,
       last_message_sent_at: "2021-07-02T08:14:16.950Z",
       current_user_membership: {
-        unread_count: 0,
         muted: false,
         following: true,
       },
@@ -242,6 +233,20 @@ export const chatChannels = {
       },
     },
   ],
+  tracking: {
+    channel_tracking: {
+      4: { unread_count: 0, mention_count: 0 },
+      5: { unread_count: 0, mention_count: 0 },
+      6: { unread_count: 0, mention_count: 0 },
+      7: { unread_count: 0, mention_count: 0 },
+      9: { unread_count: 0, mention_count: 0 },
+      10: { unread_count: 0, mention_count: 0 },
+      11: { unread_count: 0, mention_count: 0 },
+      75: { unread_count: 0, mention_count: 0 },
+      76: { unread_count: 0, mention_count: 0 },
+    },
+    thread_tracking: {},
+  },
   direct_message_channels: directMessageChannels.mapBy("chat_channel"),
   message_bus_last_ids: {
     channel_metadata: 0,

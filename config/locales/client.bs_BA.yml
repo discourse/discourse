@@ -997,12 +997,6 @@ bs_BA:
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Uobičajena početna stranica"
       staged: "Priređen"
-      staff_counters:
-        flagged_posts: "prijavljene objave"
-        deleted_posts: "obrisane objave"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
-        rejected_posts: "odbijeni postovi"
       messages:
         inbox: "Inbox"
         latest: "Zadnje"
@@ -1048,8 +1042,6 @@ bs_BA:
       second_factor_backup:
         regenerate: "Regenerate"
         disable: "Onemogući"
-        enable: "Omogući"
-        enable_long: "Omogućite rezervne kodove"
         copy_to_clipboard: "Kopirati u clipboard"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
         copied_to_clipboard: "Kopirano u međuspremnik"
@@ -2880,7 +2872,6 @@ bs_BA:
         few: "Zaradili ste ovu oznaku %{count} puta"
         other: "Zaradili ste ovu oznaku %{count} puta"
       granted_on: "Odobren %{date}"
-      others_count: "Ostale sa ovom značkom (%{count}) \\ t"
       title: Bedž
       allow_title: "Ovu značku možete koristiti kao naslov"
       multiple_grant: "To možete zaraditi više puta"
@@ -4198,7 +4189,6 @@ bs_BA:
       site_settings:
         title: "Postavke"
         no_results: "No results found."
-        more_than_30_results: "Postoji više od 30 rezultata. Pročistite pretraživanje ili odaberite kategoriju."
         clear_filter: "Clear"
         add_url: "add URL"
         add_host: "add host"

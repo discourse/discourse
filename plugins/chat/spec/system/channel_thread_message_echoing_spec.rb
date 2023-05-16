@@ -69,8 +69,8 @@ describe "Channel thread message echoing", type: :system, js: true do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
-      open_thread.send_message(thread.id, "new thread message")
-      expect(open_thread).to have_message(thread.id, text: "new thread message")
+      open_thread.send_message("new thread message")
+      expect(open_thread).to have_message(thread_id: thread.id, text: "new thread message")
       new_message = thread.reload.replies.last
       expect(channel_page).not_to have_css(channel_page.message_by_id_selector(new_message.id))
     end
@@ -83,6 +83,18 @@ describe "Channel thread message echoing", type: :system, js: true do
       chat_page.visit_channel(channel)
       expect(channel_page).not_to have_css(
         channel_page.message_by_id_selector(thread.replies.last.id),
+      )
+    end
+
+    it "does show the thread original_message if it is the last message in the channel" do
+      new_thread = Fabricate(:chat_thread, channel: channel)
+      current_user
+        .user_chat_channel_memberships
+        .find_by(chat_channel: channel)
+        .update!(last_read_message_id: new_thread.original_message_id)
+      chat_page.visit_channel(channel)
+      expect(channel_page).to have_css(
+        channel_page.message_by_id_selector(new_thread.original_message_id),
       )
     end
   end

@@ -226,6 +226,33 @@ class ComposerMessagesFinder
     }
   end
 
+  def check_dont_feed_the_trolls
+    return if !replying?
+
+    post =
+      if @details[:post_id]
+        Post.find_by(id: @details[:post_id])
+      else
+        @topic&.first_post
+      end
+
+    return if post.blank?
+
+    flags = post.flags.group(:user_id).count
+    flagged_by_replier = flags[@user.id].to_i > 0
+    flagged_by_others = flags.values.sum >= SiteSetting.dont_feed_the_trolls_threshold
+
+    return if !flagged_by_replier && !flagged_by_others
+
+    {
+      id: "dont_feed_the_trolls",
+      templateName: "education",
+      wait_for_typing: false,
+      extraClass: "urgent",
+      body: PrettyText.cook(I18n.t("education.dont_feed_the_trolls")),
+    }
+  end
+
   def check_reviving_old_topic
     return unless replying?
     if @topic.nil? || SiteSetting.warn_reviving_old_topic_age < 1 || @topic.last_posted_at.nil? ||

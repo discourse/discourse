@@ -84,7 +84,7 @@ acceptance("User directory - Editing columns", function (needs) {
     const columns = queryAll(
       ".edit-directory-columns-container .edit-directory-column"
     );
-    assert.strictEqual(columns.length, 8);
+    assert.strictEqual(columns.length, 9);
 
     const checked = queryAll(
       ".edit-directory-columns-container .edit-directory-column input[type='checkbox']:checked"
@@ -94,7 +94,7 @@ acceptance("User directory - Editing columns", function (needs) {
     const unchecked = queryAll(
       ".edit-directory-columns-container .edit-directory-column input[type='checkbox']:not(:checked)"
     );
-    assert.strictEqual(unchecked.length, 1);
+    assert.strictEqual(unchecked.length, 2);
   });
 
   const fetchColumns = function () {
@@ -134,6 +134,7 @@ acceptance("User directory - Editing columns", function (needs) {
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
     await click(moveUserFieldColumnUpBtn);
+    await click(moveUserFieldColumnUpBtn);
 
     columns = fetchColumns();
     assert.strictEqual(
@@ -160,6 +161,7 @@ acceptance("User directory - Editing columns", function (needs) {
       "Topics Viewed",
       "Posts Read",
       "Days Visited",
+      "[en.an_extra_field]",
       "Favorite Color",
     ]);
   });

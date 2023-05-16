@@ -92,3 +92,6 @@ pl_PL:
           description: "Opis"
           header: "Nagłówek"
           hover_to_see: "Najedź kursorem, aby zobaczyć podpowiedź"
+        char_counter:
+          title: "Licznik znaków"
+          placeholder: "Tutaj wpisz swój tekst..."

@@ -153,6 +153,7 @@ module Helpers
     global_setting :relative_url_root, f
     old_root = ActionController::Base.config.relative_url_root
     ActionController::Base.config.relative_url_root = f
+    Rails.application.routes.stubs(:relative_url_root).returns(f)
 
     before_next_spec { ActionController::Base.config.relative_url_root = old_root }
   end
@@ -200,5 +201,12 @@ module Helpers
       .returns(
         ips.map { |ip| Addrinfo.new([IPAddr.new(ip).ipv6? ? "AF_INET6" : "AF_INET", 80, nil, ip]) },
       )
+  end
+
+  def with_search_indexer_enabled
+    SearchIndexer.enable
+    yield
+  ensure
+    SearchIndexer.disable
   end
 end

@@ -8,6 +8,14 @@ $float-height: 530px;
   --chat-header-offset: 50px;
 }
 
+// Very specific hack to ensure the contextual menu (copy/paste/...) is
+// not completly over the textarea, the rules to position this menu are quite obscure
+// and under DiscourseHUB the space between the textarea and the keyboard is so small that
+// it sometimes prefer to appear on top of the textarea, making any gesture very complicated
+html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
+  padding-bottom: 0.2rem;
+}
+
 .chat-message-move-to-channel-modal-modal {
   .modal-inner-container {
     .chat-move-message-channel-chooser {
@@ -145,14 +153,9 @@ $float-height: 530px;
   word-wrap: break-word;
   white-space: normal;
   position: relative;
-  will-change: transform;
-  transform: translateZ(0);
 
   .chat-message-container {
     display: grid;
-    will-change: transform;
-    transform: translateZ(0);
-    overflow-x: hidden;
 
     &.selecting-messages {
       grid-template-columns: 1.5em 1fr;
@@ -257,7 +260,7 @@ $float-height: 530px;
   }
 }
 
-.chat-live-pane {
+.chat-channel {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -341,18 +344,6 @@ $float-height: 530px;
     &.visible {
       transform: translateY(-32px) scale(1);
       opacity: 0.8;
-    }
-
-    &__text {
-      color: var(--secondary);
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      background: var(--primary-medium);
-      border-radius: 3px;
-      text-align: center;
-      font-size: var(--font-down-1);
-      bottom: 40px;
-      position: absolute;
     }
 
     &__arrow {
@@ -445,9 +436,7 @@ body.has-full-page-chat {
     }
   }
 
-  .chat-live-pane,
-  .chat-messages-scroll,
-  .chat-live-pane {
+  .chat-messages-scroll {
     box-sizing: border-box;
     height: 100%;
   }
@@ -592,10 +581,6 @@ html.has-full-page-chat {
   height: 100%;
   width: 100%;
 
-  &.keyboard-visible body #main-outlet .full-page-chat {
-    padding-bottom: 0.2rem;
-  }
-
   body {
     height: 100%;
     width: 100%;
@@ -603,10 +588,6 @@ html.has-full-page-chat {
     #main-outlet {
       display: flex;
       flex-direction: column;
-      max-height: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-          var(--composer-height, 0px)
-      );
 
       .full-page-chat {
         height: 100%;
@@ -629,30 +610,11 @@ html.has-full-page-chat {
 
   // these need to apply to desktop too, because iPads
   &.discourse-touch {
-    // iPad web
-    #main-outlet-wrapper {
-      // restrict the row height, including when virtual keyboard is open
-      grid-template-rows: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px)
-      );
-      .sidebar-wrapper {
-        // prevents sidebar from overflowing behind the virtual keyboard
-        height: 100%;
-      }
-    }
-
     .full-page-chat,
-    .chat-live-pane,
+    .chat-channel,
     #main-outlet {
       // allows containers to shrink to fit
       min-height: 0;
-    }
-
-    #main-outlet {
-      // limits height for iPad
-      max-height: calc(
-        100vh - calc(var(--header-offset) + var(--composer-ipad-padding))
-      );
     }
   }
   [data-popper-reference-hidden] {

@@ -280,9 +280,9 @@ describe Chat::ReviewQueue do
             end
             .map(&:data)
 
-        delete_msg = messages.detect { |m| m[:type] == "delete" }
+        delete_msg = messages.detect { |m| m["type"] == "delete" }
 
-        expect(delete_msg[:deleted_id]).to eq(message.id)
+        expect(delete_msg["deleted_id"]).to eq(message.id)
       end
 
       it "agrees with other flags on the same message" do

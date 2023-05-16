@@ -40,7 +40,7 @@ export default Component.extend(ModalFunctionality, {
       .createChannelArchive(this.chatChannel.id, this._data())
       .then(() => {
         this.flash(I18n.t("chat.channel_archive.process_started"), "success");
-        this.chatChannel.set("status", CHANNEL_STATUSES.archived);
+        this.chatChannel.status = CHANNEL_STATUSES.archived;
 
         discourseLater(() => {
           this.closeModal();

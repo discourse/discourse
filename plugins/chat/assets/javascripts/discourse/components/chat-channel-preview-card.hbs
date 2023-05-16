@@ -2,6 +2,7 @@
   class={{concat-class
     "chat-channel-preview-card"
     (unless this.hasDescription "-no-description")
+    (unless this.showJoinButton "-no-button")
   }}
 >
   <ChatChannelTitle @channel={{@channel}} />

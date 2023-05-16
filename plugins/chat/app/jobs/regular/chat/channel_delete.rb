@@ -46,7 +46,7 @@ module Jobs
           # by the CleanUpUploads job in core
           ::UploadReference.where(
             target_id: message_ids,
-            target_type: ::Chat::Message.sti_name,
+            target_type: ::Chat::Message.polymorphic_name,
           ).delete_all
 
           # only the messages and the channel are Trashable, everything else gets

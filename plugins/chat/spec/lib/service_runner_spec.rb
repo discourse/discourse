@@ -64,6 +64,18 @@ RSpec.describe ServiceRunner do
     end
   end
 
+  class FailureWithModelErrorsService
+    include Service::Base
+
+    model :fake_model, :fetch_fake_model
+
+    private
+
+    def fetch_fake_model
+      OpenStruct.new(invalid?: true)
+    end
+  end
+
   class SuccessWithModelService
     include Service::Base
 
@@ -73,6 +85,18 @@ RSpec.describe ServiceRunner do
 
     def fetch_fake_model
       :model_found
+    end
+  end
+
+  class SuccessWithModelErrorsService
+    include Service::Base
+
+    model :fake_model, :fetch_fake_model
+
+    private
+
+    def fetch_fake_model
+      OpenStruct.new
     end
   end
 
@@ -264,6 +288,30 @@ RSpec.describe ServiceRunner do
           it "does not run the provided block" do
             expect(runner).not_to eq :no_model
           end
+        end
+      end
+    end
+
+    context "when using the on_model_errors action" do
+      let(:actions) { <<-BLOCK }
+          ->(*) do
+            on_model_errors(:fake_model) { :model_errors }
+          end
+        BLOCK
+
+      context "when the service fails with a model containing errors" do
+        let(:service) { FailureWithModelErrorsService }
+
+        it "runs the provided block" do
+          expect(runner).to eq :model_errors
+        end
+      end
+
+      context "when the service does not fail with a model containing errors" do
+        let(:service) { SuccessWithModelErrorsService }
+
+        it "does not run the provided block" do
+          expect(runner).not_to eq :model_errors
         end
       end
     end

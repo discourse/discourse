@@ -184,6 +184,8 @@ export default DiscoverySortableController.extend(
         .then((response) => {
           const payload = response.responseJson;
 
+          this.tagNotification.set("notification_level", notificationLevel);
+
           this.currentUser.setProperties({
             watched_tags: payload.watched_tags,
             watching_first_post_tags: payload.watching_first_post_tags,

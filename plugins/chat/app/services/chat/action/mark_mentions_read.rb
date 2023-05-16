@@ -10,7 +10,9 @@ module Chat
       #   marked as read.
       # @param [Integer] message_id Optional, used to limit the max message ID to mark
       #   mentions read for in the channel.
-      def self.call(user, channel_ids:, message_id: nil)
+      # @param [Integer] thread_id Optional, if provided then all notifications related
+      #   to messages in the thread will be marked as read.
+      def self.call(user, channel_ids:, message_id: nil, thread_id: nil)
         ::Notification
           .where(notification_type: Notification.types[:chat_mention])
           .where(user: user)
@@ -19,8 +21,14 @@ module Chat
           .joins("INNER JOIN chat_messages ON chat_mentions.chat_message_id = chat_messages.id")
           .where("chat_messages.chat_channel_id IN (?)", channel_ids)
           .then do |notifications|
-            break notifications if message_id.blank?
-            notifications.where("chat_messages.id <= ?", message_id)
+            break notifications if message_id.blank? && thread_id.blank?
+            break notifications.where("chat_messages.id <= ?", message_id) if message_id.present?
+            if thread_id.present?
+              notifications.where(
+                "chat_messages.id IN (SELECT id FROM chat_messages WHERE thread_id = ?)",
+                thread_id,
+              )
+            end
           end
           .update_all(read: true)
       end

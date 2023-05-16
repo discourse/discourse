@@ -26,6 +26,7 @@ module SystemHelpers
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
     SiteSetting.disable_avatar_education_message = true
+    SiteSetting.enable_user_tips = false
   end
 
   def try_until_success(timeout: 2, frequency: 0.01)

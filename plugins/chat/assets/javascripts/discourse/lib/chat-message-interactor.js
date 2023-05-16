@@ -213,23 +213,32 @@ export default class ChatMessageInteractor {
   }
 
   bulkSelect(checked) {
-    const channel = this.message.channel;
-    const lastSelectedIndex = channel.findIndexOfMessage(
-      this.pane.lastSelectedMessage
+    const manager = this.message.manager;
+    const lastSelectedIndex = manager.findIndexOfMessage(
+      this.pane.lastSelectedMessage.id
     );
-    const newlySelectedIndex = channel.findIndexOfMessage(this.message);
+    const newlySelectedIndex = manager.findIndexOfMessage(this.message.id);
     const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
       (a, b) => a - b
     );
 
     for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
-      channel.messages[i].selected = checked;
+      manager.messages[i].selected = checked;
     }
   }
 
   copyLink() {
     const { protocol, host } = window.location;
-    let url = getURL(`/chat/c/-/${this.message.channelId}/${this.message.id}`);
+    const channelId = this.message.channel.id;
+    const threadId = this.message.thread?.id;
+
+    let url;
+    if (this.context === MESSAGE_CONTEXT_THREAD && threadId) {
+      url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
+    } else {
+      url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);
+    }
+
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
   }
@@ -267,7 +276,7 @@ export default class ChatMessageInteractor {
 
     return this.chatApi
       .publishReaction(
-        this.message.channelId,
+        this.message.channel.id,
         this.message.id,
         emoji,
         reactAction
@@ -320,32 +329,32 @@ export default class ChatMessageInteractor {
   @action
   delete() {
     return this.chatApi
-      .trashMessage(this.message.channelId, this.message.id)
+      .trashMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
   }
 
   @action
   restore() {
     return this.chatApi
-      .restoreMessage(this.message.channelId, this.message.id)
+      .restoreMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
   }
 
   @action
   rebake() {
     return this.chatApi
-      .rebakeMessage(this.message.channelId, this.message.id)
+      .rebakeMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
   }
 
   @action
   reply() {
-    this.composer.setReplyTo(this.message.id);
+    this.composer.replyTo(this.message);
   }
 
   @action
   edit() {
-    this.composer.editButtonClicked(this.message.id);
+    this.composer.editMessage(this.message);
   }
 
   @action

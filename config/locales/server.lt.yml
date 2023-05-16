@@ -496,21 +496,6 @@ lt:
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
   staff_category_name: "Personalas"
   staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
-  discourse_welcome_topic:
-    body: |2
-
-      Pirmoji šios prisegtos temos pastraipa bus matoma kaip sveikinimo žinutė visiems naujiems pagrindinio puslapio lankytojams. Tai svarbu!
-
-      **Redaguokite tai** į trumpą savo bendruomenės aprašymą:
-
-      – Kam tai skirta?
-      – Ką jie čia gali rasti?
-      – Kodėl jie turėtų čia ateiti?
-      – Kur jie gali skaityti daugiau (nuorodos, šaltiniai ir pan.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Galbūt norėsite uždaryti šią temą per administratorių :wrench: (viršuje dešinėje ir apačioje), kad atsakymai nesikauptų ant skelbimo.
   admin_quick_start_title: "PERSKAITYKITE PIRMIAUSIA: administratoriaus greitas pradžios vadovas"
   category:
     topic_prefix: "Viskas apie %{category} kategoriją"
@@ -1478,7 +1463,6 @@ lt:
     default_title_count_mode: "Numatytasis puslapio pavadinimo skaitiklio režimas"
     allow_user_api_keys: "Leisti generuoti vartotojo API raktus"
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
-    min_trust_level_for_user_api_key: "Patikimumo lygis, reikalingas generuoti vartotojo API raktus"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
     tagging_enabled: "Įgalinti žymas temose?"
@@ -1922,14 +1906,6 @@ lt:
         Tai automatinis pranešimas nuo %{site_name} , informuojantis, kad jūsų paskyra nebėra sulaikyta po darbuotojų peržiūros.
 
         Dabar galite vėl kurti naujus atsakymus ir temas. Ačiū už kantrybę.
-    dashboard_problems:
-      subject_template: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
-      text_body_template: |
-        Atsižvelgdami į dabartinius svetainės nustatymus, turime jums keletą naujų patarimų ir rekomendacijų.
-
-        [Apsilankykite savo svetainės informacijos suvestinėje](%{base_url}/admin), kad ją pamatytumėte.
-
-        Jei suvestinėje nieko nematote, kitas darbuotojas jau galėjo pasinaudoti šiuo patarimu. Personalo veiksmų sąrašą galite rasti [Personalo veiksmų%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Jūs esate naujas mėnesio vartotojas!"
       subject_template: "Jūs esate naujas mėnesio vartotojas!"

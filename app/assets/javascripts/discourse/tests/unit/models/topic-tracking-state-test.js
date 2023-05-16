@@ -335,6 +335,12 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.loadStates([{ topic_id: 111 }, { topic_id: 222 }]);
     trackingState.set("_trackedTopicLimit", 1);
 
+    let stateChangeCallbackCalledTimes = 0;
+
+    trackingState.onStateChange(() => {
+      stateChangeCallbackCalledTimes += 1;
+    });
+
     const list = {
       topics: [
         this.store.createRecord("topic", {
@@ -344,13 +350,34 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
           unread_posts: 0,
           prevent_sync: false,
         }),
+        this.store.createRecord("topic", {
+          id: 333,
+          unseen: false,
+          seen: true,
+          unread_posts: 0,
+          prevent_sync: false,
+        }),
+        this.store.createRecord("topic", {
+          id: 444,
+          unseen: false,
+          seen: true,
+          unread_posts: 0,
+          prevent_sync: false,
+        }),
       ],
     };
 
     trackingState.sync(list, "unread");
+
     assert.notOk(
       trackingState.states.has("t111"),
       "expect state for topic 111 to be deleted"
+    );
+
+    assert.equal(
+      stateChangeCallbackCalledTimes,
+      1,
+      "callback is only called once"
     );
 
     trackingState.loadStates([{ topic_id: 111 }, { topic_id: 222 }]);

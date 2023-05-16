@@ -37,6 +37,11 @@ module PageObjects
         expand
         element.find(".select-kit-row[data-value='#{value}']").click
       end
+
+      def select_row_by_name(name)
+        expand
+        element.find(".select-kit-row[data-name='#{name}']").click
+      end
     end
   end
 end

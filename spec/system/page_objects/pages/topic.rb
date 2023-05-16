@@ -30,6 +30,10 @@ module PageObjects
         self
       end
 
+      def has_topic_title?(text)
+        has_css?("h1 .fancy-title", text: text)
+      end
+
       def has_post_content?(post)
         post_by_number(post).has_content? post.raw
       end
@@ -54,9 +58,11 @@ module PageObjects
       end
 
       def has_post_bookmarked?(post)
-        within post_by_number(post) do
-          has_css?(".bookmark.with-reminder.bookmarked")
-        end
+        is_post_bookmarked(post, bookmarked: true)
+      end
+
+      def has_no_post_bookmarked?(post)
+        is_post_bookmarked(post, bookmarked: false)
       end
 
       def expand_post_actions(post)
@@ -67,6 +73,8 @@ module PageObjects
         case button
         when :bookmark
           post_by_number(post).find(".bookmark.with-reminder").click
+        when :reply
+          post_by_number(post).find(".post-controls .reply").click
         end
       end
 
@@ -107,6 +115,10 @@ module PageObjects
         @composer_component.has_content?(content)
       end
 
+      def has_composer_popup_content?(content)
+        @composer_component.has_popup_content?(content)
+      end
+
       def send_reply
         find("#reply-control .save-or-cancel .create").click
       end
@@ -131,6 +143,15 @@ module PageObjects
 
       def topic_footer_button_id(button)
         "#topic-footer-button-#{button}"
+      end
+
+      def is_post_bookmarked(post, bookmarked:)
+        within post_by_number(post) do
+          page.public_send(
+            bookmarked ? :has_css? : :has_no_css?,
+            ".bookmark.with-reminder.bookmarked",
+          )
+        end
       end
     end
   end

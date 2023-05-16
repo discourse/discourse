@@ -253,6 +253,19 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.search_tokenize_chinese).to eq(true)
       end
 
+      it "throws an error when the parameter is not a configurable site setting" do
+        put "/admin/site_settings/clear_cache!.json",
+            params: {
+              clear_cache!: "",
+              update_existing_user: true,
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          "No setting named 'clear_cache!' exists",
+        )
+      end
+
       it "throws an error when trying to change a deprecated setting with override = false" do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
         put "/admin/site_settings/enable_personal_messages.json",
@@ -593,6 +606,53 @@ RSpec.describe Admin::SiteSettingsController do
 
         expect(SiteSetting.hidden_setting).to eq("hidden")
         expect(response.status).to eq(422)
+      end
+
+      it "does not allow changing of hidden settings" do
+        SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
+        SiteSetting.refresh!
+
+        put "/admin/site_settings/hidden_setting.json", params: { hidden_setting: "not allowed" }
+
+        expect(SiteSetting.hidden_setting).to eq("hidden")
+        expect(response.status).to eq(422)
+      end
+
+      context "with an plugin" do
+        let(:plugin) do
+          metadata = Plugin::Metadata.new
+          metadata.name = "discourse-plugin"
+          Plugin::Instance.new(metadata)
+        end
+
+        before do
+          Discourse.plugins_by_name[plugin.name] = plugin
+          SiteSetting.setting(:plugin_setting, "default value", plugin: "discourse-plugin")
+          SiteSetting.refresh!
+        end
+
+        after do
+          Discourse.plugins_by_name.delete(plugin.name)
+          SiteSetting.remove_setting(:plugin_setting)
+        end
+
+        it "allows changing settings of configurable plugins" do
+          plugin.stubs(:configurable?).returns(true)
+
+          put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "new value" }
+
+          expect(SiteSetting.plugin_setting).to eq("new value")
+          expect(response.status).to eq(200)
+        end
+
+        it "does not allow changing of unconfigurable settings" do
+          plugin.stubs(:configurable?).returns(false)
+
+          put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "not allowed" }
+
+          expect(SiteSetting.plugin_setting).to eq("default value")
+          expect(response.status).to eq(422)
+        end
       end
 
       it "fails when a setting does not exist" do

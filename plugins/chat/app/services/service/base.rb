@@ -58,6 +58,10 @@ module Service
         self
       end
 
+      def inspect_steps
+        Chat::StepsInspector.new(self)
+      end
+
       private
 
       def self.build(context = {})
@@ -127,6 +131,10 @@ module Service
       def call(instance, context)
         context[name] = super
         raise ArgumentError, "Model not found" if context[name].blank?
+        if context[name].try(:invalid?)
+          context[result_key].fail(invalid: true)
+          context.fail!
+        end
       rescue ArgumentError => exception
         context[result_key].fail(exception: exception)
         context.fail!

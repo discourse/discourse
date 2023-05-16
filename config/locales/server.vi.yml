@@ -175,8 +175,6 @@ vi:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
       invalid_category_id: "Bạn đã chỉ định một danh mục không tồn tại"
-      invalid_choice:
-        other: "Bạn đã chỉ định các lựa chọn không hợp lệ %{name}"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
@@ -492,21 +490,6 @@ vi:
   meta_category_description: "Thảo luận về site này, tổ chức của nó, làm sao nó hoạt động, và làm sao chúng tôi có thể cải tiến nó tốt hơn."
   staff_category_name: "Nhân viên"
   staff_category_description: "Chuyên mục riêng dành cho nhân viên. Các chủ đề chỉ hiển thị với quản trị viên và điều hành viên."
-  discourse_welcome_topic:
-    body: |2
-
-      Đoạn đầu tiên của chủ đề được ghim này sẽ hiển thị như một thông điệp chào mừng cho tất cả những khách truy cập mới trên trang chủ của bạn. Nó quan trọng!
-
-      ** Chỉnh sửa ** này thành mô tả ngắn gọn về cộng đồng của bạn:
-
-      - Nó dành cho ai?
-      - Họ có thể tìm thấy gì ở đây?
-      - Tại sao họ phải đến đây?
-      - Họ có thể đọc thêm ở đâu (liên kết, tài nguyên, v.v.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Bạn có thể muốn đóng chủ đề này thông qua quản trị viên :wrench: (ở phía trên bên phải và phía dưới), để các câu trả lời không bị dồn vào một thông báo.
   admin_quick_start_title: "ĐỌC TÔI ĐẦU TIÊN: Hướng dẫn Bắt đầu Nhanh dành cho Quản trị viên"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
@@ -1327,10 +1310,8 @@ vi:
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
-    notify_about_flags_after: "Nếu có cờ chưa được xử lý sau nhiều giờ này, hãy gửi tin nhắn cá nhân cho người điều hành. Đặt thành 0 để tắt."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
-    bootstrap_mode_min_users: "Số thành viên tối thiểu được yêu cầu để tắt chế độ bootstrap (đặt thành 0 để tắt)"
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
@@ -1366,7 +1347,6 @@ vi:
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
     enable_user_status: "(thử nghiệm) Cho phép người dùng đặt thông báo trạng thái tùy chỉnh (biểu tượng cảm xúc + mô tả)."
-    enable_user_tips: "(thử nghiệm) Bật mẹo người dùng mới mô tả các tính năng chính cho người dùng"
     short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
@@ -1763,14 +1743,6 @@ vi:
     download_remote_images_disabled:
       subject_template: "Download ảnh từ xa đã bị vô hiệu"
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
-    dashboard_problems:
-      subject_template: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
-      text_body_template: |
-        Chúng tôi có một số lời khuyên & đề xuất mới cho bạn dựa trên cài đặt trang web hiện tại của bạn.
-
-        [Truy cập bảng điều khiển trang web của bạn](%{base_url}/admin) để xem nó.
-
-        Nếu không có gì hiển thị trên bảng điều khiển của bạn, một nhân viên khác có thể đã thực hiện theo lời khuyên này. Bạn có thể tìm thấy danh sách các hành động của nhân viên trong [Nhật ký hành động của nhân viên](%{base_url}/admin/logs/staff_action_logs) của bạn.
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
       subject_template: "Bạn là một thành viên mới của tháng!"

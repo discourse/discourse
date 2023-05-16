@@ -4,14 +4,6 @@ RSpec.describe SidebarSectionsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
 
-  before do
-    ### TODO remove when enable_custom_sidebar_sections SiteSetting is removed
-    group = Fabricate(:group)
-    Fabricate(:group_user, group: group, user: user)
-    Fabricate(:group_user, group: group, user: admin)
-    SiteSetting.enable_custom_sidebar_sections = group.id.to_s
-  end
-
   describe "#index" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "private section", user: user) }
     fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
@@ -29,7 +21,7 @@ RSpec.describe SidebarSectionsController do
       get "/sidebar_sections.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["sidebar_sections"].map { |section| section["title"] }).to eq(
-        ["public section", "private section"],
+        ["Community", "public section", "private section"],
       )
     end
   end
@@ -49,6 +41,8 @@ RSpec.describe SidebarSectionsController do
 
     it "creates custom section for user" do
       sign_in(user)
+      expect(SidebarSection.count).to eq(1)
+
       post "/sidebar_sections.json",
            params: {
              title: "custom section",
@@ -66,7 +60,7 @@ RSpec.describe SidebarSectionsController do
 
       expect(response.status).to eq(200)
 
-      expect(SidebarSection.count).to eq(1)
+      expect(SidebarSection.count).to eq(2)
       sidebar_section = SidebarSection.last
 
       expect(sidebar_section.title).to eq("custom section")

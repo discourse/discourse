@@ -5,6 +5,17 @@ class SidebarUrl < ActiveRecord::Base
   MAX_ICON_LENGTH = 40
   MAX_NAME_LENGTH = 80
   MAX_VALUE_LENGTH = 200
+  COMMUNITY_SECTION_LINKS = [
+    { name: "Everything", path: "/latest", icon: "layer-group", segment: "primary" },
+    { name: "My Posts", path: "/my/activity", icon: "user", segment: "primary" },
+    { name: "Review", path: "/review", icon: "flag", segment: "primary" },
+    { name: "Admin", path: "/admin", icon: "wrench", segment: "primary" },
+    { name: "Users", path: "/u", icon: "users", segment: "secondary" },
+    { name: "About", path: "/about", icon: "info-circle", segment: "secondary" },
+    { name: "FAQ", path: "/faq", icon: "question-circle", segment: "secondary" },
+    { name: "Groups", path: "/g", icon: "user-friends", segment: "secondary" },
+    { name: "Badges", path: "/badges", icon: "certificate", segment: "secondary" },
+  ]
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
   validates :name, presence: true, length: { maximum: MAX_NAME_LENGTH }
@@ -13,6 +24,8 @@ class SidebarUrl < ActiveRecord::Base
   validate :path_validator
 
   before_validation :remove_internal_hostname, :set_external
+
+  enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
 
   def path_validator
     return true if !external?
@@ -48,4 +61,5 @@ end
 #  updated_at :datetime         not null
 #  icon       :string(40)       not null
 #  external   :boolean          default(FALSE), not null
+#  segment    :integer          default("primary"), not null
 #

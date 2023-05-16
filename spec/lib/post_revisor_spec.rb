@@ -120,6 +120,80 @@ RSpec.describe PostRevisor do
       post.revise(post.user, category_id: new_category.id, tags: ["test_tag"])
       expect(post.reload.topic.category_id).to eq(new_category.id)
     end
+
+    it "returns an error if the topic does not have minimum amount of tags that the new category requires" do
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
+
+      old_category = Fabricate(:category, minimum_required_tags: 0)
+      new_category = Fabricate(:category, minimum_required_tags: 1)
+
+      post = create_post(category: old_category)
+      topic = post.topic
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(topic.errors.full_messages).to eq([I18n.t("tags.minimum_required_tags", count: 1)])
+    end
+
+    it "returns an error if the topic has tags not allowed in the new category" do
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
+
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag1])
+      tag_group2 = Fabricate(:tag_group, tags: [tag2])
+
+      old_category = Fabricate(:category, tag_groups: [tag_group])
+      new_category = Fabricate(:category, tag_groups: [tag_group2])
+
+      post = create_post(category: old_category, tags: [tag1.name])
+      topic = post.topic
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(topic.errors.full_messages).to eq(
+        [
+          I18n.t(
+            "tags.forbidden.restricted_tags_cannot_be_used_in_category",
+            count: 1,
+            tags: tag1.name,
+            category: new_category.name,
+          ),
+        ],
+      )
+    end
+
+    it "returns an error if the topic is missing tags required from a tag group in the new category" do
+      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.min_trust_level_to_tag_topics = 0
+
+      tag1 = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag1])
+
+      old_category = Fabricate(:category)
+      new_category =
+        Fabricate(
+          :category,
+          category_required_tag_groups: [
+            CategoryRequiredTagGroup.new(tag_group: tag_group, min_count: 1),
+          ],
+        )
+
+      post = create_post(category: old_category)
+      topic = post.topic
+
+      post.revise(post.user, category_id: new_category.id)
+      expect(topic.errors.full_messages).to eq(
+        [
+          I18n.t(
+            "tags.required_tags_from_group",
+            count: 1,
+            tag_group_name: tag_group.name,
+            tags: tag1.name,
+          ),
+        ],
+      )
+    end
   end
 
   describe "editing tags" do
@@ -388,6 +462,25 @@ RSpec.describe PostRevisor do
         expect(post.revisions.count).to eq(1)
       end
 
+      it "creates a new version when the post is flagged" do
+        SiteSetting.editing_grace_period = 1.minute
+
+        post = Fabricate(:post, raw: "hello world")
+
+        Fabricate(:flag, post: post, user: user)
+
+        revisor = PostRevisor.new(post)
+        revisor.revise!(
+          post.user,
+          { raw: "hello world, JK" },
+          revised_at: post.updated_at + 1.second,
+        )
+
+        post.reload
+        expect(post.version).to eq(2)
+        expect(post.revisions.count).to eq(1)
+      end
+
       it "doesn't create a new version" do
         SiteSetting.editing_grace_period = 1.minute
         SiteSetting.editing_grace_period_max_diff = 100
@@ -420,6 +513,20 @@ RSpec.describe PostRevisor do
             revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
           )
         }.to change { post.topic.bumped_at }
+      end
+
+      it "should bump topic when no topic category" do
+        topic_with_no_category = Fabricate(:topic, category_id: nil)
+        post_from_topic_with_no_category = Fabricate(:post, topic: topic_with_no_category)
+        expect {
+          result =
+            subject.revise!(
+              Fabricate(:admin),
+              raw: post_from_topic_with_no_category.raw,
+              tags: ["foo"],
+            )
+          expect(result).to eq(true)
+        }.to change { topic.reload.bumped_at }
       end
 
       it "should send muted and latest message" do
@@ -843,26 +950,6 @@ RSpec.describe PostRevisor do
           PostRevisor.new(second_post).revise!(second_post.user, raw: "Edit the 2nd post")
           topic.reload
         }.to_not change { topic.excerpt }
-      end
-    end
-
-    describe "welcome topic" do
-      before { SiteSetting.welcome_topic_id = topic.id }
-
-      it "should publish welcome topic edit message" do
-        revisor = PostRevisor.new(post)
-        first_post = topic.first_post
-        UserAuthToken.generate!(user_id: admin.id)
-        Discourse.cache.write(Site.welcome_topic_banner_cache_key(admin.id), true)
-
-        messages =
-          MessageBus.track_publish("/site/welcome-topic-banner") do
-            revisor.revise!(admin, { raw: "updated welcome topic body" })
-          end
-        welcome_topic_banner_message =
-          messages.find { |message| message.channel == "/site/welcome-topic-banner" }
-        expect(welcome_topic_banner_message).to be_present
-        expect(welcome_topic_banner_message.data).to eq(false)
       end
     end
 
@@ -1364,20 +1451,20 @@ RSpec.describe PostRevisor do
       let(:image3) { Fabricate(:upload) }
       let(:image4) { Fabricate(:upload) }
       let(:post_args) { { user: user, topic: topic, raw: <<~RAW } }
-            This is a post with multiple uploads
-            ![image1](#{image1.short_url})
-            ![image2](#{image2.short_url})
-          RAW
+        This is a post with multiple uploads
+        ![image1](#{image1.short_url})
+        ![image2](#{image2.short_url})
+      RAW
 
       it "updates linked post uploads" do
         post.link_post_uploads
         expect(post.upload_references.pluck(:upload_id)).to contain_exactly(image1.id, image2.id)
 
         subject.revise!(user, raw: <<~RAW)
-            This is a post with multiple uploads
-            ![image2](#{image2.short_url})
-            ![image3](#{image3.short_url})
-            ![image4](#{image4.short_url})
+          This is a post with multiple uploads
+          ![image2](#{image2.short_url})
+          ![image3](#{image3.short_url})
+          ![image4](#{image4.short_url})
         RAW
 
         expect(post.reload.upload_references.pluck(:upload_id)).to contain_exactly(
@@ -1400,8 +1487,8 @@ RSpec.describe PostRevisor do
         it "updates the upload secure status, which is secure by default from the composer. set to false for a public topic" do
           stub_image_size
           subject.revise!(user, raw: <<~RAW)
-              This is a post with a secure upload
-              ![image5](#{image5.short_url})
+            This is a post with a secure upload
+            ![image5](#{image5.short_url})
           RAW
 
           expect(image5.reload.secure).to eq(false)
@@ -1414,8 +1501,8 @@ RSpec.describe PostRevisor do
           post.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
           stub_image_size
           subject.revise!(user, raw: <<~RAW)
-              This is a post with a secure upload
-              ![image5](#{image5.short_url})
+            This is a post with a secure upload
+            ![image5](#{image5.short_url})
           RAW
 
           expect(image5.reload.secure).to eq(true)

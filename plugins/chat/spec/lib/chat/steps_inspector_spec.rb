@@ -184,16 +184,32 @@ RSpec.describe Chat::StepsInspector do
     end
 
     context "when the model step is failing" do
-      before do
-        class DummyService
-          def fetch_model
-            false
+      context "when the model is missing" do
+        before do
+          class DummyService
+            def fetch_model
+              false
+            end
           end
+        end
+
+        it "returns an error related to the model" do
+          expect(error).to match(/Model not found/)
         end
       end
 
-      it "returns an error related to the model" do
-        expect(error).to match(/Model not found/)
+      context "when the model has errors" do
+        before do
+          class DummyService
+            def fetch_model
+              OpenStruct.new(invalid?: true, errors: ActiveModel::Errors.new(nil))
+            end
+          end
+        end
+
+        it "returns an error related to the model" do
+          expect(error).to match(/ActiveModel::Errors \[\]/)
+        end
       end
     end
 

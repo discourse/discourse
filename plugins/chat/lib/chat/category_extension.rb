@@ -6,10 +6,6 @@ module Chat
 
     include Chat::Chatable
 
-    def self.polymorphic_name
-      Chat::Chatable.polymorphic_name_for(self) || super
-    end
-
     prepended do
       has_one :category_channel,
               as: :chatable,

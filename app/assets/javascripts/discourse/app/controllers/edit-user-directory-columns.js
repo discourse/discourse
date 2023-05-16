@@ -49,12 +49,16 @@ export default Controller.extend(ModalFunctionality, {
   resetToDefault() {
     let resetColumns = this.columns;
     resetColumns
-      .sort((a, b) =>
-        (a.automatic_position || a.user_field.position + 1000) >
-        (b.automatic_position || b.user_field.position + 1000)
-          ? 1
-          : -1
-      )
+      .sort((a, b) => {
+        const a1 = a.automatic_position || (a.user_field?.position || 0) + 1000;
+        const b1 = b.automatic_position || (b.user_field?.position || 0) + 1000;
+
+        if (a1 === b1) {
+          return a.name.localeCompare(b.name);
+        } else {
+          return a1 > b1 ? 1 : -1;
+        }
+      })
       .forEach((column, index) => {
         column.setProperties({
           position: column.automatic_position || index + 1,

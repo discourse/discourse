@@ -409,7 +409,7 @@ const DiscourseURL = EmberObject.extend({
   },
 
   get isComposerOpen() {
-    return this.controllerFor("composer")?.visible;
+    return this.container.lookup("service:composer")?.visible;
   },
 
   get router() {

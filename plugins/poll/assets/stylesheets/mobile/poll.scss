@@ -7,6 +7,10 @@ div.poll {
     button {
       margin: 0 0.5em 0.5em 0;
     }
+
+    button + .info-text {
+      margin: 0.4em 0 0 0.5em;
+    }
   }
 
   .poll-info {

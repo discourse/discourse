@@ -1,12 +1,3 @@
-{{#if this.chatProgressBarContainer}}
-  {{#in-element this.chatProgressBarContainer}}
-    <DProgressBar
-      @key="browse-list"
-      @isLoading={{this.channelsCollection.loading}}
-    />
-  {{/in-element}}
-{{/if}}
-
 <div class="chat-browse-view__header chat-full-page-header">
   {{#if this.site.mobileView}}
     <LinkTo
@@ -75,18 +66,23 @@
       </div>
     </div>
   {{else if this.channelsCollection.length}}
-    <div class="chat-browse-view__content_wrapper">
-      <div class="chat-browse-view__content">
-        <div class="chat-browse-view__cards">
-          {{#each this.channelsCollection as |channel|}}
-            <ChatChannelCard @channel={{channel}} />
-          {{/each}}
+    <LoadMore
+      @selector=".chat-channel-card"
+      @action={{this.channelsCollection.loadMore}}
+    >
+      <div class="chat-browse-view__content_wrapper">
+        <div class="chat-browse-view__content">
+          <div class="chat-browse-view__cards">
+            {{#each this.channelsCollection as |channel|}}
+              <ChatChannelCard @channel={{channel}} />
+            {{/each}}
+          </div>
         </div>
-
-        {{#unless this.channelsCollection.loading}}
-          <OnVisibilityAction @action={{action "onScroll"}} />
-        {{/unless}}
       </div>
-    </div>
+
+      <ConditionalLoadingSpinner
+        @condition={{this.channelsCollection.loading}}
+      />
+    </LoadMore>
   {{/if}}
 </div>

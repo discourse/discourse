@@ -1043,11 +1043,21 @@ export function applyDefaultHandlers(pretender) {
         },
         {
           id: 9,
+          name: "an_extra_field",
+          type: "plugin",
+          enabled: false,
+          automatic_position: null,
+          position: 8,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 10,
           name: null,
           type: "user_field",
           enabled: false,
           automatic_position: null,
-          position: 8,
+          position: 9,
           icon: null,
           user_field: {
             id: 3,

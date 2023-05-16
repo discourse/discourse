@@ -12,6 +12,10 @@ export function addQuickAccessProfileItem(item) {
   _extraItems.push(item);
 }
 
+export function resetQuickAccessProfileItems() {
+  _extraItems.clear();
+}
+
 createWidgetFrom(QuickAccessItem, "logout-item", {
   tagName: "li.logout",
 

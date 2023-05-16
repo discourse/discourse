@@ -111,6 +111,7 @@ module Chat
         message_ids: @ordered_source_message_ids,
         destination_channel_id: destination_channel.id,
       }
+
       moved_message_ids = DB.query_single(<<~SQL, query_args)
       INSERT INTO chat_messages(
         chat_channel_id, user_id, last_editor_id, message, cooked, cooked_version, created_at, updated_at
@@ -125,6 +126,7 @@ module Chat
              CLOCK_TIMESTAMP()
       FROM chat_messages
       WHERE id IN (:message_ids)
+      ORDER BY created_at ASC, id ASC
       RETURNING id
     SQL
 
@@ -143,7 +145,7 @@ module Chat
       WHERE cmr.chat_message_id = mm.old_chat_message_id
     SQL
 
-      DB.exec(<<~SQL, target_type: Chat::Message.sti_name)
+      DB.exec(<<~SQL, target_type: Chat::Message.polymorphic_name)
       UPDATE upload_references uref
       SET target_id = mm.new_chat_message_id
       FROM moved_chat_messages mm

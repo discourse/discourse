@@ -1111,12 +1111,6 @@ da:
       save_to_change_theme: 'Tema vil blive opdateret efter du har trykket på“%{save_text}„'
       home: "Standard startside"
       staged: "Iscenesat"
-      staff_counters:
-        flagged_posts: "markerede indlæg"
-        deleted_posts: "slettede indlæg"
-        suspensions: "suspenderinger"
-        warnings_received: "advarsler"
-        rejected_posts: "afviste indlæg"
       messages:
         all: "alle indbakker"
         inbox: "Indbakke"
@@ -1164,11 +1158,9 @@ da:
         title: "To-faktor backup koder"
         regenerate: "Regenerér"
         disable: "Deaktiver"
-        enable: "Aktiver"
-        enable_long: "Aktivér backup koder"
         manage:
-          one: "Administrér backup koder. Du har <strong>%{count}</strong> backup kode tilbage."
-          other: "Administrér backup koder. Du har <strong>%{count}</strong> backup koder tilbage."
+          one: "Du har <strong>%{count}</strong> backup kode tilbage."
+          other: "Du har <strong>%{count}</strong> backup koder tilbage."
         copy_to_clipboard: "Kopiér til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
         copied_to_clipboard: "Kopieret til udklipsholder"
@@ -3368,7 +3360,6 @@ da:
         one: "Blev tildelt dette emblem %{count} gang"
         other: "Blev tildelt dette emblem %{count} gange"
       granted_on: "Tildelt %{date}"
-      others_count: "Andre med dette emblem (%{count})"
       title: Emblemer
       allow_title: "Du kan bruge dette emblem som en titel"
       multiple_grant: "Du kan optjene dette flere gange"
@@ -3932,9 +3923,6 @@ da:
         notification_event:
           name: "Meddelelsesbegivenhed"
           details: "Når en bruger modtager en underretning i deres beskedstrøm."
-        user_badge_event:
-          name: "Emblem Tildelings Begivenhed"
-          details: "Når en bruger modtager et emblem."
         group_user_event:
           name: "Gruppe Bruger Begivenhed"
           details: "Når en bruger tilføjes eller fjernes en gruppe."
@@ -4961,7 +4949,6 @@ da:
             label: "Tilføj Humørikon"
         title: "Indstillinger"
         no_results: "Ingen resultater fundet."
-        more_than_30_results: "Der er mere end 30 resultater. Foruddefiner din søgning, eller vælg en kategori."
         clear_filter: "Ryd"
         add_url: "tilføj URL"
         add_host: "tilføj server"

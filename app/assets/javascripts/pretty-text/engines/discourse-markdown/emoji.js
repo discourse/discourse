@@ -196,7 +196,8 @@ function applyEmoji(
   enableShortcuts,
   inlineEmoji,
   customEmojiTranslation,
-  watchedWordsReplacer
+  watchedWordsReplacer,
+  emojiDenyList
 ) {
   let result = null;
   let start = 0;
@@ -220,6 +221,16 @@ function applyEmoji(
             content = content.replace(matchingRegex[1], replacement);
           }
         });
+      }
+    });
+  }
+
+  // prevent denied emoji and aliases from being rendered
+  if (emojiDenyList?.length > 0) {
+    emojiDenyList.forEach((emoji) => {
+      if (content?.match(emoji)) {
+        const regex = new RegExp(`:${emoji}:`, "g");
+        content = content.replace(regex, "");
       }
     });
   }
@@ -346,6 +357,7 @@ export function setup(helper) {
     opts.emojiSet = siteSettings.emoji_set || "";
     opts.customEmoji = state.customEmoji;
     opts.emojiCDNUrl = siteSettings.external_emoji_url;
+    opts.emojiDenyList = state.emojiDenyList;
   });
 
   helper.registerPlugin((md) => {
@@ -358,7 +370,8 @@ export function setup(helper) {
           md.options.discourse.features.emojiShortcuts,
           md.options.discourse.features.inlineEmoji,
           md.options.discourse.customEmojiTranslation,
-          md.options.discourse.watchedWordsReplace
+          md.options.discourse.watchedWordsReplace,
+          md.options.discourse.emojiDenyList
         )
       )
     );
