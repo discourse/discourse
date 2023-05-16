@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import { getOwner } from "discourse-common/lib/get-owner";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender, {
+  fixturesByUrl,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Service | store", function (hooks) {
   setupTest(hooks);
@@ -235,5 +238,29 @@ module("Unit | Service | store", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     const users = await store.findAll("user");
     assert.strictEqual(users.objectAt(0).username, "souna");
+  });
+
+  test("findFiltered", async function (assert) {
+    pretender.get("/topics/created-by/trout.json", ({ queryParams }) => {
+      assert.deepEqual(queryParams, {
+        order: "latest",
+        tags: ["dev", "bug"],
+      });
+      return response(fixturesByUrl["/c/bug/1/l/latest.json"]);
+    });
+
+    const store = getOwner(this).lookup("service:store");
+    const result = await store.findFiltered("topicList", {
+      filter: "topics/created-by/trout",
+      params: {
+        order: "latest",
+        tags: ["dev", "bug"],
+      },
+    });
+
+    assert.true(result.loaded);
+    assert.true("topic_list" in result);
+    assert.true(Array.isArray(result.topics));
+    assert.strictEqual(result.filter, "topics/created-by/trout");
   });
 });
