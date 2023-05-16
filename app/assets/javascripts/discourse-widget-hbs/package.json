@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@ember/optional-features": "^2.0.0",
-    "@ember/string": "^3.0.1",
+    "@ember/string": "^3.1.0",
     "@embroider/test-setup": "^2.1.1",
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.3",
