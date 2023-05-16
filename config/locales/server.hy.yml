@@ -2136,9 +2136,6 @@ hy:
       title: "Հեռակա Նկարների Ներբեռնումը Անջատված է"
       subject_template: "Հեռակա նկարների ներբեռնումը անջատված է"
       text_body_template: " `download_remote_images_to_local` կարգավորումը անջատվել է, քանի որ հասել եք `download_remote_images_threshold` -ում դիսկի տարածքի սահմանին:"
-    dashboard_problems:
-      title: "Կառավարման Հարթակի Խնդիրներ"
-      subject_template: "Նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
     new_user_of_the_month:
       title: "Դուք Ամսվա Նոր Օգտատերն եք !"
       subject_template: "Դուք Ամսվա Նոր Օգտատերն եք !"

@@ -1731,6 +1731,7 @@ zh_TW:
       watching_first_post: "<span>新話題</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
+      admin_problems: "有新的建議出現在後台儀表板"
       dismiss_confirmation:
         dismiss: "忽略"
         cancel: "取消"

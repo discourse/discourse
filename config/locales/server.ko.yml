@@ -2855,15 +2855,6 @@ ko:
       title: "원격 이미지 다운로드 비활성화됨"
       subject_template: "원격 이미지 다운로드 비활성화됨"
       text_body_template: "`download_remote_images_threshold` 디스크 용량 한도에 도달하여 `download_remote_images_to_local` 설정이 비활성화되었습니다."
-    dashboard_problems:
-      title: "대시보드 문제"
-      subject_template: "사이트 대시보드에 대한 새로운 조언"
-      text_body_template: |
-        현재 사이트 설정과 관련하여 새로운 조언과 권장 사항이 있습니다.
-
-        [사이트 대시보드를 방문](%{base_url}/admin)하여 확인하세요.
-
-        대시보드에 아무것도 표시되지 않으면 다른 운영진이 이미 이 조언에 따라 조치를 취했을 수 있습니다. 운영진의 작업 목록은 [운영진 작업 로그](%{base_url}/admin/logs/staff_action_logs)를 확인하세요.
     new_user_of_the_month:
       title: "이달의 신규 사용자로 선정되었습니다!"
       subject_template: "이달의 신규 사용자로 선정되었습니다!"

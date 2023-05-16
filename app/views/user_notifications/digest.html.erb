@@ -56,14 +56,14 @@
                         <tbody>
                           <tr class="header-stat-count">
                             <%- @counts.each do |count| -%>
-                              <td style="text-align:center;font-size:36px;font-weight:400;">
+                              <td id="<%= count[:id] %>_stat_count" style="text-align:center;font-size:36px;font-weight:400;">
                                 <a class="with-accent-colors" href="<%= count[:href] -%>"><strong><%= count[:value] -%></strong></a>
                               </td>
                             <%- end -%>
                           </tr>
                           <tr class="header-stat-description">
                             <%- @counts.each do |count| -%>
-                              <td style="font-size:14px;font-weight:400;text-align:center;">
+                              <td id="<%= count[:id] %>_stat_description" style="font-size:14px;font-weight:400;text-align:center;">
                                 <a class="with-accent-colors" href="<%= count[:href] -%>"><strong><%=t count[:label_key] -%></strong></a>
                               </td>
                             <%- end -%>

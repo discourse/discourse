@@ -10,11 +10,4 @@ export default class ChatChannelThreadComposer extends ChatComposer {
     });
     this.message.thread = thread;
   }
-
-  @action
-  replyTo(message) {
-    this.chat.activeMessage = null;
-    this.message.thread = message.thread;
-    this.message.inReplyTo = message;
-  }
 }

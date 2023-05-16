@@ -1,7 +1,6 @@
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import ChatComposer from "./chat-composer";
-import { next } from "@ember/runloop";
 
 export default class ChatChannelComposer extends ChatComposer {
   @service chat;
@@ -25,17 +24,10 @@ export default class ChatChannelComposer extends ChatComposer {
         message.thread = thread;
       }
 
-      this.router
-        .transitionTo("chat.channel.thread", ...thread.routeModels)
-        .finally(() => this._setReplyToAfterTransition(message));
+      this.chat.activeMessage = null;
+      this.router.transitionTo("chat.channel.thread", ...thread.routeModels);
     } else {
       this.message.inReplyTo = message;
     }
-  }
-
-  _setReplyToAfterTransition(message) {
-    next(() => {
-      this.chatChannelThreadComposer.replyTo(message);
-    });
   }
 }

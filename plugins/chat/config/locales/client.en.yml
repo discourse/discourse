@@ -250,6 +250,7 @@ en:
       save: "Save"
       select: "Select"
       return_to_list: "Return to channels list"
+      return_to_threads_list: "Return to ongoing discussions"
       scroll_to_bottom: "Scroll to bottom"
       scroll_to_new_messages: "See new messages"
       sound:
@@ -541,15 +542,21 @@ en:
         no_results: "No results"
 
       thread:
+        title: "Title"
         view_thread: View thread
+        default_title: "Thread #%{thread_id}"
         replies:
           one: "%{count} reply"
           other: "%{count} replies"
         label: Thread
         close: "Close Thread"
+        original_message:
+          started_by: "Started by"
+        settings: "Settings"
       threads:
-        started_by: "Started by"
         open: "Open Thread"
+        list: "Ongoing discussions"
+        none: "You are not participating in any threads in this channel."
 
       draft_channel_screen:
         header: "New Message"

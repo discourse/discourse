@@ -1,9 +1,9 @@
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
 import I18n from "I18n";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
+import fabricators from "../helpers/fabricators";
 
 module(
   "Discourse Chat | Component | chat-retention-reminder-text",
@@ -11,7 +11,7 @@ module(
     setupRenderingTest(hooks);
 
     test("when setting is set on 0", async function (assert) {
-      this.channel = ChatChannel.create({ chatable_type: "Category" });
+      this.channel = fabricators.chatChannel();
       this.siteSettings.chat_channel_retention_days = 0;
 
       await render(
@@ -25,7 +25,7 @@ module(
 
     test("when channel is a public channel", async function (assert) {
       const count = 10;
-      this.channel = ChatChannel.create({ chatable_type: "Category" });
+      this.channel = fabricators.chatChannel();
       this.siteSettings.chat_channel_retention_days = count;
 
       await render(
@@ -39,9 +39,7 @@ module(
 
     test("when channel is a DM channel", async function (assert) {
       const count = 10;
-      this.channel = ChatChannel.create({
-        chatable_type: "DirectMessage",
-      });
+      this.channel = fabricators.directMessageChatChannel();
       this.siteSettings.chat_dm_retention_days = count;
 
       await render(

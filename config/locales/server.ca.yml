@@ -2197,10 +2197,6 @@ ca:
       title: "Descarrega imatges remotes inhabilitades"
       subject_template: "Descarregant imatges remotes inhabilitades"
       text_body_template: "S'ha inhabilitat el paràmetre `download_remote_images_to_local` perquè s'ha arribat al límit d'espai de disc en `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemes del tauler de control"
-      subject_template: "Nou consell al tauler de control del vostre lloc web"
-      text_body_template: "Tenim uns quants consells i recomanacions basats en la configuració actual del lloc web. \n\nVisiteu el [tauler de control del lloc web](%{base_url}/admin) per a veure-ho.\n\nSi no hi ha res visible en el tauler de control, algun altre membre del personal responsable pot haver actuat segons aquestes recomanacions. Es pot veure una llista d'accions de l'equip responsable en el [registre d'accions de l'equip responsable](%{base_url}/admin/logs/staff_action_logs).\n"
     new_user_of_the_month:
       title: "Sou el nou usuari del mes!"
       subject_template: "Sou un nou usuari del mes!"

@@ -2292,6 +2292,7 @@ fr:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - terminé"
       new_features: "Nouvelles fonctionnalités disponibles !"
+      admin_problems: "Des nouveaux conseils sur votre tableau de bord"
       dismiss_confirmation:
         body:
           default:

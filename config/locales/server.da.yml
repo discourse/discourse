@@ -2379,13 +2379,6 @@ da:
     download_remote_images_disabled:
       subject_template: "Download af eksterne billeder er slået fra"
       text_body_template: "Indstillingen `download_remote_images_to_local` blev slået fra fordi grænsen for bug af diskplads i `download_remote_images_threshold` blev nået."
-    dashboard_problems:
-      text_body_template: |
-        Vi har nogle nye råd og anbefalinger til dig baseret på dine nuværende webstedsindstillinger.
-
-        [Besøg dit webside dashboard](%{base_url}/admin) for at se det.
-
-        Hvis intet er synligt på dit dashboard, kan en anden medarbejder muligvis allerede have handlet på dette råd. En liste over medarbejderhandlinger kan findes under dine [Personale Handlingslogs] (%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du er månedens nye bruger!"
       subject_template: "Du er månedens nye bruger!"

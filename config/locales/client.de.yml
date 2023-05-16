@@ -2352,6 +2352,7 @@ de:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – abgeschlossen"
       new_features: "Neue Funktionen verfügbar!"
+      admin_problems: "Neue Ratschläge auf deinem Website-Dashboard"
       dismiss_confirmation:
         body:
           default:

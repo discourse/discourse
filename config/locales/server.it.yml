@@ -2101,7 +2101,6 @@ it:
     enable_sitemap: "Genera una mappa per il tuo sito e includila nel file robots.txt."
     sitemap_page_size: "Numero di URL da includere in ciascuna pagina della mappa del sito. Massimo 50.000"
     enable_user_status: "(sperimentale) Consenti agli utenti di impostare un messaggio di stato personalizzato (emoji + descrizione)."
-    enable_user_tips: "(sperimentale) Abilita i nuovi suggerimenti che descrivono le funzionalità chiave per gli utenti"
     short_title: "Il titolo breve verrà utilizzato nella schermata iniziale dell'utente, nel programma di avvio o in altri contesti in cui lo spazio potrebbe essere limitato. Dovrebbe essere limitato a 12 caratteri."
     dashboard_hidden_reports: "Consenti di nascondere i report specificati dal dashboard."
     dashboard_visible_tabs: "Scegli quali schede del dashboard sono visibili."
@@ -3025,15 +3024,6 @@ it:
       title: "Scaricamento Immagini Remote Disabilitato"
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemi dashboard"
-      subject_template: "Nuovo avviso sul dashboard del tuo sito"
-      text_body_template: |
-        Abbiamo alcuni nuovi consigli e raccomandazioni per te in base alle attuali impostazioni del sito.
-
-        [Visita il dashboard del tuo sito](%{base_url}/admin) per vederli.
-
-        Se sul dashboard non è visibile nulla, è possibile che un altro membro del personale abbia già agito su questo avviso. Un elenco delle azioni dello staff è disponibile nei [Log delle Azioni Staff](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Sei il Nuovo Utente del Mese!"
       subject_template: "Sei il Nuovo Utente del Mese!"

@@ -12,6 +12,11 @@ export default class ChatComposerChannel extends ChatComposer {
 
   composerId = "channel-composer";
 
+  get presenceChannelName() {
+    const channel = this.args.channel;
+    return `/chat-reply/${channel.id}`;
+  }
+
   @action
   persistDraft() {
     if (this.args.channel?.isDraft) {

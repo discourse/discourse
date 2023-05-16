@@ -2,6 +2,8 @@
 
 module Chat
   class DirectMessageSerializer < ApplicationSerializer
+    attributes :id
+
     has_many :users, serializer: Chat::UserWithCustomFieldsAndStatusSerializer, embed: :objects
 
     def users

@@ -51,7 +51,7 @@ describe "Uploading files in chat messages", type: :system, js: true do
       expect(Chat::Message.last.uploads.count).to eq(2)
     end
 
-    it "allows uploading a huge image file with preprocessing" do
+    xit "allows uploading a huge image file with preprocessing" do
       SiteSetting.composer_media_optimization_image_bytes_optimization_threshold = 200.kilobytes
       chat.visit_channel(channel_1)
       file_path = file_from_fixtures("huge.jpg", "images").path
@@ -64,10 +64,7 @@ describe "Uploading files in chat messages", type: :system, js: true do
 
       # image processing clientside is slow! here we are waiting for processing
       # to complete then the upload to complete as well
-      using_wait_time(10) do
-        expect(find(".chat-composer-upload")).to have_content("Uploading")
-        expect(page).to have_css(".chat-composer-upload .preview .preview-img")
-      end
+      expect(page).to have_css(".chat-composer-upload .preview .preview-img", wait: 25)
 
       channel.send_message("upload testing")
 

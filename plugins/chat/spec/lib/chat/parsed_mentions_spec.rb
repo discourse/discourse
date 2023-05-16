@@ -95,6 +95,21 @@ RSpec.describe Chat::ParsedMentions do
       expect(result).to contain_exactly(channel_member_1.username, channel_member_2.username)
     end
 
+    it "returns a user when self-mentioning" do
+      message =
+        Fabricate(
+          :chat_message,
+          chat_channel: chat_channel,
+          message: "Hey @#{channel_member_1.username}",
+          user: channel_member_1,
+        )
+
+      mentions = described_class.new(message)
+
+      result = mentions.direct_mentions.pluck(:username)
+      expect(result).to contain_exactly(channel_member_1.username)
+    end
+
     it "returns a mentioned user even if he's not a member of the channel" do
       message = create_message("mentioning @#{not_a_channel_member.username}")
 

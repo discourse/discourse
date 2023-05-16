@@ -1034,6 +1034,7 @@ hu:
     navigation_menu: "Határozza meg, melyik navigációs menüt használja. Az oldalsáv és a fejléc navigációja a felhasználók által testreszabható. A visszamenőleges kompatibilitás érdekében a régebbi opció is elérhető."
     enable_experimental_hashtag_autocomplete: "KÍSÉRLETI: Használja az új #hashtag automatikus kiegészítési rendszert a kategóriákhoz és címkékhez, amelyek másképp jelenítik meg a kiválasztott elemet, és javítják a keresést"
     experimental_new_new_view_groups: "Kísérleti: Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és az új témákat, és az oldalsávban lévő \"Minden\" linket kapcsolja rá."
+    enable_custom_sidebar_sections: "Kísérleti: Egyéni oldalsáv szekciók engedélyezése"
     errors:
       invalid_email: "Érvénytelen e-mail cím."
       invalid_username: "Nincs ilyen nevű felhasználó."
@@ -1448,14 +1449,6 @@ hu:
     download_remote_images_disabled:
       subject_template: "A távoli képek letöltése le lett tiltva"
       text_body_template: "A `download_remote_images_to_local` beállítás le lett tiltva, mert az erre szánt `download_remote_image_threshold` tárhelykorlát elérésre került."
-    dashboard_problems:
-      subject_template: "Új tanácsok a webhely irányítópultján"
-      text_body_template: |
-        Van néhány új tanácsunk és javaslatunk a jelenlegi webhelybeállításaid alapján.
-
-        [Látogasd meg a webhely irányítópultját] (%{base_url}/ admin) ezek megtekintéséhez.
-
-        Ha semmi nem látható az irányítópulton, lehet, hogy egy másik munkatársunk már eljárt aktivizálta magát. A személyzeti műveletek listája megtalálható a [Staff Action Logs] (%{base_url}/ admin / logs / staff_action_logs) könyvtárban.
     new_user_of_the_month:
       text_body_template: |
         Elnyerted ** A hónap új felhasználója %{month_year}** díjat. :trophy:

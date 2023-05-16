@@ -83,7 +83,8 @@ zh_CN:
       collapse: "收起聊天抽屉"
       expand: "展开聊天栏"
       confirm_flag: "确定要举报 %{username} 的消息吗？"
-      deleted: "一条消息已被删除。[查看]"
+      deleted:
+        other: "%{count} 条消息已被删除。[查看全部]"
       hidden: "一条消息已被隐藏。[查看]"
       delete: "删除"
       edited: "已编辑"

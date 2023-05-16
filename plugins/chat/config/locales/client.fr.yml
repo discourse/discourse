@@ -78,7 +78,6 @@ fr:
       close: "Fermer"
       collapse: "Réduire le tiroir de discussion"
       confirm_flag: "Voulez-vous vraiment signaler le message de %{username} ?"
-      deleted: "Un message a été supprimé. [view]"
       hidden: "Un message a été masqué. [view]"
       delete: "Supprimer"
       edited: "modifié"

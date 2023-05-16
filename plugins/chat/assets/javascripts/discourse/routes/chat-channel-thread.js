@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 export default class ChatChannelThread extends DiscourseRoute {
   @service router;
@@ -20,7 +21,12 @@ export default class ChatChannelThread extends DiscourseRoute {
       });
   }
 
-  deactivate() {
+  afterModel(model) {
+    this.chatChannelThreadPane.open(model);
+  }
+
+  @action
+  willTransition() {
     this.chatChannelThreadPane.close();
   }
 
@@ -53,9 +59,7 @@ export default class ChatChannelThread extends DiscourseRoute {
         return;
       }
     }
-  }
 
-  afterModel(model) {
-    this.chatChannelThreadPane.open(model);
+    this.chatStateManager.openSidePanel();
   }
 }

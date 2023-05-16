@@ -17,7 +17,7 @@
     "postinstall": "yarn --silent --cwd .. patch-package"
   },
   "dependencies": {
-    "@ember/string": "^3.0.1",
+    "@ember/string": "^3.1.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -88,7 +88,7 @@
     "babel-plugin-ember-template-compilation": "^2.0.0",
     "broccoli-asset-rev": "^3.0.0",
     "ember-auto-import": "^2.6.3",
-    "ember-auto-import-chunks-json-generator": "^1.0.0",
+    "ember-auto-import-chunks-json-generator": "^1.1.0",
     "ember-cached-decorator-polyfill": "^1.0.1",
     "ember-cli": "~4.12.0",
     "ember-cli-app-version": "^6.0.0",
@@ -112,7 +112,7 @@
     "source-map": "^0.7.4",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "terser": "^5.17.1",
-    "webpack": "^5.82.0"
+    "terser": "^5.17.3",
+    "webpack": "^5.82.1"
   }
 }

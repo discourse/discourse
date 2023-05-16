@@ -88,6 +88,12 @@ module PageObjects
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
+      def select_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='select']").click
+      end
+
       def has_deleted_message?(message, count: 1)
         has_css?(
           ".chat-thread .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",

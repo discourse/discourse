@@ -2328,6 +2328,7 @@ sv:
       reaction_2: "<span>%{username}, %{username2}</span>%{description}"
       votes_released: "%{description} - slutförd"
       new_features: "Nya funktioner tillgängliga!"
+      admin_problems: "Nytt råd på din webbplats översiktspanel"
       dismiss_confirmation:
         body:
           default:

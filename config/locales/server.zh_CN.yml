@@ -2084,7 +2084,6 @@ zh_CN:
     enable_sitemap: "为您的站点生成站点地图并将其包含在 robots.txt 文件中。"
     sitemap_page_size: "每个站点地图页面中包含的 URL 数量。最大 50.000"
     enable_user_status: "（实验性）允许用户设置自定义状态消息（表情符号 + 描述）。"
-    enable_user_tips: "（实验性）启用向用户描述关键功能的新用户提示"
     short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
     dashboard_visible_tabs: "选择可见的信息中心标签页。"
@@ -2106,6 +2105,8 @@ zh_CN:
     enable_new_notifications_menu: "启用新的通知菜单。已不能禁用此设置。新的通知菜单始终用于非传统“导航菜单”选项。 <a href='https://meta.discourse.org/t/260358'>了解更多</a>"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     experimental_new_new_view_groups: "试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 \"一切 \"链接指向它。"
+    enable_custom_sidebar_sections: "实验：启用自定义侧边栏部分"
+    experimental_topics_filter: "实验性：在 /filter 启用实验性主题过滤器"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -3109,15 +3110,6 @@ zh_CN:
       title: "下载远程图片已被禁用"
       subject_template: "下载远程图片已被禁用"
       text_body_template: "由于达到了 `download_remote_images_threshold` 的磁盘空间限制，`download_remote_images_to_local` 设置被禁用。"
-    dashboard_problems:
-      title: "信息中心问题"
-      subject_template: "站点信息中心的新建议"
-      text_body_template: |
-        基于您目前的站点设置，我们有一些新的建议和推荐。
-
-        [访问您的站点信息中心](%{base_url}/admin)以查看。
-
-        如果您的信息中心没有任何可见的内容，则可能是另一个管理人员已经根据这些建议采取了行动。可以在[管理人员操作日志](%{base_url}/admin/logs/staff_action_logs)中找到管理人员操作列表。
     new_user_of_the_month:
       title: "您是当月最佳新用户！"
       subject_template: "您是当月最佳新用户！"

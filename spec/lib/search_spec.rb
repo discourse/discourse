@@ -2658,6 +2658,37 @@ RSpec.describe Search do
     end
   end
 
+  context "when some categories are prioritized" do
+    before { SearchIndexer.enable }
+    after { SearchIndexer.disable }
+
+    it "correctly ranks topics with prioritized categories and stuffed topic terms" do
+      topic1 = Fabricate(:topic, title: "invite invited invites testing stuff with things")
+      post1 =
+        Fabricate(
+          :post,
+          topic: topic1,
+          raw: "this topic is a story about some person invites are fun",
+        )
+
+      category = Fabricate(:category, search_priority: Searchable::PRIORITIES[:high])
+
+      topic2 = Fabricate(:topic, title: "invite is the bestest", category: category)
+      post2 =
+        Fabricate(
+          :post,
+          topic: topic2,
+          raw: "this topic is a story about some other person invites are fun",
+        )
+
+      result = Search.execute("invite")
+      expect(result.posts.length).to eq(2)
+
+      # title match should win cause we limited duplication
+      expect(result.posts.pluck(:id)).to eq([post2.id, post1.id])
+    end
+  end
+
   context "when max_duplicate_search_index_terms limits duplication" do
     before { SearchIndexer.enable }
 

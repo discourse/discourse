@@ -2498,6 +2498,7 @@ pl_PL:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - zakończone"
       new_features: "Dostępne są nowe funkcje!"
+      admin_problems: "Nowe porady w panelu administratora"
       dismiss_confirmation:
         body:
           default:

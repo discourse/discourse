@@ -857,6 +857,7 @@ be:
       ignore: "ігнараваць"
     notifications:
       watching_first_post_label: "Стварыць новую тэму"
+      admin_problems: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"
       dismiss_confirmation:
         cancel: "Адмяніць"
       popup:

@@ -91,7 +91,6 @@ module Chat
         .joins(:user_option)
         .real
         .where(user_options: { chat_enabled: true })
-        .where.not(username_lower: @message.user.username.downcase)
     end
 
     def parse_mentions(message)

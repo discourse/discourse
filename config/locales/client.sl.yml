@@ -1946,6 +1946,7 @@ sl:
       membership_request_accepted: "Sprejeti v članstvo v '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      admin_problems: "Nov nasvet na vaši nadzorni plošči"
       dismiss_confirmation:
         dismiss: "Opusti"
         cancel: "Prekliči"

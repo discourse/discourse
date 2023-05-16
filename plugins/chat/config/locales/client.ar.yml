@@ -78,7 +78,6 @@ ar:
       close: "إغلاق"
       collapse: "طي ساحب الدردشة"
       confirm_flag: "هل تريد بالتأكيد الإبلاغ عن رسالة %{username}؟"
-      deleted: "تم حذف رسالة. [view]"
       hidden: "تم حذف إحدى الرسائل. [view]"
       delete: "حذف"
       edited: "تم التعديل"

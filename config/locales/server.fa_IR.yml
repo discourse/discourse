@@ -1669,8 +1669,6 @@ fa_IR:
       title: "دانلود تصاویر خارجی غیر‌فعال شد"
       subject_template: "دانلود کردن عکس‌های خارجی از کار افتاده"
       text_body_template: " تنظیمات `download_remote_images_to_local` غیرفعال شده زیرا به محدودیت فضای دیسک در `download_remote_images_threshold` رسیده شده است. "
-    dashboard_problems:
-      title: "مشکلات داشبورد"
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
       subject_template: "شما کاربر جدید ماه هستید!"

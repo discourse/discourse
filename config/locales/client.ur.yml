@@ -2052,6 +2052,7 @@ ur:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - مکمل"
+      admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
       dismiss_confirmation:
         body:
           default:

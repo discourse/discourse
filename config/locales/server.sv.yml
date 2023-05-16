@@ -2031,6 +2031,7 @@ sv:
     allowed_href_schemes: "Scheman tillåtna i länkar förutom http och https."
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
+    notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
     show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
@@ -2140,7 +2141,6 @@ sv:
     enable_sitemap: "Skapa en webbplatskarta för din webbplats och inkludera den i filen robots.txt."
     sitemap_page_size: "Antal webbadresser som ska inkluderas på varje webbplatskartsida. Max 50.000"
     enable_user_status: "(experimentell) Tillåt användare att ställa in anpassat statusmeddelande (emoji + beskrivning)."
-    enable_user_tips: "(experimentell) Aktivera nya användartips som beskriver nyckelfunktioner för användare"
     short_title: "Den korta titeln kommer att användas på användarens startskärm, startapparat eller andra platser där utrymmet kan vara begränsat. Den bör begränsas till 12 tecken."
     dashboard_hidden_reports: "Tillåt att de specificerade rapporterna döljs från översiktspanelen."
     dashboard_visible_tabs: "Välj vilka flikar på översiktspanelen som ska vara synliga."
@@ -2162,6 +2162,8 @@ sv:
     enable_new_notifications_menu: "Aktiverar den nya aviseringsmenyn. Inaktivering av den här inställningen är föråldrat. Den nya aviseringsmenyn används alltid för icke-äldre \"navigeringsmeny\"-val. <a href='https://meta.discourse.org/t/260358'>Lär dig mer</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: "EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken \"Allt\" i sidofältet länkar till den."
+    enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
+    experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -3095,15 +3097,6 @@ sv:
       title: "Hämtning av externa bilder är inaktiverad"
       subject_template: "Hämtning av externa bilder har inaktiverats"
       text_body_template: "Inställningen `download_remote_images_to_local` har inaktiverats eftersom diskutrymmet har nått sin övre gräns."
-    dashboard_problems:
-      title: "Problem med instrumentpanel"
-      subject_template: "Nytt råd på din webbplats översiktspanel"
-      text_body_template: |
-        Vi har några nya råd och rekommendationer för dig baserat på dina aktuella webbplatsinställningar.
-
-         [Gå till din översiktspanel](%{base_url}/admin) för att se dessa.
-
-        Om inget är synligt från din panel har förmodligen någon annan ur personalen redan agerat på detta råd. En lista över personalåtgärder kan hittas genom [Personalens händelselogg](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du är Månadens nya användare!"
       subject_template: "Grattis, du har tilldelats utmärkelsen ** Månadens nya användare för %{month_year}**. : Trofén:\n\nDenna utmärkelse beviljas endast till två nya användare per månad och den kommer att visas permanent på [sidan för utmärkelser] (%{url}).\n\nDu har snabbt blivit en värdefull medlem i vår gemenskap. Tack för att du gick med och fortsätt med det fantastiska arbetet!"

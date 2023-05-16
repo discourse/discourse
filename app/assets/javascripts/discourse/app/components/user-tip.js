@@ -1,4 +1,5 @@
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import { hideUserTip } from "discourse/lib/user-tips";
@@ -13,19 +14,22 @@ export default class UserTip extends Component {
       return;
     }
 
-    const { id, selector, content, placement } = this.args;
-    this.currentUser.showUserTip({
-      id,
+    schedule("afterRender", () => {
+      const { id, selector, content, placement } = this.args;
+      this.currentUser.showUserTip({
+        id,
 
-      titleText: I18n.t(`user_tips.${id}.title`),
-      contentText: content || I18n.t(`user_tips.${id}.content`),
+        titleText: I18n.t(`user_tips.${id}.title`),
+        contentText: content || I18n.t(`user_tips.${id}.content`),
 
-      reference: selector
-        ? element.parentElement.querySelector(selector) || element.parentElement
-        : element,
-      appendTo: element.parentElement,
+        reference: selector
+          ? element.parentElement.querySelector(selector) ||
+            element.parentElement
+          : element,
+        appendTo: element.parentElement,
 
-      placement: placement || "top",
+        placement: placement || "top",
+      });
     });
   }
 

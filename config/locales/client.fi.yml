@@ -1974,20 +1974,20 @@ fi:
         sr_title: "Kirjaudu sisään Twitter-tilillä"
       instagram:
         name: "Instagram"
-        title: "Kirjaudu sisään Instagram-tilillä"
-        sr_title: "Kirjaudu sisään Instagram-tilillä"
+        title: "Kirjaudu Instagramilla"
+        sr_title: "Kirjaudu Instagramilla"
       facebook:
         name: "Facebook"
-        title: "Kirjaudu sisään Facebook-tilillä"
-        sr_title: "Kirjaudu sisään Facebook-tilillä"
+        title: "Kirjaudu Facebookilla"
+        sr_title: "Kirjaudu Facebookilla"
       github:
         name: "GitHub"
-        title: "Kirjaudu sisään GitHub-tilillä"
-        sr_title: "Kirjaudu sisään GitHub-tilillä"
+        title: "Kirjaudu GitHubilla"
+        sr_title: "Kirjaudu GitHubilla"
       discord:
         name: "Discord"
-        title: "Kirjaudu sisään Discord-tilillä"
-        sr_title: "Kirjaudu sisään Discord-tilillä"
+        title: "Kirjaudu Discordilla"
+        sr_title: "Kirjaudu Discordilla"
       second_factor_toggle:
         totp: "Käytä todentajasovellusta tämän sijaan"
         backup_code: "Käytä varakoodia tämän sijaan"
@@ -2315,6 +2315,7 @@ fi:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – valmis"
       new_features: "Uusia ominaisuuksia saatavilla!"
+      admin_problems: "Uusia suosituksia sivustosi hallintapaneelissa"
       dismiss_confirmation:
         body:
           default:
