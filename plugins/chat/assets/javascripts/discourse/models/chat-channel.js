@@ -11,6 +11,7 @@ import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
 import Category from "discourse/models/category";
+import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -87,6 +88,7 @@ export default class ChatChannel {
   @tracked allowChannelWideMentions = true;
   @tracked membershipsCount = 0;
   @tracked archive;
+  @tracked tracking;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
@@ -121,6 +123,8 @@ export default class ChatChannel {
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
     }
+
+    this.tracking = new ChatTrackingState(getOwner(this));
   }
 
   findIndexOfMessage(id) {
@@ -288,8 +292,6 @@ export default class ChatChannel {
       membership.desktop_notification_level;
     this.currentUserMembership.mobileNotificationLevel =
       membership.mobile_notification_level;
-    this.currentUserMembership.unreadCount = membership.unread_count;
-    this.currentUserMembership.unreadMentions = membership.unread_mentions;
     this.currentUserMembership.muted = membership.muted;
   }
 
