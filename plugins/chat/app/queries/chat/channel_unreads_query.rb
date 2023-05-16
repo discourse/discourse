@@ -35,12 +35,15 @@ module Chat
           SELECT COUNT(*) AS mention_count
           FROM notifications
           INNER JOIN user_chat_channel_memberships ON user_chat_channel_memberships.user_id = :user_id
+          INNER JOIN chat_messages ON (data::json->>'chat_message_id')::bigint = chat_messages.id
+          LEFT JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
           WHERE NOT read
           AND user_chat_channel_memberships.chat_channel_id = memberships.chat_channel_id
           AND notifications.user_id = :user_id
           AND notifications.notification_type = :notification_type
           AND (data::json->>'chat_message_id')::bigint > COALESCE(user_chat_channel_memberships.last_read_message_id, 0)
           AND (data::json->>'chat_channel_id')::bigint = memberships.chat_channel_id
+          AND (chat_messages.thread_id IS NULL OR chat_messages.id = chat_threads.original_message_id)
         ) AS mention_count,
         memberships.chat_channel_id AS channel_id
         FROM user_chat_channel_memberships AS memberships
