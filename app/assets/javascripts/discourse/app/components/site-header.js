@@ -458,6 +458,8 @@ export default SiteHeaderComponent.extend({
       headerWrapTop -= document
         .getElementById("ember-testing-container")
         .getBoundingClientRect().top;
+
+      headerWrapTop -= 1; // For 1px border on testing container
     }
 
     const documentStyle = document.documentElement.style;
