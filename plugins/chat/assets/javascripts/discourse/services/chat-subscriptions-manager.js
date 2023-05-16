@@ -194,9 +194,6 @@ export default class ChatSubscriptionsManager extends Service {
             (channel.currentUserMembership.lastReadMessageId || 0)
           ) {
             channel.tracking.unreadCount++;
-            if (channel.isDirectMessageChannel) {
-              this.chatTrackingStateManager.triggerNotificationsChanged();
-            }
           }
         }
       }
@@ -243,13 +240,11 @@ export default class ChatSubscriptionsManager extends Service {
     Object.keys(busData).forEach((channelId) => {
       this._updateChannelTrackingData(channelId, busData[channelId]);
     });
-    this.chatTrackingStateManager.triggerNotificationsChanged();
   }
 
   @bind
   _onUserTrackingStateUpdate(busData) {
     this._updateChannelTrackingData(busData.channel_id, busData);
-    this.chatTrackingStateManager.triggerNotificationsChanged();
   }
 
   @bind
@@ -258,8 +253,8 @@ export default class ChatSubscriptionsManager extends Service {
       channel.currentUserMembership.lastReadMessageId =
         trackingData.last_read_message_id;
 
-      channel.tracking.unreadCount = trackingData.unreadCount;
-      channel.tracking.mentionCount = trackingData.mentionCount;
+      channel.tracking.unreadCount = trackingData.unread_count;
+      channel.tracking.mentionCount = trackingData.mention_count;
     });
   }
 

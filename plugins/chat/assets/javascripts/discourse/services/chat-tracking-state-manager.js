@@ -1,49 +1,8 @@
 import Service, { inject as service } from "@ember/service";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { cancel } from "@ember/runloop";
+import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { setOwner } from "@ember/application";
-import { tracked } from "@glimmer/tracking";
-
-export class ChatTrackingState {
-  @service chatTrackingStateManager;
-
-  @tracked _unreadCount = 0;
-  @tracked _mentionCount = 0;
-
-  constructor(owner, params = {}) {
-    setOwner(this, owner);
-    this._unreadCount = params.hasOwnProperty("unreadCount")
-      ? params.unreadCount
-      : 0;
-    this._mentionCount = params.hasOwnProperty("mentionCount")
-      ? params.mentionCount
-      : 0;
-  }
-
-  reset() {
-    this._unreadCount = 0;
-    this._mentionCount = 0;
-  }
-
-  get unreadCount() {
-    return this._unreadCount;
-  }
-
-  set unreadCount(value) {
-    this._unreadCount = value;
-  }
-
-  get mentionCount() {
-    return this._mentionCount;
-  }
-
-  set mentionCount(value) {
-    const valueChanged = this._mentionCount !== value;
-    this._mentionCount = value;
-    if (valueChanged) {
-      this.chatTrackingStateManager.triggerNotificationsChanged();
-    }
-  }
-}
 
 /**
  * This service is used to provide a global interface to tracking individual
@@ -103,6 +62,11 @@ export default class ChatTrackingStateManager extends Service {
     return publicChannelMentionCount + dmChannelUnreadCount;
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this._onTriggerNotificationDebounceHandler);
+  }
+
   /**
    * Some reactivity in the app such as the document title
    * updates are only done via appEvents -- rather than
@@ -110,16 +74,20 @@ export default class ChatTrackingStateManager extends Service {
    * it here so it can be changed as required.
    */
   triggerNotificationsChanged() {
+    this._onTriggerNotificationDebounceHandler = discourseDebounce(
+      this,
+      this.#triggerNotificationsChanged,
+      100
+    );
+  }
+
+  #triggerNotificationsChanged() {
     this.appEvents.trigger("notifications:changed");
   }
 
   #setState(model, state) {
     if (!model.tracking) {
-      model.tracking = new ChatTrackingState(getOwner(this), {
-        unreadCount: state.unread_count,
-        mentionCount: state.mention_count,
-      });
-      return;
+      model.tracking = new ChatTrackingState(getOwner(this));
     }
     model.tracking.unreadCount = state.unread_count;
     model.tracking.mentionCount = state.mention_count;

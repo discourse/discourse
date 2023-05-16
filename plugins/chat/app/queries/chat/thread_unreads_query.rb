@@ -26,7 +26,7 @@ module Chat
     # @param include_missing_memberships [Boolean] Whether to include threads
     #   that the user is not a member of. These counts will always be 0.
     def self.call(channel_ids: [], thread_ids: [], user_id:, include_missing_memberships: false)
-      raise Discourse::InvalidParameters if channel_ids.empty? && thread_ids.empty?
+      return [] if channel_ids.empty? && thread_ids.empty?
 
       sql = <<~SQL
         SELECT (

@@ -11,7 +11,7 @@ import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
 import Category from "discourse/models/category";
-import { ChatTrackingState } from "discourse/plugins/chat/discourse/services/chat-tracking-state-manager";
+import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
