@@ -3315,7 +3315,6 @@ ko:
       earned_n_times:
         other: "이 배지를 %{count}번 획득했습니다"
       granted_on: "%{date}에 획득"
-      others_count: "이 배지를 획득한 다른 사용자(%{count}명)"
       title: 배지
       allow_title: "이 배지를 타이틀로 사용할 수 있습니다"
       multiple_grant: "이 배지는 중복해서 획득할 수 있습니다"
@@ -4923,7 +4922,6 @@ ko:
             label: "이모티콘 추가"
         title: "사이트 설정"
         no_results: "검색 결과가 없습니다."
-        more_than_30_results: "30개 이상의 결과가 있습니다. 검색 범위를 좁히거나 카테고리를 선택하세요."
         clear_filter: "Clear"
         add_url: "URL 추가"
         add_host: "Host 추가"

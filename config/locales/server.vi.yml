@@ -175,8 +175,6 @@ vi:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
       invalid_category_id: "Bạn đã chỉ định một danh mục không tồn tại"
-      invalid_choice:
-        other: "Bạn đã chỉ định các lựa chọn không hợp lệ %{name}"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
@@ -492,21 +490,6 @@ vi:
   meta_category_description: "Thảo luận về site này, tổ chức của nó, làm sao nó hoạt động, và làm sao chúng tôi có thể cải tiến nó tốt hơn."
   staff_category_name: "Nhân viên"
   staff_category_description: "Chuyên mục riêng dành cho nhân viên. Các chủ đề chỉ hiển thị với quản trị viên và điều hành viên."
-  discourse_welcome_topic:
-    body: |2
-
-      Đoạn đầu tiên của chủ đề được ghim này sẽ hiển thị như một thông điệp chào mừng cho tất cả những khách truy cập mới trên trang chủ của bạn. Nó quan trọng!
-
-      ** Chỉnh sửa ** này thành mô tả ngắn gọn về cộng đồng của bạn:
-
-      - Nó dành cho ai?
-      - Họ có thể tìm thấy gì ở đây?
-      - Tại sao họ phải đến đây?
-      - Họ có thể đọc thêm ở đâu (liên kết, tài nguyên, v.v.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Bạn có thể muốn đóng chủ đề này thông qua quản trị viên :wrench: (ở phía trên bên phải và phía dưới), để các câu trả lời không bị dồn vào một thông báo.
   admin_quick_start_title: "ĐỌC TÔI ĐẦU TIÊN: Hướng dẫn Bắt đầu Nhanh dành cho Quản trị viên"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"

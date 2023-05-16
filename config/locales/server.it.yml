@@ -191,9 +191,6 @@ it:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
       invalid_category_id: "Hai specificato una categoria che non esiste"
-      invalid_choice:
-        one: "Hai specificato la scelta non valida %{name}"
-        other: "Hai specificato le scelte non valide %{name}"
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       default_tags_already_selected: "Non è possibile selezionare un'etichetta utilizzata in un altro elenco."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti su S3 a meno che non imposti l'opzione 's3_upload_bucket'."
@@ -608,22 +605,6 @@ it:
   meta_category_description: "Discussioni su questo sito, la sua organizzazione, su come funziona e come possiamo migliorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoria privata per discussioni dello staff. Gli argomenti sono visibili solo agli amministratori e ai moderatori."
-  discourse_welcome_topic:
-    title: "Ti diamo il benvenuto nella nostra community!"
-    body: |2
-
-      Il primo paragrafo di questo argomento appuntato sarà visibile come messaggio di benvenuto a tutti i nuovi visitatori sulla tua homepage. È importante!
-
-      **Modificalo** con una breve descrizione della tua comunità:
-
-      - A chi è rivolto?
-      - Cosa possono trovare qui?
-      - Perché dovrebbero venire qui?
-      - Dove possono saperne di più (collegamenti, risorse, ecc)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Potresti chiudere questo argomento tramite la :wrench: per amministratori (in alto a destra e in basso), in modo che le risposte non si accumulino sull'annuncio.
   admin_quick_start_title: "DA LEGGERE SUBITO: Guida Rapida per Amministratore"
   category:
     topic_prefix: "Definizione della categoria %{category}"
@@ -1891,7 +1872,6 @@ it:
     pop3_polling_password: "La password dell'account POP3 per la ricezione di email."
     pop3_polling_delete_from_server: "Elimina email dal server. NOTA: se disabiliti questa opzione, devi pulire manualmente la tua casella di posta"
     log_mail_processing_failures: "Registra tutti gli errori di elaborazione della posta elettronica in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Permetti agli utenti di pubblicare nuovi argomenti via email (richiede il polling manuale o pop3). Configura gli indirizzi nella scheda "Impostazioni" di ciascuna categoria. '
     email_in_min_trust: "Livello di attendibilità minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_in_authserv_id: "L'identificatore del servizio che esegue i controlli di autenticazione sulle e-mail in arrivo. Consulta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> per istruzioni su come configurare questa opzione."
     email_in_spam_header: "L'intestazione dell'email per segnalare contenuti spam."

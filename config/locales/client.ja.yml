@@ -3548,7 +3548,6 @@ ja:
       earned_n_times:
         other: "このバッジを %{count} 回獲得しました"
       granted_on: "%{date} にゲット！"
-      others_count: "このバッジを獲得した他のユーザー (%{count})"
       title: バッジ
       allow_title: "このバッジをタグラインとして使用できます"
       multiple_grant: "これは何度でも獲得できます"
@@ -5224,7 +5223,6 @@ ja:
             label: "絵文字を追加"
         title: "設定"
         no_results: "何も見つかりませんでした。"
-        more_than_30_results: "結果が 30 件以上あります。検索を絞り込むかカテゴリを選択してください。"
         clear_filter: "クリア"
         add_url: "URL を追加"
         add_host: "ホストを追加"

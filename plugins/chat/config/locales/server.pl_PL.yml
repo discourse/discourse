@@ -16,8 +16,11 @@ pl_PL:
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       user_cannot_send_message: "W tej chwili nie możesz wysyłać wiadomości."
       rate_limit_exceeded: "Przekroczono limit wiadomości na czacie, które można wysłać w ciągu 30 sekund"
+      duplicate_message: "Zbyt niedawno opublikowałeś identyczną wiadomość."
+      delete_channel_failed: "Nie udało się usunąć kanału, spróbuj ponownie."
       draft_too_long: "Wersja robocza jest za długa."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
+      message_move_invalid_channel: "Kanał źródłowy i docelowy muszą być kanałami publicznymi."
       not_accepting_dms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
     reviewables:
@@ -40,11 +43,24 @@ pl_PL:
           title: "Usuń wiadomość"
         delete_and_agree:
           title: "Usuń wiadomość"
+        disagree_and_restore:
+          title: "Nie zgadzam się i przywracam wiadomość"
+          description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
         disagree:
           title: "Wycofaj"
         ignore:
           title: "Ignoruj"
+      direct_messages:
+        transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
+        transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
     channel:
+      archive:
+        first_post_raw: "Ten temat jest archiwum kanału czatu [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "@%{acting_username} przeniósł wiadomość do kanału [%{channel_name}](%{first_moved_message_url})."
+        few: "@%{acting_username} przeniósł %{count} wiadomości do kanału [%{channel_name}](%{first_moved_message_url})."
+        many: "@%{acting_username} przeniósł %{count} wiadomości do kanału [%{channel_name}](%{first_moved_message_url})."
+        other: "@%{acting_username} przeniósł %{count} wiadomości do kanału [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
         multi_user_truncated:
@@ -60,6 +76,7 @@ pl_PL:
       notification_title: "wiadomość w %{channel_name}"
     personal_chat: "czat osobisty"
     onebox:
+      inline_to_message: "Wiadomość #%{message_id} od %{username} - #%{chat_channel}"
       inline_to_channel: "Czat #%{chat_channel}"
       inline_to_topic_channel: "Czat dla tematu %{topic_title}"
       x_members:
@@ -78,7 +95,10 @@ pl_PL:
         direct: '%{username} wspomniał(a) o Tobie w "%{channel}"'
         other_type: '%{username} wspomniał %{identifier} w "%{channel}"'
       direct_message_chat_mention:
+        direct: "%{username} wspomniał(a) o Tobie na czacie osobistym"
         other_type: "%{username} oznaczył %{identifier} na czacie osobistym"
+      new_chat_message: '%{username} wysłał(a) wiadomość w "%{channel}"'
+      new_direct_chat_message: "%{username} wysłał(a) wiadomość w osobistym czacie"
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -132,8 +152,10 @@ pl_PL:
         few: "Zobacz %{count} wiadomości"
         many: "Zobacz %{count} wiadomości"
         other: "Zobacz %{count} wiadomości"
+      your_chat_settings: "preferencje częstotliwości wysyłania e-maili o czacie"
   unsubscribe:
     chat_summary:
+      select_title: "Ustaw częstotliwość e-maili z podsumowaniem czatu na:"
       never: Nigdy
       when_away: Tylko gdy jesteś daleko
   category:

@@ -282,21 +282,6 @@ sl:
   general_category_name: "Splošno"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
-  discourse_welcome_topic:
-    body: |2
-
-      Prvi odstavek te pripete teme bo viden kot pozdravno sporočilo vsem novim uporabnikom na vaši domači strani. Zato je pomembno!
-
-      **Uredite** to vsebino kot kratek opis vaše skupnosti:
-
-      - Za koga je ta skupnost?
-      - Kaj lahko tukaj najdejo?
-      - Zakaj naj obiskujejo to stran?
-      - Kje lahko preberejo več (povezave, vsebine, ...)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      To temo lahko zaprete z administratorsko :wrench: (zgoraj desno ali spodaj), tako da se odgovori ne bodo nabirali pod to objavo.
   admin_quick_start_title: "PREBERI ME NAJPREJ: Admin vodnik za hitri začetek"
   category:
     replace_paragraph: "(Zamenjajte ta prvi odstavek s kratkim opisom vaše nove kategorije. Ta opis se bo pojavil v izbiri kategorije, tako da poskrbite, da je krajši od 200 znakov.)"

@@ -95,7 +95,7 @@ ru:
       header_indicator_preference:
         never: "Никогда"
       enable: "Включить чат"
-      flag: "Флаг"
+      flag: "Пожаловаться"
       emoji: "Вставить эмодзи"
       flagged: "Эта запись была отправлена на проверку"
       invalid_access: "У вас нет доступа для просмотра этого канала"
@@ -372,11 +372,13 @@ ru:
         search_placeholder: "Поиск по названию эмодзи и псевдониму…"
         no_results: "Нет результатов"
       thread:
+        title: "Название"
         replies:
           one: "%{count} ответ"
           few: "%{count} ответа"
           many: "%{count} ответ"
           other: "%{count} ответ"
+        settings: "Настройки"
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"

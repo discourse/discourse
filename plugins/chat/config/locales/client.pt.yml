@@ -175,9 +175,11 @@ pt:
         flags: "Sinalizações"
         symbols: "Símbolos"
       thread:
+        title: "Título"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
+        settings: "Configurações"
       draft_channel_screen:
         header: "Nova Mensagem"
         cancel: "Cancelar"

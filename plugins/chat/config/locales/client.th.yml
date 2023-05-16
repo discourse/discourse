@@ -105,8 +105,10 @@ th:
         flags: "ธง"
         symbols: "สัญลักษณ์"
       thread:
+        title: "ชื่อเรื่อง"
         replies:
           other: "%{count} ตอบ"
+        settings: "การตั้งค่า"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"

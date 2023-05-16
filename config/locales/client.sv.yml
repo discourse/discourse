@@ -1786,6 +1786,9 @@ sv:
       suggested_topics:
         title: "Fortsätt läsa!"
         content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
+      welcome_topic:
+        title: "Redigera välkomstämnet"
+        content: "Hjälp nya medlemmar att känna sig hemma genom att anpassa det här ämnet så att det passar ditt forums behov."
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -3791,7 +3794,6 @@ sv:
         one: "Förtjänade den här utmärkelsen %{count} gång"
         other: "Förtjänade den här utmärkelsen %{count} gånger"
       granted_on: "Utfärdad %{date}"
-      others_count: "Andra med den här utmärkelsen (%{count})"
       title: Utmärkelser
       allow_title: "Du kan använda denna utmärkelse som en titel"
       multiple_grant: "Du kan förtjäna denna flera gånger"
@@ -5612,7 +5614,6 @@ sv:
             label: "Lägg till emoji"
         title: "Webbplatsinställningar"
         no_results: "Inga resultat hittades."
-        more_than_30_results: "Det är fler än 30 resultat. Förfina din sökning eller välj en kategori."
         clear_filter: "Rensa"
         add_url: "lägg till URL"
         add_host: "lägg till värd"

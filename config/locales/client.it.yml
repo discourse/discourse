@@ -3725,7 +3725,6 @@ it:
         one: "Ha guadagnato questo distintivo %{count} volta"
         other: "Ha guadagnato questo distintivo %{count} volte"
       granted_on: "Assegnato il %{date}"
-      others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
       allow_title: "Puoi usare questo distintivo come titolo"
       multiple_grant: "Puoi guadagnarlo più volte"
@@ -5427,7 +5426,6 @@ it:
             label: "Aggiungi Emoji"
         title: "Impostazioni"
         no_results: "Nessun risultato trovato."
-        more_than_30_results: "Ci sono più di 30 risultati. Restringi i criteri di ricerca o seleziona una categoria."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"
         add_host: "aggiungi host"

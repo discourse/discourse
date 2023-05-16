@@ -191,9 +191,6 @@ fr:
       load_from_remote: "Une erreur s'est produite lors du chargement de ce message."
     site_settings:
       invalid_category_id: "Vous avez spécifiez une catégorie qui n'existe pas"
-      invalid_choice:
-        one: "Vous avez spécifié le choix invalide %{name}"
-        other: "Vous avez spécifié les choix invalides %{name}"
       default_categories_already_selected: "Vous ne pouvez pas sélectionner une catégorie qui est utilisée dans une autre liste."
       default_tags_already_selected: "Vous ne pouvez pas sélectionner une étiquette utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'envoi de fichiers sur S3 avant d'avoir renseigné le paramètre « s3_upload_bucket »."
@@ -608,22 +605,6 @@ fr:
   meta_category_description: "Discussions à propos du site, son organisation, son fonctionnement et comment nous pouvons l'améliorer."
   staff_category_name: "Responsables"
   staff_category_description: "Catégorie privée pour les discussions entre responsables. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
-  discourse_welcome_topic:
-    title: "Bienvenue dans notre communauté !"
-    body: |2
-
-      Le premier paragraphe de ce sujet épinglé sera visible comme message de bienvenue à tous les nouveaux visiteurs de votre page d'accueil. Il est important !
-
-      **Modifiez le** en une brève description de votre communauté :
-
-      - À qui est-elle destinée ?
-      - Que peuvent-ils y trouver ?
-      - Pourquoi devraient-ils venir ici ?
-      - Où peuvent-ils en savoir plus (liens, ressources, etc.) ?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et en bas) afin que les réponses ne s'accumulent pas après une annonce.
   admin_quick_start_title: "À LIRE EN PREMIER : Guide de démarrage pour les administrateurs"
   category:
     topic_prefix: "À propos de la catégorie %{category}"
@@ -1896,7 +1877,6 @@ fr:
     pop3_polling_password: "Le mot de passe du compte POP3 à interroger pour les e-mails."
     pop3_polling_delete_from_server: "Supprimer les e-mails du serveur. NOTE : si vous désactivez ceci vous devrez vider manuellement votre boîte de réception."
     log_mail_processing_failures: "Enregistrer tous les problèmes d'e-mail dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Autoriser les utilisateurs à créer de nouveaux sujets par e-mail (nécessite une requête manuelle ou via POP3). Configurez les adresses dans l''onglet « Paramètres » de chaque catégorie.'
     email_in_min_trust: "Le niveau de confiance minimal qu'un utilisateur doit avoir pour être autorisé à créer de nouveaux sujets par e-mail."
     email_in_authserv_id: "L'identifiant du service vérifiant l'authentification des e-mails entrants. Voir <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> pour obtenir plus d'informations."
     email_in_spam_header: "En-tête d'e-mail pour détecter du spam."
