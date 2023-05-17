@@ -806,7 +806,7 @@ class TopicsController < ApplicationController
     user =
       if is_api? && @guardian.is_admin?
         begin
-          fetch_user_from_params
+          fetch_user_from_params if (params[:username].present? || params[:external_id].present?)
         rescue Discourse::NotFound
           current_user
         end
