@@ -16,38 +16,52 @@ DiscourseAutomation::Scriptable.add(
 
   version 1
 
-  triggerables %i[recurring]
+  triggerables %i[recurring user_added_to_group]
 
   script do |trigger, fields|
     custom_field_name = fields.dig("custom_field_name", "value")
 
-    query = DB.query(<<-SQL, custom_field_name)
-      SELECT u.id as user_id, g.id as group_id
-      FROM users u
-      JOIN user_custom_fields ucf
-        ON u.id = ucf.user_id
-        AND ucf.name = ?
-      JOIN groups g
-        on g.full_name ilike ucf.value
-      FULL OUTER JOIN group_users gu
-        ON gu.user_id = u.id
-        AND gu.group_id = g.id
-      WHERE gu.id is null
-        AND u.active = true
-      ORDER BY 1, 2
-    SQL
+    case trigger["kind"]
+    when DiscourseAutomation::Triggerable::API_CALL, DiscourseAutomation::Triggerable::RECURRING
+      query = DB.query(<<-SQL, custom_field_name)
+        SELECT u.id as user_id, g.id as group_id
+        FROM users u
+        JOIN user_custom_fields ucf
+          ON u.id = ucf.user_id
+          AND ucf.name = ?
+        JOIN groups g
+          on g.full_name ilike ucf.value
+        FULL OUTER JOIN group_users gu
+          ON gu.user_id = u.id
+          AND gu.group_id = g.id
+        WHERE gu.id is null
+          AND u.active = true
+        ORDER BY 1, 2
+      SQL
 
-    groups_by_id = {}
+      groups_by_id = {}
 
-    User
-      .where(id: query.map(&:user_id))
-      .order(:id)
-      .zip(query) do |user, query_row|
-        group_id = query_row.group_id
-        group = groups_by_id[group_id] ||= Group.find(group_id)
+      User
+        .where(id: query.map(&:user_id))
+        .order(:id)
+        .zip(query) do |user, query_row|
+          group_id = query_row.group_id
+          group = groups_by_id[group_id] ||= Group.find(group_id)
 
-        group.add(user)
-        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
-      end
+          group.add(user)
+          GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
+        end
+    when DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP
+      user = trigger["user"]
+
+      group_name = user.custom_fields[custom_field_name]
+      next if !group_name
+
+      group = Group.where("full_name ILIKE ?", group_name)&.first
+      next if !group
+
+      group.add(user)
+      GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
+    end
   end
 end

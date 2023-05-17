@@ -24,7 +24,10 @@ describe "UserAddedToGroup" do
       list = capture_contexts { tracked_group.add(user) }
 
       expect(list.length).to eq(1)
-      expect(list[0]["kind"]).to eq("user_added_to_group")
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP)
+      expect(list[0]["user"]).to eq(user)
+      expect(list[0]["group"]).to eq(tracked_group)
+      expect(list[0]["usernames"]).to eq([user.username])
     end
   end
 

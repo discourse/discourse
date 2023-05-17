@@ -24,6 +24,9 @@ describe "UserRemovedFromGroup" do
 
       expect(list.length).to eq(1)
       expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP)
+      expect(list[0]["user"]).to eq(user)
+      expect(list[0]["group"]).to eq(group)
+      expect(list[0]["usernames"]).to eq([user.username])
     end
   end
 

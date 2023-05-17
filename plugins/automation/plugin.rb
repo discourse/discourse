@@ -104,6 +104,7 @@ after_initialize do
           automation.trigger!(
             "kind" => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
             "usernames" => [user.username],
+            "user" => user,
             "group" => group,
             "placeholders" => {
               "group_name" => group.name,
@@ -124,6 +125,7 @@ after_initialize do
           automation.trigger!(
             "kind" => DiscourseAutomation::Triggerable::USER_REMOVED_FROM_GROUP,
             "usernames" => [user.username],
+            "user" => user,
             "group" => group,
             "placeholders" => {
               "group_name" => group.name,
