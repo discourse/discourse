@@ -30,3 +30,6 @@ tmp/
 **/*.html
 **/*.json
 **/*.md
+
+.yalc/
+yalc.lock

@@ -70,3 +70,6 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+
+.yalc/
+yalc.lock
