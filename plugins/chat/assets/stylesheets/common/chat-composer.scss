@@ -38,15 +38,15 @@
     box-sizing: border-box;
     width: 100%;
     flex-direction: row;
-    border: 1px solid var(--primary-medium);
+    border: 1px solid var(--primary-low);
     border-radius: 10px;
     background-color: var(--secondary);
     min-height: 50px;
-    box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 
     .chat-composer.is-focused & {
-      border-color: var(--primary-medium);
+      border-color: var(--primary-low-mid);
+      box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.1);
     }
 
     .chat-composer.is-disabled & {
