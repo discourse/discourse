@@ -21,6 +21,18 @@ export default class ChatTrackingStateManager extends Service {
   @service chatChannelsManager;
   @service appEvents;
 
+  syncChannelThreadTrackingOverview(channel, threadTrackingOverview) {
+    for (const [threadId, trackingState] of Object.entries(
+      threadTrackingOverview
+    )) {
+      threadTrackingOverview[threadId] = new ChatTrackingState(getOwner(this));
+      threadTrackingOverview[threadId].unreadCount = trackingState.unread_count;
+      threadTrackingOverview[threadId].mentionCount =
+        trackingState.mention_count;
+    }
+    channel.threadsManager.storeTrackingOverview(threadTrackingOverview);
+  }
+
   // NOTE: In future, we may want to preload some thread tracking state
   // as well, but for now we do that on demand when the user opens a channel,
   // to avoid having to load all the threads across all channels into memory at once.
@@ -54,6 +66,10 @@ export default class ChatTrackingStateManager extends Service {
     );
 
     return publicChannelMentionCount + dmChannelUnreadCount;
+  }
+
+  unreadThreadCountForChannel(channel) {
+    return Object.values(channel.threadsManager.threadTrackingOverview).length;
   }
 
   willDestroy() {

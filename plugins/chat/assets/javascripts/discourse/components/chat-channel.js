@@ -42,6 +42,7 @@ export default class ChatLivePane extends Component {
   @service appEvents;
   @service messageBus;
   @service site;
+  @service chatTrackingStateManager;
 
   @tracked loading = false;
   @tracked loadingMorePast = false;
@@ -184,6 +185,13 @@ export default class ChatLivePane extends Component {
 
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
+
+        if (results.thread_tracking_overview) {
+          this.chatTrackingStateManager.syncChannelThreadTrackingOverview(
+            this.args.channel,
+            results.thread_tracking_overview
+          );
+        }
 
         if (this.requestedTargetMessageId) {
           this.scrollToMessage(findArgs["targetMessageId"], {

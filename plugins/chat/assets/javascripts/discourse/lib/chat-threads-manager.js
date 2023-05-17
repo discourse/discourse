@@ -19,6 +19,7 @@ export default class ChatThreadsManager {
   @service chat;
   @service currentUser;
   @tracked _cached = new TrackedObject();
+  @tracked _cachedTrackingOverview = new TrackedObject();
 
   constructor(owner) {
     setOwner(this, owner);
@@ -51,6 +52,10 @@ export default class ChatThreadsManager {
     return Object.values(this._cached);
   }
 
+  get threadTrackingOverview() {
+    return this._cachedTrackingOverview;
+  }
+
   store(channel, threadObject) {
     let model = this.#findStale(threadObject.id);
 
@@ -77,6 +82,10 @@ export default class ChatThreadsManager {
 
   async #find(channelId, threadId) {
     return this.chatApi.thread(channelId, threadId);
+  }
+
+  storeTrackingOverview(trackingOverview) {
+    this._cachedTrackingOverview = new TrackedObject(trackingOverview);
   }
 
   #cache(thread) {

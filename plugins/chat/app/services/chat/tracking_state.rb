@@ -37,7 +37,8 @@ module Chat
     def find_channel_threads(channel_id)
       thread_tracking
         .select { |_, thread| thread[:channel_id] == channel_id }
-        .map { |_, thread| TrackingStateInfo.new(thread) }
+        .map { |thread_id, thread| [thread_id, TrackingStateInfo.new(thread)] }
+        .to_h
     end
   end
 
@@ -84,6 +85,7 @@ module Chat
       attribute :thread_ids, default: []
       attribute :include_missing_memberships, default: false
       attribute :include_threads, default: false
+      attribute :include_zero_unreads, default: true
     end
 
     private
@@ -128,6 +130,7 @@ module Chat
                 thread_ids: contract.thread_ids,
                 user_id: guardian.user.id,
                 include_missing_memberships: contract.include_missing_memberships,
+                include_zero_unreads: contract.include_zero_unreads,
               )
               .map do |tt|
                 [

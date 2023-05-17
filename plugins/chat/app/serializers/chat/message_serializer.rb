@@ -15,15 +15,23 @@ module Chat
                :reactions,
                :bookmark,
                :available_flags,
-               :thread_id,
-               :thread_reply_count,
-               :thread_title,
                :chat_channel_id
+    # :thread
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
     has_one :chat_webhook_event, serializer: Chat::WebhookEventSerializer, embed: :objects
     has_one :in_reply_to, serializer: Chat::InReplyToSerializer, embed: :objects
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
+
+    #     def thread
+    #       @thread ||=
+    #         Chat::ThreadSerializer.new(
+    #           object.thread,
+    #           scope: scope,
+    #           root: false,
+    #           original_message: object,
+    #         ).as_json
+    #     end
 
     def channel
       @channel ||= @options.dig(:chat_channel) || object.chat_channel
@@ -154,24 +162,13 @@ module Chat
       end
     end
 
-    def include_threading_data?
-      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
-    end
+    # def include_threading_data?
+    #   SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    # end
 
-    def include_thread_id?
-      include_threading_data?
-    end
-
-    def include_thread_reply_count?
-      include_threading_data? && object.thread_id.present?
-    end
-
-    def thread_reply_count
-      object.thread&.replies_count_cache || 0
-    end
-
-    def thread_title
-      object.thread&.title
-    end
+    # def include_thread?
+    #   include_threading_data? && object.thread_id.present? &&
+    #     object.thread.original_message_id == object.id
+    # end
   end
 end

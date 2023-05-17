@@ -274,6 +274,23 @@ module Chat
       can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
       looked_up_message = !include_thread_messages? && @message.thread_reply? ? [] : [@message]
       messages = [past_messages.reverse, looked_up_message, future_messages].reduce([], :concat)
+
+      # TODO (martin) This is called every time we get new messages and probably
+      # doesn't need to be...really only needed in the first channel GET.
+      if SiteSetting.enable_experimental_chat_threaded_discussions &&
+           @chat_channel.threading_enabled
+        thread_tracking_overview =
+          Chat::TrackingState
+            .call(
+              thread_ids: messages.map(&:thread_id).compact.uniq,
+              guardian: guardian,
+              include_threads: true,
+              include_zero_unreads: false,
+            )
+            .report
+            .find_channel_threads(@chat_channel.id)
+      end
+
       chat_view =
         Chat::View.new(
           chat_channel: @chat_channel,
@@ -281,6 +298,7 @@ module Chat
           user: current_user,
           can_load_more_past: can_load_more_past,
           can_load_more_future: can_load_more_future,
+          thread_tracking_overview: thread_tracking_overview,
         )
       render_serialized(chat_view, Chat::ViewSerializer, root: false)
     end

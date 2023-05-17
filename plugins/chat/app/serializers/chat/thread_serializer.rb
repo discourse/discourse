@@ -11,6 +11,14 @@ module Chat
       super(object, opts)
       @opts = opts
 
+      # In some cases (e.g. the channel messages load) we only are loading the thread
+      # original message, so we can take this shortcut to make this refer to the
+      # top-level message.
+      # if @opts[:original_message]
+      #   object.original_message = @opts[:original_message]
+      #   object.original_message_user = object.original_message.user
+      # end
+
       # Avoids an N1 to re-load the thread in the serializer for original_message.
       object.original_message.thread = object
     end

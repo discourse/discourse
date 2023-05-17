@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelThreadsController < Chat::ApiController
+  def tracking
+    {
+      tracking_overview: [131, 4, 5], # unread threads,
+      threads: [{ id: 23, original_message: {}, tracking: { unread_count: 1, mention_count: 0 } }],
+    }
+  end
+
   def index
     with_service(::Chat::LookupChannelThreads) do
       on_success do

@@ -2,20 +2,27 @@
 
 module Chat
   class View
-    attr_reader :user, :chat_channel, :chat_messages, :can_load_more_past, :can_load_more_future
+    attr_reader :user,
+                :chat_channel,
+                :chat_messages,
+                :can_load_more_past,
+                :can_load_more_future,
+                :thread_tracking_overview
 
     def initialize(
       chat_channel:,
       chat_messages:,
       user:,
       can_load_more_past: nil,
-      can_load_more_future: nil
+      can_load_more_future: nil,
+      thread_tracking_overview: nil
     )
       @chat_channel = chat_channel
       @chat_messages = chat_messages
       @user = user
       @can_load_more_past = can_load_more_past
       @can_load_more_future = can_load_more_future
+      @thread_tracking_overview = thread_tracking_overview
     end
 
     def reviewable_ids

@@ -27,9 +27,32 @@
   }
 
   .open-thread-list-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--blend-primary-secondary-5);
+    border-radius: 5px;
+
     .d-icon {
       margin-right: 0;
     }
+
+    .chat-thread-header-unread-indicator {
+      color: var(--tertiary);
+      font-size: var(--font-down-2);
+      padding-left: 0.25rem;
+    }
+
+    // .chat-thread-header-unread-indicator {
+    //   @extend .chat-channel-unread-indicator;
+    //   border: 2px solid var(--header_background);
+    //   position: absolute;
+    //   right: 6px;
+    //   bottom: 16px;
+    //   width: 7px;
+    //   height: 7px;
+    //   transition: border-color linear 0.15s;
+    // }
 
     &:hover {
       .discourse-touch & {
