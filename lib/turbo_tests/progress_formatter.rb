@@ -43,7 +43,7 @@ module TurboTests
     def wrap
       @examples += 1
 
-      if @examples == LINE_LENGTH
+      if ENV["GITHUB_ACTIONS"] && @examples == LINE_LENGTH
         output.print "\n"
         @examples = 0
       end
