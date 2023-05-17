@@ -804,9 +804,10 @@ class TopicsController < ApplicationController
 
   def set_notifications
     user =
-      if is_api? && @guardian.is_admin?
+      if is_api? && @guardian.is_admin? &&
+           (params[:username].present? || params[:external_id].present?)
         begin
-          fetch_user_from_params if (params[:username].present? || params[:external_id].present?)
+          fetch_user_from_params
         rescue Discourse::NotFound
           current_user
         end
