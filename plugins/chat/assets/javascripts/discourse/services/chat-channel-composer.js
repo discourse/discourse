@@ -4,7 +4,6 @@ import ChatComposer from "./chat-composer";
 
 export default class ChatChannelComposer extends ChatComposer {
   @service chat;
-  @service chatChannelThreadComposer;
   @service router;
 
   @action

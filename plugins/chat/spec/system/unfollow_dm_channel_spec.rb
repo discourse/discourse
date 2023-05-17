@@ -22,12 +22,13 @@ RSpec.describe "Unfollow dm channel", type: :system, js: true do
 
       expect(page).to have_no_css(".channel-#{dm_channel_1.id}")
 
-      using_session(:user_1) do
+      using_session(:user_1) do |session|
         text = "this is fine"
         sign_in(other_user)
         chat_page.visit_channel(dm_channel_1)
         chat_channel_page.send_message(text)
         expect(chat_channel_page).to have_message(text: text)
+        session.quit
       end
 
       expect(page).to have_css(".channel-#{dm_channel_1.id} .urgent")

@@ -17,8 +17,8 @@ module PageObjects
         visit("/chat")
       end
 
-      def visit_channel(channel, mobile: false)
-        visit(channel.url + (mobile ? "?mobile_view=1" : ""))
+      def visit_channel(channel)
+        visit(channel.url)
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end

@@ -9,7 +9,6 @@
         this.currentMessage
         this.currentMessage.inReplyTo
       }}
-      @icon={{if this.currentMessage.editing "pencil-alt" "reply"}}
       @cancelAction={{this.onCancel}}
     />
   {{/if}}
@@ -26,7 +25,7 @@
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
-    {{did-insert this.setupAppEvents}}
+    {{did-insert this.setup}}
     {{will-destroy this.teardown}}
     {{will-destroy this.cancelPersistDraft}}
   >
@@ -71,7 +70,7 @@
           {{on "click" this.onSend}}
           @icon="paper-plane"
           class="chat-composer__send-btn"
-          title="chat.composer.send"
+          title={{i18n "chat.composer.send"}}
           disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
           {{on "focus" (fn this.computeIsFocused true)}}

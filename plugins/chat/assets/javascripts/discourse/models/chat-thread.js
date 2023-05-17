@@ -13,6 +13,10 @@ export const THREAD_STATUSES = {
 };
 
 export default class ChatThread {
+  static create(channel, args = {}) {
+    return new ChatThread(channel, args);
+  }
+
   @tracked id;
   @tracked title;
   @tracked status;

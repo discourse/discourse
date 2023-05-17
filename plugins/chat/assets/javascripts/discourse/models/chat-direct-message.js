@@ -1,5 +1,6 @@
 import User from "discourse/models/user";
 import { tracked } from "@glimmer/tracking";
+import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatDirectMessage {
   static create(args = {}) {
@@ -9,9 +10,11 @@ export default class ChatDirectMessage {
   @tracked id;
   @tracked users = null;
 
+  type = CHATABLE_TYPES.drectMessageChannel;
+
   constructor(args = {}) {
-    this.id = args.chatable.id;
-    this.users = this.#initUsers(args.chatable.users || []);
+    this.id = args.id;
+    this.users = this.#initUsers(args.users || []);
   }
 
   #initUsers(users) {

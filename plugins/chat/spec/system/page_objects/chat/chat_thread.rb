@@ -3,6 +3,15 @@
 module PageObjects
   module Pages
     class ChatThread < PageObjects::Pages::Base
+      def composer
+        @composer ||= PageObjects::Components::Chat::Composer.new(".chat-thread")
+      end
+
+      def composer_message_details
+        @composer_message_details ||=
+          PageObjects::Components::Chat::ComposerMessageDetails.new(".chat-thread")
+      end
+
       def header
         find(".chat-thread__header")
       end

@@ -641,3 +641,8 @@ en:
         chat_notifications_with_unread:
           one: "Chat notifications - %{count} unread notification"
           other: "Chat notifications - %{count} unread notifications"
+
+    styleguide:
+      sections:
+        chat:
+          title: Chat
