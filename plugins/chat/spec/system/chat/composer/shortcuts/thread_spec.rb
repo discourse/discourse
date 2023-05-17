@@ -28,7 +28,7 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system, js: true d
       it "starts editing the last editable message" do
         chat_page.visit_thread(thread_1)
 
-        thread_page.composer.arrowUp
+        thread_page.composer.edit_last_message_shortcut
 
         expect(thread_page.composer_message_details).to have_message(last_thread_message)
         expect(thread_page.composer.value).to eq(last_thread_message.message)
@@ -41,7 +41,7 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system, js: true d
       it "does nothing" do
         chat_page.visit_thread(thread_1)
 
-        thread_page.composer.arrowUp
+        thread_page.composer.edit_last_message_shortcut
 
         expect(thread_page.composer_message_details).to have_no_message
         expect(thread_page.composer.value).to be_blank

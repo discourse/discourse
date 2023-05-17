@@ -6,27 +6,25 @@ module PageObjects
       class Composer < PageObjects::Components::Base
         attr_reader :context
 
+        SELECTOR = ".chat-composer__wrapper"
+
         def initialize(context)
           @context = context
         end
 
-        def component
-          find(context).find(".chat-composer__wrapper")
-        end
-
         def input
-          component.find(".chat-composer__input")
+          find(context).find(SELECTOR).find(".chat-composer__input")
         end
 
         def value
           input.value
         end
 
-        def shiftArrowUp
+        def reply_to_last_message_shortcut
           input.send_keys(%i[shift arrow_up])
         end
 
-        def arrowUp
+        def edit_last_message_shortcut
           input.send_keys(%i[arrow_up])
         end
       end

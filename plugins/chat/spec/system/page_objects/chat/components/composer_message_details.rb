@@ -12,10 +12,6 @@ module PageObjects
           @context = context
         end
 
-        def component
-          context.find(SELECTOR)
-        end
-
         def has_message?(message)
           find(context).find(SELECTOR + "[data-id=\"#{message.id}\"]")
         end
