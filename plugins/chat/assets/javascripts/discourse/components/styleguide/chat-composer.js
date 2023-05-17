@@ -8,7 +8,7 @@ export default class ChatStyleguideChatComposer extends Component {
   @service chatChannelComposer;
   @service chatChannelPane;
 
-  channel = fabricators.channel();
+  channel = fabricators.channel({ id: -999 });
 
   @action
   toggleDisabled() {
