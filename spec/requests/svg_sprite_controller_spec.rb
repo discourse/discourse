@@ -77,6 +77,12 @@ RSpec.describe SvgSpriteController do
   end
 
   describe "#icon_picker_search" do
+    it "should return 403 for anonymous users" do
+      get "/svg-sprite/picker-search"
+
+      expect(response.status).to eq(403)
+    end
+
     it "should work with no filter and max out at 200 results" do
       user = sign_in(Fabricate(:user))
       get "/svg-sprite/picker-search"
