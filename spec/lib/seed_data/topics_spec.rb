@@ -11,7 +11,7 @@ RSpec.describe SeedData::Topics do
   end
 
   def create_topic(name = "welcome_topic_id")
-    subject.create(site_setting_names: [name])
+    subject.create(site_setting_names: [name], include_legal_topics: true)
   end
 
   describe "#create" do
@@ -70,6 +70,19 @@ RSpec.describe SeedData::Topics do
       SiteSetting.welcome_topic_id = (Topic.maximum(:id) || 0) + 1
 
       expect { create_topic }.to_not change { Topic.count }
+    end
+
+    it "does not create a legal topic if company_name is not set" do
+      subject.create(site_setting_names: ["tos_topic_id"])
+
+      expect(SiteSetting.tos_topic_id).to eq(-1)
+    end
+
+    it "creates a legal topic if company_name is set" do
+      SiteSetting.company_name = "Company Name"
+      subject.create(site_setting_names: ["tos_topic_id"])
+
+      expect(SiteSetting.tos_topic_id).to_not eq(-1)
     end
   end
 

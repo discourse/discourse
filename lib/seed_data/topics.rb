@@ -10,18 +10,20 @@ module SeedData
       @locale = locale
     end
 
-    def create(site_setting_names: nil, include_welcome_topics: true)
+    def create(site_setting_names: nil, include_welcome_topics: true, include_legal_topics: false)
       I18n.with_locale(@locale) do
-        topics(site_setting_names, include_welcome_topics).each { |params| create_topic(**params) }
+        topics(
+          site_setting_names: site_setting_names,
+          include_welcome_topics: include_welcome_topics,
+          include_legal_topics: include_legal_topics,
+        ).each { |params| create_topic(**params) }
       end
     end
 
     def update(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
-        topics(site_setting_names).each do |params|
-          params.except!(:category, :after_create)
-          params[:skip_changed] = skip_changed
-          update_topic(**params)
+        topics(site_setting_names: site_setting_names, include_legal_topics: true).each do |params|
+          update_topic(**params.except(:category, :after_create), skip_changed: skip_changed)
         end
       end
     end
@@ -41,12 +43,15 @@ module SeedData
 
     private
 
-    def topics(site_setting_names = nil, include_welcome_topics = true)
+    def topics(site_setting_names: nil, include_welcome_topics: true, include_legal_topics: false)
+      include_legal_topics ||= SiteSetting.company_name.present?
       staff_category = Category.find_by(id: SiteSetting.staff_category_id)
 
-      topics = [
-        # Terms of Service
-        {
+      topics = []
+
+      # Terms of Service
+      if include_legal_topics
+        topics << {
           site_setting_name: "tos_topic_id",
           title: I18n.t("tos_topic.title"),
           raw:
@@ -60,24 +65,28 @@ module SeedData
             ),
           category: staff_category,
           static_first_reply: true,
-        },
-        # FAQ/Guidelines
-        {
-          site_setting_name: "guidelines_topic_id",
-          title: I18n.t("guidelines_topic.title"),
-          raw: I18n.t("guidelines_topic.body", base_path: Discourse.base_path),
-          category: staff_category,
-          static_first_reply: true,
-        },
-        # Privacy Policy
-        {
+        }
+      end
+
+      # FAQ/Guidelines
+      topics << {
+        site_setting_name: "guidelines_topic_id",
+        title: I18n.t("guidelines_topic.title"),
+        raw: I18n.t("guidelines_topic.body", base_path: Discourse.base_path),
+        category: staff_category,
+        static_first_reply: true,
+      }
+
+      # Privacy Policy
+      if include_legal_topics
+        topics << {
           site_setting_name: "privacy_topic_id",
           title: I18n.t("privacy_topic.title"),
           raw: I18n.t("privacy_topic.body"),
           category: staff_category,
           static_first_reply: true,
-        },
-      ]
+        }
+      end
 
       if include_welcome_topics
         # Welcome Topic
