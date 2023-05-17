@@ -55,7 +55,7 @@ Fabricator(:chat_message, class_name: "Chat::MessageCreator") do
   transient :message
   transient :in_reply_to
   transient :thread
-  transient :uploads
+  transient :upload_ids
 
   initialize_with do |transients|
     user = transients[:user] || Fabricate(:user)
@@ -69,7 +69,7 @@ Fabricator(:chat_message, class_name: "Chat::MessageCreator") do
       content: transients[:message] || Faker::Lorem.paragraph,
       thread_id: transients[:thread]&.id,
       in_reply_to_id: transients[:in_reply_to]&.id,
-      uploads: transients[:uploads],
+      upload_ids: transients[:upload_ids],
     ).chat_message
   end
 end
