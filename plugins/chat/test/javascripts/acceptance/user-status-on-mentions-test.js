@@ -1,6 +1,7 @@
 import {
   acceptance,
   loggedInUser,
+  publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { skip, test } from "qunit";
@@ -48,6 +49,7 @@ acceptance("Chat | User status on mentions", function (needs) {
   const messagesResponse = {
     meta: {
       channel_id: channelId,
+      can_delete_self: true,
     },
     chat_messages: [
       {
@@ -58,6 +60,10 @@ acceptance("Chat | User status on mentions", function (needs) {
         user: actingUser,
       },
     ],
+  };
+  const newStatus = {
+    description: "working remotely",
+    emoji: "house",
   };
 
   needs.settings({ chat_enabled: true });
@@ -82,18 +88,11 @@ acceptance("Chat | User status on mentions", function (needs) {
   });
 
   needs.hooks.beforeEach(function () {
-    pretender.get("/chat/1/messages", () => {
-      return [200, {}, messagesResponse];
-    });
-    pretender.post("/chat/1", () => {
-      return [200, {}, {}];
-    });
-    pretender.put(`/chat/1/edit/${messageId}`, () => {
-      return [200, {}, {}];
-    });
-    pretender.post("/chat/drafts", () => {
-      return [200, {}, {}];
-    });
+    pretender.get(`/chat/1/messages`, () => [200, {}, messagesResponse]);
+    pretender.post(`/chat/1`, () => OK);
+    pretender.put(`/chat/1/edit/${messageId}`, () => OK);
+    pretender.post(`/chat/drafts`, () => OK);
+    pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () => OK);
 
     setupAutocompleteResponses([mentionedUser2, mentionedUser3]);
   });
@@ -120,11 +119,6 @@ acceptance("Chat | User status on mentions", function (needs) {
   test("just posted messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
-
-    const newStatus = {
-      description: "working remotely",
-      emoji: "house",
-    };
 
     loggedInUser().appEvents.trigger("user-status:changed", {
       [mentionedUser2.id]: newStatus,
@@ -191,10 +185,6 @@ acceptance("Chat | User status on mentions", function (needs) {
       `mentioning @${mentionedUser3.username}`
     );
 
-    const newStatus = {
-      description: "working remotely",
-      emoji: "house",
-    };
     loggedInUser().appEvents.trigger("user-status:changed", {
       [mentionedUser3.id]: newStatus,
     });
@@ -232,6 +222,80 @@ acceptance("Chat | User status on mentions", function (needs) {
     await waitFor(selector, { count: 0 });
     assert.dom(selector).doesNotExist("status is deleted");
   });
+
+  test("deleted messages | it shows status on mentions", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await deleteMessage(".chat-message-content");
+    await click(".chat-message-expand");
+
+    assert
+      .dom(`.mention[href='/u/${mentionedUser1.username}'] .user-status`)
+      .exists("status is rendered")
+      .hasAttribute(
+        "title",
+        mentionedUser1.status.description,
+        "status description is correct"
+      )
+      .hasAttribute(
+        "src",
+        new RegExp(`${mentionedUser1.status.emoji}.png`),
+        "status emoji is updated"
+      );
+  });
+
+  test("deleted messages | it updates status on mentions", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await deleteMessage(".chat-message-content");
+    await click(".chat-message-expand");
+
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser1.id]: newStatus,
+    });
+
+    const selector = `.mention[href='/u/${mentionedUser1.username}'] .user-status`;
+    await waitFor(selector);
+    assert
+      .dom(selector)
+      .exists("status is rendered")
+      .hasAttribute(
+        "title",
+        newStatus.description,
+        "status description is updated"
+      )
+      .hasAttribute(
+        "src",
+        new RegExp(`${newStatus.emoji}.png`),
+        "status emoji is updated"
+      );
+  });
+
+  test("deleted messages | it deletes status on mentions", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await deleteMessage(".chat-message-content");
+    await click(".chat-message-expand");
+
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser1.id]: null,
+    });
+
+    const selector = `.mention[href='/u/${mentionedUser1.username}'] .user-status`;
+    await waitFor(selector, { count: 0 });
+    assert.dom(selector).doesNotExist("status is deleted");
+  });
+
+  async function deleteMessage(messageSelector) {
+    await triggerEvent(query(messageSelector), "mouseenter");
+    await click(".more-buttons .select-kit-header-wrapper");
+    await click(".select-kit-collection .select-kit-row[data-value='delete']");
+    await publishToMessageBus(`/chat/${channelId}`, {
+      type: "delete",
+      deleted_id: messageId,
+      deleted_at: "2022-01-01T08:00:00.000Z",
+    });
+  }
 
   async function editMessage(messageSelector, text) {
     await triggerEvent(query(messageSelector), "mouseenter");
@@ -279,4 +343,6 @@ acceptance("Chat | User status on mentions", function (needs) {
       ];
     });
   }
+
+  const OK = [200, {}, {}];
 });
