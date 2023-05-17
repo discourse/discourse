@@ -33,9 +33,7 @@ export default {
     this.site = container.lookup("service:site");
     this.router = container.lookup("router:main");
 
-    this.reviewableCountsChannel = this.currentUser.redesigned_user_menu_enabled
-      ? `/reviewable_counts/${this.currentUser.id}`
-      : "/reviewable_counts";
+    this.reviewableCountsChannel = `/reviewable_counts/${this.currentUser.id}`;
 
     this.messageBus.subscribe(
       this.reviewableCountsChannel,
@@ -126,12 +124,10 @@ export default {
       this.currentUser.updateReviewableCount(data.reviewable_count);
     }
 
-    if (this.currentUser.redesigned_user_menu_enabled) {
-      this.currentUser.set(
-        "unseen_reviewable_count",
-        data.unseen_reviewable_count
-      );
-    }
+    this.currentUser.set(
+      "unseen_reviewable_count",
+      data.unseen_reviewable_count
+    );
   },
 
   @bind
