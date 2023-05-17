@@ -3,7 +3,7 @@ import {
   loggedInUser,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import {
   click,
   fillIn,
@@ -161,7 +161,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  test("it shows status on mentions on updated messages", async function (assert) {
+  test("it shows status on mentions on edited messages", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await editMessage(
@@ -182,6 +182,55 @@ acceptance("Chat | User status on mentions", function (needs) {
         new RegExp(`${mentionedUser3.status.emoji}.png`),
         "status emoji is updated"
       );
+  });
+
+  skip("it updates status on mentions on edited messages", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+    await editMessage(
+      ".chat-message-content",
+      `mentioning @${mentionedUser3.username}`
+    );
+
+    const newStatus = {
+      description: "working remotely",
+      emoji: "house",
+    };
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser3.id]: newStatus,
+    });
+
+    const selector = `.mention[href='/u/${mentionedUser3.username}'] .user-status`;
+    await waitFor(selector);
+    assert
+      .dom(selector)
+      .exists("status is rendered")
+      .hasAttribute(
+        "title",
+        newStatus.description,
+        "status description is updated"
+      )
+      .hasAttribute(
+        "src",
+        new RegExp(`${newStatus.emoji}.png`),
+        "status emoji is updated"
+      );
+  });
+
+  skip("it deletes status on mentions on edited messages", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await editMessage(
+      ".chat-message-content",
+      `mentioning @${mentionedUser3.username}`
+    );
+
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser3.id]: null,
+    });
+
+    const selector = `.mention[href='/u/${mentionedUser3.username}'] .user-status`;
+    await waitFor(selector, { count: 0 });
+    assert.dom(selector).doesNotExist("status is deleted");
   });
 
   async function editMessage(messageSelector, text) {
