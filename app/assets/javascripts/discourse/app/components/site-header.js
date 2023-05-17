@@ -8,7 +8,7 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { isTesting } from "discourse-common/config/environment";
 import { DEBUG } from "@glimmer/env";
@@ -425,8 +425,34 @@ export default SiteHeaderComponent.extend({
 
   init() {
     this._super(...arguments);
-
     this._resizeObserver = null;
+  },
+
+  @bind
+  updateHeaderOffset() {
+    let headerWrapTop = this.headerWrap.getBoundingClientRect().top;
+
+    if (DEBUG && isTesting()) {
+      headerWrapTop -= document
+        .getElementById("ember-testing-container")
+        .getBoundingClientRect().top;
+
+      headerWrapTop -= 1; // For 1px border on testing container
+    }
+
+    const documentStyle = document.documentElement.style;
+
+    const currentValue = documentStyle.getPropertyValue("--header-offset");
+    const newValue = `${this.headerWrap.offsetHeight + headerWrapTop}px`;
+
+    if (currentValue !== newValue) {
+      documentStyle.setProperty("--header-offset", newValue);
+    }
+  },
+
+  @bind
+  onScroll() {
+    schedule("afterRender", this.updateHeaderOffset);
   },
 
   didInsertElement() {
@@ -435,19 +461,20 @@ export default SiteHeaderComponent.extend({
     this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
     this.headerWrap = document.querySelector(".d-header-wrap");
+
     if (this.headerWrap) {
       schedule("afterRender", () => {
         this.header = this.headerWrap.querySelector("header.d-header");
-        const headerOffset = this.headerWrap.offsetHeight;
+        this.updateHeaderOffset();
         const headerTop = this.header.offsetTop;
-        document.documentElement.style.setProperty(
-          "--header-offset",
-          `${headerOffset}px`
-        );
         document.documentElement.style.setProperty(
           "--header-top",
           `${headerTop}px`
         );
+      });
+
+      window.addEventListener("scroll", this.onScroll, {
+        passive: true,
       });
     }
 
@@ -455,16 +482,12 @@ export default SiteHeaderComponent.extend({
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
-            const headerOffset = entry.contentRect.height;
             const headerTop = this.header.offsetTop;
-            document.documentElement.style.setProperty(
-              "--header-offset",
-              `${headerOffset}px`
-            );
             document.documentElement.style.setProperty(
               "--header-top",
               `${headerTop}px`
             );
+            this.updateHeaderOffset();
           }
         }
       });
@@ -475,7 +498,7 @@ export default SiteHeaderComponent.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-
+    window.removeEventListener("scroll", this.onScroll);
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },

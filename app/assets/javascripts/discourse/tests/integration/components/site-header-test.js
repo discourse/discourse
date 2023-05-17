@@ -66,9 +66,11 @@ module("Integration | Component | site-header", function (hooks) {
     await render(hbs`<SiteHeader />`);
 
     function getProperty() {
-      return getComputedStyle(document.body).getPropertyValue(
+      const rawValue = getComputedStyle(document.body).getPropertyValue(
         "--header-offset"
       );
+      const roundedValue = Math.floor(parseFloat(rawValue));
+      return roundedValue + "px";
     }
 
     document.querySelector(".d-header").style.height = 90 + "px";
