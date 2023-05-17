@@ -105,7 +105,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
     assertStatusIsRendered(
       assert,
-      `.mention[href='/u/${mentionedUser2.username}'] .user-status`,
+      statusSelector(mentionedUser2.username),
       mentionedUser2.status
     );
   });
@@ -118,7 +118,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       [mentionedUser2.id]: newStatus,
     });
 
-    const selector = `.mention[href='/u/${mentionedUser2.username}'] .user-status`;
+    const selector = statusSelector(mentionedUser2.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
   });
@@ -132,7 +132,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       [mentionedUser2.id]: null,
     });
 
-    const selector = `.mention[href='/u/${mentionedUser2.username}'] .user-status`;
+    const selector = statusSelector(mentionedUser2.username);
     await waitFor(selector, { count: 0 });
     assert.dom(selector).doesNotExist("status is deleted");
   });
@@ -147,7 +147,7 @@ acceptance("Chat | User status on mentions", function (needs) {
 
     assertStatusIsRendered(
       assert,
-      `.mention[href='/u/${mentionedUser3.username}'] .user-status`,
+      statusSelector(mentionedUser3.username),
       mentionedUser3.status
     );
   });
@@ -163,7 +163,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       [mentionedUser3.id]: newStatus,
     });
 
-    const selector = `.mention[href='/u/${mentionedUser3.username}'] .user-status`;
+    const selector = statusSelector(mentionedUser3.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
   });
@@ -180,7 +180,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       [mentionedUser3.id]: null,
     });
 
-    const selector = `.mention[href='/u/${mentionedUser3.username}'] .user-status`;
+    const selector = statusSelector(mentionedUser3.username);
     await waitFor(selector, { count: 0 });
     assert.dom(selector).doesNotExist("status is deleted");
   });
@@ -193,7 +193,7 @@ acceptance("Chat | User status on mentions", function (needs) {
 
     assertStatusIsRendered(
       assert,
-      `.mention[href='/u/${mentionedUser1.username}'] .user-status`,
+      statusSelector(mentionedUser1.username),
       mentionedUser1.status
     );
   });
@@ -208,7 +208,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       [mentionedUser1.id]: newStatus,
     });
 
-    const selector = `.mention[href='/u/${mentionedUser1.username}'] .user-status`;
+    const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
   });
@@ -223,7 +223,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       [mentionedUser1.id]: null,
     });
 
-    const selector = `.mention[href='/u/${mentionedUser1.username}'] .user-status`;
+    const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector, { count: 0 });
     assert.dom(selector).doesNotExist("status is deleted");
   });
@@ -236,7 +236,7 @@ acceptance("Chat | User status on mentions", function (needs) {
 
     assertStatusIsRendered(
       assert,
-      `.mention[href='/u/${mentionedUser1.username}'] .user-status`,
+      statusSelector(mentionedUser1.username),
       mentionedUser1.status
     );
   });
@@ -358,6 +358,10 @@ acceptance("Chat | User status on mentions", function (needs) {
         },
       ];
     });
+  }
+
+  function statusSelector(username) {
+    return `.mention[href='/u/${username}'] .user-status`;
   }
 
   const OK = [200, {}, {}];
