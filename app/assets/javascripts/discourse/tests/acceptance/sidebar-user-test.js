@@ -9,7 +9,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
-  "Sidebar - Logged on user - Experimental sidebar and hamburger setting disabled",
+  "Sidebar - Logged on user - Legacy navigation menu enabled",
   function (needs) {
     needs.user();
 
@@ -27,7 +27,29 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Logged on user - header dropdown navigation menu enabled",
+  "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",
+  function (needs) {
+    needs.user();
+    needs.mobileView();
+
+    needs.settings({
+      navigation_menu: "header dropdown",
+    });
+
+    test("sections are collapsable", async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
+
+      assert.ok(
+        exists(".sidebar-section-header.sidebar-section-header-collapsable"),
+        "sections are collapsable"
+      );
+    });
+  }
+);
+
+acceptance(
+  "Sidebar - Logged on user - Desktop view - Header dropdown navigation menu enabled",
   function (needs) {
     needs.user();
 
@@ -49,6 +71,16 @@ acceptance(
       assert.notOk(
         exists(".sidebar-hamburger-dropdown"),
         "hides the sidebar dropdown"
+      );
+    });
+
+    test("sections are not collapsable", async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
+
+      assert.notOk(
+        exists(".sidebar-section-header.sidebar-section-header-collapsable"),
+        "sections are not collapsable"
       );
     });
 
