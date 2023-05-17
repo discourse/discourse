@@ -14,6 +14,8 @@
   $hover-icon-color: var(--primary-low)
 ) {
   @include form-item-sizing;
+  border: none; // removing border in order to use better active styles
+  padding: calc($vpad + 1px) calc($hpad + 1px); // take take into the account the removal of border
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -71,9 +73,7 @@
   .discourse-no-touch &.btn-active,
   &:active,
   &.btn-active {
-    // @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
-    // border-bottom-color: $bg-color;
-    background-color: var(--primary-700);
+    background-image: ;
   }
   &[disabled],
   &.disabled {
