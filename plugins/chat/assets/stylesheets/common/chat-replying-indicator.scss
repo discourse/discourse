@@ -3,6 +3,10 @@
   display: inline-flex;
   font-size: var(--font-down-2);
 
+  &-container {
+    display: flex;
+  }
+
   &:before {
     // unicode zero width space character
     // Ensures the span height is consistent even when empty
