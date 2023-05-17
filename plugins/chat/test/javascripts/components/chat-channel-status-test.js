@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import I18n from "I18n";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import {
   CHANNEL_STATUSES,
   channelStatusIcon,
@@ -13,7 +13,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders nothing when channel is opened", async function (assert) {
-    this.channel = fabricators.chatChannel();
+    this.channel = fabricators.channel();
 
     await render(hbs`<ChatChannelStatus @channel={{this.channel}} />`);
 
@@ -21,7 +21,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   });
 
   test("defaults to long format", async function (assert) {
-    this.channel = fabricators.chatChannel({ status: CHANNEL_STATUSES.closed });
+    this.channel = fabricators.channel({ status: CHANNEL_STATUSES.closed });
 
     await render(hbs`<ChatChannelStatus @channel={{this.channel}} />`);
 
@@ -31,7 +31,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   });
 
   test("accepts a format argument", async function (assert) {
-    this.channel = fabricators.chatChannel({
+    this.channel = fabricators.channel({
       status: CHANNEL_STATUSES.archived,
     });
 
@@ -45,7 +45,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   });
 
   test("renders the correct icon", async function (assert) {
-    this.channel = fabricators.chatChannel({
+    this.channel = fabricators.channel({
       status: CHANNEL_STATUSES.archived,
     });
 
@@ -56,7 +56,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
 
   test("renders archive status", async function (assert) {
     this.currentUser.admin = true;
-    this.channel = fabricators.chatChannel({
+    this.channel = fabricators.channel({
       status: CHANNEL_STATUSES.archived,
       archive_failed: true,
     });

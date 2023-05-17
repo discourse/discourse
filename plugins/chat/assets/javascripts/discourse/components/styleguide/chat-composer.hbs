@@ -1,0 +1,17 @@
+<StyleguideExample @title="<ChatComposer>">
+  <Styleguide::Component>
+    <Chat::Composer::Channel
+      @channel={{this.channel}}
+      @onSendMessage={{this.onSendMessage}}
+    />
+  </Styleguide::Component>
+
+  <Styleguide::Controls>
+    <Styleguide::Controls::Row @name="Disabled">
+      <DToggleSwitch
+        @state={{this.channel.isReadOnly}}
+        {{on "click" this.toggleDisabled}}
+      />
+    </Styleguide::Controls::Row>
+  </Styleguide::Controls>
+</StyleguideExample>

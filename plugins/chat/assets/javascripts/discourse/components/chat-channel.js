@@ -113,11 +113,10 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this.unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
-      this.chatChannelComposer.message =
-        this.args.channel.draft ||
-        ChatMessage.createDraftMessage(this.args.channel, {
-          user: this.currentUser,
-        });
+
+      if (this.args.channel.draft) {
+        this.chatChannelComposer.message = this.args.channel.draft;
+      }
 
       this._loadedChannelId = this.args.channel?.id;
     }

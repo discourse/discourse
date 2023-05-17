@@ -101,7 +101,10 @@ module SystemHelpers
 
     ENV["TZ"] = timezone
 
-    using_session(timezone) { freeze_time(&example) }
+    using_session(timezone) do |session|
+      freeze_time(&example)
+      session.quit
+    end
 
     ENV["TZ"] = previous_browser_timezone
   end

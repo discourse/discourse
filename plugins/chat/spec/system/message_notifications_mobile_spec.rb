@@ -35,7 +35,10 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               Jobs.run_immediately!
 
               visit("/chat")
-              using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+              using_session(:user_1) do |session|
+                create_message(channel: channel_1, creator: user_1)
+                session.quit
+              end
 
               expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
               expect(page).to have_no_css(
@@ -62,7 +65,10 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               Jobs.run_immediately!
 
               visit("/chat")
-              using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+              using_session(:user_1) do |session|
+                create_message(channel: channel_1, creator: user_1)
+                session.quit
+              end
 
               expect(page).to have_css(".do-not-disturb-background")
               expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
@@ -77,7 +83,10 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
                 Jobs.run_immediately!
 
                 visit("/chat")
-                using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+                using_session(:user_1) do |session|
+                  create_message(channel: channel_1, creator: user_1)
+                  session.quit
+                end
 
                 expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
                 expect(page).to have_no_css(
@@ -92,7 +101,10 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               Jobs.run_immediately!
 
               visit("/chat")
-              using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+              using_session(:user_1) do |session|
+                create_message(channel: channel_1, creator: user_1)
+                session.quit
+              end
 
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
               expect(page).to have_css(
@@ -138,14 +150,20 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
             Jobs.run_immediately!
 
             visit("/chat")
-            using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_1, creator: user_1)
+              session.quit
+            end
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
             expect(page).to have_css(
               ".chat-channel-row[data-chat-channel-id=\"#{dm_channel_1.id}\"] .chat-channel-unread-indicator",
             )
 
-            using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_1, creator: user_1)
+              session.quit
+            end
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end
@@ -162,7 +180,10 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               ".chat-channel-row:nth-child(2)[data-chat-channel-id=\"#{dm_channel_2.id}\"]",
             )
 
-            using_session(:user_1) { create_message(channel: dm_channel_2, creator: user_2) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_2, creator: user_2)
+              session.quit
+            end
 
             expect(page).to have_css(
               ".chat-channel-row:nth-child(1)[data-chat-channel-id=\"#{dm_channel_2.id}\"]",
@@ -190,14 +211,20 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
             Jobs.run_immediately!
 
             visit("/chat")
-            using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+            using_session(:user_1) do |session|
+              create_message(channel: channel_1, creator: user_1)
+              session.quit
+            end
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
             expect(page).to have_css(
               ".chat-channel-row[data-chat-channel-id=\"#{channel_1.id}\"] .chat-channel-unread-indicator",
             )
 
-            using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_1, creator: user_1)
+              session.quit
+            end
 
             expect(page).to have_css(
               ".chat-channel-row[data-chat-channel-id=\"#{dm_channel_1.id}\"] .chat-channel-unread-indicator",

@@ -9,7 +9,6 @@
         this.currentMessage
         this.currentMessage.inReplyTo
       }}
-      @icon={{if this.currentMessage.editing "pencil-alt" "reply"}}
       @cancelAction={{this.onCancel}}
     />
   {{/if}}
@@ -26,7 +25,7 @@
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
-    {{did-insert this.setupAppEvents}}
+    {{did-insert this.setup}}
     {{will-destroy this.teardown}}
     {{will-destroy this.cancelPersistDraft}}
   >
