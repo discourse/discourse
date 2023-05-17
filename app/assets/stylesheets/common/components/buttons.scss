@@ -339,10 +339,7 @@
 
       &:active,
       &.btn-active {
-        @include linear-gradient(
-          var(--primary-low-mid) 0%,
-          var(--primary-very-low) 100%
-        );
+        @include darken-background(transparent, 0.2);
       }
     }
   }
