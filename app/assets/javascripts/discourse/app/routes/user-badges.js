@@ -14,9 +14,9 @@ export default DiscourseRoute.extend(ViewingActionType, {
     );
   },
 
-  setupController(controller, model) {
+  setupController() {
+    this._super(...arguments);
     this.viewingActionType(-1);
-    controller.set("model", model);
   },
 
   titleToken() {

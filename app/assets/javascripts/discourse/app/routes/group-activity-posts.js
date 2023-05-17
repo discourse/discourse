@@ -19,7 +19,7 @@ export function buildGroupPage(type) {
 
     setupController(controller, model) {
       let loadedAll = model.length < 20;
-      this.controllerFor("group-activity-posts").setProperties({
+      controller.setProperties({
         model,
         type,
         canLoadMore: !loadedAll,

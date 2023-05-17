@@ -3,7 +3,7 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
-  templateName: "user_stream",
+  templateName: "user/stream",
 
   model() {
     const user = this.modelFor("user");
@@ -16,10 +16,6 @@ export default DiscourseRoute.extend({
         emptyState: this.emptyState(),
       };
     });
-  },
-
-  setupController(controller, model) {
-    controller.set("model", model);
   },
 
   emptyState() {

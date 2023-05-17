@@ -16,8 +16,8 @@ export default DiscourseRoute.extend({
     return this.pmTopicTrackingState.startTracking();
   },
 
-  setupController(controller, model) {
-    controller.set("model", model);
+  setupController() {
+    this._super(...arguments);
 
     if (this.currentUser) {
       Draft.get("new_private_message").then((data) => {

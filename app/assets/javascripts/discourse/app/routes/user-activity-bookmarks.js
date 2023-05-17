@@ -5,7 +5,7 @@ import { Promise } from "rsvp";
 import I18n from "I18n";
 
 export default DiscourseRoute.extend({
-  templateName: "user_bookmarks",
+  templateName: "user/bookmarks",
 
   queryParams: {
     acting_username: { refreshModel: true },
