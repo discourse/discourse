@@ -144,7 +144,7 @@ class Upload < ActiveRecord::Base
     external_copy = nil
 
     if original_path.blank?
-      external_copy = Discourse.store.download(self)
+      external_copy = Discourse.store.download!(self)
       original_path = external_copy.path
     end
 
@@ -268,14 +268,14 @@ class Upload < ActiveRecord::Base
   def fix_dimensions!
     return if !FileHelper.is_supported_image?("image.#{extension}")
 
-    path =
-      if local?
-        Discourse.store.path_for(self)
-      else
-        Discourse.store.download(self).path
-      end
-
     begin
+      path =
+        if local?
+          Discourse.store.path_for(self)
+        else
+          Discourse.store.download!(self).path
+        end
+
       if extension == "svg"
         w, h =
           begin
