@@ -135,7 +135,7 @@ RSpec.describe SeedData::Categories do
     end
 
     it "does not override permissions of existing category when not forced" do
-      create_category("lounge_category_id")
+      create_category("general_category_id")
 
       category = Category.last
       category.set_permissions(trust_level_2: :full)
@@ -143,7 +143,7 @@ RSpec.describe SeedData::Categories do
 
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
 
-      expect { create_category("lounge_category_id") }.not_to change { CategoryGroup.count }
+      expect { create_category("general_category_id") }.not_to change { CategoryGroup.count }
 
       category.reload
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
