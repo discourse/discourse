@@ -12,7 +12,7 @@ export default DiscourseRoute.extend(ViewingActionType, {
     const userActionType = this.userActionType;
     this.controllerFor("user").set("userActionType", userActionType);
     this.controllerFor("user-activity").set("userActionType", userActionType);
-    this.controllerFor("user-topics-list").setProperties({
+    controller.setProperties({
       model,
       hideCategory: false,
     });
