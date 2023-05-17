@@ -97,7 +97,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
 
       expect(page).to have_selector(
         ".chat-channel .chat-reply__excerpt",
-        text: original_message.message,
+        text: original_message.excerpt,
       )
 
       channel_page.fill_composer("reply to message")

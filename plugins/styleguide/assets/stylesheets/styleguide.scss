@@ -73,6 +73,36 @@
 
       .rendered {
         width: 100%;
+        position: relative;
+
+        .component {
+          padding: 2rem;
+          border: 2px dotted var(--primary-low);
+          margin-bottom: 2rem;
+        }
+
+        .component-properties {
+          width: 100%;
+
+          &__cell {
+            padding: 0.5rem 0;
+
+            &:first-child {
+              width: 30%;
+            }
+
+            textarea,
+            input {
+              box-sizing: border-box;
+              margin: 0;
+              width: 100%;
+            }
+
+            textarea {
+              height: 100px;
+            }
+          }
+        }
       }
 
       margin-bottom: 2em;

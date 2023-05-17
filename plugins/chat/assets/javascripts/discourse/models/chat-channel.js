@@ -89,6 +89,7 @@ export default class ChatChannel {
   @tracked membershipsCount = 0;
   @tracked archive;
   @tracked tracking;
+  @tracked threadingEnabled = false;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
@@ -114,7 +115,10 @@ export default class ChatChannel {
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
     this.chatable = this.isDirectMessageChannel
-      ? ChatDirectMessage.create(args)
+      ? ChatDirectMessage.create({
+          id: args.chatable?.id,
+          users: args.chatable?.users,
+        })
       : Category.create(args.chatable);
     this.currentUserMembership = UserChatChannelMembership.create(
       args.current_user_membership

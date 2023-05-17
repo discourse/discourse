@@ -141,7 +141,10 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  setupAppEvents() {
+  setup() {
+    this.composer.message = ChatMessage.createDraftMessage(this.args.channel, {
+      user: this.currentUser,
+    });
     this.appEvents.on("chat:modify-selection", this, "modifySelection");
     this.appEvents.on(
       "chat:open-insert-link-modal",

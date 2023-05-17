@@ -161,15 +161,17 @@ describe "Single thread in side panel", type: :system, js: true do
           expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
         end
 
-        using_session(:tab_1) do
+        using_session(:tab_1) do |session|
           expect(side_panel).to have_open_thread(thread)
           expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
           thread_page.send_message("this is a test message")
           expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
+          session.quit
         end
 
-        using_session(:tab_2) do
+        using_session(:tab_2) do |session|
           expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
+          session.quit
         end
       end
 
