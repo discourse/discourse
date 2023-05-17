@@ -1,6 +1,6 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import pretender from "discourse/tests/helpers/create-pretender";
@@ -38,7 +38,7 @@ module(
     };
 
     hooks.beforeEach(function () {
-      this.channel = fabricators.chatChannel({
+      this.channel = fabricators.channel({
         id: channelId,
         currentUserMembership: { following: true },
       });
