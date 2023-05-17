@@ -2132,8 +2132,6 @@ navigation:
     choices:
       - "default"
       - "unread_new"
-  enable_new_notifications_menu:
-    default: true
 
 embedding:
   embed_by_username:

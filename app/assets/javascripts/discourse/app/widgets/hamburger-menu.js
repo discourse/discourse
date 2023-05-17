@@ -354,15 +354,7 @@ export default createWidget("hamburger-menu", {
       });
   },
 
-  html(attrs, state) {
-    if (
-      this.currentUser &&
-      !this.currentUser.redesigned_user_menu_enabled &&
-      !state.loaded
-    ) {
-      this.refreshReviewableCount(state);
-    }
-
+  html() {
     return this.attach("menu-panel", {
       contents: () => this.panelContents(),
       maxWidth: this.settings.maxWidth,
