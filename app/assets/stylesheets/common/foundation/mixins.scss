@@ -58,6 +58,15 @@ $breakpoints: (
   background-image: linear-gradient(to bottom, $start-color, $end-color);
 }
 
+@mixin darken-background($background-color) {
+  $overlay: dark-light-choose(
+    rgba(var(--secondary-rgb), 0.65),
+    rgba(var(--primary-rgb), 0.65)
+  );
+  background-color: $background-color;
+  background-image: linear-gradient(to bottom, $overlay 100%, $overlay 100%);
+}
+
 // Visibility
 // --------------------------------------------------
 
