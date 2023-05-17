@@ -20,7 +20,7 @@
   margin: 0;
   font-weight: normal;
   color: $text-color;
-  background: $bg-color;
+  background-color: $bg-color;
   border-radius: var(--d-button-border-radius);
   cursor: pointer;
   transition: all 0.25s;
@@ -43,7 +43,7 @@
     }
   }
   @include hover {
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -67,10 +67,13 @@
   &[href] {
     color: $text-color;
   }
+  .discourse-no-touch &:active,
+  .discourse-no-touch &.btn-active,
   &:active,
   &.btn-active {
-    @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
-    border-bottom-color: $bg-color;
+    // @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
+    // border-bottom-color: $bg-color;
+    background-color: var(--primary-700);
   }
   &[disabled],
   &.disabled {
