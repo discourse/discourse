@@ -98,7 +98,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     setupAutocompleteResponses([mentionedUser2, mentionedUser3]);
   });
 
-  test("it shows status on mentions on just posted messages", async function (assert) {
+  test("just posted messages | it shows status on mentions ", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
 
@@ -117,7 +117,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       );
   });
 
-  test("it updates status on mentions on just posted messages", async function (assert) {
+  test("just posted messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
 
@@ -147,7 +147,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       );
   });
 
-  test("it deletes status on mentions on just posted messages", async function (assert) {
+  test("just posted messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
@@ -161,7 +161,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  test("it shows status on mentions on edited messages", async function (assert) {
+  test("edited messages | it shows status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await editMessage(
@@ -184,7 +184,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       );
   });
 
-  skip("it updates status on mentions on edited messages", async function (assert) {
+  skip("edited messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
     await editMessage(
       ".chat-message-content",
@@ -216,7 +216,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       );
   });
 
-  skip("it deletes status on mentions on edited messages", async function (assert) {
+  skip("edited messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await editMessage(
