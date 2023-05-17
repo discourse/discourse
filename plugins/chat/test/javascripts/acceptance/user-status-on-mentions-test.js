@@ -46,20 +46,19 @@ acceptance("Chat | User status on mentions", function (needs) {
       emoji: "tooth",
     },
   };
+  const message = {
+    id: messageId,
+    message: `Hey @${mentionedUser1.username}`,
+    cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser1.username}">@${mentionedUser1.username}</a></p>`,
+    mentioned_users: [mentionedUser1],
+    user: actingUser,
+  };
   const messagesResponse = {
     meta: {
       channel_id: channelId,
       can_delete_self: true,
     },
-    chat_messages: [
-      {
-        id: messageId,
-        message: `Hey @${mentionedUser1.username}`,
-        cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser1.username}">@${mentionedUser1.username}</a></p>`,
-        mentioned_users: [mentionedUser1],
-        user: actingUser,
-      },
-    ],
+    chat_messages: [message],
   };
   const newStatus = {
     description: "working remotely",
@@ -93,6 +92,10 @@ acceptance("Chat | User status on mentions", function (needs) {
     pretender.put(`/chat/1/edit/${messageId}`, () => OK);
     pretender.post(`/chat/drafts`, () => OK);
     pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () => OK);
+    pretender.put(
+      `/chat/api/channels/1/messages/${messageId}/restore`,
+      () => OK
+    );
 
     setupAutocompleteResponses([mentionedUser2, mentionedUser3]);
   });
@@ -100,20 +103,11 @@ acceptance("Chat | User status on mentions", function (needs) {
   test("just posted messages | it shows status on mentions ", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
-
-    assert
-      .dom(`.mention[href='/u/${mentionedUser2.username}'] .user-status`)
-      .exists("status is rendered")
-      .hasAttribute(
-        "title",
-        mentionedUser2.status.description,
-        "status description is correct"
-      )
-      .hasAttribute(
-        "src",
-        new RegExp(`${mentionedUser2.status.emoji}.png`),
-        "status emoji is updated"
-      );
+    assertStatusIsRendered(
+      assert,
+      `.mention[href='/u/${mentionedUser2.username}'] .user-status`,
+      mentionedUser2.status
+    );
   });
 
   test("just posted messages | it updates status on mentions", async function (assert) {
@@ -126,19 +120,7 @@ acceptance("Chat | User status on mentions", function (needs) {
 
     const selector = `.mention[href='/u/${mentionedUser2.username}'] .user-status`;
     await waitFor(selector);
-    assert
-      .dom(selector)
-      .exists("status is rendered")
-      .hasAttribute(
-        "title",
-        newStatus.description,
-        "status description is updated"
-      )
-      .hasAttribute(
-        "src",
-        new RegExp(`${newStatus.emoji}.png`),
-        "status emoji is updated"
-      );
+    assertStatusIsRendered(assert, selector, newStatus);
   });
 
   test("just posted messages | it deletes status on mentions", async function (assert) {
@@ -163,19 +145,11 @@ acceptance("Chat | User status on mentions", function (needs) {
       `mentioning @${mentionedUser3.username}`
     );
 
-    assert
-      .dom(`.mention[href='/u/${mentionedUser3.username}'] .user-status`)
-      .exists("status is rendered")
-      .hasAttribute(
-        "title",
-        mentionedUser3.status.description,
-        "status description is correct"
-      )
-      .hasAttribute(
-        "src",
-        new RegExp(`${mentionedUser3.status.emoji}.png`),
-        "status emoji is updated"
-      );
+    assertStatusIsRendered(
+      assert,
+      `.mention[href='/u/${mentionedUser3.username}'] .user-status`,
+      mentionedUser3.status
+    );
   });
 
   skip("edited messages | it updates status on mentions", async function (assert) {
@@ -191,19 +165,7 @@ acceptance("Chat | User status on mentions", function (needs) {
 
     const selector = `.mention[href='/u/${mentionedUser3.username}'] .user-status`;
     await waitFor(selector);
-    assert
-      .dom(selector)
-      .exists("status is rendered")
-      .hasAttribute(
-        "title",
-        newStatus.description,
-        "status description is updated"
-      )
-      .hasAttribute(
-        "src",
-        new RegExp(`${newStatus.emoji}.png`),
-        "status emoji is updated"
-      );
+    assertStatusIsRendered(assert, selector, newStatus);
   });
 
   skip("edited messages | it deletes status on mentions", async function (assert) {
@@ -229,19 +191,11 @@ acceptance("Chat | User status on mentions", function (needs) {
     await deleteMessage(".chat-message-content");
     await click(".chat-message-expand");
 
-    assert
-      .dom(`.mention[href='/u/${mentionedUser1.username}'] .user-status`)
-      .exists("status is rendered")
-      .hasAttribute(
-        "title",
-        mentionedUser1.status.description,
-        "status description is correct"
-      )
-      .hasAttribute(
-        "src",
-        new RegExp(`${mentionedUser1.status.emoji}.png`),
-        "status emoji is updated"
-      );
+    assertStatusIsRendered(
+      assert,
+      `.mention[href='/u/${mentionedUser1.username}'] .user-status`,
+      mentionedUser1.status
+    );
   });
 
   test("deleted messages | it updates status on mentions", async function (assert) {
@@ -256,19 +210,7 @@ acceptance("Chat | User status on mentions", function (needs) {
 
     const selector = `.mention[href='/u/${mentionedUser1.username}'] .user-status`;
     await waitFor(selector);
-    assert
-      .dom(selector)
-      .exists("status is rendered")
-      .hasAttribute(
-        "title",
-        newStatus.description,
-        "status description is updated"
-      )
-      .hasAttribute(
-        "src",
-        new RegExp(`${newStatus.emoji}.png`),
-        "status emoji is updated"
-      );
+    assertStatusIsRendered(assert, selector, newStatus);
   });
 
   test("deleted messages | it deletes status on mentions", async function (assert) {
@@ -286,6 +228,35 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
+  test("restored messages | it shows status on mentions", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await deleteMessage(".chat-message-content");
+    await restoreMessage(".chat-message-content");
+
+    assertStatusIsRendered(
+      assert,
+      `.mention[href='/u/${mentionedUser1.username}'] .user-status`,
+      mentionedUser1.status
+    );
+  });
+
+  function assertStatusIsRendered(assert, selector, status) {
+    assert
+      .dom(selector)
+      .exists("status is rendered")
+      .hasAttribute(
+        "title",
+        status.description,
+        "status description is updated"
+      )
+      .hasAttribute(
+        "src",
+        new RegExp(`${status.emoji}.png`),
+        "status emoji is updated"
+      );
+  }
+
   async function deleteMessage(messageSelector) {
     await triggerEvent(query(messageSelector), "mouseenter");
     await click(".more-buttons .select-kit-header-wrapper");
@@ -302,6 +273,51 @@ acceptance("Chat | User status on mentions", function (needs) {
     await click(".more-buttons .select-kit-header-wrapper");
     await click(".select-kit-collection .select-kit-row[data-value='edit']");
     await typeWithAutocompleteAndSend(text);
+  }
+
+  async function restoreMessage(messageSelector) {
+    await triggerEvent(query(messageSelector), "mouseenter");
+    await click(".more-buttons .select-kit-header-wrapper");
+    await click(".select-kit-collection .select-kit-row[data-value='restore']");
+    await publishToMessageBus(`/chat/${channelId}`, {
+      type: "restore",
+      chat_message: message,
+    });
+
+    // data: {
+    //   chat_message: {
+    //     id: 2137,
+    //     message: "test",
+    //     cooked: "<p>test</p>",
+    //     created_at: "2023-05-17T22:15:38.972Z",
+    //     excerpt: "test",
+    //     available_flags: [],
+    //     thread_title: null,
+    //     chat_channel_id: 1,
+    //     mentioned_users: [],
+    //     user: {
+    //       id: 1,
+    //       username: "admin1",
+    //       name: null,
+    //       avatar_template:
+    //         "/letter_avatar_proxy/v4/letter/a/bbce88/{size}.png",
+    //       status: {
+    //         description: "test",
+    //         emoji: "hole",
+    //         ends_at: null,
+    //         message_bus_last_id: 29,
+    //       },
+    //       moderator: false,
+    //       admin: true,
+    //       staff: true,
+    //       new_user: false,
+    //       primary_group_name: null,
+    //     },
+    //     chat_webhook_event: null,
+    //     uploads: [],
+    //   },
+    //   type: "restore",
+    // },
   }
 
   async function emulateAutocomplete(inputSelector, text) {
