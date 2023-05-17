@@ -73,7 +73,7 @@
   .discourse-no-touch &.btn-active,
   &:active,
   &.btn-active {
-    background-image: ;
+    @include darken-background($bg-color);
   }
   &[disabled],
   &.disabled {
