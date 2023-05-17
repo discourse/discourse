@@ -10,18 +10,32 @@ function colorSchemeOverride(type) {
   const lightScheme = document.querySelector("link.light-scheme");
   const darkScheme = document.querySelector("link.dark-scheme");
 
-  if (!lightScheme || !darkScheme) {
+  if (!lightScheme && !darkScheme) {
     return;
   }
 
   switch (type) {
     case DARK:
+      lightScheme.origMedia = lightScheme.media;
       lightScheme.media = "none";
+      darkScheme.origMedia = darkScheme.media;
       darkScheme.media = "all";
       break;
     case LIGHT:
+      lightScheme.origMedia = lightScheme.media;
       lightScheme.media = "all";
+      darkScheme.origMedia = darkScheme.media;
       darkScheme.media = "none";
+      break;
+    default:
+      if (lightScheme.origMedia) {
+        lightScheme.media = lightScheme.origMedia;
+        lightScheme.removeAttribute("origMedia");
+      }
+      if (darkScheme.origMedia) {
+        darkScheme.media = darkScheme.origMedia;
+        darkScheme.removeAttribute("origMedia");
+      }
       break;
   }
 }
