@@ -6,6 +6,7 @@ import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-c
 
 export default class ChatStyleguideChatComposer extends Component {
   @service chatChannelComposer;
+  @service chatChannelPane;
 
   channel = fabricators.channel();
 
@@ -16,6 +17,10 @@ export default class ChatStyleguideChatComposer extends Component {
     } else {
       this.channel.status = CHANNEL_STATUSES.open;
     }
+  }
+  @action
+  toggleSending() {
+    this.chatChannelPane.sending = !this.chatChannelPane.sending;
   }
 
   @action

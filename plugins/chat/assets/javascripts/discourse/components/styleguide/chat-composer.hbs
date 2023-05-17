@@ -13,5 +13,11 @@
         {{on "click" this.toggleDisabled}}
       />
     </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="Sending">
+      <DToggleSwitch
+        @state={{this.chatChannelPane.sending}}
+        {{on "click" this.toggleSending}}
+      />
+    </Styleguide::Controls::Row>
   </Styleguide::Controls>
 </StyleguideExample>
