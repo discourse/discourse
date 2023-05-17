@@ -1000,7 +1000,7 @@ export default class ChatLivePane extends Component {
   #isBottomOfMessageVisible(element, container) {
     const rect = element.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    // - 1.0 to account for rounding errors, especially on firefox
-    return rect.bottom - 1.0 <= containerRect.bottom;
+    // - 5.0 to account for rounding errors, especially on firefox
+    return rect.bottom - 5.0 <= containerRect.bottom;
   }
 }
