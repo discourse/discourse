@@ -397,9 +397,13 @@ export default class ComposerController extends Controller {
     }
   }
 
-  @discourseComputed("model.creatingPrivateMessage", "model.targetRecipients")
-  showWarning(creatingPrivateMessage, usernames) {
-    if (!this.get("currentUser.staff")) {
+  @discourseComputed(
+    "model.creatingPrivateMessage",
+    "model.targetRecipients",
+    "model.warningsDisabled"
+  )
+  showWarning(creatingPrivateMessage, usernames, warningsDisabled) {
+    if (!this.get("currentUser.staff") || warningsDisabled) {
       return false;
     }
 
@@ -1335,6 +1339,7 @@ export default class ComposerController extends Controller {
       composeState: Composer.OPEN,
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
+      warningsDisabled: opts.warningsDisabled,
     });
 
     if (!this.model.targetRecipients) {
