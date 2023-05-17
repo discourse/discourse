@@ -3919,7 +3919,6 @@ hr:
         few: "Dobio ovu značku %{count} puta"
         other: "Dobio ovu značku %{count} puta"
       granted_on: "Odobreno %{date}"
-      others_count: "Ostali s ovom značkom (%{count})"
       title: Značke
       allow_title: "Ovu značku možete upotrijebiti kao naslov"
       multiple_grant: "To možete zaraditi više puta"
@@ -5646,7 +5645,6 @@ hr:
             label: "Dodaj emotikone"
         title: "Postavke"
         no_results: "Nema pronađenih rezultata"
-        more_than_30_results: "Postoji više od 30 rezultata. Molimo suzite kriterije vaše pretrage ili odaberite kategoriju."
         clear_filter: "Izbriši"
         add_url: "dodaj URL"
         add_host: "dodaj host"

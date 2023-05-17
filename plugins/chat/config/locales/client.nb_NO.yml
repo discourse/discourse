@@ -108,9 +108,11 @@ nb_NO:
         flags: "Flagg"
         symbols: "Symboler"
       thread:
+        title: "Tittel"
         replies:
           one: "%{count} svar"
           other: "%{count} svar"
+        settings: "Instillinger"
       draft_channel_screen:
         header: "Ny Melding"
         cancel: "Avbryt"

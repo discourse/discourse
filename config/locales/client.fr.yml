@@ -3737,7 +3737,6 @@ fr:
         one: "A reçu ce badge %{count} fois"
         other: "A reçu ce badge %{count} fois"
       granted_on: "Attribué le %{date}"
-      others_count: "Autres utilisateurs avec ce badge (%{count})"
       title: Badges
       allow_title: "Vous pouvez utiliser ce badge comme titre"
       multiple_grant: "Vous pouvez obtenir plusieurs fois ce badge"
@@ -5440,7 +5439,6 @@ fr:
             label: "Ajouter émoji"
         title: "Paramètres"
         no_results: "Aucun résultat trouvé."
-        more_than_30_results: "Il y a plus de 30 résultats. Veuillez affiner votre recherche ou sélectionner une catégorie."
         clear_filter: "Effacer"
         add_url: "ajouter une URL"
         add_host: "ajouter un hôte"

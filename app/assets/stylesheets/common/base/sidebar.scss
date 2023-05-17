@@ -31,18 +31,21 @@
 
   @include unselectable;
 
-  // 100dvh with fallback for old browsers
-  --100dvh: 100vh;
-  @supports (height: 100dvh) {
-    --100dvh: 100dvh;
+  // 1dvh with fallback for old browsers
+  --1dvh: 1vh;
+  @supports (height: 1dvh) {
+    --1dvh: 1dvh;
   }
 
-  height: calc(var(--100dvh) - var(--header-offset, 0px));
+  height: calc(
+    var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
+  );
 
   .footer-nav-ipad & {
     top: calc(var(--header-offset) + var(--footer-nav-height));
     height: calc(
-      var(--100dvh) - var(--header-offset, 0px) - var(--footer-nav-height, 0px)
+      var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px) -
+        var(--footer-nav-height, 0px)
     );
   }
 

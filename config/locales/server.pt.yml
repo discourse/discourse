@@ -181,9 +181,6 @@ pt:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
     site_settings:
       invalid_category_id: "Especificou uma categoria que não existe"
-      invalid_choice:
-        one: "Especificou a escolha inválida %{name}"
-        other: "Especificou escolhas inválidas %{name}"
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       default_tags_already_selected: "Não pode selecionar uma etiqueta usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."

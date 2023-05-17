@@ -420,10 +420,7 @@ class Category < ActiveRecord::Base
   end
 
   def clear_related_site_settings
-    if self.id == SiteSetting.general_category_id
-      SiteSetting.general_category_id = -1
-      Site.clear_show_welcome_topic_cache
-    end
+    SiteSetting.general_category_id = -1 if self.id == SiteSetting.general_category_id
   end
 
   def topic_url
@@ -872,7 +869,7 @@ class Category < ActiveRecord::Base
 
   def seeded?
     [
-      SiteSetting.lounge_category_id,
+      SiteSetting.general_category_id,
       SiteSetting.meta_category_id,
       SiteSetting.staff_category_id,
       SiteSetting.uncategorized_category_id,

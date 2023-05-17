@@ -104,10 +104,12 @@ lv:
         flags: "Sūdzības"
         symbols: "Simboli"
       thread:
+        title: "Virsraksts"
         replies:
           zero: "%{count} atbildes"
           one: "%{count} atbilde"
           other: "%{count} atbildes"
+        settings: "Iestatījumi"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

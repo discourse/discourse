@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import DiscourseURL from "discourse/lib/url";
 import {
   acceptance,
@@ -8,6 +8,11 @@ import {
 import I18n from "I18n";
 import { test } from "qunit";
 import sinon from "sinon";
+import {
+  getCachedTopicList,
+  setCachedTopicList,
+} from "discourse/lib/cached-topic-list";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 acceptance("Personal Message", function (needs) {
   needs.user();
@@ -19,6 +24,17 @@ acceptance("Personal Message", function (needs) {
       query("#suggested-topics .suggested-topics-title").innerText.trim(),
       I18n.t("suggested_topics.pm_title")
     );
+  });
+
+  test("redirects to inbox after topic is archived and clears topicList cache", async function (assert) {
+    const session = getOwner(this).lookup("service:session");
+    setCachedTopicList(session, {});
+
+    await visit("/t/pm-for-testing/12");
+    await click(".archive-topic");
+
+    assert.strictEqual(currentURL(), "/u/eviltrout/messages");
+    assert.notOk(getCachedTopicList(session), "topic list cached is cleared");
   });
 });
 

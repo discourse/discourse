@@ -175,6 +175,11 @@ export default class ChatComposer extends Component {
   }
 
   @action
+  focusTextarea() {
+    this.textareaInteractor.focus();
+  }
+
+  @action
   uploadClicked() {
     document.querySelector(`#${this.fileUploadElementId}`).click();
   }

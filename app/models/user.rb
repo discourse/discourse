@@ -355,6 +355,7 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
+        welcome_topic: 6,
       )
   end
 

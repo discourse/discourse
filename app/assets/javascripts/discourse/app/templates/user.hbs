@@ -180,8 +180,8 @@
                     this.model.featured_topic.slug
                     this.model.featured_topic.id
                   }}
-                >{{html-safe
-                    (replace-emoji this.model.featured_topic.fancy_title)
+                >{{replace-emoji
+                    (html-safe this.model.featured_topic.fancy_title)
                   }}</LinkTo>
               </div>
             {{/if}}

@@ -7,6 +7,7 @@ import ChatChannelArchive from "../models/chat-channel-archive";
 export default class ChatSubscriptionsManager extends Service {
   @service store;
   @service chatChannelsManager;
+  @service chatTrackingStateManager;
   @service currentUser;
   @service appEvents;
   @service chat;
@@ -135,7 +136,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       const membership = channel.currentUserMembership;
       if (busData.message_id > membership?.lastReadMessageId) {
-        membership.unreadMentions = (membership.unreadMentions || 0) + 1;
+        channel.tracking.mentionCount++;
       }
     });
   }
@@ -192,7 +193,7 @@ export default class ChatSubscriptionsManager extends Service {
             busData.message_id >
             (channel.currentUserMembership.lastReadMessageId || 0)
           ) {
-            channel.currentUserMembership.unreadCount++;
+            channel.tracking.unreadCount++;
           }
         }
       }
@@ -251,8 +252,9 @@ export default class ChatSubscriptionsManager extends Service {
     this.chatChannelsManager.find(channelId).then((channel) => {
       channel.currentUserMembership.lastReadMessageId =
         trackingData.last_read_message_id;
-      channel.currentUserMembership.unreadCount = trackingData.unread_count;
-      channel.currentUserMembership.unreadMentions = trackingData.mention_count;
+
+      channel.tracking.unreadCount = trackingData.unread_count;
+      channel.tracking.mentionCount = trackingData.mention_count;
     });
   }
 
@@ -281,7 +283,7 @@ export default class ChatSubscriptionsManager extends Service {
         channel.isDirectMessageChannel &&
         !channel.currentUserMembership.following
       ) {
-        channel.currentUserMembership.unreadCount = 1;
+        channel.tracking.unreadCount = 1;
       }
 
       this.chatChannelsManager.follow(channel);
@@ -360,8 +362,7 @@ export default class ChatSubscriptionsManager extends Service {
       // been deleted. we don't want them seeing the blue dot anymore so
       // just completely reset the unreads
       if (busData.status === CHANNEL_STATUSES.archived) {
-        channel.currentUserMembership.unreadCount = 0;
-        channel.currentUserMembership.unreadMentions = 0;
+        channel.tracking.reset();
       }
     });
   }

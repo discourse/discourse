@@ -2404,7 +2404,6 @@ et:
         one: "Teenis selle märgise %{count} kord"
         other: "Teenis selle märgise %{count} korda"
       granted_on: "Märgistatud %{date}"
-      others_count: "Teised selle märgisega (%{count})"
       title: Märgised
       badge_count:
         one: "%{count} märgis"

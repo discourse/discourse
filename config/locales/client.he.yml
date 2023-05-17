@@ -1165,6 +1165,7 @@ he:
           warning: "למחוק את הנושאים המומלצים שלך?"
       use_current_timezone: "להשתמש באזור הזמן הנוכחי"
       profile_hidden: "הפרופיל הציבורי של משתמש זה מוסתר"
+      inactive_user: "משתמש זה אינו פעיל עוד."
       expand_profile: "הרחב"
       sr_expand_profile: "הרחבת פרטי הפרופיל"
       collapse_profile: "הקטן"
@@ -1956,6 +1957,9 @@ he:
       suggested_topics:
         title: "אפשר להמשיך לקרוא!"
         content: "הינה כמה נושאים שלדעתנו יעניין אותך לקרוא בהמשך."
+      welcome_topic:
+        title: "עריכת נושא קבלת הפנים"
+        content: "סיוע לחברים חדשים להרגיש בבית על ידי התאמת הנושא כך שיתאים לצורכי הקהילה שלך."
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -4167,7 +4171,11 @@ he:
         many: "עיטור זה הוענק %{count} פעמים"
         other: "עיטור זה הוענק %{count} פעמים"
       granted_on: "הוענק לפני %{date}"
-      others_count: "אחרים עם עיטור זה (%{count})"
+      others_count:
+        one: "הוענק לאחרים פעם אחת"
+        two: "הוענק לאחרים פעמיים"
+        many: "הוענק לאחרים %{count} פעמים"
+        other: "הוענק לאחרים %{count} פעם"
       title: עיטורים
       allow_title: "ניתן להשתמש בעיטור זה ככותרת"
       multiple_grant: "ניתן לזכות בו מספר פעמים"
@@ -6044,7 +6052,6 @@ he:
             label: "הוספת אמוג׳י"
         title: "הגדרות"
         no_results: "לא נמצאו תוצאות."
-        more_than_30_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
         clear_filter: "ניקוי"
         add_url: "הוספת כתובת URL"
         add_host: "הוספת שרת"

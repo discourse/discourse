@@ -3288,7 +3288,6 @@ pt:
         one: "Ganhou este distintivo %{count} vez"
         other: "Ganhou este crachá %{count} vezes"
       granted_on: "Concedido %{date}"
-      others_count: "Outros com este crachá (%{count})"
       title: Crachás
       allow_title: "Pode usar este crachá como título"
       multiple_grant: "Você pode ganhar isto várias vezes"

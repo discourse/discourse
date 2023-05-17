@@ -29,7 +29,7 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
 
   test("unreadIndicator", async function (assert) {
     this.channel = fabricators.directMessageChatChannel();
-    this.channel.currentUserMembership.unreadCount = 1;
+    this.channel.tracking.unreadCount = 1;
 
     this.unreadIndicator = true;
     await render(

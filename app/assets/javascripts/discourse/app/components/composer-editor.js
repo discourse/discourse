@@ -249,7 +249,7 @@ export default Component.extend(
         this._bindMobileUploadButton();
       }
 
-      this.appEvents.trigger("composer:will-open");
+      this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
     },
 
     @discourseComputed(
@@ -603,7 +603,7 @@ export default Component.extend(
           );
 
           this.appEvents.trigger(
-            "composer:replace-text",
+            `${this.composerEventPrefix}:replace-text`,
             matchingPlaceholder[index],
             replacement,
             { regex: IMAGE_MARKDOWN_REGEX, index }
@@ -648,7 +648,11 @@ export default Component.extend(
         `![${input.value}|$2$3$4]($5)`
       );
 
-      this.appEvents.trigger("composer:replace-text", match, replacement);
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        match,
+        replacement
+      );
 
       this.resetImageControls(buttonWrapper);
     },
@@ -731,7 +735,7 @@ export default Component.extend(
       const matchingPlaceholder =
         this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
       this.appEvents.trigger(
-        "composer:replace-text",
+        `${this.composerEventPrefix}:replace-text`,
         matchingPlaceholder[index],
         "",
         { regex: IMAGE_MARKDOWN_REGEX, index }
@@ -749,11 +753,11 @@ export default Component.extend(
     @on("willDestroyElement")
     _composerClosed() {
       this._unbindMobileUploadButton();
-      this.appEvents.trigger("composer:will-close");
+      this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
       next(() => {
         // need to wait a bit for the "slide down" transition of the composer
         discourseLater(
-          () => this.appEvents.trigger("composer:closed"),
+          () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
           isTesting() ? 0 : 400
         );
       });

@@ -28,7 +28,7 @@
     {{else}}
       <div class="card-row first-row">
         <div class="user-card-avatar">
-          {{#if this.user.profile_hidden}}
+          {{#if this.contentHidden}}
             <span class="card-huge-avatar">{{bound-avatar
                 this.user
                 "huge"
@@ -57,7 +57,7 @@
               {{this.newUser}}
               {{if this.nameFirst 'full-name' 'username'}}"
           >
-            {{#if this.user.profile_hidden}}
+            {{#if this.contentHidden}}
               <span
                 id="discourse-user-card-title"
                 class="name-username-wrapper"
@@ -193,6 +193,12 @@
             <span>{{i18n "user.profile_hidden"}}</span>
           </div>
         </div>
+      {{else if this.user.inactive}}
+        <div class="card-row second-row">
+          <div class="inactive-user">
+            <span>{{i18n "user.inactive_user"}}</span>
+          </div>
+        </div>
       {{/if}}
 
       {{#if this.isSuspendedOrHasBio}}
@@ -292,7 +298,7 @@
       {{/if}}
 
       <div class="card-row metadata-row">
-        {{#unless this.user.profile_hidden}}
+        {{#unless this.contentHidden}}
           <div class="metadata">
             {{#if this.user.last_posted_at}}
               <h3><span class="desc">{{i18n "last_post"}}</span>

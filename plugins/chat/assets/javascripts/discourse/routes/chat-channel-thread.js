@@ -59,5 +59,7 @@ export default class ChatChannelThread extends DiscourseRoute {
         return;
       }
     }
+
+    this.chatStateManager.openSidePanel();
   }
 }

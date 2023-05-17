@@ -105,10 +105,12 @@ bs_BA:
         flags: "Flags"
         symbols: "Simboli"
       thread:
+        title: "Naslov"
         replies:
           one: "%{count} odgovor"
           few: "%{count} odgovora"
           other: "%{count} odgovora"
+        settings: "Postavke"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"

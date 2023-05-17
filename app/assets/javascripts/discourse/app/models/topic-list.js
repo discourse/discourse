@@ -7,6 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
+import deprecated from "discourse-common/lib/deprecated";
 
 function extractByKey(collection, klass) {
   const retval = {};
@@ -195,6 +196,15 @@ TopicList.reopenClass({
   },
 
   find(filter, params) {
+    deprecated(
+      `TopicList.find is deprecated. Use \`findFiltered("topicList")\` on the \`store\` service instead.`,
+      {
+        id: "topic-list-find",
+        since: "3.1.0.beta5",
+        dropFrom: "3.2.0.beta1",
+      }
+    );
+
     const store = getOwner(this).lookup("service:store");
     return store.findFiltered("topicList", { filter, params });
   },

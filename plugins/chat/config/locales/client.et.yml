@@ -102,9 +102,11 @@ et:
         objects: "Objektid"
         flags: "Tähised"
       thread:
+        title: "Pealkiri"
         replies:
           one: "%{count} vastus"
           other: "%{count} vastust"
+        settings: "Sätted"
       draft_channel_screen:
         header: "Uus sõnum"
         cancel: "Tühista"

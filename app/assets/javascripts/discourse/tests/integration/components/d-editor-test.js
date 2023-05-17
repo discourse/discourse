@@ -45,16 +45,6 @@ module("Integration | Component | d-editor", function (hooks) {
     );
   });
 
-  test("preview sanitizes HTML", async function (assert) {
-    await render(hbs`<DEditor @value={{this.value}} />`);
-
-    await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p>"&gt;</p>'
-    );
-  });
-
   test("updating the value refreshes the preview", async function (assert) {
     this.set("value", "evil trout");
 

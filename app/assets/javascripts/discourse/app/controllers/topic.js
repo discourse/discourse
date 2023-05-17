@@ -6,6 +6,7 @@ import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
+import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
@@ -579,7 +580,10 @@ export default Controller.extend(bufferedProperty("model"), {
         return;
       }
 
-      const backToInbox = () => this.gotoInbox(topic.get("inboxGroupName"));
+      const backToInbox = () => {
+        resetCachedTopicList(this.session);
+        this.gotoInbox(topic.get("inboxGroupName"));
+      };
 
       if (topic.get("message_archived")) {
         topic.moveToInbox().then(backToInbox);
