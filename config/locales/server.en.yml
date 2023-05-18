@@ -681,7 +681,7 @@ en:
     title: "Welcome to %{site_title}! :wave:"
     body: |
       We are so glad you joined us. %{site_description}
-      
+
       Here are some things you can do to get started:
 
       :speaking_head: **Introduce yourself** by adding your picture and information about yourself and your interests to [your profile](%{base_path}/my/preferences/account). What is one thing you’d like to be asked about?
@@ -2417,7 +2417,6 @@ en:
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
-
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
 
     errors:
