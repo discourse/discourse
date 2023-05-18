@@ -73,6 +73,12 @@
       }
     }
 
+    .chat-composer.is-focused.is-send-disabled & {
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+
     .chat-composer.is-sending & {
       animation: sendingScales 1s infinite linear;
     }
@@ -101,7 +107,7 @@
       cursor: default;
 
       .d-icon {
-        color: var(--primary-high);
+        color: var(--primary-low-mid);
       }
 
       &:hover {
@@ -127,7 +133,6 @@
     align-items: center;
     box-sizing: border-box;
     width: 100%;
-    padding: 0 5px;
     align-self: stretch;
   }
 

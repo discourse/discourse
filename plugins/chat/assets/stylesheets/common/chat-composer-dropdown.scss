@@ -6,6 +6,17 @@
   }
 }
 
+.chat-composer.is-disabled {
+  .no-touch & {
+    .chat-composer-dropdown__trigger-btn:hover {
+      cursor: default;
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
+  }
+}
+
 .chat-composer-dropdown__trigger-btn {
   .d-icon {
     padding: 5px;
@@ -13,6 +24,10 @@
     color: var(--primary-high);
     background: var(--secondary-very-high);
     border-radius: 100%;
+
+    .is-disabled & {
+      color: var(--primary-low-mid);
+    }
   }
 
   .no-touch & {
