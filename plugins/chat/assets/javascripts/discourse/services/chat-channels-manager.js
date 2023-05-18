@@ -120,8 +120,7 @@ export default class ChatChannelsManager extends Service {
       .channel(id)
       .catch(popupAjaxError)
       .then((result) => {
-        this.#cache(result.channel);
-        return result.channel;
+        return this.store(result.channel);
       });
   }
 
