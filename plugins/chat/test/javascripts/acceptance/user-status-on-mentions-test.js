@@ -241,6 +241,36 @@ acceptance("Chat | User status on mentions", function (needs) {
     );
   });
 
+  test("restored messages | it updates status on mentions", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await deleteMessage(".chat-message-content");
+    await restoreMessage(".chat-message-deleted");
+
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser1.id]: newStatus,
+    });
+
+    const selector = statusSelector(mentionedUser1.username);
+    await waitFor(selector);
+    assertStatusIsRendered(assert, selector, newStatus);
+  });
+
+  test("restored messages | it deletes status on mentions", async function (assert) {
+    await visit(`/chat/c/-/${channelId}`);
+
+    await deleteMessage(".chat-message-content");
+    await restoreMessage(".chat-message-deleted");
+
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser1.id]: null,
+    });
+
+    const selector = statusSelector(mentionedUser1.username);
+    await waitFor(selector, { count: 0 });
+    assert.dom(selector).doesNotExist("status is deleted");
+  });
+
   function assertStatusIsRendered(assert, selector, status) {
     assert
       .dom(selector)
