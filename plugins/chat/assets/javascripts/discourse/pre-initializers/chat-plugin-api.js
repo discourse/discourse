@@ -23,7 +23,7 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
 /**
  * Callback used to decorate a chat message
  *
- * @callback PluginApi~chatDrawerStateCallbak
+ * @callback PluginApi~chatDrawerStateCallback
  * @param {Object} state
  * @param {boolean} state.isDrawerActive - is the chat drawer active
  * @param {boolean} state.isDrawerExpanded - is the chat drawer expanded
@@ -81,7 +81,7 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * @memberof PluginApi
  * @instance
  * @function addChatDrawerStateCallback
- * @param {PluginApi~chatDrawerStateCallbak} callback
+ * @param {PluginApi~chatDrawerStateCallback} callback
  * @example
  *
  * api.addChatDrawerStateCallback(({isDrawerExpanded, isDrawerActive}) => {

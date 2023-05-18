@@ -257,7 +257,7 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Returns messages of a channel, from the last message or a specificed target.
+   * Returns messages of a channel, from the last message or a specified target.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the query.
    * @param {integer} data.targetMessageId - ID of the targeted message.
