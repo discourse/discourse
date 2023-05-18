@@ -72,7 +72,7 @@ module(
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
       assert
-        .dom(".mention .user-status")
+        .dom(statusSelector(mentionedUser.username))
         .exists("status is rendered")
         .hasAttribute(
           "title",
@@ -98,7 +98,7 @@ module(
         [mentionedUser.id]: newStatus,
       });
 
-      const selector = ".mention .user-status";
+      const selector = statusSelector(mentionedUser.username);
       await waitFor(selector);
       assert
         .dom(selector)
@@ -122,7 +122,7 @@ module(
         [mentionedUser.id]: null,
       });
 
-      const selector = ".mention .user-status";
+      const selector = statusSelector(mentionedUser.username);
       await waitFor(selector, { count: 0 });
       assert.dom(selector).doesNotExist("status is deleted");
     });
