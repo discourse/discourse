@@ -44,7 +44,7 @@ module Chat
       attribute :thread_ids, default: []
       attribute :include_missing_memberships, default: false
       attribute :include_threads, default: false
-      attribute :include_zero_unreads, default: true
+      attribute :include_read, default: true
     end
 
     private
@@ -66,7 +66,7 @@ module Chat
         thread_ids: contract.thread_ids,
         include_missing_memberships: contract.include_missing_memberships,
         include_threads: contract.include_threads,
-        include_zero_unreads: contract.include_zero_unreads,
+        include_read: contract.include_read,
       )
     end
   end

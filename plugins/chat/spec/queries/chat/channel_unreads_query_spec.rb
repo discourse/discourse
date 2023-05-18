@@ -5,6 +5,9 @@ require "rails_helper"
 describe Chat::ChannelUnreadsQuery do
   fab!(:channel_1) { Fabricate(:category_channel) }
   fab!(:current_user) { Fabricate(:user) }
+  let(:include_missing_memberships) { false }
+  let(:include_read) { true }
+  let(:channel_ids) { [channel_1.id] }
 
   before do
     SiteSetting.chat_enabled = true
@@ -12,13 +15,20 @@ describe Chat::ChannelUnreadsQuery do
     channel_1.add(current_user)
   end
 
+  let(:subject) do
+    described_class.call(
+      channel_ids: channel_ids,
+      user_id: current_user.id,
+      include_missing_memberships: include_missing_memberships,
+      include_read: include_read,
+    ).map(&:to_h)
+  end
+
   context "with unread message" do
     before { Fabricate(:chat_message, chat_channel: channel_1) }
 
     it "returns a correct unread count" do
-      expect(
-        described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-      ).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
+      expect(subject.first).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
     end
 
     context "when the membership has been muted" do
@@ -30,9 +40,7 @@ describe Chat::ChannelUnreadsQuery do
       end
 
       it "returns a zeroed unread count" do
-        expect(
-          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-        ).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
+        expect(subject.first).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
       end
     end
 
@@ -41,22 +49,19 @@ describe Chat::ChannelUnreadsQuery do
       fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }
 
       it "does include the original message in the unread count" do
-        expect(
-          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-        ).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+        expect(subject.first).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
       end
 
       it "does not include other thread messages in the unread count" do
         Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
-        expect(
-          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-        ).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+        expect(subject.first).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
       end
     end
 
     context "for multiple channels" do
       fab!(:channel_2) { Fabricate(:category_channel) }
+      let(:channel_ids) { [channel_1.id, channel_2.id] }
 
       before do
         channel_2.add(current_user)
@@ -65,12 +70,7 @@ describe Chat::ChannelUnreadsQuery do
       end
 
       it "returns accurate counts" do
-        expect(
-          described_class.call(
-            channel_ids: [channel_1.id, channel_2.id],
-            user_id: current_user.id,
-          ).map(&:to_h),
-        ).to match_array(
+        expect(subject).to match_array(
           [
             { mention_count: 0, unread_count: 1, channel_id: channel_1.id },
             { mention_count: 0, unread_count: 2, channel_id: channel_2.id },
@@ -87,28 +87,31 @@ describe Chat::ChannelUnreadsQuery do
         end
 
         it "does not return counts for the channels" do
-          expect(
-            described_class.call(
-              channel_ids: [channel_1.id, channel_2.id],
-              user_id: current_user.id,
-            ).map(&:to_h),
-          ).to match_array([{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }])
+          expect(subject).to match_array(
+            [{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }],
+          )
         end
 
         context "when include_missing_memberships is true" do
+          let(:include_missing_memberships) { true }
+
           it "does return zeroed counts for the channels" do
-            expect(
-              described_class.call(
-                channel_ids: [channel_1.id, channel_2.id],
-                user_id: current_user.id,
-                include_missing_memberships: true,
-              ).map(&:to_h),
-            ).to match_array(
+            expect(subject).to match_array(
               [
                 { mention_count: 0, unread_count: 1, channel_id: channel_1.id },
                 { mention_count: 0, unread_count: 0, channel_id: channel_2.id },
               ],
             )
+          end
+
+          context "when include_read is false" do
+            let(:include_read) { false }
+
+            it "does not return counts for the channels" do
+              expect(subject).to match_array(
+                [{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }],
+              )
+            end
           end
         end
       end
@@ -132,9 +135,7 @@ describe Chat::ChannelUnreadsQuery do
       message = Fabricate(:chat_message, chat_channel: channel_1)
       create_mention(message, channel_1)
 
-      expect(
-        described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-      ).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
+      expect(subject.first).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
     end
 
     context "for unread mentions in a thread" do
@@ -143,9 +144,7 @@ describe Chat::ChannelUnreadsQuery do
 
       it "does include the original message in the mention count" do
         create_mention(thread_om, channel_1)
-        expect(
-          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-        ).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
+        expect(subject.first).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
       end
 
       it "does not include other thread messages in the mention count" do
@@ -153,14 +152,13 @@ describe Chat::ChannelUnreadsQuery do
         thread_message_2 = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         create_mention(thread_message_1, channel_1)
         create_mention(thread_message_2, channel_1)
-        expect(
-          described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-        ).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
+        expect(subject.first).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
       end
     end
 
     context "for multiple channels" do
       fab!(:channel_2) { Fabricate(:category_channel) }
+      let(:channel_ids) { [channel_1.id, channel_2.id] }
 
       it "returns accurate counts" do
         message = Fabricate(:chat_message, chat_channel: channel_1)
@@ -171,12 +169,7 @@ describe Chat::ChannelUnreadsQuery do
         message_2 = Fabricate(:chat_message, chat_channel: channel_2)
         create_mention(message_2, channel_2)
 
-        expect(
-          described_class.call(
-            channel_ids: [channel_1.id, channel_2.id],
-            user_id: current_user.id,
-          ).map(&:to_h),
-        ).to match_array(
+        expect(subject).to match_array(
           [
             { mention_count: 1, unread_count: 1, channel_id: channel_1.id },
             { mention_count: 1, unread_count: 2, channel_id: channel_2.id },
@@ -188,9 +181,15 @@ describe Chat::ChannelUnreadsQuery do
 
   context "with nothing unread" do
     it "returns a correct state" do
-      expect(
-        described_class.call(channel_ids: [channel_1.id], user_id: current_user.id).first.to_h,
-      ).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
+      expect(subject.first).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
+    end
+
+    context "when include_read is false" do
+      let(:include_read) { false }
+
+      it "returns nothing" do
+        expect(subject).to eq([])
+      end
     end
   end
 end

@@ -113,7 +113,7 @@ module Chat
               guardian: guardian,
               channel_ids: [channel.id],
               include_threads: true,
-              include_zero_unreads: false,
+              include_read: false,
             )
             .find_channel_threads(channel.id)
             .keys

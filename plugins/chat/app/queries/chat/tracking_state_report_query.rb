@@ -8,7 +8,7 @@ module Chat
       thread_ids: [],
       include_missing_memberships: false,
       include_threads: false,
-      include_zero_unreads: true
+      include_read: true
     )
       report = ::Chat::TrackingStateReport.new
 
@@ -21,7 +21,7 @@ module Chat
               channel_ids: channel_ids,
               user_id: guardian.user.id,
               include_missing_memberships: include_missing_memberships,
-              include_zero_unreads: include_zero_unreads,
+              include_read: include_read,
             )
             .map do |ct|
               [ct.channel_id, { mention_count: ct.mention_count, unread_count: ct.unread_count }]
@@ -39,7 +39,7 @@ module Chat
               thread_ids: thread_ids,
               user_id: guardian.user.id,
               include_missing_memberships: include_missing_memberships,
-              include_zero_unreads: include_zero_unreads,
+              include_read: include_read,
             )
             .map do |tt|
               [
