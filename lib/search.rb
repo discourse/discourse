@@ -21,7 +21,7 @@ class Search
 
   def self.per_filter
     # Site setting default is 50
-    SiteSetting.search_posts_page_size
+    SiteSetting.search_page_size
   end
 
   def self.facets
