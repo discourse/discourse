@@ -1547,6 +1547,8 @@ RSpec.describe Post do
 
     let(:post) { Fabricate(:post, raw: raw_video) }
 
+    before { SiteSetting.video_thumbnails_enabled = true }
+
     it "has a topic thumbnail" do
       # Thumbnails are tied to a specific video file by using the
       # video's sha1 as the image filename
@@ -1576,6 +1578,16 @@ RSpec.describe Post do
 
       post.topic.reload
       expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
+
+    it "does not create thumbnails when disabled" do
+      SiteSetting.video_thumbnails_enabled = false
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(0)
     end
   end
 

@@ -31,8 +31,11 @@ module Chat
         validate_message!(has_uploads: upload_info[:uploads].any?)
         @chat_message.cook
         @chat_message.save!
+
+        @chat_message.update_mentions
         update_uploads(upload_info)
         revision = save_revision!
+
         @chat_message.reload
         Chat::Publisher.publish_edit!(@chat_channel, @chat_message)
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })

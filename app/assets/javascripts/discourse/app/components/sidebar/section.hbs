@@ -44,6 +44,12 @@
       {{/if}}
     </div>
 
+    {{#if @sectionDescription}}
+      <Sidebar::SectionMessage>
+        {{@sectionDescription}}
+      </Sidebar::SectionMessage>
+    {{/if}}
+
     {{#if this.displaySectionContent}}
       <ul class="sidebar-section-content" id={{this.sidebarSectionContentID}}>
         {{yield}}

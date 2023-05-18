@@ -58,20 +58,18 @@ import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
-} from "discourse/controllers/composer";
+} from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
-import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
 import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
-import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
@@ -120,7 +118,7 @@ import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.6.0";
+const PLUGIN_API_VERSION = "1.6.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -987,7 +985,7 @@ class PluginApi {
   }
 
   /**
-   * Adds a glyph to user menu after bookmarks
+   * Adds a glyph to the legacy user menu after bookmarks
    * WARNING: there is limited space there
    *
    * example:
@@ -999,9 +997,13 @@ class PluginApi {
    *    data: { url: `/some/path` },
    * });
    *
+   * To customize the new user menu, see api.registerUserMenuTab
    */
-  addUserMenuGlyph(glyph) {
-    addUserMenuGlyph(glyph);
+  addUserMenuGlyph() {
+    deprecated(
+      "addUserMenuGlyph has been removed. Use api.registerUserMenuTab instead.",
+      { id: "discourse.add-user-menu-glyph" }
+    );
   }
 
   /**
@@ -1096,7 +1098,7 @@ class PluginApi {
    *   customFilter: (category, args, router) => { return category && category.name !== 'bug' }
    *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') return "/a-feature"; },
    *   before: "top",
-   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
+   *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
    */
   addNavigationBarItem(item) {
@@ -1589,7 +1591,6 @@ class PluginApi {
    *
    **/
   addQuickAccessProfileItem(item) {
-    addQuickAccessProfileItem(item);
     addUserMenuProfileTabItem(item);
   }
 
@@ -2078,7 +2079,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for

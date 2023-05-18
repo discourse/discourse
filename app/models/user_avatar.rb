@@ -144,8 +144,8 @@ class UserAvatar < ActiveRecord::Base
         user.update!(uploaded_avatar_id: upload.id)
       end
     end
-  rescue Net::ReadTimeout, OpenURI::HTTPError
-    # skip saving, we are not connected to the net
+  rescue Net::ReadTimeout, OpenURI::HTTPError, FinalDestination::SSRFError
+    # Skip saving. We are not connected to the net, or SSRF checks failed.
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end

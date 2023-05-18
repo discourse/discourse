@@ -131,7 +131,7 @@ RSpec.describe User do
       it "should not create any sidebar section link records for staged users" do
         user = Fabricate(:user, staged: true)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should create sidebar section link records when user has been unstaged" do
@@ -144,7 +144,7 @@ RSpec.describe User do
       it "should not create any sidebar section link records for non human users" do
         user = Fabricate(:user, id: -Time.now.to_i)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should not create any tag sidebar section link records when tagging is disabled" do
@@ -3464,34 +3464,6 @@ RSpec.describe User do
 
       user.update!(seen_notification_id: last_seen_id)
       expect(user.new_personal_messages_notifications_count).to eq(1)
-    end
-  end
-
-  describe "#redesigned_user_menu_enabled?" do
-    it "returns true when `navigation_menu` site settings is `legacy` and `enable_new_notifications_menu` site settings is enabled" do
-      SiteSetting.navigation_menu = "legacy"
-      SiteSetting.enable_new_notifications_menu = true
-
-      expect(user.redesigned_user_menu_enabled?).to eq(true)
-    end
-
-    it "returns false when `navigation_menu` site settings is `legacy` and `enable_new_notifications_menu` site settings is not enabled" do
-      SiteSetting.navigation_menu = "legacy"
-      SiteSetting.enable_new_notifications_menu = false
-
-      expect(user.redesigned_user_menu_enabled?).to eq(false)
-    end
-
-    it "returns true when `navigation_menu` site settings is `sidebar`" do
-      SiteSetting.navigation_menu = "sidebar"
-
-      expect(user.redesigned_user_menu_enabled?).to eq(true)
-    end
-
-    it "returns true when `navigation_menu` site settings is `header_dropdown`" do
-      SiteSetting.navigation_menu = "header dropdown"
-
-      expect(user.redesigned_user_menu_enabled?).to eq(true)
     end
   end
 end

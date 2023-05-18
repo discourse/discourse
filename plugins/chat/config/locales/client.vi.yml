@@ -72,6 +72,7 @@ vi:
       composer:
         italic_text: "văn bản nhấn mạnh"
         bold_text: "chữ in đậm"
+        send: "Gửi"
       notification_levels:
         never: "Không bao giờ"
       settings:
@@ -110,6 +111,11 @@ vi:
         activities: "Hoạt động"
         flags: "Dấu cờ - Flags"
         symbols: "Ký hiệu"
+      thread:
+        title: "Tiêu đề"
+        replies:
+          other: "%{count} trả lời"
+        settings: "Cài đặt"
       draft_channel_screen:
         header: "Tin nhắn mới"
         cancel: "Huỷ"

@@ -455,7 +455,7 @@ module Oneboxer
       args = {
         user_id: user.id,
         username: user.username,
-        avatar: PrettyText.avatar_img(user.avatar_template, "extra_large"),
+        avatar: PrettyText.avatar_img(user.avatar_template, "huge"),
         name: name,
         bio: user.user_profile.bio_excerpt(230),
         location: Onebox::Helpers.sanitize(user.user_profile.location),

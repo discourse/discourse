@@ -120,6 +120,10 @@ module Chat
       FailWithInvalidModel.new(name)
     end
 
+    def fail_a_step(name = "model")
+      FailStep.new(name)
+    end
+
     def inspect_steps(result)
       inspector = Chat::StepsInspector.new(result)
       puts "Steps:"

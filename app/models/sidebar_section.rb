@@ -24,6 +24,7 @@ class SidebarSection < ActiveRecord::Base
             }
 
   scope :public_sections, -> { where("public") }
+  enum :section_type, { community: 0 }, scopes: false, suffix: true
 
   private
 
@@ -36,14 +37,16 @@ end
 #
 # Table name: sidebar_sections
 #
-#  id         :bigint           not null, primary key
-#  user_id    :integer          not null
-#  title      :string(30)       not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  public     :boolean          default(FALSE), not null
+#  id           :bigint           not null, primary key
+#  user_id      :integer          not null
+#  title        :string(30)       not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  public       :boolean          default(FALSE), not null
+#  section_type :integer
 #
 # Indexes
 #
+#  index_sidebar_sections_on_section_type       (section_type) UNIQUE
 #  index_sidebar_sections_on_user_id_and_title  (user_id,title) UNIQUE
 #

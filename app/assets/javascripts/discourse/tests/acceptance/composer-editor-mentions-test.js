@@ -2,6 +2,7 @@ import { test } from "qunit";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import {
   acceptance,
+  emulateAutocomplete,
   exists,
   fakeTime,
   loggedInUser,
@@ -64,19 +65,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    // Emulate user pressing backspace in the editor
-    const editor = query(".d-editor-input");
-
-    await triggerKeyEvent(".d-editor-input", "keydown", "@");
-    await fillIn(".d-editor-input", "abc @");
-    await setCaretPosition(editor, 5);
-    await triggerKeyEvent(".d-editor-input", "keyup", "@");
-
-    await triggerKeyEvent(".d-editor-input", "keydown", "U");
-    await fillIn(".d-editor-input", "abc @u");
-    await setCaretPosition(editor, 6);
-    await triggerKeyEvent(".d-editor-input", "keyup", "U");
-
+    await emulateAutocomplete(".d-editor-input", "abc @u");
     await click(".autocomplete.ac-user .selected");
 
     assert.strictEqual(
@@ -145,14 +134,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    // emulate typing in "abc @u"
-    const editor = query(".d-editor-input");
-    await fillIn(".d-editor-input", "@");
-    await setCaretPosition(editor, 5);
-    await triggerKeyEvent(".d-editor-input", "keyup", "@");
-    await fillIn(".d-editor-input", "@u");
-    await setCaretPosition(editor, 6);
-    await triggerKeyEvent(".d-editor-input", "keyup", "U");
+    await emulateAutocomplete(".d-editor-input", "@u");
 
     assert.ok(
       exists(`.autocomplete .emoji[title='${status.emoji}']`),
@@ -174,20 +156,14 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    await fillIn(".d-editor-input", "abc @");
-    await triggerKeyEvent(".d-editor-input", "keyup", "@");
-    await fillIn(".d-editor-input", "abc @u");
-    await triggerKeyEvent(".d-editor-input", "keyup", "U");
+    await emulateAutocomplete(".d-editor-input", "abc @u");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
       ["user", "user2", "user_group", "foo"]
     );
 
-    await fillIn(".d-editor-input", "abc @");
-    await triggerKeyEvent(".d-editor-input", "keyup", "@");
-    await fillIn(".d-editor-input", "abc @f");
-    await triggerKeyEvent(".d-editor-input", "keyup", "F");
+    await emulateAutocomplete(".d-editor-input", "abc @f");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),

@@ -12,9 +12,9 @@ export default class ChatMessageReaction {
   @tracked count = 0;
   @tracked reacted = false;
   @tracked users = [];
+  @tracked emoji;
 
   constructor(args = {}) {
-    this.messageId = args.messageId;
     this.count = args.count;
     this.emoji = args.emoji;
     this.users = this.#initUsersModels(args.users);

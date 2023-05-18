@@ -182,6 +182,13 @@ RSpec.configure do |config|
   config.order = "random"
   config.infer_spec_type_from_file_location!
 
+  if ENV["GITHUB_ACTIONS"]
+    # Enable color output in GitHub Actions
+    # This eventually will be `config.color_mode = :on` in RSpec 4?
+    config.tty = true
+    config.color = true
+  end
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -237,8 +244,8 @@ RSpec.configure do |config|
 
     WebMock.disable_net_connect!(allow_localhost: true, allow: [Webdrivers::Chromedriver.base_url])
 
-    if ENV["CAPBYARA_DEFAULT_MAX_WAIT_TIME"].present?
-      Capybara.default_max_wait_time = ENV["CAPBYARA_DEFAULT_MAX_WAIT_TIME"].to_i
+    if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
+      Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
     end
 
     Capybara.threadsafe = true
@@ -296,7 +303,7 @@ RSpec.configure do |config|
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => "INFO", "driver" => "ALL" })
         .tap do |options|
-          options.add_argument("--window-size=390,950")
+          options.add_argument("--window-size=390,960")
           options.add_argument("--no-sandbox")
           options.add_argument("--disable-dev-shm-usage")
           options.add_emulation(device_name: "iPhone 12 Pro")
@@ -421,6 +428,8 @@ RSpec.configure do |config|
       end
     end
 
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
     Discourse.redis.flushdb
   end
 

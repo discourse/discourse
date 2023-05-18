@@ -12,6 +12,21 @@ export function setNewCategoryDefaultColors(backgroundColor, textColor) {
 }
 
 export default DiscourseRoute.extend({
+  beforeModel() {
+    if (!this.currentUser) {
+      this.replaceWith("/404");
+      return;
+    }
+    if (!this.currentUser.admin) {
+      if (
+        !this.currentUser.moderator ||
+        this.siteSettings.moderators_manage_categories_and_groups === false
+      ) {
+        this.replaceWith("/404");
+      }
+    }
+  },
+
   model() {
     return Promise.resolve(this.groupPermissions())
       .then((permissions) => {

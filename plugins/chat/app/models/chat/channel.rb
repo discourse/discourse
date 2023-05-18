@@ -18,6 +18,7 @@ module Chat
     has_many :user_chat_channel_memberships,
              class_name: "Chat::UserChatChannelMembership",
              foreign_key: :chat_channel_id
+    has_many :threads, class_name: "Chat::Thread", foreign_key: :channel_id
     has_one :chat_channel_archive, class_name: "Chat::ChannelArchive", foreign_key: :chat_channel_id
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false

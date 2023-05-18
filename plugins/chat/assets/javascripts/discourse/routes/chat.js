@@ -4,7 +4,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
 
 export default class ChatRoute extends DiscourseRoute {
   @service chat;
@@ -23,6 +22,7 @@ export default class ChatRoute extends DiscourseRoute {
     const INTERCEPTABLE_ROUTES = [
       "chat.channel",
       "chat.channel.thread",
+      "chat.channel.threads",
       "chat.channel.index",
       "chat.channel.near-message",
       "chat.channel-legacy",
@@ -65,23 +65,17 @@ export default class ChatRoute extends DiscourseRoute {
     });
   }
 
-  deactivate() {
+  deactivate(transition) {
+    const url = this.router.urlFor(transition.from.name);
+    this.chatStateManager.storeChatURL(url);
+
+    this.chat.activeChannel = null;
+    this.chat.updatePresence();
+
     schedule("afterRender", () => {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
       scrollTop();
     });
-  }
-
-  @action
-  willTransition(transition) {
-    if (!transition?.to?.name?.startsWith("chat.channel")) {
-      this.chat.activeChannel = null;
-    }
-
-    if (!transition?.to?.name?.startsWith("chat.")) {
-      this.chatStateManager.storeChatURL();
-      this.chat.updatePresence();
-    }
   }
 }

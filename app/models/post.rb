@@ -1013,7 +1013,8 @@ class Post < ActiveRecord::Base
       upload ||= Upload.get_from_url(src)
 
       # Link any video thumbnails
-      if upload.present? && (FileHelper.supported_video.include? upload.extension&.downcase)
+      if SiteSetting.video_thumbnails_enabled && upload.present? &&
+           FileHelper.supported_video.include?(upload.extension&.downcase)
         # Video thumbnails have the filename of the video file sha1 with a .png or .jpg extension.
         # This is because at time of upload in the composer we don't know the topic/post id yet
         # and there is no thumbnail info added to the markdown to tie the thumbnail to the topic/post after

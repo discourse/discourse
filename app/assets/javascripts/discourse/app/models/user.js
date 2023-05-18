@@ -1401,6 +1401,13 @@ User.reopen(Evented, {
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
+    if (!this.id) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "It's impossible to track user status on a user model that doesn't have id. This user model won't be receiving live user status updates."
+      );
+    }
+
     if (this._subscribersCount === 0) {
       this.addObserver("status", this, "_statusChanged");
 

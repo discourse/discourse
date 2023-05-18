@@ -158,40 +158,6 @@
     }
   }
 
-  .user-nav-dropdown-button {
-    background: transparent;
-  }
-
-  .user-nav-dropdown-submenu {
-    background: var(--secondary);
-    list-style-type: none;
-    margin: 0;
-
-    li a {
-      padding: 0.5em 1em;
-      color: var(--primary);
-
-      .discourse-no-touch & {
-        &:hover {
-          background: var(--highlight-bg);
-          color: currentColor;
-        }
-      }
-
-      &.active {
-        background: var(--tertiary-low);
-        color: currentColor;
-      }
-
-      &:first-of-type {
-        padding-top: 0.5em;
-      }
-      &:last-of-type {
-        padding-bottom: 0.5em;
-      }
-    }
-  }
-
   .empty-state {
     padding: 0;
     margin: 1em 0;

@@ -233,7 +233,7 @@ class ComposerMessagesFinder
       if @details[:post_id]
         Post.find_by(id: @details[:post_id])
       else
-        @topic.first_post
+        @topic&.first_post
       end
 
     return if post.blank?

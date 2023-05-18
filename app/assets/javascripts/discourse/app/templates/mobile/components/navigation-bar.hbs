@@ -21,3 +21,9 @@
     />
   </ul>
 {{/if}}
+
+<PluginOutlet
+  @name="inline-extra-nav-item"
+  @connectorTagName="li"
+  @outletArgs={{hash category=this.category filterMode=this.filterMode}}
+/>

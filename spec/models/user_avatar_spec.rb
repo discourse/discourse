@@ -175,6 +175,12 @@ RSpec.describe UserAvatar do
         expect(user.user_avatar.custom_upload_id).to eq(nil)
       end
     end
+
+    it "doesn't error out if the remote request fails" do
+      FileHelper.stubs(:download).raises(FinalDestination::SSRFDetector::LookupFailedError.new)
+
+      expect { UserAvatar.import_url_for_user(anything, user) }.not_to raise_error
+    end
   end
 
   describe "ensure_consistency!" do

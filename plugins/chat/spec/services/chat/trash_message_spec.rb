@@ -43,10 +43,15 @@ RSpec.describe Chat::TrashMessage do
           expect(Chat::Message.find_by(id: message.id)).to be_nil
         end
 
-        it "destroys associated mentions" do
-          mention = Fabricate(:chat_mention, chat_message: message)
+        it "destroys notifications for mentions" do
+          notification = Fabricate(:notification)
+          mention = Fabricate(:chat_mention, chat_message: message, notification: notification)
+
           result
-          expect(Chat::Mention.find_by(id: mention.id)).to be_nil
+
+          mention = Chat::Mention.find_by(id: mention.id)
+          expect(mention).to be_present
+          expect(mention.notification_id).to be_nil
         end
 
         it "publishes associated Discourse and MessageBus events" do
@@ -65,7 +70,8 @@ RSpec.describe Chat::TrashMessage do
           )
         end
 
-        it "updates the tracking for users whose last_read_message_id was the trashed message" do
+        it "updates the tracking to the last non-deleted channel message for users whose last_read_message_id was the trashed message" do
+          other_message = Fabricate(:chat_message, chat_channel: message.chat_channel)
           membership_1 =
             Fabricate(
               :user_chat_channel_membership,
@@ -82,12 +88,30 @@ RSpec.describe Chat::TrashMessage do
             Fabricate(
               :user_chat_channel_membership,
               chat_channel: message.chat_channel,
-              last_read_message: Fabricate(:chat_message, chat_channel: message.chat_channel),
+              last_read_message: other_message,
+            )
+          result
+          expect(membership_1.reload.last_read_message_id).to eq(other_message.id)
+          expect(membership_2.reload.last_read_message_id).to eq(other_message.id)
+          expect(membership_3.reload.last_read_message_id).to eq(other_message.id)
+        end
+
+        it "updates the tracking to nil when there are no other messages left in the channnel" do
+          membership_1 =
+            Fabricate(
+              :user_chat_channel_membership,
+              chat_channel: message.chat_channel,
+              last_read_message: message,
+            )
+          membership_2 =
+            Fabricate(
+              :user_chat_channel_membership,
+              chat_channel: message.chat_channel,
+              last_read_message: message,
             )
           result
           expect(membership_1.reload.last_read_message_id).to be_nil
           expect(membership_2.reload.last_read_message_id).to be_nil
-          expect(membership_3.reload.last_read_message_id).not_to be_nil
         end
 
         context "when the message has a thread" do
@@ -99,6 +123,35 @@ RSpec.describe Chat::TrashMessage do
             thread.set_replies_count_cache(5)
             result
             expect(thread.replies_count_cache).to eq(4)
+          end
+
+          it "updates the tracking to the last non-deleted thread message for users whose last_read_message_id was the trashed message" do
+            other_message =
+              Fabricate(:chat_message, chat_channel: message.chat_channel, thread: thread)
+            membership_1 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            membership_2 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            membership_3 =
+              Fabricate(
+                :user_chat_thread_membership,
+                thread: thread,
+                last_read_message: other_message,
+              )
+            result
+            expect(membership_1.reload.last_read_message_id).to eq(other_message.id)
+            expect(membership_2.reload.last_read_message_id).to eq(other_message.id)
+            expect(membership_3.reload.last_read_message_id).to eq(other_message.id)
+          end
+
+          it "updates the tracking to nil when there are no other messages left in the thread" do
+            membership_1 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            membership_2 =
+              Fabricate(:user_chat_thread_membership, thread: thread, last_read_message: message)
+            result
+            expect(membership_1.reload.last_read_message_id).to be_nil
+            expect(membership_2.reload.last_read_message_id).to be_nil
           end
         end
 

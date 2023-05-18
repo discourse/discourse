@@ -36,13 +36,6 @@ html.discourse-no-touch {
   .btn-flat.delete.d-hover {
     background: var(--danger);
   }
-  .menu-links-header {
-    .btn-icon:hover {
-      .d-icon {
-        color: var(--primary);
-      }
-    }
-  }
 
   .select-kit.single-select .select-kit-header:focus {
     border-color: var(--primary-medium);
@@ -85,11 +78,6 @@ html {
     .d-icon {
       color: var(--primary);
     }
-  }
-
-  div.menu-links-header button:hover,
-  div.menu-links-header button:focus {
-    background: var(--tertiary-high);
   }
 
   .menu-panel .panel-body-bottom .btn:hover {

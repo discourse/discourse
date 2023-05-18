@@ -18,6 +18,7 @@ module TurboTests
 
     attr_reader :pending_examples
     attr_reader :failed_examples
+    attr_reader :formatters
 
     def initialize(start_time)
       @formatters = []
@@ -34,7 +35,9 @@ module TurboTests
         formatter_class =
           case name
           when "p", "progress"
-            RSpec::Core::Formatters::ProgressFormatter
+            TurboTests::ProgressFormatter
+          when "d", "documentation"
+            TurboTests::DocumentationFormatter
           else
             Kernel.const_get(name)
           end

@@ -86,7 +86,11 @@ he:
       collapse: "צמצום מגירת צ׳אט"
       expand: "הרחבת מגירת הצ׳אט"
       confirm_flag: "לסמן את ההודעה של %{username}?"
-      deleted: "הודעה נמחקה. [צפייה]"
+      deleted:
+        one: "הודעה נמחקה. [הצגה]"
+        two: "%{count} הודעות נמחקו. [הצגה של הכול]"
+        many: "%{count} הודעות נמחקו. [הצגה של הכול]"
+        other: "%{count} הודעות נמחקו. [הצגה של הכול]"
       hidden: "הודעה הוסתרה. [צפייה]"
       delete: "מחיקה"
       edited: "נערך"
@@ -240,7 +244,8 @@ he:
       close_full_page: "סגירת צ׳אט במסך מלא"
       open_message: "פתיחת הודעה בצ׳אט"
       placeholder_self: "לקשקש משהו"
-      placeholder_channel: "צ׳אט עם %{channelName}"
+      placeholder_channel: "צ׳אט ב־%{channelName}"
+      placeholder_thread: "צ'אט בשרשור"
       placeholder_users: "צ׳אט עם %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "הערוץ הועבר לארכיון, אי אפשר לשלוח אליו הודעות חדשות כעת."
@@ -265,6 +270,7 @@ he:
       save: "שמירה"
       select: "בחירה"
       return_to_list: "חזרה לרשימת הערוצים"
+      return_to_threads_list: "חזרה לדיונים שמתקיימים כרגע"
       scroll_to_bottom: "גלילה לתחתית"
       scroll_to_new_messages: "הצגת הודעות חדשות"
       sound:
@@ -276,6 +282,8 @@ he:
       title: "צ׳אט"
       title_capitalized: "צ׳אט"
       upload: "צירוף קובץ"
+      upload_to_channel: "העלאה אל %{title}"
+      upload_to_thread: "העלאה לשרשור"
       uploaded_files:
         one: "קובץ %{count}"
         two: "%{count} קבצים"
@@ -418,6 +426,7 @@ he:
         italic_text: "טקסט נטוי"
         bold_text: "טקסט מודגש"
         code_text: "טקסט קוד"
+        send: "שליחה"
       quote:
         original_channel: 'נשלח במקור ב־<a href="%{channelLink}">%{channel}</a>'
         copy_success: "ציטוט מהצ׳אט הועתק ללוח הגזירים"
@@ -552,10 +561,23 @@ he:
         search_placeholder: "חיפוש לפי שם וכינוי של האמוג׳י…"
         no_results: "אין תוצאות"
       thread:
+        title: "כותרת"
+        view_thread: הצגת שרשור
+        default_title: "שרשור מס׳ %{thread_id}"
+        replies:
+          one: "תגובה אחת"
+          two: "%{count} תגובות"
+          many: "%{count} תגובות"
+          other: "%{count} תגובות"
         label: שרשור
+        close: "סגירת שרשור"
+        original_message:
+          started_by: "נפתח ע״י"
+        settings: "הגדרות"
       threads:
-        started_by: "נפתח ע״י"
         open: "פתיחת שרשור"
+        list: "דיונים שמתקיימים כרגע"
+        none: "אין לך חלק באף אחד מהשרשורים בערוץ הזה."
       draft_channel_screen:
         header: "הודעה חדשה"
         cancel: "ביטול"

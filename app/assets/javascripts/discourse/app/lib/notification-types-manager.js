@@ -1,5 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 
+import AdminProblems from "discourse/lib/notification-types/admin-problems";
 import BookmarkReminder from "discourse/lib/notification-types/bookmark-reminder";
 import Custom from "discourse/lib/notification-types/custom";
 import GrantedBadge from "discourse/lib/notification-types/granted-badge";
@@ -27,6 +28,7 @@ const CLASS_FOR_TYPE = {
   membership_request_consolidated: MembershipRequestConsolidated,
   moved_post: MovedPost,
   new_features: NewFeatures,
+  admin_problems: AdminProblems,
   watching_first_post: WatchingFirstPost,
 };
 

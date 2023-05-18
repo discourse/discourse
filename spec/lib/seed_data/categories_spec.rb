@@ -99,6 +99,25 @@ RSpec.describe SeedData::Categories do
       expect(SiteSetting.default_composer_category).to eq(Category.last.id)
     end
 
+    it "does not overwrite permissions on the General category" do
+      create_category("general_category_id")
+      expect(Category.last.name).to eq("General")
+      category = Category.last
+
+      expect(category.category_groups.count).to eq(0)
+
+      category.set_permissions(staff: :full)
+      category.save!
+
+      expect(category.category_groups.count).to eq(1)
+
+      expect { create_category("general_category_id") }.not_to change { CategoryGroup.count }
+
+      category.reload
+      expect(category.category_groups.count).to eq(1)
+      expect(category.category_groups.first).to have_attributes(permissions(:staff, :full))
+    end
+
     it "adds default categories SiteSetting.default_sidebar_categories" do
       create_category("staff_category_id")
       staff_category = Category.last
@@ -116,7 +135,7 @@ RSpec.describe SeedData::Categories do
     end
 
     it "does not override permissions of existing category when not forced" do
-      create_category("lounge_category_id")
+      create_category("general_category_id")
 
       category = Category.last
       category.set_permissions(trust_level_2: :full)
@@ -124,7 +143,7 @@ RSpec.describe SeedData::Categories do
 
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))
 
-      expect { create_category("lounge_category_id") }.not_to change { CategoryGroup.count }
+      expect { create_category("general_category_id") }.not_to change { CategoryGroup.count }
 
       category.reload
       expect(category.category_groups.first).to have_attributes(permissions(:trust_level_2, :full))

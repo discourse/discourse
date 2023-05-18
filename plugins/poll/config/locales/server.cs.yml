@@ -34,7 +34,7 @@ cs:
     topic_must_be_open_to_vote: "Téma musí být otevřené, aby bylo možné hlasovat."
     poll_must_be_open_to_vote: "Hlasování musí být otevřené, aby bylo možné hlasovat."
     topic_must_be_open_to_toggle_status: "Téma musí být otevřené, aby bylo možné změnit status."
-    only_staff_or_op_can_toggle_status: "Pouze moderátor nebo přispěvatel může změnit status hlasování."
+    only_staff_or_op_can_toggle_status: "Pouze člen redakce nebo tvůrce původního příspěvku může změnit status hlasování."
     insufficient_rights_to_create: "Nemáte oprávnění k vytvoření hlasování."
     email:
       link_to_poll: "Klikněte pro zobrazení hlasování."

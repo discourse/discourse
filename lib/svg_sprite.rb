@@ -72,6 +72,7 @@ module SvgSprite
         discourse-emojis
         discourse-expand
         discourse-other-tab
+        discourse-threads
         download
         ellipsis-h
         ellipsis-v

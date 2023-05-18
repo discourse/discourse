@@ -277,7 +277,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         visit("/chat/c/#{category_channel.slug}/#{category_channel.id}")
         find("#site-logo").click
 
-        expect(sidebar_component).not_to have_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
       end
     end
 
@@ -299,7 +299,7 @@ RSpec.describe "Navigation", type: :system, js: true do
         sidebar_component.click_link(category_channel.name)
         chat_drawer_page.close
 
-        expect(sidebar_component).not_to have_section_link(category_channel.name, active: true)
+        expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
       end
     end
   end

@@ -180,11 +180,67 @@ describe Jobs::Chat::AutoJoinChannelBatch do
 
         assert_users_follows_channel(channel, [user, another_user])
       end
+
+      it "doesn't join users with read-only access to the category" do
+        restricted_category = Fabricate(:category, read_restricted: true)
+        another_user = Fabricate(:user, last_seen_at: 15.minutes.ago)
+        non_chatters_group = Fabricate(:group)
+        readonly_channel =
+          Fabricate(:category_channel, chatable: restricted_category, auto_join_users: true)
+        Fabricate(
+          :category_group,
+          category: restricted_category,
+          group: non_chatters_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+        non_chatters_group.add(another_user)
+
+        subject.execute(
+          chat_channel_id: readonly_channel.id,
+          starts_at: another_user.id,
+          ends_at: another_user.id,
+        )
+
+        assert_user_skipped(readonly_channel, another_user)
+      end
+
+      it "does join users with at least one group with create_post or full permission" do
+        restricted_category = Fabricate(:category, read_restricted: true)
+        another_user = Fabricate(:user, last_seen_at: 15.minutes.ago)
+        non_chatters_group = Fabricate(:group)
+        private_channel =
+          Fabricate(:category_channel, chatable: restricted_category, auto_join_users: true)
+        Fabricate(
+          :category_group,
+          category: restricted_category,
+          group: non_chatters_group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+        non_chatters_group.add(another_user)
+
+        other_group = Fabricate(:group)
+        Fabricate(
+          :category_group,
+          category: restricted_category,
+          group: other_group,
+          permission_type: CategoryGroup.permission_types[:create_post],
+        )
+        other_group.add(another_user)
+
+        subject.execute(
+          chat_channel_id: private_channel.id,
+          starts_at: another_user.id,
+          ends_at: another_user.id,
+        )
+
+        assert_users_follows_channel(private_channel, [another_user])
+      end
     end
   end
 
   def assert_users_follows_channel(channel, users)
     new_memberships = Chat::UserChatChannelMembership.where(user: users, chat_channel: channel)
+    expect(new_memberships.length).to eq(users.length)
     expect(new_memberships.all?(&:following)).to eq(true)
   end
 

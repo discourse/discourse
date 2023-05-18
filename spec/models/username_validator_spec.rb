@@ -201,6 +201,26 @@ RSpec.describe UsernameValidator do
         )
       end
 
+      it "is invalid when the username contains invisible characters" do
+        expect_invalid(
+          "a\u{034F}b",
+          "a\u{115F}b",
+          "a\u{1160}b",
+          "a\u{17B4}b",
+          "a\u{17B5}b",
+          "a\u{180B}b",
+          "a\u{180C}b",
+          "a\u{180D}b",
+          "a\u{3164}b",
+          "a\u{FFA0}b",
+          "a\u{FE00}b",
+          "a\u{FE0F}b",
+          "a\u{E0100}b",
+          "a\u{E01EF}b",
+          error_message: I18n.t(:"user.username.characters"),
+        )
+      end
+
       it "is invalid when the username contains zero width join characters" do
         expect_invalid("ണ്‍", "র‌্যাম", error_message: I18n.t(:"user.username.characters"))
       end

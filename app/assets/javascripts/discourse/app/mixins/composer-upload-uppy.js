@@ -325,32 +325,28 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
         cacheShortUploadUrl(upload.short_url, upload);
 
-        // video/mp4, video/webm, video/quicktime, etc.
-        if (file.type.split("/")[0] === "video") {
-          this._generateVideoThumbnail(file, upload.url);
-        }
-
-        if (this.useUploadPlaceholders) {
+        this._generateVideoThumbnail(file, upload.url, () => {
+          if (this.useUploadPlaceholders) {
+            this.appEvents.trigger(
+              `${this.composerEventPrefix}:replace-text`,
+              this.placeholders[file.id].uploadPlaceholder.trim(),
+              markdown
+            );
+          }
+          this._resetUpload(file, { removePlaceholder: false });
           this.appEvents.trigger(
-            `${this.composerEventPrefix}:replace-text`,
-            this.placeholders[file.id].uploadPlaceholder.trim(),
-            markdown
+            `${this.composerEventPrefix}:upload-success`,
+            file.name,
+            upload
           );
-        }
 
-        this._resetUpload(file, { removePlaceholder: false });
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:upload-success`,
-          file.name,
-          upload
-        );
-
-        if (this.inProgressUploads.length === 0) {
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:all-uploads-complete`
-          );
-          this._reset();
-        }
+          if (this.inProgressUploads.length === 0) {
+            this.appEvents.trigger(
+              `${this.composerEventPrefix}:all-uploads-complete`
+            );
+            this._reset();
+          }
+        });
       });
     });
 

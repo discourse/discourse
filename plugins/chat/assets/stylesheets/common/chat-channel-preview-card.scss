@@ -13,6 +13,12 @@
     }
   }
 
+  &.-no-button {
+    .chat-channel-preview-card__browse-all {
+      margin-top: 0;
+    }
+  }
+
   &__description {
     color: var(--primary-600);
     text-align: center;

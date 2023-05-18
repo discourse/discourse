@@ -7,7 +7,7 @@ import {
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
-import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import { toggleCheckDraftPopup } from "discourse/services/composer";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import LinkLookup from "discourse/lib/link-lookup";
@@ -1016,7 +1016,7 @@ acceptance("Composer", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .create");
 
-    this.container.lookup("controller:composer").set(
+    this.container.lookup("service:composer").set(
       "linkLookup",
       new LinkLookup({
         "github.com": {
@@ -1185,7 +1185,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
   test("Focusing a composer which is not open with create topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({ fallbackToNewTopic: true });
 
     await settled();
@@ -1200,7 +1200,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
   test("Focusing a composer which is not open with create topic and append text", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({
       fallbackToNewTopic: true,
       insertText: "this is appended",
@@ -1222,7 +1222,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer();
 
     await settled();
@@ -1237,7 +1237,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
@@ -1259,7 +1259,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggle-minimize");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();

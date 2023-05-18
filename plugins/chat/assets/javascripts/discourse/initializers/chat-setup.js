@@ -19,7 +19,7 @@ export default {
   initialize(container) {
     this.chatService = container.lookup("service:chat");
     this.siteSettings = container.lookup("service:site-settings");
-    this.appEvents = container.lookup("service:appEvents");
+    this.appEvents = container.lookup("service:app-events");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     if (!this.chatService.userCanChat) {
@@ -122,6 +122,9 @@ export default {
       document.body.classList.add("chat-enabled");
 
       const currentUser = api.getCurrentUser();
+
+      // NOTE: chat_channels is more than a simple array, it also contains
+      // tracking and membership data, see Chat::StructuredChannelSerializer
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
       }
@@ -154,7 +157,7 @@ export default {
         }
 
         const highlightable = [`@${this.currentUser.username}`];
-        if (chatChannel.allow_channel_wide_mentions) {
+        if (chatChannel.allowChannelWideMentions) {
           highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
         }
 

@@ -103,13 +103,42 @@ class Plugin::Instance
     @admin_route = { label: label, location: location }
   end
 
+  def configurable?
+    true
+  end
+
+  def visible?
+    configurable? && !@hidden
+  end
+
   def enabled?
+    return false if !configurable?
     @enabled_site_setting ? SiteSetting.get(@enabled_site_setting) : true
   end
 
   delegate :name, to: :metadata
 
-  def add_to_serializer(serializer, attr, define_include_method = true, &block)
+  def add_to_serializer(
+    serializer,
+    attr,
+    deprecated_respect_plugin_enabled = nil,
+    respect_plugin_enabled: true,
+    include_condition: nil,
+    &block
+  )
+    if !deprecated_respect_plugin_enabled.nil?
+      Discourse.deprecate(
+        "add_to_serializer's respect_plugin_enabled argument should be passed as a keyword argument",
+      )
+      respect_plugin_enabled = deprecated_respect_plugin_enabled
+    end
+
+    if attr.to_s.starts_with?("include_")
+      Discourse.deprecate(
+        "add_to_serializer should not be used to directly override include_*? methods. Use the include_condition keyword argument instead",
+      )
+    end
+
     reloadable_patch do |plugin|
       base =
         begin
@@ -123,9 +152,13 @@ class Plugin::Instance
         unless attr.to_s.start_with?("include_")
           klass.attributes(attr)
 
-          if define_include_method
+          if respect_plugin_enabled || include_condition
             # Don't include serialized methods if the plugin is disabled
-            klass.public_send(:define_method, "include_#{attr}?") { plugin.enabled? }
+            klass.public_send(:define_method, "include_#{attr}?") do
+              next false if respect_plugin_enabled && !plugin.enabled?
+              next instance_exec(&include_condition) if include_condition
+              true
+            end
           end
         end
 
@@ -801,11 +834,7 @@ class Plugin::Instance
   end
 
   def hide_plugin
-    Discourse.hidden_plugins << self
-  end
-
-  def enabled_site_setting_filter(filter = nil)
-    STDERR.puts("`enabled_site_setting_filter` is deprecated")
+    @hidden = true
   end
 
   def enabled_site_setting(setting = nil)
