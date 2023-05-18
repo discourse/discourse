@@ -5,14 +5,8 @@
   @headerActions={{this.section.headerActions}}
   @headerActionsIcon={{this.section.headerActionIcon}}
   @class={{this.section.dragCss}}
+  @sectionDescription={{this.section.description}}
 >
-
-  {{#if this.section.displayShortSiteDescription}}
-    <Sidebar::SectionMessage>
-      {{this.siteSettings.short_site_description}}
-    </Sidebar::SectionMessage>
-  {{/if}}
-
   {{#each this.section.links as |link|}}
     {{#if link.shouldDisplay}}
       {{#if link.external}}
