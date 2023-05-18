@@ -6,7 +6,7 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 
@@ -185,23 +185,21 @@ export default class ChatThreadPanel extends Component {
     this.chatChannelThreadPane.sending = true;
 
     this.thread.stageMessage(message);
-    const stagedMessage = message;
     this.resetComposer();
-    this.thread.messagesManager.addMessages([stagedMessage]);
 
     this.scrollToBottom();
 
     return this.chatApi
       .sendMessage(this.channel.id, {
-        message: stagedMessage.message,
-        in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.id,
-        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-        thread_id: this.thread.staged ? null : stagedMessage.thread.id,
-        staged_thread_id: this.thread.staged ? stagedMessage.thread.id : null,
+        message: message.message,
+        in_reply_to_id: message.inReplyTo?.id,
+        staged_id: message.id,
+        upload_ids: message.uploads.map((upload) => upload.id),
+        thread_id: this.thread.staged ? null : message.thread.id,
+        staged_thread_id: this.thread.staged ? message.thread.id : null,
       })
       .catch((error) => {
-        this.#onSendError(stagedMessage.id, error);
+        this.#onSendError(message.id, error);
       })
       .finally(() => {
         if (this._selfDeleted) {
@@ -235,13 +233,17 @@ export default class ChatThreadPanel extends Component {
   // to the bottom
   @action
   scrollToBottom() {
-    if (!this.scrollable) {
-      return;
-    }
+    next(() => {
+      schedule("afterRender", () => {
+        if (!this.scrollable) {
+          return;
+        }
 
-    this.scrollable.scrollTop = this.scrollable.scrollHeight + 1;
-    this.forceRendering(() => {
-      this.scrollable.scrollTop = this.scrollable.scrollHeight;
+        this.scrollable.scrollTop = this.scrollable.scrollHeight + 1;
+        this.forceRendering(() => {
+          this.scrollable.scrollTop = this.scrollable.scrollHeight;
+        });
+      });
     });
   }
 
