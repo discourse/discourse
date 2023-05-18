@@ -87,14 +87,13 @@ acceptance("Chat | User status on mentions", function (needs) {
   });
 
   needs.hooks.beforeEach(function () {
-    pretender.get(`/chat/1/messages`, () => [200, {}, messagesResponse]);
-    pretender.post(`/chat/1`, () => OK);
-    pretender.put(`/chat/1/edit/${messageId}`, () => OK);
-    pretender.post(`/chat/drafts`, () => OK);
-    pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () => OK);
-    pretender.put(
-      `/chat/api/channels/1/messages/${messageId}/restore`,
-      () => OK
+    pretender.get(`/chat/1/messages`, () => OK(messagesResponse));
+    pretender.post(`/chat/1`, () => OK());
+    pretender.put(`/chat/1/edit/${messageId}`, () => OK());
+    pretender.post(`/chat/drafts`, () => OK());
+    pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () => OK());
+    pretender.put(`/chat/api/channels/1/messages/${messageId}/restore`, () =>
+      OK()
     );
 
     setupAutocompleteResponses([mentionedUser2, mentionedUser3]);
@@ -359,5 +358,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     return `.mention[href='/u/${username}'] .user-status`;
   }
 
-  const OK = [200, {}, {}];
+  function OK(response = {}, headers = {}) {
+    return [200, headers, response];
+  }
 });
