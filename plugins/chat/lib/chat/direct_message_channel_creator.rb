@@ -28,7 +28,7 @@ module Chat
     private
 
     def self.enforce_max_direct_message_users!(acting_user, target_users)
-      # We never want to prevent the actor from communicating with themself.
+      # We never want to prevent the actor from communicating with themselves
       target_users = target_users.reject { |user| user.id == acting_user.id }
 
       if !acting_user.staff? && target_users.size > SiteSetting.chat_max_direct_message_users
@@ -83,7 +83,7 @@ module Chat
     end
 
     def self.ensure_actor_can_communicate!(acting_user, target_users)
-      # We never want to prevent the actor from communicating with themself.
+      # We never want to prevent the actor from communicating with themselves
       target_users = target_users.reject { |user| user.id == acting_user.id }
 
       screener =

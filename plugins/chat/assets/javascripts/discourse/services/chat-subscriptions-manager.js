@@ -276,7 +276,7 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _onNewChannelSubscription(data) {
     this.chatChannelsManager.find(data.channel.id).then((channel) => {
-      // we need to refrehs here to have correct last message ids
+      // we need to refresh here to have correct last message ids
       channel.meta = data.channel.meta;
 
       if (

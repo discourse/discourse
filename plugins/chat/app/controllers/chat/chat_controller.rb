@@ -120,7 +120,7 @@ module Chat
 
       if @chat_channel.direct_message_channel?
         # If any of the channel users is ignoring, muting, or preventing DMs from
-        # the current user then we shold not auto-follow the channel once again or
+        # the current user then we should not auto-follow the channel once again or
         # publish the new channel.
         user_ids_allowing_communication =
           UserCommScreener.new(
