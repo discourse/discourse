@@ -6,7 +6,7 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
-import { schedule } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 
@@ -235,13 +235,17 @@ export default class ChatThreadPanel extends Component {
   // to the bottom
   @action
   scrollToBottom() {
-    if (!this.scrollable) {
-      return;
-    }
+    next(() => {
+      schedule("afterRender", () => {
+        if (!this.scrollable) {
+          return;
+        }
 
-    this.scrollable.scrollTop = this.scrollable.scrollHeight + 1;
-    this.forceRendering(() => {
-      this.scrollable.scrollTop = this.scrollable.scrollHeight;
+        this.scrollable.scrollTop = this.scrollable.scrollHeight + 1;
+        this.forceRendering(() => {
+          this.scrollable.scrollTop = this.scrollable.scrollHeight;
+        });
+      });
     });
   }
 
