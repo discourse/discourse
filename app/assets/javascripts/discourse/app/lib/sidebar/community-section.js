@@ -131,8 +131,12 @@ export default class CommunitySection {
     });
   }
 
-  get displayShortSiteDescription() {
-    return !this.currentUser && !!this.siteSettings.short_site_description;
+  get description() {
+    if (!this.currentUser && !!this.siteSettings.short_site_description) {
+      return this.siteSettings.short_site_description;
+    } else {
+      return "";
+    }
   }
 
   get decoratedTitle() {
