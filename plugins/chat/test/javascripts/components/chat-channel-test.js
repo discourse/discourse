@@ -7,7 +7,7 @@ import pretender from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
 module(
-  "Discourse Chat | Component | chat-channel | mentions",
+  "Discourse Chat | Component | chat-channel | status on mentions",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -71,19 +71,11 @@ module(
     test("it shows status on mentions", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
-      assert
-        .dom(statusSelector(mentionedUser.username))
-        .exists("status is rendered")
-        .hasAttribute(
-          "title",
-          mentionedUser.status.description,
-          "status description is correct"
-        )
-        .hasAttribute(
-          "src",
-          new RegExp(`${mentionedUser.status.emoji}.png`),
-          "status emoji is updated"
-        );
+      assertStatusIsRendered(
+        assert,
+        statusSelector(mentionedUser.username),
+        mentionedUser.status
+      );
     });
 
     test("it updates status on mentions", async function (assert) {
@@ -100,19 +92,11 @@ module(
 
       const selector = statusSelector(mentionedUser.username);
       await waitFor(selector);
-      assert
-        .dom(selector)
-        .exists("status is rendered")
-        .hasAttribute(
-          "title",
-          newStatus.description,
-          "status description is updated"
-        )
-        .hasAttribute(
-          "src",
-          new RegExp(`${newStatus.emoji}.png`),
-          "status emoji is updated"
-        );
+      assertStatusIsRendered(
+        assert,
+        statusSelector(mentionedUser.username),
+        newStatus
+      );
     });
 
     test("it deletes status on mentions", async function (assert) {
@@ -132,20 +116,28 @@ module(
 
       await receiveMessageViaMessageBus();
 
+      assertStatusIsRendered(
+        assert,
+        statusSelector(mentionedUser2.username),
+        mentionedUser2.status
+      );
+    });
+
+    function assertStatusIsRendered(assert, selector, status) {
       assert
-        .dom(statusSelector(mentionedUser2.username))
+        .dom(selector)
         .exists("status is rendered")
         .hasAttribute(
           "title",
-          mentionedUser2.status.description,
-          "status description is correct"
+          status.description,
+          "status description is updated"
         )
         .hasAttribute(
           "src",
-          new RegExp(`${mentionedUser2.status.emoji}.png`),
+          new RegExp(`${status.emoji}.png`),
           "status emoji is updated"
         );
-    });
+    }
 
     async function receiveMessageViaMessageBus() {
       await publishToMessageBus(`/chat/${channelId}`, {
