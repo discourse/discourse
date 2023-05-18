@@ -207,9 +207,9 @@ $box-shadow: (
   @if dc-color-brightness($adjusted-color) <
     dc-color-brightness($comparison-color)
   {
-    @return scale-color($adjusted-color, $lightness: $lightness);
+    @return hsluv-scale-color($adjusted-color, $lightness: $lightness);
   } @else {
-    @return scale-color($adjusted-color, $lightness: $darkness);
+    @return hsluv-scale-color($adjusted-color, $lightness: $darkness);
   }
 }
 
