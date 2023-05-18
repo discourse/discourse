@@ -18,6 +18,7 @@ export default {
 
   initialize(container) {
     this.chatService = container.lookup("service:chat");
+    this.site = container.lookup("service:site");
     this.siteSettings = container.lookup("service:site-settings");
     this.appEvents = container.lookup("service:app-events");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
@@ -59,7 +60,7 @@ export default {
         id: "emoji",
         class: "chat-emoji-btn",
         icon: "discourse-emojis",
-        position: "dropdown",
+        position: this.site.desktopView ? "inline" : "dropdown",
         context: "channel",
         action() {
           const chatEmojiPickerManager = container.lookup(
