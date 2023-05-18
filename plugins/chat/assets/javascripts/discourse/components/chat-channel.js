@@ -168,12 +168,9 @@ export default class ChatLivePane extends Component {
     }
 
     return this.chatApi
-      .messages(this.args.channel.id, findArgs)
+      .channel(this.args.channel.id, findArgs)
       .then((results) => {
-        if (
-          this._selfDeleted ||
-          this.args.channel.id !== results.meta.channel_id
-        ) {
+        if (this._selfDeleted || this.args.channel.id !== results.channel.id) {
           return;
         }
 
@@ -202,6 +199,21 @@ export default class ChatLivePane extends Component {
         }
 
         this.scrollToBottom();
+
+        if (results.threads) {
+          results.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(
+              this.args.channel,
+              ChatThread.create(thread)
+            );
+          });
+        }
+
+        if (results.thread_tracking_overview) {
+          this.args.channel.threadTrackingOverview.push(
+            ...results.thread_tracking_overview
+          );
+        }
       })
       .catch(this._handleErrors)
       .finally(() => {

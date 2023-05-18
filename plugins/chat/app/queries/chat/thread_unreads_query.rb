@@ -25,7 +25,13 @@ module Chat
     # @param user_id [Integer] The ID of the user to count for.
     # @param include_missing_memberships [Boolean] Whether to include threads
     #   that the user is not a member of. These counts will always be 0.
-    def self.call(channel_ids: [], thread_ids: [], user_id:, include_missing_memberships: false)
+    def self.call(
+      channel_ids: [],
+      thread_ids: [],
+      user_id:,
+      include_missing_memberships: false,
+      include_zero_unreads: true
+    )
       return [] if channel_ids.empty? && thread_ids.empty?
 
       sql = <<~SQL
@@ -56,7 +62,14 @@ module Chat
         #{include_missing_memberships ? "" : "LIMIT :limit"}
       SQL
 
-      sql += <<~SQL if include_missing_memberships
+      sql = <<~SQL if !include_zero_unreads
+          SELECT * FROM (
+            #{sql}
+          ) AS thread_tracking
+          WHERE (unread_count > 0 OR mention_count > 0)
+        SQL
+
+      sql += <<~SQL if include_missing_memberships && !include_zero_unreads
         UNION ALL
         SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
         FROM chat_channels

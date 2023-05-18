@@ -2,7 +2,23 @@
 
 module Chat
   class ViewSerializer < ApplicationSerializer
-    attributes :meta, :chat_messages
+    attributes :meta, :chat_messages, :threads, :tracking, :thread_tracking_overview, :channel
+
+    def threads
+      object.threads || []
+    end
+
+    def tracking
+      object.tracking || {}
+    end
+
+    def thread_tracking_overview
+      object.thread_tracking_overview || {}
+    end
+
+    def channel
+      object.chat_channel
+    end
 
     def chat_messages
       ActiveModel::ArraySerializer.new(
