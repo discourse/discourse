@@ -233,7 +233,7 @@ GEM
     mini_portile2 (2.8.2)
     mini_racer (0.6.3)
       libv8-node (~> 16.10.0.0)
-    mini_scheduler (0.15.0)
+    mini_scheduler (0.16.0)
       sidekiq (>= 4.2.3, < 7.0)
     mini_sql (1.4.0)
     mini_suffix (0.3.3)
