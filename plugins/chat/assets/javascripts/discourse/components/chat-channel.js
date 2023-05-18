@@ -870,7 +870,7 @@ export default class ChatLivePane extends Component {
   computeDatesSeparators() {
     cancel(this._laterComputeHandler);
     this._computeDatesSeparators();
-    this._laterComputeHandler = later(this, this.computeDatesSeparators, 100);
+    this._laterComputeHandler = later(this, this._computeDatesSeparators, 100);
   }
 
   // A more consistent way to scroll to the bottom when we are sure this is our goal
