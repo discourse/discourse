@@ -68,12 +68,12 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
-    if params[:lookup_message_id].present? || params[:with_messages].present?
+    if params[:target_message_id].present? || params[:include_messages].present?
       with_service(
         Chat::ChannelViewBuilder,
-        **params.permit(:channel_id, :lookup_message_id, :thread_id, :page_size, :direction).slice(
+        **params.permit(:channel_id, :target_message_id, :thread_id, :page_size, :direction).slice(
           :channel_id,
-          :lookup_message_id,
+          :target_message_id,
           :thread_id,
           :page_size,
           :direction,

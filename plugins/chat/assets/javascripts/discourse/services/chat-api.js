@@ -26,16 +26,16 @@ export default class ChatApi extends Service {
     const args = {};
 
     if (data.targetMessageId) {
-      args.lookup_message_id = data.targetMessageId;
+      args.target_message_id = data.targetMessageId;
     } else {
       args.page_size = data.pageSize;
 
-      if (data.withMessages) {
-        args.with_messages = true;
+      if (data.includeMessages) {
+        args.include_messages = true;
       }
 
       if (data.messageId) {
-        args.lookup_message_id = data.messageId;
+        args.target_message_id = data.messageId;
       }
 
       if (data.threadId) {

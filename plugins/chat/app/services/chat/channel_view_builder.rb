@@ -4,7 +4,7 @@ module Chat
   # Builds up a Chat::View object for a channel, and handles several
   # different querying scenraios:
   #
-  # * Fetching messages before and after a specific lookup_message_id
+  # * Fetching messages before and after a specific target_message_id
   # * Fetching channel and/or thread tracking state
   # * Fetching threads for the found messages
   # * Fetching an overview of unread threads for the channel
@@ -19,7 +19,7 @@ module Chat
     #   @param [Integer] channel_id
     #   @param [Guardian] guardian
     #   @option optional_params [Integer] thread_id
-    #   @option optional_params [Integer] lookup_message_id
+    #   @option optional_params [Integer] target_message_id
     #   @option optional_params [Integer] page_size
     #   @option optional_params [String] direction
     #   @return [Service::Base::Context]
@@ -38,7 +38,7 @@ module Chat
 
       # If this is not present, then we just fetch messages with page_size
       # and direction.
-      attribute :lookup_message_id, :integer # (optional)
+      attribute :target_message_id, :integer # (optional)
       attribute :thread_id, :integer # (optional)
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
@@ -70,7 +70,7 @@ module Chat
         ::Chat::MessagesQuery.call(
           channel: channel,
           guardian: guardian,
-          lookup_message_id: contract.lookup_message_id,
+          target_message_id: contract.target_message_id,
           thread_id: contract.thread_id,
           include_thread_messages: include_thread_messages,
           page_size: contract.page_size,
@@ -80,18 +80,18 @@ module Chat
       context.can_load_more_past = messages_data[:can_load_more_past]
       context.can_load_more_future = messages_data[:can_load_more_future]
 
-      if messages_data[:lookup_message]
-        messages_data[:lookup_message] = (
-          if !include_thread_messages && messages_data[:lookup_message].thread_reply?
+      if messages_data[:target_message]
+        messages_data[:target_message] = (
+          if !include_thread_messages && messages_data[:target_message].thread_reply?
             []
           else
-            [messages_data[:lookup_message]]
+            [messages_data[:target_message]]
           end
         )
 
         context.messages = [
           messages_data[:past_messages].reverse,
-          messages_data[:lookup_message],
+          messages_data[:target_message],
           messages_data[:future_messages],
         ].reduce([], :concat)
       else

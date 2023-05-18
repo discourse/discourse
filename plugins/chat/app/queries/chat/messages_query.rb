@@ -12,13 +12,13 @@ module Chat
       channel:,
       guardian:,
       thread_id: nil,
-      lookup_message_id: nil,
+      target_message_id: nil,
       include_thread_messages: false,
       page_size: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT,
       direction: nil
     )
-      if lookup_message_id.present?
-        lookup_message = base_query(channel: channel).with_deleted.find_by(id: lookup_message_id)
+      if target_message_id.present?
+        target_message = base_query(channel: channel).with_deleted.find_by(id: target_message_id)
       end
 
       messages = base_query(channel: channel)
@@ -32,28 +32,28 @@ module Chat
         )
       SQL
 
-      if lookup_message
+      if target_message
         past_messages =
           messages
-            .where("created_at < ?", lookup_message.created_at)
+            .where("created_at < ?", target_message.created_at)
             .order(created_at: :desc)
             .limit(PAST_MESSAGE_LIMIT)
       end
 
-      if lookup_message
+      if target_message
         future_messages =
           messages
-            .where("created_at > ?", lookup_message.created_at)
+            .where("created_at > ?", target_message.created_at)
             .order(created_at: :asc)
             .limit(FUTURE_MESSAGE_LIMIT)
       end
 
-      if !lookup_message
+      if !target_message
         order = direction == FUTURE ? "ASC" : "DESC"
         messages = messages.order("created_at #{order}, id #{order}").limit(page_size).to_a
       end
 
-      if lookup_message
+      if target_message
         can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
         can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
       elsif direction == FUTURE
@@ -66,11 +66,11 @@ module Chat
         can_load_more_past = messages.size == page_size
       end
 
-      if lookup_message
+      if target_message
         {
           past_messages: past_messages,
           future_messages: future_messages,
-          lookup_message: lookup_message,
+          target_message: target_message,
           can_load_more_past: can_load_more_past,
           can_load_more_future: can_load_more_future,
         }
