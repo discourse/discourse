@@ -73,8 +73,8 @@
             <Chat::Composer::Button
               @icon={{button.icon}}
               class={{concat-class "chat-composer__inline-button" button.id}}
-              disabled={{or this.disabled (not this.sendEnabled)}}
-              tabindex={{if this.sendEnabled 0 -1}}
+              disabled={{button.disabled}}
+              tabindex={{if button.disabled -1 0}}
               {{on
                 "click"
                 (fn this.handleInlineButonAction button.action)
