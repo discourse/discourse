@@ -2,13 +2,17 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import { loadColorSchemeStylesheet } from "discourse/lib/color-scheme-picker";
+import { currentThemeId } from "discourse/lib/theme-selector";
 
 const DARK = "dark";
 const LIGHT = "light";
 
 function colorSchemeOverride(type) {
   const lightScheme = document.querySelector("link.light-scheme");
-  const darkScheme = document.querySelector("link.dark-scheme");
+  const darkScheme =
+    document.querySelector("link.dark-scheme") ||
+    document.querySelector("link#cs-preview-dark");
 
   if (!lightScheme && !darkScheme) {
     return;
@@ -42,8 +46,29 @@ function colorSchemeOverride(type) {
 
 export default class ToggleColorMode extends Component {
   @service keyValueStore;
+  @service siteSettings;
 
   @tracked colorSchemeOverride = this.default;
+  @tracked shouldRender = true;
+
+  constructor() {
+    super(...arguments);
+
+    // If site has a dark color scheme set but user doesn't auto switch in dark mode
+    // we need to load the stylesheet manually
+    if (!document.querySelector("link.dark-scheme")) {
+      if (this.siteSettings.default_dark_mode_color_scheme_id > 0) {
+        loadColorSchemeStylesheet(
+          this.siteSettings.default_dark_mode_color_scheme_id,
+          currentThemeId(),
+          true
+        );
+      } else {
+        // no dark color scheme available, hide button
+        this.shouldRender = false;
+      }
+    }
+  }
 
   get default() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches
