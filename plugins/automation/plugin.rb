@@ -68,6 +68,7 @@ after_initialize do
     lib/discourse_automation/triggers/user_badge_granted
     lib/discourse_automation/triggers/user_promoted
     lib/discourse_automation/triggers/user_removed_from_group
+    lib/discourse_automation/triggers/user_first_logged_in
   ].each { |path| require_relative path }
 
   reloadable_patch { Post.prepend DiscourseAutomation::PostExtension }
@@ -93,6 +94,14 @@ after_initialize do
     ).as_json
   end
 
+  on(:user_first_logged_in) do |user|
+    name = DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN
+
+    DiscourseAutomation::Automation
+      .where(trigger: name, enabled: true)
+      .find_each { |automation| automation.trigger!("kind" => name, "user" => user) }
+  end
+
   on(:user_added_to_group) do |user, group|
     name = DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP
 
@@ -102,7 +111,7 @@ after_initialize do
         joined_group = automation.trigger_field("joined_group")
         if joined_group["value"] == group.id
           automation.trigger!(
-            "kind" => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
+            "kind" => name,
             "usernames" => [user.username],
             "user" => user,
             "group" => group,

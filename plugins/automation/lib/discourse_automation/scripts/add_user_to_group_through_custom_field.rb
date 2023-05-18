@@ -16,7 +16,7 @@ DiscourseAutomation::Scriptable.add(
 
   version 1
 
-  triggerables %i[recurring user_added_to_group]
+  triggerables %i[recurring user_first_logged_in]
 
   script do |trigger, fields|
     custom_field_name = fields.dig("custom_field_name", "value")
@@ -51,15 +51,26 @@ DiscourseAutomation::Scriptable.add(
           group.add(user)
           GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
         end
-    when DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP
-      user = trigger["user"]
-
-      group_name = user.custom_fields[custom_field_name]
+    when DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN
+      group_name =
+        DB.query_single(
+          <<-SQL,
+        SELECT ucf.value
+        FROM user_fields uf
+        JOIN user_custom_fields ucf
+        ON ucf.user_id = :user_id AND ucf.name = CONCAT(:prefix, uf.id)
+        WHERE uf.name = :custom_field_name
+      SQL
+          prefix: ::User::USER_FIELD_PREFIX,
+          custom_field_name: custom_field_name,
+          user_id: trigger["user"].id,
+        ).first
       next if !group_name
 
-      group = Group.where("full_name ILIKE ?", group_name)&.first
+      group = Group.find_by(full_name: group_name)
       next if !group
 
+      user = trigger["user"]
       group.add(user)
       GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
     end

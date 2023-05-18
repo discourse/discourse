@@ -69,7 +69,7 @@ describe "AddUserTogroupThroughCustomField" do
     end
   end
 
-  context "with user_added_to_group trigger" do
+  context "with user_first_logged_in trigger" do
     fab!(:automation) do
       Fabricate(
         :automation,
@@ -79,16 +79,18 @@ describe "AddUserTogroupThroughCustomField" do
 
     context "with existing custom fields" do
       before do
+        user_field =
+          UserField.create!(name: "groupity_group", field_type: "text", description: "a nice field")
         UserCustomField.create!(
           user_id: user_1.id,
-          name: "groupity_group",
+          name: "user_field_#{user_field.id}",
           value: target_group.full_name,
         )
       end
 
       it "adds the user to the group" do
         automation.trigger!(
-          "kind" => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
+          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
           "user" => user_1,
         )
 
@@ -100,7 +102,7 @@ describe "AddUserTogroupThroughCustomField" do
       it "does nothing" do
         expect {
           automation.trigger!(
-            "kind" => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
+            "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
             "user" => user_1,
           )
         }.not_to change { user_1.reload.belonging_to_group_ids.length }
@@ -108,12 +110,20 @@ describe "AddUserTogroupThroughCustomField" do
     end
 
     context "with non existing target group" do
-      before { UserCustomField.create!(user_id: user_1.id, name: "groupity_group", value: "xx") }
+      before do
+        user_field =
+          UserField.create!(name: "groupity_group", field_type: "text", description: "a nice field")
+        UserCustomField.create!(
+          user_id: user_1.id,
+          name: "user_field_#{user_field.id}",
+          value: "xx",
+        )
+      end
 
       it "does nothing" do
         expect {
           automation.trigger!(
-            "kind" => DiscourseAutomation::Triggerable::USER_ADDED_TO_GROUP,
+            "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
             "user" => user_1,
           )
         }.not_to change { user_1.reload.belonging_to_group_ids.length }
