@@ -4,6 +4,7 @@ import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Discourse Chat | Component | chat-channel | mentions",
@@ -11,12 +12,24 @@ module(
     setupRenderingTest(hooks);
 
     const channelId = 1;
+    const actingUser = {
+      id: 1,
+      username: "acting_user",
+    };
     const mentionedUser = {
       id: 1000,
       username: "user1",
       status: {
         description: "surfing",
         emoji: "surfing_man",
+      },
+    };
+    const mentionedUser2 = {
+      id: 2000,
+      username: "user2",
+      status: {
+        description: "vacation",
+        emoji: "desert_island",
       },
     };
     const messagesResponse = {
@@ -53,6 +66,7 @@ module(
       pretender.post("/chat/drafts", () => {
         return [200, {}, {}];
       });
+      pretender.put(`/chat/api/channels/1/read/2138`, () => [200, {}, {}]);
 
       this.appEvents = this.container.lookup("service:appEvents");
     });
@@ -115,5 +129,59 @@ module(
       await waitFor(selector, { count: 0 });
       assert.dom(selector).doesNotExist("status is deleted");
     });
+
+    test("it shows status on mentions on a message that came from Message Bus", async function (assert) {
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+
+      await receiveMessageViaMessageBus();
+
+      assert
+        .dom(statusSelector(mentionedUser2.username))
+        .exists("status is rendered")
+        .hasAttribute(
+          "title",
+          mentionedUser2.status.description,
+          "status description is correct"
+        )
+        .hasAttribute(
+          "src",
+          new RegExp(`${mentionedUser2.status.emoji}.png`),
+          "status emoji is updated"
+        );
+    });
+
+    async function receiveMessageViaMessageBus() {
+      await publishToMessageBus(`/chat/${channelId}`, {
+        chat_message: {
+          id: 2138,
+          message: `Hey @${mentionedUser2.username}`,
+          cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser2.username}">@${mentionedUser2.username}</a></p>`,
+          created_at: "2023-05-18T16:07:59.588Z",
+          excerpt: `Hey @${mentionedUser2.username}`,
+          available_flags: [],
+          thread_title: null,
+          chat_channel_id: 7,
+          mentioned_users: [mentionedUser2],
+          user: actingUser,
+          chat_webhook_event: null,
+          uploads: [],
+        },
+        type: "sent",
+        staged_id: "07d40475-3ea7-4be9-a05f-c4df7b79ff3c",
+        staged_thread_id: null,
+      });
+
+      await publishToMessageBus(`/chat/${channelId}/new-messages`, {
+        channel_id: channelId,
+        message_id: 2138,
+        user_id: 2,
+        username: "andrei1",
+        thread_id: null,
+      });
+    }
+
+    function statusSelector(username) {
+      return `.mention[href='/u/${username}'] .user-status`;
+    }
   }
 );
