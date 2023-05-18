@@ -1,5 +1,5 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { render } from "@ember/test-helpers";
@@ -13,7 +13,7 @@ module(
     test("channel title is escaped in instructions correctly", async function (assert) {
       this.set(
         "channel",
-        fabricators.chatChannel({
+        fabricators.channel({
           title: `<script>someeviltitle</script>`,
         })
       );

@@ -55,7 +55,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   const template = hbs`
     <ChatMessage
       @message={{this.message}}
-      @channel={{this.channel}}
       @messageDidEnterViewport={{this.messageDidEnterViewport}}
       @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
     />

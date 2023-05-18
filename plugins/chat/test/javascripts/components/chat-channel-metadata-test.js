@@ -1,7 +1,7 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
 
@@ -10,7 +10,7 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
 
   test("displays last message sent at", async function (assert) {
     let lastMessageSentAt = moment().subtract(1, "day").format();
-    this.channel = fabricators.directMessageChatChannel({
+    this.channel = fabricators.directMessageChannel({
       last_message_sent_at: lastMessageSentAt,
     });
 
@@ -28,7 +28,7 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   });
 
   test("unreadIndicator", async function (assert) {
-    this.channel = fabricators.directMessageChatChannel();
+    this.channel = fabricators.directMessageChannel();
     this.channel.tracking.unreadCount = 1;
 
     this.unreadIndicator = true;

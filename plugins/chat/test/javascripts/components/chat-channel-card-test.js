@@ -1,7 +1,7 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import I18n from "I18n";
@@ -10,7 +10,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.channel = fabricators.chatChannel();
+    this.channel = fabricators.channel();
     this.channel.description =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
   });

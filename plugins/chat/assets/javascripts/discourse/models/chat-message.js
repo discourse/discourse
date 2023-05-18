@@ -7,7 +7,7 @@ import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
-
+import { next } from "@ember/runloop";
 export default class ChatMessage {
   static cookFunction = null;
 
@@ -38,9 +38,10 @@ export default class ChatMessage {
   @tracked expanded;
   @tracked bookmark;
   @tracked userFlagStatus;
-  @tracked hidden;
+  @tracked hidden = false;
   @tracked version = 0;
-  @tracked edited;
+  @tracked edited = false;
+  @tracked editing = false;
   @tracked chatWebhookEvent = new TrackedObject();
   @tracked mentionWarning;
   @tracked availableFlags;
@@ -62,6 +63,7 @@ export default class ChatMessage {
     this.firstOfResults = args.firstOfResults;
     this.staged = args.staged;
     this.edited = args.edited;
+    this.editing = args.editing;
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden;
     this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
@@ -82,10 +84,7 @@ export default class ChatMessage {
         ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
         : null);
     this.channel = channel;
-    this.reactions = this.#initChatMessageReactionModel(
-      args.id,
-      args.reactions
-    );
+    this.reactions = this.#initChatMessageReactionModel(args.reactions);
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
@@ -138,33 +137,35 @@ export default class ChatMessage {
   }
 
   cook() {
-    const site = getOwner(this).lookup("service:site");
+    next(() => {
+      const site = getOwner(this).lookup("service:site");
 
-    const markdownOptions = {
-      featuresOverride:
-        site.markdown_additional_options?.chat?.limited_pretty_text_features,
-      markdownItRules:
-        site.markdown_additional_options?.chat
-          ?.limited_pretty_text_markdown_rules,
-      hashtagTypesInPriorityOrder:
-        site.hashtag_configurations?.["chat-composer"],
-      hashtagIcons: site.hashtag_icons,
-    };
+      const markdownOptions = {
+        featuresOverride:
+          site.markdown_additional_options?.chat?.limited_pretty_text_features,
+        markdownItRules:
+          site.markdown_additional_options?.chat
+            ?.limited_pretty_text_markdown_rules,
+        hashtagTypesInPriorityOrder:
+          site.hashtag_configurations?.["chat-composer"],
+        hashtagIcons: site.hashtag_icons,
+      };
 
-    if (ChatMessage.cookFunction) {
-      this.cooked = ChatMessage.cookFunction(this.message);
-    } else {
-      generateCookFunction(markdownOptions).then((cookFunction) => {
-        ChatMessage.cookFunction = (raw) => {
-          return simpleCategoryHashMentionTransform(
-            cookFunction(raw),
-            site.categories
-          );
-        };
-
+      if (ChatMessage.cookFunction) {
         this.cooked = ChatMessage.cookFunction(this.message);
-      });
-    }
+      } else {
+        generateCookFunction(markdownOptions).then((cookFunction) => {
+          ChatMessage.cookFunction = (raw) => {
+            return simpleCategoryHashMentionTransform(
+              cookFunction(raw),
+              site.categories
+            );
+          };
+
+          this.cooked = ChatMessage.cookFunction(this.message);
+        });
+      }
+    });
   }
 
   get read() {
@@ -306,10 +307,8 @@ export default class ChatMessage {
     }
   }
 
-  #initChatMessageReactionModel(messageId, reactions = []) {
-    return reactions.map((reaction) =>
-      ChatMessageReaction.create(Object.assign({ messageId }, reaction))
-    );
+  #initChatMessageReactionModel(reactions = []) {
+    return reactions.map((reaction) => ChatMessageReaction.create(reaction));
   }
 
   #initUserModel(user) {

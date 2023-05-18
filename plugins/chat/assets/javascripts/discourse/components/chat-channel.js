@@ -113,11 +113,10 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this.unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
-      this.chatChannelComposer.message =
-        this.args.channel.draft ||
-        ChatMessage.createDraftMessage(this.args.channel, {
-          user: this.currentUser,
-        });
+
+      if (this.args.channel.draft) {
+        this.chatChannelComposer.message = this.args.channel.draft;
+      }
 
       this._loadedChannelId = this.args.channel?.id;
     }
@@ -202,10 +201,7 @@ export default class ChatLivePane extends Component {
 
         if (results.threads) {
           results.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(
-              this.args.channel,
-              ChatThread.create(thread)
-            );
+            this.args.channel.threadsManager.store(this.args.channel, thread);
           });
         }
 
@@ -1013,7 +1009,7 @@ export default class ChatLivePane extends Component {
   #isBottomOfMessageVisible(element, container) {
     const rect = element.getBoundingClientRect();
     const containerRect = container.getBoundingClientRect();
-    // - 1.0 to account for rounding errors, especially on firefox
-    return rect.bottom - 1.0 <= containerRect.bottom;
+    // - 5.0 to account for rounding errors, especially on firefox
+    return rect.bottom - 5.0 <= containerRect.bottom;
   }
 }

@@ -54,6 +54,10 @@ export default class ChatMessageActionsDesktop extends Component {
         this.context
       );
 
+      if (!messageContainer) {
+        return;
+      }
+
       const viewport = messageContainer.closest(".popper-viewport");
       this.size =
         viewport.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
