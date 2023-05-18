@@ -378,11 +378,10 @@ export default Component.extend(KeyEnterEscape, {
 
       schedule("afterRender", () => {
         if (this.site.mobileView) {
-          this.element.style.left = `${
-            (window.innerWidth - this.element.clientWidth) / 2
-          }px`;
+          this.textRange = document.querySelector("#main-outlet");
+          this._popper?.update();
         }
-        document.querySelector("#fast-edit-input")?.focus();
+        next(() => document.querySelector("#fast-edit-input")?.focus());
       });
     } else {
       const postId = this.quoteState.postId;

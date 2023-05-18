@@ -34,6 +34,7 @@ export default class Chat extends Service {
   @service chatChannelsManager;
   @service chatChannelPane;
   @service chatChannelThreadPane;
+  @service chatTrackingStateManager;
 
   cook = null;
   presenceChannel = null;
@@ -107,6 +108,8 @@ export default class Chat extends Service {
   @bind
   onPresenceChangeCallback(present) {
     if (present) {
+      // NOTE: channels is more than a simple array, it also contains
+      // tracking and membership data, see Chat::StructuredChannelSerializer
       this.chatApi.listCurrentUserChannels().then((channels) => {
         this.chatSubscriptionsManager.restartChannelsSubscriptions(
           channels.meta.message_bus_last_ids
@@ -121,6 +124,13 @@ export default class Chat extends Service {
             .then((channel) => {
               if (channel) {
                 channel.updateMembership(channelObject.current_user_membership);
+
+                const channelTrackingState =
+                  channels.tracking.channel_tracking[channel.id];
+                channel.tracking.unreadCount =
+                  channelTrackingState.unread_count;
+                channel.tracking.mentionCount =
+                  channelTrackingState.mention_count;
               }
             });
         });
@@ -177,6 +187,8 @@ export default class Chat extends Service {
         return this.chatChannelsManager.follow(channel);
       }
     );
+
+    this.chatTrackingStateManager.setupWithPreloadedState(channels.tracking);
   }
 
   willDestroy() {
@@ -208,7 +220,7 @@ export default class Chat extends Service {
 
   getDocumentTitleCount() {
     return this.chatNotificationManager.shouldCountChatInDocTitle()
-      ? this.chatChannelsManager.unreadUrgentCount
+      ? this.chatTrackingStateManager.allChannelUrgentCount
       : 0;
   }
 
@@ -283,7 +295,7 @@ export default class Chat extends Service {
       const membership = channel.currentUserMembership;
 
       if (channel.isDirectMessageChannel) {
-        if (!dmChannelWithUnread && membership.unreadCount > 0) {
+        if (!dmChannelWithUnread && channel.tracking.unreadCount > 0) {
           dmChannelWithUnread = channel.id;
         } else if (!dmChannel) {
           dmChannel = channel.id;
@@ -292,7 +304,10 @@ export default class Chat extends Service {
         if (membership.unread_mentions > 0) {
           publicChannelWithMention = channel.id;
           return; // <- We have a public channel with a mention. Break and return this.
-        } else if (!publicChannelWithUnread && membership.unreadCount > 0) {
+        } else if (
+          !publicChannelWithUnread &&
+          channel.tracking.unreadCount > 0
+        ) {
           publicChannelWithUnread = channel.id;
         } else if (
           !defaultChannel &&

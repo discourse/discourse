@@ -2982,7 +2982,6 @@ cs:
         many: "Získal tento odznak %{count} krát"
         other: "Získal tento odznak %{count} krát"
       granted_on: "Získán %{date}"
-      others_count: "Ostatní s tímto odznakem (%{count})"
       title: Odznaky
       allow_title: "Tento odznak můžeš použít jako titul"
       multiple_grant: "Toto si můžeš zasloužit několikrát"

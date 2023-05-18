@@ -250,6 +250,7 @@ de:
       save: "Speichern"
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
+      return_to_threads_list: "Zurück zu den laufenden Diskussionen"
       scroll_to_bottom: "Nach unten scrollen"
       scroll_to_new_messages: "Neue Nachrichten anzeigen"
       sound:
@@ -514,15 +515,21 @@ de:
         search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
         no_results: "Keine Ergebnisse"
       thread:
+        title: "Titel"
         view_thread: Thread ansehen
+        default_title: "Thema #%{thread_id}"
         replies:
           one: "%{count} Antwort"
           other: "%{count} Antworten"
         label: Thread
         close: "Thread schließen"
+        original_message:
+          started_by: "Gestartet von"
+        settings: "Einstellungen"
       threads:
-        started_by: "Gestartet von"
         open: "Thread öffnen"
+        list: "Laufende Diskussionen"
+        none: "Du nimmst an keinem Thread in diesem Kanal teil."
       draft_channel_screen:
         header: "Neue Nachricht"
         cancel: "Abbrechen"

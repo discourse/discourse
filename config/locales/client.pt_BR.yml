@@ -3771,7 +3771,6 @@ pt_BR:
         one: "Emblema obtido %{count} vez"
         other: "Emblema obtido %{count} vezes"
       granted_on: "Concedido em %{date}"
-      others_count: "Outros(as) com este emblema (%{count})"
       title: Emblemas
       allow_title: "Você pode usar este emblema como um título"
       multiple_grant: "Você pode ganhar isto várias vezes"
@@ -5478,7 +5477,6 @@ pt_BR:
             label: "Adicionar emoji"
         title: "Configurações"
         no_results: "Nenhum resultado encontrado."
-        more_than_30_results: "Existem mais de 30 resultados. Refine sua pesquisa ou selecione uma categoria."
         clear_filter: "Limpar"
         add_url: "adicionar URL"
         add_host: "adicionar host"

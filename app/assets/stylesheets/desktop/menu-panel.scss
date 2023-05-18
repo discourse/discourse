@@ -52,14 +52,10 @@
         }
       }
     }
-  }
 
-  .sidebar-section-wrapper .sidebar-section-header-caret {
-    display: none;
-  }
-
-  .sidebar-section-header-collapsable {
-    pointer-events: none; // disabling collapsible sections
+    .sidebar-section-message {
+      padding: 0;
+    }
   }
 
   .sidebar-custom-sections .d-icon-globe {

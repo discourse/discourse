@@ -47,6 +47,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
+
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
     );
@@ -997,9 +998,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       reviewable_count: 0,
     });
 
-    await visit("/reivew");
+    await visit("/review");
 
-    assert.notOk(
+    assert.ok(
       exists(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'].active"
       ),
@@ -1026,7 +1027,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "review link is displayed in the more drawer"
     );
 
-    await publishToMessageBus("/reviewable_counts", {
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       reviewable_count: 34,
     });
 

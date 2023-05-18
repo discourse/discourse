@@ -22,8 +22,8 @@
   "devDependencies": {
     "@babel/core": "^7.21.8",
     "@ember/optional-features": "^2.0.0",
-    "@ember/string": "^3.0.1",
-    "@embroider/test-setup": "^2.1.1",
+    "@ember/string": "^3.1.1",
+    "@embroider/test-setup": "^3.0.0",
     "@glimmer/component": "^1.1.2",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~4.12.0",
@@ -37,7 +37,7 @@
     "ember-source": "~3.28.12",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.82.1"
+    "webpack": "^5.83.1"
   },
   "engines": {
     "node": "16.* || >= 18",

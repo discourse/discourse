@@ -3150,7 +3150,6 @@ gl:
         one: "Gañou esta insignia %{count} vez"
         other: "Gañou esta insignia %{count} veces"
       granted_on: "Concedida %{date}"
-      others_count: "Outros con esta insignia (%{count})"
       title: Insignias
       allow_title: "Pode usar esta insignia como título"
       multiple_grant: "Pode gañala múltiples veces"
@@ -4629,7 +4628,6 @@ gl:
       site_settings:
         title: "Axustes"
         no_results: "Non se atoparon resultados."
-        more_than_30_results: "Hai máis de 30 resultados. Restrinxa a busca ou seleccione unha categoría."
         clear_filter: "Borrar"
         add_url: "engadir URL"
         add_host: "engadir servidor"

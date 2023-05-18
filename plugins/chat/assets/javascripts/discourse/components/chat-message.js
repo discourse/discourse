@@ -151,7 +151,7 @@ export default class ChatMessage extends Component {
       }
 
       _chatMessageDecorators.forEach((decorator) => {
-        decorator.call(this, this.messageContainer, this.args.channel);
+        decorator.call(this, this.messageContainer, this.args.message.channel);
       });
     });
   }
@@ -168,7 +168,7 @@ export default class ChatMessage extends Component {
       !this.args.message?.deletedAt ||
       this.currentUser.id === this.args.message?.user?.id ||
       this.currentUser.staff ||
-      this.args.channel?.canModerate
+      this.args.message?.channel?.canModerate
     );
   }
 
@@ -337,7 +337,10 @@ export default class ChatMessage extends Component {
   }
 
   get threadingEnabled() {
-    return this.args.channel?.threadingEnabled && !!this.args.message?.thread;
+    return (
+      this.args.message?.channel?.threadingEnabled &&
+      !!this.args.message?.thread
+    );
   }
 
   get showThreadIndicator() {

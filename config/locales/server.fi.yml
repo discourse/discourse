@@ -195,9 +195,6 @@ fi:
     site_settings:
       invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
-      invalid_choice:
-        one: "Määrittämäsi valinta ei kelpaa %{name}"
-        other: "Määrittämäsi valinnat eivät kelpaa %{name}"
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla."
       default_tags_already_selected: "Et voi valita tunnistetta, joka on käytössä toisella listalla."
       s3_upload_bucket_is_required: "Et voi ottaa latauksia S3:een käyttöön, ellet ole määrittänyt 's3_upload_bucket'-määritettä."
@@ -613,22 +610,6 @@ fi:
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
-  discourse_welcome_topic:
-    title: "Tervetuloa yhteisöömme!"
-    body: |2
-
-      Tämän kiinnitetyn ketjun ensimmäinen kappale on sivustolla vierailevalle näkyvä tervetulotoivotus. Se on tärkeä!
-
-      **Muokkaa tästä** tiivis kuvaus yhteisöstäsi:
-
-      – Kenelle se on suunnattu?
-      – Mistä täällä keskustellaan?
-      – Miksi heidän kannattaa käydä täällä?
-      – Mistä he löytävät lisätietoa (linkkejä, ohjeita jne.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun alaosassa), jottei vastauksia kasaannu ilmoituksen alle.
   admin_quick_start_title: "LUE ENSIN: Ylläpitäjän pika-aloitusopas"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -1896,7 +1877,6 @@ fi:
     pop3_polling_password: "Sen POP3-tilin salasana, jolta pollataan sähköposteja."
     pop3_polling_delete_from_server: "Poista sähköpostit palvelimelta. HUOM: Jos poistat tämän käytöstä, sinun täytyy siivota saapuvien sähköpostien kansio manuaalisesti"
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin käsittelyvirheet lokiin: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Salli käyttäjien aloittaa uusia ketjuja sähköpostitse (vaatii manuaalisen tai pop3-pollauksen). Määritä osoitteet jokaiselle alueelle erikseen niiden Asetukset-välilehdiltä. '
     email_in_min_trust: "Vähimmäisluottamustaso, jonka käyttäjä tarvitsee uuden ketjun aloittamiseen sähköpostitse."
     email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Sähköpostin otsikkotiedot roskapostin tunnistamiseksi."

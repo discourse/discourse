@@ -105,9 +105,11 @@ el:
         flags: "Σημάνσεις"
         symbols: "Σύμβολα"
       thread:
+        title: "Τίτλος"
         replies:
           one: "%{count} απάντηση"
           other: "%{count} απαντήσεις"
+        settings: "Ρυθμίσεις"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"

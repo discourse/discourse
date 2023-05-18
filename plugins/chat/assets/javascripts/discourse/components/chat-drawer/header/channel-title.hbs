@@ -21,9 +21,9 @@
     >
       <div class="chat-drawer-header__top-line">
         <ChatChannelTitle @channel={{@channel}}>
-          {{#if @channel.currentUserMembership.unreadCount}}
+          {{#if @channel.tracking.unreadCount}}
             <span class="chat-unread-count">
-              {{@channel.currentUserMembership.unreadCount}}
+              {{@channel.tracking.unreadCount}}
             </span>
           {{/if}}
         </ChatChannelTitle>

@@ -2132,8 +2132,6 @@ navigation:
     choices:
       - "default"
       - "unread_new"
-  enable_new_notifications_menu:
-    default: true
 
 embedding:
   embed_by_username:
@@ -2493,7 +2491,6 @@ uncategorized:
   welcome_topic_id:
     default: -1
     hidden: true
-    client: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true

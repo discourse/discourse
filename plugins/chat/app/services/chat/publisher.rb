@@ -242,20 +242,22 @@ module Chat
     end
 
     def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
-      data = {
-        channel_id: chat_channel_id,
-        last_read_message_id: chat_message_id,
-        # TODO (martin) Remove old chat_channel_id and chat_message_id keys here once deploys have cycled,
-        # this will prevent JS errors from clients that are looking for the old payload.
-        chat_channel_id: chat_channel_id,
-        chat_message_id: chat_message_id,
-      }.merge(
-        Chat::ChannelUnreadsQuery.call(channel_ids: [chat_channel_id], user_id: user.id).first.to_h,
-      )
+      tracking_data =
+        Chat::TrackingState.call(
+          guardian: Guardian.new(user),
+          channel_ids: [chat_channel_id],
+          include_missing_memberships: true,
+        )
+      if tracking_data.failure?
+        raise StandardError,
+              "Tracking service failed when trying to publish user tracking state:\n\n#{tracking_data.inspect_steps}"
+      end
 
       MessageBus.publish(
         self.user_tracking_state_message_bus_channel(user.id),
-        data.as_json,
+        { channel_id: chat_channel_id, last_read_message_id: chat_message_id }.merge(
+          tracking_data.report.find_channel(chat_channel_id),
+        ).as_json,
         user_ids: [user.id],
       )
     end
@@ -265,16 +267,19 @@ module Chat
     end
 
     def self.publish_bulk_user_tracking_state(user, channel_last_read_map)
-      unread_data =
-        Chat::ChannelUnreadsQuery.call(
+      tracking_data =
+        Chat::TrackingState.call(
+          guardian: Guardian.new(user),
           channel_ids: channel_last_read_map.keys,
-          user_id: user.id,
-        ).map(&:to_h)
+          include_missing_memberships: true,
+        )
+      if tracking_data.failure?
+        raise StandardError,
+              "Tracking service failed when trying to publish bulk tracking state:\n\n#{tracking_data.inspect_steps}"
+      end
 
       channel_last_read_map.each do |key, value|
-        channel_last_read_map[key] = value.merge(
-          unread_data.find { |data| data[:channel_id] == key }.except(:channel_id),
-        )
+        channel_last_read_map[key] = value.merge(tracking_data.report.find_channel(key))
       end
 
       MessageBus.publish(

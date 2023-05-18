@@ -362,9 +362,11 @@ nl:
         search_placeholder: "Zoek op emojinaam en -alias..."
         no_results: "Geen resultaten"
       thread:
+        title: "Titel"
         replies:
           one: "%{count} antwoord"
           other: "%{count} antwoorden"
+        settings: "Instellingen"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"

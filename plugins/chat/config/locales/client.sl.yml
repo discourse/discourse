@@ -104,11 +104,13 @@ sl:
         flags: "Zastave"
         symbols: "Simboli"
       thread:
+        title: "Naziv"
         replies:
           one: "%{count} odgovor"
           two: "%{count} odgovora"
           few: "%{count} odgovori"
           other: "%{count} odgovorov"
+        settings: "Nastavitve"
       draft_channel_screen:
         header: "Novo zasebno sporočilo"
         cancel: "Prekliči"

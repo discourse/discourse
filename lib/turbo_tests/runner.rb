@@ -5,12 +5,13 @@ module TurboTests
     def self.run(opts = {})
       files = opts[:files]
       formatters = opts[:formatters]
+      seed = opts[:seed]
       start_time = opts.fetch(:start_time) { Time.now }
       verbose = opts.fetch(:verbose, false)
       fail_fast = opts.fetch(:fail_fast, nil)
       use_runtime_info = opts.fetch(:use_runtime_info, false)
 
-      STDERR.puts "VERBOSE" if verbose
+      STDOUT.puts "VERBOSE" if verbose
 
       reporter = Reporter.from_config(formatters, start_time)
 
@@ -29,6 +30,7 @@ module TurboTests
         verbose: verbose,
         fail_fast: fail_fast,
         use_runtime_info: use_runtime_info,
+        seed: seed,
       ).run
     end
 
@@ -46,6 +48,7 @@ module TurboTests
       @verbose = opts[:verbose]
       @fail_fast = opts[:fail_fast]
       @use_runtime_info = opts[:use_runtime_info]
+      @seed = opts[:seed]
       @failure_count = 0
 
       @messages = Queue.new
@@ -59,12 +62,7 @@ module TurboTests
       @num_processes = ParallelTests.determine_number_of_processes(nil)
 
       group_opts = {}
-
-      if @use_runtime_info
-        group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log"
-      else
-        group_opts[:group_by] = :filesize
-      end
+      group_opts[:runtime_log] = "tmp/turbo_rspec_runtime.log" if @use_runtime_info
 
       tests_in_groups =
         ParallelTests::RSpec::Runner.tests_in_groups(@files, @num_processes, **group_opts)
@@ -160,8 +158,8 @@ module TurboTests
           "exec",
           "rspec",
           *extra_args,
-          "--seed",
-          rand(2**16).to_s,
+          "--order",
+          "random:#{@seed}",
           "--format",
           "TurboTests::JsonRowsFormatter",
           "--out",
@@ -175,9 +173,9 @@ module TurboTests
             [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].select { |x| x.size > 0 }
               .join(" ")
 
-          STDERR.puts "::group::[#{process_id}] Run RSpec" if ENV["CI"]
-          STDERR.puts "Process #{process_id}: #{command_str}"
-          STDERR.puts "::endgroup::" if ENV["CI"]
+          STDOUT.puts "::group::[#{process_id}] Run RSpec" if ENV["GITHUB_ACTIONS"]
+          STDOUT.puts "Process #{process_id}: #{command_str}"
+          STDOUT.puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
         end
 
         stdin, stdout, stderr, wait_thr = Open3.popen3(env, *command)

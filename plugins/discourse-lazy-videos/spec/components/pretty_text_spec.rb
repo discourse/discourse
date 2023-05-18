@@ -22,11 +22,11 @@ RSpec.describe PrettyText do
 
     HTML
 
-    email_formated = <<~HTML
+    email_formatted = <<~HTML
       <p><a href="https://www.youtube.com/watch?v=kPRA0W1kECg">15 Sorting Algorithms in 6 Minutes</a></p>
       <p><a href="https://vimeo.com/786646692">Dear Rich</a></p>
       HTML
 
-    expect(PrettyText.format_for_email(cooked_html, post)).to match_html(email_formated)
+    expect(PrettyText.format_for_email(cooked_html, post)).to match_html(email_formatted)
   end
 end

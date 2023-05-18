@@ -3167,7 +3167,6 @@ sl:
         few: "Prislužili to značko %{count} krat"
         other: "Prislužili to značko %{count} krat"
       granted_on: "Podeljeno %{date}"
-      others_count: "Drugi s to značko (%{count})"
       title: Značke
       allow_title: "To značko lahko uporabite kot naziv"
       multiple_grant: "To lahko prislužite večkrat."

@@ -112,8 +112,10 @@ vi:
         flags: "Dấu cờ - Flags"
         symbols: "Ký hiệu"
       thread:
+        title: "Tiêu đề"
         replies:
           other: "%{count} trả lời"
+        settings: "Cài đặt"
       draft_channel_screen:
         header: "Tin nhắn mới"
         cancel: "Huỷ"

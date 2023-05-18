@@ -279,7 +279,6 @@ class Notification < ActiveRecord::Base
     notifications.to_a
   end
 
-  # TODO(osama): deprecate this method when redesigned_user_menu_enabled is removed
   def self.recent_report(user, count = nil, types = [])
     return unless user && user.user_option
 

@@ -8,6 +8,14 @@ $float-height: 530px;
   --chat-header-offset: 50px;
 }
 
+// Very specific hack to ensure the contextual menu (copy/paste/...) is
+// not completely over the textarea, the rules to position this menu are quite obscure
+// and under DiscourseHUB the space between the textarea and the keyboard is so small that
+// it sometimes prefer to appear on top of the textarea, making any gesture very complicated
+html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
+  padding-bottom: 0.2rem;
+}
+
 .chat-message-move-to-channel-modal-modal {
   .modal-inner-container {
     .chat-move-message-channel-chooser {
@@ -218,10 +226,10 @@ $float-height: 530px;
 
   .chat-user-avatar-container {
     position: relative;
-    padding: 1px; //for is-online boxshadow effect, preventing cutoff
+    padding: 1px; // for is-online box-shadow effect, preventing cutoff
 
     .avatar {
-      padding: 1px; ////for is-online boxshadow effect, preventing shift
+      padding: 1px; // for is-online box-shadow effect, preventing shift
     }
 
     .chat-user-presence-flair {
@@ -584,7 +592,6 @@ html.has-full-page-chat {
       .full-page-chat {
         height: 100%;
         min-height: 0;
-        padding-bottom: env(safe-area-inset-bottom);
       }
 
       .main-chat-outlet {

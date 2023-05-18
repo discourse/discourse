@@ -105,9 +105,11 @@ gl:
         flags: "Alertas"
         symbols: "Símbolos"
       thread:
+        title: "Título"
         replies:
           one: "%{count} resposta"
           other: "%{count} repostas"
+        settings: "Configuración"
       draft_channel_screen:
         header: "Nova mensaxe"
         cancel: "Cancelar"

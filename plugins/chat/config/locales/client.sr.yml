@@ -90,6 +90,9 @@ sr:
           title: "Prebaci u Postojeću Temu"
       emoji_picker:
         flags: "Zastave"
+      thread:
+        title: "Naslov"
+        settings: "Podešavanja"
       draft_channel_screen:
         header: "Nova privatna poruka"
         cancel: "Odustani"

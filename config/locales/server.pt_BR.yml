@@ -194,9 +194,6 @@ pt_BR:
       load_from_remote: "Ocorreu um erro ao carregar esta postagem."
     site_settings:
       invalid_category_id: "Você especificou uma categoria que não existe"
-      invalid_choice:
-        one: "Você especificou a escolha inválida %{name}"
-        other: "Você especificou as escolhas inválidas %{name}"
       default_categories_already_selected: "Você não pode selecionar uma categoria usada em outra lista."
       default_tags_already_selected: "Você não pode selecionar uma etiqueta usada em outra lista."
       s3_upload_bucket_is_required: "Você não pode ativar envios para o S3, a não ser que tenha informado o \"s3_upload_bucket\"."
@@ -598,8 +595,8 @@ pt_BR:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'A seguinte chave de interpolação é inválida: %{keys}'
-                other: 'As seguintes chaves de interpolação são inválidas: %{keys}'
+                one: "A seguinte chave de interpolação é inválida: %{keys}"
+                other: "As seguintes chaves de interpolação são inválidas: %{keys}"
         watched_word:
           attributes:
             word:
@@ -619,22 +616,6 @@ pt_BR:
   meta_category_description: "Discussão sobre este site, sua organização, funcionamento e maneiras de melhorá-lo."
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para discussões da equipe. Tópicos só são visíveis para administradores(as) e moderadores(as)."
-  discourse_welcome_topic:
-    title: "Boas-vindas à nossa comunidade!"
-    body: |2
-
-      O primeiro parágrafo deste tópico fixado será visto como uma mensagem de boas-vindas a todos(as) os(as) novos(as) visitantes em sua página inicial. É muito importante!
-
-      **Edite isso** em uma breve descrição da sua comunidade:
-
-      - Para quem é?
-      - O que será encontrado aqui?
-      - Por que as pessoas devem participar?
-      - Onde é possível saber mais a respeito dela (links, fontes, etc)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Talvez você queira fechar este tópico pelo(a) administrador(a) :wrench: (na parte superior à direita e na parte inferior), para que as respostas não se acumulem em um anúncio.
   admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de início rápido do(a) administrador(a)"
   category:
     topic_prefix: "Sobre a categoria %{category} "
@@ -1907,7 +1888,6 @@ pt_BR:
     pop3_polling_password: "A senha da conta POP3 para sondar por e-mail."
     pop3_polling_delete_from_server: "Apagar e-mails do servidor. OBSERVAÇÃO: Se você desativar isso, será preciso limpar manualmente sua caixa de entrada"
     log_mail_processing_failures: "Registrar todas as falhas de processamento de e-mail em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Permita que os(as) usuários(as) postem novos tópicos por e-mail (requer sondagem manual ou POP3). Configure os endereços na aba "Configurações" de cada categoria.'
     email_in_min_trust: "O nível de confiança mínimo que um(a) usuário(a) precisa ter para ter permissão para postar novos tópicos via e-mail."
     email_in_authserv_id: "O identificador do serviço realizando verificações de autenticação em e-mails recebidos. Confira <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instruções de como configurar isso."
     email_in_spam_header: "O cabeçalho do e-mail para detectar spam."

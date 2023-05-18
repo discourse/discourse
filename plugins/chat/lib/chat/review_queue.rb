@@ -5,7 +5,7 @@
 #     a separate PM.
 #   - is_warning: Staff can send warnings when using the notify_user flag.
 #   - take_action: Automatically approves the created reviewable and deletes the chat message.
-#   - queue_for_review: Adds a special reason to the reviwable score and creates the reviewable using
+#   - queue_for_review: Adds a special reason to the reviewable score and creates the reviewable using
 #     the force_review option.
 
 module Chat
