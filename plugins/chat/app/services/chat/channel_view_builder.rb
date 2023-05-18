@@ -27,6 +27,7 @@ module Chat
     contract
     model :channel
     policy :can_view_channel
+    policy :target_message_exists
     step :fetch_messages
     step :fetch_thread_tracking_overview
     step :fetch_threads_for_messages
@@ -59,6 +60,11 @@ module Chat
 
     def can_view_channel(guardian:, channel:, **)
       guardian.can_preview_chat_channel?(channel)
+    end
+
+    def target_message_exists(contract:, **)
+      return true if contract.target_message_id.blank?
+      Chat::Message.exists?(id: contract.target_message_id)
     end
 
     def fetch_messages(channel:, guardian:, contract:, **)

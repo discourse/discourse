@@ -80,6 +80,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
         ),
       ) do
         on_success { render_serialized(result.view, Chat::ViewSerializer, root: false) }
+        on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
         on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       end
     else

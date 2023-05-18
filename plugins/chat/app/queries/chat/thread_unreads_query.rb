@@ -69,7 +69,7 @@ module Chat
           WHERE (unread_count > 0 OR mention_count > 0)
         SQL
 
-      sql += <<~SQL if include_missing_memberships && !include_zero_unreads
+      sql += <<~SQL if include_missing_memberships && include_zero_unreads
         UNION ALL
         SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
         FROM chat_channels
