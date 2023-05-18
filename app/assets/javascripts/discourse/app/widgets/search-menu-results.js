@@ -387,13 +387,12 @@ createWidget("search-menu-results", {
       }
     }
 
-    console.log(term);
     content.push(
       new RenderGlimmer(
         this,
         "div",
-        hbs`<PluginOutlet @name="search-menu-results" @searchTerm={{@data.searchTerm}}/>`,
-        { searchTerm: term }
+        hbs`<PluginOutlet @name="search-menu-results" @outletArgs={{@data.outletArgs}}/>`,
+        { outletArgs: { searchTerm: term } }
       )
     );
 
