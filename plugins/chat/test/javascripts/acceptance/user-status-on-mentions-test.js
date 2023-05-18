@@ -232,7 +232,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
-    await restoreMessage(".chat-message-content");
+    await restoreMessage(".chat-message-deleted");
 
     assertStatusIsRendered(
       assert,
