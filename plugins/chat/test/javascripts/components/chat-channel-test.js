@@ -107,7 +107,7 @@ module(
     test("it shows status on mentions on messages that came from Message Bus", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
-      await receiveMessageViaMessageBus();
+      await receiveChatMessageViaMessageBus();
 
       assertStatusIsRendered(
         assert,
@@ -118,7 +118,7 @@ module(
 
     test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
-      await receiveMessageViaMessageBus();
+      await receiveChatMessageViaMessageBus();
 
       const newStatus = {
         description: "off to meeting",
@@ -139,7 +139,7 @@ module(
 
     test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
-      await receiveMessageViaMessageBus();
+      await receiveChatMessageViaMessageBus();
 
       this.appEvents.trigger("user-status:changed", {
         [mentionedUser2.id]: null,
@@ -166,7 +166,7 @@ module(
         );
     }
 
-    async function receiveMessageViaMessageBus() {
+    async function receiveChatMessageViaMessageBus() {
       await publishToMessageBus(`/chat/${channelId}`, {
         chat_message: {
           id: 2138,

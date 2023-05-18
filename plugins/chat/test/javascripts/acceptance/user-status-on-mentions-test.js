@@ -16,12 +16,12 @@ import {
 import pretender, { OK } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
+  const channelId = 1;
+  const messageId = 1;
   const actingUser = {
     id: 1,
     username: "acting_user",
   };
-  const channelId = 1;
-  const messageId = 1891;
   const mentionedUser1 = {
     id: 1000,
     username: "user1",
