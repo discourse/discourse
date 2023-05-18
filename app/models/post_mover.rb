@@ -131,9 +131,9 @@ class PostMover
     update_quotes
     move_first_post_replies
     delete_post_replies
-    create_temp_post_timings
+    copy_shifted_post_timings_to_temp
     delete_invalid_post_timings
-    insert_from_temp_post_timings
+    copy_shifted_post_timings_from_temp
     move_post_timings
     copy_first_post_timings
     copy_topic_users
@@ -419,8 +419,11 @@ class PostMover
     SQL
   end
 
-  def create_temp_post_timings
+  def copy_shifted_post_timings_to_temp
     DB.exec("DROP TABLE IF EXISTS temp_post_timings") if Rails.env.test?
+
+    # copy post_timings for shifted posts to a temp table using the new_post_number
+    # they'll be copied back after delete_invalid_post_timings makes room for them
     DB.exec <<~SQL
       CREATE TEMPORARY TABLE temp_post_timings ON COMMIT DROP
         AS (
@@ -434,7 +437,7 @@ class PostMover
     SQL
   end
 
-  def insert_from_temp_post_timings
+  def copy_shifted_post_timings_from_temp
     DB.exec <<~SQL
       INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
       SELECT topic_id, user_id, post_number, msecs FROM temp_post_timings
