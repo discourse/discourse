@@ -1,3 +1,10 @@
-<ul class="list" aria-label={{concat (I18n "search.results") @type}}>
-
-</ul>
+<span class="topic">
+  <span class="first-line">
+    <TopicStatus @topic={{@result}} @disableActions={{true}} />
+    <span class="topic-title" data-topic-id={{@result.id}}>
+      {{! search-menu-results:240 }}
+    </span>
+  </span>
+  <span class="second-line">
+  </span>
+</span>

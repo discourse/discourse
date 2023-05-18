@@ -5,25 +5,34 @@
       @suggestionKeyword={{@suggestionKeyword}}
       @results={{@suggestionResults}}
     />
-  {{else if (and @searchTopics @invalidTerm)}}
+  {{else if this.renderTooShort}}
     <div class="no-results">
       {{I18n "search.too_short"}}
     </div>
-  {{else if (and @searchTopics @noResults)}}
+  {{else if this.renderNoResults}}
     <div class="no-results">
       {{I18n "search.no_results"}}
     </div>
-  {{else if (not (and @term @inPMInboxContext))}}
+  {{else if this.renderInitialOptions}}
     <SearchMenu::Results::InitialOptions @term={{@term}} />
   {{else}}
     {{#if this.results}}
       {{#each this.results as |result|}}
         <td>
-          <result.component
-            @ctx={{result.ctx}}
-            @params={{result.params}}
-            @textValue={{result.textValue}}
-          />
+          <ul
+            class="list"
+            aria-label={{concat (I18n result.type "search.results")}}
+          >
+            <li class="search-link">
+              <result.component
+                @result={{result}}
+                @term={{@term}}
+                @searchResultId={{result.searchResultId}}
+                @searchResultType={{result.type}}
+                @searchLogId={{result.searchLogId}}
+              />
+            </li>
+          </ul>
         </td>
       {{/each}}
     {{else}}

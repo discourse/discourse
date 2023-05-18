@@ -268,6 +268,18 @@ resetQuickSearchRandomTips();
 //});
 
 export default class Results extends Component {
+  get renderInitialOptions() {
+    return !this.args.term && !this.args.inPMInboxContext;
+  }
+
+  get renderNoResults() {
+    return this.args.searchTopics && this.args.noResults;
+  }
+
+  get renderTooShort() {
+    return this.args.searchTopics && this.args.invalidTerm;
+  }
+
   get results() {
     //const mainResultsContent = [];
     //const usersAndGroups = [];
@@ -332,12 +344,18 @@ export default class Results extends Component {
     //assignContainer(rt, h(`div.${rt.componentName}`, resultNodeContents));
     //});
 
-    const content = [];
-
-    return this.results.resultTypes?.map((result) => {
-      debugger;
-      content.push(SEARCH_RESULTS_COMPONENT_TYPE[result.type]);
+    let content = [];
+    this.args.results.resultTypes?.map((result) => {
+      const searchResultId =
+        result.type === "topic" ? result.topic_id : result.id;
+      content.push({
+        searchResultId,
+        type: result.type,
+        component: SEARCH_RESULTS_COMPONENT_TYPE[result.type],
+        searchLogId: result.searchLogId,
+      });
     });
+    return content;
 
     //if (!searchTopics) {
     //if (!attrs.inPMInboxContext) {
