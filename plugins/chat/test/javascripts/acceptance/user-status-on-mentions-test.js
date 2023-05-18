@@ -313,41 +313,6 @@ acceptance("Chat | User status on mentions", function (needs) {
       type: "restore",
       chat_message: message,
     });
-
-    // data: {
-    //   chat_message: {
-    //     id: 2137,
-    //     message: "test",
-    //     cooked: "<p>test</p>",
-    //     created_at: "2023-05-17T22:15:38.972Z",
-    //     excerpt: "test",
-    //     available_flags: [],
-    //     thread_title: null,
-    //     chat_channel_id: 1,
-    //     mentioned_users: [],
-    //     user: {
-    //       id: 1,
-    //       username: "admin1",
-    //       name: null,
-    //       avatar_template:
-    //         "/letter_avatar_proxy/v4/letter/a/bbce88/{size}.png",
-    //       status: {
-    //         description: "test",
-    //         emoji: "hole",
-    //         ends_at: null,
-    //         message_bus_last_id: 29,
-    //       },
-    //       moderator: false,
-    //       admin: true,
-    //       staff: true,
-    //       new_user: false,
-    //       primary_group_name: null,
-    //     },
-    //     chat_webhook_event: null,
-    //     uploads: [],
-    //   },
-    //   type: "restore",
-    // },
   }
 
   async function emulateAutocomplete(inputSelector, text) {
