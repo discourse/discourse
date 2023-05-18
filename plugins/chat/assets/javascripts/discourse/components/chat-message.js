@@ -134,6 +134,10 @@ export default class ChatMessage extends Component {
 
   @action
   refreshStatusOnMentions() {
+    if (!this.messageContainer) {
+      return;
+    }
+
     this.args.message.mentionedUsers.forEach((user) => {
       const href = `/u/${user.username.toLowerCase()}`;
       const mentions = this.messageContainer.querySelectorAll(
