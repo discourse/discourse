@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import {
   click,
   triggerEvent,
@@ -151,7 +151,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     );
   });
 
-  skip("edited messages | it updates status on mentions", async function (assert) {
+  test("edited messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
     await editMessage(
       ".chat-message-content",
@@ -167,7 +167,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assertStatusIsRendered(assert, selector, newStatus);
   });
 
-  skip("edited messages | it deletes status on mentions", async function (assert) {
+  test("edited messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await editMessage(
