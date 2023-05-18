@@ -20,7 +20,6 @@ class Search
   end
 
   def self.per_filter
-    # Site setting default is 50
     SiteSetting.search_page_size
   end
 
