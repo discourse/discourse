@@ -12,10 +12,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting",
     Fabricate(:private_category, parent_category_id: category.id, group: group, permission_type: 1)
   end
   fab!(:category_with_no_subcategory) do
-    category_with_no_subcategory = Fabricate(:private_category, group: group, permission_type: 3)
-    category_with_no_subcategory.read_restricted = false
-    category_with_no_subcategory.save
-    category_with_no_subcategory
+    Fabricate(:category_with_group_and_permission, group: group, permission_type: 3)
   end
   let(:category_page) { PageObjects::Pages::Category.new }
 
@@ -29,7 +26,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting",
 
   describe "logged in user" do
     before { sign_in(user) }
-    describe "Setting enabled and can't post on parent category" do
+    describe "default_subcategory_on_read_only_category setting enabled and can't post on parent category" do
       before do
         SiteSetting.default_subcategory_on_read_only_category = true
         SiteSetting.default_composer_category = default_latest_category.id
