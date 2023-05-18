@@ -8,12 +8,14 @@ import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import hbs from "discourse/widgets/hbs-compiler";
+import widgetHbs from "discourse/widgets/hbs-compiler";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 import User from "discourse/models/user";
+import { hbs } from "ember-cli-htmlbars";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 
 const suggestionShortcuts = [
   "in:title",
@@ -384,6 +386,16 @@ createWidget("search-menu-results", {
         return h("div.no-results", I18n.t("search.no_results"));
       }
     }
+
+    console.log(term);
+    content.push(
+      new RenderGlimmer(
+        this,
+        "div",
+        hbs`<PluginOutlet @name="search-menu-results" @searchTerm={{@data.searchTerm}}/>`,
+        { searchTerm: term }
+      )
+    );
 
     content.push(categoriesAndTags);
     content.push(usersAndGroups);
@@ -819,7 +831,7 @@ createWidget("random-quick-tip", {
 createWidget("search-menu-recent-searches", {
   tagName: "div.search-menu-recent",
 
-  template: hbs`
+  template: widgetHbs`
     <div class="heading">
       <h4>{{i18n "search.recent"}}</h4>
       {{flat-button
