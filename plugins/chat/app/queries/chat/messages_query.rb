@@ -1,6 +1,20 @@
 # frozen_string_literal: true
 
 module Chat
+  # Queries messages for a specific channel. This can be used in two modes:
+  #
+  # 1. Query messages around a target_message_id. This is used when a user
+  #    needs to jump to the middle of a messages stream or load around their
+  #    last read message ID. There is no pagination or direction here, just
+  #    a limit on past and future messages.
+  # 2. Query messages with paginations and direction. This is used for normal
+  #    scrolling of the messages stream of a channel.
+  #
+  # In both scenarios a thread_id can be provided to only get messages related
+  # to that thread within the channel.
+  #
+  # It is assumed that the user's permission to view the channel has already been
+  # established by the caller.
   class MessagesQuery
     PAST_MESSAGE_LIMIT = 20
     FUTURE_MESSAGE_LIMIT = 20
@@ -8,6 +22,18 @@ module Chat
     FUTURE = "future"
     VALID_DIRECTIONS = [PAST, FUTURE]
 
+    # @param channel [Chat::Channel] The channel to query messages within.
+    # @param guardian [Guardian] The guardian to use for permission checks.
+    # @param thread_id [Integer] (optional) The thread ID to filter messages by.
+    # @param target_message_id [Integer] (optional) The message ID to query around.
+    #   It is assumed that the caller already checked if this exists.
+    # @param include_thread_messages [Boolean] (optional) Whether to include messages
+    #   that are linked to a thread.
+    # @param page_size [Integer] (optional) The number of messages to fetch when not
+    #   using the target_message_id param.
+    # @param direction [String] (optional) The direction to fetch messages in when not
+    #   using the target_message_id param. Must be valid. If not provided, only the
+    #   latest messages for the channel are loaded.
     def self.call(
       channel:,
       guardian:,
@@ -19,7 +45,10 @@ module Chat
     )
       messages = base_query(channel: channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(channel.chatable)
-      messages = messages.where(thread_id: thread_id) if thread_id.present?
+      if thread_id.present?
+        include_thread_messages = true
+        messages = messages.where(thread_id: thread_id)
+      end
       messages = messages.where(<<~SQL, channel_id: channel.id) if !include_thread_messages
         chat_messages.thread_id IS NULL OR chat_messages.id IN (
           SELECT original_message_id
@@ -62,15 +91,17 @@ module Chat
           .where("created_at < ?", target_message.created_at)
           .order(created_at: :desc)
           .limit(PAST_MESSAGE_LIMIT)
+          .to_a
 
       future_messages =
         messages
           .where("created_at > ?", target_message.created_at)
           .order(created_at: :asc)
           .limit(FUTURE_MESSAGE_LIMIT)
+          .to_a
 
-      can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
-      can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
+      can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
+      can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
 
       {
         past_messages: past_messages,
