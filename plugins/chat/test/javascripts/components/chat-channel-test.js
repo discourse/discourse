@@ -57,16 +57,13 @@ module(
         meta: { can_join_chat_channel: false },
       });
 
-      pretender.get(`/chat/${channelId}/messages`, () => {
-        return [200, {}, messagesResponse];
-      });
-      pretender.post(`/chat/${channelId}`, () => {
-        return [200, {}, {}];
-      });
-      pretender.post("/chat/drafts", () => {
-        return [200, {}, {}];
-      });
-      pretender.put(`/chat/api/channels/1/read/2138`, () => [200, {}, {}]);
+      pretender.get(`/chat/${channelId}/messages`, () => [
+        200,
+        {},
+        messagesResponse,
+      ]);
+      pretender.post(`/chat/${channelId}`, () => OK);
+      pretender.post("/chat/drafts", () => OK);
 
       this.appEvents = this.container.lookup("service:appEvents");
     });
@@ -130,7 +127,7 @@ module(
       assert.dom(selector).doesNotExist("status is deleted");
     });
 
-    test("it shows status on mentions on a message that came from Message Bus", async function (assert) {
+    test("it shows status on mentions on messages that came from Message Bus", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
       await receiveMessageViaMessageBus();
@@ -167,21 +164,13 @@ module(
           uploads: [],
         },
         type: "sent",
-        staged_id: "07d40475-3ea7-4be9-a05f-c4df7b79ff3c",
-        staged_thread_id: null,
-      });
-
-      await publishToMessageBus(`/chat/${channelId}/new-messages`, {
-        channel_id: channelId,
-        message_id: 2138,
-        user_id: 2,
-        username: "andrei1",
-        thread_id: null,
       });
     }
 
     function statusSelector(username) {
       return `.mention[href='/u/${username}'] .user-status`;
     }
+
+    const OK = [200, {}, {}];
   }
 );
