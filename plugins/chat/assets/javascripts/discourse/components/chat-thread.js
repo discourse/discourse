@@ -185,23 +185,21 @@ export default class ChatThreadPanel extends Component {
     this.chatChannelThreadPane.sending = true;
 
     this.thread.stageMessage(message);
-    const stagedMessage = message;
     this.resetComposer();
-    this.thread.messagesManager.addMessages([stagedMessage]);
 
     this.scrollToBottom();
 
     return this.chatApi
       .sendMessage(this.channel.id, {
-        message: stagedMessage.message,
-        in_reply_to_id: stagedMessage.inReplyTo?.id,
-        staged_id: stagedMessage.id,
-        upload_ids: stagedMessage.uploads.map((upload) => upload.id),
-        thread_id: this.thread.staged ? null : stagedMessage.thread.id,
-        staged_thread_id: this.thread.staged ? stagedMessage.thread.id : null,
+        message: message.message,
+        in_reply_to_id: message.inReplyTo?.id,
+        staged_id: message.id,
+        upload_ids: message.uploads.map((upload) => upload.id),
+        thread_id: this.thread.staged ? null : message.thread.id,
+        staged_thread_id: this.thread.staged ? message.thread.id : null,
       })
       .catch((error) => {
-        this.#onSendError(stagedMessage.id, error);
+        this.#onSendError(message.id, error);
       })
       .finally(() => {
         if (this._selfDeleted) {
