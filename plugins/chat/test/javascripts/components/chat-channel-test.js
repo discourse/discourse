@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { OK } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
 module(
@@ -188,10 +188,6 @@ module(
 
     function statusSelector(username) {
       return `.mention[href='/u/${username}'] .user-status`;
-    }
-
-    function OK(response = {}, headers = {}) {
-      return [200, headers, response];
     }
   }
 );

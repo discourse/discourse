@@ -13,7 +13,7 @@ import {
   visit,
   waitFor,
 } from "@ember/test-helpers";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { OK } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
   const actingUser = {
@@ -356,9 +356,5 @@ acceptance("Chat | User status on mentions", function (needs) {
 
   function statusSelector(username) {
     return `.mention[href='/u/${username}'] .user-status`;
-  }
-
-  function OK(response = {}, headers = {}) {
-    return [200, headers, response];
   }
 });
