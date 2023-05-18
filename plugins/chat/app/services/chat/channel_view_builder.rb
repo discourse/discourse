@@ -4,13 +4,14 @@ module Chat
   # Builds up a Chat::View object for a channel, and handles several
   # different querying scenraios:
   #
-  # * Fetching messages before and after a specific target_message_id
-  # * Fetching channel and/or thread tracking state
-  # * Fetching threads for the found messages
-  # * Fetching an overview of unread threads for the channel
+  # * Fetching messages before and after a specific target_message_id,
+  #   or fetching paginated messages.
+  # * Fetching threads for the found messages.
+  # * Fetching thread tracking state.
+  # * Fetching an overview of unread threads for the channel.
   #
   # @example
-  #  Chat::ChannelViewBuilder.call(channel_id: 2, guardian: guardian)
+  #  Chat::ChannelViewBuilder.call(channel_id: 2, guardian: guardian, **optional_params)
   #
   class ChannelViewBuilder
     include Service::Base
@@ -28,6 +29,7 @@ module Chat
     model :channel
     policy :can_view_channel
     policy :target_message_exists
+    step :determine_threads_enabled
     step :fetch_messages
     step :fetch_thread_tracking_overview
     step :fetch_threads_for_messages
@@ -67,10 +69,13 @@ module Chat
       Chat::Message.exists?(id: contract.target_message_id)
     end
 
-    def fetch_messages(channel:, guardian:, contract:, **)
-      include_thread_messages =
-        contract.thread_id.present? || !SiteSetting.enable_experimental_chat_threaded_discussions ||
-          !channel.threading_enabled
+    def determine_threads_enabled(channel:, **)
+      context.threads_enabled =
+        SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    end
+
+    def fetch_messages(channel:, guardian:, contract:, threads_enabled:, **)
+      include_thread_messages = contract.thread_id.present? || !threads_enabled
 
       messages_data =
         ::Chat::MessagesQuery.call(
@@ -86,7 +91,9 @@ module Chat
       context.can_load_more_past = messages_data[:can_load_more_past]
       context.can_load_more_future = messages_data[:can_load_more_future]
 
-      if messages_data[:target_message]
+      if !messages_data[:target_message]
+        context.messages = messages_data[:messages]
+      else
         messages_data[:target_message] = (
           if !include_thread_messages && messages_data[:target_message].thread_reply?
             []
@@ -100,13 +107,17 @@ module Chat
           messages_data[:target_message],
           messages_data[:future_messages],
         ].reduce([], :concat)
-      else
-        context.messages = messages_data[:messages]
       end
     end
 
-    def fetch_thread_tracking_overview(guardian:, channel:, **)
-      if SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    # The thread tracking overview is a simple array of thread IDs
+    # that have unread messages, only threads with unread messages
+    # will be included in this array. This is a low-cost way to know
+    # how many threads the user has unread across the entire channel.
+    def fetch_thread_tracking_overview(guardian:, channel:, threads_enabled:, **)
+      if !threads_enabled
+        context.thread_tracking_overview = []
+      else
         context.thread_tracking_overview =
           ::Chat::TrackingStateReportQuery
             .call(
@@ -117,32 +128,40 @@ module Chat
             )
             .find_channel_threads(channel.id)
             .keys
-      else
-        context.thread_tracking_overview = []
       end
     end
 
-    def fetch_threads_for_messages(guardian:, messages:, channel:, **)
-      if SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    def fetch_threads_for_messages(guardian:, messages:, channel:, threads_enabled:, **)
+      if !threads_enabled
+        context.threads = []
+      else
         context.threads =
           ::Chat::Thread.includes(original_message_user: :user_status).where(
             id: messages.map(&:thread_id).compact.uniq,
           )
-      else
-        context.threads = []
+
+        # Saves us having to load the same message we already have.
+        context.threads.each do |thread|
+          thread.original_message =
+            messages.find { |message| message.id == thread.original_message_id }
+        end
       end
     end
 
-    def fetch_tracking(guardian:, messages:, channel:, **)
-      if SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    # Only thread tracking is necessary to fetch here -- we preload
+    # channel tracking state for all the current user's tracked channels
+    # in the CurrentUserSerializer.
+    def fetch_tracking(guardian:, messages:, channel:, threads_enabled:, **)
+      thread_ids = messages.map(&:thread_id).compact.uniq
+      if !threads_enabled || thread_ids.empty?
+        context.tracking = {}
+      else
         context.tracking =
           ::Chat::TrackingStateReportQuery.call(
             guardian: guardian,
-            thread_ids: messages.map(&:thread_id).compact.uniq,
+            thread_ids: thread_ids,
             include_threads: true,
           )
-      else
-        context.tracking = {}
       end
     end
 
