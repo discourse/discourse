@@ -171,10 +171,10 @@ RSpec.describe "Chat channel", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       expect(page).to have_selector(
-        ".mention .user-status[title=#{current_user.user_status.description}]",
+        ".mention .user-status[title='#{current_user.user_status.description}']",
       )
       expect(page).to have_selector(
-        ".mention .user-status[title=#{other_user.user_status.description}]",
+        ".mention .user-status[title='#{other_user.user_status.description}']",
       )
     end
   end
