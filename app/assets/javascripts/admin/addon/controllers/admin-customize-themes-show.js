@@ -16,6 +16,8 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { url } from "discourse/lib/computed";
+import SettingsEditor from "admin/components/settings-editor";
+import { ajax } from "discourse/lib/ajax";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -386,6 +388,31 @@ export default class AdminCustomizeThemesShowController extends Controller {
           this.transitionToRoute("adminCustomizeThemes");
         });
       },
+    });
+  }
+
+  @action
+  save(values = []) {
+    //@url("model.id", "/admin/themes/%@/setting") updateUrl;
+    const updateUrl = "/admin/themes/settings";
+    return ajax(updateUrl, {
+      type: "POST",
+      data: {
+        name: "theme_settings",
+        value: values,
+      },
+    });
+  }
+
+  @action
+  showThemeSettingsEditor() {
+    const excludedNames = [];
+    const settings = this.model.settings.filter(
+      (setting) => !excludedNames.includes[setting.name]
+    );
+    this.dialog.alert({
+      bodyComponent: SettingsEditor,
+      bodyComponentModel: settings,
     });
   }
 
