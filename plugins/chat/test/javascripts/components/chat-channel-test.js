@@ -51,20 +51,13 @@ module(
     };
 
     hooks.beforeEach(function () {
+      pretender.get(`/chat/${channelId}/messages`, () => OK(messagesResponse));
+
       this.channel = fabricators.channel({
         id: channelId,
         currentUserMembership: { following: true },
         meta: { can_join_chat_channel: false },
       });
-
-      pretender.get(`/chat/${channelId}/messages`, () => [
-        200,
-        {},
-        messagesResponse,
-      ]);
-      pretender.post(`/chat/${channelId}`, () => OK);
-      pretender.post("/chat/drafts", () => OK);
-
       this.appEvents = this.container.lookup("service:appEvents");
     });
 
@@ -197,6 +190,8 @@ module(
       return `.mention[href='/u/${username}'] .user-status`;
     }
 
-    const OK = [200, {}, {}];
+    function OK(response = {}, headers = {}) {
+      return [200, headers, response];
+    }
   }
 );
