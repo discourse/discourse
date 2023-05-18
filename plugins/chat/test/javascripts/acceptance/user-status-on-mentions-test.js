@@ -1,5 +1,6 @@
 import {
   acceptance,
+  emulateAutocomplete,
   loggedInUser,
   publishToMessageBus,
   query,
@@ -7,7 +8,6 @@ import {
 import { skip, test } from "qunit";
 import {
   click,
-  fillIn,
   triggerEvent,
   triggerKeyEvent,
   visit,
@@ -312,16 +312,6 @@ acceptance("Chat | User status on mentions", function (needs) {
       type: "restore",
       chat_message: message,
     });
-  }
-
-  async function emulateAutocomplete(inputSelector, text) {
-    await triggerKeyEvent(inputSelector, "keydown", "Backspace");
-    await fillIn(inputSelector, `${text} `);
-    await triggerKeyEvent(inputSelector, "keyup", "Backspace");
-
-    await triggerKeyEvent(inputSelector, "keydown", "Backspace");
-    await fillIn(inputSelector, text);
-    await triggerKeyEvent(inputSelector, "keyup", "Backspace");
   }
 
   async function typeWithAutocompleteAndSend(text) {
