@@ -46,14 +46,14 @@ describe "Viewing sidebar mobile", type: :system, js: true, mobile: true do
     expect(sidebar_dropdown).to be_hidden
   end
 
-  it "collapses the sidebar when clicking on a button in the sidebar" do
+  it "collapses the sidebar when clicking on a new topic button in the sidebar" do
     visit("/latest")
 
     sidebar_dropdown.click
 
     expect(sidebar_dropdown).to be_visible
 
-    sidebar_dropdown.click_community_header_button
+    sidebar_dropdown.click_new_topic_button
 
     expect(composer).to be_opened
     expect(sidebar_dropdown).to be_hidden

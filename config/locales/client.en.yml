@@ -4481,7 +4481,7 @@ en:
           header_link_text: "Community"
           links:
             new_topic:
-              content: "New topic"
+              content: "New Topic"
               title: "Create a topic"
             about:
               content: "About"

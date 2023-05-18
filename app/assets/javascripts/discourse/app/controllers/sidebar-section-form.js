@@ -375,6 +375,9 @@ export default Controller.extend(ModalFunctionality, {
 
   @bind
   reorder(linkIdFrom, linkIdTo, above) {
+    if (linkIdFrom === linkIdTo) {
+      return;
+    }
     let fromLink = this.model.links.find(
       (link) => link.objectId === linkIdFrom
     );

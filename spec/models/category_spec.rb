@@ -51,7 +51,7 @@ RSpec.describe Category do
 
       expect { category_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(12).to(10)
+      }.from(13).to(11)
       expect(SidebarSectionLink.last).to eq(tag_sidebar_section_link)
     end
   end
