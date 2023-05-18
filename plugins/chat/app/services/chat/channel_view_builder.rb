@@ -18,15 +18,16 @@ module Chat
     # @!method call(channel_id:, guardian:)
     #   @param [Integer] channel_id
     #   @param [Guardian] guardian
-    #   @option optional_params [String] direction
     #   @option optional_params [Integer] thread_id
     #   @option optional_params [Integer] lookup_message_id
+    #   @option optional_params [Integer] page_size
+    #   @option optional_params [String] direction
     #   @return [Service::Base::Context]
 
     contract
     model :channel
     policy :can_view_channel
-    model :messages
+    step :fetch_messages
     step :fetch_thread_tracking_overview
     step :fetch_threads_for_messages
     step :fetch_tracking
@@ -35,16 +36,19 @@ module Chat
     class Contract
       attribute :channel_id, :integer
 
-      # TODO (martin) HMMMMMM in some cases we don't have this, what do we do
-      # with all the fetching then?
+      # If this is not present, then we just fetch messages with page_size
+      # and direction.
       attribute :lookup_message_id, :integer # (optional)
       attribute :thread_id, :integer # (optional)
-
-      # attribute :page_size, :integer, default: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT
-      # attribute :direction, :string
+      attribute :direction, :string # (optional)
+      attribute :page_size, :integer # (optional)
 
       validates :channel_id, presence: true
-      # validates :direction, inclusion: { in: VALID_DIRECTIONS }, allow_nil: true
+      validates :direction,
+                inclusion: {
+                  in: Chat::MessagesQuery::VALID_DIRECTIONS,
+                },
+                allow_nil: true
     end
 
     private
@@ -69,53 +73,71 @@ module Chat
           lookup_message_id: contract.lookup_message_id,
           thread_id: contract.thread_id,
           include_thread_messages: include_thread_messages,
+          page_size: contract.page_size,
+          direction: contract.direction,
         )
-
-      messages_data[:lookup_message] = (
-        if !include_thread_messages && messages_data[:lookup_message].thread_reply?
-          []
-        else
-          [messages_data[:lookup_message]]
-        end
-      )
 
       context.can_load_more_past = messages_data[:can_load_more_past]
       context.can_load_more_future = messages_data[:can_load_more_future]
 
-      [
-        messages_data[:past_messages].reverse,
-        messages_data[:lookup_message],
-        messages_data[:future_messages],
-      ].reduce([], :concat)
+      if messages_data[:lookup_message]
+        messages_data[:lookup_message] = (
+          if !include_thread_messages && messages_data[:lookup_message].thread_reply?
+            []
+          else
+            [messages_data[:lookup_message]]
+          end
+        )
+
+        context.messages = [
+          messages_data[:past_messages].reverse,
+          messages_data[:lookup_message],
+          messages_data[:future_messages],
+        ].reduce([], :concat)
+      else
+        context.messages = messages_data[:messages]
+      end
     end
 
     def fetch_thread_tracking_overview(guardian:, channel:, **)
-      context.thread_tracking_overview =
-        ::Chat::TrackingStateReportQuery
-          .call(
-            guardian: guardian,
-            channel_ids: [channel.id],
-            include_threads: true,
-            include_zero_unreads: false,
-          )
-          .find_channel_threads(channel.id)
-          .keys
+      if SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+        context.thread_tracking_overview =
+          ::Chat::TrackingStateReportQuery
+            .call(
+              guardian: guardian,
+              channel_ids: [channel.id],
+              include_threads: true,
+              include_zero_unreads: false,
+            )
+            .find_channel_threads(channel.id)
+            .keys
+      else
+        context.thread_tracking_overview = []
+      end
     end
 
     def fetch_threads_for_messages(guardian:, messages:, channel:, **)
-      context.threads =
-        ::Chat::Thread.includes(original_message_user: :user_status).where(
-          id: messages.map(&:thread_id).compact.uniq,
-        )
+      if SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+        context.threads =
+          ::Chat::Thread.includes(original_message_user: :user_status).where(
+            id: messages.map(&:thread_id).compact.uniq,
+          )
+      else
+        context.threads = []
+      end
     end
 
     def fetch_tracking(guardian:, messages:, channel:, **)
-      context.tracking =
-        ::Chat::TrackingStateReportQuery.call(
-          guardian: guardian,
-          thread_ids: messages.map(&:thread_id).compact.uniq,
-          include_threads: true,
-        )
+      if SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+        context.tracking =
+          ::Chat::TrackingStateReportQuery.call(
+            guardian: guardian,
+            thread_ids: messages.map(&:thread_id).compact.uniq,
+            include_threads: true,
+          )
+      else
+        context.tracking = {}
+      end
     end
 
     def build_view(

@@ -68,18 +68,23 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
-    if params[:lookup_message_id].present?
+    if params[:lookup_message_id].present? || params[:with_messages].present?
       with_service(
         Chat::ChannelViewBuilder,
-        **params.permit(:channel_id, :lookup_message_id, :thread_id).slice(
+        **params.permit(:channel_id, :lookup_message_id, :thread_id, :page_size, :direction).slice(
           :channel_id,
           :lookup_message_id,
           :thread_id,
+          :page_size,
+          :direction,
         ),
-      ) { on_success { render_serialized(result.view, Chat::ViewSerializer, root: false) } }
+      ) do
+        on_success { render_serialized(result.view, Chat::ViewSerializer, root: false) }
+        on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
+      end
     else
       render_serialized(
-        channel,
+        channel_from_params,
         Chat::ChannelSerializer,
         membership: channel_from_params.membership_for(current_user),
         root: "channel",

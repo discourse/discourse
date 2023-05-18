@@ -13,7 +13,19 @@ module Chat
     end
 
     def thread_tracking_overview
-      object.thread_tracking_overview || {}
+      object.thread_tracking_overview || []
+    end
+
+    def include_threads?
+      include_thread_data?
+    end
+
+    def include_thread_tracking_overview?
+      include_thread_data?
+    end
+
+    def include_thread_data?
+      channel.threading_enabled && SiteSetting.enable_experimental_chat_threaded_discussions
     end
 
     def channel

@@ -8,13 +8,14 @@ module Chat
     FUTURE = "future"
     VALID_DIRECTIONS = [PAST, FUTURE]
 
-    # TODO: Maybe channel instead of channel_id?
     def self.call(
       channel:,
       guardian:,
       thread_id: nil,
       lookup_message_id: nil,
-      include_thread_messages: false
+      include_thread_messages: false,
+      page_size: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT,
+      direction: nil
     )
       if lookup_message_id.present?
         lookup_message = base_query(channel: channel).with_deleted.find_by(id: lookup_message_id)
@@ -47,13 +48,39 @@ module Chat
             .limit(FUTURE_MESSAGE_LIMIT)
       end
 
-      {
-        past_messages: past_messages,
-        future_messages: future_messages,
-        lookup_message: lookup_message,
-        can_load_more_past: past_messages.count == PAST_MESSAGE_LIMIT,
-        can_load_more_future: future_messages.count == FUTURE_MESSAGE_LIMIT,
-      }
+      if !lookup_message
+        order = direction == FUTURE ? "ASC" : "DESC"
+        messages = messages.order("created_at #{order}, id #{order}").limit(page_size).to_a
+      end
+
+      if lookup_message
+        can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
+        can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
+      elsif direction == FUTURE
+        can_load_more_future = messages.size == page_size
+      elsif direction == PAST
+        can_load_more_past = messages.size == page_size
+      else
+        # When direction is blank, we'll return the latest messages.
+        can_load_more_future = false
+        can_load_more_past = messages.size == page_size
+      end
+
+      if lookup_message
+        {
+          past_messages: past_messages,
+          future_messages: future_messages,
+          lookup_message: lookup_message,
+          can_load_more_past: can_load_more_past,
+          can_load_more_future: can_load_more_future,
+        }
+      else
+        {
+          messages: direction == FUTURE ? messages : messages.reverse,
+          can_load_more_past: can_load_more_past,
+          can_load_more_future: can_load_more_future,
+        }
+      end
     end
 
     def self.base_query(channel:)

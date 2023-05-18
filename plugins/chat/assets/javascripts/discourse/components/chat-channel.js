@@ -157,25 +157,25 @@ export default class ChatLivePane extends Component {
 
     this.loadingMorePast = true;
 
-    const findArgs = { pageSize: PAGE_SIZE };
+    const findArgs = { pageSize: PAGE_SIZE, withMessages: true };
     const fetchingFromLastRead = !options.fetchFromLastMessage;
     if (this.requestedTargetMessageId) {
-      findArgs["targetMessageId"] = this.requestedTargetMessageId;
+      findArgs.targetMessageId = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
-      findArgs["targetMessageId"] =
+      findArgs.targetMessageId =
         this.args.channel.currentUserMembership.lastReadMessageId;
     }
 
     return this.chatApi
       .channel(this.args.channel.id, findArgs)
-      .then((results) => {
-        if (this._selfDeleted || this.args.channel.id !== results.channel.id) {
+      .then((result) => {
+        if (this._selfDeleted || this.args.channel.id !== result.channel.id) {
           return;
         }
 
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
-          results
+          result
         );
 
         this.args.channel.addMessages(messages);
@@ -199,15 +199,15 @@ export default class ChatLivePane extends Component {
 
         this.scrollToBottom();
 
-        if (results.threads) {
-          results.threads.forEach((thread) => {
+        if (result.threads) {
+          result.threads.forEach((thread) => {
             this.args.channel.threadsManager.store(this.args.channel, thread);
           });
         }
 
-        if (results.thread_tracking_overview) {
+        if (result.thread_tracking_overview) {
           this.args.channel.threadTrackingOverview.push(
-            ...results.thread_tracking_overview
+            ...result.thread_tracking_overview
           );
         }
       })
@@ -364,7 +364,9 @@ export default class ChatLivePane extends Component {
       const message = ChatMessage.create(channel, messageData);
 
       if (messageData.thread_id) {
-        message.thread = new ChatThread(channel, { id: messageData.thread_id });
+        message.thread = new ChatThread(channel, {
+          id: messageData.thread_id,
+        });
       }
 
       messages.push(message);

@@ -28,6 +28,12 @@ export default class ChatApi extends Service {
     if (data.targetMessageId) {
       args.lookup_message_id = data.targetMessageId;
     } else {
+      args.page_size = data.pageSize;
+
+      if (data.withMessages) {
+        args.with_messages = true;
+      }
+
       if (data.messageId) {
         args.lookup_message_id = data.messageId;
       }
