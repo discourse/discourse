@@ -11,16 +11,25 @@ $primary-high: dark-light-diff($primary, $secondary, 30%, -25%) !default;
 $primary-very-high: dark-light-diff($primary, $secondary, 15%, -10%) !default;
 
 //primary-numbers
-$primary-50: dark-light-diff($primary, $secondary, 95%, -95%) !default;
-$primary-100: dark-light-diff($primary, $secondary, 90%, -90%) !default;
-$primary-200: dark-light-diff($primary, $secondary, 80%, -80%) !default;
-$primary-300: dark-light-diff($primary, $secondary, 70%, -70%) !default;
-$primary-400: dark-light-diff($primary, $secondary, 60%, -60%) !default;
-$primary-500: dark-light-diff($primary, $secondary, 50%, -50%) !default;
-$primary-600: dark-light-diff($primary, $secondary, 40%, -40%) !default;
-$primary-700: dark-light-diff($primary, $secondary, 30%, -30%) !default;
-$primary-800: dark-light-diff($primary, $secondary, 20%, -20%) !default;
-$primary-900: dark-light-diff($primary, $secondary, 10%, -10%) !default;
+
+$_start: -90%; // Target for primary-50
+$_end: -18%; // Target for primary-900
+
+@function shade($units) {
+  $_step: math.div($_start - $_end, 850);
+  @return $_start - ($_step * ($units - 50));
+}
+
+$primary-50: dark-light-diff($primary, $secondary, 90%, shade(50)) !default;
+$primary-100: dark-light-diff($primary, $secondary, 81%, shade(100)) !default;
+$primary-200: dark-light-diff($primary, $secondary, 73%, shade(200)) !default;
+$primary-300: dark-light-diff($primary, $secondary, 65%, shade(300)) !default;
+$primary-400: dark-light-diff($primary, $secondary, 57%, shade(400)) !default;
+$primary-500: dark-light-diff($primary, $secondary, 49%, shade(500)) !default;
+$primary-600: dark-light-diff($primary, $secondary, 41%, shade(600)) !default;
+$primary-700: dark-light-diff($primary, $secondary, 33%, shade(700)) !default;
+$primary-800: dark-light-diff($primary, $secondary, 25%, shade(800)) !default;
+$primary-900: dark-light-diff($primary, $secondary, 18%, shade(900)) !default;
 
 $header_primary-low: blend-header-primary-background(10%) !default;
 $header_primary-low-mid: blend-header-primary-background(35%) !default;
