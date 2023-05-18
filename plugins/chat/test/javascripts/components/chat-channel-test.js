@@ -123,6 +123,40 @@ module(
       );
     });
 
+    test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await receiveMessageViaMessageBus();
+
+      const newStatus = {
+        description: "off to meeting",
+        emoji: "calendar",
+      };
+      this.appEvents.trigger("user-status:changed", {
+        [mentionedUser2.id]: newStatus,
+      });
+
+      const selector = statusSelector(mentionedUser2.username);
+      await waitFor(selector);
+      assertStatusIsRendered(
+        assert,
+        statusSelector(mentionedUser2.username),
+        newStatus
+      );
+    });
+
+    test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await receiveMessageViaMessageBus();
+
+      this.appEvents.trigger("user-status:changed", {
+        [mentionedUser2.id]: null,
+      });
+
+      const selector = statusSelector(mentionedUser2.username);
+      await waitFor(selector, { count: 0 });
+      assert.dom(selector).doesNotExist("status is deleted");
+    });
+
     function assertStatusIsRendered(assert, selector, status) {
       assert
         .dom(selector)
