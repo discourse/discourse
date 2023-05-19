@@ -48,6 +48,8 @@ module.exports = function (defaults) {
           fallback: {
             // Sinon needs a `util` polyfill
             util: require.resolve("util/"),
+            // Also for sinon
+            timers: false,
           },
         },
         module: {
