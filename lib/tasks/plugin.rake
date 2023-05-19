@@ -178,11 +178,13 @@ def spec(plugin, parallel: false, argv: nil)
   # reject system specs as they are slow and need dedicated setup
   files =
     Dir.glob("./plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
+
   if files.length > 0
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
-    puts cmd if !parallel
 
-    system("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}")
+    Rake::FileUtilsExt.verbose(!parallel) do
+      sh("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}")
+    end
   else
     abort "No specs found."
   end
