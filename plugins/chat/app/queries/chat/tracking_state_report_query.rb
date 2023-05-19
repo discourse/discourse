@@ -1,6 +1,28 @@
 # frozen_string_literal: true
 
 module Chat
+  # This class is responsible for querying the user's current tracking
+  # (read/unread) state based on membership for one or more channels
+  # and/or one or more threads.
+  #
+  # Only channels with threading_enabled set to true will have thread
+  # tracking queried.
+  #
+  # @param guardian [Guardian] The current user's guardian
+  # @param channel_ids [Array<Integer>] The channel IDs to query. Must be provided
+  #   if thread_ids are not.
+  # @param thread_ids [Array<Integer>] The thread IDs to query. Must be provided
+  #   if channel_ids are not. If channel_ids are also provided then these just further
+  #   filter results.
+  # @param include_missing_memberships [Boolean] If true, will include channels
+  #   and threads where the user does not have a UserChatXMembership record,
+  #   with zeroed out unread counts.
+  # @param include_threads [Boolean] If true, will include thread tracking
+  #   state in the query, otherwise only channel tracking will be queried.
+  # @param include_read [Boolean] If true, will include tracking state where
+  #   the user has 0 unread messages. If false, will only include tracking state
+  #   where the user has > 0 unread messages. If include_missing_memberships is
+  #   also true, this overrides that option.
   class TrackingStateReportQuery
     def self.call(
       guardian:,

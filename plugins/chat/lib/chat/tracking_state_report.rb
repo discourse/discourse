@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module Chat
+  # Represents a report of the tracking state for a user
+  # across threads and channels. This is returned by
+  # Chat::TrackingStateReportQuery.
   class TrackingStateReport
     attr_accessor :channel_tracking, :thread_tracking
 
