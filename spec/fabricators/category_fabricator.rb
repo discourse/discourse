@@ -8,7 +8,7 @@ end
 
 Fabricator(:category_with_definition, from: :category) { skip_category_definition false }
 
-Fabricator(:private_category, from: :category) do
+Fabricator(:category_with_group_and_permission, from: :category) do
   transient :group
   transient :permission_type
 
@@ -17,12 +17,15 @@ Fabricator(:private_category, from: :category) do
   user
 
   after_build do |cat, transients|
-    cat.update!(read_restricted: true)
     cat.category_groups.build(
       group_id: transients[:group].id,
       permission_type: transients[:permission_type] || CategoryGroup.permission_types[:full],
     )
   end
+end
+
+Fabricator(:private_category, from: :category_with_group_and_permission) do
+  after_build { |cat, transients| cat.update!(read_restricted: true) }
 end
 
 Fabricator(:private_category_with_definition, from: :private_category) do
