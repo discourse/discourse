@@ -14,7 +14,7 @@ import {
 import Mobile from "discourse/lib/mobile";
 import { bind } from "discourse-common/utils/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import { processHTML } from "discourse/lib/lightbox/processHTML";
+import { processHTML } from "discourse/lib/lightbox/process-html";
 
 export default class LightboxService extends Service {
   @service appEvents;

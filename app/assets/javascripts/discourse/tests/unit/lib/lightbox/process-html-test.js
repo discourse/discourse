@@ -7,7 +7,7 @@ import { module, test } from "qunit";
 
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
-import { processHTML } from "discourse/lib/lightbox/processHTML";
+import { processHTML } from "discourse/lib/lightbox/process-html";
 
 module("Unit | lib | Experimental lightbox | processHTML()", function () {
   const wrap = domFromString(generateLightboxMarkup())[0];
