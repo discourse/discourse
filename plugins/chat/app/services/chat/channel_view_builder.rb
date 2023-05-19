@@ -30,6 +30,7 @@ module Chat
     policy :can_view_channel
     policy :target_message_exists
     step :determine_threads_enabled
+    step :determine_include_thread_messages
     step :fetch_messages
     step :fetch_thread_tracking_overview
     step :fetch_threads_for_messages
@@ -74,9 +75,11 @@ module Chat
         SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
     end
 
-    def fetch_messages(channel:, guardian:, contract:, threads_enabled:, **)
-      include_thread_messages = contract.thread_id.present? || !threads_enabled
+    def determine_include_thread_messages(contract:, threads_enabled:, **)
+      context.include_thread_messages = contract.thread_id.present? || !threads_enabled
+    end
 
+    def fetch_messages(channel:, guardian:, contract:, include_thread_messages:, **)
       messages_data =
         ::Chat::MessagesQuery.call(
           channel: channel,
