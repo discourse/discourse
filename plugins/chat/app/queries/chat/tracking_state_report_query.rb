@@ -4,15 +4,15 @@ module Chat
   class TrackingStateReportQuery
     def self.call(
       guardian:,
-      channel_ids: [],
-      thread_ids: [],
+      channel_ids: nil,
+      thread_ids: nil,
       include_missing_memberships: false,
       include_threads: false,
       include_read: true
     )
       report = ::Chat::TrackingStateReport.new
 
-      if channel_ids.empty?
+      if channel_ids.blank?
         report.channel_tracking = {}
       else
         report.channel_tracking =
@@ -29,7 +29,7 @@ module Chat
             .to_h
       end
 
-      if !include_threads || (thread_ids.empty? && channel_ids.empty?)
+      if !include_threads || (thread_ids.blank? && channel_ids.blank?)
         report.thread_tracking = {}
       else
         report.thread_tracking =

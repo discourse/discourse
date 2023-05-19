@@ -29,13 +29,13 @@ module Chat
     #   is a member of where they have read all the messages. This overrides
     #   include_missing_memberships.
     def self.call(
-      channel_ids: [],
-      thread_ids: [],
+      channel_ids: nil,
+      thread_ids: nil,
       user_id:,
       include_missing_memberships: false,
       include_read: true
     )
-      return [] if channel_ids.empty? && thread_ids.empty?
+      return [] if channel_ids.blank? && thread_ids.blank?
 
       sql = <<~SQL
         SELECT (
