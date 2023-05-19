@@ -8,9 +8,12 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
-import { resetCustomCountables } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import {
+  resetCustomCategoryLockIcon,
+  resetCustomCountables,
+} from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -30,7 +33,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   let linkDidInsert, linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
-    withPluginApi("1.3.0", (api) => {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           return class extends BaseCustomSidebarSection {
@@ -366,7 +369,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Single header action and no links", async function (assert) {
-    withPluginApi("1.3.0", (api) => {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
           get name() {
@@ -422,7 +425,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("API bridge for decorating hamburger-menu widget with footer links", async function (assert) {
-    withPluginApi("1.3.0", (api) => {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.decorateWidget("hamburger-menu:footerLinks", () => {
         return {
           route: "discovery.top",
@@ -460,7 +463,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("API bridge for decorating hamburger-menu widget with general links", async function (assert) {
-    withPluginApi("1.3.0", (api) => {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.decorateWidget("hamburger-menu:generalLinks", () => {
         return {
           route: "discovery.latest",
@@ -592,7 +595,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Section that is not displayed via displaySection", async function (assert) {
-    withPluginApi("1.3.0", (api) => {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
           get name() {
@@ -638,7 +641,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
   test("Registering a custom countable for a section link in the user's sidebar categories section", async function (assert) {
     try {
-      return await withPluginApi("1.6.0", async (api) => {
+      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
         const categories = Site.current().categories;
         const category1 = categories[0];
         const category2 = categories[1];
@@ -747,6 +750,33 @@ acceptance("Sidebar - Plugin API", function (needs) {
       });
     } finally {
       resetCustomCountables();
+    }
+  });
+
+  test("Customizing the icon used in a category section link to indicate that a category is read restricted", async function (assert) {
+    try {
+      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+        const categories = Site.current().categories;
+        const category1 = categories[0];
+        category1.read_restricted = true;
+
+        updateCurrentUser({
+          sidebar_category_ids: [category1.id],
+        });
+
+        api.registerCustomCategorySectionLinkLockIcon("wrench");
+
+        await visit("/");
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
+          ),
+          "wrench icon is displayed for the section link's prefix badge"
+        );
+      });
+    } finally {
+      resetCustomCategoryLockIcon();
     }
   });
 });
