@@ -7,9 +7,13 @@ describe "Custom sidebar sections", type: :system, js: true do
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
   it "allows the user to create custom section" do
+    visit("/latest")
+
+    expect(sidebar).to have_no_add_section_button
+
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
@@ -29,7 +33,7 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows the user to create custom section with /my link" do
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
@@ -49,7 +53,7 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows the user to create custom section with external link" do
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
@@ -167,7 +171,7 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows admin to create, edit and delete public section" do
     sign_in admin
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     section_modal.fill_name("Public section")
     section_modal.fill_link("Sidebar Tags", "/tags")
@@ -207,7 +211,7 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "validates custom section fields" do
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
     section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "/wrong-url")
