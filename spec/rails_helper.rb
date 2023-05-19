@@ -372,11 +372,11 @@ RSpec.configure do |config|
 
   if ENV["CI"]
     config.around do |example|
-      begin
-        Timeout.timeout(PER_SPEC_TIMEOUT_SECONDS) { example.run }
-      rescue Timeout::Error
-        raise "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds"
-      end
+      Timeout.timeout(
+        PER_SPEC_TIMEOUT_SECONDS,
+        nil,
+        "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
+      ) { example.run }
     end
   end
 
