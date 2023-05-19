@@ -5,25 +5,16 @@ import {
 } from "discourse/plugins/styleguide/discourse/lib/styleguide";
 import { createData } from "discourse/plugins/styleguide/discourse/lib/dummy-data";
 
-export default Route.extend({
+export default class StyleguideShow extends Route {
   model(params) {
     return sectionById(params.section);
-  },
+  }
 
   setupController(controller, section) {
-    let note = findNote(section);
-
     controller.setProperties({
       section,
-      note,
+      note: findNote(section),
       dummy: createData(this.store),
     });
-  },
-
-  renderTemplate(controller, section) {
-    this.render("styleguide.show");
-    this.render(`styleguide/${section.templateName}`, {
-      into: "styleguide.show",
-    });
-  },
-});
+  }
+}

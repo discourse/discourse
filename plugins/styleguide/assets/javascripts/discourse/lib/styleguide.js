@@ -1,4 +1,5 @@
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
+
 let _allCategories = null;
 let _sectionsById = {};
 let _notes = {};

@@ -5,5 +5,9 @@
     </div>
   {{/if}}
 
-  {{outlet}}
+  {{component
+    (concat "styleguide/" this.section.templateName)
+    dummy=this.dummy
+    dummyAction=this.dummyAction
+  }}
 </StyleguideSection>

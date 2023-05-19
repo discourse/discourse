@@ -66,7 +66,10 @@
 <StyleguideExample @title="inline-form with <MultiSelect>">
   <div class="inline-form">
     <TextField />
-    <MultiSelect @content={{this.dummy.options}} @onChange={{action "dummy"}} />
+    <MultiSelect
+      @content={{this.dummy.options}}
+      @onChange={{this.dummyAction}}
+    />
     <DButton
       @class="btn-primary"
       @icon="search"
@@ -80,7 +83,10 @@
   <div class="inline-form">
     <label>Text:</label>
     <TextField />
-    <MultiSelect @content={{this.dummy.options}} @onChange={{action "dummy"}} />
+    <MultiSelect
+      @content={{this.dummy.options}}
+      @onChange={{this.dummyAction}}
+    />
     <DButton
       @class="btn-primary"
       @icon="search"
@@ -101,7 +107,7 @@
     <CategoryNotificationsButton
       @category={{get this.dummy.categories 0}}
       @value={{1}}
-      @onChange={{action "dummy"}}
+      @onChange={{this.dummyAction}}
     />
     <DButton @icon="reply" @type="submit" @translatedLabel="Button" />
   </div>

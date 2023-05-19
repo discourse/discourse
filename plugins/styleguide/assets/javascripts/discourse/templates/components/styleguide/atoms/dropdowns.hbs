@@ -83,14 +83,14 @@
 </StyleguideExample>
 
 <StyleguideExample @title="<CategoriesAdminDropdown>">
-  <CategoriesAdminDropdown @onChange={{action "dummy"}} />
+  <CategoriesAdminDropdown @onChange={{this.dummyAction}} />
 </StyleguideExample>
 
 <StyleguideExample @title="<CategoryNotificationsButton>">
   <CategoryNotificationsButton
     @category={{get this.dummy.categories 0}}
     @value={{1}}
-    @onChange={{action "dummy"}}
+    @onChange={{this.dummyAction}}
   />
 </StyleguideExample>
 
@@ -98,14 +98,14 @@
   <NotificationsButton
     @options={{hash i18nPrefix="groups.notifications"}}
     @value={{2}}
-    @onChange={{action "dummy"}}
+    @onChange={{this.dummyAction}}
   />
 </StyleguideExample>
 
 <StyleguideExample @title="<DropdownSelectBox>">
   <DropdownSelectBox
     @content={{this.dummy.options}}
-    @onChange={{action "dummy"}}
+    @onChange={{this.dummyAction}}
     @options={{hash translatedNone="Something"}}
   />
 </StyleguideExample>
@@ -120,21 +120,21 @@
 </StyleguideExample>
 
 <StyleguideExample @title="<MultiSelect>">
-  <MultiSelect @content={{this.dummy.options}} @onChange={{action "dummy"}} />
+  <MultiSelect @content={{this.dummy.options}} @onChange={{this.dummyAction}} />
 </StyleguideExample>
 
 <StyleguideExample @title="admin <GroupChooser>">
   <GroupChooser
     @selected={{this.dummy.selectedGroups}}
     @content={{this.dummy.groups}}
-    @onChange={{action "dummy"}}
+    @onChange={{this.dummyAction}}
   />
 </StyleguideExample>
 
 <StyleguideExample @title="<ListSetting>">
   <ListSetting
     @settingValue={{this.dummy.settings}}
-    @onChange={{action "dummy"}}
+    @onChange={{this.dummyAction}}
   />
 </StyleguideExample>
 
@@ -142,7 +142,7 @@
   <ListSetting
     @settingValue={{this.dummy.colors}}
     @nameProperty="color"
-    @onChange={{action "dummy"}}
+    @onChange={{this.dummyAction}}
   />
 </StyleguideExample>
 
