@@ -198,13 +198,14 @@ RSpec.describe "User menu notifications | sidebar", type: :system, js: true do
       channel.send_message("this is fine @#{other_user.username}")
       find(".invite-link", wait: 5).click
 
-      using_session(:user_1) do
+      using_session(:user_1) do |session|
         sign_in(other_user)
         visit("/")
         find(".header-dropdown-toggle.current-user").click
 
         expect(find("#user-menu-button-chat-notifications")).to have_content(1)
         expect(find("#quick-access-all-notifications")).to have_css(".chat-invitation.unread")
+        session.quit
       end
     end
   end

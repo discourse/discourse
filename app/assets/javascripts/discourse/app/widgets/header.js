@@ -81,99 +81,63 @@ createWidget("header-notifications", {
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
-      if (this.currentUser.redesigned_user_menu_enabled) {
-        let ringClass = null;
-        if (user.new_personal_messages_notifications_count) {
-          ringClass = "personal-messages";
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification with-icon new-pms",
-              icon: "envelope",
-              omitSpan: true,
-              title: "notifications.tooltip.new_message_notification",
-              titleOptions: {
-                count: user.new_personal_messages_notifications_count,
-              },
-              attributes: {
-                "aria-label": I18n.t(
-                  "notifications.tooltip.new_message_notification",
-                  {
-                    count: user.new_personal_messages_notifications_count,
-                  }
-                ),
-              },
-            })
-          );
-        } else if (user.unseen_reviewable_count) {
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification with-icon new-reviewables",
-              icon: "flag",
-              omitSpan: true,
-              title: "notifications.tooltip.new_reviewable",
-              titleOptions: { count: user.unseen_reviewable_count },
-              attributes: {
-                "aria-label": I18n.t("notifications.tooltip.new_reviewable", {
-                  count: user.unseen_reviewable_count,
-                }),
-              },
-            })
-          );
-        } else if (user.all_unread_notifications_count) {
-          ringClass = "regular-notifications";
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification unread-notifications",
-              rawLabel: user.all_unread_notifications_count,
-              omitSpan: true,
-              title: "notifications.tooltip.regular",
-              titleOptions: { count: user.all_unread_notifications_count },
-              attributes: {
-                "aria-label": I18n.t("user.notifications"),
-              },
-            })
-          );
-        }
-        if (ringClass && this._shouldHighlightAvatar()) {
-          contents.push(h(`span.ring.revamped.${ringClass}`));
-        }
-      } else {
-        const unreadNotifications = user.unread_notifications;
-        if (!!unreadNotifications) {
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification unread-notifications",
-              rawLabel: unreadNotifications,
-              omitSpan: true,
-              title: "notifications.tooltip.regular",
-              titleOptions: { count: unreadNotifications },
-            })
-          );
-        }
-
-        const unreadHighPriority = user.unread_high_priority_notifications;
-        if (!!unreadHighPriority) {
-          if (this._shouldHighlightAvatar()) {
-            contents.push(h("span.ring"));
-          }
-
-          // add the counter for the unread high priority
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className:
-                "badge-notification unread-high-priority-notifications",
-              rawLabel: unreadHighPriority,
-              omitSpan: true,
-              title: "notifications.tooltip.high_priority",
-              titleOptions: { count: unreadHighPriority },
-            })
-          );
-        }
+      let ringClass = null;
+      if (user.new_personal_messages_notifications_count) {
+        ringClass = "personal-messages";
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification with-icon new-pms",
+            icon: "envelope",
+            omitSpan: true,
+            title: "notifications.tooltip.new_message_notification",
+            titleOptions: {
+              count: user.new_personal_messages_notifications_count,
+            },
+            attributes: {
+              "aria-label": I18n.t(
+                "notifications.tooltip.new_message_notification",
+                {
+                  count: user.new_personal_messages_notifications_count,
+                }
+              ),
+            },
+          })
+        );
+      } else if (user.unseen_reviewable_count) {
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification with-icon new-reviewables",
+            icon: "flag",
+            omitSpan: true,
+            title: "notifications.tooltip.new_reviewable",
+            titleOptions: { count: user.unseen_reviewable_count },
+            attributes: {
+              "aria-label": I18n.t("notifications.tooltip.new_reviewable", {
+                count: user.unseen_reviewable_count,
+              }),
+            },
+          })
+        );
+      } else if (user.all_unread_notifications_count) {
+        ringClass = "regular-notifications";
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification unread-notifications",
+            rawLabel: user.all_unread_notifications_count,
+            omitSpan: true,
+            title: "notifications.tooltip.regular",
+            titleOptions: { count: user.all_unread_notifications_count },
+            attributes: {
+              "aria-label": I18n.t("user.notifications"),
+            },
+          })
+        );
+      }
+      if (ringClass && this._shouldHighlightAvatar()) {
+        contents.push(h(`span.ring.revamped.${ringClass}`));
       }
     }
     return contents;
@@ -520,11 +484,7 @@ export default createWidget("header", {
           panels.push(this.attach("hamburger-menu"));
         }
       } else if (state.userVisible) {
-        if (this.currentUser.redesigned_user_menu_enabled) {
-          panels.push(this.attach("revamped-user-menu-wrapper", {}));
-        } else {
-          panels.push(this.attach("user-menu"));
-        }
+        panels.push(this.attach("revamped-user-menu-wrapper", {}));
       }
 
       additionalPanels.map((panel) => {

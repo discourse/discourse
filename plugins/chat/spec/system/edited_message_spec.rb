@@ -23,11 +23,12 @@ RSpec.describe "Edited message", type: :system, js: true do
       it "shows as edited for all users" do
         chat_page.visit_channel(channel_1)
 
-        using_session(:user_1) do
+        using_session(:user_1) do |session|
           sign_in(editing_user)
           chat_page.visit_channel(channel_1)
           channel_page.edit_message(message_1, "a different message")
           expect(page).to have_content(I18n.t("js.chat.edited"))
+          session.quit
         end
 
         expect(page).to have_content(I18n.t("js.chat.edited"))

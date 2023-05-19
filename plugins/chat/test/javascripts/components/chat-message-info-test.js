@@ -6,13 +6,13 @@ import I18n from "I18n";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-message-info", function (hooks) {
   setupRenderingTest(hooks);
 
   test("chat_webhook_event", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       chat_webhook_event: { username: "discobot" },
     });
 
@@ -29,7 +29,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("user", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
     });
 
@@ -42,7 +42,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("date", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
       created_at: moment(),
     });
@@ -53,7 +53,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (with reminder)", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
       bookmark: Bookmark.create({
         reminder_at: moment(),
@@ -69,7 +69,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("bookmark (no reminder)", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
       bookmark: Bookmark.create({
         name: "some name",
@@ -83,7 +83,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
   test("user status", async function (assert) {
     const status = { description: "off to dentist", emoji: "tooth" };
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { status },
     });
 
@@ -93,7 +93,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("reviewable", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
       user_flag_status: 0,
     });
@@ -105,7 +105,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       I18n.t("chat.you_flagged")
     );
 
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
       reviewable_id: 1,
     });
@@ -119,7 +119,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("with username classes", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: {
         username: "discobot",
         admin: true,
@@ -139,7 +139,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
   });
 
   test("without username classes", async function (assert) {
-    this.message = ChatMessage.create(fabricators.chatChannel(), {
+    this.message = ChatMessage.create(fabricators.channel(), {
       user: { username: "discobot" },
     });
 

@@ -49,13 +49,29 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
 end
 
-Fabricator(:chat_message, class_name: "Chat::Message") do
-  chat_channel
-  user
-  message "Beep boop"
-  cooked { |attrs| Chat::Message.cook(attrs[:message]) }
-  cooked_version Chat::Message::BAKED_VERSION
-  in_reply_to nil
+Fabricator(:chat_message, class_name: "Chat::MessageCreator") do
+  transient :chat_channel
+  transient :user
+  transient :message
+  transient :in_reply_to
+  transient :thread
+  transient :upload_ids
+
+  initialize_with do |transients|
+    user = transients[:user] || Fabricate(:user)
+    channel =
+      transients[:chat_channel] || transients[:thread]&.channel ||
+        transients[:in_reply_to]&.chat_channel || Fabricate(:chat_channel)
+
+    resolved_class.create(
+      chat_channel: channel,
+      user: user,
+      content: transients[:message] || Faker::Lorem.paragraph,
+      thread_id: transients[:thread]&.id,
+      in_reply_to_id: transients[:in_reply_to]&.id,
+      upload_ids: transients[:upload_ids],
+    ).chat_message
+  end
 end
 
 Fabricator(:chat_mention, class_name: "Chat::Mention") do

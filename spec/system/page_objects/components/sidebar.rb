@@ -15,8 +15,12 @@ module PageObjects
         page.has_link?(category.name, class: "sidebar-section-link")
       end
 
-      def open_new_custom_section
-        find("button.add-section").click
+      def click_add_section_button
+        click_button(add_section_button_text)
+      end
+
+      def has_no_add_section_button?
+        page.has_no_button?(add_section_button_text)
       end
 
       def edit_custom_section(name)
@@ -67,6 +71,10 @@ module PageObjects
         attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
         attributes[:class] += "--active" if active
         page.public_send(present ? :has_link? : :has_no_link?, name, **attributes)
+      end
+
+      def add_section_button_text
+        I18n.t("js.sidebar.sections.custom.add")
       end
     end
   end

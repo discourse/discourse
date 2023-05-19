@@ -45,9 +45,15 @@ RSpec.describe "Chat channel", type: :system, js: true do
           chat.visit_channel(channel_1)
         end
 
-        using_session(:tab_1) { channel.send_message("test_message") }
+        using_session(:tab_1) do |session|
+          channel.send_message("test_message")
+          session.quit
+        end
 
-        using_session(:tab_2) { expect(channel).to have_message(text: "test_message") }
+        using_session(:tab_2) do |session|
+          expect(channel).to have_message(text: "test_message")
+          session.quit
+        end
       end
     end
 

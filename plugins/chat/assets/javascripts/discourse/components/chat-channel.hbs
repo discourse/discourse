@@ -41,7 +41,6 @@
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
             @message={{message}}
-            @channel={{@channel}}
             @resendStagedMessage={{this.resendStagedMessage}}
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
