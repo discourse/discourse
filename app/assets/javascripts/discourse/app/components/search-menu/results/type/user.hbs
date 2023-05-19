@@ -1,3 +1,23 @@
-<ul class="list" aria-label={{concat (I18n "search.results") @type}}>
-
-</ul>
+<a href={{@result.path}} class="search-link">
+  <div class="user-result">
+    {{avatar
+      @result
+      imageSize="small"
+      template=@result.avatar_template
+      username=@result.username
+    }}
+    <div class="user-result">
+      {{#if @result.name}}
+        <span class="name">{{@result.name}}</span>
+      {{/if}}
+      <span class="username">
+        {{format-username @result.username}}
+      </span>
+      {{#if @result.custom_data}}
+        {{#each @result.custom_data as |row|}}
+          <span class="custom-field">{{row.name}}: {{row.value}}</span>
+        {{/each}}
+      {{/if}}
+    </div>
+  </div>
+</a>

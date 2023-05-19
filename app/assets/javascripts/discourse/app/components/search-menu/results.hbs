@@ -24,7 +24,9 @@
             aria-label={{concat (I18n "search.results") " " resultType.type}}
           >
             {{#each resultType.results as |result|}}
-              <resultType.component @result={{result}} @term={{@term}} />
+              <li class="item">
+                <resultType.component @result={{result}} @term={{@term}} />
+              </li>
             {{/each}}
           </ul>
         </div>

@@ -1,12 +1,3 @@
-<ul class="list" aria-label={{concat (I18n "search.results") @type}}>
-  {{#each @results as |result|}}
-    <li class="item">
-      <a href={{result.url}} class="search-link">
-        <MountWidget
-          @widget="category-link"
-          @args={{(hash category=result link=false)}}
-        />
-      </a>
-    </li>
-  {{/each}}
-</ul>
+<a href={{@result.url}} class="search-link">
+  {{category-link @result link=false}}
+</a>

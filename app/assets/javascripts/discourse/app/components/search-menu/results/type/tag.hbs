@@ -1,3 +1,4 @@
-<ul class="list" aria-label={{concat (I18n "search.results") @type}}>
-
-</ul>
+<a href={{@result.url}} class="search-link">
+  {{d-icon "tag"}}
+  {{discourse-tag @result.id tagName="span"}}
+</a>
