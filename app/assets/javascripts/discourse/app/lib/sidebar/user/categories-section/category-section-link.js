@@ -72,6 +72,16 @@ export function resetCustomCountables() {
   customCountables.length = 0;
 }
 
+let customCategoryLockIcon;
+
+export function registerCustomCategoryLockIcon(icon) {
+  customCategoryLockIcon = icon;
+}
+
+export function resetCustomCategoryLockIcon() {
+  customCategoryLockIcon = null;
+}
+
 export default class CategorySectionLink {
   @tracked activeCountable;
 
@@ -169,7 +179,7 @@ export default class CategorySectionLink {
 
   get prefixBadge() {
     if (this.category.read_restricted) {
-      return "lock";
+      return customCategoryLockIcon || "lock";
     }
   }
 
