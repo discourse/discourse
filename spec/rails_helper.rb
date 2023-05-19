@@ -370,11 +370,13 @@ RSpec.configure do |config|
     "DiscourseEvent registrations were not cleaned up"
   end
 
-  config.around do |example|
-    begin
-      Timeout.timeout(PER_SPEC_TIMEOUT_SECONDS) { example.run }
-    rescue Timeout::Error
-      raise "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds"
+  if ENV["CI"]
+    config.around do |example|
+      begin
+        Timeout.timeout(PER_SPEC_TIMEOUT_SECONDS) { example.run }
+      rescue Timeout::Error
+        raise "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds"
+      end
     end
   end
 
