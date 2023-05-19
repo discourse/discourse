@@ -844,7 +844,7 @@ describe Chat::MessageCreator do
           end
         end
 
-        context "if the root message alread had a thread" do
+        context "if the root message already had a thread" do
           fab!(:old_thread) { Fabricate(:chat_thread, original_message: old_message_1) }
           fab!(:incorrect_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 
