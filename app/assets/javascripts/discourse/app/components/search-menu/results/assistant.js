@@ -78,7 +78,6 @@ export default class Assistant extends Component {
       }
     }
 
-    console.log(this.args.suggestionKeyword);
     switch (this.args.suggestionKeyword) {
       case "+":
         this.args.results.forEach((result) => {

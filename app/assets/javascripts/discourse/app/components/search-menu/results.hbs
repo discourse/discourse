@@ -16,25 +16,32 @@
   {{else if this.renderInitialOptions}}
     <SearchMenu::Results::InitialOptions @term={{@term}} />
   {{else}}
-    {{#if this.resultTypes}}
-      {{#each this.resultTypes as |resultType|}}
-        <div class={{concat "search-result-" resultType.type}}>
-          <ul
-            class="list"
-            aria-label={{concat (I18n "search.results") " " resultType.type}}
-          >
-            {{#each resultType.results as |result|}}
-              <li class="item">
-                <resultType.component @result={{result}} @term={{@term}} />
-              </li>
-            {{/each}}
-          </ul>
+    {{log @searchTopics}}
+    {{#if @searchTopics}}
+      {{#if this.resultTypes}}
+        {{#each this.resultTypes as |resultType|}}
+          <div class={{concat "search-result-" resultType.type}}>
+            <ul
+              class="list"
+              aria-label={{concat (I18n "search.results") " " resultType.type}}
+            >
+              {{#each resultType.results as |result|}}
+                <li class="item">
+                  <resultType.component @result={{result}} @term={{@term}} />
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="no-results">
+          {{I18n "search.no_results"}}
         </div>
-      {{/each}}
+      {{/if}}
     {{else}}
-      <div class="no-results">
-        {{I18n "search.no_results"}}
-      </div>
+      {{#unless @inPMInboxContext}}
+        <SearchMenu::Results::InitialOptions @term={{@term}} />
+      {{/unless}}
     {{/if}}
   {{/if}}
 </div>
