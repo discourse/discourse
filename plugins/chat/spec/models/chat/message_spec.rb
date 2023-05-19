@@ -584,8 +584,6 @@ describe Chat::Message do
     end
     let(:already_mentioned) { [user1.id, user2.id] }
 
-    before { message.create_mentions }
-
     it "creates newly added mentions" do
       existing_mention_ids = message.chat_mentions.pluck(:id)
       message.message = message.message + " @#{user3.username} @#{user4.username} "
