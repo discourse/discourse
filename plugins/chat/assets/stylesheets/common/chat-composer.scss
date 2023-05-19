@@ -34,12 +34,12 @@
 
   &__inline-button {
     .d-icon {
-      color: var(--primary-high);
+      color: var(--tertiary);
     }
 
     &:hover {
       .d-icon {
-        color: var(--primary);
+        color: var(--tertiary-hover);
       }
     }
   }
