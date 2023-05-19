@@ -59,7 +59,7 @@ export default {
         label: "chat.emoji",
         id: "emoji",
         class: "chat-emoji-btn",
-        icon: "discourse-emojis",
+        icon: "far-smile",
         position: this.site.desktopView ? "inline" : "dropdown",
         context: "channel",
         action() {
