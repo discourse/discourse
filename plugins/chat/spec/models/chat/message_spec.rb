@@ -461,7 +461,9 @@ describe Chat::Message do
       message_1 = Fabricate(:chat_message)
       webhook_1 = Fabricate(:chat_webhook_event, chat_message: message_1)
 
-      message_1.destroy!
+      # Need to reload because chat_webhook_event instantiates the message
+      # before the relationship is created
+      message_1.reload.destroy!
 
       expect { webhook_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -485,7 +487,7 @@ describe Chat::Message do
         message_1 = Fabricate(:chat_message)
         bookmark_1 = Fabricate(:bookmark, bookmarkable: message_1)
 
-        message_1.destroy!
+        message_1.reload.destroy!
 
         expect { bookmark_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
@@ -583,8 +585,6 @@ describe Chat::Message do
       Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
     end
     let(:already_mentioned) { [user1.id, user2.id] }
-
-    before { message.create_mentions }
 
     it "creates newly added mentions" do
       existing_mention_ids = message.chat_mentions.pluck(:id)
