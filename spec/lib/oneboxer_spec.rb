@@ -183,9 +183,15 @@ RSpec.describe Oneboxer do
       category = Fabricate(:category, slug: "random")
       tag = Fabricate(:tag, name: "bug")
       public_post = Fabricate(:post, raw: "This post has some hashtags, #random and #bug")
-      preview = preview(public_post.url).chomp
-      expect(preview).to include(<<~HTML.chomp)
-        <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="random" data-id="#{category.id}">#{category.name}</a> and <a class="hashtag-cooked" href="#{tag.url}" data-type="tag" data-slug="bug" data-id="#{tag.id}">bug</a>
+      preview =
+        Nokogiri::HTML5
+          .fragment(preview(public_post.url).chomp)
+          .css("blockquote")
+          .inner_html
+          .chomp
+          .strip
+      expect(preview).to eq(<<~HTML.chomp.strip)
+        This post has some hashtags, <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="random" data-id="#{category.id}"><span class="hashtag-icon-placeholder"></span>#{category.name}</a> and <a class="hashtag-cooked" href="#{tag.url}" data-type="tag" data-slug="bug" data-id="#{tag.id}"><span class="hashtag-icon-placeholder"></span>#{tag.name}</a>
       HTML
     end
   end
