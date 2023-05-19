@@ -457,6 +457,9 @@ module PrettyText
           end
         end
 
+    mentions =
+      DiscoursePluginRegistry.apply_modifier(:pretty_text_extract_mentions, mentions, cooked)
+
     mentions.compact!
     mentions.uniq!
     mentions
