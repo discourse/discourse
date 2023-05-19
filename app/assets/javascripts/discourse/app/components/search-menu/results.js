@@ -13,7 +13,6 @@ import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 import TopicViewComponent from "./results/type/topic";
@@ -280,7 +279,7 @@ export default class Results extends Component {
     return this.args.searchTopics && this.args.invalidTerm;
   }
 
-  get results() {
+  get resultTypes() {
     //const mainResultsContent = [];
     //const usersAndGroups = [];
     //const categoriesAndTags = [];
@@ -345,15 +344,19 @@ export default class Results extends Component {
     //});
 
     let content = [];
-    this.args.results.resultTypes?.map((result) => {
-      const searchResultId =
-        result.type === "topic" ? result.topic_id : result.id;
+    this.args.results.resultTypes?.map((resultType) => {
+      //resultType.results.map((result) => {
+      //const searchResultId =
+      //result.type === "topic" ? result.topic_id : result.id;
       content.push({
-        searchResultId,
-        type: result.type,
-        component: SEARCH_RESULTS_COMPONENT_TYPE[result.type],
-        searchLogId: result.searchLogId,
+        //searchResultId,
+        //object: result,
+        type: resultType.type,
+        component: SEARCH_RESULTS_COMPONENT_TYPE[resultType.type],
+        searchLogId: resultType.searchLogId,
+        results: resultType.results,
       });
+      //});
     });
     return content;
 
@@ -378,16 +381,5 @@ export default class Results extends Component {
   moreOfType(type) {
     searchData.typeFilter = type;
     this.triggerSearch();
-  }
-}
-
-class Highlighted extends RawHtml {
-  constructor(html, term) {
-    super({ html: `<span>${html}</span>` });
-    this.term = term;
-  }
-
-  decorate($html) {
-    highlightSearch($html[0], this.term);
   }
 }

@@ -1,12 +1,20 @@
 import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import { emojiUnescape } from "discourse/lib/text";
+import { htmlSafe } from "@ember/template";
 
 export default class Results extends Component {
-  get content() {
-    this.siteSettings.use_pg_headlines_for_excerpt &&
-    result.topic_title_headline
-      ? new RawHtml({
-          html: `<span>${emojiUnescape(result.topic_title_headline)}</span>`,
-        })
-      : new Highlighted(topic.fancyTitle, term);
+  @service siteSettings;
+  @service site;
+
+  get unescapeHeadline() {
+    return (
+      this.siteSettings.use_pg_headlines_for_excerpt &&
+      this.args.result.topic_title_headline
+    );
+  }
+
+  get unescapedHeadline() {
+    return htmlSafe(emojiUnescape(this.args.result.topic_title_headline));
   }
 }
