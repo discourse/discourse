@@ -157,26 +157,24 @@ export default (filterArg, params) => {
 
       let canCreateTopicOnCategory =
         canCreateTopic && category.get("permission") === PermissionType.FULL;
-
+      let cannotCreateTopicOnCategory = !canCreateTopicOnCategory;
       let defaultSubcategory;
       let canCreateTopicOnSubCategory;
 
-      if (
-        !canCreateTopicOnCategory &&
-        this.siteSettings.default_subcategory_on_read_only_category
-      ) {
-        defaultSubcategory = category.subcategories.find((subcategory) => {
-          return subcategory.get("permission") === PermissionType.FULL;
-        });
+      if (this.siteSettings.default_subcategory_on_read_only_category) {
+        cannotCreateTopicOnCategory = false;
 
-        canCreateTopicOnSubCategory = !!defaultSubcategory;
+        if (!canCreateTopicOnCategory && category.subcategories) {
+          defaultSubcategory = category.subcategories.find((subcategory) => {
+            return subcategory.get("permission") === PermissionType.FULL;
+          });
+          canCreateTopicOnSubCategory = !!defaultSubcategory;
+        }
       }
 
       this.controllerFor("navigation/category").setProperties({
         canCreateTopicOnCategory,
-        cannotCreateTopicOnCategory: !(
-          canCreateTopicOnCategory || canCreateTopicOnSubCategory
-        ),
+        cannotCreateTopicOnCategory,
         canCreateTopic,
         canCreateTopicOnSubCategory,
         defaultSubcategory,
