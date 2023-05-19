@@ -27,8 +27,8 @@ export default DiscourseRoute.extend(ViewingActionType, {
     }
   },
 
-  setupController(controller, model) {
-    controller.set("model", model);
+  setupController(controller) {
+    this._super(...arguments);
     controller.set("user", this.modelFor("user"));
     this.viewingActionType(-1);
   },
