@@ -24,8 +24,8 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     }
 
     generatedCssClasses.push(`.hashtag-color--category-${category.id} {
-    background: linear-gradient(90deg, ${backgroundGradient.join(", ")});
-  }`);
+  background: linear-gradient(90deg, ${backgroundGradient.join(", ")});
+}`);
 
     return generatedCssClasses;
   }
