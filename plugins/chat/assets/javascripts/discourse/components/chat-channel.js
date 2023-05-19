@@ -9,7 +9,7 @@ import { action } from "@ember/object";
 import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cancel, later, schedule } from "@ember/runloop";
+import { cancel, later, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -490,18 +490,20 @@ export default class ChatLivePane extends Component {
 
   @action
   scrollToLatestMessage() {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
+    next(() => {
+      schedule("afterRender", () => {
+        if (this._selfDeleted) {
+          return;
+        }
 
-      if (this.args.channel?.canLoadMoreFuture) {
-        this._fetchAndScrollToLatest();
-      } else if (this.args.channel.messages?.length > 0) {
-        this.scrollToMessage(
-          this.args.channel.messages[this.args.channel.messages.length - 1].id
-        );
-      }
+        if (this.args.channel?.canLoadMoreFuture) {
+          this._fetchAndScrollToLatest();
+        } else if (this.args.channel.messages?.length > 0) {
+          this.scrollToMessage(
+            this.args.channel.messages[this.args.channel.messages.length - 1].id
+          );
+        }
+      });
     });
   }
 
@@ -664,7 +666,6 @@ export default class ChatLivePane extends Component {
     }
 
     this.args.channel.stageMessage(message);
-    const stagedMessage = message;
     this.resetComposer();
 
     if (!this.args.channel.canLoadMoreFuture) {
@@ -682,7 +683,7 @@ export default class ChatLivePane extends Component {
         this.scrollToLatestMessage();
       })
       .catch((error) => {
-        this._onSendError(stagedMessage.id, error);
+        this._onSendError(message.id, error);
         this.scrollToBottom();
       })
       .finally(() => {
@@ -881,7 +882,7 @@ export default class ChatLivePane extends Component {
   computeDatesSeparators() {
     cancel(this._laterComputeHandler);
     this._computeDatesSeparators();
-    this._laterComputeHandler = later(this, this.computeDatesSeparators, 100);
+    this._laterComputeHandler = later(this, this._computeDatesSeparators, 100);
   }
 
   // A more consistent way to scroll to the bottom when we are sure this is our goal

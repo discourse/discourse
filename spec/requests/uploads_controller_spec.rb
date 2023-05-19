@@ -853,6 +853,16 @@ RSpec.describe UploadsController do
         )
       end
 
+      it "returns 422 when the file is an gif and it's too big, since gifs cannot be resized on client" do
+        SiteSetting.max_image_size_kb = 1024
+        post "/uploads/create-multipart.json",
+             **{ params: { file_name: "test.gif", file_size: 9_999_999, upload_type: "composer" } }
+        expect(response.status).to eq(422)
+        expect(response.body).to include(
+          I18n.t("upload.images.too_large_humanized", max_size: "1 MB"),
+        )
+      end
+
       it "returns a sensible error if the file size is 0 bytes" do
         SiteSetting.authorized_extensions = "*"
         stub_create_multipart_request

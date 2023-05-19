@@ -5,11 +5,8 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  templateName: "user/messages",
   composer: service(),
-
-  renderTemplate() {
-    this.render("user/messages");
-  },
 
   model() {
     return this.modelFor("user");
@@ -19,8 +16,8 @@ export default DiscourseRoute.extend({
     return this.pmTopicTrackingState.startTracking();
   },
 
-  setupController(controller, model) {
-    controller.set("model", model);
+  setupController() {
+    this._super(...arguments);
 
     if (this.currentUser) {
       Draft.get("new_private_message").then((data) => {

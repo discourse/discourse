@@ -2288,6 +2288,9 @@ search:
     default: 1.2
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
+  search_page_size:
+    default: 50
+    hidden: true
 
 uncategorized:
   version_checks:
@@ -2491,7 +2494,6 @@ uncategorized:
   welcome_topic_id:
     default: -1
     hidden: true
-    client: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true
