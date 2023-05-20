@@ -537,42 +537,6 @@
     }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
-
-    &.quick-access-profile {
-      display: inline;
-      li:not(.show-all) a {
-        color: var(--primary);
-        display: flex;
-      }
-      ul button {
-        line-height: 1.4; // match 'ul a' link height
-        width: 100%;
-        display: flex;
-      }
-      @media screen and (max-height: 360px) {
-        // two column grid to avoid scroll
-        ul {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          grid-gap: 0 1em;
-          a {
-            @include ellipsis;
-            > div {
-              display: block;
-            }
-          }
-          button {
-            span:not(.relative-date) {
-              @include ellipsis;
-            }
-          }
-        }
-        li:not(.show-all) a {
-          color: var(--primary);
-          display: flex;
-        }
-      }
-    }
   }
 }
 
