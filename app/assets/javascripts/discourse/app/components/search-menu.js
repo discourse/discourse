@@ -39,8 +39,8 @@ export default class SearchMenu extends Component {
     this.search?.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
-  invalidTerm = false;
-  suggestionResults = [];
+  @tracked suggestionResults = [];
+  @tracked invalidTerm = false;
   _debouncer = null;
   _activeSearch = null;
 
@@ -107,13 +107,13 @@ export default class SearchMenu extends Component {
     this.triggerSearch();
   }
 
-  triggerAutocomplete(opts = {}) {
-    if (opts.setTopicContext) {
-      this.sendWidgetAction("setTopicContext");
-      this.state.inTopicContext = true;
-    }
-    this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
-  }
+  //triggerAutocomplete(opts = {}) {
+  //if (opts.setTopicContext) {
+  //this.sendWidgetAction("setTopicContext");
+  //this.state.inTopicContext = true;
+  //}
+  //this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
+  //}
 
   @action
   fullSearch() {
@@ -136,8 +136,13 @@ export default class SearchMenu extends Component {
   }
 
   @action
+  updateTerm(value) {
+    this.term = value;
+  }
+
+  @action
   focusSearchInput(element) {
-    if (this.args.searchVisible) {
+    if (this.args.searchVisible && element) {
       element.focus();
       element.select();
     }
@@ -182,7 +187,6 @@ export default class SearchMenu extends Component {
       this.loading = false;
       this.suggestionResults = [];
 
-      console.log(matchSuggestions);
       if (matchSuggestions.type === "category") {
         const categorySearchTerm = matchSuggestions.categoriesMatch[0].replace(
           "#",

@@ -16,10 +16,16 @@ export default class SearchTerm extends Component {
     discourseDebounce(
       this,
       this.parseAndUpdateSearchTerm,
-      this.args.value,
+      this.args.term,
       input,
       200
     );
+  }
+
+  @action
+  focus(element) {
+    element.focus();
+    element.select();
   }
 
   @action

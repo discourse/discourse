@@ -6,17 +6,17 @@
       @results={{@suggestionResults}}
     />
   {{else if this.renderTooShort}}
-    <div class="no-results">
-      {{I18n "search.too_short"}}
-    </div>
+    <div class="no-results">{{I18n "search.too_short"}}</div>
   {{else if this.renderNoResults}}
-    <div class="no-results">
-      {{I18n "search.no_results"}}
-    </div>
+    <div class="no-results">{{I18n "search.no_results"}}</div>
   {{else if this.renderInitialOptions}}
-    <SearchMenu::Results::InitialOptions @term={{@term}} />
+    <SearchMenu::Results::InitialOptions
+      @term={{@term}}
+      @updateTerm={{@updateTerm}}
+      @focusSearchInput={{@focusSearchInput}}
+    />
   {{else}}
-    {{log @searchTopics}}
+    {{! THIS IS REALLY NOT RIGHT }}
     {{#if @searchTopics}}
       {{#if this.resultTypes}}
         {{#each this.resultTypes as |resultType|}}
@@ -27,20 +27,23 @@
             >
               {{#each resultType.results as |result|}}
                 <li class="item">
-                  <resultType.component @result={{result}} @term={{@term}} />
+                  <a href={{(or result.url result.path)}} class="search-link">
+                    <resultType.component @result={{result}} @term={{@term}} />
+                  </a>
                 </li>
               {{/each}}
             </ul>
           </div>
         {{/each}}
       {{else}}
-        <div class="no-results">
-          {{I18n "search.no_results"}}
-        </div>
+        <div class="no-results">{{I18n "search.no_results"}}</div>
       {{/if}}
     {{else}}
       {{#unless @inPMInboxContext}}
-        <SearchMenu::Results::InitialOptions @term={{@term}} />
+        <SearchMenu::Results::InitialOptions
+          @term={{@term}}
+          @updateTerm={{@updateTerm}}
+        />
       {{/unless}}
     {{/if}}
   {{/if}}

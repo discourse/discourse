@@ -1,20 +1,18 @@
-<a href={{@result.url}} class="search-link">
-  <div class="group-results">
-    {{#if @result.flairUrl}}
-      <AvatarFlair
-        @flairName={{this.name}}
-        @flairUrl={{@result.flairUrl}}
-        @flairBgColor={{@result.flairBgColor}}
-        @flairColor={{@result.flairColor}}
-      />
-    {{else}}
-      {{d-icon "users"}}
+<div class="group-results">
+  {{#if @result.flairUrl}}
+    <AvatarFlair
+      @flairName={{this.name}}
+      @flairUrl={{@result.flairUrl}}
+      @flairBgColor={{@result.flairBgColor}}
+      @flairColor={{@result.flairColor}}
+    />
+  {{else}}
+    {{d-icon "users"}}
+  {{/if}}
+  <div class="group-names">
+    <span class="name">{{if this.fullName this.fullName this.name}}</span>
+    {{#if this.fullName}}
+      <div class="slug">{{this.name}}</div>
     {{/if}}
-    <div class="group-names">
-      <span class="name">{{if this.fullName this.fullName this.name}}</span>
-      {{#if this.fullName}}
-        <div class="slug">{{this.name}}</div>
-      {{/if}}
-    </div>
   </div>
-</a>
+</div>

@@ -1,9 +1,16 @@
 <li class="search-random-quick-tip">
-  <span class={{concat-class "tip-label" (if @clickable "tip-clickable")}}>
-    {{@label}}
+  <span
+    class={{concat-class
+      "tip-label"
+      (if this.randomTip.clickable "tip-clickable")
+    }}
+    role="button"
+    {{on "click" this.triggerAutocomplete}}
+  >
+    {{this.randomTip.label}}
   </span>
 
   <span class="tip-description">
-    {{@description}}
+    {{this.randomTip.description}}
   </span>
 </li>

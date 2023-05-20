@@ -86,7 +86,6 @@ export default class InitialOptions extends Component {
     this.suggestionKeyword = "#";
     this.results = [{ model: this.search.searchContext.category }];
     this.withInLabel = true;
-    console.log(this.results);
   }
 
   tagContextType() {

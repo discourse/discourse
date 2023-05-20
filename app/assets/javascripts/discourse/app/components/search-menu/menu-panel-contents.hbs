@@ -21,7 +21,7 @@
 
   <SearchMenu::SearchTerm
     @searchTermChanged={{@searchTermChanged}}
-    @value={{@term}}
+    @term={{@term}}
     @focusSearchInput={{@focusSearchInput}}
     @typeFilter={{@typeFilter}}
     @updateTypeFilter={{@updateTypeFilter}}
@@ -68,6 +68,7 @@
   {{#unless @loading}}
     <SearchMenu::Results
       @term={{@term}}
+      @updateTerm={{@updateTerm}}
       @noResults={{@noResults}}
       @results={{@results}}
       @invalidTerm={{@invalidTerm}}
@@ -75,6 +76,7 @@
       @suggestionResults={{@suggestionResults}}
       @searchTopics={{@includesTopics}}
       @inPMInboxContext={{@inPMInboxContext}}
+      @focusSearchInput={{@focusSearchInput}}
     />
   {{/unless}}
 {{/if}}

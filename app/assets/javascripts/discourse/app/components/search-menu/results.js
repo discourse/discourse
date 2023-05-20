@@ -31,51 +31,6 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
   group: GroupViewComponent,
 };
 
-const DEFAULT_QUICK_TIPS = [
-  {
-    label: "#",
-    description: I18n.t("search.tips.category_tag"),
-    clickable: true,
-  },
-  {
-    label: "@",
-    description: I18n.t("search.tips.author"),
-    clickable: true,
-  },
-  {
-    label: "in:",
-    description: I18n.t("search.tips.in"),
-    clickable: true,
-  },
-  {
-    label: "status:",
-    description: I18n.t("search.tips.status"),
-    clickable: true,
-  },
-  {
-    label: I18n.t("search.tips.full_search_key", { modifier: "Ctrl" }),
-    description: I18n.t("search.tips.full_search"),
-  },
-  {
-    label: "@me",
-    description: I18n.t("search.tips.me"),
-  },
-];
-
-let QUICK_TIPS = [];
-
-export function addQuickSearchRandomTip(tip) {
-  if (!QUICK_TIPS.includes(tip)) {
-    QUICK_TIPS.push(tip);
-  }
-}
-
-export function resetQuickSearchRandomTips() {
-  QUICK_TIPS = [].concat(DEFAULT_QUICK_TIPS);
-}
-
-resetQuickSearchRandomTips();
-
 //function createSearchResult({ type, linkField, builder }) {
 //return createWidget(`search-result-${type}`, {
 //tagName: "ul.list",

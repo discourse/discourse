@@ -2,9 +2,7 @@
   {{! We need to change up styling to removing the "widget-link" class }}
   {{! "data-topic-id": topic.id }}
   <a class="search-link" href={{this.href}}>
-    <span aria-label={{I18n "search.title"}}>
-      {{d-icon this.icon}}
-    </span>
+    <span aria-label={{I18n "search.title"}}>{{d-icon this.icon}}</span>
 
     {{#if this.prefix}}
       <span class="search-item-prefix">{{this.prefix}}</span>
@@ -15,12 +13,7 @@
     {{/if}}
 
     {{#if @category}}
-      {{category-link
-        @category
-        allowUncategorized=true
-        recursive=true
-        link=false
-      }}
+      <SearchMenu::Results::Type::Category @result={{@category}} />
       {{#if (and @tag @isIntersection)}}
         <span class="search-item-tag">
           {{d-icon "tag"}}
@@ -28,30 +21,16 @@
         </span>
       {{/if}}
     {{else if @tag}}
-      {{log "in here"}}
       {{#if (and @isIntersection @additionalTags.length)}}
         <span class="search-item-tag">{{this.tags}}</span>
       {{else}}
         <span class="search-item-tag">
-          {{d-icon "tag"}}
-          {{log @tag}}
-          {{@tag}}
+          <SearchMenu::Results::Type::Tag @result={{@tag}} />
         </span>
       {{/if}}
     {{else if @user}}
       <span class="search-item-user">
-        {{avatar
-          @user
-          imageSize="small"
-          template=@user.avatar_template
-          username=@user.username
-        }}
-        <span class="username">{{this.formattedUsername}}</span>
-        {{#if @suffix}}
-          <span class="label-suffix">
-            {{@suffix}}
-          </span>
-        {{/if}}
+        <SearchMenu::Results::Type::User @result={{@user}} />
       </span>
     {{else}}
       <span class="search-item-slug">{{this.labelOrSlug}}</span>
