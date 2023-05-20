@@ -115,11 +115,13 @@ export default EmberObject.extend({
     const data = {};
     const typeField = underscore(this.apiNameFor(type));
     data[typeField] = attrs;
-
-    return ajax(
-      this.pathFor(store, type, id),
-      this.getPayload("PUT", data)
-    ).then(function (json) {
+    console.log("restAdapter.update");
+    console.log({ type, id, attrs });
+    const path = this.pathFor(store, type, id);
+    const payload = this.getPayload("PUT", data);
+    console.log({ path });
+    console.log({ payload });
+    return ajax(path, payload).then(function (json) {
       return new Result(json[typeField], json);
     });
   },

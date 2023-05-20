@@ -392,16 +392,8 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   @action
-  save(values = []) {
-    //@url("model.id", "/admin/themes/%@/setting") updateUrl;
-    const updateUrl = "/admin/themes/settings";
-    return ajax(updateUrl, {
-      type: "POST",
-      data: {
-        name: "theme_settings",
-        value: values,
-      },
-    });
+  saveSettings() {
+    this.model.saveChanges("settings");
   }
 
   @action
