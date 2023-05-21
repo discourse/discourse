@@ -7,6 +7,7 @@ module SidebarGuardian
 
   def can_edit_sidebar_section?(sidebar_section)
     return @user.staff? if sidebar_section.public?
+    return @user.staff? if sidebar_section.section_type
     is_my_own?(sidebar_section)
   end
 

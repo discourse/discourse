@@ -135,6 +135,9 @@ RSpec.describe SidebarSectionsController do
     fab!(:section_link_2) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
     end
+    let(:community_section) do
+      SidebarSection.where(section_type: SidebarSection.section_types[:community]).first
+    end
 
     it "allows user to update their own section and links" do
       sign_in(user)
@@ -333,6 +336,30 @@ RSpec.describe SidebarSectionsController do
       delete "/sidebar_sections/#{sidebar_section.id}.json"
 
       expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#reset" do
+    let(:community_section) do
+      SidebarSection.where(section_type: SidebarSection.section_types[:community]).first
+    end
+    let(:everything_link) { community_section.sidebar_section_links.first }
+
+    it "doesn't allow user to reset community section" do
+      sign_in(user)
+      put "/sidebar_sections/reset/#{community_section.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "allows admins to reset community section to default" do
+      community_section.update!(title: "test")
+      everything_link.linkable.update!(name: "everything edited")
+
+      sign_in(admin)
+      put "/sidebar_sections/reset/#{community_section.id}.json"
+
+      expect(community_section.reload.title).to eq("Community")
+      expect(community_section.sidebar_section_links.first.linkable.name).to eq("Everything")
     end
   end
 end
