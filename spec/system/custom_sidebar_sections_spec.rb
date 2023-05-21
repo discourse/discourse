@@ -201,6 +201,39 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar).to have_no_section("Edited public section")
   end
 
+  it "allows admin to edit community section and reset to default" do
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Community")
+    section_modal.fill_name("Edited community section")
+    everything_link = find(".draggable[data-link-name='Everything']")
+    my_posts_link = find(".draggable[data-link-name='Review']")
+    everything_link.drag_to(my_posts_link, delay: 0.4)
+    section_modal.save
+
+    expect(sidebar).to have_section("Edited community section")
+    within(
+      "[data-section-name='edited-community-section'] .sidebar-section-link-wrapper:nth-child(1)",
+    ) { expect(sidebar).to have_section_link("My Posts") }
+
+    within(
+      "[data-section-name='edited-community-section'] .sidebar-section-link-wrapper:nth-child(2)",
+    ) { expect(sidebar).to have_section_link("Everything") }
+
+    sidebar.edit_custom_section("Edited community section")
+    section_modal.reset
+
+    expect(sidebar).to have_section("Community")
+    within("[data-section-name='community'] .sidebar-section-link-wrapper:nth-child(1)") do
+      expect(sidebar).to have_section_link("Everything")
+    end
+
+    within("[data-section-name='community'] .sidebar-section-link-wrapper:nth-child(2)") do
+      expect(sidebar).to have_section_link("My Posts")
+    end
+  end
+
   it "shows anonymous public sections" do
     sidebar_section = Fabricate(:sidebar_section, title: "Public section", public: true)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")

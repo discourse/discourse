@@ -24,6 +24,6 @@ export default class GroupsSectionLink extends BaseSectionLink {
   }
 
   get prefixValue() {
-    return "user-friends";
+    return this.overridenIcon || "user-friends";
   }
 }

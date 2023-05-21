@@ -44,7 +44,10 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.everything.content");
+    return I18n.t(
+      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
+      { defaultValue: this.overridenName }
+    );
   }
 
   get currentWhen() {
@@ -93,7 +96,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get prefixValue() {
-    return "layer-group";
+    return this.overridenIcon || "layer-group";
   }
 
   get suffixCSSClass() {
