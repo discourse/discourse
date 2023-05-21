@@ -16,6 +16,7 @@ import UsersSectionLink from "discourse/lib/sidebar/common/community-section/use
 import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
+import NewTopicSectionButton from "discourse/lib/sidebar/user/community-section/new-topic-section-button";
 import {
   customSectionLinks,
   secondaryCustomSectionLinks,
@@ -34,6 +35,7 @@ const SPECIAL_LINKS_MAP = {
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
   "/g": GroupsSectionLink,
+  "/new-topic": NewTopicSectionButton,
 };
 
 export default class CommunitySection {
@@ -111,13 +113,23 @@ export default class CommunitySection {
     const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
 
     if (sectionLinkClass) {
-      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+      return this.#initializeSectionLink(
+        sectionLinkClass,
+        inMoreDrawer,
+        link.name,
+        link.icon
+      );
     } else {
       return new SectionLink(link, this, this.router);
     }
   }
 
-  #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
+  #initializeSectionLink(
+    sectionLinkClass,
+    inMoreDrawer,
+    overridenName,
+    overridenIcon
+  ) {
     if (this.router.isDestroying) {
       return;
     }
@@ -128,6 +140,8 @@ export default class CommunitySection {
       router: this.router,
       siteSettings: this.siteSettings,
       inMoreDrawer,
+      overridenName,
+      overridenIcon,
     });
   }
 

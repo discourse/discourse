@@ -4474,6 +4474,9 @@ en:
           header_link_text: "Community"
           header_action_title: "Create a topic"
           links:
+            new_topic:
+              content: "New Topic"
+              title: "Create a topic"
             about:
               content: "About"
               title: "More details about this site"

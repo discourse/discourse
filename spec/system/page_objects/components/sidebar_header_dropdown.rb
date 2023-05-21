@@ -23,10 +23,10 @@ module PageObjects
         page.has_no_css?(".sidebar-footer-actions-keyboard-shortcuts")
       end
 
-      def click_community_header_button
+      def click_new_topic_button
         page.click_button(
-          I18n.t("js.sidebar.sections.community.header_action_title"),
-          class: "sidebar-section-header-button",
+          I18n.t("js.sidebar.sections.community.links.new_topic.content"),
+          class: "sidebar-button",
         )
       end
 
