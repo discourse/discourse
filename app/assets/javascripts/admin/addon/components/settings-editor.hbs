@@ -2,7 +2,25 @@
   <AceEditor
     @mode={{"html"}}
     @content={{this.editorContents}}
-    @save={{@save}}
   />
-
+  <br/>
+  <hr/>
+  {{#if this.errors}}
+    <div style="color:red">The following errors were found.</div>
+  {{/if}}
+  <ul>
+  <div style="color:green">{{this.success}}</div>
+  {{#each this.errors as |error|}}
+    <li style="color:red"><b>{{error.setting}}</b>: {{error.errorMessage}}</li>
+  {{/each}}
+  </ul>
+  <hr/>
+  <div class="buttons">
+    <DButton
+      @action={{action "save"}}
+      @class="btn-primary"
+      @disabled={{this.buttonDisabled}}
+      @translatedLabel="Save"
+    />
+  </div>
 </div>

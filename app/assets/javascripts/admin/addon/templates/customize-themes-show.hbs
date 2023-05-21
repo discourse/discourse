@@ -1,17 +1,4 @@
 <div class="show-current-style">
-  <SettingsEditor
-    @theme={{this.model}}
-    @save={{action "saveSettings"}}
-  />
-<br/>
-  <div class="buttons">
-    <DButton
-      @action={{action "saveSettings"}}
-      @class="btn-primary"
-      @translatedLabel="Save"
-    />
-  </div>
-
   <span>
     <PluginOutlet
       @name="admin-customize-themes-show-top"
