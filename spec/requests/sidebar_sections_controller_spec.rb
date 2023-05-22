@@ -350,7 +350,7 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(403)
     end
 
-    it "doesn't allow staff to delete public sidebar section" do
+    it "doesn't allow moderator to delete public sidebar section" do
       sign_in(moderator)
       sidebar_section.update!(public: true)
       delete "/sidebar_sections/#{sidebar_section.id}.json"
