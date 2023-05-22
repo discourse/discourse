@@ -8,8 +8,6 @@ module Jobs
       return if SiteSetting.clean_up_inactive_users_after_days <= 0
 
       User
-        .where
-        .missing(:posts, :topics)
         .where(
           last_posted_at: nil,
           trust_level: TrustLevel.levels[:newuser],
@@ -20,6 +18,8 @@ module Jobs
           "users.last_seen_at < ? OR users.last_seen_at IS NULL",
           SiteSetting.clean_up_inactive_users_after_days.days.ago,
         )
+        .where
+        .missing(:posts, :topics)
         .limit(1000)
         .pluck(:id)
         .each_slice(50) { |slice| destroy(slice) }
