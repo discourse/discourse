@@ -52,6 +52,7 @@ module(
 
     hooks.beforeEach(function () {
       pretender.get(`/chat/${channelId}/messages`, () => OK(messagesResponse));
+      pretender.get(`/chat/api/channels/1`, () => OK());
 
       this.channel = fabricators.channel({
         id: channelId,

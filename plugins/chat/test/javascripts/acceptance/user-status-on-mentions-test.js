@@ -91,6 +91,8 @@ acceptance("Chat | User status on mentions", function (needs) {
     pretender.post(`/chat/1`, () => OK());
     pretender.put(`/chat/1/edit/${messageId}`, () => OK());
     pretender.post(`/chat/drafts`, () => OK());
+    pretender.get(`/chat/api/channels/1`, () => OK());
+    pretender.put(`/chat/api/channels/1/read/1`, () => OK());
     pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () => OK());
     pretender.put(`/chat/api/channels/1/messages/${messageId}/restore`, () =>
       OK()
