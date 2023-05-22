@@ -7,21 +7,12 @@ import { bind } from "discourse-common/utils/decorators";
 
 export default class NewTopicSectionButton {
   constructor({
-    topicTrackingState,
+  constructor({
     currentUser,
-    appEvents,
-    router,
-    siteSettings,
-    inMoreDrawer,
     overridenName,
     overridenIcon,
   } = {}) {
-    this.router = router;
-    this.topicTrackingState = topicTrackingState;
     this.currentUser = currentUser;
-    this.appEvents = appEvents;
-    this.siteSettings = siteSettings;
-    this.inMoreDrawer = inMoreDrawer;
     this.overridenName = overridenName;
     this.overridenIcon = overridenIcon;
   }
