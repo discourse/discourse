@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
-    "@babel/standalone": "^7.21.8",
+    "@babel/standalone": "^7.21.9",
     "@ember/optional-features": "^2.0.0",
     "@uppy/aws-s3": "^3.0.6",
     "@uppy/aws-s3-multipart": "^3.1.3",
