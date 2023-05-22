@@ -1917,6 +1917,7 @@ class PluginApi {
   }
 
   /**
+   * EXPERIMENTAL. Do not use.
    * Changes the lock icon used for a sidebar category section link to indicate that a category is read restricted.
    *
    * @param {String} Name of a FontAwesome 5 icon
