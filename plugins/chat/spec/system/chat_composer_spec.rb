@@ -192,8 +192,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       SiteSetting.emoji_deny_list = "monkey|peach"
 
       chat.visit_channel(channel_1)
-      channel.open_action_menu
-      channel.click_action_button("emoji")
+      channel.composer.open_emoji_picker
 
       expect(page).to have_no_selector("[data-emoji='monkey']")
       expect(page).to have_no_selector("[data-emoji='peach']")

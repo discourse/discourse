@@ -3,6 +3,10 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
+      def composer
+        @composer ||= PageObjects::Components::Chat::Composer.new(".chat-channel")
+      end
+
       def replying_to?(message)
         find(".chat-channel .chat-reply", text: message.message)
       end
