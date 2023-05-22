@@ -27,7 +27,7 @@ export default {
     }
 
     withPluginApi("0.12.1", (api) => {
-      api.registerHashtagType("channel", ChannelHashtagType);
+      api.registerHashtagType("channel", new ChannelHashtagType(container));
 
       api.registerChatComposerButton({
         id: "chat-upload-btn",

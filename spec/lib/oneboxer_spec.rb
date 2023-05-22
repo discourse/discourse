@@ -178,13 +178,20 @@ RSpec.describe Oneboxer do
       expect(preview("/u/#{user.username}")).to include("Thunderland")
     end
 
-    it "includes hashtag HTML and icons" do
+    it "includes hashtag HTML" do
       SiteSetting.enable_experimental_hashtag_autocomplete = true
       category = Fabricate(:category, slug: "random")
-      Fabricate(:tag, name: "bug")
+      tag = Fabricate(:tag, name: "bug")
       public_post = Fabricate(:post, raw: "This post has some hashtags, #random and #bug")
-      expect(preview(public_post.url).chomp).to include(<<~HTML.chomp)
-        <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="random"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>#{category.name}</a> and <a class="hashtag-cooked" href="/tag/bug" data-type="tag" data-slug="bug"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg>bug</a>
+      preview =
+        Nokogiri::HTML5
+          .fragment(preview(public_post.url).chomp)
+          .css("blockquote")
+          .inner_html
+          .chomp
+          .strip
+      expect(preview).to eq(<<~HTML.chomp.strip)
+        This post has some hashtags, <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="random" data-id="#{category.id}"><span class="hashtag-icon-placeholder"></span>#{category.name}</a> and <a class="hashtag-cooked" href="#{tag.url}" data-type="tag" data-slug="bug" data-id="#{tag.id}"><span class="hashtag-icon-placeholder"></span>#{tag.name}</a>
       HTML
     end
   end
