@@ -76,8 +76,7 @@
   .discourse-no-touch &:active:not(:hover):not(:focus),
   .discourse-no-touch &.btn-active:not(:hover):not(:focus),
   &:active:not(:hover):not(:focus),
-  &.btn-active:not(:hover):not(:focus)
-   {
+  &.btn-active:not(:hover):not(:focus) {
     @include darken-background($bg-color, 0.6);
     color: $hover-text-color;
     .d-icon {
