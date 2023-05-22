@@ -4844,7 +4844,7 @@ RSpec.describe TopicsController do
 
   describe "#set_notifications" do
     describe "initiated by admin" do
-      it "admins can update another user's notification level via API" do
+      it "can update another user's notification level via API" do
         api_key = Fabricate(:api_key, user: admin)
         post "/t/#{topic.id}/notifications",
              params: {
@@ -4856,6 +4856,21 @@ RSpec.describe TopicsController do
                HTTP_API_USERNAME: admin.username,
              }
         expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:watching],
+        )
+      end
+
+      it "can update own notification level via API" do
+        api_key = Fabricate(:api_key, user: admin)
+        post "/t/#{topic.id}/notifications",
+             params: {
+               notification_level: NotificationLevels.topic_levels[:watching],
+             },
+             headers: {
+               HTTP_API_KEY: api_key.key,
+               HTTP_API_USERNAME: admin.username,
+             }
+        expect(TopicUser.find_by(user: admin, topic: topic).notification_level).to eq(
           NotificationLevels.topic_levels[:watching],
         )
       end
@@ -4879,6 +4894,22 @@ RSpec.describe TopicsController do
           NotificationLevels.topic_levels[:watching],
         )
         expect(TopicUser.find_by(user: user_2, topic: topic)).to be_blank
+      end
+
+      it "can update own notification level via API" do
+        api_key = Fabricate(:api_key, user: user)
+        post "/t/#{topic.id}/notifications",
+             params: {
+               notification_level: NotificationLevels.topic_levels[:watching],
+             },
+             headers: {
+               HTTP_API_KEY: api_key.key,
+               HTTP_API_USERNAME: user.username,
+             }
+
+        expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
+          NotificationLevels.topic_levels[:watching],
+        )
       end
     end
   end
