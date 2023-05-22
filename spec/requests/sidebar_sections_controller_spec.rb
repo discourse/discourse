@@ -151,7 +151,7 @@ RSpec.describe SidebarSectionsController do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
     end
     let(:community_section) do
-      SidebarSection.where(section_type: SidebarSection.section_types[:community]).first
+      SidebarSection.find(section_type: SidebarSection.section_types[:community])
     end
 
     it "allows user to update their own section and links" do
