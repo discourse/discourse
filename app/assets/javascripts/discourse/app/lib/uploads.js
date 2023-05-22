@@ -196,7 +196,7 @@ export function authorizedExtensions(staff, siteSettings) {
 
 function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
-    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp"
+    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif"
     : imagesExtensions(staff, siteSettings).join(", ");
 }
 
@@ -230,7 +230,7 @@ export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
 }
 
 export function isImage(path) {
-  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif)$/i.test(path);
+  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif|avif)$/i.test(path);
 }
 
 export function isVideo(path) {
