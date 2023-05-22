@@ -384,6 +384,8 @@ RSpec.describe SidebarSectionsController do
       SidebarSection.any_instance.expects(:reset_community!).once
       put "/sidebar_sections/reset/#{community_section.id}.json"
       expect(response.status).to eq(200)
+      expect(response.parsed_body["sidebar_section"]["id"]).to eq(community_section.id)
+      expect(response.parsed_body["sidebar_section"]["title"]).to eq(community_section.title)
     end
   end
 end
