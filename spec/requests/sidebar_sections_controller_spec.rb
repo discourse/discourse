@@ -151,7 +151,7 @@ RSpec.describe SidebarSectionsController do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
     end
     let(:community_section) do
-      SidebarSection.find(section_type: SidebarSection.section_types[:community])
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     end
 
     it "allows user to update their own section and links" do
@@ -291,6 +291,7 @@ RSpec.describe SidebarSectionsController do
         .sidebar_section_links
         .where.not(linkable_id: [everything_link.id, my_posts_link.id])
         .destroy_all
+
       put "/sidebar_sections/#{community_section.id}.json",
           params: {
             title: "community section edited",
@@ -369,7 +370,7 @@ RSpec.describe SidebarSectionsController do
   describe "#destroy" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
     let(:community_section) do
-      SidebarSection.find(section_type: SidebarSection.section_types[:community])
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     end
 
     it "allows user to delete their own section" do
