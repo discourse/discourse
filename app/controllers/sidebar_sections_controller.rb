@@ -58,7 +58,7 @@ class SidebarSectionsController < ApplicationController
     when "community"
       reset_community(sidebar_section)
     end
-    render json: SidebarSectionSerializer.new(sidebar_section.reload)
+    render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   end
 
   def reorder
