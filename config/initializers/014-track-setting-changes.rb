@@ -74,11 +74,19 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   elsif name == :company_name
     %w[tos_topic_id privacy_topic_id].each do |site_setting|
       topic_id = SiteSetting.get(site_setting)
-      if topic_id > 0 && Topic.exists?(id: topic_id)
-        SeedData::Topics.with_default_locale.update(
-          site_setting_names: [site_setting],
-          skip_changed: true,
-        )
+      if topic_id > 0 && Topic.with_deleted.exists?(id: topic_id)
+        if SiteSetting.company_name.blank?
+          SeedData::Topics.with_default_locale.delete(
+            site_setting_names: [site_setting],
+            skip_changed: true,
+          )
+        else
+          SeedData::Topics.with_default_locale.update(
+            site_setting_names: [site_setting],
+            recover: true,
+            skip_changed: true,
+          )
+        end
       elsif SiteSetting.company_name.present?
         SeedData::Topics.with_default_locale.create(site_setting_names: [site_setting])
       end

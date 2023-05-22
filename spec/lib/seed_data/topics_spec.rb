@@ -142,6 +142,29 @@ RSpec.describe SeedData::Topics do
     end
   end
 
+  describe "#delete" do
+    def delete_topic(name = "welcome_topic_id", skip_changed: false)
+      subject.delete(site_setting_names: [name], skip_changed: skip_changed)
+    end
+
+    it "deletes the topic" do
+      create_topic
+
+      topic = Topic.last
+
+      expect { delete_topic }.to change { Topic.count }.by(-1)
+    end
+
+    it "does not delete the topic if changed" do
+      create_topic
+
+      topic = Topic.last
+      topic.first_post.revise(Fabricate(:admin), raw: "New text of first post.")
+
+      expect { delete_topic(skip_changed: true) }.not_to change { Topic.count }
+    end
+  end
+
   describe "#reseed_options" do
     it "returns only existing topics as options" do
       create_topic("guidelines_topic_id")

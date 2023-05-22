@@ -73,5 +73,24 @@ RSpec.describe "Setting changes" do
         2,
       ).and change { SiteSetting.tos_topic_id }.and change { SiteSetting.privacy_topic_id }
     end
+
+    it "creates, updates and deletes the topic" do
+      # Topic is created
+      expect { SiteSetting.company_name = "Company Name" }.to change { Topic.count }.by(2)
+      topic = Topic.find(SiteSetting.tos_topic_id)
+      first_post = topic.first_post
+      expect(first_post.raw).to include("Company Name")
+
+      # Topic is edited
+      expect { SiteSetting.company_name = "Other Name" }.not_to change { Topic.count }
+      expect(first_post.reload.raw).to include("Other Name")
+
+      # Topic can be deleted
+      expect { SiteSetting.company_name = "" }.to change { Topic.count }.by(-2)
+
+      # Topic can be recovered and edited
+      SiteSetting.company_name = "New Name"
+      expect(first_post.reload.raw).to include("New Name")
+    end
   end
 end

@@ -20,10 +20,22 @@ module SeedData
       end
     end
 
-    def update(site_setting_names: nil, skip_changed: false)
+    def update(site_setting_names: nil, skip_changed: false, recover: false)
       I18n.with_locale(@locale) do
         topics(site_setting_names: site_setting_names, include_legal_topics: true).each do |params|
-          update_topic(**params.except(:category, :after_create), skip_changed: skip_changed)
+          update_topic(
+            **params.except(:category, :after_create),
+            skip_changed: skip_changed,
+            recover: recover,
+          )
+        end
+      end
+    end
+
+    def delete(site_setting_names: nil, skip_changed: false)
+      I18n.with_locale(@locale) do
+        topics(site_setting_names: site_setting_names, include_legal_topics: true).each do |params|
+          delete_topic(site_setting_name: params[:site_setting_name], skip_changed: skip_changed)
         end
       end
     end
@@ -160,28 +172,50 @@ module SeedData
       SiteSetting.set(site_setting_name, post.topic_id)
     end
 
-    def update_topic(site_setting_name:, title:, raw:, static_first_reply: false, skip_changed:)
-      post = find_post(site_setting_name)
+    def update_topic(
+      site_setting_name:,
+      title:,
+      raw:,
+      static_first_reply: false,
+      skip_changed:,
+      recover:
+    )
+      post = find_post(site_setting_name, deleted: recover)
       return if !post
 
       if !skip_changed || unchanged?(post)
-        changes = { title: title, raw: raw }
-        post.revise(Discourse.system_user, changes, skip_validations: true)
+        if post.deleted_by_id && recover
+          PostDestroyer.new(Discourse.system_user, post).recover
+          post.reload
+        end
+
+        post.revise(Discourse.system_user, { title: title, raw: raw }, skip_validations: true)
       end
 
       if static_first_reply && (reply = first_reply(post)) && (!skip_changed || unchanged?(reply))
-        changes = { raw: first_reply_raw(title) }
-        reply.revise(Discourse.system_user, changes, skip_validations: true)
+        reply.revise(Discourse.system_user, { raw: first_reply_raw(title) }, skip_validations: true)
       end
     end
 
-    def find_post(site_setting_name)
+    def delete_topic(site_setting_name:, skip_changed:)
+      post = find_post(site_setting_name)
+      return if !post
+
+      PostDestroyer.new(Discourse.system_user, post).destroy if !skip_changed || unchanged?(post)
+    end
+
+    def find_post(site_setting_name, deleted: false)
       topic_id = SiteSetting.get(site_setting_name)
-      Post.find_by(topic_id: topic_id, post_number: 1) if topic_id > 0
+      return if topic_id < 1
+
+      posts = Post.where(topic_id: topic_id, post_number: 1)
+      posts = posts.with_deleted if deleted
+      posts.first
     end
 
     def unchanged?(post)
-      post.last_editor_id == Discourse::SYSTEM_USER_ID
+      post.last_editor_id == Discourse::SYSTEM_USER_ID &&
+        (!post.deleted_by_id || post.deleted_by_id == Discourse::SYSTEM_USER_ID)
     end
 
     def setting_value(site_setting_key)
