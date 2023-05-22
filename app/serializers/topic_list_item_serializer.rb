@@ -18,6 +18,11 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
+  has_many :participant_groups, serializer: TopicParticipantGroupSerializer, embed: :objects
+
+  def include_participant_groups?
+    object.private_message?
+  end
 
   def posters
     object.posters || object.posters_summary || []

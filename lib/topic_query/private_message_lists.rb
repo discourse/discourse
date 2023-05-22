@@ -71,7 +71,7 @@ class TopicQuery
       list = list.where("gm.id IS NULL")
       publish_read_state = !!group.publish_read_state
       list = append_read_state(list, group) if publish_read_state
-      create_list(:private_messages, { publish_read_state: publish_read_state }, list)
+      create_list(:private_messages, { publish_read_state: publish_read_state, group: group }, list)
     end
 
     def list_private_messages_group_archive(user)
@@ -84,7 +84,7 @@ class TopicQuery
 
       publish_read_state = !!group.publish_read_state
       list = append_read_state(list, group) if publish_read_state
-      create_list(:private_messages, { publish_read_state: publish_read_state }, list)
+      create_list(:private_messages, { publish_read_state: publish_read_state, group: group }, list)
     end
 
     def list_private_messages_group_new(user)
@@ -92,14 +92,14 @@ class TopicQuery
       list = remove_dismissed(list, user)
       publish_read_state = !!group.publish_read_state
       list = append_read_state(list, group) if publish_read_state
-      create_list(:private_messages, { publish_read_state: publish_read_state }, list)
+      create_list(:private_messages, { publish_read_state: publish_read_state, group: group }, list)
     end
 
     def list_private_messages_group_unread(user)
       list = filter_private_messages_unread(user, :group)
       publish_read_state = !!group.publish_read_state
       list = append_read_state(list, group) if publish_read_state
-      create_list(:private_messages, { publish_read_state: publish_read_state }, list)
+      create_list(:private_messages, { publish_read_state: publish_read_state, group: group }, list)
     end
 
     def list_private_messages_warnings(user)
@@ -259,6 +259,7 @@ class TopicQuery
         Topic
           .private_messages
           .includes(:allowed_users)
+          .includes(:allowed_groups)
           .joins(
             "LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})",
           )
