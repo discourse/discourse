@@ -39,8 +39,7 @@ class SidebarSectionsController < ApplicationController
         sidebar_section
           .sidebar_urls
           .sort_by do |url|
-            links_params.index { |link| link["name"] == url.name && link["value"] == url.value } ||
-              -1
+            links_params.index { |link| link["name"] == url.name && link["value"] == url.value }
           end
           .each_with_index
           .map { |url, index| [url.id, index] }
