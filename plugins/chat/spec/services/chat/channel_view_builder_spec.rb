@@ -146,6 +146,7 @@ RSpec.describe Chat::ChannelViewBuilder do
 
       it "fetches an overview of threads with unread messages in the channel" do
         thread = Fabricate(:chat_thread, channel: channel)
+        thread.add(current_user)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)
         expect(subject.view.thread_tracking_overview).to eq([message_1.thread.id])
       end
