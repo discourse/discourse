@@ -341,7 +341,7 @@ RSpec.describe SidebarSectionsController do
 
   describe "#reset" do
     let(:community_section) do
-      SidebarSection.where(section_type: SidebarSection.section_types[:community]).first
+      SidebarSection.find(section_type: SidebarSection.section_types[:community])
     end
     let(:everything_link) { community_section.sidebar_section_links.first }
 
