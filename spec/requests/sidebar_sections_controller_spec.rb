@@ -369,7 +369,7 @@ RSpec.describe SidebarSectionsController do
   describe "#destroy" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
     let(:community_section) do
-      SidebarSection.where(section_type: SidebarSection.section_types[:community]).first
+      SidebarSection.find(section_type: SidebarSection.section_types[:community])
     end
 
     it "allows user to delete their own section" do
