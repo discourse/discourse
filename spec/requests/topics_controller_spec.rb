@@ -4844,7 +4844,7 @@ RSpec.describe TopicsController do
 
   describe "#set_notifications" do
     describe "initiated by admin" do
-      it "allows fetches user from params if the request is_api? " do
+      it "admins can update another user's notification level via API" do
         api_key = Fabricate(:api_key, user: admin)
         post "/t/#{topic.id}/notifications",
              params: {
