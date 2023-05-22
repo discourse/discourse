@@ -14,8 +14,8 @@
   $hover-icon-color: var(--primary-low)
 ) {
   @include form-item-sizing;
-  border: none; // removing border in order to use better active styles
-  padding: calc($vpad + 1px) calc($hpad + 1px); // take take into the account the removal of border
+  // border: none; // removing border in order to use better active styles
+  // padding: calc($vpad + 1px) calc($hpad + 1px); // take take into the account the removal of border
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -61,7 +61,7 @@
   }
   &:focus {
     outline: none;
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -73,10 +73,11 @@
   &[href] {
     color: $text-color;
   }
-  .discourse-no-touch &:active:not(:hover),
-  .discourse-no-touch &.btn-active:not(:hover),
-  &:active:not(:hover),
-  &.btn-active:not(:hover) {
+  .discourse-no-touch &:active:not(:hover):not(:focus),
+  .discourse-no-touch &.btn-active:not(:hover):not(:focus),
+  &:active:not(:hover):not(:focus),
+  &.btn-active:not(:hover):not(:focus)
+   {
     @include darken-background($bg-color, 0.6);
     color: $hover-text-color;
     .d-icon {
