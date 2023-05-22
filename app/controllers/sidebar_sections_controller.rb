@@ -50,6 +50,18 @@ class SidebarSectionsController < ApplicationController
     render json: failed_json, status: 403
   end
 
+  def reset
+    sidebar_section = SidebarSection.find_by(id: params[:id])
+    raise Discourse::InvalidParameters if !sidebar_section
+    @guardian.ensure_can_edit!(sidebar_section)
+
+    case sidebar_section.section_type
+    when "community"
+      sidebar_section.reset_community!
+    end
+    render_serialized(sidebar_section.reload, SidebarSectionSerializer)
+  end
+
   def reorder
     sidebar_section = SidebarSection.find_by(id: reorder_params["sidebar_section_id"])
     @guardian.ensure_can_edit!(sidebar_section)

@@ -3,6 +3,7 @@
 RSpec.describe SidebarSectionsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   describe "#index" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "private section", user: user) }
@@ -88,6 +89,20 @@ RSpec.describe SidebarSectionsController do
 
     it "does not allow regular user to create public section" do
       sign_in(user)
+      post "/sidebar_sections.json",
+           params: {
+             title: "custom section",
+             public: true,
+             links: [
+               { icon: "link", name: "categories", value: "/categories" },
+               { icon: "address-book", name: "tags", value: "/tags" },
+             ],
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "does not allow moderator to create public section" do
+      sign_in(moderator)
       post "/sidebar_sections.json",
            params: {
              title: "custom section",
@@ -333,6 +348,44 @@ RSpec.describe SidebarSectionsController do
       delete "/sidebar_sections/#{sidebar_section.id}.json"
 
       expect(response.status).to eq(403)
+    end
+
+    it "doesn't allow moderator to delete public sidebar section" do
+      sign_in(moderator)
+      sidebar_section.update!(public: true)
+      delete "/sidebar_sections/#{sidebar_section.id}.json"
+
+      expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#reset" do
+    let(:community_section) do
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+    end
+    let(:everything_link) { community_section.sidebar_section_links.first }
+
+    it "doesn't allow user to reset community section" do
+      sign_in(user)
+      SidebarSection.any_instance.expects(:reset_community!).never
+      put "/sidebar_sections/reset/#{community_section.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "doesn't allow staff to reset community section" do
+      sign_in(moderator)
+      SidebarSection.any_instance.expects(:reset_community!).never
+      put "/sidebar_sections/reset/#{community_section.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "allows admins to reset community section to default" do
+      sign_in(admin)
+      SidebarSection.any_instance.expects(:reset_community!).once
+      put "/sidebar_sections/reset/#{community_section.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["sidebar_section"]["id"]).to eq(community_section.id)
+      expect(response.parsed_body["sidebar_section"]["title"]).to eq(community_section.title)
     end
   end
 end
