@@ -16,7 +16,10 @@ module Chat
     # @param user_id [Integer] The ID of the user to count for.
     # @param include_missing_memberships [Boolean] Whether to include channels
     #   that the user is not a member of. These counts will always be 0.
-    def self.call(channel_ids:, user_id:, include_missing_memberships: false)
+    # @param include_read [Boolean] Whether to include channels that the user
+    #   is a member of where they have read all the messages. This overrides
+    #   include_missing_memberships.
+    def self.call(channel_ids:, user_id:, include_missing_memberships: false, include_read: true)
       sql = <<~SQL
         SELECT (
           SELECT COUNT(*) AS unread_count
@@ -52,7 +55,14 @@ module Chat
         #{include_missing_memberships ? "" : "LIMIT :limit"}
       SQL
 
-      sql += <<~SQL if include_missing_memberships
+      sql = <<~SQL if !include_read
+        SELECT * FROM (
+          #{sql}
+        ) AS channel_tracking
+        WHERE (unread_count > 0 OR mention_count > 0)
+      SQL
+
+      sql += <<~SQL if include_missing_memberships && include_read
         UNION ALL
         SELECT 0 AS unread_count, 0 AS mention_count, chat_channels.id AS channel_id
         FROM chat_channels
