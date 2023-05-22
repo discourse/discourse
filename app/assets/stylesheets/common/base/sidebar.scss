@@ -136,7 +136,7 @@
   }
   .row-wrapper {
     display: grid;
-    grid-template-columns: 25px 220px auto auto 2em;
+    grid-template-columns: 25px 60px auto auto 2em;
     gap: 1em;
     padding: 0.5em 1px;
     -webkit-user-drag: none;
@@ -171,8 +171,7 @@
   }
   .delete-link {
     height: 1em;
-    align-self: end;
-    margin-bottom: 0.75em;
+    align-self: center;
     margin-right: 1em;
   }
   .btn-flat.add-link,
@@ -202,5 +201,14 @@
     .delete {
       margin-right: 0;
     }
+  }
+  .select-kit.multi-select .multi-select-header .formatted-selection {
+    display: none;
+  }
+  .modal-inner-container .select-kit {
+    width: 60px;
+  }
+  .select-kit.is-expanded .select-kit-body {
+    width: 220px !important;
   }
 }
