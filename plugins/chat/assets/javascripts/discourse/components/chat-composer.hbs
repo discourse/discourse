@@ -39,6 +39,8 @@
             this.context
           }}
           @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
+          {{on "focus" (fn this.computeIsFocused true)}}
+          {{on "blur" (fn this.computeIsFocused false)}}
         />
 
         <div
@@ -66,20 +68,36 @@
           />
         </div>
 
+        {{#if this.inlineButtons.length}}
+          {{#each this.inlineButtons as |button|}}
+            <Chat::Composer::Button
+              @icon={{button.icon}}
+              class={{button.id}}
+              disabled={{button.disabled}}
+              tabindex={{if button.disabled -1 0}}
+              {{on
+                "click"
+                (fn this.handleInlineButonAction button.action)
+                bubbles=false
+              }}
+              {{on "focus" (fn this.computeIsFocused true)}}
+              {{on "blur" (fn this.computeIsFocused false)}}
+            />
+          {{/each}}
+
+          <Chat::Composer::Separator />
+        {{/if}}
+
         <Chat::Composer::Button
-          {{on "click" this.onSend}}
           @icon="paper-plane"
           class="chat-composer__send-btn"
           title={{i18n "chat.composer.send"}}
           disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
+          {{on "click" this.onSend}}
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
         />
-
-        {{#unless this.disabled}}
-          <ChatComposerInlineButtons @buttons={{this.inlineButtons}} />
-        {{/unless}}
       </div>
     </div>
   </div>

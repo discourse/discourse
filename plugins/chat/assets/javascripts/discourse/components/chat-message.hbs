@@ -21,6 +21,7 @@
       "chat-message-container"
       (if this.pane.selectingMessages "selecting-messages")
       (if @message.highlighted "highlighted")
+      (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
     }}
     data-id={{@message.id}}
     data-thread-id={{@message.thread.id}}

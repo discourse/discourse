@@ -13,6 +13,7 @@ describe Chat::ThreadUnreadsQuery do
 
   let(:params) { { user_id: current_user.id, channel_ids: channel_ids, thread_ids: thread_ids } }
   let(:include_missing_memberships) { false }
+  let(:include_read) { true }
   let(:channel_ids) { [] }
   let(:thread_ids) { [] }
   let(:subject) do
@@ -21,6 +22,7 @@ describe Chat::ThreadUnreadsQuery do
       thread_ids: thread_ids,
       user_id: current_user.id,
       include_missing_memberships: include_missing_memberships,
+      include_read: include_read,
     )
   end
 
@@ -89,6 +91,23 @@ describe Chat::ThreadUnreadsQuery do
           { channel_id: channel_1.id, mention_count: 0, thread_id: thread_1.id, unread_count: 0 },
         )
       end
+
+      context "when include_read is false" do
+        let(:include_read) { false }
+
+        it "does not get threads with no unread messages" do
+          expect(subject.map(&:to_h)).not_to include(
+            [
+              {
+                channel_id: channel_1.id,
+                mention_count: 0,
+                thread_id: thread_2.id,
+                unread_count: 0,
+              },
+            ],
+          )
+        end
+      end
     end
 
     context "when only the thread_ids are provided" do
@@ -154,6 +173,23 @@ describe Chat::ThreadUnreadsQuery do
                 },
               ],
             )
+          end
+
+          context "when include_read is false" do
+            let(:include_read) { false }
+
+            it "does not include the thread that the user is not a member of with zeroed out counts" do
+              expect(subject.map(&:to_h)).to match_array(
+                [
+                  {
+                    channel_id: channel_2.id,
+                    mention_count: 0,
+                    thread_id: thread_3.id,
+                    unread_count: 1,
+                  },
+                ],
+              )
+            end
           end
         end
       end

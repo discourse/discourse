@@ -7,11 +7,15 @@ export default Mixin.create({
   openComposer(controller) {
     let categoryId = controller.get("category.id");
 
-    if (
-      !controller.canCreateTopicOnCategory &&
-      this.siteSettings.default_subcategory_on_read_only_category
-    ) {
-      categoryId = controller.get("defaultSubcategory.id");
+    if (this.siteSettings.default_subcategory_on_read_only_category) {
+      if (
+        !controller.canCreateTopicOnCategory &&
+        controller.canCreateTopicOnSubCategory
+      ) {
+        categoryId = controller.get("defaultSubcategory.id");
+      } else {
+        categoryId = this.siteSettings.default_composer_category;
+      }
     }
 
     if (

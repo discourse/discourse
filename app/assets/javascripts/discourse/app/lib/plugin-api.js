@@ -104,7 +104,11 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
-import { registerCustomCountable as registerUserCategorySectionLinkCountable } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import {
+  registerCustomCategoryLockIcon,
+  registerCustomCategorySectionLinkPrefix,
+  registerCustomCountable as registerUserCategorySectionLinkCountable,
+} from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
@@ -118,7 +122,7 @@ import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.6.1";
+export const PLUGIN_API_VERSION = "1.6.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1909,6 +1913,55 @@ class PluginApi {
       shouldRegister,
       refreshCountFunction,
       prioritizeOverDefaults,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Changes the lock icon used for a sidebar category section link to indicate that a category is read restricted.
+   *
+   * @param {String} Name of a FontAwesome 5 icon
+   */
+  registerCustomCategorySectionLinkLockIcon(icon) {
+    return registerCustomCategoryLockIcon(icon);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom prefix for a sidebar category section link.
+   *
+   * Example:
+   *
+   * ```
+   * api.registerCustomCategorySectionLinkPrefix({
+   *   categoryId: category.id,
+   *   prefixType: "icon",
+   *   prefixValue: "wrench",
+   *   prefixColor: "FF0000"
+   * })
+   * ```
+   *
+   * @params {Object} arg - An object
+   * @params {string} arg.categoryId - The id of the category
+   * @params {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
+   * @params {string} arg.prefixValue - The value of the prefix to use.
+   *                                    For "icon", pass in the name of a FontAwesome 5 icon.
+   *                                    For "image", pass in the src of the image.
+   *                                    For "text", pass in the text to display.
+   *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
+   * @params {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
+   */
+  registerCustomCategorySectionLinkPrefix({
+    categoryId,
+    prefixType,
+    prefixValue,
+    prefixColor,
+  }) {
+    registerCustomCategorySectionLinkPrefix({
+      categoryId,
+      prefixType,
+      prefixValue,
+      prefixColor,
     });
   }
 

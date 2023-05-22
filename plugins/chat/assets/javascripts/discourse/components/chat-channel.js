@@ -157,28 +157,25 @@ export default class ChatLivePane extends Component {
 
     this.loadingMorePast = true;
 
-    const findArgs = { pageSize: PAGE_SIZE };
+    const findArgs = { pageSize: PAGE_SIZE, includeMessages: true };
     const fetchingFromLastRead = !options.fetchFromLastMessage;
     if (this.requestedTargetMessageId) {
-      findArgs["targetMessageId"] = this.requestedTargetMessageId;
+      findArgs.targetMessageId = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
-      findArgs["targetMessageId"] =
+      findArgs.targetMessageId =
         this.args.channel.currentUserMembership.lastReadMessageId;
     }
 
     return this.chatApi
-      .messages(this.args.channel.id, findArgs)
-      .then((results) => {
-        if (
-          this._selfDeleted ||
-          this.args.channel.id !== results.meta.channel_id
-        ) {
+      .channel(this.args.channel.id, findArgs)
+      .then((result) => {
+        if (this._selfDeleted || this.args.channel.id !== result.channel.id) {
           return;
         }
 
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
-          results
+          result
         );
 
         this.args.channel.addMessages(messages);
@@ -201,6 +198,18 @@ export default class ChatLivePane extends Component {
         }
 
         this.scrollToBottom();
+
+        if (result.threads) {
+          result.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(this.args.channel, thread);
+          });
+        }
+
+        if (result.thread_tracking_overview) {
+          this.args.channel.threadTrackingOverview.push(
+            ...result.thread_tracking_overview
+          );
+        }
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -355,7 +364,9 @@ export default class ChatLivePane extends Component {
       const message = ChatMessage.create(channel, messageData);
 
       if (messageData.thread_id) {
-        message.thread = new ChatThread(channel, { id: messageData.thread_id });
+        message.thread = ChatThread.create(channel, {
+          id: messageData.thread_id,
+        });
       }
 
       messages.push(message);

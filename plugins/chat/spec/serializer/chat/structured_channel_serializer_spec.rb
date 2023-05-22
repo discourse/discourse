@@ -51,8 +51,6 @@ RSpec.describe Chat::StructuredChannelSerializer do
       "last_read_message_id" => nil,
       "mobile_notification_level" => "mention",
       "muted" => false,
-      "unread_count" => 0,
-      "unread_mentions" => 0,
     )
   end
 
@@ -71,8 +69,6 @@ RSpec.describe Chat::StructuredChannelSerializer do
       "last_read_message_id" => nil,
       "mobile_notification_level" => "always",
       "muted" => false,
-      "unread_count" => 0,
-      "unread_mentions" => 0,
     )
   end
 
