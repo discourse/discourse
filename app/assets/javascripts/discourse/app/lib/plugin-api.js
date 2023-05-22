@@ -106,6 +106,7 @@ import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/s
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import {
   registerCustomCategoryLockIcon,
+  registerCustomCategorySectionLinkPrefix,
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
@@ -1922,6 +1923,45 @@ class PluginApi {
    */
   registerCustomCategorySectionLinkLockIcon(icon) {
     return registerCustomCategoryLockIcon(icon);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom prefix for a sidebar category section link.
+   *
+   * Example:
+   *
+   * ```
+   * api.registerCustomCategorySectionLinkPrefix({
+   *   categoryId: category.id,
+   *   prefixType: "icon",
+   *   prefixValue: "wrench",
+   *   prefixColor: "FF0000"
+   * })
+   * ```
+   *
+   * @params {Object} arg - An object
+   * @params {string} arg.categoryId - The id of the category
+   * @params {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
+   * @params {string} arg.prefixValue - The value of the prefix to use.
+   *                                    For "icon", pass in the name of a FontAwesome 5 icon.
+   *                                    For "image", pass in the src of the image.
+   *                                    For "text", pass in the text to display.
+   *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
+   * @params {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
+   */
+  registerCustomCategorySectionLinkPrefix({
+    categoryId,
+    prefixType,
+    prefixValue,
+    prefixColor,
+  }) {
+    registerCustomCategorySectionLinkPrefix({
+      categoryId,
+      prefixType,
+      prefixValue,
+      prefixColor,
+    });
   }
 
   /**

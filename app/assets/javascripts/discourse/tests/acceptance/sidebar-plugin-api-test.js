@@ -12,6 +12,7 @@ import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
 import Site from "discourse/models/site";
 import {
   resetCustomCategoryLockIcon,
+  resetCustomCategorySectionLinkPrefix,
   resetCustomCountables,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
@@ -777,6 +778,46 @@ acceptance("Sidebar - Plugin API", function (needs) {
       });
     } finally {
       resetCustomCategoryLockIcon();
+    }
+  });
+
+  test("Customizing the prefix used in a category section link for a particular category", async function (assert) {
+    try {
+      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+        const categories = Site.current().categories;
+        const category1 = categories[0];
+        category1.read_restricted = true;
+
+        updateCurrentUser({
+          sidebar_category_ids: [category1.id],
+        });
+
+        api.registerCustomCategorySectionLinkPrefix({
+          categoryId: category1.id,
+          prefixType: "icon",
+          prefixValue: "wrench",
+          prefixColor: "FF0000", // rgb(255, 0, 0)
+        });
+
+        await visit("/");
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
+          ),
+          "wrench icon is displayed for the section link's prefix icon"
+        );
+
+        assert.strictEqual(
+          query(
+            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
+          ).style.color,
+          "rgb(255, 0, 0)",
+          "section link's prefix icon has the right color"
+        );
+      });
+    } finally {
+      resetCustomCategorySectionLinkPrefix();
     }
   });
 });
