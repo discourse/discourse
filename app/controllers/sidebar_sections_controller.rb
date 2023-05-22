@@ -55,7 +55,7 @@ class SidebarSectionsController < ApplicationController
       Site.clear_anon_cache!
     end
 
-    render json: SidebarSectionSerializer.new(sidebar_section.reload)
+    render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
   rescue Discourse::InvalidAccess
