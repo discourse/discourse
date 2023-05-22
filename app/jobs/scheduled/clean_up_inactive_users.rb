@@ -8,7 +8,6 @@ module Jobs
       return if SiteSetting.clean_up_inactive_users_after_days <= 0
 
       User
-        .joins("LEFT JOIN posts ON posts.user_id = users.id")
         .where(
           last_posted_at: nil,
           trust_level: TrustLevel.levels[:newuser],
@@ -16,9 +15,11 @@ module Jobs
           moderator: false,
         )
         .where(
-          "posts.user_id IS NULL AND users.last_seen_at < ?",
+          "users.last_seen_at < ? OR users.last_seen_at IS NULL",
           SiteSetting.clean_up_inactive_users_after_days.days.ago,
         )
+        .where
+        .missing(:posts, :topics)
         .limit(1000)
         .pluck(:id)
         .each_slice(50) { |slice| destroy(slice) }
