@@ -4,7 +4,7 @@ import {
   filterBy,
   mapBy,
   match,
-  notEmpty
+  notEmpty,
 } from "@ember/object/computed";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import Controller from "@ember/controller";
@@ -95,7 +95,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
       value: this.parentThemesNames.join("|"),
       defaultValues: this.availableActiveThemesNames.join("|"),
       allThemes: this.allThemes,
-      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes")
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes"),
     });
   }
 
@@ -113,7 +113,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
       value: this.childThemesNames.join("|"),
       defaultValues: this.availableActiveComponentsNames.join("|"),
       allThemes: this.allThemes,
-      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all")
+      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all"),
     });
   }
 
@@ -206,7 +206,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
           color_scheme_id: null,
           user_selectable: false,
           child_themes: [],
-          childThemes: []
+          childThemes: [],
         });
 
         this.get("parentController.model.content").forEach((theme) => {
@@ -218,7 +218,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
             rawChildren.splice(index, 1);
             theme.setProperties({
               childThemes: children,
-              child_themes: rawChildren
+              child_themes: rawChildren,
             });
           }
         });
@@ -322,7 +322,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
     if (this.get("model.remote_theme.is_git")) {
       this.dialog.confirm({
         message: I18n.t("admin.customize.theme.edit_confirm"),
-        didConfirm: () => this.transitionToEditRoute()
+        didConfirm: () => this.transitionToEditRoute(),
       });
     } else {
       this.transitionToEditRoute();
@@ -364,7 +364,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   removeUpload(upload) {
     return this.dialog.yesNoConfirm({
       message: I18n.t("admin.customize.theme.delete_upload_confirm"),
-      didConfirm: () => this.model.removeField(upload)
+      didConfirm: () => this.model.removeField(upload),
     });
   }
 
@@ -377,7 +377,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   destroyTheme() {
     return this.dialog.yesNoConfirm({
       message: I18n.t("admin.customize.delete_confirm", {
-        theme_name: this.get("model.name")
+        theme_name: this.get("model.name"),
       }),
       didConfirm: () => {
         const model = this.model;
@@ -386,16 +386,16 @@ export default class AdminCustomizeThemesShowController extends Controller {
           this.allThemes.removeObject(model);
           this.transitionToRoute("adminCustomizeThemes");
         });
-      }
+      },
     });
   }
 
   @action
   showThemeSettingsEditor() {
     this.dialog.notice({
-      title: "Settings",
+      title: "Edit Settings",
       bodyComponent: SettingsEditor,
-      bodyComponentModel: this.model
+      bodyComponentModel: this.model,
     });
   }
 
@@ -409,13 +409,13 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
     if (relatives && relatives.length > 0) {
       message = I18n.t(`${this.convertKey}_alert`, {
-        relatives: relatives.map((relative) => relative.get("name")).join(", ")
+        relatives: relatives.map((relative) => relative.get("name")).join(", "),
       });
     }
 
     return this.dialog.yesNoConfirm({
       message,
-      didConfirm: () => this.commitSwitchType()
+      didConfirm: () => this.commitSwitchType(),
     });
   }
 

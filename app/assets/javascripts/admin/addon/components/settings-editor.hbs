@@ -1,25 +1,25 @@
-<div class="settings-editor">
-  <AceEditor
-    @mode={{"html"}}
-    @content={{this.editorContents}}
-  />
-  <br/>
-  <hr/>
-  {{#if this.errors}}
-    <div style="color:red">The following errors were found.</div>
-  {{/if}}
-  <ul>
-  <div style="color:green">{{this.success}}</div>
-  {{#each this.errors as |error|}}
-    <li style="color:red"><b>{{error.setting}}</b>: {{error.errorMessage}}</li>
-  {{/each}}
-  </ul>
-  <hr/>
+<div class="settings-editor settings">
+  <div class="setting">
+    <AceEditor
+      @mode={{"html"}}
+      @content={{this.editorContents}}
+    />
+
+    {{#each this.errors as |error|}}
+      <div class="validation-error">
+        <svg class="fa d-icon d-icon-times svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+          <use href="#times"></use>
+        </svg>
+        <b>{{error.setting}}</b>: {{error.errorMessage}}
+      </div>
+    {{/each}}
+  </div>
+
   <div class="buttons">
     <DButton
       @action={{action "save"}}
       @class="btn-primary"
-      @disabled={{this.buttonDisabled}}
+      @disabled={{this.saveButtonDisabled}}
       @translatedLabel="Save"
     />
   </div>
