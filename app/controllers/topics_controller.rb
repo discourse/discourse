@@ -803,8 +803,16 @@ class TopicsController < ApplicationController
   end
 
   def set_notifications
+    user =
+      if is_api? && @guardian.is_admin? &&
+           (params[:username].present? || params[:external_id].present?)
+        fetch_user_from_params
+      else
+        current_user
+      end
+
     topic = Topic.find(params[:topic_id].to_i)
-    TopicUser.change(current_user, topic.id, notification_level: params[:notification_level].to_i)
+    TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
 
