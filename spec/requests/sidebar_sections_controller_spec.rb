@@ -308,9 +308,9 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(200)
 
       expect(community_section.reload.title).to eq("community section edited")
-      expect(community_section.sidebar_urls[0].reload.name).to eq("my posts edited")
+      expect(community_section.sidebar_urls[0].name).to eq("my posts edited")
       expect(community_section.sidebar_urls[0].value).to eq("/my_posts")
-      expect(community_section.sidebar_urls[1].reload.name).to eq("everything edited")
+      expect(community_section.sidebar_urls[1].name).to eq("everything edited")
       expect(community_section.sidebar_urls[1].value).to eq("/everything")
     end
   end
