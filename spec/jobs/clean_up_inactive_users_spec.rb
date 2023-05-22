@@ -42,4 +42,34 @@ RSpec.describe Jobs::CleanUpInactiveUsers do
     expect { described_class.new.execute({}) }.to_not change { User.count }
     expect(User.exists?(moderator.id)).to eq(true)
   end
+
+  it "should clean up a user that has a deleted post" do
+    SiteSetting.clean_up_inactive_users_after_days = 1
+
+    Fabricate(:active_user)
+
+    Fabricate(
+      :post,
+      user: Fabricate(:user, trust_level: TrustLevel.levels[:newuser], last_seen_at: 5.days.ago),
+      # ensuring that topic author is a different user as the topic is non-deleted
+      topic: Fabricate(:topic, user: Fabricate(:user)),
+      deleted_at: Time.now,
+    ).user
+
+    expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
+  end
+
+  it "should clean up user that has a deleted topic" do
+    SiteSetting.clean_up_inactive_users_after_days = 1
+
+    Fabricate(:active_user)
+
+    Fabricate(
+      :topic,
+      user: Fabricate(:user, trust_level: TrustLevel.levels[:newuser], last_seen_at: 5.days.ago),
+      deleted_at: Time.now,
+    ).user
+
+    expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
+  end
 end
