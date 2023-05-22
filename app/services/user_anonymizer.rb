@@ -60,6 +60,8 @@ class UserAnonymizer
         )
       end
 
+      @user.clear_status!
+
       @user.user_avatar&.destroy!
       @user.single_sign_on_record&.destroy!
       @user.oauth2_user_infos.destroy_all
