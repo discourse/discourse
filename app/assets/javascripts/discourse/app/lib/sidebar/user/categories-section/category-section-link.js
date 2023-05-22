@@ -169,8 +169,12 @@ export default class CategorySectionLink {
     return "span";
   }
 
-  get prefixElementColors() {
-    return [this.category.parentCategory?.color, this.category.color];
+  get prefixValue() {
+    if (this.category.parentCategory?.color) {
+      return [this.category.parentCategory?.color, this.category.color];
+    } else {
+      return [this.category.color];
+    }
   }
 
   get prefixColor() {
