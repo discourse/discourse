@@ -101,7 +101,7 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(403)
     end
 
-    it "does not allow staff to create public section" do
+    it "does not allow moderator to create public section" do
       sign_in(moderator)
       post "/sidebar_sections.json",
            params: {
