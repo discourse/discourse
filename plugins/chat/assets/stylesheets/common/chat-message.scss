@@ -88,6 +88,14 @@
     min-width: 0;
   }
 
+  .stop-streaming-btn-container {
+    display: flex;
+    justify-content: center;
+    .stop-streaming-btn {
+      max-width: 200px;
+    }
+  }
+
   .chat-message-text {
     min-width: 0;
     width: 100%;

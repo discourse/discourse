@@ -117,3 +117,12 @@ chat:
     default: false
     hidden: true
     client: true
+  streaming_messages_enabled:
+    default: false
+    client: true
+  streaming_bots:
+    type: list
+    default: "discobot"
+    client: true
+    choices:
+     - discobot

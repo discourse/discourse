@@ -357,6 +357,14 @@ module Chat
       )
     end
 
+    def self.too_many_bot_mentions(user_id, chat_message)
+      MessageBus.publish(
+        "/chat/#{chat_message.chat_channel_id}",
+        { type: :mention_warning, chat_message_id: chat_message.id, too_many_bot_mentions: true },
+        user_ids: [user_id],
+      )
+    end
+
     def self.publish_kick_users(channel_id, user_ids)
       MessageBus.publish(
         kick_users_message_bus_channel(channel_id),

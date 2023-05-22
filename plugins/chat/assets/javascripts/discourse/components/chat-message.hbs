@@ -88,12 +88,6 @@
               <ChatMessageInfo @message={{@message}} />
             {{/unless}}
 
-            {{#if this.shouldRenderStopMessageStreamingButton}}
-              <DButton @action={{fn this.stopMessageStreaming @message}}>
-                Stop generating response
-              </DButton>
-            {{/if}}
-
             <ChatMessageText
               @cooked={{@message.cooked}}
               @uploads={{@message.uploads}}
@@ -130,6 +124,17 @@
                 </div>
               {{/if}}
             </ChatMessageText>
+
+            {{#if this.shouldRenderStopMessageStreamingButton}}
+              <div class="stop-streaming-btn-container">
+                <DButton
+                  @class="stop-streaming-btn"
+                  @action={{fn this.stopMessageStreaming @message}}
+                >
+                  {{i18n "chat.stop_streaming"}}
+                </DButton>
+              </div>
+            {{/if}}
 
             {{#if @message.error}}
               <div class="chat-send-error">
@@ -173,6 +178,12 @@
                   {{#if this.mentionWarning.cannot_see}}
                     <p class="warning-item cannot-see">
                       {{this.mentionedCannotSeeText}}
+                    </p>
+                  {{/if}}
+
+                  {{#if this.mentionWarning.too_many_bot_mentions}}
+                    <p class="warning-item too-many-bot-mentions">
+                      {{i18n "chat.mention_warning.too_many_bot_mentions"}}
                     </p>
                   {{/if}}
 

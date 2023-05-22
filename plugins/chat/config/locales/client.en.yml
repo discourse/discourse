@@ -136,6 +136,7 @@ en:
         too_many_members_multiple:
           one: "%{group_name} and %{count} other group have too many members. No one was notified."
           other: "%{group_name} and %{count} other groups have too many members. No one was notified."
+        too_many_bot_mentions: "Please, mention one bot at a time"
         groups:
           header:
             some: "Some users won't be notified"
@@ -243,6 +244,7 @@ en:
       retry_staged_message:
         title: "Network error"
         action: "Send again?"
+      stop_streaming: "Stop generating"
       unreliable_network: "Network is unreliable, sending messages and saving draft might not work"
       bookmark_message: "Bookmark"
       bookmark_message_edit: "Edit Bookmark"
