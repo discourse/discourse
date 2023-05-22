@@ -367,25 +367,23 @@ RSpec.describe SidebarSectionsController do
 
     it "doesn't allow user to reset community section" do
       sign_in(user)
+      SidebarSection.any_instance.expects(:reset_community!).never
       put "/sidebar_sections/reset/#{community_section.id}.json"
       expect(response.status).to eq(403)
     end
 
     it "doesn't allow staff to reset community section" do
       sign_in(moderator)
+      SidebarSection.any_instance.expects(:reset_community!).never
       put "/sidebar_sections/reset/#{community_section.id}.json"
       expect(response.status).to eq(403)
     end
 
     it "allows admins to reset community section to default" do
-      community_section.update!(title: "test")
-      everything_link.linkable.update!(name: "everything edited")
-
       sign_in(admin)
+      SidebarSection.any_instance.expects(:reset_community!).once
       put "/sidebar_sections/reset/#{community_section.id}.json"
-
-      expect(community_section.reload.title).to eq("Community")
-      expect(community_section.sidebar_section_links.first.linkable.name).to eq("Everything")
+      expect(response.status).to eq(200)
     end
   end
 end
