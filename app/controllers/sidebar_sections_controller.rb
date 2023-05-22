@@ -51,12 +51,13 @@ class SidebarSectionsController < ApplicationController
   end
 
   def reset
-    sidebar_section = SidebarSection.find(params[:id])
+    sidebar_section = SidebarSection.find_by(id: params[:id])
+    raise Discourse::InvalidParameters if !sidebar_section
     @guardian.ensure_can_edit!(sidebar_section)
 
     case sidebar_section.section_type
     when "community"
-      reset_community(sidebar_section)
+      sidebar_section.reset_community!
     end
     render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   end
@@ -110,31 +111,6 @@ class SidebarSectionsController < ApplicationController
   end
 
   private
-
-  def reset_community(community_section)
-    community_section.update!(title: "Community")
-    community_section.sidebar_section_links.destroy_all
-    community_urls =
-      SidebarUrl::COMMUNITY_SECTION_LINKS.map do |url_data|
-        "('#{url_data[:name]}', '#{url_data[:path]}', '#{url_data[:icon]}', '#{url_data[:segment]}', false, now(), now())"
-      end
-
-    result = DB.query <<~SQL
-      INSERT INTO sidebar_urls(name, value, icon, segment, external, created_at, updated_at)
-      VALUES #{community_urls.join(",")}
-      RETURNING sidebar_urls.id
-    SQL
-
-    sidebar_section_links =
-      result.map.with_index do |url, index|
-        "(-1, #{url.id}, 'SidebarUrl', #{community_section.id}, #{index},  now(), now())"
-      end
-
-    DB.query <<~SQL
-      INSERT INTO sidebar_section_links(user_id, linkable_id, linkable_type, sidebar_section_id, position, created_at, updated_at)
-      VALUES #{sidebar_section_links.join(",")}
-    SQL
-  end
 
   def check_access_if_public
     return true if !params[:public]

@@ -3,6 +3,7 @@
 RSpec.describe SidebarSectionsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator) { Fabricate(:moderator) }
 
   describe "#index" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "private section", user: user) }
@@ -100,6 +101,20 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(403)
     end
 
+    it "does not allow staff to create public section" do
+      sign_in(moderator)
+      post "/sidebar_sections.json",
+           params: {
+             title: "custom section",
+             public: true,
+             links: [
+               { icon: "link", name: "categories", value: "/categories" },
+               { icon: "address-book", name: "tags", value: "/tags" },
+             ],
+           }
+      expect(response.status).to eq(403)
+    end
+
     it "allows admin to create public section" do
       sign_in(admin)
       post "/sidebar_sections.json",
@@ -134,9 +149,6 @@ RSpec.describe SidebarSectionsController do
     end
     fab!(:section_link_2) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
-    end
-    let(:community_section) do
-      SidebarSection.find(section_type: SidebarSection.section_types[:community])
     end
 
     it "allows user to update their own section and links" do
@@ -337,16 +349,30 @@ RSpec.describe SidebarSectionsController do
 
       expect(response.status).to eq(403)
     end
+
+    it "doesn't allow staff to delete public sidebar section" do
+      sign_in(moderator)
+      sidebar_section.update!(public: true)
+      delete "/sidebar_sections/#{sidebar_section.id}.json"
+
+      expect(response.status).to eq(403)
+    end
   end
 
   describe "#reset" do
     let(:community_section) do
-      SidebarSection.find(section_type: SidebarSection.section_types[:community])
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     end
     let(:everything_link) { community_section.sidebar_section_links.first }
 
     it "doesn't allow user to reset community section" do
       sign_in(user)
+      put "/sidebar_sections/reset/#{community_section.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "doesn't allow staff to reset community section" do
+      sign_in(moderator)
       put "/sidebar_sections/reset/#{community_section.id}.json"
       expect(response.status).to eq(403)
     end
