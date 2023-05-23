@@ -74,7 +74,7 @@ class UploadCreator
     is_image = FileHelper.is_supported_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
-    is_thumbnail = (SiteSetting.video_thumbails_enabled && @opts[:type] == "thumbnail")
+    is_thumbnail = SiteSetting.video_thumbnails_enabled && @opts[:type] == "thumbnail"
 
     # If this is present then it means we are creating an upload record from
     # an external_upload_stub and the file is > ExternalUploadManager::DOWNLOAD_LIMIT,
