@@ -35,6 +35,18 @@ class SidebarSectionsController < ApplicationController
     ActiveRecord::Base.transaction do
       sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
       sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
+      order =
+        sidebar_section
+          .sidebar_urls
+          .sort_by do |url|
+            links_params.index { |link| link["name"] == url.name && link["value"] == url.value } ||
+              -1
+          end
+          .each_with_index
+          .map { |url, index| [url.id, index] }
+          .to_h
+
+      set_order(sidebar_section, order)
     end
 
     if sidebar_section.public?
@@ -43,7 +55,7 @@ class SidebarSectionsController < ApplicationController
       Site.clear_anon_cache!
     end
 
-    render json: SidebarSectionSerializer.new(sidebar_section)
+    render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
   rescue Discourse::InvalidAccess
@@ -67,16 +79,8 @@ class SidebarSectionsController < ApplicationController
     @guardian.ensure_can_edit!(sidebar_section)
 
     order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
-    position_generator =
-      (0..sidebar_section.sidebar_section_links.count * 2).excluding(
-        sidebar_section.sidebar_section_links.map(&:position),
-      ).each
-    links =
-      sidebar_section
-        .sidebar_section_links
-        .sort_by { |link| order[link.linkable_id] }
-        .map { |link| link.attributes.merge(position: position_generator.next) }
-    sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
+
+    set_order(sidebar_section, order)
     render json: sidebar_section
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
@@ -103,7 +107,7 @@ class SidebarSectionsController < ApplicationController
   end
 
   def links_params
-    params.permit(links: %i[icon name value id _destroy])["links"]
+    params.permit(links: %i[icon name value id _destroy segment])["links"]
   end
 
   def reorder_params
@@ -111,6 +115,20 @@ class SidebarSectionsController < ApplicationController
   end
 
   private
+
+  def set_order(sidebar_section, order)
+    position_generator =
+      (0..sidebar_section.sidebar_section_links.count * 2).excluding(
+        sidebar_section.sidebar_section_links.map(&:position),
+      ).each
+
+    links =
+      sidebar_section
+        .sidebar_section_links
+        .sort_by { |link| order[link.linkable_id] }
+        .map { |link| link.attributes.merge(position: position_generator.next) }
+    sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
+  end
 
   def check_access_if_public
     return true if !params[:public]
