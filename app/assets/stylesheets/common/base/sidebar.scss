@@ -42,10 +42,8 @@
   );
 
   .footer-nav-ipad & {
-    top: calc(var(--header-offset) + var(--footer-nav-height));
     height: calc(
-      var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px) -
-        var(--footer-nav-height, 0px)
+      var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
     );
   }
 
