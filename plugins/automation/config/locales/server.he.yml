@@ -12,6 +12,9 @@ he:
       user_badge_granted:
         title: עיטור משתמש הוענק
         doc: מקפיץ אוטומציה כשמוענק עיטור למשתמש.
+      user_first_logged_in:
+        title: כניסת המשתמש לראשונה
+        doc: מפעיל אוטומציה עם כניסת משתמש לראשונה
       api_call:
         title: קריאת API
       category_created_edited:

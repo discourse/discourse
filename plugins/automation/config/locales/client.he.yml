@@ -131,12 +131,17 @@ he:
               label: מזהה נושא
         post_created_edited:
           fields:
+            action_type:
+              label: סוג פעולה
+              description: "כרשות, הגבלת ההקפצה לאירועים שנוצרו או נערכו בלבד"
             valid_trust_levels:
               label: דרגות אמון תקפות
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
               description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
+          created: נוצרו
+          edited: נערכו
         category_created_edited:
           fields:
             restricted_category:
