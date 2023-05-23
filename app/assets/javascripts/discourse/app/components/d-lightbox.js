@@ -206,6 +206,14 @@ export default class DLightbox extends Component {
 
     await this.#setCurrentItem(this.currentIndex);
 
+    if (
+      this.options.zoomOnOpen &&
+      this.currentItem?.canZoom &&
+      !this.currentItem?.isZoomed
+    ) {
+      this.toggleZoom();
+    }
+
     this.callbacks.onOpen?.({
       items: this.items,
       currentItem: this.currentItem,
@@ -286,6 +294,7 @@ export default class DLightbox extends Component {
     }
 
     this.isZoomed = !this.isZoomed;
+    document.querySelector("[data-lightbox-close-button]")?.focus();
   }
 
   @bind
