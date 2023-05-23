@@ -303,9 +303,7 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(messages[0].id, { position: "end" });
         }
       })
-      .catch(() => {
-        this._handleErrors();
-      })
+      .catch(this._handleErrors)
       .finally(() => {
         this[loadingMoreKey] = false;
         this.fillPaneAttempt();
@@ -835,11 +833,22 @@ export default class ChatLivePane extends Component {
     });
   }
 
+  @bind
   _handleErrors(error) {
     switch (error?.jqXHR?.status) {
       case 429:
-      case 404:
         popupAjaxError(error);
+        break;
+      case 404:
+        // avoids handling 404 errors from a channel
+        // that is not the current one, this is very likely in tests
+        // which will destroy the channel after the test is done
+        if (
+          error.jqXHR?.requestedUrl ===
+          `/chat/api/channels/${this.args.channel.id}`
+        ) {
+          popupAjaxError(error);
+        }
         break;
       default:
         throw error;
