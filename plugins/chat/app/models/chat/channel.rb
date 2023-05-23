@@ -127,6 +127,16 @@ module Chat
     SQL
     end
 
+    def latest_not_deleted_message_id
+      DB.query_single(<<~SQL, channel_id: self.id).first
+        SELECT id FROM chat_messages
+        WHERE chat_channel_id = :channel_id
+        AND deleted_at IS NULL
+        ORDER BY created_at DESC, id DESC
+        LIMIT 1
+      SQL
+    end
+
     private
 
     def change_status(acting_user, target_status)

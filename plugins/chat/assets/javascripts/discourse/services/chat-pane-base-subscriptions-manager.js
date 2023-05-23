@@ -182,6 +182,8 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     } else {
       this.messagesManager.removeMessage(targetMsg);
     }
+
+    this._afterDeleteMessage(targetMsg, data);
   }
 
   handleRestoreMessage(data) {
@@ -247,6 +249,10 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   }
 
   handleThreadOriginalMessageUpdate() {
+    throw "not implemented";
+  }
+
+  _afterDeleteMessage() {
     throw "not implemented";
   }
 }

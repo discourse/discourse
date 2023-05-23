@@ -29,4 +29,11 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
       message.threadTitle = data.title;
     }
   }
+
+  _afterDeleteMessage(targetMsg, data) {
+    if (this.model.currentUserMembership.lastReadMessageId === targetMsg.id) {
+      this.model.currentUserMembership.lastReadMessageId =
+        data.latest_not_deleted_message_id;
+    }
+  }
 }
