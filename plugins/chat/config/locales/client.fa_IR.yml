@@ -343,3 +343,7 @@ fa_IR:
         chat_notifications_with_unread:
           one: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"
           other: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"
+    styleguide:
+      sections:
+        chat:
+          title: گفتگو
