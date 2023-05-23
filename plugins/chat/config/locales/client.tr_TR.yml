@@ -519,3 +519,7 @@ tr_TR:
         chat_notifications_with_unread:
           one: "Sohbet bildirimleri - %{count} okunmamış bildirim"
           other: "Sohbet bildirimleri - %{count} okunmamış bildirim"
+    styleguide:
+      sections:
+        chat:
+          title: Sohbet

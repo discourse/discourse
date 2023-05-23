@@ -211,3 +211,7 @@ zh_TW:
     keyboard_shortcuts_help:
       chat:
         title: "聊天"
+    styleguide:
+      sections:
+        chat:
+          title: 聊天

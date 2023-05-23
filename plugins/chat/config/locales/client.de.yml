@@ -607,3 +607,7 @@ de:
         chat_notifications_with_unread:
           one: "Chat-Benachrichtigungen – %{count} ungelesene Benachrichtigung"
           other: "Chat-Benachrichtigungen – %{count} ungelesene Benachrichtigungen"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

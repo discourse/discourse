@@ -453,3 +453,7 @@ pt_BR:
         chat_notifications_with_unread:
           one: "Notificações do chat - %{count} notificação não lida"
           other: "Notificações do chat - %{count} notificações não lidas"
+    styleguide:
+      sections:
+        chat:
+          title: Chat
