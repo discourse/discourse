@@ -84,9 +84,7 @@ export default class ChatLivePane extends Component {
 
   @action
   teardownListeners() {
-    cancel(this._onScrollEndedHandler);
-    cancel(this._laterComputeHandler);
-    cancel(this._debounceFetchMessagesHandler);
+    this.#cancelHandlers();
     document.removeEventListener("scroll", this._forceBodyScroll);
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.unsubscribeToUpdates(this._loadedChannelId);
@@ -107,9 +105,7 @@ export default class ChatLivePane extends Component {
 
   @action
   updateChannel() {
-    cancel(this._onScrollEndedHandler);
-    cancel(this._laterComputeHandler);
-    cancel(this._debounceFetchMessagesHandler);
+    this.#cancelHandlers();
 
     this.loadedOnce = false;
 
@@ -1033,5 +1029,11 @@ export default class ChatLivePane extends Component {
     const containerRect = container.getBoundingClientRect();
     // - 5.0 to account for rounding errors, especially on firefox
     return rect.bottom - 5.0 <= containerRect.bottom;
+  }
+
+  #cancelHandlers() {
+    cancel(this._onScrollEndedHandler);
+    cancel(this._laterComputeHandler);
+    cancel(this._debounceFetchMessagesHandler);
   }
 }
