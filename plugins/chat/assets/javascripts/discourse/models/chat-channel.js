@@ -91,10 +91,11 @@ export default class ChatChannel {
   @tracked archive;
   @tracked tracking;
   @tracked threadingEnabled = false;
-  @tracked threadTrackingOverview = new TrackedArray();
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
+
+  @tracked _threadTrackingOverview = new TrackedArray();
 
   constructor(args = {}) {
     this.id = args.id;
@@ -131,6 +132,14 @@ export default class ChatChannel {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
+  }
+
+  get threadTrackingOverview() {
+    return this._threadTrackingOverview;
+  }
+
+  set threadTrackingOverview(threadTrackingOverview) {
+    this._threadTrackingOverview = new TrackedArray(threadTrackingOverview);
   }
 
   findIndexOfMessage(id) {

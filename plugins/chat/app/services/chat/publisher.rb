@@ -54,6 +54,22 @@ module Chat
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
+            type: "channel",
+            channel_id: chat_channel.id,
+            message_id: chat_message.id,
+            user_id: chat_message.user.id,
+            username: chat_message.user.username,
+            thread_id: chat_message.thread_id,
+          },
+          permissions(chat_channel),
+        )
+      end
+
+      if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel)
+        MessageBus.publish(
+          self.new_messages_message_bus_channel(chat_channel.id),
+          {
+            type: "thread",
             channel_id: chat_channel.id,
             message_id: chat_message.id,
             user_id: chat_message.user.id,
@@ -241,23 +257,52 @@ module Chat
       "/chat/user-tracking-state/#{user_id}"
     end
 
-    def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
-      tracking_data =
-        Chat::TrackingState.call(
-          guardian: Guardian.new(user),
-          channel_ids: [chat_channel_id],
+    # TODO (martin) Make sure we maintain backward compat for deploys
+    # with the keys etc. we are sending.
+    #
+    def self.publish_user_tracking_state!(user, channel, message)
+      # TODO (martin) This could be a last read message for the channel
+      # OR last read message for the thread. We need to figure out which
+      # and react differently on the client.
+      data = {
+        channel_id: channel.id,
+        last_read_message_id: message.id,
+        thread_id: message.thread_id,
+      }
+
+      channel_tracking_data =
+        Chat::TrackingStateReportQuery.call(
+          guardian: user.guardian,
+          channel_ids: [channel.id],
           include_missing_memberships: true,
-        )
-      if tracking_data.failure?
-        raise StandardError,
-              "Tracking service failed when trying to publish user tracking state:\n\n#{tracking_data.inspect_steps}"
+        ).find_channel(channel.id)
+
+      data.merge!(channel_tracking_data)
+
+      # Need the thread unread overview if channel has threading enabled
+      # and a message is sent in the thread. We also need to pass the actual
+      # thread tracking state.
+      if channel.threading_enabled && message.thread_reply?
+        data[:thread_tracking_overview] = ::Chat::TrackingStateReportQuery
+          .call(
+            guardian: user.guardian,
+            channel_ids: [channel.id],
+            include_threads: true,
+            include_read: false,
+          )
+          .find_channel_threads(channel.id)
+          .keys
+
+        data[:thread_tracking] = ::Chat::TrackingStateReportQuery.call(
+          guardian: user.guardian,
+          thread_ids: [message.thread_id],
+          include_threads: true,
+        ).find_thread(message.thread_id)
       end
 
       MessageBus.publish(
         self.user_tracking_state_message_bus_channel(user.id),
-        { channel_id: chat_channel_id, last_read_message_id: chat_message_id }.merge(
-          tracking_data.report.find_channel(chat_channel_id),
-        ).as_json,
+        data.as_json,
         user_ids: [user.id],
       )
     end
@@ -266,7 +311,7 @@ module Chat
       "/chat/bulk-user-tracking-state/#{user_id}"
     end
 
-    def self.publish_bulk_user_tracking_state(user, channel_last_read_map)
+    def self.publish_bulk_user_tracking_state!(user, channel_last_read_map)
       tracking_data =
         Chat::TrackingState.call(
           guardian: Guardian.new(user),

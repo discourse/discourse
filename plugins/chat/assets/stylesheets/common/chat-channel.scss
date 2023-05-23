@@ -27,8 +27,20 @@
   }
 
   .open-thread-list-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--blend-primary-secondary-5);
+    border-radius: 5px;
+
     .d-icon {
       margin-right: 0;
+    }
+
+    .chat-thread-header-unread-indicator {
+      color: var(--tertiary);
+      font-size: var(--font-down-2);
+      padding-left: 0.25rem;
     }
 
     &:hover {
