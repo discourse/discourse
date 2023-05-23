@@ -41,12 +41,6 @@
     var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
   );
 
-  .footer-nav-ipad & {
-    height: calc(
-      var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
-    );
-  }
-
   align-self: start;
   overflow-y: auto;
 
