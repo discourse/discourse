@@ -105,11 +105,8 @@ class TopicList
 
     user_ids = TopicList.preload_user_ids(@topics, user_ids, self)
     user_lookup = UserLookup.new(user_ids)
-
-    if group_ids.present?
-      group_ids = group_ids.flatten.uniq
-      group_lookup = GroupLookup.new(group_ids)
-    end
+    group_ids = group_ids.flatten.uniq
+    group_lookup = GroupLookup.new(group_ids)
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
