@@ -2,7 +2,10 @@
   @route="chat.channel.threads"
   @models={{@channel.routeModels}}
   title={{i18n "chat.threads.list"}}
-  class="open-thread-list-btn btn btn-flat"
+  class={{concat-class
+    "open-thread-list-btn btn btn-flat"
+    (if @channel.threadTrackingOverview.length "-has-unreads")
+  }}
 >
   {{d-icon "discourse-threads"}}
 

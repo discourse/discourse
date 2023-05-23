@@ -7,4 +7,13 @@ export default class ChatThreadHeaderUnreadIndicator extends Component {
   get showUnreadIndicator() {
     return this.args.channel.threadTrackingOverview.length > 0;
   }
+
+  get unreadCounter() {
+    const unreadThreads = this.args.channel.threadTrackingOverview.length;
+    if (unreadThreads > 99) {
+      return "99+";
+    }
+
+    return unreadThreads;
+  }
 }
