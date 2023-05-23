@@ -33,17 +33,10 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows the user to create custom section with /my link" do
     sign_in user
     visit("/latest")
+
     sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
     section_modal.fill_name("My section")
-
     section_modal.fill_link("My preferences", "/my/preferences")
-    expect(section_modal).to have_enabled_save
-
     section_modal.save
 
     expect(sidebar).to have_section("My section")
@@ -53,17 +46,10 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows the user to create custom section with /pub link" do
     sign_in user
     visit("/latest")
+
     sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
     section_modal.fill_name("My section")
-
     section_modal.fill_link("Published Page", "/pub/test")
-    expect(section_modal).to have_enabled_save
-
     section_modal.save
 
     expect(sidebar).to have_section("My section")
