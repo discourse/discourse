@@ -1,20 +1,47 @@
 # frozen_string_literal: true
 
 class SidebarUrl < ActiveRecord::Base
+  enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
+
   FULL_RELOAD_LINKS_REGEX = [%r{\A/my/[a-z_\-/]+\z}, %r{\A/safe-mode\z}]
   MAX_ICON_LENGTH = 40
   MAX_NAME_LENGTH = 80
   MAX_VALUE_LENGTH = 200
   COMMUNITY_SECTION_LINKS = [
-    { name: "Everything", path: "/latest", icon: "layer-group", segment: "primary" },
-    { name: "My Posts", path: "/my/activity", icon: "user", segment: "primary" },
-    { name: "Review", path: "/review", icon: "flag", segment: "primary" },
-    { name: "Admin", path: "/admin", icon: "wrench", segment: "primary" },
-    { name: "Users", path: "/u", icon: "users", segment: "secondary" },
-    { name: "About", path: "/about", icon: "info-circle", segment: "secondary" },
-    { name: "FAQ", path: "/faq", icon: "question-circle", segment: "secondary" },
-    { name: "Groups", path: "/g", icon: "user-friends", segment: "secondary" },
-    { name: "Badges", path: "/badges", icon: "certificate", segment: "secondary" },
+    {
+      name: "Everything",
+      path: "/latest",
+      icon: "layer-group",
+      segment: SidebarUrl.segments["primary"],
+    },
+    {
+      name: "My Posts",
+      path: "/my/activity",
+      icon: "user",
+      segment: SidebarUrl.segments["primary"],
+    },
+    { name: "Review", path: "/review", icon: "flag", segment: SidebarUrl.segments["primary"] },
+    { name: "Admin", path: "/admin", icon: "wrench", segment: SidebarUrl.segments["primary"] },
+    { name: "Users", path: "/u", icon: "users", segment: SidebarUrl.segments["secondary"] },
+    {
+      name: "About",
+      path: "/about",
+      icon: "info-circle",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    {
+      name: "FAQ",
+      path: "/faq",
+      icon: "question-circle",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    { name: "Groups", path: "/g", icon: "user-friends", segment: SidebarUrl.segments["secondary"] },
+    {
+      name: "Badges",
+      path: "/badges",
+      icon: "certificate",
+      segment: SidebarUrl.segments["secondary"],
+    },
   ]
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
@@ -24,8 +51,6 @@ class SidebarUrl < ActiveRecord::Base
   validate :path_validator
 
   before_validation :remove_internal_hostname, :set_external
-
-  enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
 
   def path_validator
     return true if !external?

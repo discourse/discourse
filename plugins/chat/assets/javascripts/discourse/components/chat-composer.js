@@ -122,6 +122,13 @@ export default class ChatComposer extends Component {
     cancel(this._persistHandler);
   }
 
+  @action
+  handleInlineButonAction(buttonAction, event) {
+    event.stopPropagation();
+
+    buttonAction();
+  }
+
   get currentMessage() {
     return this.composer.message;
   }

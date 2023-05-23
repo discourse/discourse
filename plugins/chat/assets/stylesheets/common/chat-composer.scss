@@ -4,7 +4,7 @@
     flex-direction: column;
     z-index: 3;
     background-color: var(--primary-very-low);
-    padding: 12px 10px env(safe-area-inset-bottom) 10px;
+    padding: 0.5rem 0 env(safe-area-inset-bottom) 0;
 
     .keyboard-visible & {
       padding-bottom: 0;
@@ -18,11 +18,15 @@
     .drop-a-file {
       display: none;
     }
+
+    .chat-replying-indicator {
+      padding-inline: 1rem;
+    }
   }
 
   .chat-composer-button,
   .chat-composer-separator {
-    align-self: stretch;
+    align-self: flex-end;
   }
 
   &__outer-container {
@@ -30,6 +34,7 @@
     align-items: center;
     box-sizing: border-box;
     width: 100%;
+    padding-inline: 1rem;
   }
 
   &__inner-container {
@@ -58,6 +63,45 @@
     }
   }
 
+  .chat-composer-button__btn {
+    background: none;
+
+    &:not(:disabled) {
+      .d-icon {
+        color: var(--primary-high);
+      }
+
+      .no-touch & {
+        &:hover,
+        &:focus {
+          .d-icon {
+            color: var(--primary);
+          }
+
+          &.primary {
+            .d-icon {
+              color: var(--tertiary);
+            }
+          }
+        }
+      }
+
+      &.primary {
+        .d-icon {
+          color: var(--tertiary);
+        }
+      }
+    }
+
+    &:disabled {
+      cursor: default;
+
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
+  }
+
   &__send-btn {
     will-change: scale;
 
@@ -73,58 +117,16 @@
       }
     }
 
-    .chat-composer.is-focused.is-send-disabled & {
-      .d-icon {
-        color: var(--primary-high);
-      }
-    }
-
     .chat-composer.is-sending & {
       animation: sendingScales 1s infinite linear;
     }
 
-    .d-icon {
-      background: none !important;
-    }
-
-    .chat-composer.is-send-enabled & {
-      .d-icon {
-        color: var(--tertiary);
-      }
-
+    &:not(:disabled) {
       &:hover {
         .d-icon {
           transform: scale(1.2);
         }
       }
-
-      &:focus {
-        outline: auto;
-      }
-    }
-
-    .chat-composer.is-send-disabled & {
-      cursor: default;
-
-      .d-icon {
-        color: var(--primary-low-mid);
-      }
-
-      &:hover {
-        background: none !important;
-      }
-    }
-
-    .chat-composer.is-disabled & {
-      opacity: 0.4;
-
-      &:hover {
-        background: none !important;
-      }
-    }
-
-    .d-icon {
-      color: var(--primary);
     }
   }
 
@@ -136,6 +138,11 @@
     align-self: stretch;
   }
 
+  --100dvh: 100vh;
+  @supports (height: 100dvh) {
+    --100dvh: 100dvh;
+  }
+
   &__input {
     overflow-x: hidden;
     width: 100%;
@@ -143,17 +150,25 @@
     outline: none;
     border: 0;
     resize: none;
-    max-height: 125px;
+    max-height: calc(
+      (
+          var(--100dvh) - var(--header-offset, 0px) -
+            var(--chat-header-offset, 0px)
+        ) / 100 * 25
+    );
     background: none;
-    margin: 0;
     padding: 0;
+    margin: 5px 0;
     text-overflow: ellipsis;
     cursor: inherit;
-
     @include chat-scrollbar();
 
     &[disabled] {
       background: none;
+
+      .d-icon {
+        opacity: 0.4;
+      }
     }
 
     &:focus,

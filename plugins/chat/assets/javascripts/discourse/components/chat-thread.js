@@ -10,7 +10,7 @@ import { cancel, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 100;
 const READ_INTERVAL_MS = 1000;
 
 export default class ChatThreadPanel extends Component {

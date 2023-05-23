@@ -35,7 +35,7 @@
 }
 
 .chat-message:not(.user-info-hidden) {
-  padding: 0.65em 1em 0.15em;
+  padding: 0.65rem 1rem 0.15rem;
 }
 
 .chat-message-text {
@@ -52,7 +52,7 @@
 }
 
 .chat-message.user-info-hidden {
-  padding: 0.15em 1em;
+  padding: 0.15rem 1rem;
 
   .chat-time {
     color: var(--secondary-medium);
