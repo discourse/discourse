@@ -46,8 +46,8 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(403)
     end
 
-    it "errors when page size is over 50" do
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: 51 }
+    it "errors when page size is over 100" do
+      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: 200 }
       expect(response.status).to eq(400)
     end
 
