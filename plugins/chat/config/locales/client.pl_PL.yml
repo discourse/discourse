@@ -89,7 +89,7 @@ pl_PL:
       delete: "Usuń"
       edited: "edytowane"
       muted: "wyciszono"
-      joined: "dołączył"
+      joined: "dołączono"
       empty_state:
         direct_message_cta: "Rozpocznij czat osobisty"
         direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
@@ -230,9 +230,11 @@ pl_PL:
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
+        archive_failed: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych. <a target=\"_blank\" href=\"%{topic_url}\">temat docelowy</a>. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
+        archive_failed_no_topic: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych, temat docelowy nie został utworzony. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
         archive_completed: "Zobacz <a target=\"_blank\" href=\"%{topic_url}\">temat archiwum</a>"
         closed_header: "Kanał jest zamknięty"
-        closed: "Zamknięta"
+        closed: "Zamknięte"
         open_header: "Kanał jest otwarty"
         open: "Otwórz"
       browse:
@@ -240,7 +242,7 @@ pl_PL:
         title: Kanały
         filter_all: Wszystkie
         filter_open: Otwarty
-        filter_closed: Zamknięta
+        filter_closed: Zamknięte
         filter_archived: Zarchiwizowany
         filter_input_placeholder: Szukaj kanału według nazwy
       chat_message_separator:
@@ -320,6 +322,7 @@ pl_PL:
         bold_text: "pogrubiony tekst"
         code_text: "kod"
       quote:
+        original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
       notification_levels:
         never: "Nigdy"
@@ -337,12 +340,15 @@ pl_PL:
         followed: "Dołączył"
         mobile_notification_level: "Mobilne powiadomienia push"
         mute: "Wycisz kanał"
+        muted_on: "Wł"
+        muted_off: "Wył"
         notifications: "Powiadomienia"
         preview: "Podgląd"
         save: "Zapisz"
         saved: "Zapisano"
         unfollow: "Opuść"
         admin_title: "Administratorzy"
+        retention_info: "Historia czatu będzie zapisywana przez %{days} dni."
       admin:
         title: "Czat"
       direct_messages:
@@ -410,6 +416,7 @@ pl_PL:
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
         spam: "Ta wiadomość to reklama lub akt wandalizmu. Nie jest przydatna ani istotna dla bieżącego kanału."
         notify_user: "Chcę porozmawiać z tą osobą bezpośrednio i osobiście o jej przesłaniu."
+        notify_moderators: "Ta wiadomość wymaga uwagi personelu z innego powodu niewymienionego powyżej."
       flagging:
         action: "Oflaguj wiadomość"
       emoji_picker:
@@ -465,6 +472,8 @@ pl_PL:
             sender:
               label: Nadawca
     review:
+      transcript:
+        view: "Zobacz transkrypcję poprzednich wiadomości"
       types:
         reviewable_chat_message:
           title: "Oznaczona wiadomość czatu"
@@ -485,6 +494,9 @@ pl_PL:
       muted_users_instructions: "Wyłącz wszystkie powiadomienia, wiadomości osobiste i bezpośrednie wiadomości czatu od tych użytkowników."
       allowed_pm_users_instructions: "Zezwalaj na wysyłanie osobistych wiadomości lub bezpośrednich wiadomości na czacie tylko od tych użytkowników."
     user_menu:
+      no_chat_notifications_title: "Nie masz jeszcze żadnych powiadomień czatu"
+      no_chat_notifications_body: >
+        Zostaniesz powiadomiony w tym panelu, gdy ktoś wyśle do Ciebie wiadomość lub <b>@wspomni</b> o Tobie na czacie. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie będziesz zalogowany przez jakiś czas. <br><br> Kliknij tytuł u góry dowolnego kanału czatu, aby skonfigurować powiadomienia otrzymywane na tym kanale. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
       tabs:
         chat_notifications: "Powiadomienia czatu"
         chat_notifications_with_unread:

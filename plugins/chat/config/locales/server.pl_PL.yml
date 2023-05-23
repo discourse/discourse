@@ -59,7 +59,7 @@ pl_PL:
       statuses:
         read_only: "Tylko do odczytu"
         archived: "Zarchiwizowany"
-        closed: "Zamknięta"
+        closed: "Zamknięte"
         open: "Otwórz"
       archive:
         first_post_raw: "Ten temat jest archiwum kanału czatu [%{channel_name}](%{channel_url})."
