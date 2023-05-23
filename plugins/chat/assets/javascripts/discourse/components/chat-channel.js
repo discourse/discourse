@@ -844,8 +844,9 @@ export default class ChatLivePane extends Component {
         // that is not the current one, this is very likely in tests
         // which will destroy the channel after the test is done
         if (
+          this.args.channel.id &&
           error.jqXHR?.requestedUrl ===
-          `/chat/api/channels/${this.args.channel.id}`
+            `/chat/api/channels/${this.args.channel.id}`
         ) {
           popupAjaxError(error);
         }
