@@ -26,7 +26,7 @@
       <DLightbox::Button
         data-lightbox-zoom-button
         aria-hidden="true"
-        @class="d-lightbox__content__footer__buttons__zoom-button"
+        @class="d-lightbox__zoom-button"
         @name="zoom"
         @icon={{@zoomButtonIcon}}
         @onClick={{@toggleZoom}}
@@ -36,7 +36,7 @@
       <DLightbox::Button
         data-lightbox-rotate-button
         aria-hidden="true"
-        @class="d-lightbox__content__footer__buttons__rotate-button"
+        @class="d-lightbox__rotate-button"
         @name="rotate"
         @icon="redo"
         @onClick={{@rotateImage}}
@@ -45,7 +45,7 @@
     {{#if @canDownload}}
       <DLightbox::Button
         data-lightbox-download-button
-        @class="d-lightbox__content__footer__buttons__download-button"
+        @class="d-lightbox__download-button"
         @name="download"
         @icon="download"
         @onClick={{@downloadImage}}
