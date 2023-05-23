@@ -16,9 +16,6 @@
 .hamburger-panel .revamped {
   --d-sidebar-row-horizontal-padding: 1rem;
   --d-sidebar-highlight-color: var(--primary-low);
-  --d-sidebar-row-font-size: var(--font-0);
-  --d-sidebar-row-height: 32px;
-  --d-sidebar-section-header-text-font-size: var(--font-0);
   box-sizing: border-box;
   padding: 0;
 
@@ -65,5 +62,12 @@
 
   .sidebar-section-content {
     padding-bottom: 0;
+  }
+
+  .sidebar-section-header-wrapper {
+    .d-icon-globe {
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+    }
   }
 }
