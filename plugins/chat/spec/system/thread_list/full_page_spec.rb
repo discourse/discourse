@@ -20,7 +20,7 @@ describe "Thread list in side panel | full page", type: :system, js: true do
   context "when there are no threads that the user is participating in" do
     it "shows a message" do
       chat_page.visit_channel(channel)
-      chat_page.open_thread_list
+      channel_page.open_thread_list
       expect(page).to have_content(I18n.t("js.chat.threads.none"))
     end
   end
@@ -37,14 +37,14 @@ describe "Thread list in side panel | full page", type: :system, js: true do
 
     it "shows a default title for threads without a title" do
       chat_page.visit_channel(channel)
-      chat_page.open_thread_list
+      channel_page.open_thread_list
       expect(page).to have_content(I18n.t("js.chat.thread.default_title", thread_id: thread_1.id))
     end
 
     it "shows the thread title with emoji" do
       thread_1.update!(title: "What is for dinner? :hamburger:")
       chat_page.visit_channel(channel)
-      chat_page.open_thread_list
+      channel_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content("What is for dinner?")
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css("img.emoji[alt='hamburger']")
     end
@@ -53,7 +53,7 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       thread_1.original_message.update!(message: "This is a long message for the excerpt")
       thread_1.original_message.rebake!
       chat_page.visit_channel(channel)
-      chat_page.open_thread_list
+      channel_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
         "This is a long message for the excerpt",
       )
@@ -61,7 +61,7 @@ describe "Thread list in side panel | full page", type: :system, js: true do
 
     it "shows the thread original message user username and avatar" do
       chat_page.visit_channel(channel)
-      chat_page.open_thread_list
+      channel_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
         ".chat-thread-original-message__avatar .chat-user-avatar .chat-user-avatar-container img",
       )
@@ -72,7 +72,7 @@ describe "Thread list in side panel | full page", type: :system, js: true do
 
     it "opens a thread" do
       chat_page.visit_channel(channel)
-      chat_page.open_thread_list
+      channel_page.open_thread_list
       thread_list_page.item_by_id(thread_1.id).click
       expect(side_panel).to have_open_thread(thread_1)
     end
@@ -82,7 +82,7 @@ describe "Thread list in side panel | full page", type: :system, js: true do
 
       def open_thread_list
         chat_page.visit_channel(channel)
-        chat_page.open_thread_list
+        channel_page.open_thread_list
         expect(side_panel).to have_open_thread_list
       end
 

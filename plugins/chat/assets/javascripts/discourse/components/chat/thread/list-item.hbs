@@ -1,7 +1,7 @@
 <div
   class={{concat-class
     "chat-thread-list-item"
-    (if (gt @thread.tracking.unreadCount 0) "unread-thread-item")
+    (if (gt @thread.tracking.unreadCount 0) "-unread")
   }}
   data-thread-id={{@thread.id}}
 >

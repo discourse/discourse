@@ -16,7 +16,7 @@
     .chat-thread-list-item {
       margin: 0.75rem 0.25rem 0.75rem 0.5rem;
 
-      &.unread-thread-item {
+      &.-unread {
         border-left: 2px solid var(--tertiary-medium);
       }
 
