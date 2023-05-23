@@ -6,7 +6,6 @@ import {
 } from "discourse/lib/lightbox/constants";
 import Service, { inject as service } from "@ember/service";
 import {
-  findNearestSharedParent,
   getSiteThemeColor,
   setSiteThemeColor,
 } from "discourse/lib/lightbox/helpers";
@@ -24,6 +23,7 @@ export default class LightboxService extends Service {
   lastFocusedElement = null;
   originalSiteThemeColor = null;
   onFocus = null;
+  selector = null;
 
   callbacks = {};
   options = {};
@@ -43,6 +43,7 @@ export default class LightboxService extends Service {
       isMobile: Mobile.mobileView,
       isRTL: isDocumentRTL(),
       minCarosuelArrowItemCount: MIN_CAROUSEL_ARROW_ITEM_COUNT,
+      zoomOnOpen: true,
       canDownload:
         this.currentUser ||
         !this.siteSettings.prevent_anons_from_downloading_files,
@@ -106,8 +107,37 @@ export default class LightboxService extends Service {
   }
 
   @bind
+  handleEvent(event) {
+    const isLightboxClick = event
+      .composedPath()
+      .find(
+        (element) =>
+          element.matches &&
+          (element.matches(this.selector) ||
+            element.matches("[data-lightbox-trigger]"))
+      );
+
+    if (!isLightboxClick) {
+      return;
+    }
+
+    event.preventDefault();
+
+    this.openLightbox({
+      container: event.currentTarget,
+      selector: this.selector,
+    });
+
+    event.target.toggleAttribute(SELECTORS.DOCUMENT_LAST_FOCUSED_ELEMENT);
+  }
+
+  @bind
   async openLightbox({ container, selector }) {
     const { items, startingIndex } = await processHTML({ container, selector });
+
+    if (!items.length) {
+      return;
+    }
 
     this.appEvents.trigger(LIGHTBOX_APP_EVENT_NAMES.OPEN, {
       items,
@@ -132,56 +162,18 @@ export default class LightboxService extends Service {
       throw new Error("Lightboxes require a container to be passed in");
     }
 
-    if (container.length) {
-      // passed in a nodelist instead of an element
-      container = findNearestSharedParent(container);
-    }
-
+    this.selector = selector;
     const hasLightboxes = container.querySelector(selector);
 
     if (!hasLightboxes) {
       return;
     }
 
-    const handlerOptions = {
-      capture: true,
-    };
+    const handlerOptions = { capture: true };
 
-    function clickHandler(event) {
-      const isLightboxClick = event
-        .composedPath()
-        .find(
-          (element) =>
-            element.matches &&
-            (element.matches(selector) ||
-              element.matches("[data-lightbox-trigger]"))
-        );
+    container.addEventListener("click", this, handlerOptions);
 
-      if (!isLightboxClick) {
-        return;
-      }
-
-      event.preventDefault();
-
-      this.openLightbox({
-        container,
-        selector,
-      });
-
-      container.toggleAttribute(SELECTORS.DOCUMENT_LAST_FOCUSED_ELEMENT);
-    }
-
-    container.addEventListener(
-      "click",
-      clickHandler.bind(this),
-      handlerOptions
-    );
-
-    this.lightboxClickElements.push({
-      container,
-      clickHandler,
-      handlerOptions,
-    });
+    this.lightboxClickElements.push({ container, handlerOptions });
   }
 
   @bind
@@ -192,11 +184,9 @@ export default class LightboxService extends Service {
   async #cleanupLightboxes() {
     this.closeLightbox();
 
-    this.lightboxClickElements.forEach(
-      ({ container, clickHandler, handlerOptions }) => {
-        container.removeEventListener("click", clickHandler, handlerOptions);
-      }
-    );
+    this.lightboxClickElements.forEach(({ container, handlerOptions }) => {
+      container.removeEventListener("click", this, handlerOptions);
+    });
 
     this.lightboxClickElements = [];
   }
@@ -263,6 +253,7 @@ export default class LightboxService extends Service {
     this.onFocus = null;
     this.callbacks = null;
     this.options = null;
+    this.selector = null;
   }
 
   willDestroy() {
