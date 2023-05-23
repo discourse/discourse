@@ -159,6 +159,7 @@ fi:
       save: "Tallenna"
       select: "Valitse"
       return_to_list: "Palaa kanavaluetteloon"
+      return_to_threads_list: "Palaa aktiivisiin keskusteluihin"
       scroll_to_bottom: "Vieritä alas"
       scroll_to_new_messages: "Katso uudet viestit"
       sound:
@@ -374,13 +375,18 @@ fi:
       thread:
         title: "Otsikko"
         view_thread: Näytä ketju
+        default_title: "Ketju #%{thread_id}"
         replies:
           one: "%{count} vastaus"
           other: "%{count} vastausta"
         close: "Sulje ketju"
+        original_message:
+          started_by: "Aloittanut"
         settings: "Asetukset"
       threads:
         open: "Avaa ketju"
+        list: "Käynnissä olevat keskustelut"
+        none: "Et osallistu mihinkään viestiketjuun tällä kanavalla."
       draft_channel_screen:
         header: "Uusi viesti"
         cancel: "Peruuta"
@@ -457,3 +463,7 @@ fi:
         chat_notifications_with_unread:
           one: "Chat-ilmoitukset – %{count} lukematon ilmoitus"
           other: "Chat-ilmoitukset – %{count} lukematonta ilmoitusta"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

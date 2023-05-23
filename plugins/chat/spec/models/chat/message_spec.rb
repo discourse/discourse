@@ -259,7 +259,7 @@ describe Chat::Message do
       cooked = described_class.cook("##{category.slug}", user_id: user.id)
 
       expect(cooked).to eq(
-        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>#{category.name}</span></a></p>",
+        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\" data-id=\"#{category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>#{category.name}</span></a></p>",
       )
     end
 

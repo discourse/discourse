@@ -513,3 +513,7 @@ zh_CN:
         chat_notifications: "聊天通知"
         chat_notifications_with_unread:
           other: "聊天通知 - %{count} 个未读通知"
+    styleguide:
+      sections:
+        chat:
+          title: 聊天

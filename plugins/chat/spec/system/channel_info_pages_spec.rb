@@ -8,8 +8,8 @@ RSpec.describe "Info pages", type: :system, js: true do
 
   before do
     chat_system_bootstrap
-    sign_in(current_user)
     channel_1.add(current_user)
+    sign_in(current_user)
   end
 
   context "when visiting from browse page" do

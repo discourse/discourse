@@ -68,7 +68,7 @@ export default class ResizableNode extends Modifier {
 
   @bind
   _resize(event) {
-    throttle(this, this._resizeThrottled, event, 24);
+    throttle(this, this._resizeThrottled, event, 50);
   }
 
   /*

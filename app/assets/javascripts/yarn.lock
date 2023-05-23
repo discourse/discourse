@@ -978,10 +978,10 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
-"@babel/standalone@^7.21.8":
-  version "7.21.8"
-  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.21.8.tgz#e24b3fb8aafe1f0f3db4d2f0de59dd2baea13dc2"
-  integrity sha512-Od6cBJ8dm9wjAt+3olvO7N3s+8UsCkX3hH41Ew3BlFJw1QQtbctplq3kuwzzfk+YcmXE95k8fJCzbnhf32+BxQ==
+"@babel/standalone@^7.21.9":
+  version "7.21.9"
+  resolved "https://registry.yarnpkg.com/@babel/standalone/-/standalone-7.21.9.tgz#baf7069a46199e5889b9b1df0cdd0544655602bd"
+  integrity sha512-I9UNGZyBQgJOXdzZNeqO5NfTZhZoCCjnkR31GlEH6CDfnIWSC2D3OYSZTSGsQ2JhEwx7tbNR+1HuYHcoZd1IaQ==
 
 "@babel/template@^7.16.7", "@babel/template@^7.20.7":
   version "7.20.7"
@@ -9089,10 +9089,10 @@ terser-webpack-plugin@^5.3.7:
     serialize-javascript "^6.0.1"
     terser "^5.16.5"
 
-terser@^5.16.5, terser@^5.17.4, terser@^5.3.0:
-  version "5.17.4"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.17.4.tgz#b0c2d94897dfeba43213ed5f90ed117270a2c696"
-  integrity sha512-jcEKZw6UPrgugz/0Tuk/PVyLAPfMBJf5clnGueo45wTweoV8yh7Q7PEkhkJ5uuUbC7zAxEcG3tqNr1bstkQ8nw==
+terser@^5.16.5, terser@^5.17.5, terser@^5.3.0:
+  version "5.17.5"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.17.5.tgz#557141b662b5978ac3d6a2f3d6455a26267ddcd4"
+  integrity sha512-NqFkzBX34WExkCbk3K5urmNCpEWqMPZnwGI1pMHwqvJ/zDlXC75u3NI7BrzoR8/pryy8Abx2e1i8ChrWkhH1Hg==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"

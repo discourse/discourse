@@ -175,7 +175,7 @@ module Chat
       page_size = params[:page_size]&.to_i || 1000
       direction = params[:direction].to_s
       message_id = params[:message_id]
-      if page_size > 50 ||
+      if page_size > 100 ||
            (
              message_id.blank? ^ direction.blank? &&
                (direction.present? && !CHAT_DIRECTIONS.include?(direction))

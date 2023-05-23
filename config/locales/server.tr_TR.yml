@@ -4119,6 +4119,7 @@ tr_TR:
     required_tags_from_group:
       one: "En az %{count} %{tag_group_name} etiketi eklemelisiniz. Bu gruptaki etiketler şunlardır: %{tags}."
       other: "En az %{count} %{tag_group_name} etiketi eklemelisiniz. Bu gruptaki etiketler şunlardır: %{tags}."
+    limited_to_one_tag_from_group: "%{tags} etiketleri aynı anda kullanılamaz. Lütfen bunlardan yalnızca birini ekleyin."
     invalid_target_tag: "bir eş anlamlının eş anlamlısı olamaz"
     synonyms_exist: "eş anlamlılar mevcutken izin verilmez"
   rss_by_tag: "%{tag} etiketli konular"

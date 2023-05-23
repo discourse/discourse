@@ -24,10 +24,9 @@ export default class ChatMessagesManager {
       message.manager = this;
     });
 
-    this.messages = this.messages
-      .concat(messages)
-      .uniqBy("id")
-      .sortBy("createdAt");
+    this.messages = new TrackedArray(
+      this.messages.concat(messages).uniqBy("id").sortBy("createdAt")
+    );
   }
 
   findMessage(messageId) {
