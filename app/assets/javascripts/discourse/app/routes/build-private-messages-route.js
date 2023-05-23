@@ -80,7 +80,11 @@ export default (inboxType, path, filter) => {
         group: null,
       });
 
-      this.searchService.setSearchContext({ type: "private_messages" });
+      const pmSearchContext = {
+        ...this.controllerFor("user").get("model.searchContext"),
+        type: "private_messages",
+      };
+      this.searchService.setSearchContext(pmSearchContext);
     },
 
     emptyState() {
