@@ -15,6 +15,7 @@ class TopicParticipantGroupsSummary
   end
 
   def group_participants
+    return [] if group_ids.blank?
     group_ids.map { |id| group_lookup[id] }
   end
 
