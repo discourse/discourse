@@ -25,6 +25,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     tracked_tags: ["tag1"],
     watched_tags: ["tag2"],
     watching_first_post_tags: ["tag3"],
+    admin: false,
   });
 
   needs.settings({
@@ -67,6 +68,22 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(".category-input .selected-name .category-name").textContent,
       "bug",
       "the current category is prefilled in the composer input"
+    );
+  });
+
+  test("clicking on section header button", async function (assert) {
+    updateCurrentUser({
+      admin: "true",
+    });
+    await visit("/");
+
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
+    );
+
+    assert.ok(
+      exists(".sidebar-section-form-modal"),
+      "it opens edit community section form"
     );
   });
 
