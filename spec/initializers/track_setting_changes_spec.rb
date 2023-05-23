@@ -44,7 +44,7 @@ RSpec.describe "Setting changes" do
     end
   end
 
-  describe "#title and site_description" do
+  describe "#title and #site_description" do
     before do
       general_category = Fabricate(:category, name: "General")
       SiteSetting.general_category_id = general_category.id
@@ -52,18 +52,18 @@ RSpec.describe "Setting changes" do
     end
 
     it "updates the welcome topic when title changes" do
-      SiteSetting.title = "foobar"
+      SiteSetting.title = SecureRandom.alphanumeric
 
       topic = Topic.find(SiteSetting.welcome_topic_id)
-      expect(topic.title).to include("foobar")
-      expect(topic.first_post.raw).to include("foobar")
+      expect(topic.title).to include(SiteSetting.title)
+      expect(topic.first_post.raw).to include(SiteSetting.title)
     end
 
-    it "updates the welcome topic when description changes" do
-      SiteSetting.site_description = "foobar"
+    it "updates the welcome topic when site_description changes" do
+      SiteSetting.site_description = SecureRandom.alphanumeric
 
       topic = Topic.find(SiteSetting.welcome_topic_id)
-      expect(topic.first_post.raw).to include("foobar")
+      expect(topic.first_post.raw).to include(SiteSetting.site_description)
     end
   end
 

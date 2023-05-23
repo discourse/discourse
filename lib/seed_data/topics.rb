@@ -15,27 +15,25 @@ module SeedData
         topics(
           site_setting_names: site_setting_names,
           include_welcome_topics: include_welcome_topics,
-          include_legal_topics: include_legal_topics,
+          include_legal_topics: include_legal_topics || SiteSetting.company_name.present?,
         ).each { |params| create_topic(**params) }
       end
     end
 
     def update(site_setting_names: nil, skip_changed: false, recover: false)
       I18n.with_locale(@locale) do
-        topics(site_setting_names: site_setting_names, include_legal_topics: true).each do |params|
-          update_topic(
-            **params.except(:category, :after_create),
-            skip_changed: skip_changed,
-            recover: recover,
-          )
+        topics(site_setting_names: site_setting_names).each do |params|
+          params = params.except(:category, :after_create)
+          update_topic(**params, skip_changed: skip_changed, recover: recover)
         end
       end
     end
 
     def delete(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
-        topics(site_setting_names: site_setting_names, include_legal_topics: true).each do |params|
-          delete_topic(site_setting_name: params[:site_setting_name], skip_changed: skip_changed)
+        topics(site_setting_names: site_setting_names).each do |params|
+          params = params.slice(:site_setting_name)
+          delete_topic(**params, skip_changed: skip_changed)
         end
       end
     end
@@ -55,8 +53,7 @@ module SeedData
 
     private
 
-    def topics(site_setting_names: nil, include_welcome_topics: true, include_legal_topics: false)
-      include_legal_topics ||= SiteSetting.company_name.present?
+    def topics(site_setting_names: nil, include_welcome_topics: true, include_legal_topics: true)
       staff_category = Category.find_by(id: SiteSetting.staff_category_id)
 
       topics = []
