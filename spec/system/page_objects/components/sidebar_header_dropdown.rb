@@ -43,7 +43,7 @@ module PageObjects
 
       def click_outside
         dropdown = page.find(SIDEBAR_HAMBURGER_DROPDOWN)
-        dropdown.click(x: dropdown.rect.width + 1, y: 1)
+        dropdown.click(x: dropdown.rect.width + 10, y: 10)
       end
     end
   end
