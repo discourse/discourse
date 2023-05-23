@@ -62,7 +62,7 @@
         <div
           class={{concat-class
             "chat-message"
-            (if @message.staged "chat-message-staged")
+            (if @message.staged "chat-message-staged" "chat-message-persisted")
             (if @message.deletedAt "deleted")
             (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
             (if this.showThreadIndicator "is-threaded")
