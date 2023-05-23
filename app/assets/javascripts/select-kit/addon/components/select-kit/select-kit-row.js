@@ -8,7 +8,7 @@ import { reads } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
 
 export default Component.extend(UtilsMixin, {
-  classNames: ["select-kit-row "],
+  classNames: ["select-kit-row"],
   tagName: "li",
   tabIndex: 0,
 

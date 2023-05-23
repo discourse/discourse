@@ -40,7 +40,7 @@ export default (type) => {
       });
 
       const currentUser = this.currentUser;
-      this.searchService.set("searchContext", {
+      this.searchService.setSearchContext({
         type: "private_messages",
         id: currentUser.get("username_lower"),
         user: currentUser,
@@ -59,7 +59,7 @@ export default (type) => {
     },
 
     deactivate() {
-      this.searchService.set("searchContext", null);
+      this.searchService.setSearchContext(null);
     },
   });
 };

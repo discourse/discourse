@@ -80,7 +80,7 @@ export default (inboxType, path, filter) => {
         group: null,
       });
 
-      this.searchService.set("contextType", "private_messages");
+      this.searchService.setSearchContext({ type: "private_messages" });
     },
 
     emptyState() {
@@ -97,8 +97,7 @@ export default (inboxType, path, filter) => {
     deactivate() {
       this.controllerFor("user-topics-list").unsubscribe();
 
-      this.searchService.set(
-        "searchContext",
+      this.searchService.setSearchContext(
         this.controllerFor("user").get("model.searchContext")
       );
     },

@@ -47,8 +47,7 @@ export default class SearchMenu extends Component {
     super(...arguments);
   }
 
-  @bind
-  searchContext() {
+  get searchContext() {
     //THIS DOES NOT EXIST AND NEEDS TO BE DUPDATD
     if (this.inTopicContext || this.inPMInboxContext) {
       //return this.search.searchContext;
@@ -133,11 +132,6 @@ export default class SearchMenu extends Component {
   @action
   updateTypeFilter(value) {
     this.typeFilter = value;
-  }
-
-  @action
-  updateTerm(value) {
-    this.search.activeGlobalSearchTerm = value;
   }
 
   @action

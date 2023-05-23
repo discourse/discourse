@@ -52,6 +52,7 @@
     <SiteTextSummary
       @siteText={{siteText}}
       @editAction={{action "edit"}}
+      @term={{this.q}}
       @searchRegex={{this.siteTexts.extras.regex}}
     />
   {{/each}}
