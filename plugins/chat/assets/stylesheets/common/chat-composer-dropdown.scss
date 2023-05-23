@@ -1,4 +1,4 @@
-[data-theme="chat-composer-drodown"] {
+[data-theme="chat-composer-dropdown"] {
   margin-left: 0.2rem;
 
   .tippy-content {
@@ -6,23 +6,23 @@
   }
 }
 
+.chat-composer.is-disabled {
+  .no-touch & {
+    .chat-composer-dropdown__trigger-btn:hover {
+      cursor: default;
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
+  }
+}
+
 .chat-composer-dropdown__trigger-btn {
   .d-icon {
     padding: 5px;
     transition: transform 0.1s ease-in-out;
-    color: var(--primary-high);
     background: var(--secondary-very-high);
     border-radius: 100%;
-  }
-
-  .no-touch & {
-    &:hover,
-    &:focus {
-      cursor: pointer;
-      .d-icon {
-        color: var(--primary);
-      }
-    }
   }
 
   &.has-active-panel {

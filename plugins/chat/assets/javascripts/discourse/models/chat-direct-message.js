@@ -10,7 +10,7 @@ export default class ChatDirectMessage {
   @tracked id;
   @tracked users = null;
 
-  type = CHATABLE_TYPES.drectMessageChannel;
+  type = CHATABLE_TYPES.directMessageChannel;
 
   constructor(args = {}) {
     this.id = args.id;

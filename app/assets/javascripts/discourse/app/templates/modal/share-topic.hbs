@@ -67,6 +67,10 @@
             />
           {{/if}}
         {{/if}}
+        <PluginOutlet
+          @name="share-topic-sources"
+          @outletArgs={{hash topic=this.topic post=this.post}}
+        />
       </div>
     </div>
   </form>

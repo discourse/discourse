@@ -41,14 +41,17 @@ acceptance("Edit Notification Click", function (needs) {
   // TODO: Unskip failing test after fixing issue with new user menu and history modal
   skip("history modal is shown when navigating from a non-topic page", async function (assert) {
     await visit("/");
-    await click(".d-header-icons #current-user");
-    await click("#quick-access-notifications .edited");
+    await click(".header-dropdown-toggle.current-user");
+    await click(".notification.edited a");
+
     const [v1, v2] = queryAll(".history-modal .revision-content");
+
     assert.strictEqual(
       v1.textContent.trim(),
       "Hello world this is a test",
       "history modal for the edited post is shown"
     );
+
     assert.strictEqual(
       v2.textContent.trim(),
       "Hello world this is a testThis is an edit!",

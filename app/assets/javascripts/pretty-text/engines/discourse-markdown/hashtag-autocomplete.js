@@ -29,6 +29,7 @@ function addHashtag(buffer, matches, state) {
       ["href", result.relative_url],
       ["data-type", result.type],
       ["data-slug", result.slug],
+      ["data-id", result.id],
     ];
 
     // Most cases these will be the exact same, one standout is categories
@@ -40,20 +41,7 @@ function addHashtag(buffer, matches, state) {
     token.block = false;
     buffer.push(token);
 
-    token = new state.Token("svg_open", "svg", 1);
-    token.block = false;
-    token.attrs = [
-      ["class", `fa d-icon d-icon-${result.icon} svg-icon svg-node`],
-    ];
-    buffer.push(token);
-
-    token = new state.Token("use_open", "use", 1);
-    token.block = false;
-    token.attrs = [["href", `#${result.icon}`]];
-    buffer.push(token);
-
-    buffer.push(new state.Token("use_close", "use", -1));
-    buffer.push(new state.Token("svg_close", "svg", -1));
+    addIconPlaceholder(buffer, state);
 
     token = new state.Token("span_open", "span", 1);
     token.block = false;
@@ -82,24 +70,22 @@ function addHashtag(buffer, matches, state) {
   }
 }
 
+// The svg icon is not baked into the HTML because we want
+// to be able to use icon replacement via renderIcon, and
+// because different hashtag types may render icons/CSS
+// classes differently.
+//
+// Instead, the UI will dynamically replace these where hashtags
+// are rendered, like within posts, using decorateCooked* APIs.
+function addIconPlaceholder(buffer, state) {
+  const token = new state.Token("span_open", "span", 1);
+  token.block = false;
+  token.attrs = [["class", "hashtag-icon-placeholder"]];
+  buffer.push(token);
+  buffer.push(new state.Token("span_close", "span", -1));
+}
+
 export function setup(helper) {
-  const opts = helper.getOptions();
-
-  // we do this because plugins can register their own hashtag data
-  // sources which specify an icon, and each icon must be allowlisted
-  // or it will not render in the markdown pipeline
-  const hashtagIconAllowList = opts.hashtagIcons
-    ? opts.hashtagIcons
-        .concat(["hashtag"])
-        .map((icon) => {
-          return [
-            `svg[class=fa d-icon d-icon-${icon} svg-icon svg-node]`,
-            `use[href=#${icon}]`,
-          ];
-        })
-        .flat()
-    : [];
-
   helper.registerPlugin((md) => {
     if (
       md.options.discourse.limitedSiteSettings
@@ -114,13 +100,13 @@ export function setup(helper) {
     }
   });
 
-  helper.allowList(
-    hashtagIconAllowList.concat([
-      "a.hashtag-cooked",
-      "span.hashtag-raw",
-      "a[data-type]",
-      "a[data-slug]",
-      "a[data-ref]",
-    ])
-  );
+  helper.allowList([
+    "a.hashtag-cooked",
+    "span.hashtag-raw",
+    "span.hashtag-icon-placeholder",
+    "a[data-type]",
+    "a[data-slug]",
+    "a[data-ref]",
+    "a[data-id]",
+  ]);
 }

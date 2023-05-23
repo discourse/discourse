@@ -5,6 +5,8 @@ import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default DiscourseRoute.extend(ViewingActionType, {
+  templateName: "user/badges",
+
   model() {
     return UserBadge.findByUsername(
       this.modelFor("user").get("username_lower"),
@@ -12,13 +14,9 @@ export default DiscourseRoute.extend(ViewingActionType, {
     );
   },
 
-  setupController(controller, model) {
+  setupController() {
+    this._super(...arguments);
     this.viewingActionType(-1);
-    controller.set("model", model);
-  },
-
-  renderTemplate() {
-    this.render("user/badges");
   },
 
   titleToken() {

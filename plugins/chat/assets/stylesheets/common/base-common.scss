@@ -9,7 +9,7 @@ $float-height: 530px;
 }
 
 // Very specific hack to ensure the contextual menu (copy/paste/...) is
-// not completly over the textarea, the rules to position this menu are quite obscure
+// not completely over the textarea, the rules to position this menu are quite obscure
 // and under DiscourseHUB the space between the textarea and the keyboard is so small that
 // it sometimes prefer to appear on top of the textarea, making any gesture very complicated
 html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
@@ -226,10 +226,10 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
   .chat-user-avatar-container {
     position: relative;
-    padding: 1px; //for is-online boxshadow effect, preventing cutoff
+    padding: 1px; // for is-online box-shadow effect, preventing cutoff
 
     .avatar {
-      padding: 1px; ////for is-online boxshadow effect, preventing shift
+      padding: 1px; // for is-online box-shadow effect, preventing shift
     }
 
     .chat-user-presence-flair {

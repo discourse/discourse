@@ -34,8 +34,8 @@ class HashtagAutocompleteService
     data_sources.map(&:type)
   end
 
-  def self.data_source_icons
-    data_sources.map(&:icon)
+  def self.data_source_icon_map
+    data_sources.map { |ds| [ds.type, ds.icon] }.to_h
   end
 
   def self.data_source_from_type(type)
@@ -88,6 +88,10 @@ class HashtagAutocompleteService
     # item, used for the cooked hashtags, e.g. /c/2/staff
     attr_accessor :relative_url
 
+    # The ID of the resource that is represented by the autocomplete item,
+    # e.g. category.id, tag.id
+    attr_accessor :id
+
     def initialize(params = {})
       @relative_url = params[:relative_url]
       @text = params[:text]
@@ -96,6 +100,7 @@ class HashtagAutocompleteService
       @type = params[:type]
       @ref = params[:ref]
       @slug = params[:slug]
+      @id = params[:id]
     end
 
     def to_h
@@ -107,6 +112,7 @@ class HashtagAutocompleteService
         type: self.type,
         ref: self.ref,
         slug: self.slug,
+        id: self.id,
       }
     end
   end

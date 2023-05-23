@@ -7,30 +7,24 @@
     }}
     style={{if @prefixColor (html-safe (concat "color: " @prefixColor))}}
   >
+
     {{#if (eq @prefixType "image")}}
-      <img src={{@prefixValue}} class="prefix-image" />
-    {{/if}}
-
-    {{#if (eq @prefixType "text")}}
+      <img src={{this.prefixValue}} class="prefix-image" />
+    {{else if (eq @prefixType "text")}}
       <span class="prefix-text">
-        {{@prefixValue}}
+        {{this.prefixValue}}
       </span>
-    {{/if}}
-
-    {{#if (eq @prefixType "icon")}}
-      {{d-icon @prefixValue class="prefix-icon"}}
-    {{/if}}
-
-    {{#if (eq @prefixType "span")}}
+    {{else if (eq @prefixType "icon")}}
+      {{d-icon this.prefixValue class="prefix-icon"}}
+    {{else if (eq @prefixType "span")}}
       <span
         style={{html-safe
-          (concat
-            "background: linear-gradient(90deg, " @prefixElementColors ")"
-          )
+          (concat "background: linear-gradient(90deg, " this.prefixValue ")")
         }}
         class="prefix-span"
       ></span>
     {{/if}}
+
     {{#if @prefixBadge}}
       {{d-icon @prefixBadge class="prefix-badge"}}
     {{/if}}

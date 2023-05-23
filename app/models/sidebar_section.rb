@@ -26,6 +26,33 @@ class SidebarSection < ActiveRecord::Base
   scope :public_sections, -> { where("public") }
   enum :section_type, { community: 0 }, scopes: false, suffix: true
 
+  def reset_community!
+    ActiveRecord::Base.transaction do
+      self.update!(title: "Community")
+      self.sidebar_section_links.destroy_all
+      community_urls =
+        SidebarUrl::COMMUNITY_SECTION_LINKS.map do |url_data|
+          "('#{url_data[:name]}', '#{url_data[:path]}', '#{url_data[:icon]}', '#{url_data[:segment]}', false, now(), now())"
+        end
+
+      result = DB.query <<~SQL
+      INSERT INTO sidebar_urls(name, value, icon, segment, external, created_at, updated_at)
+      VALUES #{community_urls.join(",")}
+      RETURNING sidebar_urls.id
+      SQL
+
+      sidebar_section_links =
+        result.map.with_index do |url, index|
+          "(-1, #{url.id}, 'SidebarUrl', #{self.id}, #{index},  now(), now())"
+        end
+
+      DB.query <<~SQL
+      INSERT INTO sidebar_section_links(user_id, linkable_id, linkable_type, sidebar_section_id, position, created_at, updated_at)
+      VALUES #{sidebar_section_links.join(",")}
+      SQL
+    end
+  end
+
   private
 
   def set_system_user_for_public_section

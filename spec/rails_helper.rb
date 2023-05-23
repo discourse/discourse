@@ -163,6 +163,8 @@ else
   TestProf::LetItBe.configure { |config| config.alias_to :fab!, refind: true }
 end
 
+PER_SPEC_TIMEOUT_SECONDS = 30
+
 RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
@@ -366,6 +368,16 @@ RSpec.configure do |config|
     after_event_count = DiscourseEvent.events.values.sum(&:count)
     expect(before_event_count).to eq(after_event_count),
     "DiscourseEvent registrations were not cleaned up"
+  end
+
+  if ENV["CI"]
+    config.around do |example|
+      Timeout.timeout(
+        PER_SPEC_TIMEOUT_SECONDS,
+        nil,
+        "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
+      ) { example.run }
+    end
   end
 
   config.before :each do
