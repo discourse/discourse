@@ -20,10 +20,14 @@
   margin: 0;
   font-weight: normal;
   color: $text-color;
-  background: $bg-color;
+  background-color: $bg-color;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0)
+  );
   border-radius: var(--d-button-border-radius);
   cursor: pointer;
-  transition: all 0.25s;
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
@@ -43,7 +47,7 @@
     }
   }
   @include hover {
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -55,7 +59,7 @@
   }
   &:focus {
     outline: none;
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -67,10 +71,25 @@
   &[href] {
     color: $text-color;
   }
+  .discourse-no-touch &:active:not(:hover):not(:focus),
+  .discourse-no-touch &.btn-active:not(:hover):not(:focus),
+  &:active:not(:hover):not(:focus),
+  &.btn-active:not(:hover):not(:focus) {
+    @include darken-background($bg-color, 0.6);
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
+  .discourse-no-touch &:active,
+  .discourse-no-touch &.btn-active,
   &:active,
   &.btn-active {
-    @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
-    border-bottom-color: $bg-color;
+    @include darken-background($bg-color, 0.3);
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
   }
   &[disabled],
   &.disabled {
@@ -318,10 +337,7 @@
 
       &:active,
       &.btn-active {
-        @include linear-gradient(
-          var(--primary-low-mid) 0%,
-          var(--primary-very-low) 100%
-        );
+        @include darken-background(transparent, 0.2);
       }
     }
   }

@@ -191,9 +191,6 @@ fr:
       load_from_remote: "Une erreur s'est produite lors du chargement de ce message."
     site_settings:
       invalid_category_id: "Vous avez spécifiez une catégorie qui n'existe pas"
-      invalid_choice:
-        one: "Vous avez spécifié le choix invalide %{name}"
-        other: "Vous avez spécifié les choix invalides %{name}"
       default_categories_already_selected: "Vous ne pouvez pas sélectionner une catégorie qui est utilisée dans une autre liste."
       default_tags_already_selected: "Vous ne pouvez pas sélectionner une étiquette utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'envoi de fichiers sur S3 avant d'avoir renseigné le paramètre « s3_upload_bucket »."
@@ -608,22 +605,6 @@ fr:
   meta_category_description: "Discussions à propos du site, son organisation, son fonctionnement et comment nous pouvons l'améliorer."
   staff_category_name: "Responsables"
   staff_category_description: "Catégorie privée pour les discussions entre responsables. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
-  discourse_welcome_topic:
-    title: "Bienvenue dans notre communauté !"
-    body: |2
-
-      Le premier paragraphe de ce sujet épinglé sera visible comme message de bienvenue à tous les nouveaux visiteurs de votre page d'accueil. Il est important !
-
-      **Modifiez le** en une brève description de votre communauté :
-
-      - À qui est-elle destinée ?
-      - Que peuvent-ils y trouver ?
-      - Pourquoi devraient-ils venir ici ?
-      - Où peuvent-ils en savoir plus (liens, ressources, etc.) ?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et en bas) afin que les réponses ne s'accumulent pas après une annonce.
   admin_quick_start_title: "À LIRE EN PREMIER : Guide de démarrage pour les administrateurs"
   category:
     topic_prefix: "À propos de la catégorie %{category}"
@@ -1617,7 +1598,6 @@ fr:
     discourse_connect_overrides_profile_background: "Écrase l'arrière-plan du profil en le remplaçant par une valeur définie par un site externe, par le biais de données transmises avec le protocole DiscourseConnect."
     discourse_connect_overrides_card_background: "Écrase l'arrière-plan de la carte utilisateur en le remplaçant par une valeur définie par un site externe, par le biais de données transmises avec le protocole DiscourseConnect."
     discourse_connect_not_approved_url: "Rediriger les comptes DiscourseConnect non validés vers cette URL"
-    discourse_connect_allows_all_return_paths: "Ne pas restreindre le nom de domaine du champ return_paths indiqué par DiscourseConnect (si ce paramètres est désactivé, l'emplacement indiqué par « return path » doit se trouver sur le site actuel)"
     enable_local_logins: "Activer l'authentification locale avec nom d'utilisateur et mot de passe. ATTENTION : si ce paramètre est désactivé, il vous sera peut-être impossible de vous connecter si vous n'avez pas configuré au moins une méthode d'authentification alternative."
     enable_local_logins_via_email: "Permettre aux utilisateurs de demander qu'un lien de connexion en un clic leur soit envoyé par e-mail."
     allow_new_registrations: "Autoriser l'inscription des nouveaux utilisateurs. Décocher pour empêcher la création de nouveau compte."
@@ -1897,7 +1877,6 @@ fr:
     pop3_polling_password: "Le mot de passe du compte POP3 à interroger pour les e-mails."
     pop3_polling_delete_from_server: "Supprimer les e-mails du serveur. NOTE : si vous désactivez ceci vous devrez vider manuellement votre boîte de réception."
     log_mail_processing_failures: "Enregistrer tous les problèmes d'e-mail dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Autoriser les utilisateurs à créer de nouveaux sujets par e-mail (nécessite une requête manuelle ou via POP3). Configurez les adresses dans l''onglet « Paramètres » de chaque catégorie.'
     email_in_min_trust: "Le niveau de confiance minimal qu'un utilisateur doit avoir pour être autorisé à créer de nouveaux sujets par e-mail."
     email_in_authserv_id: "L'identifiant du service vérifiant l'authentification des e-mails entrants. Voir <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> pour obtenir plus d'informations."
     email_in_spam_header: "En-tête d'e-mail pour détecter du spam."
@@ -2004,11 +1983,9 @@ fr:
     allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximal de messages à intégrer."
     embed_username_required: "Un nom d'utilisateur est nécessaire pour la création du sujet."
-    notify_about_flags_after: "Si des signalements n'ont pas été gérés après ce nombre d'heures, envoyer un message direct aux modérateurs. 0 pour désactiver."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: "Supprimer les brouillons remontant à plus de (n) jours."
     delete_merged_stub_topics_after_days: "Délai (en jours) de suppression automatique des sujets fusionnés, c'est-à-dire les sujets sans réponses résultant de la fusion de deux sujets par déplacement de messages. Si la valeur est fixée à 0, les sujets fusionnés ne seront pas supprimés."
-    bootstrap_mode_min_users: "Nombre minimal d'utilisateurs nécessaire pour désactiver le mode d'amorçage (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
@@ -2078,7 +2055,6 @@ fr:
     revoke_api_keys_days: "Nombre de jours avant qu'une clé API inutilisée soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
-    min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
     allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via les clés d'API. Le symbole « * » peut être utilisé pour remplacer n'importe quelle partie de cette adresse (p. ex. : www.exemple.fr/*)."
     allowed_user_api_push_urls: "Adresses URL autorisées pour le service push du serveur vers l'API utilisateur"
     expire_user_api_keys_days: "Nombre de jours avant l'expiration automatique d'une clé API utilisateur (0 pour jamais)"
@@ -2110,7 +2086,6 @@ fr:
     enable_sitemap: "Générez un sitemap pour votre site et l'inclure dans le fichier robots.txt."
     sitemap_page_size: "Nombre d'URL à inclure dans chaque page de sitemap. Maximum 50 000"
     enable_user_status: "(expérimental) Autoriser les utilisateurs à définir un message d'état personnalisé (émoji + description)."
-    enable_user_tips: "(expérimental) Activer les nouveaux conseils d'utilisation qui décrivent les fonctionnalités clés aux utilisateurs"
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
     dashboard_visible_tabs: "Choisissez les onglets visibles sur le tableau de bord."
@@ -2129,7 +2104,6 @@ fr:
     navigation_menu: "Déterminer le menu de navigation à utiliser. La navigation dans la barre latérale et l'en-tête sont personnalisables par les utilisateurs. L'option Legacy est disponible pour des raisons de rétrocompatibilité."
     default_sidebar_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories de la barre latérale."
     default_sidebar_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes de la barre latérale."
-    enable_new_notifications_menu: "Active le nouveau menu de notifications pour l'ancien menu de navigation."
     enable_experimental_hashtag_autocomplete: "EXPÉRIMENTAL : utilisez le nouveau système de saisie semi-automatique #hashtag pour les catégories et les balises, il affiche différemment l'élément sélectionné et améliore la recherche"
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
@@ -2186,7 +2160,6 @@ fr:
       search_tokenize_japanese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_japanese »."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Vous ne pouvez pas activer DiscourseConnect si la 2FA est obligatoire."
       delete_rejected_email_after_days: "Ce paramètre ne peut pas être inférieur au paramètre delete_email_logs_after_days ou supérieur à %{max}"
-      enable_new_notifications_menu_not_legacy_navigation_menu: "Vous devez définir `navigation_menu` sur `legacy` avant d'activer ce paramètre."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -3153,15 +3126,6 @@ fr:
       title: "Téléchargement d'images distantes désactivé"
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre « download_remote_images_to_local » a été désactivé car la limite (« download_remote_images_threshold ») d'espace disque utilisé par les images vient d'être dépassée."
-    dashboard_problems:
-      title: "Problèmes du tableau de bord"
-      subject_template: "Des nouveaux conseils sur votre tableau de bord"
-      text_body_template: |
-        Nous avons de nouveaux conseils et recommandations pour vous d'après vos paramètres actuels.
-
-        [Rendez-vous sur votre tableau de bord](%{base_url}/admin) pour les voir.
-
-        Si rien n'est visible sur votre tableau de bord, il est possible qu'un autre responsable ait déjà appliqué ces conseils. Une liste des actions réalisées par les responsables se trouve sur la page [Actions des responsables](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"
       subject_template: "Vous êtes un nouvel utilisateur ou une nouvelle utilisatrice du mois !"

@@ -36,6 +36,8 @@ class Reviewable < ActiveRecord::Base
   enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
   enum :sensitivity, { disabled: 0, low: 9, medium: 6, high: 3 }, scopes: false, suffix: true
 
+  validates :reject_reason, length: { maximum: 500 }
+
   after_create { log_history(:created, created_by) }
 
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
@@ -60,7 +62,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.valid_type?(type)
-    return false unless type =~ /\AReviewable[A-Za-z]+\z/
+    return false unless Reviewable.types.include?(type)
     type.constantize <= Reviewable
   rescue NameError
     false
@@ -314,7 +316,7 @@ class Reviewable < ActiveRecord::Base
     valid = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
 
     # Ensure the user has access to the action
-    actions = actions_for(Guardian.new(performed_by), args)
+    actions = actions_for(args[:guardian] || Guardian.new(performed_by), args)
     raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
 
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
@@ -459,7 +461,8 @@ class Reviewable < ActiveRecord::Base
 
     result = by_status(result, status)
     result = result.where(id: ids) if ids
-    result = result.where("reviewables.type = ?", type) if type
+
+    result = result.where("reviewables.type = ?", Reviewable.sti_class_for(type).sti_name) if type
     result = result.where("reviewables.category_id = ?", category_id) if category_id
     result = result.where("reviewables.topic_id = ?", topic_id) if topic_id
     result = result.where("reviewables.created_at >= ?", from_date) if from_date

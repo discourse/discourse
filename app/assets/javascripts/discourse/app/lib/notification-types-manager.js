@@ -1,5 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 
+import AdminProblems from "discourse/lib/notification-types/admin-problems";
 import BookmarkReminder from "discourse/lib/notification-types/bookmark-reminder";
 import Custom from "discourse/lib/notification-types/custom";
 import GrantedBadge from "discourse/lib/notification-types/granted-badge";
@@ -13,10 +14,12 @@ import MembershipRequestConsolidated from "discourse/lib/notification-types/memb
 import NewFeatures from "discourse/lib/notification-types/new-features";
 import MovedPost from "discourse/lib/notification-types/moved-post";
 import WatchingFirstPost from "discourse/lib/notification-types/watching-first-post";
+import Edited from "discourse/lib/notification-types/edited";
 
 const CLASS_FOR_TYPE = {
   bookmark_reminder: BookmarkReminder,
   custom: Custom,
+  edited: Edited,
   granted_badge: GrantedBadge,
   group_mentioned: GroupMentioned,
   group_message_summary: GroupMessageSummary,
@@ -27,6 +30,7 @@ const CLASS_FOR_TYPE = {
   membership_request_consolidated: MembershipRequestConsolidated,
   moved_post: MovedPost,
   new_features: NewFeatures,
+  admin_problems: AdminProblems,
   watching_first_post: WatchingFirstPost,
 };
 

@@ -163,6 +163,8 @@ else
   TestProf::LetItBe.configure { |config| config.alias_to :fab!, refind: true }
 end
 
+PER_SPEC_TIMEOUT_SECONDS = 30
+
 RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
@@ -181,6 +183,13 @@ RSpec.configure do |config|
   config.mock_framework = :mocha
   config.order = "random"
   config.infer_spec_type_from_file_location!
+
+  if ENV["GITHUB_ACTIONS"]
+    # Enable color output in GitHub Actions
+    # This eventually will be `config.color_mode = :on` in RSpec 4?
+    config.tty = true
+    config.color = true
+  end
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -237,8 +246,8 @@ RSpec.configure do |config|
 
     WebMock.disable_net_connect!(allow_localhost: true, allow: [Webdrivers::Chromedriver.base_url])
 
-    if ENV["CAPBYARA_DEFAULT_MAX_WAIT_TIME"].present?
-      Capybara.default_max_wait_time = ENV["CAPBYARA_DEFAULT_MAX_WAIT_TIME"].to_i
+    if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
+      Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
     end
 
     Capybara.threadsafe = true
@@ -296,7 +305,7 @@ RSpec.configure do |config|
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => "INFO", "driver" => "ALL" })
         .tap do |options|
-          options.add_argument("--window-size=390,950")
+          options.add_argument("--window-size=390,960")
           options.add_argument("--no-sandbox")
           options.add_argument("--disable-dev-shm-usage")
           options.add_emulation(device_name: "iPhone 12 Pro")
@@ -361,6 +370,16 @@ RSpec.configure do |config|
     "DiscourseEvent registrations were not cleaned up"
   end
 
+  if ENV["CI"]
+    config.around do |example|
+      Timeout.timeout(
+        PER_SPEC_TIMEOUT_SECONDS,
+        nil,
+        "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
+      ) { example.run }
+    end
+  end
+
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
@@ -421,6 +440,8 @@ RSpec.configure do |config|
       end
     end
 
+    Capybara.reset_sessions!
+    Capybara.use_default_driver
     Discourse.redis.flushdb
   end
 

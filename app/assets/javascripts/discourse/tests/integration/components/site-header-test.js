@@ -21,7 +21,6 @@ module("Integration | Component | site-header", function (hooks) {
 
   test("unread notifications count rerenders when user's notifications count is updated", async function (assert) {
     this.currentUser.set("all_unread_notifications_count", 1);
-    this.currentUser.set("redesigned_user_menu_enabled", true);
 
     await render(hbs`<SiteHeader />`);
     let unreadBadge = query(
@@ -56,7 +55,6 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("clicking outside the revamped menu closes it", async function (assert) {
-    this.currentUser.set("redesigned_user_menu_enabled", true);
     await render(hbs`<SiteHeader />`);
     await click(".header-dropdown-toggle.current-user");
     assert.ok(exists(".user-menu.revamped"));
@@ -68,9 +66,11 @@ module("Integration | Component | site-header", function (hooks) {
     await render(hbs`<SiteHeader />`);
 
     function getProperty() {
-      return getComputedStyle(document.body).getPropertyValue(
+      const rawValue = getComputedStyle(document.body).getPropertyValue(
         "--header-offset"
       );
+      const roundedValue = Math.floor(parseFloat(rawValue));
+      return roundedValue + "px";
     }
 
     document.querySelector(".d-header").style.height = 90 + "px";
@@ -83,7 +83,6 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("arrow up/down keys move focus between the tabs", async function (assert) {
-    this.currentUser.set("redesigned_user_menu_enabled", true);
     this.currentUser.set("can_send_private_messages", true);
     await render(hbs`<SiteHeader />`);
     await click(".header-dropdown-toggle.current-user");
@@ -129,7 +128,6 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("new personal messages bubble is prioritized over unseen reviewables and regular notifications bubbles", async function (assert) {
-    this.currentUser.set("redesigned_user_menu_enabled", true);
     this.currentUser.set("all_unread_notifications_count", 5);
     this.currentUser.set("new_personal_messages_notifications_count", 2);
     this.currentUser.set("unseen_reviewable_count", 3);
@@ -170,7 +168,6 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("unseen reviewables bubble is prioritized over regular notifications", async function (assert) {
-    this.currentUser.set("redesigned_user_menu_enabled", true);
     this.currentUser.set("all_unread_notifications_count", 5);
     this.currentUser.set("new_personal_messages_notifications_count", 0);
     this.currentUser.set("unseen_reviewable_count", 3);
@@ -210,7 +207,6 @@ module("Integration | Component | site-header", function (hooks) {
   });
 
   test("regular notifications bubble is shown if there are neither new personal messages nor unseen reviewables", async function (assert) {
-    this.currentUser.set("redesigned_user_menu_enabled", true);
     this.currentUser.set("all_unread_notifications_count", 5);
     this.currentUser.set("new_personal_messages_notifications_count", 0);
     this.currentUser.set("unseen_reviewable_count", 0);

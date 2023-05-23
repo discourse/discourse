@@ -178,6 +178,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     return `group-${primaryGroup}`;
   },
 
+  @discourseComputed("user.profile_hidden", "user.inactive")
+  contentHidden(profileHidden, inactive) {
+    return profileHidden || inactive;
+  },
+
   _showCallback(username, $target) {
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });

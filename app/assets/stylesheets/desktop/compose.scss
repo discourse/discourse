@@ -304,4 +304,7 @@ a.toggle-preview {
   padding: 0.5em 0.75em;
   pointer-events: none;
   border-radius: 2px;
+  kbd {
+    background: none;
+  }
 }

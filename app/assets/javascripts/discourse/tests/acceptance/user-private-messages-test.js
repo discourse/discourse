@@ -45,6 +45,27 @@ acceptance(
       );
     });
 
+    test("viewing group messages on subfolder setup", async function (assert) {
+      const router = this.container.lookup("router:main");
+      const originalRootURL = router.rootURL;
+
+      try {
+        router.set("rootURL", "/forum/");
+
+        await visit("/forum/u/eviltrout/messages");
+
+        const messagesDropdown = selectKit(".user-nav-messages-dropdown");
+
+        assert.strictEqual(
+          messagesDropdown.header().name(),
+          I18n.t("user.messages.inbox"),
+          "User personal inbox is selected in dropdown"
+        );
+      } finally {
+        router.set("rootURL", originalRootURL);
+      }
+    });
+
     test("viewing messages of another user", async function (assert) {
       updateCurrentUser({ id: 5, username: "charlie" });
 

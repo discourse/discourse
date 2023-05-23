@@ -1163,12 +1163,6 @@ it:
       save_to_change_theme: 'Il tema verrà aggiornato dopo aver cliccato su "%{save_text}"'
       home: "Home Page Predefinita"
       staged: "Temporaneo"
-      staff_counters:
-        flagged_posts: "messaggi segnalati"
-        deleted_posts: "messaggi cancellati"
-        suspensions: "sospensioni"
-        warnings_received: "avvisi"
-        rejected_posts: "messaggi rifiutati"
       messages:
         all: "tutti i messaggi in arrivo"
         inbox: "In arrivo"
@@ -1275,11 +1269,9 @@ it:
         title: "Codice di backup per l'autenticazione a due fattori"
         regenerate: "Rigenera"
         disable: "Disabilita"
-        enable: "Abilita"
-        enable_long: "Abilita codici di backup"
         manage:
-          one: "Gestisci i codici di backup. Ti è rimasto <strong>%{count}</strong> codice di backup."
-          other: "Gestisci i codici di backup. Ti sono rimasti <strong>%{count}</strong> codici di backup."
+          one: "Ti è rimasto <strong>%{count}</strong> codice di backup."
+          other: "Ti sono rimasti <strong>%{count}</strong> codici di backup."
         copy_to_clipboard: "Copia negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia negli appunti"
         copied_to_clipboard: "Copiato negli Appunti"
@@ -2288,6 +2280,7 @@ it:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completato"
       new_features: "Nuove funzionalità disponibili!"
+      admin_problems: "Nuovo avviso sul dashboard del tuo sito"
       dismiss_confirmation:
         body:
           default:
@@ -3732,7 +3725,6 @@ it:
         one: "Ha guadagnato questo distintivo %{count} volta"
         other: "Ha guadagnato questo distintivo %{count} volte"
       granted_on: "Assegnato il %{date}"
-      others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
       allow_title: "Puoi usare questo distintivo come titolo"
       multiple_grant: "Puoi guadagnarlo più volte"
@@ -4372,9 +4364,6 @@ it:
         user_promoted_event:
           name: "Evento promosso dall'utente"
           details: "Quando un utente viene promosso da un livello di attendibilità a un altro."
-        user_badge_event:
-          name: "Evento Assegnazione Distintivo"
-          details: "Quando un utente riceve un distintivo."
         group_user_event:
           name: "Evento Utente in un gruppo"
           details: "Quando un utente viene aggiunto o rimosso da un gruppo."
@@ -5437,7 +5426,6 @@ it:
             label: "Aggiungi Emoji"
         title: "Impostazioni"
         no_results: "Nessun risultato trovato."
-        more_than_30_results: "Ci sono più di 30 risultati. Restringi i criteri di ricerca o seleziona una categoria."
         clear_filter: "Pulisci"
         add_url: "aggiungi URL"
         add_host: "aggiungi host"

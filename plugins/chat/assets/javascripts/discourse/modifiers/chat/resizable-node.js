@@ -9,6 +9,7 @@ export default class ResizableNode extends Modifier {
   element = null;
   resizerSelector = null;
   didResizeContainer = null;
+  options = null;
 
   _originalWidth = 0;
   _originalHeight = 0;
@@ -22,10 +23,14 @@ export default class ResizableNode extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, [resizerSelector, didResizeContainer]) {
+  modify(element, [resizerSelector, didResizeContainer, options = {}]) {
     this.resizerSelector = resizerSelector;
     this.element = element;
     this.didResizeContainer = didResizeContainer;
+    this.options = Object.assign(
+      { vertical: true, horizontal: true, position: true, mutate: true },
+      options
+    );
 
     this.element
       .querySelector(this.resizerSelector)
@@ -97,21 +102,29 @@ export default class ResizableNode extends Modifier {
 
     const newStyle = {};
 
-    if (width > MINIMUM_SIZE) {
+    if (this.options.horizontal && width > MINIMUM_SIZE) {
       newStyle.width = width + "px";
-      newStyle.left =
-        Math.ceil(this._originalX + (event.pageX - this._originalMouseX)) +
-        "px";
+
+      if (this.options.position) {
+        newStyle.left =
+          Math.ceil(this._originalX + (event.pageX - this._originalMouseX)) +
+          "px";
+      }
     }
 
-    if (height > MINIMUM_SIZE) {
+    if (this.options.vertical && height > MINIMUM_SIZE) {
       newStyle.height = height + "px";
-      newStyle.top =
-        Math.ceil(this._originalY + (event.pageY - this._originalMouseY)) +
-        "px";
+
+      if (this.options.position) {
+        newStyle.top =
+          Math.ceil(this._originalY + (event.pageY - this._originalMouseY)) +
+          "px";
+      }
     }
 
-    Object.assign(this.element.style, newStyle);
+    if (this.options.mutate) {
+      Object.assign(this.element.style, newStyle);
+    }
 
     this.didResizeContainer?.(this.element, { width, height });
   }

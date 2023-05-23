@@ -712,11 +712,6 @@ sr:
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
-      staff_counters:
-        flagged_posts: "označene poruke"
-        deleted_posts: "obrisane poruke"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
       messages:
         inbox: "Primljeno"
         latest: "Poslednje"
@@ -749,7 +744,6 @@ sr:
       second_factor_backup:
         regenerate: "Regeneriši"
         disable: "Onemogući"
-        enable: "Omogući"
       second_factor:
         name: "Ime foruma"
         disable: "Onemogući"

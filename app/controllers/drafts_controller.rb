@@ -87,11 +87,26 @@ class DraftsController < ApplicationController
   end
 
   def destroy
+    user =
+      if is_api?
+        if @guardian.is_admin?
+          fetch_user_from_params
+        else
+          raise Discourse::InvalidAccess
+        end
+      else
+        current_user
+      end
+
     begin
-      Draft.clear(current_user, params[:id], params[:sequence].to_i)
+      Draft.clear(user, params[:id], params[:sequence].to_i)
     rescue Draft::OutOfSequence
       # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
+      # rendering an error causes issues in the composer
+    rescue StandardError => e
+      return render json: failed_json.merge(errors: e), status: 401
     end
+
     render json: success_json
   end
 end

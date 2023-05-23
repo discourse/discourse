@@ -6,6 +6,7 @@ RSpec.describe ApiKey do
 
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :created_by }
+  it { is_expected.to validate_length_of(:description).is_at_most(255) }
 
   it "generates a key when saving" do
     api_key = ApiKey.new

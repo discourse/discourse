@@ -5,7 +5,7 @@ import I18n from "I18n";
 import { test } from "qunit";
 
 acceptance("User Tips - first_notification", function (needs) {
-  needs.user({ unread_high_priority_notifications: 1 });
+  needs.user({ new_personal_messages_notifications_count: 1 });
   needs.site({ user_tips: { first_notification: 1 } });
 
   needs.hooks.beforeEach(() => hideAllUserTips());

@@ -18,6 +18,7 @@ module Chat
     has_many :user_chat_channel_memberships,
              class_name: "Chat::UserChatChannelMembership",
              foreign_key: :chat_channel_id
+    has_many :threads, class_name: "Chat::Thread", foreign_key: :channel_id
     has_one :chat_channel_archive, class_name: "Chat::ChannelArchive", foreign_key: :chat_channel_id
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
@@ -124,6 +125,16 @@ module Chat
       AND channels.deleted_at IS NULL
       AND subquery.messages_count != channels.messages_count
     SQL
+    end
+
+    def latest_not_deleted_message_id
+      DB.query_single(<<~SQL, channel_id: self.id).first
+        SELECT id FROM chat_messages
+        WHERE chat_channel_id = :channel_id
+        AND deleted_at IS NULL
+        ORDER BY created_at DESC, id DESC
+        LIMIT 1
+      SQL
     end
 
     private

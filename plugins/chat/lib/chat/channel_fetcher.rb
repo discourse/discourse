@@ -4,14 +4,22 @@ module Chat
   class ChannelFetcher
     MAX_PUBLIC_CHANNEL_RESULTS = 50
 
-    def self.structured(guardian)
+    def self.structured(guardian, include_threads: false)
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
+      public_channels =
+        secured_public_channels(guardian, memberships, status: :open, following: true)
+      direct_message_channels =
+        secured_direct_message_channels(guardian.user.id, memberships, guardian)
       {
-        public_channels:
-          secured_public_channels(guardian, memberships, status: :open, following: true),
-        direct_message_channels:
-          secured_direct_message_channels(guardian.user.id, memberships, guardian),
+        public_channels: public_channels,
+        direct_message_channels: direct_message_channels,
         memberships: memberships,
+        tracking:
+          tracking_state(
+            public_channels.map(&:id) + direct_message_channels.map(&:id),
+            guardian,
+            include_threads: include_threads,
+          ),
       }
     end
 
@@ -151,7 +159,6 @@ module Chat
           options.merge(include_archives: true, filter_on_category_name: true),
         )
 
-      decorate_memberships_with_tracking_data(guardian, channels, memberships)
       channels = channels.to_a
       preload_custom_fields_for(channels)
       channels
@@ -184,50 +191,17 @@ module Chat
         User.allowed_user_custom_fields(guardian) +
           UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
       User.preload_custom_fields(channels.map { |c| c.chatable.users }.flatten, preload_fields)
-
-      decorate_memberships_with_tracking_data(guardian, channels, memberships)
+      channels
     end
 
-    def self.decorate_memberships_with_tracking_data(guardian, channels, memberships)
-      unread_counts_per_channel = unread_counts(channels, guardian.user.id)
-
-      mention_notifications =
-        Notification.unread.where(
-          user_id: guardian.user.id,
-          notification_type: Notification.types[:chat_mention],
-        )
-      mention_notification_data = mention_notifications.map { |m| JSON.parse(m.data) }
-
-      channels.each do |channel|
-        membership = memberships.find { |m| m.chat_channel_id == channel.id }
-
-        if membership
-          membership.unread_mentions =
-            mention_notification_data.count do |data|
-              data["chat_channel_id"] == channel.id &&
-                data["chat_message_id"] > (membership.last_read_message_id || 0)
-            end
-
-          membership.unread_count = unread_counts_per_channel[channel.id] if !membership.muted
-        end
-      end
-    end
-
-    def self.unread_counts(channels, user_id)
-      unread_counts = DB.query_array(<<~SQL, channel_ids: channels.map(&:id), user_id: user_id).to_h
-      SELECT cc.id, COUNT(*) as count
-      FROM chat_messages cm
-      JOIN chat_channels cc ON cc.id = cm.chat_channel_id
-      JOIN user_chat_channel_memberships uccm ON uccm.chat_channel_id = cc.id
-      WHERE cc.id IN (:channel_ids)
-        AND cm.user_id != :user_id
-        AND uccm.user_id = :user_id
-        AND cm.id > COALESCE(uccm.last_read_message_id, 0)
-        AND cm.deleted_at IS NULL
-      GROUP BY cc.id
-    SQL
-      unread_counts.default = 0
-      unread_counts
+    def self.tracking_state(channel_ids, guardian, include_threads: false)
+      Chat::TrackingState.call(
+        channel_ids: channel_ids,
+        guardian: guardian,
+        include_missing_memberships: true,
+        include_threads:
+          SiteSetting.enable_experimental_chat_threaded_discussions && include_threads,
+      ).report
     end
 
     def self.find_with_access_check(channel_id_or_name, guardian)
@@ -256,7 +230,7 @@ module Chat
       end
 
       raise Discourse::NotFound if chat_channel.blank?
-      raise Discourse::InvalidAccess if !guardian.can_join_chat_channel?(chat_channel)
+      raise Discourse::InvalidAccess if !guardian.can_preview_chat_channel?(chat_channel)
       chat_channel
     end
   end

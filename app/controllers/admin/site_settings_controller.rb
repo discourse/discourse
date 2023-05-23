@@ -38,7 +38,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     value = Upload.get_from_url(value) || "" if SiteSetting.type_supervisor.get_type(id) == :upload
 
     update_existing_users = params[:update_existing_user].present?
-    previous_value = value_or_default(SiteSetting.public_send(id)) if update_existing_users
+    previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
     SiteSetting.set_and_log(id, value, current_user)
 
@@ -259,9 +259,14 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def raise_access_hidden_setting(id)
-    # note, as of Ruby 2.3 symbols are GC'd so this is considered safe
-    if SiteSetting.hidden_settings.include?(id.to_sym)
+    id = id.to_sym
+
+    if SiteSetting.hidden_settings.include?(id)
       raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
+    end
+
+    if SiteSetting.plugins[id] && !Discourse.plugins_by_name[SiteSetting.plugins[id]].configurable?
+      raise Discourse::InvalidParameters, "You are not allowed to change unconfigurable settings"
     end
   end
 

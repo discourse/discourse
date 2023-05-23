@@ -66,6 +66,7 @@ module Chat
     # @!visibility private
     class Model < Step
       def error
+        return result[name].errors.inspect if step_result.invalid
         step_result.exception.full_message
       end
     end

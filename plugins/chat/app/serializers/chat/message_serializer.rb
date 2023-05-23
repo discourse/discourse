@@ -17,6 +17,7 @@ module Chat
                :available_flags,
                :thread_id,
                :thread_reply_count,
+               :thread_title,
                :chat_channel_id
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
@@ -166,7 +167,11 @@ module Chat
     end
 
     def thread_reply_count
-      object.thread&.replies_count || 0
+      object.thread&.replies_count_cache || 0
+    end
+
+    def thread_title
+      object.thread&.title
     end
   end
 end

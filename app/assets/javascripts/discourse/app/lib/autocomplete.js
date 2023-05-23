@@ -216,7 +216,7 @@ export default function (options) {
       });
   }
 
-  let completeTerm = async function (term) {
+  let completeTerm = async function (term, event) {
     let completeEnd = null;
 
     if (term) {
@@ -228,7 +228,7 @@ export default function (options) {
         addInputSelectedItem(term, true);
       } else {
         if (options.transformComplete) {
-          term = await options.transformComplete(term);
+          term = await options.transformComplete(term, event);
         }
 
         if (term) {
@@ -272,7 +272,7 @@ export default function (options) {
           setCaretPosition(me[0], newCaretPos);
 
           if (options && options.afterComplete) {
-            options.afterComplete(text);
+            options.afterComplete(text, event);
           }
         }
       }
@@ -371,7 +371,7 @@ export default function (options) {
     } else {
       selectedOption = -1;
     }
-    ul.find("li").click(function () {
+    ul.find("li").click(function ({ originalEvent }) {
       selectedOption = ul.find("li").index(this);
       // hack for Gboard, see meta.discourse.org/t/-/187009/24
       if (autocompleteOptions == null) {
@@ -379,13 +379,13 @@ export default function (options) {
         const forcedAutocompleteOptions = dataSource(prevTerm, opts);
         forcedAutocompleteOptions?.then((data) => {
           updateAutoComplete(data);
-          completeTerm(autocompleteOptions[selectedOption]);
+          completeTerm(autocompleteOptions[selectedOption], originalEvent);
           if (!options.single) {
             me.focus();
           }
         });
       } else {
-        completeTerm(autocompleteOptions[selectedOption]);
+        completeTerm(autocompleteOptions[selectedOption], originalEvent);
         if (!options.single) {
           me.focus();
         }
@@ -710,7 +710,7 @@ export default function (options) {
             selectedOption >= 0 &&
             (userToComplete = autocompleteOptions[selectedOption])
           ) {
-            completeTerm(userToComplete);
+            completeTerm(userToComplete, e);
           } else {
             // We're cancelling it, really.
             return true;

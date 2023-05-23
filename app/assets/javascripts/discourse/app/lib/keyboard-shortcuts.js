@@ -445,14 +445,14 @@ export default {
       return;
     }
 
-    this.container.lookup("controller:composer").open({
+    this.container.lookup("service:composer").open({
       action: Composer.CREATE_TOPIC,
       draftKey: Composer.NEW_TOPIC_KEY,
     });
   },
 
   focusComposer(event) {
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -461,7 +461,7 @@ export default {
   },
 
   fullscreenComposer() {
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     if (composer.get("model")) {
       composer.toggleFullscreen();
     }

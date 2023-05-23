@@ -3,6 +3,9 @@
 module Chat
   class Thread < ActiveRecord::Base
     EXCERPT_LENGTH = 150
+    MAX_TITLE_LENGTH = 100
+
+    include Chat::ThreadCache
 
     self.table_name = "chat_threads"
 
@@ -11,12 +14,27 @@ module Chat
     belongs_to :original_message, foreign_key: "original_message_id", class_name: "Chat::Message"
 
     has_many :chat_messages,
-             -> { order("chat_messages.created_at ASC, chat_messages.id ASC") },
+             -> {
+               where("deleted_at IS NULL").order(
+                 "chat_messages.created_at ASC, chat_messages.id ASC",
+               )
+             },
              foreign_key: :thread_id,
              primary_key: :id,
              class_name: "Chat::Message"
+    has_many :user_chat_thread_memberships
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
+
+    validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
+
+    def add(user)
+      Chat::UserChatThreadMembership.find_or_create_by!(user: user, thread: self)
+    end
+
+    def remove(user)
+      Chat::UserChatThreadMembership.find_by(user: user, thread: self)&.destroy
+    end
 
     def replies
       self.chat_messages.where.not(id: self.original_message_id)
@@ -31,10 +49,37 @@ module Chat
     end
 
     def excerpt
-      original_message.excerpt(max_length: EXCERPT_LENGTH)
+      original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
+    end
+
+    def latest_not_deleted_message_id
+      DB.query_single(<<~SQL, channel_id: self.channel_id, thread_id: self.id).first
+        SELECT id FROM chat_messages
+        WHERE chat_channel_id = :channel_id
+        AND thread_id = :thread_id
+        AND deleted_at IS NULL
+        ORDER BY created_at DESC, id DESC
+        LIMIT 1
+      SQL
+    end
+
+    def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)
+      DB.query(<<~SQL, message_ids: message_ids, thread_ids: thread_ids)
+        SELECT thread_id,
+          array_agg(chat_messages.id ORDER BY chat_messages.created_at, chat_messages.id) AS thread_message_ids,
+          chat_threads.original_message_id
+        FROM chat_messages
+        INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
+        WHERE thread_id IS NOT NULL
+        #{thread_ids ? "AND thread_id IN (:thread_ids)" : ""}
+        #{message_ids ? "AND chat_messages.id IN (:message_ids)" : ""}
+        #{include_original_message ? "" : "AND chat_messages.id != chat_threads.original_message_id"}
+        GROUP BY thread_id, chat_threads.original_message_id;
+      SQL
     end
 
     def self.ensure_consistency!
+      return if !SiteSetting.enable_experimental_chat_threaded_discussions
       update_counts
     end
 
@@ -46,7 +91,7 @@ module Chat
       #
       # It is updated eventually via Jobs::Chat::PeriodicalUpdates. In
       # future we may want to update this more frequently.
-      DB.exec <<~SQL
+      updated_thread_ids = DB.query_single <<~SQL
         UPDATE chat_threads threads
         SET replies_count = subquery.replies_count
         FROM (
@@ -57,7 +102,10 @@ module Chat
         ) subquery
         WHERE threads.id = subquery.thread_id
         AND subquery.replies_count != threads.replies_count
+        RETURNING threads.id AS thread_id;
       SQL
+      return if updated_thread_ids.empty?
+      self.clear_caches!(updated_thread_ids)
     end
   end
 end

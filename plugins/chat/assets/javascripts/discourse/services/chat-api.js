@@ -22,10 +22,31 @@ export default class ChatApi extends Service {
    *
    *    this.chatApi.channel(1).then(channel => { ... })
    */
-  channel(channelId) {
-    return this.#getRequest(`/channels/${channelId}`).then((result) =>
-      this.chatChannelsManager.store(result.channel)
-    );
+  channel(channelId, data = {}) {
+    const args = {};
+
+    if (data.targetMessageId) {
+      args.target_message_id = data.targetMessageId;
+    } else {
+      args.page_size = data.pageSize;
+
+      if (data.includeMessages) {
+        args.include_messages = true;
+      }
+
+      if (data.messageId) {
+        args.target_message_id = data.messageId;
+      }
+
+      if (data.threadId) {
+        args.thread_id = data.threadId;
+      }
+    }
+
+    return this.#getRequest(`/channels/${channelId}`, args).then((result) => {
+      this.chatChannelsManager.store(result.channel);
+      return result;
+    });
   }
 
   /**
@@ -40,8 +61,25 @@ export default class ChatApi extends Service {
    */
   thread(channelId, threadId) {
     return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
-      (result) => this.chat.activeChannel.threadsManager.store(result.thread)
+      (result) =>
+        this.chat.activeChannel.threadsManager.store(
+          this.chat.activeChannel,
+          result.thread
+        )
     );
+  }
+
+  /**
+   * Loads all threads for a channel.
+   * For now we only get the 50 threads ordered
+   * by the last message sent by the user then the
+   * thread creation date, later we will paginate
+   * and add filters.
+   * @param {number} channelId - The ID of the channel.
+   * @returns {Promise}
+   */
+  threads(channelId) {
+    return this.#getRequest(`/channels/${channelId}/threads`);
   }
 
   /**
@@ -214,11 +252,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   listCurrentUserChannels() {
-    return this.#getRequest("/channels/me").then((result) => {
-      return (result?.channels || []).map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+    return this.#getRequest("/channels/me");
   }
 
   /**
@@ -244,7 +278,7 @@ export default class ChatApi extends Service {
   }
 
   /**
-   * Returns messages of a channel, from the last message or a specificed target.
+   * Returns messages of a channel, from the last message or a specified target.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the query.
    * @param {integer} data.targetMessageId - ID of the targeted message.
@@ -299,7 +333,7 @@ export default class ChatApi extends Service {
   /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
-   * @param {object} data - The draft data, see ChatMessageDraft.toJSON() for more details.
+   * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
   saveDraft(channelId, data) {
@@ -350,10 +384,9 @@ export default class ChatApi extends Service {
    * @param {number} messageId - The ID of the message being restored.
    */
   restoreMessage(channelId, messageId) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
-    return ajax(`/chat/${channelId}/restore/${messageId}`, {
-      type: "PUT",
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}/restore`
+    );
   }
 
   /**
@@ -406,6 +439,32 @@ export default class ChatApi extends Service {
    */
   markChannelAsRead(channelId, messageId = null) {
     return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
+  }
+
+  /**
+   * Marks all messages and mentions in a thread as read. This is quite
+   * far-reaching for now, and is not granular since there is no membership/
+   * read state per-user for threads. In future this will be expanded to
+   * also pass message ID in the same way as markChannelAsRead
+   *
+   * @param {number} channelId - The ID of the channel for the thread being marked as read.
+   * @param {number} threadId - The ID of the thread being marked as read.
+   * @returns {Promise}
+   */
+  markThreadAsRead(channelId, threadId) {
+    return this.#putRequest(`/channels/${channelId}/threads/${threadId}/read`);
+  }
+
+  /**
+   * Updates settings of a thread.
+   *
+   * @param {number} channelId - The ID of the channel for the thread being edited.
+   * @param {number} threadId - The ID of the thread being edited.
+   * @param {object} data - Params of the edit.
+   * @param {string} data.title - The new title for the thread.
+   */
+  editThread(channelId, threadId, data) {
+    return this.#putRequest(`/channels/${channelId}/threads/${threadId}`, data);
   }
 
   get #basePath() {

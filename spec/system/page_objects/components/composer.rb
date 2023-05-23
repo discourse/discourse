@@ -15,8 +15,8 @@ module PageObjects
         self
       end
 
-      def click_toolbar_button(number)
-        find(".d-editor-button-bar button:nth-child(#{number})").click
+      def click_toolbar_button(button_class)
+        find(".d-editor-button-bar button.#{button_class}").click
         self
       end
 
@@ -41,6 +41,10 @@ module PageObjects
 
       def has_content?(content)
         composer_input.value == content
+      end
+
+      def has_popup_content?(content)
+        composer_popup.has_content?(content)
       end
 
       def select_action(action)
@@ -72,16 +76,40 @@ module PageObjects
         has_css?(AUTOCOMPLETE_MENU)
       end
 
+      def has_no_emoji_autocomplete?
+        has_no_css?(AUTOCOMPLETE_MENU)
+      end
+
+      EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
+
       def has_emoji_suggestion?(emoji)
-        has_css?("#{AUTOCOMPLETE_MENU} .emoji-shortname", text: emoji)
+        has_css?(EMOJI_SUGGESTION_SELECTOR, text: emoji)
+      end
+
+      def has_no_emoji_suggestion?(emoji)
+        has_no_css?(EMOJI_SUGGESTION_SELECTOR, text: emoji)
       end
 
       def has_emoji_preview?(emoji)
-        page.has_css?(".d-editor-preview .emoji[title=':#{emoji}:']")
+        page.has_css?(emoji_preview_selector(emoji))
+      end
+
+      def has_no_emoji_preview?(emoji)
+        page.has_no_css?(emoji_preview_selector(emoji))
       end
 
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
+      end
+
+      def composer_popup
+        find("#{COMPOSER_ID} .composer-popup")
+      end
+
+      private
+
+      def emoji_preview_selector(emoji)
+        ".d-editor-preview .emoji[title=':#{emoji}:']"
       end
     end
   end

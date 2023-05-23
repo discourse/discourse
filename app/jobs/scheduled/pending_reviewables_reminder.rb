@@ -9,12 +9,15 @@ module Jobs
     def execute(args)
       @sent_reminder = false
 
-      if SiteSetting.notify_about_flags_after > 0
+      if SiteSetting.notify_about_reviewable_item_after > 0
         reviewable_ids =
           Reviewable
             .pending
             .default_visible
-            .where("latest_score < ?", SiteSetting.notify_about_flags_after.to_f.hours.ago)
+            .where(
+              "latest_score < ?",
+              SiteSetting.notify_about_reviewable_item_after.to_f.hours.ago,
+            )
             .order("id DESC")
             .pluck(:id)
 
@@ -30,7 +33,7 @@ module Jobs
                 limit_once_per: false,
                 message_params: {
                   mentions: mentions,
-                  count: SiteSetting.notify_about_flags_after,
+                  count: SiteSetting.notify_about_reviewable_item_after,
                 },
               },
             )

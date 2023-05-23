@@ -92,6 +92,12 @@
             "null"
           ]
         },
+        "flair_group_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "version": {
           "type": "integer"
         },

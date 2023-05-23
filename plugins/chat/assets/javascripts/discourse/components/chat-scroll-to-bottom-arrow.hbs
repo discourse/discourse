@@ -3,18 +3,12 @@
     class={{concat-class
       "btn-flat"
       "chat-scroll-to-bottom"
-      (if (or @show @hasNewMessages) "visible")
+      (if @show "visible")
     }}
     @action={{@scrollToBottom}}
   >
     <span class="chat-scroll-to-bottom__arrow">
       {{d-icon "arrow-down"}}
-
-      {{#if @hasNewMessages}}
-        <span class="chat-scroll-to-bottom__text">
-          {{i18n "chat.scroll_to_new_messages"}}
-        </span>
-      {{/if}}
     </span>
   </DButton>
 </div>

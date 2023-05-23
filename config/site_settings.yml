@@ -385,7 +385,8 @@ basic:
     default: false
   enable_user_tips:
     client: true
-    default: false
+    default: true
+    refresh: true
 
 login:
   invite_only:
@@ -831,10 +832,6 @@ posting:
       ja: 4
       zh_CN: 4
       zh_TW: 4
-  enable_personal_messages:
-    default: true
-    client: true
-    hidden: true
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
@@ -958,6 +955,9 @@ posting:
       ja: 120
       zh_CN: 120
       zh_TW: 120
+  default_subcategory_on_read_only_category:
+    client: true
+    default: false
   show_pinned_excerpt_mobile:
     client: true
     default: true
@@ -1568,6 +1568,10 @@ files:
     default: false
     client: true
     hidden: true
+  video_thumbnails_enabled:
+    default: true
+    client: true
+    hidden: true
 
 trust:
   default_trust_level:
@@ -1588,10 +1592,6 @@ trust:
   min_trust_to_allow_self_wiki:
     default: 3
     enum: "TrustLevelSetting"
-  min_trust_to_send_messages:
-    default: 1
-    enum: "TrustLevelSetting"
-    hidden: true
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
@@ -1704,7 +1704,9 @@ security:
   allow_indexing_non_canonical_urls:
     default: true
     hidden: true
-  moderators_manage_categories_and_groups: false
+  moderators_manage_categories_and_groups:
+    default: false
+    client: true
   moderators_change_post_ownership:
     client: true
     default: false
@@ -2100,7 +2102,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-    hidden: true
 
 navigation:
   navigation_menu:
@@ -2123,15 +2124,6 @@ navigation:
     choices:
       - "default"
       - "unread_new"
-  enable_new_notifications_menu:
-    default: true
-  enable_custom_sidebar_sections:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
 
 embedding:
   embed_by_username:
@@ -2288,6 +2280,9 @@ search:
     default: 1.2
     hidden: true
     validator: "CategorySearchPriorityWeightsValidator"
+  search_page_size:
+    default: 50
+    hidden: true
 
 uncategorized:
   version_checks:
@@ -2390,6 +2385,7 @@ uncategorized:
   educate_until_posts: 2
   sequential_replies_threshold: 2
   get_a_room_threshold: 3
+  dont_feed_the_trolls_threshold: 2
   dominating_topic_minimum_percent: 40
   disable_avatar_education_message: false
   pm_warn_user_last_seen_months_ago: 24
@@ -2427,7 +2423,7 @@ uncategorized:
     default: ""
     validator: "DefaultComposerCategoryValidator"
 
-  notify_about_flags_after:
+  notify_about_reviewable_item_after:
     type: float
     default: 48
 
@@ -2490,7 +2486,6 @@ uncategorized:
   welcome_topic_id:
     default: -1
     hidden: true
-    client: true
   admin_quick_start_topic_id:
     default: -1
     hidden: true

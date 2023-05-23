@@ -1,10 +1,48 @@
 # frozen_string_literal: true
 
 class SidebarUrl < ActiveRecord::Base
+  enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
+
   FULL_RELOAD_LINKS_REGEX = [%r{\A/my/[a-z_\-/]+\z}, %r{\A/safe-mode\z}]
   MAX_ICON_LENGTH = 40
   MAX_NAME_LENGTH = 80
   MAX_VALUE_LENGTH = 200
+  COMMUNITY_SECTION_LINKS = [
+    {
+      name: "Everything",
+      path: "/latest",
+      icon: "layer-group",
+      segment: SidebarUrl.segments["primary"],
+    },
+    {
+      name: "My Posts",
+      path: "/my/activity",
+      icon: "user",
+      segment: SidebarUrl.segments["primary"],
+    },
+    { name: "Review", path: "/review", icon: "flag", segment: SidebarUrl.segments["primary"] },
+    { name: "Admin", path: "/admin", icon: "wrench", segment: SidebarUrl.segments["primary"] },
+    { name: "Users", path: "/u", icon: "users", segment: SidebarUrl.segments["secondary"] },
+    {
+      name: "About",
+      path: "/about",
+      icon: "info-circle",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    {
+      name: "FAQ",
+      path: "/faq",
+      icon: "question-circle",
+      segment: SidebarUrl.segments["secondary"],
+    },
+    { name: "Groups", path: "/g", icon: "user-friends", segment: SidebarUrl.segments["secondary"] },
+    {
+      name: "Badges",
+      path: "/badges",
+      icon: "certificate",
+      segment: SidebarUrl.segments["secondary"],
+    },
+  ]
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
   validates :name, presence: true, length: { maximum: MAX_NAME_LENGTH }
@@ -48,4 +86,5 @@ end
 #  updated_at :datetime         not null
 #  icon       :string(40)       not null
 #  external   :boolean          default(FALSE), not null
+#  segment    :integer          default("primary"), not null
 #

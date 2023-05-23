@@ -61,20 +61,4 @@ export default class SectionLink extends Component {
 
     return "#" + color;
   }
-
-  get prefixElementColors() {
-    if (!this.args.prefixElementColors) {
-      return;
-    }
-
-    const prefixElementColors = this.args.prefixElementColors.filter((color) =>
-      color?.slice(0, 6)
-    );
-
-    if (prefixElementColors.length === 1) {
-      prefixElementColors.push(prefixElementColors[0]);
-    }
-
-    return prefixElementColors.map((color) => `#${color} 50%`).join(", ");
-  }
 }

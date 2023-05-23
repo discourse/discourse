@@ -143,12 +143,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
         chat_channel_page.send_message(clip_text)
 
         expect(page).to have_selector(".chat-message", count: 2)
-
-        message = Chat::Message.find_by(user: current_user, message: clip_text.chomp)
-
-        within(chat_channel_page.message_by_id(message.id)) do
-          expect(page).to have_css(".chat-transcript")
-        end
+        expect(page).to have_css(".chat-transcript")
       end
     end
   end

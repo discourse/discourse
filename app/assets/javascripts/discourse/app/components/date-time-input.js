@@ -66,7 +66,7 @@ export default Component.extend({
     );
   },
 
-  @computed
+  @computed("timezone")
   get resolvedTimezone() {
     return this.timezone || moment.tz.guess();
   },

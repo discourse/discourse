@@ -4,7 +4,7 @@ Congratulations, you are now the proud owner of your very own [Civilized Discour
 
 If you haven't already, launch the [setup wizard](/wizard) and go through the steps to configure your site. You can run the wizard as many times as you want, it's completely safe!
 
-> Note: To make launching your new site easier, all new members will have daily email summary emails enabled (instead of the usual weekly) and be given a higher level of trust. See below to learn more about the trust system and bootstrap mode.
+> Note: To make launching your new site easier, all new members will have daily summary emails enabled (instead of the usual weekly) and be given a higher level of trust. See below to learn more about the trust system and bootstrap mode.
 
 ### Admin Dashboard
 

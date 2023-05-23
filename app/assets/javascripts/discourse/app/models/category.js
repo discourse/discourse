@@ -38,9 +38,11 @@ const Category = RestModel.extend({
   @discourseComputed("required_tag_groups", "minimum_required_tags")
   minimumRequiredTags() {
     if (this.required_tag_groups?.length > 0) {
-      return this.required_tag_groups.reduce(
-        (sum, rtg) => sum + rtg.min_count,
-        0
+      // it should require the max between the bare minimum set in the category and the sum of the min_count of the
+      // required_tag_groups
+      return Math.max(
+        this.required_tag_groups.reduce((sum, rtg) => sum + rtg.min_count, 0),
+        this.minimum_required_tags || 0
       );
     } else {
       return this.minimum_required_tags > 0 ? this.minimum_required_tags : null;

@@ -12,6 +12,8 @@ module Jobs
       # channels updated or with new messages in the past N days? Perhaps
       # we could update all the counts in a single query as well?
       def execute(args = {})
+        return if !SiteSetting.chat_enabled
+
         ::Chat::Channel
           .where(status: %i[open closed])
           .find_each { |chat_channel| set_user_count(chat_channel) }

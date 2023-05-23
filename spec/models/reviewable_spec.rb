@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Reviewable, type: :model do
+  describe "Validations" do
+    it { is_expected.to validate_length_of(:reject_reason).is_at_most(500) }
+  end
+
   describe ".create" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }

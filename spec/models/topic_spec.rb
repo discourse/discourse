@@ -653,8 +653,9 @@ RSpec.describe Topic do
 
     context "with a similar topic" do
       fab!(:post) do
-        SearchIndexer.enable
-        create_post(title: "Evil trout is the dude who posted this topic")
+        with_search_indexer_enabled do
+          create_post(title: "Evil trout is the dude who posted this topic")
+        end
       end
 
       let(:topic) { post.topic }

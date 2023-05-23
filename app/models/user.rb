@@ -607,7 +607,7 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
-  def unread_notifications_of_type(notification_type)
+  def unread_notifications_of_type(notification_type, since: nil)
     # perf critical, much more efficient than AR
     sql = <<~SQL
         SELECT COUNT(*)
@@ -617,10 +617,11 @@ class User < ActiveRecord::Base
            AND n.notification_type = :notification_type
            AND n.user_id = :user_id
            AND NOT read
+           #{since ? "AND n.created_at > :since" : ""}
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, notification_type: notification_type)[0].to_i
+    DB.query_single(sql, user_id: id, notification_type: notification_type, since: since)[0].to_i
   end
 
   def unread_notifications_of_priority(high_priority:)
@@ -760,7 +761,7 @@ class User < ActiveRecord::Base
   end
 
   def reviewable_count
-    Reviewable.list_for(self, include_claimed_by_others: !redesigned_user_menu_enabled?).count
+    Reviewable.list_for(self, include_claimed_by_others: false).count
   end
 
   def saw_notification_id(notification_id)
@@ -867,13 +868,9 @@ class User < ActiveRecord::Base
       seen_notification_id: seen_notification_id,
     }
 
-    if self.redesigned_user_menu_enabled?
-      payload[:all_unread_notifications_count] = all_unread_notifications_count
-      payload[:grouped_unread_notifications] = grouped_unread_notifications
-      payload[
-        :new_personal_messages_notifications_count
-      ] = new_personal_messages_notifications_count
-    end
+    payload[:all_unread_notifications_count] = all_unread_notifications_count
+    payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
@@ -1824,10 +1821,6 @@ class User < ActiveRecord::Base
 
   def has_status?
     user_status && !user_status.expired?
-  end
-
-  def redesigned_user_menu_enabled?
-    !SiteSetting.legacy_navigation_menu? || SiteSetting.enable_new_notifications_menu
   end
 
   def new_new_view_enabled?

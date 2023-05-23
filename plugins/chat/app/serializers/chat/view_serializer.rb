@@ -2,7 +2,41 @@
 
 module Chat
   class ViewSerializer < ApplicationSerializer
-    attributes :meta, :chat_messages
+    attributes :meta, :chat_messages, :threads, :tracking, :thread_tracking_overview, :channel
+
+    def threads
+      return [] if !object.threads
+
+      ActiveModel::ArraySerializer.new(
+        object.threads,
+        each_serializer: Chat::ThreadSerializer,
+        scope: scope,
+      )
+    end
+
+    def tracking
+      object.tracking || {}
+    end
+
+    def thread_tracking_overview
+      object.thread_tracking_overview || []
+    end
+
+    def include_threads?
+      include_thread_data?
+    end
+
+    def include_thread_tracking_overview?
+      include_thread_data?
+    end
+
+    def include_thread_data?
+      channel.threading_enabled && SiteSetting.enable_experimental_chat_threaded_discussions
+    end
+
+    def channel
+      object.chat_channel
+    end
 
     def chat_messages
       ActiveModel::ArraySerializer.new(

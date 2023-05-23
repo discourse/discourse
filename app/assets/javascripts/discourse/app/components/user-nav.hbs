@@ -76,8 +76,7 @@
         <span>{{i18n "user.preferences"}}</span>
       </DNavigationItem>
     {{/if}}
-
-    {{#if (and this.site.mobileView this.currentUser.staff)}}
+    {{#if (and @isMobileView @isStaff)}}
       <li class="user-nav__admin">
         <a href={{@user.adminPath}}>
           {{d-icon "wrench"}}

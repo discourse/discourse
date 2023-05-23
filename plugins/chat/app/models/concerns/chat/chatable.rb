@@ -12,6 +12,10 @@ module Chat
       channel_class.create!(args.merge(chatable: self))
     end
 
+    def create_chat_channel(**args)
+      channel_class.create(args.merge(chatable: self))
+    end
+
     private
 
     def channel_class

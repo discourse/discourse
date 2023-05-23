@@ -3,6 +3,7 @@ import Draft from "discourse/models/draft";
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
 import { seenUser } from "discourse/lib/user-presence";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const DiscourseRoute = Route.extend({
   showFooter: false,
@@ -53,7 +54,7 @@ const DiscourseRoute = Route.extend({
   },
 
   openTopicDraft() {
-    const composer = this.controllerFor("composer");
+    const composer = getOwner(this).lookup("service:composer");
 
     if (
       composer.get("model.action") === Composer.CREATE_TOPIC &&
@@ -72,15 +73,6 @@ const DiscourseRoute = Route.extend({
         }
       });
     }
-  },
-
-  // deprecated, use isCurrentUser() instead
-  isAnotherUsersPage(user) {
-    if (!this.currentUser) {
-      return true;
-    }
-
-    return user.username !== this.currentUser.username;
   },
 
   isCurrentUser(user) {

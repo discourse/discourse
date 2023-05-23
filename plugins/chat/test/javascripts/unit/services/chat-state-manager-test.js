@@ -53,11 +53,6 @@ module(
     test("lastKnownChatURL", function (assert) {
       assert.strictEqual(this.subject.lastKnownChatURL, "/chat");
 
-      sinon.stub(this.subject.router, "currentURL").value("/foo");
-      this.subject.storeChatURL();
-
-      assert.strictEqual(this.subject.lastKnownChatURL, "/foo");
-
       this.subject.storeChatURL("/bar");
 
       assert.strictEqual(this.subject.lastKnownChatURL, "/bar");

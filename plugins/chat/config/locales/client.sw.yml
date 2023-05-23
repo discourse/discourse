@@ -66,6 +66,7 @@ sw:
       composer:
         italic_text: "Maneno yaliyo tiliwa mkazo"
         bold_text: "Maneno yaliyokolezwa"
+        send: "Tuma"
       notification_levels:
         never: "Kamwe"
       settings:
@@ -98,6 +99,12 @@ sw:
       emoji_picker:
         objects: "Vitu"
         flags: "Bendera"
+      thread:
+        title: "Kichwa cha Habari"
+        replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        settings: "Mipangilio"
       draft_channel_screen:
         header: "Ujumbe Mpya"
         cancel: "Ghairi"

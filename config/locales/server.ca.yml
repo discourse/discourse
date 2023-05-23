@@ -165,9 +165,6 @@ ca:
       load_from_remote: "Hi ha hagut un error en carregar aquesta publicació."
     site_settings:
       invalid_category_id: "Heu especificat una categoria que no existeix"
-      invalid_choice:
-        one: "Heu fet la tria no vàlida %{name}"
-        other: "Heu fet tries no vàlides %{name}"
       default_categories_already_selected: "No podeu triar una categoria emprada en una altra llista."
       s3_upload_bucket_is_required: "No podeu activar càrregues a S3 si no heu proporcionat el 's3_upload_bucket'."
       enable_s3_uploads_is_required: "No podeu habilitar l'inventari a S3 si no heu habilitat la càrrega a S3."
@@ -445,21 +442,6 @@ ca:
   meta_category_description: "Discussió sobre aquest lloc web, la seva organització, com funciona i com podem millorar-lo."
   staff_category_name: "Equip responsable"
   staff_category_description: "Categoria privada per a converses de l'equip responsable. Els temes només seran visibles per a discussions entre moderadors i administradors."
-  discourse_welcome_topic:
-    body: |2
-
-      El primer paràgraf d'aquest tema afixat serà visible com a missatge de benvinguda per a totes les noves visites a la vostra pàgina principal. És important!
-
-      **Editeu-lo** i convertiu-lo en una breu descripció de la vostra comunitat:
-
-      - Per a qui és?
-      - Què hi poden trobar?
-      - Per què haurien de venir aquí?
-      - On poden llegir-ne més (enllaços, recursos, etc.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Potser voleu tancar el tema amb l'eina d'administració :wrench: (dalt a la dreta i a baix), perquè les respostes no s'amunteguin sobre una comunicació.
   admin_quick_start_title: "LLEGIU-ME PRIMER DE TOT: Guia ràpida d'inici per a administradors"
   category:
     topic_prefix: "Quant a la categoria %{category} "
@@ -1505,7 +1487,6 @@ ca:
     pop3_polling_password: "Contrasenya del compte POP3 per a la consulta de correu."
     pop3_polling_delete_from_server: "Suprimeix els correus electrònics del servidor. NOTA: Si ho desactiveu, haureu de buidar manualment la vostra bústia de correu."
     log_mail_processing_failures: "Registra tots els errors de processament de correu electrònic en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Permet als usuaris publicar temes nous per correu (requereix consulta manual o POP3). Configureu les adreces en la pestanya "Configuració" de cada categoria.'
     email_in_min_trust: "El nivell de confiança mínim que un usuari necessita per a tenir permís per a publicar temes nous des del correu."
     email_in_spam_header: "La capçalera del correu electrònic per a detectar correu brossa."
     email_prefix: "L'[etiqueta] utilitzada en l'assumpte dels correus. Per defecte serà 'títol'."
@@ -1587,10 +1568,8 @@ ca:
     allowed_href_schemes: "Esquemes permesos en enllaços a més de http i https."
     embed_post_limit: "Nombre màxim de publicacions que s'incrusten."
     embed_username_required: "Cal un nom d'usuari per a crear un tema."
-    notify_about_flags_after: "Si hi ha banderes que no s'han gestionat després d'aquest nombre d'hores, envia un missatge personal als moderadors. 0 per desactivar."
     show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
-    bootstrap_mode_min_users: "Nombre mínim d'usuaris necessaris per a desactivar el mode d'arrencada (deixeu-ho a 0 per a desactivar-lo)."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"
     enable_emoji_shortcuts: "El text típic d'emojis com ara :): p :( serà convertit en emojis."
@@ -1642,7 +1621,6 @@ ca:
     revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
     allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
-    min_trust_level_for_user_api_key: "Nivell de confiança necessari per a generar claus API d'usuari."
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
     expire_user_api_keys_days: "Nombre de dies abans de l'extinció automàtica d'una clau d'API d'usuari (0 vol dir mai)"
@@ -2200,10 +2178,6 @@ ca:
       title: "Descarrega imatges remotes inhabilitades"
       subject_template: "Descarregant imatges remotes inhabilitades"
       text_body_template: "S'ha inhabilitat el paràmetre `download_remote_images_to_local` perquè s'ha arribat al límit d'espai de disc en `download_remote_images_threshold`."
-    dashboard_problems:
-      title: "Problemes del tauler de control"
-      subject_template: "Nou consell al tauler de control del vostre lloc web"
-      text_body_template: "Tenim uns quants consells i recomanacions basats en la configuració actual del lloc web. \n\nVisiteu el [tauler de control del lloc web](%{base_url}/admin) per a veure-ho.\n\nSi no hi ha res visible en el tauler de control, algun altre membre del personal responsable pot haver actuat segons aquestes recomanacions. Es pot veure una llista d'accions de l'equip responsable en el [registre d'accions de l'equip responsable](%{base_url}/admin/logs/staff_action_logs).\n"
     new_user_of_the_month:
       title: "Sou el nou usuari del mes!"
       subject_template: "Sou un nou usuari del mes!"

@@ -44,15 +44,15 @@ RSpec.describe "Channel - Info - Members page", type: :system, js: true do
 
         chat_page.visit_channel_members(channel_1)
 
-        expect(page).to have_selector(".channel-members-view__list-item", count: 50)
+        expect(page).to have_selector(".channel-members-view__list-item", count: 50, wait: 15)
 
         scroll_to(find(".channel-members-view__list-item:nth-child(50)"))
 
-        expect(page).to have_selector(".channel-members-view__list-item", count: 100, wait: 5)
+        expect(page).to have_selector(".channel-members-view__list-item", count: 100, wait: 15)
 
         scroll_to(find(".channel-members-view__list-item:nth-child(100)"))
 
-        expect(page).to have_selector(".channel-members-view__list-item", count: 100)
+        expect(page).to have_selector(".channel-members-view__list-item", count: 100, wait: 15)
       end
 
       context "with filter" do

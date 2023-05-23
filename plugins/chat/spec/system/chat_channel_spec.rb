@@ -45,9 +45,15 @@ RSpec.describe "Chat channel", type: :system, js: true do
           chat.visit_channel(channel_1)
         end
 
-        using_session(:tab_1) { channel.send_message("test_message") }
+        using_session(:tab_1) do |session|
+          channel.send_message("test_message")
+          session.quit
+        end
 
-        using_session(:tab_2) { expect(channel).to have_message(text: "test_message") }
+        using_session(:tab_2) do |session|
+          expect(channel).to have_message(text: "test_message")
+          session.quit
+        end
       end
     end
 
@@ -248,6 +254,30 @@ RSpec.describe "Chat channel", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       expect(page).to have_selector("code.lang-ruby")
+    end
+  end
+
+  context "when scrolling" do
+    before do
+      channel_1.add(current_user)
+      50.times { Fabricate(:chat_message, chat_channel: channel_1) }
+      sign_in(current_user)
+    end
+
+    it "resets the active message" do
+      chat.visit_channel(channel_1)
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
+
+      expect(page).to have_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+
+      find(".chat-messages-scroll").scroll_to(0, -1000)
+
+      expect(page).to have_no_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
     end
   end
 end

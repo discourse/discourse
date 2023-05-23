@@ -1,30 +1,62 @@
 .chat-composer-upload {
   display: inline-flex;
-  height: 50px;
+  height: 64px;
   padding: 0.5rem;
   border: 1px solid var(--primary-low-mid);
   margin-right: 0.5em;
+  position: relative;
+  border-radius: 5px;
+  box-sizing: border-box;
+
+  &--image:not(.chat-composer-upload--in-progress) {
+    padding: 0;
+
+    .preview-img {
+      height: 62px;
+      width: 62px;
+      box-sizing: border-box;
+    }
+  }
 
   &:last-child {
     margin-right: 0;
   }
 
+  &:hover {
+    .chat-composer-upload__remove-btn {
+      visibility: visible;
+      background: rgba(var(--always-black-rgb), 0.9);
+      padding: 5px;
+      border-radius: 100%;
+      font-size: var(--font-down-2);
+    }
+  }
+
+  &__remove-btn {
+    border: 1px solid var(--primary-medium);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    visibility: hidden;
+  }
+
   .preview {
-    width: 50px;
+    width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 1em 0 0;
-    border-radius: 8px;
+    margin: 0;
 
     .d-icon {
       font-size: var(--font-up-6);
+      margin-right: 0.5rem;
     }
 
     .preview-img {
-      max-width: 100%;
-      max-height: 100%;
+      object-position: center;
+      object-fit: cover;
+      border-radius: 5px;
     }
   }
 

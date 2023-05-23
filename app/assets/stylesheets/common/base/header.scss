@@ -210,10 +210,11 @@
     right: 23.5px;
     z-index: z("base");
     margin-left: 0;
-    background: radial-gradient(transparent, var(--success));
     border-radius: 100%;
     width: 20px;
     height: 20px;
+    box-shadow: 0 0 0 rgba(var(--success-rgb), 1);
+    transform: scale(1);
     transform-origin: center;
     animation-iteration-count: infinite;
     animation-duration: 3s;

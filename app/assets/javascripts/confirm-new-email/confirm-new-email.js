@@ -13,10 +13,14 @@ if (security) {
         document.getElementById("security-key-credential").value =
           JSON.stringify(credentialData);
 
-        $(e.target).parents("form").submit();
+        e.target.closest("form").submit();
       },
       (errorMessage) => {
-        document.getElementById("security-key-error").innerText = errorMessage;
+        document.getElementById(
+          "security-key-error"
+        ).innerHTML = `<div class="alert alert-error"></div>`;
+        document.querySelector("#security-key-error .alert").innerText =
+          errorMessage;
       }
     );
   };

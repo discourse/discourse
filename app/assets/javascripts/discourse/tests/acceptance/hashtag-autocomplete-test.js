@@ -1,27 +1,9 @@
-import { setCaretPosition } from "discourse/lib/utilities";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import {
-  click,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+  acceptance,
+  emulateAutocomplete,
+} from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-
-async function typeHashtagAutocomplete() {
-  const composerInput = query(".d-editor-input");
-  await fillIn(".d-editor-input", "abc #");
-  await triggerKeyEvent(".d-editor-input", "keydown", "#");
-  await fillIn(".d-editor-input", "abc #");
-  await setCaretPosition(composerInput, 5);
-  await triggerKeyEvent(".d-editor-input", "keyup", "#");
-  await triggerKeyEvent(".d-editor-input", "keydown", "O");
-  await fillIn(".d-editor-input", "abc #o");
-  await setCaretPosition(composerInput, 6);
-  await triggerKeyEvent(".d-editor-input", "keyup", "O");
-  await settled();
-}
 
 acceptance("#hashtag autocompletion in composer", function (needs) {
   needs.user();
@@ -71,7 +53,9 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
   test(":emoji: unescape in autocomplete search results", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
-    await typeHashtagAutocomplete();
+
+    await emulateAutocomplete(".d-editor-input", "abc #o");
+
     assert.dom(".hashtag-autocomplete__option").exists({ count: 3 });
     assert
       .dom(

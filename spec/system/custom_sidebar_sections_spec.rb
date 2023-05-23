@@ -6,18 +6,14 @@ describe "Custom sidebar sections", type: :system, js: true do
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
-  before do
-    ### TODO remove when enable_custom_sidebar_sections SiteSetting is removed
-    group = Fabricate(:group)
-    Fabricate(:group_user, group: group, user: user)
-    Fabricate(:group_user, group: group, user: admin)
-    SiteSetting.enable_custom_sidebar_sections = group.id.to_s
-  end
-
   it "allows the user to create custom section" do
+    visit("/latest")
+
+    expect(sidebar).to have_no_add_section_button
+
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
@@ -37,7 +33,7 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows the user to create custom section with /my link" do
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
@@ -57,7 +53,7 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows the user to create custom section with external link" do
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     expect(section_modal).to be_visible
     expect(section_modal).to have_disabled_save
@@ -99,7 +95,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar).to have_section("Edited section")
     expect(sidebar).to have_section_link("Edited Tag")
 
-    expect(sidebar).not_to have_section_link("Sidebar Categories")
+    expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
   it "allows the user to reorder links in custom section" do
@@ -112,11 +108,11 @@ describe "Custom sidebar sections", type: :system, js: true do
     sign_in user
     visit("/latest")
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
       expect(sidebar).to have_section_link("Sidebar Tags")
     end
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
       expect(sidebar).to have_section_link("Sidebar Categories")
     end
 
@@ -124,11 +120,11 @@ describe "Custom sidebar sections", type: :system, js: true do
     categories_link = find(".sidebar-section-link[data-link-name='Sidebar Categories']")
     tags_link.drag_to(categories_link, html5: true, delay: 0.4)
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(1)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
       expect(sidebar).to have_section_link("Sidebar Categories")
     end
 
-    within(".sidebar-custom-sections .sidebar-section-link-wrapper:nth-child(2)") do
+    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
       expect(sidebar).to have_section_link("Sidebar Tags")
     end
   end
@@ -169,13 +165,13 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.delete
     section_modal.confirm_delete
 
-    expect(sidebar).not_to have_section("My section")
+    expect(sidebar).to have_no_section("My section")
   end
 
   it "allows admin to create, edit and delete public section" do
     sign_in admin
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     section_modal.fill_name("Public section")
     section_modal.fill_link("Sidebar Tags", "/tags")
@@ -196,7 +192,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.delete
     section_modal.confirm_delete
 
-    expect(sidebar).not_to have_section("Edited public section")
+    expect(sidebar).to have_no_section("Edited public section")
   end
 
   it "shows anonymous public sections" do
@@ -215,7 +211,7 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "validates custom section fields" do
     sign_in user
     visit("/latest")
-    sidebar.open_new_custom_section
+    sidebar.click_add_section_button
 
     section_modal.fill_name("A" * (SidebarSection::MAX_TITLE_LENGTH + 1))
     section_modal.fill_link("B" * (SidebarUrl::MAX_NAME_LENGTH + 1), "/wrong-url")

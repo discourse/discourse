@@ -55,7 +55,11 @@ module(
       assert.ok(!exists("li.read"));
 
       await triggerEvent("li", "mouseup", { button: 1, which: 2 });
-      assert.strictEqual(count("li.read"), 1);
+      assert.strictEqual(
+        count("li.read"),
+        1,
+        "only one item is marked as read"
+      );
       assert.strictEqual(requests, 1);
     });
   }

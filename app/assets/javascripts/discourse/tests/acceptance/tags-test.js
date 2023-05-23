@@ -542,7 +542,7 @@ acceptance("Tag info", function (needs) {
   test("composer will not set tags if user cannot create them", async function (assert) {
     await visit("/tag/planters");
     await click("#create-topic");
-    let composer = this.owner.lookup("controller:composer");
+    let composer = this.owner.lookup("service:composer");
     assert.strictEqual(composer.get("model").tags, undefined);
   });
 });
@@ -611,7 +611,7 @@ acceptance("Tag show - create topic", function (needs) {
   });
 
   test("composer will not set tags with all/none tags when creating topic", async function (assert) {
-    const composer = this.owner.lookup("controller:composer");
+    const composer = this.owner.lookup("service:composer");
 
     await visit("/tag/none");
     await click("#create-topic");
@@ -623,7 +623,7 @@ acceptance("Tag show - create topic", function (needs) {
   });
 
   test("composer will set tags from selected tag", async function (assert) {
-    const composer = this.owner.lookup("controller:composer");
+    const composer = this.owner.lookup("service:composer");
 
     await visit("/tag/planters");
     await click("#create-topic");

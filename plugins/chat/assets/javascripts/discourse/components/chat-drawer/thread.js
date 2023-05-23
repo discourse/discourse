@@ -7,6 +7,23 @@ export default class ChatDrawerThread extends Component {
   @service chat;
   @service chatStateManager;
   @service chatChannelsManager;
+  @service chatDrawerRouter;
+
+  get backLink() {
+    const link = {
+      models: this.chat.activeChannel.routeModels,
+    };
+
+    if (this.chatDrawerRouter.previousRouteName === "chat.channel.threads") {
+      link.title = "chat.return_to_threads_list";
+      link.route = "chat.channel.threads";
+    } else {
+      link.title = "chat.return_to_list";
+      link.route = "chat.channel";
+    }
+
+    return link;
+  }
 
   @action
   fetchChannelAndThread() {
