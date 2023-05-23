@@ -12,6 +12,7 @@ import { isTesting } from "discourse-common/config/environment";
 import loadScript from "discourse/lib/load-script";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { SELECTORS } from "discourse/lib/lightbox/constants";
 
 export async function setupLightboxes({ container, selector }) {
   const lightboxService = getOwner(this).lookup("service:lightbox");
@@ -36,7 +37,7 @@ export default function lightbox(elem, siteSettings) {
 
     return setupLightboxes({
       container: elem,
-      selector: "*:not(.spoiler):not(.spoiled) a.lightbox",
+      selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
     });
   }
 
@@ -44,9 +45,7 @@ export default function lightbox(elem, siteSettings) {
     return;
   }
 
-  const lightboxes = elem.querySelectorAll(
-    "*:not(.spoiler):not(.spoiled) a.lightbox"
-  );
+  const lightboxes = elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR);
 
   if (!lightboxes.length) {
     return;
