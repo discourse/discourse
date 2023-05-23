@@ -150,6 +150,9 @@ RSpec.describe SidebarSectionsController do
     fab!(:section_link_2) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
     end
+    let(:community_section) do
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+    end
 
     it "allows user to update their own section and links" do
       sign_in(user)
@@ -268,6 +271,49 @@ RSpec.describe SidebarSectionsController do
 
       expect(sidebar_url_3.reload.name).to eq("other_tags")
     end
+
+    it "doesn't allow users to edit community section" do
+      sign_in(user)
+      put "/sidebar_sections/#{community_section.id}.json",
+          params: {
+            title: "custom section edited",
+            links: [],
+          }
+
+      expect(response.status).to eq(403)
+    end
+
+    it "allows admin to edit community section" do
+      sign_in(admin)
+      everything_link = community_section.sidebar_urls.find_by(name: "Everything")
+      my_posts_link = community_section.sidebar_urls.find_by(name: "My Posts")
+      community_section
+        .sidebar_section_links
+        .where.not(linkable_id: [everything_link.id, my_posts_link.id])
+        .destroy_all
+
+      put "/sidebar_sections/#{community_section.id}.json",
+          params: {
+            title: "community section edited",
+            links: [
+              { icon: "link", id: my_posts_link.id, name: "my posts edited", value: "/my_posts" },
+              {
+                icon: "link",
+                id: everything_link.id,
+                name: "everything edited",
+                value: "/everything",
+              },
+            ],
+          }
+
+      expect(response.status).to eq(200)
+
+      expect(community_section.reload.title).to eq("community section edited")
+      expect(community_section.sidebar_urls[0].name).to eq("my posts edited")
+      expect(community_section.sidebar_urls[0].value).to eq("/my_posts")
+      expect(community_section.sidebar_urls[1].name).to eq("everything edited")
+      expect(community_section.sidebar_urls[1].value).to eq("/everything")
+    end
   end
 
   describe "#reorder" do
@@ -323,6 +369,9 @@ RSpec.describe SidebarSectionsController do
 
   describe "#destroy" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+    let(:community_section) do
+      SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
+    end
 
     it "allows user to delete their own section" do
       sign_in(user)
@@ -401,6 +450,13 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["sidebar_section"]["id"]).to eq(community_section.id)
       expect(response.parsed_body["sidebar_section"]["title"]).to eq(community_section.title)
+    end
+
+    it "doesn't allow admin to delete community sidebar section" do
+      sign_in(admin)
+      delete "/sidebar_sections/#{community_section.id}.json"
+
+      expect(response.status).to eq(403)
     end
   end
 end
