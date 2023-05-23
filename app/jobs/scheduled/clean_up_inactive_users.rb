@@ -14,6 +14,7 @@ module Jobs
           admin: false,
           moderator: false,
         )
+        .where("users.created_at < ?", SiteSetting.clean_up_inactive_users_after_days.days.ago)
         .where(
           "users.last_seen_at < ? OR users.last_seen_at IS NULL",
           SiteSetting.clean_up_inactive_users_after_days.days.ago,
