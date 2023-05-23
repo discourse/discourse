@@ -47,9 +47,6 @@ module Chat
         ),
       )
 
-      # NOTE: This means that the read count is only updated in the client
-      # for new messages in the main channel stream, maybe in future we want to
-      # do this for thread messages as well?
       if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel)
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),

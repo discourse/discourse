@@ -174,6 +174,7 @@ describe Chat::Publisher do
           end
         expect(messages.first.data).to eq(
           {
+            type: "channel",
             channel_id: channel.id,
             message_id: message.id,
             user_id: message.user_id,
@@ -225,12 +226,21 @@ describe Chat::Publisher do
         context "if threading_enabled is true for the channel" do
           before { channel.update!(threading_enabled: true) }
 
-          it "does not publish to the new_messages_message_bus_channel" do
+          it "does publish to the new_messages_message_bus_channel" do
             messages =
               MessageBus.track_publish(
                 described_class.new_messages_message_bus_channel(channel.id),
               ) { described_class.publish_new!(channel, message, staged_id) }
-            expect(messages).to be_empty
+            expect(messages.first.data).to eq(
+              {
+                type: "thread",
+                channel_id: channel.id,
+                message_id: message.id,
+                user_id: message.user_id,
+                username: message.user.username,
+                thread_id: thread.id,
+              },
+            )
           end
         end
       end
