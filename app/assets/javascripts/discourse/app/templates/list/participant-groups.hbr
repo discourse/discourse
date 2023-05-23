@@ -1,8 +1,8 @@
 <div class="participant-groups" role="list" aria-label="Groups">
 {{#each groups as |group|}}
-  <a class="user-group trigger-group-card" href="/g/{{group.name}}" data-group-card="{{group.name}}">
+  <a class="user-group trigger-group-card" href="/g/{{group}}" data-group-card="{{group}}">
     {{d-icon 'users'}}
-    {{group.name}}
+    {{group}}
   </a>
 {{/each}}
 </div>
