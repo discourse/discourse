@@ -158,9 +158,8 @@ export default class ComposerController extends Controller {
     return this.set("_disableSubmit", value);
   }
 
-  @discourseComputed("model.category")
-  formTemplateIds() {
-    return this.model.category?.form_template_ids;
+  get formTemplateIds() {
+    return this.model.category?.get("form_template_ids");
   }
 
   @discourseComputed("showPreview")

@@ -10,14 +10,26 @@ export default class FormTemplateFieldWrapper extends Component {
   constructor() {
     super(...arguments);
 
-    // TODO: move this outside the constructor so it can be called
-    // when switching categories as well
-    FormTemplate.findById(this.args.ids).then((ft) => {
-      try {
-        this.parsedTemplate = Yaml.load(ft.form_template.template);
-      } catch (e) {
-        this.error = e;
-      }
-    });
+    if (this.args.content) {
+      this.loadTemplate(this.args.content);
+    } else {
+      // TODO: move this outside the constructor so it can be called
+      // when switching categories as well
+      FormTemplate.findById(this.args.ids).then((ft) => {
+        try {
+          this.parsedTemplate = Yaml.load(ft.form_template.template);
+        } catch (e) {
+          this.error = e;
+        }
+      });
+    }
+  }
+
+  loadTemplate(templateContent) {
+    try {
+      this.parsedTemplate = Yaml.load(templateContent);
+    } catch (e) {
+      this.error = e;
+    }
   }
 }
