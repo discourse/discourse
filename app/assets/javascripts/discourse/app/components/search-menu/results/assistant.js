@@ -27,9 +27,8 @@ export default class Assistant extends Component {
   @service router;
   @service currentUser;
   @service siteSettings;
+  @service search;
 
-  suggestionType;
-  prefix;
   //  we need access to the shorcuts in the view
   suggestionShortcuts = suggestionShortcuts;
 
@@ -72,7 +71,9 @@ export default class Assistant extends Component {
   attributesForSuggestionKeyword() {
     if (this.args.suggestionKeyword !== "+") {
       this.prefix =
-        this.args.term?.split(this.args.suggestionKeyword)[0].trim() || "";
+        this.args.contextTypeSlug
+          ?.split(this.args.suggestionKeyword)[0]
+          .trim() || "";
       if (this.prefix.length) {
         this.prefix = `${this.prefix} `;
       }
@@ -83,9 +84,13 @@ export default class Assistant extends Component {
         this.args.results.forEach((result) => {
           if (result.additionalTags) {
             this.prefix =
-              this.args.term?.split(" ").slice(0, -1).join(" ").trim() || "";
+              this.args.contextTypeSlug
+                ?.split(" ")
+                .slice(0, -1)
+                .join(" ")
+                .trim() || "";
           } else {
-            this.prefix = this.args.term?.split("#")[0].trim() || "";
+            this.prefix = this.args.contextTypeSlug?.split("#")[0].trim() || "";
           }
           if (this.prefix.length) {
             this.prefix = `${this.prefix} `;

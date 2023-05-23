@@ -1,7 +1,6 @@
 <div class="results">
   {{#if @suggestionKeyword}}
     <SearchMenu::Results::Assistant
-      @term={{@term}}
       @suggestionKeyword={{@suggestionKeyword}}
       @results={{@suggestionResults}}
     />
@@ -11,8 +10,6 @@
     <div class="no-results">{{I18n "search.no_results"}}</div>
   {{else if this.renderInitialOptions}}
     <SearchMenu::Results::InitialOptions
-      @term={{@term}}
-      @updateTerm={{@updateTerm}}
       @focusSearchInput={{@focusSearchInput}}
     />
   {{else}}
@@ -28,7 +25,7 @@
               {{#each resultType.results as |result|}}
                 <li class="item">
                   <a href={{(or result.url result.path)}} class="search-link">
-                    <resultType.component @result={{result}} @term={{@term}} />
+                    <resultType.component @result={{result}} />
                   </a>
                 </li>
               {{/each}}
@@ -40,10 +37,7 @@
       {{/if}}
     {{else}}
       {{#unless @inPMInboxContext}}
-        <SearchMenu::Results::InitialOptions
-          @term={{@term}}
-          @updateTerm={{@updateTerm}}
-        />
+        <SearchMenu::Results::InitialOptions />
       {{/unless}}
     {{/if}}
   {{/if}}

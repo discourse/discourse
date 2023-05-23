@@ -1,15 +1,18 @@
 <ul class="search-menu-initial-options">
   {{#if this.termMatch}}
     <SearchMenu::Results::AssistantItem
-      @slug={{@term}}
+      @slug={{this.search.activeGlobalSearchTerm}}
       @extraHint={{I18n "search.enter_hint"}}
       @withLabel={{false}}
     />
   {{else}}
-    {{#if (or @term this.search.searchContext)}}
+    {{#if (or this.search.activeGlobalSearchTerm this.search.searchContext)}}
       {{#if this.search.searchContext}}
         <this.contextTypeComponent
-          @term={{this.contextTypeTerm}}
+          @contextTypeSlug={{or
+            this.contextTypeSlug
+            this.search.activeGlobalSearchTerm
+          }}
           @suggestionKeyword={{this.suggestionKeyword}}
           @results={{this.results}}
           @withInLabel={{this.withInLabel}}
@@ -18,15 +21,14 @@
         />
       {{/if}}
 
-      {{#if @term}}
+      {{#if this.search.activeGlobalSearchTerm}}
         <SearchMenu::Results::AssistantItem
-          @slug={{@term}}
+          @slug={{this.search.activeGlobalSearchTerm}}
           @withLabel={{true}}
         />
       {{/if}}
     {{else}}
       <SearchMenu::Results::RandomQuickTip
-        @updateTerm={{@updateTerm}}
         @focusSearchInput={{@focusSearchInput}}
       />
 

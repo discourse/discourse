@@ -51,6 +51,8 @@ export function resetQuickSearchRandomTips() {
 resetQuickSearchRandomTips();
 
 export default class RandomQuickTip extends Component {
+  @service search;
+
   constructor() {
     super(...arguments);
     this.randomTip = QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
@@ -59,7 +61,7 @@ export default class RandomQuickTip extends Component {
   @action
   triggerAutocomplete(e) {
     if (e.target.classList.contains("tip-clickable")) {
-      this.args.updateTerm(this.randomTip.label);
+      this.search.updateActiveGlobalSearchTerm(this.randomTip.label);
       const searchInput = document.querySelector("#search-term");
       searchInput.focus();
     }

@@ -222,8 +222,10 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 //});
 
 export default class Results extends Component {
+  @service search;
+
   get renderInitialOptions() {
-    return !this.args.term && !this.args.inPMInboxContext;
+    return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
   }
 
   get renderNoResults() {

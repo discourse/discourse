@@ -5,10 +5,7 @@
       {{#if this.unescapeHeadline}}
         <span>{{this.unescapedHeadline}}</span>
       {{else}}
-        <SearchMenu::HighlightedSearch
-          @string={{@result.topic.fancyTitle}}
-          @term={{@term}}
-        />
+        <SearchMenu::HighlightedSearch @string={{@result.topic.fancyTitle}} />
       {{/if}}
     </span>
   </span>
@@ -19,4 +16,4 @@
     {{/if}}
   </span>
 </span>
-<SearchMenu::Results::Blurb @result={{@result}} @term={{@term}} />
+<SearchMenu::Results::Blurb @result={{@result}} />

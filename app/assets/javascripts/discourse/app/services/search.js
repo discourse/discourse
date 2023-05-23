@@ -1,21 +1,28 @@
 import Service from "@ember/service";
-import discourseComputed from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 
-export default Service.extend({
-  searchContextEnabled: false, // checkbox to scope search
-  searchContext: null,
-  highlightTerm: null,
+export default class Search extends Service {
+  @tracked activeGlobalSearchTerm = "";
 
-  @discourseComputed("searchContext")
-  contextType: {
-    get(searchContext) {
-      return searchContext?.type;
-    },
+  @action
+  updateActiveGlobalSearchTerm(term) {
+    this.activeGlobalSearchTerm = term;
+  }
 
-    set(value, searchContext) {
-      this.set("searchContext", { ...searchContext, type: value });
+  //searchContextEnabled = false; // checkbox to scope search
+  //searchContext = null;
+  //highlightTerm = null;
 
-      return value;
-    },
-  },
-});
+  //@discourseComputed("searchContext")
+  //contextType: {
+  //get(searchContext) {
+  //return searchContext?.type;
+  //}
+
+  //set(value, searchContext) {
+  //this.set("searchContext", { ...searchContext, type: value });
+  //return value;
+  //}
+  //}
+}

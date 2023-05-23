@@ -34,7 +34,6 @@ export default class SearchMenu extends Component {
   @tracked loading = false;
   @tracked results = {};
   @tracked noResults = false;
-  @tracked term = "";
   @tracked inPMInboxContext =
     this.search?.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
@@ -50,8 +49,9 @@ export default class SearchMenu extends Component {
 
   @bind
   searchContext() {
+    //THIS DOES NOT EXIST AND NEEDS TO BE DUPDATD
     if (this.inTopicContext || this.inPMInboxContext) {
-      return this.search.searchContext;
+      //return this.search.searchContext;
     }
 
     return false;
@@ -62,10 +62,10 @@ export default class SearchMenu extends Component {
     let url = "/search";
     const params = [];
 
-    if (this.term) {
+    if (this.search.activeGlobalSearchTerm) {
       let query = "";
 
-      query += `q=${encodeURIComponent(this.term)}`;
+      query += `q=${encodeURIComponent(this.search.activeGlobalSearchTerm)}`;
 
       if (this.searchContext?.type === "topic") {
         query += encodeURIComponent(` topic:${searchContext.id}`);
@@ -93,7 +93,7 @@ export default class SearchMenu extends Component {
   clearSearch(e) {
     e.preventDefault();
 
-    this.term = "";
+    this.search.updateActiveGlobalSearchTerm("");
     const searchInput = document.getElementById("search-term");
     searchInput.value = "";
     searchInput.focus();
@@ -103,7 +103,7 @@ export default class SearchMenu extends Component {
   @action
   searchTermChanged(term, opts = {}) {
     this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
-    this.term = term;
+    this.search.updateActiveGlobalSearchTerm(term);
     this.triggerSearch();
   }
 
@@ -137,7 +137,7 @@ export default class SearchMenu extends Component {
 
   @action
   updateTerm(value) {
-    this.term = value;
+    this.search.activeGlobalSearchTerm = value;
   }
 
   @action
@@ -232,12 +232,14 @@ export default class SearchMenu extends Component {
 
     this.suggestionKeyword = false;
 
-    if (!this.term) {
+    if (!this.search.activeGlobalSearchTerm) {
       this.noResults = false;
       this.results = {};
       this.loading = false;
       this.invalidTerm = false;
-    } else if (!isValidSearchTerm(this.term, this.siteSettings)) {
+    } else if (
+      !isValidSearchTerm(this.search.activeGlobalSearchTerm, this.siteSettings)
+    ) {
       this.noResults = true;
       this.results = {};
       this.loading = false;
@@ -245,7 +247,7 @@ export default class SearchMenu extends Component {
     } else {
       this.invalidTerm = false;
 
-      this._activeSearch = searchForTerm(this.term, {
+      this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
         typeFilter: this.typeFilter,
         fullSearchUrl: this.fullSearchUrl,
         searchContext,
@@ -273,11 +275,14 @@ export default class SearchMenu extends Component {
   }
 
   matchesSuggestions() {
-    if (this.term === undefined || this.includesTopics()) {
+    if (
+      this.search.activeGlobalSearchTerm === undefined ||
+      this.includesTopics()
+    ) {
       return false;
     }
 
-    const term = this.term.trim();
+    const term = this.search.activeGlobalSearchTerm.trim();
     const categoriesMatch = term.match(CATEGORY_SLUG_REGEXP);
 
     if (categoriesMatch) {
@@ -309,16 +314,21 @@ export default class SearchMenu extends Component {
   triggerSearch() {
     this.noResults = false;
     if (this.includesTopics()) {
-      if (this.inTopicContext) {
-        this.search.set("highlightTerm", this.term);
-      }
+      // search service doesn't use this anymore
+      // i think it is just working out the box now with my highlight changes
+      //if (this.inTopicContext) {
+      //this.search.set("highlightTerm", this.search.activeGlobalSearchTerm);
+      //}
 
       this.loading = true;
       cancel(this._debouncer);
       this.perform();
 
       if (this.currentUser) {
-        updateRecentSearches(this.currentUser, this.term);
+        updateRecentSearches(
+          this.currentUser,
+          this.search.activeGlobalSearchTerm
+        );
       }
     } else {
       this.loading = false;

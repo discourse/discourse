@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-//import { tracked } from "@glimmer/tracking";
 import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 
@@ -46,20 +45,16 @@ export default class AssistantItem extends Component {
     return this.args.label || this.args.slug;
   }
 
-  constructor() {
-    super(...arguments);
-  }
-
-  click(e) {
-    const searchInput = document.querySelector("#search-term");
-    searchInput.value = this.attrs.slug;
-    searchInput.focus();
-    this.sendWidgetAction("triggerAutocomplete", {
-      value: this.attrs.slug,
-      searchTopics: true,
-      setTopicContext: this.attrs.setTopicContext,
-    });
-    e.preventDefault();
-    return false;
-  }
+  //click(e) {
+  //const searchInput = document.querySelector("#search-term");
+  //searchInput.value = this.attrs.slug;
+  //searchInput.focus();
+  //this.sendWidgetAction("triggerAutocomplete", {
+  //value: this.attrs.slug,
+  //searchTopics: true,
+  //setTopicContext: this.attrs.setTopicContext,
+  //});
+  //e.preventDefault();
+  //return false;
+  //}
 }

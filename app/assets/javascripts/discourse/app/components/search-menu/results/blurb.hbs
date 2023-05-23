@@ -7,10 +7,7 @@
       <span>{{@result.blurb}}</span>
     {{else}}
       <span>
-        <SearchMenu::HighlightedSearch
-          @string={{@result.blurb}}
-          @term={{@term}}
-        />
+        <SearchMenu::HighlightedSearch @string={{@result.blurb}} />
       </span>
     {{/if}}
   </span>

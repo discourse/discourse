@@ -1,7 +1,5 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 import AssistantItem from "./assistant-item";
@@ -22,14 +20,16 @@ export default class InitialOptions extends Component {
   @service currentUser;
 
   get termMatch() {
-    return this.args.term?.match(MODIFIER_REGEXP) ? true : false;
+    return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP)
+      ? true
+      : false;
   }
 
   constructor() {
     super(...arguments);
 
     const searchContext = this.search.searchContext;
-    if (this.args.term || searchContext) {
+    if (this.search.activeGlobalSearchTerm || searchContext) {
       if (searchContext) {
         // set the component we will be using to display results
         this.contextTypeComponent =
@@ -64,16 +64,16 @@ export default class InitialOptions extends Component {
   }
 
   topicContextType() {
-    this.slug = this.args.term;
+    this.slug = this.search.activeGlobalSearchTerm;
     this.setTopicContext = true;
     //this.label = [
-    //h("span", `${this.args.term} `),
+    //h("span", `${this.search.activeGlobalSearchTerm} `),
     //h("span.label-suffix", I18n.t("search.in_this_topic")),
     //];
   }
 
   privateMessageContextType() {
-    this.slug = `${this.args.term} in:messages`;
+    this.slug = `${this.search.activeGlobalSearchTerm} in:messages`;
   }
 
   categoryContextType() {
@@ -82,16 +82,20 @@ export default class InitialOptions extends Component {
       ? `#${searchContextCategory.parentCategory.slug}:${searchContextCategory.slug}`
       : `#${searchContextCategory.slug}`;
 
-    this.contextTypeTerm = `${this.args.term} ${fullSlug}`;
-    this.suggestionKeyword = "#";
-    this.results = [{ model: this.search.searchContext.category }];
+    this.contextTypeSlug = `${this.search.activeGlobalSearchTerm} ${fullSlug}`;
+    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
+    //this.suggestionKeyword = "#";
+    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
+    //this.results = [{ model: this.search.searchContext.category }];
     this.withInLabel = true;
   }
 
   tagContextType() {
-    this.contextTypeTerm = `${this.args.term} #${this.search.searchContext.name}`;
-    this.suggestionKeyword = "#";
-    this.results = [{ name: this.search.searchContext.name }];
+    this.contextTypeSlug = `${this.search.activeGlobalSearchTerm} #${this.search.searchContext.name}`;
+    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
+    //this.suggestionKeyword = "#";
+    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
+    //this.results = [{ name: this.search.searchContext.name }];
     this.withInLabel = true;
   }
 
@@ -101,9 +105,9 @@ export default class InitialOptions extends Component {
     let tagTerm;
     if (searchContext.additionalTags) {
       const tags = [searchContext.tagId, ...searchContext.additionalTags];
-      tagTerm = `${this.args.term} tags:${tags.join("+")}`;
+      tagTerm = `${this.search.activeGlobalSearchTerm} tags:${tags.join("+")}`;
     } else {
-      tagTerm = `${this.args.term} #${searchContext.tagId}`;
+      tagTerm = `${this.search.activeGlobalSearchTerm} #${searchContext.tagId}`;
     }
     let suggestionOptions = {
       tagName: searchContext.tagId,
@@ -118,14 +122,16 @@ export default class InitialOptions extends Component {
       tagTerm = tagTerm + ` ${categorySlug}`;
     }
 
-    this.contextTypeTerm = tagTerm;
-    this.suggestionKeyword = "+";
-    this.results = [suggestionOptions];
+    this.contextTypeSlug = tagTerm;
+    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
+    //this.suggestionKeyword = "+";
+    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
+    //this.results = [suggestionOptions];
     this.withInLabel = true;
   }
 
   userContextType() {
-    this.slug = `${this.args.term} @${this.search.searchContext.user.username}`;
+    this.slug = `${this.search.activeGlobalSearchTerm} @${this.search.searchContext.user.username}`;
     //this.label = [
     //h("span", `${term} `),
     //h(

@@ -1,7 +1,7 @@
 <Input
   id="search-term"
   @type="text"
-  @value={{@term}}
+  @value={{this.search.activeGlobalSearchTerm}}
   autocomplete="off"
   placeholder={{I18n "search.title"}}
   aria-label={{I18n "search.title"}}
