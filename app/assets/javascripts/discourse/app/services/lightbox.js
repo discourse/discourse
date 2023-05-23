@@ -43,7 +43,7 @@ export default class LightboxService extends Service {
       isMobile: Mobile.mobileView,
       isRTL: isDocumentRTL(),
       minCarosuelArrowItemCount: MIN_CAROUSEL_ARROW_ITEM_COUNT,
-      zoomOnOpen: true,
+      zoomOnOpen: false,
       canDownload:
         this.currentUser ||
         !this.siteSettings.prevent_anons_from_downloading_files,
