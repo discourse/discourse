@@ -153,7 +153,7 @@ RSpec.describe EmbedController do
         }
         expect(response.status).to eq(200)
         expect(response.headers["X-Robots-Tag"]).to match(/googlebot:noindex/)
-      end      
+      end
     end
   end
 
