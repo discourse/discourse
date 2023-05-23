@@ -6,6 +6,39 @@ describe Chat::Publisher do
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
+  describe ".publish_delete!" do
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel) }
+    before { message.trash! }
+
+    it "publishes the correct data" do
+      data = MessageBus.track_publish { described_class.publish_delete!(channel, message) }[0].data
+
+      expect(data["deleted_at"]).to eq(message.deleted_at.iso8601(3))
+      expect(data["deleted_id"]).to eq(message.id)
+      expect(data["latest_not_deleted_message_id"]).to eq(message_2.id)
+      expect(data["type"]).to eq("delete")
+    end
+
+    context "when the message is in a thread and the channel has threading_enabled" do
+      before do
+        SiteSetting.enable_experimental_chat_threaded_discussions = true
+        thread = Fabricate(:chat_thread, channel: channel)
+        message.update!(thread: thread)
+        channel.update!(threading_enabled: true)
+      end
+
+      it "publishes the correct latest not deleted message id" do
+        data =
+          MessageBus.track_publish { described_class.publish_delete!(channel, message) }[0].data
+
+        expect(data["deleted_at"]).to eq(message.deleted_at.iso8601(3))
+        expect(data["deleted_id"]).to eq(message.id)
+        expect(data["latest_not_deleted_message_id"]).to eq(message.thread.original_message_id)
+        expect(data["type"]).to eq("delete")
+      end
+    end
+  end
+
   describe ".publish_refresh!" do
     it "publishes the message" do
       data = MessageBus.track_publish { described_class.publish_refresh!(channel, message) }[0].data
