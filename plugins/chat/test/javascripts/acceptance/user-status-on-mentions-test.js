@@ -53,16 +53,17 @@ acceptance("Chat | User status on mentions", function (needs) {
     mentioned_users: [mentionedUser1],
     user: actingUser,
   };
-  const messagesResponse = {
-    meta: {
-      channel_id: channelId,
-      can_delete_self: true,
-    },
-    chat_messages: [message],
-  };
   const newStatus = {
     description: "working remotely",
     emoji: "house",
+  };
+  const channel = {
+    id: channelId,
+    chatable_id: 1,
+    chatable_type: "Category",
+    meta: { message_bus_last_ids: {} },
+    current_user_membership: { following: true },
+    chatable: { id: 1 },
   };
 
   needs.settings({ chat_enabled: true });
@@ -71,31 +72,28 @@ acceptance("Chat | User status on mentions", function (needs) {
     ...actingUser,
     has_chat_enabled: true,
     chat_channels: {
-      public_channels: [
-        {
-          id: channelId,
-          chatable_id: 1,
-          chatable_type: "Category",
-          meta: { message_bus_last_ids: {} },
-          current_user_membership: { following: true },
-          chatable: { id: 1 },
-        },
-      ],
+      public_channels: [channel],
       direct_message_channels: [],
       meta: { message_bus_last_ids: {} },
     },
   });
 
   needs.hooks.beforeEach(function () {
-    pretender.get(`/chat/1/messages`, () => OK(messagesResponse));
     pretender.post(`/chat/1`, () => OK());
     pretender.put(`/chat/1/edit/${messageId}`, () => OK());
     pretender.post(`/chat/drafts`, () => OK());
-    pretender.get(`/chat/api/channels/1`, () => OK());
     pretender.put(`/chat/api/channels/1/read/1`, () => OK());
     pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () => OK());
     pretender.put(`/chat/api/channels/1/messages/${messageId}/restore`, () =>
       OK()
+    );
+
+    pretender.get(`/chat/api/channels/1`, () =>
+      OK({
+        channel,
+        chat_messages: [message],
+        meta: { can_delete_self: true },
+      })
     );
 
     setupAutocompleteResponses([mentionedUser2, mentionedUser3]);

@@ -12,6 +12,14 @@ module(
     setupRenderingTest(hooks);
 
     const channelId = 1;
+    const channel = {
+      id: channelId,
+      chatable_id: 1,
+      chatable_type: "Category",
+      meta: { message_bus_last_ids: {} },
+      current_user_membership: { following: true },
+      chatable: { id: 1 },
+    };
     const actingUser = {
       id: 1,
       username: "acting_user",
@@ -32,27 +40,25 @@ module(
         emoji: "desert_island",
       },
     };
-    const messagesResponse = {
-      meta: {
-        channel_id: channelId,
+    const message = {
+      id: 1891,
+      message: `Hey @${mentionedUser.username}`,
+      cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser.username}">@${mentionedUser.username}</a></p>`,
+      mentioned_users: [mentionedUser],
+      user: {
+        id: 1,
+        username: "jesse",
       },
-      chat_messages: [
-        {
-          id: 1891,
-          message: `Hey @${mentionedUser.username}`,
-          cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser.username}">@${mentionedUser.username}</a></p>`,
-          mentioned_users: [mentionedUser],
-          user: {
-            id: 1,
-            username: "jesse",
-          },
-        },
-      ],
     };
 
     hooks.beforeEach(function () {
-      pretender.get(`/chat/${channelId}/messages`, () => OK(messagesResponse));
-      pretender.get(`/chat/api/channels/1`, () => OK());
+      pretender.get(`/chat/api/channels/1`, () =>
+        OK({
+          channel,
+          chat_messages: [message],
+          meta: { can_delete_self: true },
+        })
+      );
 
       this.channel = fabricators.channel({
         id: channelId,
