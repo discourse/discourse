@@ -21,7 +21,7 @@
     "@uppy/core": "^3.0.4",
     "@uppy/drop-target": "^2.0.1",
     "@uppy/utils": "^5.2.0",
-    "@uppy/xhr-upload": "^3.1.1",
+    "@uppy/xhr-upload": "^3.2.0",
     "ember-auto-import": "^2.6.3",
     "ember-cli-babel": "^7.26.11",
     "ember-cli-htmlbars": "^6.2.0",

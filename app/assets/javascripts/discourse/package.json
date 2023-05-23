@@ -83,7 +83,7 @@
     "@uppy/core": "^3.0.4",
     "@uppy/drop-target": "^2.0.1",
     "@uppy/utils": "^5.2.0",
-    "@uppy/xhr-upload": "^3.1.1",
+    "@uppy/xhr-upload": "^3.2.0",
     "babel-import-util": "^1.3.0",
     "babel-plugin-ember-template-compilation": "^2.0.0",
     "broccoli-asset-rev": "^3.0.0",
