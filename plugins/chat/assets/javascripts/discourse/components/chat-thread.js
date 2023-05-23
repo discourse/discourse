@@ -54,6 +54,8 @@ export default class ChatThreadPanel extends Component {
     this.chatChannelThreadPaneSubscriptionsManager.unsubscribe();
   }
 
+  // TODO (martin) This needs to have the extended scroll/message visibility/
+  // mark read behaviour the same as the channel.
   @action
   computeScrollState() {
     cancel(this.onScrollEndedHandler);

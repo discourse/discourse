@@ -1,6 +1,4 @@
 import { inject as service } from "@ember/service";
-import { getOwner } from "discourse-common/lib/get-owner";
-import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 import { setOwner } from "@ember/application";
 import Promise from "rsvp";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
@@ -17,6 +15,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 export default class ChatThreadsManager {
   @service chatSubscriptionsManager;
+  @service chatTrackingStateManager;
   @service chatApi;
   @service chat;
   @service currentUser;
@@ -39,28 +38,20 @@ export default class ChatThreadsManager {
 
   async index(channelId) {
     return this.#loadIndex(channelId).then((result) => {
-      // TODO (martin) Fix this tracking stuff up, should probably go
-      // via chatTrackingStateManager
       const threads = result.threads.map((thread) => {
         const storedThread = this.chat.activeChannel.threadsManager.store(
           this.chat.activeChannel,
           thread
         );
 
-        // TODO (martin) Since we didn't backfill data for thread membership,
-        // there are cases where we are getting threads the user "participated"
-        // in but don't have tracking state for.
-        const tracking = result.tracking[thread.id];
-        if (tracking) {
-          if (!storedThread.tracking) {
-            storedThread.tracking = new ChatTrackingState(getOwner(this));
-          }
-          storedThread.tracking.unreadCount = tracking.unread_count;
-          storedThread.tracking.mentionCount = tracking.mention_count;
-        }
-
         return storedThread;
       });
+
+      this.chatTrackingStateManager.setupChannelThreadState(
+        this.chat.activeChannel,
+        result.tracking
+      );
+
       return { threads, meta: result.meta };
     });
   }

@@ -257,13 +257,7 @@ module Chat
       "/chat/user-tracking-state/#{user_id}"
     end
 
-    # TODO (martin) Make sure we maintain backward compat for deploys
-    # with the keys etc. we are sending.
-    #
     def self.publish_user_tracking_state!(user, channel, message)
-      # TODO (martin) This could be a last read message for the channel
-      # OR last read message for the thread. We need to figure out which
-      # and react differently on the client.
       data = {
         channel_id: channel.id,
         last_read_message_id: message.id,
