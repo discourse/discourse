@@ -17,7 +17,9 @@ RSpec.describe "Deleted message", type: :system, js: true do
     it "shows as deleted" do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("aaaaaaaaaaaaaaaaaaaa")
-      expect(page).to have_no_css(".chat-message-staged")
+
+      expect(page).to have_css(".chat-message-persisted")
+
       last_message = find(".chat-message-container:last-child")
       channel_page.delete_message(OpenStruct.new(id: last_message["data-id"]))
 
