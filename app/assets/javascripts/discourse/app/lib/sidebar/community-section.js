@@ -1,9 +1,12 @@
 import I18n from "I18n";
 import SectionLink from "discourse/lib/sidebar/section-link";
-import { setOwner } from "@ember/application";
+import Composer from "discourse/models/composer";
+import { getOwner, setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
+import PermissionType from "discourse/models/permission-type";
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
@@ -109,13 +112,23 @@ export default class CommunitySection {
     const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
 
     if (sectionLinkClass) {
-      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+      return this.#initializeSectionLink(
+        sectionLinkClass,
+        inMoreDrawer,
+        link.name,
+        link.icon
+      );
     } else {
       return new SectionLink(link, this, this.router);
     }
   }
 
-  #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
+  #initializeSectionLink(
+    sectionLinkClass,
+    inMoreDrawer,
+    overridenName,
+    overridenIcon
+  ) {
     if (this.router.isDestroying) {
       return;
     }
@@ -126,6 +139,8 @@ export default class CommunitySection {
       router: this.router,
       siteSettings: this.siteSettings,
       inMoreDrawer,
+      overridenName,
+      overridenIcon,
     });
   }
 
@@ -137,22 +152,58 @@ export default class CommunitySection {
   }
 
   get headerActions() {
-    if (this.currentUser) {
+    if (this.currentUser && this.currentUser.admin) {
       return [
         {
           action: this.editSection,
-          title: I18n.t("sidebar.sections.community.header_action_title"),
+          title: I18n.t(
+            "sidebar.sections.community.header_action_edit_section_title"
+          ),
+        },
+      ];
+    }
+    if (this.currentUser) {
+      return [
+        {
+          action: this.composeTopic,
+          title: I18n.t(
+            "sidebar.sections.community.header_action_create_topic_title"
+          ),
         },
       ];
     }
   }
 
   get headerActionIcon() {
-    return "pencil-alt";
+    if (this.currentUser && this.currentUser.admin) {
+      return "pencil-alt";
+    }
+    if (this.currentUser) {
+      return "plus";
+    }
   }
 
   @action
   editSection() {
     showModal("sidebar-section-form", { model: this.section });
+  }
+
+  @action
+  composeTopic() {
+    const composerArgs = {
+      action: Composer.CREATE_TOPIC,
+      draftKey: Composer.NEW_TOPIC_KEY,
+    };
+
+    const controller = getOwner(this).lookup("controller:navigation/category");
+    const category = controller.category;
+
+    if (category && category.permission === PermissionType.FULL) {
+      composerArgs.categoryId = category.id;
+    }
+
+    next(() => {
+      getOwner(this).lookup("controller:composer").open(composerArgs);
+    });
   }
 }

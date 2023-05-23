@@ -55,21 +55,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.ok(exists("#reply-control"), "it opens the composer");
   });
 
-  test("clicking on section header button while viewing a category", async function (assert) {
-    await visit("/c/bug");
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
-    );
-
-    assert.ok(exists("#reply-control"), "it opens the composer");
-
-    assert.strictEqual(
-      query(".category-input .selected-name .category-name").textContent,
-      "bug",
-      "the current category is prefilled in the composer input"
-    );
-  });
-
   test("clicking on section header link", async function (assert) {
     await visit("/t/280");
 

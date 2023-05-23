@@ -46,19 +46,6 @@ describe "Viewing sidebar mobile", type: :system, js: true, mobile: true do
     expect(sidebar_dropdown).to be_hidden
   end
 
-  it "collapses the sidebar when clicking on a button in the sidebar" do
-    visit("/latest")
-
-    sidebar_dropdown.click
-
-    expect(sidebar_dropdown).to be_visible
-
-    sidebar_dropdown.click_new_topic_button
-
-    expect(composer).to be_opened
-    expect(sidebar_dropdown).to be_hidden
-  end
-
   it "toggles to desktop view after clicking on the toggle to desktop view button" do
     visit ("/latest")
 

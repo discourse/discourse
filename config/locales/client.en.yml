@@ -4476,6 +4476,8 @@ en:
           configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
+          header_action_create_topic_title: "Create a topic"
+          header_action_edit_section_title: "Edit Community section"
           links:
             about:
               content: "About"
