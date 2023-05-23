@@ -37,18 +37,6 @@
     padding-inline: 1rem;
   }
 
-  &__inline-button {
-    .d-icon {
-      color: var(--primary-medium);
-    }
-
-    &:hover {
-      .d-icon {
-        color: var(--primary);
-      }
-    }
-  }
-
   &__inner-container {
     display: flex;
     align-items: center;
@@ -75,6 +63,45 @@
     }
   }
 
+  .chat-composer-button__btn {
+    background: none;
+
+    &:not(:disabled) {
+      .d-icon {
+        color: var(--primary-high);
+      }
+
+      .no-touch & {
+        &:hover,
+        &:focus {
+          .d-icon {
+            color: var(--primary);
+          }
+
+          &.primary {
+            .d-icon {
+              color: var(--tertiary);
+            }
+          }
+        }
+      }
+
+      &.primary {
+        .d-icon {
+          color: var(--tertiary);
+        }
+      }
+    }
+
+    &:disabled {
+      cursor: default;
+
+      .d-icon {
+        color: var(--primary-low-mid);
+      }
+    }
+  }
+
   &__send-btn {
     will-change: scale;
 
@@ -90,54 +117,15 @@
       }
     }
 
-    .chat-composer.is-focused.is-send-disabled & {
-      .d-icon {
-        color: var(--primary-high);
-      }
-    }
-
     .chat-composer.is-sending & {
       animation: sendingScales 1s infinite linear;
     }
 
-    .d-icon {
-      background: none !important;
-      color: var(--primary);
-    }
-
-    .chat-composer.is-send-enabled & {
-      .d-icon {
-        color: var(--tertiary);
-      }
-
+    &:not(:disabled) {
       &:hover {
         .d-icon {
           transform: scale(1.2);
         }
-      }
-
-      &:focus {
-        outline: auto;
-      }
-    }
-
-    .chat-composer.is-send-disabled & {
-      cursor: default;
-
-      .d-icon {
-        color: var(--primary-low-mid);
-      }
-
-      &:hover {
-        background: none !important;
-      }
-    }
-
-    .chat-composer.is-disabled & {
-      opacity: 0.4;
-
-      &:hover {
-        background: none !important;
       }
     }
   }
@@ -177,6 +165,10 @@
 
     &[disabled] {
       background: none;
+
+      .d-icon {
+        opacity: 0.4;
+      }
     }
 
     &:focus,

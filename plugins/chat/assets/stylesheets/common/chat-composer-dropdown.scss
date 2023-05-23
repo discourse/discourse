@@ -21,23 +21,8 @@
   .d-icon {
     padding: 5px;
     transition: transform 0.1s ease-in-out;
-    color: var(--primary-high);
     background: var(--secondary-very-high);
     border-radius: 100%;
-
-    .is-disabled & {
-      color: var(--primary-low-mid);
-    }
-  }
-
-  .no-touch & {
-    &:hover,
-    &:focus {
-      cursor: pointer;
-      .d-icon {
-        color: var(--primary);
-      }
-    }
   }
 
   &.has-active-panel {

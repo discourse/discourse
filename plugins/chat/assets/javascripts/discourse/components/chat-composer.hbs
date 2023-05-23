@@ -21,7 +21,7 @@
       (if this.isFocused "is-focused")
       (if this.pane.sending "is-sending")
       (if this.sendEnabled "is-send-enabled" "is-send-disabled")
-      (if this.disabled "is-disabled")
+      (if this.disabled "is-disabled" "is-enabled")
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
@@ -73,7 +73,7 @@
             <Chat::Composer::Button
               @icon={{button.icon}}
               class={{button.id}}
-              disabled={{button.disabled}}
+              disabled={{or this.disabled button.disabled}}
               tabindex={{if button.disabled -1 0}}
               {{on
                 "click"
@@ -90,7 +90,7 @@
 
         <Chat::Composer::Button
           @icon="paper-plane"
-          class="chat-composer__send-btn"
+          class="chat-composer__send-btn primary"
           title={{i18n "chat.composer.send"}}
           disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
