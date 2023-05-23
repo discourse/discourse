@@ -49,6 +49,10 @@ class TopicListItemSerializer < ListableTopicSerializer
     object.participants_summary || []
   end
 
+  def participant_groups
+    object.participant_groups_summary || []
+  end
+
   def include_liked_post_numbers?
     include_post_action? :like
   end
