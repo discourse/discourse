@@ -154,7 +154,7 @@ GEM
       faraday (~> 2.0)
     fast_blank (1.0.1)
     fast_xs (0.8.0)
-    fastimage (2.2.6)
+    fastimage (2.2.7)
     ffi (1.15.5)
     fspath (3.1.2)
     gc_tracer (1.5.1)
