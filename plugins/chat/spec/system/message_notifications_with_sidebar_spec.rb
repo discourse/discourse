@@ -11,11 +11,13 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
     chat_system_bootstrap
   end
 
-  def create_message(text: "this is fine", channel:, creator: Fabricate(:user))
+  def create_message(text: nil, channel:, creator: Fabricate(:user))
     sign_in(creator)
     chat_page.visit_channel(channel)
     channel_page.send_message(text)
-    expect(channel_page.messages).to have_message(text: text, persisted: true)
+    args = { persisted: true }
+    args[:text] = text if text
+    expect(channel_page.messages).to have_message(**args)
   end
 
   context "as a user" do

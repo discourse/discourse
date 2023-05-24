@@ -12,17 +12,12 @@ module PageObjects
           @context = context
         end
 
-        def has_message?(id: nil, persisted: nil, text: nil, staged: nil)
-          selectors = ""
-          selectors += "[data-id=\"#{message.id}\"]" if id
-          selectors += ".is-persisted" if persisted
-          selectors += ".is-staged" if staged
-          node = message(selectors)
-          node.find(".chat-message-text", text: text) if text
+        def has_message?(**args)
+          PageObjects::Components::Chat::Message.new(".chat-channel").exists?(**args)
         end
 
-        def message(selectors = "")
-          find(context).find(SELECTOR + selectors)
+        def has_no_message?(**args)
+          !has_message?(**args)
         end
       end
     end

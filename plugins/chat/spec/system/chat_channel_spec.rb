@@ -21,12 +21,11 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
       it "loads most recent messages" do
         unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-        visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
+        chat.visit_channel(channel_1, message_id: message_1.id)
 
-        expect(channel_page).to have_no_loading_skeleton
-        expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
+        expect(channel_page.messages).to have_no_message(id: unloaded_message.id)
 
-        channel_page.send_message("test_message")
+        channel_page.send_message
 
         expect(channel_page.messages).to have_message(id: unloaded_message.id)
       end
@@ -58,12 +57,14 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
     it "allows to edit this message once persisted" do
       chat.visit_channel(channel_1)
-      channel_page.send_message("aaaaaaaaaaaaaaaaaaaa")
-      expect(page).to have_no_css(".is-staged")
+      channel_page.send_message("aaaaaa")
+
+      expect(channel_page.messages).to have_message(persisted: true, text: "aaaaaa")
+
       last_message = find(".chat-message-container:last-child")
       last_message.hover
 
-      expect(page).to have_css(
+      expect(channel_page).to have_css(
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
       )
     end
