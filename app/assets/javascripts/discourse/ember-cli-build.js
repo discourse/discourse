@@ -58,7 +58,7 @@ module.exports = function (defaults) {
     },
 
     "ember-cli-babel": {
-      throwUnlessParallelizable: true,
+      throwUnlessParallelizable: false,
     },
 
     babel: {
@@ -78,11 +78,6 @@ module.exports = function (defaults) {
       app: RawHandlebarsCompiler("app"),
     },
   });
-
-  // TODO: remove me
-  // Ember 3.28 still has some internal dependency on jQuery being a global,
-  // for the time being we will bring it in vendor.js
-  app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
@@ -156,9 +151,7 @@ module.exports = function (defaults) {
           function ({ request }, callback) {
             if (
               !request.includes("-embroider-implicit") &&
-              // TODO: delete special case for jquery when removing app.import() above
-              (request === "jquery" ||
-                request.startsWith("admin/") ||
+              (request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))

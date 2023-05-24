@@ -1,6 +1,10 @@
 import EmberArray from "@ember/array";
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
+import {
+  arrayContentDidChange,
+  arrayContentWillChange,
+} from "@ember/-internals/metal";
 
 export function Placeholder(viewName) {
   this.viewName = viewName;
@@ -26,9 +30,9 @@ export default EmberObject.extend(EmberArray, {
   },
 
   _changeArray(cb, offset, removed, inserted) {
-    this.arrayContentWillChange(offset, removed, inserted);
+    arrayContentWillChange(this, offset, removed, inserted);
     cb();
-    this.arrayContentDidChange(offset, removed, inserted);
+    arrayContentDidChange(this, offset, removed, inserted);
     this.notifyPropertyChange("length");
   },
 

@@ -101,12 +101,20 @@ module.exports = {
     },
 
     "ember-cli-babel": {
-      throwUnlessParallelizable: true,
+      throwUnlessParallelizable: false,
     },
 
     "ember-this-fallback": {
       enableLogging: false,
     },
+  },
+
+  // TODO - gate on version, and shouldn't be in discourse-plugins
+  setupPreprocessorRegistry(type, registry) {
+    registry.add("htmlbars-ast-plugin", {
+      name: "rewrite-named-outlets",
+      plugin: require.resolve("../discourse/lib/rewrite-named-outlets"),
+    });
   },
 
   pluginInfos() {
