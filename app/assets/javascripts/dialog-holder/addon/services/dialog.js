@@ -45,7 +45,7 @@ export default Service.extend({
 
       didConfirm,
       didCancel,
-      buttons
+      buttons,
     } = params;
 
     const element = document.getElementById("dialog-holder");
@@ -72,7 +72,7 @@ export default Service.extend({
       didConfirm,
       didCancel,
       buttons,
-      class: params.class
+      class: params.class,
     });
 
     this.dialogInstance.show();
@@ -91,13 +91,13 @@ export default Service.extend({
     if (typeof params === "string") {
       return this.dialog({
         message: params,
-        type: "alert"
+        type: "alert",
       });
     }
 
     return this.dialog({
       ...params,
-      type: "alert"
+      type: "alert",
     });
   },
 
@@ -106,7 +106,7 @@ export default Service.extend({
       ...params,
       shouldDisplayCancel: true,
       buttons: null,
-      type: "confirm"
+      type: "confirm",
     });
   },
 
@@ -115,13 +115,13 @@ export default Service.extend({
     if (typeof params === "string") {
       return this.dialog({
         message: params,
-        type: "notice"
+        type: "notice",
       });
     }
 
     return this.dialog({
       ...params,
-      type: "notice"
+      type: "notice",
     });
   },
 
@@ -129,7 +129,7 @@ export default Service.extend({
     return this.confirm({
       ...params,
       confirmButtonLabel: "yes_value",
-      cancelButtonLabel: "no_value"
+      cancelButtonLabel: "no_value",
     });
   },
 
@@ -137,7 +137,7 @@ export default Service.extend({
     return this.confirm({
       ...params,
       confirmButtonClass: "btn-danger",
-      confirmButtonLabel: params.confirmButtonLabel || "delete"
+      confirmButtonLabel: params.confirmButtonLabel || "delete",
     });
   },
 
@@ -165,7 +165,7 @@ export default Service.extend({
       buttons: null,
       class: null,
 
-      _confirming: false
+      _confirming: false,
     });
   },
 
@@ -191,5 +191,5 @@ export default Service.extend({
   @bind
   enableConfirmButton() {
     this.set("confirmButtonDisabled", false);
-  }
+  },
 });

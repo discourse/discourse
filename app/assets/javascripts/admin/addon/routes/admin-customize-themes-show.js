@@ -12,6 +12,11 @@ export default class AdminCustomizeThemesShowRoute extends Route {
     return { theme_id: model.get("id") };
   }
 
+  @action
+  routeRefreshModel() {
+    this.refresh();
+  }
+
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
     const model = all.findBy("id", parseInt(params.theme_id, 10));

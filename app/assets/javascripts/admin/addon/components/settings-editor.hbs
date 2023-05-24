@@ -1,15 +1,13 @@
 <div class="settings-editor settings">
   <div class="setting">
     <AceEditor
-      @mode={{"html"}}
+      @mode="html"
       @content={{this.editorContents}}
     />
 
     {{#each this.errors as |error|}}
       <div class="validation-error">
-        <svg class="fa d-icon d-icon-times svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
-          <use href="#times"></use>
-        </svg>
+        {{d-icon "times"}}
         <b>{{error.setting}}</b>: {{error.errorMessage}}
       </div>
     {{/each}}

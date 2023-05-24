@@ -6,6 +6,11 @@
       @outletArgs={{hash theme=this.model}}
     />
   </span>
+  <DButton
+    @action={{action "refreshModel"}}
+    @class="btn-primary btn-small submit-edit"
+    @icon="refresh"
+  />
   <div class="title">
     {{#if this.editingName}}
       <TextField @value={{this.model.name}} @autofocus="true" />
@@ -496,6 +501,8 @@
           />
         {{/if}}
       {{/if}}
+    {{#if this.hasSettings}}
+
       <DButton
         @action={{action "showThemeSettingsEditor"}}
         @label="admin.customize.theme.settings_editor"
@@ -503,13 +510,13 @@
         @class="btn-default btn-normal"
         @title="admin.customize.theme.settings_editor"
       />
+    {{/if}}
       <DButton
         @action={{action "destroyTheme"}}
         @label="admin.customize.delete"
         @icon="trash-alt"
         @class="btn-danger"
       />
-
     </div>
   {{/if}}
 

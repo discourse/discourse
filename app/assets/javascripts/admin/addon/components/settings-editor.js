@@ -2,8 +2,11 @@ import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
 
 export default class SettingsEditor extends Component {
+  @service dialog;
+
   @tracked editedContent = null;
   @tracked errors = [];
   @tracked saving = false;
@@ -170,6 +173,7 @@ export default class SettingsEditor extends Component {
       this.editedContent = null;
     }
     this.saving = false;
+    this.dialog.cancel();
   }
 
   async saveSetting(themeId, setting) {

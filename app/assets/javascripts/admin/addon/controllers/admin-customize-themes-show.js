@@ -251,6 +251,12 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   @action
+  refreshModel() {
+    this.send("routeRefreshModel");
+    this.notifyPropertyChange("model");
+  }
+
+  @action
   updateToLatest() {
     this.set("updatingRemote", true);
     this.model
