@@ -581,34 +581,40 @@ RSpec.describe Group do
 
   it "allows you to lookup a group by integer id" do
     group = Fabricate(:group)
-    expect(group.id).to eq Group.lookup_groups(group_ids: group.id).first.id
+    expect(Group.lookup_groups(group_ids: group.id)).to contain_exactly(group)
   end
 
   it "allows you to lookup groups by comma separated string" do
     group1 = Fabricate(:group)
     group2 = Fabricate(:group)
-    expect([group1, group2]).to eq Group.lookup_groups(group_ids: "#{group1.id},#{group2.id}")
+    expect(Group.lookup_groups(group_ids: "#{group1.id},#{group2.id}")).to contain_exactly(
+      group1,
+      group2,
+    )
   end
 
   it "allows you to lookup groups by array" do
     group1 = Fabricate(:group)
     group2 = Fabricate(:group)
-    expect([group1, group2]).to eq Group.lookup_groups(group_ids: [group1.id, group2.id])
+    expect(Group.lookup_groups(group_ids: [group1.id, group2.id])).to contain_exactly(
+      group1,
+      group2,
+    )
   end
 
   it "can find desired groups correctly" do
-    expect(Group.desired_trust_level_groups(2).sort).to eq [10, 11, 12]
+    expect(Group.desired_trust_level_groups(2)).to contain_exactly(10, 11, 12)
   end
 
   it "correctly handles trust level changes" do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
 
-    expect(user.groups.map(&:name).sort).to eq %w[trust_level_0 trust_level_1 trust_level_2]
+    expect(user.groups.map(&:name)).to match_array %w[trust_level_0 trust_level_1 trust_level_2]
 
     Group.user_trust_level_change!(user.id, 0)
     user.reload
-    expect(user.groups.map(&:name).sort).to eq ["trust_level_0"]
+    expect(user.groups.map(&:name)).to contain_exactly("trust_level_0")
   end
 
   it "generates an event when applying group from trust level change" do
