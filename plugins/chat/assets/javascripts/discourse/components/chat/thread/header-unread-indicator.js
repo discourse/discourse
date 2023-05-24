@@ -5,15 +5,14 @@ export default class ChatThreadHeaderUnreadIndicator extends Component {
   @service chatTrackingStateManager;
 
   get showUnreadIndicator() {
-    return this.args.channel.threadTrackingOverview.length > 0;
+    return this.args.channel.unreadThreadCount > 0;
   }
 
   get unreadCountLabel() {
-    const unreadThreads = this.args.channel.threadTrackingOverview.length;
-    if (unreadThreads > 99) {
+    if (this.args.channel.unreadThreadCount > 99) {
       return "99+";
     }
 
-    return unreadThreads;
+    return this.args.channel.unreadThreadCount;
   }
 }

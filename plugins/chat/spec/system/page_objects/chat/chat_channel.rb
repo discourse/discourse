@@ -225,7 +225,7 @@ module PageObjects
       end
 
       def thread_list_button_selector
-        ".open-thread-list-btn"
+        ".chat-threads-list-button"
       end
 
       private

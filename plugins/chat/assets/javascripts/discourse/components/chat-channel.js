@@ -198,9 +198,8 @@ export default class ChatLivePane extends Component {
           });
         }
 
-        if (result.thread_tracking_overview) {
-          this.args.channel.threadTrackingOverview =
-            result.thread_tracking_overview;
+        if (result.unread_thread_ids) {
+          this.args.channel.unreadThreadIds = result.unread_thread_ids;
         }
 
         if (this.requestedTargetMessageId) {

@@ -55,6 +55,10 @@ export default class Chat extends Service {
       this._activeMessage = null;
     }
 
+    if (this._activeChannel) {
+      this._activeChannel.activeThread = null;
+    }
+
     this._activeChannel = channel;
   }
 

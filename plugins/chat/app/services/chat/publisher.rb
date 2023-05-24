@@ -286,7 +286,7 @@ module Chat
       # and a message is sent in the thread. We also need to pass the actual
       # thread tracking state.
       if channel.threading_enabled && message.thread_reply?
-        data[:thread_tracking_overview] = ::Chat::TrackingStateReportQuery
+        data[:unread_thread_ids] = ::Chat::TrackingStateReportQuery
           .call(
             guardian: user.guardian,
             channel_ids: [channel.id],

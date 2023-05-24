@@ -3,8 +3,8 @@
   @models={{@channel.routeModels}}
   title={{i18n "chat.threads.list"}}
   class={{concat-class
-    "open-thread-list-btn btn btn-flat"
-    (if @channel.threadTrackingOverview.length "-has-unreads")
+    "chat-threads-list-button btn btn-flat"
+    (if @channel.unreadThreadCount "-has-unreads")
   }}
 >
   {{d-icon "discourse-threads"}}

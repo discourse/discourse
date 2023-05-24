@@ -41,7 +41,7 @@
           {{/if}}
 
           {{#if @channel.threadingEnabled}}
-            <Chat::Thread::HeaderButton @channel={{@channel}} />
+            <Chat::Thread::ThreadsListButton @channel={{@channel}} />
           {{/if}}
         </div>
       {{/if}}

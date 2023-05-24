@@ -209,9 +209,7 @@ export default class ChatSubscriptionsManager extends Service {
 
           // Thread should be considered unread if not already.
           if (busData.thread_id) {
-            if (!channel.threadTrackingOverview.includes(busData.thread_id)) {
-              channel.threadTrackingOverview.push(busData.thread_id);
-            }
+            channel.unreadThreadIds.add(busData.thread_id);
           }
         }
       }
@@ -227,12 +225,7 @@ export default class ChatSubscriptionsManager extends Service {
         .then((thread) => {
           if (busData.user_id === this.currentUser.id) {
             // Thread should no longer be considered unread.
-            if (channel.threadTrackingOverview.includes(busData.thread_id)) {
-              channel.threadTrackingOverview =
-                channel.threadTrackingOverview.filter(
-                  (threadId) => threadId !== busData.thread_id
-                );
-            }
+            channel.unreadThreadIds.remove(busData.thread_id);
             // TODO (martin) Update lastReadMessageId for thread membership on client.
           } else {
             if (this.currentUser.ignored_users.includes(busData.username)) {
@@ -245,12 +238,7 @@ export default class ChatSubscriptionsManager extends Service {
                 // so if the user is looking at the thread don't do anything to mark it unread.
               } else {
                 // Message from other user. Thread should be considered unread if not already.
-                if (
-                  !channel.threadTrackingOverview.includes(busData.thread_id)
-                ) {
-                  channel.threadTrackingOverview.push(busData.thread_id);
-                }
-
+                channel.unreadThreadIds.add(busData.thread_id);
                 thread.tracking.unreadCount += 1;
               }
             }
@@ -317,8 +305,8 @@ export default class ChatSubscriptionsManager extends Service {
       channel.tracking.unreadCount = busData.unread_count;
       channel.tracking.mentionCount = busData.mention_count;
 
-      if (busData.hasOwnProperty("thread_tracking_overview")) {
-        channel.threadTrackingOverview = busData.thread_tracking_overview;
+      if (busData.hasOwnProperty("unread_thread_ids")) {
+        channel.unreadThreadIds = busData.unread_thread_ids;
       }
 
       if (busData.thread_id && busData.hasOwnProperty("thread_tracking")) {

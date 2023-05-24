@@ -6,7 +6,7 @@ import ChatDrawerThread from "discourse/plugins/chat/discourse/components/chat-d
 import ChatDrawerThreads from "discourse/plugins/chat/discourse/components/chat-drawer/threads";
 import ChatDrawerIndex from "discourse/plugins/chat/discourse/components/chat-drawer/index";
 
-const COMPONENTS_MAP = {
+const ROUTES = {
   "chat.draft-channel": { name: ChatDrawerDraftChannel },
   "chat.channel": { name: ChatDrawerChannel },
   "chat.channel.thread": {
@@ -50,23 +50,40 @@ const COMPONENTS_MAP = {
 export default class ChatDrawerRouter extends Service {
   @service router;
   @tracked component = null;
+  @tracked drawerRoute = null;
   @tracked params = null;
   @tracked history = [];
 
-  get previousRouteName() {
+  get previousRoute() {
     if (this.history.length > 1) {
       return this.history[this.history.length - 2];
     }
   }
 
+  get currentRoute() {
+    if (this.history.length > 0) {
+      return this.history[this.history.length - 1];
+    }
+  }
+
   stateFor(route) {
-    this.history.push(route.name);
+    this.drawerRoute?.deactivate?.(this.currentRoute);
+
+    this.history.push(route);
     if (this.history.length > 10) {
       this.history.shift();
     }
 
-    const component = COMPONENTS_MAP[route.name];
-    this.params = component?.extractParams?.(route) || route.params;
-    this.component = component?.name || ChatDrawerIndex;
+    this.drawerRoute = ROUTES[route.name];
+
+    if (!this.drawerRoute) {
+      // TODO (joffrey) maybe we should implement the equivalent of a 404 here?
+      return;
+    }
+
+    this.params = this.drawerRoute?.extractParams?.(route) || route.params;
+    this.component = this.drawerRoute?.name || ChatDrawerIndex;
+
+    this.drawerRoute.activate?.(route);
   }
 }
