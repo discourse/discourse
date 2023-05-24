@@ -17,8 +17,8 @@ import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { Promise } from "rsvp";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import User from "discourse/models/user";
 
 export default class ChatComposer extends Component {
@@ -33,6 +33,7 @@ export default class ChatComposer extends Component {
   @service chatEmojiPickerManager;
   @service currentUser;
   @service chatApi;
+  @service chatDraftsManager;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
@@ -78,15 +79,8 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  sendMessage(raw) {
-    const message = ChatMessage.createDraftMessage(this.args.channel, {
-      user: this.currentUser,
-      message: raw,
-    });
-
-    this.args.onSendMessage(message);
-
-    return Promise.resolve();
+  sendMessage() {
+    this.args.onSendMessage(this.currentMessage);
   }
 
   @action
@@ -107,13 +101,15 @@ export default class ChatComposer extends Component {
 
   @action
   didUpdateMessage() {
-    cancel(this._persistHandler);
+    this.cancelPersistDraft();
     this.textareaInteractor.value = this.currentMessage.message || "";
     this.textareaInteractor.focus({ refreshHeight: true });
+    this.persistDraft();
   }
 
   @action
   didUpdateInReplyTo() {
+    this.cancelPersistDraft();
     this.textareaInteractor.focus({ ensureAtEnd: true, refreshHeight: true });
     this.persistDraft();
   }
@@ -149,10 +145,20 @@ export default class ChatComposer extends Component {
   }
 
   @action
+  didUpdateChannel() {
+    if (!this.args.channel) {
+      this.composer.message = null;
+    }
+
+    this.composer.message =
+      this.chatDraftsManager.get({ channelId: this.args.channel.id }) ||
+      ChatMessage.createDraftMessage(this.args.channel, {
+        user: this.currentUser,
+      });
+  }
+
+  @action
   setup() {
-    this.composer.message = ChatMessage.createDraftMessage(this.args.channel, {
-      user: this.currentUser,
-    });
     this.appEvents.on("chat:modify-selection", this, "modifySelection");
     this.appEvents.on(
       "chat:open-insert-link-modal",

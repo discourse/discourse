@@ -138,8 +138,12 @@ export default class ChatMessage {
   }
 
   cook() {
+    const site = getOwner(this).lookup("service:site");
+
     next(() => {
-      const site = getOwner(this).lookup("service:site");
+      if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
 
       const markdownOptions = {
         featuresOverride:
@@ -246,6 +250,12 @@ export default class ChatMessage {
           username: this.inReplyTo.user.username,
         },
       };
+    }
+
+    if (this.editing) {
+      data.editing = true;
+      data.id = this.id;
+      data.excerpt = this.excerpt;
     }
 
     return JSON.stringify(data);

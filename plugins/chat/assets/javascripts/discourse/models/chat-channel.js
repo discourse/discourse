@@ -81,7 +81,6 @@ export default class ChatChannel {
   @tracked canFlag;
   @tracked canModerate;
   @tracked userSilenced;
-  @tracked draft = null;
   @tracked meta;
   @tracked chatableType;
   @tracked chatableUrl;

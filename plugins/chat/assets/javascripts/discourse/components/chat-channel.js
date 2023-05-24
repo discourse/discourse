@@ -43,6 +43,7 @@ export default class ChatLivePane extends Component {
   @service appEvents;
   @service messageBus;
   @service site;
+  @service chatDraftsManager;
 
   @tracked loading = false;
   @tracked loadingMorePast = false;
@@ -116,11 +117,6 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this.unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
-
-      if (this.args.channel.draft) {
-        this.chatChannelComposer.message = this.args.channel.draft;
-      }
-
       this._loadedChannelId = this.args.channel?.id;
     }
 
@@ -642,6 +638,7 @@ export default class ChatLivePane extends Component {
       .editMessage(this.args.channel.id, message.id, data)
       .catch(popupAjaxError)
       .finally(() => {
+        this.chatDraftsManager.remove({ channelId: this.args.channel.id });
         this.chatChannelPane.sending = false;
       });
   }
@@ -704,7 +701,7 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        this.args.channel.draft = null;
+        this.chatDraftsManager.remove({ channelId: this.args.channel.id });
         this.chatChannelPane.sending = false;
       });
   }
