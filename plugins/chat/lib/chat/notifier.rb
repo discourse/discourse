@@ -223,10 +223,9 @@ module Chat
           group.user_count > SiteSetting.max_users_notified_per_group_mention
         end
 
-      mentions_disabled =
-        @chat_message.parsed_mentions.visible_groups -
-          @chat_message.parsed_mentions.mentionable_groups
-      to_notify[:group_mentions_disabled] = mentions_disabled
+      to_notify[
+        :group_mentions_disabled
+      ] = @chat_message.parsed_mentions.groups_with_disabled_mentions
       to_notify[:too_many_members] = too_many_members
       mentionable.each { |g| to_notify[g.name.downcase] = [] }
 

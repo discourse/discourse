@@ -62,6 +62,10 @@ module Chat
         .where.not(username_lower: @parsed_direct_mentions)
     end
 
+    def groups_with_disabled_mentions
+      @groups_with_disabled_mentions ||= visible_groups - mentionable_groups
+    end
+
     def mentionable_groups
       @mentionable_groups ||=
         Group.mentionable(@message.user, include_public: false).where(id: visible_groups.map(&:id))
