@@ -1991,7 +1991,7 @@ RSpec.describe Search do
       expect(Search.execute("with:images").posts.map(&:id)).to contain_exactly(post_uploaded.id)
     end
 
-    it "can find by latest" do
+    it "can find by latest and oldest" do
       topic1 = Fabricate(:topic, title: "I do not like that Sam I am")
       post1 = Fabricate(:post, topic: topic1, created_at: 10.minutes.ago)
       post2 = Fabricate(:post, raw: "that Sam I am, that Sam I am", created_at: 5.minutes.ago)
@@ -2000,6 +2000,16 @@ RSpec.describe Search do
       expect(Search.execute("sam ORDER:LATEST").posts.map(&:id)).to eq([post2.id, post1.id])
       expect(Search.execute("sam l").posts.map(&:id)).to eq([post2.id, post1.id])
       expect(Search.execute("l sam").posts.map(&:id)).to eq([post2.id, post1.id])
+    end
+
+    it "can find by oldest" do
+      topic1 = Fabricate(:topic, title: "I do not like that Sam I am")
+      post1 = Fabricate(:post, topic: topic1, raw: "sam is a sam sam sam") # score higher
+
+      topic2 = Fabricate(:topic, title: "I do not like that Sam I am 2", created_at: 5.minutes.ago)
+      post2 = Fabricate(:post, topic: topic2, created_at: 5.minutes.ago)
+
+      expect(Search.execute("sam ORDER:oldest").posts.map(&:id)).to eq([post2.id, post1.id])
     end
 
     it "can order by topic creation" do
@@ -2038,6 +2048,13 @@ RSpec.describe Search do
       # Expecting the ordered by topic creation results
       expect(Search.execute("Topic order:latest_topic").posts.map(&:id)).to eq(
         [category.topic.first_post.id, latest_irrelevant_topic_post.id, old_relevant_topic_post.id],
+      )
+
+      # push weight to the front to ensure test is correct and is not just a coincidence
+      latest_irrelevant_topic_post.update!(raw: "Topic Topic Topic")
+
+      expect(Search.execute("Topic order:oldest_topic").posts.map(&:id)).to eq(
+        [old_relevant_topic_post.id, latest_irrelevant_topic_post.id, category.topic.first_post.id],
       )
     end
 
