@@ -16,7 +16,7 @@ module(
       this.subject.reset();
     });
 
-    test("storing and retrivieng messsage", function (assert) {
+    test("storing and retrieving message", function (assert) {
       const message1 = fabricators.message();
       this.subject.add(message1);
 
