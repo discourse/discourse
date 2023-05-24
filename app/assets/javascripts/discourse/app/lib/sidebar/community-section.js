@@ -175,7 +175,7 @@ export default class CommunitySection {
   }
 
   get headerActionIcon() {
-    if (this.currentUser && this.currentUser.admin) {
+    if (this.currentUser?.admin) {
       return "pencil-alt";
     }
     if (this.currentUser) {
