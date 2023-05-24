@@ -35,6 +35,7 @@
     .sidebar-section-link-content-badge {
       @include ellipsis;
       padding-left: 0.5em;
+      padding-right: 0.1em; // avoids some overflow cropping
       text-align: right;
       color: var(--primary-700);
       font-size: var(--font-down-1);
@@ -146,8 +147,8 @@
       }
     }
     .prefix-span {
-      width: 0.9em;
-      height: 0.9em;
+      width: 0.87em;
+      height: 0.87em;
     }
   }
 
