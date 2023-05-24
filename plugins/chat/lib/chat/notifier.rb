@@ -218,16 +218,11 @@ module Chat
           .where.not(username_lower: @user.username_lower)
           .where.not(id: already_covered_ids)
 
-      too_many_members, mentionable =
-        @chat_message.parsed_mentions.mentionable_groups.partition do |group|
-          group.user_count > SiteSetting.max_users_notified_per_group_mention
-        end
-
       to_notify[
         :group_mentions_disabled
       ] = @chat_message.parsed_mentions.groups_with_disabled_mentions
-      to_notify[:too_many_members] = too_many_members
-      mentionable.each { |g| to_notify[g.name.downcase] = [] }
+      to_notify[:too_many_members] = @chat_message.parsed_mentions.groups_with_too_many_members
+      @chat_message.parsed_mentions.groups_to_mention.each { |g| to_notify[g.name.downcase] = [] }
 
       grouped = group_users_to_notify(reached_by_group)
       grouped[:already_participating].each do |user|
@@ -235,7 +230,7 @@ module Chat
         # the most far to the left should take precedence.
         ordered_group_names =
           @chat_message.parsed_mentions.parsed_group_mentions &
-            mentionable.map { |mg| mg.name.downcase }
+            @chat_message.parsed_mentions.groups_to_mention.map { |mg| mg.name.downcase }
         user_group_names = user.groups.map { |ug| ug.name.downcase }
         group_name = ordered_group_names.detect { |gn| user_group_names.include?(gn) }
 
