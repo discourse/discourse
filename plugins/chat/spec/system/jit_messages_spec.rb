@@ -50,35 +50,6 @@ RSpec.describe "JIT messages", type: :system, js: true do
         )
       end
     end
-
-    context "when user can’t access a non read_restrictd channel" do
-      let!(:everyone) { Group.find(Group::AUTO_GROUPS[:everyone]) }
-      fab!(:category) { Fabricate(:category) }
-      fab!(:readonly_channel) { Fabricate(:category_channel, chatable: category) }
-
-      before do
-        Fabricate(
-          :category_group,
-          category: category,
-          group: everyone,
-          permission_type: CategoryGroup.permission_types[:readonly],
-        )
-        everyone.add(other_user)
-        readonly_channel.add(current_user)
-      end
-
-      it "displays a mention warning" do
-        Jobs.run_immediately!
-
-        chat.visit_channel(readonly_channel)
-        channel.send_message("hi @#{other_user.username}")
-
-        expect(page).to have_content(
-          I18n.t("js.chat.mention_warning.cannot_see", username: other_user.username),
-          wait: 5,
-        )
-      end
-    end
   end
 
   context "when category channel permission is readonly for everyone" do

@@ -913,7 +913,7 @@ RSpec.describe Chat::ChatController do
       channel = Fabricate(:category_channel, chatable: Fabricate(:category))
       message = Fabricate(:chat_message, chat_channel: channel)
 
-      Guardian.any_instance.expects(:can_preview_chat_channel?).with(channel)
+      Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
 
       sign_in(Fabricate(:user))
       get "/chat/message/#{message.id}.json"
