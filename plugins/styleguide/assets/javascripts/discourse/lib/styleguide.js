@@ -1,3 +1,40 @@
+import typography from "../components/sections/atoms/00-typography";
+import fontScale from "../components/sections/atoms/01-font-scale";
+import buttons from "../components/sections/atoms/02-buttons";
+import colors from "../components/sections/atoms/03-colors";
+import icons from "../components/sections/atoms/04-icons";
+import inputFields from "../components/sections/atoms/05-input-fields";
+import spinners from "../components/sections/atoms/06-spinners";
+import dateTimeInputs from "../components/sections/atoms/date-time-inputs";
+import dropdowns from "../components/sections/atoms/dropdowns";
+import topicLink from "../components/sections/atoms/topic-link";
+import topicStatuses from "../components/sections/atoms/topic-statuses";
+import breadCrumbs from "../components/sections/molecules/bread-crumbs";
+import categories from "../components/sections/molecules/categories";
+import charCounter from "../components/sections/molecules/char-counter";
+import emptyState from "../components/sections/molecules/empty-state";
+import footerMessage from "../components/sections/molecules/footer-message";
+import headerIcons from "../components/sections/molecules/header-icons";
+import navigationBar from "../components/sections/molecules/navigation-bar";
+import navigationStacked from "../components/sections/molecules/navigation-stacked";
+import postMenu from "../components/sections/molecules/post-menu";
+import richTooltip from "../components/sections/molecules/rich-tooltip";
+import signupCta from "../components/sections/molecules/signup-cta";
+import topicListItem from "../components/sections/molecules/topic-list-item";
+import topicNotifications from "../components/sections/molecules/topic-notifications";
+import topicTimerInfo from "../components/sections/molecules/topic-timer-info";
+import post from "../components/sections/organisms/00-post";
+import topicMap from "../components/sections/organisms/01-topic-map";
+import topicFooterButtons from "../components/sections/organisms/03-topic-footer-buttons";
+import topicList from "../components/sections/organisms/04-topic-list";
+import basicTopicList from "../components/sections/organisms/basic-topic-list";
+import categoriesList from "../components/sections/organisms/categories-list";
+import modal from "../components/sections/organisms/modal";
+import navigation from "../components/sections/organisms/navigation";
+import siteHeader from "../components/sections/organisms/site-header";
+import suggestedTopics from "../components/sections/organisms/suggested-topics";
+import userAbout from "../components/sections/organisms/user-about";
+
 let _allCategories = null;
 let _sectionsById = {};
 let _notes = {};
@@ -5,47 +42,70 @@ let _notes = {};
 export const CATEGORIES = ["atoms", "molecules", "organisms"];
 
 const SECTIONS = [
-  "sections/atoms/00-typography",
-  "sections/atoms/01-font-scale",
-  "sections/atoms/02-buttons",
-  "sections/atoms/03-colors",
-  "sections/atoms/04-icons",
-  "sections/atoms/05-input-fields",
-  "sections/atoms/06-spinners",
-  "sections/atoms/date-time-inputs",
-  "sections/atoms/dropdowns",
-  "sections/atoms/topic-link",
-  "sections/atoms/topic-statuses",
-  "sections/molecules/bread-crumbs",
-  "sections/molecules/categories",
-  "sections/molecules/char-counter",
-  "sections/molecules/empty-state",
-  "sections/molecules/footer-message",
-  "sections/molecules/header-icons",
-  "sections/molecules/navigation-bar",
-  "sections/molecules/navigation-stacked",
-  "sections/molecules/post-menu",
-  "sections/molecules/rich-tooltip",
-  "sections/molecules/signup-cta",
-  "sections/molecules/topic-list-item",
-  "sections/molecules/topic-notifications",
-  "sections/molecules/topic-timer-info",
-  "sections/organisms/00-post",
-  "sections/organisms/01-topic-map",
-  "sections/organisms/03-topic-footer-buttons",
-  "sections/organisms/04-topic-list",
-  "sections/organisms/basic-topic-list",
-  "sections/organisms/categories-list",
-  "sections/organisms/modal",
-  "sections/organisms/navigation",
-  "sections/organisms/site-header",
-  "sections/organisms/suggested-topics",
-  "sections/organisms/user-about",
+  { component: typography, category: "atoms", id: "typography", priority: 0 },
+  { component: fontScale, category: "atoms", id: "font-scale", priority: 1 },
+  { component: buttons, category: "atoms", id: "buttons", priority: 2 },
+  { component: colors, category: "atoms", id: "colors", priority: 3 },
+  { component: icons, category: "atoms", id: "icons", priority: 4 },
+  {
+    component: inputFields,
+    category: "atoms",
+    id: "input-fields",
+    priority: 5,
+  },
+  { component: spinners, category: "atoms", id: "spinners", priority: 6 },
+  { component: dateTimeInputs, category: "atoms", id: "date-time-inputs" },
+  { component: dropdowns, category: "atoms", id: "dropdowns" },
+  { component: topicLink, category: "atoms", id: "topic-link" },
+  { component: topicStatuses, category: "atoms", id: "topic-statuses" },
+  { component: breadCrumbs, category: "molecules", id: "bread-crumbs" },
+  { component: categories, category: "molecules", id: "categories" },
+  { component: charCounter, category: "molecules", id: "char-counter" },
+  { component: emptyState, category: "molecules", id: "empty-state" },
+  { component: footerMessage, category: "molecules", id: "footer-message" },
+  { component: headerIcons, category: "molecules", id: "header-icons" },
+  { component: navigationBar, category: "molecules", id: "navigation-bar" },
+  {
+    component: navigationStacked,
+    category: "molecules",
+    id: "navigation-stacked",
+  },
+  { component: postMenu, category: "molecules", id: "post-menu" },
+  { component: richTooltip, category: "molecules", id: "rich-tooltip" },
+  { component: signupCta, category: "molecules", id: "signup-cta" },
+  { component: topicListItem, category: "molecules", id: "topic-list-item" },
+  {
+    component: topicNotifications,
+    category: "molecules",
+    id: "topic-notifications",
+  },
+  { component: topicTimerInfo, category: "molecules", id: "topic-timer-info" },
+  { component: post, category: "organisms", id: "post", priority: 0 },
+  { component: topicMap, category: "organisms", id: "topic-map", priority: 1 },
+  {
+    component: topicFooterButtons,
+    category: "organisms",
+    id: "topic-footer-buttons",
+    priority: 3,
+  },
+  {
+    component: topicList,
+    category: "organisms",
+    id: "topic-list",
+    priority: 4,
+  },
+  { component: basicTopicList, category: "organisms", id: "basic-topic-list" },
+  { component: categoriesList, category: "organisms", id: "categories-list" },
+  { component: modal, category: "organisms", id: "modal" },
+  { component: navigation, category: "organisms", id: "navigation" },
+  { component: siteHeader, category: "organisms", id: "site-header" },
+  { component: suggestedTopics, category: "organisms", id: "suggested-topics" },
+  { component: userAbout, category: "organisms", id: "user-about" },
 ];
 
-export function addSection(componentName) {
-  if (!SECTIONS.includes(componentName)) {
-    SECTIONS.push(componentName);
+export function addSection(section) {
+  if (!SECTIONS.some((s) => s.id === section.id)) {
+    SECTIONS.push(section);
   }
 }
 
@@ -71,34 +131,21 @@ export function allCategories() {
     return _allCategories;
   }
 
-  const categories = {};
-  const paths = CATEGORIES.join("|");
-  const regexp = new RegExp(`[/]?(${paths})\/(\\d+)?\\-?([^\\/]+)$`);
+  for (const section of SECTIONS) {
+    section.priority ??= 100;
 
-  for (const componentName of SECTIONS) {
-    const match = componentName.match(regexp);
+    categories[section.category] ||= [];
+    categories[section.category].push(section);
 
-    if (match) {
-      const [, category, priority, id] = match;
-      const section = {
-        id,
-        priority: parseInt(priority || "100", 10),
-        category,
-        componentName,
-      };
+    _sectionsById[section.id] = section;
 
-      categories[section.category] ||= [];
-      categories[section.category].push(section);
-
-      _sectionsById[section.id] = section;
-    }
-
+    // TODO: ?
     // Look for notes
-    const notesRegexp = new RegExp(`[/]?notes\/(\\d+)?\\-?([^\\/]+)$`);
-    const notesMatch = componentName.match(notesRegexp);
-    if (notesMatch) {
-      _notes[notesMatch[2]] = componentName.replace(/^.*notes\//, "");
-    }
+    // const notesRegexp = new RegExp(`[/]?notes\/(\\d+)?\\-?([^\\/]+)$`);
+    // const notesMatch = componentName.match(notesRegexp);
+    // if (notesMatch) {
+    //   _notes[notesMatch[2]] = componentName.replace(/^.*notes\//, "");
+    // }
   }
 
   _allCategories = [];

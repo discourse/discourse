@@ -2,13 +2,24 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { addSection } from "../lib/styleguide";
 
 /**
- * Add given section component to the styleguide
+ * Add a section to the styleguide
  *
  * @function addStyleguideSection
- * @param {string} componentName
+ * @param {Object} section
+ * @param {Component} section.component
+ * @param {string} options.id
+ * @param {string} options.category
+ * @param {number} [options.priority]
  * @example
  *
- * api.addStyleguideSection("");
+ * import fidget from "../components/styleguide/molecules/fidget";
+ *
+ * api.addStyleguideSection({
+ *   component: fidget,
+ *   id: "fidget",
+ *   category: "molecules",
+ *   priority: 0,
+ * });
  */
 
 export default {
@@ -21,8 +32,8 @@ export default {
 
       if (!apiPrototype.hasOwnProperty("addStyleguideSection")) {
         Object.defineProperty(apiPrototype, "addStyleguideSection", {
-          value(componentName) {
-            addSection(componentName);
+          value(section) {
+            addSection(section);
           },
         });
       }
