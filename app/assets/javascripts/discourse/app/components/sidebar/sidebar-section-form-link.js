@@ -5,12 +5,6 @@ import { tracked } from "@glimmer/tracking";
 export default class SidebarSectionFormLink extends Component {
   @tracked dragCssClass;
 
-  constructor() {
-    super(...arguments);
-    this.link = this.args.link;
-    this.reorderCallback = this.args.reorderCallback;
-    this.deleteLink = this.args.deleteLink;
-  }
 
   isAboveElement(event) {
     event.preventDefault();
