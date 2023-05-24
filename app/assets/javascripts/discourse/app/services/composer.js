@@ -503,6 +503,16 @@ export default class ComposerController extends Controller {
   }
 
   @action
+  setCategory(categoryId) {
+    this.model.categoryId = categoryId;
+    const formTemplateIds = this.model.category.form_template_ids;
+
+    if (formTemplateIds.length) {
+      this.appEvents.trigger("composer:load-templates", formTemplateIds);
+    }
+  }
+
+  @action
   openIfDraft(event) {
     if (!this.get("model.viewDraft")) {
       return false;

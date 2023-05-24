@@ -168,9 +168,7 @@
                     <div class="category-input">
                       <CategoryChooser
                         @value={{this.composer.model.categoryId}}
-                        @onChange={{action
-                          (mut this.composer.model.categoryId)
-                        }}
+                        @onChange={{this.composer.setCategory}}
                         @options={{hash
                           disabled=this.composer.disableCategoryChooser
                           scopedCategoryId=this.composer.scopedCategoryId
