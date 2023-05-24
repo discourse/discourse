@@ -1436,6 +1436,10 @@ User.reopen(Evented, {
     this._subscribersCount--;
   },
 
+  isTrackingStatus() {
+    return this._subscribersCount > 0;
+  },
+
   _statusChanged(sender, key) {
     this.trigger("status-changed");
 

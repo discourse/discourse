@@ -145,6 +145,60 @@ RSpec.describe Chat::ChatController do
       expect(response.parsed_body["meta"]["channel_message_bus_last_id"]).not_to eq(nil)
     end
 
+    context "with mentions" do
+      it "returns mentioned users" do
+        last_message = chat_channel.chat_messages.last
+        user1 = Fabricate(:user)
+        user2 = Fabricate(:user)
+        Fabricate(:chat_mention, user: user1, chat_message: last_message)
+        Fabricate(:chat_mention, user: user2, chat_message: last_message)
+
+        get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
+        mentioned_users = response.parsed_body["chat_messages"].last["mentioned_users"]
+        expect(mentioned_users[0]["id"]).to eq(user1.id)
+        expect(mentioned_users[0]["username"]).to eq(user1.username)
+        expect(mentioned_users[1]["id"]).to eq(user2.id)
+        expect(mentioned_users[1]["username"]).to eq(user2.username)
+      end
+
+      it "returns an empty list if no one was mentioned" do
+        get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
+        last_message = response.parsed_body["chat_messages"].last
+        expect(last_message).to have_key("mentioned_users")
+        expect(last_message["mentioned_users"]).to be_empty
+      end
+
+      context "with user status" do
+        fab!(:status) { Fabricate(:user_status) }
+        fab!(:user1) { Fabricate(:user, user_status: status) }
+        fab!(:chat_mention) do
+          Fabricate(:chat_mention, user: user1, chat_message: chat_channel.chat_messages.last)
+        end
+
+        it "returns status if enabled in settings" do
+          SiteSetting.enable_user_status = true
+
+          get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
+          mentioned_user = response.parsed_body["chat_messages"].last["mentioned_users"][0]
+          expect(mentioned_user).to have_key("status")
+          expect(mentioned_user["status"]["emoji"]).to eq(status.emoji)
+          expect(mentioned_user["status"]["description"]).to eq(status.description)
+        end
+
+        it "doesn't return status if disabled in settings" do
+          SiteSetting.enable_user_status = false
+
+          get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
+
+          mentioned_user = response.parsed_body["chat_messages"].last["mentioned_users"][0]
+          expect(mentioned_user).not_to have_key("status")
+        end
+      end
+    end
+
     describe "scrolling to the past" do
       it "returns the correct messages in created_at, id order" do
         get "/chat/#{chat_channel.id}/messages.json",
