@@ -19,11 +19,9 @@ module PageObjects
           selectors += ".is-staged" if args[:staged]
 
           if args[:text]
-            return(
-              find(context).has_selector?(selectors + " " + ".chat-message-text", text: args[:text])
-            )
+            find(context).has_selector?(selectors + " " + ".chat-message-text", text: args[:text])
           else
-            return find(context).has_selector?(selectors)
+            find(context).has_selector?(selectors)
           end
         end
       end
