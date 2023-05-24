@@ -18,7 +18,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     this.render("discovery/categories", { outlet: "list-container" });
   },
 
-  findCategories() {
+  findCategories(extras) {
     let style =
       !this.site.mobileView && this.siteSettings.desktop_category_page_style;
 
@@ -26,9 +26,9 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       style === "categories_and_latest_topics" ||
       style === "categories_and_latest_topics_created_date"
     ) {
-      return this._findCategoriesAndTopics("latest");
+      return this._findCategoriesAndTopics("latest", extras);
     } else if (style === "categories_and_top_topics") {
-      return this._findCategoriesAndTopics("top");
+      return this._findCategoriesAndTopics("top", extras);
     } else {
       // The server may have serialized this. Based on the logic above, we don't need it
       // so remove it to avoid it being used later by another TopicList route.
@@ -38,8 +38,11 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     return CategoryList.list(this.store);
   },
 
-  model() {
-    return this.findCategories().then((model) => {
+  model(params, transition) {
+    const extras = { cached: this.isPoppedState(transition) };
+
+    // the extras parameter is not used in discourse core
+    return this.findCategories(extras).then((model) => {
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(model, "categories");
@@ -78,7 +81,10 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     };
   },
 
-  _findCategoriesAndTopics(filter) {
+  // the extras parameter is not used in discourse core but it is provided in case some plugins need to implement more
+  // complex loading strategies
+  // eslint-disable-next-line no-unused-vars
+  _findCategoriesAndTopics(filter, extras) {
     return hash({
       wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
       topicsList: PreloadStore.getAndRemove("topic_list"),
