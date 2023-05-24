@@ -42,6 +42,8 @@ RSpec.describe "Deleted message", type: :system, js: true do
       channel_page.delete_message(message)
       expect(channel_page).to have_deleted_message(message, count: 1)
       sidebar_component.click_link(channel_2.name)
+      expect(channel_page).to have_no_loading_skeleton
+
       sidebar_component.click_link(channel_1.name)
       expect(channel_page).to have_deleted_message(message, count: 1)
     end

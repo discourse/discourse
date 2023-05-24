@@ -127,11 +127,12 @@ module Chat
     SQL
     end
 
-    def latest_not_deleted_message_id
-      DB.query_single(<<~SQL, channel_id: self.id).first
+    def latest_not_deleted_message_id(anchor_message_id: nil)
+      DB.query_single(<<~SQL, channel_id: self.id, anchor_message_id: anchor_message_id).first
         SELECT id FROM chat_messages
         WHERE chat_channel_id = :channel_id
         AND deleted_at IS NULL
+        #{anchor_message_id ? "AND id < :anchor_message_id" : ""}
         ORDER BY created_at DESC, id DESC
         LIMIT 1
       SQL

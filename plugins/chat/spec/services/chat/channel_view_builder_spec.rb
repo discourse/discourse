@@ -228,6 +228,18 @@ RSpec.describe Chat::ChannelViewBuilder do
         before { message.trash! }
 
         it { is_expected.to fail_a_policy(:target_message_exists) }
+
+        context "when the user is the owner of the trashed message" do
+          before { message.update!(user: current_user) }
+
+          it { is_expected.not_to fail_a_policy(:target_message_exists) }
+        end
+
+        context "when the user is admin" do
+          before { current_user.update!(admin: true) }
+
+          it { is_expected.not_to fail_a_policy(:target_message_exists) }
+        end
       end
     end
   end

@@ -4,36 +4,47 @@ require "rails_helper"
 
 describe Chat::Publisher do
   fab!(:channel) { Fabricate(:category_channel) }
-  fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 
   describe ".publish_delete!" do
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel) }
-    before { message.trash! }
+    before { message_2.trash! }
 
     it "publishes the correct data" do
-      data = MessageBus.track_publish { described_class.publish_delete!(channel, message) }[0].data
+      data =
+        MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }[0].data
 
-      expect(data["deleted_at"]).to eq(message.deleted_at.iso8601(3))
-      expect(data["deleted_id"]).to eq(message.id)
-      expect(data["latest_not_deleted_message_id"]).to eq(message_2.id)
+      expect(data["deleted_at"]).to eq(message_2.deleted_at.iso8601(3))
+      expect(data["deleted_id"]).to eq(message_2.id)
+      expect(data["latest_not_deleted_message_id"]).to eq(message_1.id)
       expect(data["type"]).to eq("delete")
+    end
+
+    context "when there are no earlier messages in the channel to send as latest_not_deleted_message_id" do
+      it "publishes nil" do
+        data =
+          MessageBus.track_publish { described_class.publish_delete!(channel, message_1) }[0].data
+
+        expect(data["latest_not_deleted_message_id"]).to eq(nil)
+      end
     end
 
     context "when the message is in a thread and the channel has threading_enabled" do
       before do
         SiteSetting.enable_experimental_chat_threaded_discussions = true
         thread = Fabricate(:chat_thread, channel: channel)
-        message.update!(thread: thread)
+        message_1.update!(thread: thread)
+        message_2.update!(thread: thread)
         channel.update!(threading_enabled: true)
       end
 
       it "publishes the correct latest not deleted message id" do
         data =
-          MessageBus.track_publish { described_class.publish_delete!(channel, message) }[0].data
+          MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }[0].data
 
-        expect(data["deleted_at"]).to eq(message.deleted_at.iso8601(3))
-        expect(data["deleted_id"]).to eq(message.id)
-        expect(data["latest_not_deleted_message_id"]).to eq(message.thread.original_message_id)
+        expect(data["deleted_at"]).to eq(message_2.deleted_at.iso8601(3))
+        expect(data["deleted_id"]).to eq(message_2.id)
+        expect(data["latest_not_deleted_message_id"]).to eq(message_1.id)
         expect(data["type"]).to eq("delete")
       end
     end
@@ -41,9 +52,10 @@ describe Chat::Publisher do
 
   describe ".publish_refresh!" do
     it "publishes the message" do
-      data = MessageBus.track_publish { described_class.publish_refresh!(channel, message) }[0].data
+      data =
+        MessageBus.track_publish { described_class.publish_refresh!(channel, message_1) }[0].data
 
-      expect(data["chat_message"]["id"]).to eq(message.id)
+      expect(data["chat_message"]["id"]).to eq(message_1.id)
       expect(data["type"]).to eq("refresh")
     end
   end
@@ -53,10 +65,10 @@ describe Chat::Publisher do
       before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
 
       context "when the message is the original message of a thread" do
-        fab!(:thread) { Fabricate(:chat_thread, original_message: message, channel: channel) }
+        fab!(:thread) { Fabricate(:chat_thread, original_message: message_1, channel: channel) }
 
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}")
         end
       end
@@ -70,17 +82,17 @@ describe Chat::Publisher do
           )
         end
 
-        before { message.update!(thread: thread) }
+        before { message_1.update!(thread: thread) }
 
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}")
         end
       end
 
       context "when the message is not part of a thread" do
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}")
         end
       end
@@ -93,10 +105,10 @@ describe Chat::Publisher do
       end
 
       context "when the message is the original message of a thread" do
-        fab!(:thread) { Fabricate(:chat_thread, original_message: message, channel: channel) }
+        fab!(:thread) { Fabricate(:chat_thread, original_message: message_1, channel: channel) }
 
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}")
         end
       end
@@ -110,17 +122,17 @@ describe Chat::Publisher do
           )
         end
 
-        before { message.update!(thread: thread) }
+        before { message_1.update!(thread: thread) }
 
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}")
         end
       end
 
       context "when the message is not part of a thread" do
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}")
         end
       end
@@ -133,10 +145,10 @@ describe Chat::Publisher do
       end
 
       context "when the message is the original message of a thread" do
-        fab!(:thread) { Fabricate(:chat_thread, original_message: message, channel: channel) }
+        fab!(:thread) { Fabricate(:chat_thread, original_message: message_1, channel: channel) }
 
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly(
             "/chat/#{channel.id}",
             "/chat/#{channel.id}/thread/#{thread.id}",
@@ -153,13 +165,13 @@ describe Chat::Publisher do
           )
         end
 
-        before { message.update!(thread: thread) }
+        before { message_1.update!(thread: thread) }
 
         it "generates the correct targets" do
           targets =
             described_class.calculate_publish_targets(
               channel,
-              message,
+              message_1,
               staged_thread_id: "stagedthreadid",
             )
 
@@ -179,17 +191,17 @@ describe Chat::Publisher do
           )
         end
 
-        before { message.update!(thread: thread) }
+        before { message_1.update!(thread: thread) }
 
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}/thread/#{thread.id}")
         end
       end
 
       context "when the message is not part of a thread" do
         it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message)
+          targets = described_class.calculate_publish_targets(channel, message_1)
           expect(targets).to contain_exactly("/chat/#{channel.id}")
         end
       end
@@ -203,14 +215,14 @@ describe Chat::Publisher do
       it "publishes to the new_messages_message_bus_channel" do
         messages =
           MessageBus.track_publish(described_class.new_messages_message_bus_channel(channel.id)) do
-            described_class.publish_new!(channel, message, staged_id)
+            described_class.publish_new!(channel, message_1, staged_id)
           end
         expect(messages.first.data).to eq(
           {
             channel_id: channel.id,
-            message_id: message.id,
-            user_id: message.user_id,
-            username: message.user.username,
+            message_id: message_1.id,
+            user_id: message_1.user_id,
+            username: message_1.user.username,
             thread_id: nil,
           },
         )
@@ -226,7 +238,7 @@ describe Chat::Publisher do
         )
       end
 
-      before { message.update!(thread: thread) }
+      before { message_1.update!(thread: thread) }
 
       context "if enable_experimental_chat_threaded_discussions is false" do
         before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
@@ -235,7 +247,7 @@ describe Chat::Publisher do
           messages =
             MessageBus.track_publish(
               described_class.new_messages_message_bus_channel(channel.id),
-            ) { described_class.publish_new!(channel, message, staged_id) }
+            ) { described_class.publish_new!(channel, message_1, staged_id) }
           expect(messages).not_to be_empty
         end
       end
@@ -250,7 +262,7 @@ describe Chat::Publisher do
             messages =
               MessageBus.track_publish(
                 described_class.new_messages_message_bus_channel(channel.id),
-              ) { described_class.publish_new!(channel, message, staged_id) }
+              ) { described_class.publish_new!(channel, message_1, staged_id) }
             expect(messages).not_to be_empty
           end
         end
@@ -262,7 +274,7 @@ describe Chat::Publisher do
             messages =
               MessageBus.track_publish(
                 described_class.new_messages_message_bus_channel(channel.id),
-              ) { described_class.publish_new!(channel, message, staged_id) }
+              ) { described_class.publish_new!(channel, message_1, staged_id) }
             expect(messages).to be_empty
           end
         end

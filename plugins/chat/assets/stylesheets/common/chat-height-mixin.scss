@@ -20,20 +20,9 @@
   .footer-nav-ipad & {
     height: calc(
       var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-        var(--footer-nav-height, 0px) - var(--chat-draft-header-height, 0px) -
+        var(--chat-draft-header-height, 0px) -
         var(--chat-direct-message-creator-height, 0px) -
         var(--composer-height, 0px)
     );
-  }
-
-  // ipad with keyboard opened
-  .keyboard-visible & {
-    .footer-nav-ipad & {
-      height: calc(
-        var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
-          var(--footer-nav-height, 0px) - var(--chat-draft-header-height, 0px) -
-          var(--chat-direct-message-creator-height, 0px)
-      );
-    }
   }
 }
