@@ -60,6 +60,9 @@
         </div>
       {{else}}
         <div
+          {{did-insert this.refreshStatusOnMentions}}
+          {{did-update this.refreshStatusOnMentions @message.version}}
+          {{did-update this.initMentionedUsers @message.version}}
           class={{concat-class
             "chat-message"
             (if @message.staged "chat-message-staged" "chat-message-persisted")

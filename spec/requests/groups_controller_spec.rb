@@ -2208,7 +2208,7 @@ RSpec.describe GroupsController do
 
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to contain_exactly(
-        "Reason is too long (maximum is 280 characters)",
+        "Reason is too long (maximum is 5000 characters)",
       )
     end
 
