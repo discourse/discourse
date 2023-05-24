@@ -79,7 +79,7 @@ RSpec.describe "Browse page", type: :system, js: true do
       context "when results are found" do
         it "lists expected results" do
           visit("/chat/browse")
-          find(".dc-filter-input").fill_in(with: category_channel_1.name)
+          find(".chat-browse-view .dc-filter-input").fill_in(with: category_channel_1.name)
 
           expect(browse_view).to have_content(category_channel_1.name)
           expect(browse_view).to have_no_content(category_channel_2.name)
@@ -89,14 +89,14 @@ RSpec.describe "Browse page", type: :system, js: true do
       context "when results are not found" do
         it "displays the correct message" do
           visit("/chat/browse")
-          find(".dc-filter-input").fill_in(with: "x")
+          find(".chat-browse-view .dc-filter-input").fill_in(with: "x")
 
           expect(browse_view).to have_content(I18n.t("js.chat.empty_state.title"))
         end
 
         it "doesn’t display any channel" do
           visit("/chat/browse")
-          find(".dc-filter-input").fill_in(with: "x")
+          find(".chat-browse-view .dc-filter-input").fill_in(with: "x")
 
           expect(browse_view).to have_no_content(category_channel_1.name)
           expect(browse_view).to have_no_content(category_channel_2.name)

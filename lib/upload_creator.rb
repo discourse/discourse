@@ -74,6 +74,7 @@ class UploadCreator
     is_image = FileHelper.is_supported_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
+    is_thumbnail = SiteSetting.video_thumbnails_enabled && @opts[:type] == "thumbnail"
 
     # If this is present then it means we are creating an upload record from
     # an external_upload_stub and the file is > ExternalUploadManager::DOWNLOAD_LIMIT,
@@ -119,13 +120,17 @@ class UploadCreator
       # compute the sha of the file and generate a unique hash
       # which is only used for secure uploads
       sha1 = Upload.generate_digest(@file) if !external_upload_too_big
-      unique_hash = generate_fake_sha1_hash if SiteSetting.secure_uploads || external_upload_too_big
+      unique_hash = generate_fake_sha1_hash if SiteSetting.secure_uploads ||
+        external_upload_too_big || is_thumbnail
 
       # we do not check for duplicate uploads if secure uploads is
       # enabled because we use a unique access hash to differentiate
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
-      if !SiteSetting.secure_uploads && !external_upload_too_big
+      # We do not check for duplicate uploads for video thumbnails because
+      # their filename needs to match with their corresponding video. This also
+      # enables rebuilding the html on a topic to regenerate a thumbnail.
+      if !SiteSetting.secure_uploads && !external_upload_too_big && !is_thumbnail
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
 
@@ -163,7 +168,14 @@ class UploadCreator
       @upload.user_id = user_id
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize = filesize
-      @upload.sha1 = (SiteSetting.secure_uploads? || external_upload_too_big) ? unique_hash : sha1
+      @upload.sha1 =
+        (
+          if (SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail)
+            unique_hash
+          else
+            sha1
+          end
+        )
       @upload.original_sha1 = SiteSetting.secure_uploads? ? sha1 : nil
       @upload.url = ""
       @upload.origin = @opts[:origin][0...1000] if @opts[:origin]

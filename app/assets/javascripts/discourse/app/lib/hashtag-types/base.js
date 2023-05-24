@@ -16,4 +16,8 @@ export default class HashtagTypeBase {
   generateColorCssClasses() {
     throw "not implemented";
   }
+
+  generateIconHTML() {
+    throw "not implemented";
+  }
 }

@@ -4,12 +4,10 @@ import {
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import QUnit, { module, test } from "qunit";
-import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 const rawOpts = {
   siteSettings: {
@@ -439,6 +437,24 @@ eviltrout</p>
 </blockquote>
 </aside>`,
       "quote has group class"
+    );
+
+    assert.cooked(
+      "[quote]\ntest\n[/quote]",
+      '<aside class="quote no-group">\n<blockquote>\n<p>test</p>\n</blockquote>\n</aside>',
+      "it supports quotes without params"
+    );
+
+    assert.cooked(
+      "[quote]\n*test*\n[/quote]",
+      '<aside class="quote no-group">\n<blockquote>\n<p><em>test</em></p>\n</blockquote>\n</aside>',
+      "it doesn't insert a new line for italics"
+    );
+
+    assert.cooked(
+      "[quote=,script='a'><script>alert('test');//':a]\n[/quote]",
+      '<aside class="quote no-group">\n<blockquote></blockquote>\n</aside>',
+      "It will not create a script tag within an attribute"
     );
   });
 
@@ -973,6 +989,24 @@ eviltrout</p>
       '<p><a href="http://discourse.org" data-bbcode="true">discourse</a></p>',
       "named links are properly parsed"
     );
+
+    assert.cooked(
+      "[url]https://discourse.org/path[/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true">https://discourse.org/path</a></p>',
+      "paths are correctly handled"
+    );
+
+    assert.cooked(
+      "[url]discourse.org/path[/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true">discourse.org/path</a></p>',
+      "paths are correctly handled"
+    );
+
+    assert.cooked(
+      "[url][b]discourse.org/path[/b][/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true"><span class="bbcode-b">discourse.org/path</span></a></p>',
+      "paths are correctly handled"
+    );
   });
 
   test("images", function (assert) {
@@ -1200,7 +1234,7 @@ eviltrout</p>
     );
     assert.cookedPara(
       "[url]abc.com[/url]",
-      '<a href="http://abc.com">abc.com</a>',
+      '<a href="https://abc.com" data-bbcode="true">abc.com</a>',
       "it magically links using linkify"
     );
     assert.cookedPara(
@@ -1270,90 +1304,6 @@ eviltrout</p>
       "[b]first[/b] [b]second[/b]",
       '<span class="bbcode-b">first</span> <span class="bbcode-b">second</span>',
       "can bold two things on the same line"
-    );
-  });
-
-  test("quotes", function (assert) {
-    const store = getOwner(this).lookup("service:store");
-    const post = store.createRecord("post", {
-      cooked: "<p><b>lorem</b> ipsum</p>",
-      username: "eviltrout",
-      post_number: 1,
-      topic_id: 2,
-    });
-
-    function formatQuote(val, expected, text, opts) {
-      assert.strictEqual(buildQuote(post, val, opts), expected, text);
-    }
-
-    formatQuote(undefined, "", "empty string for undefined content");
-    formatQuote(null, "", "empty string for null content");
-    formatQuote("", "", "empty string for empty string content");
-
-    formatQuote(
-      "lorem",
-      '[quote="eviltrout, post:1, topic:2"]\nlorem\n[/quote]\n\n',
-      "correctly formats quotes"
-    );
-
-    formatQuote(
-      "  lorem \t  ",
-      '[quote="eviltrout, post:1, topic:2"]\nlorem\n[/quote]\n\n',
-      "trims white spaces before & after the quoted contents"
-    );
-
-    formatQuote(
-      "lorem ipsum",
-      '[quote="eviltrout, post:1, topic:2, full:true"]\nlorem ipsum\n[/quote]\n\n',
-      "marks quotes as full if the `full` option is passed",
-      { full: true }
-    );
-
-    formatQuote(
-      "**lorem** ipsum",
-      '[quote="eviltrout, post:1, topic:2"]\n**lorem** ipsum\n[/quote]\n\n',
-      "keeps BBCode formatting"
-    );
-
-    assert.cooked(
-      "[quote]\ntest\n[/quote]",
-      '<aside class="quote no-group">\n<blockquote>\n<p>test</p>\n</blockquote>\n</aside>',
-      "it supports quotes without params"
-    );
-
-    assert.cooked(
-      "[quote]\n*test*\n[/quote]",
-      '<aside class="quote no-group">\n<blockquote>\n<p><em>test</em></p>\n</blockquote>\n</aside>',
-      "it doesn't insert a new line for italics"
-    );
-
-    assert.cooked(
-      "[quote=,script='a'><script>alert('test');//':a]\n[/quote]",
-      '<aside class="quote no-group">\n<blockquote></blockquote>\n</aside>',
-      "It will not create a script tag within an attribute"
-    );
-  });
-
-  test("quoting a quote", function (assert) {
-    const store = getOwner(this).lookup("service:store");
-    const post = store.createRecord("post", {
-      cooked: new PrettyText(defaultOpts).cook(
-        '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
-      ),
-      username: "eviltrout",
-      post_number: 1,
-      topic_id: 2,
-    });
-
-    const quote = buildQuote(
-      post,
-      '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
-    );
-
-    assert.strictEqual(
-      quote,
-      '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
-      "allows quoting a quote"
     );
   });
 

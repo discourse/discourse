@@ -42,7 +42,7 @@ class Chat::Api::ChatablesController < Chat::ApiController
     direct_message_channels =
       if users.count > 0
         # FIXME: investigate the cost of this query
-        Chat::Channel
+        Chat::DirectMessageChannel
           .includes(chatable: :users)
           .joins(direct_message: :direct_message_users)
           .group(1)

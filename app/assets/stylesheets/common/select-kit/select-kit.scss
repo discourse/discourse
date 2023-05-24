@@ -278,6 +278,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    position: relative;
 
     .filter-input {
       background: none;
@@ -321,7 +322,6 @@
   }
 
   .no-content,
-  .is-loading,
   .results-count {
     display: flex;
     flex: 1 0 auto;
@@ -345,8 +345,25 @@
     white-space: nowrap;
   }
 
-  .is-loading {
-    align-items: flex-start;
-    justify-content: center;
+  @keyframes lineDrawToRight {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  &.is-loading {
+    .select-kit-filter::after {
+      content: "";
+      position: absolute;
+      background: var(--tertiary);
+      width: 100%;
+      height: 2px;
+      left: 0;
+      bottom: 0;
+      animation: lineDrawToRight 0.5s ease-in;
+    }
   }
 }

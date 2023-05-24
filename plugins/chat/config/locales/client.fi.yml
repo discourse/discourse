@@ -79,7 +79,9 @@ fi:
       collapse: "Tiivistä chat-laatikko"
       expand: "Laajenna chat-laatikko"
       confirm_flag: "Haluatko varmasti liputtaa käyttäjän %{username} viestin?"
-      deleted: "Viesti poistettiin. [näytä]"
+      deleted:
+        one: "Viesti poistettiin. [näytä]"
+        other: "%{count} viestiä poistettiin. [näytä kaikki]"
       hidden: "Viesti piilotettiin. [näytä]"
       delete: "Poista"
       edited: "muokattu"
@@ -136,6 +138,8 @@ fi:
       close_full_page: "Sulje koko näytön chat"
       open_message: "Avaa viesti chatissa"
       placeholder_self: "Kirjoita jotakin"
+      placeholder_channel: "Keskustelu kanavalla %{channelName}"
+      placeholder_thread: "Keskustelu ketjussa"
       placeholder_users: "Chat-keskustelu käyttäjän %{commaSeparatedNames} kanssa"
       placeholder_silenced: "Et voi lähettää viestejä tällä hetkellä."
       placeholder_start_conversation_users: "Aloita keskustelu käyttäjän %{commaSeparatedUsernames} kanssa"
@@ -155,6 +159,7 @@ fi:
       save: "Tallenna"
       select: "Valitse"
       return_to_list: "Palaa kanavaluetteloon"
+      return_to_threads_list: "Palaa aktiivisiin keskusteluihin"
       scroll_to_bottom: "Vieritä alas"
       scroll_to_new_messages: "Katso uudet viestit"
       sound:
@@ -166,6 +171,8 @@ fi:
       title: "chat"
       title_capitalized: "Chat"
       upload: "Liitä tiedosto"
+      upload_to_channel: "Lähetä kanavalle %{title}"
+      upload_to_thread: "Lähetä ketjuun"
       uploaded_files:
         one: "%{count} tiedosto"
         other: "%{count} tiedostoa"
@@ -254,6 +261,7 @@ fi:
         italic_text: "korostettu teksti"
         bold_text: "lihavoitu teksti"
         code_text: "kooditeksti"
+        send: "Lähetä"
       quote:
         original_channel: 'Lähetetty alun perin kanavalla <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-lainaus kopioitiin leikepöydälle"
@@ -364,8 +372,21 @@ fi:
         symbols: "Symbolit"
         search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
         no_results: "Ei tuloksia"
+      thread:
+        title: "Otsikko"
+        view_thread: Näytä ketju
+        default_title: "Ketju #%{thread_id}"
+        replies:
+          one: "%{count} vastaus"
+          other: "%{count} vastausta"
+        close: "Sulje ketju"
+        original_message:
+          started_by: "Aloittanut"
+        settings: "Asetukset"
       threads:
         open: "Avaa ketju"
+        list: "Käynnissä olevat keskustelut"
+        none: "Et osallistu mihinkään viestiketjuun tällä kanavalla."
       draft_channel_screen:
         header: "Uusi viesti"
         cancel: "Peruuta"
@@ -442,3 +463,7 @@ fi:
         chat_notifications_with_unread:
           one: "Chat-ilmoitukset – %{count} lukematon ilmoitus"
           other: "Chat-ilmoitukset – %{count} lukematonta ilmoitusta"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

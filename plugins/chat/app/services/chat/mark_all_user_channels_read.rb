@@ -49,7 +49,7 @@ module Chat
     def mark_associated_mentions_as_read(guardian:, updated_memberships:, **)
       return if updated_memberships.empty?
 
-      Chat::Action::MarkMentionsRead.call(
+      ::Chat::Action::MarkMentionsRead.call(
         guardian.user,
         channel_ids: updated_memberships.map(&:channel_id),
       )

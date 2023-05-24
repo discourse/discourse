@@ -80,12 +80,14 @@ createWidget("topic-participant", {
       linkContents.push(h("span.post-count", attrs.post_count.toString()));
     }
 
-    if (attrs.flair_url || attrs.flair_bg_color) {
-      linkContents.push(this.attach("avatar-flair", attrs));
-    } else {
-      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
-      if (autoFlairAttrs) {
-        linkContents.push(this.attach("avatar-flair", autoFlairAttrs));
+    if (attrs.flair_group_id) {
+      if (attrs.flair_url || attrs.flair_bg_color) {
+        linkContents.push(this.attach("avatar-flair", attrs));
+      } else {
+        const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+        if (autoFlairAttrs) {
+          linkContents.push(this.attach("avatar-flair", autoFlairAttrs));
+        }
       }
     }
     return h(

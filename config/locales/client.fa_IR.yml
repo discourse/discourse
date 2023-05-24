@@ -1097,12 +1097,6 @@ fa_IR:
       theme: "قالب"
       home: "صفحه خانگی پیشفرض"
       staged: "کاربر از راه دور"
-      staff_counters:
-        flagged_posts: "نوشته های پرچم گذاری شده"
-        deleted_posts: "پست های حذف شده"
-        suspensions: "تعلیق‌ها"
-        warnings_received: "هشدارها"
-        rejected_posts: "پست های رد شده"
       messages:
         all: "تمام صندوق‌های ورودی"
         inbox: "صندوق دریافت"
@@ -1150,8 +1144,6 @@ fa_IR:
       second_factor_backup:
         regenerate: "ایجاد مجدد"
         disable: "ازکاراندازی"
-        enable: "فعال کردن"
-        enable_long: "کدهای پشتیبان را به کار بگیر"
         copy_to_clipboard: "کپی در clipboard"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
         copied_to_clipboard: "کپی شد"
@@ -2041,6 +2033,7 @@ fa_IR:
       reaction_2: "<span>%{username}، %{username2}</span> %{description}"
       votes_released: "%{description} - تکمیل شد"
       new_features: "ویژگی‌های جدید در دسترس است!"
+      admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
       dismiss_confirmation:
         body:
           default:
@@ -3205,7 +3198,6 @@ fa_IR:
         one: "این مدال را %{count} بار به دست آورده"
         other: "این مدال را %{count} بار به دست آورده"
       granted_on: "اعطا شده %{date}"
-      others_count: "سایرین با این مدال (%{count})"
       title: نشان‌ها
       allow_title: "می‌توانید از این نشان برای عنوان کاربری استفاده کنید"
       multiple_grant: "می‌توانید این را چند بار به‌دست آورید"
@@ -4430,6 +4422,9 @@ fa_IR:
             label: "افزودن شکلک"
         title: "تنظیمات"
         no_results: "چیزی یافت نشد."
+        more_site_setting_results:
+          one: "بیش از %{count} نتیجه وجود دارد. لطفا جستجوی خود را اصلاح کنید یا یک دسته‌بندی را انتخاب کنید."
+          other: "بیش از %{count} نتیجه وجود دارد. لطفا جستجوی خود را اصلاح کنید یا یک دسته‌بندی را انتخاب کنید."
         clear_filter: "واضح"
         add_url: "اضافه کردن URL"
         add_host: "اضافه کردن هاست"

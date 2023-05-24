@@ -39,6 +39,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   shortSiteDescription: setting("short_site_description"),
   documentTitle: service(),
   dialog: service(),
+  composer: service(),
 
   actions: {
     toggleAnonymous() {
@@ -72,13 +73,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.documentTitle.setTitle(tokens.join(" - "));
     },
 
-    postWasEnqueued(details) {
-      showModal("post-enqueued", {
-        model: details,
-        title: "review.approval.title",
-      });
-    },
-
     composePrivateMessage(user, post) {
       const recipients = user ? user.get("username") : "";
       const reply = post
@@ -91,7 +85,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         : null;
 
       // used only once, one less dependency
-      return this.controllerFor("composer").open({
+      return this.composer.open({
         action: Composer.PRIVATE_MESSAGE,
         recipients,
         archetypeId: "private_message",
@@ -135,7 +129,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     ),
 
     showForgotPassword() {
-      this.controllerFor("forgot-password").setProperties({
+      getOwner(this).lookup("controller:forgot-password").setProperties({
         offerHelp: null,
         helpSeen: false,
       });
@@ -196,6 +190,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         }
         modalController.set("name", null);
       }
+      modalController.hidden = true;
     },
 
     /**
@@ -257,7 +252,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   renderTemplate() {
     this.render("application");
     this.render("modal", { into: "application", outlet: "modal" });
-    this.render("composer", { into: "application", outlet: "composer" });
   },
 
   handleShowLogin() {
@@ -266,7 +260,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       this._autoLogin("login", {
-        notAuto: () => this.controllerFor("login").resetForm(),
+        notAuto: () => getOwner(this).lookup("controller:login").resetForm(),
       });
     }
   },
@@ -296,9 +290,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0], {
-        signup,
-      });
+      getOwner(this)
+        .lookup("controller:login")
+        .send("externalLogin", methods[0], {
+          signup,
+        });
     } else {
       showModal(modal, { modalClass, titleAriaElementId });
       notAuto?.();

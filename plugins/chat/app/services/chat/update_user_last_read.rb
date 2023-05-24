@@ -61,7 +61,7 @@ module Chat
     end
 
     def mark_associated_mentions_as_read(active_membership:, contract:, **)
-      Chat::Action::MarkMentionsRead.call(
+      ::Chat::Action::MarkMentionsRead.call(
         active_membership.user,
         channel_ids: [active_membership.chat_channel.id],
         message_id: contract.message_id,

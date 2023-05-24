@@ -6,11 +6,45 @@
 
 id:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Obrolan
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status kanal obrolan berubah"
+            chat_channel_delete: "Kanal obrolan dihapus"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Buat pesan obrolan di kanal tertentu"
+    about:
+      chat_messages_count: "Pesan Obrolan"
+      chat_channels_count: "Kanal Obrolan"
+      chat_users_count: "Pengguna Obrolan"
     chat:
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Menampilkan semua pesan"
+      already_enabled: "Obrolan sudah diaktifkan pada topik ini. Segarkan."
+      disabled_for_topic: "Obrolan dinonaktifkan pada topik ini."
+      bot: "bot"
+      create: "Buat"
       cancel: "Batal"
+      cancel_reply: "Batalkan balasan"
+      chat_channels: "Kanal"
+      browse_all_channels: "Jelajahi semua kanal"
+      move_to_channel:
+        title: "Pindahkan pesan ke kanal"
+        confirm_move: "Pindahkan Pesan"
       channel_settings:
+        title: "Pengaturan kanal"
         edit: "Ubah"
         add: "Menambahkan"
+        close_channel: "Tutup kanal"
+        open_channel: "Buka kanal"
         join: "Gabung"
         leave: "Keluar"
       close: "Tutup"
@@ -20,6 +54,7 @@ id:
       email_frequency:
         never: "Tidak pernah"
       header_indicator_preference:
+        all_new: "Semua Pesan Baru"
         never: "Tidak pernah"
       join: "Gabung"
       mention_warning:
@@ -29,6 +64,7 @@ id:
       bookmark_message: "Penandaan"
       bookmark_message_edit: "Edit Bookmark"
       save: "Simpan"
+      return_to_threads_list: "Kembali ke diskusi yang sedang berlangsung"
       sounds:
         none: "Tidak ada"
       channel_status:
@@ -77,6 +113,17 @@ id:
       emoji_picker:
         objects: "Objek"
         flags: "Flags"
+      thread:
+        title: "Judul"
+        default_title: "Utas #%{thread_id}"
+        replies:
+          other: "%{count} balasan"
+        original_message:
+          started_by: "Dimulai oleh"
+        settings: "Pengaturan"
+      threads:
+        list: "Diskusi yang sedang berlangsung"
+        none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."
       draft_channel_screen:
         header: "Pesan Baru"
         cancel: "Batal"
@@ -86,3 +133,7 @@ id:
           fields:
             message:
               label: pesan
+    styleguide:
+      sections:
+        chat:
+          title: Obrolan

@@ -58,6 +58,10 @@ module Service
         self
       end
 
+      def inspect_steps
+        Chat::StepsInspector.new(self)
+      end
+
       private
 
       def self.build(context = {})

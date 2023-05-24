@@ -204,9 +204,9 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js).to_json};
+        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace, engine: :js).to_json};
+        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link, engine: :js).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
       JS
 
@@ -224,10 +224,8 @@ module PrettyText
           .ordered_types_for_context(opts[:hashtag_context])
           .map { |t| "'#{t}'" }
           .join(",")
-      hashtag_icons_as_js =
-        HashtagAutocompleteService.data_source_icons.map { |i| "'#{i}'" }.join(",")
       buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
-      buffer << "__optInput.hashtagIcons = [#{hashtag_icons_as_js}];\n"
+      buffer << "__optInput.hashtagIcons = #{HashtagAutocompleteService.data_source_icon_map.to_json};\n"
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
       buffer << ("__pt = new __PrettyText(__textOptions);")

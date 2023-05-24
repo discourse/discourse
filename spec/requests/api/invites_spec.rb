@@ -40,13 +40,17 @@ RSpec.describe "invites" do
                     topic_id: {
                       type: :integer,
                     },
-                    group_id: {
-                      type: :integer,
-                      description: "optional, either this or `group_names`",
+                    group_ids: {
+                      type: :string,
+                      description:
+                        "Optional, either this or `group_names`. Comma separated list for multiple ids.",
+                      example: "42,43",
                     },
                     group_names: {
                       type: :string,
-                      description: "optional, either this or `group_id`",
+                      description:
+                        "Optional, either this or `group_ids`. Comma separated list for multiple names.",
+                      example: "foo,bar",
                     },
                     expires_at: {
                       type: :string,

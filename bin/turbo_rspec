@@ -10,6 +10,7 @@ requires = []
 formatters = []
 verbose = false
 fail_fast = nil
+seed = rand(2**16)
 
 OptionParser
   .new do |opts|
@@ -35,6 +36,8 @@ OptionParser
         end
       fail_fast = (n.nil? || n < 1) ? 1 : n
     end
+
+    opts.on("--seed SEED", "The seed for the random order") { |s| seed = s.to_i }
   end
   .parse!(ARGV)
 
@@ -52,7 +55,10 @@ else
   use_runtime_info = false
 end
 
-puts "Running turbo_rspec using files in #{files}"
+puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
+puts "Running turbo_rspec (seed: #{seed}) using files in: #{files}"
+puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
+
 success =
   TurboTests::Runner.run(
     formatters: formatters,
@@ -60,6 +66,7 @@ success =
     verbose: verbose,
     fail_fast: fail_fast,
     use_runtime_info: use_runtime_info,
+    seed: seed.to_s,
   )
 
 if success

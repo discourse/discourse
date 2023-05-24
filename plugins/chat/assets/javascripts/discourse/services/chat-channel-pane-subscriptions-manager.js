@@ -20,26 +20,20 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
     return;
   }
 
-  // TODO (martin) Move scrolling functionality to pane from ChatLivePane?
-  afterProcessedMessage() {
-    // this.scrollToLatestMessage();
-    return;
-  }
-
-  handleThreadCreated(data) {
-    const message = this.messagesManager.findMessage(data.chat_message.id);
-    if (message) {
-      message.threadId = data.chat_message.thread_id;
-      message.threadReplyCount = 0;
-    }
-  }
-
   handleThreadOriginalMessageUpdate(data) {
     const message = this.messagesManager.findMessage(data.original_message_id);
     if (message) {
       if (data.replies_count) {
         message.threadReplyCount = data.replies_count;
       }
+      message.threadTitle = data.title;
+    }
+  }
+
+  _afterDeleteMessage(targetMsg, data) {
+    if (this.model.currentUserMembership.lastReadMessageId === targetMsg.id) {
+      this.model.currentUserMembership.lastReadMessageId =
+        data.latest_not_deleted_message_id;
     }
   }
 }

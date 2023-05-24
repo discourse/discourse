@@ -56,7 +56,7 @@ acceptance("Login with email", function (needs) {
     await click("#email-login-link");
 
     assert.strictEqual(
-      query(".alert-error").innerHTML,
+      query(".alert-error").innerHTML.trim(),
       I18n.t("email_login.complete_username_not_found", {
         username: "someuser",
       }),
@@ -67,7 +67,7 @@ acceptance("Login with email", function (needs) {
     await click("#email-login-link");
 
     assert.strictEqual(
-      query(".alert-error").innerHTML,
+      query(".alert-error").innerHTML.trim(),
       I18n.t("email_login.complete_email_not_found", {
         email: "someuser@gmail.com",
       }),

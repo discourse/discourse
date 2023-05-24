@@ -270,13 +270,18 @@ class TopicQuery
 
   def list_filter
     topics_filter =
-      TopicsFilter.new(guardian: @guardian, scope: latest_results(include_muted: false))
+      TopicsFilter.new(
+        guardian: @guardian,
+        scope: latest_results(include_muted: false, skip_ordering: true),
+      )
 
     results = topics_filter.filter_from_query_string(@options[:q])
 
     if !topics_filter.topic_notification_levels.include?(NotificationLevels.all[:muted])
       results = remove_muted_topics(results, @user)
     end
+
+    results = apply_ordering(results) if results.order_values.empty?
 
     create_list(:filter, {}, results)
   end
@@ -618,7 +623,7 @@ class TopicQuery
     result.where("topics.category_id != ?", drafts_category_id)
   end
 
-  def apply_ordering(result, options)
+  def apply_ordering(result, options = {})
     sort_column = SORTABLE_MAPPING[options[:order]] || "default"
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
 
@@ -732,7 +737,7 @@ class TopicQuery
       result = filter_by_tags(result)
     end
 
-    result = apply_ordering(result, options)
+    result = apply_ordering(result, options) if !options[:skip_ordering]
 
     all_listable_topics =
       @guardian.filter_allowed_categories(

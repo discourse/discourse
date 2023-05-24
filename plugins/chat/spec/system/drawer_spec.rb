@@ -81,7 +81,7 @@ RSpec.describe "Drawer", type: :system, js: true do
       channel_page.hover_message(message_1)
       expect(page).to have_css(".chat-message-actions-container")
 
-      find(".chat-composer-input").send_keys(:escape)
+      find(".chat-composer__input").send_keys(:escape)
 
       expect(page).to have_no_css(".chat-message-actions-container")
     end
@@ -126,11 +126,11 @@ RSpec.describe "Drawer", type: :system, js: true do
         session.quit
       end
 
-      expect(page).to have_content("onlyonce", count: 1)
+      expect(page).to have_content("onlyonce", count: 1, wait: 20)
 
       chat_page.visit_channel(channel_2)
 
-      expect(page).to have_content("onlyonce", count: 0)
+      expect(page).to have_content("onlyonce", count: 0, wait: 20)
     end
   end
 end

@@ -58,20 +58,18 @@ import { addPluginReviewableParam } from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
-} from "discourse/controllers/composer";
+} from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
   addPostSmallActionClassesCallback,
   addPostSmallActionIcon,
 } from "discourse/widgets/post-small-action";
-import { addQuickAccessProfileItem } from "discourse/widgets/quick-access-profile";
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
 import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
-import { addUserMenuGlyph } from "discourse/widgets/user-menu";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
@@ -106,7 +104,12 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
-import { registerCustomCountable as registerUserCategorySectionLinkCountable } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import {
+  registerCustomCategoryLockIcon,
+  registerCustomCategorySectionLinkPrefix,
+  registerCustomCountable as registerUserCategorySectionLinkCountable,
+} from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
@@ -120,7 +123,7 @@ import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-const PLUGIN_API_VERSION = "1.6.0";
+export const PLUGIN_API_VERSION = "1.6.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -987,7 +990,7 @@ class PluginApi {
   }
 
   /**
-   * Adds a glyph to user menu after bookmarks
+   * Adds a glyph to the legacy user menu after bookmarks
    * WARNING: there is limited space there
    *
    * example:
@@ -999,9 +1002,13 @@ class PluginApi {
    *    data: { url: `/some/path` },
    * });
    *
+   * To customize the new user menu, see api.registerUserMenuTab
    */
-  addUserMenuGlyph(glyph) {
-    addUserMenuGlyph(glyph);
+  addUserMenuGlyph() {
+    deprecated(
+      "addUserMenuGlyph has been removed. Use api.registerUserMenuTab instead.",
+      { id: "discourse.add-user-menu-glyph" }
+    );
   }
 
   /**
@@ -1096,7 +1103,7 @@ class PluginApi {
    *   customFilter: (category, args, router) => { return category && category.name !== 'bug' }
    *   customHref: (category, args, router) => {  if (category && category.name) === 'not-a-bug') return "/a-feature"; },
    *   before: "top",
-   *   forceActive(category, args, router) => router.currentURL === "/a/b/c/d";
+   *   forceActive: (category, args, router) => router.currentURL === "/a/b/c/d",
    * })
    */
   addNavigationBarItem(item) {
@@ -1589,7 +1596,6 @@ class PluginApi {
    *
    **/
   addQuickAccessProfileItem(item) {
-    addQuickAccessProfileItem(item);
     addUserMenuProfileTabItem(item);
   }
 
@@ -1913,6 +1919,87 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Changes the lock icon used for a sidebar category section link to indicate that a category is read restricted.
+   *
+   * @param {String} Name of a FontAwesome 5 icon
+   */
+  registerCustomCategorySectionLinkLockIcon(icon) {
+    return registerCustomCategoryLockIcon(icon);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom prefix for a sidebar category section link.
+   *
+   * Example:
+   *
+   * ```
+   * api.registerCustomCategorySectionLinkPrefix({
+   *   categoryId: category.id,
+   *   prefixType: "icon",
+   *   prefixValue: "wrench",
+   *   prefixColor: "FF0000"
+   * })
+   * ```
+   *
+   * @params {Object} arg - An object
+   * @params {string} arg.categoryId - The id of the category
+   * @params {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
+   * @params {string} arg.prefixValue - The value of the prefix to use.
+   *                                    For "icon", pass in the name of a FontAwesome 5 icon.
+   *                                    For "image", pass in the src of the image.
+   *                                    For "text", pass in the text to display.
+   *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
+   * @params {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
+   */
+  registerCustomCategorySectionLinkPrefix({
+    categoryId,
+    prefixType,
+    prefixValue,
+    prefixColor,
+  }) {
+    registerCustomCategorySectionLinkPrefix({
+      categoryId,
+      prefixType,
+      prefixValue,
+      prefixColor,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom prefix for a sidebar tag section link.
+   *
+   * Example:
+   *
+   * ```
+   * api.registerCustomTagSectionLinkPrefixValue({
+   *   tagName: "tag1",
+   *   prefixType: "icon",
+   *   prefixValue: "wrench",
+   *   prefixColor: "#FF0000"
+   * });
+   * ```
+   *
+   * @params {Object} arg - An object
+   * @params {string} arg.tagName - The name of the tag
+   * @params {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @params {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
+   */
+  registerCustomTagSectionLinkPrefixIcon({
+    tagName,
+    prefixValue,
+    prefixColor,
+  }) {
+    registerCustomTagSectionLinkPrefixIcon({
+      tagName,
+      prefixValue,
+      prefixColor,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
    * Triggers a refresh of the counts for all category section links under the categories section for a logged in user.
    */
   refreshUserSidebarCategoriesSectionCounts() {
@@ -2078,7 +2165,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Registers a new tab in the user menu. This API method expects a callback
    * that should return a class inheriting from the class (UserMenuTab) that's
    * passed to the callback. See discourse/app/lib/user-menu/tab.js for
@@ -2173,10 +2259,11 @@ class PluginApi {
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
    * @param {string} type - The type of the hashtag.
-   * @param {Class} typeClass - The class of the hashtag type.
+   * @param {Class} typeClassInstance - The initialized class of the hashtag type, which
+   *  needs the `container`.
    */
-  registerHashtagType(type, typeClass) {
-    registerHashtagType(type, typeClass);
+  registerHashtagType(type, typeClassInstance) {
+    registerHashtagType(type, typeClassInstance);
   }
 }
 

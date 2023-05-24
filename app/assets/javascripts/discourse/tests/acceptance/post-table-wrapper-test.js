@@ -37,6 +37,7 @@ acceptance("Post Table Wrapper Test", function () {
     await click(
       `${postWithLargeTable} .fullscreen-table-wrapper .btn-expand-table`
     );
+
     assert.ok(
       exists(".fullscreen-table-modal"),
       "The fullscreen table modal appears"
@@ -44,6 +45,16 @@ acceptance("Post Table Wrapper Test", function () {
     assert.ok(
       exists(".fullscreen-table-modal table"),
       "The table is present inside the modal"
+    );
+
+    await click(".fullscreen-table-modal .modal-close.close");
+    await click(
+      `${postWithLargeTable} .fullscreen-table-wrapper .btn-expand-table svg`
+    );
+
+    assert.ok(
+      exists(".fullscreen-table-modal"),
+      "Fullscreen table modal appears on clicking svg icon"
     );
   });
 });

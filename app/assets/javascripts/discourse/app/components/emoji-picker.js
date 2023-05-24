@@ -277,7 +277,7 @@ export default Component.extend({
       if (fromTopicComposer) {
         document.querySelector(".d-editor-input")?.focus();
       } else if (fromChatComposer) {
-        document.querySelector(".chat-composer-input")?.focus();
+        document.querySelector(".chat-composer__input")?.focus();
       } else {
         document.querySelector("textarea")?.focus();
       }

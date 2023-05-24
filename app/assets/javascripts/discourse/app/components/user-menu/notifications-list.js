@@ -14,6 +14,7 @@ import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
+  @service appEvents;
   @service currentUser;
   @service siteSettings;
   @service site;
@@ -108,6 +109,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
         }
       ).forEach((item) => {
         const props = {
+          appEvents: this.appEvents,
           currentUser: this.currentUser,
           siteSettings: this.siteSettings,
           site: this.site,
@@ -126,6 +128,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       content.push(
         new UserMenuNotificationItem({
           notification,
+          appEvents: this.appEvents,
           currentUser: this.currentUser,
           siteSettings: this.siteSettings,
           site: this.site,

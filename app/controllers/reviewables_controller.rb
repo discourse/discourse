@@ -169,7 +169,7 @@ class ReviewablesController < ApplicationController
     reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: user)
     raise Discourse::NotFound.new if reviewable.blank?
 
-    reviewable.perform(current_user, :delete)
+    reviewable.perform(current_user, :delete, { guardian: @guardian })
 
     render json: success_json
   end

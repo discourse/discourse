@@ -26,7 +26,7 @@ ru:
       chat_users_count: "Пользователи чата"
     chat:
       dates:
-        time_tiny: "ч:мм"
+        time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
       already_enabled: "Чат в этой теме уже включён . Обновите страницу."
       disabled_for_topic: "Чат в этой теме отключён."
@@ -78,7 +78,6 @@ ru:
       close: "Закрыть"
       collapse: "Свернуть чат"
       confirm_flag: "Действительно пожаловаться на сообщение пользователя %{username}?"
-      deleted: "Сообщение было удалено. [view]"
       hidden: "Сообщение было скрыто. [view]"
       delete: "Удалить"
       edited: "Отредактировано"
@@ -96,7 +95,7 @@ ru:
       header_indicator_preference:
         never: "Никогда"
       enable: "Включить чат"
-      flag: "Флаг"
+      flag: "Пожаловаться"
       emoji: "Вставить эмодзи"
       flagged: "Эта запись была отправлена на проверку"
       invalid_access: "У вас нет доступа для просмотра этого канала"
@@ -253,6 +252,7 @@ ru:
         italic_text: "текст, выделенный курсивом"
         bold_text: "Жирный"
         code_text: "Код"
+        send: "Отправить"
       quote:
         original_channel: 'Первоначально отправлено в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитата из чата скопирована в буфер обмена"
@@ -371,6 +371,14 @@ ru:
         symbols: "Символы"
         search_placeholder: "Поиск по названию эмодзи и псевдониму…"
         no_results: "Нет результатов"
+      thread:
+        title: "Название"
+        replies:
+          one: "%{count} ответ"
+          few: "%{count} ответа"
+          many: "%{count} ответ"
+          other: "%{count} ответ"
+        settings: "Настройки"
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"
@@ -449,3 +457,7 @@ ru:
           few: "Уведомления чата —%{count} непрочитанных уведомления"
           many: "Уведомления чата —%{count} непрочитанных уведомлений"
           other: "Уведомления чата —%{count} непрочитанных уведомлений"
+    styleguide:
+      sections:
+        chat:
+          title: Чат

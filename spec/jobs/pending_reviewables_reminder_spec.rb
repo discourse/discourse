@@ -20,8 +20,8 @@ RSpec.describe Jobs::PendingReviewablesReminder do
     expect(execute.sent_reminder).to eq(false)
   end
 
-  context "when notify_about_flags_after is 0" do
-    before { SiteSetting.notify_about_flags_after = 0 }
+  context "when notify_about_reviewable_item_after is 0" do
+    before { SiteSetting.notify_about_reviewable_item_after = 0 }
 
     it "never notifies" do
       create_flag(50.hours.ago)
@@ -29,8 +29,8 @@ RSpec.describe Jobs::PendingReviewablesReminder do
     end
   end
 
-  context "when notify_about_flags_after accepts a float" do
-    before { SiteSetting.notify_about_flags_after = 0.25 }
+  context "when notify_about_reviewable_item_after accepts a float" do
+    before { SiteSetting.notify_about_reviewable_item_after = 0.25 }
 
     it "doesn't send message when flags are less than 15 minutes old" do
       create_flag(14.minutes.ago)
@@ -43,9 +43,9 @@ RSpec.describe Jobs::PendingReviewablesReminder do
     end
   end
 
-  context "when notify_about_flags_after is 48" do
+  context "when notify_about_reviewable_item_after is 48" do
     before do
-      SiteSetting.notify_about_flags_after = 48
+      SiteSetting.notify_about_reviewable_item_after = 48
       described_class.clear_key
     end
 

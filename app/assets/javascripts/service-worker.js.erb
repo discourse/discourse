@@ -19,7 +19,7 @@ var externalCacheName = "external-" + cacheVersion;
 // https://bugs.chromium.org/p/chromium/issues/detail?id=1286367
 var chromeVersionMatch = navigator.userAgent.match(/Chrome\/97.0.(\d+)/);
 var isBrokenChrome97 = chromeVersionMatch && parseInt(chromeVersionMatch[1]) <= 4692;
-var isApple = /iPhone|iPod|Mac OS/.test(navigator.userAgent);
+var isApple = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 // Cache all GET requests, so Discourse can be used while offline
 workbox.routing.registerRoute(
@@ -81,6 +81,9 @@ if (cdnUrls.length > 0) {
         credentials: 'omit'
       },
       plugins: [
+        new workbox.cacheableResponse.Plugin({
+          statuses: [200] // opaque responses will return status code '0'
+        }),
         new workbox.expiration.Plugin({
           maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
           maxEntries: 250,

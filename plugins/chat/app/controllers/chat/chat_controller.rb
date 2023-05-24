@@ -107,6 +107,7 @@ module Chat
           staged_id: params[:staged_id],
           upload_ids: params[:upload_ids],
           thread_id: params[:thread_id],
+          staged_thread_id: params[:staged_thread_id],
         )
 
       return render_json_error(chat_message_creator.error) if chat_message_creator.failed?
@@ -119,7 +120,7 @@ module Chat
 
       if @chat_channel.direct_message_channel?
         # If any of the channel users is ignoring, muting, or preventing DMs from
-        # the current user then we shold not auto-follow the channel once again or
+        # the current user then we should not auto-follow the channel once again or
         # publish the new channel.
         user_ids_allowing_communication =
           UserCommScreener.new(
@@ -168,11 +169,13 @@ module Chat
       render json: success_json
     end
 
+    # TODO: (martin) This endpoint is deprecated -- the /api/channels/:id?include_messages=true
+    # endpoint should be used instead. We need to remove this and any JS references.
     def messages
       page_size = params[:page_size]&.to_i || 1000
       direction = params[:direction].to_s
       message_id = params[:message_id]
-      if page_size > 50 ||
+      if page_size > 100 ||
            (
              message_id.blank? ^ direction.blank? &&
                (direction.present? && !CHAT_DIRECTIONS.include?(direction))
@@ -249,6 +252,8 @@ module Chat
                )
     end
 
+    # TODO: (martin) This endpoint is deprecated -- the /api/channels/:id?target_message_id=:message_id
+    # endpoint should be used instead. We need to remove this and any JS references.
     def lookup_message
       set_channel_and_chatable_with_access_check(chat_channel_id: @message.chat_channel_id)
 

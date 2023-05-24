@@ -66,6 +66,7 @@ et:
       composer:
         italic_text: "esiletõstetud tekst"
         bold_text: "rasvane tekst"
+        send: "Saada"
       notification_levels:
         never: "Mitte kunagi"
       settings:
@@ -100,6 +101,12 @@ et:
       emoji_picker:
         objects: "Objektid"
         flags: "Tähised"
+      thread:
+        title: "Pealkiri"
+        replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        settings: "Sätted"
       draft_channel_screen:
         header: "Uus sõnum"
         cancel: "Tühista"

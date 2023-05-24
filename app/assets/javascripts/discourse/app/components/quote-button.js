@@ -165,12 +165,14 @@ export default Component.extend(KeyEnterEscape, {
       if (this._canEditPost) {
         const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
         const matches = cooked.innerHTML.match(regexp);
+        const non_ascii_regex = /[^\x00-\x7F]/;
 
         if (
           quoteState.buffer.length < 1 ||
           quoteState.buffer.includes("|") || // tables are too complex
           quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-          matches?.length > 1 // duplicates are too complex
+          matches?.length > 1 || // duplicates are too complex
+          non_ascii_regex.test(quoteState.buffer) // non-ascii chars break fast-edit
         ) {
           this.set("_isFastEditable", false);
           this.set("_fastEditInitialSelection", null);
@@ -376,11 +378,10 @@ export default Component.extend(KeyEnterEscape, {
 
       schedule("afterRender", () => {
         if (this.site.mobileView) {
-          this.element.style.left = `${
-            (window.innerWidth - this.element.clientWidth) / 2
-          }px`;
+          this.textRange = document.querySelector("#main-outlet");
+          this._popper?.update();
         }
-        document.querySelector("#fast-edit-input")?.focus();
+        next(() => document.querySelector("#fast-edit-input")?.focus());
       });
     } else {
       const postId = this.quoteState.postId;

@@ -293,7 +293,7 @@ class DiscourseJsProcessor
         "transpile",
         source,
         {
-          skip_module: @skip_module,
+          skipModule: @skip_module,
           moduleId: module_name(root_path, logical_path),
           filename: logical_path || "unknown",
           themeId: theme_id,

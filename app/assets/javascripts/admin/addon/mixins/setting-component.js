@@ -214,8 +214,15 @@ export default Mixin.create({
         this.afterSave();
       }
     } catch (e) {
-      if (e.jqXHR?.responseJSON?.errors) {
-        this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
+      const json = e.jqXHR?.responseJSON;
+      if (json?.errors) {
+        let errorString = json.errors[0];
+
+        if (json.html_message) {
+          errorString = htmlSafe(errorString);
+        }
+
+        this.set("validationMessage", errorString);
       } else {
         this.set("validationMessage", I18n.t("generic_error"));
       }

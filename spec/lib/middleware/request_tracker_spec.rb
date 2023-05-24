@@ -21,6 +21,7 @@ RSpec.describe Middleware::RequestTracker do
   end
 
   after do
+    CachedCounting.reset
     ApplicationRequest.disable
     CachedCounting.disable
   end

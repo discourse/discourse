@@ -114,17 +114,27 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.find_remote(url)
-    require "ruby-readability"
-
     url = UrlHelper.normalized_encode(url)
-    original_uri = URI.parse(url)
+    URI.parse(url) # ensure url parses, will raise if not
     fd = FinalDestination.new(url, validate_uri: true, max_redirects: 5, follow_canonical: true)
 
     uri = fd.resolve
     return if uri.blank?
 
+    begin
+      html = uri.read
+    rescue OpenURI::HTTPError, Net::OpenTimeout
+      return
+    end
+
+    parse_html(html, url)
+  end
+
+  def self.parse_html(html, url)
+    require "ruby-readability"
+
     opts = {
-      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
+      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote figure figcaption],
       attributes: %w[href src class],
       remove_empty_nodes: false,
     }
@@ -139,11 +149,6 @@ class TopicEmbed < ActiveRecord::Base
       SiteSetting.allowed_embed_classnames if SiteSetting.allowed_embed_classnames.present?
 
     response = FetchResponse.new
-    begin
-      html = uri.read
-    rescue OpenURI::HTTPError, Net::OpenTimeout
-      return
-    end
 
     raw_doc = Nokogiri.HTML5(html)
     auth_element =
@@ -200,7 +205,7 @@ class TopicEmbed < ActiveRecord::Base
           end
       end
 
-    response.body = doc.to_html
+    response.body = doc.at("body").children.to_html
     response
   end
 

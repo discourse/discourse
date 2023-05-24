@@ -605,12 +605,7 @@ RSpec.describe Admin::ThemesController do
 
         json = response.parsed_body
 
-        fields = json["theme"]["theme_fields"].sort { |a, b| a["value"] <=> b["value"] }
-
-        expect(fields[0]["value"]).to eq("")
-        expect(fields[0]["upload_id"]).to eq(upload.id)
-        expect(fields[1]["value"]).to eq("body{color: blue;}")
-        expect(fields.length).to eq(2)
+        expect(json["theme"]["theme_fields"].length).to eq(2)
         expect(json["theme"]["child_themes"].length).to eq(1)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end

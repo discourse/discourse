@@ -573,10 +573,6 @@ table {
     max-width: 100%;
   }
 
-  .control-group {
-    @include clearfix;
-  }
-
   .control-label:not(.checkbox-label) {
     font-family: var(--heading-font-family);
     font-weight: bold;

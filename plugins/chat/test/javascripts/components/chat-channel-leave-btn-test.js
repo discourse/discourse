@@ -5,20 +5,15 @@ import hbs from "htmlbars-inline-precompile";
 import pretender from "discourse/tests/helpers/create-pretender";
 import I18n from "I18n";
 import { module, test } from "qunit";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
   setupRenderingTest(hooks);
 
   test("accepts an optional onLeaveChannel callback", async function (assert) {
-    this.set("foo", 1);
-    this.set("onLeaveChannel", () => this.set("foo", 2));
-    this.set("channel", {
-      id: 1,
-      chatable_type: "DirectMessage",
-      chatable: {
-        users: [{ id: 1 }],
-      },
-    });
+    this.foo = 1;
+    this.onLeaveChannel = () => (this.foo = 2);
+    this.channel = fabricators.directMessageChannel();
 
     await render(
       hbs`<ChatChannelLeaveBtn @channel={{this.channel}} @onLeaveChannel={{this.onLeaveChannel}} />`
@@ -34,7 +29,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
   });
 
   test("has a specific title for direct message channel", async function (assert) {
-    this.set("channel", { chatable_type: "DirectMessage" });
+    this.channel = fabricators.directMessageChannel();
 
     await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
@@ -43,7 +38,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
   });
 
   test("has a specific title for message channel", async function (assert) {
-    this.set("channel", { chatable_type: "Topic" });
+    this.channel = fabricators.channel();
 
     await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
@@ -53,7 +48,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
 
   test("is not visible on mobile", async function (assert) {
     this.site.mobileView = true;
-    this.set("channel", { chatable_type: "Topic" });
+    this.channel = fabricators.channel();
 
     await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 

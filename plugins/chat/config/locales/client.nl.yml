@@ -78,7 +78,6 @@ nl:
       close: "Sluiten"
       collapse: "Chatlade samenvouwen"
       confirm_flag: "Weet je zeker dat je het bericht van %{username} wilt markeren?"
-      deleted: "Er is een bericht verwijderd. [weergeven]"
       hidden: "Er is een bericht verborgen. [weergeven]"
       delete: "Verwijderen"
       edited: "bewerkt"
@@ -251,6 +250,7 @@ nl:
         italic_text: "Cursieve tekst"
         bold_text: "Vetgedrukte tekst"
         code_text: "codetekst"
+        send: "Verzenden"
       quote:
         original_channel: 'Oorspronkelijk gestuurd in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chatcitaat gekopieerd naar klembord"
@@ -361,6 +361,12 @@ nl:
         symbols: "Symbolen"
         search_placeholder: "Zoek op emojinaam en -alias..."
         no_results: "Geen resultaten"
+      thread:
+        title: "Titel"
+        replies:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
+        settings: "Instellingen"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
@@ -437,3 +443,7 @@ nl:
         chat_notifications_with_unread:
           one: "Chatmeldingen - %{count} ongelezen melding"
           other: "Chatmeldingen - %{count} ongelezen meldingen"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

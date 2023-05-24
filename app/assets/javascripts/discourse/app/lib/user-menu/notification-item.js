@@ -5,8 +5,9 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import { getRenderDirector } from "discourse/lib/notification-types-manager";
 
 export default class UserMenuNotificationItem extends UserMenuBaseItem {
-  constructor({ notification, currentUser, siteSettings, site }) {
+  constructor({ notification, appEvents, currentUser, siteSettings, site }) {
     super(...arguments);
+    this.appEvents = appEvents;
     this.notification = notification;
     this.currentUser = currentUser;
     this.siteSettings = siteSettings;
@@ -62,6 +63,9 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
   }
 
   onClick() {
+    this.renderDirector.onClick?.();
+    this.appEvents.trigger("user-menu:notification-click", this.notification);
+
     if (!this.notification.read) {
       this.notification.set("read", true);
 

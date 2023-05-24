@@ -51,8 +51,6 @@ RSpec.describe Chat::StructuredChannelSerializer do
       "last_read_message_id" => nil,
       "mobile_notification_level" => "mention",
       "muted" => false,
-      "unread_count" => 0,
-      "unread_mentions" => 0,
     )
   end
 
@@ -71,8 +69,6 @@ RSpec.describe Chat::StructuredChannelSerializer do
       "last_read_message_id" => nil,
       "mobile_notification_level" => "always",
       "muted" => false,
-      "unread_count" => 0,
-      "unread_mentions" => 0,
     )
   end
 
@@ -179,6 +175,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
             new_mentions_message_bus_last_id: 0,
             kick_message_bus_last_id: 0,
             channel_message_bus_last_id: 0,
+            can_join_chat_channel: true,
           )
           .once
         described_class.new(data, scope: guardian).as_json

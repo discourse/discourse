@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import {
   click,
   currentRouteName,
@@ -47,6 +47,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
+
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
     );
@@ -110,8 +111,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  // TODO(tgxworld): Flaky probably due to assertions running before event listener callbacks have completed.
-  skip("clicking on more... link", async function (assert) {
+  test("clicking on more... link", async function (assert) {
     await visit("/");
 
     await click(
@@ -792,6 +792,14 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "shows suffix indicator for unread posts on everything link"
     );
 
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+
+    const initialCallbackCount = Object.keys(
+      topicTrackingState.stateChangeCallbacks
+    ).length;
+
     // simulate reading topic 2
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -808,6 +816,12 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
       ),
       "shows suffix indicator for new topics on categories link"
+    );
+
+    assert.equal(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length,
+      initialCallbackCount,
+      "it does not add a new topic tracking state callback when the topic is read"
     );
 
     // simulate reading topic 1
@@ -984,9 +998,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       reviewable_count: 0,
     });
 
-    await visit("/reivew");
+    await visit("/review");
 
-    assert.notOk(
+    assert.ok(
       exists(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'].active"
       ),
@@ -1013,7 +1027,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "review link is displayed in the more drawer"
     );
 
-    await publishToMessageBus("/reviewable_counts", {
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       reviewable_count: 34,
     });
 

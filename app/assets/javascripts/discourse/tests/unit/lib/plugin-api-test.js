@@ -1,4 +1,4 @@
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -88,7 +88,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(thingy.prop, "g'day");
   });
 
-  skip("modifyClass works with getters", function (assert) {
+  test("modifyClass works with getters", function (assert) {
     let Base = EmberObject.extend({
       get foo() {
         throw new Error("base getter called");

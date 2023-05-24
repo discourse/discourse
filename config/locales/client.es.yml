@@ -1016,6 +1016,7 @@ es:
           warning: "¿Estás seguro de que quieres quitar tu tema destacado?"
       use_current_timezone: "Usar zona horaria actual"
       profile_hidden: "El perfil público de este usuario está oculto."
+      inactive_user: "Este usuario está inactivo"
       expand_profile: "Expandir"
       sr_expand_profile: "Expandir detalles del perfil"
       collapse_profile: "Contraer"
@@ -1163,12 +1164,6 @@ es:
       save_to_change_theme: 'Este tema se actualizará después de que hagas clic en «%{save_text}»'
       home: "Página de inicio por defecto"
       staged: "Temporal"
-      staff_counters:
-        flagged_posts: "publicaciones denunciadas"
-        deleted_posts: "publicaciones eliminadas"
-        suspensions: "suspensiones"
-        warnings_received: "avisos"
-        rejected_posts: "publicaciones rechazadas"
       messages:
         all: "todas las bandejas de entrada"
         inbox: "Bandeja de entrada"
@@ -1275,11 +1270,9 @@ es:
         title: "Códigos de respaldo de la verificación en dos factores"
         regenerate: "Generar nuevos"
         disable: "Desactivar"
-        enable: "Activar"
-        enable_long: "Activar códigos de respaldo"
         manage:
-          one: "Gestiona tus códigos de respaldo. Te queda <strong>%{count}</strong> código sin usar."
-          other: "Gestiona tus códigos de respaldo. Te quedan <strong>%{count}</strong> códigos sin usar."
+          one: "Te queda <strong>%{count}</strong> código de copia de seguridad sin usar todavía."
+          other: "Te quedan <strong>%{count}</strong> códigos de respaldo sin usar todavía."
         copy_to_clipboard: "Copiar al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
@@ -2287,6 +2280,7 @@ es:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
       new_features: "¡Nuevas características disponibles!"
+      admin_problems: "Nuevos consejos en tu panel del sitio"
       dismiss_confirmation:
         body:
           default:
@@ -3731,7 +3725,9 @@ es:
         one: "Insignia ganada %{count} vez"
         other: "Insignia ganada %{count} veces"
       granted_on: "Concedido hace %{date}"
-      others_count: "Otras personas con esta insignia (%{count})"
+      others_count:
+        one: "Concedido a otros %{count} vez"
+        other: "Concedido a otros %{count} veces"
       title: Insignias
       allow_title: "Puedes usar esta insignia como título"
       multiple_grant: "Puedes ganar esta insignia varias veces"
@@ -4370,9 +4366,6 @@ es:
         user_promoted_event:
           name: "Evento por ascenso de usuario"
           details: "Cuando un usuario asciende de nivel de confianza."
-        user_badge_event:
-          name: "Evento por obtención de insignia"
-          details: "Cuando un usuario recibe una insignia."
         group_user_event:
           name: "Evento de usuario de grupo"
           details: "Cuando se agrega o elimina un usuario en un grupo."
@@ -5435,7 +5428,6 @@ es:
             label: "Añadir emoji"
         title: "Ajustes"
         no_results: "No se encontró ningún resultado."
-        more_than_30_results: "Hay más de 30 resultados. Por favor, afina tu búsqueda o selecciona una categoría."
         clear_filter: "Quitar filtros"
         add_url: "añadir URL"
         add_host: "añadir host"

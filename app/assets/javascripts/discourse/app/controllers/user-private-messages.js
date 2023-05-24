@@ -41,10 +41,12 @@ export default class extends Controller {
   get messagesDropdownValue() {
     let value;
 
+    const currentURL = this.router.currentURL.toLowerCase();
+
     for (let i = this.messagesDropdownContent.length - 1; i >= 0; i--) {
       const row = this.messagesDropdownContent[i];
 
-      if (this.router.currentURL.toLowerCase().includes(row.id)) {
+      if (currentURL.includes(row.id.replace(this.router.rootURL, "/"))) {
         value = row.id;
         break;
       }

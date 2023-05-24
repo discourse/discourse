@@ -68,6 +68,7 @@ ca:
       composer:
         italic_text: "text en cursiva"
         bold_text: "text en negreta"
+        send: "Envia"
       notification_levels:
         never: "Mai"
       settings:
@@ -104,6 +105,12 @@ ca:
         activities: "Activitats"
         flags: "Banderes"
         symbols: "Símbols"
+      thread:
+        title: "Títol"
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        settings: "Configuració"
       draft_channel_screen:
         header: "Missatge nou"
         cancel: "Cancel·la"
