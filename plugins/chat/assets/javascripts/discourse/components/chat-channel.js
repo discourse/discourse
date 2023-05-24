@@ -192,6 +192,18 @@ export default class ChatLivePane extends Component {
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
+        if (result.threads) {
+          result.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(this.args.channel, thread);
+          });
+        }
+
+        if (result.thread_tracking_overview) {
+          this.args.channel.threadTrackingOverview.push(
+            ...result.thread_tracking_overview
+          );
+        }
+
         if (this.requestedTargetMessageId) {
           this.scrollToMessage(findArgs["targetMessageId"], {
             highlight: true,
@@ -209,18 +221,6 @@ export default class ChatLivePane extends Component {
         }
 
         this.scrollToBottom();
-
-        if (result.threads) {
-          result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
-          });
-        }
-
-        if (result.thread_tracking_overview) {
-          this.args.channel.threadTrackingOverview.push(
-            ...result.thread_tracking_overview
-          );
-        }
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -269,11 +269,11 @@ export default class ChatLivePane extends Component {
     };
 
     return this.chatApi
-      .messages(this.args.channel.id, findArgs)
-      .then((results) => {
+      .channel(this.args.channel.id, findArgs)
+      .then((result) => {
         if (
           this._selfDeleted ||
-          this.args.channel.id !== results.meta.channel_id ||
+          this.args.channel.id !== result.meta.channel_id ||
           !this.scrollable
         ) {
           return;
@@ -287,14 +287,29 @@ export default class ChatLivePane extends Component {
 
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
-          results
+          result
         );
+
+        if (result.threads) {
+          result.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(this.args.channel, thread);
+          });
+        }
+
+        if (result.thread_tracking_overview) {
+          result.thread_tracking_overview.forEach((threadId) => {
+            if (!this.args.channel.threadTrackingOverview.includes(threadId)) {
+              this.args.channel.threadTrackingOverview.push(threadId);
+            }
+          });
+        }
+
+        this.args.channel.details = meta;
 
         if (!messages?.length) {
           return;
         }
 
-        this.args.channel.details = meta;
         this.args.channel.addMessages(messages);
 
         // Edge case for IOS to avoid blank screens
@@ -334,11 +349,11 @@ export default class ChatLivePane extends Component {
   }
 
   @bind
-  afterFetchCallback(channel, results) {
+  afterFetchCallback(channel, result) {
     const messages = [];
     let foundFirstNew = false;
 
-    results.chat_messages.forEach((messageData, index) => {
+    result.chat_messages.forEach((messageData, index) => {
       if (index === 0) {
         messageData.firstOfResults = true;
       }
@@ -381,7 +396,7 @@ export default class ChatLivePane extends Component {
       messages.push(message);
     });
 
-    return [messages, results.meta];
+    return [messages, result.meta];
   }
 
   @debounce(100)
