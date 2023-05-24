@@ -401,11 +401,7 @@ export default Controller.extend(ModalFunctionality, {
       toPosition = this.model.secondaryLinks.findIndex(
         (link) => link.objectId === linkIdTo
       );
-      if (above) {
-        this.model.secondaryLinks.insertAt(toPosition, fromLink);
-      } else {
-        this.model.secondaryLinks.insertAt(toPosition + 1, fromLink);
-      }
+      this.model.secondaryLinks.insertAt(above ? toPosition : toPosition +, fromLink);
     } else {
       fromLink.segment = "primary";
       this.model.links.insertAt(above ? toPosition : toPosition + 1, fromLink);
