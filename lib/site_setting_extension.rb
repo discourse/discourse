@@ -115,69 +115,12 @@ module SiteSettingExtension
     @plugins ||= {}
   end
 
-  def setting(name_arg, default = nil, opts = {})
-    name = name_arg.to_sym
-
-    if name == :default_locale
-      raise Discourse::InvalidParameters.new(
-              "Other settings depend on default locale, you can not configure it like this",
-            )
-    end
-
-    shadowed_val = nil
-
-    mutex.synchronize do
-      defaults.load_setting(name, default, opts.delete(:locale_default))
-
-      categories[name] = opts[:category] || :uncategorized
-
-      hidden_settings << name if opts[:hidden]
-
-      if GlobalSetting.respond_to?(name)
-        val = GlobalSetting.public_send(name)
-
-        unless val.nil? || (val == "")
-          shadowed_val = val
-          hidden_settings << name
-          shadowed_settings << name
-        end
+  def load_settings(file, plugin: nil)
+    SiteSettings::YamlLoader
+      .new(file)
+      .load do |category, name, default, opts|
+        setting(name, default, opts.merge(category: category, plugin: plugin))
       end
-
-      refresh_settings << name if opts[:refresh]
-
-      client_settings << name.to_sym if opts[:client]
-
-      previews[name] = opts[:preview] if opts[:preview]
-
-      secret_settings << name if opts[:secret]
-
-      plugins[name] = opts[:plugin] if opts[:plugin]
-
-      type_supervisor.load_setting(
-        name,
-        opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS),
-      )
-
-      if !shadowed_val.nil?
-        setup_shadowed_methods(name, shadowed_val)
-      else
-        setup_methods(name)
-      end
-    end
-  end
-
-  def remove_setting(name_arg)
-    raise if !Rails.env.test?
-
-    name = name_arg.to_sym
-
-    categories.delete(name)
-    hidden_settings.delete(name)
-    refresh_settings.delete(name)
-    client_settings.delete(name)
-    previews.delete(name)
-    secret_settings.delete(name)
-    plugins.delete(name)
   end
 
   def settings_hash
@@ -619,6 +562,57 @@ module SiteSettingExtension
   end
 
   private
+
+  def setting(name_arg, default = nil, opts = {})
+    name = name_arg.to_sym
+
+    if name == :default_locale
+      raise Discourse::InvalidParameters.new(
+              "Other settings depend on default locale, you can not configure it like this",
+            )
+    end
+
+    shadowed_val = nil
+
+    mutex.synchronize do
+      defaults.load_setting(name, default, opts.delete(:locale_default))
+
+      categories[name] = opts[:category] || :uncategorized
+
+      hidden_settings << name if opts[:hidden]
+
+      if GlobalSetting.respond_to?(name)
+        val = GlobalSetting.public_send(name)
+
+        unless val.nil? || (val == "")
+          shadowed_val = val
+          hidden_settings << name
+          shadowed_settings << name
+        end
+      end
+
+      refresh_settings << name if opts[:refresh]
+
+      client_settings << name.to_sym if opts[:client]
+
+      previews[name] = opts[:preview] if opts[:preview]
+
+      secret_settings << name if opts[:secret]
+
+      plugins[name] = opts[:plugin] if opts[:plugin]
+
+      type_supervisor.load_setting(
+        name,
+        opts.extract!(*SiteSettings::TypeSupervisor::CONSUMED_OPTS),
+      )
+
+      if !shadowed_val.nil?
+        setup_shadowed_methods(name, shadowed_val)
+      else
+        setup_methods(name)
+      end
+    end
+  end
 
   def default_uploads
     @default_uploads ||= {}

@@ -48,12 +48,6 @@ RSpec.describe Admin::SiteSettingsController do
     fab!(:staged_user) { Fabricate(:staged) }
     let(:tracking) { NotificationLevels.all[:tracking] }
 
-    before do
-      SiteSetting.setting(:test_setting, "default")
-      SiteSetting.setting(:test_upload, "", type: :upload)
-      SiteSetting.refresh!
-    end
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -75,8 +69,6 @@ RSpec.describe Admin::SiteSettingsController do
             }
 
         expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
-
-        SiteSetting.setting(:default_categories_watching, "")
       end
 
       it "should return correct user count for default tags change" do
@@ -97,8 +89,6 @@ RSpec.describe Admin::SiteSettingsController do
             }
 
         expect(response.parsed_body["user_count"]).to eq(User.real.where(staged: false).count - 1)
-
-        SiteSetting.setting(:default_tags_watching, "")
       end
 
       context "for sidebar defaults" do
@@ -228,19 +218,13 @@ RSpec.describe Admin::SiteSettingsController do
   end
 
   describe "#update" do
-    before do
-      SiteSetting.setting(:test_setting, "default")
-      SiteSetting.setting(:test_upload, "", type: :upload)
-      SiteSetting.refresh!
-    end
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
       it "sets the value when the param is present" do
-        put "/admin/site_settings/test_setting.json", params: { test_setting: "hello" }
+        put "/admin/site_settings/title.json", params: { title: "hello" }
         expect(response.status).to eq(200)
-        expect(SiteSetting.test_setting).to eq("hello")
+        expect(SiteSetting.title).to eq("hello")
       end
 
       it "works for deprecated settings" do
@@ -280,9 +264,9 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       it "allows value to be a blank string" do
-        put "/admin/site_settings/test_setting.json", params: { test_setting: "" }
+        put "/admin/site_settings/title.json", params: { title: "" }
         expect(response.status).to eq(200)
-        expect(SiteSetting.test_setting).to eq("")
+        expect(SiteSetting.title).to eq("")
       end
 
       context "with default user options" do
@@ -400,15 +384,14 @@ RSpec.describe Admin::SiteSettingsController do
         let(:category_ids) { 3.times.collect { Fabricate(:category).id } }
 
         before do
-          SiteSetting.setting(:default_categories_watching, category_ids.first(2).join("|"))
+          SiteSetting.default_categories_watching = category_ids.first(2).join("|")
+
           CategoryUser.create!(
             category_id: category_ids.last,
             notification_level: tracking,
             user: user2,
           )
         end
-
-        after { SiteSetting.setting(:default_categories_watching, "") }
 
         it "should update existing users user preference" do
           put "/admin/site_settings/default_categories_watching.json",
@@ -515,11 +498,9 @@ RSpec.describe Admin::SiteSettingsController do
         let(:tags) { 3.times.collect { Fabricate(:tag) } }
 
         before do
-          SiteSetting.setting(:default_tags_watching, tags.first(2).pluck(:name).join("|"))
+          SiteSetting.default_tags_watching = tags.first(2).pluck(:name).join("|")
           TagUser.create!(tag_id: tags.last.id, notification_level: tracking, user: user2)
         end
-
-        after { SiteSetting.setting(:default_tags_watching, "") }
 
         it "should update existing users user preference" do
           put "/admin/site_settings/default_tags_watching.json",
@@ -550,31 +531,40 @@ RSpec.describe Admin::SiteSettingsController do
 
       context "with upload site settings" do
         it "can remove the site setting" do
-          SiteSetting.test_upload = Fabricate(:upload)
+          SiteSetting.push_notifications_icon = Fabricate(:upload)
 
-          put "/admin/site_settings/test_upload.json", params: { test_upload: nil }
+          put "/admin/site_settings/push_notifications_icon.json",
+              params: {
+                push_notifications_icon: nil,
+              }
 
           expect(response.status).to eq(200)
-          expect(SiteSetting.test_upload).to eq(nil)
+          expect(SiteSetting.push_notifications_icon).to eq(nil)
         end
 
         it "can reset the site setting to the default" do
-          SiteSetting.test_upload = nil
+          SiteSetting.push_notifications_icon = nil
           default_upload = Upload.find(-1)
 
-          put "/admin/site_settings/test_upload.json", params: { test_upload: default_upload.url }
+          put "/admin/site_settings/push_notifications_icon.json",
+              params: {
+                push_notifications_icon: default_upload.url,
+              }
 
           expect(response.status).to eq(200)
-          expect(SiteSetting.test_upload).to eq(default_upload)
+          expect(SiteSetting.push_notifications_icon).to eq(default_upload)
         end
 
         it "can update the site setting" do
           upload = Fabricate(:upload)
 
-          put "/admin/site_settings/test_upload.json", params: { test_upload: upload.url }
+          put "/admin/site_settings/push_notifications_icon.json",
+              params: {
+                push_notifications_icon: upload.url,
+              }
 
           expect(response.status).to eq(200)
-          expect(SiteSetting.test_upload).to eq(upload)
+          expect(SiteSetting.push_notifications_icon).to eq(upload)
 
           user_history = UserHistory.last
 
@@ -586,58 +576,30 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       it "logs the change" do
-        SiteSetting.test_setting = "previous"
+        SiteSetting.title = "previous"
 
-        expect do
-          put "/admin/site_settings/test_setting.json", params: { test_setting: "hello" }
-        end.to change {
+        expect do put "/admin/site_settings/title.json", params: { title: "hello" } end.to change {
           UserHistory.where(action: UserHistory.actions[:change_site_setting]).count
         }.by(1)
 
         expect(response.status).to eq(200)
-        expect(SiteSetting.test_setting).to eq("hello")
+        expect(SiteSetting.title).to eq("hello")
       end
 
       it "does not allow changing of hidden settings" do
-        SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
-        SiteSetting.refresh!
+        SiteSetting.max_category_nesting = 3
 
-        put "/admin/site_settings/hidden_setting.json", params: { hidden_setting: "not allowed" }
+        put "/admin/site_settings/max_category_nesting.json", params: { max_category_nesting: 2 }
 
-        expect(SiteSetting.hidden_setting).to eq("hidden")
-        expect(response.status).to eq(422)
-      end
-
-      it "does not allow changing of hidden settings" do
-        SiteSetting.setting(:hidden_setting, "hidden", hidden: true)
-        SiteSetting.refresh!
-
-        put "/admin/site_settings/hidden_setting.json", params: { hidden_setting: "not allowed" }
-
-        expect(SiteSetting.hidden_setting).to eq("hidden")
+        expect(SiteSetting.max_category_nesting).to eq(3)
         expect(response.status).to eq(422)
       end
 
       context "with an plugin" do
-        let(:plugin) do
-          metadata = Plugin::Metadata.new
-          metadata.name = "discourse-plugin"
-          Plugin::Instance.new(metadata)
-        end
-
-        before do
-          Discourse.plugins_by_name[plugin.name] = plugin
-          SiteSetting.setting(:plugin_setting, "default value", plugin: "discourse-plugin")
-          SiteSetting.refresh!
-        end
-
-        after do
-          Discourse.plugins_by_name.delete(plugin.name)
-          SiteSetting.remove_setting(:plugin_setting)
-        end
-
         it "allows changing settings of configurable plugins" do
-          plugin.stubs(:configurable?).returns(true)
+          SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
+
+          expect(SiteSetting.plugin_setting).to eq("some value")
 
           put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "new value" }
 
@@ -646,11 +608,11 @@ RSpec.describe Admin::SiteSettingsController do
         end
 
         it "does not allow changing of unconfigurable settings" do
-          plugin.stubs(:configurable?).returns(false)
+          SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
 
           put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "not allowed" }
 
-          expect(SiteSetting.plugin_setting).to eq("default value")
+          expect(SiteSetting.plugin_setting).to eq("some value")
           expect(response.status).to eq(422)
         end
       end
