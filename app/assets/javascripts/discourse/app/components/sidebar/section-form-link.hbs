@@ -1,5 +1,9 @@
 <div
-  class={{concat-class "row-wrapper" this.dragCssClass}}
+  class={{concat-class
+    "sidebar-section-form-link"
+    "row-wrapper"
+    this.dragCssClass
+  }}
   draggable="true"
   {{on "dragstart" this.dragHasStarted}}
   {{on "dragover" this.dragOver}}

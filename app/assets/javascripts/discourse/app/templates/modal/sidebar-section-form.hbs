@@ -40,7 +40,7 @@
       </div>
     </div>
     {{#each this.activeLinks as |link|}}
-      <Sidebar::SidebarSectionFormLink
+      <Sidebar::SectionFormLink
         @link={{link}}
         @deleteLink={{this.deleteLink}}
         @reorderCallback={{this.reorder}}
@@ -57,7 +57,7 @@
       <hr />
       <h3>{{I18n "sidebar.sections.custom.more_menu"}}</h3>
       {{#each this.activeSecondaryLinks as |link|}}
-        <Sidebar::SidebarSectionFormLink
+        <Sidebar::SectionFormLink
           @link={{link}}
           @deleteLink={{this.deleteLink}}
           @reorderCallback={{this.reorder}}

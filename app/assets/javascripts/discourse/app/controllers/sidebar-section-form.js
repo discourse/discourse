@@ -85,7 +85,7 @@ class SectionLink {
   @tracked value;
   @tracked _destroy;
 
-  constructor({ router, icon, name, value, id, objectId }) {
+  constructor({ router, icon, name, value, id, objectId, segment }) {
     this.router = router;
     this.icon = icon || "link";
     this.name = name;
@@ -94,6 +94,7 @@ class SectionLink {
     this.httpHost = "http://" + window.location.host;
     this.httpsHost = "https://" + window.location.host;
     this.objectId = objectId;
+    this.segment = segment;
   }
 
   get path() {
@@ -181,6 +182,10 @@ class SectionLink {
     );
   }
 
+  get isPrimary() {
+    return this.segment === "primary";
+  }
+
   get #blankIcon() {
     return isEmpty(this.icon);
   }
@@ -251,28 +256,30 @@ export default Controller.extend(ModalFunctionality, {
         title: this.model.title,
         publicSection: this.model.public,
         sectionType: this.model.section_type,
-        links: A(
-          this.model.links
-            .filter((link) => link.segment === "primary")
-            .map((link) => {
-              this.nextObjectId = this.nextObjectId + 1;
-              return this.initLink(link);
-            })
-        ),
-        secondaryLinks: A(
-          this.model.links
-            .filter((link) => link.segment === "secondary")
-            .map((link) => {
-              this.nextObjectId = this.nextObjectId + 1;
-              return this.initLink(link);
-            })
-        ),
+        links: this.model.links.reduce((acc, link) => {
+          if (link.segment === "primary") {
+            this.nextObjectId++;
+            acc.push(this.initLink(link));
+          }
+          return acc;
+        }, A()),
+        secondaryLinks: this.model.links.reduce((acc, link) => {
+          if (link.segment === "secondary") {
+            this.nextObjectId++;
+            acc.push(this.initLink(link));
+          }
+          return acc;
+        }, A()),
         id: this.model.id,
       });
     } else {
       return new Section({
         links: A([
-          new SectionLink({ router: this.router, objectId: this.nextObjectId }),
+          new SectionLink({
+            router: this.router,
+            objectId: this.nextObjectId,
+            segment: "primary",
+          }),
         ]),
       });
     }
@@ -286,6 +293,7 @@ export default Controller.extend(ModalFunctionality, {
       value: link.value,
       id: link.id,
       objectId: this.nextObjectId,
+      segment: link.segment,
     });
   },
 
@@ -378,33 +386,28 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @bind
-  reorder(linkIdFrom, linkIdTo, above) {
-    if (linkIdFrom === linkIdTo) {
+  reorder(linkFrom, linkTo, above) {
+    if (linkFrom === linkTo) {
       return;
     }
-    let fromLink = this.model.links.find(
-      (link) => link.objectId === linkIdFrom
-    );
-    if (!fromLink) {
-      fromLink = this.model.secondaryLinks.find(
-        (link) => link.objectId === linkIdFrom
-      );
-    }
-    this.model.links.removeObject(fromLink);
-    this.model.secondaryLinks?.removeObject(fromLink);
 
-    let toPosition = this.model.links.findIndex(
-      (link) => link.objectId === linkIdTo
-    );
-    if (toPosition === -1) {
-      fromLink.segment = "secondary";
-      toPosition = this.model.secondaryLinks.findIndex(
-        (link) => link.objectId === linkIdTo
-      );
-      this.model.secondaryLinks.insertAt(above ? toPosition : toPosition +, fromLink);
+    if (linkFrom.isPrimary) {
+      this.model.links.removeObject(linkFrom);
     } else {
-      fromLink.segment = "primary";
-      this.model.links.insertAt(above ? toPosition : toPosition + 1, fromLink);
+      this.model.secondaryLinks?.removeObject(linkFrom);
+    }
+
+    if (linkTo.isPrimary) {
+      const toPosition = this.model.links.indexOf(linkTo);
+      linkFrom.segment = "primary";
+      this.model.links.insertAt(above ? toPosition : toPosition + 1, linkFrom);
+    } else {
+      linkFrom.segment = "secondary";
+      const toPosition = this.model.secondaryLinks.indexOf(linkTo);
+      this.model.secondaryLinks.insertAt(
+        above ? toPosition : toPosition + 1,
+        linkFrom
+      );
     }
   },
 
@@ -417,8 +420,11 @@ export default Controller.extend(ModalFunctionality, {
     if (link.id) {
       link._destroy = "1";
     } else {
-      this.model.links.removeObject(link);
-      this.model.secondaryLinks.removeObject(link);
+      if (link.isPrimary) {
+        this.model.links.removeObject(link);
+      } else {
+        this.model.secondaryLinks.removeObject(link);
+      }
     }
   },
 
@@ -426,14 +432,22 @@ export default Controller.extend(ModalFunctionality, {
     addLink() {
       this.nextObjectId = this.nextObjectId + 1;
       this.model.links.pushObject(
-        new SectionLink({ router: this.router, objectId: this.nextObjectId })
+        new SectionLink({
+          router: this.router,
+          objectId: this.nextObjectId,
+          segment: "primary",
+        })
       );
     },
 
     addSecondaryLink() {
       this.nextObjectId = this.nextObjectId + 1;
       this.model.secondaryLinks.pushObject(
-        new SectionLink({ router: this.router, objectId: this.nextObjectId })
+        new SectionLink({
+          router: this.router,
+          objectId: this.nextObjectId,
+          segment: "secondary",
+        })
       );
     },
 

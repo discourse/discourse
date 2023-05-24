@@ -2,9 +2,8 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
-export default class SidebarSectionFormLink extends Component {
+export default class SectionFormLink extends Component {
   @tracked dragCssClass;
-
 
   isAboveElement(event) {
     event.preventDefault();
@@ -16,7 +15,7 @@ export default class SidebarSectionFormLink extends Component {
   @action
   dragHasStarted(event) {
     event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("linkId", this.link.objectId);
+    event.dataTransfer.setData("link", JSON.stringify(this.args.link));
     this.dragCssClass = "dragging";
   }
 
@@ -45,9 +44,9 @@ export default class SidebarSectionFormLink extends Component {
   @action
   dropItem(event) {
     event.stopPropagation();
-    this.reorderCallback(
-      parseInt(event.dataTransfer.getData("linkId"), 10),
-      this.link.objectId,
+    this.args.reorderCallback(
+      JSON.parse(event.dataTransfer.getData("link")),
+      this.args.link,
       this.isAboveElement(event)
     );
     this.dragCssClass = null;
