@@ -17,7 +17,7 @@ RSpec.describe Chat::ChannelViewBuilder do
     let(:channel_id) { channel.id }
     let(:guardian) { current_user.guardian }
     let(:target_message_id) { nil }
-    let(:page_size) { nil }
+    let(:page_size) { 10 }
     let(:direction) { nil }
     let(:thread_id) { nil }
     let(:params) do
