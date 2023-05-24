@@ -75,6 +75,7 @@ acceptance("Chat | User status on mentions", function (needs) {
       public_channels: [channel],
       direct_message_channels: [],
       meta: { message_bus_last_ids: {} },
+      tracking: {},
     },
   });
 
