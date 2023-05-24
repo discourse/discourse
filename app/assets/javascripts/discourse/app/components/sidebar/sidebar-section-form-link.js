@@ -19,6 +19,7 @@ export default class SidebarSectionFormLink extends Component {
     event.dataTransfer.setData("linkId", this.link.objectId);
     this.dragCssClass = "dragging";
   }
+
   @action
   dragOver(event) {
     event.preventDefault();
@@ -30,6 +31,7 @@ export default class SidebarSectionFormLink extends Component {
       }
     }
   }
+
   @action
   dragLeave() {
     if (
@@ -39,6 +41,7 @@ export default class SidebarSectionFormLink extends Component {
       this.dragCssClass = null;
     }
   }
+
   @action
   dropItem(event) {
     event.stopPropagation();
@@ -49,6 +52,7 @@ export default class SidebarSectionFormLink extends Component {
     );
     this.dragCssClass = null;
   }
+
   @action
   dragEnd() {
     this.dragCssClass = null;
