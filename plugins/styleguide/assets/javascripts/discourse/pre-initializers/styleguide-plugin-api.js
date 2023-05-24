@@ -2,7 +2,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { addSection } from "../lib/styleguide";
 
 /**
- * Callback when the sate of the chat drawer changes
+ * Add given section component to the styleguide
  *
  * @function addStyleguideSection
  * @param {string} componentName
