@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
+import I18n from "I18n";
 
 export default class SettingsEditor extends Component {
   @service dialog;
@@ -104,9 +105,8 @@ export default class SettingsEditor extends Component {
       this.errors = [
         ...this.errors,
         {
-          setting: "Syntax Error",
-          errorMessage:
-            "Each item must have a 'settings' and a 'value' key and no other keys.",
+          setting: I18n.t("admin.customize.syntax_error"),
+          errorMessage: I18n.t("admin.customize.validation_settings_keys"),
         },
       ];
       this.saving = false;
@@ -129,8 +129,7 @@ export default class SettingsEditor extends Component {
         ...this.errors,
         {
           setting: deletedNames.join(", "),
-          errorMessage:
-            "These settings were deleted. Please restore them and try again.",
+          errorMessage: I18n.t("admin.customize.validation_settings_deleted"),
         },
       ];
     }
@@ -139,8 +138,7 @@ export default class SettingsEditor extends Component {
         ...this.errors,
         {
           setting: addedNames.join(","),
-          errorMessage:
-            "These settings were added. Please remove them and try again.",
+          errorMessage: I18n.t("admin.customize.validation_settings_added"),
         },
       ];
     }
