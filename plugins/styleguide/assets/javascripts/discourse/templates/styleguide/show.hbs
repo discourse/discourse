@@ -1,11 +1,4 @@
 <StyleguideSection @section={{this.section}}>
-  {{#if this.note}}
-    <div class="styleguide-note">
-      {{! TODO }}
-      {{component (concat "notes/" this.note)}}
-    </div>
-  {{/if}}
-
   {{#let this.section.component as |SectionComponent|}}
     <SectionComponent
       @dummy={{this.dummy}}

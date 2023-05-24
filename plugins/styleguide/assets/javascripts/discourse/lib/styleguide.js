@@ -37,7 +37,6 @@ import userAbout from "../components/sections/organisms/user-about";
 
 let _allCategories = null;
 let _sectionsById = {};
-let _notes = {};
 
 export const CATEGORIES = ["atoms", "molecules", "organisms"];
 
@@ -138,14 +137,6 @@ export function allCategories() {
     categories[section.category].push(section);
 
     _sectionsById[section.id] = section;
-
-    // TODO: ?
-    // Look for notes
-    // const notesRegexp = new RegExp(`[/]?notes\/(\\d+)?\\-?([^\\/]+)$`);
-    // const notesMatch = componentName.match(notesRegexp);
-    // if (notesMatch) {
-    //   _notes[notesMatch[2]] = componentName.replace(/^.*notes\//, "");
-    // }
   }
 
   _allCategories = [];
@@ -161,8 +152,4 @@ export function allCategories() {
   }
 
   return _allCategories;
-}
-
-export function findNote(section) {
-  return _notes[section.id];
 }
