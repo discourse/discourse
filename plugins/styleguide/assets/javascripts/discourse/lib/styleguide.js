@@ -44,7 +44,9 @@ const SECTIONS = [
 ];
 
 export function addSection(componentName) {
-  SECTIONS.push(componentName);
+  if (!SECTIONS.includes(componentName)) {
+    SECTIONS.push(componentName);
+  }
 }
 
 export function sectionById(id) {

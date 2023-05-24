@@ -144,6 +144,8 @@ export default {
 
       api.addToHeaderIcons("chat-header-icon");
 
+      api.addStyleguideSection?.("styleguide/organisms/chat");
+
       api.addChatDrawerStateCallback(({ isDrawerActive }) => {
         if (isDrawerActive) {
           document.body.classList.add("chat-drawer-active");
