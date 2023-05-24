@@ -13,9 +13,7 @@
   list-style: none;
   box-sizing: border-box;
   width: 100%;
-  padding: var(--d-sidebar-row-vertical-padding)
-    var(--d-sidebar-row-horizontal-padding);
-  font-size: var(--d-sidebar-row-font-size);
+  padding: 0 var(--d-sidebar-row-horizontal-padding);
   justify-content: left;
 
   svg.d-icon {
