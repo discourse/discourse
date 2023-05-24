@@ -140,9 +140,9 @@ module Chat
       latest_not_deleted_message_id =
         if chat_message.thread_reply? && chat_channel.threading_enabled &&
              SiteSetting.enable_experimental_chat_threaded_discussions
-          chat_message.thread.latest_not_deleted_message_id
+          chat_message.thread.latest_not_deleted_message_id(anchor_message_id: chat_message.id)
         else
-          chat_channel.latest_not_deleted_message_id
+          chat_channel.latest_not_deleted_message_id(anchor_message_id: chat_message.id)
         end
       publish_to_targets!(
         message_bus_targets,
