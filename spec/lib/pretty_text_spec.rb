@@ -2367,6 +2367,21 @@ HTML
     expect(cooked).to eq(html.strip)
   end
 
+  it "can skip relative paths in allowlist iframes" do
+    SiteSetting.allowed_iframes = "https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def'></iframe>
+      <iframe src='https://bob.com/abc/def/../ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
+  end
+
   it "You can disable linkify" do
     md = "www.cnn.com test.it http://test.com https://test.ab https://a"
     cooked = PrettyText.cook(md)
