@@ -20,11 +20,10 @@ module SeedData
       end
     end
 
-    def update(site_setting_names: nil, skip_changed: false, recover: false)
+    def update(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
         topics(site_setting_names: site_setting_names).each do |params|
-          params = params.except(:category, :after_create)
-          update_topic(**params, skip_changed: skip_changed, recover: recover)
+          update_topic(**params.except(:category, :after_create), skip_changed: skip_changed)
         end
       end
     end
@@ -32,8 +31,7 @@ module SeedData
     def delete(site_setting_names: nil, skip_changed: false)
       I18n.with_locale(@locale) do
         topics(site_setting_names: site_setting_names).each do |params|
-          params = params.slice(:site_setting_name)
-          delete_topic(**params, skip_changed: skip_changed)
+          delete_topic(**params.slice(:site_setting_name), skip_changed: skip_changed)
         end
       end
     end
@@ -169,19 +167,12 @@ module SeedData
       SiteSetting.set(site_setting_name, post.topic_id)
     end
 
-    def update_topic(
-      site_setting_name:,
-      title:,
-      raw:,
-      static_first_reply: false,
-      skip_changed:,
-      recover:
-    )
-      post = find_post(site_setting_name, deleted: recover)
+    def update_topic(site_setting_name:, title:, raw:, static_first_reply: false, skip_changed:)
+      post = find_post(site_setting_name, deleted: true)
       return if !post
 
       if !skip_changed || unchanged?(post)
-        if post.deleted_by_id && recover
+        if post.trashed?
           PostDestroyer.new(Discourse.system_user, post).recover
           post.reload
         end

@@ -78,7 +78,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
         if SiteSetting.company_name.blank?
           topics.delete(site_setting_names: [site_setting], skip_changed: true)
         else
-          topics.update(site_setting_names: [site_setting], skip_changed: true, recover: true)
+          topics.update(site_setting_names: [site_setting], skip_changed: true)
         end
       elsif SiteSetting.company_name.present?
         topics.create(site_setting_names: [site_setting])
