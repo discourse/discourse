@@ -152,7 +152,7 @@ export default class CommunitySection {
   }
 
   get headerActions() {
-    if (this.currentUser && this.currentUser.admin) {
+    if (this.currentUser?.admin) {
       return [
         {
           action: this.editSection,
