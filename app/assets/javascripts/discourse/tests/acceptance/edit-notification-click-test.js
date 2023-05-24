@@ -1,6 +1,6 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { skip } from "qunit";
+import { test } from "qunit";
 
 acceptance("Edit Notification Click", function (needs) {
   needs.user();
@@ -38,8 +38,7 @@ acceptance("Edit Notification Click", function (needs) {
     });
   });
 
-  // TODO: Unskip failing test after fixing issue with new user menu and history modal
-  skip("history modal is shown when navigating from a non-topic page", async function (assert) {
+  test("history modal is shown when navigating from a non-topic page", async function (assert) {
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
     await click(".notification.edited a");
