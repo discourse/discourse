@@ -7,9 +7,12 @@ class SidebarSectionsController < ApplicationController
   def index
     sections =
       SidebarSection
+        .strict_loading
+        .includes(:sidebar_urls)
         .where("public OR user_id = ?", current_user.id)
         .order("(public IS TRUE) DESC")
         .map { |section| SidebarSectionSerializer.new(section, root: false) }
+
     render json: sections
   end
 
@@ -23,7 +26,7 @@ class SidebarSectionsController < ApplicationController
       Site.clear_anon_cache!
     end
 
-    render json: SidebarSectionSerializer.new(sidebar_section)
+    render_serialized(sidebar_section, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
   end
@@ -35,6 +38,7 @@ class SidebarSectionsController < ApplicationController
     ActiveRecord::Base.transaction do
       sidebar_section.update!(section_params.merge(sidebar_urls_attributes: links_params))
       sidebar_section.sidebar_section_links.update_all(user_id: sidebar_section.user_id)
+
       order =
         sidebar_section
           .sidebar_urls
@@ -55,7 +59,7 @@ class SidebarSectionsController < ApplicationController
       Site.clear_anon_cache!
     end
 
-    render_serialized(sidebar_section.reload, SidebarSectionSerializer)
+    render_serialized(sidebar_section, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
   rescue Discourse::InvalidAccess
@@ -71,17 +75,17 @@ class SidebarSectionsController < ApplicationController
     when "community"
       sidebar_section.reset_community!
     end
-    render_serialized(sidebar_section.reload, SidebarSectionSerializer)
+
+    render_serialized(sidebar_section, SidebarSectionSerializer)
   end
 
   def reorder
     sidebar_section = SidebarSection.find_by(id: reorder_params["sidebar_section_id"])
     @guardian.ensure_can_edit!(sidebar_section)
-
     order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
-
     set_order(sidebar_section, order)
-    render json: sidebar_section
+
+    render_serialized_sidebar_section(sidebar_section)
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end
@@ -95,7 +99,8 @@ class SidebarSectionsController < ApplicationController
       StaffActionLogger.new(current_user).log_destroy_public_sidebar_section(sidebar_section)
       MessageBus.publish("/refresh-sidebar-sections", nil)
     end
-    render json: SidebarSectionSerializer.new(sidebar_section)
+
+    render json: success_json
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end
@@ -127,6 +132,7 @@ class SidebarSectionsController < ApplicationController
         .sidebar_section_links
         .sort_by { |link| order[link.linkable_id] }
         .map { |link| link.attributes.merge(position: position_generator.next) }
+
     sidebar_section.sidebar_section_links.upsert_all(links, update_only: [:position])
   end
 

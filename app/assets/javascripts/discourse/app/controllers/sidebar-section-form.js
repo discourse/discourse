@@ -359,11 +359,12 @@ export default Controller.extend(ModalFunctionality, {
           return ajax(`/sidebar_sections/${this.model.id}`, {
             type: "DELETE",
           })
-            .then((data) => {
+            .then(() => {
               const newSidebarSections =
                 this.currentUser.sidebar_sections.filter((section) => {
-                  return section.id !== data["sidebar_section"].id;
+                  return section.id !== this.model.id;
                 });
+
               this.currentUser.set("sidebar_sections", newSidebarSections);
               this.send("closeModal");
             })
