@@ -7,6 +7,10 @@ module PageObjects
         @composer ||= PageObjects::Components::Chat::Composer.new(".chat-channel")
       end
 
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
+      end
+
       def replying_to?(message)
         find(".chat-channel .chat-reply", text: message.message)
       end
@@ -115,10 +119,12 @@ module PageObjects
       end
 
       def send_message(text = nil)
+        text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
         click_send_message
         click_composer
+        has_no_loading_skeleton?
       end
 
       def reply_to(message)
