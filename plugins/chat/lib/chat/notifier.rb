@@ -218,7 +218,6 @@ module Chat
           .where.not(username_lower: @user.username_lower)
           .where.not(id: already_covered_ids)
 
-      to_notify[:too_many_members] = @chat_message.parsed_mentions.groups_with_too_many_members
       @chat_message.parsed_mentions.groups_to_mention.each { |g| to_notify[g.name.downcase] = [] }
 
       grouped = group_users_to_notify(reached_by_group)
@@ -243,14 +242,18 @@ module Chat
       inaccessible = to_notify.extract!(:unreachable, :welcome_to_join, :too_many_members)
       groups_with_disabled_mentions =
         @chat_message.parsed_mentions.groups_with_disabled_mentions.to_a
-      return if inaccessible.values.all?(&:blank?) && groups_with_disabled_mentions.empty?
+      groups_with_too_many_members = @chat_message.parsed_mentions.groups_with_too_many_members.to_a
+      if inaccessible.values.all?(&:blank?) && groups_with_disabled_mentions.empty? &&
+           groups_with_too_many_members.empty?
+        return
+      end
 
       Chat::Publisher.publish_inaccessible_mentions(
         @user.id,
         @chat_message,
         inaccessible[:unreachable].to_a,
         inaccessible[:welcome_to_join].to_a,
-        inaccessible[:too_many_members].to_a,
+        groups_with_too_many_members,
         groups_with_disabled_mentions,
       )
     end
