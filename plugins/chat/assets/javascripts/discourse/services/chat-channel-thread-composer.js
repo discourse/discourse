@@ -7,7 +7,7 @@ export default class ChatChannelThreadComposer extends ChatComposer {
   reset(channel, thread) {
     this.message = ChatMessage.createDraftMessage(channel, {
       user: this.currentUser,
+      thread,
     });
-    this.message.thread = thread;
   }
 }

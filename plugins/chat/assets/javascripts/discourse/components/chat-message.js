@@ -12,6 +12,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 
 let _chatMessageDecorators = [];
 
@@ -42,6 +43,11 @@ export default class ChatMessage extends Component {
   @service router;
 
   @optionalService adminTools;
+
+  constructor() {
+    super(...arguments);
+    this.initMentionedUsers();
+  }
 
   get pane() {
     return this.args.context === MESSAGE_CONTEXT_THREAD
@@ -104,7 +110,7 @@ export default class ChatMessage extends Component {
     };
 
     this.args.message.expanded = true;
-
+    this.refreshStatusOnMentions();
     recursiveExpand(this.args.message);
   }
 
@@ -120,6 +126,27 @@ export default class ChatMessage extends Component {
   @action
   teardownChatMessage() {
     cancel(this._invitationSentTimer);
+    this.#teardownMentionedUsers();
+  }
+
+  @action
+  refreshStatusOnMentions() {
+    schedule("afterRender", () => {
+      if (!this.messageContainer) {
+        return;
+      }
+
+      this.args.message.mentionedUsers.forEach((user) => {
+        const href = `/u/${user.username.toLowerCase()}`;
+        const mentions = this.messageContainer.querySelectorAll(
+          `a.mention[href="${href}"]`
+        );
+
+        mentions.forEach((mention) => {
+          updateUserStatusOnMention(mention, user.status, this.currentUser);
+        });
+      });
+    });
   }
 
   @action
@@ -132,6 +159,18 @@ export default class ChatMessage extends Component {
       _chatMessageDecorators.forEach((decorator) => {
         decorator.call(this, this.messageContainer, this.args.message.channel);
       });
+    });
+  }
+
+  @action
+  initMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      if (user.isTrackingStatus()) {
+        return;
+      }
+
+      user.trackStatus();
+      user.on("status-changed", this, "refreshStatusOnMentions");
     });
   }
 
@@ -405,5 +444,12 @@ export default class ChatMessage extends Component {
   @action
   dismissMentionWarning() {
     this.args.message.mentionWarning = null;
+  }
+
+  #teardownMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      user.stopTrackingStatus();
+      user.off("status-changed", this, "refreshStatusOnMentions");
+    });
   }
 }

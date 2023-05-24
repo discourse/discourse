@@ -478,7 +478,7 @@ RSpec.describe Invite do
     end
   end
 
-  describe "#invalidate_for_email" do
+  describe ".invalidate_for_email" do
     it "returns nil if there is no invite for the given email" do
       invite = Invite.invalidate_for_email("test@example.com")
       expect(invite).to eq(nil)
@@ -597,6 +597,31 @@ RSpec.describe Invite do
 
       it "returns true if email does match user email" do
         expect(invite.can_be_redeemed_by?(user)).to eq(true)
+      end
+    end
+  end
+
+  describe "#invalidate!" do
+    subject(:invalidate) { invite.invalidate! }
+
+    fab!(:invite) { Fabricate(:invite) }
+
+    before { freeze_time }
+
+    it "invalidates the invite" do
+      expect { invalidate }.to change { invite.invalidated_at }.to Time.current
+    end
+
+    it "returns the invite" do
+      expect(invalidate).to eq invite
+    end
+
+    context "when the invite is in an invalid state" do
+      before { invite.update_attribute(:custom_message, "a" * 2000) }
+
+      it "still invalidates the invite" do
+        expect(invite).to be_invalid
+        expect { invalidate }.to change { invite.invalidated_at }.to Time.current
       end
     end
   end

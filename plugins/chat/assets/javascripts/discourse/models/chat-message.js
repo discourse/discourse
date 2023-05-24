@@ -88,6 +88,7 @@ export default class ChatMessage {
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+    this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
   }
 
   duplicate() {
@@ -137,8 +138,12 @@ export default class ChatMessage {
   }
 
   cook() {
+    const site = getOwner(this).lookup("service:site");
+
     next(() => {
-      const site = getOwner(this).lookup("service:site");
+      if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
 
       const markdownOptions = {
         featuresOverride:
@@ -247,6 +252,12 @@ export default class ChatMessage {
       };
     }
 
+    if (this.editing) {
+      data.editing = true;
+      data.id = this.id;
+      data.excerpt = this.excerpt;
+    }
+
     return JSON.stringify(data);
   }
 
@@ -309,6 +320,17 @@ export default class ChatMessage {
 
   #initChatMessageReactionModel(reactions = []) {
     return reactions.map((reaction) => ChatMessageReaction.create(reaction));
+  }
+
+  #initMentionedUsers(mentionedUsers) {
+    const map = new Map();
+    if (mentionedUsers) {
+      mentionedUsers.forEach((userData) => {
+        const user = User.create(userData);
+        map.set(user.id, user);
+      });
+    }
+    return map;
   }
 
   #initUserModel(user) {

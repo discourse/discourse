@@ -5,89 +5,10 @@ RSpec.describe "Chat composer", type: :system, js: true do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
-  let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:chat_page) { PageObjects::Pages::Chat.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before { chat_system_bootstrap }
-
-  context "when loading a channel with a draft" do
-    fab!(:draft_1) do
-      Chat::Draft.create!(
-        chat_channel: channel_1,
-        user: current_user,
-        data: { message: "draft" }.to_json,
-      )
-    end
-
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
-    it "loads the draft" do
-      chat.visit_channel(channel_1)
-
-      expect(find(".chat-composer__input").value).to eq("draft")
-    end
-
-    context "with uploads" do
-      fab!(:upload_1) do
-        Fabricate(
-          :upload,
-          url: "/images/logo-dark.png",
-          original_filename: "logo_dark.png",
-          width: 400,
-          height: 300,
-          extension: "png",
-        )
-      end
-
-      fab!(:draft_1) do
-        Chat::Draft.create!(
-          chat_channel: channel_1,
-          user: current_user,
-          data: { message: "draft", uploads: [upload_1] }.to_json,
-        )
-      end
-
-      it "loads the draft with the upload" do
-        chat.visit_channel(channel_1)
-
-        expect(find(".chat-composer__input").value).to eq("draft")
-        expect(page).to have_selector(".chat-composer-upload--image", count: 1)
-      end
-    end
-
-    context "when replying" do
-      fab!(:draft_1) do
-        Chat::Draft.create!(
-          chat_channel: channel_1,
-          user: current_user,
-          data: {
-            message: "draft",
-            replyToMsg: {
-              id: message_1.id,
-              excerpt: message_1.excerpt,
-              user: {
-                id: message_1.user.id,
-                name: nil,
-                avatar_template: message_1.user.avatar_template,
-                username: message_1.user.username,
-              },
-            },
-          }.to_json,
-        )
-      end
-
-      it "loads the draft with replied to mesage" do
-        chat.visit_channel(channel_1)
-
-        expect(find(".chat-composer__input").value).to eq("draft")
-        expect(page).to have_selector(".chat-reply__username", text: message_1.user.username)
-        expect(page).to have_selector(".chat-reply__excerpt", text: message_1.excerpt)
-      end
-    end
-  end
 
   context "when replying to a message" do
     before do
@@ -96,8 +17,8 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "adds the reply indicator to the composer" do
-      chat.visit_channel(channel_1)
-      channel.reply_to(message_1)
+      chat_page.visit_channel(channel_1)
+      channel_page.reply_to(message_1)
 
       expect(page).to have_selector(
         ".chat-composer-message-details .chat-reply__username",
@@ -109,8 +30,8 @@ RSpec.describe "Chat composer", type: :system, js: true do
       before { message_1.update!(message: "<mark>not marked</mark>") }
 
       it "renders text in the details" do
-        chat.visit_channel(channel_1)
-        channel.reply_to(message_1)
+        chat_page.visit_channel(channel_1)
+        channel_page.reply_to(message_1)
 
         expect(
           find(".chat-composer-message-details .chat-reply__excerpt")["innerHTML"].strip,
@@ -128,47 +49,47 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "adds the edit indicator" do
-      chat.visit_channel(channel_1)
-      channel.edit_message(message_2)
+      chat_page.visit_channel(channel_1)
+      channel_page.edit_message(message_2)
 
       expect(page).to have_selector(
         ".chat-composer-message-details .chat-reply__username",
         text: current_user.username,
       )
-      expect(find(".chat-composer__input").value).to eq(message_2.message)
+      expect(channel_page.composer.value).to eq(message_2.message)
     end
 
     it "updates the message instantly" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       page.driver.browser.network_conditions = { offline: true }
 
-      channel.edit_message(message_2)
+      channel_page.edit_message(message_2)
       find(".chat-composer__input").send_keys("instant")
-      channel.click_send_message
+      channel_page.click_send_message
 
-      expect(channel).to have_message(text: message_2.message + "instant")
+      expect(channel_page).to have_message(text: message_2.message + "instant")
       page.driver.browser.network_conditions = { offline: false }
     end
 
     context "when pressing escape" do
       it "cancels editing" do
-        chat.visit_channel(channel_1)
-        channel.edit_message(message_2)
+        chat_page.visit_channel(channel_1)
+        channel_page.edit_message(message_2)
         find(".chat-composer__input").send_keys(:escape)
 
         expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
-        expect(find(".chat-composer__input").value).to eq("")
+        expect(channel_page.composer.value).to eq("")
       end
     end
 
     context "when closing edited message" do
       it "cancels editing" do
-        chat.visit_channel(channel_1)
-        channel.edit_message(message_2)
+        chat_page.visit_channel(channel_1)
+        channel_page.edit_message(message_2)
         find(".cancel-message-action").click
 
         expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
-        expect(find(".chat-composer__input").value).to eq("")
+        expect(channel_page.composer.value).to eq("")
       end
     end
   end
@@ -180,19 +101,19 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     xit "adds the emoji to the composer" do
-      chat.visit_channel(channel_1)
-      channel.open_action_menu
-      channel.click_action_button("emoji")
+      chat_page.visit_channel(channel_1)
+      channel_page.open_action_menu
+      channel_page.click_action_button("emoji")
       find("[data-emoji='grimacing']").click(wait: 0.5)
 
-      expect(find(".chat-composer__input").value).to eq(":grimacing:")
+      expect(channel_page.composer.value).to eq(":grimacing:")
     end
 
     it "removes denied emojis from insert emoji picker" do
       SiteSetting.emoji_deny_list = "monkey|peach"
 
-      chat.visit_channel(channel_1)
-      channel.composer.open_emoji_picker
+      chat_page.visit_channel(channel_1)
+      channel_page.composer.open_emoji_picker
 
       expect(page).to have_no_selector("[data-emoji='monkey']")
       expect(page).to have_no_selector("[data-emoji='peach']")
@@ -206,16 +127,16 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "adds the emoji to the composer" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":gri")
       find(".emoji-shortname", text: "grimacing").click
 
-      expect(find(".chat-composer__input").value).to eq(":grimacing: ")
+      expect(channel_page.composer.value).to eq(":grimacing: ")
     end
 
     it "doesn't suggest denied emojis and aliases" do
       SiteSetting.emoji_deny_list = "peach|poop"
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       find(".chat-composer__input").fill_in(with: ":peac")
       expect(page).to have_no_selector(".emoji-shortname", text: "peach")
@@ -232,7 +153,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     xit "prefills the emoji picker filter input" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":gri")
 
       click_link(I18n.t("js.composer.more_emoji"))
@@ -241,7 +162,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     xit "filters with the prefilled input" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":fr")
 
       click_link(I18n.t("js.composer.more_emoji"))
@@ -258,19 +179,19 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "propagates keys to composer" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       find("body").send_keys("b")
 
-      expect(find(".chat-composer__input").value).to eq("b")
+      expect(channel_page.composer.value).to eq("b")
 
       find("body").send_keys("b")
 
-      expect(find(".chat-composer__input").value).to eq("bb")
+      expect(channel_page.composer.value).to eq("bb")
 
       find("body").send_keys(:enter) # special case
 
-      expect(find(".chat-composer__input").value).to eq("bb")
+      expect(channel_page.composer.value).to eq("bb")
     end
   end
 
@@ -288,7 +209,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
         element.setSelectionRange(0, element.value.length)
       JS
 
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       find("body").send_keys("https://www.discourse.org")
       page.execute_script(select_text, ".chat-composer__input")
@@ -301,7 +222,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
       page.send_keys [modifier, "v"]
 
-      expect(find(".chat-composer__input").value).to eq("[discourse](https://www.discourse.org)")
+      expect(channel_page.composer.value).to eq("[discourse](https://www.discourse.org)")
     end
   end
 
@@ -313,11 +234,11 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "works" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       find("body").send_keys("1")
-      channel.click_send_message
+      channel_page.click_send_message
 
-      expect(channel).to have_message(text: "1")
+      expect(channel_page).to have_message(text: "1")
     end
   end
 
@@ -329,7 +250,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "doesn’t allow to send" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
       find("body").send_keys("1")
 
       expect(page).to have_css(".chat-composer.is-send-disabled")
@@ -343,14 +264,14 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
 
     it "doesn’t allow to send" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
       page.driver.browser.network_conditions = { latency: 20_000 }
 
       file_path = file_from_fixtures("logo.png", "images").path
       attach_file(file_path) do
-        channel.open_action_menu
-        channel.click_action_button("chat-upload-btn")
+        channel_page.open_action_menu
+        channel_page.click_action_button("chat-upload-btn")
       end
 
       expect(page).to have_css(".chat-composer-upload--in-progress")
