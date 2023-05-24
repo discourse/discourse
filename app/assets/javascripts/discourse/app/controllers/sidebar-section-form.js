@@ -408,11 +408,7 @@ export default Controller.extend(ModalFunctionality, {
       }
     } else {
       fromLink.segment = "primary";
-      if (above) {
-        this.model.links.insertAt(toPosition, fromLink);
-      } else {
-        this.model.links.insertAt(toPosition + 1, fromLink);
-      }
+      this.model.links.insertAt(above ? toPosition : toPosition + 1, fromLink);
     }
   },
 
