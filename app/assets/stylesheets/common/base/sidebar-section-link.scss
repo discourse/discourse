@@ -36,14 +36,14 @@
       @include ellipsis;
       padding-left: 0.5em;
       text-align: right;
-      color: var(--primary-high);
+      color: var(--primary-700);
       font-size: var(--font-down-1);
       font-weight: normal;
       margin-left: auto;
     }
 
     .sidebar-section-link-suffix {
-      margin-left: 0.25rem;
+      margin-left: 1em;
       font-size: var(--font-down-4);
       color: var(--tertiary-medium);
     }
@@ -119,6 +119,7 @@
         background: rgba(var(--primary-rgb), 0.1);
         width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
         height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        font-size: var(--font-down-1);
       }
     }
 
