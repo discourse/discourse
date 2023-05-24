@@ -15,6 +15,7 @@ import {
   resetCustomCategorySectionLinkPrefix,
   resetCustomCountables,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -22,6 +23,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});
 
   needs.settings({
+    tagging_enabled: true,
     navigation_menu: "sidebar",
   });
 
@@ -818,6 +820,53 @@ acceptance("Sidebar - Plugin API", function (needs) {
       });
     } finally {
       resetCustomCategorySectionLinkPrefix();
+    }
+  });
+
+  test("Customizing the prefix icon used in a tag section link for a particular tag", async function (assert) {
+    try {
+      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+        updateCurrentUser({
+          display_sidebar_tags: true,
+          sidebar_tags: [
+            { name: "tag2", pm_only: false },
+            { name: "tag1", pm_only: false },
+            { name: "tag3", pm_only: false },
+          ],
+        });
+
+        api.registerCustomTagSectionLinkPrefixIcon({
+          tagName: "tag1",
+          prefixValue: "wrench",
+          prefixColor: "#FF0000", // rgb(255, 0, 0)
+        });
+
+        await visit("/");
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link[data-tag-name="tag1"] .prefix-icon.d-icon-wrench`
+          ),
+          "wrench icon is displayed for tag1 section link's prefix icon"
+        );
+
+        assert.strictEqual(
+          query(
+            `.sidebar-section-link[data-tag-name="tag1"] .sidebar-section-link-prefix`
+          ).style.color,
+          "rgb(255, 0, 0)",
+          "tag1 section link's prefix icon has the right color"
+        );
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link[data-tag-name="tag2"] .prefix-icon.d-icon-tag`
+          ),
+          "default tag icon is displayed for tag2 section link's prefix icon"
+        );
+      });
+    } finally {
+      resetCustomTagSectionLinkPrefixIcons();
     }
   });
 });

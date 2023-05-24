@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { isHex } from "discourse/components/sidebar/section-link";
 
 export default class extends Component {
   get prefixValue() {
@@ -11,8 +12,10 @@ export default class extends Component {
         let hexValues = this.args.prefixValue;
 
         hexValues = hexValues.reduce((acc, color) => {
-          if (color?.match(/^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
-            acc.push(`#${color} 50%`);
+          const hexCode = isHex(color);
+
+          if (hexCode) {
+            acc.push(`#${hexCode} 50%`);
           }
 
           return acc;
