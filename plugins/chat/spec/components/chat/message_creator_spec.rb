@@ -726,7 +726,13 @@ describe Chat::MessageCreator do
         end
 
         it "creates a thread and updates all the messages in the chain" do
-          skip "TODO: a recent spec regression"
+          # This must be done since the fabricator uses Chat::MessageCreator
+          # under the hood and it creates the thread already.
+          old_message_1.update!(thread_id: nil)
+          old_message_2.update!(thread_id: nil)
+          old_message_3.update!(thread_id: nil)
+          reply_message.update!(thread_id: nil)
+
           thread_count = Chat::Thread.count
           message =
             described_class.create(
@@ -851,11 +857,11 @@ describe Chat::MessageCreator do
 
           before do
             old_message_1.update!(thread: old_thread)
+            old_message_2.update!(thread: old_thread)
             old_message_3.update!(thread: incorrect_thread)
           end
 
           it "does not change any messages in the chain, assumes they have the correct thread ID" do
-            skip "TODO: a recent spec regression"
             thread_count = Chat::Thread.count
             message =
               described_class.create(
