@@ -12,6 +12,10 @@ module PageObjects
           PageObjects::Components::Chat::ComposerMessageDetails.new(".chat-thread")
       end
 
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-thread")
+      end
+
       def header
         find(".chat-thread__header")
       end

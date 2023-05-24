@@ -7,6 +7,10 @@ module PageObjects
         @composer ||= PageObjects::Components::Chat::Composer.new(".chat-channel")
       end
 
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
+      end
+
       def replying_to?(message)
         find(".chat-channel .chat-reply", text: message.message)
       end
@@ -119,6 +123,7 @@ module PageObjects
         fill_composer(text)
         click_send_message
         click_composer
+        has_no_loading_skeleton?
       end
 
       def reply_to(message)
