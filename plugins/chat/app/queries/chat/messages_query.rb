@@ -21,6 +21,7 @@ module Chat
     PAST = "past"
     FUTURE = "future"
     VALID_DIRECTIONS = [PAST, FUTURE]
+    MAX_PAGE_SIZE = 100
 
     # @param channel [Chat::Channel] The channel to query messages within.
     # @param guardian [Guardian] The guardian to use for permission checks.
