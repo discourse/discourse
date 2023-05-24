@@ -12,10 +12,9 @@ export default class TagSectionLink extends BaseTagSectionLink {
   @tracked hideCount =
     this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
 
-  constructor({ topicTrackingState, currentUser }) {
+  constructor({ topicTrackingState }) {
     super(...arguments);
     this.topicTrackingState = topicTrackingState;
-    this.currentUser = currentUser;
     this.refreshCounts();
   }
 

@@ -607,3 +607,7 @@ sv:
         chat_notifications_with_unread:
           one: "Chattaviseringar - %{count} oläst avisering"
           other: "Chattaviseringar - %{count} olästa aviseringar"
+    styleguide:
+      sections:
+        chat:
+          title: Chatt

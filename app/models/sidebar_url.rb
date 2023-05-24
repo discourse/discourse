@@ -3,7 +3,7 @@
 class SidebarUrl < ActiveRecord::Base
   enum :segment, { primary: 0, secondary: 1 }, scopes: false, suffix: true
 
-  FULL_RELOAD_LINKS_REGEX = [%r{\A/my/[a-z_\-/]+\z}, %r{\A/safe-mode\z}]
+  FULL_RELOAD_LINKS_REGEX = [%r{\A/my/[a-z_\-/]+\z}, %r{\A/pub/[a-z_\-/]+\z}, %r{\A/safe-mode\z}]
   MAX_ICON_LENGTH = 40
   MAX_NAME_LENGTH = 80
   MAX_VALUE_LENGTH = 200

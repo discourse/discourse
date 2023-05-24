@@ -109,6 +109,7 @@ import {
   registerCustomCategorySectionLinkPrefix,
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
@@ -1960,6 +1961,38 @@ class PluginApi {
     registerCustomCategorySectionLinkPrefix({
       categoryId,
       prefixType,
+      prefixValue,
+      prefixColor,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom prefix for a sidebar tag section link.
+   *
+   * Example:
+   *
+   * ```
+   * api.registerCustomTagSectionLinkPrefixValue({
+   *   tagName: "tag1",
+   *   prefixType: "icon",
+   *   prefixValue: "wrench",
+   *   prefixColor: "#FF0000"
+   * });
+   * ```
+   *
+   * @params {Object} arg - An object
+   * @params {string} arg.tagName - The name of the tag
+   * @params {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @params {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
+   */
+  registerCustomTagSectionLinkPrefixIcon({
+    tagName,
+    prefixValue,
+    prefixColor,
+  }) {
+    registerCustomTagSectionLinkPrefixIcon({
+      tagName,
       prefixValue,
       prefixColor,
     });

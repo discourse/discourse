@@ -75,6 +75,9 @@ be:
     share:
       topic_html: 'Тэма: <span class="topic-title">%{topicTitle}</span>'
       close: "схаваць"
+    action_codes:
+      tags_changed: "Тэгі абноўлены %{when}"
+      category_changed: "Катэгорыя абноўлена %{when}"
     emails_are_disabled: "Адпраўка паведамленняў па электроннай пошце было глабальна адключана адміністратарам. Ні адно апавяшчэнне па электроннай пошце не будзе даслана."
     themes:
       default_description: "Default"
@@ -160,6 +163,7 @@ be:
       title: "Абранае"
       clear_bookmarks: "Выдаліць з абранага"
       help:
+        bookmark: "Націсніце, каб дадаць гэтую тэму ў закладкі"
         unbookmark: "Націсніце каб выдаліць усе закладкі ў гэтай тэме"
     bookmarks:
       not_bookmarked: "закладка гэты пост"
@@ -230,8 +234,15 @@ be:
           title: "Адобрана"
         rejected:
           title: "адхілена"
+        rejected_post:
+          title: "Публікацыя адхілена"
+        deleted:
+          title: "Тэма альбо паведамленне выдалена"
+        all:
+          title: "Усё"
       context_question:
         delimiter: "або"
+        something_else_wrong: "Штосьці не так з гэтай публікацыяй?"
       types:
         reviewable_user:
           title: "Карыстальнік"
@@ -359,6 +370,7 @@ be:
         title: "Удзельнікі"
         filter_placeholder_admin: "імя карыстальніка або email"
         filter_placeholder: "імя карыстальніка"
+        status: "Статус"
       topics: "тэмы"
       posts: "паведамленні"
       mentions: "згадкі"
@@ -1117,6 +1129,7 @@ be:
       view: "Прагляд тэм па катэгорыям"
       general: "Агульныя"
       settings: "Налады"
+      topic_template: "Шаблон"
       tags: "Тэгі"
       required_tag_group:
         delete: "Выдаліць"
@@ -1187,6 +1200,7 @@ be:
       notify_action: "паведамленне"
       delete_spammer: "выдаліць спамера"
       yes_delete_spammer: "Так, выдаліць спамера"
+      notify_moderators_textarea_label: "Паведамленне для мадэратараў"
     flagging_topic:
       notify_action: "паведамленне"
     topic_map:
@@ -1297,6 +1311,7 @@ be:
         mark_tracking: "%{shortcut}Сачыць за тэмай"
     badges:
       title: значкі
+      awarded: узнагароджаны
       select_badge_for_title: Выберыце значок, будзе вашым званнем
       badge_grouping:
         community:
@@ -1355,10 +1370,22 @@ be:
           save: "захаваць"
           delete: "выдаляць"
           links:
+            add: "Дадаць іншую спасылку"
+            delete: "Выдаліць спасылку"
             icon:
               label: "Абразка"
             name:
               label: "імя"
+              validation:
+                blank: "Імя не можа быць пустым"
+            value:
+              label: "Спасылка"
+              validation:
+                blank: "Спасылка не можа быць пустой"
+                maximum: "Спасылка павінна быць карацейшай за %{count} сімвалаў"
+          title:
+            validation:
+              blank: "Загаловак ня можа быць пустым"
         about:
           header_link_text: "Аб тэме"
         messages:
@@ -1390,6 +1417,7 @@ be:
               content: "карыстальнікаў"
             my_posts:
               content: "мае паведамленні"
+              content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
   admin_js:
@@ -1487,6 +1515,13 @@ be:
         continue: Працягнуць
         scopes:
           action: дзеянне
+          descriptions:
+            topics:
+              delete: Выдаліць тэму.
+            posts:
+              delete: Выдаліць паведамленне.
+            invites:
+              create: Адправіць запрашэнні па электроннай пошце альбо стварыць спасылкі для запрашэнняў.
       web_hooks:
         create: "стварыць"
         edit: "рэдагаваць"
@@ -1767,27 +1802,43 @@ be:
           success: "поспех"
       form_templates:
         nav_title: "шаблоны"
+        new_template: "Новы шаблон"
         list_table:
           headings:
-            name: "імя"
-            actions: "дзеянні"
+            name: "Імя"
+            active_categories: "Актыўныя катэгорыі"
+            actions: "Дзеянні"
         view_template:
           close: "зачыніць"
-          edit: "рэдагаваць"
-          delete: "выдаляць"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
         new_template_form:
-          submit: "захаваць"
-          cancel: "адмяніць"
-          preview: "папярэдні прагляд"
+          submit: "Захаваць"
+          cancel: "Адмяніць"
+          name:
+            label: "Назва шаблона"
+          template:
+            label: "Шаблон"
+          preview: "Папярэдні прагляд"
         quick_insert_fields:
-          add_new_field: "дадаць"
+          add_new_field: "Дадаць"
+          checkbox: "Птушка"
+          input: "Кароткі адказ"
+          textarea: "Доўгі адказ"
+          dropdown: "Выпадаючы спіс"
+          upload: "Загрузіць файл"
         validations_modal:
           table_headers:
-            type: "тып"
+            type: "Тып"
             description: "Апісанне"
           validations:
             required:
-              key: "абавязковыя"
+              key: "абавязкова"
+        field_placeholders:
+          choices:
+            first: "Варыянт 1"
+            second: "Варыянт 2"
+            third: "Варыянт 3"
       impersonate:
         title: "ўвасобіцца"
         not_found: "Карыстача не ўдалося знайсці."
@@ -1798,6 +1849,7 @@ be:
         last_emailed: "Апошні емэйл"
         not_found: "Выбачайце, такога імя карыстальніка няма ў нашай сістэме."
         id_not_found: "Выбачайце, карыстальніка з такім нумарам няма ў нашай сістэме."
+        status: "Статус"
         show_emails: "Паказаць емейл"
         nav:
           new: "Новыя"
