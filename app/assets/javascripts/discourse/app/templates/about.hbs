@@ -18,12 +18,16 @@
                 "faq"
               }}</LinkTo></li>
         {{/if}}
-        <li class="nav-item-tos"><LinkTo @route="tos">{{i18n
-              "tos"
-            }}</LinkTo></li>
-        <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n
-              "privacy"
-            }}</LinkTo></li>
+        {{#if (gt this.siteSettings.tos_topic_id 0)}}
+          <li class="nav-item-tos"><LinkTo @route="tos">{{i18n
+                "tos"
+              }}</LinkTo></li>
+        {{/if}}
+        {{#if (gt this.siteSettings.privacy_topic_id 0)}}
+          <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n
+                "privacy"
+              }}</LinkTo></li>
+        {{/if}}
       </ul>
 
       <section class="about description">
