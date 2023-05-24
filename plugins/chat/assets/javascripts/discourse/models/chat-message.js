@@ -137,8 +137,12 @@ export default class ChatMessage {
   }
 
   cook() {
+    const site = getOwner(this).lookup("service:site");
+
     next(() => {
-      const site = getOwner(this).lookup("service:site");
+      if (this.isDestroyed || this.isDestroying) {
+        return;
+      }
 
       const markdownOptions = {
         featuresOverride:
