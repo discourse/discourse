@@ -1,5 +1,5 @@
 :root {
-  --d-sidebar-section-link-prefix-margin-right: 0.4rem;
+  --d-sidebar-section-link-prefix-margin-right: 0.5rem;
   --d-sidebar-section-link-prefix-width: 20px;
 }
 
@@ -35,15 +35,16 @@
     .sidebar-section-link-content-badge {
       @include ellipsis;
       padding-left: 0.5em;
+      padding-right: 0.1em; // avoids some overflow cropping
       text-align: right;
-      color: var(--primary-high);
+      color: var(--primary-700);
       font-size: var(--font-down-1);
       font-weight: normal;
       margin-left: auto;
     }
 
     .sidebar-section-link-suffix {
-      margin-left: 0.25rem;
+      margin-left: 1em;
       font-size: var(--font-down-4);
       color: var(--tertiary-medium);
     }
@@ -119,6 +120,7 @@
         background: rgba(var(--primary-rgb), 0.1);
         width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
         height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        font-size: var(--font-down-1);
       }
     }
 
@@ -145,8 +147,8 @@
       }
     }
     .prefix-span {
-      width: 0.9em;
-      height: 0.9em;
+      width: 0.87em;
+      height: 0.87em;
     }
   }
 

@@ -16,15 +16,23 @@
 
   .sidebar-section-header-wrapper {
     display: flex;
+    font-size: var(--d-sidebar-section-header-text-font-size);
 
     .discourse-no-touch & {
       &:hover {
         background: var(--d-sidebar-highlight-color);
+        .d-icon-globe {
+          color: var(--primary-medium);
+        }
       }
     }
 
     &:focus-within {
       background: var(--d-sidebar-highlight-color);
+    }
+
+    .sidebar-section-header-button {
+      font-size: var(--font-down-1);
     }
 
     .btn.dropdown-select-box-header,
@@ -86,9 +94,9 @@
   }
 
   .sidebar-section-header-text {
+    display: flex;
     line-height: normal;
     margin-right: 0.25em;
-    font-size: var(--d-sidebar-section-header-text-font-size);
     @include ellipsis;
   }
 
@@ -133,7 +141,7 @@
   }
 
   .sidebar-section-content {
-    padding-bottom: 1em;
+    padding-bottom: 1.25em;
     margin: 0;
     hr {
       margin: 0em 1.5em;
