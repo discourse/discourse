@@ -65,9 +65,12 @@ module Chat
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def target_message_exists(contract:, **)
+    def target_message_exists(contract:, guardian:, **)
       return true if contract.target_message_id.blank?
-      Chat::Message.exists?(id: contract.target_message_id)
+      target_message = Chat::Message.unscoped.find_by(id: contract.target_message_id)
+      return false if target_message.blank?
+      return true if !target_message.trashed?
+      target_message.user_id == guardian.user.id || guardian.is_staff?
     end
 
     def determine_threads_enabled(channel:, **)
