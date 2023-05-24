@@ -567,24 +567,20 @@ id:
   staff_category_description: "Kategori pribadi untuk diskusi staf. Topik hanya dapat dilihat oleh admin dan moderator."
   discourse_welcome_topic:
     title: "Selamat datang di %{site_title}! :wave:"
-    body: |
-      Kami sangat senang Anda bergabung dengan kami. %{site_description}
-
-      Berikut adalah beberapa hal yang dapat Anda lakukan untuk memulai:
-
-      :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Apa satu hal yang ingin Anda tanyakan?
-
-      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan postingan yang menarik, informatif, atau menghibur, gunakan angka :heart: untuk menunjukkan penghargaan atau dukungan Anda!
-
-      :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
-
-      > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di [#feedback](%{base_path}/c/site-feedback) atau [hubungi admin](%{base_path}/about).
+  admin_quick_start_title: "BACA SAYA TERLEBIH DAHULU: Panduan Mulai Cepat Admin"
   category:
     topic_prefix: "Tentang kategori %{category}"
+    replace_paragraph: "(Ganti paragraf pertama ini dengan deskripsi singkat tentang kategori baru Anda. Panduan ini akan muncul di area pemilihan kategori, jadi cobalah membuatnya di bawah 200 karakter.)"
+    post_template: "%{replace_paragraph}\n\nGunakan paragraf berikut untuk deskripsi yang lebih panjang, atau untuk menetapkan pedoman atau aturan kategori:\n\n- Mengapa orang harus menggunakan kategori ini? Untuk apa ini?\n\n- Bagaimana tepatnya ini berbeda dari kategori lain yang sudah kita miliki?\n\n- Topik apa yang harus ada dalam kategori ini secara umum?\n\n- Apakah kita membutuhkan kategori ini? Bisakah kita menggabungkan dengan kategori lain, atau subkategori?\n"
     errors:
+      not_found: "Kategori tidak ditemukan!"
+      uncategorized_parent: "Tidak dikategorikan tidak boleh memiliki kategori induk"
+      self_parent: "Induk subkategori tidak bisa dirinya sendiri"
+      depth: "Anda tidak dapat menyarangkan subkategori di bawah yang lain"
       invalid_email_in: "'%{email}' bukanlah alamat email yang valid."
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
+      description_incomplete: "Post deskripsi kategori harus memiliki setidaknya satu paragraf."
       slug_contains_non_ascii_chars: "berisi karakter non-ascii"
       is_already_in_use: "sedang digunakan"
       move_topic_to_category_disallowed: "Anda tidak dapat memindahkan topik ini ke kategori di mana Anda tidak memiliki izin untuk membuat topik baru."
@@ -609,6 +605,7 @@ id:
       other: "%{count} menit"
     seconds:
       other: "%{count} detik"
+    short_time: "beberapa detik"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
@@ -658,11 +655,19 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
+    no_token: 'Ups! Tautan yang Anda gunakan tidak berfungsi lagi. Anda dapat <a href="%{base_url}/login">Masuk</a> sekarang. Jika Anda lupa kata sandi, Anda dapat <a href="%{base_url}/password-reset">meminta tautan</a> untuk meresetnya.'
     title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
+  email_login:
+    invalid_token: 'Ups! Tautan yang Anda gunakan tidak berfungsi lagi. Anda dapat <a href="%{base_url}/login">Masuk</a> sekarang. Jika Anda lupa kata sandi, Anda dapat <a href="%{base_url}/password-reset">meminta tautan</a> untuk meresetnya.'
+    title: "Masuk melalui email"
   user_auth_tokens:
     browser:
+      chrome: "Google Chrome"
+      discoursehub: "Aplikasi DiscourseHub"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
       ie: "Internet Explorer"
       opera: "Opera"
       safari: "Safari"
@@ -716,19 +721,54 @@ id:
   post_action_types:
     off_topic:
       title: "Diluar topik"
+      short_description: "Tidak relevan dengan diskusi"
     spam:
       title: "Spam"
+      description: "Postingan ini adalah iklan, atau vandalisme. Tidak berguna atau relevan dengan topik saat ini."
+      short_description: "Ini adalah iklan atau vandalisme"
+      email_title: '"%{title}" ditandai sebagai spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Tidak pantas"
+      description: 'Post ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
+      short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
     notify_user:
       title: "Kirim @%{username} sebuah pesan"
+      description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
+      short_description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
+      email_title: 'Post Anda di "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Hal Lain"
+      description: "Post ini membutuhkan perhatian staf karena alasan lain yang tidak tercantum di atas."
+      short_description: "Membutuhkan perhatian staf karena alasan lain"
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Penandaan"
+      description: "Bookmark post ini"
+      short_description: "Bookmark post ini"
+    like:
+      title: "Suka"
+      description: "Sukai post ini"
+      short_description: "Sukai post ini"
+  draft:
+    sequence_conflict_error:
+      title: "kesalahan draf"
+      description: "Draf sedang diedit di jendela lain. Muat ulang halaman ini."
+  draft_backup:
+    pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
+    pm_body: "Topik berisi draf cadangan"
+  webauthn:
+    validation:
+      user_verification_error: "Verifikasi pengguna diperlukan."
+      unsupported_public_key_algorithm_error: "Algoritma kunci publik yang disediakan tidak didukung oleh server."
+      unsupported_attestation_format_error: "Format pengesahan tidak didukung oleh server."
+      credential_id_in_use_error: "ID kredensial yang diberikan sudah digunakan."
+      public_key_error: "Verifikasi kunci publik untuk kredensial gagal."
+      ownership_error: "Kunci keamanan tidak dimiliki oleh pengguna."
+      not_found_error: "Kunci keamanan dengan ID kredensial yang diberikan tidak dapat ditemukan."
+      unknown_cose_algorithm_error: "Algoritma yang digunakan untuk kunci keamanan tidak dikenali."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -737,10 +777,14 @@ id:
       short_description: "Ini adalah iklan"
     inappropriate:
       title: "Tidak pantas"
+      description: 'Topik ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
       long_form: "menandai sebagai tidak pantas"
+      short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
     notify_moderators:
       title: "Hal Lain"
+      description: 'Topik ini memerlukan perhatian staf umum berdasarkan <a href="%{base_path}/guidelines">pedoman</a>, <a href="%{tos_url}">TOS</a>, atau karena alasan lain yang tidak tercantum di atas.'
       long_form: "menandai sebagai membutuhkan perhatian moderator"
+      short_description: "Membutuhkan perhatian staf karena alasan lain"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
       email_body: "%{link}\n\n%{message}"
   archetypes:
@@ -767,24 +811,53 @@ id:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{username}
       confirm_button: Selesai Login
+    scopes:
+      one_time_password: "Membuat token masuk satu kali"
+      bookmarks_calendar: "Baca pengingat bookmark"
+      user_status: "Baca dan perbarui status pengguna"
+    invalid_public_key: "Maaf, kunci publik tidak valid."
+    invalid_auth_redirect: "Maaf, host auth_redirect ini tidak diizinkan."
+    invalid_token: "Token tidak ada, tidak valid, atau kedaluwarsa."
+  flags:
+    errors:
+      already_handled: "Penanda sudah ditangani"
   reports:
     default:
       labels:
         count: Menghitung
+        percent: Persen
         day: Hari
     post_edits:
+      title: "Pengeditan Post"
       labels:
         edited_at: Tanggal
         post: Postingan
+        editor: Editor
+        author: Pengarang
         edit_reason: Alasan
+      description: "Jumlah edit post baru."
     user_flagging_ratio:
+      title: "Rasio Penandaan Pengguna"
       labels:
         user: Pengguna
+        agreed_flags: Penanda yang disepakati
+        disagreed_flags: Penanda yang tidak disepakati
+        ignored_flags: Penanda yang diabaikan
         score: Skor
+      description: "Daftar pengguna yang diurutkan berdasarkan rasio respons staf terhadap penanda mereka (tidak setuju hingga setuju)."
     moderators_activity:
+      title: "Aktivitas Moderator"
       labels:
         moderator: Moderator
+        flag_count: Penanda ditinjau
+        time_read: Pembacaan waktu
+        topic_count: Topik dibuat
+        post_count: Post dibuat
+        pm_count: PM dibuat
+        revision_count: Revisi
+      description: Daftar aktivitas moderator termasuk penanda yang ditinjau, waktu pembacaan, topik yang dibuat, post yang dibuat, pesan pribadi yang dibuat, dan revisi.
     flags_status:
+      title: "Status Penanda"
       labels:
         flag: Tipe
     visits:
@@ -991,7 +1064,6 @@ id:
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
     create_post_for_category_and_tag_changes: "Buat post tindakan kecil saat kategori atau tag topik berubah"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
-    enable_new_notifications_menu: "Mengaktifkan menu notifikasi baru. Menonaktifkan setelan ini sudah usang. Menu notifikasi baru selalu digunakan untuk pilihan 'navigation menu' yang tidak usang. <a href='https://meta.discourse.org/t/260358'>Pelajari lebih lanjut</a>"
     experimental_new_new_view_groups: 'EKSPERIMENTAL: Aktifkan daftar topik baru yang menggabungkan topik yang belum dibaca dan topik baru dan buat tautan "Everything" di tautan sidebar ke sana.'
     enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
     experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"

@@ -1787,9 +1787,6 @@ de:
       suggested_topics:
         title: "Lies weiter!"
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
-      welcome_topic:
-        title: "Das Willkommensthema bearbeiten"
-        content: "Hilf neuen Mitgliedern, sich wie zu Hause zu fühlen, indem du dieses Thema an die Bedürfnisse deiner Gemeinde anpasst."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -5642,6 +5639,9 @@ de:
             label: "Emoji hinzufügen"
         title: "Einstellungen"
         no_results: "Keine Ergebnisse gefunden."
+        more_site_setting_results:
+          one: "Es gibt mehr als %{count} Ergebnis. Bitte verfeinere deine Suche oder wähle eine Kategorie."
+          other: "Es gibt mehr als %{count} Ergebnisse. Bitte verfeinere deine Suche oder wähle eine Kategorie."
         clear_filter: "Filter zurücksetzen"
         add_url: "URL hinzufügen"
         add_host: "Host hinzufügen"

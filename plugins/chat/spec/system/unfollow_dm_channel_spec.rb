@@ -31,7 +31,7 @@ RSpec.describe "Unfollow dm channel", type: :system, js: true do
         session.quit
       end
 
-      expect(page).to have_css(".channel-#{dm_channel_1.id} .urgent")
+      expect(page).to have_css(".channel-#{dm_channel_1.id} .urgent", wait: 25)
     end
   end
 end

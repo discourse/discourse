@@ -1,6 +1,21 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 
+/**
+ * Checks if a given string is a valid color hex code.
+ *
+ * @param {String|undefined} input Input string to check if it is a valid color hex code. Can be in the form of "FFFFFF" or "#FFFFFF" or "FFF" or "#FFF".
+ * @returns {String|undefined} Returns the matching color hex code without the leading `#` if it is valid, otherwise returns undefined. Example: "FFFFFF" or "FFF".
+ */
+export function isHex(input) {
+  const match = input?.match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
+
+  if (match) {
+    return match[1];
+  } else {
+    return;
+  }
+}
 export default class SectionLink extends Component {
   @service currentUser;
 
@@ -53,12 +68,12 @@ export default class SectionLink extends Component {
   }
 
   get prefixColor() {
-    const color = this.args.prefixColor;
+    const hexCode = isHex(this.args.prefixColor);
 
-    if (!color || !color.match(/^\w{6}$/)) {
-      return "";
+    if (hexCode) {
+      return `#${hexCode}`;
+    } else {
+      return;
     }
-
-    return "#" + color;
   }
 }

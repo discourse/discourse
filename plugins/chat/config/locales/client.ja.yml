@@ -441,3 +441,7 @@ ja:
         chat_notifications: "チャット通知"
         chat_notifications_with_unread:
           other: "チャット通知 - %{count} 件の未読の通知"
+    styleguide:
+      sections:
+        chat:
+          title: チャット

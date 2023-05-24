@@ -133,3 +133,7 @@ id:
           fields:
             message:
               label: pesan
+    styleguide:
+      sections:
+        chat:
+          title: Obrolan

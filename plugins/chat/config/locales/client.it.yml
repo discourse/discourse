@@ -443,3 +443,7 @@ it:
         chat_notifications_with_unread:
           one: "Notifiche chat - %{count} notifica non letta"
           other: "Notifiche chat - %{count} notifiche non lette"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

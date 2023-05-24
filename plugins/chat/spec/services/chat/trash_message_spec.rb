@@ -66,6 +66,7 @@ RSpec.describe Chat::TrashMessage do
               "type" => "delete",
               "deleted_id" => message.id,
               "deleted_at" => message.reload.deleted_at.iso8601(3),
+              "latest_not_deleted_message_id" => nil,
             },
           )
         end

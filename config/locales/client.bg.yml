@@ -1044,6 +1044,7 @@ bg:
           warning: "Наистина ли искате да изчистите представената си тема?"
       use_current_timezone: "Използвайте текущата часова зона"
       profile_hidden: "Публичният профил на този потребител е скрит."
+      inactive_user: "Този потребител вече не е активен."
       expand_profile: "Разшири"
       sr_expand_profile: "Разгънете подробностите за профила"
       collapse_profile: "Намали"
@@ -1191,6 +1192,25 @@ bg:
       save_to_change_theme: 'Темата ще бъде актуализирана, след като кликнете върху "%{save_text}“'
       home: "Начална страница по подразбиране"
       staged: "Поставен"
+      staff_counters:
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> полезен сигнал'
+          other: '<span class="%{className}">%{count}</span> полезни сигнала'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> публикация със сигнал'
+          other: '<span class="%{className}">%{count}</span> публикации със сигнал'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> изтрита публикация'
+          other: '<span class="%{className}">%{count}</span> изтрити публикации'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> спиране'
+          other: '<span class="%{className}">%{count}</span> спирания'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> предупреждение'
+          other: '<span class="%{className}">%{count}</span> предупреждения'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> отхвърлена публикация'
+          other: '<span class="%{className}">%{count}</span> отхвърлени публикации'
       messages:
         all: "всички пощенски кутии"
         inbox: "Входяща кутия"
@@ -1297,6 +1317,9 @@ bg:
         title: "Двуфакторни резервни кодове"
         regenerate: "Регенерирай"
         disable: "Деактивиране"
+        enable: "Създаване на резервни кодове"
+        enable_long: "Добавяне на резервни кодове"
+        not_enabled: "Все още не сте създали никакви резервни кодове."
         manage:
           one: "Остава ви <strong>%{count}</strong> резервен код."
           other: "Остават ви <strong>%{count}</strong> резервни кода."
@@ -1383,6 +1406,7 @@ bg:
         success: "Изпратихме съобщение на този адрес. Моля, следвайте инструкциите за потвърждаване."
         success_via_admin: "Изпратихме имейл на този адрес. Потребителят ще трябва да следва инструкциите за потвърждение в имейла."
         success_staff: "Изпратихме съобщение на този адрес. Моля, следвайте инструкциите за потвърждаване."
+        back_to_preferences: "Обратно към предпочитанията"
       change_avatar:
         title: "Сменете аватара на вашия профил "
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, въз основа на"
@@ -1714,6 +1738,7 @@ bg:
         none: "(никой)"
         instructions: "появява се след потребителското ви име"
       flair:
+        title: "Усет"
         none: "(никой)"
         instructions: "икона, показана до снимката на профила ви"
       status:
@@ -1731,6 +1756,28 @@ bg:
         the_topic: "темата"
     user_status:
       save: "Запази"
+      set_custom_status: "Задаване на персонализиран статус"
+      what_are_you_doing: "Какво правиш?"
+      pause_notifications: "Пауза на известията"
+      remove_status: "Премахване на статуса"
+    user_tips:
+      primary: "Схванах го!"
+      secondary: "не ми показвай тези съвети"
+      first_notification:
+        title: "Вашето първо известие!"
+        content: "Известията се използват, за да ви информират какво се случва в общността."
+      topic_timeline:
+        title: "Хронология на темата"
+        content: "Превъртете бързо през публикация, като използвате хронологията на темата."
+      post_menu:
+        title: "Меню за публикации"
+        content: "Вижте как още можете да взаимодействате с публикацията, като кликнете върху трите точки!"
+      topic_notification_levels:
+        title: "Сега следите тази тема"
+        content: "Потърсете тази камбана, за да коригирате предпочитанията си за известяване за конкретни теми или цели категории."
+      suggested_topics:
+        title: "Продължете да четете!"
+        content: "Ето някои теми, които смятаме, че бихте искали също да прочетете."
     loading: "Зарежда се..."
     errors:
       prev_page: "докато се зареждаше"
@@ -1755,6 +1802,7 @@ bg:
       close: "затвори"
       dismiss_error: "Отхвърли грешката"
     close: "Затвори"
+    assets_changed_confirm: "Този сайт току-що получи надстройка на софтуера. Вземете най-новата версия сега?"
     logout: "Вие бяхте отписан."
     refresh: "Опресни"
     home: "Начало"
@@ -1762,7 +1810,47 @@ bg:
       enabled: "Сайта е в режим само за четене. Моля продължете да разглеждате, но отгавяне, харесване и всичко останали опции са спряни за сега."
       login_disabled: "Влизането е изключено, докато страницата е в режим само за четене."
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
+    staff_writes_only_mode:
+      enabled: "Този сайт е в режим само за персонал. Моля, продължете да сърфирате, но отговарянето, харесванията и други действия са ограничени само до членове на персонала."
+    too_few_topics_and_posts_notice_MF: |
+      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentTopics, plural,
+          one {е <strong>#</strong> тема}
+        other {са <strong>#</strong> теми}
+      } и { currentPosts, plural,
+          one {<strong>#</strong> публикация}
+        other {<strong>#</strong> публикации}
+      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredTopics, plural,
+          one {<strong>#</strong> тема}
+        other {<strong>#</strong> теми}
+      } и { requiredPosts, plural,
+          one {<strong>#</strong> публикация}
+        other {<strong>#</strong> публикации}
+      }. Само служителите могат да видят това съобщение.
+    too_few_topics_notice_MF: |
+      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentTopics, plural,
+          one {е <strong>#</strong> тема}
+        other {са <strong>#</strong> теми}
+      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredTopics, plural,
+          one {<strong>#</strong> тема}
+        other {<strong>#</strong> теми}
+      }. Само служителите могат да видят това съобщение.
+    too_few_posts_notice_MF: |
+      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentPosts, plural,
+          one {е <strong>#</strong> публикация}
+        other {са <strong>#</strong> публикации}
+      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredPosts, plural,
+          one {<strong>#</strong> публикация}
+        other {<strong>#</strong> публикации}
+      }. Само служителите могат да видят това съобщение.
     logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
+            one {# грешка/час}
+          other {# грешки/час}
+        }</a> достигнаха ограничението в настройката на сайта от {limit, plural,
+            one {# грешка/час}
+          other {# грешки/час}
+        }.
       reached_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> достигна ограничението за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
       exceeded_hour_MF: |
@@ -1784,9 +1872,11 @@ bg:
       other: отговори
     signup_cta:
       sign_up: "Регистрирай се"
+      hide_session: "Може би по-късно"
       hide_forever: "не благодаря"
       hidden_for_session: "Добре, ще те попитаме утре. Винаги можете да използвате „Вход“ и за създаване на акаунт."
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
+      value_prop: "Уморихте ли се да превъртате едни и същи публикации? Когато създадете акаунт, винаги ще се връщате там, до където сте стигнали. С акаунт можете също да получавате известия за нови отговори, да запазвате отметки и да използвате харесвания, за да благодарите на другите. Всички можем да работим заедно, за да направим тази общност страхотна. :heart:"
     summary:
       enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
       description_time_MF: |
@@ -1810,6 +1900,7 @@ bg:
       remove_allowed_user: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       remove_allowed_group: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       leave: "Напусни"
+      remove_group: "Премахване на група"
       remove_user: "Премахни потребител"
     email: "Имейл"
     username: "Потребителско име"
@@ -1829,6 +1920,7 @@ bg:
       title: "Възстановяване на парола"
       action: "Забравих си паролата"
       invite: "Въведете вашето потребителско име или имейл и ние ще Ви изпратим имейл за смяна на паролата."
+      invite_no_username: "Въведете имейл адреса си и ние ще ви изпратим имейл за възстановяване на паролата."
       reset: "Смяна на паролата"
       complete_username: "Ако профилът съвпада с потребителското име <b>%{username}</b>, трябва да получите имейл с инструкции, как да си смените паролата. "
       complete_email: "Ако профилът съвпада с <b>%{email}</b>, трябва да получите имейл с инструкции, как да си смените паролата. "
@@ -1860,12 +1952,16 @@ bg:
       username: "Потребител"
       password: "Парола"
       show_password: "Покажи"
+      hide_password: "Скрий"
+      show_password_title: "Показване на паролата"
+      hide_password_title: "Скриване на паролата"
       second_factor_title: "Двуфакторна автентификация"
       second_factor_description: "Моля, въведете кода за удостоверяване от вашето приложение:"
       second_factor_backup: "Влезте с помощта на резервен код"
       second_factor_backup_title: "Двуфакторно резервно копие"
       second_factor_backup_description: "Моля, въведете един от вашите резервни кодове:"
       second_factor: "Влезте с помощта на приложението Authenticator"
+      security_key_description: "Когато сте подготвили своя физически ключ за сигурност или съвместимо мобилно устройство, натиснете бутона Удостоверяване с ключ за сигурност по-долу."
       security_key_alternative: "Опитайте друг начин"
       security_key_authenticate: "Удостоверяване с ключ за сигурност"
       security_key_not_allowed_error: "Процесът на удостоверяване на ключа за сигурност или изтече, или беше анулиран."
@@ -1880,6 +1976,7 @@ bg:
       blank_username_or_password: "Моля, въведете Вашия имейл или потребителско име и парола."
       reset_password: "Смяна на парола"
       logging_in: "Влизане..."
+      previous_sign_up: "Вече имате акаунт?"
       or: "Или"
       authenticating: "Оторизация..."
       awaiting_activation: "Вашият акаунт изчаква активация, използвайте линка за забравена парола, за да изпратите друг имейл за активация."
@@ -1901,19 +1998,32 @@ bg:
       not_approved: "Вашият профил все още не е одобрен. Ще бъдете уведомени с имейл, когато е възможно влизането Ви. "
       google_oauth2:
         name: "Google"
+        title: "Влезте с Google"
+        sr_title: "Влезте с Google"
       twitter:
         name: "Twitter"
+        title: "Влезте с Twitter"
+        sr_title: "Влезте с Twitter"
       instagram:
         name: "Instagram"
+        title: "Влезте с Instagram"
+        sr_title: "Влезте с Instagram"
       facebook:
         name: "Facebook"
+        title: "Влезте с Facebook"
+        sr_title: "Влезте с Facebook"
       github:
         name: "GitHub"
+        title: "Влезте с GitHub"
+        sr_title: "Влезте с GitHub"
       discord:
         name: "Discord"
+        title: "Влезте с Discord"
+        sr_title: "Влезте с Discord"
       second_factor_toggle:
         totp: "Вместо това използвайте приложение за удостоверяване"
         backup_code: "Вместо това използвайте резервен код"
+        security_key: "Вместо това използвайте ключ за сигурност"
     invites:
       accept_title: "Покана"
       emoji: "емоджи за плик"
@@ -1925,6 +2035,7 @@ bg:
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
       password_label: "Парола"
+      existing_user_can_redeem: "Осребрете своята покана за тема или група."
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -1938,9 +2049,11 @@ bg:
       categories_only: "Само категории"
       categories_with_featured_topics: "Категории с избрани теми"
       categories_and_latest_topics: "Категории и най-новите теми"
+      categories_and_latest_topics_created_date: "Категории и най-нови теми (сортиране по дата на създаване на тема)"
       categories_and_top_topics: "Категории и топ теми"
       categories_boxes: "Кутии с подкатегории"
       categories_boxes_with_topics: "Кутии с избрани теми"
+      subcategories_with_featured_topics: "Подкатегории с избрани теми"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2006,6 +2119,10 @@ bg:
     shared_drafts:
       title: "Споделени чернови"
       notice: "Тази тема е видима само за тези, които могат да публикуват споделени чернови."
+      destination_category: "Категория дестинация"
+      publish: "Публикуване на споделена чернова"
+      confirm_publish: "Сигурни ли сте, че искате да публикувате тази чернова?"
+      publishing: "Темата се публикува..."
     composer:
       emoji: "Емошънка :)"
       more_emoji: "още..."
@@ -2020,12 +2137,29 @@ bg:
       similar_topics: "Вашата тема е подобна на..."
       drafts_offline: "чернови офлайн"
       edit_conflict: "редактиране на конфликта"
+      esc: "esc"
+      esc_label: "Щракнете или натиснете Esc, за да отхвърлите"
+      ok_proceed: "Добре, продължете"
       group_mentioned_limit:
         one: "<b>Внимание!</b> Споменахте <a href='%{group_link}'>%{group}</a>, но тази група има повече членове от ограничението за споменаване, конфигурирано от администратора, от %{count} потребители. Никой няма да бъде уведомен."
         other: "<b>Внимание!</b> Споменахте <a href='%{group_link}'>%{group}</a>, но тази група има повече членове от ограничението за споменаване, конфигурирано от администратора, от %{count} потребители. Никой няма да бъде уведомен."
       group_mentioned:
         one: "Споменавайки %{group}, вие ще уведомите <a href='%{group_link}'>%{count} човек</a> – сигурни ли сте?"
         other: "Споменавайки %{group}, вие ще уведомите <a href='%{group_link}'>%{count} души</a> – сигурни ли сте?"
+      cannot_see_mention:
+        category: "Споменахте @%{username} , но те няма да бъдат уведомени, защото нямат достъп до тази категория. Ще трябва да ги добавите към група, която има достъп до тази категория."
+        private: "Споменахте @%{username} , но те няма да бъдат уведомени, защото не могат да видят това лично съобщение. Ще трябва да ги поканите в това лично съобщение."
+        muted_topic: "Споменахте @%{username} , но те няма да бъдат уведомени, защото са заглушили тази тема."
+        not_allowed: "Споменахте @%{username} , но те няма да бъдат уведомени, защото не са поканени в тази тема."
+      cannot_see_group_mention:
+        not_mentionable: "Не можете да споменавате група @%{group}."
+        some_not_allowed:
+          one: "Споменахте @%{group} , но само %{count} член ще бъде уведомен, защото другите членове не могат да видят това лично съобщение. Ще трябва да ги поканите на това лично съобщение."
+          other: "Споменахте @%{group} , но само %{count} членове ще бъдат уведомени, защото останалите членове не могат да видят това лично съобщение. Ще трябва да ги поканите на това лично съобщение."
+        not_allowed: "Споменахте @%{group} , но никой от неговите членове няма да бъде уведомен, защото не могат да видят това лично съобщение. Ще трябва да ги поканите на това лично съобщение."
+      here_mention:
+        one: "Споменавайки <b>@%{here}</b>, вие сте на път да уведомите %{count} потребител – сигурни ли сте?"
+        other: "Споменавайки <b>@%{here}</b>, вие сте на път да уведомите %{count} потребители – сигурни ли сте?"
       duplicate_link: "Изглежда, че връзката ви към <b>%{domain}</b> вече е публикувана в темата от <b>@%{username}</b> от <a href='%{post_url}'>отговор на %{ago}</a> – сигурни ли сте, че искате да я публикувате отново?"
       reference_topic_title: "RE: %{title}"
       error:
@@ -2128,15 +2262,44 @@ bg:
       empty: "Няма намерени нотификации."
       reviewable_items: "точки, изискващи преглед"
       watching_first_post_label: "Нова тема"
+      invitee_accepted: "<span>%{username}</span> прие поканата ви"
+      invitee_accepted_your_invitation: "прие поканата ви"
+      moved_post: "<span>%{username}</span> преместен %{description}"
+      linked: "<span>%{username}</span> %{description}"
+      granted_badge: "Спечелена \"%{description}\""
+      topic_reminder: "<span>%{username}</span> %{description}"
+      watching_first_post: "<span>Нова тема</span> %{description}"
+      membership_request_accepted: "Прието членство в '%{group_name}'"
+      membership_request_consolidated:
+        one: "%{count} отворена заявка за членство в „%{group_name}“"
+        other: "%{count} отворени заявки за членство в '%{group_name}'"
+      reaction: "<span>%{username}</span> %{description}"
+      reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      votes_released: "%{description} - завършено"
+      new_features: "Налични са нови функции!"
       dismiss_confirmation:
+        body:
+          default:
+            one: "Сигурни ли сте? Имате %{count} важно известие."
+            other: "Сигурни ли сте? Имате %{count} важни известия."
+          bookmarks:
+            one: "Сигурни ли си? Имате %{count} непрочетено напомняне за отметки."
+            other: "Сигурни ли сте? Имате %{count} непрочетени напомняния за отметки."
+          messages:
+            one: "Сигурен ли си? Имате %{count} непрочетено лично съобщение."
+            other: "Сигурни ли си? Имате %{count} непрочетени лични съобщения."
         dismiss: "Отмени"
         cancel: "Отмени"
+      group_message_summary:
+        one: "%{count} съобщение във входящата ви поща %{group_name}"
+        other: "%{count} съобщения във входящата ви поща %{group_name}"
       popup:
         mentioned: '%{username} ви спомена в "%{topic}" - %{site_title}'
         group_mentioned: '%{username} ви спомена в "%{topic}" - %{site_title}'
         quoted: '%{username} ви цитира в "%{topic}" - %{site_title}'
         replied: '%{username} ви отговори в "%{topic}" - %{site_title}'
         posted: '%{username} публикува в "%{topic}" - %{site_title}'
+        private_message: '%{username} ви изпрати лично съобщение в "%{topic}" - %{site_title}'
         linked: '%{username} прикачи вашата публикация от "%{topic}" - %{site_title}'
         confirm_title: "Включени известявания - %{site_title}"
         confirm_body: "Успех! Известяването е включено."

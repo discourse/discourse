@@ -623,18 +623,6 @@ de:
   staff_category_description: "Private Kategorie für Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
   discourse_welcome_topic:
     title: "Willkommen bei %{site_title}! :wave:"
-    body: |
-      Wir freuen uns, dass du dich uns angeschlossen hast. %{site_description}
-
-      Hier sind einige Dinge, die du tun kannst, um loszulegen:
-
-      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einträgst. Worüber würdest du gerne gefragt werden?
-
-      :open_book: **Lerne die Gemeinschaft** kennen, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze die :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
-
-      :handshake: **Beitrage** bei, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
-
-      > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) oder [contact the admins](%{base_path}/about) fragen.
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -2159,7 +2147,6 @@ de:
     navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
     default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
     default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
-    enable_new_notifications_menu: "Aktiviert das neue Benachrichtigungsmenü. Das Deaktivieren dieser Einstellung ist veraltet. Das neue Benachrichtigungsmenü wird immer für Optionen im Navigationsmenü verwendet, die nicht aus den älteren Versionen stammen. <a href='https://meta.discourse.org/t/260358'>Erfahren Sie mehr</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: 'EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf.'
     enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
