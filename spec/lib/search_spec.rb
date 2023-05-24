@@ -1991,7 +1991,7 @@ RSpec.describe Search do
       expect(Search.execute("with:images").posts.map(&:id)).to contain_exactly(post_uploaded.id)
     end
 
-    it "can find by latest and oldest" do
+    it "can find by latest" do
       topic1 = Fabricate(:topic, title: "I do not like that Sam I am")
       post1 = Fabricate(:post, topic: topic1, created_at: 10.minutes.ago)
       post2 = Fabricate(:post, raw: "that Sam I am, that Sam I am", created_at: 5.minutes.ago)
