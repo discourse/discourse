@@ -27,6 +27,7 @@ export default class Chat extends Service {
   @service chatNotificationManager;
   @service chatSubscriptionsManager;
   @service chatStateManager;
+  @service chatDraftsManager;
   @service presence;
   @service router;
   @service site;
@@ -167,19 +168,18 @@ export default class Chat extends Service {
     [...channels.public_channels, ...channels.direct_message_channels].forEach(
       (channelObject) => {
         const channel = this.chatChannelsManager.store(channelObject);
+        const storedDraft = (this.currentUser?.chat_drafts || []).find(
+          (draft) => draft.channel_id === channel.id
+        );
 
-        if (this.currentUser.chat_drafts) {
-          const storedDraft = this.currentUser.chat_drafts.find(
-            (draft) => draft.channel_id === channel.id
-          );
-
-          channel.draft = ChatMessage.createDraftMessage(
-            channel,
-            Object.assign(
-              {
-                user: this.currentUser,
-              },
-              storedDraft ? JSON.parse(storedDraft.data) : {}
+        if (storedDraft) {
+          this.chatDraftsManager.add(
+            ChatMessage.createDraftMessage(
+              channel,
+              Object.assign(
+                { user: this.currentUser },
+                JSON.parse(storedDraft.data)
+              )
             )
           );
         }

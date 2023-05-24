@@ -247,6 +247,12 @@ export default class ChatMessage {
       };
     }
 
+    if (this.editing) {
+      data.editing = true;
+      data.id = this.id;
+      data.excerpt = this.excerpt;
+    }
+
     return JSON.stringify(data);
   }
 

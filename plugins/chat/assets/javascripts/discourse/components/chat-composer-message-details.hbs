@@ -1,4 +1,8 @@
-<div class="chat-composer-message-details" data-id={{@message.id}}>
+<div
+  class="chat-composer-message-details"
+  data-id={{@message.id}}
+  data-action={{if @message.editing "edit" "reply"}}
+>
   <div class="chat-reply">
     {{d-icon (if @message.editing "pencil-alt" "reply")}}
     <ChatUserAvatar @user={{@message.user}} />

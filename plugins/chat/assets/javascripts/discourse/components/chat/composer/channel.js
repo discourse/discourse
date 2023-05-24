@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
+  @service chatDraftsManager;
 
   context = "channel";
 
@@ -22,6 +23,8 @@ export default class ChatComposerChannel extends ChatComposer {
     if (this.args.channel?.isDraft) {
       return;
     }
+
+    this.chatDraftsManager.add(this.currentMessage);
 
     this._persistHandler = discourseDebounce(
       this,
