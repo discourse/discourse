@@ -6,8 +6,9 @@
   {{/if}}
 
   {{component
-    (concat "styleguide/" this.section.templateName)
+    this.section.componentName
     dummy=this.dummy
     dummyAction=this.dummyAction
+    siteSettings=this.siteSettings
   }}
 </StyleguideSection>

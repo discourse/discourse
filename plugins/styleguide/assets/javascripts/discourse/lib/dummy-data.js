@@ -98,7 +98,7 @@ export function createData(store) {
           posts_count: ((topicId * 1234) % 100) + 1,
           views: ((topicId * 123) % 1000) + 1,
           like_count: topicId % 3,
-          created_at: `2017-03-${topicId}`,
+          created_at: `2017-03-${topicId % 30}T12:30:00.000Z`,
           visible: true,
           posters: [
             { extras: "latest", user },
@@ -179,6 +179,7 @@ export function createData(store) {
     topicLinkLength: 5,
     topicPostsCount: 4,
     participants: [createUser(), createUser(), createUser(), createUser()],
+    post_number: 1,
     topicLinks: [
       {
         title: "Evil Trout",
@@ -277,6 +278,8 @@ export function createData(store) {
     settings: "bold|italic|strike|underline",
 
     colors: "f49|c89|564897",
+
+    charCounterContent: "",
   };
 
   return _data;
