@@ -13,11 +13,6 @@ class GroupLookup
   private
 
   def group_names
-    @group_names ||=
-      begin
-        names = {}
-        Group.where(id: @group_ids).select(:id, :name).each { |g| names[g.id] = g.name }
-        names
-      end
+    @group_names ||= Group.where(id: @group_ids).pluck(:id, :name).to_h
   end
 end
