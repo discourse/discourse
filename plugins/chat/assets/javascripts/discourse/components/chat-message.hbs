@@ -22,6 +22,7 @@
       (if this.pane.selectingMessages "selecting-messages")
       (if @message.highlighted "highlighted")
       (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
+      (if @message.staged "is-staged" "is-persisted")
     }}
     data-id={{@message.id}}
     data-thread-id={{@message.thread.id}}
@@ -65,7 +66,6 @@
           {{did-update this.initMentionedUsers @message.version}}
           class={{concat-class
             "chat-message"
-            (if @message.staged "chat-message-staged" "chat-message-persisted")
             (if @message.deletedAt "deleted")
             (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
             (if this.showThreadIndicator "is-threaded")
