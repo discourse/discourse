@@ -2009,6 +2009,7 @@ RSpec.describe Search do
       topic2 = Fabricate(:topic, title: "I do not like that Sam I am 2", created_at: 5.minutes.ago)
       post2 = Fabricate(:post, topic: topic2, created_at: 5.minutes.ago)
 
+      expect(Search.execute("sam").posts.map(&:id)).to eq([post1.id, post2.id])
       expect(Search.execute("sam ORDER:oldest").posts.map(&:id)).to eq([post2.id, post1.id])
     end
 
