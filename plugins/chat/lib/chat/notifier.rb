@@ -235,7 +235,7 @@ module Chat
     end
 
     def notify_creator_of_inaccessible_mentions(to_notify)
-      inaccessible = to_notify.extract!(:unreachable, :welcome_to_join, :too_many_members)
+      inaccessible = to_notify.extract!(:unreachable, :welcome_to_join)
       groups_with_disabled_mentions = @parsed_mentions.groups_with_disabled_mentions.to_a
       groups_with_too_many_members = @parsed_mentions.groups_with_too_many_members.to_a
       if inaccessible.values.all?(&:blank?) && groups_with_disabled_mentions.empty? &&
