@@ -776,7 +776,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
           ),
           "wrench icon is displayed for the section link's prefix badge"
         );
@@ -808,14 +808,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
           ),
           "wrench icon is displayed for the section link's prefix icon"
         );
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
           ).style.color,
           "rgb(255, 0, 0)",
           "section link's prefix icon has the right color"

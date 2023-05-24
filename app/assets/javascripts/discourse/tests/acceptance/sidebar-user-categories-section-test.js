@@ -421,7 +421,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     await click(
-      `.sidebar-section-link-wrapper[data-category-id="${category1.id}"]`
+      `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
     );
 
     assert.strictEqual(
