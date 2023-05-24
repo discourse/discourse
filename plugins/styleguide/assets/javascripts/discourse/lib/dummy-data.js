@@ -157,9 +157,9 @@ export function createData(store) {
     id: 1234,
     cooked,
     created_at: moment().subtract(3, "days"),
-    user_id: user.get("id"),
-    username: user.get("username"),
-    avatar_template: user.get("avatar_template"),
+    user_id: user.id,
+    username: user.username,
+    avatar_template: user.avatar_template,
     showLike: true,
     canToggleLike: true,
     canFlag: true,
@@ -168,10 +168,10 @@ export function createData(store) {
     canBookmark: true,
     canManage: true,
     canDelete: true,
-    createdByUsername: user.get("username"),
-    createdByAvatarTemplate: user.get("avatar_template"),
-    lastPostUsername: user.get("username"),
-    lastPostAvatarTemplate: user.get("avatar_template"),
+    createdByUsername: user.username,
+    createdByAvatarTemplate: user.avatar_template,
+    lastPostUsername: user.username,
+    lastPostAvatarTemplate: user.avatar_template,
     topicReplyCount: 123,
     topicViews: 3456,
     participantCount: 10,
@@ -194,6 +194,11 @@ export function createData(store) {
       },
     ],
   };
+
+  const postModel = store.createRecord("post", {
+    ...transformedPost,
+    topic: createTopic(),
+  });
 
   _data = {
     options: [
@@ -246,6 +251,7 @@ export function createData(store) {
     soon: moment().add(2, "days"),
 
     transformedPost,
+    postModel,
 
     user,
 
