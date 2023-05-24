@@ -39,12 +39,10 @@ export default class ChatThreadsManager {
   async index(channelId) {
     return this.#loadIndex(channelId).then((result) => {
       const threads = result.threads.map((thread) => {
-        const storedThread = this.chat.activeChannel.threadsManager.store(
+        return this.chat.activeChannel.threadsManager.store(
           this.chat.activeChannel,
           thread
         );
-
-        return storedThread;
       });
 
       this.chatTrackingStateManager.setupChannelThreadState(
