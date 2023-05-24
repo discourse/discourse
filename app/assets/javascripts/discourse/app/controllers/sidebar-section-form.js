@@ -10,7 +10,11 @@ import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 
-const FULL_RELOAD_LINKS_REGEX = [/^\/my\/[a-z_\-\/]+$/, /^\/safe-mode$/];
+const FULL_RELOAD_LINKS_REGEX = [
+  /^\/my\/[a-z_\-\/]+$/,
+  /^\/pub\/[a-z_\-\/]+$/,
+  /^\/safe-mode$/,
+];
 
 class Section {
   @tracked title;

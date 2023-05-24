@@ -39,6 +39,10 @@ export function success() {
   return response({ success: true });
 }
 
+export function OK(resp = {}, headers = {}) {
+  return [200, headers, resp];
+}
+
 const loggedIn = () => !!User.current();
 const helpers = { response, success, parsePostData };
 

@@ -33,4 +33,8 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
   handleThreadOriginalMessageUpdate() {
     return;
   }
+
+  _afterDeleteMessage() {
+    // TODO (martin) Handle this once we have lastReadMessageId for thread memberships.
+  }
 }

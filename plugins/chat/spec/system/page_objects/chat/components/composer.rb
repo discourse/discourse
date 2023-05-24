@@ -27,6 +27,10 @@ module PageObjects
         def edit_last_message_shortcut
           input.send_keys(%i[arrow_up])
         end
+
+        def open_emoji_picker
+          find(context).find(SELECTOR).find(".chat-composer-button__btn.emoji").click
+        end
       end
     end
   end

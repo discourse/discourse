@@ -52,6 +52,23 @@ module Chat
       original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
     end
 
+    def latest_not_deleted_message_id(anchor_message_id: nil)
+      DB.query_single(
+        <<~SQL,
+        SELECT id FROM chat_messages
+        WHERE chat_channel_id = :channel_id
+        AND thread_id = :thread_id
+        AND deleted_at IS NULL
+        #{anchor_message_id ? "AND id < :anchor_message_id" : ""}
+        ORDER BY created_at DESC, id DESC
+        LIMIT 1
+      SQL
+        channel_id: self.channel_id,
+        thread_id: self.id,
+        anchor_message_id: anchor_message_id,
+      ).first
+    end
+
     def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)
       DB.query(<<~SQL, message_ids: message_ids, thread_ids: thread_ids)
         SELECT thread_id,

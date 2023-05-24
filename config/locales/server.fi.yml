@@ -195,6 +195,9 @@ fi:
     site_settings:
       invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
+      invalid_choice:
+        one: "'%{name}' on virheellinen valinta."
+        other: "'%{name}' ovat virheellisiä valintoja."
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla."
       default_tags_already_selected: "Et voi valita tunnistetta, joka on käytössä toisella listalla."
       s3_upload_bucket_is_required: "Et voi ottaa latauksia S3:een käyttöön, ellet ole määrittänyt 's3_upload_bucket'-määritettä."
@@ -610,6 +613,8 @@ fi:
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
+  discourse_welcome_topic:
+    title: "Tervetuloa sivustolle %{site_title}! :wave:"
   admin_quick_start_title: "LUE ENSIN: Ylläpitäjän pika-aloitusopas"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -1439,6 +1444,7 @@ fi:
     exclude_rel_nofollow_domains: "Luettelo verkkotunnuksista, joihin osoittaviin linkkeihin nofollow'ta ei lisätä. Esimerkki.fi sallii automaattisesti myös verkkotunnuksen sub.esimerkki.fi. Sinun tulisi vähintäänkin lisätä tämän sivuston verkkotunnus, jotta hakurobotit löytävät kaiken sisällön. Jos sivustosi muita osia on toisen verkkotunnuksen alaisuudessa, lisää nekin."
     post_excerpt_maxlength: "Viestin katkelman tai yhteenvedon merkkien maksimimäärä."
     topic_excerpt_maxlength: "Ketjun katkelman tai yhteenvedon enimmäispituus, luodaan ketjun ensimmäisestä viestistä."
+    default_subcategory_on_read_only_category: "Ottaa käyttöön \"Uusi aihe\" -painikkeen ja valitsee oletusarvoisen alikategorian, jota käytetään julkaisuun kategorioissa, joissa käyttäjä ei saa luoda uutta aihetta."
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
@@ -1877,6 +1883,7 @@ fi:
     pop3_polling_password: "Sen POP3-tilin salasana, jolta pollataan sähköposteja."
     pop3_polling_delete_from_server: "Poista sähköpostit palvelimelta. HUOM: Jos poistat tämän käytöstä, sinun täytyy siivota saapuvien sähköpostien kansio manuaalisesti"
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin käsittelyvirheet lokiin: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
+    email_in: "Salli käyttäjien julkaista uusia aiheita sähköpostitse. Kun asetustus on käytössä, voidaan ryhmille ja kategorioille määrittää vastaanottoon käytettävät sähköpostiosoitteet."
     email_in_min_trust: "Vähimmäisluottamustaso, jonka käyttäjä tarvitsee uuden ketjun aloittamiseen sähköpostitse."
     email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Sähköpostin otsikkotiedot roskapostin tunnistamiseksi."
@@ -2094,6 +2101,7 @@ fi:
     enable_sitemap: "Luo sivustokartta sivustollesi ja sisällytä se robots.txt-tiedostoon."
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "(kokeellinen) Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
+    enable_user_tips: "Käytä keskeisiä ominaisuuksia uusille käyttäjille kuvaavat vinkit"
     short_title: "Lyhyttä nimeä käytetään käyttäjän aloitusnäytöllä, käynnistysruudussa ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
     dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
@@ -4145,6 +4153,7 @@ fi:
     required_tags_from_group:
       one: "Sinun täytyy lisätä vähintään %{count} ryhmän %{tag_group_name} tunniste. Tämän ryhmän tunnisteet ovat: %{tags}."
       other: "Sinun täytyy lisätä vähintään %{count} ryhmän %{tag_group_name} tunnistetta. Tämän ryhmän tunnisteet ovat: %{tags}."
+    limited_to_one_tag_from_group: "Tunnisteiden %{tags} samanaikainen käyttö ei ole mahdollista. Sisällytä vain yksi."
     invalid_target_tag: "ei voi olla synonyymin synonyymi"
     synonyms_exist: "ei ole sallittua, kun synonyymejä on olemassa"
   rss_by_tag: "Ketjut tunnisteella %{tag}"

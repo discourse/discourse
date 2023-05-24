@@ -169,11 +169,13 @@ module Chat
       render json: success_json
     end
 
+    # TODO: (martin) This endpoint is deprecated -- the /api/channels/:id?include_messages=true
+    # endpoint should be used instead. We need to remove this and any JS references.
     def messages
       page_size = params[:page_size]&.to_i || 1000
       direction = params[:direction].to_s
       message_id = params[:message_id]
-      if page_size > 50 ||
+      if page_size > 100 ||
            (
              message_id.blank? ^ direction.blank? &&
                (direction.present? && !CHAT_DIRECTIONS.include?(direction))
@@ -250,6 +252,8 @@ module Chat
                )
     end
 
+    # TODO: (martin) This endpoint is deprecated -- the /api/channels/:id?target_message_id=:message_id
+    # endpoint should be used instead. We need to remove this and any JS references.
     def lookup_message
       set_channel_and_chatable_with_access_check(chat_channel_id: @message.chat_channel_id)
 
@@ -412,6 +416,7 @@ module Chat
           .includes(:uploads)
           .includes(chat_channel: :chatable)
           .includes(:thread)
+          .includes(:chat_mentions)
 
       query = query.includes(user: :user_status) if SiteSetting.enable_user_status
 

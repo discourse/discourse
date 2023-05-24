@@ -20,6 +20,7 @@ import {
 } from "discourse/lib/user-presence";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { tracked } from "@glimmer/tracking";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 const PAGE_SIZE = 50;
 const PAST = "past";
@@ -83,11 +84,11 @@ export default class ChatLivePane extends Component {
 
   @action
   teardownListeners() {
+    this.#cancelHandlers();
     document.removeEventListener("scroll", this._forceBodyScroll);
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.unsubscribeToUpdates(this._loadedChannelId);
     this.requestedTargetMessageId = null;
-    cancel(this._laterComputeHandler);
   }
 
   @action
@@ -104,6 +105,8 @@ export default class ChatLivePane extends Component {
 
   @action
   updateChannel() {
+    this.#cancelHandlers();
+
     this.loadedOnce = false;
 
     // Technically we could keep messages to avoid re-fetching them, but
@@ -138,7 +141,7 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       this.highlightOrFetchMessage(this.requestedTargetMessageId);
     } else {
-      this.fetchMessages({ fetchFromLastMessage: false });
+      this.debounceFetchMessages({ fetchFromLastMessage: false });
     }
   }
 
@@ -149,7 +152,15 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  @debounce(100)
+  debounceFetchMessages(options) {
+    this._debounceFetchMessagesHandler = discourseDebounce(
+      this,
+      this.fetchMessages,
+      options,
+      100
+    );
+  }
+
   fetchMessages(options = {}) {
     if (this._selfDeleted) {
       return;
@@ -157,28 +168,25 @@ export default class ChatLivePane extends Component {
 
     this.loadingMorePast = true;
 
-    const findArgs = { pageSize: PAGE_SIZE };
+    const findArgs = { pageSize: PAGE_SIZE, includeMessages: true };
     const fetchingFromLastRead = !options.fetchFromLastMessage;
     if (this.requestedTargetMessageId) {
-      findArgs["targetMessageId"] = this.requestedTargetMessageId;
+      findArgs.targetMessageId = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
-      findArgs["targetMessageId"] =
+      findArgs.targetMessageId =
         this.args.channel.currentUserMembership.lastReadMessageId;
     }
 
     return this.chatApi
-      .messages(this.args.channel.id, findArgs)
-      .then((results) => {
-        if (
-          this._selfDeleted ||
-          this.args.channel.id !== results.meta.channel_id
-        ) {
+      .channel(this.args.channel.id, findArgs)
+      .then((result) => {
+        if (this._selfDeleted || this.args.channel.id !== result.channel.id) {
           return;
         }
 
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
-          results
+          result
         );
 
         this.args.channel.addMessages(messages);
@@ -201,6 +209,18 @@ export default class ChatLivePane extends Component {
         }
 
         this.scrollToBottom();
+
+        if (result.threads) {
+          result.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(this.args.channel, thread);
+          });
+        }
+
+        if (result.thread_tracking_overview) {
+          this.args.channel.threadTrackingOverview.push(
+            ...result.thread_tracking_overview
+          );
+        }
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -283,9 +303,7 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(messages[0].id, { position: "end" });
         }
       })
-      .catch(() => {
-        this._handleErrors();
-      })
+      .catch(this._handleErrors)
       .finally(() => {
         this[loadingMoreKey] = false;
         this.fillPaneAttempt();
@@ -355,7 +373,9 @@ export default class ChatLivePane extends Component {
       const message = ChatMessage.create(channel, messageData);
 
       if (messageData.thread_id) {
-        message.thread = new ChatThread(channel, { id: messageData.thread_id });
+        message.thread = ChatThread.create(channel, {
+          id: messageData.thread_id,
+        });
       }
 
       messages.push(message);
@@ -375,7 +395,7 @@ export default class ChatLivePane extends Component {
       });
       this.requestedTargetMessageId = null;
     } else {
-      this.fetchMessages();
+      this.debounceFetchMessages();
     }
   }
 
@@ -507,7 +527,7 @@ export default class ChatLivePane extends Component {
 
   @action
   computeScrollState() {
-    cancel(this.onScrollEndedHandler);
+    cancel(this._onScrollEndedHandler);
 
     if (!this.scrollable) {
       return;
@@ -525,7 +545,11 @@ export default class ChatLivePane extends Component {
       this.onScrollEnded();
     } else {
       this.isScrolling = true;
-      this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 150);
+      this._onScrollEndedHandler = discourseLater(
+        this,
+        this.onScrollEnded,
+        150
+      );
     }
   }
 
@@ -804,16 +828,28 @@ export default class ChatLivePane extends Component {
 
   _fetchAndScrollToLatest() {
     this.loadedOnce = false;
-    return this.fetchMessages({
+    return this.debounceFetchMessages({
       fetchFromLastMessage: true,
     });
   }
 
+  @bind
   _handleErrors(error) {
     switch (error?.jqXHR?.status) {
       case 429:
-      case 404:
         popupAjaxError(error);
+        break;
+      case 404:
+        // avoids handling 404 errors from a channel
+        // that is not the current one, this is very likely in tests
+        // which will destroy the channel after the test is done
+        if (
+          this.args.channel?.id &&
+          error.jqXHR?.requestedUrl ===
+            `/chat/api/channels/${this.args.channel.id}`
+        ) {
+          popupAjaxError(error);
+        }
         break;
       default:
         throw error;
@@ -1003,5 +1039,11 @@ export default class ChatLivePane extends Component {
     const containerRect = container.getBoundingClientRect();
     // - 5.0 to account for rounding errors, especially on firefox
     return rect.bottom - 5.0 <= containerRect.bottom;
+  }
+
+  #cancelHandlers() {
+    cancel(this._onScrollEndedHandler);
+    cancel(this._laterComputeHandler);
+    cancel(this._debounceFetchMessagesHandler);
   }
 }

@@ -110,17 +110,10 @@ RSpec.describe "Visit channel", type: :system, js: true do
           )
         end
 
-        it "doesn't allow user to join it" do
-          chat.visit_channel(readonly_category_channel_1)
+        it "shows an error" do
+          chat.visit_channel(inaccessible_dm_channel_1)
 
-          expect(page).not_to have_content(I18n.t("js.chat.channel_settings.join_channel"))
-        end
-
-        it "shows a preview of the channel" do
-          chat.visit_channel(readonly_category_channel_1)
-
-          expect(page).to have_content(readonly_category_channel_1.name)
-          expect(chat).to have_message(message_1)
+          expect(page).to have_content(I18n.t("invalid_access"))
         end
       end
 

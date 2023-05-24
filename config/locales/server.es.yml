@@ -612,19 +612,6 @@ es:
   meta_category_description: "Debate sobre este sitio, su organización, cómo funciona y cómo podemos mejorarlo."
   staff_category_name: "Personal"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del equipo."
-  discourse_welcome_topic:
-    body: |
-      Nos alegra mucho que te hayas unido a nosotros. %{site_description}
-
-      Aquí tienes algunas cosas que puedes hacer para empezar:
-
-      :speaking_head: **Preséntate** añadiendo tu foto e información sobre ti y tus intereses a [tu perfil](%{base_path}/my/preferences/account). ¿Qué te gustaría que te preguntaran?
-
-      :open_book: **Conoce a la comunidad** [navegando por los debates](%{base_path}/top) que ya se están produciendo aquí. Cuando encuentres una publicación interesante, informativa o entretenida, utiliza :heart: para mostrar tu agradecimiento o apoyo.
-
-      :handshake: **Contribuye** comentando, compartiendo tu propia perspectiva, haciendo preguntas u ofreciendo tu opinión en el debate. Antes de responder o iniciar nuevos temas, revisa las [Directrices de la Comunidad](%{base_path}/faq).
-
-      > Si necesitas ayuda o tienes alguna sugerencia, no dudes en preguntar en [#feedback](%{base_path}/c/site-feedback) o [contacta con los administradores](%{base_path}/about).
   admin_quick_start_title: "LEER PRIMERO: Guía rápida de inicio para administradores"
   category:
     topic_prefix: "Acerca de la categoría %{category}"
@@ -2135,7 +2122,6 @@ es:
     navigation_menu: "Determina qué menú de navegación utilizar. La barra lateral y la navegación del encabezado son personalizables por los usuarios. La opción heredada está disponible para compatibilidad con versiones anteriores."
     default_sidebar_categories: "Las categorías seleccionadas aparecerán por defecto en la sección de categorías de la barra lateral."
     default_sidebar_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas de la barra lateral."
-    enable_new_notifications_menu: "Activa el nuevo menú de notificaciones. Desactivar esta opción está obsoleto. El nuevo menú de notificaciones se utiliza siempre para las opciones del \"menú de navegación\" no heredadas. <a href='https://meta.discourse.org/t/260358'>Más información</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Utiliza el nuevo sistema de autocompletado #hashtag para categorías y etiquetas que muestra el elemento seleccionado de forma diferente y ha mejorado la búsqueda"
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."

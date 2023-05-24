@@ -18,6 +18,7 @@ export default {
 
   initialize(container) {
     this.chatService = container.lookup("service:chat");
+    this.site = container.lookup("service:site");
     this.siteSettings = container.lookup("service:site-settings");
     this.appEvents = container.lookup("service:app-events");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
@@ -27,7 +28,7 @@ export default {
     }
 
     withPluginApi("0.12.1", (api) => {
-      api.registerHashtagType("channel", ChannelHashtagType);
+      api.registerHashtagType("channel", new ChannelHashtagType(container));
 
       api.registerChatComposerButton({
         id: "chat-upload-btn",
@@ -58,8 +59,8 @@ export default {
         label: "chat.emoji",
         id: "emoji",
         class: "chat-emoji-btn",
-        icon: "discourse-emojis",
-        position: "dropdown",
+        icon: "far-smile",
+        position: this.site.desktopView ? "inline" : "dropdown",
         context: "channel",
         action() {
           const chatEmojiPickerManager = container.lookup(

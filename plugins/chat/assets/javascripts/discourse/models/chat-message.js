@@ -88,6 +88,7 @@ export default class ChatMessage {
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+    this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
   }
 
   duplicate() {
@@ -309,6 +310,17 @@ export default class ChatMessage {
 
   #initChatMessageReactionModel(reactions = []) {
     return reactions.map((reaction) => ChatMessageReaction.create(reaction));
+  }
+
+  #initMentionedUsers(mentionedUsers) {
+    const map = new Map();
+    if (mentionedUsers) {
+      mentionedUsers.forEach((userData) => {
+        const user = User.create(userData);
+        map.set(user.id, user);
+      });
+    }
+    return map;
   }
 
   #initUserModel(user) {

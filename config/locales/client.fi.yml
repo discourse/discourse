@@ -1023,6 +1023,7 @@ fi:
           warning: "Haluatko varmasti nollata valikoimasi ketjun?"
       use_current_timezone: "Käytä nykyistä aikavyöhykettäni"
       profile_hidden: "Käyttäjän julkinen profiili ei ole nähtävillä."
+      inactive_user: "Käyttäjä ei ole enää aktiivinen."
       expand_profile: "Laajenna"
       sr_expand_profile: "Laajenna profiilin tiedot"
       collapse_profile: "Supista"
@@ -3760,6 +3761,9 @@ fi:
         one: "On ansainnut tämän kunniamerkin %{count} kerran"
         other: "On ansainnut tämän kunniamerkin %{count} kertaa"
       granted_on: "Myönnetty %{date}"
+      others_count:
+        one: "Myönnetty muille %{count} kerran"
+        other: "Myönnetty muille %{count} kertaa"
       title: Kunniamerkit
       allow_title: "Voit käyttää tätä kunniamerkkiä tittelinä"
       multiple_grant: "Voit ansaita tämän useasti"
@@ -5463,6 +5467,9 @@ fi:
             label: "Lisää Emoji"
         title: "Asetukset"
         no_results: "Ei tuloksia."
+        more_site_setting_results:
+          one: "Tuloksia on enemmän kuin %{count}. Rajaa hakua tai valitse kategoria."
+          other: "Tuloksia on enemmän kuin %{count}. Rajaa hakua tai valitse kategoria."
         clear_filter: "Tyhjennä"
         add_url: "lisää URL"
         add_host: "lisää isäntä"

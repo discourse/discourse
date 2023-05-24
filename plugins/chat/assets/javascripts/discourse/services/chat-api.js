@@ -22,10 +22,31 @@ export default class ChatApi extends Service {
    *
    *    this.chatApi.channel(1).then(channel => { ... })
    */
-  channel(channelId) {
-    return this.#getRequest(`/channels/${channelId}`).then((result) =>
-      this.chatChannelsManager.store(result.channel)
-    );
+  channel(channelId, data = {}) {
+    const args = {};
+
+    if (data.targetMessageId) {
+      args.target_message_id = data.targetMessageId;
+    } else {
+      args.page_size = data.pageSize;
+
+      if (data.includeMessages) {
+        args.include_messages = true;
+      }
+
+      if (data.messageId) {
+        args.target_message_id = data.messageId;
+      }
+
+      if (data.threadId) {
+        args.thread_id = data.threadId;
+      }
+    }
+
+    return this.#getRequest(`/channels/${channelId}`, args).then((result) => {
+      this.chatChannelsManager.store(result.channel);
+      return result;
+    });
   }
 
   /**
