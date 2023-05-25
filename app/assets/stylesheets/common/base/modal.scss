@@ -602,6 +602,14 @@
       width: 100%;
     }
   }
+
+  #choosing-topic {
+    form {
+      hr {
+        margin-bottom: 0.5em;
+      }
+    }
+  }
 }
 
 .publish-page-modal {
