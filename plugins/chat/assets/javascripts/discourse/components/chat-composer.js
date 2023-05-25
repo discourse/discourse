@@ -146,8 +146,11 @@ export default class ChatComposer extends Component {
 
   @action
   didUpdateChannel() {
+    this.cancelPersistDraft();
+
     if (!this.args.channel) {
       this.composer.message = null;
+      return;
     }
 
     this.composer.message =
