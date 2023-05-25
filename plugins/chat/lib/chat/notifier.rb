@@ -162,13 +162,7 @@ module Chat
         users.partition { |user| @chat_channel.can_be_joined_by?(user) }
 
       participants, welcome_to_join =
-        potential_participants.partition do |participant|
-          participant.user_chat_channel_memberships.any? do |m|
-            predicate = m.chat_channel_id == @chat_channel.id
-            predicate = predicate && m.following == true if @chat_channel.public_channel?
-            predicate
-          end
-        end
+        potential_participants.partition { |user| @chat_channel.joined_by?(user) }
 
       {
         already_participating: participants || [],
