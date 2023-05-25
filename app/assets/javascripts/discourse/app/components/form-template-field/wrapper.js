@@ -11,15 +11,20 @@ export default class FormTemplateFieldWrapper extends Component {
 
   constructor() {
     super(...arguments);
-    this.appEvents.on("composer:load-templates", this, this._reloadTemplate);
-    this.appEvents.trigger("composer:load-templates", this.args.ids);
+    this.appEvents.on("composer:load-templates", this, this._fetchTemplate);
+
+    if (this.args.content) {
+      this._loadTemplate(this.args.content);
+    } else if (this.args.ids) {
+      this.appEvents.trigger("composer:load-templates", this.args.ids);
+    }
   }
 
   willDestroy() {
-    this.appEvents.off("composer:load-templates", this, this._reloadTemplate);
+    this.appEvents.off("composer:load-templates", this, this._fetchTemplate);
   }
 
-  loadTemplate(templateContent) {
+  _loadTemplate(templateContent) {
     try {
       this.parsedTemplate = Yaml.load(templateContent);
     } catch (e) {
@@ -27,13 +32,9 @@ export default class FormTemplateFieldWrapper extends Component {
     }
   }
 
-  async _reloadTemplate(ids) {
+  async _fetchTemplate(ids) {
     const response = await FormTemplate.findById(ids);
     const templateContent = await response.form_template.template;
-    try {
-      this.parsedTemplate = Yaml.load(templateContent);
-    } catch (e) {
-      this.error = e;
-    }
+    return this._loadTemplate(templateContent);
   }
 }
