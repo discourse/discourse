@@ -507,7 +507,6 @@ export default createWidget("header", {
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
-        console.log(state.searchVisible);
         if (this.siteSettings.experimental_search_menu) {
           panels.push(
             this.attach("glimmer-search-menu-wrapper", {

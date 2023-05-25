@@ -133,6 +133,7 @@ export default class SearchTerm extends Component {
         (this.args.typeFilter !== DEFAULT_TYPE_FILTER && recentEnterHit)
       ) {
         this.args.fullSearch();
+        this.args.closeSearchMenu();
       } else {
         this.args.updateTypeFilter(null);
         this.args.triggerSearch();
