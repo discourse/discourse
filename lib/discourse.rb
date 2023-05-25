@@ -977,14 +977,14 @@ module Discourse
 
     raise Deprecation.new(warning) if raise_error
 
-    STDERR.puts(warning) if Rails.env == "development"
+    STDERR.puts(warning) if Rails.env.development?
 
-    STDERR.puts(warning) if output_in_test && Rails.env == "test"
+    STDERR.puts(warning) if output_in_test && Rails.env.test?
 
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
-    if Rails.logger && !GlobalSetting.skip_redis? &&
+    if !Rails.env.development? && Rails.logger && !GlobalSetting.skip_redis? &&
          !Discourse.redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
       begin

@@ -7,11 +7,14 @@ module Chat
     def threads
       return [] if !object.threads
 
-      ActiveModel::ArraySerializer.new(
-        object.threads,
-        each_serializer: Chat::ThreadSerializer,
-        scope: scope,
-      )
+      object.threads.map do |thread|
+        Chat::ThreadSerializer.new(
+          thread,
+          scope: scope,
+          membership: object.thread_memberships.find { |m| m.thread_id == thread.id },
+          root: nil,
+        )
+      end
     end
 
     def tracking

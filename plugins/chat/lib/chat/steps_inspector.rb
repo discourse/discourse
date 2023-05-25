@@ -80,6 +80,9 @@ module Chat
 
     # @!visibility private
     class Policy < Step
+      def error
+        step_result.reason
+      end
     end
 
     # @!visibility private

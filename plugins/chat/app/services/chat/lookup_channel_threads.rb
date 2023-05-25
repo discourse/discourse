@@ -24,6 +24,7 @@ module Chat
     policy :can_view_channel
     model :threads
     step :fetch_tracking
+    step :fetch_memberships
 
     # @!visibility private
     class Contract
@@ -80,6 +81,14 @@ module Chat
           thread_ids: threads.map(&:id),
           include_threads: true,
         ).thread_tracking
+    end
+
+    def fetch_memberships(guardian:, threads:, **)
+      context.memberships =
+        ::Chat::UserChatThreadMembership.where(
+          thread_id: threads.map(&:id),
+          user_id: guardian.user.id,
+        )
     end
   end
 end

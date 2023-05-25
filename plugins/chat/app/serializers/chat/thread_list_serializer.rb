@@ -5,11 +5,14 @@ module Chat
     attributes :meta, :threads, :tracking
 
     def threads
-      ActiveModel::ArraySerializer.new(
-        object.threads,
-        each_serializer: Chat::ThreadSerializer,
-        scope: scope,
-      )
+      object.threads.map do |thread|
+        Chat::ThreadSerializer.new(
+          thread,
+          scope: scope,
+          membership: object.memberships.find { |m| m.thread_id == thread.id },
+          root: nil,
+        )
+      end
     end
 
     def tracking

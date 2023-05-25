@@ -221,6 +221,30 @@ RSpec.describe Chat::StepsInspector do
       end
     end
 
+    context "when the policy step is failing" do
+      before do
+        class DummyService
+          def policy
+            false
+          end
+        end
+      end
+
+      context "when there is no reason provided" do
+        it "returns nothing" do
+          expect(error).to be_blank
+        end
+      end
+
+      context "when a reason is provided" do
+        before { result["result.policy.policy"].reason = "failed" }
+
+        it "returns the reason" do
+          expect(error).to eq "failed"
+        end
+      end
+    end
+
     context "when a common step is failing" do
       before { result["result.step.final_step"].fail(error: "my error") }
 
