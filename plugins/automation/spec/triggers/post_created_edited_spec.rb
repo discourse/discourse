@@ -8,6 +8,9 @@ describe "PostCreatedEdited" do
   let(:basic_topic_params) do
     { title: "hello world topic", raw: "my name is fred", archetype_id: 1 }
   end
+  let(:parent_category) { Fabricate(:category_with_definition) }
+  let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: parent_category.id) }
+
   fab!(:user) { Fabricate(:user) }
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED)
@@ -81,6 +84,67 @@ describe "PostCreatedEdited" do
           list =
             capture_contexts do
               PostCreator.create(user, basic_topic_params.merge({ category: Category.first.id }))
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+      end
+
+      context "when restricted to a subcategory" do
+        before do
+          automation.upsert_field!(
+            "restricted_category",
+            "category",
+            { value: subcategory.id },
+            target: "trigger",
+          )
+        end
+
+        it "fires the trigger" do
+          list =
+            capture_contexts do
+              PostCreator.create(user, basic_topic_params.merge({ category: subcategory.id }))
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+
+        it "does not fire the trigger for the parent" do
+          list =
+            capture_contexts do
+              PostCreator.create(user, basic_topic_params.merge({ category: parent_category.id }))
+            end
+
+          expect(list.length).to eq(0)
+        end
+      end
+
+      context "when restricted to a parent category" do
+        before do
+          automation.upsert_field!(
+            "restricted_category",
+            "category",
+            { value: parent_category.id },
+            target: "trigger",
+          )
+        end
+
+        it "fires the trigger for a subcategory" do
+          list =
+            capture_contexts do
+              PostCreator.create(user, basic_topic_params.merge({ category: subcategory.id }))
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+
+        it "fires the trigger for the parent" do
+          list =
+            capture_contexts do
+              PostCreator.create(user, basic_topic_params.merge({ category: parent_category.id }))
             end
 
           expect(list.length).to eq(1)
