@@ -7,6 +7,10 @@ module PageObjects
         @composer ||= PageObjects::Components::Chat::Composer.new(".chat-channel")
       end
 
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
+      end
+
       def replying_to?(message)
         find(".chat-channel .chat-reply", text: message.message)
       end
@@ -115,10 +119,12 @@ module PageObjects
       end
 
       def send_message(text = nil)
+        text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
         click_send_message
         click_composer
+        has_no_loading_skeleton?
       end
 
       def reply_to(message)
@@ -206,6 +212,26 @@ module PageObjects
 
       def message_thread_indicator(message)
         find(message_thread_indicator_selector(message))
+      end
+
+      def open_thread_list
+        find(thread_list_button_selector).click
+      end
+
+      def has_unread_thread_indicator?(count:)
+        has_css?("#{thread_list_button_selector}.-has-unreads") &&
+          has_css?(
+            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number-wrap",
+            text: count.to_s,
+          )
+      end
+
+      def has_no_unread_thread_indicator?
+        has_no_css?("#{thread_list_button_selector}.-has-unreads")
+      end
+
+      def thread_list_button_selector
+        ".chat-threads-list-button"
       end
 
       private

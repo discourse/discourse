@@ -32,7 +32,7 @@ module Chat
     step :determine_threads_enabled
     step :determine_include_thread_messages
     step :fetch_messages
-    step :fetch_thread_tracking_overview
+    step :fetch_unread_thread_ids
     step :fetch_threads_for_messages
     step :fetch_tracking
     step :build_view
@@ -136,11 +136,11 @@ module Chat
     # that have unread messages, only threads with unread messages
     # will be included in this array. This is a low-cost way to know
     # how many threads the user has unread across the entire channel.
-    def fetch_thread_tracking_overview(guardian:, channel:, threads_enabled:, **)
+    def fetch_unread_thread_ids(guardian:, channel:, threads_enabled:, **)
       if !threads_enabled
-        context.thread_tracking_overview = []
+        context.unread_thread_ids = []
       else
-        context.thread_tracking_overview =
+        context.unread_thread_ids =
           ::Chat::TrackingStateReportQuery
             .call(
               guardian: guardian,
@@ -193,7 +193,7 @@ module Chat
       messages:,
       threads:,
       tracking:,
-      thread_tracking_overview:,
+      unread_thread_ids:,
       can_load_more_past:,
       can_load_more_future:,
       **
@@ -205,7 +205,7 @@ module Chat
           user: guardian.user,
           can_load_more_past: can_load_more_past,
           can_load_more_future: can_load_more_future,
-          thread_tracking_overview: thread_tracking_overview,
+          unread_thread_ids: unread_thread_ids,
           threads: threads,
           tracking: tracking,
         )

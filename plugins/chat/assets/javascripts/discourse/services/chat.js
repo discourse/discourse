@@ -56,6 +56,10 @@ export default class Chat extends Service {
       this._activeMessage = null;
     }
 
+    if (this._activeChannel) {
+      this._activeChannel.activeThread = null;
+    }
+
     this._activeChannel = channel;
   }
 
@@ -123,6 +127,13 @@ export default class Chat extends Service {
           this.chatChannelsManager
             .find(channelObject.id, { fetchIfNotFound: false })
             .then((channel) => {
+              // TODO (martin) We need to do something here for thread tracking
+              // state as well on presence change, otherwise we will be back in
+              // the same place as the channels were.
+              //
+              // At some point it would likely be better to just fetch an
+              // endpoint that gives you all channel tracking state and the
+              // thread tracking state for the current channel.
               if (channel) {
                 channel.updateMembership(channelObject.current_user_membership);
 

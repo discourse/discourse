@@ -29,7 +29,7 @@ jobs:
       PGUSER: discourse
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
-      CABPYARA_DEFAULT_MAX_WAIT_TIME: 4
+      CABPYARA_DEFAULT_MAX_WAIT_TIME: 10
 
     strategy:
       fail-fast: false

@@ -16,7 +16,7 @@
   --d-sidebar-row-height: 30px;
   // 1.25rem gets text left-aligned with the hamburger icon
   --d-sidebar-row-horizontal-padding: 0.66rem;
-  --d-sidebar-row-vertical-padding: 0.33rem;
+  width: 360px;
 
   .panel-body-content {
     width: 100%;
@@ -41,8 +41,13 @@
     &.sidebar-section {
       padding-top: 0.5em;
       .sidebar-section-header-wrapper {
-        margin: 0 0 var(--d-sidebar-row-vertical-padding);
+        margin: 0 0 0.5em;
+        padding-bottom: 0.25em;
         border-bottom: 1px solid var(--primary-low);
+        .d-icon-globe {
+          font-size: var(--font-down-2);
+          color: var(--primary-medium);
+        }
       }
       ul {
         display: grid;
@@ -56,12 +61,6 @@
     .sidebar-section-message {
       padding: 0;
     }
-  }
-
-  .sidebar-custom-sections .d-icon-globe {
-    left: -0.9em;
-    top: 0.35em;
-    font-size: 0.7em;
   }
 
   .sidebar-section-link-wrapper

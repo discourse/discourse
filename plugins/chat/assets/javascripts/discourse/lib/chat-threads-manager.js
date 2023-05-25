@@ -15,6 +15,7 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 export default class ChatThreadsManager {
   @service chatSubscriptionsManager;
+  @service chatTrackingStateManager;
   @service chatApi;
   @service chat;
   @service currentUser;
@@ -43,6 +44,12 @@ export default class ChatThreadsManager {
           thread
         );
       });
+
+      this.chatTrackingStateManager.setupChannelThreadState(
+        this.chat.activeChannel,
+        result.tracking
+      );
+
       return { threads, meta: result.meta };
     });
   }

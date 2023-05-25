@@ -12,6 +12,10 @@ module PageObjects
           PageObjects::Components::Chat::ComposerMessageDetails.new(".chat-thread")
       end
 
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-thread")
+      end
+
       def header
         find(".chat-thread__header")
       end
@@ -47,6 +51,7 @@ module PageObjects
       end
 
       def send_message(text = nil)
+        text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
         click_send_message

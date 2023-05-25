@@ -20,7 +20,7 @@ export default class ChannelHashtagType extends HashtagTypeBase {
 
   generateColorCssClasses(channel) {
     return [
-      `.hashtag-cooked .d-icon.hashtag-color--${this.type}-${channel.id} { color: var(--category-${channel.chatable.id}-color); }`,
+      `.d-icon.hashtag-color--${this.type}-${channel.id} { color: var(--category-${channel.chatable.id}-color); }`,
     ];
   }
 

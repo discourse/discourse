@@ -662,7 +662,7 @@ class UploadCreator
         if is_animated != nil
           # FastImage will return nil if it cannot determine if animated
           is_animated
-        elsif type == "gif" || type == "webp"
+        elsif %w[gif webp avif].include?(type)
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 

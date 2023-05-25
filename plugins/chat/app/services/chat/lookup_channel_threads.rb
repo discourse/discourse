@@ -23,6 +23,7 @@ module Chat
     policy :threading_enabled_for_channel
     policy :can_view_channel
     model :threads
+    step :fetch_tracking
 
     # @!visibility private
     class Contract
@@ -70,6 +71,15 @@ module Chat
         .group("chat_threads.id")
         .order("last_posted_at DESC NULLS LAST")
         .limit(50)
+    end
+
+    def fetch_tracking(guardian:, threads:, **)
+      context.tracking =
+        ::Chat::TrackingStateReportQuery.call(
+          guardian: guardian,
+          thread_ids: threads.map(&:id),
+          include_threads: true,
+        ).thread_tracking
     end
   end
 end

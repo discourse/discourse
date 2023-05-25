@@ -6,11 +6,12 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
-import { next, schedule } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 
 const PAGE_SIZE = 100;
+const READ_INTERVAL_MS = 1000;
 
 export default class ChatThreadPanel extends Component {
   @service siteSettings;
@@ -51,6 +52,66 @@ export default class ChatThreadPanel extends Component {
   @action
   unsubscribeFromUpdates() {
     this.chatChannelThreadPaneSubscriptionsManager.unsubscribe();
+  }
+
+  // TODO (martin) This needs to have the extended scroll/message visibility/
+  // mark read behaviour the same as the channel.
+  @action
+  computeScrollState() {
+    cancel(this.onScrollEndedHandler);
+
+    if (!this.scrollable) {
+      return;
+    }
+
+    this.resetActiveMessage();
+
+    if (this.#isAtBottom()) {
+      this.updateLastReadMessage();
+      this.onScrollEnded();
+    } else {
+      this.isScrolling = true;
+      this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 150);
+    }
+  }
+
+  #isAtBottom() {
+    if (!this.scrollable) {
+      return false;
+    }
+
+    // This is different from the channel scrolling because the scrolling here
+    // is inverted -- in the channel's case scrollTop is 0 when scrolled to the
+    // bottom of the channel, but in the negatives when scrolling up to past messages.
+    //
+    // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#determine_if_an_element_has_been_totally_scrolled
+    return (
+      Math.abs(
+        this.scrollable.scrollHeight -
+          this.scrollable.clientHeight -
+          this.scrollable.scrollTop
+      ) <= 2
+    );
+  }
+
+  @bind
+  onScrollEnded() {
+    this.isScrolling = false;
+  }
+
+  @debounce(READ_INTERVAL_MS)
+  updateLastReadMessage() {
+    schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
+      // TODO (martin) HACK: We don't have proper scroll visibility over
+      // what message we are looking at, don't have the lastReadMessageId
+      // for the thread, and this updateLastReadMessage function is only
+      // called when scrolling all the way to the bottom.
+      this.markThreadAsRead();
+    });
   }
 
   @action

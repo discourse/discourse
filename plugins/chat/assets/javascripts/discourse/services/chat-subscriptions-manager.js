@@ -179,6 +179,17 @@ export default class ChatSubscriptionsManager extends Service {
 
   @bind
   _onNewMessages(busData) {
+    switch (busData.type) {
+      case "channel":
+        this._onNewChannelMessage(busData);
+        break;
+      case "thread":
+        this._onNewThreadMessage(busData);
+        break;
+    }
+  }
+
+  _onNewChannelMessage(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       if (busData.user_id === this.currentUser.id) {
         // User sent message, update tracking state to no unread
@@ -188,17 +199,51 @@ export default class ChatSubscriptionsManager extends Service {
         if (this.currentUser.ignored_users.includes(busData.username)) {
           channel.currentUserMembership.lastReadMessageId = busData.message_id;
         } else {
-          // Message from other user. Increment trackings state
+          // Message from other user. Increment unread for channel tracking state.
           if (
             busData.message_id >
             (channel.currentUserMembership.lastReadMessageId || 0)
           ) {
             channel.tracking.unreadCount++;
           }
+
+          // Thread should be considered unread if not already.
+          if (busData.thread_id) {
+            channel.unreadThreadIds.add(busData.thread_id);
+          }
         }
       }
 
       channel.lastMessageSentAt = new Date();
+    });
+  }
+
+  _onNewThreadMessage(busData) {
+    this.chatChannelsManager.find(busData.channel_id).then((channel) => {
+      channel.threadsManager
+        .find(busData.channel_id, busData.thread_id)
+        .then((thread) => {
+          if (busData.user_id === this.currentUser.id) {
+            // Thread should no longer be considered unread.
+            channel.unreadThreadIds.remove(busData.thread_id);
+            // TODO (martin) Update lastReadMessageId for thread membership on client.
+          } else {
+            if (this.currentUser.ignored_users.includes(busData.username)) {
+              // TODO (martin) Update lastReadMessageId for thread membership on client.
+            } else {
+              if (
+                this.chat.activeChannel?.activeThread?.id === busData.thread_id
+              ) {
+                // TODO (martin) HACK: We don't yet have the lastReadMessageId on the client,
+                // so if the user is looking at the thread don't do anything to mark it unread.
+              } else {
+                // Message from other user. Thread should be considered unread if not already.
+                channel.unreadThreadIds.add(busData.thread_id);
+                thread.tracking.unreadCount += 1;
+              }
+            }
+          }
+        });
     });
   }
 
@@ -248,13 +293,31 @@ export default class ChatSubscriptionsManager extends Service {
   }
 
   @bind
-  _updateChannelTrackingData(channelId, trackingData) {
+  _updateChannelTrackingData(channelId, busData) {
     this.chatChannelsManager.find(channelId).then((channel) => {
-      channel.currentUserMembership.lastReadMessageId =
-        trackingData.last_read_message_id;
+      if (busData.thread_id) {
+        // TODO (martin) Update thread membership last read message ID on client.
+      } else {
+        channel.currentUserMembership.lastReadMessageId =
+          busData.last_read_message_id;
+      }
 
-      channel.tracking.unreadCount = trackingData.unread_count;
-      channel.tracking.mentionCount = trackingData.mention_count;
+      channel.tracking.unreadCount = busData.unread_count;
+      channel.tracking.mentionCount = busData.mention_count;
+
+      if (busData.hasOwnProperty("unread_thread_ids")) {
+        channel.unreadThreadIds = busData.unread_thread_ids;
+      }
+
+      if (busData.thread_id && busData.hasOwnProperty("thread_tracking")) {
+        channel.threadsManager
+          .find(channelId, busData.thread_id)
+          .then((thread) => {
+            thread.tracking.unreadCount = busData.thread_tracking.unread_count;
+            thread.tracking.mentionCount =
+              busData.thread_tracking.mention_count;
+          });
+      }
     });
   }
 

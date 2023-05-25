@@ -17,9 +17,10 @@ RSpec.describe SidebarSection do
     community_section.update!(title: "test")
     community_section.sidebar_section_links.first.linkable.update!(name: "everything edited")
     community_section.sidebar_section_links.last.destroy!
-
     community_section.reset_community!
+
     expect(community_section.reload.title).to eq("Community")
+
     expect(community_section.sidebar_section_links.all.map { |link| link.linkable.name }).to eq(
       ["Everything", "My Posts", "Review", "Admin", "Users", "About", "FAQ", "Groups", "Badges"],
     )
