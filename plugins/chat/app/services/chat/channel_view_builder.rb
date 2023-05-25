@@ -80,7 +80,7 @@ module Chat
     def target_message_exists(contract:, guardian:, **)
       return true if contract.target_message_id.blank?
       target_message =
-        Chat::Message.unscoped.find_by(
+        Chat::Message.with_deleted.find_by(
           id: contract.target_message_id,
           chat_channel_id: contract.channel_id,
         )
