@@ -149,7 +149,8 @@ describe UserNotifications do
     context "with public channel" do
       fab!(:channel) { Fabricate(:category_channel) }
       fab!(:chat_message) { Fabricate(:chat_message, user: sender, chat_channel: channel) }
-      fab!(:user_membership) do
+      # using fab! for user_membership below makes these specs flaky
+      let!(:user_membership) do
         Fabricate(
           :user_chat_channel_membership,
           chat_channel: channel,
