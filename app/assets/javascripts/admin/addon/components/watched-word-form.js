@@ -1,14 +1,14 @@
 import { action } from "@ember/object";
 import { classNames, tagName } from "@ember-decorators/component";
 import { inject as service } from "@ember/service";
-import { equal, not } from "@ember/object/computed";
+import { empty, equal } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { observes } from "@ember-decorators/object";
 import Component from "@ember/component";
 import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
 import { isEmpty } from "@ember/utils";
-import { schedule } from "@ember/runloop";
+// import { schedule } from "@ember/runloop";
 
 @tagName("form")
 @classNames("watched-word-form")
@@ -18,21 +18,17 @@ export default class WatchedWordForm extends Component {
   formSubmitted = false;
   actionKey = null;
   showMessage = false;
-  selectedTags = null;
   isCaseSensitive = false;
+  selectedTags = [];
+  words = [];
 
-  @not("word") submitDisabled;
+  @empty("words") submitDisabled;
 
   @equal("actionKey", "replace") canReplace;
 
   @equal("actionKey", "tag") canTag;
 
   @equal("actionKey", "link") canLink;
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.set("selectedTags", []);
-  }
 
   @discourseComputed("siteSettings.watched_words_regular_expressions")
   placeholderKey(watchedWordsRegularExpressions) {
@@ -43,29 +39,35 @@ export default class WatchedWordForm extends Component {
     }
   }
 
-  @observes("word")
+  @observes("words.[]")
   removeMessage() {
-    if (this.showMessage && !isEmpty(this.word)) {
+    if (this.showMessage && !isEmpty(this.words)) {
       this.set("showMessage", false);
     }
   }
 
-  @discourseComputed("word")
-  isUniqueWord(word) {
-    const words = this.filteredContent || [];
-    const filtered = words.filter(
+  @discourseComputed("words.[]")
+  isUniqueWord(words) {
+    const existingWords = this.filteredContent || [];
+    const filtered = existingWords.filter(
       (content) => content.action === this.actionKey
     );
-    return filtered.every((content) => {
+
+    const duplicate = filtered.find((content) => {
       if (content.case_sensitive === true) {
-        return content.word !== word;
+        return words.includes(content.word);
+      } else {
+        return words
+          .map((w) => w.toLowerCase())
+          .includes(content.word.toLowerCase());
       }
-      return content.word.toLowerCase() !== word.toLowerCase();
     });
+
+    return !duplicate;
   }
 
   focusInput() {
-    schedule("afterRender", () => this.element.querySelector("input").focus());
+    // schedule("afterRender", () => this.element.querySelector("input").focus());
   }
 
   @action
@@ -90,7 +92,7 @@ export default class WatchedWordForm extends Component {
       this.set("formSubmitted", true);
 
       const watchedWord = WatchedWord.create({
-        word: this.word,
+        words: this.words,
         replacement:
           this.canReplace || this.canTag || this.canLink
             ? this.replacement
@@ -103,7 +105,7 @@ export default class WatchedWordForm extends Component {
         .save()
         .then((result) => {
           this.setProperties({
-            word: "",
+            words: [],
             replacement: "",
             formSubmitted: false,
             selectedTags: [],

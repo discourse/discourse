@@ -34,7 +34,7 @@ export default class WatchedWord extends EmberObject {
       {
         type: this.id ? "PUT" : "POST",
         data: {
-          word: this.word,
+          words: this.words,
           replacement: this.replacement,
           action_key: this.action,
           case_sensitive: this.isCaseSensitive,
