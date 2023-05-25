@@ -288,6 +288,8 @@ Discourse::Application.routes.draw do
           end
         end
         post "watched_words/upload" => "watched_words#upload"
+
+        resources :watched_word_groups, only: %i[create update destroy]
       end
 
       get "version_check" => "versions#show"

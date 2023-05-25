@@ -124,6 +124,9 @@ class UserHistory < ActiveRecord::Base
         update_public_sidebar_section: 102,
         destroy_public_sidebar_section: 103,
         reset_bounce_score: 104,
+        create_watched_word_group: 105,
+        update_watched_word_group: 106,
+        delete_watched_word_group: 107,
       )
   end
 
@@ -223,6 +226,9 @@ class UserHistory < ActiveRecord::Base
       update_public_sidebar_section
       destroy_public_sidebar_section
       reset_bounce_score
+      create_watched_word_group
+      update_watched_word_group
+      delete_watched_word_group
     ]
   end
 
