@@ -199,7 +199,6 @@ export default class ChatSubscriptionsManager extends Service {
         if (this.currentUser.ignored_users.includes(busData.username)) {
           channel.currentUserMembership.lastReadMessageId = busData.message_id;
         } else {
-          // Message from other user. Increment unread for channel tracking state.
           if (
             busData.message_id >
             (channel.currentUserMembership.lastReadMessageId || 0)
@@ -209,7 +208,13 @@ export default class ChatSubscriptionsManager extends Service {
 
           // Thread should be considered unread if not already.
           if (busData.thread_id) {
-            channel.unreadThreadIds.add(busData.thread_id);
+            channel.threadsManager
+              .find(busData.channel_id, busData.thread_id)
+              .then((thread) => {
+                if (thread.currentUserMembership) {
+                  channel.unreadThreadIds.add(busData.thread_id);
+                }
+              });
           }
         }
       }
@@ -225,21 +230,27 @@ export default class ChatSubscriptionsManager extends Service {
         .then((thread) => {
           if (busData.user_id === this.currentUser.id) {
             // Thread should no longer be considered unread.
-            channel.unreadThreadIds.remove(busData.thread_id);
-            // TODO (martin) Update lastReadMessageId for thread membership on client.
+            if (thread.currentUserMembership) {
+              channel.unreadThreadIds.delete(busData.thread_id);
+              thread.currentUserMembership.lastReadMessageId =
+                busData.message_id;
+            }
           } else {
+            // Ignored user sent message, update tracking state to no unread
             if (this.currentUser.ignored_users.includes(busData.username)) {
-              // TODO (martin) Update lastReadMessageId for thread membership on client.
+              if (thread.currentUserMembership) {
+                thread.currentUserMembership.lastReadMessageId =
+                  busData.message_id;
+              }
             } else {
+              // Message from other user. Increment unread for thread tracking state.
               if (
-                this.chat.activeChannel?.activeThread?.id === busData.thread_id
+                thread.currentUserMembership &&
+                busData.message_id >
+                  (thread.currentUserMembership.lastReadMessageId || 0)
               ) {
-                // TODO (martin) HACK: We don't yet have the lastReadMessageId on the client,
-                // so if the user is looking at the thread don't do anything to mark it unread.
-              } else {
-                // Message from other user. Thread should be considered unread if not already.
                 channel.unreadThreadIds.add(busData.thread_id);
-                thread.tracking.unreadCount += 1;
+                thread.tracking.unreadCount++;
               }
             }
           }

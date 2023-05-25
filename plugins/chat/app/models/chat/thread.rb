@@ -36,6 +36,10 @@ module Chat
       Chat::UserChatThreadMembership.find_by(user: user, thread: self)&.destroy
     end
 
+    def membership_for(user)
+      user_chat_thread_memberships.find_by(user: user)
+    end
+
     def replies
       self.chat_messages.where.not(id: self.original_message_id)
     end

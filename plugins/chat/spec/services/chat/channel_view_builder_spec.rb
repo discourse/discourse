@@ -123,6 +123,19 @@ RSpec.describe Chat::ChannelViewBuilder do
         expect(subject.view.threads).to eq([message_1.thread])
       end
 
+      it "fetches thread memberships for the current user for fetched threads" do
+        message_1 =
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            thread: Fabricate(:chat_thread, channel: channel),
+          )
+        message_1.thread.add(current_user)
+        expect(subject.view.thread_memberships).to eq(
+          [message_1.thread.membership_for(current_user)],
+        )
+      end
+
       it "calls the tracking state report query for thread overview and tracking" do
         thread = Fabricate(:chat_thread, channel: channel)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)

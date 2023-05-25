@@ -35,6 +35,7 @@ module Chat
     step :fetch_unread_thread_ids
     step :fetch_threads_for_messages
     step :fetch_tracking
+    step :fetch_thread_memberships
     step :build_view
 
     class Contract
@@ -171,6 +172,18 @@ module Chat
       end
     end
 
+    def fetch_thread_memberships(threads:, guardian:, **)
+      if threads.empty?
+        context.thread_memberships = []
+      else
+        context.thread_memberships =
+          ::Chat::UserChatThreadMembership.where(
+            thread_id: threads.map(&:id),
+            user_id: guardian.user.id,
+          )
+      end
+    end
+
     def build_view(
       guardian:,
       channel:,
@@ -180,6 +193,7 @@ module Chat
       unread_thread_ids:,
       can_load_more_past:,
       can_load_more_future:,
+      thread_memberships:,
       **
     )
       context.view =
@@ -192,6 +206,7 @@ module Chat
           unread_thread_ids: unread_thread_ids,
           threads: threads,
           tracking: tracking,
+          thread_memberships: thread_memberships,
         )
     end
   end
