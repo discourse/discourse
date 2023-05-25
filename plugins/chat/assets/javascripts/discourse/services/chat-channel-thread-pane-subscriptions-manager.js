@@ -34,7 +34,10 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
     return;
   }
 
-  _afterDeleteMessage() {
-    // TODO (martin) Handle this once we have lastReadMessageId for thread memberships.
+  _afterDeleteMessage(targetMsg, data) {
+    if (this.model.currentUserMembership?.lastReadMessageId === targetMsg.id) {
+      this.model.currentUserMembership.lastReadMessageId =
+        data.latest_not_deleted_message_id;
+    }
   }
 }
