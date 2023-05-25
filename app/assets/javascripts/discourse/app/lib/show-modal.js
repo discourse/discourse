@@ -1,5 +1,3 @@
-import I18n from "I18n";
-import { dasherize } from "@ember/string";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 /**
