@@ -85,7 +85,7 @@ class SidebarSectionsController < ApplicationController
     order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
     set_order(sidebar_section, order)
 
-    render_serialized_sidebar_section(sidebar_section)
+    render_serialized(sidebar_section, SidebarSectionSerializer)
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end
