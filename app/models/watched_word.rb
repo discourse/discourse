@@ -74,6 +74,7 @@ class WatchedWord < ActiveRecord::Base
     w.action_key = params[:action_key] if params[:action_key]
     w.action = params[:action] if params[:action]
     w.case_sensitive = params[:case_sensitive] if !params[:case_sensitive].nil?
+    w.watched_word_group_id = params[:watched_word_group_id]
     w.save
     w
   end
