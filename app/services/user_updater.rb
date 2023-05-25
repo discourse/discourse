@@ -237,7 +237,7 @@ class UserUpdater
           attributes.fetch(:name) { "" },
         )
       end
-      DiscourseEvent.trigger(:user_updater_commit_updates, user, attributes)
+      DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
     rescue Addressable::URI::InvalidURIError => e
       # Prevent 500 for crazy url input
       return saved

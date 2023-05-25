@@ -46,7 +46,7 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
-    describe "the user_updater_commit_updates event" do
+    describe "the within_user_updater_transaction event" do
       it "allows plugins to perform additional updates" do
         update_attributes = { name: "Jimmmy Johnny" }
         handler =
@@ -54,7 +54,7 @@ RSpec.describe UserUpdater do
             user.user_profile.update!(bio_raw: "hello world I'm Jimmmy")
             expect(attrs).to eq(update_attributes)
           end
-        DiscourseEvent.on(:user_updater_commit_updates, &handler)
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
 
         updater = UserUpdater.new(user, user)
         updater.update(update_attributes)
@@ -62,14 +62,14 @@ RSpec.describe UserUpdater do
         expect(user.reload.name).to eq("Jimmmy Johnny")
         expect(user.user_profile.bio_raw).to eq("hello world I'm Jimmmy")
       ensure
-        DiscourseEvent.off(:user_updater_commit_updates, &handler)
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
       end
 
       it "can cancel the whole update transaction if a handler raises" do
         error_class = Class.new(StandardError)
         handler = Proc.new { raise error_class.new }
 
-        DiscourseEvent.on(:user_updater_commit_updates, &handler)
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
 
         old_name = user.name
         updater = UserUpdater.new(user, user)
@@ -78,7 +78,7 @@ RSpec.describe UserUpdater do
 
         expect(user.reload.name).to eq(old_name)
       ensure
-        DiscourseEvent.off(:user_updater_commit_updates, &handler)
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
       end
     end
 
