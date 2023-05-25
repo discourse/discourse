@@ -19,25 +19,24 @@ export default class InitialOptions extends Component {
   @service siteSettings;
   @service currentUser;
 
+  constructor() {
+    super(...arguments);
+
+    if (this.search.activeGlobalSearchTerm || this.search.searchContext) {
+      if (this.search.searchContext) {
+        // set the component we will be using to display results
+        this.contextTypeComponent =
+          SEARCH_CONTEXT_TYPE_COMPONENTS[this.search.searchContext.type];
+        // set attributes for the component
+        this.attributesForSearchContextType(this.search.searchContext.type);
+      }
+    }
+  }
+
   get termMatch() {
     return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP)
       ? true
       : false;
-  }
-
-  constructor() {
-    super(...arguments);
-
-    const searchContext = this.search.searchContext;
-    if (this.search.activeGlobalSearchTerm || searchContext) {
-      if (searchContext) {
-        // set the component we will be using to display results
-        this.contextTypeComponent =
-          SEARCH_CONTEXT_TYPE_COMPONENTS[searchContext.type];
-        // set attributes for the component
-        this.attributesForSearchContextType(searchContext.type);
-      }
-    }
   }
 
   attributesForSearchContextType(type) {

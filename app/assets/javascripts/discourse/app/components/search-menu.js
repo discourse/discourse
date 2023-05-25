@@ -43,6 +43,10 @@ export default class SearchMenu extends Component {
   _debouncer = null;
   _activeSearch = null;
 
+  get includesTopics() {
+    return this.typeFilter !== DEFAULT_TYPE_FILTER;
+  }
+
   get searchContext() {
     if (this.inTopicContext || this.inPMInboxContext) {
       return this.search.searchContext;
@@ -266,7 +270,7 @@ export default class SearchMenu extends Component {
   matchesSuggestions() {
     if (
       this.search.activeGlobalSearchTerm === undefined ||
-      this.includesTopics()
+      this.includesTopics
     ) {
       return false;
     }
@@ -291,10 +295,6 @@ export default class SearchMenu extends Component {
     return false;
   }
 
-  includesTopics() {
-    return this.typeFilter !== DEFAULT_TYPE_FILTER;
-  }
-
   //mouseDownOutside() {
   //this.sendWidgetAction("toggleSearchMenu");
   //}
@@ -302,9 +302,7 @@ export default class SearchMenu extends Component {
   @action
   triggerSearch() {
     this.noResults = false;
-    if (this.includesTopics()) {
-      // search service doesn't use this anymore
-      // i think it is just working out the box now with my highlight changes
+    if (this.includesTopics) {
       //if (this.inTopicContext) {
       //this.search.set("highlightTerm", this.search.activeGlobalSearchTerm);
       //}

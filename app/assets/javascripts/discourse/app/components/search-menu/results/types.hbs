@@ -1,0 +1,16 @@
+{{#each @resultTypes as |resultType|}}
+  <div class={{concat "search-result-" resultType.type}}>
+    <ul
+      class="list"
+      aria-label={{concat (I18n "search.results") " " resultType.type}}
+    >
+      {{#each resultType.results as |result|}}
+        <li class="item">
+          <a href={{(or result.url result.path)}} class="search-link">
+            <resultType.component @result={{result}} />
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+{{/each}}

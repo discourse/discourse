@@ -37,24 +37,16 @@
     </div>
   {{else}}
     <div class="searching">
-      {{#if @term}}
-        <a
-          class="clear-search"
-          aria-label="clear_input"
-          title={{i18n "search.clear_search"}}
-          href
-          {{on "click" @clearSearch}}
-        >
-          {{d-icon "times"}}
-        </a>
+      {{#if this.search.activeGlobalSearchTerm}}
+        <SearchMenu::AdvancedButton
+          @clearSearch={{@clearSearch}}
+          @title={{i18n "search.clear_search"}}
+        />
       {{/if}}
-      <a
-        class="show-advanced-search"
-        title={{i18n "search.open_advanced"}}
-        href={{this.advancedSearchButtonHref}}
-      >
-        {{d-icon "sliders-h"}}
-      </a>
+      <SearchMenu::AdvancedButton
+        @href={{this.advancedSearchButtonHref}}
+        @title={{i18n "search.open_advanced"}}
+      />
     </div>
   {{/if}}
 </div>

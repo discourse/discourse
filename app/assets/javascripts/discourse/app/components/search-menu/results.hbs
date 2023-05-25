@@ -4,41 +4,24 @@
       @suggestionKeyword={{@suggestionKeyword}}
       @results={{@suggestionResults}}
     />
-  {{else if this.renderTooShort}}
+  {{else if this.termTooShort}}
     <div class="no-results">{{I18n "search.too_short"}}</div>
-  {{else if this.renderNoResults}}
+  {{else if this.noTopicResults}}
     <div class="no-results">{{I18n "search.no_results"}}</div>
   {{else if this.renderInitialOptions}}
-    <SearchMenu::Results::InitialOptions
-      @focusSearchInput={{@focusSearchInput}}
-    />
+    <SearchMenu::Results::InitialOptions />
   {{else}}
-    {{! THIS IS REALLY NOT RIGHT }}
-    {{#if @searchTopics}}
-      {{#if this.resultTypes}}
-        {{#each this.resultTypes as |resultType|}}
-          <div class={{concat "search-result-" resultType.type}}>
-            <ul
-              class="list"
-              aria-label={{concat (I18n "search.results") " " resultType.type}}
-            >
-              {{#each resultType.results as |result|}}
-                <li class="item">
-                  <a href={{(or result.url result.path)}} class="search-link">
-                    <resultType.component @result={{result}} />
-                  </a>
-                </li>
-              {{/each}}
-            </ul>
-          </div>
-        {{/each}}
-      {{else}}
-        <div class="no-results">{{I18n "search.no_results"}}</div>
-      {{/if}}
-    {{else}}
+    {{#if (not @searchTopics)}}
       {{#unless @inPMInboxContext}}
         <SearchMenu::Results::InitialOptions />
+        {{#if this.resultTypes}}
+          <SearchMenu::Results::Types @resultTypes={{this.resultTypes}} />
+        {{/if}}
       {{/unless}}
+    {{else}}
+      {{#if this.resultTypes}}
+        <SearchMenu::Results::Types @resultTypes={{this.resultTypes}} />
+      {{/if}}
     {{/if}}
   {{/if}}
 </div>

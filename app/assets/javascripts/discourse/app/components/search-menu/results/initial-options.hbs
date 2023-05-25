@@ -22,6 +22,14 @@
       {{/if}}
 
       {{#if this.search.activeGlobalSearchTerm}}
+        {{! <span class="keyword"> }}
+        {{!-- {{@slug}} --}}
+        {{!-- {{#if @withLabel}} --}}
+        {{! <span class="label-suffix"> }}
+        {{!-- {{i18n "search.in_topics_posts"}} --}}
+        {{! </span> }}
+        {{!-- {{/if}} --}}
+        {{! </span> }}
         <SearchMenu::Results::AssistantItem
           @slug={{this.search.activeGlobalSearchTerm}}
           @withLabel={{true}}
@@ -33,6 +41,7 @@
       />
 
       {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
+        recent searches
         {{! search-menu-recent-searches }}
       {{/if}}
     {{/if}}
