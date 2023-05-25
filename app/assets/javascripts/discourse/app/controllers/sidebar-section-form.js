@@ -39,12 +39,11 @@ class Section {
   }
 
   get valid() {
+    const allLinks = this.links
+      .filter((link) => !link._destroy)
+      .concat(this.secondaryLinks?.filter((link) => !link._destroy) || []);
     const validLinks =
-      this.links.length > 0 &&
-      this.links.every((link) => link.valid) &&
-      (this.secondaryLinks
-        ? this.secondaryLinks.every((link) => link.valid)
-        : true);
+      allLinks.length > 0 && allLinks.every((link) => link.valid);
     return this.validTitle && validLinks;
   }
 
