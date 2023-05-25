@@ -168,6 +168,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       }
 
       this.render("hide-modal", { into: "modal", outlet: "modalBody" });
+      $(".d-modal.fixed-modal").modal("hide");
 
       if (controllerName) {
         const controller = getOwner(this).lookup(
