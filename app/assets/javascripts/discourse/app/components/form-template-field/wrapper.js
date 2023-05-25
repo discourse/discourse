@@ -15,8 +15,8 @@ export default class FormTemplateFieldWrapper extends Component {
 
     if (this.args.content) {
       this._loadTemplate(this.args.content);
-    } else if (this.args.ids) {
-      this.appEvents.trigger("composer:load-templates", this.args.ids);
+    } else if (this.args.id) {
+      this.appEvents.trigger("composer:load-templates", this.args.id);
     }
   }
 
@@ -32,8 +32,8 @@ export default class FormTemplateFieldWrapper extends Component {
     }
   }
 
-  async _fetchTemplate(ids) {
-    const response = await FormTemplate.findById(ids);
+  async _fetchTemplate(id) {
+    const response = await FormTemplate.findById(id);
     const templateContent = await response.form_template.template;
     return this._loadTemplate(templateContent);
   }

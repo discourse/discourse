@@ -59,9 +59,9 @@ module(
         });
       });
 
-      this.set("formTemplateIds", [1]);
+      this.set("formTemplateId", [1]);
       await render(
-        hbs`<FormTemplateField::Wrapper @ids={{this.formTemplateIds}} />`
+        hbs`<FormTemplateField::Wrapper @id={{this.formTemplateId}} />`
       );
 
       assert.ok(
