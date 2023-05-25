@@ -71,22 +71,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("clicking on section header button", async function (assert) {
-    updateCurrentUser({
-      admin: "true",
-    });
-    await visit("/");
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
-    );
-
-    assert.ok(
-      exists(".sidebar-section-form-modal"),
-      "it opens edit community section form"
-    );
-  });
-
   test("clicking on section header link", async function (assert) {
     await visit("/t/280");
 
