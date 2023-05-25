@@ -46,6 +46,16 @@
     }
   }
 
+  &__metadata {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__last-reply {
+    color: var(--secondary-low);
+    font-size: var(--font-down-1);
+  }
+
   &__header {
     display: flex;
     flex-direction: row;

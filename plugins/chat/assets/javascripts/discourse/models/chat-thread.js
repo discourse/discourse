@@ -7,6 +7,7 @@ import guid from "pretty-text/guid";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
+import ChatThreadLastReply from "discourse/plugins/chat/discourse/models/chat-thread-last-reply";
 
 export const THREAD_STATUSES = {
   open: "open",
@@ -31,6 +32,7 @@ export default class ChatThread {
   @tracked replyCount;
   @tracked tracking;
   @tracked currentUserMembership = null;
+  @tracked lastReply = null;
 
   messagesManager = new ChatMessagesManager(getOwner(this));
 
@@ -51,6 +53,9 @@ export default class ChatThread {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
+    if (args.last_reply) {
+      this.lastReply = ChatThreadLastReply.create(args.last_reply);
+    }
   }
 
   stageMessage(message) {

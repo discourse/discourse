@@ -5,7 +5,14 @@ module Chat
     has_one :original_message_user, serializer: BasicUserWithStatusSerializer, embed: :objects
     has_one :original_message, serializer: Chat::ThreadOriginalMessageSerializer, embed: :objects
 
-    attributes :id, :title, :status, :channel_id, :meta, :reply_count, :current_user_membership
+    attributes :id,
+               :title,
+               :status,
+               :channel_id,
+               :meta,
+               :reply_count,
+               :current_user_membership,
+               :last_reply
 
     def initialize(object, opts)
       super(object, opts)
@@ -22,6 +29,14 @@ module Chat
 
     def reply_count
       object.replies_count_cache || 0
+    end
+
+    def include_last_reply?
+      @opts[:include_last_reply]
+    end
+
+    def last_reply
+      Chat::ThreadLastReplySerializer.new(object.last_reply, scope: scope, root: false).as_json
     end
 
     def include_current_user_membership?
