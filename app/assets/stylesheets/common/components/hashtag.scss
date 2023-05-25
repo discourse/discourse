@@ -90,8 +90,15 @@ a.hashtag-cooked {
     }
 
     .d-icon {
-      color: var(--primary-medium);
       margin-right: 0.25em;
+    }
+
+    .hashtag-category-badge {
+      flex: 0 0 auto;
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+      display: inline-block;
     }
   }
 
