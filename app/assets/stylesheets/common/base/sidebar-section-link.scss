@@ -1,6 +1,6 @@
 :root {
-  --d-sidebar-section-link-prefix-margin-right: 0.5rem;
-  --d-sidebar-section-link-prefix-width: 20px;
+  --d-sidebar-section-link-prefix-margin-right: 0.35rem;
+  --d-sidebar-section-link-prefix-width: 1.35rem;
 }
 
 .sidebar-section-link-wrapper {
@@ -22,12 +22,12 @@
     }
 
     &.active {
-      color: var(--primary);
+      color: var(--primary-800);
       background: var(--d-sidebar-highlight-color);
 
       .sidebar-section-link-prefix {
-        &.icon {
-          color: var(--primary-high);
+        &.icon svg {
+          color: var(--primary-medium);
         }
       }
     }
@@ -38,7 +38,7 @@
       padding-right: 0.1em; // avoids some overflow cropping
       text-align: right;
       color: var(--primary-700);
-      font-size: var(--font-down-1);
+      font-size: var(--font-down-2);
       font-weight: normal;
       margin-left: auto;
     }
@@ -120,17 +120,17 @@
         background: rgba(var(--primary-rgb), 0.1);
         width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
         height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
-        font-size: var(--font-down-1);
+        font-size: var(--font-down-2);
       }
     }
 
     &.icon,
     &.span {
       position: relative;
-      color: var(--primary-medium);
+      color: var(--primary-500);
 
       svg {
-        font-size: var(--font-down-1);
+        font-size: 0.8em;
       }
 
       .prefix-badge {
@@ -147,8 +147,8 @@
       }
     }
     .prefix-span {
-      width: 0.87em;
-      height: 0.87em;
+      width: 0.8em;
+      height: 0.8em;
     }
   }
 
