@@ -244,7 +244,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @action
   updateSelectedFormTemplateId(formTemplateId) {
-    this.set("selectedFormTemplateId", formTemplateId);
+    this.selectedFormTemplateId = formTemplateId;
 
     if (formTemplateId.length > 0) {
       return this.appEvents.trigger("composer:load-templates", formTemplateId);
