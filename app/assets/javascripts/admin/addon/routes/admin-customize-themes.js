@@ -17,6 +17,11 @@ export default class AdminCustomizeThemesRoute extends Route {
     return this.store.findAll("theme");
   }
 
+  @action
+  routeRefreshModel() {
+    this.refresh();
+  }
+
   setupController(controller, model) {
     super.setupController(controller, model);
     controller.set("editingTheme", false);

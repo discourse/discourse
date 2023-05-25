@@ -40,7 +40,7 @@ export default class SettingsEditor extends Component {
   }
 
   _theme() {
-    return this.theme || this.model;
+    return this.model.model;
   }
 
   condensedThemeSettings() {
@@ -172,6 +172,7 @@ export default class SettingsEditor extends Component {
     }
     this.saving = false;
     this.dialog.cancel();
+    this.model.controller.send("routeRefreshModel");
   }
 
   async saveSetting(themeId, setting) {

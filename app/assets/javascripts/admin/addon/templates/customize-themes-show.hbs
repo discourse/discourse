@@ -6,11 +6,6 @@
       @outletArgs={{hash theme=this.model}}
     />
   </span>
-  <DButton
-    @action={{action "refreshModel"}}
-    @class="btn-primary btn-small submit-edit"
-    @icon="refresh"
-  />
   <div class="title">
     {{#if this.editingName}}
       <TextField @value={{this.model.name}} @autofocus="true" />

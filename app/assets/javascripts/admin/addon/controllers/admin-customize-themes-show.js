@@ -253,7 +253,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @action
   refreshModel() {
     this.send("routeRefreshModel");
-    this.notifyPropertyChange("model");
   }
 
   @action
@@ -401,7 +400,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
     this.dialog.notice({
       title: "Edit Settings",
       bodyComponent: SettingsEditor,
-      bodyComponentModel: this.model,
+      bodyComponentModel: { model: this.model, controller: this },
     });
   }
 
