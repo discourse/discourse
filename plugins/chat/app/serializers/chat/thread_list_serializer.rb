@@ -2,7 +2,7 @@
 
 module Chat
   class ThreadListSerializer < ApplicationSerializer
-    attributes :meta, :threads
+    attributes :meta, :threads, :tracking
 
     def threads
       ActiveModel::ArraySerializer.new(
@@ -10,6 +10,10 @@ module Chat
         each_serializer: Chat::ThreadSerializer,
         scope: scope,
       )
+    end
+
+    def tracking
+      object.tracking
     end
 
     def meta

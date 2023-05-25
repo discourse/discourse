@@ -1,3 +1,19 @@
+@mixin chat-channel-header-button {
+  color: var(--primary-low-mid);
+
+  &:visited {
+    color: var(--primary-low-mid);
+  }
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  > * {
+    pointer-events: none;
+  }
+}
+
 .chat-channel {
   display: flex;
   flex-direction: column;
@@ -9,39 +25,8 @@
   min-width: 250px;
   @include chat-height;
 
-  .open-drawer-btn,
-  .open-thread-list-btn {
-    color: var(--primary-low-mid);
-
-    &:visited {
-      color: var(--primary-low-mid);
-    }
-
-    &:hover {
-      color: var(--primary);
-    }
-
-    > * {
-      pointer-events: none;
-    }
-  }
-
-  .open-thread-list-btn {
-    .d-icon {
-      margin-right: 0;
-    }
-
-    &:hover {
-      .discourse-touch & {
-        background: none !important;
-      }
-    }
-
-    &:active {
-      .discourse-touch & {
-        background: var(--secondary-very-high) !important;
-      }
-    }
+  .open-drawer-btn {
+    @include chat-channel-header-button;
   }
 
   .chat-messages-scroll {

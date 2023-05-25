@@ -1,4 +1,10 @@
-<div class="chat-thread-list-item" data-thread-id={{@thread.id}}>
+<div
+  class={{concat-class
+    "chat-thread-list-item"
+    (if (gt @thread.tracking.unreadCount 0) "-unread")
+  }}
+  data-thread-id={{@thread.id}}
+>
   <div class="chat-thread-list-item__main">
     <div
       title={{i18n "chat.thread.view_thread"}}

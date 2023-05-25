@@ -1,5 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -90,10 +90,11 @@ export default class ChatChannel {
   @tracked archive;
   @tracked tracking;
   @tracked threadingEnabled = false;
-  @tracked threadTrackingOverview = new TrackedArray();
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
+
+  @tracked _unreadThreadIds = new TrackedSet();
 
   constructor(args = {}) {
     this.id = args.id;
@@ -130,6 +131,18 @@ export default class ChatChannel {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
+  }
+
+  get unreadThreadCount() {
+    return this.unreadThreadIds.size;
+  }
+
+  get unreadThreadIds() {
+    return this._unreadThreadIds;
+  }
+
+  set unreadThreadIds(unreadThreadIds) {
+    this._unreadThreadIds = new TrackedSet(unreadThreadIds);
   }
 
   findIndexOfMessage(id) {

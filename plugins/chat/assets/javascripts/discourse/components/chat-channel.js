@@ -188,6 +188,16 @@ export default class ChatLivePane extends Component {
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
+        if (result.threads) {
+          result.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(this.args.channel, thread);
+          });
+        }
+
+        if (result.unread_thread_ids) {
+          this.args.channel.unreadThreadIds = result.unread_thread_ids;
+        }
+
         if (this.requestedTargetMessageId) {
           this.scrollToMessage(findArgs["targetMessageId"], {
             highlight: true,
@@ -205,18 +215,6 @@ export default class ChatLivePane extends Component {
         }
 
         this.scrollToBottom();
-
-        if (result.threads) {
-          result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
-          });
-        }
-
-        if (result.thread_tracking_overview) {
-          this.args.channel.threadTrackingOverview.push(
-            ...result.thread_tracking_overview
-          );
-        }
       })
       .catch(this._handleErrors)
       .finally(() => {

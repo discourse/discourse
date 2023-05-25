@@ -141,17 +141,16 @@ module Chat
         end
       end
 
-      Chat::Publisher.publish_user_tracking_state(
-        current_user,
-        @chat_channel.id,
+      message =
         (
-          if chat_message_creator.chat_message.thread_id.present?
-            @user_chat_channel_membership.last_read_message_id
+          if chat_message_creator.chat_message.in_thread?
+            Chat::Message.find(@user_chat_channel_membership.last_read_message_id)
           else
-            chat_message_creator.chat_message.id
+            chat_message_creator.chat_message
           end
-        ),
-      )
+        )
+
+      Chat::Publisher.publish_user_tracking_state!(current_user, @chat_channel, message)
       render json: success_json
     end
 

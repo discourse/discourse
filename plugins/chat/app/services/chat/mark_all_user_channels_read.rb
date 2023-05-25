@@ -63,7 +63,7 @@ module Chat
             membership_id: membership.membership_id,
           }
         end
-      Chat::Publisher.publish_bulk_user_tracking_state(guardian.user, data)
+      Chat::Publisher.publish_bulk_user_tracking_state!(guardian.user, data)
     end
   end
 end

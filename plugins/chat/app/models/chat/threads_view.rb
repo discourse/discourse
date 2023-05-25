@@ -2,12 +2,13 @@
 
 module Chat
   class ThreadsView
-    attr_reader :user, :channel, :threads
+    attr_reader :user, :channel, :threads, :tracking
 
-    def initialize(channel:, threads:, user:)
+    def initialize(channel:, threads:, user:, tracking:)
       @channel = channel
       @threads = threads
       @user = user
+      @tracking = tracking
     end
   end
 end

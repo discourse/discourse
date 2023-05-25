@@ -9,6 +9,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
             user: guardian.user,
             threads: result.threads,
             channel: result.channel,
+            tracking: result.tracking,
           ),
           ::Chat::ThreadListSerializer,
           root: false,

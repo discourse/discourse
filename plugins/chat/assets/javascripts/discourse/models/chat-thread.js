@@ -4,6 +4,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 
 export const THREAD_STATUSES = {
   open: "open",
@@ -26,6 +27,7 @@ export default class ChatThread {
   @tracked originalMessage;
   @tracked threadMessageBusLastId;
   @tracked replyCount;
+  @tracked tracking;
 
   messagesManager = new ChatMessagesManager(getOwner(this));
 
@@ -38,6 +40,8 @@ export default class ChatThread {
     this.staged = args.staged;
     this.replyCount = args.reply_count;
     this.originalMessage = ChatMessage.create(channel, args.original_message);
+
+    this.tracking = new ChatTrackingState(getOwner(this));
   }
 
   stageMessage(message) {
