@@ -134,29 +134,18 @@ export default class SearchMenu extends Component {
   }
 
   @action
-  focusSearchInput(element) {
-    if (this.args.searchVisible && element) {
-      element.focus();
-      element.select();
-    }
-  }
-
-  @action
   clearPMInboxContext() {
     this.inPMInboxContext = false;
-    this.focusSearchInput();
   }
 
   @action
   setTopicContext() {
     this.inTopicContext = true;
-    this.focusSearchInput();
   }
 
   @action
   clearTopicContext() {
     this.inTopicContext = false;
-    this.focusSearchInput();
   }
 
   // for cancelling debounced search

@@ -2,7 +2,6 @@
   <MenuPanel @animationClass={{@animationClass}} @maxWidth={{500}}>
     <SearchMenu::MenuPanelContents
       @inTopicContext={{this.inTopicContext}}
-      @updateInTopicContext={{this.updateInTopicContext}}
       @clearContext={{@clearContext}}
       @clearTopicContext={{this.clearTopicContext}}
       @setTopicContext={{@setTopicContext}}
@@ -14,7 +13,7 @@
       @fullSearch={{this.fullSearch}}
       @triggerSearch={{this.triggerSearch}}
       @clearSearch={{this.clearSearch}}
-      @focusSearchInput={{this.focusSearchInput}}
+      {{!-- @focusSearchInput={{this.focusSearchInput}} --}}
       @includesTopics={{this.includesTopics}}
       @noResults={{this.noResults}}
       @results={{this.results}}
@@ -24,6 +23,7 @@
       @searchTopics={{this.includesTopics}}
       @typeFilter={{this.typeFilter}}
       @updateTypeFilter={{this.updateTypeFilter}}
+      @searchVisible={{@searchVisible}}
     />
   </MenuPanel>
 </div>

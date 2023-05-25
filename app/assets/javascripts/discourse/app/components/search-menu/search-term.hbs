@@ -1,11 +1,11 @@
 <Input
   id="search-term"
   @type="text"
-  {{!-- @value={{this.search.activeGlobalSearchTerm}} --}}
   autocomplete="off"
+  @value={{this.search.activeGlobalSearchTerm}}
   placeholder={{I18n "search.title"}}
   aria-label={{I18n "search.title"}}
   {{on "input" this.updateSearchTerm}}
   {{on "keydown" this.keyDown}}
-  {{did-insert @focusSearchInput}}
+  {{did-insert this.focus}}
 />

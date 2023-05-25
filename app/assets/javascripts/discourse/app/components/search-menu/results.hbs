@@ -20,7 +20,10 @@
       {{/unless}}
     {{else}}
       {{#if this.resultTypes}}
-        <SearchMenu::Results::Types @resultTypes={{this.resultTypes}} />
+        <SearchMenu::Results::Types
+          @resultTypes={{this.resultTypes}}
+          @topicResultsOnly={{true}}
+        />
       {{/if}}
     {{/if}}
   {{/if}}

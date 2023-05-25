@@ -33,6 +33,8 @@ export default class SearchTerm extends Component {
 
   @action
   keyDown(e) {
+    //we can move this to it's own method
+    //@escape-press
     if (e.key === "Escape") {
       this.sendWidgetAction("toggleSearchMenu");
       document.querySelector("#search-button").focus();
@@ -144,6 +146,7 @@ export default class SearchTerm extends Component {
       if (!searchInput.value) {
         this.args.clearTopicContext();
         this.args.clearPMInboxContext();
+        this.focus(e.target);
       }
     }
   }
