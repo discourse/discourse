@@ -1161,7 +1161,6 @@ Discourse::Application.routes.draw do
 
     get "c/:id/show" => "categories#show"
     get "c/:id/visible_groups" => "categories#visible_groups"
-    get "c/:id/template" => "categories#form_template_content"
 
     get "c/*category_slug/find_by_slug" => "categories#find_by_slug"
     get "c/*category_slug/edit(/:tab)" => "categories#find_by_slug",
@@ -1600,5 +1599,6 @@ Discourse::Application.routes.draw do
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
 
     get "/form-templates/:id" => "form_templates#show"
+    get "/form-templates" => "form_templates#index"
   end
 end

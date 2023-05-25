@@ -115,6 +115,10 @@ module PageObjects
         page.has_css?(".form-template-field[data-field-type='#{field}']")
       end
 
+      def has_form_template_chooser?
+        page.has_css?(".composer-select-form-template")
+      end
+
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
       end

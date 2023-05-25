@@ -2,7 +2,16 @@
   <div class="d-editor-textarea-column">
     {{yield}}
     {{#if @formTemplateIds}}
-      <FormTemplateField::Wrapper @ids={{@formTemplateIds}} />
+      {{#if (gt @formTemplateIds.length 1)}}
+        <FormTemplateChooser
+          @class="composer-select-form-template"
+          @filteredIds={{@formTemplateIds}}
+          @value={{this.selectedFormTemplateId}}
+          @onChange={{this.updateSelectedFormTemplateId}}
+          @options={{hash maximum=1}}
+        />
+      {{/if}}
+      <FormTemplateField::Wrapper @ids={{this.selectedFormTemplateId}} />
     {{else}}
       <div
         class="d-editor-textarea-wrapper
