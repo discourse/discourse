@@ -270,7 +270,7 @@ class ComposerMessagesFinder
           I18n.t(
             "education.reviving_old_topic",
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 @topic.last_posted_at,
                 false,
                 scope: :"datetime.distance_in_words_verbose",
