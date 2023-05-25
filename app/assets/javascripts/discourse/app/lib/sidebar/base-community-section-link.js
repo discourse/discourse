@@ -109,8 +109,15 @@ export default class BaseCommunitySectionLink {
   /**
    * @returns {string} The name of the fontawesome icon to be displayed before the link. Defaults to "link".
    */
-  get prefixValue() {
+  get defaultPrefixValue() {
     return "link";
+  }
+
+  /**
+   * @returns {string} The name of the fontawesome icon to be displayed before the link.
+   */
+  get prefixValue() {
+    return this.overridenIcon || this.defaultPrefixValue;
   }
 
   _notImplemented() {

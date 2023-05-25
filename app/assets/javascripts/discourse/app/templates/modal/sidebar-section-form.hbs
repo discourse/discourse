@@ -23,20 +23,14 @@
       {{/if}}
     </div>
     <div class="row-wrapper header">
+      <div class="input-group link-icon">
+        <label>{{i18n "sidebar.sections.custom.links.icon.label"}}</label>
+      </div>
       <div class="input-group link-name">
-        <label for="link-name">{{i18n
-            "sidebar.sections.custom.links.icon.label"
-          }}</label>
+        <label>{{i18n "sidebar.sections.custom.links.name.label"}}</label>
       </div>
-      <div class="input-group">
-        <label for="link-name">{{i18n
-            "sidebar.sections.custom.links.name.label"
-          }}</label>
-      </div>
-      <div class="input-group">
-        <label for="link-url">{{i18n
-            "sidebar.sections.custom.links.value.label"
-          }}</label>
+      <div class="input-group link-url">
+        <label>{{i18n "sidebar.sections.custom.links.value.label"}}</label>
       </div>
     </div>
     {{#each this.activeLinks as |link|}}
@@ -55,7 +49,7 @@
     />
     {{#if this.activeSecondaryLinks}}
       <hr />
-      <h3>{{I18n "sidebar.sections.custom.more_menu"}}</h3>
+      <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
       {{#each this.activeSecondaryLinks as |link|}}
         <Sidebar::SectionFormLink
           @link={{link}}

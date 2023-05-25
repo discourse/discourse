@@ -26,7 +26,7 @@ export default class FAQSectionLink extends BaseSectionLink {
     );
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "question-circle";
+  get defaultPrefixValue() {
+    return "question-circle";
   }
 }

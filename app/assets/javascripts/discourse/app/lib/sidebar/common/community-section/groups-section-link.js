@@ -26,7 +26,7 @@ export default class GroupsSectionLink extends BaseSectionLink {
     return this.siteSettings.enable_group_directory;
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "user-friends";
+  get defaultPrefixValue() {
+    return "user-friends";
   }
 }

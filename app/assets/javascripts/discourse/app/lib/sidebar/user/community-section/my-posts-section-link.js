@@ -69,10 +69,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get text() {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return I18n.t(
-        `sidebar.sections.community.links.my_posts.content_drafts`,
-        { defaultValue: "My Drafts" }
-      );
+      return I18n.t(`sidebar.sections.community.links.my_posts.content_drafts`);
     } else {
       return I18n.t(
         `sidebar.sections.community.links.${this.overridenName
@@ -98,11 +95,11 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     return this.draftCount > 0;
   }
 
-  get prefixValue() {
+  get defaultPrefixValue() {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
       return "pencil-alt";
     }
-    return this.overridenIcon || "user";
+    return "user";
   }
 
   get suffixCSSClass() {

@@ -22,7 +22,7 @@ export default class AboutSectionLink extends BaseSectionLink {
     );
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "info-circle";
+  get defaultPrefixValue() {
+    return "info-circle";
   }
 }

@@ -95,8 +95,8 @@ export default class EverythingSectionLink extends BaseSectionLink {
     return "discovery.latest";
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "layer-group";
+  get defaultPrefixValue() {
+    return "layer-group";
   }
 
   get suffixCSSClass() {

@@ -26,7 +26,7 @@ export default class AdminSectionLink extends BaseSectionLink {
     return !!this.currentUser?.staff;
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "wrench";
+  get defaultPrefixValue() {
+    return "wrench";
   }
 }

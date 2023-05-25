@@ -73,7 +73,7 @@ export default class ReviewSectionLink extends BaseSectionLink {
     }
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "flag";
+  get defaultPrefixValue() {
+    return "flag";
   }
 }

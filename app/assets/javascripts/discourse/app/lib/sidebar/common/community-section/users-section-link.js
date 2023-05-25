@@ -29,7 +29,7 @@ export default class UsersSectionLink extends BaseSectionLink {
     );
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "users";
+  get defaultPrefixValue() {
+    return "users";
   }
 }

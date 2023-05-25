@@ -149,6 +149,12 @@
     &.header {
       padding-bottom: 0;
       padding-top: 1em;
+      label {
+        margin-bottom: 0;
+      }
+      .link-url {
+        margin-left: -1em;
+      }
     }
 
     &.drag-above {
@@ -159,7 +165,7 @@
       border-bottom: 1px dotted #666;
       padding-bottom: calc(0.5em - 1px);
     }
-    .link-name {
+    .link-icon {
       grid-column: 1 / span 2;
       padding-left: calc(25px + 1em);
     }

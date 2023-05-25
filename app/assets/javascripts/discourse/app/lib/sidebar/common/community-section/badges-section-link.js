@@ -26,7 +26,7 @@ export default class BadgesSectionLink extends BaseSectionLink {
     return this.siteSettings.enable_badges;
   }
 
-  get prefixValue() {
-    return this.overridenIcon || "certificate";
+  get defaultPrefixValue() {
+    return "certificate";
   }
 }
