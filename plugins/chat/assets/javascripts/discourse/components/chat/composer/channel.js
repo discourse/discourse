@@ -29,16 +29,15 @@ export default class ChatComposerChannel extends ChatComposer {
     this._persistHandler = discourseDebounce(
       this,
       this._debouncedPersistDraft,
+      this.args.channel.id,
+      this.currentMessage.toJSONDraft(),
       2000
     );
   }
 
   @action
-  _debouncedPersistDraft() {
-    this.chatApi.saveDraft(
-      this.args.channel.id,
-      this.currentMessage.toJSONDraft()
-    );
+  _debouncedPersistDraft(channelId, jsonDraft) {
+    this.chatApi.saveDraft(channelId, jsonDraft);
   }
 
   get placeholder() {
