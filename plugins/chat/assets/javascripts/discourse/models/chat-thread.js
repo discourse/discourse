@@ -1,4 +1,5 @@
 import { getOwner } from "discourse-common/lib/get-owner";
+import I18n from "I18n";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -80,5 +81,14 @@ export default class ChatThread {
 
   get escapedTitle() {
     return escapeExpression(this.title);
+  }
+
+  get titleOrDefault() {
+    return (
+      this.escapedTitle ||
+      `${I18n.t("chat.thread.default_title", {
+        thread_id: this.id,
+      })}`
+    );
   }
 }
