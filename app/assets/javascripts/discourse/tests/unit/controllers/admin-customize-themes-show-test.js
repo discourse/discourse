@@ -50,4 +50,40 @@ module("Unit | Controller | admin-customize-themes-show", function (hooks) {
       "returns theme's repo URL to branch"
     );
   });
+
+  test("displays settings editor button with settings", function (assert) {
+    const theme = Theme.create({
+      id: 2,
+      default: true,
+      name: "default",
+      settings: [{}],
+    });
+    const controller = this.owner.lookup(
+      "controller:admin-customize-themes-show"
+    );
+    controller.setProperties({ model: theme });
+    assert.deepEqual(
+      controller.hasSettings,
+      true,
+      "sets the hasSettings property to true with settings"
+    );
+  });
+
+  test("hides settings editor button with no settings", function (assert) {
+    const theme = Theme.create({
+      id: 2,
+      default: true,
+      name: "default",
+      settings: [],
+    });
+    const controller = this.owner.lookup(
+      "controller:admin-customize-themes-show"
+    );
+    controller.setProperties({ model: theme });
+    assert.deepEqual(
+      controller.hasSettings,
+      false,
+      "sets the hasSettings property to true with settings"
+    );
+  });
 });
