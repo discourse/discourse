@@ -7,6 +7,8 @@ import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { parseMentionedUsernames } from "discourse/lib/parse-mentions";
+import { except } from "discourse/lib/collections";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -90,6 +92,10 @@ export default class ChatMessage {
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
+
+    this.site = getOwner(this).lookup("service:site");
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.usersApi = getOwner(this).lookup("service:usersApi");
   }
 
   duplicate() {
@@ -156,21 +162,20 @@ export default class ChatMessage {
   }
 
   async cook() {
-    const site = getOwner(this).lookup("service:site");
-
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
 
     const markdownOptions = {
       featuresOverride:
-        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+        this.site.markdown_additional_options?.chat
+          ?.limited_pretty_text_features,
       markdownItRules:
-        site.markdown_additional_options?.chat
+        this.site.markdown_additional_options?.chat
           ?.limited_pretty_text_markdown_rules,
       hashtagTypesInPriorityOrder:
-        site.hashtag_configurations?.["chat-composer"],
-      hashtagIcons: site.hashtag_icons,
+        this.site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: this.site.hashtag_icons,
     };
 
     if (ChatMessage.cookFunction) {
@@ -180,7 +185,7 @@ export default class ChatMessage {
       ChatMessage.cookFunction = (raw) => {
         return simpleCategoryHashMentionTransform(
           cookFunction(raw),
-          site.categories
+          this.site.categories
         );
       };
 
@@ -229,6 +234,19 @@ export default class ChatMessage {
   @cached
   get nextMessage() {
     return this.manager?.messages?.objectAt?.(this.index + 1);
+  }
+
+  addMentionedUser(user) {
+    this.mentionedUsers.set(user.id, user);
+  }
+
+  async ensureMentionsLoaded() {
+    const notLoaded = this.#notLoadedMentions;
+    if (notLoaded.length > 0) {
+      const users = await this.usersApi.list(notLoaded);
+      users.forEach((user) => this.addMentionedUser(user));
+      this.incrementVersion();
+    }
   }
 
   incrementVersion() {
@@ -331,6 +349,15 @@ export default class ChatMessage {
         );
       }
     }
+  }
+
+  get #notLoadedMentions() {
+    const parsed = parseMentionedUsernames(this._cooked).slice(
+      0,
+      this.siteSettings.max_mentions_per_chat_message
+    );
+    const loaded = [...this.mentionedUsers.values()].map((u) => u.username);
+    return except(parsed, loaded);
   }
 
   #initChatMessageReactionModel(reactions = []) {

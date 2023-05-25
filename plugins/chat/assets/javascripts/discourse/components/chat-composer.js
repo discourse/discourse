@@ -387,7 +387,7 @@ export default class ChatComposer extends Component {
 
   #addMentionedUser(userData) {
     const user = User.create(userData);
-    this.currentMessage.mentionedUsers.set(user.id, user);
+    this.currentMessage.addMentionedUser(user);
   }
 
   #applyUserAutocomplete($textarea) {
