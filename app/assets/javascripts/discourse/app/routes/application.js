@@ -40,6 +40,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   documentTitle: service(),
   dialog: service(),
   composer: service(),
+  modal: service(),
 
   actions: {
     toggleAnonymous() {
@@ -152,46 +153,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     // Close the current modal, and destroy its state.
     closeModal(initiatedBy) {
-      const route = getOwner(this).lookup("route:application");
-      let modalController = route.controllerFor("modal");
-      const controllerName = modalController.get("name");
-
-      if (controllerName) {
-        const controller = getOwner(this).lookup(
-          `controller:${controllerName}`
-        );
-        if (controller && controller.beforeClose) {
-          if (false === controller.beforeClose()) {
-            return;
-          }
-        }
-      }
-
-      this.render("hide-modal", { into: "modal", outlet: "modalBody" });
-      $(".d-modal.fixed-modal").modal("hide");
-
-      if (controllerName) {
-        const controller = getOwner(this).lookup(
-          `controller:${controllerName}`
-        );
-
-        if (controller) {
-          this.appEvents.trigger("modal:closed", {
-            name: controllerName,
-            controller,
-          });
-
-          if (controller.onClose) {
-            controller.onClose({
-              initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
-              initiatedByClickOut: initiatedBy === "initiatedByClickOut",
-              initiatedByESC: initiatedBy === "initiatedByESC",
-            });
-          }
-        }
-        modalController.set("name", null);
-      }
-      modalController.hidden = true;
+      return this.modal.close(initiatedBy);
     },
 
     /**
@@ -200,11 +162,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
     **/
     hideModal() {
-      $(".d-modal.fixed-modal").modal("hide");
+      return this.modal.hide();
     },
 
     reopenModal() {
-      $(".d-modal.fixed-modal").modal("show");
+      return this.modal.reopen();
     },
 
     editCategory(category) {
