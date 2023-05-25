@@ -129,11 +129,6 @@ module Chat
           ).allowing_actor_communication
 
         if user_ids_allowing_communication.any?
-          Chat::Publisher.publish_new_channel(
-            @chat_channel,
-            @chat_channel.chatable.users.where(id: user_ids_allowing_communication),
-          )
-
           @chat_channel
             .user_chat_channel_memberships
             .where(user_id: user_ids_allowing_communication)
