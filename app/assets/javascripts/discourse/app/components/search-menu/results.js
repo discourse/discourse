@@ -31,21 +31,14 @@ export default class Results extends Component {
     return this.args.searchTopics && this.args.invalidTerm;
   }
 
-  get resultTypes() {
+  get resultTypesWithComponent() {
     let content = [];
     this.args.results.resultTypes?.map((resultType) => {
       content.push({
-        type: resultType.type,
+        ...resultType,
         component: SEARCH_RESULTS_COMPONENT_TYPE[resultType.type],
-        searchLogId: resultType.searchLogId,
-        results: resultType.results,
       });
     });
     return content;
-  }
-
-  moreOfType(type) {
-    searchData.typeFilter = type;
-    this.triggerSearch();
   }
 }

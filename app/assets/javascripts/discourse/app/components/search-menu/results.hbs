@@ -5,24 +5,31 @@
       @results={{@suggestionResults}}
     />
   {{else if this.termTooShort}}
-    <div class="no-results">{{I18n "search.too_short"}}</div>
+    <div class="no-results">{{i18n "search.too_short"}}</div>
   {{else if this.noTopicResults}}
-    <div class="no-results">{{I18n "search.no_results"}}</div>
+    <div class="no-results">{{i18n "search.no_results"}}</div>
   {{else if this.renderInitialOptions}}
     <SearchMenu::Results::InitialOptions />
   {{else}}
     {{#if (not @searchTopics)}}
       {{#unless @inPMInboxContext}}
         <SearchMenu::Results::InitialOptions />
-        {{#if this.resultTypes}}
-          <SearchMenu::Results::Types @resultTypes={{this.resultTypes}} />
+        {{#if this.resultTypesWithComponent}}
+          <SearchMenu::Results::Types
+            @resultTypes={{this.resultTypesWithComponent}}
+          />
         {{/if}}
       {{/unless}}
     {{else}}
-      {{#if this.resultTypes}}
+      {{#if this.resultTypesWithComponent}}
         <SearchMenu::Results::Types
-          @resultTypes={{this.resultTypes}}
+          @resultTypes={{this.resultTypesWithComponent}}
           @topicResultsOnly={{true}}
+        />
+        <SearchMenu::Results::MoreLink
+          @updateTypeFilter={{@updateTypeFilter}}
+          @triggerSearch={{@triggerSearch}}
+          @resultTypes={{this.resultTypesWithComponent}}
         />
       {{/if}}
     {{/if}}

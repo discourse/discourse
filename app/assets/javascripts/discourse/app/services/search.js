@@ -18,8 +18,6 @@ export default class Search extends Service {
   @action
   updateActiveGlobalSearchTerm(term) {
     this.activeGlobalSearchTerm = term;
-    console.log(term);
-    console.log(this.activeGlobalSearchTerm);
   }
 
   @action
