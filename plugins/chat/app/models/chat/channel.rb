@@ -119,6 +119,11 @@ module Chat
       update_user_counts
     end
 
+    def can_be_joined_by?(user)
+      guardian = Guardian.new(user)
+      guardian.can_chat? && guardian.can_join_chat_channel?(self)
+    end
+
     def self.update_message_counts
       # NOTE: Chat::Channel#messages_count is not updated every time
       # a message is created or deleted in a channel, so it should not
