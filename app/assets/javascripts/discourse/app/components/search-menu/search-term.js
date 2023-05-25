@@ -33,11 +33,9 @@ export default class SearchTerm extends Component {
 
   @action
   keyDown(e) {
-    //we can move this to it's own method
-    //@escape-press
     if (e.key === "Escape") {
-      this.sendWidgetAction("toggleSearchMenu");
       document.querySelector("#search-button").focus();
+      this.args.closeSearchMenu();
       e.preventDefault();
       return false;
     }
