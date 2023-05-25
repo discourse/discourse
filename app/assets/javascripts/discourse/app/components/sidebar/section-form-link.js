@@ -15,7 +15,7 @@ export default class SectionFormLink extends Component {
   @action
   dragHasStarted(event) {
     event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("link", JSON.stringify(this.args.link));
+    event.dataTransfer.setData("linkId", this.args.link.objectId);
     this.dragCssClass = "dragging";
   }
 
@@ -45,7 +45,7 @@ export default class SectionFormLink extends Component {
   dropItem(event) {
     event.stopPropagation();
     this.args.reorderCallback(
-      JSON.parse(event.dataTransfer.getData("link")),
+      parseInt(event.dataTransfer.getData("linkId"), 10),
       this.args.link,
       this.isAboveElement(event)
     );

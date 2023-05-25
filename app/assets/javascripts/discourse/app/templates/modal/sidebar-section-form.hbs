@@ -46,6 +46,7 @@
       @title="sidebar.sections.custom.links.add"
       @icon="plus"
       @label="sidebar.sections.custom.links.add"
+      @ariaLabel="sidebar.sections.custom.links.add"
     />
     {{#if this.activeSecondaryLinks}}
       <hr />
@@ -63,6 +64,7 @@
         @title="sidebar.sections.custom.links.add"
         @icon="plus"
         @label="sidebar.sections.custom.links.add"
+        @ariaLabel="sidebar.sections.custom.links.add"
       />
 
       {{#if this.model.sectionType}}
@@ -72,6 +74,7 @@
           @icon="undo"
           @title="sidebar.sections.custom.links.reset"
           @label="sidebar.sections.custom.links.reset"
+          @ariaLabel="sidebar.sections.custom.links.reset"
         />
       {{/if}}
     {{/if}}
@@ -96,6 +99,7 @@
     @action={{action "save"}}
     @class="btn-primary"
     @label="sidebar.sections.custom.save"
+    @ariaLabel="sidebar.sections.custom.save"
     @disabled={{not this.model.valid}}
   />
   {{#if this.canDelete}}
@@ -105,6 +109,7 @@
       @class="btn-danger delete"
       @action={{action "delete"}}
       @label="sidebar.sections.custom.delete"
+      @ariaLabel="sidebar.sections.custom.delete"
     />
   {{/if}}
 </div>

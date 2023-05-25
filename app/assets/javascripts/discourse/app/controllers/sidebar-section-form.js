@@ -385,9 +385,17 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @bind
-  reorder(linkFrom, linkTo, above) {
-    if (linkFrom === linkTo) {
+  reorder(linkFromId, linkTo, above) {
+    if (linkFromId === linkTo.objectId) {
       return;
+    }
+    let linkFrom = this.model.links.find(
+      (link) => link.objectId === linkFromId
+    );
+    if (!linkFrom) {
+      linkFrom = this.model.secondaryLinks.find(
+        (link) => link.objectId === linkFrom
+      );
     }
 
     if (linkFrom.isPrimary) {
