@@ -190,24 +190,30 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.strictEqual(
-      query(".sidebar-section-link[data-tag-name=tag1]").textContent.trim(),
+      query(
+        ".sidebar-section-link-wrapper[data-tag-name=tag1]"
+      ).textContent.trim(),
       "tag1",
       "displays the tag1 name for the link text"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-link[data-tag-name=tag2]").textContent.trim(),
+      query(
+        ".sidebar-section-link-wrapper[data-tag-name=tag2]"
+      ).textContent.trim(),
       "tag2",
       "displays the tag2 name for the link text"
     );
 
     assert.strictEqual(
-      query(".sidebar-section-link[data-tag-name=tag3]").textContent.trim(),
+      query(
+        ".sidebar-section-link-wrapper[data-tag-name=tag3]"
+      ).textContent.trim(),
       "tag3",
       "displays the tag3 name for the link text"
     );
 
-    await click(".sidebar-section-link[data-tag-name=tag1]");
+    await click(".sidebar-section-link-wrapper[data-tag-name=tag1] a");
 
     assert.strictEqual(
       currentURL(),
@@ -224,11 +230,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(`.sidebar-section-link[data-tag-name=tag1].active`),
+      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
       "the tag1 section link is marked as active"
     );
 
-    await click(".sidebar-section-link[data-tag-name=tag2]");
+    await click(".sidebar-section-link-wrapper[data-tag-name=tag2] a");
 
     assert.strictEqual(
       currentURL(),
@@ -245,7 +251,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(`.sidebar-section-link[data-tag-name=tag2].active`),
+      exists(`.sidebar-section-link-wrapper[data-tag-name=tag2] a.active`),
       "the tag2 section link is marked as active"
     );
   });
@@ -256,7 +262,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     });
 
     await visit("/");
-    await click(".sidebar-section-link[data-tag-name=tag1]");
+    await click(".sidebar-section-link-wrapper[data-tag-name=tag1] a");
 
     assert.strictEqual(
       currentURL(),
@@ -273,7 +279,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(`.sidebar-section-link[data-tag-name=tag1].active`),
+      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
       "the tag1 section link is marked as active"
     );
   });
@@ -298,7 +304,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     ]);
 
     await visit("/");
-    await click(".sidebar-section-link[data-tag-name=tag1]");
+    await click(".sidebar-section-link-wrapper[data-tag-name=tag1] a");
 
     assert.strictEqual(
       currentURL(),
@@ -315,7 +321,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(`.sidebar-section-link[data-tag-name=tag1].active`),
+      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
       "the tag1 section link is marked as active"
     );
   });
@@ -340,7 +346,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     ]);
 
     await visit("/");
-    await click(".sidebar-section-link[data-tag-name=tag1]");
+    await click(".sidebar-section-link-wrapper[data-tag-name=tag1] a");
 
     assert.strictEqual(
       currentURL(),
@@ -357,7 +363,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(`.sidebar-section-link[data-tag-name=tag1].active`),
+      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
       "the tag1 section link is marked as active"
     );
   });
@@ -365,7 +371,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   test("private message tag section links for user", async function (assert) {
     await visit("/");
 
-    await click(".sidebar-section-link[data-tag-name=tag4]");
+    await click(".sidebar-section-link-wrapper[data-tag-name=tag4] a");
 
     assert.strictEqual(
       currentURL(),
@@ -382,7 +388,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(`.sidebar-section-link[data-tag-name=tag4].active`),
+      exists(`.sidebar-section-link-wrapper[data-tag-name=tag4] a.active`),
       "the tag4 section link is marked as active"
     );
   });
@@ -399,7 +405,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(".sidebar-section-link[data-tag-name=tag1].active"),
+      exists(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active"),
       "the tag1 section link is marked as active for the top route"
     );
   });
@@ -416,7 +422,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(".sidebar-section-link[data-tag-name=tag1].active"),
+      exists(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active"),
       "the tag1 section link is marked as active for the new route"
     );
   });
@@ -433,7 +439,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
 
     assert.ok(
-      exists(".sidebar-section-link[data-tag-name=tag1].active"),
+      exists(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active"),
       "the tag1 section link is marked as active for the unread route"
     );
   });
@@ -483,21 +489,21 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link[data-tag-name=tag1] .sidebar-section-link-suffix`
+        `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-suffix`
       ),
       "shows suffix indicator for new content on tag1 link"
     );
 
     assert.ok(
       exists(
-        `.sidebar-section-link[data-tag-name=tag2] .sidebar-section-link-suffix`
+        `.sidebar-section-link-wrapper[data-tag-name=tag2] .sidebar-section-link-suffix`
       ),
       "shows suffix indicator for new content on tag2 link"
     );
 
     assert.ok(
       !exists(
-        `.sidebar-section-link[data-tag-name=tag3] .sidebar-section-link-suffix`
+        `.sidebar-section-link-wrapper[data-tag-name=tag3] .sidebar-section-link-suffix`
       ),
       "hides suffix indicator when there's no new content on tag3 link"
     );
@@ -513,7 +519,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       exists(
-        `.sidebar-section-link[data-tag-name=tag1] .sidebar-section-link-suffix`
+        `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-suffix`
       ),
       "shows suffix indicator for new topic on tag1 link"
     );
@@ -529,7 +535,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       !exists(
-        `.sidebar-section-link[data-tag-name=tag1] .sidebar-section-link-suffix`
+        `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-suffix`
       ),
       "hides suffix indicator for tag1 section link"
     );
@@ -591,7 +597,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       query(
-        `.sidebar-section-link[data-tag-name=tag1] .sidebar-section-link-content-badge`
+        `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
       ).textContent.trim(),
       I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag1 section link`
@@ -599,7 +605,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       query(
-        `.sidebar-section-link[data-tag-name=tag2] .sidebar-section-link-content-badge`
+        `.sidebar-section-link-wrapper[data-tag-name=tag2] .sidebar-section-link-content-badge`
       ).textContent.trim(),
       I18n.t("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag2 section link`
@@ -607,7 +613,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       !exists(
-        `.sidebar-section-link[data-tag-name=tag3] .sidebar-section-link-content-badge`
+        `.sidebar-section-link-wrapper[data-tag-name=tag3] .sidebar-section-link-content-badge`
       ),
       "does not display any badge for tag3 section link"
     );
@@ -623,7 +629,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       query(
-        `.sidebar-section-link[data-tag-name=tag1] .sidebar-section-link-content-badge`
+        `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
       ).textContent.trim(),
       I18n.t("sidebar.new_count", { count: 1 }),
       `displays 1 new count for tag1 section link`
@@ -640,7 +646,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       !exists(
-        `.sidebar-section-link[data-tag-name=tag1] .sidebar-section-link-content-badge`
+        `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
       ),
       `does not display any badge tag1 section link`
     );
@@ -752,7 +758,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          '.sidebar-section-link[data-tag-name="tag1"] .sidebar-section-link-content-badge'
+          '.sidebar-section-link-wrapper[data-tag-name="tag1"] .sidebar-section-link-content-badge'
         ).textContent.trim(),
         "2",
         "count for tag1 is 2 because it has 1 unread topic and 1 new topic"
@@ -760,7 +766,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          '.sidebar-section-link[data-tag-name="tag2"] .sidebar-section-link-content-badge'
+          '.sidebar-section-link-wrapper[data-tag-name="tag2"] .sidebar-section-link-content-badge'
         ).textContent.trim(),
         "1",
         "count for tag2 is 1 because it has 1 unread topic"
@@ -768,7 +774,7 @@ acceptance(
 
       assert.strictEqual(
         query(
-          '.sidebar-section-link[data-tag-name="tag3"] .sidebar-section-link-content-badge'
+          '.sidebar-section-link-wrapper[data-tag-name="tag3"] .sidebar-section-link-content-badge'
         ).textContent.trim(),
         "1",
         "count for tag3 is 1 because it has 1 new topic"
@@ -815,23 +821,23 @@ acceptance(
       await visit("/");
 
       assert.true(
-        query('.sidebar-section-link[data-tag-name="tag1"]').href.endsWith(
-          "/tag/tag1/l/new"
-        ),
+        query(
+          '.sidebar-section-link-wrapper[data-tag-name="tag1"] a'
+        ).href.endsWith("/tag/tag1/l/new"),
         "links to the new topics list for the tag because there's 1 new topic"
       );
 
       assert.true(
-        query('.sidebar-section-link[data-tag-name="tag2"]').href.endsWith(
-          "/tag/tag2/l/new"
-        ),
+        query(
+          '.sidebar-section-link-wrapper[data-tag-name="tag2"] a'
+        ).href.endsWith("/tag/tag2/l/new"),
         "links to the new topics list for the tag because there's 1 unread topic"
       );
 
       assert.true(
-        query('.sidebar-section-link[data-tag-name="tag3"]').href.endsWith(
-          "/tag/tag3"
-        ),
+        query(
+          '.sidebar-section-link-wrapper[data-tag-name="tag3"] a'
+        ).href.endsWith("/tag/tag3"),
         "links to the latest topics list for the tag because there are no unread or new topics"
       );
     });
