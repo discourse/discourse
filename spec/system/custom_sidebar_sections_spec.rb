@@ -114,25 +114,17 @@ describe "Custom sidebar sections", type: :system, js: true do
     sign_in user
     visit("/latest")
 
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
-      expect(sidebar).to have_section_link("Sidebar Tags")
-    end
-
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
-      expect(sidebar).to have_section_link("Sidebar Categories")
-    end
+    expect(sidebar.primary_section_links("my-section")).to eq(
+      ["Sidebar Tags", "Sidebar Categories"],
+    )
 
     tags_link = find(".sidebar-section-link[data-link-name='Sidebar Tags']")
     categories_link = find(".sidebar-section-link[data-link-name='Sidebar Categories']")
     tags_link.drag_to(categories_link, html5: true, delay: 0.4)
 
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
-      expect(sidebar).to have_section_link("Sidebar Categories")
-    end
-
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
-      expect(sidebar).to have_section_link("Sidebar Tags")
-    end
+    expect(sidebar.primary_section_links("my-section")).to eq(
+      ["Sidebar Categories", "Sidebar Tags"],
+    )
   end
 
   it "does not allow the user to edit public section" do
@@ -207,31 +199,21 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     sidebar.edit_custom_section("Community")
     section_modal.fill_name("Edited community section")
-    everything_link = find(".draggable[data-link-name='Everything']")
-    my_posts_link = find(".draggable[data-link-name='Review']")
-    everything_link.drag_to(my_posts_link, delay: 0.4)
+    section_modal.everything_link.drag_to(section_modal.review_link, delay: 0.4)
     section_modal.save
 
     expect(sidebar).to have_section("Edited community section")
-    within(
-      "[data-section-name='edited-community-section'] .sidebar-section-link-wrapper:nth-child(1)",
-    ) { expect(sidebar).to have_section_link("My Posts") }
-
-    within(
-      "[data-section-name='edited-community-section'] .sidebar-section-link-wrapper:nth-child(2)",
-    ) { expect(sidebar).to have_section_link("Everything") }
+    expect(sidebar.primary_section_links("edited-community-section")).to eq(
+      ["My Posts", "Everything", "Admin", "More"],
+    )
 
     sidebar.edit_custom_section("Edited community section")
     section_modal.reset
 
     expect(sidebar).to have_section("Community")
-    within("[data-section-name='community'] .sidebar-section-link-wrapper:nth-child(1)") do
-      expect(sidebar).to have_section_link("Everything")
-    end
-
-    within("[data-section-name='community'] .sidebar-section-link-wrapper:nth-child(2)") do
-      expect(sidebar).to have_section_link("My Posts")
-    end
+    expect(sidebar.primary_section_links("community")).to eq(
+      ["Everything", "My Posts", "Admin", "More"],
+    )
   end
 
   it "shows anonymous public sections" do
