@@ -21,7 +21,6 @@
 .sidebar-wrapper {
   display: flex;
   --d-sidebar-highlight-color: var(--primary-low);
-  background-color: var(--primary-very-low);
   grid-area: sidebar;
   position: sticky;
   top: var(--header-offset);
@@ -48,6 +47,7 @@
     height: 100%;
     width: 100%;
     padding: 0;
+    border-right: 1px solid var(--primary-low);
     overflow-x: hidden;
     // allows sidebar to scroll to the bottom when the composer is open
     height: calc(100% - var(--composer-height, 0px));

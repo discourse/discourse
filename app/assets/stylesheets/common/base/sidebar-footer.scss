@@ -8,8 +8,6 @@
     display: flex;
     align-items: stretch;
     position: relative;
-    border-top: 1.5px solid var(--primary-low);
-    background: var(--primary-very-low);
     padding: 0.5em 0.8em;
     padding-bottom: max(env(safe-area-inset-bottom), 0.5em);
     &:before {
@@ -18,15 +16,15 @@
       content: "";
       display: block;
       height: 1.5em;
-      top: calc(-1.5em - 1px);
+      top: calc(-1.5em);
       left: -0.5em;
       right: -0.5em;
       width: calc(100% + 0.5em);
       pointer-events: none;
       background: linear-gradient(
         to bottom,
-        rgba(var(--primary-very-low-rgb), 0),
-        rgba(var(--primary-very-low-rgb), 1)
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 1)
       );
     }
   }
