@@ -2477,14 +2477,12 @@ uncategorized:
   tos_topic_id:
     default: -1
     hidden: true
-    client: true
   guidelines_topic_id:
     default: -1
     hidden: true
   privacy_topic_id:
     default: -1
     hidden: true
-    client: true
   welcome_topic_id:
     default: -1
     hidden: true
