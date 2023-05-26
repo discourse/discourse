@@ -13,8 +13,12 @@
   z-index: 10;
   min-width: 280px;
 
+  .rtl & {
+    padding: 0.5em 1em 0.5em 0;
+  }
+
   .btn-flat.dismiss-btn {
-    margin-left: 0.25em;
+    margin-inline-end: 0.25em;
     color: var(--primary-medium);
 
     &:hover,

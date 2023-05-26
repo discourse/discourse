@@ -60,11 +60,23 @@
     &:first-child {
       border-bottom-left-radius: 0.25em;
       border-top-left-radius: 0.25em;
+
+      .rtl & {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0.25em;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0.25em;
+      }
     }
 
     &:first-child:not(:hover) {
       border-color: var(--primary-300);
       border-right-color: transparent;
+
+      .rtl & {
+        border-color: var(--primary-300);
+        border-left-color: transparent;
+      }
     }
 
     .d-icon {
@@ -85,6 +97,12 @@
       padding: 0.5em 0;
       width: 2.5em;
       transition: background 0.2s, border-color 0.2s;
+
+      .rtl & {
+        border: 1px solid var(--primary-300);
+        border-right-color: transparent;
+        border-radius: 0.25em 0 0 0.25em;
+      }
 
       &:focus {
         border-color: var(--primary-300);

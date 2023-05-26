@@ -10,7 +10,7 @@
 
   & + .chat-message-info__bot-indicator,
   & + .chat-message-info__date {
-    margin-left: 0.25em;
+    margin-inline-start: 0.25em;
   }
 }
 
@@ -29,7 +29,7 @@
   font-size: var(--font-down-2);
 
   & + .chat-message-info__date {
-    margin-left: 0.25em;
+    margin-inline-start: 0.25em;
   }
 }
 
@@ -45,7 +45,7 @@
   }
 
   & + .chat-message-info__flag {
-    margin-left: 0.25em;
+    margin-inline-start: 0.25em;
   }
 }
 
@@ -58,7 +58,7 @@
   .d-icon-bookmark {
     color: var(--primary-low-mid);
     font-size: var(--font-down-2);
-    margin-left: 0.5em;
+    margin-inline-start: 0.5em;
   }
 }
 

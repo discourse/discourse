@@ -52,4 +52,8 @@
   @include ellipsis;
   font-weight: 700;
   padding: 0 0.5em 0 0;
+
+  .rtl & {
+    padding: 0 0 0 0.5em;
+  }
 }

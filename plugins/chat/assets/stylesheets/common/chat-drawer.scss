@@ -110,6 +110,11 @@ html.rtl {
   display: flex;
   height: 2rem;
   margin-left: auto;
+
+  .rtl & {
+    margin-left: unset;
+    margin-right: auto;
+  }
 }
 
 .chat-drawer-header__top-line {
