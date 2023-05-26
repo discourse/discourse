@@ -166,10 +166,13 @@ export default class ChatLivePane extends Component {
 
     const findArgs = { pageSize: PAGE_SIZE, includeMessages: true };
     const fetchingFromLastRead = !options.fetchFromLastMessage;
+    let scrollToMessageId = null;
     if (this.requestedTargetMessageId) {
       findArgs.targetMessageId = this.requestedTargetMessageId;
+      scrollToMessageId = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
-      findArgs.targetMessageId =
+      findArgs.fetchFromLastRead = true;
+      scrollToMessageId =
         this.args.channel.currentUserMembership.lastReadMessageId;
     }
 
@@ -199,7 +202,7 @@ export default class ChatLivePane extends Component {
         }
 
         if (this.requestedTargetMessageId) {
-          this.scrollToMessage(findArgs["targetMessageId"], {
+          this.scrollToMessage(scrollToMessageId, {
             highlight: true,
           });
           return;
@@ -208,9 +211,9 @@ export default class ChatLivePane extends Component {
         if (
           fetchingFromLastRead &&
           messages.length &&
-          findArgs["targetMessageId"] !== messages[messages.length - 1].id
+          scrollToMessageId !== messages[messages.length - 1].id
         ) {
-          this.scrollToMessage(findArgs["targetMessageId"]);
+          this.scrollToMessage(scrollToMessageId);
           return;
         }
 

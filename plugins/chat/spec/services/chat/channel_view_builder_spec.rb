@@ -20,11 +20,13 @@ RSpec.describe Chat::ChannelViewBuilder do
     let(:page_size) { nil }
     let(:direction) { nil }
     let(:thread_id) { nil }
+    let(:fetch_from_last_read) { nil }
     let(:params) do
       {
         guardian: guardian,
         channel_id: channel_id,
         target_message_id: target_message_id,
+        fetch_from_last_read: fetch_from_last_read,
         page_size: page_size,
         direction: direction,
         thread_id: thread_id,
@@ -192,6 +194,49 @@ RSpec.describe Chat::ChannelViewBuilder do
       fab!(:channel) { Fabricate(:private_category_channel) }
 
       it { is_expected.to fail_a_policy(:can_view_channel) }
+    end
+
+    context "when fetch_from_last_read is true" do
+      let(:fetch_from_last_read) { true }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+      fab!(:past_message_1) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: message.created_at - 1.day)
+        msg
+      end
+      fab!(:past_message_2) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: message.created_at - 2.days)
+        msg
+      end
+
+      context "if the user is not a member of the channel" do
+        it "does not error and still returns messages" do
+          expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+        end
+      end
+
+      context "if the user is a member of the channel" do
+        fab!(:membership) do
+          Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+        end
+
+        context "if the user's last_read_message_id is not nil" do
+          before { membership.update!(last_read_message_id: past_message_1.id) }
+
+          it "uses the last_read_message_id of the user's membership as the target_message_id" do
+            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          end
+        end
+
+        context "if the user's last_read_message_id is nil" do
+          before { membership.update!(last_read_message_id: nil) }
+
+          it "does not error and still returns messages" do
+            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          end
+        end
+      end
     end
 
     context "when target_message_id provided" do
