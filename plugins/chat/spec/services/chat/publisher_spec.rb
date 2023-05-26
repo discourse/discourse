@@ -60,6 +60,66 @@ describe Chat::Publisher do
     end
   end
 
+  describe ".publish_user_tracking_state!" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+    fab!(:user) { Fabricate(:user) }
+
+    let(:data) do
+      MessageBus
+        .track_publish { described_class.publish_user_tracking_state!(user, channel, message_1) }
+        .first
+        .data
+    end
+
+    context "when the user has channel membership" do
+      fab!(:membership) do
+        Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user)
+      end
+
+      it "publishes the tracking state with correct counts" do
+        expect(data["unread_count"]).to eq(1)
+        expect(data["mention_count"]).to eq(0)
+      end
+    end
+
+    context "when the user has no channel membership" do
+      it "publishes the tracking state with zeroed out counts" do
+        expect(data["channel_id"]).to eq(channel.id)
+        expect(data["last_read_message_id"]).to eq(message_1.id)
+        expect(data["thread_id"]).to eq(nil)
+        expect(data["unread_count"]).to eq(0)
+        expect(data["mention_count"]).to eq(0)
+      end
+    end
+
+    context "when the channel has threading enabled and the message is a thread reply" do
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+      before do
+        message_1.update!(thread: thread)
+        channel.update!(threading_enabled: true)
+      end
+
+      context "when the user has thread membership" do
+        fab!(:membership) { Fabricate(:user_chat_thread_membership, thread: thread, user: user) }
+
+        it "publishes the tracking state with correct counts" do
+          expect(data["thread_id"]).to eq(thread.id)
+          expect(data["unread_thread_ids"]).to eq([thread.id])
+          expect(data["thread_tracking"]).to eq({ "unread_count" => 1, "mention_count" => 0 })
+        end
+      end
+
+      context "when the user has no thread membership" do
+        it "publishes the tracking state with zeroed out counts" do
+          expect(data["thread_id"]).to eq(thread.id)
+          expect(data["unread_thread_ids"]).to eq([])
+          expect(data["thread_tracking"]).to eq({ "unread_count" => 0, "mention_count" => 0 })
+        end
+      end
+    end
+  end
+
   describe ".calculate_publish_targets" do
     context "when enable_experimental_chat_threaded_discussions is false" do
       before { SiteSetting.enable_experimental_chat_threaded_discussions = false }

@@ -131,14 +131,6 @@ export default class CommunitySection {
     });
   }
 
-  get description() {
-    if (!this.currentUser && !!this.siteSettings.short_site_description) {
-      return this.siteSettings.short_site_description;
-    } else {
-      return "";
-    }
-  }
-
   get decoratedTitle() {
     return I18n.t(
       `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`

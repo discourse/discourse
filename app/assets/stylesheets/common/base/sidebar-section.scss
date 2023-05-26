@@ -1,7 +1,3 @@
-:root {
-  --d-sidebar-section-header-text-font-size: var(--font-up-1);
-}
-
 .sidebar-section-wrapper {
   .discourse-no-touch & {
     &:hover {
@@ -16,7 +12,6 @@
 
   .sidebar-section-header-wrapper {
     display: flex;
-    font-size: var(--d-sidebar-section-header-text-font-size);
 
     .discourse-no-touch & {
       &:hover {
@@ -141,7 +136,7 @@
   }
 
   .sidebar-section-content {
-    padding-bottom: 1.25em;
+    padding-bottom: 0.875em;
     margin: 0;
     hr {
       margin: 0em 1.5em;
