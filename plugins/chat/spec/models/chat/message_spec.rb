@@ -451,7 +451,7 @@ describe Chat::Message do
       notification = Fabricate(:notification)
       mention_1 = Fabricate(:chat_mention, chat_message: message_1, notification: notification)
 
-      message_1.destroy!
+      message_1.reload.destroy!
 
       expect { mention_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)

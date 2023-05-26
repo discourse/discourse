@@ -76,10 +76,14 @@ module Chat
           .includes(:uploads)
           .includes(chat_channel: :chatable)
           .includes(:thread)
-          .includes(:chat_mentions)
           .where(chat_channel_id: channel.id)
 
-      query = query.includes(user: :user_status) if SiteSetting.enable_user_status
+      if SiteSetting.enable_user_status
+        query = query.includes(user: :user_status)
+        query = query.includes(chat_mentions: { user: :user_status })
+      else
+        query = query.includes(chat_mentions: :user)
+      end
 
       query
     end
