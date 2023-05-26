@@ -30,9 +30,11 @@ export default class FormTemplateFieldWrapper extends Component {
 
   @action
   refreshTemplate() {
-    if (this.args?.id.length > 0) {
-      return this._fetchTemplate(this.args.id);
+    if (Array.isArray(this.args?.id) && this.args?.id.length === 0) {
+      return;
     }
+
+    return this._fetchTemplate(this.args.id);
   }
 
   async _fetchTemplate(id) {
