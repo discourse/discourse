@@ -34,8 +34,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a>
-          </div>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a></div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -200,8 +199,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
-          </div>
+          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a></div>
           <blockquote>
           <p>I have nothing to say.</p>
           </blockquote>
@@ -223,8 +221,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-an-off-topic-topic/#{topic.id}/3">#{topic.title}</a>
-          </div>
+          <a href="http://test.localhost/t/this-is-an-off-topic-topic/#{topic.id}/3">#{topic.title}</a></div>
           <blockquote>
           <p>I have nothing to say.</p>
           </blockquote>
@@ -320,8 +317,7 @@ RSpec.describe PrettyText do
           <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
-          </div>
+          <img loading="lazy" alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a></div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
