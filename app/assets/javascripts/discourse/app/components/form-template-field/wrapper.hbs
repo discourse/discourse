@@ -1,5 +1,8 @@
 {{#if this.parsedTemplate}}
-  <div class="form-template-form__wrapper">
+  <div
+    class="form-template-form__wrapper"
+    {{did-update this.refreshTemplate @id}}
+  >
     {{#each this.parsedTemplate as |content|}}
       {{component
         (concat "form-template-field/" content.type)

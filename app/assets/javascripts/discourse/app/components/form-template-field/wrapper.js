@@ -3,6 +3,7 @@ import Yaml from "js-yaml";
 import { tracked } from "@glimmer/tracking";
 import FormTemplate from "discourse/models/form-template";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 export default class FormTemplateFieldWrapper extends Component {
   @service appEvents;
@@ -11,25 +12,14 @@ export default class FormTemplateFieldWrapper extends Component {
 
   constructor() {
     super(...arguments);
-    this.appEvents.on(
-      "composer:selected-form-template",
-      this,
-      this._fetchTemplate
-    );
 
     if (this.args.content) {
+      // Content used when no id exists yet
+      // (i.e. previewing while creating a new template)
       this._loadTemplate(this.args.content);
     } else if (this.args.id) {
-      this.appEvents.trigger("composer:selected-form-template", this.args.id);
+      this._fetchTemplate(this.args.id);
     }
-  }
-
-  willDestroy() {
-    this.appEvents.off(
-      "composer:selected-form-template",
-      this,
-      this._fetchTemplate
-    );
   }
 
   _loadTemplate(templateContent) {
@@ -37,6 +27,13 @@ export default class FormTemplateFieldWrapper extends Component {
       this.parsedTemplate = Yaml.load(templateContent);
     } catch (e) {
       this.error = e;
+    }
+  }
+
+  @action
+  refreshTemplate() {
+    if (this.args?.id.length > 0) {
+      return this._fetchTemplate(this.args.id);
     }
   }
 

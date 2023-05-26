@@ -509,13 +509,6 @@ export default class ComposerController extends Controller {
   @action
   updateCategory(categoryId) {
     this.model.categoryId = categoryId;
-
-    if (this.formTemplateIds?.length) {
-      this.appEvents.trigger(
-        "composer:selected-form-template",
-        this.formTemplateIds
-      );
-    }
   }
 
   @action
