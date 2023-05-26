@@ -2,11 +2,9 @@ import Component from "@glimmer/component";
 import Yaml from "js-yaml";
 import { tracked } from "@glimmer/tracking";
 import FormTemplate from "discourse/models/form-template";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
 export default class FormTemplateFieldWrapper extends Component {
-  @service appEvents;
   @tracked error = null;
   @tracked parsedTemplate = null;
 
