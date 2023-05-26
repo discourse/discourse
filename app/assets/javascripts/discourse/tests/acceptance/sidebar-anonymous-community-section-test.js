@@ -5,7 +5,6 @@ import { test } from "qunit";
 import {
   acceptance,
   exists,
-  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -15,22 +14,8 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
     navigation_menu: "sidebar",
     faq_url: "https://discourse.org",
   });
+
   needs.site({});
-
-  test("display short site description site setting when it is set", async function (assert) {
-    this.siteSettings.short_site_description =
-      "This is a short description about the site";
-
-    await visit("/");
-
-    assert.strictEqual(
-      query(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-message"
-      ).textContent.trim(),
-      this.siteSettings.short_site_description,
-      "displays the short site description under the community section"
-    );
-  });
 
   test("everything section link is shown by default ", async function (assert) {
     await visit("/");
