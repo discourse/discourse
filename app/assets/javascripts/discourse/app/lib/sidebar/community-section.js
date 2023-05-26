@@ -116,7 +116,7 @@ export default class CommunitySection {
         sectionLinkClass,
         inMoreDrawer,
         link.name,
-        link.icon
+        link.scon
       );
     } else {
       return new SectionLink(link, this, this.router);
@@ -175,12 +175,7 @@ export default class CommunitySection {
   }
 
   get headerActionIcon() {
-    if (this.currentUser?.admin) {
-      return "pencil-alt";
-    }
-    if (this.currentUser) {
-      return "plus";
-    }
+    return this.currentUser?.admin ? "pencil-alt" : "plus";
   }
 
   @action
