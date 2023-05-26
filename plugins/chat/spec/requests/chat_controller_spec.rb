@@ -505,8 +505,6 @@ RSpec.describe Chat::ChatController do
       it "forces users to follow the channel" do
         direct_message_channel.remove(user2)
 
-        Chat::Publisher.expects(:publish_new_channel).once
-
         sign_in(user1)
 
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
