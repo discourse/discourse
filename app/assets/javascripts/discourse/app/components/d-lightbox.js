@@ -76,8 +76,8 @@ export default class DLightbox extends Component {
       `${base}-height: ${height}px`,
       `${base}-aspect-ratio: ${aspectRatio}`,
       `${base}-dominant-color: #${dominantColor}`,
-      `${base}-full-size-url: url(${fullsizeURL})`,
-      `${base}-small-url: url(${smallURL})`
+      `${base}-full-size-url: url(${encodeURI(fullsizeURL)})`,
+      `${base}-small-url: url(${encodeURI(smallURL)})`
     );
 
     return htmlSafe(variables.filter(Boolean).join(";"));
@@ -294,7 +294,7 @@ export default class DLightbox extends Component {
     }
 
     this.isZoomed = !this.isZoomed;
-    document.querySelector("[data-lightbox-close-button]")?.focus();
+    document.querySelector(".d-lightbox__close-button")?.focus();
   }
 
   @bind
@@ -444,27 +444,29 @@ export default class DLightbox extends Component {
 
   @bind
   cleanup() {
-    this.hasCarousel = false;
-    this.hasExpandedTitle = false;
-    this.isLoading = false;
-    this.items = [];
-    this.currentIndex = 0;
-    this.isZoomed = false;
-    this.isRotated = false;
-    this.rotationAmount = 0;
+    if (this.isVisible) {
+      this.hasCarousel = !!document.querySelector(".d-lightbox--has-carousel");
+      this.hasExpandedTitle = false;
+      this.isLoading = false;
+      this.items = [];
+      this.currentIndex = 0;
+      this.isZoomed = false;
+      this.isRotated = false;
+      this.rotationAmount = 0;
 
-    if (this.isFullScreen) {
-      this.toggleFullScreen();
-      this.isFullScreen = false;
+      if (this.isFullScreen) {
+        this.toggleFullScreen();
+        this.isFullScreen = false;
+      }
+
+      this.isVisible = false;
+      this.willClose = false;
+
+      this.callbacks.onCleanup?.();
+
+      this.callbacks = {};
+      this.options = {};
     }
-
-    this.isVisible = false;
-    this.willClose = false;
-
-    this.callbacks.onCleanup?.();
-
-    this.callbacks = {};
-    this.options = {};
   }
 
   willDestroy() {

@@ -1,5 +1,4 @@
 <DSection
-  data-lightbox-element
   tabIndex="-1"
   id={{this.elementId}}
   aria-hidden={{not this.isVisible}}
@@ -10,7 +9,6 @@
 >
   {{#if this.isVisible}}
     <div
-      data-lightbox-content
       aria-hidden="false"
       tabindex="0"
       role="document"
@@ -19,11 +17,7 @@
       aria-labelledby={{this.titleElementId}}
       {{on "keyup" this.onKeyup passive=true capture=true}}
     >
-      <div
-        data-lightbox-focus-trap
-        class="d-lightbox__content__focus-trap"
-        tabindex="0"
-      ></div>
+      <div class="d-lightbox__focus-trap" tabindex="0"></div>
       <DLightbox::Header
         @canDownload={{this.canDownload}}
         @canFullscreen={{this.canFullscreen}}
@@ -83,11 +77,7 @@
         @totalItemCount={{this.totalItemCount}}
         @titleElementId={{this.titleElementId}}
       />
-      <div
-        data-lightbox-focus-trap
-        class="d-lightbox__content__focus-trap"
-        tabindex="0"
-      ></div>
+      <div class="d-lightbox__focus-trap" tabindex="0"></div>
     </div>
   {{/if}}
 </DSection>

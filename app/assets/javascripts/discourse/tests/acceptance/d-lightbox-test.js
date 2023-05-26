@@ -5,8 +5,6 @@ import {
 import {
   acceptance,
   chromeTest,
-  exists,
-  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
@@ -32,7 +30,33 @@ async function waitForLoad() {
   );
 }
 
-const selector = ".lightbox";
+const trigger_selector = ".lightbox";
+const lightbox_selector = ".d-lightbox";
+const lightbox_open_selector = ".d-lightbox__content";
+const lightbox_body_selector = ".d-lightbox__body";
+// header
+const new_tab_btn_selector = ".d-lightbox__new-tab-button";
+const fullscreen_btn_selector = ".d-lightbox__full-screen-button";
+const close_btn_selector = ".d-lightbox__close-button";
+const carousel_btn_selector = ".d-lightbox__carousel-button";
+const carousel_multi_btns_selector = ".d-lightbox__multi-item-controls";
+// body
+const main_img_selector = ".d-lightbox__main-image";
+const prev_btn_selector = ".d-lightbox__previous-button";
+const next_btn_selector = ".d-lightbox__next-button";
+// footer
+const zoom_btn_selector = ".d-lightbox__zoom-button";
+const rotate_btn_selector = ".d-lightbox__rotate-button";
+const download_btn_selector = ".d-lightbox__download-button";
+const item_title_selector = ".d-lightbox__item-title";
+const item_file_details_selector = ".d-lightbox__item-file-details";
+// carousel controls
+const carousel_selector = ".d-lightbox__carousel";
+const carousel_item_selector = ".d-lightbox__carousel-item";
+const carousel_prev_btn_selector = ".d-lightbox__carousel-previous-button";
+const carousel_next_btn_selector = ".d-lightbox__carousel-next-button";
+const counter_current_selector = ".d-lightbox__counter-current";
+const counter_total_selector = ".d-lightbox__counter-total";
 
 const singleLargeImageMarkup = `
 ${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.first)}`;
@@ -67,12 +91,9 @@ acceptance("Experimental Lightbox - site setting", function (needs) {
 
   test("it does not interfere with Magnific when enable_experimental_lightbox is disabled", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.notOk(
-      exists("[data-lightbox-content]"),
-      "it doesn't interfere with magnific when the setting is disabled"
-    );
+    assert.dom(lightbox_open_selector).doesNotExist();
 
     await click(".mfp-close");
   });
@@ -87,132 +108,49 @@ acceptance("Experimental Lightbox - layout single image", function (needs) {
 
   test("it shows the correct elements for a single-image lightbox", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(
-      exists("[data-lightbox-content]"),
-      "it opens the lightbox when the setting is enabled"
-    );
+    assert.dom(lightbox_open_selector).exists();
 
     await waitForLoad();
 
-    assert.ok(exists("[data-lightbox-title]"), "title is visible");
+    assert.dom(".d-lightbox__footer__main-title").exists();
 
-    assert.strictEqual(
-      query("[data-lightbox-title-text]").textContent,
-      LIGHTBOX_IMAGE_FIXTURES.first.title,
-      "title is correct"
-    );
+    assert
+      .dom(item_title_selector)
+      .hasText(LIGHTBOX_IMAGE_FIXTURES.first.title);
 
-    assert.strictEqual(
-      query("[data-lightbox-file-details]").textContent,
-      LIGHTBOX_IMAGE_FIXTURES.first.fileDetails,
-      "file details are correct"
-    );
+    assert
+      .dom(item_file_details_selector)
+      .hasText(LIGHTBOX_IMAGE_FIXTURES.first.fileDetails);
 
-    assert.ok(
-      exists("[data-lightbox-close-button]"),
-      "close button is visible"
-    );
+    assert.dom(close_btn_selector).exists();
+    assert.dom(close_btn_selector).isFocused();
+    assert.dom(new_tab_btn_selector).exists();
+    assert.dom(fullscreen_btn_selector).exists();
+    assert.dom(rotate_btn_selector).exists();
+    assert.dom(zoom_btn_selector).exists();
+    assert.dom(download_btn_selector).exists();
+    assert.dom(prev_btn_selector).doesNotExist();
+    assert.dom(next_btn_selector).doesNotExist();
+    assert.dom(carousel_multi_btns_selector).doesNotExist();
+    assert.dom(carousel_selector).doesNotExist();
+    assert.dom(main_img_selector).exists();
+    assert.dom(main_img_selector).hasAttribute("src");
 
-    assert.strictEqual(
-      document.activeElement,
-      query("[data-lightbox-close-button]"),
-      "close button is focused when the lightbox is opened"
-    );
+    assert.dom(".d-lightbox__error-message").doesNotExist();
 
-    assert.ok(
-      exists("[data-lightbox-newtab-button]"),
-      "download button is visible"
-    );
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
 
-    assert.ok(
-      exists("[data-lightbox-fullscreen-button]"),
-      "fullscreen button is visible"
-    );
+    assert.dom(".d-lightbox--is-fullscreen").doesNotExist();
+    assert.dom(".d-lightbox--is-rotated").doesNotExist();
+    assert.dom(".d-lightbox--is-zoomed").doesNotExist();
+    assert.dom(".d-lightbox__backdrop").exists();
 
-    assert.ok(
-      exists("[data-lightbox-rotate-button]"),
-      "rotate button is visible"
-    );
-
-    assert.ok(
-      exists("[data-lightbox-zoom-button]"),
-      "zoom in button is visible"
-    );
-
-    assert.ok(
-      exists("[data-lightbox-download-button]"),
-      "download button is visible"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-previous-button]"),
-      "previous button is not visible if there's only one image"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-next-button]"),
-      "next button is not visible if there's only one image"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-multi-item-controls]"),
-      "multi item controls are not visible if there's only one image"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-carousel]"),
-      "carousel is not visible if there's only one image"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-error-message]"),
-      "error message is not visible"
-    );
-
-    assert.ok(exists("[data-lightbox-main-image]"), "main image is visible");
-
-    assert.ok(
-      query("[data-lightbox-main-image]").hasAttribute("src"),
-      "main image has a src attribute"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL,
-      "main image src is correct"
-    );
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "lightbox is not fullscreen by default"
-    );
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "lightbox is not rotated by default"
-    );
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "lightbox is not zoomed by default"
-    );
-
-    assert.ok(
-      exists("[data-lightbox-backdrop]"),
-      "lightbox backdrop is visible"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 });
 
@@ -225,46 +163,20 @@ acceptance("Experimental Lightbox - layout multiple images", function (needs) {
 
   test("it shows multiple image controls when there's more than one item", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
 
+    await click(trigger_selector);
     await waitForLoad();
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(prev_btn_selector).exists();
+    assert.dom(next_btn_selector).exists();
+    assert.dom(carousel_multi_btns_selector).exists();
+    assert.dom(".d-lightbox__counters").exists();
+    assert.dom(counter_current_selector).hasText("1");
+    assert.dom(counter_total_selector).hasText("3");
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    assert.ok(
-      exists("[data-lightbox-previous-button]"),
-      "previous button is visible"
-    );
-
-    assert.ok(exists("[data-lightbox-next-button]"), "next button is visible");
-
-    assert.ok(
-      exists("[data-lightbox-multi-item-controls]"),
-      "multi item controls are visible"
-    );
-
-    assert.ok(exists("[data-lightbox-counter]"), "counter is visible");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "counter current is correct"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-total]").textContent,
-      "3",
-      "counter total is correct"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-carousel]"),
-      "carousel is not visible by default"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 });
 
@@ -277,350 +189,170 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
   test("handles zoom", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
-
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    await click(trigger_selector);
+    assert.dom(lightbox_open_selector).exists();
 
     await waitForLoad();
+    assert.dom(".d-lightbox--is-zoomed").doesNotExist();
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "lightbox is not zoomed by default"
-    );
+    await click(zoom_btn_selector);
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-zoomed");
+    assert.dom(item_title_selector).doesNotExist();
 
-    await click("[data-lightbox-zoom-button]");
+    await click(zoom_btn_selector);
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-zoomed");
+    assert.dom(item_title_selector).exists();
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "zoom button toggles zoom"
-    );
+    await click(main_img_selector);
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-zoomed");
 
-    assert.notOk(
-      exists("[data-lightbox-title-text]"),
-      "title is not shown when zoomed"
-    );
+    await click(".d-lightbox__zoomed-image-container");
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-zoomed");
 
-    await click("[data-lightbox-zoom-button]");
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "clicking zoom button again exists zoom"
-    );
-
-    assert.ok(
-      exists("[data-lightbox-title-text]"),
-      "title is restored after exiting zoom"
-    );
-
-    await click("[data-lightbox-main-image]");
-
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "clicking main image toggles zoom"
-    );
-
-    await click("[data-lightbox-zoomed-image-container]");
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "clicking zoomed image exists zoom"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("handles rotation", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
-
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    await click(trigger_selector);
+    assert.dom(lightbox_selector).exists();
 
     await waitForLoad();
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-rotated");
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "lightbox is not rotated by default"
-    );
+    await click(rotate_btn_selector);
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-rotated");
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-rotated-90");
 
-    await click("[data-lightbox-rotate-button]");
+    await click(rotate_btn_selector);
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-rotated-180");
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "lightbox is rotated"
-    );
+    await click(rotate_btn_selector);
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-rotated-270");
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated-90"
-      ),
-      "lightbox is rotated 90 degrees after first click"
-    );
+    await click(rotate_btn_selector);
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-rotated");
 
-    await click("[data-lightbox-rotate-button]");
-
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated-180"
-      ),
-      "lightbox is rotated 180 degrees after second click"
-    );
-
-    await click("[data-lightbox-rotate-button]");
-
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated-270"
-      ),
-      "lightbox is rotated 270 degrees after third click"
-    );
-
-    await click("[data-lightbox-rotate-button]");
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "lightbox is not rotated and resets after fourth click"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("handles navigation - next", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "starts at 1"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-total]").textContent,
-      "3",
-      "has a total of 3"
-    );
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(counter_current_selector).hasText("1");
+    assert.dom(counter_total_selector).hasText("3");
 
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL,
-      "shows the first image"
-    );
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
 
-    await click("[data-lightbox-next-button]");
-
+    await click(next_btn_selector);
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "2",
-      "increments counter to 2"
-    );
+    assert.dom(counter_current_selector).hasText("2");
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL,
-      "shows the second image"
-    );
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL);
 
-    await click("[data-lightbox-next-button]");
-
+    await click(next_btn_selector);
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "3",
-      "increments counter to 3"
-    );
+    assert.dom(counter_current_selector).hasText("3");
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.third.fullsizeURL,
-      "shows the third image"
-    );
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.third.fullsizeURL);
 
-    await click("[data-lightbox-next-button]");
-
+    await click(next_btn_selector);
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "loops counter back to 1"
-    );
+    assert.dom(counter_current_selector).hasText("1");
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL,
-      "shows the first image again"
-    );
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
 
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("handles navigation - previous", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "starts at 1"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-total]").textContent,
-      "3",
-      "has a total of 3"
-    );
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(counter_current_selector).hasText("1");
+    assert.dom(counter_total_selector).hasText("3");
 
     await waitForLoad();
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL,
-      "shows the first image"
-    );
-
-    await click("[data-lightbox-previous-button]");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "3",
-      "loops counter back to 3"
-    );
+    await click(prev_btn_selector);
+    assert.dom(counter_current_selector).hasText("3");
 
     await waitForLoad();
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.third.fullsizeURL);
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.third.fullsizeURL,
-      "shows the third image"
-    );
-
-    await click("[data-lightbox-previous-button]");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "2",
-      "decrements counter to 2"
-    );
+    await click(prev_btn_selector);
+    assert.dom(counter_current_selector).hasText("2");
 
     await waitForLoad();
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL);
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL,
-      "shows the second image"
-    );
-
-    await click("[data-lightbox-previous-button]");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "decrements counter to 1"
-    );
+    await click(prev_btn_selector);
+    assert.dom(counter_current_selector).hasText("1");
 
     await waitForLoad();
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL,
-      "shows the first image again"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("handles navigation - opens at the correct index", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    const lightboxes = queryAll(selector);
+    const lightboxes = queryAll(trigger_selector);
 
     await click(lightboxes[1]);
-
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "2",
-      "starts at 2"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-total]").textContent,
-      "3",
-      "has a total of 3"
-    );
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(counter_current_selector).hasText("2");
+    assert.dom(counter_total_selector).hasText("3");
 
     await waitForLoad();
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL);
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL,
-      "shows the second image"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
 
     await click(lightboxes[2]);
-
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "3",
-      "starts at 3"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-total]").textContent,
-      "3",
-      "has a total of 3"
-    );
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(counter_current_selector).hasText("3");
+    assert.dom(counter_total_selector).hasText("3");
 
     await waitForLoad();
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.third.fullsizeURL);
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.third.fullsizeURL,
-      "shows the third image"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test(`handles navigation - prevents document scroll while the lightbox is open`, async function (assert) {
@@ -635,20 +367,19 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
       "remove"
     );
 
-    await click(selector);
-
+    await click(trigger_selector);
     await waitForLoad();
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    assert.dom(lightbox_open_selector).exists();
 
     assert.ok(
       classListAddStub.calledWith("has-lightbox"),
       "adds has-lightbox class to document element"
     );
 
-    await click("[data-lightbox-close-button]");
+    await click(close_btn_selector);
 
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    assert.dom(lightbox_open_selector).doesNotExist();
 
     assert.ok(
       classListRemoveStub.calledWith("has-lightbox"),
@@ -662,16 +393,10 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
   test("handles fullscreen", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "it is not fullscreen by default"
-    );
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-fullscreen");
 
     const requestFullscreenStub = sinon.stub(
       document.documentElement,
@@ -680,31 +405,22 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     const exitFullscreenStub = sinon.stub(document, "exitFullscreen");
 
-    await click("[data-lightbox-fullscreen-button]");
+    await click(fullscreen_btn_selector);
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "it is fullscreen"
-    );
-
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-fullscreen");
     assert.ok(requestFullscreenStub.calledOnce, "it calls requestFullscreen");
 
-    await click("[data-lightbox-fullscreen-button]");
+    await click(fullscreen_btn_selector);
 
-    assert.notOk(
-      query("[data-lightbox-content]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "it is not fullscreen"
-    );
+    assert
+      .dom(lightbox_open_selector)
+      .doesNotHaveClass("d-lightbox--is-fullscreen");
 
     assert.ok(exitFullscreenStub.calledOnce, "it calls exitFullscreen");
 
-    await click("[data-lightbox-close-button]");
+    await click(close_btn_selector);
 
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    assert.dom(lightbox_open_selector).doesNotExist();
 
     requestFullscreenStub.restore();
     exitFullscreenStub.restore();
@@ -713,19 +429,19 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
   test("handles download", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    assert.dom(lightbox_open_selector).exists();
 
     const clickStub = sinon.stub(HTMLAnchorElement.prototype, "click");
 
     // appends and clicks <a download="..." href="..."></a>
-    await click("[data-lightbox-download-button]");
+    await click(download_btn_selector);
 
     assert.ok(clickStub.called, "The click method was called");
 
-    await click("[data-lightbox-close-button]");
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
 
     clickStub.restore();
   });
@@ -733,19 +449,19 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
   test("handles newtab", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    assert.dom(lightbox_open_selector).exists();
 
     const openStub = sinon.stub(window, "open");
 
-    await click("[data-lightbox-newtab-button]");
+    await click(new_tab_btn_selector);
 
     assert.ok(openStub.called, "The open method was called");
 
-    await click("[data-lightbox-close-button]");
+    await click(close_btn_selector);
 
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    assert.dom(lightbox_open_selector).doesNotExist();
 
     openStub.restore();
   });
@@ -753,71 +469,51 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
   test("handles close", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(selector);
+    await click(trigger_selector);
+    assert.dom(lightbox_open_selector).exists();
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("handles focus", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.notOk(
-      document.activeElement.closest("[data-lightbox-content]"),
-      "it is not focused"
-    );
+    assert.dom(lightbox_open_selector).doesNotExist();
 
-    const lightbox = query(selector);
-
-    await click(lightbox);
-
+    await click(trigger_selector);
     await waitForLoad();
 
-    assert.ok(
-      document.activeElement === query("[data-lightbox-close-button]"),
-      "it focuses the close button when opened"
-    );
+    assert.dom(close_btn_selector).isFocused();
 
     // tab forward
     Array(50)
       .fill()
       .forEach(async () => {
-        await triggerKeyEvent("[data-lightbox-content]", "keyup", 9);
+        await triggerKeyEvent(lightbox_open_selector, "keyup", 9);
       });
 
-    assert.ok(
-      document.activeElement.closest("[data-lightbox-content]"),
-      "it keeps focus inside the lightbox when tabbing forward"
-    );
+    // it keeps focus inside the lightbox when tabbing forward
+    assert.dom(lightbox_open_selector).exists();
 
     // tab backward
     Array(50)
       .fill()
       .forEach(async () => {
-        await triggerKeyEvent("[data-lightbox-content]", "keyup", 9, {
+        await triggerKeyEvent(lightbox_open_selector, "keyup", 9, {
           shiftKey: true,
         });
       });
 
-    assert.ok(
-      document.activeElement.closest("[data-lightbox-content]"),
-      "it keeps focus inside the lightbox when tabbing backward"
-    );
+    // it keeps focus inside the lightbox when tabbing backward
+    assert.dom(lightbox_open_selector).exists();
 
-    await click("[data-lightbox-close-button]");
+    await click(close_btn_selector);
 
-    assert.notOk(
-      document.activeElement.closest("[data-lightbox-content]"),
-      "it is not focused"
-    );
+    assert.dom(lightbox_open_selector).doesNotExist();
 
-    assert.ok(
-      document.activeElement === lightbox,
-      "it restores focus in the main document when closed"
-    );
+    // it restores focus in the main document when closed
+    assert.dom(trigger_selector).isFocused();
   });
 
   test("navigation - screen reader announcer", async function (assert) {
@@ -841,210 +537,123 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
       }
     );
 
-    await click(selector);
-
+    await click(trigger_selector);
     await waitForLoad();
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    assert.dom(lightbox_open_selector).exists();
 
-    assert.ok(
-      exists("[data-lightbox-screen-reader-announcer]"),
-      "it has a screen reader announcer"
-    );
+    assert.dom(".d-lightbox__screen-reader-announcer").exists();
 
-    assert.strictEqual(
-      query("[data-lightbox-screen-reader-announcer]").textContent.trim(),
-      firstExpectedTitle,
-      "it updates the screen reader announcer when navigating"
-    );
+    assert
+      .dom(".d-lightbox__screen-reader-announcer")
+      .hasText(firstExpectedTitle);
 
-    await click("[data-lightbox-next-button]");
-
+    await click(next_btn_selector);
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-screen-reader-announcer]").textContent.trim(),
-      secondExpectedTitle,
-      "it updates the screen reader announcer when navigating"
-    );
+    assert
+      .dom(".d-lightbox__screen-reader-announcer")
+      .hasText(secondExpectedTitle);
 
-    await click("[data-lightbox-close-button]");
+    await click(close_btn_selector);
 
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   // TODO: this test is flaky on firefox. It runs fine locally and the functionality works in a real session, but fails on CI.
   chromeTest("handles keyboard shortcuts", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    assert.dom(lightbox_open_selector).exists();
 
     await waitForLoad();
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", "ArrowRight");
+    await triggerKeyEvent(lightbox_open_selector, "keyup", "ArrowRight");
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "2",
-      "ArrowRight increments counter to 2"
-    );
+    assert.dom(counter_current_selector).hasText("2");
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", "ArrowLeft");
+    await triggerKeyEvent(lightbox_open_selector, "keyup", "ArrowLeft");
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "ArrowLeft decrements counter to 1"
-    );
+    assert.dom(counter_current_selector).hasText("1");
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", "ArrowDown");
+    await triggerKeyEvent(lightbox_open_selector, "keyup", "ArrowDown");
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "2",
-      "ArrowDown increments counter to 2"
-    );
+    assert.dom(counter_current_selector).hasText("2");
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", "ArrowUp");
+    await triggerKeyEvent(lightbox_open_selector, "keyup", "ArrowUp");
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "ArrowUp decrements counter to 1"
-    );
+    assert.dom(counter_current_selector).hasText("1");
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "is not zoomed"
-    );
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-zoomed");
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 90);
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 90); // 'z' key
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "pressing 'z' toggles zoom"
-    );
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-zoomed");
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 90);
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 90);
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "pressing 'z' again exits zoom"
-    );
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-zoomed");
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-rotated");
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "is not rotated"
-    );
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 82); // r key
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 82);
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-rotated");
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "pressing 'r' toggles rotation"
-    );
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 82);
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 82);
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 82);
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 82);
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 82);
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 82);
+    // back to original rotation
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-rotated");
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "pressing 'r' 3 more times results in no rotation 90|180|270"
-    );
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.notOk(exists("[data-lightbox-carousel]"), "carousel is not visible");
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 65); // 'a' key
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 65);
+    assert.dom(carousel_selector).exists();
 
-    assert.ok(
-      exists("[data-lightbox-carousel]"),
-      "pressing 'a' toggles carousel"
-    );
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 65);
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 65);
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.notOk(
-      exists("[data-lightbox-carousel]"),
-      "pressing 'a' again hides carousel"
-    );
+    assert
+      .dom(lightbox_selector)
+      .doesNotHaveClass("d-lightbox--has-expanded-title");
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--has-expanded-title"
-      ),
-      "title is not expanded by default"
-    );
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 84); // 't' key
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 84);
+    assert.dom(lightbox_selector).hasClass("d-lightbox--has-expanded-title");
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--has-expanded-title"
-      ),
-      "pressing 't' toggles title"
-    );
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 84);
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 84);
-
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--has-expanded-title"
-      ),
-      "pressing 't' again hides title"
-    );
+    assert
+      .dom(lightbox_selector)
+      .doesNotHaveClass("d-lightbox--has-expanded-title");
 
     const requestFullscreenStub = sinon.stub(
       document.documentElement,
       "requestFullscreen"
     );
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "is not fullscreen"
-    );
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-fullscreen");
 
     const exitFullscreenStub = sinon.stub(document, "exitFullscreen");
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 77);
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 77); // 'm' key
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "pressing 'm' toggles fullscreen"
-    );
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-fullscreen");
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", 77);
+    await triggerKeyEvent(lightbox_open_selector, "keyup", 77);
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "pressing 'm' again exits fullscreen"
-    );
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-fullscreen");
 
     requestFullscreenStub.restore();
     exitFullscreenStub.restore();
 
-    await triggerKeyEvent("[data-lightbox-content]", "keyup", "Escape");
+    await triggerKeyEvent(lightbox_open_selector, "keyup", "Escape");
 
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 });
 
@@ -1061,109 +670,69 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
   test("navigation", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    // lightbox opens with the first image
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(counter_current_selector).hasText("1");
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").textContent,
-      "1",
-      "starts at 1"
-    );
+    // carousel is not visible by default
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.strictEqual(
-      exists("[data-lightbox-carousel]"),
-      false,
-      "carousel is not visible by default"
-    );
+    await click(carousel_btn_selector);
 
-    await click("[data-lightbox-carousel-button]");
+    // carousel opens after clicking the button, and has prev/next buttons
+    assert.dom(carousel_selector).exists();
+    assert.dom(carousel_prev_btn_selector).exists();
+    assert.dom(carousel_next_btn_selector).exists();
 
-    assert.strictEqual(
-      exists("[data-lightbox-carousel]"),
-      true,
-      "carousel opens after clicking the button"
-    );
-
-    assert.strictEqual(
-      exists("[data-lightbox-carousel-previous-button]"),
-      true,
-      "carousel has a previous button"
-    );
-
-    assert.strictEqual(
-      exists("[data-lightbox-carousel-next-button]"),
-      true,
-      "carousel has a next button"
-    );
-
-    assert.strictEqual(
-      queryAll("[data-lightbox-carousel-item]").length,
-      6,
-      "carousel has 6 items"
-    );
-
-    assert.strictEqual(
-      exists("[data-lightbox-carousel-item].active"),
-      true,
-      "carousel has a current item"
-    );
+    // carousel has 5 items and an active item
+    assert.dom(carousel_item_selector).exists({ count: 5 });
+    assert.dom(carousel_item_selector + "--is-current").exists();
 
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-carousel-item].active").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.first.smallURL,
-      "carousel current item is the first image"
-    );
+    // carousel current item is the first image
+    assert
+      .dom(carousel_item_selector + "--is-current")
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.smallURL);
 
-    await click("[data-lightbox-carousel-next-button]");
-
+    await click(carousel_next_btn_selector);
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-carousel-item].active").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.second.smallURL,
-      "carousel next button works and current item is the second image"
-    );
+    // carousel next button works and current item is the second image
+    assert
+      .dom(carousel_item_selector + "--is-current")
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.second.smallURL);
 
-    await click("[data-lightbox-carousel-previous-button]");
-
+    await click(carousel_prev_btn_selector);
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-carousel-item].active").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.first.smallURL,
-      "carousel previous button works and current item is the first image again"
-    );
+    // carousel previous button works and current item is the first image again
+    assert
+      .dom(carousel_item_selector + "--is-current")
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.smallURL);
 
-    await click("[data-lightbox-carousel-item]:nth-child(3)");
-
+    await click(carousel_item_selector + ":nth-child(3)");
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-carousel-item].active").getAttribute("src"),
-      LIGHTBOX_IMAGE_FIXTURES.third.smallURL,
-      "carousel manual item selection works and current item is the third image"
-    );
+    // carousel manual item selection works and current item is the third image
+    assert
+      .dom(carousel_item_selector + "--is-current")
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.third.smallURL);
 
-    await click("[data-lightbox-carousel-button]");
+    // carousel closes after clicking the carousel button again
+    await click(carousel_btn_selector);
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.strictEqual(
-      exists("[data-lightbox-carousel]"),
-      false,
-      "carousel closes after clicking the carousel button again"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("arrows are not shown when there are only a few images", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const lightboxes = [...queryAll(selector)];
+    const lightboxes = [...queryAll(trigger_selector)];
 
     const lastThreeLightboxes = lightboxes.slice(-3);
 
@@ -1171,51 +740,25 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
       lightbox.remove();
     });
 
-    await click(selector);
+    await click(trigger_selector);
+    assert.dom(lightbox_selector).exists();
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    // carousel opens after clicking the button
+    await click(carousel_btn_selector);
+    assert.dom(carousel_selector).exists();
+    assert.dom(carousel_item_selector).exists({ count: 2 });
 
-    assert.strictEqual(
-      exists("[data-lightbox-carousel]"),
-      false,
-      "carousel is not visible by default"
-    );
+    // no prev/next buttons when carousel only has a few images
+    assert.dom(carousel_prev_btn_selector).doesNotExist();
+    assert.dom(carousel_next_btn_selector).doesNotExist();
 
-    await click("[data-lightbox-carousel-button]");
+    // carousel closes after clicking the button again
+    await click(carousel_btn_selector);
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.strictEqual(
-      exists("[data-lightbox-carousel]"),
-      true,
-      "carousel opens after clicking the button"
-    );
-
-    assert.strictEqual(
-      queryAll("[data-lightbox-carousel-item]").length,
-      3,
-      "carousel has 3 items"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-carousel-previous-button]"),
-      "carousel doesn't have a previous button when it only has a few images"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-carousel-next-button]"),
-      "carousel doesn't have a previous button when it only has a few images"
-    );
-
-    await click("[data-lightbox-carousel-button]");
-
-    assert.strictEqual(
-      exists("[data-lightbox-carousel]"),
-      false,
-      "carousel closes after clicking the button again"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 });
 
@@ -1228,64 +771,47 @@ acceptance("Experimental Lightbox - mobile", function (needs) {
 
   test("navigation - swipe navigation LTR", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(counter_current_selector).hasText("1");
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").innerText,
-      "1",
-      "it starts at the first image"
-    );
-
-    await triggerEvent("[data-lightbox-body]", "touchstart", {
+    await triggerEvent(lightbox_body_selector, "touchstart", {
       changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ screenX: 0, screenY: 0 }],
     });
 
-    await triggerEvent("[data-lightbox-body]", "touchend", {
+    await triggerEvent(lightbox_body_selector, "touchend", {
       changedTouches: [{ screenX: 150, screenY: 0 }],
       touches: [{ pageX: 150, pageY: 0 }],
     });
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").innerText,
-      "3",
-      "swiping left goes to the previous image"
-    );
+    // swiping left goes to the previous image
+    assert.dom(counter_current_selector).hasText("3");
 
-    await triggerEvent("[data-lightbox-body]", "touchstart", {
+    await triggerEvent(lightbox_body_selector, "touchstart", {
       changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ screenX: 0, screenY: 0 }],
     });
 
-    await triggerEvent("[data-lightbox-body]", "touchend", {
+    await triggerEvent(lightbox_body_selector, "touchend", {
       changedTouches: [{ screenX: -150, screenY: 0 }],
       touches: [{ pageX: 150, pageY: 0 }],
     });
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").innerText,
-      "1",
-      "swiping right goes to the next image"
-    );
+    // swiping right goes to the next image
+    assert.dom(counter_current_selector).hasText("1");
 
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("navigation - swipe navigation RTL", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").innerText,
-      "1",
-      "it starts at the first image"
-    );
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(counter_current_selector).hasText("1");
 
     const containsStub = sinon.stub(
       document.documentElement.classList,
@@ -1294,108 +820,89 @@ acceptance("Experimental Lightbox - mobile", function (needs) {
 
     containsStub.withArgs("rtl").returns(true);
 
-    await triggerEvent("[data-lightbox-body]", "touchstart", {
+    await triggerEvent(lightbox_body_selector, "touchstart", {
       changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ screenX: 0, screenY: 0 }],
     });
 
-    await triggerEvent("[data-lightbox-body]", "touchend", {
+    await triggerEvent(lightbox_body_selector, "touchend", {
       changedTouches: [{ screenX: -150, screenY: 0 }],
       touches: [{ pageX: 150, pageY: 0 }],
     });
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").innerText,
-      "2",
-      "swiping left goes to the next image in RTL"
-    );
+    // swiping left goes to the next image in RTL
+    assert.dom(counter_current_selector).hasText("2");
 
-    await triggerEvent("[data-lightbox-body]", "touchstart", {
+    await triggerEvent(lightbox_body_selector, "touchstart", {
       changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ screenX: 0, screenY: 0 }],
     });
 
-    await triggerEvent("[data-lightbox-body]", "touchend", {
+    await triggerEvent(lightbox_body_selector, "touchend", {
       changedTouches: [{ screenX: 150, screenY: 0 }],
       touches: [{ pageX: 150, pageY: 0 }],
     });
 
-    assert.strictEqual(
-      query("[data-lightbox-counter-current]").innerText,
-      "1",
-      "swiping right goes to the previous image in RTL"
-    );
+    // swiping right goes to the previous image in RTL
+    assert.dom(counter_current_selector).hasText("1");
 
     containsStub.restore();
 
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("navigation - swipe close", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
+    await click(trigger_selector);
+    assert.dom(lightbox_open_selector).exists();
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    await triggerEvent("[data-lightbox-body]", "touchstart", {
+    await triggerEvent(lightbox_body_selector, "touchstart", {
       changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ screenX: 0, screenY: 0 }],
     });
 
-    await triggerEvent("[data-lightbox-body]", "touchend", {
+    await triggerEvent(lightbox_body_selector, "touchend", {
       changedTouches: [{ screenX: 0, screenY: -150 }],
       touches: [{ pageX: 0, pageY: 150 }],
     });
 
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 
   test("navigation - swipe carousel", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click(selector);
 
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
+    await click(trigger_selector);
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(carousel_selector).doesNotExist();
 
-    assert.notOk(
-      exists("[data-lightbox-carousel]"),
-      "carousel is not visible by default"
-    );
-
-    await triggerEvent("[data-lightbox-body]", "touchstart", {
+    await triggerEvent(lightbox_body_selector, "touchstart", {
       changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ screenX: 0, screenY: 0 }],
     });
 
-    await triggerEvent("[data-lightbox-body]", "touchend", {
+    await triggerEvent(lightbox_body_selector, "touchend", {
       changedTouches: [{ screenX: 0, screenY: 150 }],
       touches: [{ pageX: 0, pageY: 150 }],
     });
 
-    assert.ok(
-      exists("[data-lightbox-carousel]"),
-      "carousel opens after swiping down"
-    );
+    assert.dom(carousel_selector).exists(); // opens after swiping down
 
-    await triggerEvent("[data-lightbox-body]", "touchstart", {
+    await triggerEvent(lightbox_body_selector, "touchstart", {
       changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ screenX: 0, screenY: 0 }],
     });
 
-    await triggerEvent("[data-lightbox-body]", "touchend", {
+    await triggerEvent(lightbox_body_selector, "touchend", {
       changedTouches: [{ screenX: 0, screenY: 150 }],
       touches: [{ pageX: 0, pageY: 150 }],
     });
 
-    assert.notOk(
-      exists("[data-lightbox-carousel]"),
-      "carousel closes after swiping down again"
-    );
+    assert.dom(carousel_selector).doesNotExist(); // closes after swiping down again
 
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 });
 
@@ -1409,45 +916,34 @@ acceptance("Experimental Lightbox - loading state", function (needs) {
   test("handles loading errors", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(selector);
-
-    assert.ok(exists("[data-lightbox-content]"), "it opens");
-
-    await waitForLoad();
-
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").src,
-      LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL,
-      "the image has the correct src"
-    );
-
-    await click("[data-lightbox-next-button]");
-
-    assert.notOk(
-      exists("[data-lightbox-main-image]"),
-      true,
-      "the does not show an image if it can't be loaded"
-    );
-
-    await click("[data-lightbox-next-button]");
-
-    assert.strictEqual(
-      query("[data-lightbox-counter-current").textContent,
-      "3",
-      "it shows the correct image when navigating after an error"
-    );
+    await click(trigger_selector);
+    assert.dom(lightbox_open_selector).exists();
 
     await waitForLoad();
 
-    assert.strictEqual(
-      query("[data-lightbox-main-image]").src,
-      LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL,
-      "the image has the correct src"
-    );
+    // the image has the correct src
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
 
-    await click("[data-lightbox-close-button]");
+    await click(next_btn_selector);
 
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    // does not show an image if it can't be loaded
+    assert.dom(main_img_selector).doesNotExist();
+
+    await click(next_btn_selector);
+
+    // it shows the correct image when navigating after an error
+    assert.dom(counter_current_selector).hasText("3");
+
+    await waitForLoad();
+
+    assert
+      .dom(main_img_selector)
+      .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.second.fullsizeURL);
+
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 });
 
@@ -1463,34 +959,21 @@ acceptance("Experimental Lightbox - conditional buttons", function (needs) {
 
   test("it doesn't show the newtab and download buttons to anons if prevent_anons_from_downloading_files is enabled", async function (assert) {
     this.siteSettings.prevent_anons_from_downloading_files = true;
-
     await visit("/t/internationalization-localization/280");
+    await click(trigger_selector);
 
-    await click(selector);
-
-    assert.notOk(
-      exists("[data-lightbox-newtab-button]"),
-      "it doesn't show the newtab button"
-    );
-
-    assert.notOk(
-      exists("[data-lightbox-download-button]"),
-      "it doesn't show the download button"
-    );
+    // it doesn not show the newtab or download button
+    assert.dom(new_tab_btn_selector).doesNotExist();
+    assert.dom(download_btn_selector).doesNotExist();
   });
 
   test("it doesn't show the zoom button if the image is smaller than the viewport", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click(selector);
+    await click(trigger_selector);
+    assert.dom(zoom_btn_selector).doesNotExist();
 
-    assert.notOk(
-      exists("[data-lightbox-zoom-button]"),
-      "it doesn't show the zoom button"
-    );
-
-    await click("[data-lightbox-close-button]");
-
-    assert.notOk(exists("[data-lightbox-content]"), "it closes");
+    await click(close_btn_selector);
+    assert.dom(lightbox_open_selector).doesNotExist();
   });
 });

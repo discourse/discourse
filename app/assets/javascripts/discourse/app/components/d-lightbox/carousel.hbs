@@ -1,19 +1,14 @@
-<div
-  data-lightbox-carousel
-  class="d-lightbox__content__carousel"
->
+<div class="d-lightbox__carousel">
   {{#if @shouldDisplayCarouselArrows}}
     <DLightbox::Button
-      data-lightbox-carousel-previous-button
-      @class="d-lightbox__content__carousel__previous-button"
+      @class="d-lightbox__carousel-previous-button"
       @name="previous"
       @icon={{@previousButtonIcon}}
       @onClick={{@showPreviousItem}}
     />
   {{/if}}
   <div
-    data-lightbox-carousel-items
-    class="d-lightbox__content__carousel__carousel-items"
+    class="d-lightbox__carousel-items"
     tabindex="-1"
     role="list"
     aria-hidden="true"
@@ -31,7 +26,7 @@
         data-lightbox-item-index={{item.index}}
         style={{html-safe item.cssVars}}
         class={{concat
-          "d-lightbox__content__carousel__carousel-items__item"
+          "d-lightbox__carousel-item"
           (if (eq item.index @currentIndex) "--is-current active")
         }}
       >
@@ -39,8 +34,7 @@
   </div>
   {{#if @shouldDisplayCarouselArrows}}
     <DLightbox::Button
-      data-lightbox-carousel-next-button
-      @class="d-lightbox__content__carousel__next-button"
+      @class="d-lightbox__carousel-next-button"
       @name="next"
       @icon={{@nextButtonIcon}}
       @onClick={{@showNextItem}}

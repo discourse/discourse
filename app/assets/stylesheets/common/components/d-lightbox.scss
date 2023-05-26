@@ -62,42 +62,42 @@ html.has-lightbox {
       "lightbox-carousel lightbox-footer";
   }
 
-  &__content__header {
+  &__header {
     grid-area: lightbox-header;
     justify-self: stretch;
     display: grid;
     place-items: center start;
     grid-template-areas: "preview-controls lightbox-header-buttons";
+  }
 
-    &__multi-item-controls {
-      grid-area: preview-controls;
-      place-self: center start;
-      display: grid;
-      gap: 0.5em;
-      place-items: center start;
-      grid-auto-flow: column;
-      grid-template-areas: "lightbox-carousel-toggle lightbox-counter";
+  &__multi-item-controls {
+    grid-area: preview-controls;
+    place-self: center start;
+    display: grid;
+    gap: 0.5em;
+    place-items: center start;
+    grid-auto-flow: column;
+    grid-template-areas: "lightbox-carousel-toggle lightbox-counter";
 
-      &__counter {
-        grid-area: lightbox-counter;
-      }
-
-      .btn--toggle-carousel {
-        grid-area: lightbox-carousel-toggle;
-      }
-    }
-
-    &__buttons {
-      grid-area: lightbox-header-buttons;
-      place-self: center end;
-      display: grid;
-      gap: 0 0.25em;
-      place-items: center end;
-      grid-auto-flow: column;
+    .btn--toggle-carousel {
+      grid-area: lightbox-carousel-toggle;
     }
   }
 
-  &__content__body {
+  &__counters {
+    grid-area: lightbox-counter;
+  }
+
+  &__header-buttons {
+    grid-area: lightbox-header-buttons;
+    place-self: center end;
+    display: grid;
+    gap: 0 0.25em;
+    place-items: center end;
+    grid-auto-flow: column;
+  }
+
+  &__body {
     grid-area: lightbox-body;
     display: grid;
     place-items: center stretch;
@@ -105,39 +105,39 @@ html.has-lightbox {
     grid-auto-flow: column;
     grid-template-columns: auto 1fr auto;
     grid-template-areas: "lightbox-previous-button lightbox-main-image lightbox-next-button";
+  }
 
-    &__main-image,
-    &__error-message,
-    &__loading-spinner {
-      grid-area: lightbox-main-image;
-      place-self: center;
-      display: grid;
-      place-items: center;
-      grid-auto-flow: column;
-    }
+  &__main-image,
+  &__error-message,
+  &__loading-spinner {
+    grid-area: lightbox-main-image;
+    place-self: center;
+    display: grid;
+    place-items: center;
+    grid-auto-flow: column;
+  }
 
-    &__previous-button {
-      grid-area: lightbox-previous-button;
-      place-self: center start;
-    }
+  &__previous-button {
+    grid-area: lightbox-previous-button;
+    place-self: center start;
+  }
 
-    &__next-button {
-      grid-area: lightbox-next-button;
-      place-self: center end;
-    }
+  &__next-button {
+    grid-area: lightbox-next-button;
+    place-self: center end;
   }
 
   &--has-carousel &,
   &--is-rotated &,
   &--is-zoomed & {
-    &__content__body {
+    &__body {
       grid-auto-flow: row;
       grid-template-columns: 1fr;
       grid-template-areas: "lightbox-main-image";
     }
   }
 
-  &__content__footer {
+  &__footer {
     grid-area: lightbox-footer;
     place-self: stretch;
     display: grid;
@@ -145,59 +145,58 @@ html.has-lightbox {
     gap: 1.5em;
     grid-template-columns: 1fr auto;
     grid-template-areas: "lightbox-title lightbox-footer-buttons";
-
-    &__main-title {
-      grid-area: lightbox-title;
-      place-self: center start;
-    }
-
-    &__buttons {
-      grid-area: lightbox-footer-buttons;
-      place-self: center end;
-      display: grid;
-      grid-auto-flow: column;
-      gap: 0 0.25em;
-      place-items: center;
-    }
   }
 
-  &__content__carousel {
+  &__main-title {
+    grid-area: lightbox-title;
+    place-self: center start;
+  }
+
+  &__footer-buttons {
+    grid-area: lightbox-footer-buttons;
+    place-self: center end;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 0 0.25em;
+    place-items: center;
+  }
+
+  &__carousel {
     grid-area: lightbox-carousel;
     display: grid;
     place-items: center;
-
-    &__carousel-items {
-      grid-area: lightbox-preview-images;
-      display: grid;
-      gap: 1em;
-      place-items: center;
-    }
-
-    &__previous-button {
-      grid-area: lightbox-previous;
-    }
-
-    &__next-button {
-      grid-area: lightbox-next;
-    }
   }
 
-  &--is-vertical &__content__carousel {
+  &__carousel-items {
+    grid-area: lightbox-preview-images;
+    display: grid;
+    gap: 1em;
+    place-items: center;
+  }
+
+  &__carousel-previous-button {
+    grid-area: lightbox-previous;
+  }
+
+  &__carousel-next-button {
+    grid-area: lightbox-next;
+  }
+
+  &--is-vertical &__carousel {
     grid-auto-flow: column;
     grid-template-columns: auto 1fr auto;
     grid-template-areas: "lightbox-previous lightbox-preview-images lightbox-next";
-
-    &__carousel-items {
-      grid-auto-flow: column;
-
-      &__item,
-      &__item--is-current {
-        height: var(--carousel-item-size);
-      }
-    }
   }
 
-  &--is-horizontal &__content__carousel {
+  &__carousel-items {
+    grid-auto-flow: column;
+  }
+  &__carousel-item,
+  &__carousel-item--is-current {
+    height: var(--carousel-item-size);
+  }
+
+  &--is-horizontal &__carousel {
     max-height: 100vh;
     grid-template-rows: 1fr auto 1fr;
     place-items: center;
@@ -205,23 +204,23 @@ html.has-lightbox {
       "lightbox-previous"
       "lightbox-preview-images"
       "lightbox-next";
+  }
 
-    &__carousel-items {
-      grid-auto-flow: row;
+  &--is-horizontal &__carousel-items {
+    grid-auto-flow: row;
+  }
 
-      &__item,
-      &__item--is-current {
-        width: var(--carousel-item-size);
-      }
-    }
+  &__carousel-item,
+  &__carousel-item--is-current {
+    width: var(--carousel-item-size);
+  }
 
-    &__previous-button {
-      place-self: self-end center;
-    }
+  &__carousel-previous-button {
+    place-self: self-end center;
+  }
 
-    &__next-button {
-      place-self: self-start center;
-    }
+  &__carousel-next-button {
+    place-self: self-start center;
   }
 }
 
@@ -247,7 +246,7 @@ html.has-lightbox {
 }
 
 .d-lightbox {
-  &__content__header {
+  &__header {
     z-index: 1;
     padding: 0.25em 1px; // 1px for button outlines
     color: var(--d-lightbox-primary);
@@ -262,58 +261,58 @@ html.has-lightbox {
 }
 
 .d-lightbox {
-  &__content__body {
+  &__body {
     @include user-select(none);
     position: relative;
     outline: none;
+  }
 
-    &__loading-spinner,
-    &__error-message,
-    &__main-image {
-      position: absolute;
-      outline: none;
-    }
+  &__loading-spinner,
+  &__error-message,
+  &__main-image {
+    position: absolute;
+    outline: none;
+  }
 
-    &__backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background-size: cover;
-      background-position: center;
-      filter: blur(15px) brightness(0.25);
-      background-color: var(--d-lightbox-secondary);
-      background-image: var(--d-lightbox-image-small-url);
-    }
+  &__backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(15px) brightness(0.25);
+    background-color: var(--d-lightbox-secondary);
+    background-image: var(--d-lightbox-image-small-url);
+  }
 
-    &__main-image {
-      aspect-ratio: var(--d-lightbox-image-aspect-ratio);
-      background-color: var(--d-lightbox-image-dominant-color);
-      box-sizing: border-box;
-      max-height: 100%;
-      max-width: 100%;
-      box-shadow: shadow("card");
-    }
+  &__main-image {
+    aspect-ratio: var(--d-lightbox-image-aspect-ratio);
+    background-color: var(--d-lightbox-image-dominant-color);
+    box-sizing: border-box;
+    max-height: 100%;
+    max-width: 100%;
+    box-shadow: shadow("card");
+  }
 
-    &__error-message {
-      color: var(--d-lightbox-primary);
-    }
+  &__error-message {
+    color: var(--d-lightbox-primary);
+  }
 
-    &__previous-button,
-    &__next-button {
-      z-index: 1;
-      position: absolute;
+  &__previous-button,
+  &__next-button {
+    z-index: 1;
+    position: absolute;
 
-      .d-icon {
-        font-size: var(--font-up-2);
-      }
+    .d-icon {
+      font-size: var(--font-up-2);
     }
   }
 }
 
 .d-lightbox {
-  &__content__footer {
+  &__footer {
     z-index: 1;
     padding: 0.25em 1px;
     box-sizing: border-box;
@@ -342,73 +341,70 @@ html.has-lightbox {
         border: 1px solid var(--tertiary);
         border-radius: 1px;
       }
-
-      &__item-file-details {
-        font-size: var(--font-down-2);
-        opacity: 0.5;
-        padding: 0.25em 0;
-        white-space: nowrap;
-      }
     }
+  }
+
+  &__item-file-details {
+    font-size: var(--font-down-2);
+    opacity: 0.5;
+    padding: 0.25em 0;
+    white-space: nowrap;
   }
 }
 
 .d-lightbox {
-  &__content__carousel {
+  &__carousel {
     @include user-select(none);
     box-sizing: border-box;
     z-index: 1;
     position: relative;
     color: var(--d-lightbox-primary);
+  }
+  &__carousel-previous-button,
+  &__carousel-next-button {
+    z-index: 2;
 
-    &__previous-button,
-    &__next-button {
-      z-index: 2;
-
-      .d-icon {
-        font-size: var(--font-up-2);
-      }
+    .d-icon {
+      font-size: var(--font-up-2);
     }
   }
 }
 
 .d-lightbox {
-  &__content__carousel {
-    &__carousel-items {
-      @extend %lightbox-scrollable;
-      max-height: 100%;
-      max-width: 100%;
-      z-index: 0;
-      box-sizing: border-box;
+  &__carousel-items {
+    @extend %lightbox-scrollable;
+    max-height: 100%;
+    max-width: 100%;
+    z-index: 0;
+    box-sizing: border-box;
+  }
 
-      &__item,
-      &__item--is-current {
-        border: 1px solid transparent;
-        box-shadow: 0 0 2px -1px var(--d-lightbox-primary);
-        border-radius: 5px;
-        cursor: pointer;
-        user-select: none;
-        transition: all var(--d-lightbox-image-animation-duration) ease-in-out;
-        background-color: var(--dominant-color);
-        aspect-ratio: var(--aspect-ratio);
-        filter: saturate(0.5);
+  &__carousel-item,
+  &__carousel-item--is-current {
+    border: 1px solid transparent;
+    box-shadow: 0 0 2px -1px var(--d-lightbox-primary);
+    border-radius: 5px;
+    cursor: pointer;
+    user-select: none;
+    transition: all var(--d-lightbox-image-animation-duration) ease-in-out;
+    background-color: var(--dominant-color);
+    aspect-ratio: var(--aspect-ratio);
+    filter: saturate(0.5);
 
-        &:focus {
-          outline: none;
-        }
-      }
-
-      &__item--is-current {
-        border-color: var(--tertiary);
-        pointer-events: none;
-        filter: initial;
-      }
+    &:focus {
+      outline: none;
     }
+  }
+
+  &__carousel-item--is-current {
+    border-color: var(--tertiary);
+    pointer-events: none;
+    filter: initial;
   }
 }
 
 .d-lightbox {
-  &--is-vertical &__content__carousel {
+  &--is-vertical &__carousel {
     position: relative;
     background-color: var(----d-lightbox-secondary-translucent);
     &:before,
@@ -465,32 +461,20 @@ html.has-lightbox {
         right: auto;
       }
     }
+  }
 
-    &__carousel-items {
-      padding: 50% 1em;
-    }
+  &--is-vertical &__carousel-items {
+    padding: 1em 2em;
+  }
 
-    &__carousel-items {
-      padding: 1em 2em;
-    }
-
-    &__previous-button,
-    &__next-button {
-      position: absolute;
-    }
-
-    &__previous-button {
-      left: 0;
-    }
-
-    &__next-button {
-      right: 0;
-    }
+  &__carousel-previous-button,
+  &__carousel-next-button {
+    position: absolute;
   }
 }
 
 .d-lightbox {
-  &--is-horizontal &__content__carousel {
+  &--is-horizontal &__carousel {
     position: relative;
     &:before,
     &:after {
@@ -534,18 +518,18 @@ html.has-lightbox {
         transparent 100%
       );
     }
+  }
 
-    &__carousel-items {
-      padding: 50% 1em;
-    }
+  &--is-horizontal &__carousel-items {
+    padding: 50% 1em;
+  }
 
-    &__previous-button,
-    &__next-button {
-      transform: rotate(90deg);
+  &__carousel-previous-button,
+  &__carousel-next-button {
+    transform: rotate(90deg);
 
-      & .rtl & {
-        transform: rotate(-90deg);
-      }
+    .rtl & {
+      transform: rotate(-90deg);
     }
   }
 }
@@ -582,13 +566,11 @@ html.has-lightbox {
 }
 
 .d-lightbox {
-  &__content {
-    &__focus-trap,
-    &__screen-reader-announcer {
-      position: absolute;
-      left: -100%;
-      top: -100%;
-    }
+  &__focus-trap,
+  &__screen-reader-announcer {
+    position: absolute;
+    left: -100%;
+    top: -100%;
   }
 }
 
@@ -618,7 +600,7 @@ html.has-lightbox {
       gap: 2em;
     }
 
-    .d-lightbox__content__footer__main-title {
+    .d-lightbox__main-title {
       overflow: visible;
       white-space: normal;
       text-overflow: unset;
@@ -629,47 +611,49 @@ html.has-lightbox {
 // Zoom
 .d-lightbox {
   &--can-zoom {
-    .d-lightbox__content__body {
+    .d-lightbox__body {
       @extend %lightbox-scrollable;
 
       overflow: auto;
       height: 100%;
       width: 100%;
       position: absolute;
+    }
 
-      &__main-image {
-        cursor: zoom-in;
-      }
+    .d-lightbox__main-image {
+      cursor: zoom-in;
     }
   }
 
   &--is-zoomed {
     .d-lightbox__content {
       gap: 0;
+    }
 
+    .d-lightbox {
       &__body {
         @extend %lightbox-scrollable;
         overflow: auto;
         height: 100%;
         width: 100%;
         position: absolute;
+      }
 
-        &__zoomed-image-container {
-          cursor: zoom-out;
-          background-image: var(--d-lightbox-image-full-size-url);
-          background-repeat: no-repeat;
-          backface-visibility: hidden;
-          background-position: center;
+      &__zoomed-image-container {
+        cursor: zoom-out;
+        background-image: var(--d-lightbox-image-full-size-url);
+        background-repeat: no-repeat;
+        backface-visibility: hidden;
+        background-position: center;
 
-          .mobile-view & {
-            width: var(--d-lightbox-image-width);
-            height: var(--d-lightbox-image-height);
-          }
+        .mobile-view & {
+          width: var(--d-lightbox-image-width);
+          height: var(--d-lightbox-image-height);
+        }
 
-          .desktop-view & {
-            width: 100%;
-            height: 100%;
-          }
+        .desktop-view & {
+          width: 100%;
+          height: 100%;
         }
       }
     }
@@ -687,13 +671,12 @@ html.has-lightbox {
 // Rotate
 .d-lightbox {
   &--is-rotated {
-    .d-lightbox__content__body {
+    .d-lightbox__body {
       gap: 0;
-
-      &__main-image,
-      &__zoomed-image-container {
-        transform: rotate(var(--d-lightbox-image-rotation));
-      }
+    }
+    .d-lightbox__main-image,
+    .d-lightbox__zoomed-image-container {
+      transform: rotate(var(--d-lightbox-image-rotation));
     }
 
     .btn-flat.btn--rotate .d-icon {
@@ -726,21 +709,21 @@ html.has-lightbox {
   &--is-visible &__content {
     @extend %lightbox-animation-base;
     animation-name: lightbox-fade-in-scale;
+  }
 
-    &__body__backdrop,
-    &__body__main-image,
-    &__body__loading-spinner,
-    &__body__zoomed-image-container,
-    &__carousel,
-    &__footer__main-title {
-      @extend %lightbox-animation-base;
-      animation-name: lightbox-fade-in;
-    }
+  &__backdrop,
+  &__main-image,
+  &__loading-spinner,
+  &__zoomed-image-container,
+  &__carousel,
+  &__main-title {
+    @extend %lightbox-animation-base;
+    animation-name: lightbox-fade-in;
+  }
 
-    &__body__loading-spinner {
-      animation-delay: var(--d-lightbox-image-animation-duration);
-      opacity: 0;
-    }
+  &__loading-spinner {
+    animation-delay: var(--d-lightbox-image-animation-duration);
+    opacity: 0;
   }
 
   &--will-close &__content {

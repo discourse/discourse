@@ -1,52 +1,34 @@
-<div data-lightbox-header class="d-lightbox__content__header">
+<div class="d-lightbox__header">
   {{#if @canNavigate}}
     <div
-      data-lightbox-multi-item-controls
       aria-hidden="true"
-      class="d-lightbox__content__header__multi-item-controls"
+      class="d-lightbox__multi-item-controls"
     >
       <DLightbox::Button
-        data-lightbox-carousel-button
         aria-hidden="true"
-        @class="d-lightbox__content__header__multi-item-controls__carousel-button"
+        @class="d-lightbox__carousel-button"
         @name="carousel"
         @icon="images"
         @onClick={{@toggleCarousel}}
       />
-      <div
-        data-lightbox-counter
-        class="d-lightbox__content__header__multi-item-controls__counter"
-      >
-        <span
-          data-lightbox-counter-current
-          class="d-lightbox__content__header__multi-item-controls__counter__current"
-        >
+      <div class="d-lightbox__counters">
+        <span class="d-lightbox__counter-current">
           {{~@counterIndex~}}
         </span>
-        <span
-          data-lightbox-counter-separator
-          class="d-lightbox__content__header__multi-item-controls__counter__separator"
-        >
+        <span class="d-lightbox__counter-separator">
           <span>/</span>
         </span>
-        <span
-          data-lightbox-counter-total
-          class="d-lightbox__content__header__multi-item-controls__counter__total"
-        >
+        <span class="d-lightbox__counter-total">
           {{~@totalItemCount~}}
         </span>
       </div>
     </div>
   {{/if}}
-  <div
-    data-lightbox-header-buttons
-    class="d-lightbox__content__header__buttons"
-  >
+  <div class="d-lightbox__header-buttons">
     {{#if @canDownload}}
       <DLightbox::Button
-        data-lightbox-newtab-button
         aria-hidden="true"
-        @class="d-lightbox__content__header__buttons__new-tab-button"
+        @class="d-lightbox__new-tab-button"
         @name="newtab"
         @icon="external-link-alt"
         @onClick={{@openInNewTab}}
@@ -54,17 +36,15 @@
     {{/if}}
     {{#if @canFullscreen}}
       <DLightbox::Button
-        data-lightbox-fullscreen-button
         aria-hidden="true"
-        @class="d-lightbox__content__header__buttons__full-screen-button"
+        @class="d-lightbox__full-screen-button"
         @name="fullscreen"
         @icon="discourse-expand"
         @onClick={{@toggleFullScreen}}
       />
     {{/if}}
     <DLightbox::Button
-      data-lightbox-close-button
-      @class="d-lightbox__content__header__buttons__close-button"
+      @class="d-lightbox__close-button"
       @name="close"
       @icon="times"
       @onClick={{@close}}

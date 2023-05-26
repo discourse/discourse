@@ -199,17 +199,15 @@ export default class LightboxService extends Service {
   async #setupDocumentFocus() {
     this.lastFocusedElement = document.activeElement;
     document.activeElement.blur();
-    document.querySelector("[data-lightbox-close-button]")?.focus();
+    document.querySelector(".d-lightbox__close-button")?.focus();
 
-    const focusableElements = document.querySelectorAll(
-      "[data-lightbox-element] button"
-    );
+    const focusableElements = document.querySelectorAll(".d-lightbox button");
 
     const firstFocusableElement = focusableElements[0];
     const lastFocusableElement =
       focusableElements[focusableElements.length - 1];
 
-    const focusTraps = document.querySelectorAll("[data-lightbox-focus-trap]");
+    const focusTraps = document.querySelectorAll(".d-lightbox__focus-trap");
 
     const firstfocusTrap = focusTraps[0];
     const lastfocusTrap = focusTraps[focusTraps.length - 1];

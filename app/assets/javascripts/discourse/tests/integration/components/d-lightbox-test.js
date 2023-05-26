@@ -1,5 +1,5 @@
 import { click, render, settled } from "@ember/test-helpers";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import { module, test } from "qunit";
 
 import domFromString from "discourse-common/lib/dom-from-string";
@@ -8,143 +8,77 @@ import { hbs } from "ember-cli-htmlbars";
 import { setupLightboxes } from "discourse/lib/lightbox";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
+const trigger_selector = ".lightbox";
+const lightbox_selector = ".d-lightbox";
+const lightbox_open_selector = ".d-lightbox__content";
+
 module("Integration | Component | d-lightbox", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders according to state", async function (assert) {
     await render(hbs`<DLightbox />`);
 
-    assert.ok(exists("[data-lightbox-element]"), "it renders");
+    // lightbox container exists but is not visible
+    assert.dom(lightbox_selector).exists();
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-visible");
+    assert.dom(lightbox_selector).hasAttribute("tabindex", "-1");
+    assert.dom(lightbox_open_selector).doesNotExist();
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-visible"
-      ),
-      "it is hidden by default"
-    );
-
-    assert.notOk(exists("[data-lightbox-content]"), "it has no content");
-
-    assert.strictEqual(
-      query("[data-lightbox-element]").tabIndex,
-      -1,
-      "it is not tabbable"
-    );
-
-    assert.ok(
-      query("[data-lightbox-element]").hasAttribute("aria-hidden"),
-      "it is hidden from screen readers"
-    );
+    // it is hidden from screen readers
+    assert.dom(lightbox_selector).hasAttribute("aria-hidden");
 
     const container = domFromString(generateLightboxMarkup())[0];
+    await setupLightboxes({ container, selector: trigger_selector });
 
-    await setupLightboxes({
-      container,
-      selector: ".lightbox",
-    });
-
-    const lightboxedElement = container.querySelector(".lightbox");
+    const lightboxedElement = container.querySelector(trigger_selector);
     await click(lightboxedElement);
 
     await settled();
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-visible"
-      ),
-      "it is visible"
-    );
+    assert.dom(lightbox_selector).hasClass("d-lightbox--is-visible");
 
-    assert.ok(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-vertical"
-      ) ||
-        query("[data-lightbox-element]").classList.contains(
-          "d-lightbox--is-horizontal"
-        ),
-      "it has a layout class"
-    );
+    assert
+      .dom(lightbox_selector)
+      .hasClass(/^(d-lightbox--is-vertical|d-lightbox--is-horizontal)$/);
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-zoomed"
-      ),
-      "it is not zoomed"
-    );
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-zoomed");
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-rotated");
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-fullscreen");
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-rotated"
-      ),
-      "it not rotated"
-    );
+    assert.dom(lightbox_open_selector).exists();
+    assert.dom(lightbox_selector).doesNotHaveAria("hidden");
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-fullscreen"
-      ),
-      "it is not fullscreen"
-    );
+    // the content is tabbable
+    assert.dom(lightbox_open_selector).hasAttribute("tabindex", "0");
 
-    assert.ok(exists("[data-lightbox-content]"), "it has content");
+    // the content has a document role
+    assert.dom(lightbox_open_selector).hasAttribute("role", "document");
 
-    assert.notOk(
-      query("[data-lightbox-element]").hasAttribute("aria-hidden"),
-      "it is not hidden from screen readers"
-    );
+    // the content has an aria-labelledby attribute
+    assert.dom(lightbox_open_selector).hasAttribute("aria-labelledby");
 
     assert.strictEqual(
-      query("[data-lightbox-content]").tabIndex,
-      0,
-      "the content is tabbable"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-content]").getAttribute("role"),
-      "document",
-      "the content has a document role"
-    );
-
-    assert.ok(
-      query("[data-lightbox-content]").getAttribute("aria-labelledby"),
-      "the content has an aria-labelledby attribute"
-    );
-
-    assert.strictEqual(
-      query("[data-lightbox-content]")
+      query(lightbox_open_selector)
         .getAttribute("style")
         .match(/--d-lightbox/g).length,
       8,
       "the content has the corrrect number of css variables"
     );
 
-    assert.ok(
-      query("[data-lightbox-focus-trap]"),
-      "it has focus traps for keyboard navigation"
-    );
+    // it has focus traps for keyboard navigation
+    assert.dom(".d-lightbox__focus-trap").exists();
 
-    await click("[data-lightbox-close-button]");
-
+    await click(".d-lightbox__close-button");
     await settled();
 
-    assert.notOk(
-      query("[data-lightbox-element]").classList.contains(
-        "d-lightbox--is-visible"
-      ),
-      "it is hidden"
-    );
+    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-visible");
 
-    assert.notOk(exists("[data-lightbox-content]"), "it has no content");
+    assert.dom(lightbox_open_selector).doesNotExist();
 
-    assert.strictEqual(
-      query("[data-lightbox-element]").tabIndex,
-      -1,
-      "it is not tabbable"
-    );
+    // it is not tabbable
+    assert.dom(lightbox_selector).hasAttribute("tabindex", "-1");
 
-    assert.ok(
-      query("[data-lightbox-element]").hasAttribute("aria-hidden"),
-      "it is hidden from screen readers"
-    );
+    // it is hidden from screen readers
+    assert.dom(lightbox_selector).hasAttribute("aria-hidden");
   });
 });

@@ -1,30 +1,22 @@
-<div class="d-lightbox__content__footer" data-lightbox-footer>
+<div class="d-lightbox__footer">
   {{#if @shouldDisplayTitle}}
     <div
-      data-lightbox-title
       aria-hidden="true"
-      class="d-lightbox__content__footer__main-title"
+      class="d-lightbox__main-title"
       tabindex="0"
       {{on "click" @toggleExpandTitle passive=true capture=true}}
     >
-      <span
-        data-lightbox-title-text
-        class="d-lightbox__content__footer__main-title__item-title"
-      >
+      <span class="d-lightbox__item-title">
         {{~@currentItem.title~}}
       </span>
-      <span
-        data-lightbox-file-details
-        class="d-lightbox__content__footer__main-title__item-file-details"
-      >
+      <span class="d-lightbox__item-file-details">
         {{~@currentItem.fileDetails~}}
       </span>
     </div>
   {{/if}}
-  <div class="d-lightbox__content__footer__buttons">
+  <div class="d-lightbox__footer-buttons">
     {{#if @canZoom}}
       <DLightbox::Button
-        data-lightbox-zoom-button
         aria-hidden="true"
         @class="d-lightbox__zoom-button"
         @name="zoom"
@@ -34,7 +26,6 @@
     {{/if}}
     {{#if @canRotate}}
       <DLightbox::Button
-        data-lightbox-rotate-button
         aria-hidden="true"
         @class="d-lightbox__rotate-button"
         @name="rotate"
@@ -44,7 +35,6 @@
     {{/if}}
     {{#if @canDownload}}
       <DLightbox::Button
-        data-lightbox-download-button
         @class="d-lightbox__download-button"
         @name="download"
         @icon="download"
