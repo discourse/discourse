@@ -27,9 +27,10 @@ module Chat
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
 
     def mentioned_users
-      User
-        .where(id: object.chat_mentions.pluck(:user_id))
-        .order("users.id ASC")
+      object
+        .chat_mentions
+        .map(&:user)
+        .sort_by(&:id)
         .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
         .as_json
     end
