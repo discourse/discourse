@@ -300,6 +300,7 @@ module Chat
           guardian: user.guardian,
           thread_ids: [message.thread_id],
           include_threads: true,
+          include_missing_memberships: true,
         ).find_thread(message.thread_id)
       end
 
