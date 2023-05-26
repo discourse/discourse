@@ -67,6 +67,16 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       )
     end
 
+    it "shows the last reply date of the thread" do
+      freeze_time
+      last_reply = Fabricate(:chat_message, chat_channel: thread_1.channel, thread: thread_1)
+      chat_page.visit_channel(channel)
+      channel_page.open_thread_list
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
+        thread_list_page.last_reply_datetime_selector(last_reply),
+      )
+    end
+
     it "opens a thread" do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list

@@ -11,6 +11,10 @@ module PageObjects
         ".chat-thread-list-item__om-user-avatar .chat-user-avatar .chat-user-avatar-container[data-user-card=\"#{user.username}\"] img"
       end
 
+      def last_reply_datetime_selector(last_reply)
+        ".chat-thread-list-item__last-reply .relative-date[data-time='#{(last_reply.created_at.to_f * 1000).to_i}']"
+      end
+
       def has_no_unread_item?(id)
         has_no_css?(item_by_id_selector(id) + ".-is-unread")
       end
