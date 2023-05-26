@@ -359,13 +359,13 @@ export default class ChatComposer extends Component {
       }
     }
 
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && this.isFocused) {
+      event.stopPropagation();
+
       if (this.currentMessage?.inReplyTo) {
         this.reset();
-        return false;
       } else if (this.currentMessage?.editing) {
         this.composer.onCancelEditing();
-        return false;
       } else {
         event.target.blur();
       }
