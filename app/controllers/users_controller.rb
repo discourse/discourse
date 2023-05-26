@@ -2015,7 +2015,13 @@ class UsersController < ApplicationController
     end
 
     deprecate_modify_user_params_method
-    modify_user_params(result)
+    result = modify_user_params(result)
+    DiscoursePluginRegistry.apply_modifier(
+      :users_controller_update_user_params,
+      result,
+      current_user,
+      params,
+    )
   end
 
   # Plugins can use this to modify user parameters

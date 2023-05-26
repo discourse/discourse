@@ -37,7 +37,7 @@ async function runAllTests() {
     const options = {
       chromeFlags: [
         "--disable-gpu",
-        "--headless",
+        "--headless=new",
         "--no-sandbox",
         "--disable-dev-shm-usage",
         "--mute-audio",
