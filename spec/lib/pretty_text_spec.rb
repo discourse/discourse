@@ -2139,7 +2139,7 @@ HTML
     expect(cooked).to eq(html)
   end
 
-  it "provides safety for img bbcode" do
+  it "supports img bbcode entities in attributes" do
     actual = PrettyText.cook "[img]http://aaa.com/?a=1&b=<script>alert(1);</script>[/img]"
     expected =
       '<p><img src="http://aaa.com/?a=1&b=&lt;script&gt;alert(1);&lt;/script&gt;" alt="" role="presentation"></p>'
