@@ -511,7 +511,10 @@ export default class ComposerController extends Controller {
     this.model.categoryId = categoryId;
 
     if (this.formTemplateIds?.length) {
-      this.appEvents.trigger("composer:load-templates", this.formTemplateIds);
+      this.appEvents.trigger(
+        "composer:selected-form-templates",
+        this.formTemplateIds
+      );
     }
   }
 

@@ -11,17 +11,25 @@ export default class FormTemplateFieldWrapper extends Component {
 
   constructor() {
     super(...arguments);
-    this.appEvents.on("composer:load-templates", this, this._fetchTemplate);
+    this.appEvents.on(
+      "composer:selected-form-template",
+      this,
+      this._fetchTemplate
+    );
 
     if (this.args.content) {
       this._loadTemplate(this.args.content);
     } else if (this.args.id) {
-      this.appEvents.trigger("composer:load-templates", this.args.id);
+      this.appEvents.trigger("composer:selected-form-templates", this.args.id);
     }
   }
 
   willDestroy() {
-    this.appEvents.off("composer:load-templates", this, this._fetchTemplate);
+    this.appEvents.off(
+      "composer:selected-form-templates",
+      this,
+      this._fetchTemplate
+    );
   }
 
   _loadTemplate(templateContent) {

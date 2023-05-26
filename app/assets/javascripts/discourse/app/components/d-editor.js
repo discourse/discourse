@@ -247,7 +247,10 @@ export default Component.extend(TextareaTextManipulation, {
     this.selectedFormTemplateId = formTemplateId;
 
     if (formTemplateId.length > 0) {
-      return this.appEvents.trigger("composer:load-templates", formTemplateId);
+      return this.appEvents.trigger(
+        "composer:selected-form-templates",
+        formTemplateId
+      );
     }
   },
 
