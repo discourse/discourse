@@ -507,7 +507,7 @@ export default class ComposerController extends Controller {
   }
 
   @action
-  setCategory(categoryId) {
+  updateCategory(categoryId) {
     this.model.categoryId = categoryId;
 
     if (this.formTemplateIds?.length) {
