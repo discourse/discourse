@@ -11,12 +11,12 @@
         </label>
 
         <div class="controls">
-          {{text-field
-            value=automationForm.name
-            type="text"
-            classNames="input-large"
-            autofocus="autofocus"
-          }}
+          <TextField
+            @value={{automationForm.name}}
+            @type="text"
+            @classNames="input-large"
+            @autofocus="autofocus"
+          />
         </div>
       </div>
 
@@ -26,13 +26,13 @@
         </label>
 
         <div class="controls">
-          {{combo-box
-            class="scriptables"
-            value=automationForm.script
-            content=model.scriptables
-            onChange=(action "onChangeScript")
-            options=(hash filterable=true)
-          }}
+          <ComboBox
+            @class="scriptables"
+            @value={{automationForm.script}}
+            @content={{model.scriptables}}
+            @onChange={{action "onChangeScript"}}
+            @options={{hash filterable=true}}
+          />
         </div>
       </div>
     </section>
@@ -56,17 +56,17 @@
         </label>
 
         <div class="controls">
-          {{combo-box
-            class="triggerables"
-            value=automationForm.trigger
-            content=model.triggerables
-            onChange=(action "onChangeTrigger")
-            options=(hash
+          <ComboBox
+            @class="triggerables"
+            @value={{automationForm.trigger}}
+            @content={{model.triggerables}}
+            @onChange={{action "onChangeTrigger"}}
+            @options={{hash
               filterable=true
               none="discourse_automation.select_trigger"
               disabled=model.automation.script.forced_triggerable
-            )
-          }}
+            }}
+          />
         </div>
       </div>
 
@@ -92,12 +92,12 @@
                 }}</p>
             {{/if}}
 
-            {{d-button
-              label="discourse_automation.edit_automation.trigger_section.trigger_now"
+            <DButton
+              @label="discourse_automation.edit_automation.trigger_section.trigger_now"
               class="btn-primary trigger-now-btn"
-              isLoading=isTriggeringAutomation
-              action=(action "onManualAutomationTrigger" model.automation.id)
-            }}
+              @isLoading={{isTriggeringAutomation}}
+              @action={{action "onManualAutomationTrigger" model.automation.id}}
+            />
           </div>
         {{/if}}
 
@@ -152,13 +152,13 @@
       {{/if}}
 
       <div class="control-group">
-        {{d-button
-          isLoading=isUpdatingAutomation
+        <DButton
+          @isLoading={{isUpdatingAutomation}}
           class="btn-primary"
-          label="discourse_automation.update"
-          type="submit"
-          action=(action "saveAutomation" automation)
-        }}
+          @label="discourse_automation.update"
+          @type="submit"
+          @action={{action "saveAutomation" automation}}
+        />
       </div>
     {{/if}}
   </form>

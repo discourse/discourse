@@ -39,12 +39,12 @@
   </h1>
 
   {{#if showNewAutomation}}
-    {{d-button
-      label="discourse_automation.create"
-      icon="plus"
-      action=(action "newAutomation")
+    <DButton
+      @label="discourse_automation.create"
+      @icon="plus"
+      @action={{action "newAutomation"}}
       class="new-automation"
-    }}
+    />
   {{/if}}
 {{/link-to}}
 

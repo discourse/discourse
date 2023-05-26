@@ -3,13 +3,13 @@
     {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
-      {{group-chooser
-        content=allGroups
-        value=field.metadata.value
-        labelProperty="name"
-        onChange=(action "setGroupField")
-        options=(hash maximum=1 disabled=field.isDisabled)
-      }}
+      <GroupChooser
+        @content={{allGroups}}
+        @value={{field.metadata.value}}
+        @labelProperty="name"
+        @onChange={{action "setGroupField"}}
+        @options={{hash maximum=1 disabled=field.isDisabled}}
+      />
 
       {{fields/da-field-description description=description}}
     </div>

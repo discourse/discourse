@@ -65,11 +65,11 @@
           {{/if}}
 
           <td>
-            {{d-button
-              icon="trash-alt"
+            <DButton
+              @icon="trash-alt"
               class="btn-danger"
-              action=(action "destroyAutomation" automation)
-            }}
+              @action={{action "destroyAutomation" automation}}
+            />
           </td>
         </tr>
       {{/each}}
@@ -78,11 +78,11 @@
 {{else}}
   <div class="alert alert-info">
     <p>{{i18n "discourse_automation.no_automation_yet"}}</p>
-    {{d-button
-      label="discourse_automation.create"
-      icon="plus"
-      class="btn btn-primary"
-      action=(action "newAutomation")
-    }}
+    <DButton
+      @label="discourse_automation.create"
+      @icon="plus"
+      class="btn-primary"
+      @action={{action "newAutomation"}}
+    />
   </div>
 {{/if}}

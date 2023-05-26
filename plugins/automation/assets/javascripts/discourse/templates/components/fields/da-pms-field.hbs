@@ -2,11 +2,11 @@
   {{#if field.metadata.value.length}}
     <section class="actions header">
       {{fields/da-field-label label=label field=field}}
-      {{d-button
-        icon="plus"
-        action=(action "insertPM")
+      <DButton
+        @icon="plus"
+        @action={{action "insertPM"}}
         class="btn-primary insert-pm"
-      }}
+      />
     </section>
   {{/if}}
 
@@ -86,24 +86,24 @@
         </div>
       </div>
       <section class="actions">
-        {{d-button
-          icon="trash-alt"
-          action=(action "removePM" pm)
+        <DButton
+          @icon="trash-alt"
+          @action={{action "removePM" pm}}
           class="btn-danger"
-          disabled=field.isDisabled
-        }}
+          @disabled={{field.isDisabled}}
+        />
       </section>
     </div>
   {{else}}
     <div class="no-pm">
       <p>{{i18n "discourse_automation.fields.pms.no_pm_created"}}</p>
-      {{d-button
-        icon="plus"
-        label="discourse_automation.fields.pms.add_pm"
-        action=(action "insertPM")
+      <DButton
+        @icon="plus"
+        @label="discourse_automation.fields.pms.add_pm"
+        @action={{action "insertPM"}}
         class="btn-primary insert-pm"
-        disabled=field.isDisabled
-      }}
+        @disabled={{field.isDisabled}}
+      />
     </div>
   {{/each}}
 </section>

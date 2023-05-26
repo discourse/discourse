@@ -8,12 +8,12 @@
       </label>
 
       <div class="controls">
-        {{text-field
-          value=form.name
-          type="text"
-          classNames="input-large"
-          autofocus="autofocus"
-        }}
+        <TextField
+          @value={{form.name}}
+          @type="text"
+          @class="input-large"
+          @autofocus="autofocus"
+        />
       </div>
     </div>
 
@@ -40,12 +40,12 @@
     <div class="control-group">
 
       <div class="controls">
-        {{d-button
-          icon="plus"
+        <DButton
+          @icon="plus"
           class="btn-primary"
-          label="discourse_automation.create"
-          action=(action "saveAutomation" model.automation)
-        }}
+          @label="discourse_automation.create"
+          @action={{action "saveAutomation" model.automation}}
+        />
       </div>
     </div>
   </form>
