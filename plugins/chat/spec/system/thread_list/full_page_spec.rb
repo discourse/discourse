@@ -59,15 +59,12 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       )
     end
 
-    it "shows the thread original message user username and avatar" do
+    it "shows the thread original message user avatar" do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
-        ".chat-thread-original-message__avatar .chat-user-avatar .chat-user-avatar-container img",
+        thread_list_page.avatar_selector(thread_1.original_message.user),
       )
-      expect(
-        thread_list_page.item_by_id(thread_1.id).find(".chat-thread-original-message__username"),
-      ).to have_content(thread_1.original_message.user.username)
     end
 
     it "opens a thread" do
@@ -89,20 +86,22 @@ describe "Thread list in side panel | full page", type: :system, js: true do
       it "allows updating when user is admin" do
         current_user.update!(admin: true)
         open_thread_list
-        thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings").click
+        thread_list_page.item_by_id(thread_1.id).click
+        thread_page.header.open_settings
         find(".thread-title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
-        expect(thread_list_page.item_by_id(thread_1.id)).to have_content(new_title)
+        expect(thread_page.header).to have_title_content(new_title)
       end
 
       it "allows updating when user is same as the chat original message user" do
         thread_1.update!(original_message_user: current_user)
         thread_1.original_message.update!(user: current_user)
         open_thread_list
-        thread_list_page.item_by_id(thread_1.id).find(".chat-thread-list-item__settings").click
+        thread_list_page.item_by_id(thread_1.id).click
+        thread_page.header.open_settings
         find(".thread-title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
-        expect(thread_list_page.item_by_id(thread_1.id)).to have_content(new_title)
+        expect(thread_page.header).to have_title_content(new_title)
       end
 
       it "does not allow updating if user is neither admin nor original message user" do
@@ -110,10 +109,8 @@ describe "Thread list in side panel | full page", type: :system, js: true do
         thread_1.original_message.update!(user: other_user)
 
         open_thread_list
-
-        expect(thread_list_page.item_by_id(thread_1.id)).to have_no_css(
-          ".chat-thread-list-item__settings",
-        )
+        thread_list_page.item_by_id(thread_1.id).click
+        expect(thread_page.header).to have_no_settings_button
       end
     end
   end
