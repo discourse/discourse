@@ -462,7 +462,7 @@ export default class ChatLivePane extends Component {
       const lastReadId =
         this.args.channel.currentUserMembership?.lastReadMessageId;
       let lastUnreadVisibleMessage = this.args.channel.visibleMessages.findLast(
-        (message) => !lastReadId || message.id > lastReadId
+        (message) => !message.staged && (!lastReadId || message.id > lastReadId)
       );
 
       // all intersecting messages are read
