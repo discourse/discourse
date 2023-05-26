@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class FormTemplatesController < ApplicationController
+  requires_login
   before_action :ensure_form_templates_enabled
 
   def index
@@ -10,7 +11,13 @@ class FormTemplatesController < ApplicationController
 
   def show
     params.require(:id)
-    template = FormTemplate.find(params[:id])
+
+    begin
+      template = FormTemplate.find(params[:id])
+    rescue StandardError
+      raise Discourse::NotFound
+    end
+
     render_serialized(template, FormTemplateSerializer, root: "form_template")
   end
 
