@@ -2140,10 +2140,10 @@ HTML
   end
 
   it "provides safety for img bbcode" do
-    cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
-    html =
-      '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt="" role="presentation"></p>'
-    expect(cooked).to eq(html)
+    actual = PrettyText.cook "[img]http://aaa.com/?a=1&b=<script>alert(1);</script>[/img]"
+    expected =
+      '<p><img src="http://aaa.com/?a=1&b=&lt;script&gt;alert(1);&lt;/script&gt;" alt="" role="presentation"></p>'
+    expect(expected).to be_same_dom(actual)
   end
 
   it "supports email bbcode" do
@@ -2216,6 +2216,13 @@ HTML
 
   it "should strip SCRIPT" do
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
+    expect(PrettyText.cook("<div><script>alert(42)</script></div>")).to eq "<div></div>"
+  end
+
+  it "strips script regardless of sanitize" do
+    expect(
+      PrettyText.cook("<div><script>alert(42)</script></div>", sanitize: false),
+    ).to eq "<div></div>"
   end
 
   it "should allow sanitize bypass" do

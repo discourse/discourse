@@ -625,6 +625,7 @@ DEPENDENCIES
   rack
   rack-mini-profiler
   rack-protection
+  rails-dom-testing
   rails_failover
   rails_multisite
   railties (= 7.0.4.3)
@@ -672,4 +673,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.4.4
+   2.4.13
