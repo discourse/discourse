@@ -445,3 +445,7 @@ fr:
         chat_notifications_with_unread:
           one: "Notifications de discussion - %{count} notification non lue"
           other: "Notifications de discussion - %{count} notifications non lues"
+    styleguide:
+      sections:
+        chat:
+          title: Discussion

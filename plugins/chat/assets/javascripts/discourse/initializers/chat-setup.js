@@ -6,6 +6,7 @@ import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/ch
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import { replaceIcon } from "discourse-common/lib/icon-library";
+import chatStyleguide from "../components/styleguide/organisms/chat";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
@@ -28,7 +29,7 @@ export default {
     }
 
     withPluginApi("0.12.1", (api) => {
-      api.registerHashtagType("channel", ChannelHashtagType);
+      api.registerHashtagType("channel", new ChannelHashtagType(container));
 
       api.registerChatComposerButton({
         id: "chat-upload-btn",
@@ -143,6 +144,12 @@ export default {
       api.addCardClickListenerSelector(".chat-drawer-outlet");
 
       api.addToHeaderIcons("chat-header-icon");
+
+      api.addStyleguideSection?.({
+        component: chatStyleguide,
+        category: "organisms",
+        id: "chat",
+      });
 
       api.addChatDrawerStateCallback(({ isDrawerActive }) => {
         if (isDrawerActive) {

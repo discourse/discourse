@@ -32,9 +32,10 @@ module Chat
     step :determine_threads_enabled
     step :determine_include_thread_messages
     step :fetch_messages
-    step :fetch_thread_tracking_overview
+    step :fetch_unread_thread_ids
     step :fetch_threads_for_messages
     step :fetch_tracking
+    step :fetch_thread_memberships
     step :build_view
 
     class Contract
@@ -65,9 +66,12 @@ module Chat
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def target_message_exists(contract:, **)
+    def target_message_exists(contract:, guardian:, **)
       return true if contract.target_message_id.blank?
-      Chat::Message.exists?(id: contract.target_message_id)
+      target_message = Chat::Message.unscoped.find_by(id: contract.target_message_id)
+      return false if target_message.blank?
+      return true if !target_message.trashed?
+      target_message.user_id == guardian.user.id || guardian.is_staff?
     end
 
     def determine_threads_enabled(channel:, **)
@@ -117,11 +121,11 @@ module Chat
     # that have unread messages, only threads with unread messages
     # will be included in this array. This is a low-cost way to know
     # how many threads the user has unread across the entire channel.
-    def fetch_thread_tracking_overview(guardian:, channel:, threads_enabled:, **)
+    def fetch_unread_thread_ids(guardian:, channel:, threads_enabled:, **)
       if !threads_enabled
-        context.thread_tracking_overview = []
+        context.unread_thread_ids = []
       else
-        context.thread_tracking_overview =
+        context.unread_thread_ids =
           ::Chat::TrackingStateReportQuery
             .call(
               guardian: guardian,
@@ -168,15 +172,28 @@ module Chat
       end
     end
 
+    def fetch_thread_memberships(threads:, guardian:, **)
+      if threads.empty?
+        context.thread_memberships = []
+      else
+        context.thread_memberships =
+          ::Chat::UserChatThreadMembership.where(
+            thread_id: threads.map(&:id),
+            user_id: guardian.user.id,
+          )
+      end
+    end
+
     def build_view(
       guardian:,
       channel:,
       messages:,
       threads:,
       tracking:,
-      thread_tracking_overview:,
+      unread_thread_ids:,
       can_load_more_past:,
       can_load_more_future:,
+      thread_memberships:,
       **
     )
       context.view =
@@ -186,9 +203,10 @@ module Chat
           user: guardian.user,
           can_load_more_past: can_load_more_past,
           can_load_more_future: can_load_more_future,
-          thread_tracking_overview: thread_tracking_overview,
+          unread_thread_ids: unread_thread_ids,
           threads: threads,
           tracking: tracking,
+          thread_memberships: thread_memberships,
         )
     end
   end

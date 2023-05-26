@@ -121,7 +121,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     @channel ||=
       begin
         channel = Chat::Channel.find(params.require(:channel_id))
-        guardian.ensure_can_preview_chat_channel!(channel)
+        guardian.ensure_can_join_chat_channel!(channel)
         channel
       end
   end

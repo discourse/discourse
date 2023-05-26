@@ -12,6 +12,10 @@ module PageObjects
           @context = context
         end
 
+        def message_details
+          @message_details ||= PageObjects::Components::Chat::ComposerMessageDetails.new(context)
+        end
+
         def input
           find(context).find(SELECTOR).find(".chat-composer__input")
         end
@@ -30,6 +34,10 @@ module PageObjects
 
         def open_emoji_picker
           find(context).find(SELECTOR).find(".chat-composer-button__btn.emoji").click
+        end
+
+        def editing_message?(message)
+          value == message.message && message_details.editing_message?(message)
         end
       end
     end

@@ -4,19 +4,20 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
   fab!(:current_user) { Fabricate(:user) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
-  let!(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
+  let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
   end
 
-  def create_message(text: "this is fine", channel:, creator: Fabricate(:user))
+  def create_message(text: nil, channel:, creator: Fabricate(:user))
     sign_in(creator)
     chat_page.visit_channel(channel)
-    chat_channel_page.send_message(text)
-    expect(chat_channel_page).to have_no_css(".chat-message-staged")
-    expect(chat_channel_page).to have_message(text: text)
+    channel_page.send_message(text)
+    args = { persisted: true }
+    args[:text] = text if text
+    expect(channel_page.messages).to have_message(**args)
   end
 
   context "as a user" do
@@ -34,6 +35,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
           context "when a message is created" do
             it "doesn't show anything" do
               visit("/")
+
               using_session(:user_1) do |session|
                 create_message(channel: channel_1, creator: user_1)
                 session.quit

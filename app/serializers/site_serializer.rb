@@ -241,7 +241,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def hashtag_icons
-    HashtagAutocompleteService.data_source_icons
+    HashtagAutocompleteService.data_source_icon_map
   end
 
   def displayed_about_plugin_stat_groups
@@ -260,7 +260,7 @@ class SiteSerializer < ApplicationSerializer
   def anonymous_sidebar_sections
     SidebarSection
       .public_sections
-      .includes(sidebar_section_links: :linkable)
+      .includes(:sidebar_urls)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end

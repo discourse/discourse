@@ -62,9 +62,17 @@ module Chat
         .where.not(username_lower: @parsed_direct_mentions)
     end
 
-    def mentionable_groups
-      @mentionable_groups ||=
-        Group.mentionable(@message.user, include_public: false).where(id: visible_groups.map(&:id))
+    def groups_to_mention
+      @groups_to_mention = mentionable_groups - groups_with_too_many_members
+    end
+
+    def groups_with_disabled_mentions
+      @groups_with_disabled_mentions ||= visible_groups - mentionable_groups
+    end
+
+    def groups_with_too_many_members
+      @groups_with_too_many_members ||=
+        mentionable_groups.where("user_count > ?", SiteSetting.max_users_notified_per_group_mention)
     end
 
     def visible_groups
@@ -91,6 +99,11 @@ module Chat
         .joins(:user_option)
         .real
         .where(user_options: { chat_enabled: true })
+    end
+
+    def mentionable_groups
+      @mentionable_groups ||=
+        Group.mentionable(@message.user, include_public: false).where(id: visible_groups.map(&:id))
     end
 
     def parse_mentions(message)

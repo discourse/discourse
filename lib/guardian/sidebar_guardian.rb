@@ -12,6 +12,7 @@ module SidebarGuardian
   end
 
   def can_delete_sidebar_section?(sidebar_section)
+    return false if sidebar_section.section_type.present?
     return @user.admin? if sidebar_section.public?
     is_my_own?(sidebar_section)
   end

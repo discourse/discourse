@@ -109,6 +109,7 @@ import {
   registerCustomCategorySectionLinkPrefix,
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
@@ -572,7 +573,17 @@ class PluginApi {
   attachWidgetAction(widget, actionName, fn) {
     const widgetClass =
       queryRegistry(widget) ||
-      this.container.factoryFor(`widget:${widget}`).class;
+      this.container.factoryFor(`widget:${widget}`)?.class;
+
+    if (!widgetClass) {
+      // eslint-disable-next-line no-console
+      console.error(
+        consolePrefix(),
+        `attachWidgetAction: Could not find widget ${widget} in registry`
+      );
+      return;
+    }
+
     widgetClass.prototype[actionName] = fn;
   }
 
@@ -1967,6 +1978,38 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Register a custom prefix for a sidebar tag section link.
+   *
+   * Example:
+   *
+   * ```
+   * api.registerCustomTagSectionLinkPrefixValue({
+   *   tagName: "tag1",
+   *   prefixType: "icon",
+   *   prefixValue: "wrench",
+   *   prefixColor: "#FF0000"
+   * });
+   * ```
+   *
+   * @params {Object} arg - An object
+   * @params {string} arg.tagName - The name of the tag
+   * @params {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @params {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
+   */
+  registerCustomTagSectionLinkPrefixIcon({
+    tagName,
+    prefixValue,
+    prefixColor,
+  }) {
+    registerCustomTagSectionLinkPrefixIcon({
+      tagName,
+      prefixValue,
+      prefixColor,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
    * Triggers a refresh of the counts for all category section links under the categories section for a logged in user.
    */
   refreshUserSidebarCategoriesSectionCounts() {
@@ -2226,10 +2269,11 @@ class PluginApi {
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
    * @param {string} type - The type of the hashtag.
-   * @param {Class} typeClass - The class of the hashtag type.
+   * @param {Class} typeClassInstance - The initialized class of the hashtag type, which
+   *  needs the `container`.
    */
-  registerHashtagType(type, typeClass) {
-    registerHashtagType(type, typeClass);
+  registerHashtagType(type, typeClassInstance) {
+    registerHashtagType(type, typeClassInstance);
   }
 }
 

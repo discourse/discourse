@@ -6,7 +6,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before { chat_system_bootstrap }
 
@@ -21,15 +21,13 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
       it "loads most recent messages" do
         unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
-        visit("/chat/c/-/#{channel_1.id}/#{message_1.id}")
+        chat.visit_channel(channel_1, message_id: message_1.id)
 
-        expect(channel).to have_no_loading_skeleton
-        expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
+        expect(channel_page.messages).to have_no_message(id: unloaded_message.id)
 
-        channel.send_message("test_message")
+        channel_page.send_message
 
-        expect(channel).to have_no_loading_skeleton
-        expect(page).to have_css("[data-id='#{unloaded_message.id}']")
+        expect(channel_page.messages).to have_message(id: unloaded_message.id)
       end
     end
 
@@ -46,12 +44,12 @@ RSpec.describe "Chat channel", type: :system, js: true do
         end
 
         using_session(:tab_1) do |session|
-          channel.send_message("test_message")
+          channel_page.send_message("test_message")
           session.quit
         end
 
         using_session(:tab_2) do |session|
-          expect(channel).to have_message(text: "test_message")
+          expect(channel_page).to have_message(text: "test_message")
           session.quit
         end
       end
@@ -59,12 +57,14 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
     it "allows to edit this message once persisted" do
       chat.visit_channel(channel_1)
-      channel.send_message("aaaaaaaaaaaaaaaaaaaa")
-      expect(page).to have_no_css(".chat-message-staged")
+      channel_page.send_message("aaaaaa")
+
+      expect(channel_page.messages).to have_message(persisted: true, text: "aaaaaa")
+
       last_message = find(".chat-message-container:last-child")
       last_message.hover
 
-      expect(page).to have_css(
+      expect(channel_page).to have_css(
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
       )
     end
@@ -81,12 +81,12 @@ RSpec.describe "Chat channel", type: :system, js: true do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
       visit("/chat/message/#{message_1.id}")
 
-      expect(channel).to have_no_loading_skeleton
+      expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
 
       find(".chat-scroll-to-bottom").click
 
-      expect(channel).to have_no_loading_skeleton
+      expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")
     end
   end
@@ -133,16 +133,18 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
   context "when a message contains mentions" do
     fab!(:other_user) { Fabricate(:user) }
-
-    before do
-      channel_1.add(other_user)
-      channel_1.add(current_user)
+    fab!(:message) do
       Fabricate(
         :chat_message,
         chat_channel: channel_1,
         message: "hello @here @all @#{current_user.username} @#{other_user.username} @unexisting",
         user: other_user,
       )
+    end
+
+    before do
+      channel_1.add(other_user)
+      channel_1.add(current_user)
       sign_in(current_user)
     end
 
@@ -157,6 +159,23 @@ RSpec.describe "Chat channel", type: :system, js: true do
       )
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
+    end
+
+    it "renders user status on mentions" do
+      SiteSetting.enable_user_status = true
+      current_user.set_status!("off to dentist", "tooth")
+      other_user.set_status!("surfing", "surfing_man")
+      Fabricate(:chat_mention, user: current_user, chat_message: message)
+      Fabricate(:chat_mention, user: other_user, chat_message: message)
+
+      chat.visit_channel(channel_1)
+
+      expect(page).to have_selector(
+        ".mention .user-status[title='#{current_user.user_status.description}']",
+      )
+      expect(page).to have_selector(
+        ".mention .user-status[title='#{other_user.user_status.description}']",
+      )
     end
   end
 

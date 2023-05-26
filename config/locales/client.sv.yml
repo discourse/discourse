@@ -1053,6 +1053,7 @@ sv:
           warning: "Är du säker på att du vill rensa ditt utvalda ämne?"
       use_current_timezone: "Använd nuvarande tidszon"
       profile_hidden: "Den här användarens offentliga profil är dold."
+      inactive_user: "Den här användaren är inte längre aktiv."
       expand_profile: "Utvidga"
       sr_expand_profile: "Expandera profilinformation"
       collapse_profile: "Förminska"
@@ -1786,9 +1787,6 @@ sv:
       suggested_topics:
         title: "Fortsätt läsa!"
         content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
-      welcome_topic:
-        title: "Redigera välkomstämnet"
-        content: "Hjälp nya medlemmar att känna sig hemma genom att anpassa det här ämnet så att det passar ditt forums behov."
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -3794,6 +3792,9 @@ sv:
         one: "Förtjänade den här utmärkelsen %{count} gång"
         other: "Förtjänade den här utmärkelsen %{count} gånger"
       granted_on: "Utfärdad %{date}"
+      others_count:
+        one: "Beviljad till andra %{count} gång"
+        other: "Beviljad till andra %{count} gånger"
       title: Utmärkelser
       allow_title: "Du kan använda denna utmärkelse som en titel"
       multiple_grant: "Du kan förtjäna denna flera gånger"
@@ -5614,6 +5615,9 @@ sv:
             label: "Lägg till emoji"
         title: "Webbplatsinställningar"
         no_results: "Inga resultat hittades."
+        more_site_setting_results:
+          one: "Det är över %{count} resultat. Förfina din sökning eller välj en kategori."
+          other: "Det är över %{count} resultat. Förfina din sökning eller välj en kategori."
         clear_filter: "Rensa"
         add_url: "lägg till URL"
         add_host: "lägg till värd"

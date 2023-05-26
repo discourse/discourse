@@ -5,20 +5,17 @@
   }
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
-  --d-sidebar-row-height: 30px;
   // 1.25rem gets text left-aligned with the hamburger icon
   --d-sidebar-row-horizontal-padding: 1.25rem;
-  --d-sidebar-row-vertical-padding: 0.33rem;
-  --d-sidebar-row-font-size: var(--font-down-1);
+  // ems so height is variable along with font size
+  --d-sidebar-row-height: 2.1em;
 }
 
 .sidebar-row {
   box-sizing: border-box;
   height: var(--d-sidebar-row-height);
-  padding: var(--d-sidebar-row-vertical-padding)
-    var(--d-sidebar-row-horizontal-padding);
+  padding: 0 var(--d-sidebar-row-horizontal-padding);
   align-items: center;
-  font-size: var(--d-sidebar-row-font-size);
 }
 
 .sidebar-wrapper {
@@ -41,14 +38,6 @@
     var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
   );
 
-  .footer-nav-ipad & {
-    top: calc(var(--header-offset) + var(--footer-nav-height));
-    height: calc(
-      var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px) -
-        var(--footer-nav-height, 0px)
-    );
-  }
-
   align-self: start;
   overflow-y: auto;
 
@@ -69,7 +58,7 @@
     flex-direction: column;
     box-sizing: border-box;
     flex: 1;
-    padding: 1.5em 0 1em;
+    padding: 1.35em 0 1em;
     overflow-x: hidden;
     overflow-y: overlay;
 

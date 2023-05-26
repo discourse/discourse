@@ -10,7 +10,11 @@ import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 
-const FULL_RELOAD_LINKS_REGEX = [/^\/my\/[a-z_\-\/]+$/, /^\/safe-mode$/];
+const FULL_RELOAD_LINKS_REGEX = [
+  /^\/my\/[a-z_\-\/]+$/,
+  /^\/pub\/[a-z_\-\/]+$/,
+  /^\/safe-mode$/,
+];
 
 class Section {
   @tracked title;
@@ -355,11 +359,12 @@ export default Controller.extend(ModalFunctionality, {
           return ajax(`/sidebar_sections/${this.model.id}`, {
             type: "DELETE",
           })
-            .then((data) => {
+            .then(() => {
               const newSidebarSections =
                 this.currentUser.sidebar_sections.filter((section) => {
-                  return section.id !== data["sidebar_section"].id;
+                  return section.id !== this.model.id;
                 });
+
               this.currentUser.set("sidebar_sections", newSidebarSections);
               this.send("closeModal");
             })

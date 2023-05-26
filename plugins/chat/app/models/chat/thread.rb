@@ -36,6 +36,10 @@ module Chat
       Chat::UserChatThreadMembership.find_by(user: user, thread: self)&.destroy
     end
 
+    def membership_for(user)
+      user_chat_thread_memberships.find_by(user: user)
+    end
+
     def replies
       self.chat_messages.where.not(id: self.original_message_id)
     end
@@ -50,6 +54,23 @@ module Chat
 
     def excerpt
       original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
+    end
+
+    def latest_not_deleted_message_id(anchor_message_id: nil)
+      DB.query_single(
+        <<~SQL,
+        SELECT id FROM chat_messages
+        WHERE chat_channel_id = :channel_id
+        AND thread_id = :thread_id
+        AND deleted_at IS NULL
+        #{anchor_message_id ? "AND id < :anchor_message_id" : ""}
+        ORDER BY created_at DESC, id DESC
+        LIMIT 1
+      SQL
+        channel_id: self.channel_id,
+        thread_id: self.id,
+        anchor_message_id: anchor_message_id,
+      ).first
     end
 
     def self.grouped_messages(thread_ids: nil, message_ids: nil, include_original_message: true)

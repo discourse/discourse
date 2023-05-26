@@ -5,6 +5,7 @@ class SidebarSection < ActiveRecord::Base
 
   belongs_to :user
   has_many :sidebar_section_links, -> { order("position") }, dependent: :destroy
+
   has_many :sidebar_urls,
            through: :sidebar_section_links,
            source: :linkable,

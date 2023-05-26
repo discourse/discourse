@@ -76,7 +76,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.8",
-    "@babel/standalone": "^7.21.8",
+    "@babel/standalone": "^7.21.9",
     "@ember/optional-features": "^2.0.0",
     "@uppy/aws-s3": "^3.0.6",
     "@uppy/aws-s3-multipart": "^3.1.3",
@@ -112,7 +112,7 @@
     "source-map": "^0.7.4",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "terser": "^5.17.4",
-    "webpack": "^5.83.1"
+    "terser": "^5.17.6",
+    "webpack": "^5.84.1"
   }
 }

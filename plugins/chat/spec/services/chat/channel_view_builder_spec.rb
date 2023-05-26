@@ -123,6 +123,19 @@ RSpec.describe Chat::ChannelViewBuilder do
         expect(subject.view.threads).to eq([message_1.thread])
       end
 
+      it "fetches thread memberships for the current user for fetched threads" do
+        message_1 =
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            thread: Fabricate(:chat_thread, channel: channel),
+          )
+        message_1.thread.add(current_user)
+        expect(subject.view.thread_memberships).to eq(
+          [message_1.thread.membership_for(current_user)],
+        )
+      end
+
       it "calls the tracking state report query for thread overview and tracking" do
         thread = Fabricate(:chat_thread, channel: channel)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)
@@ -148,7 +161,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         thread = Fabricate(:chat_thread, channel: channel)
         thread.add(current_user)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)
-        expect(subject.view.thread_tracking_overview).to eq([message_1.thread.id])
+        expect(subject.view.unread_thread_ids).to eq([message_1.thread.id])
       end
 
       it "fetches the tracking state of threads in the channel" do
@@ -228,6 +241,18 @@ RSpec.describe Chat::ChannelViewBuilder do
         before { message.trash! }
 
         it { is_expected.to fail_a_policy(:target_message_exists) }
+
+        context "when the user is the owner of the trashed message" do
+          before { message.update!(user: current_user) }
+
+          it { is_expected.not_to fail_a_policy(:target_message_exists) }
+        end
+
+        context "when the user is admin" do
+          before { current_user.update!(admin: true) }
+
+          it { is_expected.not_to fail_a_policy(:target_message_exists) }
+        end
       end
     end
   end

@@ -17,8 +17,8 @@ module PageObjects
         visit("/chat")
       end
 
-      def visit_channel(channel)
-        visit(channel.url)
+      def visit_channel(channel, message_id: nil)
+        visit(channel.url + (message_id ? "/#{message_id}" : ""))
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end
@@ -50,10 +50,6 @@ module PageObjects
 
       def minimize_full_page
         find(".open-drawer-btn").click
-      end
-
-      def open_thread_list
-        find(".open-thread-list-btn").click
       end
 
       def has_message?(message)

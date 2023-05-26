@@ -2973,6 +2973,32 @@ RSpec.describe UsersController do
         end
       end
     end
+
+    context "when a plugin introduces a users_controller_update_user_params modifier" do
+      before { sign_in(user) }
+
+      after { DiscoursePluginRegistry.clear_modifiers! }
+
+      it "allows the plugin to modify the user params" do
+        block_called = false
+
+        plugin = Plugin::Instance.new
+        plugin.register_modifier(
+          :users_controller_update_user_params,
+        ) do |result, current_user, params|
+          block_called = true
+          expect(current_user.id).to eq(user.id)
+          result[:location] = params[:plugin_location_alias]
+          result
+        end
+
+        put "/u/#{user.username}.json", params: { location: "abc", plugin_location_alias: "xyz" }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_profile.location).to eq("xyz")
+        expect(block_called).to eq(true)
+      end
+    end
   end
 
   describe "#badge_title" do

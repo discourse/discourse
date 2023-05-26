@@ -236,14 +236,16 @@ module("Unit | Utility | uploads", function (hooks) {
   });
 
   test("isImage", function (assert) {
-    ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach((extension) => {
-      let image = "image." + extension;
-      assert.ok(isImage(image), image + " is recognized as an image");
-      assert.ok(
-        isImage("http://foo.bar/path/to/" + image),
-        image + " is recognized as an image"
-      );
-    });
+    ["png", "webp", "jpg", "jpeg", "gif", "ico", "avif"].forEach(
+      (extension) => {
+        let image = "image." + extension;
+        assert.ok(isImage(image), image + " is recognized as an image");
+        assert.ok(
+          isImage("http://foo.bar/path/to/" + image),
+          image + " is recognized as an image"
+        );
+      }
+    );
     assert.notOk(isImage("file.txt"));
     assert.notOk(isImage("http://foo.bar/path/to/file.txt"));
     assert.notOk(isImage(""));

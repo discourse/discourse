@@ -1,6 +1,6 @@
 :root {
-  --d-sidebar-section-link-prefix-margin-right: 0.4rem;
-  --d-sidebar-section-link-prefix-width: 20px;
+  --d-sidebar-section-link-prefix-margin-right: 0.35rem;
+  --d-sidebar-section-link-prefix-width: 1.35rem;
 }
 
 .sidebar-section-link-wrapper {
@@ -22,12 +22,12 @@
     }
 
     &.active {
-      color: var(--primary);
+      color: var(--primary-800);
       background: var(--d-sidebar-highlight-color);
 
       .sidebar-section-link-prefix {
         &.icon {
-          color: var(--primary-high);
+          color: var(--primary-medium);
         }
       }
     }
@@ -35,15 +35,16 @@
     .sidebar-section-link-content-badge {
       @include ellipsis;
       padding-left: 0.5em;
+      padding-right: 0.1em; // avoids some overflow cropping
       text-align: right;
-      color: var(--primary-high);
-      font-size: var(--font-down-1);
+      color: var(--primary-700);
+      font-size: var(--font-down-2);
       font-weight: normal;
       margin-left: auto;
     }
 
     .sidebar-section-link-suffix {
-      margin-left: 0.25rem;
+      margin-left: 1em;
       font-size: var(--font-down-4);
       color: var(--tertiary-medium);
     }
@@ -119,16 +120,17 @@
         background: rgba(var(--primary-rgb), 0.1);
         width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
         height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+        font-size: var(--font-down-2);
       }
     }
 
     &.icon,
     &.span {
       position: relative;
-      color: var(--primary-medium);
+      color: var(--primary-500);
 
       svg {
-        font-size: var(--font-down-1);
+        font-size: 0.8em;
       }
 
       .prefix-badge {
@@ -145,8 +147,8 @@
       }
     }
     .prefix-span {
-      width: 0.9em;
-      height: 0.9em;
+      width: 0.8em;
+      height: 0.8em;
     }
   }
 

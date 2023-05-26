@@ -1702,9 +1702,6 @@ zh_CN:
       suggested_topics:
         title: "继续阅读！"
         content: "下面是我们认为您接下来可能想要阅读的一些话题。"
-      welcome_topic:
-        title: "编辑欢迎话题"
-        content: "通过自定义此话题以满足你社区的需求，帮助新成员有宾至如归的感觉。"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -5415,6 +5412,8 @@ zh_CN:
             label: "添加表情符号"
         title: "设置"
         no_results: "找不到结果。"
+        more_site_setting_results:
+          other: "结果超过 %{count} 个。请优化你的搜索或选择一个类别。"
         clear_filter: "清除"
         add_url: "添加 URL"
         add_host: "添加主机"

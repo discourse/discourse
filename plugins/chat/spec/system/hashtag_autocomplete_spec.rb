@@ -71,13 +71,13 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
     cooked_hashtags = page.all(".hashtag-cooked", count: 3)
 
     expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
-    <a class=\"hashtag-cooked\" href=\"#{channel2.relative_url}\" data-type=\"channel\" data-slug=\"random\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-node\"><use href=\"#comment\"></use></svg><span>Random</span></a>
+    <a class=\"hashtag-cooked\" href=\"#{channel2.relative_url}\" data-type=\"channel\" data-slug=\"random\" data-id=\"#{channel2.id}\"><svg class=\"fa d-icon d-icon-comment svg-icon hashtag-color--channel-#{channel2.id} svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#comment\"></use></svg><span>Random</span></a>
     HTML
     expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
-    <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"raspberry-beret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>Raspberry</span></a>
+    <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"raspberry-beret\" data-id="#{category.id}"><span class=\"hashtag-category-badge hashtag-color--category-#{category.id}\"></span><span>Raspberry</span></a>
     HTML
     expect(cooked_hashtags[2]["outerHTML"]).to eq(<<~HTML.chomp)
-    <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>razed</span></a>
+    <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\" data-id="#{tag.id}"><svg class=\"fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#tag\"></use></svg><span>razed</span></a>
     HTML
   end
 end

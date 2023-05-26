@@ -1,0 +1,53 @@
+.chat-threads-list-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--blend-primary-secondary-5);
+  border-radius: 5px;
+
+  @include chat-channel-header-button;
+
+  &.-has-unreads {
+    .d-icon {
+      color: var(--tertiary-med-or-tertiary);
+    }
+  }
+
+  .d-icon {
+    margin-right: 0;
+  }
+
+  .chat-thread-header-unread-indicator {
+    color: var(--tertiary);
+    padding-left: 0.25rem;
+
+    &__number-wrap {
+      background-color: var(--tertiary-med-or-tertiary);
+      display: flex;
+      padding: 0.25rem 0.5rem;
+      border-radius: 20px;
+      width: 35px;
+      box-sizing: border-box;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__number {
+      color: var(--secondary);
+      font-size: var(--font-down-3);
+      font-weight: bold;
+    }
+  }
+
+  &:hover {
+    .discourse-touch & {
+      background: none !important;
+    }
+  }
+
+  &:active {
+    .discourse-touch & {
+      background: var(--secondary-very-high) !important;
+    }
+  }
+}

@@ -1580,6 +1580,18 @@ RSpec.describe Post do
       expect(post.topic.image_upload_id).to eq(image_upload_2.id)
     end
 
+    it "uses the newest thumbnail" do
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      image_upload_2.original_filename = "#{video_upload.sha1}.png"
+      image_upload_2.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(1)
+      expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
+
     it "does not create thumbnails when disabled" do
       SiteSetting.video_thumbnails_enabled = false
       image_upload.original_filename = "#{video_upload.sha1}.png"

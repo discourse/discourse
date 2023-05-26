@@ -289,6 +289,7 @@ RSpec.configure do |config|
           options.add_argument("--no-sandbox")
           options.add_argument("--disable-dev-shm-usage")
           options.add_argument("--mute-audio")
+          options.add_argument("--force-device-scale-factor=1")
         end
 
     Capybara.register_driver :selenium_chrome do |app|
@@ -310,6 +311,7 @@ RSpec.configure do |config|
           options.add_argument("--disable-dev-shm-usage")
           options.add_emulation(device_name: "iPhone 12 Pro")
           options.add_argument("--mute-audio")
+          options.add_argument("--force-device-scale-factor=1")
         end
 
     Capybara.register_driver :selenium_mobile_chrome do |app|

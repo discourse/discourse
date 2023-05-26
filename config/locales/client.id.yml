@@ -121,6 +121,7 @@ id:
     action_codes:
       public_topic: "Membuat topik ini umum %{when}"
       open_topic: "Diubah menjadi topik ini %{when}"
+      private_topic: "Jadikan topik ini sebagai pesan pribadi %{when}"
       split_topic: "Pisahkan topik ini %{when}"
       invited_user: "Diundang%{who}%{when}"
       invited_group: "Diundang%{who}%{when}"
@@ -151,6 +152,7 @@ id:
       banner:
         enabled: "Jadikan ini sebagai spanduk %{when}. Spanduk akan tampil di bagian atas di setiap halaman hingga diturunkan oleh pengguna."
         disabled: "Hilangkan spanduk ini %{when}. Spanduk tidak akan lagi tampil pada bagian teratas di tiap halaman."
+      forwarded: "Meneruskan email di atas"
     topic_admin_menu: "tindakan topik"
     skip_to_main_content: "Lewati ke konten utama"
     skip_user_nav: "Lewati ke konten profil"
@@ -202,6 +204,7 @@ id:
     delete: "Hapus"
     generic_error: "Maaf, terjadi kesalahan."
     generic_error_with_reason: "Terjadi kesalahan: %{error}"
+    multiple_errors: "Beberapa kesalahan terjadi: %{errors}"
     sign_up: "Daftar"
     log_in: "Masuk"
     age: "Umur"
@@ -259,6 +262,7 @@ id:
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
+      user_count: "Pendaftaran"
       active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
@@ -548,9 +552,14 @@ id:
         other: "tahun"
       relative: "Relatif"
     time_shortcut:
+      now: "Sekarang"
+      in_one_hour: "Dalam satu jam"
+      in_two_hours: "Dalam dua jam"
       later_today: "Nanti hari ini"
+      two_days: "Dua hari"
       next_business_day: "Hari kerja berikutnya"
       tomorrow: "Besok"
+      post_local_date: "Tanggal di post"
       later_this_week: "Nanti pekan ini"
       this_weekend: "Akhir pekan ini"
       start_of_next_business_week: "Senin"
@@ -558,10 +567,17 @@ id:
       next_week: "Minggu depan"
       two_weeks: "Dua pekan"
       next_month: "Bulan depan"
+      two_months: "Dua bulan"
+      three_months: "Tiga bulan"
+      four_months: "Empat bulan"
       six_months: "Enam bulan"
+      one_year: "Satu tahun"
+      forever: "Selamanya"
+      relative: "Waktu relatif"
       none: "Tidak dibutuhkan"
       never: "Tidak pernah"
       custom: "Tanggal dan waktu tersuai"
+      select_timeframe: "Pilih jangka waktu"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> memposting <a href='%{topicUrl}'>topik</a>"
       you_posted_topic: "<a href='%{userUrl}'>Anda</a> memposting <a href='%{topicUrl}'>the topic</a>"
@@ -598,9 +614,13 @@ id:
       total_rows:
         other: "%{count} pengguna"
       edit_columns:
+        title: "Edit Kolom Direktori"
         save: "Simpan"
+        reset_to_default: "Setel ulang ke bawaan"
       group:
         all: "semua grup"
+      sort:
+        label: "Urutkan berdasarkan %{criteria}"
     group_histories:
       actions:
         change_group_setting: "Ubah pengaturan grup"
@@ -612,9 +632,12 @@ id:
       member_added: "Ditambahkan"
       member_requested: "Diminta pada"
       add_members:
+        title: "Tambahkan Pengguna ke %{group_name}"
+        description: "Masukkan daftar pengguna yang ingin Anda undang ke grup atau rekatkan dalam daftar yang dipisahkan koma:"
         usernames_placeholder: "nama Pengguna"
         usernames_or_emails_placeholder: "nama pengguna atau email"
         notify_users: "Beritahu pengguna"
+        set_owner: "Tetapkan pengguna sebagai pemilik grup ini"
       requests:
         title: "Permintaan"
         reason: "Alasan"
@@ -622,6 +645,8 @@ id:
         accepted: "Diterima"
         deny: "Menolak"
         denied: "ditolak"
+        undone: "permintaan dibatalkan"
+        handle: "menangani permintaan keanggotaan"
         undo: "Batalkan perintah"
       manage:
         title: "Mengelola"
@@ -638,11 +663,14 @@ id:
           notification: Pemberitahuan
         email:
           title: "Email"
+          status: "Sinkronisasi email %{old_emails} / %{total_emails} melalui IMAP."
           enable_smtp: "Aktifkan SMTP"
           enable_imap: "Aktifkan IMAP"
+          test_settings: "Pengaturan Tes"
           save_settings: "Simpan Pengaturan"
           last_updated: "Terakhir diperbarui:"
           last_updated_by: "oleh"
+          settings_required: "Semua pengaturan diperlukan, harap isi semua kolom sebelum validasi."
           smtp_settings_valid: "Pengaturan SMTP valid."
           smtp_title: "SMTP"
           imap_title: "IMAP"
@@ -1287,10 +1315,6 @@ id:
         the_topic: "Topik"
     user_status:
       save: "Simpan"
-    user_tips:
-      welcome_topic:
-        title: "Edit topik sambutan"
-        content: "Bantu anggota baru agar merasa betah dengan menyesuaikan topik ini agar sesuai dengan kebutuhan komunitas Anda."
     loading: "Diproses..."
     errors:
       reasons:
@@ -2190,6 +2214,8 @@ id:
         none: "Tak ada"
       site_settings:
         title: "Pengaturan"
+        more_site_setting_results:
+          other: "Ada lebih dari %{count} hasil. Silakan persempit pencarian Anda atau pilih kategori."
         clear_filter: "Bersihkan"
         uploaded_image_list:
           upload:
