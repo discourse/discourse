@@ -23,6 +23,7 @@ import { deepMerge } from "discourse-common/lib/object";
 import { get } from "@ember/object";
 import { h } from "virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
+import { consolePrefix } from "discourse/lib/source-identifier";
 
 const _registry = {};
 
@@ -106,7 +107,10 @@ export function reopenWidget(name, opts) {
   let existing = _registry[name];
   if (!existing) {
     // eslint-disable-next-line no-console
-    console.error(`Could not find widget ${name} in registry`);
+    console.error(
+      consolePrefix(),
+      `reopenWidget: Could not find widget ${name} in registry`
+    );
     return;
   }
 

@@ -573,7 +573,17 @@ class PluginApi {
   attachWidgetAction(widget, actionName, fn) {
     const widgetClass =
       queryRegistry(widget) ||
-      this.container.factoryFor(`widget:${widget}`).class;
+      this.container.factoryFor(`widget:${widget}`)?.class;
+
+    if (!widgetClass) {
+      // eslint-disable-next-line no-console
+      console.error(
+        consolePrefix(),
+        `attachWidgetAction: Could not find widget ${widget} in registry`
+      );
+      return;
+    }
+
     widgetClass.prototype[actionName] = fn;
   }
 

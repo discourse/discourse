@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Move message to channel", type: :system, js: true do
-  let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:chat_page) { PageObjects::Pages::Chat.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before { chat_system_bootstrap }
 
@@ -17,8 +17,8 @@ RSpec.describe "Move message to channel", type: :system, js: true do
     end
 
     it "is not available" do
-      chat.visit_channel(channel_1)
-      channel.select_message(message_1)
+      chat_page.visit_channel(channel_1)
+      channel_page.select_message(message_1)
 
       expect(page).to have_no_content(I18n.t("js.chat.selection.move_selection_to_channel"))
     end
@@ -36,8 +36,8 @@ RSpec.describe "Move message to channel", type: :system, js: true do
       end
 
       it "is available" do
-        chat.visit_channel(channel_1)
-        channel.select_message(message_1)
+        chat_page.visit_channel(channel_1)
+        channel_page.select_message(message_1)
 
         expect(page).to have_content(I18n.t("js.chat.selection.move_selection_to_channel"))
       end
@@ -56,8 +56,8 @@ RSpec.describe "Move message to channel", type: :system, js: true do
       end
 
       it "is not available" do
-        chat.visit_channel(dm_channel_1)
-        channel.select_message(message_1)
+        chat_page.visit_channel(dm_channel_1)
+        channel_page.select_message(message_1)
 
         expect(page).to have_no_content(I18n.t("js.chat.selection.move_selection_to_channel"))
       end
@@ -76,14 +76,19 @@ RSpec.describe "Move message to channel", type: :system, js: true do
       end
 
       it "moves the message" do
-        chat.visit_channel(channel_1)
-        channel.select_message(message_1)
+        chat_page.visit_channel(channel_1)
+        channel_page.select_message(message_1)
         click_button(I18n.t("js.chat.selection.move_selection_to_channel"))
         find(".chat-move-message-channel-chooser").click
         find("[data-value='#{channel_2.id}']").click
         click_button(I18n.t("js.chat.move_to_channel.confirm_move"))
 
-        expect(channel).to have_deleted_message(message_1)
+        expect(page).to have_current_path(chat.channel_path(channel_2.slug, channel_2.id))
+        expect(channel_page).to have_message(text: message_1.message)
+
+        chat_page.visit_channel(channel_1)
+
+        expect(channel_page).to have_deleted_message(message_1)
       end
     end
   end
