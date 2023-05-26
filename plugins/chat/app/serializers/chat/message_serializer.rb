@@ -29,6 +29,7 @@ module Chat
     def mentioned_users
       User
         .where(id: object.chat_mentions.pluck(:user_id))
+        .order("users.id ASC")
         .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
         .as_json
     end
