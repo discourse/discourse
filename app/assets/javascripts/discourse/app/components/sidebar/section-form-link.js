@@ -54,6 +54,7 @@ export default class SectionFormLink extends Component {
   @action
   dropItem(event) {
     event.stopPropagation();
+    this.dragCounter = 0;
     this.args.reorderCallback(
       parseInt(event.dataTransfer.getData("linkId"), 10),
       this.args.link,
@@ -64,6 +65,7 @@ export default class SectionFormLink extends Component {
 
   @action
   dragEnd() {
+    this.dragCounter = 0;
     this.dragCssClass = null;
   }
 }
