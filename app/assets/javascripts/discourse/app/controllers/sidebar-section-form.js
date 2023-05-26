@@ -466,15 +466,10 @@ export default Controller.extend(ModalFunctionality, {
             type: "PUT",
           })
             .then((data) => {
-              const newSidebarSections = this.currentUser.sidebar_sections.map(
-                (section) => {
-                  if (section.id === data["sidebar_section"].id) {
-                    return data["sidebar_section"];
-                  }
-                  return section;
-                }
+              this.currentUser.sidebar_sections.shiftObject();
+              this.currentUser.sidebar_sections.unshiftObject(
+                data["sidebar_section"]
               );
-              this.currentUser.set("sidebar_sections", newSidebarSections);
               this.send("closeModal");
             })
             .catch((e) =>
