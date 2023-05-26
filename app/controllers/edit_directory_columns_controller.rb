@@ -2,10 +2,9 @@
 
 class EditDirectoryColumnsController < ApplicationController
   requires_login
+  before_action :ensure_staff
 
   def index
-    raise Discourse::NotFound unless guardian.is_staff?
-
     ensure_user_fields_have_columns
 
     columns = DirectoryColumn.includes(:user_field).all
@@ -13,7 +12,6 @@ class EditDirectoryColumnsController < ApplicationController
   end
 
   def update
-    raise Discourse::NotFound unless guardian.is_staff?
     params.require(:directory_columns)
     directory_column_params = params.permit(directory_columns: {})
     directory_columns = DirectoryColumn.all
@@ -26,16 +24,30 @@ class EditDirectoryColumnsController < ApplicationController
       raise Discourse::InvalidParameters, "Must have at least one column enabled"
     end
 
+    changes = "\n"
     directory_column_params[:directory_columns].values.each do |column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
       if (
-           existing_column.enabled != column_data[:enabled] ||
+           existing_column.enabled != ActiveModel::Type::Boolean.new.cast(column_data[:enabled]) ||
              existing_column.position != column_data[:position].to_i
          )
-        existing_column.update(enabled: column_data[:enabled], position: column_data[:position])
+        changes +=
+          "#{existing_column.name} - enabled: #{existing_column.enabled} -> #{column_data[:enabled]} , position: #{existing_column.position} -> #{column_data[:position]}\n"
+        existing_column.update(
+          enabled: column_data[:enabled],
+          position: column_data[:position].to_i,
+        )
       end
     end
 
+    details =
+      if changes.empty?
+        { Detail: "Nothing was changed" }
+      else
+        { Changes: changes }
+      end
+
+    StaffActionLogger.new(current_user).log_custom("update_directory_columns", details = details)
     render json: success_json
   end
 
