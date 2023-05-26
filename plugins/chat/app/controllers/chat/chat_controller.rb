@@ -125,10 +125,16 @@ module Chat
         user_ids_allowing_communication =
           UserCommScreener.new(
             acting_user: current_user,
-            target_user_ids: @chat_channel.user_chat_channel_memberships.pluck(:user_id),
+            target_user_ids:
+              @chat_channel.user_chat_channel_memberships.where(following: false).pluck(:user_id),
           ).allowing_actor_communication
 
         if user_ids_allowing_communication.any?
+          Chat::Publisher.publish_new_channel(
+            @chat_channel,
+            User.where(id: user_ids_allowing_communication),
+          )
+
           @chat_channel
             .user_chat_channel_memberships
             .where(user_id: user_ids_allowing_communication)
