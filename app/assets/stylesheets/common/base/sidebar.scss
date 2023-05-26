@@ -106,7 +106,6 @@
     }
   }
 }
-
 .sidebar-section-form-modal {
   .draggable {
     cursor: move;
@@ -159,7 +158,7 @@
 
     &.drag-above {
       border-top: 1px dotted #666;
-      padding-top: calc(0.5em - 1px);
+      margin-top: -1px;
     }
     &.drag-below {
       border-bottom: 1px dotted #666;

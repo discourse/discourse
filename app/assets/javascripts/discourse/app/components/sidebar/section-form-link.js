@@ -5,6 +5,11 @@ import { tracked } from "@glimmer/tracking";
 export default class SectionFormLink extends Component {
   @tracked dragCssClass;
 
+  constructor() {
+    super(...arguments);
+    this.dragCounter = 0;
+  }
+
   isAboveElement(event) {
     event.preventDefault();
     const target = event.currentTarget;
@@ -30,12 +35,17 @@ export default class SectionFormLink extends Component {
       }
     }
   }
+  @action
+  dragEnter() {
+    this.dragCounter++;
+  }
 
   @action
   dragLeave() {
+    this.dragCounter--;
     if (
-      this.dragCssClass === "drag-above" ||
-      this.dragCssClass === "drag-below"
+      this.dragCounter === 0 &&
+      (this.dragCssClass === "drag-above" || this.dragCssClass === "drag-below")
     ) {
       this.dragCssClass = null;
     }

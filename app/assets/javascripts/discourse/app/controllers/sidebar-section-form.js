@@ -394,7 +394,7 @@ export default Controller.extend(ModalFunctionality, {
     );
     if (!linkFrom) {
       linkFrom = this.model.secondaryLinks.find(
-        (link) => link.objectId === linkFrom
+        (link) => link.objectId === linkFromId
       );
     }
 
