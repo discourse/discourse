@@ -20,13 +20,13 @@ export default class FormTemplateFieldWrapper extends Component {
     if (this.args.content) {
       this._loadTemplate(this.args.content);
     } else if (this.args.id) {
-      this.appEvents.trigger("composer:selected-form-templates", this.args.id);
+      this.appEvents.trigger("composer:selected-form-template", this.args.id);
     }
   }
 
   willDestroy() {
     this.appEvents.off(
-      "composer:selected-form-templates",
+      "composer:selected-form-template",
       this,
       this._fetchTemplate
     );

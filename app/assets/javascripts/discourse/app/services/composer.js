@@ -512,7 +512,7 @@ export default class ComposerController extends Controller {
 
     if (this.formTemplateIds?.length) {
       this.appEvents.trigger(
-        "composer:selected-form-templates",
+        "composer:selected-form-template",
         this.formTemplateIds
       );
     }

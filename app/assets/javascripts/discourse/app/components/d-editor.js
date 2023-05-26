@@ -248,7 +248,7 @@ export default Component.extend(TextareaTextManipulation, {
 
     if (formTemplateId.length > 0) {
       return this.appEvents.trigger(
-        "composer:selected-form-templates",
+        "composer:selected-form-template",
         formTemplateId
       );
     }
