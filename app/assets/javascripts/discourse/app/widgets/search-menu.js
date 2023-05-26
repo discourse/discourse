@@ -27,6 +27,15 @@ export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 const searchData = {};
 
+const _extraForceToFullSearchOnEnterFns = [];
+
+export function addExtraForceToFullSearchOnEnterFn(fn) {
+  _extraForceToFullSearchOnEnterFns.push(fn);
+}
+export function resetExtraForceToFullSearchOnEnterFns() {
+  _extraForceToFullSearchOnEnterFns.clear();
+}
+
 export function initSearchData() {
   searchData.loading = false;
   searchData.results = {};
@@ -322,6 +331,8 @@ export default createWidget("search-menu", {
           suggestionResults: searchData.suggestionResults,
           searchTopics: SearchHelper.includesTopics(),
           inPMInboxContext: this.state.inPMInboxContext,
+          inTopicContext: this.state.inTopicContext,
+          onLinkClicked: this.onLinkClicked.bind(this),
         })
       );
     }
@@ -346,6 +357,10 @@ export default createWidget("search-menu", {
       maxWidth: 500,
       contents: () => this.panelContents(),
     });
+  },
+
+  onLinkClicked() {
+    return this.sendWidgetAction("linkClickedEvent");
   },
 
   mouseDown(e) {
@@ -463,8 +478,12 @@ export default createWidget("search-menu", {
         this.state._lastEnterTimestamp &&
         Date.now() - this.state._lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
 
+      const forceToFullSearch = _extraForceToFullSearchOnEnterFns.some((fn) => {
+        return fn.call(this);
+      });
       // same combination as key-enter-escape mixin
       if (
+        forceToFullSearch ||
         e.ctrlKey ||
         e.metaKey ||
         (isiPad() && e.altKey) ||

@@ -286,7 +286,14 @@ createWidget("search-menu-results", {
   tagName: "div.results",
 
   html(attrs) {
-    const { term, suggestionKeyword, results, searchTopics } = attrs;
+    const {
+      term,
+      suggestionKeyword,
+      inTopicContext,
+      results,
+      searchTopics,
+      onLinkClicked,
+    } = attrs;
 
     if (suggestionKeyword) {
       return this.attach("search-menu-assistant", {
@@ -392,12 +399,35 @@ createWidget("search-menu-results", {
         this,
         "div",
         hbs`<PluginOutlet @name="search-menu-results" @outletArgs={{@data.outletArgs}}/>`,
-        { outletArgs: { searchTerm: term } }
+        {
+          outletArgs: {
+            searchTerm: term,
+            inTopicContext,
+            onLinkClicked,
+            searchTopics,
+          },
+        }
       )
     );
 
     content.push(categoriesAndTags);
     content.push(usersAndGroups);
+
+    content.push(
+      new RenderGlimmer(
+        this,
+        "div",
+        hbs`<PluginOutlet @name="search-menu-results-bottom" @outletArgs={{@data.outletArgs}}/>`,
+        {
+          outletArgs: {
+            searchTerm: term,
+            inTopicContext,
+            onLinkClicked,
+            searchTopics,
+          },
+        }
+      )
+    );
 
     return content;
   },
