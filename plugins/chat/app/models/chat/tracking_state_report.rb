@@ -11,8 +11,8 @@ module Chat
       attr_accessor :unread_count, :mention_count
 
       def initialize(info)
-        @unread_count = info[:unread_count]
-        @mention_count = info[:mention_count]
+        @unread_count = info.present? ? info[:unread_count] : 0
+        @mention_count = info.present? ? info[:mention_count] : 0
       end
 
       def to_hash

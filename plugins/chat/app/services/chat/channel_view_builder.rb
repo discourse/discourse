@@ -21,6 +21,7 @@ module Chat
     #   @param [Guardian] guardian
     #   @option optional_params [Integer] thread_id
     #   @option optional_params [Integer] target_message_id
+    #   @option optional_params [Boolean] fetch_from_last_read
     #   @option optional_params [Integer] page_size
     #   @option optional_params [String] direction
     #   @return [Service::Base::Context]
@@ -28,6 +29,7 @@ module Chat
     contract
     model :channel
     policy :can_view_channel
+    step :determine_target_message_id
     policy :target_message_exists
     step :determine_threads_enabled
     step :determine_include_thread_messages
@@ -47,6 +49,7 @@ module Chat
       attribute :thread_id, :integer # (optional)
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
+      attribute :fetch_from_last_read, :boolean # (optional)
 
       validates :channel_id, presence: true
       validates :direction,
@@ -64,6 +67,12 @@ module Chat
 
     def can_view_channel(guardian:, channel:, **)
       guardian.can_preview_chat_channel?(channel)
+    end
+
+    def determine_target_message_id(contract:, channel:, guardian:, **)
+      if contract.fetch_from_last_read
+        contract.target_message_id = channel.membership_for(guardian.user)&.last_read_message_id
+      end
     end
 
     def target_message_exists(contract:, guardian:, **)
