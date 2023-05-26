@@ -514,6 +514,14 @@ RSpec.describe Chat::ChatController do
         expect(Chat::UserChatChannelMembership.find_by(user_id: user2.id).following).to be true
       end
 
+      it "doesn’t call publish new channel when already following" do
+        Chat::Publisher.expects(:publish_new_channel).never
+
+        sign_in(user1)
+
+        post "/chat/#{direct_message_channel.id}.json", params: { message: message }
+      end
+
       it "errors when the user is not part of the direct message channel" do
         Chat::DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
         sign_in(user1)
