@@ -398,7 +398,7 @@ createWidget("search-menu-results", {
       new RenderGlimmer(
         this,
         "div",
-        hbs`<PluginOutlet @name="search-menu-results" @outletArgs={{@data.outletArgs}}/>`,
+        hbs`<PluginOutlet @name="search-menu-results-top" @outletArgs={{@data.outletArgs}}/>`,
         {
           outletArgs: {
             searchTerm: term,
