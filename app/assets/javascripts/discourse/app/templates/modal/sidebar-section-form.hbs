@@ -48,7 +48,7 @@
       @label="sidebar.sections.custom.links.add"
       @ariaLabel="sidebar.sections.custom.links.add"
     />
-    {{#if this.activeSecondaryLinks}}
+    {{#if this.model.sectionType}}
       <hr />
       <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
       {{#each this.activeSecondaryLinks as |link|}}
