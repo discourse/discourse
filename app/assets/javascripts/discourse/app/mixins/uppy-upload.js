@@ -73,7 +73,6 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
     this.set("inProgressUploads", []);
-    this._triggerInProgressUploadsEvent();
 
     this._bindFileInputChange();
 
