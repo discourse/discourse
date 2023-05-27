@@ -18,7 +18,6 @@ import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import User from "discourse/models/user";
 
 export default class ChatComposer extends Component {
