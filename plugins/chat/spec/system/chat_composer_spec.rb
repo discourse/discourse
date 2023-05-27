@@ -3,19 +3,18 @@
 RSpec.describe "Chat composer", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+  fab!(:message_1) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
-  before { chat_system_bootstrap }
+  before do
+    chat_system_bootstrap
+    channel_1.add(current_user)
+    sign_in(current_user)
+  end
 
   context "when replying to a message" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     it "adds the reply indicator to the composer" do
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(message_1)
@@ -42,11 +41,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
 
   context "when editing a message" do
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
-
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
 
     it "adds the edit indicator" do
       chat_page.visit_channel(channel_1)
@@ -95,11 +89,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when adding an emoji through the picker" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     xit "adds the emoji to the composer" do
       chat_page.visit_channel(channel_1)
       channel_page.open_action_menu
@@ -121,11 +110,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when adding an emoji through the autocomplete" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     it "adds the emoji to the composer" do
       chat_page.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":gri")
@@ -147,11 +131,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when opening emoji picker through more button of the autocomplete" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     xit "prefills the emoji picker filter input" do
       chat_page.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":gri")
@@ -173,11 +152,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when typing on keyboard" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     it "propagates keys to composer" do
       chat_page.visit_channel(channel_1)
 
@@ -196,11 +170,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when pasting link over selected text" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     it "outputs a markdown link" do
       modifier = /darwin/i =~ RbConfig::CONFIG["host_os"] ? :command : :control
       select_text = <<-JS
@@ -226,12 +195,19 @@ RSpec.describe "Chat composer", type: :system, js: true do
     end
   end
 
-  context "when posting a message with length equal to minimum length" do
-    before do
-      SiteSetting.chat_minimum_message_length = 1
-      channel_1.add(current_user)
-      sign_in(current_user)
+  context "when editing a message with no length" do
+    it "deletes the message" do
+      chat_page.visit_channel(channel_1)
+      channel_page.composer.edit_last_message_shortcut
+      channel_page.composer.fill_in(with: "")
+      channel_page.click_send_message
+
+      expect(channel_page.messages).to have_message(deleted: 1)
     end
+  end
+
+  context "when posting a message with length equal to minimum length" do
+    before { SiteSetting.chat_minimum_message_length = 1 }
 
     it "works" do
       chat_page.visit_channel(channel_1)
@@ -243,11 +219,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when posting a message with length superior to minimum length" do
-    before do
-      SiteSetting.chat_minimum_message_length = 2
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
+    before { SiteSetting.chat_minimum_message_length = 2 }
 
     it "doesn’t allow to send" do
       chat_page.visit_channel(channel_1)
@@ -258,11 +230,6 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when upload is in progress" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     it "doesn’t allow to send" do
       chat_page.visit_channel(channel_1)
 

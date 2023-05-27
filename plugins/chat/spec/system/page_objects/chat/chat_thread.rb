@@ -63,6 +63,7 @@ module PageObjects
         fill_composer(text)
         click_send_message
         click_composer
+        text
       end
 
       def click_send_message

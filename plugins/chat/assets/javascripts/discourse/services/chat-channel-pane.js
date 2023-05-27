@@ -41,19 +41,13 @@ export default class ChatChannelPane extends Service {
   }
 
   get lastCurrentUserMessage() {
-    const lastCurrentUserMessage = this.chat.activeChannel.messages.findLast(
-      (message) => message.user.id === this.currentUser.id
+    return this.chat.activeChannel.messages.findLast(
+      (message) =>
+        message.user.id === this.currentUser.id &&
+        !message.staged &&
+        !message.error &&
+        !message.deletedAt
     );
-
-    if (!lastCurrentUserMessage) {
-      return;
-    }
-
-    if (lastCurrentUserMessage.staged || lastCurrentUserMessage.error) {
-      return;
-    }
-
-    return lastCurrentUserMessage;
   }
 
   get lastMessage() {

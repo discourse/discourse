@@ -125,6 +125,7 @@ module PageObjects
         click_send_message
         click_composer
         has_no_loading_skeleton?
+        text
       end
 
       def reply_to(message)
