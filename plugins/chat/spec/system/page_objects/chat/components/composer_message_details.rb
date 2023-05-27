@@ -12,18 +12,26 @@ module PageObjects
           @context = context
         end
 
+        def component
+          find(context)
+        end
+
         def has_message?(message, action: nil)
           data_attributes = "[data-id=\"#{message.id}\"]"
           data_attributes << "[data-action=\"#{action}\"]" if action
-          find(context).find(SELECTOR + data_attributes)
+          component.find(SELECTOR + data_attributes)
         end
 
         def has_no_message?
-          find(context).has_no_css?(SELECTOR)
+          component.has_no_css?(SELECTOR)
         end
 
         def editing_message?(message)
           has_message?(message, action: :edit)
+        end
+
+        def cancel_edit
+          component.find(".cancel-message-action").click
         end
       end
     end

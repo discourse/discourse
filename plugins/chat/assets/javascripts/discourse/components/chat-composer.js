@@ -153,11 +153,15 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    this.composer.message =
-      this.chatDraftsManager.get({ channelId: this.args.channel.id }) ||
-      ChatMessage.createDraftMessage(this.args.channel, {
-        user: this.currentUser,
-      });
+    const existingDraft = this.chatDraftsManager.get({
+      channelId: this.args.channel.id,
+    });
+    if (existingDraft) {
+      this.composer.message = existingDraft;
+      return;
+    }
+
+    this.composer.reset(this.channel);
   }
 
   @action
@@ -213,6 +217,7 @@ export default class ChatComposer extends Component {
 
   @action
   onInput(event) {
+    this.currentMessage.draftSaved = false;
     this.currentMessage.message = event.target.value;
     this.textareaInteractor.refreshHeight();
     this.reportReplyingPresence();
@@ -225,6 +230,8 @@ export default class ChatComposer extends Component {
     if (!this.args.channel) {
       return;
     }
+
+    this.currentMessage.draftSaved = false;
 
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
 

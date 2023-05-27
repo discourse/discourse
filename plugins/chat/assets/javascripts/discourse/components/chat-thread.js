@@ -121,13 +121,6 @@ export default class ChatThreadPanel extends Component {
 
   @action
   loadMessages() {
-    const message = ChatMessage.createDraftMessage(this.channel, {
-      user: this.currentUser,
-    });
-    message.thread = this.thread;
-    message.inReplyTo = this.thread.originalMessage;
-    this.chatChannelThreadComposer.message = message;
-
     this.thread.messagesManager.clearMessages();
     this.fetchMessages();
   }

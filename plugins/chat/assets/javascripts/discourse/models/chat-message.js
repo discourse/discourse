@@ -24,8 +24,9 @@ export default class ChatMessage {
   @tracked error;
   @tracked selected;
   @tracked channel;
-  @tracked staged = false;
-  @tracked draft = false;
+  @tracked staged;
+  @tracked draftSaved;
+  @tracked draft;
   @tracked channelId;
   @tracked createdAt;
   @tracked deletedAt;
@@ -38,34 +39,35 @@ export default class ChatMessage {
   @tracked expanded;
   @tracked bookmark;
   @tracked userFlagStatus;
-  @tracked hidden = false;
+  @tracked hidden;
   @tracked version = 0;
-  @tracked edited = false;
-  @tracked editing = false;
+  @tracked edited;
+  @tracked editing;
   @tracked chatWebhookEvent = new TrackedObject();
   @tracked mentionWarning;
   @tracked availableFlags;
-  @tracked newest = false;
-  @tracked highlighted = false;
-  @tracked firstOfResults = false;
+  @tracked newest;
+  @tracked highlighted;
+  @tracked firstOfResults;
   @tracked message;
   @tracked thread;
   @tracked threadReplyCount;
-  @tracked manager = null;
-  @tracked threadTitle = null;
+  @tracked manager;
+  @tracked threadTitle;
 
   @tracked _cooked;
 
   constructor(channel, args = {}) {
     // when modifying constructor, be sure to update duplicate function accordingly
     this.id = args.id;
-    this.newest = args.newest;
-    this.firstOfResults = args.firstOfResults;
-    this.staged = args.staged;
-    this.edited = args.edited;
-    this.editing = args.editing;
+    this.newest = args.newest || false;
+    this.draftSaved = args.draftSaved || args.draft_saved || false;
+    this.firstOfResults = args.firstOfResults || args.first_of_results || false;
+    this.staged = args.staged || false;
+    this.edited = args.edited || false;
+    this.editing = args.editing || false;
     this.availableFlags = args.availableFlags || args.available_flags;
-    this.hidden = args.hidden;
+    this.hidden = args.hidden || false;
     this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
     this.threadTitle = args.threadTitle || args.thread_title;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
