@@ -117,7 +117,6 @@ export default {
   initialize() {
     withPluginApi("1.2.0", (api) => {
       const apiPrototype = Object.getPrototypeOf(api);
-      const chatApi = api.container.lookup("service:chat-api");
 
       if (!apiPrototype.hasOwnProperty("decorateChatMessage")) {
         Object.defineProperty(apiPrototype, "decorateChatMessage", {
@@ -150,6 +149,7 @@ export default {
               { message },
               { thread_id: options.threadId }
             );
+            const chatApi = api.container.lookup("service:chat-api");
             return chatApi.sendMessage(channelId, data);
           },
         });
