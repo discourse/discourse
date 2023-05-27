@@ -39,7 +39,7 @@ export default class ChatChannelsManager extends Service {
     let model;
 
     if (!options.replace) {
-      this.#findStale(channelObject.id);
+      model = this.#findStale(channelObject.id);
     }
 
     if (!model) {
