@@ -26,13 +26,17 @@ describe "Thread list in side panel | full page", type: :system, js: true do
   end
 
   context "when there are threads that the user is participating in" do
-    before { chat_system_user_bootstrap(user: other_user, channel: channel) }
-
     fab!(:thread_1) do
       chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
     end
     fab!(:thread_2) do
       chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
+    end
+
+    before do
+      chat_system_user_bootstrap(user: other_user, channel: channel)
+      thread_1.add(current_user)
+      thread_2.add(current_user)
     end
 
     it "shows a default title for threads without a title" do
