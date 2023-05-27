@@ -91,6 +91,25 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * });
  */
 
+/**
+ * Send a chat message
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function sendChatMessage
+ * @param {number} channelId - The id of the channel
+ * @param {string} message - The content of the message to send
+ * @param {Object} options
+ * @param {number} [options.threadId] - The thread id where the message should be sent
+ * @example
+ *
+ * api.sendChatMessage(
+ *   1,
+ *  "Hello world",
+ *  { thread_id: 2 }
+ * );
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -98,6 +117,7 @@ export default {
   initialize() {
     withPluginApi("1.2.0", (api) => {
       const apiPrototype = Object.getPrototypeOf(api);
+      const chatApi = api.container.lookup("service:chat-api");
 
       if (!apiPrototype.hasOwnProperty("decorateChatMessage")) {
         Object.defineProperty(apiPrototype, "decorateChatMessage", {
@@ -119,6 +139,18 @@ export default {
         Object.defineProperty(apiPrototype, "addChatDrawerStateCallback", {
           value(callback) {
             addChatDrawerStateCallback(callback);
+          },
+        });
+      }
+
+      if (!apiPrototype.hasOwnProperty("sendChatMessage")) {
+        Object.defineProperty(apiPrototype, "sendChatMessage", {
+          value(channelId, message, options = {}) {
+            const data = Object.assign(
+              { message },
+              { thread_id: options.threadId }
+            );
+            return chatApi.sendMessage(channelId, data);
           },
         });
       }
