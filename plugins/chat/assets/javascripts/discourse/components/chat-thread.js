@@ -40,6 +40,13 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
+  didUpdateThread() {
+    this.subscribeToUpdates();
+    this.loadMessages();
+    this.resetComposer();
+  }
+
+  @action
   setUploadDropZone(element) {
     this.uploadDropZone = element;
   }
@@ -246,11 +253,11 @@ export default class ChatThreadPanel extends Component {
     return this.chatApi
       .sendMessage(this.channel.id, {
         message: message.message,
-        in_reply_to_id: message.inReplyTo?.id,
+        in_reply_to_id: message.thread.originalMessage.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-        thread_id: this.thread.staged ? null : message.thread.id,
-        staged_thread_id: this.thread.staged ? message.thread.id : null,
+        thread_id: message.thread.staged ? null : message.thread.id,
+        staged_thread_id: message.thread.staged ? message.thread.id : null,
       })
       .catch((error) => {
         this.#onSendError(message.id, error);

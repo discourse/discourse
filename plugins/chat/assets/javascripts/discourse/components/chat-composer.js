@@ -144,26 +144,6 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  didUpdateChannel() {
-    this.cancelPersistDraft();
-
-    if (!this.args.channel) {
-      this.composer.message = null;
-      return;
-    }
-
-    const existingDraft = this.chatDraftsManager.get({
-      channelId: this.args.channel.id,
-    });
-    if (existingDraft) {
-      this.composer.message = existingDraft;
-      return;
-    }
-
-    this.composer.reset(this.args.channel);
-  }
-
-  @action
   setup() {
     this.appEvents.on("chat:modify-selection", this, "modifySelection");
     this.appEvents.on(
@@ -380,7 +360,7 @@ export default class ChatComposer extends Component {
 
   @action
   reset() {
-    this.composer.reset(this.args.channel);
+    this.composer.reset(this.args.channel, this.args.thread);
   }
 
   @action

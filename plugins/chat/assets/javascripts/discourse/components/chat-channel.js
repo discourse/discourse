@@ -105,19 +105,32 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  updateChannel() {
+  didUpdateChannel() {
     this.#cancelHandlers();
 
     this.loadedOnce = false;
 
+    if (!this.args.channel) {
+      return;
+    }
+
     // Technically we could keep messages to avoid re-fetching them, but
     // it's not worth the complexity for now
-    this.args.channel?.clearMessages();
+    this.args.channel.clearMessages();
 
-    if (this._loadedChannelId !== this.args.channel?.id) {
+    if (this._loadedChannelId !== this.args.channel.id) {
       this.unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
-      this._loadedChannelId = this.args.channel?.id;
+      this._loadedChannelId = this.args.channel.id;
+    }
+
+    const existingDraft = this.chatDraftsManager.get({
+      channelId: this.args.channel.id,
+    });
+    if (existingDraft) {
+      this.chatChannelComposer.message = existingDraft;
+    } else {
+      this.resetComposer();
     }
 
     this.loadMessages();
