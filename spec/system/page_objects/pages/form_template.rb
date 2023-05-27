@@ -36,7 +36,7 @@ module PageObjects
       end
 
       def click_save_button
-        find(".form-templates__form .footer-buttons .btn-primary").click
+        find(".form-templates__form .footer-buttons .btn-primary:enabled", visible: :all).click
       end
 
       def click_quick_insert(field_type)
