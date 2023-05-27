@@ -160,7 +160,7 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    this.composer.reset(this.channel);
+    this.composer.reset(this.args.channel);
   }
 
   @action
