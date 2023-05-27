@@ -10,4 +10,9 @@ export default class ChatChannelThreadComposer extends ChatComposer {
       thread,
     });
   }
+
+  @action
+  cancelEditing() {
+    this.reset(this.message.channel, this.message.thread);
+  }
 }

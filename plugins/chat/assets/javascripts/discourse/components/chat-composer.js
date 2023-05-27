@@ -365,7 +365,7 @@ export default class ChatComposer extends Component {
       if (this.currentMessage?.inReplyTo) {
         this.reset();
       } else if (this.currentMessage?.editing) {
-        this.composer.onCancelEditing();
+        this.composer.cancel();
       } else {
         event.target.blur();
       }

@@ -8,6 +8,11 @@ export default class ChatChannelComposer extends ChatComposer {
   @service router;
 
   @action
+  cancelEditing() {
+    this.reset(this.message.channel);
+  }
+
+  @action
   reset(channel) {
     this.message = ChatMessage.createDraftMessage(channel, {
       user: this.currentUser,
