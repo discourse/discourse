@@ -62,13 +62,7 @@ export default class ChatApi extends Service {
    *    this.chatApi.thread(5, 1).then(thread => { ... })
    */
   thread(channelId, threadId) {
-    return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
-      (result) =>
-        this.chat.activeChannel.threadsManager.store(
-          this.chat.activeChannel,
-          result.thread
-        )
-    );
+    return this.#getRequest(`/channels/${channelId}/threads/${threadId}`);
   }
 
   /**
