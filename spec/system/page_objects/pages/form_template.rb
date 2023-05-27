@@ -48,7 +48,7 @@ module PageObjects
       end
 
       def click_preview_button
-        find(".form-templates__preview-button").click
+        find(".form-templates__preview-button:enabled").click
       end
 
       def has_input_field?(type)
