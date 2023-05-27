@@ -55,7 +55,7 @@ module PageObjects
         end
 
         def editing_message?(message)
-          value == message.message && message_details.editing_message?(message)
+          value == message.message && message_details.editing?(message)
         end
       end
     end
