@@ -6,7 +6,7 @@ RSpec.describe "Unfollow dm channel", type: :system, js: true do
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
-  let!(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
+  let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -26,8 +26,8 @@ RSpec.describe "Unfollow dm channel", type: :system, js: true do
         text = "this is fine"
         sign_in(other_user)
         chat_page.visit_channel(dm_channel_1)
-        chat_channel_page.send_message(text)
-        expect(chat_channel_page).to have_message(text: text)
+        channel_page.send_message(text)
+        expect(channel_page).to have_message(text: text)
         session.quit
       end
 

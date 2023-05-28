@@ -92,10 +92,6 @@ export default {
         return;
       }
 
-      if (!isChatComposer(event.target)) {
-        return;
-      }
-
       event.preventDefault();
       event.stopPropagation();
       appEvents.trigger("chat:toggle-close", event);

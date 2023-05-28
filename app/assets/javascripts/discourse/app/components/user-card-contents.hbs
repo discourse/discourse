@@ -261,12 +261,13 @@
               <span class="website-name">
                 {{d-icon "globe"}}
                 {{#if this.linkWebsite}}
-                  {{! template-lint-disable  }}
+                  {{! template-lint-disable link-rel-noopener }}
                   <a
-                    href="{{this.user.website}}"
+                    href={{this.user.website}}
                     rel="noopener {{unless this.removeNoFollow 'nofollow ugc'}}"
                     target="_blank"
                   >{{this.user.website_name}}</a>
+                  {{! template-lint-enable link-rel-noopener }}
                 {{else}}
                   <span
                     title={{this.user.website}}
@@ -281,7 +282,7 @@
               </span>
             {{/if}}
             {{#if this.showUserLocalTime}}
-              <span class="local-time" title="{{i18n 'local_time'}}">
+              <span class="local-time" title={{i18n "local_time"}}>
                 {{d-icon "far-clock"}}
                 <span>{{this.formattedUserLocalTime}}</span>
               </span>
@@ -307,7 +308,7 @@
             <h3><span class="desc">{{i18n "joined"}}</span>
               {{format-date this.user.created_at leaveAgo="true"}}</h3>
             {{#if this.user.time_read}}
-              <h3 title="{{this.timeReadTooltip}}">
+              <h3 title={{this.timeReadTooltip}}>
                 <span class="desc">{{i18n "time_read"}}</span>
                 {{format-duration this.user.time_read}}
                 {{#if this.showRecentTimeRead}}

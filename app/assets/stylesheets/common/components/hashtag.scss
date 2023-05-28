@@ -14,7 +14,7 @@ a.hashtag {
   }
 }
 
-a.hashtag-cooked {
+.hashtag-cooked {
   @include mention;
 
   &:visited,
@@ -23,7 +23,6 @@ a.hashtag-cooked {
   }
 
   .d-icon {
-    color: var(--primary-high);
     font-size: var(--font-down-1);
     margin: 0 0.2em 0 0.1em;
   }
