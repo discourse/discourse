@@ -106,7 +106,7 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * api.sendChatMessage(
  *   1,
  *  "Hello world",
-{ threadId: 2 }
+ *  { threadId: 2 }
  * );
  */
 
