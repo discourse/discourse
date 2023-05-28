@@ -87,6 +87,12 @@ RSpec.describe Chat::ChannelViewBuilder do
       expect(subject.view).to be_a(Chat::View)
     end
 
+    context "when page_size is null" do
+      let(:page_size) { nil }
+
+      it { is_expected.to fail_a_contract }
+    end
+
     context "when channel has threading_enabled and enable_experimental_chat_threaded_discussions is true" do
       before do
         channel.update!(threading_enabled: true)
@@ -210,6 +216,12 @@ RSpec.describe Chat::ChannelViewBuilder do
         msg
       end
 
+      context "when page_size is null" do
+        let(:page_size) { nil }
+
+        it { is_expected.not_to fail_a_contract }
+      end
+
       context "if the user is not a member of the channel" do
         it "does not error and still returns messages" do
           expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
@@ -255,6 +267,12 @@ RSpec.describe Chat::ChannelViewBuilder do
 
       it "includes the target message as well as past and future messages" do
         expect(subject.view.chat_messages).to eq([past_message, message, future_message])
+      end
+
+      context "when page_size is null" do
+        let(:page_size) { nil }
+
+        it { is_expected.not_to fail_a_contract }
       end
 
       context "when the target message is a thread reply" do

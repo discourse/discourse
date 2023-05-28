@@ -64,7 +64,7 @@ module Chat
                 },
                 allow_nil: true
 
-      validate :page_size_present, if: -> { target_message_id.blank? }
+      validate :page_size_present, if: -> { target_message_id.blank? && !fetch_from_last_read }
 
       def page_size_present
         errors.add(:page_size, :blank) if page_size.blank?
