@@ -272,24 +272,15 @@ RSpec.configure do |config|
 
     Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
 
-    # The valid values for SELENIUM_BROWSER_LOG_LEVEL are:
-    #
-    # OFF
-    # SEVERE
-    # WARNING
-    # INFO
-    # DEBUG
-    # ALL
+    # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
     browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
+
     chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
+          apply_base_chrome_options(options)
           options.add_argument("--window-size=1400,1400")
-          options.add_argument("--no-sandbox")
-          options.add_argument("--disable-dev-shm-usage")
-          options.add_argument("--mute-audio")
-          options.add_argument("--force-device-scale-factor=1")
         end
 
     Capybara.register_driver :selenium_chrome do |app|
@@ -304,14 +295,10 @@ RSpec.configure do |config|
 
     mobile_chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
-        .new(logging_prefs: { "browser" => "INFO", "driver" => "ALL" })
+        .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
-          options.add_argument("--window-size=390,960")
-          options.add_argument("--no-sandbox")
-          options.add_argument("--disable-dev-shm-usage")
           options.add_emulation(device_name: "iPhone 12 Pro")
-          options.add_argument("--mute-audio")
-          options.add_argument("--force-device-scale-factor=1")
+          apply_base_chrome_options(options)
         end
 
     Capybara.register_driver :selenium_mobile_chrome do |app|
@@ -628,6 +615,27 @@ def decrypt_auth_cookie(cookie)
   ).encrypted[
     :_t
   ].with_indifferent_access
+end
+
+def apply_base_chrome_options(options)
+  # possible values: undocked, bottom, right, left
+  chrome_dev_tools = ENV["CHROME_DEV_TOOLS"]
+
+  if chrome_dev_tools
+    options.add_argument("--auto-open-devtools-for-tabs")
+    options.add_preference(
+      "devtools",
+      "preferences" => {
+        "currentDockState" => "\"#{chrome_dev_tools}\"",
+        "panel-selectedTab" => '"console"',
+      },
+    )
+  end
+
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage")
+  options.add_argument("--mute-audio")
+  options.add_argument("--force-device-scale-factor=1")
 end
 
 class SpecSecureRandom
