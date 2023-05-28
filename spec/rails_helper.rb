@@ -618,7 +618,7 @@ def decrypt_auth_cookie(cookie)
 end
 
 def apply_base_chrome_options(options)
-  # possible values: undocked, bottom, right
+  # possible values: undocked, bottom, right, left
   chrome_dev_tools = ENV["CHROME_DEV_TOOLS"]
 
   if chrome_dev_tools
