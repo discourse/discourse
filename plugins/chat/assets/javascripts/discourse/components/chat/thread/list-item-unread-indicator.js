@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
 
 export default class ChatThreadListItemUnreadIndicator extends Component {
+  get unreadCount() {
+    return this.args.thread.tracking.unreadCount;
+  }
+
   get showUnreadIndicator() {
-    return this.args.thread.tracking.unreadCount > 0;
+    return this.unreadCount > 0;
   }
 
   get unreadCountLabel() {
-    if (this.args.thread.tracking.unreadCount > 99) {
-      return "99+";
-    }
-
-    return this.args.thread.tracking.unreadCount;
+    return this.unreadCount > 99 ? "99+" : this.unreadCount;
   }
 }

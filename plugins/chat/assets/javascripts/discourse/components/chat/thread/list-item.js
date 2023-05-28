@@ -7,7 +7,7 @@ export default class ChatThreadListItem extends Component {
   @service router;
 
   get title() {
-    return this.args.thread.titleOrDefault;
+    return this.args.thread.escapedTitle;
   }
 
   @action

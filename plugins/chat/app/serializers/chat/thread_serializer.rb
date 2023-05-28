@@ -12,7 +12,7 @@ module Chat
                :meta,
                :reply_count,
                :current_user_membership,
-               :last_reply
+               :preview
 
     def initialize(object, opts)
       super(object, opts)
@@ -31,12 +31,12 @@ module Chat
       object.replies_count_cache || 0
     end
 
-    def include_last_reply?
-      @opts[:include_last_reply]
+    def include_preview?
+      @opts[:include_preview]
     end
 
-    def last_reply
-      Chat::ThreadLastReplySerializer.new(object.last_reply, scope: scope, root: false).as_json
+    def preview
+      Chat::ThreadPreviewSerializer.new(object, scope: scope, root: false).as_json
     end
 
     def include_current_user_membership?

@@ -12,20 +12,24 @@ module PageObjects
           @context = context
         end
 
+        def component
+          find(context)
+        end
+
         def has_content?(content)
-          find(context).find(SELECTOR).has_content?(content)
+          component.find(SELECTOR).has_content?(content)
         end
 
         def has_title_content?(content)
-          find(context).find(SELECTOR + " .chat-thread-header__label").has_content?(content)
+          component.find(SELECTOR + " .chat-thread-header__label").has_content?(content)
         end
 
         def open_settings
-          find(context).find(SELECTOR + " .chat-thread-header__settings").click
+          component.find(SELECTOR + " .chat-thread-header__settings").click
         end
 
         def has_no_settings_button?
-          find(context).has_no_css?(SELECTOR + " .chat-thread-header__settings")
+          component.has_no_css?(SELECTOR + " .chat-thread-header__settings")
         end
       end
     end

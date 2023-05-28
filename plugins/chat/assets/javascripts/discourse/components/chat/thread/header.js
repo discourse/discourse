@@ -10,7 +10,7 @@ export default class ChatThreadHeader extends Component {
 
   get label() {
     if (this.args.thread) {
-      return this.args.thread.titleOrDefault;
+      return this.args.thread.escapedTitle;
     } else {
       return I18n.t("chat.threads.list");
     }
