@@ -28,7 +28,7 @@
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.3",
     "@glimmer/tracking": "^1.1.2",
-    "@popperjs/core": "^2.11.7",
+    "@popperjs/core": "^2.11.8",
     "a11y-dialog": "7.5.2",
     "admin": "1.0.0",
     "bootstrap": "3.4.1",
