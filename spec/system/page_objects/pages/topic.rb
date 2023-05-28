@@ -119,7 +119,8 @@ module PageObjects
         @composer_component.has_popup_content?(content)
       end
 
-      def send_reply
+      def send_reply(content = nil)
+        fill_in_composer(content) if content
         find("#reply-control .save-or-cancel .create").click
       end
 
