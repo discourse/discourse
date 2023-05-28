@@ -253,7 +253,9 @@ export default class ChatThreadPanel extends Component {
     return this.chatApi
       .sendMessage(this.channel.id, {
         message: message.message,
-        in_reply_to_id: message.thread.originalMessage.id,
+        in_reply_to_id: message.thread.staged
+          ? message.thread.originalMessage.id
+          : null,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
         thread_id: message.thread.staged ? null : message.thread.id,
