@@ -123,6 +123,7 @@ module PageObjects
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
         click_send_message
+        messages.has_message?(text: text, persisted: true)
         click_composer
         has_no_loading_skeleton?
       end
