@@ -2,7 +2,7 @@
   <div class="chat-thread-header__left-buttons">
     {{#if @thread}}
       <LinkTo
-        class="chat-thread__back-to-index btn-flat btn btn-icon no-text"
+        class="chat-thread__back-to-list btn-flat btn btn-icon no-text"
         @route="chat.channel.threads"
         @models={{@channel.routeModels}}
         title={{i18n "chat.return_to_threads_list"}}
