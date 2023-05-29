@@ -10,6 +10,7 @@ module Chat
           thread,
           scope: scope,
           membership: object.memberships.find { |m| m.thread_id == thread.id },
+          include_preview: true,
           root: nil,
         )
       end

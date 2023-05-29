@@ -1,7 +1,7 @@
 <div
   class={{concat-class
     "chat-thread-list-item"
-    (if (gt @thread.tracking.unreadCount 0) "-unread")
+    (if (gt @thread.tracking.unreadCount 0) "-is-unread")
   }}
   data-thread-id={{@thread.id}}
 >
@@ -13,20 +13,30 @@
       {{on "click" (fn this.openThread @thread) passive=true}}
     >
       <div class="chat-thread-list-item__header">
-        <div class="chat-thread-list-item__title">
+        <div class="chat-thread-list-item__om-user-avatar">
+          <ChatUserAvatar @user={{@thread.originalMessage.user}} />
+        </div>
+        <div class="chat-thread-list-item__title overflow-ellipsis">
           {{replace-emoji this.title}}
         </div>
-        <div class="chat-thread-list-item__buttons">
-          <DButton
-            @action={{action this.openThreadSettings}}
-            @class="btn-flat chat-thread-list-item__settings"
-            @icon="cog"
-            @title="chat.thread.settings"
-            @disabled={{not this.canChangeThreadSettings}}
-          />
+        <div class="chat-thread-list-item__unread-indicator">
+          <Chat::Thread::ListItemUnreadIndicator @thread={{@thread}} />
         </div>
       </div>
-      <Chat::Thread::OriginalMessage @message={{@thread.originalMessage}} />
+
+      <div class="chat-thread-list-item__body">
+        {{replace-emoji (html-safe @thread.originalMessage.excerpt)}}
+      </div>
+
+      <div class="chat-thread-list-item__metadata">
+        <div class="chat-thread-list-item__participants"></div>
+        <div class="chat-thread-list-item__last-reply">
+          {{#if @thread.preview.lastReplyCreatedAt}}
+            {{i18n "chat.thread.last_reply"}}
+            {{format-date @thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+          {{/if}}
+        </div>
+      </div>
     </div>
   </div>
 </div>

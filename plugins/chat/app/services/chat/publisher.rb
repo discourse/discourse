@@ -72,6 +72,9 @@ module Chat
             user_id: chat_message.user.id,
             username: chat_message.user.username,
             thread_id: chat_message.thread_id,
+            created_at: chat_message.created_at,
+            excerpt:
+              chat_message.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH),
           },
           permissions(chat_channel),
         )

@@ -23,6 +23,7 @@ module Chat
              primary_key: :id,
              class_name: "Chat::Message"
     has_many :user_chat_thread_memberships
+    has_one :last_reply, -> { order("created_at DESC, id DESC") }, class_name: "Chat::Message"
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
 
