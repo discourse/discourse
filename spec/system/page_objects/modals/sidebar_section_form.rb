@@ -28,6 +28,11 @@ module PageObjects
         find(".dialog-container .btn-primary").click
       end
 
+      def reset
+        find(".reset-link").click
+        find(".dialog-footer .btn-primary").click
+      end
+
       def save
         find("#save-section").click
       end
@@ -39,8 +44,17 @@ module PageObjects
       def has_disabled_save?
         find_button("Save", disabled: true)
       end
+
       def has_enabled_save?
         find_button("Save", disabled: false)
+      end
+
+      def everything_link
+        find(".draggable[data-link-name='Everything']")
+      end
+
+      def review_link
+        find(".draggable[data-link-name='Review']")
       end
     end
   end
