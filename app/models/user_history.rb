@@ -129,7 +129,7 @@ class UserHistory < ActiveRecord::Base
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
   def self.staff_actions
-    actions = %i[
+    @staff_actions ||= %i[
       delete_user
       change_trust_level
       change_site_setting
@@ -230,11 +230,6 @@ class UserHistory < ActiveRecord::Base
       chat_channel_status_change
       chat_auto_remove_membership
     ]
-
-    actions_constants = [Chat::TrashChannel::DELETE_CHANNEL_LOG_KEY.to_sym]
-    actions.concat(actions_constants)
-
-    @staff_actions ||= actions
   end
 
   def self.staff_action_ids

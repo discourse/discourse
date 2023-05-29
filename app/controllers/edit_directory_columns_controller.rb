@@ -43,7 +43,7 @@ class EditDirectoryColumnsController < ApplicationController
 
     details =
       if changes.empty?
-        { Detail: "Nothing was changed" }
+        { Detail: "" }
       else
         { Changes: changes }
       end
