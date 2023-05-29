@@ -1,3 +1,5 @@
+import { htmlSafe } from "@ember/template";
+
 // we use transparent pngs here to avoid loading actual images in tests. We don't care so much about the content of the image
 // we only care that the correct loading state is set and the metadata is correct
 const PNGS = {
@@ -27,6 +29,19 @@ const PNGS = {
   },
 };
 
+const cssVars1 = htmlSafe(
+  `--dominant-color: #F0F1F3;--aspect-ratio: 3000 / 10;--small-url: url(${PNGS.first.smallURL});`
+);
+const cssVars2 = htmlSafe(
+  `--dominant-color: #F0F1F3;--aspect-ratio: 3000 / 10;--small-url: url(${PNGS.second.smallURL});`
+);
+const cssVars3 = htmlSafe(
+  `--dominant-color: #F0F1F3;--aspect-ratio: 3000 / 10;--small-url: url(${PNGS.third.smallURL});`
+);
+const cssVars4 = htmlSafe(
+  `--dominant-color: #F0F1F3;--aspect-ratio: 3000 / 10;--small-url: url(${PNGS.smallerThanViewPort.smallURL});`
+);
+
 export const LIGHTBOX_IMAGE_FIXTURES = {
   first: {
     fullsizeURL: PNGS.first.fullsizeURL,
@@ -40,7 +55,7 @@ export const LIGHTBOX_IMAGE_FIXTURES = {
     index: 0,
     title: "first image title",
     alt: "first image alt",
-    cssVars: `--dominant-color: #F0F1F3;--aspect-ratio: 3000 / 10;--small-url: url(${PNGS.first.smallURL});`,
+    cssVars: cssVars1,
   },
   second: {
     fullsizeURL: PNGS.second.fullsizeURL,
@@ -54,7 +69,7 @@ export const LIGHTBOX_IMAGE_FIXTURES = {
     index: 1,
     title: "second image title",
     alt: "second image alt",
-    cssVars: `--dominant-color: #F9F5F6;--aspect-ratio: 1000 / 2;--small-url: url(${PNGS.second.smallURL});`,
+    cssVars: cssVars2,
   },
   third: {
     fullsizeURL: PNGS.third.fullsizeURL,
@@ -68,7 +83,7 @@ export const LIGHTBOX_IMAGE_FIXTURES = {
     index: 2,
     title: "third image title",
     alt: "third image alt",
-    cssVars: `--dominant-color: #F9F5F6;--aspect-ratio: 1000 / 2;--small-url: url(${PNGS.third.smallURL});`,
+    cssVars: cssVars3,
   },
   smallerThanViewPort: {
     fullsizeURL: PNGS.smallerThanViewPort.fullsizeURL,
@@ -82,7 +97,7 @@ export const LIGHTBOX_IMAGE_FIXTURES = {
     index: 3,
     title: "fourth image title",
     alt: "fourth image alt",
-    cssVars: `--dominant-color: #F0F0F1;--aspect-ratio: 300 / 2;--small-url: url(${PNGS.smallerThanViewPort.smallURL});`,
+    cssVars: cssVars4,
   },
   invalidImage: {
     fullsizeURL: `https:expected-lightbox-invalid/.image/404.png`,

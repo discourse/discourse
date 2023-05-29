@@ -62,13 +62,13 @@ export async function processHTML({ container, selector }) {
       const _cssVars = [
         _dominantColor && `--dominant-color: #${_dominantColor};`,
         _aspectRatio && `--aspect-ratio: ${_aspectRatio};`,
-        _smallURL && `--small-url: url(${_smallURL});`,
+        _smallURL && `--small-url: url(${encodeURI(_smallURL)});`,
       ].join("");
 
       return {
-        fullsizeURL: _fullsizeURL,
-        smallURL: _smallURL,
-        downloadURL: _downloadURL,
+        fullsizeURL: encodeURI(_fullsizeURL),
+        smallURL: encodeURI(_smallURL),
+        downloadURL: encodeURI(_downloadURL),
         title: escapeExpression(_title),
         fileDetails: _fileDetails,
         dominantColor: _dominantColor,

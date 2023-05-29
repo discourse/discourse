@@ -57,7 +57,10 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
 
     assert.strictEqual(item.index, LIGHTBOX_IMAGE_FIXTURES.first.index);
 
-    assert.strictEqual(item.cssVars, LIGHTBOX_IMAGE_FIXTURES.first.cssVars);
+    assert.strictEqual(
+      item.cssVars.string,
+      LIGHTBOX_IMAGE_FIXTURES.first.cssVars.string
+    );
 
     assert.strictEqual(startingIndex, 0);
   });
@@ -155,7 +158,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items[0].aspectRatio, null);
 
     assert.strictEqual(
-      items[0].cssVars,
+      items[0].cssVars.string,
       `--dominant-color: #${LIGHTBOX_IMAGE_FIXTURES.first.dominantColor};--small-url: url(${LIGHTBOX_IMAGE_FIXTURES.first.smallURL});`
     );
   });
@@ -186,7 +189,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items[0].dominantColor, null);
 
     assert.strictEqual(
-      items[0].cssVars,
+      items[0].cssVars.string,
       `--aspect-ratio: ${LIGHTBOX_IMAGE_FIXTURES.first.aspectRatio};--small-url: url(${LIGHTBOX_IMAGE_FIXTURES.first.smallURL});`
     );
   });
@@ -265,7 +268,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     );
 
     assert.strictEqual(
-      item.cssVars,
+      item.cssVars.string,
       `--small-url: url(${LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL});`
     );
   });
