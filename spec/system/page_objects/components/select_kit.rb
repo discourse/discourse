@@ -27,7 +27,7 @@ module PageObjects
       end
 
       def is_collapsed?
-        has_css?(context + ":not(.is-expanded)")
+        has_css?(context + ":not(.is-expanded)", wait: 0)
       end
 
       def has_selected_value?(value)
