@@ -170,6 +170,8 @@ export default class ChatApi extends Service {
    * @param {string} data.cooked - The cooked content of the message.
    * @param {number} [data.in_reply_to_id] - The ID of the replied-to message.
    * @param {number} [data.staged_id] - The staged ID of the message before it was persisted.
+   * @param {number} [data.thread_id] - The ID of the thread where this message should be posted.
+   * @param {number} [data.staged_thread_id] - The staged ID of the thread before it was persisted.
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
