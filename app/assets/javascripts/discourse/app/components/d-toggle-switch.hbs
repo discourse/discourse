@@ -1,6 +1,6 @@
 <div class="d-toggle-switch">
   <label class="d-toggle-switch--label">
-    {{! template-lint-disable no-unnecessary-concat  }}
+    {{! template-lint-disable no-unnecessary-concat }}
     <button
       class="d-toggle-switch__checkbox"
       type="button"
@@ -8,12 +8,15 @@
       aria-checked="{{@state}}"
       ...attributes
     ></button>
+    {{! template-lint-enable no-unnecessary-concat }}
+
     <span class="d-toggle-switch__checkbox-slider">
       {{#if @state}}
         {{d-icon "check"}}
       {{/if}}
     </span>
   </label>
+
   <span class="d-toggle-switch__checkbox-label">
     {{this.computedLabel}}
   </span>

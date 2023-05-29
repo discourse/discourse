@@ -67,7 +67,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id=6] a"
       ),
       "support category is present in sidebar"
     );
@@ -95,14 +95,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       !exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=10]"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id=10] a"
       ),
       "howto category is not displayed in sidebar"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id=6] a"
       ),
       "support category is displayed in sidebar"
     );
@@ -123,14 +123,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id=6] a"
       ),
       "support category has been added to sidebar"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=1]"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id=1] a"
       ),
       "bug category has been added to sidebar"
     );
@@ -153,14 +153,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=6]"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id=6] a"
       ),
       "support category has been added to sidebar"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-category-id=1]"
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id=1] a"
       ),
       "bug category has been added to sidebar"
     );
@@ -179,7 +179,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name=monkey]"
       ),
       "monkey tag is displayed in sidebar"
     );
@@ -207,14 +207,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       !exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=gazelle]"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name=gazelle]"
       ),
       "gazelle tag is not displayed in sidebar"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name=monkey]"
       ),
       "monkey tag is displayed in sidebar"
     );
@@ -239,7 +239,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name=monkey]"
       ),
       "monkey tag has been added to sidebar"
     );
@@ -262,14 +262,14 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=monkey]"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name=monkey]"
       ),
       "monkey tag has been added to sidebar"
     );
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-tag-name=gazelle]"
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name=gazelle]"
       ),
       "gazelle tag has been added to sidebar"
     );

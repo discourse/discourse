@@ -17,8 +17,9 @@ import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { Promise } from "rsvp";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import User from "discourse/models/user";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -32,6 +33,7 @@ export default class ChatComposer extends Component {
   @service chatEmojiPickerManager;
   @service currentUser;
   @service chatApi;
+  @service chatDraftsManager;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
@@ -77,15 +79,8 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  sendMessage(raw) {
-    const message = ChatMessage.createDraftMessage(this.args.channel, {
-      user: this.currentUser,
-      message: raw,
-    });
-
-    this.args.onSendMessage(message);
-
-    return Promise.resolve();
+  sendMessage() {
+    this.args.onSendMessage(this.currentMessage);
   }
 
   @action
@@ -106,13 +101,15 @@ export default class ChatComposer extends Component {
 
   @action
   didUpdateMessage() {
-    cancel(this._persistHandler);
+    this.cancelPersistDraft();
     this.textareaInteractor.value = this.currentMessage.message || "";
     this.textareaInteractor.focus({ refreshHeight: true });
+    this.persistDraft();
   }
 
   @action
   didUpdateInReplyTo() {
+    this.cancelPersistDraft();
     this.textareaInteractor.focus({ ensureAtEnd: true, refreshHeight: true });
     this.persistDraft();
   }
@@ -148,10 +145,23 @@ export default class ChatComposer extends Component {
   }
 
   @action
+  didUpdateChannel() {
+    this.cancelPersistDraft();
+
+    if (!this.args.channel) {
+      this.composer.message = null;
+      return;
+    }
+
+    this.composer.message =
+      this.chatDraftsManager.get({ channelId: this.args.channel.id }) ||
+      ChatMessage.createDraftMessage(this.args.channel, {
+        user: this.currentUser,
+      });
+  }
+
+  @action
   setup() {
-    this.composer.message = ChatMessage.createDraftMessage(this.args.channel, {
-      user: this.currentUser,
-    });
     this.appEvents.on("chat:modify-selection", this, "modifySelection");
     this.appEvents.on(
       "chat:open-insert-link-modal",
@@ -349,13 +359,13 @@ export default class ChatComposer extends Component {
       }
     }
 
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && this.isFocused) {
+      event.stopPropagation();
+
       if (this.currentMessage?.inReplyTo) {
         this.reset();
-        return false;
       } else if (this.currentMessage?.editing) {
         this.composer.onCancelEditing();
-        return false;
       } else {
         event.target.blur();
       }
@@ -419,7 +429,11 @@ export default class ChatComposer extends Component {
       width: "100%",
       treatAsTextarea: true,
       autoSelectFirstSuggestion: true,
-      transformComplete: (v) => v.username || v.name,
+      transformComplete: (userData) => {
+        const user = User.create(userData);
+        this.currentMessage.mentionedUsers.set(user.id, user);
+        return user.username || user.name;
+      },
       dataSource: (term) => {
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {

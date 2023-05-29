@@ -21,6 +21,7 @@ module Chat
     #   @param [Guardian] guardian
     #   @option optional_params [Integer] thread_id
     #   @option optional_params [Integer] target_message_id
+    #   @option optional_params [Boolean] fetch_from_last_read
     #   @option optional_params [Integer] page_size
     #   @option optional_params [String] direction
     #   @return [Service::Base::Context]
@@ -28,13 +29,15 @@ module Chat
     contract
     model :channel
     policy :can_view_channel
+    step :determine_target_message_id
     policy :target_message_exists
     step :determine_threads_enabled
     step :determine_include_thread_messages
     step :fetch_messages
-    step :fetch_thread_tracking_overview
+    step :fetch_unread_thread_ids
     step :fetch_threads_for_messages
     step :fetch_tracking
+    step :fetch_thread_memberships
     step :build_view
 
     class Contract
@@ -46,6 +49,7 @@ module Chat
       attribute :thread_id, :integer # (optional)
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
+      attribute :fetch_from_last_read, :boolean # (optional)
 
       validates :channel_id, presence: true
       validates :direction,
@@ -53,6 +57,18 @@ module Chat
                   in: Chat::MessagesQuery::VALID_DIRECTIONS,
                 },
                 allow_nil: true
+      validates :page_size,
+                numericality: {
+                  less_than_or_equal_to: Chat::MessagesQuery::MAX_PAGE_SIZE,
+                  only_integer: true,
+                },
+                allow_nil: true
+
+      validate :page_size_present, if: -> { target_message_id.blank? && !fetch_from_last_read }
+
+      def page_size_present
+        errors.add(:page_size, :blank) if page_size.blank?
+      end
     end
 
     private
@@ -65,9 +81,22 @@ module Chat
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def target_message_exists(contract:, **)
+    def determine_target_message_id(contract:, channel:, guardian:, **)
+      if contract.fetch_from_last_read
+        contract.target_message_id = channel.membership_for(guardian.user)&.last_read_message_id
+      end
+    end
+
+    def target_message_exists(contract:, guardian:, **)
       return true if contract.target_message_id.blank?
-      Chat::Message.exists?(id: contract.target_message_id)
+      target_message =
+        Chat::Message.with_deleted.find_by(
+          id: contract.target_message_id,
+          chat_channel_id: contract.channel_id,
+        )
+      return false if target_message.blank?
+      return true if !target_message.trashed?
+      target_message.user_id == guardian.user.id || guardian.is_staff?
     end
 
     def determine_threads_enabled(channel:, **)
@@ -117,11 +146,11 @@ module Chat
     # that have unread messages, only threads with unread messages
     # will be included in this array. This is a low-cost way to know
     # how many threads the user has unread across the entire channel.
-    def fetch_thread_tracking_overview(guardian:, channel:, threads_enabled:, **)
+    def fetch_unread_thread_ids(guardian:, channel:, threads_enabled:, **)
       if !threads_enabled
-        context.thread_tracking_overview = []
+        context.unread_thread_ids = []
       else
-        context.thread_tracking_overview =
+        context.unread_thread_ids =
           ::Chat::TrackingStateReportQuery
             .call(
               guardian: guardian,
@@ -168,15 +197,28 @@ module Chat
       end
     end
 
+    def fetch_thread_memberships(threads:, guardian:, **)
+      if threads.empty?
+        context.thread_memberships = []
+      else
+        context.thread_memberships =
+          ::Chat::UserChatThreadMembership.where(
+            thread_id: threads.map(&:id),
+            user_id: guardian.user.id,
+          )
+      end
+    end
+
     def build_view(
       guardian:,
       channel:,
       messages:,
       threads:,
       tracking:,
-      thread_tracking_overview:,
+      unread_thread_ids:,
       can_load_more_past:,
       can_load_more_future:,
+      thread_memberships:,
       **
     )
       context.view =
@@ -186,9 +228,10 @@ module Chat
           user: guardian.user,
           can_load_more_past: can_load_more_past,
           can_load_more_future: can_load_more_future,
-          thread_tracking_overview: thread_tracking_overview,
+          unread_thread_ids: unread_thread_ids,
           threads: threads,
           tracking: tracking,
+          thread_memberships: thread_memberships,
         )
     end
   end

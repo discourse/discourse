@@ -1124,11 +1124,23 @@ class Search
       else
         posts = posts.reorder("posts.created_at DESC")
       end
+    elsif @order == :oldest
+      if aggregate_search
+        posts = posts.order("MAX(posts.created_at) ASC")
+      else
+        posts = posts.reorder("posts.created_at ASC")
+      end
     elsif @order == :latest_topic
       if aggregate_search
         posts = posts.order("MAX(topics.created_at) DESC")
       else
         posts = posts.order("topics.created_at DESC")
+      end
+    elsif @order == :oldest_topic
+      if aggregate_search
+        posts = posts.order("MAX(topics.created_at) ASC")
+      else
+        posts = posts.order("topics.created_at ASC")
       end
     elsif @order == :views
       if aggregate_search

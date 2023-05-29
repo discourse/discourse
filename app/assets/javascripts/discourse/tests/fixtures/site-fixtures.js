@@ -723,7 +723,7 @@ export default {
             },
             {
               id: 331,
-              name: "Info",
+              name: "About",
               value: "/about",
               icon: "info-circle",
               external: false,

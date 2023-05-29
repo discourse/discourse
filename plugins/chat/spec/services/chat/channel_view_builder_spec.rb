@@ -17,14 +17,16 @@ RSpec.describe Chat::ChannelViewBuilder do
     let(:channel_id) { channel.id }
     let(:guardian) { current_user.guardian }
     let(:target_message_id) { nil }
-    let(:page_size) { nil }
+    let(:page_size) { 10 }
     let(:direction) { nil }
     let(:thread_id) { nil }
+    let(:fetch_from_last_read) { nil }
     let(:params) do
       {
         guardian: guardian,
         channel_id: channel_id,
         target_message_id: target_message_id,
+        fetch_from_last_read: fetch_from_last_read,
         page_size: page_size,
         direction: direction,
         thread_id: thread_id,
@@ -85,6 +87,12 @@ RSpec.describe Chat::ChannelViewBuilder do
       expect(subject.view).to be_a(Chat::View)
     end
 
+    context "when page_size is null" do
+      let(:page_size) { nil }
+
+      it { is_expected.to fail_a_contract }
+    end
+
     context "when channel has threading_enabled and enable_experimental_chat_threaded_discussions is true" do
       before do
         channel.update!(threading_enabled: true)
@@ -123,6 +131,19 @@ RSpec.describe Chat::ChannelViewBuilder do
         expect(subject.view.threads).to eq([message_1.thread])
       end
 
+      it "fetches thread memberships for the current user for fetched threads" do
+        message_1 =
+          Fabricate(
+            :chat_message,
+            chat_channel: channel,
+            thread: Fabricate(:chat_thread, channel: channel),
+          )
+        message_1.thread.add(current_user)
+        expect(subject.view.thread_memberships).to eq(
+          [message_1.thread.membership_for(current_user)],
+        )
+      end
+
       it "calls the tracking state report query for thread overview and tracking" do
         thread = Fabricate(:chat_thread, channel: channel)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)
@@ -148,7 +169,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         thread = Fabricate(:chat_thread, channel: channel)
         thread.add(current_user)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)
-        expect(subject.view.thread_tracking_overview).to eq([message_1.thread.id])
+        expect(subject.view.unread_thread_ids).to eq([message_1.thread.id])
       end
 
       it "fetches the tracking state of threads in the channel" do
@@ -181,6 +202,55 @@ RSpec.describe Chat::ChannelViewBuilder do
       it { is_expected.to fail_a_policy(:can_view_channel) }
     end
 
+    context "when fetch_from_last_read is true" do
+      let(:fetch_from_last_read) { true }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+      fab!(:past_message_1) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: message.created_at - 1.day)
+        msg
+      end
+      fab!(:past_message_2) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: message.created_at - 2.days)
+        msg
+      end
+
+      context "when page_size is null" do
+        let(:page_size) { nil }
+
+        it { is_expected.not_to fail_a_contract }
+      end
+
+      context "if the user is not a member of the channel" do
+        it "does not error and still returns messages" do
+          expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+        end
+      end
+
+      context "if the user is a member of the channel" do
+        fab!(:membership) do
+          Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+        end
+
+        context "if the user's last_read_message_id is not nil" do
+          before { membership.update!(last_read_message_id: past_message_1.id) }
+
+          it "uses the last_read_message_id of the user's membership as the target_message_id" do
+            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          end
+        end
+
+        context "if the user's last_read_message_id is nil" do
+          before { membership.update!(last_read_message_id: nil) }
+
+          it "does not error and still returns messages" do
+            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          end
+        end
+      end
+    end
+
     context "when target_message_id provided" do
       fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
       fab!(:past_message) do
@@ -197,6 +267,12 @@ RSpec.describe Chat::ChannelViewBuilder do
 
       it "includes the target message as well as past and future messages" do
         expect(subject.view.chat_messages).to eq([past_message, message, future_message])
+      end
+
+      context "when page_size is null" do
+        let(:page_size) { nil }
+
+        it { is_expected.not_to fail_a_contract }
       end
 
       context "when the target message is a thread reply" do
@@ -228,6 +304,18 @@ RSpec.describe Chat::ChannelViewBuilder do
         before { message.trash! }
 
         it { is_expected.to fail_a_policy(:target_message_exists) }
+
+        context "when the user is the owner of the trashed message" do
+          before { message.update!(user: current_user) }
+
+          it { is_expected.not_to fail_a_policy(:target_message_exists) }
+        end
+
+        context "when the user is admin" do
+          before { current_user.update!(admin: true) }
+
+          it { is_expected.not_to fail_a_policy(:target_message_exists) }
+        end
       end
     end
   end

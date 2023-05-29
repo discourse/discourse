@@ -68,15 +68,24 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
-    if params[:target_message_id].present? || params[:include_messages].present?
+    if params[:target_message_id].present? || params[:include_messages].present? ||
+         params[:fetch_from_last_read].present?
       with_service(
         Chat::ChannelViewBuilder,
-        **params.permit(:channel_id, :target_message_id, :thread_id, :page_size, :direction).slice(
+        **params.permit(
           :channel_id,
           :target_message_id,
           :thread_id,
           :page_size,
           :direction,
+          :fetch_from_last_read,
+        ).slice(
+          :channel_id,
+          :target_message_id,
+          :thread_id,
+          :page_size,
+          :direction,
+          :fetch_from_last_read,
         ),
       ) do
         on_success { render_serialized(result.view, Chat::ViewSerializer, root: false) }
@@ -121,7 +130,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     @channel ||=
       begin
         channel = Chat::Channel.find(params.require(:channel_id))
-        guardian.ensure_can_preview_chat_channel!(channel)
+        guardian.ensure_can_join_chat_channel!(channel)
         channel
       end
   end

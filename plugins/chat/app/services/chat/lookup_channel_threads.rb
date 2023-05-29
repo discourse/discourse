@@ -23,6 +23,8 @@ module Chat
     policy :threading_enabled_for_channel
     policy :can_view_channel
     model :threads
+    step :fetch_tracking
+    step :fetch_memberships
 
     # @!visibility private
     class Contract
@@ -52,6 +54,7 @@ module Chat
       Chat::Thread
         .includes(
           :channel,
+          :last_reply,
           original_message_user: :user_status,
           original_message: :chat_webhook_event,
         )
@@ -70,6 +73,23 @@ module Chat
         .group("chat_threads.id")
         .order("last_posted_at DESC NULLS LAST")
         .limit(50)
+    end
+
+    def fetch_tracking(guardian:, threads:, **)
+      context.tracking =
+        ::Chat::TrackingStateReportQuery.call(
+          guardian: guardian,
+          thread_ids: threads.map(&:id),
+          include_threads: true,
+        ).thread_tracking
+    end
+
+    def fetch_memberships(guardian:, threads:, **)
+      context.memberships =
+        ::Chat::UserChatThreadMembership.where(
+          thread_id: threads.map(&:id),
+          user_id: guardian.user.id,
+        )
     end
   end
 end

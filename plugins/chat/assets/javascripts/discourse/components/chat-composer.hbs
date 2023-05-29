@@ -26,6 +26,8 @@
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
     {{did-insert this.setup}}
+    {{did-insert this.didUpdateChannel}}
+    {{did-update this.didUpdateChannel @channel.id}}
     {{will-destroy this.teardown}}
     {{will-destroy this.cancelPersistDraft}}
   >

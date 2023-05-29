@@ -43,6 +43,7 @@ export default class ChatLivePane extends Component {
   @service appEvents;
   @service messageBus;
   @service site;
+  @service chatDraftsManager;
 
   @tracked loading = false;
   @tracked loadingMorePast = false;
@@ -116,11 +117,6 @@ export default class ChatLivePane extends Component {
     if (this._loadedChannelId !== this.args.channel?.id) {
       this.unsubscribeToUpdates(this._loadedChannelId);
       this.chatChannelPane.selectingMessages = false;
-
-      if (this.args.channel.draft) {
-        this.chatChannelComposer.message = this.args.channel.draft;
-      }
-
       this._loadedChannelId = this.args.channel?.id;
     }
 
@@ -170,10 +166,13 @@ export default class ChatLivePane extends Component {
 
     const findArgs = { pageSize: PAGE_SIZE, includeMessages: true };
     const fetchingFromLastRead = !options.fetchFromLastMessage;
+    let scrollToMessageId = null;
     if (this.requestedTargetMessageId) {
       findArgs.targetMessageId = this.requestedTargetMessageId;
+      scrollToMessageId = this.requestedTargetMessageId;
     } else if (fetchingFromLastRead) {
-      findArgs.targetMessageId =
+      findArgs.fetchFromLastRead = true;
+      scrollToMessageId =
         this.args.channel.currentUserMembership.lastReadMessageId;
     }
 
@@ -192,8 +191,18 @@ export default class ChatLivePane extends Component {
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
+        if (result.threads) {
+          result.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(this.args.channel, thread);
+          });
+        }
+
+        if (result.unread_thread_ids) {
+          this.args.channel.unreadThreadIds = result.unread_thread_ids;
+        }
+
         if (this.requestedTargetMessageId) {
-          this.scrollToMessage(findArgs["targetMessageId"], {
+          this.scrollToMessage(scrollToMessageId, {
             highlight: true,
           });
           return;
@@ -202,25 +211,13 @@ export default class ChatLivePane extends Component {
         if (
           fetchingFromLastRead &&
           messages.length &&
-          findArgs["targetMessageId"] !== messages[messages.length - 1].id
+          scrollToMessageId !== messages[messages.length - 1].id
         ) {
-          this.scrollToMessage(findArgs["targetMessageId"]);
+          this.scrollToMessage(scrollToMessageId);
           return;
         }
 
         this.scrollToBottom();
-
-        if (result.threads) {
-          result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
-          });
-        }
-
-        if (result.thread_tracking_overview) {
-          this.args.channel.threadTrackingOverview.push(
-            ...result.thread_tracking_overview
-          );
-        }
       })
       .catch(this._handleErrors)
       .finally(() => {
@@ -269,11 +266,11 @@ export default class ChatLivePane extends Component {
     };
 
     return this.chatApi
-      .messages(this.args.channel.id, findArgs)
-      .then((results) => {
+      .channel(this.args.channel.id, findArgs)
+      .then((result) => {
         if (
           this._selfDeleted ||
-          this.args.channel.id !== results.meta.channel_id ||
+          this.args.channel.id !== result.meta.channel_id ||
           !this.scrollable
         ) {
           return;
@@ -287,14 +284,29 @@ export default class ChatLivePane extends Component {
 
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
-          results
+          result
         );
+
+        if (result.threads) {
+          result.threads.forEach((thread) => {
+            this.args.channel.threadsManager.store(this.args.channel, thread);
+          });
+        }
+
+        if (result.thread_tracking_overview) {
+          result.thread_tracking_overview.forEach((threadId) => {
+            if (!this.args.channel.threadTrackingOverview.includes(threadId)) {
+              this.args.channel.threadTrackingOverview.push(threadId);
+            }
+          });
+        }
+
+        this.args.channel.details = meta;
 
         if (!messages?.length) {
           return;
         }
 
-        this.args.channel.details = meta;
         this.args.channel.addMessages(messages);
 
         // Edge case for IOS to avoid blank screens
@@ -334,11 +346,11 @@ export default class ChatLivePane extends Component {
   }
 
   @bind
-  afterFetchCallback(channel, results) {
+  afterFetchCallback(channel, result) {
     const messages = [];
     let foundFirstNew = false;
 
-    results.chat_messages.forEach((messageData, index) => {
+    result.chat_messages.forEach((messageData, index) => {
       if (index === 0) {
         messageData.firstOfResults = true;
       }
@@ -381,7 +393,7 @@ export default class ChatLivePane extends Component {
       messages.push(message);
     });
 
-    return [messages, results.meta];
+    return [messages, result.meta];
   }
 
   @debounce(100)
@@ -465,7 +477,7 @@ export default class ChatLivePane extends Component {
       const lastReadId =
         this.args.channel.currentUserMembership?.lastReadMessageId;
       let lastUnreadVisibleMessage = this.args.channel.visibleMessages.findLast(
-        (message) => !lastReadId || message.id > lastReadId
+        (message) => !message.staged && (!lastReadId || message.id > lastReadId)
       );
 
       // all intersecting messages are read
@@ -642,6 +654,7 @@ export default class ChatLivePane extends Component {
       .editMessage(this.args.channel.id, message.id, data)
       .catch(popupAjaxError)
       .finally(() => {
+        this.chatDraftsManager.remove({ channelId: this.args.channel.id });
         this.chatChannelPane.sending = false;
       });
   }
@@ -704,7 +717,7 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        this.args.channel.draft = null;
+        this.chatDraftsManager.remove({ channelId: this.args.channel.id });
         this.chatChannelPane.sending = false;
       });
   }

@@ -46,6 +46,26 @@ module PageObjects
       def has_open_thread_list?
         has_css?("#{VISIBLE_DRAWER} .chat-thread-list")
       end
+
+      def open_thread_list
+        find(thread_list_button_selector).click
+      end
+
+      def thread_list_button_selector
+        ".chat-threads-list-button"
+      end
+
+      def has_unread_thread_indicator?(count:)
+        has_css?("#{thread_list_button_selector}.-has-unreads") &&
+          has_css?(
+            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number-wrap",
+            text: count.to_s,
+          )
+      end
+
+      def has_no_unread_thread_indicator?
+        has_no_css?("#{thread_list_button_selector}.-has-unreads")
+      end
     end
   end
 end

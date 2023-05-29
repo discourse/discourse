@@ -41,14 +41,7 @@
           {{/if}}
 
           {{#if @channel.threadingEnabled}}
-            <LinkTo
-              @route="chat.channel.threads"
-              @models={{@channel.routeModels}}
-              title={{i18n "chat.threads.list"}}
-              class="open-thread-list-btn btn btn-flat"
-            >
-              {{d-icon "discourse-threads"}}
-            </LinkTo>
+            <Chat::Thread::ThreadsListButton @channel={{@channel}} />
           {{/if}}
         </div>
       {{/if}}

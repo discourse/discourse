@@ -6,11 +6,12 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
-import { next, schedule } from "@ember/runloop";
+import { cancel, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 
 const PAGE_SIZE = 100;
+const READ_INTERVAL_MS = 1000;
 
 export default class ChatThreadPanel extends Component {
   @service siteSettings;
@@ -53,6 +54,66 @@ export default class ChatThreadPanel extends Component {
     this.chatChannelThreadPaneSubscriptionsManager.unsubscribe();
   }
 
+  // TODO (martin) This needs to have the extended scroll/message visibility/
+  // mark read behaviour the same as the channel.
+  @action
+  computeScrollState() {
+    cancel(this.onScrollEndedHandler);
+
+    if (!this.scrollable) {
+      return;
+    }
+
+    this.resetActiveMessage();
+
+    if (this.#isAtBottom()) {
+      this.updateLastReadMessage();
+      this.onScrollEnded();
+    } else {
+      this.isScrolling = true;
+      this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 150);
+    }
+  }
+
+  #isAtBottom() {
+    if (!this.scrollable) {
+      return false;
+    }
+
+    // This is different from the channel scrolling because the scrolling here
+    // is inverted -- in the channel's case scrollTop is 0 when scrolled to the
+    // bottom of the channel, but in the negatives when scrolling up to past messages.
+    //
+    // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollHeight#determine_if_an_element_has_been_totally_scrolled
+    return (
+      Math.abs(
+        this.scrollable.scrollHeight -
+          this.scrollable.clientHeight -
+          this.scrollable.scrollTop
+      ) <= 2
+    );
+  }
+
+  @bind
+  onScrollEnded() {
+    this.isScrolling = false;
+  }
+
+  @debounce(READ_INTERVAL_MS)
+  updateLastReadMessage() {
+    schedule("afterRender", () => {
+      if (this._selfDeleted) {
+        return;
+      }
+
+      // TODO (martin) HACK: We don't have proper scroll visibility over
+      // what message we are looking at, don't have the lastReadMessageId
+      // for the thread, and this updateLastReadMessage function is only
+      // called when scrolling all the way to the bottom.
+      this.markThreadAsRead();
+    });
+  }
+
   @action
   setScrollable(element) {
     this.scrollable = element;
@@ -93,22 +154,22 @@ export default class ChatThreadPanel extends Component {
 
     this.loading = true;
 
-    const findArgs = { pageSize: PAGE_SIZE, threadId: this.thread.id };
+    const findArgs = {
+      pageSize: PAGE_SIZE,
+      threadId: this.thread.id,
+      includeMessages: true,
+    };
     return this.chatApi
-      .messages(this.channel.id, findArgs)
-      .then((results) => {
-        if (this._selfDeleted || this.channel.id !== results.meta.channel_id) {
-          this.router.transitionTo(
-            "chat.channel",
-            "-",
-            results.meta.channel_id
-          );
+      .channel(this.channel.id, findArgs)
+      .then((result) => {
+        if (this._selfDeleted || this.channel.id !== result.meta.channel_id) {
+          this.router.transitionTo("chat.channel", "-", result.meta.channel_id);
         }
 
         const [messages, meta] = this.afterFetchCallback(
           this.channel,
           this.thread,
-          results
+          result
         );
         this.thread.messagesManager.addMessages(messages);
         this.thread.details = meta;
@@ -125,10 +186,10 @@ export default class ChatThreadPanel extends Component {
   }
 
   @bind
-  afterFetchCallback(channel, thread, results) {
+  afterFetchCallback(channel, thread, result) {
     const messages = [];
 
-    results.chat_messages.forEach((messageData) => {
+    result.chat_messages.forEach((messageData) => {
       // If a message has been hidden it is because the current user is ignoring
       // the user who sent it, so we want to unconditionally hide it, even if
       // we are going directly to the target
@@ -144,7 +205,7 @@ export default class ChatThreadPanel extends Component {
       messages.push(message);
     });
 
-    return [messages, results.meta];
+    return [messages, result.meta];
   }
 
   // NOTE: At some point we want to do this based on visible messages

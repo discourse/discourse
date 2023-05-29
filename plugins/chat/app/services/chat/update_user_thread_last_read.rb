@@ -70,10 +70,10 @@ module Chat
     end
 
     def publish_new_last_read_to_clients(guardian:, thread:, **)
-      ::Chat::Publisher.publish_user_tracking_state(
+      ::Chat::Publisher.publish_user_tracking_state!(
         guardian.user,
-        thread.channel_id,
-        thread.replies.last.id,
+        thread.channel,
+        thread.replies.last,
       )
     end
   end
