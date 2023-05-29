@@ -65,9 +65,7 @@ describe "Composer Form Templates", type: :system, js: true do
   end
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:form_template_chooser) do
-    PageObjects::Components::SelectKit.new(page.find(".form-template-chooser"))
-  end
+  let(:form_template_chooser) { PageObjects::Components::SelectKit.new(".form-template-chooser") }
 
   before do
     SiteSetting.experimental_form_templates = true
