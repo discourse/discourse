@@ -247,7 +247,9 @@ RSpec.configure do |config|
     WebMock.disable_net_connect!(allow_localhost: true, allow: [Webdrivers::Chromedriver.base_url])
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
-      Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
+      default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
+      puts "Setting capybara default wait time to #{default_max_wait_time} seconds"
+      Capybara.default_max_wait_time = default_max_wait_time
     end
 
     Capybara.threadsafe = true
