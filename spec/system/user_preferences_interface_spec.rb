@@ -11,7 +11,8 @@ describe "User preferences for Interface", type: :system, js: true do
     it "changes the bookmark after notification preference" do
       user_preferences_page.visit(user)
       click_link(I18n.t("js.user.preferences_nav.interface"))
-      dropdown = PageObjects::Components::SelectKit.new("#boookmark-after-notification-mode")
+
+      dropdown = PageObjects::Components::SelectKit.new("#bookmark-after-notification-mode")
 
       # preselects the default user_option.bookmark_auto_delete_preference value of 3 (clear_reminder)
       expect(dropdown).to have_selected_value(Bookmark.auto_delete_preferences[:clear_reminder])
