@@ -54,7 +54,7 @@
     "handlebars": "^4.7.7",
     "html-entities": "^2.3.3",
     "js-yaml": "^4.1.0",
-    "jsdom": "^22.0.0",
+    "jsdom": "^22.1.0",
     "markdown-it": "^13.0.1",
     "message-bus-client": "^4.3.2",
     "messageformat": "0.1.5",
