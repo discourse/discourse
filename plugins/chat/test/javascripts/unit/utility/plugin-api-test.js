@@ -14,7 +14,7 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
     });
 
     withPluginApi("1.1.0", (api) => {
-      api.sendChatMessage(1, "hello", { thread_id: 2 });
+      api.sendChatMessage(1, { message: "hello", thread_id: 2 });
     });
   });
 });
