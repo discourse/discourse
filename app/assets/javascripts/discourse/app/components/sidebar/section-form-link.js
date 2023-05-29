@@ -5,10 +5,7 @@ import { tracked } from "@glimmer/tracking";
 export default class SectionFormLink extends Component {
   @tracked dragCssClass;
 
-  constructor() {
-    super(...arguments);
-    this.dragCounter = 0;
-  }
+  dragCount = 0;
 
   isAboveElement(event) {
     event.preventDefault();
