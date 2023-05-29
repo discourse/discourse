@@ -6,9 +6,9 @@ RSpec.describe FormTemplatesController do
   before { SiteSetting.experimental_form_templates = true }
 
   describe "#index" do
-    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template) { Fabricate(:form_template, id: 2) }
     fab!(:form_template_2) { Fabricate(:form_template, id: 1) }
-    fab!(:form_template_3) { Fabricate(:form_template) }
+    fab!(:form_template_3) { Fabricate(:form_template, id: 3) }
 
     context "when logged in as a user" do
       before { sign_in(user) }
