@@ -6,14 +6,14 @@ module PageObjects
       class Messages < PageObjects::Components::Base
         attr_reader :context
 
-        SELECTOR = ".chat-message-container"
+        SELECTOR = ".chat-messages-scroll"
 
         def initialize(context)
           @context = context
         end
 
         def has_message?(**args)
-          PageObjects::Components::Chat::Message.new(".chat-channel").exists?(**args)
+          PageObjects::Components::Chat::Message.new(context + " " + SELECTOR).exists?(**args)
         end
 
         def has_no_message?(**args)
