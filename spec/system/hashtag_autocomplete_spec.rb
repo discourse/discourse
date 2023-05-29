@@ -77,10 +77,13 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
   it "cooks the hashtags for tag and category correctly serverside when the post is saved to the database" do
     topic_page.visit_topic_and_open_composer(topic)
+
     expect(topic_page).to have_expanded_composer
-    topic_page.type_in_composer("this is a #cool-cat category and a #cooltag tag")
-    topic_page.send_reply
+
+    topic_page.send_reply("this is a #cool-cat category and a #cooltag tag")
+
     expect(topic_page).to have_post_number(2)
+
     cooked_hashtags = page.all(".hashtag-cooked", count: 2)
 
     expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)

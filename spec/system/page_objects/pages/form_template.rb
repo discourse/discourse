@@ -36,7 +36,7 @@ module PageObjects
       end
 
       def click_save_button
-        find(".form-templates__form .footer-buttons .btn-primary").click
+        find(".form-templates__form .footer-buttons .btn-primary:enabled", visible: :all).click
       end
 
       def click_quick_insert(field_type)
@@ -48,7 +48,7 @@ module PageObjects
       end
 
       def click_preview_button
-        find(".form-templates__preview-button").click
+        find(".form-templates__preview-button:enabled").click
       end
 
       def has_input_field?(type)

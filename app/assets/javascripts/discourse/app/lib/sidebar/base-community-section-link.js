@@ -9,6 +9,8 @@ export default class BaseCommunitySectionLink {
     router,
     siteSettings,
     inMoreDrawer,
+    overridenName,
+    overridenIcon,
   } = {}) {
     this.router = router;
     this.topicTrackingState = topicTrackingState;
@@ -16,6 +18,8 @@ export default class BaseCommunitySectionLink {
     this.appEvents = appEvents;
     this.siteSettings = siteSettings;
     this.inMoreDrawer = inMoreDrawer;
+    this.overridenName = overridenName;
+    this.overridenIcon = overridenIcon;
   }
 
   /**
@@ -105,8 +109,15 @@ export default class BaseCommunitySectionLink {
   /**
    * @returns {string} The name of the fontawesome icon to be displayed before the link. Defaults to "link".
    */
-  get prefixValue() {
+  get defaultPrefixValue() {
     return "link";
+  }
+
+  /**
+   * @returns {string} The name of the fontawesome icon to be displayed before the link.
+   */
+  get prefixValue() {
+    return this.overridenIcon || this.defaultPrefixValue;
   }
 
   _notImplemented() {

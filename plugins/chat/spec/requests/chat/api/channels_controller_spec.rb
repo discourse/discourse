@@ -159,6 +159,395 @@ RSpec.describe Chat::Api::ChannelsController do
         end
       end
     end
+
+    context "when include_messages is true" do
+      fab!(:current_user) { Fabricate(:user) }
+      fab!(:channel_1) { Fabricate(:category_channel) }
+      fab!(:other_user) { Fabricate(:user) }
+
+      describe "target message lookup" do
+        let!(:message) { Fabricate(:chat_message, chat_channel: channel_1) }
+        let(:chatable) { channel_1.chatable }
+
+        before { sign_in(current_user) }
+
+        context "when the message doesn’t belong to the channel" do
+          let!(:message) { Fabricate(:chat_message) }
+
+          it "returns a 404" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  target_message_id: message.id,
+                  include_messages: true,
+                }
+
+            expect(response.status).to eq(404)
+          end
+        end
+
+        context "when the chat channel is for a category" do
+          it "ensures the user can access that category" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  target_message_id: message.id,
+                  include_messages: true,
+                }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
+
+            group = Fabricate(:group)
+            chatable.update!(read_restricted: true)
+            Fabricate(:category_group, group: group, category: chatable)
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  target_message_id: message.id,
+                  include_messages: true,
+                }
+            expect(response.status).to eq(403)
+
+            GroupUser.create!(user: current_user, group: group)
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  target_message_id: message.id,
+                  include_messages: true,
+                }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
+          end
+        end
+
+        context "when the chat channel is for a direct message channel" do
+          let(:channel_1) { Fabricate(:direct_message_channel) }
+
+          it "ensures the user can access that direct message channel" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  target_message_id: message.id,
+                  include_messages: true,
+                }
+            expect(response.status).to eq(403)
+
+            Chat::DirectMessageUser.create!(user: current_user, direct_message: chatable)
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  target_message_id: message.id,
+                  include_messages: true,
+                }
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
+          end
+        end
+      end
+
+      describe "messages pagination and direction" do
+        let(:page_size) { 30 }
+
+        message_count = 70
+        message_count.times do |n|
+          fab!("message_#{n}") do
+            Fabricate(
+              :chat_message,
+              chat_channel: channel_1,
+              user: other_user,
+              message: "message #{n}",
+            )
+          end
+        end
+
+        before do
+          sign_in(current_user)
+          Group.refresh_automatic_groups!
+        end
+
+        it "errors for user when they are not allowed to chat" do
+          SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.status).to eq(403)
+        end
+
+        it "errors when page size is over the maximum" do
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: Chat::MessagesQuery::MAX_PAGE_SIZE + 1,
+              }
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to include(
+            "Page size must be less than or equal to #{Chat::MessagesQuery::MAX_PAGE_SIZE}",
+          )
+        end
+
+        it "errors when page size is nil" do
+          get "/chat/api/channels/#{channel_1.id}.json", params: { include_messages: true }
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to include("Page size can't be blank")
+        end
+
+        it "returns the latest messages in created_at, id order" do
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          messages = response.parsed_body["chat_messages"]
+          expect(messages.count).to eq(page_size)
+          expect(messages.first["created_at"].to_time).to be < messages.last["created_at"].to_time
+        end
+
+        it "returns `can_flag=true` for public channels" do
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.parsed_body["meta"]["can_flag"]).to be true
+        end
+
+        it "returns `can_flag=true` for DM channels" do
+          dm_chat_channel = Fabricate(:direct_message_channel, users: [current_user, other_user])
+          get "/chat/api/channels/#{dm_chat_channel.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.parsed_body["meta"]["can_flag"]).to be true
+        end
+
+        it "returns `can_moderate=true` based on whether the user can moderate the chatable" do
+          1.upto(4) do |n|
+            current_user.update!(trust_level: n)
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  include_messages: true,
+                  page_size: page_size,
+                }
+            expect(response.parsed_body["meta"]["can_moderate"]).to be false
+          end
+
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.parsed_body["meta"]["can_moderate"]).to be false
+
+          current_user.update!(admin: true)
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.parsed_body["meta"]["can_moderate"]).to be true
+          current_user.update!(admin: false)
+
+          SiteSetting.enable_category_group_moderation = true
+          group = Fabricate(:group)
+          group.add(current_user)
+          channel_1.category.update!(reviewable_by_group: group)
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.parsed_body["meta"]["can_moderate"]).to be true
+        end
+
+        it "serializes `user_flag_status` for user who has a pending flag" do
+          chat_message = channel_1.chat_messages.last
+          reviewable = flag_message(chat_message, current_user)
+          score = reviewable.reviewable_scores.last
+
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+
+          expect(response.parsed_body["chat_messages"].last["user_flag_status"]).to eq(
+            score.status_for_database,
+          )
+        end
+
+        it "doesn't serialize `reviewable_ids` for non-staff" do
+          reviewable = flag_message(channel_1.chat_messages.last, Fabricate(:admin))
+
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+
+          expect(response.parsed_body["chat_messages"].last["reviewable_id"]).to be_nil
+        end
+
+        it "serializes `reviewable_ids` correctly for staff" do
+          admin = Fabricate(:admin)
+          sign_in(admin)
+          reviewable = flag_message(channel_1.chat_messages.last, admin)
+
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.parsed_body["chat_messages"].last["reviewable_id"]).to eq(reviewable.id)
+        end
+
+        it "correctly marks reactions as 'reacted' for the current_user" do
+          heart_emoji = ":heart:"
+          smile_emoji = ":smile"
+          last_message = channel_1.chat_messages.last
+          last_message.reactions.create(user: current_user, emoji: heart_emoji)
+          last_message.reactions.create(user: Fabricate(:admin), emoji: smile_emoji)
+
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+
+          reactions = response.parsed_body["chat_messages"].last["reactions"]
+          heart_reaction = reactions.find { |r| r["emoji"] == heart_emoji }
+          expect(heart_reaction["reacted"]).to be true
+          smile_reaction = reactions.find { |r| r["emoji"] == smile_emoji }
+          expect(smile_reaction["reacted"]).to be false
+        end
+
+        it "sends the last message bus id for the channel" do
+          get "/chat/api/channels/#{channel_1.id}.json",
+              params: {
+                include_messages: true,
+                page_size: page_size,
+              }
+          expect(response.parsed_body["meta"]["channel_message_bus_last_id"]).not_to eq(nil)
+        end
+
+        describe "scrolling to the past" do
+          it "returns the correct messages in created_at, id order" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  include_messages: true,
+                  target_message_id: message_40.id,
+                  page_size: page_size,
+                  direction: Chat::MessagesQuery::PAST,
+                }
+            messages = response.parsed_body["chat_messages"]
+            expect(messages.count).to eq(page_size)
+            expect(messages.first["created_at"].to_time).to eq_time(message_10.created_at)
+            expect(messages.last["created_at"].to_time).to eq_time(message_39.created_at)
+          end
+
+          it "returns 'can_load...' properly when there are more past messages" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  include_messages: true,
+                  target_message_id: message_40.id,
+                  page_size: page_size,
+                  direction: Chat::MessagesQuery::PAST,
+                }
+            expect(response.parsed_body["meta"]["can_load_more_past"]).to be true
+            expect(response.parsed_body["meta"]["can_load_more_future"]).to be_nil
+          end
+
+          it "returns 'can_load...' properly when there are no past messages" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  include_messages: true,
+                  target_message_id: message_3.id,
+                  page_size: page_size,
+                  direction: Chat::MessagesQuery::PAST,
+                }
+            expect(response.parsed_body["meta"]["can_load_more_past"]).to be false
+            expect(response.parsed_body["meta"]["can_load_more_future"]).to be_nil
+          end
+        end
+
+        describe "scrolling to the future" do
+          it "returns the correct messages in created_at, id order when there are many after" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  include_messages: true,
+                  target_message_id: message_10.id,
+                  page_size: page_size,
+                  direction: Chat::MessagesQuery::FUTURE,
+                }
+            messages = response.parsed_body["chat_messages"]
+            expect(messages.count).to eq(page_size)
+            expect(messages.first["created_at"].to_time).to eq_time(message_11.created_at)
+            expect(messages.last["created_at"].to_time).to eq_time(message_40.created_at)
+          end
+
+          it "return 'can_load..' properly when there are future messages" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  include_messages: true,
+                  target_message_id: message_10.id,
+                  page_size: page_size,
+                  direction: Chat::MessagesQuery::FUTURE,
+                }
+            expect(response.parsed_body["meta"]["can_load_more_past"]).to be_nil
+            expect(response.parsed_body["meta"]["can_load_more_future"]).to be true
+          end
+
+          it "returns 'can_load..' properly when there are no future messages" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  include_messages: true,
+                  target_message_id: message_60.id,
+                  page_size: page_size,
+                  direction: Chat::MessagesQuery::FUTURE,
+                }
+            expect(response.parsed_body["meta"]["can_load_more_past"]).to be_nil
+            expect(response.parsed_body["meta"]["can_load_more_future"]).to be false
+          end
+        end
+
+        describe "without direction (latest messages)" do
+          it "signals there are no future messages" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  page_size: page_size,
+                  include_messages: true,
+                }
+
+            expect(response.parsed_body["meta"]["can_load_more_future"]).to eq(false)
+          end
+
+          it "signals there are more messages in the past" do
+            get "/chat/api/channels/#{channel_1.id}.json",
+                params: {
+                  page_size: page_size,
+                  include_messages: true,
+                }
+
+            expect(response.parsed_body["meta"]["can_load_more_past"]).to eq(true)
+          end
+
+          it "signals there are no more messages" do
+            new_channel = Fabricate(:category_channel)
+            Fabricate(
+              :chat_message,
+              chat_channel: new_channel,
+              user: other_user,
+              message: "message",
+            )
+            chat_messages_qty = 1
+
+            get "/chat/api/channels/#{new_channel.id}.json",
+                params: {
+                  page_size: chat_messages_qty + 1,
+                  include_messages: true,
+                }
+
+            expect(response.parsed_body["meta"]["can_load_more_past"]).to eq(false)
+          end
+        end
+      end
+    end
   end
 
   describe "#destroy" do
@@ -568,5 +957,9 @@ RSpec.describe Chat::Api::ChannelsController do
         end
       end
     end
+  end
+
+  def flag_message(message, flagger, flag_type: ReviewableScore.types[:off_topic])
+    Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 end
