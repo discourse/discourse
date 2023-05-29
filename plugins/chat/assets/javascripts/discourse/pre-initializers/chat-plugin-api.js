@@ -145,7 +145,7 @@ export default {
 
       if (!apiPrototype.hasOwnProperty("sendChatMessage")) {
         Object.defineProperty(apiPrototype, "sendChatMessage", {
-          value(channelId, options = {}) {
+          async value(channelId, options = {}) {
             if (api.container.isDestroyed || api.container.isDestroying) {
               return;
             }

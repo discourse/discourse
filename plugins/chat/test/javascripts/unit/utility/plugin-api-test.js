@@ -16,8 +16,8 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
       return [200, {}, {}];
     });
 
-    await withPluginApi("1.1.0", async (api) => {
-      return await api.sendChatMessage(1, { message: "hello", threadId: 2 });
+    withPluginApi("1.1.0", async (api) => {
+      await api.sendChatMessage(1, { message: "hello", threadId: 2 });
     });
   });
 });
