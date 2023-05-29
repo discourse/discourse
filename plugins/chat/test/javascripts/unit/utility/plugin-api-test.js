@@ -9,12 +9,12 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
   test("#sendChatMessage", function (assert) {
     pretender.post("/chat/1", (request) => {
       assert.strictEqual(request.url, "/chat/1");
-      assert.strictEqual(request.requestBody, "message=hello&thread_id=2");
+      assert.strictEqual(request.requestBody, "thread_id=2&message=hello");
       return [200, {}, {}];
     });
 
     withPluginApi("1.1.0", (api) => {
-      api.sendChatMessage(1, { message: "hello", thread_id: 2 });
+      api.sendChatMessage(1, { message: "hello", threadId: 2 });
     });
   });
 });

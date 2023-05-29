@@ -102,12 +102,12 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * @param {string} [options.message] - The content of the message to send
  * @param {string} [options.uploads] - A list of uploads to send
  * @param {number} [options.threadId] - The thread id where the message should be sent
+ *
  * @example
  *
  * api.sendChatMessage(
  *   1,
- *  "Hello world",
- *  { threadId: 2 }
+ *  { message: "Hello world", threadId: 2 }
  * );
  */
 
@@ -146,14 +146,17 @@ export default {
       if (!apiPrototype.hasOwnProperty("sendChatMessage")) {
         Object.defineProperty(apiPrototype, "sendChatMessage", {
           value(channelId, options = {}) {
-            const data = {
-              thread_id: options.threadId,
-              message: options.message,
-              uploads: options.uploads,
-            };
+            if (api.container.isDestroyed || api.container.isDestroying) {
+              return;
+            }
 
-            const chatApi = api.container.lookup("service:chat-api");
-            return chatApi.sendMessage(channelId, data);
+            return api.container
+              .lookup("service:chat-api")
+              .sendMessage(channelId, {
+                thread_id: options.threadId,
+                message: options.message,
+                uploads: options.uploads,
+              });
           },
         });
       }
