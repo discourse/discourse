@@ -19,7 +19,7 @@ module Chat
       @opts = opts
 
       # Avoids an N1 to re-load the thread in the serializer for original_message.
-      object.original_message.thread = object
+      object.original_message&.thread = object
       @current_user_membership = opts[:membership]
     end
 
