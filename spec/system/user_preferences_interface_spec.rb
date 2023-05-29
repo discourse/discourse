@@ -3,34 +3,29 @@
 describe "User preferences for Interface", type: :system, js: true do
   fab!(:user) { Fabricate(:user) }
   let(:user_preferences_page) { PageObjects::Pages::UserPreferences.new }
+  let(:user_preferences_interface_page) { PageObjects::Pages::UserPreferencesInterface.new }
 
   before { sign_in(user) }
 
   describe "Bookmarks" do
     it "changes the bookmark after notification preference" do
-      user_preferences_page.visit(user)
-      click_link "Interface"
+      user_preferences_page.visit(user).click_interface_tab
 
       # preselects the default user_option.bookmark_auto_delete_preference value of 3 (clear_reminder)
-      expect(page).to have_css(
-        "#boookmark-after-notification-mode .select-kit-header[data-value='#{Bookmark.auto_delete_preferences[:clear_reminder]}']",
+      expect(user_preferences_interface_page).to have_bookmark_after_notification_mode(
+        Bookmark.auto_delete_preferences[:clear_reminder],
       )
-      page.find("#boookmark-after-notification-mode").click
-      page.find(
-        ".select-kit-row[data-value=\"#{Bookmark.auto_delete_preferences[:when_reminder_sent]}\"]",
-      ).click
 
-      click_button "Save Changes"
+      user_preferences_interface_page.select_bookmark_after_notification_mode(
+        Bookmark.auto_delete_preferences[:when_reminder_sent],
+      ).save_changes
 
-      # the preference page reloads after saving, so we need to poll the db
-      try_until_success do
-        expect(
-          UserOption.exists?(
-            user_id: user.id,
-            bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
-          ),
-        ).to be_truthy
-      end
+      expect(
+        UserOption.exists?(
+          user_id: user.id,
+          bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
+        ),
+      ).to eq(true)
     end
   end
 end
