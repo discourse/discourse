@@ -2,31 +2,34 @@
 
 module Chat
   class ViewSerializer < ApplicationSerializer
-    attributes :meta, :chat_messages, :threads, :tracking, :thread_tracking_overview, :channel
+    attributes :meta, :chat_messages, :threads, :tracking, :unread_thread_ids, :channel
 
     def threads
       return [] if !object.threads
 
-      ActiveModel::ArraySerializer.new(
-        object.threads,
-        each_serializer: Chat::ThreadSerializer,
-        scope: scope,
-      )
+      object.threads.map do |thread|
+        Chat::ThreadSerializer.new(
+          thread,
+          scope: scope,
+          membership: object.thread_memberships.find { |m| m.thread_id == thread.id },
+          root: nil,
+        )
+      end
     end
 
     def tracking
       object.tracking || {}
     end
 
-    def thread_tracking_overview
-      object.thread_tracking_overview || []
+    def unread_thread_ids
+      object.unread_thread_ids || []
     end
 
     def include_threads?
       include_thread_data?
     end
 
-    def include_thread_tracking_overview?
+    def include_unread_thread_ids?
       include_thread_data?
     end
 

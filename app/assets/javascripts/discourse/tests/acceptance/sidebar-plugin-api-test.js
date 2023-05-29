@@ -15,6 +15,7 @@ import {
   resetCustomCategorySectionLinkPrefix,
   resetCustomCountables,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -22,6 +23,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});
 
   needs.settings({
+    tagging_enabled: true,
     navigation_menu: "sidebar",
   });
 
@@ -690,21 +692,22 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-suffix.unread`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-suffix.unread`
           ),
           "the right suffix is displayed when custom countable is active"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
-            .pathname,
+          query(
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
+          ).pathname,
           `/c/${category1.name}/${category1.id}`,
           "does not use route configured for custom countable when user has elected not to show any counts in sidebar"
         );
 
         assert.notOk(
           exists(
-            `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-suffix.unread`
+            `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-suffix.unread`
           ),
           "does not display suffix when custom countable is not registered"
         );
@@ -715,7 +718,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           ).innerText.trim(),
           I18n.t("sidebar.unread_count", { count: 1 }),
           "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
@@ -729,22 +732,24 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           ).innerText.trim(),
           `some custom ${category1.topic_count}`,
           "displays the right badge text in section link when unread is present but custom countable is prioritised over unread"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
-            .pathname,
+          query(
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
+          ).pathname,
           `/c/${category1.name}/${category1.id}/l/latest`,
           "has the right pathname for section link"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
-            .search,
+          query(
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
+          ).search,
           "?status=open",
           "has the right query params for section link"
         );
@@ -771,7 +776,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
           ),
           "wrench icon is displayed for the section link's prefix badge"
         );
@@ -803,14 +808,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
           ),
           "wrench icon is displayed for the section link's prefix icon"
         );
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
           ).style.color,
           "rgb(255, 0, 0)",
           "section link's prefix icon has the right color"
@@ -818,6 +823,53 @@ acceptance("Sidebar - Plugin API", function (needs) {
       });
     } finally {
       resetCustomCategorySectionLinkPrefix();
+    }
+  });
+
+  test("Customizing the prefix icon used in a tag section link for a particular tag", async function (assert) {
+    try {
+      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+        updateCurrentUser({
+          display_sidebar_tags: true,
+          sidebar_tags: [
+            { name: "tag2", pm_only: false },
+            { name: "tag1", pm_only: false },
+            { name: "tag3", pm_only: false },
+          ],
+        });
+
+        api.registerCustomTagSectionLinkPrefixIcon({
+          tagName: "tag1",
+          prefixValue: "wrench",
+          prefixColor: "#FF0000", // rgb(255, 0, 0)
+        });
+
+        await visit("/");
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link-wrapper[data-tag-name="tag1"] .prefix-icon.d-icon-wrench`
+          ),
+          "wrench icon is displayed for tag1 section link's prefix icon"
+        );
+
+        assert.strictEqual(
+          query(
+            `.sidebar-section-link-wrapper[data-tag-name="tag1"] .sidebar-section-link-prefix`
+          ).style.color,
+          "rgb(255, 0, 0)",
+          "tag1 section link's prefix icon has the right color"
+        );
+
+        assert.ok(
+          exists(
+            `.sidebar-section-link-wrapper[data-tag-name="tag2"] .prefix-icon.d-icon-tag`
+          ),
+          "default tag icon is displayed for tag2 section link's prefix icon"
+        );
+      });
+    } finally {
+      resetCustomTagSectionLinkPrefixIcons();
     }
   });
 });

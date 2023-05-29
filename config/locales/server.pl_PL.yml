@@ -676,18 +676,6 @@ pl_PL:
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
     title: "Witamy w %{site_title}! :wave:"
-    body: |
-      Bardzo się cieszymy, że do nas dołączyłeś. %{site_description}
-
-      Oto kilka rzeczy, które możesz zrobić, aby zacząć:
-
-      :speaking_head: **Przedstaw się**, dodając swoje zdjęcie oraz informacje o sobie i swoich zainteresowaniach do [swojego profilu](%{base_path}/my/preferences/account). Jaka jest jedna rzecz, o którą chciałbyś zostać zapytany?
-
-      :open_book: **Poznaj społeczność**, [przeglądając dyskusje](%{base_path}/top), które już się tutaj toczą. Gdy uznasz post za interesujący, pouczający lub zabawny, użyj :heart:, aby okazać uznanie lub wsparcie!
-
-      :handshake: **Wnieś swój wkład**, komentując, dzieląc się własną perspektywą, zadając pytania lub wyrażając opinie w dyskusji. Przed udzieleniem odpowiedzi lub rozpoczęciem nowych tematów zapoznaj się z [wytycznymi dla społeczności](%{base_path}/faq).
-
-      > Jeśli potrzebujesz pomocy lub masz sugestie, możesz zapytać [#feedback](%{base_path}/c/site-feedback) lub [skontaktuj się z administratorami](%{base_path}/about).
   admin_quick_start_title: "README: Skrócony poradnik administratora"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -1213,6 +1201,7 @@ pl_PL:
         author: Autor
         edit_reason: Powód
     consolidated_api_requests:
+      title: "Skonsolidowane żądania API"
       xaxis:
         api: "API"
         user_api: "API użytkownika"
@@ -1758,6 +1747,7 @@ pl_PL:
     discord_trusted_guilds: 'Zezwalaj tylko członkom tych gildii Discorda na logowanie się przez Discord. Użyj numerycznego identyfikatora gildii. Aby uzyskać więcej informacji, zapoznaj się z instrukcjami zamieszczonymi <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">tutaj</a>. Pozostaw puste, aby pozwolić na dołączenie z dowolnej gildii.'
     enable_backups: "Pozwól administratorom tworzyć kopie zapasowe forum"
     allow_restore: "Zezwól na przywracanie, które może zastąpić WSZYSTKIE dane witryny! Pozostaw wyłączone, chyba że planujesz przywrócić kopię zapasową"
+    maximum_backups: "Maksymalna liczba przechowywanych kopii zapasowych. Starsze kopie zapasowe są automatycznie usuwane"
     automatic_backups_enabled: "Uruchom automatyczne kopie zapasowe zgodnie z ustawioną częstotliwością kopii"
     backup_frequency: "Liczba dni pomiędzy tworzeniem kopii zapasowych."
     s3_backup_bucket: "Zdalne wiadro do przechowywania kopii zapasowych. UWAGA: Upewnij się, że jest to wiadro prywatne."
@@ -1789,6 +1779,7 @@ pl_PL:
     max_personal_messages_per_day: "Maksymalna liczba nowych wiadomości osobistych, które użytkownik może utworzyć dziennie."
     max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
     max_topic_invitations_per_day: "Maksymalna dzienna liczba zaproszeń do tematu, jakie może wysłać użytkownik."
+    max_topic_invitations_per_minute: "Maksymalna liczba zaproszeń do tematów, które użytkownik może wysłać na minutę."
     max_logins_per_ip_per_hour: "Maksymalna liczba logowań dozwolona per adres IP na godzinę"
     max_logins_per_ip_per_minute: "Maksymalna liczba logowań dozwolona per adres IP na minutę"
     max_post_deletions_per_minute: "Maksymalna liczba postów, które użytkownik może usunąć w ciągu minuty. Ustaw na 0, aby wyłączyć usuwanie postów."
@@ -2210,6 +2201,7 @@ pl_PL:
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
     tag_style: "Styl etykiet tagów"
+    pm_tags_allowed_for_groups: "Zezwalaj członkom uwzględnionych grup na oznaczanie dowolnej wiadomości osobistej"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
     remove_muted_tags_from_latest: "Nie pokazuj tematów oznaczonych tylko wyciszonymi tagami na najnowszej liście tematów."
@@ -4751,6 +4743,7 @@ pl_PL:
         title: "Ignoruj"
       ignore_and_do_nothing:
         title: "Nic nie rób"
+        description: "Zignoruj flagę, usuwając ją z kolejki bez podejmowania żadnych działań. Ukryte posty pozostaną ukryte i będą obsługiwane przez automatyczne narzędzia."
       approve:
         title: "Zatwierdź"
       approve_post:
@@ -4817,6 +4810,8 @@ pl_PL:
   form_templates:
     errors:
       invalid_yaml: "nie jest prawidłowym ciągiem YAML"
+      invalid_type: "zawiera nieprawidłowy typ szablonu: %{type} (prawidłowe typy to: %{valid_types})"
+      missing_type: "brakuje typu pola"
   activemodel:
     errors:
       <<: *errors

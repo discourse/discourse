@@ -25,6 +25,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     tracked_tags: ["tag1"],
     watched_tags: ["tag2"],
     watching_first_post_tags: ["tag3"],
+    admin: false,
   });
 
   needs.settings({
@@ -1065,6 +1066,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         route: "discovery.unread",
         text: "unread topics",
         title: "List of unread topics",
+        icon: "wrench",
       });
     });
 
@@ -1086,6 +1088,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(".sidebar-section-link[data-link-name='unread']").title,
       "List of unread topics",
       "displays the right title for the link"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-link[data-link-name='unread'] .sidebar-section-link-prefix.icon .d-icon-wrench"
+      ),
+      "displays the wrench icon for the link"
     );
 
     await click(".sidebar-section-link[data-link-name='unread']");
@@ -1152,6 +1161,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(".sidebar-section-link[data-link-name='user-summary']").title,
       "eviltrout summary",
       "displays the right title for the link"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-link[data-link-name='user-summary'] .sidebar-section-link-prefix.icon .d-icon-link"
+      ),
+      "displays the link icon for the link"
     );
 
     await click(".btn-sidebar-toggle");

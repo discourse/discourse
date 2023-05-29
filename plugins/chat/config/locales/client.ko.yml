@@ -278,3 +278,7 @@ ko:
         chat_notifications: "채팅 알림"
         chat_notifications_with_unread:
           other: "채팅 알림 - 읽지 않은 알림 %{count}개"
+    styleguide:
+      sections:
+        chat:
+          title: 채팅

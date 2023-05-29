@@ -142,6 +142,9 @@
   &.none {
     color: var(--primary-high);
     margin-right: 5px;
+    .badge-category {
+      overflow: hidden;
+    }
   }
 }
 

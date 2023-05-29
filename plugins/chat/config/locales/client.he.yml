@@ -657,3 +657,7 @@ he:
           two: "התראות צ׳אט - %{count} התראות שלא נקראו"
           many: "התראות צ׳אט - %{count} התראות שלא נקראו"
           other: "התראות צ׳אט - %{count} התראות שלא נקראו"
+    styleguide:
+      sections:
+        chat:
+          title: צ׳אט

@@ -1,13 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatComposer extends Service {
   @service chat;
   @service currentUser;
 
-  @tracked _message;
+  @tracked message;
 
   @action
   cancel() {
@@ -16,13 +15,6 @@ export default class ChatComposer extends Service {
     } else if (this.message.inReplyTo) {
       this.message.inReplyTo = null;
     }
-  }
-
-  @action
-  reset(channel) {
-    this.message = ChatMessage.createDraftMessage(channel, {
-      user: this.currentUser,
-    });
   }
 
   @action
@@ -40,13 +32,5 @@ export default class ChatComposer extends Service {
   @action
   onCancelEditing() {
     this.reset();
-  }
-
-  get message() {
-    return this._message;
-  }
-
-  set message(message) {
-    this._message = message;
   }
 }

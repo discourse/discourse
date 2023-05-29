@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
+  @service chatDraftsManager;
 
   context = "channel";
 
@@ -23,19 +24,20 @@ export default class ChatComposerChannel extends ChatComposer {
       return;
     }
 
+    this.chatDraftsManager.add(this.currentMessage);
+
     this._persistHandler = discourseDebounce(
       this,
       this._debouncedPersistDraft,
+      this.args.channel.id,
+      this.currentMessage.toJSONDraft(),
       2000
     );
   }
 
   @action
-  _debouncedPersistDraft() {
-    this.chatApi.saveDraft(
-      this.args.channel.id,
-      this.currentMessage.toJSONDraft()
-    );
+  _debouncedPersistDraft(channelId, jsonDraft) {
+    this.chatApi.saveDraft(channelId, jsonDraft);
   }
 
   get placeholder() {

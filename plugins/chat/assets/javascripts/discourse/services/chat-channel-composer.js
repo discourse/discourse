@@ -1,10 +1,18 @@
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import ChatComposer from "./chat-composer";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatChannelComposer extends ChatComposer {
   @service chat;
   @service router;
+
+  @action
+  reset(channel) {
+    this.message = ChatMessage.createDraftMessage(channel, {
+      user: this.currentUser,
+    });
+  }
 
   @action
   replyTo(message) {

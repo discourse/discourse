@@ -1,0 +1,31 @@
+.chat-threads-list-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--blend-primary-secondary-5);
+  border-radius: 5px;
+
+  @include chat-channel-header-button;
+
+  &.-has-unreads {
+    .d-icon {
+      color: var(--tertiary-med-or-tertiary);
+    }
+  }
+
+  .d-icon {
+    margin-right: 0;
+  }
+
+  &:hover {
+    .discourse-touch & {
+      background: none !important;
+    }
+  }
+
+  &:active {
+    .discourse-touch & {
+      background: var(--secondary-very-high) !important;
+    }
+  }
+}

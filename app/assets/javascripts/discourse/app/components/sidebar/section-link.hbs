@@ -2,6 +2,8 @@
   <li
     class="sidebar-section-link-wrapper"
     {{did-insert this.didInsert this.args}}
+    data-list-item-name={{@linkName}}
+    ...attributes
   >
     {{#if @href}}
       <a
@@ -11,7 +13,6 @@
         class={{this.classNames}}
         title={{@title}}
         data-link-name={{@linkName}}
-        ...attributes
       >
         <Sidebar::SectionLinkPrefix
           @prefixType={{@prefixType}}
@@ -34,7 +35,6 @@
         @current-when={{@currentWhen}}
         title={{@title}}
         data-link-name={{@linkName}}
-        ...attributes
       >
 
         <Sidebar::SectionLinkPrefix

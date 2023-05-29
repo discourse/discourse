@@ -17,8 +17,19 @@ module PageObjects
         visit("/chat")
       end
 
-      def visit_channel(channel)
-        visit(channel.url)
+      def has_drawer?(channel_id: nil, expanded: true)
+        selector = ".chat-drawer"
+        selector += ".is-expanded" if expanded
+        selector += "[data-chat-channel-id=\"#{channel_id}\"]" if channel_id
+        has_css?(selector)
+      end
+
+      def has_no_drawer?(**args)
+        !has_drawer?(**args)
+      end
+
+      def visit_channel(channel, message_id: nil)
+        visit(channel.url + (message_id ? "/#{message_id}" : ""))
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end
@@ -44,16 +55,15 @@ module PageObjects
         visit(channel.url + "/info")
       end
 
-      def visit_browse
-        visit("/chat/browse")
+      def visit_browse(filter = nil)
+        url = "/chat/browse"
+        url += "/" + filter.to_s if filter
+        visit(url)
+        PageObjects::Pages::ChatBrowse.new.has_finished_loading?
       end
 
       def minimize_full_page
         find(".open-drawer-btn").click
-      end
-
-      def open_thread_list
-        find(".open-thread-list-btn").click
       end
 
       def has_message?(message)

@@ -12,20 +12,16 @@ module PageObjects
           PageObjects::Components::Chat::ComposerMessageDetails.new(".chat-thread")
       end
 
-      def header
-        find(".chat-thread__header")
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-thread")
       end
 
-      def omu
-        header.find(".chat-thread__omu")
+      def header
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
       end
 
       def close
         header.find(".chat-thread__close").click
-      end
-
-      def has_header_content?(content)
-        header.has_content?(content)
       end
 
       def has_no_loading_skeleton?
@@ -47,6 +43,7 @@ module PageObjects
       end
 
       def send_message(text = nil)
+        text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         fill_composer(text)
         click_send_message

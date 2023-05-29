@@ -553,6 +553,7 @@ en:
         original_message:
           started_by: "Started by"
         settings: "Settings"
+        last_reply: "last reply"
       threads:
         open: "Open Thread"
         list: "Ongoing discussions"

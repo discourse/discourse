@@ -113,6 +113,9 @@ bg:
       load_from_remote: "Получи се грешка при зареждането на тази публикация."
     site_settings:
       invalid_site_setting: "Не съществува настройка с име „%{name}“."
+      invalid_choice:
+        one: "„%{name}“ е невалиден избор."
+        other: "'%{name}' са невалидни избори."
   invite:
     generic_error_response: "Имаше проблем с вашата заявка."
     disabled_errors:
@@ -273,6 +276,8 @@ bg:
   meta_category_description: "Дискусия за сайта, неговата организация, как той работи, и как можем да го подобрим."
   staff_category_name: "Персонал"
   staff_category_description: "Частна категория за дискусии на персонала. Темите са видими само за админи и модератори."
+  discourse_welcome_topic:
+    title: "Добре дошли в %{site_title}! :wave:"
   category:
     topic_prefix: "За %{category} категория"
     errors:

@@ -15,6 +15,7 @@ pl_PL:
           actions:
             chat_channel_status_change: "Zmieniono status kanału czatu"
             chat_channel_delete: "Kanał czatu usunięty"
+            chat_auto_remove_membership: "Członkostwa automatycznie usuwane z kanałów"
       api:
         scopes:
           descriptions:
@@ -88,7 +89,7 @@ pl_PL:
       delete: "Usuń"
       edited: "edytowane"
       muted: "wyciszono"
-      joined: "dołączył"
+      joined: "dołączono"
       empty_state:
         direct_message_cta: "Rozpocznij czat osobisty"
         direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
@@ -99,6 +100,9 @@ pl_PL:
         title: "Powiadomienia e-mail"
         when_away: "Tylko gdy jesteś daleko"
       header_indicator_preference:
+        title: "Pokaż wskaźnik aktywności w nagłówku"
+        all_new: "Wszystkie nowe wiadomości"
+        dm_and_mentions: "Bezpośrednie wiadomości i wzmianki"
         never: "Nigdy"
       enable: "Włącz czat"
       flag: "Oflaguj"
@@ -112,12 +116,24 @@ pl_PL:
       last_visit: "ostatnia wizyta"
       mention_warning:
         dismiss: "odrzuć"
+        cannot_see: "%{username} nie ma dostępu do tego kanału i nie został powiadomiony."
+        cannot_see_multiple:
+          one: "%{username} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
+          few: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+          many: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+          other: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         invitations_sent:
           one: "Zaproszenie wysłane"
           few: "Zaproszenia wysłane"
           many: "Zaproszenia wysłane"
           other: "Zaproszenia wysłane"
         invite: "Zaproś do kanału"
+        without_membership: "%{username} nie dołączył(a) do tego kanału."
+        without_membership_multiple:
+          one: "%{username} i %{count} inny użytkownik nie dołączył do tego kanału."
+          few: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
+          many: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
+          other: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
         group_mentions_disabled: "%{group_name} nie zezwala na wzmianki."
         too_many_members: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony."
         groups:
@@ -130,6 +146,7 @@ pl_PL:
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
       no_public_channels: "Nie dołączyłeś do żadnego kanału."
+      kicked_from_channel: "Nie masz już dostępu do tego kanału."
       only_chat_push_notifications:
         title: "Wysyłaj tylko powiadomienia push czatu"
         description: "Zablokuj wysyłanie wszystkich powiadomień push niezwiązanych z czatem"
@@ -141,6 +158,8 @@ pl_PL:
       close_full_page: "Zamknij czat pełnoekranowy"
       open_message: "Otwórz wiadomość na czacie"
       placeholder_self: "Zanotuj coś"
+      placeholder_channel: "Czat w %{channelName}"
+      placeholder_thread: "Czat w wątku"
       placeholder_users: "Czat z %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie możesz teraz wysyłać nowych wiadomości."
@@ -176,6 +195,8 @@ pl_PL:
       title: "czat"
       title_capitalized: "Czat"
       upload: "Dołącz plik"
+      upload_to_channel: "Prześlij do %{title}"
+      upload_to_thread: "Prześlij do wątku"
       uploaded_files:
         one: "%{count} plik"
         few: "%{count} pliki"
@@ -188,9 +209,11 @@ pl_PL:
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
+        archive_failed: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych. <a target=\"_blank\" href=\"%{topic_url}\">temat docelowy</a>. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
+        archive_failed_no_topic: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych, temat docelowy nie został utworzony. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
         archive_completed: "Zobacz <a target=\"_blank\" href=\"%{topic_url}\">temat archiwum</a>"
         closed_header: "Kanał jest zamknięty"
-        closed: "Zamknięta"
+        closed: "Zamknięte"
         open_header: "Kanał jest otwarty"
         open: "Otwórz"
       browse:
@@ -198,7 +221,7 @@ pl_PL:
         title: Kanały
         filter_all: Wszystkie
         filter_open: Otwarty
-        filter_closed: Zamknięta
+        filter_closed: Zamknięte
         filter_archived: Zarchiwizowany
         filter_input_placeholder: Szukaj kanału według nazwy
       chat_message_separator:
@@ -248,6 +271,16 @@ pl_PL:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} to kategoria publiczna. Automatycznie dodać wszystkich ostatnio aktywnych użytkowników do tego kanału?"
+          warning_1_group:
+            one: "Automatycznie dodać %{count} użytkownika z %{group}?"
+            few: "Automatycznie dodać %{count} użytkowników z %{group}?"
+            many: "Automatycznie dodać %{count} użytkowników z %{group}?"
+            other: "Automatycznie dodać %{count} użytkowników z %{group}?"
+          warning_2_groups:
+            one: "Automatycznie dodać %{count} użytkownika z %{group1} i %{group2}?"
+            few: "Automatycznie dodać %{count} użytkowników z %{group1} i %{group2}?"
+            many: "Automatycznie dodać %{count} użytkowników z %{group1} i %{group2}?"
+            other: "Automatycznie dodać %{count} użytkowników z %{group1} i %{group2}?"
         choose_category:
           label: "Wybierz kategorię"
           none: "wybierz jeden..."
@@ -265,6 +298,13 @@ pl_PL:
         type: "Wiadomość na czacie"
       reactions:
         only_you: "Zareagowałeś z :%{emoji}:"
+        you_and_single_user: "Ty i %{username} zareagowaliście za pomocą :%{emoji}:"
+        you_and_multiple_users: "Ty, %{commaSeparatedUsernames} i %{username} zareagowaliście za pomocą :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "Ty, %{commaSeparatedUsernames} i %{count} inny zareagowaliście za pomocą :%{emoji}:"
+          few: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
+          many: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
+          other: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
       composer:
         toggle_toolbar: "Przełącz pasek narzędzi"
         italic_text: "wyróżniony tekst"
@@ -272,6 +312,7 @@ pl_PL:
         code_text: "kod"
         send: "Wyślij"
       quote:
+        original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
       notification_levels:
         never: "Nigdy"
@@ -287,6 +328,8 @@ pl_PL:
         followed: "Dołączył"
         mobile_notification_level: "Mobilne powiadomienia push"
         mute: "Wycisz kanał"
+        muted_on: "Wł"
+        muted_off: "Wył"
         notifications: "Powiadomienia"
         preview: "Podgląd"
         save: "Zapisz"
@@ -357,6 +400,7 @@ pl_PL:
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
         spam: "Ta wiadomość to reklama lub akt wandalizmu. Nie jest przydatna ani istotna dla bieżącego kanału."
         notify_user: "Chcę porozmawiać z tą osobą bezpośrednio i osobiście o jej przesłaniu."
+        notify_moderators: "Ta wiadomość wymaga uwagi personelu z innego powodu niewymienionego powyżej."
       flagging:
         action: "Oflaguj wiadomość"
       emoji_picker:
@@ -430,6 +474,8 @@ pl_PL:
             sender:
               label: Nadawca
     review:
+      transcript:
+        view: "Zobacz transkrypcję poprzednich wiadomości"
       types:
         chat_reviewable_message:
           title: "Oflagowana wiadomość na czacie"
@@ -441,6 +487,7 @@ pl_PL:
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
           drawer_open: "%{shortcut} Otwórz szufladę czatu"
           drawer_close: "%{shortcut} Zamknij szufladę czatu"
+          mark_all_channels_read: "%{shortcut} Zaznacz wszystkie kanały jako przeczytane"
     topic_statuses:
       chat:
         help: "Czat jest włączony dla tego tematu"
@@ -449,6 +496,9 @@ pl_PL:
       muted_users_instructions: "Wyłącz wszystkie powiadomienia, wiadomości osobiste i bezpośrednie wiadomości czatu od tych użytkowników."
       allowed_pm_users_instructions: "Zezwalaj na wysyłanie osobistych wiadomości lub bezpośrednich wiadomości na czacie tylko od tych użytkowników."
     user_menu:
+      no_chat_notifications_title: "Nie masz jeszcze żadnych powiadomień czatu"
+      no_chat_notifications_body: >
+        Zostaniesz powiadomiony w tym panelu, gdy ktoś wyśle do Ciebie wiadomość lub <b>@wspomni</b> o Tobie na czacie. Powiadomienia będą również wysyłane na Twój adres e-mail, gdy nie będziesz zalogowany przez jakiś czas. <br><br> Kliknij tytuł u góry dowolnego kanału czatu, aby skonfigurować powiadomienia otrzymywane na tym kanale. Więcej informacji znajdziesz w <a href='%{preferencesUrl}'>preferencjach powiadomień</a>.
       tabs:
         chat_notifications: "Powiadomienia czatu"
         chat_notifications_with_unread:
@@ -456,3 +506,7 @@ pl_PL:
           few: "Powiadomienia czatu — %{count} nieprzeczytane powiadomienia"
           many: "Powiadomienia czatu — %{count} nieprzeczytanych powiadomień"
           other: "Powiadomienia czatu — %{count} nieprzeczytanych powiadomień"
+    styleguide:
+      sections:
+        chat:
+          title: Czat

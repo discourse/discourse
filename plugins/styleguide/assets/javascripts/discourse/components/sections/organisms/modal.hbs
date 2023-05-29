@@ -1,0 +1,15 @@
+<StyleguideExample @title="<DModal>">
+  <DModal
+    @closeModal={{@dummyAction}}
+    @modalStyle="inline-modal"
+    @title={{i18n "styleguide.sections.modal.header"}}
+  >
+    <DModalBody>
+      {{html-safe @dummy.lorem}}
+    </DModalBody>
+
+    <div class="modal-footer">
+      {{i18n "styleguide.sections.modal.footer"}}
+    </div>
+  </DModal>
+</StyleguideExample>

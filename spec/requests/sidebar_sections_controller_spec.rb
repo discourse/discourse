@@ -89,6 +89,7 @@ RSpec.describe SidebarSectionsController do
 
     it "does not allow regular user to create public section" do
       sign_in(user)
+
       post "/sidebar_sections.json",
            params: {
              title: "custom section",
@@ -98,11 +99,13 @@ RSpec.describe SidebarSectionsController do
                { icon: "address-book", name: "tags", value: "/tags" },
              ],
            }
+
       expect(response.status).to eq(403)
     end
 
     it "does not allow moderator to create public section" do
       sign_in(moderator)
+
       post "/sidebar_sections.json",
            params: {
              title: "custom section",
@@ -112,11 +115,13 @@ RSpec.describe SidebarSectionsController do
                { icon: "address-book", name: "tags", value: "/tags" },
              ],
            }
+
       expect(response.status).to eq(403)
     end
 
     it "allows admin to create public section" do
       sign_in(admin)
+
       post "/sidebar_sections.json",
            params: {
              title: "custom section",
@@ -126,6 +131,7 @@ RSpec.describe SidebarSectionsController do
                { icon: "address-book", name: "tags", value: "/tags" },
              ],
            }
+
       expect(response.status).to eq(200)
 
       sidebar_section = SidebarSection.last
@@ -144,18 +150,22 @@ RSpec.describe SidebarSectionsController do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
     fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
     fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
+
     fab!(:section_link_1) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
     end
+
     fab!(:section_link_2) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
     end
+
     let(:community_section) do
       SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     end
 
     it "allows user to update their own section and links" do
       sign_in(user)
+
       put "/sidebar_sections/#{sidebar_section.id}.json",
           params: {
             title: "custom section edited",
@@ -178,6 +188,7 @@ RSpec.describe SidebarSectionsController do
     it "allows admin to update public section and links" do
       sign_in(admin)
       sidebar_section.update!(public: true)
+
       put "/sidebar_sections/#{sidebar_section.id}.json",
           params: {
             title: "custom section edited",
@@ -230,6 +241,7 @@ RSpec.describe SidebarSectionsController do
       sidebar_url_3 = Fabricate(:sidebar_url, name: "other_tags", value: "/tags")
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section_2, linkable: sidebar_url_3)
       sign_in(user)
+
       put "/sidebar_sections/#{sidebar_section_2.id}.json",
           params: {
             title: "custom section edited",
@@ -242,6 +254,7 @@ RSpec.describe SidebarSectionsController do
     it "doesn't allow to edit public sections" do
       sign_in(user)
       sidebar_section.update!(public: true)
+
       put "/sidebar_sections/#{sidebar_section.id}.json",
           params: {
             title: "custom section edited",
@@ -250,17 +263,21 @@ RSpec.describe SidebarSectionsController do
               { icon: "link", id: sidebar_url_2.id, name: "tags", value: "/tags", _destroy: "1" },
             ],
           }
+
       expect(response.status).to eq(403)
     end
 
     it "doesn't allow to edit other's links" do
       sidebar_url_3 = Fabricate(:sidebar_url, name: "other_tags", value: "/tags")
+
       Fabricate(
         :sidebar_section_link,
         sidebar_section: Fabricate(:sidebar_section),
         linkable: sidebar_url_3,
       )
+
       sign_in(user)
+
       put "/sidebar_sections/#{sidebar_section.id}.json",
           params: {
             title: "custom section edited",
@@ -268,12 +285,12 @@ RSpec.describe SidebarSectionsController do
           }
 
       expect(response.status).to eq(404)
-
       expect(sidebar_url_3.reload.name).to eq("other_tags")
     end
 
     it "doesn't allow users to edit community section" do
       sign_in(user)
+
       put "/sidebar_sections/#{community_section.id}.json",
           params: {
             title: "custom section edited",
@@ -285,8 +302,10 @@ RSpec.describe SidebarSectionsController do
 
     it "allows admin to edit community section" do
       sign_in(admin)
+
       everything_link = community_section.sidebar_urls.find_by(name: "Everything")
       my_posts_link = community_section.sidebar_urls.find_by(name: "My Posts")
+
       community_section
         .sidebar_section_links
         .where.not(linkable_id: [everything_link.id, my_posts_link.id])
@@ -317,58 +336,74 @@ RSpec.describe SidebarSectionsController do
   end
 
   describe "#reorder" do
+    fab!(:user2) { Fabricate(:user) }
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
     fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
     fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
     fab!(:sidebar_url_3) { Fabricate(:sidebar_url, name: "topic", value: "/t/1") }
+
     fab!(:section_link_1) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
     end
+
     fab!(:section_link_2) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
     end
+
     fab!(:section_link_3) do
       Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_3)
     end
 
     it "sorts links" do
-      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
-      expect(serializer[:links].map(&:id)).to eq(
+      expect(sidebar_section.sidebar_urls.pluck(:id)).to eq(
         [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
       )
 
       sign_in(user)
+
       post "/sidebar_sections/reorder.json",
            params: {
              sidebar_section_id: sidebar_section.id,
              links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
            }
 
-      serializer = SidebarSectionSerializer.new(sidebar_section.reload, root: false).as_json
-      expect(serializer[:links].map(&:id)).to eq(
+      expect(response.status).to eq(200)
+
+      expect(sidebar_section.reload.sidebar_urls.pluck(:id)).to eq(
         [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
       )
     end
 
-    it "is not allowed for not own sections" do
-      sidebar_section_2 = Fabricate(:sidebar_section)
+    it "returns 403 when a user tries to reorder a section that doesn't belong to them" do
+      sign_in(user2)
+
       post "/sidebar_sections/reorder.json",
            params: {
-             sidebar_section_id: sidebar_section_2.id,
+             sidebar_section_id: sidebar_section.id,
              links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
            }
 
       expect(response.status).to eq(403)
 
-      serializer = SidebarSectionSerializer.new(sidebar_section, root: false).as_json
-      expect(serializer[:links].map(&:id)).to eq(
+      expect(sidebar_section.reload.sidebar_urls.pluck(:id)).to eq(
         [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
       )
+    end
+
+    it "returns 403 for an non user" do
+      post "/sidebar_sections/reorder.json",
+           params: {
+             sidebar_section_id: sidebar_section.id,
+             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
+           }
+
+      expect(response.status).to eql(403)
     end
   end
 
   describe "#destroy" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+
     let(:community_section) do
       SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     end
@@ -380,7 +415,6 @@ RSpec.describe SidebarSectionsController do
       expect(response.status).to eq(200)
 
       expect { sidebar_section.reload }.to raise_error(ActiveRecord::RecordNotFound)
-
       expect(UserHistory.count).to eq(0)
     end
 

@@ -1930,9 +1930,6 @@ pl_PL:
       suggested_topics:
         title: "Czytaj dalej!"
         content: "Oto kilka tematów, które naszym zdaniem warto przeczytać w następnej kolejności."
-      welcome_topic:
-        title: "Edytuj temat powitalny"
-        content: "Pomóż nowym członkom poczuć się jak w domu, dostosowując ten temat do potrzeb swojej społeczności."
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -4668,7 +4665,7 @@ pl_PL:
               description: "Administratorzy mogą widzieć wszystkie grupy."
             members_visibility_levels:
               title: "Kto może widzieć członków grupy?"
-              description: "Administratorzy widzą członków wszystkich grup. Flair jest widoczny dla wszystkich użytkowników."
+              description: "Administratorzy widzą członków wszystkich grup. Ikona jest widoczna dla wszystkich użytkowników."
             publish_read_state: "Wyświetlaj status przeczytania w grupowych wiadomościach"
           membership:
             automatic: Automatyczne
@@ -4685,6 +4682,7 @@ pl_PL:
             primary_group: "Automatycznie ustawiaj jako główną grupę"
           alert:
             primary_group: "Ponieważ jest to grupa podstawowa, nazwa '%{group_name}' będzie używana w klasach CSS, które każdy może zobaczyć."
+            flair_group: "Ponieważ ta grupa ma ikonę dla swoich członków, nazwa '%{group_name}' będzie widoczna dla każdego."
         name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"

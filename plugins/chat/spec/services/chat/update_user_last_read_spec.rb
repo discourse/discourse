@@ -65,7 +65,7 @@ RSpec.describe Chat::UpdateUserLastRead do
           membership.update!(last_read_message_id: 1)
         end
 
-        it { is_expected.to fail_a_policy(:ensure_message_exists) }
+        it { is_expected.to fail_to_find_a_model(:message) }
       end
 
       context "when everything is fine" do

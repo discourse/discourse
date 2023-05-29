@@ -109,6 +109,7 @@ import {
   registerCustomCategorySectionLinkPrefix,
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import DiscourseURL from "discourse/lib/url";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
@@ -572,7 +573,17 @@ class PluginApi {
   attachWidgetAction(widget, actionName, fn) {
     const widgetClass =
       queryRegistry(widget) ||
-      this.container.factoryFor(`widget:${widget}`).class;
+      this.container.factoryFor(`widget:${widget}`)?.class;
+
+    if (!widgetClass) {
+      // eslint-disable-next-line no-console
+      console.error(
+        consolePrefix(),
+        `attachWidgetAction: Could not find widget ${widget} in registry`
+      );
+      return;
+    }
+
     widgetClass.prototype[actionName] = fn;
   }
 
@@ -1837,10 +1848,11 @@ class PluginApi {
    *
    * @param {(addCommunitySectionLinkCallback|Object)} arg - A callback function or an Object.
    * @param {string} arg.name - The name of the link. Needs to be dasherized and lowercase.
-   * @param {string=} arg.route - The Ember route name to generate the href attribute for the link.
-   * @param {string=} arg.href - The href attribute for the link.
    * @param {string} arg.title - The title attribute for the link.
    * @param {string} arg.text - The text to display for the link.
+   * @param {string} [arg.route] - The Ember route name to generate the href attribute for the link.
+   * @param {string} [arg.href] - The href attribute for the link.
+   * @param {string} [arg.icon] - The FontAwesome icon to display for the link.
    * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
    */
   addCommunitySectionLink(arg, secondary) {
@@ -1893,7 +1905,7 @@ class PluginApi {
    * @param {Object} arg - An object
    * @param {string} arg.badgeTextFunction - Function used to generate the text for the badge displayed in the section link.
    * @param {string} arg.route - The Ember route name to generate the href attribute for the link.
-   * @param {Object=} arg.routeQuery - Object representing the query params that should be appended to the route generated.
+   * @param {Object} [arg.routeQuery] - Object representing the query params that should be appended to the route generated.
    * @param {shouldRegister} arg.shouldRegister - Function used to determine if the countable should be registered for the category.
    * @param {refreshCountFunction} arg.refreshCountFunction - Function used to calculate the value used to set the property for the count whenever the sidebar section link refreshes.
    * @param {prioritizeOverDefaults} args.prioritizeOverDefaults - Function used to determine whether the countable should be prioritized over the default countables of unread/new.
@@ -1960,6 +1972,38 @@ class PluginApi {
     registerCustomCategorySectionLinkPrefix({
       categoryId,
       prefixType,
+      prefixValue,
+      prefixColor,
+    });
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Register a custom prefix for a sidebar tag section link.
+   *
+   * Example:
+   *
+   * ```
+   * api.registerCustomTagSectionLinkPrefixValue({
+   *   tagName: "tag1",
+   *   prefixType: "icon",
+   *   prefixValue: "wrench",
+   *   prefixColor: "#FF0000"
+   * });
+   * ```
+   *
+   * @params {Object} arg - An object
+   * @params {string} arg.tagName - The name of the tag
+   * @params {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @params {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
+   */
+  registerCustomTagSectionLinkPrefixIcon({
+    tagName,
+    prefixValue,
+    prefixColor,
+  }) {
+    registerCustomTagSectionLinkPrefixIcon({
+      tagName,
       prefixValue,
       prefixColor,
     });

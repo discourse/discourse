@@ -91,7 +91,7 @@ class Group < ActiveRecord::Base
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
   validates :automatic_membership_email_domains, length: { maximum: 1000 }
   validates :bio_raw, length: { maximum: 3000 }
-  validates :membership_request_template, length: { maximum: 500 }
+  validates :membership_request_template, length: { maximum: 5000 }
   validates :full_name, length: { maximum: 100 }
 
   AUTO_GROUPS = {

@@ -15,6 +15,8 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 export default class ChatThreadsManager {
   @service chatSubscriptionsManager;
+  @service chatTrackingStateManager;
+  @service chatChannelsManager;
   @service chatApi;
   @service chat;
   @service currentUser;
@@ -40,9 +42,16 @@ export default class ChatThreadsManager {
       const threads = result.threads.map((thread) => {
         return this.chat.activeChannel.threadsManager.store(
           this.chat.activeChannel,
-          thread
+          thread,
+          { replace: true }
         );
       });
+
+      this.chatTrackingStateManager.setupChannelThreadState(
+        this.chat.activeChannel,
+        result.tracking
+      );
+
       return { threads, meta: result.meta };
     });
   }
@@ -51,14 +60,18 @@ export default class ChatThreadsManager {
     return Object.values(this._cached);
   }
 
-  store(channel, threadObject) {
-    let model = this.#findStale(threadObject.id);
+  store(channel, threadObject, options = {}) {
+    let model;
+
+    if (!options.replace) {
+      model = this.#findStale(threadObject.id);
+    }
 
     if (!model) {
       if (threadObject instanceof ChatThread) {
         model = threadObject;
       } else {
-        model = new ChatThread(channel, threadObject);
+        model = ChatThread.create(channel, threadObject);
       }
 
       this.#cache(model);
@@ -76,7 +89,11 @@ export default class ChatThreadsManager {
   }
 
   async #find(channelId, threadId) {
-    return this.chatApi.thread(channelId, threadId);
+    return this.chatApi.thread(channelId, threadId).then((result) => {
+      return this.chatChannelsManager.find(channelId).then((channel) => {
+        return channel.threadsManager.store(channel, result.thread);
+      });
+    });
   }
 
   #cache(thread) {

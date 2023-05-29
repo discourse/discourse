@@ -115,7 +115,7 @@ class Admin::UsersController < Admin::StaffController
           "user.already_suspended",
           staff: suspend_record.acting_user.username,
           time_ago:
-            FreedomPatches::Rails4.time_ago_in_words(
+            AgeWords.time_ago_in_words(
               suspend_record.created_at,
               true,
               scope: :"datetime.distance_in_words_verbose",
@@ -368,7 +368,7 @@ class Admin::UsersController < Admin::StaffController
           "user.already_silenced",
           staff: silenced_record.acting_user.username,
           time_ago:
-            FreedomPatches::Rails4.time_ago_in_words(
+            AgeWords.time_ago_in_words(
               silenced_record.created_at,
               true,
               scope: :"datetime.distance_in_words_verbose",

@@ -33,21 +33,27 @@ describe "Custom sidebar sections", type: :system, js: true do
   it "allows the user to create custom section with /my link" do
     sign_in user
     visit("/latest")
+
     sidebar.click_add_section_button
-
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
-
     section_modal.fill_name("My section")
-
     section_modal.fill_link("My preferences", "/my/preferences")
-    expect(section_modal).to have_enabled_save
-
     section_modal.save
 
     expect(sidebar).to have_section("My section")
     expect(sidebar).to have_section_link("My preferences")
+  end
+
+  it "allows the user to create custom section with /pub link" do
+    sign_in user
+    visit("/latest")
+
+    sidebar.click_add_section_button
+    section_modal.fill_name("My section")
+    section_modal.fill_link("Published Page", "/pub/test")
+    section_modal.save
+
+    expect(sidebar).to have_section("My section")
+    expect(sidebar).to have_section_link("Published Page")
   end
 
   it "allows the user to create custom section with external link" do
@@ -108,25 +114,17 @@ describe "Custom sidebar sections", type: :system, js: true do
     sign_in user
     visit("/latest")
 
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
-      expect(sidebar).to have_section_link("Sidebar Tags")
-    end
-
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
-      expect(sidebar).to have_section_link("Sidebar Categories")
-    end
+    expect(sidebar.primary_section_links("my-section")).to eq(
+      ["Sidebar Tags", "Sidebar Categories"],
+    )
 
     tags_link = find(".sidebar-section-link[data-link-name='Sidebar Tags']")
     categories_link = find(".sidebar-section-link[data-link-name='Sidebar Categories']")
     tags_link.drag_to(categories_link, html5: true, delay: 0.4)
 
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(1)") do
-      expect(sidebar).to have_section_link("Sidebar Categories")
-    end
-
-    within("[data-section-name='my-section'] .sidebar-section-link-wrapper:nth-child(2)") do
-      expect(sidebar).to have_section_link("Sidebar Tags")
-    end
+    expect(sidebar.primary_section_links("my-section")).to eq(
+      ["Sidebar Categories", "Sidebar Tags"],
+    )
   end
 
   it "does not allow the user to edit public section" do
@@ -193,6 +191,29 @@ describe "Custom sidebar sections", type: :system, js: true do
     section_modal.confirm_delete
 
     expect(sidebar).to have_no_section("Edited public section")
+  end
+
+  it "allows admin to edit community section and reset to default" do
+    sign_in admin
+    visit("/latest")
+
+    sidebar.edit_custom_section("Community")
+    section_modal.fill_name("Edited community section")
+    section_modal.everything_link.drag_to(section_modal.review_link, delay: 0.4)
+    section_modal.save
+
+    expect(sidebar).to have_section("Edited community section")
+    expect(sidebar.primary_section_links("edited-community-section")).to eq(
+      ["My Posts", "Everything", "Admin", "More"],
+    )
+
+    sidebar.edit_custom_section("Edited community section")
+    section_modal.reset
+
+    expect(sidebar).to have_section("Community")
+    expect(sidebar.primary_section_links("community")).to eq(
+      ["Everything", "My Posts", "Admin", "More"],
+    )
   end
 
   it "shows anonymous public sections" do

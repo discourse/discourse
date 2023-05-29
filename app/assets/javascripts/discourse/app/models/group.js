@@ -375,7 +375,7 @@ const Group = RestModel.extend({
   },
 
   requestMembership(reason) {
-    return ajax(`/groups/${this.name}/request_membership`, {
+    return ajax(`/groups/${this.name}/request_membership.json`, {
       type: "POST",
       data: { reason },
     });
