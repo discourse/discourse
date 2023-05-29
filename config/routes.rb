@@ -1597,5 +1597,8 @@ Discourse::Application.routes.draw do
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
+
+    get "/form-templates/:id" => "form_templates#show"
+    get "/form-templates" => "form_templates#index"
   end
 end

@@ -34,8 +34,16 @@ module PageObjects
         component.find(".select-kit-header[data-value='#{value}']")
       end
 
-      def has_selected_name?(value)
-        component.find(".select-kit-header[data-name='#{value}']")
+      def has_selected_name?(name)
+        component.find(".select-kit-header[data-name='#{name}']")
+      end
+
+      def has_selected_choice_name?(name)
+        component.find(".selected-choice[data-name='#{name}']")
+      end
+
+      def has_option_name?(name)
+        component.find(".select-kit-collection li[data-name='#{name}']")
       end
 
       def expand

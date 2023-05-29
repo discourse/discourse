@@ -4525,6 +4525,9 @@ en:
     char_counter:
       exceeded: "The maximum number of characters allowed has been exceeded."
 
+    form_template_chooser:
+      select_template: "Select form templates"
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."

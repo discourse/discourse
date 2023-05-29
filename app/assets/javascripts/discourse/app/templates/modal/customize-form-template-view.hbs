@@ -8,7 +8,7 @@
     />
   </div>
   {{#if this.showPreview}}
-    <FormTemplateField::Wrapper @content={{this.model.template}} />
+    <FormTemplateField::Wrapper @id={{this.model.id}} />
   {{else}}
     <HighlightedCode @lang="yaml" @code={{this.model.template}} />
   {{/if}}
