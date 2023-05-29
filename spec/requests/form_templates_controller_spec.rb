@@ -7,15 +7,23 @@ RSpec.describe FormTemplatesController do
 
   describe "#index" do
     fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template_2) { Fabricate(:form_template, id: 1) }
+    fab!(:form_template_3) { Fabricate(:form_template) }
 
     context "when logged in as a user" do
       before { sign_in(user) }
 
-      it "should return all forum templates" do
+      it "should return all form templates ordered by its ids" do
         get "/form-templates.json"
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["form_templates"]).to be_present
+        expect(json["form_templates"].length).to eq(3)
+
+        templates = json["form_templates"]
+        expect(templates[0]["id"]).to eq(form_template_2.id)
+        expect(templates[1]["id"]).to eq(form_template.id)
+        expect(templates[2]["id"]).to eq(form_template_3.id)
       end
     end
 

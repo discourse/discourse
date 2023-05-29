@@ -65,7 +65,9 @@ describe "Composer Form Templates", type: :system, js: true do
   end
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:composer) { PageObjects::Components::Composer.new }
-  let(:form_template_chooser) { PageObjects::Components::FormTemplateChooser.new }
+  let(:form_template_chooser) do
+    PageObjects::Components::SelectKit.new(page.find(".form-template-chooser"))
+  end
 
   before do
     SiteSetting.experimental_form_templates = true
@@ -128,7 +130,7 @@ describe "Composer Form Templates", type: :system, js: true do
     category_page.visit(category_with_multiple_templates_1)
     category_page.new_topic_button.click
     expect(composer).to have_form_template_field("checkbox")
-    form_template_chooser.select_template_by_name(form_template_2.name)
+    form_template_chooser.select_row_by_name(form_template_2.name)
     expect(composer).to have_form_template_field("input")
   end
 
@@ -136,20 +138,20 @@ describe "Composer Form Templates", type: :system, js: true do
     category_page.visit(category_with_multiple_templates_1)
     category_page.new_topic_button.click
     expect(composer).to have_form_template_chooser
-    form_template_chooser.toggle_dropdown
-    expect(form_template_chooser).to have_selected_template(form_template_1.name)
-    expect(form_template_chooser).to have_dropdown_option(form_template_2.name)
+    form_template_chooser.expand
+    expect(form_template_chooser).to have_selected_choice_name(form_template_1.name)
+    expect(form_template_chooser).to have_option_name(form_template_2.name)
     composer.switch_category(category_with_multiple_templates_2.name)
-    form_template_chooser.toggle_dropdown
-    expect(form_template_chooser).to have_selected_template(form_template_3.name)
-    expect(form_template_chooser).to have_dropdown_option(form_template_4.name)
+    form_template_chooser.expand
+    expect(form_template_chooser).to have_selected_choice_name(form_template_3.name)
+    expect(form_template_chooser).to have_option_name(form_template_4.name)
   end
 
   it "shows the correct template name in the dropdown header after switching templates" do
     category_page.visit(category_with_multiple_templates_1)
     category_page.new_topic_button.click
-    expect(form_template_chooser).to have_selected_header(form_template_1.name)
-    form_template_chooser.select_template_by_name(form_template_2.name)
-    expect(form_template_chooser).to have_selected_header(form_template_2.name)
+    expect(form_template_chooser).to have_selected_name(form_template_1.name)
+    form_template_chooser.select_row_by_name(form_template_2.name)
+    expect(form_template_chooser).to have_selected_name(form_template_2.name)
   end
 end

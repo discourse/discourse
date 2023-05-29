@@ -30,16 +30,14 @@ export default class FormTemplate extends RestModel {
     });
   }
 
-  static findAll() {
-    return ajax(`/admin/customize/form-templates.json`).then((model) => {
-      return model.form_templates.sort((a, b) => a.id - b.id);
-    });
+  static async findAll() {
+    const result = await ajax("/admin/customize/form-templates.json");
+    return result.form_templates;
   }
 
-  static findById(id) {
-    return ajax(`/admin/customize/form-templates/${id}.json`).then((model) => {
-      return model.form_template;
-    });
+  static async findById(id) {
+    const result = await ajax(`/admin/customize/form-templates/${id}.json`);
+    return result.form_template;
   }
 
   static validateTemplate(data) {
