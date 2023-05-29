@@ -93,6 +93,12 @@ RSpec.describe Chat::ChannelViewBuilder do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when page_size is too big" do
+      let(:page_size) { Chat::MessagesQuery::MAX_PAGE_SIZE + 1 }
+
+      it { is_expected.to fail_a_contract }
+    end
+
     context "when channel has threading_enabled and enable_experimental_chat_threaded_discussions is true" do
       before do
         channel.update!(threading_enabled: true)
@@ -246,6 +252,19 @@ RSpec.describe Chat::ChannelViewBuilder do
 
           it "does not error and still returns messages" do
             expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          end
+
+          context "if page_size is nil" do
+            let(:page_size) { nil }
+
+            it "calls the messages query with the default page size" do
+              ::Chat::MessagesQuery
+                .expects(:call)
+                .with(has_entries(page_size: Chat::MessagesQuery::MAX_PAGE_SIZE))
+                .once
+                .returns({ messages: [] })
+              subject
+            end
           end
         end
       end
