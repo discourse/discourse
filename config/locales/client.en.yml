@@ -2094,6 +2094,9 @@ en:
       disable: "Show All Posts"
       short_label: "Summarize"
       short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      custom: 
+        button_title: "Summarize with %{strategy}"
+        title: "Topic summary"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."

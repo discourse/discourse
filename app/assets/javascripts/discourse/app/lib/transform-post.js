@@ -185,6 +185,7 @@ export default function transformPost(
     (post.post_number === 1 &&
       topic.archetype === "regular" &&
       topic.posts_count > 1);
+
   if (showTopicMap) {
     postAtts.showTopicMap = true;
     postAtts.topicCreatedAt = topic.created_at;
