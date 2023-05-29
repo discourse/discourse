@@ -25,6 +25,7 @@ class EditDirectoryColumnsController < ApplicationController
     end
 
     changes = "\n"
+
     directory_column_params[:directory_columns].values.each do |column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
       if (
@@ -32,7 +33,7 @@ class EditDirectoryColumnsController < ApplicationController
              existing_column.position != column_data[:position].to_i
          )
         changes +=
-          "#{existing_column.name} - enabled: #{existing_column.enabled} -> #{column_data[:enabled]} , position: #{existing_column.position} -> #{column_data[:position]}\n"
+          "#{existing_column.name} - enabled: #{existing_column.enabled} -> #{column_data[:enabled]}, position: #{existing_column.position} -> #{column_data[:position]}\n"
         existing_column.update(
           enabled: column_data[:enabled],
           position: column_data[:position].to_i,
