@@ -7,6 +7,8 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
 
   test("#sendChatMessage", function (assert) {
+    const done = assert.async();
+
     pretender.post("/chat/1", (request) => {
       assert.strictEqual(request.url, "/chat/1");
       assert.strictEqual(request.requestBody, "thread_id=2&message=hello");
@@ -14,7 +16,9 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
     });
 
     withPluginApi("1.1.0", (api) => {
-      api.sendChatMessage(1, { message: "hello", threadId: 2 });
+      api.sendChatMessage(1, { message: "hello", threadId: 2 }).then(() => {
+        done();
+      });
     });
   });
 });
