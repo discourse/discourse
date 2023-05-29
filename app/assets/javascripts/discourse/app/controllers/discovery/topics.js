@@ -127,12 +127,7 @@ const controllerOpts = {
       Topic.resetNew(this.category, !this.noSubcategories, {
         tracked,
         topicIds,
-      }).then(() =>
-        this.send(
-          "refresh",
-          tracked ? { skipResettingParams: ["filter", "f"] } : {}
-        )
-      );
+      });
     },
   },
 

@@ -1,0 +1,26 @@
+<DModalBody>
+  <p>
+    <PreferenceCheckbox
+      @labelKey="topics.bulk.dismiss_new_modal.topics"
+      @checked={{this.model.dismissTopics}}
+    />
+    <PreferenceCheckbox
+      @labelKey="topics.bulk.dismiss_new_modal.posts"
+      @checked={{this.model.dismissPosts}}
+    />
+    <PreferenceCheckbox
+      @labelKey="topics.bulk.dismiss_new_modal.untrack"
+      @checked={{this.model.untrack}}
+    />
+  </p>
+</DModalBody>
+
+<div class="modal-footer">
+  <DButton
+    @class="btn-primary"
+    @action="close"
+    @icon="check"
+    @id="dismiss-read-confirm"
+    @label="topics.bulk.dismiss"
+  />
+</div>

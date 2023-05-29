@@ -4061,6 +4061,84 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    describe "new and unread" do
+      fab!(:group) { Fabricate(:group) }
+      fab!(:new_topic) { Fabricate(:topic) }
+      fab!(:unread_topic) { Fabricate(:topic, highest_post_number: 3) }
+      fab!(:topic_user) do
+        Fabricate(
+          :topic_user,
+          topic: unread_topic,
+          user: user,
+          notification_level: NotificationLevels.topic_levels[:tracking],
+          last_read_post_number: 1,
+        )
+      end
+
+      before do
+        create_post(topic: unread_topic)
+        create_post(topic: unread_topic)
+        user.groups << group
+        SiteSetting.experimental_new_new_view_groups = group.id
+        sign_in(user)
+      end
+
+      it "dismisses new topics" do
+        put "/topics/reset-new.json"
+        topics = TopicQuery.new(user).new_and_unread_results(limit: false)
+        expect(topics).to eq([unread_topic, new_topic])
+
+        put "/topics/reset-new.json", params: { dismiss_topics: true }
+        topics = TopicQuery.new(user).new_and_unread_results(limit: false)
+        expect(topics).to eq([unread_topic])
+        expect(DismissedTopicUser.count).to eq(1)
+        expect(topic_user.reload.notification_level).to eq(
+          NotificationLevels.topic_levels[:tracking],
+        )
+      end
+
+      it "dismisses unread topics" do
+        put "/topics/reset-new.json"
+        topics = TopicQuery.new(user).new_and_unread_results(limit: false)
+        expect(topics).to eq([unread_topic, new_topic])
+
+        put "/topics/reset-new.json", params: { dismiss_posts: true }
+        topics = TopicQuery.new(user).new_and_unread_results(limit: false)
+        expect(topics).to eq([new_topic])
+        expect(DismissedTopicUser.count).to eq(0)
+        expect(topic_user.reload.notification_level).to eq(
+          NotificationLevels.topic_levels[:tracking],
+        )
+      end
+
+      it "untrack topics" do
+        expect(topic_user.notification_level).to eq(NotificationLevels.topic_levels[:tracking])
+        put "/topics/reset-new.json", params: { dismiss_posts: true, untrack: true }
+        expect(topic_user.reload.notification_level).to eq(
+          NotificationLevels.topic_levels[:regular],
+        )
+      end
+
+      it "dismisses new topics, unread posts and untrack" do
+        topic_user_count = TopicUser.count
+
+        put "/topics/reset-new.json",
+            params: {
+              dismiss_topics: true,
+              dismiss_posts: true,
+              untrack: true,
+            }
+        topics = TopicQuery.new(user).new_and_unread_results(limit: false)
+        expect(topics).to be_empty
+        expect(DismissedTopicUser.count).to eq(1)
+
+        expect(TopicUser.count).to eq(topic_user_count + 1)
+        expect(user.topic_users.map(&:notification_level).uniq).to eq(
+          [NotificationLevels.topic_levels[:regular]],
+        )
+      end
+    end
   end
 
   describe "#feature_stats" do
