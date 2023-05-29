@@ -10,7 +10,7 @@
 .chat-thread-list-item {
   @include thread-list-item;
   cursor: pointer;
-  margin: 0.5rem 0.25rem 0.25rem;
+  margin: 0.25rem;
 
   & + .chat-thread-list-item {
     margin-top: 0;
