@@ -39,7 +39,7 @@ module PageObjects
       end
 
       def expand
-        collapsed_component.find(":not(.is-expanded) .select-kit-header").click
+        collapsed_component.find(":not(.is-expanded) .select-kit-header", visible: :all).click
         expanded_component
       end
 
