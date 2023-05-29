@@ -13,6 +13,7 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
       assert.strictEqual(request.url, "/chat/1");
       assert.strictEqual(request.requestBody, "thread_id=2&message=hello");
       done();
+      return [200, {}, {}];
     });
 
     withPluginApi("1.1.0", (api) => {
