@@ -40,7 +40,7 @@
             />
           {{/if}}
 
-          {{#if @channel.threadingEnabled}}
+          {{#if this.showThreadsListButton}}
             <Chat::Thread::ThreadsListButton @channel={{@channel}} />
           {{/if}}
         </div>

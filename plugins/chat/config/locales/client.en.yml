@@ -251,6 +251,9 @@ en:
       select: "Select"
       return_to_list: "Return to channels list"
       return_to_threads_list: "Return to ongoing discussions"
+      unread_threads_count:
+        one: "You have %{count} unread discussion"
+        other: "You have %{count} unread discussions"
       scroll_to_bottom: "Scroll to bottom"
       scroll_to_new_messages: "See new messages"
       sound:

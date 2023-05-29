@@ -9,7 +9,5 @@
 >
   {{d-icon "discourse-threads"}}
 
-  {{#unless this.currentUserInDnD}}
-    <Chat::Thread::HeaderUnreadIndicator @channel={{@channel}} />
-  {{/unless}}
+  <Chat::Thread::HeaderUnreadIndicator @channel={{@channel}} />
 </LinkTo>

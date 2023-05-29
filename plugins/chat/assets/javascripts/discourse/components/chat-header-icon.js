@@ -8,10 +8,6 @@ export default class ChatHeaderIcon extends Component {
   @service chatStateManager;
   @service router;
 
-  get currentUserInDnD() {
-    return this.currentUser.isInDoNotDisturb();
-  }
-
   get href() {
     if (this.chatStateManager.isFullPageActive) {
       if (this.site.mobileView) {

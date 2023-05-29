@@ -1,12 +1,19 @@
 import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
 
 export default class ChatThreadHeaderUnreadIndicator extends Component {
+  @service currentUser;
+
+  get currentUserInDnD() {
+    return this.currentUser.isInDoNotDisturb();
+  }
+
   get unreadCount() {
     return this.args.channel.unreadThreadCount;
   }
 
   get showUnreadIndicator() {
-    return this.unreadCount > 0;
+    return !this.currentUserInDnD && this.unreadCount > 0;
   }
 
   get unreadCountLabel() {
