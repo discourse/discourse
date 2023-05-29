@@ -94,7 +94,7 @@ export default class ChatLivePane extends Component {
 
   @action
   didResizePane() {
-    this.fillPaneAttempt();
+    this.debounceFillPaneAttempt();
     this.computeDatesSeparators();
     this.forceRendering();
   }
@@ -228,7 +228,7 @@ export default class ChatLivePane extends Component {
         this.loadedOnce = true;
         this.requestedTargetMessageId = null;
         this.loadingMorePast = false;
-        this.fillPaneAttempt();
+        this.debounceFillPaneAttempt();
         this.updateLastReadMessage();
         this.subscribeToUpdates(this.args.channel);
       });
@@ -276,12 +276,6 @@ export default class ChatLivePane extends Component {
           return;
         }
 
-        // prevents an edge case where user clicks bottom arrow
-        // just after scrolling to top
-        if (loadingPast && this.#isAtBottom()) {
-          return;
-        }
-
         const [messages, meta] = this.afterFetchCallback(
           this.args.channel,
           result
@@ -318,11 +312,23 @@ export default class ChatLivePane extends Component {
       .catch(this._handleErrors)
       .finally(() => {
         this[loadingMoreKey] = false;
-        this.fillPaneAttempt();
+        this.debounceFillPaneAttempt();
       });
   }
 
-  @debounce(500)
+  debounceFillPaneAttempt() {
+    if (!this.loadedOnce) {
+      return;
+    }
+
+    this._debouncedFillPaneAttemptHandler = discourseDebounce(
+      this,
+      this.fillPaneAttempt,
+      500
+    );
+  }
+
+  @bind
   fillPaneAttempt() {
     if (this._selfDeleted) {
       return;
@@ -333,11 +339,12 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    if (!this.args.channel?.messagesManager?.canLoadMorePast) {
+    if (!this.args.channel?.canLoadMorePast) {
       return;
     }
 
-    const firstMessage = this.args.channel?.messages?.[0];
+    const firstMessage = this.args.channel?.messages?.firstObject;
+
     if (!firstMessage?.visible) {
       return;
     }
@@ -1055,6 +1062,7 @@ export default class ChatLivePane extends Component {
   }
 
   #cancelHandlers() {
+    cancel(this._debouncedFillPaneAttemptHandler);
     cancel(this._onScrollEndedHandler);
     cancel(this._laterComputeHandler);
     cancel(this._debounceFetchMessagesHandler);

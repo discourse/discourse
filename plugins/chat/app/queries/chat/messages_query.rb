@@ -125,6 +125,8 @@ module Chat
       messages,
       target_message_id = nil
     )
+      page_size = [page_size || MAX_PAGE_SIZE, MAX_PAGE_SIZE].min
+
       if target_message_id.present?
         condition = direction == PAST ? "<" : ">"
         messages = messages.where("id #{condition} ?", target_message_id.to_i)

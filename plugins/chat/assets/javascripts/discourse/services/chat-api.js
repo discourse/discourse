@@ -24,14 +24,13 @@ export default class ChatApi extends Service {
    */
   channel(channelId, data = {}) {
     const args = {};
+    args.page_size = data.pageSize;
 
     if (data.targetMessageId) {
       args.target_message_id = data.targetMessageId;
     } else if (data.fetchFromLastRead) {
       args.fetch_from_last_read = true;
     } else {
-      args.page_size = data.pageSize;
-
       if (data.direction) {
         args.direction = data.direction;
       }

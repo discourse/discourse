@@ -71,6 +71,11 @@ RSpec.describe Chat::MessagesQuery do
       end
     end
 
+    it "limits results of paginated query when page_size is not set" do
+      options[:target_message_id] = nil
+      stub_const(described_class, "MAX_PAGE_SIZE", 1) { expect(subject[:messages].length).to eq(1) }
+    end
+
     describe "when some messages are in threads" do
       fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
 
