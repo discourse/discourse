@@ -120,8 +120,7 @@ module Chat
     end
 
     def can_be_joined_by?(user)
-      guardian = Guardian.new(user)
-      guardian.can_chat? && guardian.can_join_chat_channel?(self)
+      user.guardian.can_chat? && user.guardian.can_join_chat_channel?(self)
     end
 
     def joined_by?(user)
