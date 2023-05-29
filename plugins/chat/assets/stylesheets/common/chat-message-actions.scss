@@ -74,6 +74,7 @@
       border-right-color: transparent;
 
       .rtl & {
+        border-color: var(--primary-300);
         border-left-color: transparent;
       }
     }
