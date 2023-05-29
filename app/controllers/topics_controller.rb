@@ -1128,6 +1128,26 @@ class TopicsController < ApplicationController
     head :ok
   end
 
+  def custom_summary
+    topic = Topic.find(params[:topic_id])
+    guardian.ensure_can_see!(topic)
+    strategy = Summarization::Base.selected_strategy&.new
+    raise Discourse::NotFound.new unless strategy
+
+    hijack do
+      summary_opts = {
+        filter: "summary",
+        exclude_deleted_users: true,
+        exclude_hidden: true,
+        show_deleted: false,
+      }
+
+      content = TopicView.new(topic, current_user, summary_opts).posts.pluck(:raw).join("\n")
+
+      render json: { summary: strategy.summarize(content) }
+    end
+  end
+
   private
 
   def topic_params

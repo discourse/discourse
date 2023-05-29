@@ -5121,4 +5121,24 @@ RSpec.describe TopicsController do
       end
     end
   end
+
+  describe "#custom_summary" do
+    fab!(:topic) { Fabricate(:topic) }
+
+    it "returns a 404 if there is no topic" do
+      invalid_topic_id = 999
+
+      get "/t/#{invalid_topic_id}/custom-summary.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a 403 if not allowed to see the topic" do
+      pm = Fabricate(:private_message_topic)
+
+      get "/t/#{pm.id}/custom-summary.json"
+
+      expect(response.status).to eq(403)
+    end
+  end
 end

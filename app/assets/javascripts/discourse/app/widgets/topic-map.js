@@ -386,7 +386,8 @@ export default createWidget("topic-map", {
       contents.push(this.attach("topic-map-expanded", attrs));
     }
 
-    if (attrs.hasTopicSummary) {
+    if (attrs.hasTopicSummary || this._includesCustomSummary()) {
+      attrs.includeCustomSummary = this._includesCustomSummary();
       contents.push(this.attach("toggle-topic-summary", attrs));
     }
 
@@ -398,5 +399,20 @@ export default createWidget("topic-map", {
 
   toggleMap() {
     this.state.collapsed = !this.state.collapsed;
+  },
+
+  _includesCustomSummary() {
+    const customSummaryAllowedGroups =
+      this.siteSettings.custom_summarization_allowed_groups
+        .split("|")
+        .map(parseInt);
+
+    return (
+      this.siteSettings.summarization_strategy &&
+      this.currentUser &&
+      this.currentUser.groups.some((g) =>
+        customSummaryAllowedGroups.includes(g.id)
+      )
+    );
   },
 });
