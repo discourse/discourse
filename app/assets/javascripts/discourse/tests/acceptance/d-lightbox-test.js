@@ -114,7 +114,7 @@ acceptance("Experimental Lightbox - layout single image", function (needs) {
 
     await waitForLoad();
 
-    assert.dom(".d-lightbox__footer__main-title").exists();
+    assert.dom(".d-lightbox__main-title").exists();
 
     assert
       .dom(item_title_selector)

@@ -1,5 +1,6 @@
 import { SELECTORS } from "./constants";
 import { escapeExpression } from "discourse/lib/utilities";
+import { htmlSafe } from "@ember/template";
 
 export async function processHTML({ container, selector }) {
   selector ??= SELECTORS.DEFAULT_ITEM_SELECTOR;
@@ -73,7 +74,7 @@ export async function processHTML({ container, selector }) {
         dominantColor: _dominantColor,
         aspectRatio: _aspectRatio,
         index,
-        cssVars: _cssVars,
+        cssVars: htmlSafe(_cssVars),
       };
     } catch (error) {
       // eslint-disable-next-line no-console

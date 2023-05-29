@@ -24,7 +24,7 @@
         tabindex="-1"
         src={{item.smallURL}}
         data-lightbox-item-index={{item.index}}
-        style={{html-safe item.cssVars}}
+        style={{item.cssVars}}
         class={{concat
           "d-lightbox__carousel-item"
           (if (eq item.index @currentIndex) "--is-current active")

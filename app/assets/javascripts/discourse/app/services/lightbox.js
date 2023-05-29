@@ -197,6 +197,10 @@ export default class LightboxService extends Service {
   }
 
   async #setupDocumentFocus() {
+    if (!this.lightboxIsOpen) {
+      return;
+    }
+
     this.lastFocusedElement = document.activeElement;
     document.activeElement.blur();
     document.querySelector(".d-lightbox__close-button")?.focus();
