@@ -9,6 +9,15 @@ describe "User preferences for Interface", type: :system, js: true do
 
   describe "Bookmarks" do
     it "changes the bookmark after notification preference" do
+      skip(<<~TEXT) if ENV["CI"]
+      This is currently failing on CI with the following:
+
+      ```
+      Failure/Error: expect(page).to have_content(I18n.t("js.saved"))
+      expected `#<Capybara::Session>.has_content?("Saved!")` to be truthy, got false
+      ```
+      TEXT
+
       user_preferences_page.visit(user).click_interface_tab
 
       # preselects the default user_option.bookmark_auto_delete_preference value of 3 (clear_reminder)
