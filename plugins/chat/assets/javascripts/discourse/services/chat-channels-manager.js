@@ -35,11 +35,19 @@ export default class ChatChannelsManager extends Service {
     return Object.values(this._cached);
   }
 
-  store(channelObject) {
-    let model = this.#findStale(channelObject.id);
+  store(channelObject, options = {}) {
+    let model;
+
+    if (!options.replace) {
+      model = this.#findStale(channelObject.id);
+    }
 
     if (!model) {
-      model = ChatChannel.create(channelObject);
+      if (channelObject instanceof ChatChannel) {
+        model = channelObject;
+      } else {
+        model = ChatChannel.create(channelObject);
+      }
       this.#cache(model);
     }
 

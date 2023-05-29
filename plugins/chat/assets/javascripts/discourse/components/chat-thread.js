@@ -154,22 +154,22 @@ export default class ChatThreadPanel extends Component {
 
     this.loading = true;
 
-    const findArgs = { pageSize: PAGE_SIZE, threadId: this.thread.id };
+    const findArgs = {
+      pageSize: PAGE_SIZE,
+      threadId: this.thread.id,
+      includeMessages: true,
+    };
     return this.chatApi
-      .messages(this.channel.id, findArgs)
-      .then((results) => {
-        if (this._selfDeleted || this.channel.id !== results.meta.channel_id) {
-          this.router.transitionTo(
-            "chat.channel",
-            "-",
-            results.meta.channel_id
-          );
+      .channel(this.channel.id, findArgs)
+      .then((result) => {
+        if (this._selfDeleted || this.channel.id !== result.meta.channel_id) {
+          this.router.transitionTo("chat.channel", "-", result.meta.channel_id);
         }
 
         const [messages, meta] = this.afterFetchCallback(
           this.channel,
           this.thread,
-          results
+          result
         );
         this.thread.messagesManager.addMessages(messages);
         this.thread.details = meta;
@@ -186,10 +186,10 @@ export default class ChatThreadPanel extends Component {
   }
 
   @bind
-  afterFetchCallback(channel, thread, results) {
+  afterFetchCallback(channel, thread, result) {
     const messages = [];
 
-    results.chat_messages.forEach((messageData) => {
+    result.chat_messages.forEach((messageData) => {
       // If a message has been hidden it is because the current user is ignoring
       // the user who sent it, so we want to unconditionally hide it, even if
       // we are going directly to the target
@@ -205,7 +205,7 @@ export default class ChatThreadPanel extends Component {
       messages.push(message);
     });
 
-    return [messages, results.meta];
+    return [messages, result.meta];
   }
 
   // NOTE: At some point we want to do this based on visible messages

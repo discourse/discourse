@@ -32,7 +32,7 @@ describe "Thread tracking state | full page", type: :system, js: true do
     it "shows an indicator on the unread thread in the list" do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
-      expect(thread_list_page).to have_unread_item(thread.id)
+      expect(thread_list_page).to have_unread_item(thread.id, count: 1)
     end
 
     it "marks the thread as read and removes both indicators when the user opens it" do

@@ -20,6 +20,7 @@ import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
+import showModal from "discourse/lib/show-modal";
 
 const LINKS_IN_BOTH_SEGMENTS = ["/review"];
 
@@ -111,13 +112,23 @@ export default class CommunitySection {
     const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
 
     if (sectionLinkClass) {
-      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+      return this.#initializeSectionLink(
+        sectionLinkClass,
+        inMoreDrawer,
+        link.name,
+        link.scon
+      );
     } else {
       return new SectionLink(link, this, this.router);
     }
   }
 
-  #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
+  #initializeSectionLink(
+    sectionLinkClass,
+    inMoreDrawer,
+    overridenName,
+    overridenIcon
+  ) {
     if (this.router.isDestroying) {
       return;
     }
@@ -128,28 +139,48 @@ export default class CommunitySection {
       router: this.router,
       siteSettings: this.siteSettings,
       inMoreDrawer,
+      overridenName,
+      overridenIcon,
     });
   }
 
   get decoratedTitle() {
     return I18n.t(
-      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`
+      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`,
+      { defaultValue: this.section.title }
     );
   }
 
   get headerActions() {
+    if (this.currentUser?.admin) {
+      return [
+        {
+          action: this.editSection,
+          title: I18n.t(
+            "sidebar.sections.community.header_action_edit_section_title"
+          ),
+        },
+      ];
+    }
     if (this.currentUser) {
       return [
         {
           action: this.composeTopic,
-          title: I18n.t("sidebar.sections.community.header_action_title"),
+          title: I18n.t(
+            "sidebar.sections.community.header_action_create_topic_title"
+          ),
         },
       ];
     }
   }
 
   get headerActionIcon() {
-    return "plus";
+    return this.currentUser?.admin ? "pencil-alt" : "plus";
+  }
+
+  @action
+  editSection() {
+    showModal("sidebar-section-form", { model: this.section });
   }
 
   @action

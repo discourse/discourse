@@ -12,14 +12,13 @@ module Chat
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
     before_action :find_chatable, only: %i[enable_chat disable_chat]
-    before_action :find_chat_message, only: %i[lookup_message edit_message rebake message_link]
+    before_action :find_chat_message, only: %i[edit_message rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[
                     respond
                     enable_chat
                     disable_chat
                     message_link
-                    lookup_message
                     set_user_chat_status
                     dismiss_retention_reminder
                     flag
@@ -169,59 +168,6 @@ module Chat
       render json: success_json
     end
 
-    # TODO: (martin) This endpoint is deprecated -- the /api/channels/:id?include_messages=true
-    # endpoint should be used instead. We need to remove this and any JS references.
-    def messages
-      page_size = params[:page_size]&.to_i || 1000
-      direction = params[:direction].to_s
-      message_id = params[:message_id]
-      if page_size > 100 ||
-           (
-             message_id.blank? ^ direction.blank? &&
-               (direction.present? && !CHAT_DIRECTIONS.include?(direction))
-           )
-        raise Discourse::InvalidParameters
-      end
-
-      messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
-      messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
-      messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
-      messages = exclude_thread_messages(messages) if !include_thread_messages?
-
-      if message_id.present?
-        condition = direction == PAST ? "<" : ">"
-        messages = messages.where("id #{condition} ?", message_id.to_i)
-      end
-
-      # NOTE: This order is reversed when we return the Chat::View below if the direction
-      # is not FUTURE.
-      order = direction == FUTURE ? "ASC" : "DESC"
-      messages = messages.order("created_at #{order}, id #{order}").limit(page_size).to_a
-
-      can_load_more_past = nil
-      can_load_more_future = nil
-
-      if direction == FUTURE
-        can_load_more_future = messages.size == page_size
-      elsif direction == PAST
-        can_load_more_past = messages.size == page_size
-      else
-        # When direction is blank, we'll return the latest messages.
-        can_load_more_future = false
-        can_load_more_past = messages.size == page_size
-      end
-
-      chat_view =
-        Chat::View.new(
-          chat_channel: @chat_channel,
-          chat_messages: direction == FUTURE ? messages : messages.reverse,
-          user: current_user,
-          can_load_more_past: can_load_more_past,
-          can_load_more_future: can_load_more_future,
-        )
-      render_serialized(chat_view, Chat::ViewSerializer, root: false)
-    end
-
     def react
       params.require(%i[message_id emoji react_action])
       guardian.ensure_can_react!
@@ -250,43 +196,6 @@ module Chat
                  chat_channel_id: @chat_channel.id,
                  chat_channel_title: @chat_channel.title(current_user),
                )
-    end
-
-    # TODO: (martin) This endpoint is deprecated -- the /api/channels/:id?target_message_id=:message_id
-    # endpoint should be used instead. We need to remove this and any JS references.
-    def lookup_message
-      set_channel_and_chatable_with_access_check(chat_channel_id: @message.chat_channel_id)
-
-      messages = preloaded_chat_message_query.where(chat_channel: @chat_channel)
-      messages = messages.with_deleted if guardian.can_moderate_chat?(@chatable)
-      messages = messages.where(thread_id: params[:thread_id]) if params[:thread_id]
-      messages = exclude_thread_messages(messages) if !include_thread_messages?
-
-      past_messages =
-        messages
-          .where("created_at < ?", @message.created_at)
-          .order(created_at: :desc)
-          .limit(PAST_MESSAGE_LIMIT)
-
-      future_messages =
-        messages
-          .where("created_at > ?", @message.created_at)
-          .order(created_at: :asc)
-          .limit(FUTURE_MESSAGE_LIMIT)
-
-      can_load_more_past = past_messages.count == PAST_MESSAGE_LIMIT
-      can_load_more_future = future_messages.count == FUTURE_MESSAGE_LIMIT
-      looked_up_message = !include_thread_messages? && @message.thread_reply? ? [] : [@message]
-      messages = [past_messages.reverse, looked_up_message, future_messages].reduce([], :concat)
-      chat_view =
-        Chat::View.new(
-          chat_channel: @chat_channel,
-          chat_messages: messages,
-          user: current_user,
-          can_load_more_past: can_load_more_past,
-          can_load_more_future: can_load_more_future,
-        )
-      render_serialized(chat_view, Chat::ViewSerializer, root: false)
     end
 
     def set_user_chat_status
@@ -423,11 +332,6 @@ module Chat
       query
     end
 
-    def include_thread_messages?
-      params[:thread_id].present? || !SiteSetting.enable_experimental_chat_threaded_discussions ||
-        !@chat_channel.threading_enabled
-    end
-
     def find_chatable
       @chatable = Category.find_by(id: params[:chatable_id])
       guardian.ensure_can_moderate_chat!(@chatable)
@@ -440,16 +344,6 @@ module Chat
       ]
       @message = @message.find_by(id: params[:message_id])
       raise Discourse::NotFound unless @message
-    end
-
-    def exclude_thread_messages(messages)
-      messages.where(<<~SQL, channel_id: @chat_channel.id)
-        chat_messages.thread_id IS NULL OR chat_messages.id IN (
-          SELECT original_message_id
-          FROM chat_threads
-          WHERE chat_threads.channel_id = :channel_id
-        )
-      SQL
     end
   end
 end

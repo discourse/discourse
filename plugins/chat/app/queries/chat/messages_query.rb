@@ -21,6 +21,7 @@ module Chat
     PAST = "past"
     FUTURE = "future"
     VALID_DIRECTIONS = [PAST, FUTURE]
+    MAX_PAGE_SIZE = 100
 
     # @param channel [Chat::Channel] The channel to query messages within.
     # @param guardian [Guardian] The guardian to use for permission checks.
@@ -57,10 +58,10 @@ module Chat
         )
       SQL
 
-      if target_message_id.present?
+      if target_message_id.present? && direction.blank?
         query_around_target(target_message_id, channel, messages)
       else
-        query_paginated_messages(direction, page_size, channel, messages)
+        query_paginated_messages(direction, page_size, channel, messages, target_message_id)
       end
     end
 
@@ -117,7 +118,18 @@ module Chat
       }
     end
 
-    def self.query_paginated_messages(direction, page_size, channel, messages)
+    def self.query_paginated_messages(
+      direction,
+      page_size,
+      channel,
+      messages,
+      target_message_id = nil
+    )
+      if target_message_id.present?
+        condition = direction == PAST ? "<" : ">"
+        messages = messages.where("id #{condition} ?", target_message_id.to_i)
+      end
+
       order = direction == FUTURE ? "ASC" : "DESC"
       messages = messages.order("created_at #{order}, id #{order}").limit(page_size).to_a
 
