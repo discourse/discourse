@@ -18,15 +18,15 @@ module PageObjects
       end
 
       def has_form_template?(name)
-        find(".form-templates__table tbody tr td", text: name).present?
+        has_css?(".form-templates__table tbody tr td", text: name)
       end
 
       def has_category_in_template_row?(category_name)
-        find(".form-templates__table .categories .category-name", text: category_name).present?
+        has_css?(".form-templates__table tbody tr td", text: category_name)
       end
 
       def has_template_structure?(structure)
-        find("code", text: structure).present?
+        has_css?("code", text: structure)
       end
 
       # Form Template new/edit form related
@@ -52,15 +52,15 @@ module PageObjects
       end
 
       def has_input_field?(type)
-        find(".form-template-field__#{type}").present?
+        has_css?(".form-template-field__#{type}")
       end
 
       def has_preview_modal?
-        find(".form-template-form-preview-modal").present?
+        has_css?(".form-template-form-preview-modal")
       end
 
       def has_validations_modal?
-        find(".admin-form-template-validation-options-modal").present?
+        has_css?(".admin-form-template-validation-options-modal")
       end
 
       def has_name_value?(name)
@@ -68,11 +68,11 @@ module PageObjects
       end
 
       def has_save_button_with_state?(state)
-        find_button("Save", disabled: state)
+        has_button?("Save", disabled: state)
       end
 
       def has_preview_button_with_state?(state)
-        find_button("Preview", disabled: state)
+        has_button?("Preview", disabled: state)
       end
     end
   end
