@@ -17,19 +17,11 @@ module PageObjects
       end
 
       def header
-        find(".chat-thread__header")
-      end
-
-      def omu
-        header.find(".chat-thread__omu")
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
       end
 
       def close
         header.find(".chat-thread__close").click
-      end
-
-      def has_header_content?(content)
-        header.has_content?(content)
       end
 
       def has_no_loading_skeleton?

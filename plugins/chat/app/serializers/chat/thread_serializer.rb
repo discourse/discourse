@@ -5,14 +5,21 @@ module Chat
     has_one :original_message_user, serializer: BasicUserWithStatusSerializer, embed: :objects
     has_one :original_message, serializer: Chat::ThreadOriginalMessageSerializer, embed: :objects
 
-    attributes :id, :title, :status, :channel_id, :meta, :reply_count, :current_user_membership
+    attributes :id,
+               :title,
+               :status,
+               :channel_id,
+               :meta,
+               :reply_count,
+               :current_user_membership,
+               :preview
 
     def initialize(object, opts)
       super(object, opts)
       @opts = opts
 
       # Avoids an N1 to re-load the thread in the serializer for original_message.
-      object.original_message.thread = object
+      object.original_message&.thread = object
       @current_user_membership = opts[:membership]
     end
 
@@ -22,6 +29,14 @@ module Chat
 
     def reply_count
       object.replies_count_cache || 0
+    end
+
+    def include_preview?
+      @opts[:include_preview]
+    end
+
+    def preview
+      Chat::ThreadPreviewSerializer.new(object, scope: scope, root: false).as_json
     end
 
     def include_current_user_membership?

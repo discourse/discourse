@@ -106,8 +106,21 @@
     }
   }
 }
-
 .sidebar-section-form-modal {
+  .draggable {
+    cursor: move;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-user-drag: element;
+    -khtml-user-drag: element;
+    -moz-user-drag: element;
+    -o-user-drag: element;
+    user-drag: element;
+  }
+  .dragging {
+    opacity: 0.4;
+  }
   .modal-inner-container {
     width: var(--modal-max-width);
   }
@@ -122,17 +135,52 @@
   }
   .row-wrapper {
     display: grid;
-    grid-template-columns: auto auto auto 2em;
+    grid-template-columns: 25px 60px auto auto 2em;
     gap: 1em;
-    margin-top: 1em;
+    padding: 0.5em 1px;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    cursor: default;
+
+    &.header {
+      padding-bottom: 0;
+      padding-top: 1em;
+      label {
+        margin-bottom: 0;
+      }
+      .link-url {
+        margin-left: -1em;
+      }
+    }
+
+    &.drag-above {
+      border-top: 1px dotted #666;
+      margin-top: -1px;
+    }
+    &.drag-below {
+      border-bottom: 1px dotted #666;
+      padding-bottom: calc(0.5em - 1px);
+    }
+    .link-icon {
+      grid-column: 1 / span 2;
+      padding-left: calc(25px + 1em);
+    }
+    &.mark-public-wrapper {
+      label {
+        grid-column: 1 / -1;
+      }
+    }
   }
   .delete-link {
     height: 1em;
-    align-self: end;
-    margin-bottom: 0.75em;
+    align-self: center;
     margin-right: 1em;
   }
-  .btn-flat.add-link {
+  .btn-flat.add-link,
+  .btn-flat.reset-link {
     margin-top: 1em;
     margin-left: -0.65em;
     &:active,
@@ -148,6 +196,9 @@
       color: var(--tertiary-hover);
     }
   }
+  .btn-flat.reset-link {
+    float: right;
+  }
   .modal-footer {
     display: flex;
     justify-content: space-between;
@@ -155,5 +206,14 @@
     .delete {
       margin-right: 0;
     }
+  }
+  .select-kit.multi-select .multi-select-header .formatted-selection {
+    display: none;
+  }
+  .modal-inner-container .select-kit {
+    width: 60px;
+  }
+  .select-kit.is-expanded .select-kit-body {
+    width: 220px !important;
   }
 }
