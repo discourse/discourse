@@ -5008,7 +5008,7 @@ en:
         explain_preview: "See the site with this theme enabled"
         syntax_error: "Syntax Error"
         settings_editor: "Settings Editor"
-        validation_settings_keys: "Each item must have a 'settings' and a 'value' key and no other keys."
+        validation_settings_keys: "Each item must have only a 'setting' key and a 'value' key."
         validation_settings_deleted: "These settings were deleted. Please restore them and try again."
         validation_settings_added: "These settings were added. Please remove them and try again."
         save: "Save"
