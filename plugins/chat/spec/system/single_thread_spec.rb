@@ -183,6 +183,7 @@ describe "Single thread in side panel", type: :system, js: true do
       it "opens the side panel for a single thread using the indicator", mobile: true do
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
+
         expect(side_panel).to have_open_thread(thread)
       end
     end
