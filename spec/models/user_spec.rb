@@ -129,7 +129,7 @@ RSpec.describe User do
       end
 
       it "should not create any sidebar section link records for staged users" do
-        Fabricate(:user, staged: true)
+        user = Fabricate(:user, staged: true)
 
         expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
@@ -142,7 +142,8 @@ RSpec.describe User do
       end
 
       it "should not create any sidebar section link records for non human users" do
-        Fabricate(:user, id: -Time.now.to_i)
+        id = -Time.now.to_i
+        user = Fabricate(:user, id: id)
 
         expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
