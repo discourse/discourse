@@ -25,8 +25,11 @@ export default class ChannelHashtagType extends HashtagTypeBase {
   }
 
   generateIconHTML(hashtag) {
+    const colorCssClass = !this.preloadedData.mapBy("id").includes(hashtag.id)
+      ? "hashtag-missing"
+      : `hashtag-color--${this.type}-${hashtag.id}`;
     return iconHTML(hashtag.icon, {
-      class: `hashtag-color--${this.type}-${hashtag.id}`,
+      class: colorCssClass,
     });
   }
 }
