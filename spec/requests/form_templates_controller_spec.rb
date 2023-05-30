@@ -6,9 +6,9 @@ RSpec.describe FormTemplatesController do
   before { SiteSetting.experimental_form_templates = true }
 
   describe "#index" do
-    fab!(:form_template) { Fabricate(:form_template, id: 2) }
-    fab!(:form_template_2) { Fabricate(:form_template, id: 1) }
-    fab!(:form_template_3) { Fabricate(:form_template, id: 3) }
+    fab!(:form_template) { Fabricate(:form_template) }
+    fab!(:form_template_2) { Fabricate(:form_template) }
+    fab!(:form_template_3) { Fabricate(:form_template) }
 
     context "when logged in as a user" do
       before { sign_in(user) }
@@ -20,10 +20,10 @@ RSpec.describe FormTemplatesController do
         expect(json["form_templates"]).to be_present
         expect(json["form_templates"].length).to eq(3)
 
-        templates = json["form_templates"]
-        expect(templates[0]["id"]).to eq(form_template_2.id)
-        expect(templates[1]["id"]).to eq(form_template.id)
-        expect(templates[2]["id"]).to eq(form_template_3.id)
+        templates = json["form_templates"].map { |template| template["id"] }
+        form_templates = [form_template, form_template_2, form_template_3].sort_by(&:id).map(&:id)
+
+        expect(templates).to eq(form_templates)
       end
     end
 
