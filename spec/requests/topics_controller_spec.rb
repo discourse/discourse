@@ -5286,21 +5286,53 @@ RSpec.describe TopicsController do
 
   describe "#custom_summary" do
     fab!(:topic) { Fabricate(:topic) }
+    let(:plugin) { Plugin::Instance.new }
 
-    it "returns a 404 if there is no topic" do
-      invalid_topic_id = 999
-
-      get "/t/#{invalid_topic_id}/custom-summary.json"
-
-      expect(response.status).to eq(404)
+    before do
+      plugin.register_summarization_strategy(DummyCustomSummarization)
+      SiteSetting.summarization_strategy = DummyCustomSummarization.name
     end
 
-    it "returns a 403 if not allowed to see the topic" do
-      pm = Fabricate(:private_message_topic)
+    context "for anons" do
+      it "returns a 404" do
+        get "/t/#{topic.id}/custom-summary.json"
 
-      get "/t/#{pm.id}/custom-summary.json"
+        expect(response.status).to eq(403)
+      end
+    end
 
-      expect(response.status).to eq(403)
+    context "when the user is a member of an allowlisted group" do
+      fab!(:user) { Fabricate(:leader) }
+
+      before { sign_in(user) }
+
+      it "returns a 404 if there is no topic" do
+        invalid_topic_id = 999
+
+        get "/t/#{invalid_topic_id}/custom-summary.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a 403 if not allowed to see the topic" do
+        pm = Fabricate(:private_message_topic)
+
+        get "/t/#{pm.id}/custom-summary.json"
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when the user is not a member of an allowlited group" do
+      fab!(:user) { Fabricate(:user) }
+
+      before { sign_in(user) }
+
+      it "return a 404" do
+        get "/t/#{topic.id}/custom-summary.json"
+
+        expect(response.status).to eq(403)
+      end
     end
   end
 end
