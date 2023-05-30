@@ -360,12 +360,18 @@ RSpec.configure do |config|
   end
 
   if ENV["CI"]
+    class SpecTimeoutError < StandardError
+    end
+
     config.around do |example|
       Timeout.timeout(
         PER_SPEC_TIMEOUT_SECONDS,
-        nil,
+        SpecTimeoutError,
         "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
-      ) { example.run }
+      ) do
+        example.run
+      rescue SpecTimeoutError
+      end
     end
   end
 
