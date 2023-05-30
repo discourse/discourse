@@ -30,6 +30,7 @@ class TopicsController < ApplicationController
                    publish
                    reset_bump_date
                    set_slow_mode
+                   custom_summary
                  ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -1133,6 +1134,17 @@ class TopicsController < ApplicationController
     guardian.ensure_can_see!(topic)
     strategy = Summarization::Base.selected_strategy&.new
     raise Discourse::NotFound.new unless strategy
+
+    user_group_ids = current_user.group_ids
+
+    forbidden =
+      SiteSetting.custom_summarization_allowed_groups_map.none? do |group_id|
+        user_group_ids.include?(group_id)
+      end
+
+    raise Discourse::InvalidAccess if forbidden
+
+    RateLimiter.new(current_user, "custom_summary", 6, 5.minutes).performed!
 
     hijack do
       summary_opts = {
