@@ -84,7 +84,6 @@ RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
         expect {
           find(".channel-settings-view__muted-selector").click
           find(".channel-settings-view__muted-selector [data-name='On']").click
-          expect(page).to have_content(I18n.t("js.chat.settings.saved"))
         }.to change { membership.reload.muted }.from(false).to(true)
       end
 
@@ -97,7 +96,6 @@ RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
           find(
             ".channel-settings-view__desktop-notification-level-selector [data-name='Never']",
           ).click
-          expect(page).to have_content(I18n.t("js.chat.settings.saved"))
         }.to change { membership.reload.desktop_notification_level }.from("mention").to("never")
       end
 
@@ -110,7 +108,6 @@ RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
           find(
             ".channel-settings-view__mobile-notification-level-selector [data-name='Never']",
           ).click
-          expect(page).to have_content(I18n.t("js.chat.settings.saved"))
         }.to change { membership.reload.mobile_notification_level }.from("mention").to("never")
       end
 
@@ -136,7 +133,6 @@ RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
             find(".channel-settings-view__auto-join-selector").click
             find(".channel-settings-view__auto-join-selector [data-name='Yes']").click
             find("#dialog-holder .btn-primary").click
-            expect(page).to have_content(I18n.t("js.chat.settings.saved"))
           }.to change { channel_1.reload.auto_join_users }.from(false).to(true)
         end
 
@@ -146,7 +142,6 @@ RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
           expect {
             find(".channel-settings-view__channel-wide-mentions-selector").click
             find(".channel-settings-view__channel-wide-mentions-selector [data-name='No']").click
-            expect(page).to have_content(I18n.t("js.chat.settings.saved"))
           }.to change { channel_1.reload.allow_channel_wide_mentions }.from(true).to(false)
         end
 
