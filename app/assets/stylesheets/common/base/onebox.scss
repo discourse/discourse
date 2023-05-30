@@ -1005,3 +1005,18 @@ aside.onebox.preview-error .site-icon {
   height: 16px;
   margin-right: 0.5em;
 }
+
+iframe.tiktok-onebox {
+  // corrects TikTok's iframe spacing
+  border-top: 3px solid #fff;
+  border-radius: 9px;
+}
+
+.mobile-view {
+  iframe.tiktok-onebox {
+    border: 3px solid #fff;
+    margin: 0 auto;
+    display: block;
+    box-sizing: border-box;
+  }
+}

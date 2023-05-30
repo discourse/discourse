@@ -24,6 +24,11 @@ export default class LazyVideo extends Component {
 
   get thumbnailStyle() {
     const color = this.args.videoAttributes.dominantColor;
+    const provider = this.args.videoAttributes.providerName;
+    if (provider === "tiktok") {
+      return "";
+    }
+
     if (color?.match(/^[0-9A-Fa-f]+$/)) {
       return htmlSafe(`background-color: #${color};`);
     }

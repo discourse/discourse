@@ -10,22 +10,22 @@ module Onebox
       requires_iframe_origins "https://www.tiktok.com"
       always_https
 
+      TIKTOK_HEIGHT = 582
+      TIKTOK_WIDTH = 332
+
       def placeholder_html
         <<-HTML
           <img
             src="#{oembed_data.thumbnail_url}"
             title="#{oembed_data.title}"
             style="
-              max-width: #{oembed_data.thumbnail_width / 2}px;
-              max-height: #{oembed_data.thumbnail_height / 2}px;"
+              width: #{TIKTOK_WIDTH}px;
+              height: #{TIKTOK_HEIGHT}px;"
           >
         HTML
       end
 
       def to_html
-        video_height = oembed_data.thumbnail_height < 1024 ? 998 : oembed_data.thumbnail_height
-        height = (323.0 / 576) * video_height
-
         <<-HTML
           <iframe
             class="tiktok-onebox"
@@ -35,12 +35,8 @@ module Onebox
             seamless="seamless"
             scrolling="no"
             style="
-              min-width: 323px;
-              height: #{height}px;
-              border: 4px solid #fff;
-              border-top: 3px solid #fff;
-              background-color: #fff;
-              border-radius: 9px;
+              width: #{TIKTOK_WIDTH}px;
+              height: #{TIKTOK_HEIGHT}px;
               "
           ></iframe>
         HTML

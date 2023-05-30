@@ -126,20 +126,62 @@
 }
 
 // TikTok iframe isn't fluid
+// Same width/height as onebox in tiktok_onebox
+$tiktokWidth: 332px;
+$tiktokHeight: 582px;
+
 .lazy-video-container.tiktok-onebox {
-  width: 332px;
-  height: 745px;
+  width: $tiktokWidth;
+  height: $tiktokHeight;
   padding: 0;
+  background-color: transparent;
+  overflow: hidden;
+
+  .video-thumbnail.tiktok,
+  .video-thumbnail.tiktok img,
+  .title-container,
+  iframe {
+    border-radius: 9px;
+  }
+  .video-thumbnail.tiktok {
+    background-color: transparent;
+    padding: 0;
+    width: $tiktokWidth;
+    height: $tiktokHeight;
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      border: 3px solid #fff;
+      border-radius: 9px;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      box-sizing: border-box;
+    }
+  }
 
   .video-thumbnail.tiktok img {
-    height: 745px;
+    width: $tiktokWidth;
+    height: $tiktokHeight;
   }
 
   iframe {
-    min-width: 332px;
-    height: 742px;
-    background-color: #fff;
+    width: $tiktokWidth;
+    height: $tiktokHeight;
+    // corrects TikTok's iframe spacing
     border-top: 3px solid #fff;
-    border-radius: 9px;
+  }
+}
+
+.mobile-view {
+  .lazy-video-container.tiktok-onebox {
+    margin: 0 auto;
+    iframe {
+      border: 3px solid #fff;
+      margin: 0 auto;
+      display: block;
+      box-sizing: border-box;
+    }
   }
 }
