@@ -1012,6 +1012,12 @@ iframe.tiktok-onebox {
   border-radius: 9px;
 }
 
+.tiktok-onebox-thumbnail {
+  border: 3px solid #fff;
+  border-radius: 9px;
+  display: block;
+  box-sizing: border-box;
+}
 .mobile-view {
   iframe.tiktok-onebox {
     border: 3px solid #fff;

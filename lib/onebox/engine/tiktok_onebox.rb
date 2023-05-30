@@ -18,6 +18,7 @@ module Onebox
           <img
             src="#{oembed_data.thumbnail_url}"
             title="#{oembed_data.title}"
+            class="tiktok-onebox-thumbnail"
             style="
               width: #{TIKTOK_WIDTH}px;
               height: #{TIKTOK_HEIGHT}px;"
