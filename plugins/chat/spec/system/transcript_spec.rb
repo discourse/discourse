@@ -2,6 +2,7 @@
 
 RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:chat_channel_1) { Fabricate(:chat_channel) }
 
   let(:cdp) { PageObjects::CDP.new }
@@ -10,13 +11,13 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    chat_system_bootstrap(Fabricate(:admin), [chat_channel_1])
+    chat_system_bootstrap(admin, [chat_channel_1])
     chat_channel_1.add(current_user)
     sign_in(current_user)
   end
 
   def select_message_desktop(message)
-    if page.has_css?(".chat-message-container.selecting-messages")
+    if page.has_css?(".chat-message-container.selecting-messages", wait: 0)
       chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
     else
       chat_channel_page.message_by_id(message.id).hover

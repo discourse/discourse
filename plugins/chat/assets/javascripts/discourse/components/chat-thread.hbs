@@ -1,5 +1,9 @@
 <div
-  class={{concat-class "chat-thread" (if this.loading "loading")}}
+  class={{concat-class
+    "chat-thread"
+    (if this.loading "loading")
+    (if this.thread.staged "staged")
+  }}
   data-id={{this.thread.id}}
   {{did-insert this.setUploadDropZone}}
   {{did-insert this.subscribeToUpdates}}

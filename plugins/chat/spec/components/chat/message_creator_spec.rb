@@ -558,10 +558,27 @@ describe Chat::MessageCreator do
               content: "this is a message",
               in_reply_to_id: reply_message.id,
             ).chat_message
-        }.to change { Chat::UserChatThreadMembership.count }
+        }.to change { Chat::UserChatThreadMembership.count }.by(2)
 
         expect(
           Chat::UserChatThreadMembership.exists?(user: user1, thread: message.thread),
+        ).to be_truthy
+      end
+
+      it "creates a thread membership for the original message user" do
+        message = nil
+        expect {
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+        }.to change { Chat::UserChatThreadMembership.count }.by(2)
+
+        expect(
+          Chat::UserChatThreadMembership.exists?(user: reply_message.user, thread: message.thread),
         ).to be_truthy
       end
 
@@ -664,6 +681,11 @@ describe Chat::MessageCreator do
 
         it "does not create a thread membership if one exists" do
           Fabricate(:user_chat_thread_membership, user: user1, thread: existing_thread)
+          Fabricate(
+            :user_chat_thread_membership,
+            user: existing_thread.original_message_user,
+            thread: existing_thread,
+          )
           expect {
             described_class.create(
               chat_channel: public_chat_channel,

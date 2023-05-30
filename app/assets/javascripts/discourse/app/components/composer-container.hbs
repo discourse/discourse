@@ -121,6 +121,7 @@
           @afterRefresh={{this.composer.afterRefresh}}
           @focusTarget={{this.composer.focusTarget}}
           @disableTextarea={{this.composer.disableTextarea}}
+          @formTemplateIds={{this.composer.formTemplateIds}}
         >
           <div class="composer-fields">
             <PluginOutlet
@@ -167,9 +168,7 @@
                     <div class="category-input">
                       <CategoryChooser
                         @value={{this.composer.model.categoryId}}
-                        @onChange={{action
-                          (mut this.composer.model.categoryId)
-                        }}
+                        @onChange={{this.composer.updateCategory}}
                         @options={{hash
                           disabled=this.composer.disableCategoryChooser
                           scopedCategoryId=this.composer.scopedCategoryId
