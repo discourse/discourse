@@ -147,7 +147,7 @@ export default class ChatMessage {
     }
   }
 
-  cook() {
+  async cook() {
     const site = getOwner(this).lookup("service:site");
 
     if (this.isDestroyed || this.isDestroying) {
@@ -168,16 +168,15 @@ export default class ChatMessage {
     if (ChatMessage.cookFunction) {
       this.cooked = ChatMessage.cookFunction(this.message);
     } else {
-      generateCookFunction(markdownOptions).then((cookFunction) => {
-        ChatMessage.cookFunction = (raw) => {
-          return simpleCategoryHashMentionTransform(
-            cookFunction(raw),
-            site.categories
-          );
-        };
+      const cookFunction = await generateCookFunction(markdownOptions);
+      ChatMessage.cookFunction = (raw) => {
+        return simpleCategoryHashMentionTransform(
+          cookFunction(raw),
+          site.categories
+        );
+      };
 
-        this.cooked = ChatMessage.cookFunction(this.message);
-      });
+      this.cooked = ChatMessage.cookFunction(this.message);
     }
   }
 
