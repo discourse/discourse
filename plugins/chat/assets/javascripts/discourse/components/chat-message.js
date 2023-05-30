@@ -287,6 +287,7 @@ export default class ChatMessage extends Component {
   @action
   handleTouchEnd(event) {
     event.stopPropagation();
+    event.preventDefault();
 
     cancel(this._isPressingHandler);
   }
