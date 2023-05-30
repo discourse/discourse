@@ -62,14 +62,17 @@ module PageObjects
 
       def select_row_by_value(value)
         expanded_component.find(".select-kit-row[data-value='#{value}']").click
+        has_selected_value?(value)
       end
 
       def select_row_by_name(name)
         expanded_component.find(".select-kit-row[data-name='#{name}']").click
+        has_selected_name?(name)
       end
 
       def select_row_by_index(index)
         expanded_component.find(".select-kit-row[data-index='#{index}']").click
+        has_selected_index?(index)
       end
 
       def expand_if_needed
