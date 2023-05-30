@@ -7,15 +7,40 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
-  before { chat_system_bootstrap }
+  before do
+    chat_system_bootstrap
+    channel_1.add(current_user)
+    sign_in(current_user)
+  end
 
-  context "when sending a message" do
+  context "when first batch of messages doesnt fill page" do
     before do
-      channel_1.add(current_user)
-      sign_in(current_user)
+      50.times do
+        Fabricate(
+          :chat_message,
+          message: Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length),
+          user: current_user,
+          chat_channel: channel_1,
+        )
+      end
     end
 
+    it "autofills for more messages" do
+      chat.prefers_full_page
+      visit("/")
+      # cheap trick to ensure the messages don't fill the initial page
+      page.execute_script(
+        "document.head.insertAdjacentHTML('beforeend', `<style>.chat-message-text{font-size:3px;}</style>`)",
+      )
+      sidebar_page.open_channel(channel_1)
+
+      expect(channel_page.messages).to have_message(id: message_1.id)
+    end
+  end
+
+  context "when sending a message" do
     context "with lots of messages" do
       before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
 
@@ -71,11 +96,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
   end
 
   context "when clicking the arrow button" do
-    before do
-      channel_1.add(current_user)
-      50.times { Fabricate(:chat_message, chat_channel: channel_1) }
-      sign_in(current_user)
-    end
+    before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
 
     it "jumps to the bottom of the channel" do
       unloaded_message = Fabricate(:chat_message, chat_channel: channel_1)
@@ -92,11 +113,6 @@ RSpec.describe "Chat channel", type: :system, js: true do
   end
 
   context "when returning to a channel where last read is not last message" do
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     it "jumps to the bottom of the channel" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
       messages = 50.times.map { Fabricate(:chat_message, chat_channel: channel_1) }
@@ -112,9 +128,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
 
     before do
       channel_1.add(other_user)
-      channel_1.add(current_user)
       50.times { Fabricate(:chat_message, chat_channel: channel_1) }
-      sign_in(current_user)
     end
 
     it "doesn’t scroll the pane" do
@@ -142,11 +156,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       )
     end
 
-    before do
-      channel_1.add(other_user)
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
+    before { channel_1.add(other_user) }
 
     it "highlights the mentions" do
       chat.visit_channel(channel_1)
@@ -185,8 +195,6 @@ RSpec.describe "Chat channel", type: :system, js: true do
     before do
       Fabricate(:chat_message, in_reply_to: message_1, user: other_user, chat_channel: channel_1)
       channel_1.add(other_user)
-      channel_1.add(current_user)
-      sign_in(current_user)
     end
 
     it "doesn’t show the reply-to line" do
@@ -203,8 +211,6 @@ RSpec.describe "Chat channel", type: :system, js: true do
       Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
       Fabricate(:chat_message, in_reply_to: message_1, user: other_user, chat_channel: channel_1)
       channel_1.add(other_user)
-      channel_1.add(current_user)
-      sign_in(current_user)
     end
 
     it "shows the reply-to line" do
@@ -229,8 +235,6 @@ RSpec.describe "Chat channel", type: :system, js: true do
       Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
       Fabricate(:chat_message, in_reply_to: message_2, user: current_user, chat_channel: channel_1)
       channel_1.add(other_user)
-      channel_1.add(current_user)
-      sign_in(current_user)
     end
 
     it "renders text in the reply-to" do
@@ -241,12 +245,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
   end
 
   context "when messages are separated by a day" do
-    before do
-      Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.days.ago)
-
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
+    before { Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.days.ago) }
 
     it "shows a date separator" do
       chat.visit_channel(channel_1)
@@ -264,11 +263,6 @@ RSpec.describe "Chat channel", type: :system, js: true do
       \`\`\`
       MESSAGE
 
-    before do
-      channel_1.add(current_user)
-      sign_in(current_user)
-    end
-
     it "adds the correct lang" do
       chat.visit_channel(channel_1)
 
@@ -277,11 +271,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
   end
 
   context "when scrolling" do
-    before do
-      channel_1.add(current_user)
-      50.times { Fabricate(:chat_message, chat_channel: channel_1) }
-      sign_in(current_user)
-    end
+    before { 50.times { Fabricate(:chat_message, chat_channel: channel_1) } }
 
     it "resets the active message" do
       chat.visit_channel(channel_1)

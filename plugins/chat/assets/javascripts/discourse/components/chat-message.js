@@ -274,6 +274,7 @@ export default class ChatMessage extends Component {
       this._handleLongPress();
     }
 
+    this._touchStartAt = Date.now();
     this._isPressingHandler = discourseLater(this._handleLongPress, 500);
   }
 
@@ -287,6 +288,11 @@ export default class ChatMessage extends Component {
   @action
   handleTouchEnd(event) {
     event.stopPropagation();
+
+    // this is to prevent the long press to register as a click
+    if (Date.now() - this._touchStartAt >= 500) {
+      event.preventDefault();
+    }
 
     cancel(this._isPressingHandler);
   }

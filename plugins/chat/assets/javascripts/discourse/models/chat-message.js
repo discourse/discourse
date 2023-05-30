@@ -126,6 +126,14 @@ export default class ChatMessage {
     return message;
   }
 
+  get replyable() {
+    return !this.staged && !this.error;
+  }
+
+  get editable() {
+    return !this.staged && !this.error;
+  }
+
   get cooked() {
     return this._cooked;
   }

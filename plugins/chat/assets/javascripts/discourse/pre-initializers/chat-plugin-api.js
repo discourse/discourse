@@ -91,6 +91,26 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * });
  */
 
+/**
+ * Send a chat message, message or uploads must be provided
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function sendChatMessage
+ * @param {number} channelId - The id of the channel
+ * @param {Object} options
+ * @param {string} [options.message] - The content of the message to send
+ * @param {string} [options.uploads] - A list of uploads to send
+ * @param {number} [options.threadId] - The thread id where the message should be sent
+ *
+ * @example
+ *
+ * api.sendChatMessage(
+ *   1,
+ *  { message: "Hello world", threadId: 2 }
+ * );
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -119,6 +139,20 @@ export default {
         Object.defineProperty(apiPrototype, "addChatDrawerStateCallback", {
           value(callback) {
             addChatDrawerStateCallback(callback);
+          },
+        });
+      }
+
+      if (!apiPrototype.hasOwnProperty("sendChatMessage")) {
+        Object.defineProperty(apiPrototype, "sendChatMessage", {
+          async value(channelId, options = {}) {
+            return this.container
+              .lookup("service:chat-api")
+              .sendMessage(channelId, {
+                thread_id: options.threadId,
+                message: options.message,
+                uploads: options.uploads,
+              });
           },
         });
       }

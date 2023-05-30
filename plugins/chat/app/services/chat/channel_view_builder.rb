@@ -84,6 +84,15 @@ module Chat
     def determine_target_message_id(contract:, channel:, guardian:, **)
       if contract.fetch_from_last_read
         contract.target_message_id = channel.membership_for(guardian.user)&.last_read_message_id
+
+        # We need to force a page size here because we don't want to
+        # load all messages in the channel (since starting from 0
+        # makes them all unread). When the target_message_id is provided
+        # page size is not required since we load N messages either side of
+        # the target.
+        if contract.target_message_id.blank?
+          contract.page_size = contract.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE
+        end
       end
     end
 

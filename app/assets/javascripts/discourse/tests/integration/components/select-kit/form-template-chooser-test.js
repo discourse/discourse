@@ -12,7 +12,7 @@ module(
 
     hooks.beforeEach(function () {
       this.set("subject", selectKit());
-      pretender.get("/admin/customize/form-templates.json", () => {
+      pretender.get("/form-templates.json", () => {
         return response({
           form_templates: [
             { id: 1, name: "template 1", template: "test: true" },
@@ -40,7 +40,7 @@ module(
     });
 
     test("when no templates are available, the select is disabled", async function (assert) {
-      pretender.get("/admin/customize/form-templates.json", () => {
+      pretender.get("/form-templates.json", () => {
         return response({ form_templates: [] });
       });
 

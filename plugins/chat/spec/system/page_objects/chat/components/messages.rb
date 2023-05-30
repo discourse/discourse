@@ -12,12 +12,20 @@ module PageObjects
           @context = context
         end
 
+        def component
+          find(context)
+        end
+
+        def message
+          PageObjects::Components::Chat::Message.new(context + " " + SELECTOR)
+        end
+
         def has_message?(**args)
-          PageObjects::Components::Chat::Message.new(context + " " + SELECTOR).exists?(**args)
+          message.exists?(**args)
         end
 
         def has_no_message?(**args)
-          !has_message?(**args)
+          message.does_not_exist?(**args)
         end
       end
     end

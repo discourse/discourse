@@ -11,6 +11,8 @@ formatters = []
 verbose = false
 fail_fast = nil
 seed = rand(2**16)
+profile = false
+profile_print_slowest_examples_count = 10
 
 OptionParser
   .new do |opts|
@@ -26,6 +28,15 @@ OptionParser
     end
 
     opts.on("-v", "--verbose", "More output") { verbose = true }
+
+    opts.on(
+      "-p",
+      "--profile=[COUNT]",
+      "Benchmark the runtime of each example and list the slowest examples (default: 10)",
+    ) do |count|
+      profile = true
+      profile_print_slowest_examples_count = count.to_i if count
+    end
 
     opts.on("--fail-fast=[N]") do |n|
       n =
@@ -67,6 +78,8 @@ success =
     fail_fast: fail_fast,
     use_runtime_info: use_runtime_info,
     seed: seed.to_s,
+    profile:,
+    profile_print_slowest_examples_count:,
   )
 
 if success

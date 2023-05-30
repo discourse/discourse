@@ -16,18 +16,25 @@ module PageObjects
           find(context)
         end
 
-        def has_message?(message, action: nil)
-          data_attributes = "[data-id=\"#{message.id}\"]"
-          data_attributes << "[data-action=\"#{action}\"]" if action
-          component.find(SELECTOR + data_attributes)
+        def has_message?(**args)
+          selectors = SELECTOR
+          selectors += "[data-id=\"#{args[:id]}\"]" if args[:id]
+          selectors += "[data-action=\"#{args[:action]}\"]" if args[:action]
+          selector_method = args[:does_not_exist] ? :has_no_selector? : :has_selector?
+
+          component.send(selector_method, selectors)
         end
 
-        def has_no_message?
-          component.has_no_css?(SELECTOR)
+        def has_no_message?(**args)
+          has_message?(**args, does_not_exist: true)
         end
 
-        def editing_message?(message)
-          has_message?(message, action: :edit)
+        def editing?(message)
+          has_message?(id: message.id, action: :edit)
+        end
+
+        def replying_to?(message)
+          has_message?(id: message.id, action: :reply)
         end
 
         def cancel_edit

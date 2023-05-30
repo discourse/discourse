@@ -21,7 +21,7 @@
     "xss": "^1.0.14"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
+    "@babel/core": "^7.22.1",
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.1.1",
     "@embroider/test-setup": "^3.0.1",

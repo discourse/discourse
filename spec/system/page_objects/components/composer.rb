@@ -72,6 +72,11 @@ module PageObjects
         find(AUTOCOMPLETE_MENU)
       end
 
+      def switch_category(category_name)
+        find(".category-chooser").click
+        find(".category-row[data-name='#{category_name}']").click
+      end
+
       def has_emoji_autocomplete?
         has_css?(AUTOCOMPLETE_MENU)
       end
@@ -96,6 +101,22 @@ module PageObjects
 
       def has_no_emoji_preview?(emoji)
         page.has_no_css?(emoji_preview_selector(emoji))
+      end
+
+      def has_composer_input?
+        page.has_css?("#{COMPOSER_ID} .d-editor .d-editor-input")
+      end
+
+      def has_form_template?
+        page.has_css?(".form-template-form__wrapper")
+      end
+
+      def has_form_template_field?(field)
+        page.has_css?(".form-template-field[data-field-type='#{field}']")
+      end
+
+      def has_form_template_chooser?
+        page.has_css?(".composer-select-form-template")
       end
 
       def composer_input

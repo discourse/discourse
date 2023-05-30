@@ -8,13 +8,13 @@ module PageObjects
       end
 
       def has_finished_loading?
-        component.has_css?(".loading-container .spinner")
+        component.has_css?(".loading-container .spinner", wait: 0)
         component.has_no_css?(".loading-container .spinner")
       end
 
       def search(query)
         component.find(".dc-filter-input").fill_in(with: query)
-        component.has_css?(".loading-container .spinner")
+        component.has_css?(".loading-container .spinner", wait: 0)
         component.has_no_css?(".loading-container .spinner")
       end
 

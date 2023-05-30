@@ -27,10 +27,9 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
 
       expect(side_panel_page).to have_open_thread
 
-      thread_page.fill_composer("reply to message")
-      thread_page.click_send_message
+      text = thread_page.send_message
 
-      expect(thread_page).to have_message(text: "reply to message")
+      expect(thread_page.messages).to have_message(text: text, persisted: true)
 
       thread_page.close
 

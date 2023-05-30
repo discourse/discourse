@@ -251,7 +251,7 @@ RSpec.configure do |config|
     end
 
     Capybara.threadsafe = true
-    Capybara.disable_animation = false
+    Capybara.disable_animation = true
 
     # Click offsets is calculated from top left of element
     Capybara.w3c_click_offset = false
@@ -366,6 +366,13 @@ RSpec.configure do |config|
         nil,
         "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
       ) { example.run }
+    end
+  end
+
+  if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]
+    config.around :each do |example|
+      measurement = Benchmark.measure { example.run }
+      RSpec.current_example.metadata[:run_duration_ms] = (measurement.real * 1000).round(2)
     end
   end
 
