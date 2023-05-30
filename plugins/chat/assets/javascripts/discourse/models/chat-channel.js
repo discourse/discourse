@@ -169,6 +169,14 @@ export default class ChatChannel {
     this.messagesManager.removeMessage(message);
   }
 
+  get lastMessage() {
+    return this.messagesManager.findLastMessage();
+  }
+
+  lastUserMessage(user) {
+    return this.messagesManager.findLastUserMessage(user);
+  }
+
   get messages() {
     return this.messagesManager.messages;
   }

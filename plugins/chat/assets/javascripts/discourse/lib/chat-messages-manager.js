@@ -48,4 +48,20 @@ export default class ChatMessagesManager {
   findIndexOfMessage(id) {
     return this.messages.findIndex((m) => m.id === id);
   }
+
+  findLastMessage() {
+    return this.messages.find(
+      (message) => !message.staged && !message.error && !message.deletedAt
+    );
+  }
+
+  findLastUserMessage(user) {
+    return this.messages.findLast(
+      (message) =>
+        message.user.id === user.id &&
+        !message.staged &&
+        !message.error &&
+        !message.deletedAt
+    );
+  }
 }

@@ -24,14 +24,4 @@ export default class ChatChannelThreadPane extends ChatChannelPane {
   get composerService() {
     return this.chatChannelThreadComposer;
   }
-
-  get lastCurrentUserMessage() {
-    return this.chat.activeChannel.activeThread.messages.findLast(
-      (message) =>
-        message.user.id === this.currentUser.id &&
-        !message.staged &&
-        !message.error &&
-        !message.deletedAt
-    );
-  }
 }
