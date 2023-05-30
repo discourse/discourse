@@ -21,7 +21,7 @@ module PageObjects
       end
 
       def save_changes
-        click_button(I18n.t("js.save"))
+        find("button", exact_text: I18n.t("js.save"), visible: :all).click
         find(".saved", exact_text: I18n.t("js.saved"))
         self
       end
