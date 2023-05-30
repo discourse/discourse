@@ -18,7 +18,6 @@ import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isEmpty, isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
@@ -143,22 +142,6 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  didUpdateChannel() {
-    this.cancelPersistDraft();
-
-    if (!this.args.channel) {
-      this.composer.message = null;
-      return;
-    }
-
-    this.composer.message =
-      this.chatDraftsManager.get({ channelId: this.args.channel.id }) ||
-      ChatMessage.createDraftMessage(this.args.channel, {
-        user: this.currentUser,
-      });
-  }
-
-  @action
   setup() {
     this.appEvents.on("chat:modify-selection", this, "modifySelection");
     this.appEvents.on(
@@ -211,6 +194,7 @@ export default class ChatComposer extends Component {
 
   @action
   onInput(event) {
+    this.currentMessage.draftSaved = false;
     this.currentMessage.message = event.target.value;
     this.textareaInteractor.refreshHeight();
     this.reportReplyingPresence();
@@ -223,6 +207,8 @@ export default class ChatComposer extends Component {
     if (!this.args.channel) {
       return;
     }
+
+    this.currentMessage.draftSaved = false;
 
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
 
@@ -376,7 +362,7 @@ export default class ChatComposer extends Component {
       if (this.currentMessage?.inReplyTo) {
         this.reset();
       } else if (this.currentMessage?.editing) {
-        this.composer.onCancelEditing();
+        this.composer.cancel();
       } else {
         event.target.blur();
       }
@@ -385,7 +371,7 @@ export default class ChatComposer extends Component {
 
   @action
   reset() {
-    this.composer.reset(this.args.channel);
+    this.composer.reset(this.args.channel, this.args.thread);
   }
 
   @action

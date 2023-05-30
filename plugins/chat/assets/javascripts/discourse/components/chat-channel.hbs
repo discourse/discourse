@@ -8,9 +8,9 @@
   {{did-insert this.setUploadDropZone}}
   {{did-insert this.setupListeners}}
   {{will-destroy this.teardownListeners}}
-  {{did-insert this.updateChannel}}
   {{did-update this.loadMessages @targetMessageId}}
-  {{did-update this.updateChannel @channel.id}}
+  {{did-insert this.didUpdateChannel}}
+  {{did-update this.didUpdateChannel @channel.id}}
   {{did-insert this.addAutoFocusEventListener}}
   {{will-destroy this.removeAutoFocusEventListener}}
   data-id={{@channel.id}}

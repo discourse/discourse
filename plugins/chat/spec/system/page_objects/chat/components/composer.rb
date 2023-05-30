@@ -14,12 +14,28 @@ module PageObjects
           @context = context
         end
 
+        def blank?
+          input.value.blank?
+        end
+
+        def has_saved_draft?
+          component.has_css?(".chat-composer.is-draft-saved")
+        end
+
+        def has_unsaved_draft?
+          component.has_css?(".chat-composer.is-draft-unsaved")
+        end
+
         def message_details
           @message_details ||= PageObjects::Components::Chat::ComposerMessageDetails.new(context)
         end
 
         def input
-          find(context).find(SELECTOR).find(".chat-composer__input")
+          component.find(".chat-composer__input")
+        end
+
+        def component
+          find(context).find(SELECTOR)
         end
 
         def fill_in(**args)

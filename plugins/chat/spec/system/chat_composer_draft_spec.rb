@@ -72,6 +72,17 @@ RSpec.describe "Chat composer draft", type: :system, js: true do
 
         expect(channel_page.composer).to be_editing_message(message_1)
       end
+
+      context "when canceling editing" do
+        it "resets the draft" do
+          chat_page.visit_channel(channel_1)
+          channel_page.composer.message_details.cancel_edit
+
+          expect(channel_page.composer).to be_blank
+          expect(channel_page.composer).to have_unsaved_draft
+          expect(channel_page.composer).to have_saved_draft
+        end
+      end
     end
 
     context "with uploads" do

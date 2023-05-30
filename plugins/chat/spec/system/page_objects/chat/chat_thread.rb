@@ -60,8 +60,9 @@ module PageObjects
       def send_message(text = nil)
         text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        fill_composer(text)
+        composer.fill_in(with: text)
         click_send_message
+        messages.has_message?(text: text, persisted: true)
         click_composer
         text
       end

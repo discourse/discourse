@@ -36,6 +36,10 @@ module PageObjects
         def replying_to?(message)
           has_message?(id: message.id, action: :reply)
         end
+
+        def cancel_edit
+          component.find(".cancel-message-action").click
+        end
       end
     end
   end

@@ -26,6 +26,7 @@ RSpec.describe "Reply to message - channel - drawer", type: :system, js: true do
       chat_page.open_from_header
       drawer_page.open_channel(channel_1)
       channel_page.reply_to(original_message)
+
       expect(drawer_page).to have_open_thread
 
       thread_page.fill_composer("reply to message")

@@ -54,15 +54,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
 
   context "when the message has an existing thread" do
     fab!(:message_1) do
-      creator =
-        Chat::MessageCreator.new(
-          chat_channel: channel_1,
-          in_reply_to_id: original_message.id,
-          user: Fabricate(:user),
-          content: Faker::Lorem.paragraph,
-        )
-      creator.create
-      creator.chat_message
+      Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
     end
 
     it "replies to the existing thread" do
@@ -71,11 +63,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
       expect(channel_page).to have_thread_indicator(original_message, text: "1")
 
       channel_page.reply_to(original_message)
-
-      expect(side_panel_page).to have_open_thread
-
-      thread_page.fill_composer("reply to message")
-      thread_page.click_send_message
+      thread_page.send_message("reply to message")
 
       expect(thread_page).to have_message(text: message_1.message)
       expect(thread_page).to have_message(text: "reply to message")
@@ -83,7 +71,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
       thread_page.close
 
       expect(channel_page).to have_thread_indicator(original_message, text: "2")
-      expect(channel_page).to have_no_message(text: "reply to message")
+      expect(channel_page.messages).to have_no_message(text: "reply to message")
     end
   end
 
