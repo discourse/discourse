@@ -10,7 +10,7 @@ describe "User preferences for Interface", type: :system, js: true do
 
   describe "Bookmarks" do
     let(:preferences) { Bookmark.auto_delete_preferences }
-    let(:dropdown) { PageObjects::Components::SelectKit.new("#bookmark-after-notification-mode") }
+    let(:dropdown) { user_preferences_interface_page.bookmark_after_notification_mode_dropdown }
 
     it "changes the bookmark after notification preference" do
       user_preferences_page.visit(user)
