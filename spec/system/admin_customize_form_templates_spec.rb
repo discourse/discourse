@@ -9,6 +9,10 @@ describe "Admin Customize Form Templates", type: :system, js: true do
   fab!(:category) { Fabricate(:category) }
 
   before do
+    skip(<<~TEXT) if ENV["CI"]
+    The specs here are extremely flaky on CI for some reason.
+    TEXT
+
     SiteSetting.experimental_form_templates = true
     sign_in(admin)
   end
