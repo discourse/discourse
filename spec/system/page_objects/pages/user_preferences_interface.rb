@@ -19,7 +19,7 @@ module PageObjects
 
       def save_changes
         find("button", text: I18n.t("js.save").click
-        find(".saved", text: I18n.t("js.saved")
+        find(".saved", text: I18n.t("js.saved"))
         self
       end
 
