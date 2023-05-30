@@ -570,7 +570,9 @@ class PostSerializer < BasicPostSerializer
       if @topic_view && (mentioned_users = @topic_view.mentioned_users[object.id])
         mentioned_users
       else
-        User.where(username: object.mentions)
+        query = User
+        query = query.includes(:user_status) if SiteSetting.enable_user_status
+        query = query.where(username: object.mentions)
       end
 
     users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }

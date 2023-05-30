@@ -63,6 +63,10 @@ module PageObjects
         find(SIDEBAR_WRAPPER_SELECTOR).has_no_button?(name)
       end
 
+      def primary_section_links(slug)
+        all("[data-section-name='#{slug}'] .sidebar-section-link-wrapper").map(&:text)
+      end
+
       private
 
       def section_link_present?(name, href: nil, active: false, present:)

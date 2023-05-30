@@ -17,19 +17,26 @@ module PageObjects
       end
 
       def header
-        find(".chat-thread__header")
-      end
-
-      def omu
-        header.find(".chat-thread__omu")
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
       end
 
       def close
         header.find(".chat-thread__close").click
       end
 
-      def has_header_content?(content)
-        header.has_content?(content)
+      def back_to_list
+        header.find(".chat-thread__back-to-list").click
+      end
+
+      def has_no_unread_list_indicator?
+        has_no_css?(".chat-thread__back-to-list .chat-thread-header-unread-indicator")
+      end
+
+      def has_unread_list_indicator?(count:)
+        has_css?(
+          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number-wrap",
+          text: count.to_s,
+        )
       end
 
       def has_no_loading_skeleton?

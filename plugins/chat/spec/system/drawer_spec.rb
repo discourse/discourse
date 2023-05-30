@@ -79,9 +79,10 @@ RSpec.describe "Drawer", type: :system, js: true do
       chat_page.open_from_header
       drawer.open_channel(channel_1)
       channel_page.hover_message(message_1)
+
       expect(page).to have_css(".chat-message-actions-container")
 
-      find(".chat-composer__input").send_keys(:escape)
+      drawer.close
 
       expect(page).to have_no_css(".chat-message-actions-container")
     end

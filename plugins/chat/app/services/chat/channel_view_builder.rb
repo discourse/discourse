@@ -21,6 +21,7 @@ module Chat
     #   @param [Guardian] guardian
     #   @option optional_params [Integer] thread_id
     #   @option optional_params [Integer] target_message_id
+    #   @option optional_params [Boolean] fetch_from_last_read
     #   @option optional_params [Integer] page_size
     #   @option optional_params [String] direction
     #   @return [Service::Base::Context]
@@ -28,6 +29,7 @@ module Chat
     contract
     model :channel
     policy :can_view_channel
+    step :determine_target_message_id
     policy :target_message_exists
     step :determine_threads_enabled
     step :determine_include_thread_messages
@@ -47,6 +49,7 @@ module Chat
       attribute :thread_id, :integer # (optional)
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
+      attribute :fetch_from_last_read, :boolean # (optional)
 
       validates :channel_id, presence: true
       validates :direction,
@@ -54,6 +57,18 @@ module Chat
                   in: Chat::MessagesQuery::VALID_DIRECTIONS,
                 },
                 allow_nil: true
+      validates :page_size,
+                numericality: {
+                  less_than_or_equal_to: Chat::MessagesQuery::MAX_PAGE_SIZE,
+                  only_integer: true,
+                },
+                allow_nil: true
+
+      validate :page_size_present, if: -> { target_message_id.blank? && !fetch_from_last_read }
+
+      def page_size_present
+        errors.add(:page_size, :blank) if page_size.blank?
+      end
     end
 
     private
@@ -66,9 +81,28 @@ module Chat
       guardian.can_preview_chat_channel?(channel)
     end
 
+    def determine_target_message_id(contract:, channel:, guardian:, **)
+      if contract.fetch_from_last_read
+        contract.target_message_id = channel.membership_for(guardian.user)&.last_read_message_id
+
+        # We need to force a page size here because we don't want to
+        # load all messages in the channel (since starting from 0
+        # makes them all unread). When the target_message_id is provided
+        # page size is not required since we load N messages either side of
+        # the target.
+        if contract.target_message_id.blank?
+          contract.page_size = contract.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE
+        end
+      end
+    end
+
     def target_message_exists(contract:, guardian:, **)
       return true if contract.target_message_id.blank?
-      target_message = Chat::Message.unscoped.find_by(id: contract.target_message_id)
+      target_message =
+        Chat::Message.with_deleted.find_by(
+          id: contract.target_message_id,
+          chat_channel_id: contract.channel_id,
+        )
       return false if target_message.blank?
       return true if !target_message.trashed?
       target_message.user_id == guardian.user.id || guardian.is_staff?

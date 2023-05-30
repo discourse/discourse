@@ -630,6 +630,8 @@ en:
           title: "User"
         reviewable_post:
           title: "Post"
+        reviewable_chat_message:
+          title: "Flagged chat message"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -3305,6 +3307,7 @@ en:
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>%{count}</b> posts to."
+        chronological_order: "preserve chronological order after merging"
 
       move_to_new_message:
         title: "Move to New Message"
@@ -4412,10 +4415,13 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
+          reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Make this section public and visible to everyone"
+          more_menu: "More menu"
           links:
             add: "Add another link"
             delete: "Delete link"
+            reset: "Reset to default"
             icon:
               label: "Icon"
               validation:
@@ -4472,7 +4478,8 @@ en:
           configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
-          header_action_title: "Create a topic"
+          header_action_create_topic_title: "Create a topic"
+          header_action_edit_section_title: "Edit Community section"
           links:
             about:
               content: "About"
@@ -4517,6 +4524,9 @@ en:
 
     char_counter:
       exceeded: "The maximum number of characters allowed has been exceeded."
+
+    form_template_chooser:
+      select_template: "Select form templates"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

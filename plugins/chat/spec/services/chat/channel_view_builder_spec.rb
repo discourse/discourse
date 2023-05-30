@@ -17,14 +17,16 @@ RSpec.describe Chat::ChannelViewBuilder do
     let(:channel_id) { channel.id }
     let(:guardian) { current_user.guardian }
     let(:target_message_id) { nil }
-    let(:page_size) { nil }
+    let(:page_size) { 10 }
     let(:direction) { nil }
     let(:thread_id) { nil }
+    let(:fetch_from_last_read) { nil }
     let(:params) do
       {
         guardian: guardian,
         channel_id: channel_id,
         target_message_id: target_message_id,
+        fetch_from_last_read: fetch_from_last_read,
         page_size: page_size,
         direction: direction,
         thread_id: thread_id,
@@ -83,6 +85,18 @@ RSpec.describe Chat::ChannelViewBuilder do
 
     it "returns a Chat::View" do
       expect(subject.view).to be_a(Chat::View)
+    end
+
+    context "when page_size is null" do
+      let(:page_size) { nil }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when page_size is too big" do
+      let(:page_size) { Chat::MessagesQuery::MAX_PAGE_SIZE + 1 }
+
+      it { is_expected.to fail_a_contract }
     end
 
     context "when channel has threading_enabled and enable_experimental_chat_threaded_discussions is true" do
@@ -194,6 +208,68 @@ RSpec.describe Chat::ChannelViewBuilder do
       it { is_expected.to fail_a_policy(:can_view_channel) }
     end
 
+    context "when fetch_from_last_read is true" do
+      let(:fetch_from_last_read) { true }
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+      fab!(:past_message_1) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: message.created_at - 1.day)
+        msg
+      end
+      fab!(:past_message_2) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: message.created_at - 2.days)
+        msg
+      end
+
+      context "when page_size is null" do
+        let(:page_size) { nil }
+
+        it { is_expected.not_to fail_a_contract }
+      end
+
+      context "if the user is not a member of the channel" do
+        it "does not error and still returns messages" do
+          expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+        end
+      end
+
+      context "if the user is a member of the channel" do
+        fab!(:membership) do
+          Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+        end
+
+        context "if the user's last_read_message_id is not nil" do
+          before { membership.update!(last_read_message_id: past_message_1.id) }
+
+          it "uses the last_read_message_id of the user's membership as the target_message_id" do
+            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          end
+        end
+
+        context "if the user's last_read_message_id is nil" do
+          before { membership.update!(last_read_message_id: nil) }
+
+          it "does not error and still returns messages" do
+            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          end
+
+          context "if page_size is nil" do
+            let(:page_size) { nil }
+
+            it "calls the messages query with the default page size" do
+              ::Chat::MessagesQuery
+                .expects(:call)
+                .with(has_entries(page_size: Chat::MessagesQuery::MAX_PAGE_SIZE))
+                .once
+                .returns({ messages: [] })
+              subject
+            end
+          end
+        end
+      end
+    end
+
     context "when target_message_id provided" do
       fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
       fab!(:past_message) do
@@ -210,6 +286,12 @@ RSpec.describe Chat::ChannelViewBuilder do
 
       it "includes the target message as well as past and future messages" do
         expect(subject.view.chat_messages).to eq([past_message, message, future_message])
+      end
+
+      context "when page_size is null" do
+        let(:page_size) { nil }
+
+        it { is_expected.not_to fail_a_contract }
       end
 
       context "when the target message is a thread reply" do

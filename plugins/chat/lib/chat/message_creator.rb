@@ -233,6 +233,13 @@ module Chat
       return if resolved_thread.blank?
       resolved_thread.increment_replies_count_cache
       Chat::UserChatThreadMembership.find_or_create_by!(user: @user, thread: resolved_thread)
+
+      if resolved_thread.original_message_user != @user
+        Chat::UserChatThreadMembership.find_or_create_by!(
+          user: resolved_thread.original_message_user,
+          thread: resolved_thread,
+        )
+      end
     end
   end
 end
