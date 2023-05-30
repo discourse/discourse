@@ -1,4 +1,3 @@
-import getURL from "discourse-common/lib/get-url";
 import Component from "@ember/component";
 import { bind, observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -192,9 +191,7 @@ export default Component.extend({
     this.chatStateManager.prefersFullPage();
     this.chat.activeChannel = null;
 
-    return this.router.transitionTo(
-      getURL(this.chatStateManager.lastKnownChatURL)
-    );
+    return this.router.transitionTo(this.chatStateManager.lastKnownChatURL);
   },
 
   @action
