@@ -82,15 +82,13 @@ class Site
                   :tag_groups,
                   :form_templates,
                   category_required_tag_groups: :tag_group,
-                  )
+                )
                 .joins("LEFT JOIN topics t on t.id = categories.topic_id")
                 .select("categories.*, t.slug topic_slug")
                 .order(:position)
 
-            modifiers = []
-            # some plugins may need to change the categories cached on site load
-            DiscourseEvent.trigger(:site_query_categories, modifiers, query, @guardian)
-            modifiers.each { |mod| query = mod.call(query) }
+            query =
+              DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
 
             query.to_a
           end
@@ -160,7 +158,13 @@ class Site
   end
 
   def groups
-    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true).includes(:flair_upload)
+    query =
+      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(
+        :flair_upload,
+      )
+    query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
+
+    query
   end
 
   def archetypes

@@ -59,7 +59,8 @@ class GroupsController < ApplicationController
 
     if !guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
-      groups = groups.where("automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
+      groups =
+        groups.where("groups.automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
       type_filters.delete(:automatic)
     end
 
@@ -80,10 +81,7 @@ class GroupsController < ApplicationController
       type_filters = type_filters - %i[my owner]
     end
 
-    modifiers = []
-    # some plugins may need to change the query
-    DiscourseEvent.trigger(:query_groups_list, modifiers, groups, @guardian, params)
-    modifiers.each { |mod| groups = mod.call(groups) }
+    groups = DiscoursePluginRegistry.apply_modifier(:groups_index_query, groups, self)
 
     type_filters.delete(:non_automatic)
 
@@ -127,7 +125,10 @@ class GroupsController < ApplicationController
         groups = Group.visible_groups(current_user)
         if !guardian.is_staff?
           groups =
-            groups.where("automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
+            groups.where(
+              "groups.automatic IS FALSE OR groups.id = ?",
+              Group::AUTO_GROUPS[:moderators],
+            )
         end
 
         render_json_dump(
@@ -618,10 +619,12 @@ class GroupsController < ApplicationController
         .order(:name)
 
     if (term = params[:term]).present?
-      groups = groups.where("name ILIKE :term OR full_name ILIKE :term", term: "%#{term}%")
+      groups =
+        groups.where("groups.name ILIKE :term OR groups.full_name ILIKE :term", term: "%#{term}%")
     end
 
     groups = groups.where(automatic: false) if params[:ignore_automatic].to_s == "true"
+    groups = DiscoursePluginRegistry.apply_modifier(:groups_search_query, groups, self)
 
     if Group.preloaded_custom_field_names.present?
       Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
