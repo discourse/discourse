@@ -526,6 +526,7 @@ sv:
         original_message:
           started_by: "Startad av"
         settings: "Webbplatsinställningar"
+        last_reply: "senaste svar"
       threads:
         open: "Öppna tråd"
         list: "Pågående diskussioner"

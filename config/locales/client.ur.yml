@@ -3593,6 +3593,7 @@ ur:
           save: "محفوظ کریں"
           delete: "مٹائیں"
           links:
+            reset: "دوبارہ پہلے جیسا کر دیں"
             icon:
               label: "آئیکن"
             name:

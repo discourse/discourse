@@ -542,6 +542,8 @@ es:
           title: "Usuario"
         reviewable_post:
           title: "Publicación"
+        reviewable_chat_message:
+          title: "Mensaje de chat marcado"
       approval:
         title: "La publicación requiere aprobación"
         description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor, ten paciencia."
@@ -2955,6 +2957,7 @@ es:
         instructions:
           one: "Escoge el tema al que quieres mover esa publicación."
           other: "Escoge el tema al que quieres mover estas <b>%{count}</b> publicaciones."
+        chronological_order: "preservar el orden cronológico tras la fusión"
       move_to_new_message:
         title: "Mover a un mensaje nuevo"
         action: "mover a un mensaje nuevo"
@@ -3967,7 +3970,10 @@ es:
         custom:
           save: "Guardar"
           delete: "Eliminar"
+          reset_confirm: "¿Está seguro de que desea restablecer esta sección a los valores predeterminados?"
+          more_menu: "Más opciones menú"
           links:
+            reset: "Restablecer valores por defecto"
             icon:
               label: "Icono"
             name:
@@ -4009,7 +4015,8 @@ es:
           configure_defaults: "Configurar valores predeterminados"
         community:
           header_link_text: "Comunidad"
-          header_action_title: "Crear un tema"
+          header_action_create_topic_title: "Crear un tema"
+          header_action_edit_section_title: "Editar la sección Comunidad"
           links:
             about:
               content: "Acerca de"
@@ -4048,6 +4055,8 @@ es:
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."
       button_title: "Empezar a editar"
     until: "Hasta:"
+    form_template_chooser:
+      select_template: "Seleccionar plantillas de formulario"
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:

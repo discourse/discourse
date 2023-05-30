@@ -211,7 +211,7 @@ ru:
         reply: |-
           Спасибо, что поставили лайк!
         not_found: |-
-          Вы не забыли лайкнуть :heart: мою [запись](%{url})? :crying_cat_face:
+          Вы не забыли лайкнуть :heart: мое [сообщение](%{url})? :crying_cat_face:
       formatting:
         instructions: |-
           Вы можете выделить некоторые слова **жирным** или _курсивом_ в своем ответе?
@@ -289,7 +289,7 @@ ru:
 
           В нижней части сообщения нажмите на кнопку **Пожаловаться**, отмеченную иконкой <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">, и выберите пункт **Это неприемлемо** в качестве причины!
         reply: |-
-          [Наш персонал](%{base_uri}/groups/staff) получит уведомление о вашей жалобе. Если достаточное количество участников сообщества пожалуются на запись, она будет автоматически скрыто в качестве меры предосторожности. (Так как мы просто тренировались и я не писал ничего злонамеренного :angel:, то вашу жалобу я аннулировал.)
+          [Наш персонал](%{base_uri}/groups/staff) получит уведомление о вашей жалобе. Если достаточное количество участников сообщества пожалуются на сообщение, оно будет автоматически скрыто в качестве меры предосторожности. (Так как мы просто тренировались и я не писал ничего злонамеренного :angel:, то вашу жалобу я аннулировал.)
         not_found: |-
           О нет, моё провоцирующее сообщение ещё не получило по заслугам. :worried: Можете **пометить** это сообщение как неуместное, используя кнопку <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Она становится доступна, если нажать «Показать больше» <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">.
       search:
@@ -348,21 +348,21 @@ ru:
           Обратите внимание, что правки, сделанные с 5-минутным интервалом, становятся доступны для просмотра всем желающим в виде истории редактирования. Для доступа к истории нажмите на значок карандаша, который появится в правом верхнем углу отредактированного сообщения.
       delete:
         instructions: |-
-          Если вы хотите отозвать опубликованную вами запись, ее можно удалить.
+          Если вы хотите отозвать опубликованное вами сообщение, его можно удалить.
 
-          Попробуйте сделать это: удалите любую из записей выше, нажав на кнопку **удалить** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">. Только не удаляйте самую первую!
+          Попробуйте сделать это: удалите любое из сообщений выше, нажав на кнопку **удаления** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">. Только не удаляйте самое первое!
         not_found: |-
-          Я пока не вижу ни одной удаленной записи… Не забудьте нажать на значок <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, чтобы появилась опция удаления <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">.
+          Я пока не вижу ни одного удаленного сообщения… Не забудьте нажать на значок <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, чтобы появилась опция удаления <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16">.
         reply: |-
           Ой-ой! :boom:
 
-          Чтобы сохранить непрерывность обсуждений, удаление не выполняется немедленно, поэтому запись будет удалена через некоторое время.
+          Чтобы сохранить непрерывность обсуждений, удаление не выполняется немедленно, поэтому сообщение будет удалено через некоторое время.
       recover:
         deleted_post_raw: "Почему @%{discobot_username} удалил моё сообщение? :anguished:"
         instructions: |-
-          Непорядок! Похоже, я случайно удалил запись, которую только что создал.
+          Непорядок! Похоже, я случайно удалил сообщение, которое только что создал.
 
-          Можете ли вы сделать мне одолжение и **восстановить** ее <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">?
+          Можете ли вы сделать мне одолжение и **восстановить** его <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">?
         not_found: |-
           Возникли проблемы? Помните, что нужно нажать на значок «Показать ещё» <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, чтобы увидеть опцию «Восстановить» <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">.
         reply: |-

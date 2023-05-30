@@ -559,6 +559,8 @@ tr_TR:
           title: "Kullanıcı"
         reviewable_post:
           title: "Gönderi"
+        reviewable_chat_message:
+          title: "Bayraklı sohbet mesajı"
       approval:
         title: "Gönderi Onay Gerektiriyor"
         description: "Yeni gönderinizi aldık fakat görünmeden önce moderatör tarafından onaylanması gerekiyor. Lütfen sabırlı olun."
@@ -2968,6 +2970,7 @@ tr_TR:
         instructions:
           one: "Lütfen bu gönderiyi taşımak istediğiniz konuyu seçin."
           other: "Lütfen bu <b>%{count}</b> gönderiyi taşımak istediğiniz konuyu seçin."
+        chronological_order: "birleştirdikten sonra kronolojik sırayı koru"
       move_to_new_message:
         title: "Yeni Mesaja Taşı"
         action: "yeni mesaja taşı"
@@ -3982,8 +3985,11 @@ tr_TR:
         custom:
           save: "Kaydet"
           delete: "Sil"
+          reset_confirm: "Bu bölümü varsayılana sıfırlamak istediğinizden emin misiniz?"
           public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getir"
+          more_menu: "Daha fazla menü"
           links:
+            reset: "Varsayılana sıfırla"
             icon:
               label: "Simge"
               validation:
@@ -4040,7 +4046,8 @@ tr_TR:
           configure_defaults: "Varsayılanları yapılandır"
         community:
           header_link_text: "Topluluk"
-          header_action_title: "Yeni konu oluşturun"
+          header_action_create_topic_title: "Yeni konu oluşturun"
+          header_action_edit_section_title: "Topluluk bölümünü düzenle"
           links:
             about:
               content: "Hakkında"
@@ -4081,6 +4088,8 @@ tr_TR:
     until: "Şuna kadar:"
     char_counter:
       exceeded: "İzin verilen maksimum karakter sayısı aşıldı."
+    form_template_chooser:
+      select_template: "Form şablonlarını seçin"
   admin_js:
     type_to_filter: "filtrelemek için yazın..."
     admin:

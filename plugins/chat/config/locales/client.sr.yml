@@ -93,6 +93,7 @@ sr:
       thread:
         title: "Naslov"
         settings: "Podešavanja"
+        last_reply: "poslednji odgovor"
       draft_channel_screen:
         header: "Nova privatna poruka"
         cancel: "Odustani"

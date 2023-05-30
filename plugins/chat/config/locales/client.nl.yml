@@ -367,6 +367,7 @@ nl:
           one: "%{count} antwoord"
           other: "%{count} antwoorden"
         settings: "Instellingen"
+        last_reply: "laatste antwoord"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"

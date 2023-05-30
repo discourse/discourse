@@ -658,6 +658,8 @@ he:
           title: "משתמש"
         reviewable_post:
           title: "פוסט"
+        reviewable_chat_message:
+          title: "הודעת צ׳אט מסומנת"
       approval:
         title: "הפוסט זקוק לאישור"
         description: "הפוסט התקבל אך הוא נתון לאישור מפקח בטרם הצגתו. נא להתאזר בסבלנות."
@@ -767,7 +769,7 @@ he:
       edit_columns:
         title: "עריכת עמודות ספרייה"
         save: "שמירה"
-        reset_to_default: "איפוס לבררת מחדל"
+        reset_to_default: "איפוס לברירת מחדל"
       group:
         all: "כל הקבוצות"
       sort:
@@ -861,7 +863,7 @@ he:
           access: גישה
         categories:
           title: קטגוריות
-          long_title: "הודעות בררת המחדל של הקטגוריה"
+          long_title: "הודעות ברירת המחדל של הקטגוריה"
           description: "כאשר משתמשים מתווספים לקבוצה זו, הגדרות ההתראה של הקטגוריות שלהם לבררות מחדל אלו. יש להם אפשרות לשנות זאת בהמשך."
           watched_categories_instructions: "לעקוב אוטומטית אחר כל הנושאים בקטגוריות הללו. חברי הקבוצה יקבלו התראה על כל הפוסטים והנושאים החדשים. מספר הפוסטים יופיע לצד כותרת הנושא."
           tracked_categories_instructions: "לעקוב אוטומטית אחר כל הנושאים עם קטגוריות אלו. מס׳ פוסטים חדשים יופיע ליד הנושא."
@@ -870,7 +872,7 @@ he:
           muted_categories_instructions: "משתמשים לא יקבלו הודעה על נושאים חדשים בקטגוריות אלה והם לא יופיעו בקטגוריות או בדפים האחרונים."
         tags:
           title: תגיות
-          long_title: "התראות בררת המחדל של התגיות"
+          long_title: "התראות ברירת המחדל של התגיות"
           description: "כאשר משתמשים מתווספים לקבוצה זו, הגדרות ההתראה של התגיות שלהם יוגדרו לבררות מחדל אלו. יש להם אפשרות לשנות זאת בהמשך."
           watched_tags_instructions: "לעקוב אוטומטית אחר כל הנושאים עם התגיות הללו. חברי הקבוצה יקבלו התראה על כל הפוסטים והנושאים החדשים. מספר הפוסטים יופיע לצד כותרת הנושא."
           tracked_tags_instructions: "לעקוב אוטומטית אחר כל הנושאים עם תגיות אלו. ספירה של פוסטים חדשים תופיע ליד הנושא."
@@ -1016,7 +1018,7 @@ he:
         icon: "נא לבחור סמל"
         image: "העלאת תמונה"
       default_notifications:
-        modal_title: "התראות בררת המחדל של המשתמש"
+        modal_title: "התראות ברירת המחדל של המשתמש"
         modal_description: "מעניין אותך להחיל את השינוי הזה רטרואקטיבית? פעולה זו תשנה את העדפותיהם של %{count} משתמשים קיימים."
         modal_yes: "כן"
         modal_no: "לא, להחיל את השינוי מעתה ואילך"
@@ -1219,13 +1221,13 @@ he:
       color_scheme_default_on_all_devices: "הגדרת ערכות צבעים כבררת מחדל לכל המכשירים שלי"
       color_scheme: "ערכת צבעים"
       color_schemes:
-        default_description: "בררת המחדל לערכת העיצוב"
+        default_description: "ברירת המחדל לערכת העיצוב"
         disable_dark_scheme: "כמו הרגילה"
         dark_instructions: "ניתן להדגים את ערכת צבעי הערכה הכהה על ידי החלפת מצב התצוגה הכהה במכשיר שלך."
         undo: "איפוס"
         regular: "רגילה"
         dark: "מצב כהה"
-        default_dark_scheme: "(בררת המחדל של האתר)"
+        default_dark_scheme: "(ברירת המחדל של האתר)"
       dark_mode: "מצב כהה"
       dark_mode_enable: "הפעלת ערכת צבעים כהה אוטומטית"
       text_size_default_on_all_devices: "הפוך את גודל הטקסט הזה לברירת המחדל בכל המכשירים שלי"
@@ -1575,7 +1577,7 @@ he:
         uploaded_avatar_empty: "הוסיפו תמונה אישית"
         upload_title: "העלאת התמונה שלך"
         image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
-        logo_small: "הלוגו הקטן של האתר. משמש כבררת מחדל."
+        logo_small: "הלוגו הקטן של האתר. משמש כברירת מחדל."
         use_custom: "או להעלות תמונה ייצוגית משלך:"
       change_profile_background:
         title: "כותרת פרופיל"
@@ -2893,7 +2895,7 @@ he:
         filter: "אין נושאים."
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
-          unread: "<p>הנושאים שלא קראת יופיעו כאן.</p><p>כבררת מחדל, נושאים ייחשבו שטרם קראת אותם ויוצג עליהם מונה <span class=\"badge unread-posts badge-notification\">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־4 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך \U0001F514 המופיע בכל נושא.</p><p>ניתן לבקר בעמוד ה<a href=\"%{userPrefsUrl}\">העדפות</a> שלך כדי לשנות זאת.</p>"
+          unread: "<p>הנושאים שלא קראת יופיעו כאן.</p><p>כברירת מחדל, נושאים ייחשבו שטרם קראת אותם ויוצג עליהם מונה <span class=\"badge unread-posts badge-notification\">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־4 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך \U0001F514 המופיע בכל נושא.</p><p>ניתן לבקר בעמוד ה<a href=\"%{userPrefsUrl}\">העדפות</a> שלך כדי לשנות זאת.</p>"
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."
@@ -3305,6 +3307,7 @@ he:
           two: "בבקשה בחרו את הנושא אליו תרצה להעביר את <b>%{count}</b> הפוסטים."
           many: "בבקשה בחרו את הנושא אליו תרצה להעביר את <b>%{count}</b> הפוסטים."
           other: "בבקשה בחרו את הנושא אליו תרצה להעביר את <b>%{count}</b> הפוסטים."
+        chronological_order: "שמירה על סדר כרונולוגי לאחר המיזוג"
       move_to_new_message:
         title: "העבר להודעה חדשה"
         action: "העבר להודעה חדשה"
@@ -3750,7 +3753,7 @@ he:
       read_only_banner: "טקסט כרזה כאשר משתמש לא יכול ליצור נושא בקטגוריה הזו:"
       num_featured_topics: "מספר הנושאים המוצגים בדף הקטגוריות:"
       subcategory_num_featured_topics: "מספר הנושאים המומלצים בדף קטגוריית ההורה:"
-      all_topics_wiki: "להפוך נושאים חדשים לעמודי ויקי כבררת מחדל"
+      all_topics_wiki: "להפוך נושאים חדשים לעמודי ויקי כברירת מחדל"
       allow_unlimited_owner_edits_on_first_post: "לבטל את מגבלת העריכות על ידי הבעלים לפוסט הראשון"
       subcategory_list_style: "סגנון רשימות קטגוריות משנה:"
       sort_order: "סידור ברירת מחדל לנושאים:"
@@ -4216,7 +4219,7 @@ he:
       remember: "לא לשאול אותי שוב"
       remember_explanation: "(ניתן לשנות העדפה זו בהעדפות המשתמש שלך)"
       download: "הורדה"
-      default_calendar: "לוח שנה כבררת מחדל"
+      default_calendar: "לוח שנה כברירת מחדל"
       default_calendar_instruction: "הגדרה באיזה לוח שנה יש להשתמש כשנשמרים תאריכים"
       add_to_calendar: "הוספה ללוח השנה"
       google: "לוח שנה של Google"
@@ -4444,10 +4447,13 @@ he:
           save: "שמירה"
           delete: "מחיקה"
           delete_confirm: "למחוק את המקטע הזה?"
+          reset_confirm: "לאפס את המקטע הזה לברירת המחדל?"
           public: "להפוך את הסעיף הזה לציבורי וגלוי לכולם"
+          more_menu: "תפריט נוסף"
           links:
             add: "הוספת קישור נוסף"
             delete: "מחיקת קישור"
+            reset: "איפוס לברירת מחדל"
             icon:
               label: "סמל"
               validation:
@@ -4504,7 +4510,8 @@ he:
           configure_defaults: "הגדרת ברירות מחדל"
         community:
           header_link_text: "קהילה"
-          header_action_title: "יצירת נושא"
+          header_action_create_topic_title: "יצירת נושא"
+          header_action_edit_section_title: "עריכת מקטע הקהילה"
           links:
             about:
               content: "על אודות"
@@ -4548,6 +4555,8 @@ he:
     until: "עד:"
     char_counter:
       exceeded: "חרגת ממספר התווים המרבי המותר."
+    form_template_chooser:
+      select_template: "בחירת תבניות טופס"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -4728,7 +4737,7 @@ he:
         add: "הוספה"
         custom: "מותאם"
         automatic: "אוטומטי"
-        default_title: "כותרת בררת מחדל"
+        default_title: "כותרת ברירת מחדל"
         default_title_description: "יחול על כל המשתמשים בקבוצה"
         group_owners: מנהלים
         add_owners: הוספת בעלים
@@ -5088,12 +5097,12 @@ he:
           show_advanced: "הצגת שדות מתקדמים"
           hide_advanced: "הסתרת שדות מתקדמים"
           hide_unused_fields: "הסתרת שדות שאינם בשימוש"
-          is_default: "ערכת עיצוב מאופשרת כבררת מחדל"
+          is_default: "ערכת עיצוב מאופשרת כברירת מחדל"
           user_selectable: "המשתמשים יכולים לבחור את ערכת העיצוב"
           color_scheme_user_selectable: "המשתמשים יכולים לבחור את ערכת הצבעים"
           auto_update: "לעדכן אוטומטית כש־Discourse מעודכן"
           color_scheme: "לוח צבעים"
-          default_light_scheme: "בהירה (בררת מחדל)"
+          default_light_scheme: "בהירה (ברירת מחדל)"
           color_scheme_select: "בחירת צבעים לשימושה של ערכת העיצוב"
           custom_sections: "אזורים מותאמים אישית:"
           theme_components: "רכיבי ערכת העיצוב"
@@ -5109,7 +5118,7 @@ he:
           inactive_components: "רכיבים שאינם בשימוש:"
           broken_theme_tooltip: "לערכת עיצוב זו יש שגיאות ב־CSS,‏ HTML או YAML"
           disabled_component_tooltip: "הרכיב הזה נוטרל"
-          default_theme_tooltip: "ערכת עיצוב זו מכהנת כבררת המחדל של האתר"
+          default_theme_tooltip: "ערכת עיצוב זו מכהנת כברירת המחדל של האתר"
           updates_available_tooltip: "קיימים עדכונים לערכת עיצוב זו"
           and_x_more: "ו־%{count} נוספות."
           collapse: צמצום
@@ -5299,7 +5308,7 @@ he:
           heading: "התאמת סגנון דוא״ל"
           html: "תבנית HTML"
           css: "CSS"
-          reset: "איפוס לבררת מחדל"
+          reset: "איפוס לברירת מחדל"
           reset_confirm: "לאפס אל בררת המחדל %{fieldName} ולאבד את כל השינויים שלך?"
           save_error_with_reason: "השינויים שלך לא נשמרו. %{error}"
           instructions: "התאמת התבנית שמשמשת כתבנית להודעות html, לצד עיצוב עם CSS."

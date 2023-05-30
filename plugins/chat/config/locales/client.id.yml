@@ -121,6 +121,7 @@ id:
         original_message:
           started_by: "Dimulai oleh"
         settings: "Pengaturan"
+        last_reply: "balasan terakhir"
       threads:
         list: "Diskusi yang sedang berlangsung"
         none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."

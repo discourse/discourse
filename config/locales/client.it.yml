@@ -3965,6 +3965,7 @@ it:
           save: "Salva"
           delete: "Elimina"
           links:
+            reset: "Ripristina impostazioni predefinite"
             icon:
               label: "Icona"
             name:
@@ -4006,7 +4007,7 @@ it:
           configure_defaults: "Configura impostazioni predefinite"
         community:
           header_link_text: "Community"
-          header_action_title: "Crea un argomento"
+          header_action_create_topic_title: "Crea un argomento"
           links:
             about:
               content: "Informazioni"

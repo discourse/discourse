@@ -4013,6 +4013,7 @@ pt_BR:
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"
+            reset: "Redefinir para padrão"
             icon:
               label: "Ícone"
               validation:
@@ -4056,7 +4057,7 @@ pt_BR:
           configure_defaults: "Configurar padrões"
         community:
           header_link_text: "Comunidade"
-          header_action_title: "Criar um tópico"
+          header_action_create_topic_title: "Criar um tópico"
           links:
             about:
               content: "Sobre"

@@ -3381,6 +3381,7 @@ nb_NO:
           save: "Lagre"
           delete: "Slett"
           links:
+            reset: "Tilbakestill til standard"
             icon:
               label: "Ikon"
             name:

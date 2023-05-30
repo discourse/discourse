@@ -111,6 +111,7 @@ bs_BA:
           few: "%{count} odgovora"
           other: "%{count} odgovora"
         settings: "Postavke"
+        last_reply: "zadnji odgovor"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"

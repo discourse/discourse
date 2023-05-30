@@ -2880,6 +2880,7 @@ ca:
           save: "Desa"
           delete: "Suprimeix"
           links:
+            reset: "Restableix el valor predeterminat"
             icon:
               label: "Icona"
             name:

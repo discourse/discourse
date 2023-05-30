@@ -110,6 +110,7 @@ gl:
           one: "%{count} resposta"
           other: "%{count} repostas"
         settings: "Configuración"
+        last_reply: "última resposta"
       draft_channel_screen:
         header: "Nova mensaxe"
         cancel: "Cancelar"

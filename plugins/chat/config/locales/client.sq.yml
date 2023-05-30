@@ -95,6 +95,7 @@ sq:
           one: "%{count} përgjigje"
           other: "%{count} përgjigje"
         settings: "Rregullimet"
+        last_reply: "përgjigja e fundit"
       draft_channel_screen:
         header: "Mesazh i ri"
         cancel: "Anulo"

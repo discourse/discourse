@@ -3009,6 +3009,7 @@ sv:
         instructions:
           one: "Välj vilket ämne du vill flytta det inlägget till."
           other: "Välj vilket ämne du vill flytta de <b>%{count}</b> inläggen till."
+        chronological_order: "bevara kronologisk ordning efter sammanslagning"
       move_to_new_message:
         title: "Flytta till nytt meddelande"
         action: "flytta till nytt meddelande"
@@ -4042,6 +4043,7 @@ sv:
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
+            reset: "Återställ till standard"
             icon:
               label: "Ikon"
               validation:
@@ -4098,7 +4100,7 @@ sv:
           configure_defaults: "Konfigurera standardvärden"
         community:
           header_link_text: "Community"
-          header_action_title: "Skapa ett ämne"
+          header_action_create_topic_title: "Skapa ett ämne"
           links:
             about:
               content: "Om"
@@ -4140,6 +4142,8 @@ sv:
     until: "T.o.m.:"
     char_counter:
       exceeded: "Det maximala antalet tillåtna tecken har överskridits."
+    form_template_chooser:
+      select_template: "Välj formulärmallar"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

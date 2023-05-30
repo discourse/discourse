@@ -4765,6 +4765,7 @@ ar:
           save: "حفظ"
           delete: "حذف"
           links:
+            reset: "إعادة الضبط إلى الإعداد الافتراضي"
             icon:
               label: "الأيقونة"
             name:
@@ -4806,7 +4807,7 @@ ar:
           configure_defaults: "تكوين الإعدادات الافتراضية"
         community:
           header_link_text: "المجتمع"
-          header_action_title: "إنشاء موضوع"
+          header_action_create_topic_title: "إنشاء موضوع"
           links:
             about:
               content: "نبذة"

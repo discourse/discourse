@@ -3141,6 +3141,7 @@ cs:
           save: "Uložit"
           delete: "Smazat"
           links:
+            reset: "Obnovit výchozí"
             icon:
               label: "Ikona"
             name:
