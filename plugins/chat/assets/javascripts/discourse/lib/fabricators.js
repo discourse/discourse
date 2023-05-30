@@ -46,8 +46,6 @@ function messageFabricator(args = {}) {
     message.excerpt = text.slice(0, excerptLength) + "...";
   }
 
-  message.cook();
-
   return message;
 }
 
