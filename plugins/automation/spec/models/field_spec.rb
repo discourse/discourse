@@ -62,4 +62,62 @@ describe DiscourseAutomation::Field do
       expect(field).to be_valid
     end
   end
+
+  describe "choices field" do
+    DiscourseAutomation::Scriptable.add("test_choices_field") { field :foo, component: :choices }
+
+    fab!(:automation) { Fabricate(:automation, script: "test_choices_field") }
+
+    it "works with a string value" do
+      field =
+        DiscourseAutomation::Field.create(
+          automation: automation,
+          component: "choices",
+          name: "foo",
+          metadata: {
+            value: "some text",
+          },
+        )
+      expect(field).to be_valid
+    end
+
+    it "works with an integer value" do
+      field =
+        DiscourseAutomation::Field.create(
+          automation: automation,
+          component: "choices",
+          name: "foo",
+          metadata: {
+            value: 21,
+          },
+        )
+      expect(field).to be_valid
+    end
+
+    it "does not work with an array value" do
+      field =
+        DiscourseAutomation::Field.create(
+          automation: automation,
+          component: "choices",
+          name: "foo",
+          metadata: {
+            value: [1, 2, 3],
+          },
+        )
+      expect(field).to_not be_valid
+    end
+
+    it "works with a nil value" do
+      field =
+        DiscourseAutomation::Field.create(
+          automation: automation,
+          component: "choices",
+          name: "foo",
+          metadata: {
+            value: nil,
+          },
+        )
+      expect(field).to be_valid
+    end
+  end
 end
