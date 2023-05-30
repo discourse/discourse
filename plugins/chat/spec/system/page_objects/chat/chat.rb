@@ -55,8 +55,11 @@ module PageObjects
         visit(channel.url + "/info")
       end
 
-      def visit_browse
-        visit("/chat/browse")
+      def visit_browse(filter = nil)
+        url = "/chat/browse"
+        url += "/" + filter.to_s if filter
+        visit(url)
+        PageObjects::Pages::ChatBrowse.new.has_finished_loading?
       end
 
       def minimize_full_page

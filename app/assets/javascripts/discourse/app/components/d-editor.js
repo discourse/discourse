@@ -33,7 +33,7 @@ import showModal from "discourse/lib/show-modal";
 import { siteDir } from "discourse/lib/text-direction";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import TextareaTextManipulation, {
   getHead,
 } from "discourse/mixins/textarea-text-manipulation";
@@ -227,6 +227,25 @@ export default Component.extend(TextareaTextManipulation, {
   isEditorFocused: false,
   processPreview: true,
   composerFocusSelector: "#reply-control .d-editor-input",
+
+  selectedFormTemplateId: computed("formTemplateIds", {
+    get() {
+      if (this._selectedFormTemplateId) {
+        return this._selectedFormTemplateId;
+      }
+
+      return this.formTemplateIds?.[0];
+    },
+
+    set(key, value) {
+      return (this._selectedFormTemplateId = value);
+    },
+  }),
+
+  @action
+  updateSelectedFormTemplateId(formTemplateId) {
+    this.selectedFormTemplateId = formTemplateId;
+  },
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {

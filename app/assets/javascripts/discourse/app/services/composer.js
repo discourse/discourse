@@ -158,6 +158,14 @@ export default class ComposerController extends Controller {
     return this.set("_disableSubmit", value);
   }
 
+  get formTemplateIds() {
+    if (!this.siteSettings.experimental_form_templates) {
+      return null;
+    }
+
+    return this.model.category?.get("form_template_ids");
+  }
+
   @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
@@ -496,6 +504,11 @@ export default class ComposerController extends Controller {
         this.model.appendText(insertText, null, { new_line: true });
       }
     });
+  }
+
+  @action
+  updateCategory(categoryId) {
+    this.model.categoryId = categoryId;
   }
 
   @action

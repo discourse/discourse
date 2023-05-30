@@ -42,6 +42,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system, js: true
         thread_page.click_send_message
 
         expect(thread_page).to have_message(text: "reply to message")
+        expect(channel_page).to have_thread_indicator(original_message)
 
         refresh
 

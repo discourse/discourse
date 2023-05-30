@@ -146,6 +146,12 @@ module Chat
       PrettyText.excerpt(cooked, max_length)
     end
 
+    def censored_excerpt(rich: false, max_length: 50)
+      WordWatcher.censor(
+        rich ? rich_excerpt(max_length: max_length) : excerpt(max_length: max_length),
+      )
+    end
+
     def cooked_for_excerpt
       (cooked.blank? && uploads.present?) ? "<p>#{uploads.first.original_filename}</p>" : cooked
     end

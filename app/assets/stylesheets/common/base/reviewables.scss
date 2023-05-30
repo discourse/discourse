@@ -232,8 +232,9 @@
       color: var(--secondary);
       border-radius: 8px;
       background-color: var(--secondary-high);
-      &.-flagged-post {
-        background-color: var(--danger-medium);
+      &.-flagged-post,
+      &.-flagged-chat-message {
+        background-color: var(--danger);
       }
       &.-queued-post,
       &.-queued-topic,

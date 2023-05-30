@@ -53,7 +53,10 @@ export default class ReviewSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.review.content");
+    return I18n.t(
+      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
+      { defaultValue: this.overridenName }
+    );
   }
 
   get shouldDisplay() {
@@ -70,7 +73,7 @@ export default class ReviewSectionLink extends BaseSectionLink {
     }
   }
 
-  get prefixValue() {
+  get defaultPrefixValue() {
     return "flag";
   }
 }

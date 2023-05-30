@@ -9,6 +9,7 @@ import { sanitize } from "discourse/lib/text";
 import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
+import { bind } from "discourse-common/utils/decorators";
 
 const FULL_RELOAD_LINKS_REGEX = [
   /^\/my\/[a-z_\-\/]+$/,
@@ -19,17 +20,30 @@ const FULL_RELOAD_LINKS_REGEX = [
 class Section {
   @tracked title;
   @tracked links;
+  @tracked secondaryLinks;
 
-  constructor({ title, links, id, publicSection }) {
+  constructor({
+    title,
+    links,
+    secondaryLinks,
+    id,
+    publicSection,
+    sectionType,
+  }) {
     this.title = title;
     this.public = publicSection;
+    this.sectionType = sectionType;
     this.links = links;
+    this.secondaryLinks = secondaryLinks;
     this.id = id;
   }
 
   get valid() {
+    const allLinks = this.links
+      .filter((link) => !link._destroy)
+      .concat(this.secondaryLinks?.filter((link) => !link._destroy) || []);
     const validLinks =
-      this.links.length > 0 && this.links.every((link) => link.valid);
+      allLinks.length > 0 && allLinks.every((link) => link.valid);
     return this.validTitle && validLinks;
   }
 
@@ -70,7 +84,7 @@ class SectionLink {
   @tracked value;
   @tracked _destroy;
 
-  constructor({ router, icon, name, value, id }) {
+  constructor({ router, icon, name, value, id, objectId, segment }) {
     this.router = router;
     this.icon = icon || "link";
     this.name = name;
@@ -78,6 +92,8 @@ class SectionLink {
     this.id = id;
     this.httpHost = "http://" + window.location.host;
     this.httpsHost = "https://" + window.location.host;
+    this.objectId = objectId;
+    this.segment = segment;
   }
 
   get path() {
@@ -165,6 +181,10 @@ class SectionLink {
     );
   }
 
+  get isPrimary() {
+    return this.segment === "primary";
+  }
+
   get #blankIcon() {
     return isEmpty(this.icon);
   }
@@ -221,6 +241,7 @@ export default Controller.extend(ModalFunctionality, {
       flashText: null,
       flashClass: null,
     });
+    this.nextObjectId = 0;
     this.model = this.initModel();
   },
 
@@ -233,25 +254,46 @@ export default Controller.extend(ModalFunctionality, {
       return new Section({
         title: this.model.title,
         publicSection: this.model.public,
-        links: A(
-          this.model.links.map(
-            (link) =>
-              new SectionLink({
-                router: this.router,
-                icon: link.icon,
-                name: link.name,
-                value: link.value,
-                id: link.id,
-              })
-          )
-        ),
+        sectionType: this.model.section_type,
+        links: this.model.links.reduce((acc, link) => {
+          if (link.segment === "primary") {
+            this.nextObjectId++;
+            acc.push(this.initLink(link));
+          }
+          return acc;
+        }, A()),
+        secondaryLinks: this.model.links.reduce((acc, link) => {
+          if (link.segment === "secondary") {
+            this.nextObjectId++;
+            acc.push(this.initLink(link));
+          }
+          return acc;
+        }, A()),
         id: this.model.id,
       });
     } else {
       return new Section({
-        links: A([new SectionLink({ router: this.router })]),
+        links: A([
+          new SectionLink({
+            router: this.router,
+            objectId: this.nextObjectId,
+            segment: "primary",
+          }),
+        ]),
       });
     }
+  },
+
+  initLink(link) {
+    return new SectionLink({
+      router: this.router,
+      icon: link.icon,
+      name: link.name,
+      value: link.value,
+      id: link.id,
+      objectId: this.nextObjectId,
+      segment: link.segment,
+    });
   },
 
   create() {
@@ -294,15 +336,18 @@ export default Controller.extend(ModalFunctionality, {
       data: JSON.stringify({
         title: this.model.title,
         public: this.model.public,
-        links: this.model.links.map((link) => {
-          return {
-            id: link.id,
-            icon: link.icon,
-            name: link.name,
-            value: link.path,
-            _destroy: link._destroy,
-          };
-        }),
+        links: this.model.links
+          .concat(this.model?.secondaryLinks || [])
+          .map((link) => {
+            return {
+              id: link.id,
+              icon: link.icon,
+              name: link.name,
+              value: link.path,
+              segment: link.segment,
+              _destroy: link._destroy,
+            };
+          }),
       }),
     })
       .then((data) => {
@@ -329,23 +374,112 @@ export default Controller.extend(ModalFunctionality, {
     return this.model.links.filter((link) => !link._destroy);
   },
 
+  get activeSecondaryLinks() {
+    return this.model.secondaryLinks?.filter((link) => !link._destroy);
+  },
+
   get header() {
     return this.model.id
       ? "sidebar.sections.custom.edit"
       : "sidebar.sections.custom.add";
   },
 
+  @bind
+  reorder(linkFromId, linkTo, above) {
+    if (linkFromId === linkTo.objectId) {
+      return;
+    }
+    let linkFrom = this.model.links.find(
+      (link) => link.objectId === linkFromId
+    );
+    if (!linkFrom) {
+      linkFrom = this.model.secondaryLinks.find(
+        (link) => link.objectId === linkFromId
+      );
+    }
+
+    if (linkFrom.isPrimary) {
+      this.model.links.removeObject(linkFrom);
+    } else {
+      this.model.secondaryLinks?.removeObject(linkFrom);
+    }
+
+    if (linkTo.isPrimary) {
+      const toPosition = this.model.links.indexOf(linkTo);
+      linkFrom.segment = "primary";
+      this.model.links.insertAt(above ? toPosition : toPosition + 1, linkFrom);
+    } else {
+      linkFrom.segment = "secondary";
+      const toPosition = this.model.secondaryLinks.indexOf(linkTo);
+      this.model.secondaryLinks.insertAt(
+        above ? toPosition : toPosition + 1,
+        linkFrom
+      );
+    }
+  },
+
+  get canDelete() {
+    return this.model.id && !this.model.sectionType;
+  },
+
+  @bind
+  deleteLink(link) {
+    if (link.id) {
+      link._destroy = "1";
+    } else {
+      if (link.isPrimary) {
+        this.model.links.removeObject(link);
+      } else {
+        this.model.secondaryLinks.removeObject(link);
+      }
+    }
+  },
+
   actions: {
     addLink() {
-      this.model.links.pushObject(new SectionLink({ router: this.router }));
+      this.nextObjectId = this.nextObjectId + 1;
+      this.model.links.pushObject(
+        new SectionLink({
+          router: this.router,
+          objectId: this.nextObjectId,
+          segment: "primary",
+        })
+      );
     },
 
-    deleteLink(link) {
-      if (link.id) {
-        link._destroy = "1";
-      } else {
-        this.model.links.removeObject(link);
-      }
+    addSecondaryLink() {
+      this.nextObjectId = this.nextObjectId + 1;
+      this.model.secondaryLinks.pushObject(
+        new SectionLink({
+          router: this.router,
+          objectId: this.nextObjectId,
+          segment: "secondary",
+        })
+      );
+    },
+
+    resetToDefault() {
+      return this.dialog.yesNoConfirm({
+        message: I18n.t("sidebar.sections.custom.reset_confirm"),
+        didConfirm: () => {
+          return ajax(`/sidebar_sections/reset/${this.model.id}`, {
+            type: "PUT",
+          })
+            .then((data) => {
+              this.currentUser.sidebar_sections.shiftObject();
+              this.currentUser.sidebar_sections.unshiftObject(
+                data["sidebar_section"]
+              );
+              this.send("closeModal");
+            })
+            .catch((e) =>
+              this.setProperties({
+                flashText: sanitize(extractError(e)),
+                flashClass: "error",
+              })
+            );
+        },
+      });
     },
 
     save() {

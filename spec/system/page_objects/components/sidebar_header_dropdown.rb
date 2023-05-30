@@ -25,7 +25,7 @@ module PageObjects
 
       def click_community_header_button
         page.click_button(
-          I18n.t("js.sidebar.sections.community.header_action_title"),
+          I18n.t("js.sidebar.sections.community.header_action_create_topic_title"),
           class: "sidebar-section-header-button",
         )
       end

@@ -25,6 +25,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     tracked_tags: ["tag1"],
     watched_tags: ["tag2"],
     watching_first_post_tags: ["tag3"],
+    admin: false,
   });
 
   needs.settings({

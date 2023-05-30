@@ -30,7 +30,7 @@
     "truth-helpers": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
+    "@babel/core": "^7.22.1",
     "@ember/optional-features": "^2.0.0",
     "@embroider/test-setup": "^3.0.1",
     "@glimmer/component": "^1.1.2",
