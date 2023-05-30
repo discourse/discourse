@@ -1619,13 +1619,13 @@
   resolved "https://registry.yarnpkg.com/@types/symlink-or-copy/-/symlink-or-copy-1.2.0.tgz#4151a81b4052c80bc2becbae09f3a9ec010a9c7a"
   integrity sha512-Lja2xYuuf2B3knEsga8ShbOdsfNOtzT73GyJmZyY7eGl2+ajOqrs8yM5ze0fsSoYwvA6bw7/Qr7OZ7PEEmYwWg==
 
-"@uppy/aws-s3-multipart@^3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@uppy/aws-s3-multipart/-/aws-s3-multipart-3.1.3.tgz#eb4e9f40686444cf8fa4d35c6bb5f36947bd7f6b"
-  integrity sha512-V1s9526efZz1T8YWT3g+Y4pZlazoH0mR4R6fql+PdzwYNvlchPe4b/+zFuEiymhHvoQk8pZM6kqI34Cf7FzqrQ==
+"@uppy/aws-s3-multipart@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@uppy/aws-s3-multipart/-/aws-s3-multipart-3.3.0.tgz#a120132fb93a0b393540881b8decdb4d176ab218"
+  integrity sha512-II3ebodEp9awkQapQgZ/i0WQicOc+uNoGDnLohWe63ZbUuux5WL3JoWKw4dovPfCEHUeleFOjMG2xqpAgZ/WEA==
   dependencies:
-    "@uppy/companion-client" "^3.1.2"
-    "@uppy/utils" "^5.2.0"
+    "@uppy/companion-client" "^3.1.3"
+    "@uppy/utils" "^5.3.0"
 
 "@uppy/aws-s3@^3.0.6":
   version "3.0.6"
@@ -1637,12 +1637,12 @@
     "@uppy/xhr-upload" "^3.1.1"
     nanoid "^4.0.0"
 
-"@uppy/companion-client@^3.1.2":
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-3.1.2.tgz#525f6b4b3f943eb48f65b4e2e31ffa4c7de7a842"
-  integrity sha512-XQm1xARUSmUKQylWNHlOmE/lY0Wgvv0Vf4DlDn2/CiYZBIr/fyemJPe0chCW2jYP5RjYEwqscZRdRrywUygrzw==
+"@uppy/companion-client@^3.1.2", "@uppy/companion-client@^3.1.3":
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/@uppy/companion-client/-/companion-client-3.1.3.tgz#b4889cfca6a1d60e044d0594a8da56304ba5d9fa"
+  integrity sha512-l70qOd4P9PSqxPDOFD1LMusDGGi36LCCiQko/e+Uw5hBtzN9vhAG5rQm242FlNoFdxK5T6jmfoZJSVel0UTvzg==
   dependencies:
-    "@uppy/utils" "^5.2.0"
+    "@uppy/utils" "^5.3.0"
     namespace-emitter "^2.0.1"
 
 "@uppy/core@^3.0.4":
@@ -1671,10 +1671,10 @@
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-3.0.2.tgz#870724c45a2f671d625123cb4a412e3bfae935d9"
   integrity sha512-kIQMCjXui6tjF1E9xGo4YHkvt71McXkU0FStrcQuBrRXuOhb+NcuWh3sMh3KryivVNgT6w5Odrlw2FUFkl9cqA==
 
-"@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.2.0.tgz#1436cda37c2bad5643837eeb1de897a7803511a3"
-  integrity sha512-5NSX0rDTBZSDSaP0T5IUmrPp7eRYGwcALQz+UBVSZaJTaMKPcfQwNJYNk0YwRfOAOhyvyrUfIxWMbjapDCp4RA==
+"@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.3.0.tgz#60803328536da73a11c8e747ed365c903b6a5f7e"
+  integrity sha512-tPW+HtRkjanFQAa/XD2e6kjJ7ZeMHtVxEVeBeRtKTnltsCA9kNF2gDwxtUVPEWyLrKzW+CvRm60NDiOKaWUuww==
   dependencies:
     lodash.throttle "^4.1.1"
 
