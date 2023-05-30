@@ -251,7 +251,7 @@ RSpec.configure do |config|
     end
 
     Capybara.threadsafe = true
-    Capybara.disable_animation = false
+    Capybara.disable_animation = true
 
     # Click offsets is calculated from top left of element
     Capybara.w3c_click_offset = false
