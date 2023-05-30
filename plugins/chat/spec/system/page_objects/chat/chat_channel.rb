@@ -73,7 +73,7 @@ module PageObjects
           click_message_action_mobile(message, "bookmark")
         else
           hover_message(message)
-          find(".reply-btn").click
+          find(".bookmark-btn").click
         end
       end
 
