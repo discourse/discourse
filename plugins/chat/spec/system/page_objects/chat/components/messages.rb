@@ -21,7 +21,7 @@ module PageObjects
         end
 
         def has_no_message?(**args)
-          !has_message?(**args)
+          PageObjects::Components::Chat::Message.new(".chat-channel").does_not_exist?(**args)
         end
 
         def has_x_messages?(count)
