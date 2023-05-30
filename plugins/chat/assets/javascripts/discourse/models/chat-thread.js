@@ -73,6 +73,14 @@ export default class ChatThread {
     this.messagesManager.addMessages([message]);
   }
 
+  get lastMessage() {
+    return this.messagesManager.findLastMessage();
+  }
+
+  lastUserMessage(user) {
+    return this.messagesManager.findLastUserMessage(user);
+  }
+
   get routeModels() {
     return [...this.channel.routeModels, this.id];
   }

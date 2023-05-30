@@ -40,6 +40,14 @@ export default class ChatComposerChannel extends ChatComposer {
     this.chatApi.saveDraft(channelId, jsonDraft);
   }
 
+  get lastMessage() {
+    return this.args.channel.lastMessage;
+  }
+
+  lastUserMessage(user) {
+    return this.args.channel.lastUserMessage(user);
+  }
+
   get placeholder() {
     if (!this.args.channel.canModifyMessages(this.currentUser)) {
       return I18n.t(

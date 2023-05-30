@@ -20,6 +20,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import User from "discourse/models/user";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -79,11 +80,6 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  sendMessage() {
-    this.args.onSendMessage(this.currentMessage);
-  }
-
-  @action
   persistDraft() {}
 
   @action
@@ -140,7 +136,9 @@ export default class ChatComposer extends Component {
 
   get sendEnabled() {
     return (
-      this.hasContent && !this.pane.sending && !this.inProgressUploadsCount > 0
+      (this.hasContent || this.currentMessage?.editing) &&
+      !this.pane.sending &&
+      !this.inProgressUploadsCount > 0
     );
   }
 
@@ -248,6 +246,19 @@ export default class ChatComposer extends Component {
       return;
     }
 
+    if (
+      this.currentMessage.editing &&
+      this.currentMessage.message.length === 0
+    ) {
+      new ChatMessageInteractor(
+        getOwner(this),
+        this.currentMessage,
+        this.context
+      ).delete();
+      this.reset(this.args.channel, this.args.thread);
+      return;
+    }
+
     if (this.site.mobileView) {
       // prevents to hide the keyboard after sending a message
       // we use direct DOM manipulation here because textareaInteractor.focus()
@@ -349,11 +360,11 @@ export default class ChatComposer extends Component {
       !this.hasContent &&
       !this.currentMessage.editing
     ) {
-      if (event.shiftKey) {
-        this.composer.replyTo(this.pane?.lastMessage);
+      if (event.shiftKey && this.lastMessage?.replyable) {
+        this.composer.replyTo(this.lastMessage);
       } else {
-        const editableMessage = this.pane?.lastCurrentUserMessage;
-        if (editableMessage) {
+        const editableMessage = this.lastUserMessage(this.currentUser);
+        if (editableMessage?.editable) {
           this.composer.editMessage(editableMessage);
         }
       }

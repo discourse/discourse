@@ -22,7 +22,7 @@
     {{on "scroll" this.computeScrollState passive=true}}
   >
     <div
-      class="chat-thread__messages chat-messages-container"
+      class="chat-thread__messages chat-messages-scroll chat-messages-container"
       {{chat/on-resize this.didResizePane (hash delay=10)}}
     >
       {{#each this.thread.messages key="id" as |message|}}

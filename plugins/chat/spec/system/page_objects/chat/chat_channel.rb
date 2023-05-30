@@ -59,8 +59,7 @@ module PageObjects
       end
 
       def click_message_action_mobile(message, message_action)
-        expand_message_actions_mobile(message, delay: 0.5)
-        wait_for_animation(find(".chat-message-actions"), timeout: 5)
+        expand_message_actions_mobile(message, delay: 0.6)
         find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
@@ -69,8 +68,22 @@ module PageObjects
       end
 
       def bookmark_message(message)
-        hover_message(message)
-        find(".bookmark-btn").click
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "bookmark")
+        else
+          hover_message(message)
+          find(".bookmark-btn").click
+        end
+      end
+
+      def select_message(message)
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "select")
+        else
+          hover_message(message)
+          click_more_button
+          find("[data-value='select']").click
+        end
       end
 
       def click_more_button
@@ -93,12 +106,6 @@ module PageObjects
         hover_message(message)
         click_more_button
         find("[data-value='flag']").click
-      end
-
-      def select_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='select']").click
       end
 
       def delete_message(message)
@@ -125,6 +132,7 @@ module PageObjects
         click_send_message
         click_composer
         has_no_loading_skeleton?
+        text
       end
 
       def reply_to(message)
