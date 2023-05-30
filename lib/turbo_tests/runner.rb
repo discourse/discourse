@@ -178,9 +178,7 @@ module TurboTests
         env["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"] = "1" if @profile
 
         if @verbose
-          command_str =
-            [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].select { |x| x.size > 0 }
-              .join(" ")
+          command_str = [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].join(" ")
 
           STDOUT.puts "::group::[#{process_id}] Run RSpec" if ENV["GITHUB_ACTIONS"]
           STDOUT.puts "Process #{process_id}: #{command_str}"
