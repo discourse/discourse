@@ -24,6 +24,21 @@ module PageObjects
         header.find(".chat-thread__close").click
       end
 
+      def back_to_list
+        header.find(".chat-thread__back-to-list").click
+      end
+
+      def has_no_unread_list_indicator?
+        has_no_css?(".chat-thread__back-to-list .chat-thread-header-unread-indicator")
+      end
+
+      def has_unread_list_indicator?(count:)
+        has_css?(
+          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number-wrap",
+          text: count.to_s,
+        )
+      end
+
       def has_no_loading_skeleton?
         has_no_css?(".chat-thread__messages .chat-skeleton")
       end

@@ -39,28 +39,27 @@ describe "Thread tracking state | full page", type: :system, js: true do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       thread_list_page.item_by_id(thread.id).click
-      expect(channel_page).to have_no_unread_thread_indicator
-      channel_page.open_thread_list
+      expect(thread_page).to have_no_unread_list_indicator
+      thread_page.back_to_list
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end
 
-    it "shows unread indicators for the header icon and the list when a new unread arrives" do
+    it "shows unread indicators for the header of the list when a new unread arrives" do
       message_1.trash!
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
-      expect(channel_page).to have_no_unread_thread_indicator
       expect(thread_list_page).to have_no_unread_item(thread.id)
       Fabricate(:chat_message, chat_channel: channel, thread: thread)
-      expect(channel_page).to have_unread_thread_indicator(count: 1)
       expect(thread_list_page).to have_unread_item(thread.id)
     end
 
     it "does not change the unread indicator for the header icon when the user is not a member of the thread" do
       thread.remove(current_user)
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
+      expect(channel_page).to have_no_unread_thread_indicator
       Fabricate(:chat_message, chat_channel: channel, thread: thread)
       expect(channel_page).to have_no_unread_thread_indicator
+      channel_page.open_thread_list
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end
   end

@@ -2,14 +2,20 @@
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--blend-primary-secondary-5);
   border-radius: 5px;
+  padding: 0.5rem 0;
 
   @include chat-channel-header-button;
 
   &.-has-unreads {
     .d-icon {
       color: var(--tertiary-med-or-tertiary);
+    }
+
+    &:hover {
+      .d-icon {
+        color: var(--tertiary-med-or-tertiary);
+      }
     }
   }
 
