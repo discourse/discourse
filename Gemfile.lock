@@ -181,7 +181,7 @@ GEM
       image_size (>= 1.5, < 4)
       in_threads (~> 1.3)
       progress (~> 3.0, >= 3.0.1)
-    image_size (3.2.0)
+    image_size (3.3.0)
     in_threads (1.6.0)
     jmespath (1.6.2)
     json (2.6.3)
