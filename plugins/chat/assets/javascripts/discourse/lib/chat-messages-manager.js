@@ -50,7 +50,7 @@ export default class ChatMessagesManager {
   }
 
   findLastMessage() {
-    return this.messages.find(
+    return this.messages.findLast(
       (message) => !message.staged && !message.error && !message.deletedAt
     );
   }
