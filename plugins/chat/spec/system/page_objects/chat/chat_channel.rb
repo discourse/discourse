@@ -69,8 +69,12 @@ module PageObjects
       end
 
       def bookmark_message(message)
-        hover_message(message)
-        find(".bookmark-btn").click
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "bookmark")
+        else
+          hover_message(message)
+          find(".reply-btn").click
+        end
       end
 
       def click_more_button

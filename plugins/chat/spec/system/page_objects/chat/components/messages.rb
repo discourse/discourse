@@ -27,10 +27,6 @@ module PageObjects
         def has_no_message?(**args)
           message.does_not_exist?(**args)
         end
-
-        def has_x_messages?(count)
-          find(context).has_css?(SELECTOR, count: count, visible: :all)
-        end
       end
     end
   end
