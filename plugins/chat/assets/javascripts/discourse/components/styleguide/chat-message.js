@@ -61,9 +61,9 @@ export default class ChatStyleguideChatMessage extends Component {
   }
 
   @action
-  updateMessage(event) {
+  async updateMessage(event) {
     this.message.message = event.target.value;
-    this.message.cook();
+    await this.message.cook();
   }
 
   @action
