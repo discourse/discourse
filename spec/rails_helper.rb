@@ -369,6 +369,13 @@ RSpec.configure do |config|
     end
   end
 
+  if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]
+    config.around :each do |example|
+      measurement = Benchmark.measure { example.run }
+      RSpec.current_example.metadata[:run_duration_ms] = (measurement.real * 1000).round(2)
+    end
+  end
+
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
