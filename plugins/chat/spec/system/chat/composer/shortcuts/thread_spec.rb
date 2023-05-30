@@ -39,7 +39,7 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system, js: true d
         thread_page.send_message
         thread_page.composer.edit_last_message_shortcut
 
-        expect(thread_page.composer.message_details).to be_editing(last_thread_message)
+        expect(thread_page.composer.message_details).to have_no_message
       ensure
         page.driver.browser.network_conditions = { offline: false }
       end

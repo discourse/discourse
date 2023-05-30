@@ -360,11 +360,11 @@ export default class ChatComposer extends Component {
       !this.hasContent &&
       !this.currentMessage.editing
     ) {
-      if (event.shiftKey) {
+      if (event.shiftKey && this.lastMessage?.replyable) {
         this.composer.replyTo(this.lastMessage);
       } else {
         const editableMessage = this.lastUserMessage(this.currentUser);
-        if (editableMessage) {
+        if (editableMessage?.editable) {
           this.composer.editMessage(editableMessage);
         }
       }

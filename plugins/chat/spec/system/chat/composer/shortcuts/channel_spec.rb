@@ -97,7 +97,7 @@ RSpec.describe "Chat | composer | shortcuts | channel", type: :system, js: true 
         channel_page.send_message
         channel_page.composer.edit_last_message_shortcut
 
-        expect(channel_page.composer.message_details).to be_editing(message_1)
+        expect(channel_page.composer.message_details).to have_no_message
       ensure
         page.driver.browser.network_conditions = { offline: false }
       end
