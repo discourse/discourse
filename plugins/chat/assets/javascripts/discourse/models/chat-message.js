@@ -7,7 +7,7 @@ import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { next } from "@ember/runloop";
+
 export default class ChatMessage {
   static cookFunction = null;
 
@@ -150,37 +150,35 @@ export default class ChatMessage {
   cook() {
     const site = getOwner(this).lookup("service:site");
 
-    next(() => {
-      if (this.isDestroyed || this.isDestroying) {
-        return;
-      }
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
 
-      const markdownOptions = {
-        featuresOverride:
-          site.markdown_additional_options?.chat?.limited_pretty_text_features,
-        markdownItRules:
-          site.markdown_additional_options?.chat
-            ?.limited_pretty_text_markdown_rules,
-        hashtagTypesInPriorityOrder:
-          site.hashtag_configurations?.["chat-composer"],
-        hashtagIcons: site.hashtag_icons,
-      };
+    const markdownOptions = {
+      featuresOverride:
+        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+      markdownItRules:
+        site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: site.hashtag_icons,
+    };
 
-      if (ChatMessage.cookFunction) {
+    if (ChatMessage.cookFunction) {
+      this.cooked = ChatMessage.cookFunction(this.message);
+    } else {
+      generateCookFunction(markdownOptions).then((cookFunction) => {
+        ChatMessage.cookFunction = (raw) => {
+          return simpleCategoryHashMentionTransform(
+            cookFunction(raw),
+            site.categories
+          );
+        };
+
         this.cooked = ChatMessage.cookFunction(this.message);
-      } else {
-        generateCookFunction(markdownOptions).then((cookFunction) => {
-          ChatMessage.cookFunction = (raw) => {
-            return simpleCategoryHashMentionTransform(
-              cookFunction(raw),
-              site.categories
-            );
-          };
-
-          this.cooked = ChatMessage.cookFunction(this.message);
-        });
-      }
-    });
+      });
+    }
   }
 
   get read() {
