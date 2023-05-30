@@ -34,6 +34,10 @@ module PageObjects
         component.find(".select-kit-header[data-value='#{value}']")
       end
 
+      def has_selected_index?(index)
+        component.find(".select-kit-header[data-index='#{index}']")
+      end
+
       def has_selected_name?(name)
         component.find(".select-kit-header[data-name='#{name}']")
       end

@@ -39,7 +39,7 @@ describe "Navigating with breadcrumbs", type: :system, js: true do
 
     expect(discovery.subcategory_drop).to have_selected_value("") # all
 
-    discovery.subcategory_drop.select_row_by_value("no-categories")
+    discovery.subcategory_drop.select_row_by_name("none")
     expect(discovery.topic_list).to have_topic(c3_topic)
     expect(discovery.topic_list).to have_topics(count: 1)
 
