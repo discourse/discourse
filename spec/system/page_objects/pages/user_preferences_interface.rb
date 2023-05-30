@@ -21,8 +21,8 @@ module PageObjects
       end
 
       def save_changes
-        click_button "Save Changes"
-        expect(page).to have_content(I18n.t("js.saved"))
+        click_button(I18n.t("js.save"))
+        find(".saved", exact_text: I18n.t("js.saved"))
         self
       end
     end

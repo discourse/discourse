@@ -9,7 +9,7 @@ module PageObjects
       end
 
       def click_interface_tab
-        click_link "Interface"
+        click_link(I18n.t("js.user.preferences_nav.interface"))
         self
       end
 
