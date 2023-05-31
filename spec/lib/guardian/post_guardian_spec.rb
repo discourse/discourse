@@ -51,7 +51,7 @@ RSpec.describe PostGuardian do
       end
 
       it "returns false if the user is not in hidden_post_visible_groups" do
-        expect(Guardian.new.can_see_hidden_post?(hidden_post)).to eq(false)
+        expect(Guardian.new(groupless_user).can_see_hidden_post?(hidden_post)).to eq(false)
       end
     end
   end
