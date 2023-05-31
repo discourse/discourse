@@ -657,14 +657,17 @@ class Group < ActiveRecord::Base
     groups ||= Group
 
     relation =
-      groups.where("name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%")
+      groups.where(
+        "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
+        term_like: "%#{name}%",
+      )
 
     if sort == :auto
       prefix = "#{name.gsub("_", "\\_")}%"
       relation =
         relation.reorder(
           DB.sql_fragment(
-            "CASE WHEN name ILIKE :like OR full_name ILIKE :like THEN 0 ELSE 1 END ASC, name ASC",
+            "CASE WHEN groups.name ILIKE :like OR groups.full_name ILIKE :like THEN 0 ELSE 1 END ASC, groups.name ASC",
             like: prefix,
           ),
         )

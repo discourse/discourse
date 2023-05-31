@@ -103,8 +103,14 @@ module PageObjects
         page.has_no_css?(emoji_preview_selector(emoji))
       end
 
+      COMPOSER_INPUT_SELECTOR = "#{COMPOSER_ID} .d-editor-input"
+
+      def has_no_composer_input?
+        page.has_no_css?(COMPOSER_INPUT_SELECTOR)
+      end
+
       def has_composer_input?
-        page.has_css?("#{COMPOSER_ID} .d-editor .d-editor-input")
+        page.has_css?(COMPOSER_INPUT_SELECTOR)
       end
 
       def has_form_template?
@@ -115,8 +121,14 @@ module PageObjects
         page.has_css?(".form-template-field[data-field-type='#{field}']")
       end
 
+      FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
+
+      def has_no_form_template_chooser?
+        page.has_no_css?(FORM_TEMPLATE_CHOOSER_SELECTOR)
+      end
+
       def has_form_template_chooser?
-        page.has_css?(".composer-select-form-template")
+        page.has_css?(FORM_TEMPLATE_CHOOSER_SELECTOR)
       end
 
       def composer_input

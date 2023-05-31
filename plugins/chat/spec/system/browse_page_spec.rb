@@ -64,7 +64,7 @@ RSpec.describe "Browse page", type: :system, js: true do
       end
     end
 
-    context "when filtering resuls" do
+    context "when filtering results" do
       fab!(:category_channel_1) { Fabricate(:chat_channel, name: "foo") }
       fab!(:category_channel_2) { Fabricate(:chat_channel, name: "bar") }
 

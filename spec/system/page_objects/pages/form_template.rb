@@ -31,7 +31,7 @@ module PageObjects
 
       # Form Template new/edit form related
       def type_in_template_name(input)
-        find(".form-templates__form-name-input").send_keys(input)
+        find(".form-templates__form-name-input").fill_in(with: input)
         self
       end
 

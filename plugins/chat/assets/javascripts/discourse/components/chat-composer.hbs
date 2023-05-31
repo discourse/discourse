@@ -22,12 +22,11 @@
       (if this.pane.sending "is-sending")
       (if this.sendEnabled "is-send-enabled" "is-send-disabled")
       (if this.disabled "is-disabled" "is-enabled")
+      (if this.currentMessage.draftSaved "is-draft-saved" "is-draft-unsaved")
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
     {{did-insert this.setup}}
-    {{did-insert this.didUpdateChannel}}
-    {{did-update this.didUpdateChannel @channel.id}}
     {{will-destroy this.teardown}}
     {{will-destroy this.cancelPersistDraft}}
   >

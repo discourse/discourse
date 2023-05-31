@@ -88,7 +88,7 @@ describe "Composer Form Templates", type: :system, js: true do
   it "shows a form when a form template is assigned to the category" do
     category_page.visit(category_with_template_1)
     category_page.new_topic_button.click
-    expect(composer).not_to have_composer_input
+    expect(composer).to have_no_composer_input
     expect(composer).to have_form_template
     expect(composer).to have_form_template_field("checkbox")
   end
@@ -115,7 +115,7 @@ describe "Composer Form Templates", type: :system, js: true do
   it "does not show form template chooser when a category only has form template" do
     category_page.visit(category_with_template_1)
     category_page.new_topic_button.click
-    expect(composer).not_to have_form_template_chooser
+    expect(composer).to have_no_form_template_chooser
   end
 
   it "shows form template chooser when a category has multiple form templates" do

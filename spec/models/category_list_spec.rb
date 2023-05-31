@@ -327,4 +327,27 @@ RSpec.describe CategoryList do
       end
     end
   end
+
+  describe "category_list_find_categories_query modifier" do
+    fab!(:cool_category) { Fabricate(:category, name: "Cool category") }
+    fab!(:boring_category) { Fabricate(:category, name: "Boring category") }
+
+    it "allows changing the query" do
+      prefetched_categories = CategoryList.new(Guardian.new(user)).categories.map { |c| c[:id] }
+      expect(prefetched_categories).to include(cool_category.id, boring_category.id)
+
+      Plugin::Instance
+        .new
+        .register_modifier(:category_list_find_categories_query) do |query|
+          query.where("categories.name LIKE 'Cool%'")
+        end
+
+      prefetched_categories = CategoryList.new(Guardian.new(user)).categories.map { |c| c[:id] }
+
+      expect(prefetched_categories).to include(cool_category.id)
+      expect(prefetched_categories).not_to include(boring_category.id)
+    ensure
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+  end
 end

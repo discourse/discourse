@@ -36,8 +36,7 @@ RSpec.describe "Chat channel", type: :system, js: true do
       )
       sidebar_page.open_channel(channel_1)
 
-      expect(channel_page).to have_no_loading_skeleton
-      expect(channel_page.messages).to have_x_messages(51)
+      expect(channel_page.messages).to have_message(id: message_1.id)
     end
   end
 

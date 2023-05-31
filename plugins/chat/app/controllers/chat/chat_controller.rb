@@ -90,7 +90,7 @@ module Chat
       raise Discourse::InvalidAccess unless @user_chat_channel_membership
 
       reply_to_msg_id = params[:in_reply_to_id]
-      if reply_to_msg_id
+      if reply_to_msg_id.present?
         rm = Chat::Message.find(reply_to_msg_id)
         raise Discourse::NotFound if rm.chat_channel_id != @chat_channel.id
       end

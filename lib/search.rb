@@ -630,7 +630,7 @@ class Search
       Group
         .visible_groups(@guardian.user)
         .members_visible_groups(@guardian.user)
-        .where("groups.name ILIKE ? OR (id = ? AND id > 0)", match, match.to_i)
+        .where("groups.name ILIKE ? OR (groups.id = ? AND groups.id > 0)", match, match.to_i)
 
     DiscoursePluginRegistry.search_groups_set_query_callbacks.each do |cb|
       group_query = cb.call(group_query, @term, @guardian)

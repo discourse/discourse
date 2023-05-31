@@ -397,6 +397,46 @@ RSpec.describe GroupsController do
         end
       end
     end
+
+    describe "groups_index_query modifier" do
+      fab!(:user) { Fabricate(:user) }
+      fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+      fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+      it "allows changing the query" do
+        get "/groups.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(
+          cool_group.id,
+          boring_group.id,
+        )
+
+        get "/groups.json", params: { filter: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(boring_group.id)
+
+        Plugin::Instance
+          .new
+          .register_modifier(:groups_index_query) do |query|
+            query.where("groups.name LIKE 'cool%'")
+          end
+
+        get "/groups.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(boring_group.id)
+
+        get "/groups.json", params: { filter: "boring" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(
+          cool_group.id,
+          boring_group.id,
+        )
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
   end
 
   describe "#show" do
@@ -2326,6 +2366,36 @@ RSpec.describe GroupsController do
         expect(groups.length).to eq(2)
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
+      end
+    end
+
+    describe "groups_search_query modifier" do
+      fab!(:user) { Fabricate(:user) }
+      fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+      fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+      before { sign_in(user) }
+
+      it "allows changing the query" do
+        get "/groups/search.json", params: { term: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body.map { |g| g["id"] }).not_to include(boring_group.id)
+
+        Plugin::Instance
+          .new
+          .register_modifier(:groups_search_query) do |query|
+            query.where("groups.name LIKE 'boring%'")
+          end
+
+        get "/groups/search.json", params: { term: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |g| g["id"] }).not_to include(
+          cool_group.id,
+          boring_group.id,
+        )
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
       end
     end
   end
