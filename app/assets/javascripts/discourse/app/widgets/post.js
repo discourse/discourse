@@ -497,10 +497,7 @@ createWidget("post-contents", {
 
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
-    if (
-      attrs.cooked_hidden &&
-      (this.currentUser?.isLeader || attrs.user_id === this.currentUser?.id)
-    ) {
+    if (attrs.cooked_hidden && attrs.canSeeHiddenPost) {
       result.push(this.attach("expand-hidden", attrs));
     }
 
