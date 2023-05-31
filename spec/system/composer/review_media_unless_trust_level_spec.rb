@@ -8,7 +8,6 @@ describe "Composer using review_media", type: :system, js: true do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    skip("Currently flaky on CI")
     SiteSetting.review_media_unless_trust_level = 3
     sign_in user
   end

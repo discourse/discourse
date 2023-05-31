@@ -89,7 +89,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when adding an emoji through the picker" do
-    xit "adds the emoji to the composer" do
+    it "adds the emoji to the composer" do
       chat_page.visit_channel(channel_1)
       channel_page.open_action_menu
       channel_page.click_action_button("emoji")
@@ -131,7 +131,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
   end
 
   context "when opening emoji picker through more button of the autocomplete" do
-    xit "prefills the emoji picker filter input" do
+    it "prefills the emoji picker filter input" do
       chat_page.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":gri")
 
@@ -140,7 +140,7 @@ RSpec.describe "Chat composer", type: :system, js: true do
       expect(find(".chat-emoji-picker .dc-filter-input").value).to eq("gri")
     end
 
-    xit "filters with the prefilled input" do
+    it "filters with the prefilled input" do
       chat_page.visit_channel(channel_1)
       find(".chat-composer__input").fill_in(with: ":fr")
 

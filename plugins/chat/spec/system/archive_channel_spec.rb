@@ -105,7 +105,7 @@ RSpec.describe "Archive channel", type: :system, js: true do
           )
         end
 
-        xit "can be retried" do
+        it "can be retried" do
           Jobs.run_immediately!
 
           chat.visit_channel(channel_1)
