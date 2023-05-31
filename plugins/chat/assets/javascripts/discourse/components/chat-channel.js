@@ -21,6 +21,7 @@ import {
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { tracked } from "@glimmer/tracking";
 import discourseDebounce from "discourse-common/lib/debounce";
+import DiscourseURL from "discourse/lib/url";
 
 const PAGE_SIZE = 50;
 const PAST = "past";
@@ -815,11 +816,14 @@ export default class ChatLivePane extends Component {
   @action
   onCloseFullScreen() {
     this.chatStateManager.prefersDrawer();
-    this.router.transitionTo(this.chatStateManager.lastKnownAppURL).then(() => {
-      this.appEvents.trigger(
-        "chat:open-url",
-        this.chatStateManager.lastKnownChatURL
-      );
+
+    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL, {
+      afterRouteComplete: () => {
+        this.appEvents.trigger(
+          "chat:open-url",
+          this.chatStateManager.lastKnownChatURL
+        );
+      },
     });
   }
 
