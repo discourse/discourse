@@ -2,7 +2,7 @@
 
 class GroupLookup
   def initialize(group_ids = [])
-    @group_ids = group_ids.tap(&:flatten!).tap(&:compact!).tap(&:uniq!)
+    @group_ids = group_ids.flatten.compact.uniq
   end
 
   # Lookup a group by id
