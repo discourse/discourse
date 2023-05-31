@@ -34,16 +34,6 @@
     }
   }
 
-  // .no-touch & {
-  //   &:hover,
-  //   &:focus {
-  //     .d-icon {
-  //       color: var(--primary);
-  //     }
-  //   }
-  //   // }
-  // }
-
   &.-send {
     will-change: scale;
 
@@ -78,6 +68,14 @@
         .is-send-enabled & {
           transform: scale(1.2);
         }
+      }
+    }
+  }
+
+  &.-emoji {
+    .d-icon {
+      .is-focused & {
+        color: var(--tertiary);
       }
     }
   }

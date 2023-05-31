@@ -73,7 +73,7 @@
           {{#each this.inlineButtons as |button|}}
             <Chat::Composer::Button
               @icon={{button.icon}}
-              class={{button.id}}
+              class="-{{button.id}}"
               disabled={{or this.disabled button.disabled}}
               tabindex={{if button.disabled -1 0}}
               {{on
