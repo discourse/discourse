@@ -59,7 +59,9 @@
       </div>
     {{else}}
       {{#component
-        this.reviewableComponent reviewable=this.reviewable tagName=""
+        this.reviewableComponent
+        reviewable=this.reviewable
+        tagName=""
       }}
         <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
       {{/component}}

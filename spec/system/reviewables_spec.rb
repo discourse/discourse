@@ -5,7 +5,6 @@ describe "Reviewables", type: :system, js: true do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:theme) { Fabricate(:theme) }
   fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
-  #
 
   before { sign_in(admin) }
 
