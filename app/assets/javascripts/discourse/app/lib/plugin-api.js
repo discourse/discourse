@@ -95,9 +95,11 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
+import { addForceToFullSearchOnEnterFn } from "discourse/widgets/search-menu";
 import {
   addQuickSearchRandomTip,
   addSearchSuggestion,
+  removeDefaultQuickSearchRandomTips,
 } from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -1693,6 +1695,20 @@ class PluginApi {
   }
 
   /**
+   * Add a function to be called when Enter is pressed on the search menu. If function returns true,
+   * the user will be navigated to full-page search
+   *
+   * Example usage:
+   * ```
+   * api.addForceToFullSearchOnEnterFn((searchMenu) => { return ... });
+   * ```
+   *
+   */
+  addForceToFullSearchOnEnterFn(fn) {
+    addForceToFullSearchOnEnterFn(fn);
+  }
+
+  /**
    * Add a quick search tip shown randomly when the search dropdown is invoked on desktop.
    *
    * Example usage:
@@ -1709,6 +1725,19 @@ class PluginApi {
    */
   addQuickSearchRandomTip(tip) {
     addQuickSearchRandomTip(tip);
+  }
+
+  /**
+   * Remove the default quick search tips shown randomly when the search dropdown is invoked on desktop.
+   *
+   * Usage:
+   * ```
+   * api.removeDefaultQuickSearchRandomTips();
+   * ```
+   *
+   */
+  removeDefaultQuickSearchRandomTips(tip) {
+    removeDefaultQuickSearchRandomTips(tip);
   }
 
   /**

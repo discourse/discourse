@@ -29,10 +29,10 @@ const searchData = {};
 
 const _extraForceToFullSearchOnEnterFns = [];
 
-export function addExtraForceToFullSearchOnEnterFn(fn) {
+export function addForceToFullSearchOnEnterFn(fn) {
   _extraForceToFullSearchOnEnterFns.push(fn);
 }
-export function resetExtraForceToFullSearchOnEnterFns() {
+export function resetForceToFullSearchOnEnterFns() {
   _extraForceToFullSearchOnEnterFns.clear();
 }
 
