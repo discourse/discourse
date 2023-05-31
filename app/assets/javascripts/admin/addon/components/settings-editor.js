@@ -94,7 +94,7 @@ export default class SettingsEditor extends Component {
       this.errors = [
         ...this.errors,
         {
-          setting: "Syntax Error",
+          setting: I18n.t("admin.customize.syntax_error"),
           errorMessage: e.message,
         },
       ];
