@@ -67,16 +67,6 @@
         @ariaLabel="sidebar.sections.custom.links.add"
       />
 
-      {{#if this.model.sectionType}}
-        <DButton
-          @action={{action "resetToDefault"}}
-          @class="btn-flat btn-text reset-link"
-          @icon="undo"
-          @title="sidebar.sections.custom.links.reset"
-          @label="sidebar.sections.custom.links.reset"
-          @ariaLabel="sidebar.sections.custom.links.reset"
-        />
-      {{/if}}
     {{/if}}
     {{#if (and this.currentUser.staff (not this.model.sectionType))}}
       <div class="row-wrapper mark-public-wrapper">
@@ -110,6 +100,16 @@
       @action={{action "delete"}}
       @label="sidebar.sections.custom.delete"
       @ariaLabel="sidebar.sections.custom.delete"
+    />
+  {{/if}}
+  {{#if this.model.sectionType}}
+    <DButton
+      @action={{action "resetToDefault"}}
+      @class="btn-flat btn-text reset-link"
+      @icon="undo"
+      @title="sidebar.sections.custom.links.reset"
+      @label="sidebar.sections.custom.links.reset"
+      @ariaLabel="sidebar.sections.custom.links.reset"
     />
   {{/if}}
 </div>
