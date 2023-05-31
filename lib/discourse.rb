@@ -597,6 +597,38 @@ module Discourse
     alias_method :base_url_no_path, :base_url_no_prefix
   end
 
+  def self.urls_cache
+    @urls_cache ||= DistributedCache.new("urls_cache")
+  end
+
+  def self.tos_url
+    urls_cache["tos"] ||= if SiteSetting.tos_url.present?
+      SiteSetting.tos_url
+    elsif SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
+      "#{Discourse.base_path}/tos"
+    else
+      :nil
+    end
+
+    urls_cache["tos"] != :nil ? url : nil
+  end
+
+  def self.privacy_policy_url
+    urls_cache["privacy_policy"] ||= if SiteSetting.privacy_policy_url.present?
+      SiteSetting.privacy_policy_url
+    elsif SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
+      "#{Discourse.base_path}/privacy"
+    else
+      :nil
+    end
+
+    urls_cache["privacy_policy"] != :nil ? url : nil
+  end
+
+  def self.clear_urls!
+    urls_cache.clear
+  end
+
   LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
 
   READONLY_MODE_KEY_TTL ||= 60

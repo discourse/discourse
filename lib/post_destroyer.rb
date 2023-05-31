@@ -90,6 +90,9 @@ class PostDestroyer
       UserActionManager.topic_destroyed(@topic)
       DiscourseEvent.trigger(:topic_destroyed, @topic, @user)
       WebHook.enqueue_topic_hooks(:topic_destroyed, @topic, topic_payload) if has_topic_web_hooks
+      if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
+        Discourse.clear_urls!
+      end
     end
   end
 
@@ -122,6 +125,9 @@ class PostDestroyer
         )
       end
       update_imap_sync(@post, false)
+      if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
+        Discourse.clear_urls!
+      end
     end
   end
 
