@@ -3,7 +3,7 @@ import discourseComputed, {
   observes,
 } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { groupPath } from "discourse/lib/url";
 import I18n from "I18n";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { alias } from "@ember/object/computed";
@@ -113,6 +113,17 @@ export default Component.extend({
     ).classList;
 
     nodeClassList.toggle("read", !data.show_indicator);
+  },
+
+  @discourseComputed("topic.participant_groups")
+  participantGroups(groupNames) {
+    if (!groupNames) {
+      return [];
+    }
+
+    return groupNames.map((name) => {
+      return { name, url: groupPath(name) };
+    });
   },
 
   @discourseComputed("topic.id")
