@@ -100,12 +100,11 @@ class TopicList
     group_ids = []
     @topics.each do |ft|
       user_ids << ft.user_id << ft.last_post_user_id << ft.featured_user_ids << ft.allowed_user_ids
-      group_ids |= ft.allowed_group_ids
+      group_ids |= (ft.allowed_group_ids || [])
     end
 
     user_ids = TopicList.preload_user_ids(@topics, user_ids, self)
     user_lookup = UserLookup.new(user_ids)
-    group_ids = group_ids.flatten.uniq
     group_lookup = GroupLookup.new(group_ids)
 
     @topics.each do |ft|
