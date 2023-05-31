@@ -23,8 +23,11 @@ html.composer-open {
     min-width: 0;
   }
   z-index: z("composer", "content");
+
+  // If the transition duration is changed here, it must also be changed in the `composeStateChanged` function of models/composer.js
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
     max-width 250ms ease, padding-bottom 250ms ease;
+
   background-color: var(--secondary);
   box-shadow: shadow("composer");
 
