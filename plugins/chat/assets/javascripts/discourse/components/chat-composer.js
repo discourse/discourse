@@ -432,7 +432,10 @@ export default class ChatComposer extends Component {
       treatAsTextarea: true,
       autoSelectFirstSuggestion: true,
       transformComplete: (obj) => {
-        this.#addMentionedUser(obj);
+        if (obj.isUser) {
+          this.#addMentionedUser(obj);
+        }
+
         return obj.username || obj.name;
       },
       dataSource: (term) => {
