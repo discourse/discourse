@@ -1700,6 +1700,7 @@ en:
     enable_badges: "Enable the badge system"
     max_favorite_badges: "Maximum number of badges that user can select"
     whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
+    hidden_post_visible_groups: "Allow members of these groups to view hidden posts. Staff users can always view hidden posts."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
     blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com|trashmail.net"
