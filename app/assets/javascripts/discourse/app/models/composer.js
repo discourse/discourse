@@ -5,7 +5,6 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import discourseLater from "discourse-common/lib/later";
 import {
   emailValid,
   escapeExpression,
@@ -226,12 +225,6 @@ const Composer = RestModel.extend({
     if (this.composeState === OPEN) {
       this.set("composerOpened", oldOpen || new Date());
       elem.classList.add("composer-open");
-
-      // If the duration changes here, it must also be changed in `stylesheets/common/base/compose.scss` which is where
-      // the transition duration is defined. A delay is added here as we only want to fire the event after the transition ends.
-      discourseLater(() => {
-        this.appEvents.trigger("composer:opened");
-      }, 250);
     } else {
       if (oldOpen) {
         const oldTotal = this.composerTotalOpened || 0;
