@@ -73,7 +73,7 @@
           {{#each this.inlineButtons as |button|}}
             <Chat::Composer::Button
               @icon={{button.icon}}
-              class={{button.id}}
+              class="-{{button.id}}"
               disabled={{or this.disabled button.disabled}}
               tabindex={{if button.disabled -1 0}}
               {{on
@@ -91,7 +91,7 @@
 
         <Chat::Composer::Button
           @icon="paper-plane"
-          class="chat-composer__send-btn primary"
+          class="-send"
           title={{i18n "chat.composer.send"}}
           disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
