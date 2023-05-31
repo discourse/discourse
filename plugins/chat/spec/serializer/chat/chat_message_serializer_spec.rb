@@ -209,6 +209,26 @@ describe Chat::MessageSerializer do
     end
   end
 
+  describe "#mentioned_users" do
+    it "doesn't fail if mentioned user was deleted" do
+      mentioned_user = Fabricate(:user)
+      message =
+        Fabricate(
+          :chat_message,
+          message:
+            "here should be a mention, but since we're fabricating objects it doesn't matter",
+        )
+      Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+
+      mentioned_user.destroy!
+      message.reload
+      serializer = described_class.new(message, scope: guardian, root: nil)
+
+      expect { serializer.as_json }.not_to raise_error
+      expect(serializer.as_json[:mentioned_users]).to be_empty
+    end
+  end
+
   describe "threading data" do
     before { message_1.update!(thread: Fabricate(:chat_thread, channel: chat_channel)) }
 
