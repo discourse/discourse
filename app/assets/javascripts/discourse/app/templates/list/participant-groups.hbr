@@ -1,4 +1,4 @@
-<div class="participant-groups" role="list" aria-label="Groups">
+<div class="participant-groups" role="list" aria-label="{{i18n 'topic.participant_groups'}}">
 {{#each groups as |group|}}
   <a class="user-group trigger-group-card" href="/g/{{group}}" data-group-card="{{group}}">
     {{d-icon 'users'}}
