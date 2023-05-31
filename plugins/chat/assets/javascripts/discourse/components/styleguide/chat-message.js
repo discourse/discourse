@@ -10,7 +10,11 @@ export default class ChatStyleguideChatMessage extends Component {
 
   manager = new ChatMessagesManager(getOwner(this));
 
-  message = fabricators.message({ user: this.currentUser });
+  constructor() {
+    super(...arguments);
+    this.message = fabricators.message({ user: this.currentUser });
+    this.message.cook();
+  }
 
   @action
   toggleDeleted() {
