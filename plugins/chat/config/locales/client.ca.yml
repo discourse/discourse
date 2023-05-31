@@ -111,6 +111,7 @@ ca:
           one: "%{count} resposta"
           other: "%{count} respostes"
         settings: "Configuració"
+        last_reply: "darrera resposta"
       draft_channel_screen:
         header: "Missatge nou"
         cancel: "Cancel·la"

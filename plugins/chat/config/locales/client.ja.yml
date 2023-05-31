@@ -366,6 +366,7 @@ ja:
         replies:
           other: "返信: %{count} 件"
         settings: "設定"
+        last_reply: "最後の返信"
       draft_channel_screen:
         header: "新しいメッセージ"
         cancel: "キャンセル"

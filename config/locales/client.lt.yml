@@ -3536,6 +3536,7 @@ lt:
           save: "Išsaugoti"
           delete: "Pašalinti"
           links:
+            reset: "Atstatyti numatytuosius nustatymus"
             icon:
               label: "Ikona"
             name:

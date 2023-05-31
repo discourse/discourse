@@ -109,6 +109,7 @@ th:
         replies:
           other: "%{count} ตอบ"
         settings: "การตั้งค่า"
+        last_reply: "การตอบล่าสุด"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"

@@ -184,6 +184,7 @@ pl_PL:
       save: "Zapisz"
       select: "Wybierz"
       return_to_list: "Powrót do listy kanałów"
+      return_to_threads_list: "Wróć do trwających dyskusji"
       scroll_to_bottom: "Przewiń na dół"
       scroll_to_new_messages: "Zobacz nowe wiadomości"
       sound:
@@ -430,6 +431,7 @@ pl_PL:
         original_message:
           started_by: "Rozpoczęty przez"
         settings: "Ustawienia"
+        last_reply: "ostatnia odpowiedź"
       threads:
         open: "Otwórz wątek"
         list: "Trwające dyskusje"
@@ -473,6 +475,7 @@ pl_PL:
               label: Wiadomość
             sender:
               label: Nadawca
+              description: Domyślnie dla systemu
     review:
       transcript:
         view: "Zobacz transkrypcję poprzednich wiadomości"
@@ -495,6 +498,8 @@ pl_PL:
       allow_private_messages: "Zezwalaj innym użytkownikom na wysyłanie mi osobistych wiadomości i bezpośrednich wiadomości na czacie"
       muted_users_instructions: "Wyłącz wszystkie powiadomienia, wiadomości osobiste i bezpośrednie wiadomości czatu od tych użytkowników."
       allowed_pm_users_instructions: "Zezwalaj na wysyłanie osobistych wiadomości lub bezpośrednich wiadomości na czacie tylko od tych użytkowników."
+      allow_private_messages_from_specific_users: "Zezwalaj tylko określonym użytkownikom na wysyłanie mi osobistych wiadomości lub bezpośrednich wiadomości na czacie"
+      ignored_users_instructions: "Zignoruj wszystkie posty, wiadomości, powiadomienia, wiadomości osobiste i bezpośrednie wiadomości na czacie od tych użytkowników."
     user_menu:
       no_chat_notifications_title: "Nie masz jeszcze żadnych powiadomień czatu"
       no_chat_notifications_body: >

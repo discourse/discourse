@@ -529,6 +529,8 @@ id:
           title: "Pengguna"
         reviewable_post:
           title: "Postingan"
+        reviewable_chat_message:
+          title: "Pesan obrolan yang ditandai"
       approval:
         title: "Pesan Membutuhkan Persetujuan"
         description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
@@ -1687,6 +1689,8 @@ id:
         action: "pindahkan sebagai topik baru"
         radio_label: "Topik Baru"
         error: "Ada kesalahan dalam memindahkan posting sebagai topik baru"
+      merge_topic:
+        chronological_order: "mempertahankan urutan kronologis setelah penggabungan"
       move_to_new_message:
         radio_label: "Pesan Baru"
       publish_page:
@@ -1895,7 +1899,10 @@ id:
         custom:
           save: "Simpan"
           delete: "Hapus"
+          reset_confirm: "Yakin ingin menyetel ulang bagian ini ke bawaan?"
+          more_menu: "Lebih banyak menu"
           links:
+            reset: "Setel ulang ke bawaan"
             name:
               label: "Name"
         about:
@@ -1914,6 +1921,8 @@ id:
         categories:
           header_link_text: "Kategori"
         community:
+          header_action_create_topic_title: "Buat topik"
+          header_action_edit_section_title: "Edit bagian Komunitas"
           links:
             about:
               content: "Tentang"

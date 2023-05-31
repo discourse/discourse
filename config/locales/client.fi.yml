@@ -549,6 +549,8 @@ fi:
           title: "Käyttäjä"
         reviewable_post:
           title: "Viesti"
+        reviewable_chat_message:
+          title: "Liputettu chat-viesti"
       approval:
         title: "Viesti odottaa hyväksyntää"
         description: "Viestisi saapui perille, mutta valvojan on vielä hyväksyttävä se, jotta se näkyy sivustolla. Ole kärsivällinen."
@@ -2991,6 +2993,7 @@ fi:
         instructions:
           one: "Valitse ketju, johon haluat siirtää valitun viestin."
           other: "Valitse ketju, johon haluat siirtää valitut <b>%{count}</b> viestiä."
+        chronological_order: "säilytä kronologinen järjestys yhdistämisen jälkeen"
       move_to_new_message:
         title: "Siirrä uuteen viestiin"
         action: "siirrä uuteen viestiin"
@@ -4003,7 +4006,10 @@ fi:
         custom:
           save: "Tallenna"
           delete: "Poista"
+          reset_confirm: "Haluatko varmasti palauttaa osion oletukset?"
+          more_menu: "Lisää-valikko"
           links:
+            reset: "Palauta oletukset"
             icon:
               label: "Kuvake"
             name:
@@ -4045,7 +4051,8 @@ fi:
           configure_defaults: "Määritä oletukset"
         community:
           header_link_text: "Yhteisö"
-          header_action_title: "Aloita ketju"
+          header_action_create_topic_title: "Aloita aihe"
+          header_action_edit_section_title: "Muokkaa Yhteisö-osiota"
           links:
             about:
               content: "Tietoa"
@@ -4084,6 +4091,8 @@ fi:
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
       button_title: "Aloita muokkaaminen"
     until: "Asti:"
+    form_template_chooser:
+      select_template: "Valitse malleista"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:

@@ -90,6 +90,7 @@ be:
       thread:
         title: "Загаловак"
         settings: "Налады"
+        last_reply: "апошні адказ"
       draft_channel_screen:
         header: "новае паведамленне"
         cancel: "адмяніць"

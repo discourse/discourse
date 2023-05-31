@@ -392,6 +392,7 @@ ar:
           many: "%{count} ردود"
           other: "%{count} ردًا"
         settings: "الإعدادات"
+        last_reply: "آخر رد"
       draft_channel_screen:
         header: "رسالة جديدة"
         cancel: "إلغاء"

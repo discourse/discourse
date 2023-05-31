@@ -3369,6 +3369,7 @@ fa_IR:
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
           links:
             delete: "حذف پیوند"
+            reset: "بازگردانی به پیش‌فرض"
             icon:
               label: "آیکن"
             name:
@@ -3402,7 +3403,7 @@ fa_IR:
           configure_defaults: "تنظیمات پیش‌فرض"
         community:
           header_link_text: "انجمن"
-          header_action_title: "ایجاد موضوع"
+          header_action_create_topic_title: "ایجاد موضوع"
           links:
             about:
               content: "درباره"

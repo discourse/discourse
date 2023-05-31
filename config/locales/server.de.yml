@@ -623,6 +623,23 @@ de:
   staff_category_description: "Private Kategorie für Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
   discourse_welcome_topic:
     title: "Willkommen bei %{site_title}! :wave:"
+    body: |
+      Willkommen an Bord. Wir freuen uns.
+
+      > ## %{site_title}
+      >
+      > %{site_description}
+
+
+      Hier sind einige Dinge, die du tun kannst, um loszulegen:
+
+      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einträgst. Worüber würdest du gerne gefragt werden?
+
+      :open_book: **Lerne die Gemeinschaft kennen**, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze ein :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
+
+      :handshake: **Trage bei**, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
+
+      > Schreibe Vorschläge oder Fragen unter [#feedback](%{base_path}/c/site-feedback) oder [an die Betreiber](%{base_path}/about).
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"

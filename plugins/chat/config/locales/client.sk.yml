@@ -106,6 +106,7 @@ sk:
           many: "%{count} odpovedí"
           other: "%{count} odpovedí"
         settings: "Nastavenia"
+        last_reply: "posledná odpoveď"
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"

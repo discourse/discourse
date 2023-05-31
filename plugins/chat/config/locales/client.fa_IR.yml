@@ -288,6 +288,7 @@ fa_IR:
         original_message:
           started_by: "شروع شده توسط"
         settings: "تنظیمات"
+        last_reply: "آخرین پاسخ"
       threads:
         list: "گفتگوهای در حال انجام"
       draft_channel_screen:

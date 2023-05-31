@@ -3321,6 +3321,7 @@ gl:
           save: "Gardar"
           delete: "Eliminar"
           links:
+            reset: "Restabelecer cos valores predeterminados"
             icon:
               label: "Icona"
             name:

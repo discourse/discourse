@@ -658,6 +658,8 @@ uk:
           title: "Користувач"
         reviewable_post:
           title: "Допис"
+        reviewable_chat_message:
+          title: "Позначене повідомлення чату"
       approval:
         title: "Допис потребує схвалення"
         description: "Ми отримали ваш новий допис, але він потребує схвалення модератором, перш ніж зʼявитися. Будь ласка, будьте терплячі."
@@ -4400,6 +4402,7 @@ uk:
           links:
             add: "Додати ще одне посилання"
             delete: "Видалити посилання"
+            reset: "Відновити типові"
             icon:
               label: "Іконка"
               validation:
@@ -4456,7 +4459,7 @@ uk:
           configure_defaults: "Налаштувати типові значення"
         community:
           header_link_text: "Спільнота"
-          header_action_title: "Створити тему"
+          header_action_create_topic_title: "Створити тему"
           links:
             about:
               content: "Про"
@@ -4500,6 +4503,8 @@ uk:
     until: "До:"
     char_counter:
       exceeded: "Перевищено максимальну кількість символів."
+    form_template_chooser:
+      select_template: "Виберіть шаблони форм"
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати…"
     admin:

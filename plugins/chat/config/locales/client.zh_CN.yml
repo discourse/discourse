@@ -187,6 +187,8 @@ zh_CN:
       select: "选择"
       return_to_list: "返回频道列表"
       return_to_threads_list: "返回正在进行的讨论"
+      unread_threads_count:
+        other: "你有 %{count} 个未读的讨论"
       scroll_to_bottom: "滚动到底部"
       scroll_to_new_messages: "查看新消息"
       sound:
@@ -433,6 +435,7 @@ zh_CN:
         original_message:
           started_by: "开始于"
         settings: "设置"
+        last_reply: "最后回复"
       threads:
         open: "打开主题"
         list: "正在进行的讨论"

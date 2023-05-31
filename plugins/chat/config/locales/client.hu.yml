@@ -354,6 +354,7 @@ hu:
           other: "%{count} válasz"
         label: Szál
         settings: "Beállítások"
+        last_reply: "utolsó válasz"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"

@@ -374,6 +374,7 @@ pt_BR:
         original_message:
           started_by: "Iniciado por"
         settings: "Definições"
+        last_reply: "última resposta"
       threads:
         open: "Tópico Aberto"
       draft_channel_screen:

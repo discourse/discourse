@@ -3547,6 +3547,7 @@ vi:
           save: "Lưu lại"
           delete: "Xóa"
           links:
+            reset: "Đặt lại về mặc định"
             icon:
               label: "Biểu tượng"
             name:

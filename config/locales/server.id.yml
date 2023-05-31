@@ -567,6 +567,22 @@ id:
   staff_category_description: "Kategori pribadi untuk diskusi staf. Topik hanya dapat dilihat oleh admin dan moderator."
   discourse_welcome_topic:
     title: "Selamat datang di %{site_title}! :wave:"
+    body: |
+      Kami sangat senang Anda bergabung dengan kami.
+
+      > ## %{site_title}
+      >
+      > %{site_description}
+
+      Berikut adalah beberapa hal yang dapat Anda lakukan untuk memulai:
+
+      :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Apa satu hal yang ingin Anda tanyakan?
+
+      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan postingan yang menarik, informatif, atau menghibur, gunakan angka :heart: untuk menunjukkan penghargaan atau dukungan Anda!
+
+      :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
+
+      > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di [#feedback](%{base_path}/c/site-feedback) atau [hubungi admin](%{base_path}/about).
   admin_quick_start_title: "BACA SAYA TERLEBIH DAHULU: Panduan Mulai Cepat Admin"
   category:
     topic_prefix: "Tentang kategori %{category}"

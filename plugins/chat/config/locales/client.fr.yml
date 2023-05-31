@@ -369,6 +369,7 @@ fr:
           one: "%{count} réponse"
           other: "%{count} réponses"
         settings: "Paramètres"
+        last_reply: "dernière réponse"
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"
