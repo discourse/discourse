@@ -110,17 +110,9 @@ export default Service.extend({
     });
   },
 
-  notice(params) {
-    // support string param for easier porting of bootbox.alert
-    if (typeof params === "string") {
-      return this.dialog({
-        message: params,
-        type: "notice",
-      });
-    }
-
+  notice(message) {
     return this.dialog({
-      ...params,
+      message,
       type: "notice",
     });
   },

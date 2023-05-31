@@ -397,10 +397,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   showThemeSettingsEditor() {
-    this.dialog.notice({
+    this.dialog.alert({
       title: "Edit Settings",
       bodyComponent: ThemeSettingsEditor,
       bodyComponentModel: { model: this.model, controller: this },
+      class: "theme-settings-editor-dialog",
     });
   }
 

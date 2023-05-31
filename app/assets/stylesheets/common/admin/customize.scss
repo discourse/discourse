@@ -39,6 +39,12 @@
   }
 }
 
+.theme-settings-editor-dialog {
+  .dialog-footer {
+    display: none;
+  }
+}
+
 .admin-customize.admin-customize-themes {
   .admin-container {
     padding: 0;
