@@ -28,7 +28,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
 import {
   initSearchData,
-  resetForceToFullSearchOnEnterFns,
+  resetOnKeyDownCallbacks,
 } from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
@@ -216,7 +216,7 @@ export function testCleanup(container, app) {
   resetSidebarSection();
   resetNotificationTypeRenderers();
   clearExtraHeaderIcons();
-  resetForceToFullSearchOnEnterFns();
+  resetOnKeyDownCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();

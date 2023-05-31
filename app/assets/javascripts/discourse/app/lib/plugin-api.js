@@ -95,7 +95,7 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
-import { addForceToFullSearchOnEnterFn } from "discourse/widgets/search-menu";
+import { addOnKeyDownCallback } from "discourse/widgets/search-menu";
 import {
   addQuickSearchRandomTip,
   addSearchSuggestion,
@@ -1695,17 +1695,22 @@ class PluginApi {
   }
 
   /**
-   * Add a function to be called when Enter is pressed on the search menu. If function returns true,
-   * the user will be navigated to full-page search
+   * Add a function to be called when there is a keyDown even on the search-menu widget.
+   * This function runs before the default logic, and if one callback returns a falsey value
+   * the logic chain will stop, to prevent the core behavior from occuring.
    *
    * Example usage:
    * ```
-   * api.addForceToFullSearchOnEnterFn((searchMenu) => { return ... });
+   * api.addSearchMenuOnKeyDownCallback((searchMenu, event) => {
+   *  if (searchMenu.term === "stop") {
+   *    return false;
+   *  }
+   * });
    * ```
    *
    */
-  addForceToFullSearchOnEnterFn(fn) {
-    addForceToFullSearchOnEnterFn(fn);
+  addSearchMenuOnKeyDownCallback(fn) {
+    addOnKeyDownCallback(fn);
   }
 
   /**

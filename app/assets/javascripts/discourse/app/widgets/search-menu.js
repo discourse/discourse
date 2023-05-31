@@ -27,13 +27,13 @@ export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 const searchData = {};
 
-const _extraForceToFullSearchOnEnterFns = [];
+const onKeyDownCallbacks = [];
 
-export function addForceToFullSearchOnEnterFn(fn) {
-  _extraForceToFullSearchOnEnterFns.push(fn);
+export function addOnKeyDownCallback(fn) {
+  onKeyDownCallbacks.push(fn);
 }
-export function resetForceToFullSearchOnEnterFns() {
-  _extraForceToFullSearchOnEnterFns.clear();
+export function resetOnKeyDownCallbacks() {
+  onKeyDownCallbacks.clear();
 }
 
 export function initSearchData() {
@@ -386,6 +386,14 @@ export default createWidget("search-menu", {
   },
 
   keyDown(e) {
+    const earlyReturn = !onKeyDownCallbacks.some((fn) => fn(this, e));
+    if (earlyReturn) {
+      return;
+    }
+    this.handleKeyDown(e);
+  },
+
+  handleKeyDown(e) {
     if (e.key === "Escape") {
       this.sendWidgetAction("toggleSearchMenu");
       document.querySelector("#search-button").focus();
@@ -478,15 +486,8 @@ export default createWidget("search-menu", {
         this.state._lastEnterTimestamp &&
         Date.now() - this.state._lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
 
-      // Themes/Plugins may need to force an `Enter` keydown to navigate to full search page.
-      // Pass in context to functions and if any return true, we will call `fullSearch`
-      const forceToFullSearch = _extraForceToFullSearchOnEnterFns.some((fn) =>
-        fn(this)
-      );
-
       // same combination as key-enter-escape mixin
       if (
-        forceToFullSearch ||
         e.ctrlKey ||
         e.metaKey ||
         (isiPad() && e.altKey) ||
