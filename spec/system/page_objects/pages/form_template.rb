@@ -3,6 +3,16 @@
 module PageObjects
   module Pages
     class FormTemplate < PageObjects::Pages::Base
+      def visit
+        page.visit("/admin/customize/form-templates")
+        self
+      end
+
+      def visit_new
+        page.visit("/admin/customize/form-templates/new")
+        self
+      end
+
       # Form Template Index
       def has_form_template_table?
         page.has_selector?("table.form-templates__table")
@@ -67,12 +77,12 @@ module PageObjects
         find(".form-templates__form-name-input").value == name
       end
 
-      def has_save_button_with_state?(state)
-        find_button("Save", disabled: state)
+      def has_save_button_with_state?(disabled:)
+        find_button("Save", disabled:)
       end
 
-      def has_preview_button_with_state?(state)
-        find_button("Preview", disabled: state)
+      def has_preview_button_with_state?(disabled:)
+        find_button("Preview", disabled:)
       end
     end
   end
