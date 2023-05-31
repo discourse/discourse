@@ -75,6 +75,10 @@ export function addQuickSearchRandomTip(tip) {
   }
 }
 
+export function removeDefaultQuickSearchRandomTips() {
+  QUICK_TIPS = QUICK_TIPS.filter((tip) => !DEFAULT_QUICK_TIPS.includes(tip));
+}
+
 export function resetQuickSearchRandomTips() {
   QUICK_TIPS = [].concat(DEFAULT_QUICK_TIPS);
 }
@@ -819,6 +823,7 @@ createWidget("search-menu-assistant-item", {
       value: this.attrs.slug,
       searchTopics: true,
       setTopicContext: this.attrs.setTopicContext,
+      origin: this.attrs.origin,
     });
     e.preventDefault();
     return false;
@@ -831,10 +836,16 @@ createWidget("random-quick-tip", {
   buildKey: () => "random-quick-tip",
 
   defaultState() {
-    return QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
+    return QUICK_TIPS.length
+      ? QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)]
+      : {};
   },
 
   html(attrs, state) {
+    if (!Object.keys(state).length) {
+      return;
+    }
+
     return [
       h(
         `span.tip-label${state.clickable ? ".tip-clickable" : ""}`,
@@ -874,7 +885,7 @@ createWidget("search-menu-recent-searches", {
     {{#each this.currentUser.recent_searches as |slug|}}
       {{attach
         widget="search-menu-assistant-item"
-        attrs=(hash slug=slug icon="history")
+        attrs=(hash slug=slug icon="history" origin="recent-search")
       }}
     {{/each}}
   `,

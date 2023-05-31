@@ -478,9 +478,12 @@ export default createWidget("search-menu", {
         this.state._lastEnterTimestamp &&
         Date.now() - this.state._lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
 
-      const forceToFullSearch = _extraForceToFullSearchOnEnterFns.some((fn) => {
-        return fn.call(this);
-      });
+      // Themes/Plugins may need to force an `Enter` keydown to navigate to full search page.
+      // Pass in context to functions and if any return true, we will call `fullSearch`
+      const forceToFullSearch = _extraForceToFullSearchOnEnterFns.some((fn) =>
+        fn(this)
+      );
+
       // same combination as key-enter-escape mixin
       if (
         forceToFullSearch ||
