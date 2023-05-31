@@ -5049,6 +5049,7 @@ en:
           create: "Create"
           create_type: "Type"
           create_name: "Name"
+          save: "Save"
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
