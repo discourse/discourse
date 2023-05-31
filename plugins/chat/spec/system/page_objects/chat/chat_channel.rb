@@ -30,7 +30,7 @@ module PageObjects
       end
 
       def click_send_message
-        find(".chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
       def message_by_id_selector(id)

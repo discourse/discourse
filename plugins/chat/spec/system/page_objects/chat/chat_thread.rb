@@ -68,7 +68,7 @@ module PageObjects
       end
 
       def click_send_message
-        find(".chat-thread .chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-thread .chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
       def has_message?(text: nil, id: nil, thread_id: nil)

@@ -98,7 +98,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
   skip("Sending a message with unreliable network", async function (assert) {
     await visit("/chat/c/-/11");
     await fillIn(".chat-composer__input", "network-error-message");
-    await click(".send-btn");
+    await click(".chat-composer-button.-send");
 
     assert.ok(
       exists(".chat-message-container[data-id='1'] .retry-staged-message-btn"),
@@ -106,7 +106,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     );
 
     await fillIn(".chat-composer__input", "network-error-message");
-    await click(".send-btn");
+    await click(".chat-composer-button.-send");
     await publishToMessageBus(`/chat/11`, {
       type: "sent",
       staged_id: 1,
