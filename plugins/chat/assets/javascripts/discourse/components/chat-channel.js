@@ -816,11 +816,13 @@ export default class ChatLivePane extends Component {
   @action
   onCloseFullScreen() {
     this.chatStateManager.prefersDrawer();
-    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL);
+
     this.appEvents.trigger(
       "chat:open-url",
       this.chatStateManager.lastKnownChatURL
     );
+
+    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL);
   }
 
   unsubscribeToUpdates(channelId) {
