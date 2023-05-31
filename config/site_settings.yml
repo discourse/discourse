@@ -339,7 +339,7 @@ basic:
   hidden_post_visible_groups:
     type: group_list
     list_type: compact
-    default: "3|14"
+    default: "14"
     allow_any: false
     refresh: true  
   enable_bookmarks_with_reminders:

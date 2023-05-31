@@ -288,7 +288,7 @@ module PostGuardian
       return true
     end
     return false if anonymous?
-    return true if is_admin?
+    return true if is_staff?
     post.user_id == @user.id || @user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
   end
 
