@@ -225,6 +225,7 @@ module PageObjects
 
       def open_thread_list
         find(thread_list_button_selector).click
+        PageObjects::Components::Chat::ThreadList.new.has_loaded?
       end
 
       def has_unread_thread_indicator?(count:)
