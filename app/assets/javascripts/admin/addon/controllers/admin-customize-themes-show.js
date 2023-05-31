@@ -16,7 +16,7 @@ import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { url } from "discourse/lib/computed";
-import SettingsEditor from "admin/components/settings-editor";
+import ThemeSettingsEditor from "admin/components/theme-settings-editor";
 
 const THEME_UPLOAD_VAR = 2;
 
@@ -399,7 +399,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   showThemeSettingsEditor() {
     this.dialog.notice({
       title: "Edit Settings",
-      bodyComponent: SettingsEditor,
+      bodyComponent: ThemeSettingsEditor,
       bodyComponentModel: { model: this.model, controller: this },
     });
   }

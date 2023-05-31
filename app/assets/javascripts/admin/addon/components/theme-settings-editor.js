@@ -5,7 +5,7 @@ import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
 import I18n from "I18n";
 
-export default class SettingsEditor extends Component {
+export default class ThemeSettingsEditor extends Component {
   @service dialog;
 
   @tracked editedContent = null;
