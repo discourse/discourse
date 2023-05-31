@@ -14,6 +14,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: flex-end;
   }
 
   .d-icon {
@@ -62,15 +63,19 @@
     }
 
     &:hover {
-      .d-icon.is-send-enabled & {
-        transform: scale(1.2);
+      .d-icon {
+        .is-send-enabled & {
+          transform: scale(1.2);
+        }
       }
     }
   }
 
   &.-emoji {
-    .d-icon.is-focused & {
-      color: var(--tertiary);
+    .d-icon {
+      .is-focused & {
+        color: var(--tertiary);
+      }
     }
   }
 }
