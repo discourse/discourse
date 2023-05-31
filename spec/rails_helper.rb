@@ -442,6 +442,7 @@ RSpec.configure do |config|
       end
     end
 
+    page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
     Capybara.reset_sessions!
     Capybara.use_default_driver
     Discourse.redis.flushdb

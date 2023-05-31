@@ -9,10 +9,6 @@ describe "Admin Customize Form Templates", type: :system, js: true do
   fab!(:category) { Fabricate(:category) }
 
   before do
-    skip(<<~TEXT) if ENV["CI"]
-    The specs here are extremely flaky on CI for some reason.
-    TEXT
-
     SiteSetting.experimental_form_templates = true
     sign_in(admin)
   end
@@ -21,25 +17,29 @@ describe "Admin Customize Form Templates", type: :system, js: true do
     before { category.update!(form_template_ids: [form_template.id]) }
 
     it "should show the existing form templates in a table" do
-      visit("/admin/customize/form-templates")
+      form_template_page.visit
+
       expect(form_template_page).to have_form_template_table
       expect(form_template_page).to have_form_template(form_template.name)
     end
 
     it "should show the categories the form template is used in" do
-      visit("/admin/customize/form-templates")
+      form_template_page.visit
+
       expect(form_template_page).to have_form_template_table
       expect(form_template_page).to have_category_in_template_row(category.name)
     end
 
     it "should show the form template structure in a modal" do
-      visit("/admin/customize/form-templates")
+      form_template_page.visit
+
       form_template_page.click_view_form_template
       expect(form_template_page).to have_template_structure("- type: input")
     end
 
     it "should show a preview of the template in a modal when toggling the preview" do
-      visit("/admin/customize/form-templates")
+      form_template_page.visit
+
       form_template_page.click_view_form_template
       form_template_page.click_toggle_preview
       expect(form_template_page).to have_input_field("input")
@@ -55,7 +55,7 @@ describe "Admin Customize Form Templates", type: :system, js: true do
   end
 
   def quick_insertion_test(field_type, content)
-    visit("/admin/customize/form-templates/new")
+    form_template_page.visit_new
     form_template_page.type_in_template_name("New Template")
     form_template_page.click_quick_insert(field_type)
     expect(ace_editor).to have_text(content)
@@ -63,7 +63,7 @@ describe "Admin Customize Form Templates", type: :system, js: true do
 
   describe "when visiting the page to create a new form template" do
     it "should allow admin to create a new form template" do
-      visit("/admin/customize/form-templates/new")
+      form_template_page.visit_new
 
       sample_name = "My First Template"
       sample_template = "- type: input"
@@ -75,40 +75,41 @@ describe "Admin Customize Form Templates", type: :system, js: true do
     end
 
     it "should disable the save button until form is filled out" do
-      visit("/admin/customize/form-templates/new")
-      expect(form_template_page).to have_save_button_with_state(true)
+      form_template_page.visit_new
+      expect(form_template_page).to have_save_button_with_state(disabled: true)
       form_template_page.type_in_template_name("New Template")
-      expect(form_template_page).to have_save_button_with_state(true)
+      expect(form_template_page).to have_save_button_with_state(disabled: true)
       ace_editor.type_input("- type: input")
-      expect(form_template_page).to have_save_button_with_state(false)
+      expect(form_template_page).to have_save_button_with_state(disabled: false)
     end
 
     it "should disable the preview button until form is filled out" do
-      visit("/admin/customize/form-templates/new")
-      expect(form_template_page).to have_preview_button_with_state(true)
+      form_template_page.visit_new
+      expect(form_template_page).to have_preview_button_with_state(disabled: true)
       form_template_page.type_in_template_name("New Template")
-      expect(form_template_page).to have_preview_button_with_state(true)
+      expect(form_template_page).to have_preview_button_with_state(disabled: true)
       ace_editor.type_input("- type: input")
-      expect(form_template_page).to have_preview_button_with_state(false)
+      expect(form_template_page).to have_preview_button_with_state(disabled: false)
     end
 
     it "should show validation options in a modal when clicking the validations button" do
-      visit("/admin/customize/form-templates/new")
+      form_template_page.visit_new
       form_template_page.click_validations_button
       expect(form_template_page).to have_validations_modal
     end
 
     it "should show a preview of the template in a modal when clicking the preview button" do
-      visit("/admin/customize/form-templates/new")
+      form_template_page.visit_new
       form_template_page.type_in_template_name("New Template")
       ace_editor.type_input("- type: input")
       form_template_page.click_preview_button
+
       expect(form_template_page).to have_preview_modal
       expect(form_template_page).to have_input_field("input")
     end
 
     it "should render all the input field types in the preview" do
-      visit("/admin/customize/form-templates/new")
+      form_template_page.visit_new
       form_template_page.type_in_template_name("New Template")
       ace_editor.type_input(
         "- type: input\n- type: textarea\n- type: checkbox\n- type: dropdown\n- type: upload\n- type: multi-select",
