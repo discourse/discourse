@@ -17,7 +17,11 @@
   >
     {{#each @items as |item|}}
       <img
-        data-lightbox-carousel-item={{if (eq item.index @currentIndex) "current" ""}}
+        data-lightbox-carousel-item={{if
+          (eq item.index @currentIndex)
+          "current"
+          ""
+        }}
         fetchPriority="low"
         decoding="async"
         loading="lazy"
@@ -29,7 +33,7 @@
           "d-lightbox__carousel-item"
           (if (eq item.index @currentIndex) "--is-current active")
         }}
-      >
+      />
     {{/each}}
   </div>
   {{#if @shouldDisplayCarouselArrows}}
