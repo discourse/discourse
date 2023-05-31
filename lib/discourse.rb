@@ -431,6 +431,7 @@ module Discourse
           end
     end
 
+    assets.map! { |asset| "#{asset}_rtl" } if args[:rtl]
     assets
   end
 

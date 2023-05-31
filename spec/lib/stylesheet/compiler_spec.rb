@@ -89,6 +89,20 @@ RSpec.describe Stylesheet::Compiler do
         expect(css).to include("background:")
       end
 
+      context "with the `rtl` option" do
+        it "generates an RTL version of the plugin CSS if the option is true" do
+          css, _ = Stylesheet::Compiler.compile_asset("scss_plugin", theme_id: theme.id, rtl: true)
+          expect(css).to include(".pull-left{float:right}")
+          expect(css).not_to include(".pull-left{float:left}")
+        end
+
+        it "returns an unchanged version of the plugin CSS" do
+          css, _ = Stylesheet::Compiler.compile_asset("scss_plugin", theme_id: theme.id, rtl: false)
+          expect(css).to include(".pull-left{float:left}")
+          expect(css).not_to include(".pull-left{float:right}")
+        end
+      end
+
       it "supports SCSS imports" do
         css, _map = Stylesheet::Compiler.compile_asset("scss_plugin", theme_id: theme.id)
 
