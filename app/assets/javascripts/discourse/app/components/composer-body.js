@@ -170,7 +170,20 @@ export default Component.extend(KeyEnterEscape, {
 
   didInsertElement() {
     this._super(...arguments);
+
     this.setupComposerResizeEvents();
+
+    const triggerOpen = () => {
+      if (this.get("composer.composeState") === Composer.OPEN) {
+        this.appEvents.trigger("composer:opened");
+      }
+    };
+    triggerOpen();
+
+    this.element.addEventListener("transitionend", () => {
+      triggerOpen();
+    });
+
     positioningWorkaround(this.element);
   },
 
