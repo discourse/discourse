@@ -18,6 +18,7 @@
 
   .d-icon {
     color: var(--primary-low-mid);
+
     &:hover {
       color: var(--primary-low-mid);
     }
@@ -25,6 +26,7 @@
     .is-send-disabled.is-focused & {
       color: var(--primary-high);
     }
+
     .is-disabled & {
       cursor: not-allowed;
     }
@@ -60,19 +62,15 @@
     }
 
     &:hover {
-      .d-icon {
-        .is-send-enabled & {
-          transform: scale(1.2);
-        }
+      .d-icon.is-send-enabled & {
+        transform: scale(1.2);
       }
     }
   }
 
   &.-emoji {
-    .d-icon {
-      .is-focused & {
-        color: var(--tertiary);
-      }
+    .d-icon.is-focused & {
+      color: var(--tertiary);
     }
   }
 }
