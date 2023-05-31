@@ -19,13 +19,11 @@
   // &:not(:disabled) {
 
   .d-icon {
-    .is-send-disabled & {
+    color: var(--primary-low-mid);
+    &:hover {
       color: var(--primary-low-mid);
-
-      &:hover {
-        color: var(--primary-low-mid);
-      }
     }
+
     .is-send-disabled.is-focused & {
       color: var(--primary-high);
     }
@@ -58,7 +56,7 @@
     }
 
     .d-icon {
-      .is-send-enabled & {
+      .is-send-enabled.is-focused & {
         color: var(--tertiary);
       }
     }
