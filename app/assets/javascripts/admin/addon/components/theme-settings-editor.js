@@ -40,10 +40,13 @@ export default class ThemeSettingsEditor extends Component {
   }
 
   _theme() {
-    return this.model.model;
+    return this.model ? this.model.model : null;
   }
 
   condensedThemeSettings() {
+    if (!this._theme()) {
+      return null;
+    }
     return this._theme().settings.map((setting) => ({
       setting: setting.setting,
       value: setting.value,
@@ -100,7 +103,6 @@ export default class ThemeSettingsEditor extends Component {
       ];
       return;
     }
-
     if (!this.validateSettingsKeys(newSettings)) {
       this.errors = [
         ...this.errors,
