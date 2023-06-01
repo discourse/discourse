@@ -216,13 +216,13 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  onSendMessage(message) {
+  async onSendMessage(message) {
     resetIdle();
 
     if (message.editing) {
-      this.#sendEditMessage(message);
+      await this.#sendEditMessage(message);
     } else {
-      this.#sendNewMessage(message);
+      await this.#sendNewMessage(message);
     }
   }
 
@@ -236,7 +236,7 @@ export default class ChatThreadPanel extends Component {
     this.chat.activeMessage = null;
   }
 
-  #sendNewMessage(message) {
+  async #sendNewMessage(message) {
     message.thread = this.thread;
 
     if (this.chatChannelThreadPane.sending) {
@@ -245,7 +245,7 @@ export default class ChatThreadPanel extends Component {
 
     this.chatChannelThreadPane.sending = true;
 
-    this.thread.stageMessage(message);
+    await this.thread.stageMessage(message);
     this.resetComposer();
 
     this.scrollToBottom();
@@ -272,8 +272,8 @@ export default class ChatThreadPanel extends Component {
       });
   }
 
-  #sendEditMessage(message) {
-    message.cook();
+  async #sendEditMessage(message) {
+    await message.cook();
     this.chatChannelThreadPane.sending = true;
 
     const data = {
@@ -283,12 +283,17 @@ export default class ChatThreadPanel extends Component {
 
     this.resetComposer();
 
-    return this.chatApi
-      .editMessage(message.channel.id, message.id, data)
-      .catch(popupAjaxError)
-      .finally(() => {
-        this.chatChannelThreadPane.sending = false;
-      });
+    try {
+      return await this.chatApi.editMessage(
+        message.channel.id,
+        message.id,
+        data
+      );
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.chatChannelThreadPane.sending = false;
+    }
   }
 
   // A more consistent way to scroll to the bottom when we are sure this is our goal
