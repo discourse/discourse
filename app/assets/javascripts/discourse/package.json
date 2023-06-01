@@ -60,6 +60,7 @@
     "pretty-text": "1.0.0",
     "select-kit": "1.0.0",
     "tippy.js": "^6.3.7",
+    "truth-helpers": "1.0.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
     "wizard": "1.0.0",
