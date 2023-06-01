@@ -453,6 +453,8 @@ en:
         placeholder: "type the message title, url or id here"
 
     review:
+      show_more: "Show more"
+      show_less: "Show less"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
