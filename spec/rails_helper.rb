@@ -650,7 +650,6 @@ def apply_base_chrome_options(options)
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
   options.add_argument("--force-device-scale-factor=1")
-  options.add_argument("--disable-gpu")
 end
 
 class SpecSecureRandom
