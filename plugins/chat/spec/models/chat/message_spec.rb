@@ -75,7 +75,7 @@ describe Chat::Message do
       post = Fabricate(:post, topic: topic)
       SiteSetting.external_system_avatars_enabled = false
       avatar_src =
-        "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "48")}"
 
       cooked = described_class.cook(<<~RAW)
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
@@ -87,7 +87,7 @@ describe Chat::Message do
       <aside class="quote no-group" data-username="#{post.user.username}" data-post="#{post.post_number}" data-topic="#{topic.id}">
       <div class="title">
       <div class="quote-controls"></div>
-      <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a>
+      <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a>
       </div>
       <blockquote>
       <p>Mark me...this will go down in history.</p>
@@ -101,9 +101,9 @@ describe Chat::Message do
       user = Fabricate(:user, username: "chatbbcodeuser")
       user2 = Fabricate(:user, username: "otherbbcodeuser")
       avatar_src =
-        "//test.localhost#{User.system_avatar_template(user.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(user.username).gsub("{size}", "48")}"
       avatar_src2 =
-        "//test.localhost#{User.system_avatar_template(user2.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(user2.username).gsub("{size}", "48")}"
       msg1 =
         Fabricate(
           :chat_message,
@@ -135,7 +135,7 @@ describe Chat::Message do
         </div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src}" class="avatar">
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar">
         </div>
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
@@ -150,7 +150,7 @@ describe Chat::Message do
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src2}" class="avatar">
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src2}" class="avatar">
         </div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>

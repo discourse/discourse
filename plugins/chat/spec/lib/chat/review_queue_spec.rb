@@ -369,6 +369,18 @@ describe Chat::ReviewQueue do
 
         expect(message_poster.reload.silenced?).to eq(false)
       end
+
+      context "when the target is an admin" do
+        it "does not silence the user" do
+          SiteSetting.chat_auto_silence_from_flags_duration = 1
+          flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
+          message_poster.update!(admin: true)
+
+          queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+          expect(message_poster.reload.silenced?).to eq(false)
+        end
+      end
     end
 
     context "when flagging a DM" do

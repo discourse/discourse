@@ -495,7 +495,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("cooked content hidden", async function (assert) {
-    this.set("args", { cooked_hidden: true });
+    this.set("args", { cooked_hidden: true, canSeeHiddenPost: true });
     this.set("expandHidden", () => (this.unhidden = true));
 
     await render(hbs`
@@ -504,6 +504,17 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await click(".topic-body .expand-hidden");
     assert.ok(this.unhidden, "triggers the action");
+  });
+
+  test(`cooked content hidden - can't view hidden post`, async function (assert) {
+    this.set("args", { cooked_hidden: true, canSeeHiddenPost: false });
+    this.set("expandHidden", () => (this.unhidden = true));
+
+    await render(hbs`
+      <MountWidget @widget="post" @args={{this.args}} @expandHidden={{this.expandHidden}} />
+    `);
+
+    assert.ok(!exists(".topic-body .expand-hidden"), "button is not displayed");
   });
 
   test("expand first post", async function (assert) {
