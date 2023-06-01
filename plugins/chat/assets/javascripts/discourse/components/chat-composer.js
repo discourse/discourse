@@ -415,6 +415,11 @@ export default class ChatComposer extends Component {
     }
   }
 
+  #addMentionedUser(userData) {
+    const user = User.create(userData);
+    this.currentMessage.mentionedUsers.set(user.id, user);
+  }
+
   #applyUserAutocomplete($textarea) {
     if (!this.siteSettings.enable_mentions) {
       return;
@@ -426,10 +431,12 @@ export default class ChatComposer extends Component {
       width: "100%",
       treatAsTextarea: true,
       autoSelectFirstSuggestion: true,
-      transformComplete: (userData) => {
-        const user = User.create(userData);
-        this.currentMessage.mentionedUsers.set(user.id, user);
-        return user.username || user.name;
+      transformComplete: (obj) => {
+        if (obj.isUser) {
+          this.#addMentionedUser(obj);
+        }
+
+        return obj.username || obj.name;
       },
       dataSource: (term) => {
         return userSearch({ term, includeGroups: true }).then((result) => {
