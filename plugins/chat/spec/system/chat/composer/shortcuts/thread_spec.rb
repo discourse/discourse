@@ -36,7 +36,7 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system, js: true d
       it "does not edit a message" do
         chat_page.visit_thread(thread_1)
         page.driver.browser.network_conditions = { offline: true }
-        thread_page.send_message
+        thread_page.send_message(persisted: false, staged: true)
         thread_page.composer.edit_last_message_shortcut
 
         expect(thread_page.composer.message_details).to have_no_message

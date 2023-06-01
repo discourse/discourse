@@ -57,12 +57,12 @@ module PageObjects
         find(".chat-thread .chat-composer__input").click # ensures autocomplete is closed and not masking anything
       end
 
-      def send_message(text = nil)
+      def send_message(text = nil, persisted: true, staged: false)
         text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
-        expect(messages).to have_message(text: text, persisted: true)
+        expect(messages).to have_message(text:, persisted:, staged:)
         click_composer
         text
       end
