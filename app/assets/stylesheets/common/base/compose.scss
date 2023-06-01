@@ -120,11 +120,9 @@ html.composer-open {
       width: auto;
       max-width: 100%;
 
-      .avatar {
-        width: 20px;
-      }
-
       .action-title {
+        display: flex;
+        align-items: center;
         line-height: normal;
         @include ellipsis;
       }
