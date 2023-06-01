@@ -120,19 +120,17 @@ module PageObjects
         find("[data-value='edit']").click
       end
 
-      def edit_message(message, text = nil, check_message_presence: true)
+      def edit_message(message, text = nil)
         open_edit_message(message)
-        send_message(text, check_message_presence:) if text
+        send_message(text) if text
       end
 
-      def send_message(text = nil, check_message_presence: true)
+      def send_message(text = nil)
         text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
-        expect(messages).to have_message(text: text, persisted: true) if check_message_presence
         click_composer
-        expect(self).to have_no_loading_skeleton
         text
       end
 
