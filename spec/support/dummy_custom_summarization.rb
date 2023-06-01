@@ -3,7 +3,7 @@
 class DummyCustomSummarization < Summarization::Base
   RESPONSE = "This is a summary of the content you gave me"
 
-  def self.name
+  def display_name
     "dummy"
   end
 

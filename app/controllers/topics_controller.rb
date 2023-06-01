@@ -1164,7 +1164,7 @@ class TopicsController < ApplicationController
   def custom_summary
     topic = Topic.find(params[:topic_id])
     guardian.ensure_can_see!(topic)
-    strategy = Summarization::Base.selected_strategy&.new
+    strategy = Summarization::Base.selected_strategy
     raise Discourse::NotFound.new unless strategy
 
     user_group_ids = current_user.group_ids
