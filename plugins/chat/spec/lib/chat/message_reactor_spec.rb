@@ -9,6 +9,8 @@ describe Chat::MessageReactor do
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: reacting_user) }
   let(:subject) { described_class.new(reacting_user, channel) }
 
+  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
   it "calls guardian ensure_can_join_chat_channel!" do
     Guardian.any_instance.expects(:ensure_can_join_chat_channel!).once
     subject.react!(message_id: message_1.id, react_action: :add, emoji: ":+1:")
