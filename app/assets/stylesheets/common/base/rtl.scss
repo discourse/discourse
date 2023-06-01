@@ -24,15 +24,6 @@
   }
 }
 
-.rtl .admin-customize .current-style .toggle-mobile {
-  position: static !important;
-  float: left !important;
-}
-.rtl .admin-customize .current-style .toggle-maximize {
-  position: static !important;
-  float: left !important;
-}
-
 // For the support_mixed_text_direction setting
 html:not(.rtl) .cooked ul[dir="rtl"],
 html:not(.rtl) .d-editor-preview ul[dir="rtl"],
@@ -41,36 +32,6 @@ html:not(.rtl) .d-editor-preview ul[dir="rtl"],
   padding-left: 0;
   padding-right: 1.25em;
   margin-right: 1.25em;
-}
-
-.rtl {
-  $mobile-breakpoint: 700px;
-
-  .admin-detail.mobile-open {
-    @media (max-width: $mobile-breakpoint) {
-      transition: transform 0.3s ease;
-      @include transform(translateX(-250px));
-    }
-    @media (max-width: 500px) {
-      transition: transform 0.3s ease;
-      @include transform(translateX(-50%));
-    }
-  }
-
-  .admin-detail.mobile-closed {
-    @media (max-width: $mobile-breakpoint) {
-      transition: transform 0.3s ease;
-      @include transform(translateX(0));
-      margin-left: -10px !important;
-      padding-left: 10px !important;
-    }
-  }
-
-  .admin-nav {
-    .nav-stacked {
-      margin: 0 -10px 0 10px !important;
-    }
-  }
 }
 
 .rtl .ace_placeholder {

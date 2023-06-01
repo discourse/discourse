@@ -498,7 +498,13 @@ class TopicQuery
     end
 
     topics.each do |t|
-      t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map { |u| u.id } : []
+      if filter == :private_messages
+        t.allowed_user_ids = t.allowed_users.map { |u| u.id }
+        t.allowed_group_ids = t.allowed_groups.map { |g| g.id }
+      else
+        t.allowed_user_ids = []
+        t.allowed_group_ids = []
+      end
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))

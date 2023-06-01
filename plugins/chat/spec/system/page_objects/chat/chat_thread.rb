@@ -62,13 +62,13 @@ module PageObjects
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
-        messages.has_message?(text: text, persisted: true)
+        expect(messages).to have_message(text: text, persisted: true)
         click_composer
         text
       end
 
       def click_send_message
-        find(".chat-thread .chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-thread .chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
       def has_message?(text: nil, id: nil, thread_id: nil)

@@ -30,7 +30,7 @@ module PageObjects
       end
 
       def click_send_message
-        find(".chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
       def message_by_id_selector(id)
@@ -120,19 +120,19 @@ module PageObjects
         find("[data-value='edit']").click
       end
 
-      def edit_message(message, text = nil)
+      def edit_message(message, text = nil, check_message_presence: true)
         open_edit_message(message)
-        send_message(text) if text
+        send_message(text, check_message_presence:) if text
       end
 
-      def send_message(text = nil)
+      def send_message(text = nil, check_message_presence: true)
         text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
-        messages.has_message?(text: text, persisted: true)
+        expect(messages).to have_message(text: text, persisted: true) if check_message_presence
         click_composer
-        has_no_loading_skeleton?
+        expect(self).to have_no_loading_skeleton
         text
       end
 
@@ -225,6 +225,7 @@ module PageObjects
 
       def open_thread_list
         find(thread_list_button_selector).click
+        PageObjects::Components::Chat::ThreadList.new.has_loaded?
       end
 
       def has_unread_thread_indicator?(count:)

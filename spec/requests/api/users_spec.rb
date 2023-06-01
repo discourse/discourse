@@ -462,7 +462,7 @@ RSpec.describe "users" do
     before do
       stub_request(
         :get,
-        %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=360},
+        %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=#{Discourse.avatar_sizes.max}},
       ).with(
         headers: {
           "Accept" => "*/*",

@@ -141,7 +141,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
         clip_text = copy_messages_to_clipboard(message_1)
         click_selection_button("cancel")
-        chat_channel_page.send_message(clip_text)
+        chat_channel_page.send_message(clip_text, check_message_presence: false)
 
         expect(page).to have_selector(".chat-message", count: 2)
         expect(page).to have_css(".chat-transcript")

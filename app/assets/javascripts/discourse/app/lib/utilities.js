@@ -20,17 +20,17 @@ export function splitString(str, separator = ",") {
 export function translateSize(size) {
   switch (size) {
     case "tiny":
-      return 20;
+      return 24;
     case "small":
-      return 25;
+      return 24;
     case "medium":
-      return 32;
+      return 48;
     case "large":
-      return 45;
+      return 48;
     case "extra_large":
-      return 60;
+      return 96;
     case "huge":
-      return 120;
+      return 144;
   }
   return size;
 }
@@ -62,9 +62,28 @@ export function avatarUrl(template, size, { customGetURL } = {}) {
   if (!template) {
     return "";
   }
-  const rawSize = getRawSize(translateSize(size));
+  const rawSize = getRawAvatarSize(translateSize(size));
   const templatedPath = template.replace(/\{size\}/g, rawSize);
   return (customGetURL || getURLWithCDN)(templatedPath);
+}
+
+let allowedSizes = null;
+
+export function getRawAvatarSize(size) {
+  allowedSizes ??= helperContext()
+    .siteSettings["avatar_sizes"].split("|")
+    .map((s) => parseInt(s, 10))
+    .sort((a, b) => a - b);
+
+  size = getRawSize(size);
+
+  for (let i = 0; i < allowedSizes.length; i++) {
+    if (allowedSizes[i] >= size) {
+      return allowedSizes[i];
+    }
+  }
+
+  return allowedSizes[allowedSizes.length - 1];
 }
 
 export function getRawSize(size) {
