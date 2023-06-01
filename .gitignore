@@ -53,6 +53,9 @@
 # We provide a .sample but people can use newer versions if they want to
 .ruby-version
 
+# Likewise, there is a .vscode-sample for VSCode config
+.vscode
+
 # Front-end
 dist
 node_modules
