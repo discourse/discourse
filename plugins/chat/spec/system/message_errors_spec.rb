@@ -16,7 +16,7 @@ RSpec.describe "Message errors", type: :system, js: true do
       sign_in(current_user)
       chat_page.visit_channel(channel)
 
-      channel_page.send_message("atoolongmessage" + "a" * max_length, check_message_presence: false)
+      channel_page.send_message("atoolongmessage" + "a" * max_length)
 
       expect(page).to have_no_content("atoolongmessage")
       expect(page).to have_content(I18n.t("chat.errors.message_too_long", count: max_length))
