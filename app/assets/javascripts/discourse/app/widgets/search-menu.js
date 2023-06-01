@@ -386,10 +386,14 @@ export default createWidget("search-menu", {
   },
 
   keyDown(e) {
-    const earlyReturn = !onKeyDownCallbacks.some((fn) => fn(this, e));
-    if (earlyReturn) {
+    if (
+      onKeyDownCallbacks.length &&
+      !onKeyDownCallbacks.some((fn) => fn(this, e))
+    ) {
+      // Return early if any callbacks return false
       return;
     }
+
     this.handleKeyDown(e);
   },
 
