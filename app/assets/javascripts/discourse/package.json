@@ -23,7 +23,7 @@
     "@ember-compat/tracked-built-ins": "^0.9.1",
     "@ember/jquery": "^2.0.0",
     "@ember/legacy-built-in-components": "^0.4.2",
-    "@ember/render-modifiers": "^2.0.5",
+    "@ember/render-modifiers": "^2.1.0",
     "@ember/test-helpers": "^2.9.3",
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.84.3",
