@@ -43,6 +43,7 @@ class PostSerializer < BasicPostSerializer
              :can_delete,
              :can_permanently_delete,
              :can_recover,
+             :can_see_hidden_post,
              :can_wiki,
              :link_counts,
              :read,
@@ -178,6 +179,10 @@ class PostSerializer < BasicPostSerializer
 
   def can_recover
     scope.can_recover_post?(object)
+  end
+
+  def can_see_hidden_post
+    scope.can_see_hidden_post?(object)
   end
 
   def can_wiki
