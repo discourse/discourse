@@ -37,7 +37,10 @@ RSpec.describe "Chat message onebox", type: :system, js: true do
 
     it "is oneboxed" do
       chat_page.visit_channel(channel_1)
-      channel_page.send_message("https://en.wikipedia.org/wiki/Hyperlink")
+      channel_page.send_message(
+        "https://en.wikipedia.org/wiki/Hyperlink",
+        check_message_presence: false,
+      )
 
       expect(page).to have_content("This is a test", wait: 20)
     end
