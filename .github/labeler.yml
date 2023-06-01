@@ -1,3 +1,6 @@
 chat:
-  - plugins/chat/**/*
-design: "**/*.{hbs,css,scss}"
+- plugins/chat/**/*
+design:
+- **/*.hbs
+- **/*.css
+- **/*.scss
