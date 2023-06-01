@@ -70,11 +70,10 @@ export function avatarUrl(template, size, { customGetURL } = {}) {
 let allowedSizes = null;
 
 export function getRawAvatarSize(size) {
-  allowedSizes ??=
-    helperContext()
-      .siteSettings["avatar_sizes"].split("|")
-      .map((s) => parseInt(s, 10))
-      .sort((a, b) => a - b);
+  allowedSizes ??= helperContext()
+    .siteSettings["avatar_sizes"].split("|")
+    .map((s) => parseInt(s, 10))
+    .sort((a, b) => a - b);
 
   size = getRawSize(size);
 
