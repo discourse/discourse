@@ -3,7 +3,8 @@
 require "rails_helper"
 
 describe Chat::MessageBookmarkable do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:chatters) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
   fab!(:guardian) { Guardian.new(user) }
   fab!(:other_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:category_channel) { Fabricate(:category_channel, chatable: other_category) }
@@ -13,6 +14,7 @@ describe Chat::MessageBookmarkable do
   before do
     register_test_bookmarkable(described_class)
     Chat::UserChatChannelMembership.create(chat_channel: channel, user: user, following: true)
+    SiteSetting.chat_allowed_groups = [chatters]
   end
 
   after { DiscoursePluginRegistry.reset_register!(:bookmarkables) }
