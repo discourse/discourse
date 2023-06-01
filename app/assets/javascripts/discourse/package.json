@@ -102,6 +102,7 @@
     "ember-exam": "^8.0.0",
     "ember-functions-as-helper-polyfill": "^2.1.1",
     "ember-qunit": "^6.2.0",
+    "ember-template-imports": "^3.4.2",
     "eslint": "^8.43.0",
     "eslint-plugin-qunit": "^7.3.4",
     "imports-loader": "^4.0.1",
