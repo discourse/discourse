@@ -674,10 +674,18 @@ aside.quote {
   border-top: none; // would cause double top border
 
   .avatars {
-    > div {
-      float: left;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-sizing: border-box;
+    a {
+      display: block;
       position: relative;
-      margin: 3px 0;
+    }
+
+    .avatar {
+      width: 2.5em;
+      height: 2.5em;
     }
     .post-count {
       position: absolute;
@@ -692,8 +700,7 @@ aside.quote {
   }
 
   .avatar {
-    float: left;
-    margin-right: 4px;
+    margin-right: 0.33em;
   }
 
   section {
@@ -701,12 +708,15 @@ aside.quote {
   }
 
   ul {
+    display: flex;
+    flex-wrap: wrap;
     margin: 0;
     list-style: none;
   }
 
   h3 {
-    margin-bottom: 4px;
+    width: 100%;
+    margin-bottom: 0.33em;
     color: var(--primary);
     line-height: var(--line-height-large);
     font-weight: normal;
