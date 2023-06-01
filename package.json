@@ -30,6 +30,7 @@
     "magnific-popup": "1.1.0",
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
+    "prettier-plugin-ember-template-tag": "^0.3.2",
     "pikaday": "1.8.2",
     "puppeteer-core": "^13.7.0",
     "squoosh": "discourse/squoosh#dc9649d",
