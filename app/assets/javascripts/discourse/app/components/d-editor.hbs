@@ -11,7 +11,9 @@
           @options={{hash maximum=1}}
         />
       {{/if}}
-      <FormTemplateField::Wrapper @id={{this.selectedFormTemplateId}} />
+      <form id="form-template-form">
+        <FormTemplateField::Wrapper @id={{this.selectedFormTemplateId}} />
+      </form>
     {{else}}
       <div
         class="d-editor-textarea-wrapper

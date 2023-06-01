@@ -788,6 +788,10 @@ export default class ComposerController extends Controller {
 
   @action
   saveAction(ignore, event) {
+    if (this.formTemplateIds.length > 0) {
+      this.prepareFormTemplateData(event);
+    }
+
     this.save(false, {
       jump:
         !(event?.shiftKey && this.get("model.replyingToTopic")) &&
@@ -1662,5 +1666,22 @@ export default class ComposerController extends Controller {
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
+  }
+
+  prepareFormTemplateData(event) {
+    event?.preventDefault();
+
+    const form = document.querySelector("#form-template-form");
+    const formData = new FormData(form);
+
+    const topic = [];
+    for (let [key, value] of formData.entries()) {
+      topic.push(`### ${key}\n${value}`);
+    }
+    this.model.set("reply", topic.join("\n\n"));
+
+    // TODO!(@keegan):
+    // - [ ] Fix multi-select appearing with multiple headings
+    // - [ ] Ensure validations are working
   }
 }
