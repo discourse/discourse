@@ -150,8 +150,8 @@
       max-height: var(--avatar-width);
     }
     .avatar {
-      width: 100%;
-      height: 100%;
+      width: var(--avatar-width);
+      height: var(--avatar-width);
     }
     .new-user a {
       color: var(--primary-low-mid);
