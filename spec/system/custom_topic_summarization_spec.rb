@@ -12,8 +12,9 @@ RSpec.describe "Topic custom summarization", type: :system, js: true do
 
   before do
     sign_in(user)
-    plugin.register_summarization_strategy(DummyCustomSummarization)
-    SiteSetting.summarization_strategy = DummyCustomSummarization.name
+    strategy = DummyCustomSummarization.new("dummy")
+    plugin.register_summarization_strategy(strategy)
+    SiteSetting.summarization_strategy = strategy.model
   end
 
   it "returns a summary using the selected timeframe" do

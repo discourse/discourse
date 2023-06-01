@@ -6,7 +6,7 @@ class SummarizationValidator
   end
 
   def valid_value?(val)
-    strategy = Summarization::Base.find_strategy(val)&.new
+    strategy = Summarization::Base.find_strategy(val)
 
     return true unless strategy
 
@@ -14,6 +14,6 @@ class SummarizationValidator
   end
 
   def error_message
-    @strategy&.configuration_hint
+    @strategy.configuration_hint
   end
 end

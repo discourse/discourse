@@ -5127,8 +5127,9 @@ RSpec.describe TopicsController do
     let(:plugin) { Plugin::Instance.new }
 
     before do
-      plugin.register_summarization_strategy(DummyCustomSummarization)
-      SiteSetting.summarization_strategy = DummyCustomSummarization.name
+      strategy = DummyCustomSummarization.new("dummy")
+      plugin.register_summarization_strategy(strategy)
+      SiteSetting.summarization_strategy = strategy.model
     end
 
     context "for anons" do

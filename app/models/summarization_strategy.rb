@@ -8,6 +8,9 @@ class SummarizationStrategy < EnumSiteSetting
   end
 
   def self.values
-    @values ||= Summarization::Base.available_strategies.map(&:name)
+    @values ||=
+      Summarization::Base.available_strategies.map do |strategy|
+        { name: strategy.display_name, value: strategy.model }
+      end
   end
 end
