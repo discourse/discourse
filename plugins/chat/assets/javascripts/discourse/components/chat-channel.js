@@ -724,28 +724,24 @@ export default class ChatLivePane extends Component {
       this.scrollToLatestMessage();
     }
 
-    return this.chatApi
-      .sendMessage(this.args.channel.id, {
+    try {
+      await this.chatApi.sendMessage(this.args.channel.id, {
         message: message.message,
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-      })
-      .then(() => {
-        this.scrollToLatestMessage();
-      })
-      .catch((error) => {
-        this._onSendError(message.id, error);
-        this.scrollToBottom();
-      })
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
+      });
 
+      this.scrollToLatestMessage();
+    } catch (error) {
+      this._onSendError(message.id, error);
+      this.scrollToBottom();
+    } finally {
+      if (!this._selfDeleted) {
         this.chatDraftsManager.remove({ channelId: this.args.channel.id });
         this.chatChannelPane.sending = false;
-      });
+      }
+    }
   }
 
   async _upsertChannelWithMessage(channel, data) {

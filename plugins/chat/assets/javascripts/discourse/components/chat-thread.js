@@ -250,8 +250,8 @@ export default class ChatThreadPanel extends Component {
 
     this.scrollToBottom();
 
-    return this.chatApi
-      .sendMessage(this.channel.id, {
+    try {
+      await this.chatApi.sendMessage(this.channel.id, {
         message: message.message,
         in_reply_to_id: message.thread.staged
           ? message.thread.originalMessage.id
@@ -260,16 +260,14 @@ export default class ChatThreadPanel extends Component {
         upload_ids: message.uploads.map((upload) => upload.id),
         thread_id: message.thread.staged ? null : message.thread.id,
         staged_thread_id: message.thread.staged ? message.thread.id : null,
-      })
-      .catch((error) => {
-        this.#onSendError(message.id, error);
-      })
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.chatChannelThreadPane.sending = false;
       });
+    } catch (error) {
+      this.#onSendError(message.id, error);
+    } finally {
+      if (!this._selfDeleted) {
+        this.chatChannelThreadPane.sending = false;
+      }
+    }
   }
 
   async #sendEditMessage(message) {
