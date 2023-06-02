@@ -116,7 +116,7 @@ export default class CommunitySection {
         sectionLinkClass,
         inMoreDrawer,
         link.name,
-        link.scon
+        link.icon
       );
     } else {
       return new SectionLink(link, this, this.router);

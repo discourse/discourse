@@ -197,7 +197,10 @@ describe "Custom sidebar sections", type: :system, js: true do
     sign_in admin
     visit("/latest")
 
+    expect(sidebar.primary_section_icons("community")).to eq(%w[layer-group user wrench ellipsis-v])
+
     sidebar.edit_custom_section("Community")
+    section_modal.fill_link("Everything", "/latest", "paper-plane")
     section_modal.fill_name("Edited community section")
     section_modal.everything_link.drag_to(section_modal.review_link, delay: 0.4)
     section_modal.save
@@ -205,6 +208,9 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar).to have_section("Edited community section")
     expect(sidebar.primary_section_links("edited-community-section")).to eq(
       ["My Posts", "Everything", "Admin", "More"],
+    )
+    expect(sidebar.primary_section_icons("edited-community-section")).to eq(
+      %w[user paper-plane wrench ellipsis-v],
     )
 
     sidebar.edit_custom_section("Edited community section")
@@ -214,6 +220,7 @@ describe "Custom sidebar sections", type: :system, js: true do
     expect(sidebar.primary_section_links("community")).to eq(
       ["Everything", "My Posts", "Admin", "More"],
     )
+    expect(sidebar.primary_section_icons("community")).to eq(%w[layer-group user wrench ellipsis-v])
   end
 
   it "shows anonymous public sections" do
