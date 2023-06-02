@@ -1,0 +1,26 @@
+{{#if this.shouldRender}}
+  <div
+    class="chat-thread-list"
+    {{did-insert this.loadThreads}}
+    {{did-update this.loadThreads @channel}}
+    {{will-destroy this.teardown}}
+  >
+    {{#if @includeHeader}}
+      <Chat::ThreadList::Header @channel={{@channel}} />
+    {{/if}}
+
+    <div class="chat-thread-list__items">
+      {{#if this.loading}}
+        {{loading-spinner size="medium"}}
+      {{else}}
+        {{#each this.threads as |thread|}}
+          <Chat::ThreadList::Item @thread={{thread}} />
+        {{else}}
+          <div class="chat-thread-list__no-threads">
+            {{i18n "chat.threads.none"}}
+          </div>
+        {{/each}}
+      {{/if}}
+    </div>
+  </div>
+{{/if}}

@@ -2,16 +2,16 @@
   class={{concat-class
     "chat-thread"
     (if this.loading "loading")
-    (if this.thread.staged "staged")
+    (if @thread.staged "staged")
   }}
-  data-id={{this.thread.id}}
+  data-id={{@thread.id}}
   {{did-insert this.setUploadDropZone}}
   {{did-insert this.didUpdateThread}}
-  {{did-update this.didUpdateThread this.thread.id}}
+  {{did-update this.didUpdateThread @thread.id}}
   {{will-destroy this.unsubscribeFromUpdates}}
 >
   {{#if @includeHeader}}
-    <Chat::Thread::Header @thread={{this.thread}} @channel={{this.channel}} />
+    <Chat::Thread::Header @channel={{@thread.channel}} @thread={{@thread}} />
   {{/if}}
 
   <div
@@ -23,7 +23,7 @@
       class="chat-thread__messages chat-messages-scroll chat-messages-container"
       {{chat/on-resize this.didResizePane (hash delay=10)}}
     >
-      {{#each this.thread.messages key="id" as |message|}}
+      {{#each @thread.messages key="id" as |message|}}
         <ChatMessage
           @message={{message}}
           @resendStagedMessage={{this.resendStagedMessage}}
@@ -38,24 +38,24 @@
     </div>
   </div>
 
-  {{#if this.chatChannelThreadPane.selectingMessages}}
+  {{#if this.chatThreadPane.selectingMessages}}
     <ChatSelectionManager
-      @selectedMessageIds={{this.chatChannelThreadPane.selectedMessageIds}}
-      @chatChannel={{this.channel}}
+      @selectedMessageIds={{this.chatThreadPane.selectedMessageIds}}
+      @chatChannel={{@channel}}
       @cancelSelecting={{action
-        this.chatChannelThreadPane.cancelSelecting
-        this.channel.selectedMessages
+        this.chatThreadPane.cancelSelecting
+        @channel.selectedMessages
       }}
       @context="thread"
     />
   {{else}}
     <Chat::Composer::Thread
-      @channel={{this.channel}}
-      @thread={{this.thread}}
+      @channel={{@channel}}
+      @thread={{@thread}}
       @onSendMessage={{this.onSendMessage}}
       @uploadDropZone={{this.uploadDropZone}}
     />
   {{/if}}
 
-  <ChatUploadDropZone @model={{this.thread}} />
+  <ChatUploadDropZone @model={{@thread}} />
 </div>

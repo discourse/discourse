@@ -45,21 +45,31 @@ export default class TextareaInteractor extends EmberObject.extend(
     this._textarea.dispatchEvent(event);
   }
 
+  blur() {
+    next(() => {
+      schedule("afterRender", () => {
+        this._textarea.blur();
+      });
+    });
+  }
+
   focus(opts = { ensureAtEnd: false, refreshHeight: true }) {
     next(() => {
-      if (opts.refreshHeight) {
-        this.refreshHeight();
-      }
+      schedule("afterRender", () => {
+        if (opts.refreshHeight) {
+          this.refreshHeight();
+        }
 
-      if (opts.ensureAtEnd) {
-        this.ensureCaretAtEnd();
-      }
+        if (opts.ensureAtEnd) {
+          this.ensureCaretAtEnd();
+        }
 
-      if (this.capabilities.isIpadOS || this.site.mobileView) {
-        return;
-      }
+        if (this.capabilities.isIpadOS || this.site.mobileView) {
+          return;
+        }
 
-      this.focusTextArea();
+        this.focusTextArea();
+      });
     });
   }
 
