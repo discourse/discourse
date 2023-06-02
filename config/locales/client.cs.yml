@@ -3170,7 +3170,7 @@ cs:
               content: "Administrace"
             badges:
               content: "Odznaky"
-            everything:
+            topics:
               content: "Vše"
             faq:
               content: "FAQ"

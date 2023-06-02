@@ -30,8 +30,8 @@ module PageObjects
         )
       end
 
-      def click_everything_link
-        find(".sidebar-section-link[data-link-name='everything']").click
+      def click_topics_link
+        find(".sidebar-section-link[data-link-name='topics']").click
       end
 
       def click_toggle_to_desktop_view_button

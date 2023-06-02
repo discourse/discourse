@@ -4818,7 +4818,7 @@ ar:
             badges:
               content: "الشارات"
               title: "كل الشارات الممكن منحها لك"
-            everything:
+            topics:
               content: "كل شيء"
               title: "كل الموضوعات"
             faq:

@@ -3568,7 +3568,7 @@ lt:
               content: "Adminas"
             badges:
               content: "Trofėjai"
-            everything:
+            topics:
               content: "Viskas"
               title: "Visos temos"
             faq:

@@ -9,8 +9,8 @@ class SidebarUrl < ActiveRecord::Base
   MAX_VALUE_LENGTH = 200
   COMMUNITY_SECTION_LINKS = [
     {
-      name: "Everything",
-      path: "/latest",
+      name: "Topics",
+      path: "/topics",
       icon: "layer-group",
       segment: SidebarUrl.segments["primary"],
     },

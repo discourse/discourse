@@ -3391,7 +3391,7 @@ sl:
               content: "Admin"
             badges:
               content: "Značke"
-            everything:
+            topics:
               content: "Vse"
             faq:
               content: "Pravila skupnosti"

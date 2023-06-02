@@ -4226,7 +4226,7 @@ hr:
             badges:
               content: "Značke"
               title: "Sve značke dostupne za osvajanje"
-            everything:
+            topics:
               content: "Sve"
               title: "Sve teme"
             faq:

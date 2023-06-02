@@ -32,7 +32,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get name() {
-    return "everything";
+    return "topics";
   }
 
   get query() {
@@ -40,7 +40,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return I18n.t("sidebar.sections.community.links.everything.title");
+    return I18n.t("sidebar.sections.community.links.topics.title");
   }
 
   get text() {

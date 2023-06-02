@@ -4119,7 +4119,7 @@ sv:
             badges:
               content: "Utmärkelser"
               title: "Alla utmärkelser som kan förtjänas"
-            everything:
+            topics:
               content: "Allting"
               title: "Alla ämnen"
             faq:

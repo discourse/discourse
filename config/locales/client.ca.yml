@@ -2910,7 +2910,7 @@ ca:
               content: "Administració"
             badges:
               content: "Insígnies"
-            everything:
+            topics:
               content: "Qualsevol cosa"
             faq:
               content: "PMF"

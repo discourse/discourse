@@ -15,6 +15,7 @@ const FULL_RELOAD_LINKS_REGEX = [
   /^\/my\/[a-z_\-\/]+$/,
   /^\/pub\/[a-z_\-\/]+$/,
   /^\/safe-mode$/,
+  /^\/topics$/,
 ];
 
 class Section {

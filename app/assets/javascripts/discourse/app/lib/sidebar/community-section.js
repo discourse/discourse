@@ -7,7 +7,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import PermissionType from "discourse/models/permission-type";
-import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
+import TopicsSectionLink from "discourse/lib/sidebar/common/community-section/topics-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import AboutSectionLink from "discourse/lib/sidebar/common/community-section/about-section-link";
@@ -23,8 +23,7 @@ import {
 import showModal from "discourse/lib/show-modal";
 
 const SPECIAL_LINKS_MAP = {
-  "/latest": EverythingSectionLink,
-  "/new": EverythingSectionLink,
+  "/topics": TopicsSectionLink,
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,

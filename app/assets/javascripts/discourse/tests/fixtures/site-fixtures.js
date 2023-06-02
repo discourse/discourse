@@ -707,8 +707,8 @@ export default {
           links: [
             {
               id: 329,
-              name: "Everything",
-              value: "/latest",
+              name: "Topics",
+              value: "/topics",
               icon: "layer-group",
               external: false,
               segment: "primary",

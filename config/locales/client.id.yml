@@ -1944,7 +1944,7 @@ id:
               content: "Tentang"
             admin:
               content: "Admin"
-            everything:
+            topics:
               content: "Semuanya"
             faq:
               content: "FAQ"

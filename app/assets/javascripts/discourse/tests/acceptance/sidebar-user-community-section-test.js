@@ -151,10 +151,10 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("clicking on everything link", async function (assert) {
+  test("clicking on topics link", async function (assert) {
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
     );
 
     assert.strictEqual(
@@ -173,20 +173,20 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'].active"
       ),
-      "the everything link is marked as active"
+      "the topics link is marked as active"
     );
   });
 
-  test("clicking on everything link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+  test("clicking on topics link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
     updateCurrentUser({
       sidebar_list_destination: "unread_new",
     });
 
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
     );
     assert.strictEqual(
       currentURL(),
@@ -204,13 +204,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'].active"
       ),
-      "the everything link is marked as active"
+      "the topics link is marked as active"
     );
   });
 
-  test("clicking on everything link - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+  test("clicking on topics link - sidebar_list_destination set to unread/new with new topics", async function (assert) {
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
     );
@@ -226,7 +226,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
     );
 
     assert.strictEqual(
@@ -245,13 +245,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'].active"
       ),
-      "the everything link is marked as active"
+      "the topics link is marked as active"
     );
   });
 
-  test("clicking on everything link - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+  test("clicking on topics link - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
     );
@@ -275,7 +275,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
     await visit("/t/280");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
     );
 
     assert.strictEqual(
@@ -294,9 +294,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'].active"
       ),
-      "the everything link is marked as active"
+      "the topics link is marked as active"
     );
   });
 
@@ -712,9 +712,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'].active"
       ),
-      "the everything link is marked as active"
+      "the topics link is marked as active"
     );
   });
 
@@ -731,9 +731,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'].active"
       ),
-      "the everything link is marked as active"
+      "the topics link is marked as active"
     );
   });
 
@@ -750,13 +750,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'].active"
       ),
-      "the everything link is marked as active"
+      "the topics link is marked as active"
     );
   });
 
-  test("show suffix indicator for unread and new content on everything link", async function (assert) {
+  test("show suffix indicator for unread and new content on topics link", async function (assert) {
     updateCurrentUser({
       sidebar_list_destination: "default",
     });
@@ -788,9 +788,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
+        ".sidebar-section-link[data-link-name='topics'] .sidebar-section-link-suffix"
       ),
-      "shows suffix indicator for unread posts on everything link"
+      "shows suffix indicator for unread posts on topics link"
     );
 
     const topicTrackingState = this.container.lookup(
@@ -814,7 +814,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
+        ".sidebar-section-link[data-link-name='topics'] .sidebar-section-link-suffix"
       ),
       "shows suffix indicator for new topics on categories link"
     );
@@ -838,13 +838,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       !exists(
-        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
+        ".sidebar-section-link[data-link-name='topics'] .sidebar-section-link-suffix"
       ),
       "it removes the suffix indicator when all topics are read"
     );
   });
 
-  test("new and unread count for everything link", async function (assert) {
+  test("new and unread count for topics link", async function (assert) {
     updateCurrentUser({
       sidebar_list_destination: "unread_new",
     });
@@ -896,7 +896,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='topics'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "3 unread",
       "it displays the right unread count"
@@ -915,7 +915,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='topics'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "2 unread",
       "it updates the unread count"
@@ -945,7 +945,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.strictEqual(
       query(
-        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='topics'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "1 new",
       "it displays the new count once there are no unread topics"
@@ -963,7 +963,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.ok(
       !exists(
-        ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
+        ".sidebar-section-link[data-link-name='topics'] .sidebar-section-link-content-badge"
       ),
       "it removes new count once there are no new topics"
     );
@@ -1187,7 +1187,7 @@ acceptance(
       navigation_menu: "sidebar",
     });
 
-    test("count shown next to the everything link", async function (assert) {
+    test("count shown next to the topics link", async function (assert) {
       this.container.lookup("service:topic-tracking-state").loadStates([
         {
           topic_id: 1,
@@ -1225,14 +1225,14 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics'] .sidebar-section-link-content-badge"
         ).textContent.trim(),
         "2",
         "count is 2 because there's 1 unread topic and 1 new topic"
       );
     });
 
-    test("everything link href", async function (assert) {
+    test("topics link href", async function (assert) {
       this.container.lookup("service:topic-tracking-state").loadStates([
         {
           topic_id: 1,
@@ -1260,7 +1260,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
         ).href.endsWith("/new"),
         "links to /new because there are 1 new and 1 unread topics"
       );
@@ -1276,7 +1276,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
         ).href.endsWith("/new"),
         "links to /new because there is 1 unread topic"
       );
@@ -1292,7 +1292,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
         ).href.endsWith("/latest"),
         "links to /latest because there are no unread or new topics"
       );
@@ -1308,7 +1308,7 @@ acceptance(
 
       assert.true(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
+          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='topics']"
         ).href.endsWith("/new"),
         "links to /new because there is 1 new topic"
       );

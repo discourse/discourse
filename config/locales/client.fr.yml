@@ -4037,7 +4037,7 @@ fr:
             badges:
               content: "Badges"
               title: "Tous les badges disponibles à gagner"
-            everything:
+            topics:
               content: "Tout"
               title: "Tous les sujets"
             faq:

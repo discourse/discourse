@@ -4030,7 +4030,7 @@ nl:
             badges:
               content: "Badges"
               title: "Alle beschikbare badges om te verdienen"
-            everything:
+            topics:
               content: "Alles"
               title: "Alle topics"
             faq:
