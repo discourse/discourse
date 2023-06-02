@@ -41,6 +41,10 @@ export default {
       return;
     }
 
+    window.addEventListener("AppStateChange", (state) => {
+      console.log(state)
+    })
+
     const messageBus = container.lookup("service:message-bus"),
       user = container.lookup("service:current-user"),
       siteSettings = container.lookup("service:site-settings"),
