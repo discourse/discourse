@@ -34,7 +34,7 @@ module PageObjects
 
       def has_unread_list_indicator?(count:)
         has_css?(
-          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number-wrap",
+          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
           text: count.to_s,
         )
       end
