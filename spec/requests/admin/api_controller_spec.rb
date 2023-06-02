@@ -434,6 +434,8 @@ RSpec.describe Admin::ApiController do
           "invites",
           "wordpress",
         )
+
+        expect(scopes["topics"].any? { |h| h["urls"].include?("/latest.rss (GET)") }).to be_truthy
       end
     end
 
