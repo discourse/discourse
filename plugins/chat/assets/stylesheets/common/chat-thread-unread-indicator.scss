@@ -5,13 +5,14 @@
   width: auto;
   min-width: 14px;
   padding: 3px;
-  font-size: var(--font-down-2);
+  font-size: 0.8rem;
   border-radius: 1em;
   background: var(--tertiary-med-or-tertiary);
 
   &__number {
     font-weight: bold;
     color: var(--secondary);
+    line-height: 1;
   }
 }
 
