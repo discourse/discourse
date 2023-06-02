@@ -2,7 +2,14 @@
 
 module Chat
   class ThreadPreviewSerializer < ApplicationSerializer
-    attributes :last_reply_created_at, :last_reply_excerpt, :last_reply_id
+    attributes :last_reply_created_at, :last_reply_excerpt, :last_reply_id, :participant_count
+    has_many :participant_users, serializer: BasicUserSerializer, embed: :objects
+    has_one :last_reply_user, serializer: BasicUserSerializer, embed: :objects
+
+    def initialize(object, opts)
+      super(object, opts)
+      @participants = opts[:participants]
+    end
 
     def last_reply_created_at
       object.last_reply.created_at
@@ -13,7 +20,36 @@ module Chat
     end
 
     def last_reply_excerpt
-      object.last_reply.censored_excerpt
+      object.last_reply.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH)
+    end
+
+    def last_reply_user
+      object.last_reply.user
+    end
+
+    def include_participant_data?
+      @participants.present?
+    end
+
+    def include_participant_users?
+      include_participant_data?
+    end
+
+    def include_participant_count?
+      include_participant_data?
+    end
+
+    # TODO (martin) Fix this since it will be an N1
+    def participant_users
+      @participant_users ||=
+        User
+          .where(id: @participants[:user_ids])
+          .select(:id, :username, :name, :uploaded_avatar_id)
+          .in_order_of(:id, @participants[:user_ids])
+    end
+
+    def participant_count
+      @participants[:total_count]
     end
   end
 end

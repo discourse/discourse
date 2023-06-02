@@ -207,7 +207,12 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
+            const storedThread = this.args.channel.threadsManager.store(
+              this.args.channel,
+              thread
+            );
+            messages.findBy("id", storedThread.originalMessage.id).thread =
+              storedThread;
           });
         }
 
@@ -297,7 +302,12 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
+            const storedThread = this.args.channel.threadsManager.store(
+              this.args.channel,
+              thread
+            );
+            messages.findBy("id", storedThread.originalMessage.id).thread =
+              storedThread;
           });
         }
 

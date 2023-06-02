@@ -54,7 +54,7 @@ module Chat
       Chat::Thread
         .includes(
           :channel,
-          :last_reply,
+          last_reply: :user,
           original_message_user: :user_status,
           original_message: :chat_webhook_event,
         )

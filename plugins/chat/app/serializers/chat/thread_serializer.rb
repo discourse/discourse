@@ -36,7 +36,12 @@ module Chat
     end
 
     def preview
-      Chat::ThreadPreviewSerializer.new(object, scope: scope, root: false).as_json
+      Chat::ThreadPreviewSerializer.new(
+        object,
+        scope: scope,
+        root: false,
+        participants: @opts[:participants],
+      ).as_json
     end
 
     def include_current_user_membership?

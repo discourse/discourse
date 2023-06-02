@@ -233,6 +233,7 @@ export default class ChatSubscriptionsManager extends Service {
       channel.threadsManager
         .find(busData.channel_id, busData.thread_id)
         .then((thread) => {
+          // TODO (martin) Handle lastReplyUser being updated here
           thread.preview = ChatThreadPreview.create({
             lastReplyId: busData.message_id,
             lastReplyExcerpt: busData.excerpt,

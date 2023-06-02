@@ -63,6 +63,8 @@ module Chat
       end
 
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel)
+        # TODO (martin) Handle publishing the additional user data here so
+        # the last_reply_user on the client can be updated.
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
@@ -81,6 +83,8 @@ module Chat
       end
     end
 
+    # TODO (martin) Make this publish all the data needed for preview e.g.
+    # last reply, participants.
     def self.publish_thread_original_message_metadata!(thread)
       publish_to_channel!(
         thread.channel,

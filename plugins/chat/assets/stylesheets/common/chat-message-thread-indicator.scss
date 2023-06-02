@@ -9,12 +9,45 @@
   margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
   padding-block: 0.25rem;
   padding-inline: 0.5rem;
-  max-width: 500px;
+  max-width: 600px;
   border-radius: 4px;
+  color: var(--primary);
+  border: 1px solid transparent;
 
-  &__replies-count {
+  &:visited,
+  &:hover {
+    color: var(--primary);
+  }
+
+  &:hover {
+    border: 1px solid var(--primary-low-mid);
+  }
+
+  &__participants {
+    margin-left: auto;
+  }
+
+  &__last-reply-avatar {
+    margin-bottom: auto;
+    padding-top: 0.5rem;
+
+    .chat-user-avatar {
+      img {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+
+  &__last-reply-metadata {
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
+
+  &__last-reply-username {
+    font-weight: bold;
+    color: var(--secondary-low);
+    font-size: var(--font-up-1);
   }
 
   &__view-thread {
@@ -24,6 +57,15 @@
     .chat-message-thread-indicator:hover & {
       text-decoration: underline;
     }
+  }
+
+  &__last-reply-excerpt {
+    max-width: 95%;
+  }
+
+  &__body {
+    padding: 0.5rem 0;
+    max-width: 82%;
   }
 
   &__replies-count + &__view-thread {

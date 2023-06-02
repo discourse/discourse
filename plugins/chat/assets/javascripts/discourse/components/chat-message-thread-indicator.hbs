@@ -3,11 +3,33 @@
   @models={{@message.thread.routeModels}}
   class="chat-message-thread-indicator"
 >
-  <span class="chat-message-thread-indicator__replies-count">
-    {{i18n "chat.thread.replies" count=@message.threadReplyCount}}
-  </span>
-  <span class="chat-message-thread-indicator__view-thread overflow-ellipsis">
-    {{i18n "chat.thread.view_thread"}}{{#if this.threadTitle}}:
-      {{replace-emoji this.threadTitle}}{{/if}}
-  </span>
+  <div class="chat-message-thread-indicator__last-reply-avatar">
+    <ChatUserAvatar
+      @user={{@message.thread.preview.lastReplyUser}}
+      @avatarSize="medium"
+    />
+  </div>
+
+  <div class="chat-message-thread-indicator__body">
+    <div class="chat-message-thread-indicator__last-reply-metadata">
+      <span
+        class="chat-message-thread-indicator__last-reply-username"
+      >{{@message.thread.preview.lastReplyUser.username}}</span>
+      <span class="chat-message-thread-indicator__replies-count">
+        {{i18n "chat.thread.replies" count=@message.threadReplyCount}}
+        |
+      </span>
+      {{i18n "chat.thread.last_reply"}}
+      {{format-date @message.thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+    </div>
+    <div
+      class="chat-message-thread-indicator__last-reply-excerpt overflow-ellipsis"
+    >
+      {{replace-emoji (html-safe @message.thread.preview.lastReplyExcerpt)}}
+    </div>
+  </div>
+
+  <div class="chat-message-thread-indicator__participants">
+    <Chat::Thread::Participants @thread={{@message.thread}} />
+  </div>
 </LinkTo>
