@@ -1,13 +1,17 @@
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 
 export default class AppState extends Service {
+  @service capabilities;
+
   constructor() {
     super(...arguments);
 
-    window.addEventListener("AppStateChange", (event) => {
-      // Possible states: "active", "inactive", and "background"
-      this._state = event.detail?.newAppState;
-    });
+    if (this.capabilities.isAppWebview) {
+      window.addEventListener("AppStateChange", (event) => {
+        // Possible states: "active", "inactive", and "background"
+        this._state = event.detail?.newAppState;
+      });
+    }
   }
 
   get active() {

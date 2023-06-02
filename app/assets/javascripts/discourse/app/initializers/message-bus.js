@@ -6,18 +6,15 @@ import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
-function ajax(opts, messageBusConnectivity, appState, capabilities) {
+function ajax(opts, messageBusConnectivity, appState) {
   if (opts.complete) {
     const oldComplete = opts.complete;
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
 
-      const inBackgroundAppState =
-        capabilities.isAppWebview && appState.background;
-
       messageBusConnectivity.setConnectivity(
-        xhr.readyState === 4 || stat === "abort" || inBackgroundAppState
+        xhr.readyState === 4 || stat === "abort" || appState.background
       );
     };
   } else {
@@ -41,7 +38,6 @@ export default {
       user = container.lookup("service:current-user"),
       siteSettings = container.lookup("service:site-settings"),
       appState = container.lookup("service:app-state"),
-      capabilities = container.lookup("service:capabilities"),
       messageBusConnectivity = container.lookup(
         "service:message-bus-connectivity"
       );
@@ -99,7 +95,7 @@ export default {
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
         }
-        return ajax(opts, messageBusConnectivity, appState, capabilities);
+        return ajax(opts, messageBusConnectivity, appState);
       };
     } else {
       messageBus.ajax = function (opts) {
@@ -107,7 +103,7 @@ export default {
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
         }
-        return ajax(opts, messageBusConnectivity, appState, capabilities);
+        return ajax(opts, messageBusConnectivity, appState);
       };
 
       messageBus.baseUrl = getURL("/");
