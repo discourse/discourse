@@ -61,6 +61,9 @@ class ApiKeyScope < ActiveRecord::Base
           delete: {
             actions: %w[posts#destroy],
           },
+          list: {
+            actions: %w[posts#latest],
+          },
         },
         tags: {
           list: {
