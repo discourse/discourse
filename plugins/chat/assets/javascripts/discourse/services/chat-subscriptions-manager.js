@@ -54,15 +54,6 @@ export default class ChatSubscriptionsManager extends Service {
     this._channelSubscriptions.delete(channel.id);
   }
 
-  restartChannelsSubscriptions(messageBusIds) {
-    this.stopChannelsSubscriptions();
-    this.startChannelsSubscriptions(messageBusIds);
-
-    (this.chatChannelsManager.channels || []).forEach((channel) => {
-      this.startChannelSubscription(channel);
-    });
-  }
-
   startChannelsSubscriptions(messageBusIds) {
     this._startNewChannelSubscription(messageBusIds.new_channel);
     this._startChannelArchiveStatusSubscription(messageBusIds.archive_status);
