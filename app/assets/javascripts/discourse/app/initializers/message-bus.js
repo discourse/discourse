@@ -6,22 +6,18 @@ import userPresent, { onPresenceChange } from "discourse/lib/user-presence";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
-let requestId = 0
-function ajax(opts, messageBusConnectivity) {
-
-  requestId++;
-  let thisRequestId = requestId
-  opts.beforeSend = function(xhr) {
-    console.log(`SENDING ${thisRequestId}`, )
-  };
+function ajax(opts, messageBusConnectivity, appState, capabilities) {
   if (opts.complete) {
     const oldComplete = opts.complete;
     opts.complete = function (xhr, stat) {
       handleLogoff(xhr);
       oldComplete(xhr, stat);
-      console.log(`DONE: ${thisRequestId}`, stat, xhr.readyState)
+
+      const inBackgroundAppState =
+        capabilities.isAppWebview && appState.background;
+
       messageBusConnectivity.setConnectivity(
-        stat === "abort" || xhr.readyState === 4
+        xhr.readyState === 4 || stat === "abort" || inBackgroundAppState
       );
     };
   } else {
@@ -41,13 +37,11 @@ export default {
       return;
     }
 
-    window.addEventListener("AppStateChange", (state) => {
-      console.log(state)
-    })
-
     const messageBus = container.lookup("service:message-bus"),
       user = container.lookup("service:current-user"),
       siteSettings = container.lookup("service:site-settings"),
+      appState = container.lookup("service:app-state"),
+      capabilities = container.lookup("service:capabilities"),
       messageBusConnectivity = container.lookup(
         "service:message-bus-connectivity"
       );
@@ -105,7 +99,7 @@ export default {
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
         }
-        return ajax(opts, messageBusConnectivity);
+        return ajax(opts, messageBusConnectivity, appState, capabilities);
       };
     } else {
       messageBus.ajax = function (opts) {
@@ -113,7 +107,7 @@ export default {
         if (userPresent()) {
           opts.headers["Discourse-Present"] = "true";
         }
-        return ajax(opts, messageBusConnectivity);
+        return ajax(opts, messageBusConnectivity, appState, capabilities);
       };
 
       messageBus.baseUrl = getURL("/");
