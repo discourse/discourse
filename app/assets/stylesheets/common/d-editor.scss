@@ -297,6 +297,11 @@
       }
     }
 
+    .wrap-image-grid-button {
+      cursor: pointer;
+      color: var(--tertiary);
+    }
+
     svg {
       pointer-events: none;
     }

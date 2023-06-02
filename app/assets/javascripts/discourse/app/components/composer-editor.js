@@ -743,20 +743,34 @@ export default Component.extend(
     },
 
     @bind
-    _handleGalleryToggleClick(event) {
-      if (!event.target.classList.contains("image-grid-toggle")) {
+    _handleGalleryButtonClick(event) {
+      if (!event.target.classList.contains("wrap-image-grid-button")) {
         return;
       }
 
-      const imageGrid = '<div data-disable-image-grid="true"></div>';
-      const matchingPlaceholder =
-        this.get("composer.reply").includes(imageGrid);
+      const index = parseInt(
+        event.target.closest(".button-wrapper").dataset.imageIndex,
+        10
+      );
+      const imageCount = parseInt(event.target.dataset.imageCount, 10) - 1;
+      const closingIndex = index + imageCount;
 
-      if (matchingPlaceholder) {
-        this.appEvents.trigger("composer:replace-text", imageGrid, "");
-      } else {
-        this.appEvents.trigger("composer:insert-block", imageGrid);
-      }
+      const matchingPlaceholder =
+        this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        matchingPlaceholder[index],
+        `[grid]\n${matchingPlaceholder[index]}`,
+        { regex: IMAGE_MARKDOWN_REGEX, index }
+      );
+
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        matchingPlaceholder[closingIndex],
+        `${matchingPlaceholder[closingIndex]}\n[/grid]`,
+        { regex: IMAGE_MARKDOWN_REGEX, index: closingIndex }
+      );
     },
 
     _registerImageAltTextButtonClick(preview) {
@@ -765,9 +779,8 @@ export default Component.extend(
       preview.addEventListener("click", this._handleAltTextCancelButtonClick);
       preview.addEventListener("click", this._handleImageDeleteButtonClick);
       preview.addEventListener("keypress", this._handleAltTextInputKeypress);
-
       if (this.siteSettings.experimental_post_image_grid) {
-        preview.addEventListener("click", this._handleGalleryToggleClick);
+        preview.addEventListener("click", this._handleGalleryButtonClick);
       }
     },
 
@@ -794,6 +807,10 @@ export default Component.extend(
       preview?.removeEventListener("click", this._handleImageScaleButtonClick);
       preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
       preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
+      preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
+      if (this.siteSettings.experimental_post_image_grid) {
+        preview?.removeEventListener("click", this._handleGalleryButtonClick);
+      }
       preview?.removeEventListener(
         "click",
         this._handleAltTextCancelButtonClick
@@ -802,10 +819,6 @@ export default Component.extend(
         "keypress",
         this._handleAltTextInputKeypress
       );
-
-      if (this.siteSettings.experimental_post_image_grid) {
-        preview?.removeEventListener("click", this._handleGalleryToggleClick);
-      }
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {
