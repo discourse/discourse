@@ -26,7 +26,6 @@ const LINKS_IN_BOTH_SEGMENTS = ["/review"];
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
-  "/new": EverythingSectionLink,
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
@@ -116,7 +115,7 @@ export default class CommunitySection {
         sectionLinkClass,
         inMoreDrawer,
         link.name,
-        link.scon
+        link.icon
       );
     } else {
       return new SectionLink(link, this, this.router);
