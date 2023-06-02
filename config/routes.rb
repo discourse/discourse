@@ -485,6 +485,7 @@ Discourse::Application.routes.draw do
                format: "json",
              }
       get "#{root_path}/search/users" => "users#search_users"
+      get "#{root_path}/lookup/users" => "users#lookup", :constraints => { format: "json" }
 
       get(
         { "#{root_path}/account-created/" => "users#account_created" }.merge(

@@ -1895,6 +1895,11 @@ class UsersController < ApplicationController
            }
   end
 
+  def lookup
+    users = User.where(username: params[:usernames])
+    render json: serialize_found_users(users)
+  end
+
   private
 
   def clean_custom_field_values(field)
@@ -2087,9 +2092,13 @@ class UsersController < ApplicationController
   end
 
   def serialize_found_users(users)
-    each_serializer =
-      SiteSetting.enable_user_status? ? FoundUserWithStatusSerializer : FoundUserSerializer
+    {
+      users:
+        ActiveModel::ArraySerializer.new(users, each_serializer: found_user_serializer).as_json,
+    }
+  end
 
-    { users: ActiveModel::ArraySerializer.new(users, each_serializer: each_serializer).as_json }
+  def found_user_serializer
+    SiteSetting.enable_user_status? ? FoundUserWithStatusSerializer : FoundUserSerializer
   end
 end
