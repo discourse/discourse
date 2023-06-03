@@ -2521,9 +2521,7 @@ en:
         aria_label: Alt text for image
 
       delete_image_button: Delete Image
-
-      disable_image_grid: Disable image grid
-      enable_image_grid: Enable image grid
+      toggle_image_grid: Toggle image grid
 
     notifications:
       tooltip:

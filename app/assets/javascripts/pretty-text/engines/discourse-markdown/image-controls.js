@@ -110,7 +110,7 @@ function buildImageDeleteButton() {
 function buildImageGalleryControl(imageCount) {
   return `
   <span class="wrap-image-grid-button" title="${I18n.t(
-    "composer.enable_image_grid"
+    "composer.toggle_image_grid"
   )}" data-image-count="${imageCount}">
     <svg class="fa d-icon d-icon-th svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
     <use href="#th"></use>
