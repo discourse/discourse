@@ -102,7 +102,7 @@
     "ember-cli-terser": "^4.0.2",
     "ember-qunit": "^6.2.0",
     "ember-exam": "^8.0.0",
-    "eslint": "^8.41.0",
+    "eslint": "^8.42.0",
     "eslint-plugin-qunit": "^7.3.4",
     "imports-loader": "^4.0.1",
     "loader.js": "^4.7.0",
