@@ -1745,4 +1745,60 @@ var bar = 'bar';
       "code block with html alias work"
     );
   });
+
+  test("image grid", function (assert) {
+    assert.cooked(
+      "[grid]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
+      `<p>[grid]<br>
+<img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"><br>
+[/grid]</p>`,
+      "image grid without site setting does not work"
+    );
+
+    assert.cookedOptions(
+      "[grid]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>
+</div>`,
+      "image grid with site setting works"
+    );
+
+    assert.cookedOptions(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png)
+![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with 3 images works"
+    );
+
+    assert.cookedOptions(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with mixed block and inline images works"
+    );
+
+    assert.cookedOptions(
+      "[grid]![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)[/grid]",
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"></p>
+</div>`,
+      "image grid with inline images works"
+    );
+  });
 });
