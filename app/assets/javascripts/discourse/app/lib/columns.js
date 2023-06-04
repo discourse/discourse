@@ -1,12 +1,16 @@
-// Inspired by https://github.com/mladenilic/columns.js
-// TODO: add more details
-
+/**
+ * Turns an element containing multiple children into a grid of columns.
+ * Can be used to arrange images or media in a grid.
+ *
+ * Inspired/adapted from https://github.com/mladenilic/columns.js
+ *
+ */
 export default class Columns {
   constructor(container, options = {}) {
     this.container = container;
 
     this.options = {
-      columns: 2,
+      columns: 3,
       columnClass: "d-image-grid-column",
       minCount: 2,
       ...options,
@@ -19,7 +23,7 @@ export default class Columns {
     if (this.items.length >= this.options.minCount) {
       this.render();
     } else {
-      container.classList.add("d-image-grid-disabled");
+      container.dataset.disabled = true;
     }
   }
 
@@ -62,7 +66,7 @@ export default class Columns {
   _prepareItems() {
     let targets = this.container.children;
 
-    // sometimes the children are wrapped in a paragraph
+    // if all children are wrapped in a paragraph, pull them out
     if (targets.length === 1 && targets[0].nodeName === "P") {
       targets = targets[0].children;
     }

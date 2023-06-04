@@ -1,28 +1,33 @@
-.d-image-grid {
-  --grid-column-gap: 3px;
+.d-image-grid:not([data-disabled]) {
+  $grid-column-gap: 6px;
 
-  margin-left: calc(var(--grid-column-gap) * -1);
-  margin-right: calc(var(--grid-column-gap) * -1);
   &[data-columns] {
     display: flex;
     flex-wrap: wrap;
   }
 
   &[data-columns="2"] > * {
-    flex-basis: 50%;
+    flex-basis: calc(50% - ($grid-column-gap / 2));
+    margin-right: $grid-column-gap;
   }
 
   &[data-columns="3"] > * {
-    flex-basis: calc(100% / 3);
+    flex-basis: calc(33.33% - ($grid-column-gap * 0.75));
+    margin-right: $grid-column-gap;
   }
 
   .d-image-grid-column {
     box-sizing: border-box;
-    > * {
-      padding-left: var(--grid-column-gap);
-      padding-right: var(--grid-column-gap);
+
+    &:last-child {
+      margin-right: 0;
     }
-    > .lightbox-wrapper {
+
+    > img {
+      margin-bottom: $grid-column-gap;
+    }
+
+    .lightbox-wrapper {
       .meta .informations {
         display: none;
       }
@@ -34,7 +39,7 @@
 
   .desktop-view .d-editor-preview & {
     .image-wrapper {
-      padding-bottom: calc(var(--grid-column-gap) * 2);
+      padding-bottom: $grid-column-gap;
       margin-bottom: 0em;
       .button-wrapper .scale-btn-container {
         display: none;

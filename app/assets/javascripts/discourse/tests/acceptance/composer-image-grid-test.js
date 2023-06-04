@@ -125,5 +125,24 @@ and a second group of images
       2,
       "Preview organizes images into two columns"
     );
+
+    await fillIn(".d-editor-input", `[grid]\n${uploads[0]}\n[/grid]`);
+
+    assert.ok(
+      query(".d-editor-preview .d-image-grid[data-disabled]"),
+      "Grid is disabled when there is only one image"
+    );
+
+    await fillIn(
+      ".d-editor-input",
+      `[grid]${uploads[0]} ${uploads[1]} ${uploads[0]} ${uploads[1]}[/grid]`
+    );
+
+    assert.ok(
+      document.querySelectorAll(".d-editor-preview .d-image-grid-column")
+        .length,
+      2,
+      "Special case of two columns for 4 images"
+    );
   });
 });
