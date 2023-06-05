@@ -43,7 +43,8 @@ export default class ModalService extends Service {
       return this.modalClassOverride;
     } else {
       return (
-        this.opts.modalClass || `${dasherize(this.name).toLowerCase()}-modal`
+        this.opts.modalClass ||
+        `${dasherize(this.name.replace(/^modals\//, "")).toLowerCase()}-modal`
       );
     }
   }
