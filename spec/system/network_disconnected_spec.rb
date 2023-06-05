@@ -10,7 +10,8 @@ RSpec.describe "Network Disconnected", type: :system, js: true do
   end
 
   it "Message bus connectivity service adds class to DOM and displays offline indicator" do
-    sign_in(current_user)
+    SiteSetting.enable_offline_indicator = true
+
     visit("/c")
 
     expect(page).to have_no_css("html.message-bus-offline")
@@ -22,6 +23,17 @@ RSpec.describe "Network Disconnected", type: :system, js: true do
 
       # Offline indicator is rendered
       expect(page).to have_css(".offline-indicator")
+    end
+  end
+
+  it "Doesn't show the offline indicator when the site setting isn't present" do
+    SiteSetting.enable_offline_indicator = false
+
+    visit("/c")
+
+    with_network_disconnected do
+      expect(page).to have_css("html.message-bus-offline")
+      expect(page).not_to have_css(".offline-indicator")
     end
   end
 end
