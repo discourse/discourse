@@ -647,6 +647,7 @@ export default class ChatLivePane extends Component {
 
   @action
   async onSendMessage(message) {
+    await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);
     } else {
@@ -660,7 +661,6 @@ export default class ChatLivePane extends Component {
   }
 
   async #sendEditMessage(message) {
-    await message.cook();
     this.pane.sending = true;
 
     const data = {
