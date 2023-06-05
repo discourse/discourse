@@ -245,6 +245,10 @@ en:
     errors:
       <<: *errors
 
+  custom_fields:
+    validations:
+      max_items: "Maximum number of custom fields for this entity has been reached (%{max_items_number})"
+      max_value_length: "Maximum length for a custom field value has been reached (%{max_value_length})"
   invite:
     expired: "Your invite token has expired. Please <a href='%{base_url}/about'>contact staff</a>."
     not_found: "Your invite token is invalid. Please <a href='%{base_url}/about'>contact staff</a>."
