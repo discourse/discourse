@@ -6,7 +6,7 @@ import { isTesting } from "discourse-common/config/environment";
 import { rewritePath } from "discourse/lib/url";
 
 const BareRouter = EmberRouter.extend({
-  location: isTesting() ? "none" : "discourse-location",
+  location: isTesting() ? "none" : "history",
 
   handleURL(url) {
     url = rewritePath(url);
