@@ -10,7 +10,16 @@
       {{chat/track-message-separator-date}}
     >
       <span class="chat-message-separator__text">
-        <span>{{@message.firstMessageOfTheDayAt}}</span>
+        <DButton
+          type="button"
+          class="chat-message-separator__button"
+          @action={{action
+            @fetchMessagesByDate
+            @message.firstMessageOfTheDayAtNoFormat
+          }}
+        >
+          {{@message.firstMessageOfTheDayAt}}
+        </DButton>
 
         {{#if @message.newest}}
           <span class="chat-message-separator__last-visit">

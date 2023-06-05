@@ -2,7 +2,10 @@
 
 {{#if this.shouldRender}}
   {{#if (eq @context "channel")}}
-    <ChatMessageSeparatorDate @message={{@message}} />
+    <ChatMessageSeparatorDate
+      @fetchMessagesByDate={{@fetchMessagesByDate}}
+      @message={{@message}}
+    />
     <ChatMessageSeparatorNew @message={{@message}} />
   {{/if}}
 

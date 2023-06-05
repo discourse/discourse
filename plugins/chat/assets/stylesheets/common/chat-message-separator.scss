@@ -47,6 +47,15 @@
     padding-left: 1rem;
     pointer-events: none;
 
+    .chat-message-separator__button {
+      pointer-events: auto;
+      background: none;
+      padding: 0;
+      &:focus {
+        color: var(--primary);
+      }
+    }
+
     &.with-last-visit {
       & + .chat-message-separator__line-container {
         .chat-message-separator__line {

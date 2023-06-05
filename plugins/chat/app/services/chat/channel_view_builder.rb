@@ -50,6 +50,7 @@ module Chat
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
       attribute :fetch_from_last_read, :boolean # (optional)
+      attribute :target_date, :string # (optional)
 
       validates :channel_id, presence: true
       validates :direction,
@@ -127,12 +128,13 @@ module Chat
           include_thread_messages: include_thread_messages,
           page_size: contract.page_size,
           direction: contract.direction,
+          target_date: contract.target_date,
         )
 
       context.can_load_more_past = messages_data[:can_load_more_past]
       context.can_load_more_future = messages_data[:can_load_more_future]
 
-      if !messages_data[:target_message]
+      if !messages_data[:target_message] && !messages_data[:target_date]
         context.messages = messages_data[:messages]
       else
         messages_data[:target_message] = (
@@ -147,7 +149,7 @@ module Chat
           messages_data[:past_messages].reverse,
           messages_data[:target_message],
           messages_data[:future_messages],
-        ].reduce([], :concat)
+        ].reduce([], :concat).compact
       end
     end
 

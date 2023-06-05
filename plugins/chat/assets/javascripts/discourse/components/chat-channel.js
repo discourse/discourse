@@ -56,6 +56,7 @@ export default class ChatLivePane extends Component {
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
   @tracked uploadDropZone;
+  @tracked requestedTargetDate;
 
   scrollable = null;
   _loadedChannelId = null;
@@ -220,6 +221,15 @@ export default class ChatLivePane extends Component {
             highlight: true,
           });
           return;
+        } else if (this.requestedTargetDate) {
+          const message = this.args.channel?.findMessageByDate(
+            this.requestedTargetDate
+          );
+
+          this.scrollToMessage(message.id, {
+            highlight: true,
+          });
+          return;
         }
 
         if (
@@ -230,7 +240,6 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(scrollToMessageId);
           return;
         }
-
         this.scrollToBottom();
       })
       .catch(this._handleErrors)
@@ -241,6 +250,7 @@ export default class ChatLivePane extends Component {
 
         this.loadedOnce = true;
         this.requestedTargetMessageId = null;
+        this.requestedTargetDate = null;
         this.loadingMorePast = false;
         this.debounceFillPaneAttempt();
         this.updateLastReadMessage();
@@ -342,7 +352,11 @@ export default class ChatLivePane extends Component {
     );
   }
 
-  @bind
+  fetchMessagesByDate(date) {
+    this.requestedTargetDate = date;
+    this.debounceFetchMessages();
+  }
+
   fillPaneAttempt() {
     if (this._selfDeleted) {
       return;

@@ -42,7 +42,8 @@ module Chat
       target_message_id: nil,
       include_thread_messages: false,
       page_size: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT,
-      direction: nil
+      direction: nil,
+      target_date: nil
     )
       messages = base_query(channel: channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(channel.chatable)
@@ -61,7 +62,11 @@ module Chat
       if target_message_id.present? && direction.blank?
         query_around_target(target_message_id, channel, messages)
       else
-        query_paginated_messages(direction, page_size, channel, messages, target_message_id)
+        if target_date.present?
+          query_by_date(target_date, channel, messages)
+        else
+          query_paginated_messages(direction, page_size, channel, messages, target_message_id)
+        end
       end
     end
 
@@ -147,6 +152,33 @@ module Chat
 
       {
         messages: direction == FUTURE ? messages : messages.reverse,
+        can_load_more_past: can_load_more_past,
+        can_load_more_future: can_load_more_future,
+      }
+    end
+
+    def self.query_by_date(target_date, channel, messages)
+      past_messages =
+        messages
+          .where("created_at < ?", target_date)
+          .order(created_at: :desc)
+          .limit(PAST_MESSAGE_LIMIT)
+          .to_a
+
+      future_messages =
+        messages
+          .where("created_at > ?", target_date)
+          .order(created_at: :asc)
+          .limit(FUTURE_MESSAGE_LIMIT)
+          .to_a
+
+      can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
+      can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
+
+      {
+        past_messages: past_messages,
+        future_messages: future_messages,
+        target_date: target_date,
         can_load_more_past: can_load_more_past,
         can_load_more_future: can_load_more_future,
       }

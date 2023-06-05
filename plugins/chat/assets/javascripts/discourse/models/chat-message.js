@@ -199,6 +199,21 @@ export default class ChatMessage {
     }
   }
 
+  get firstMessageOfTheDayAtNoFormat() {
+    if (!this.previousMessage) {
+      return this.createdAt;
+    }
+
+    if (
+      !this.#areDatesOnSameDay(
+        new Date(this.previousMessage.createdAt),
+        new Date(this.createdAt)
+      )
+    ) {
+      return this.createdAt;
+    }
+  }
+
   #calendarDate(date) {
     return moment(date).calendar(moment(), {
       sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
