@@ -31,8 +31,10 @@ export default class Search extends Service {
   // between multiple components
   //
   // - SearchTerm
-  // - AssistantItem
-  // - Result::Types
+  // - Results::AssistantItem
+  // - Results::Types
+  // - Results::MoreLink
+  // - Results::RecentSearches
   //
   // To minimze the duplicate logic we will create a shared action here
   // that can be reused across all of the components

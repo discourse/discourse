@@ -46,10 +46,6 @@ export default class AssistantItem extends Component {
     return `tags:${[this.args.tag, ...this.args.additionalTags].join("+")}`;
   }
 
-  get labelOrSlug() {
-    return this.args.label || this.args.slug;
-  }
-
   @action
   onKeyup(e) {
     if (e.key === "Escape") {
@@ -58,8 +54,6 @@ export default class AssistantItem extends Component {
       e.preventDefault();
       return false;
     }
-
-    this.search.handleResultInsertion(e);
     this.search.handleArrowUpOrDown(e);
   }
 

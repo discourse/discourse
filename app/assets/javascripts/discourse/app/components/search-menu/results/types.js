@@ -23,6 +23,7 @@ export default class Types extends Component {
       return false;
     }
 
+    this.search.handleResultInsertion(e);
     this.search.handleArrowUpOrDown(e);
   }
 }

@@ -71,9 +71,7 @@ export default class Assistant extends Component {
   attributesForSuggestionKeyword() {
     if (this.args.suggestionKeyword !== "+") {
       this.prefix =
-        this.args.contextTypeSlug
-          ?.split(this.args.suggestionKeyword)[0]
-          .trim() || "";
+        this.args.slug?.split(this.args.suggestionKeyword)[0].trim() || "";
       if (this.prefix.length) {
         this.prefix = `${this.prefix} `;
       }
@@ -84,13 +82,9 @@ export default class Assistant extends Component {
         this.args.results.forEach((result) => {
           if (result.additionalTags) {
             this.prefix =
-              this.args.contextTypeSlug
-                ?.split(" ")
-                .slice(0, -1)
-                .join(" ")
-                .trim() || "";
+              this.args.slug?.split(" ").slice(0, -1).join(" ").trim() || "";
           } else {
-            this.prefix = this.args.contextTypeSlug?.split("#")[0].trim() || "";
+            this.prefix = this.args.slug?.split("#")[0].trim() || "";
           }
           if (this.prefix.length) {
             this.prefix = `${this.prefix} `;

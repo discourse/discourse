@@ -1,32 +1,44 @@
-createWidget("search-menu-recent-searches", {
-  tagName: "div.search-menu-recent",
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import User from "discourse/models/user";
+import { action } from "@ember/object";
 
-  template: hbs`
-    <div class="heading">
-      <h4>{{i18n "search.recent"}}</h4>
-      {{flat-button
-        className="clear-recent-searches"
-        title="search.clear_recent"
-        icon="times"
-        action="clearRecent"
-      }}
-    </div>
+export default class RecentSearches extends Component {
+  @service currentUser;
+  @service siteSettings;
 
-    {{#each this.currentUser.recent_searches as |slug|}}
-      {{attach
-        widget="search-menu-assistant-item"
-        attrs=(hash slug=slug icon="history")
-      }}
-    {{/each}}
-  `,
+  constructor() {
+    super(...arguments);
 
+    if (
+      this.currentUser &&
+      this.siteSettings.log_search_queries &&
+      !this.currentUser.recent_searches?.length
+    ) {
+      this.loadRecentSearches();
+    }
+  }
+
+  @action
   clearRecent() {
     return User.resetRecentSearches().then((result) => {
       if (result.success) {
         this.currentUser.recent_searches.clear();
       }
     });
-  },
+  }
+
+  @action
+  onKeyup(e) {
+    if (e.key === "Escape") {
+      document.querySelector("#search-button").focus();
+      this.args.closeSearchMenu();
+      e.preventDefault();
+      return false;
+    }
+
+    this.search.handleArrowUpOrDown(e);
+  }
 
   loadRecentSearches() {
     User.loadRecentSearches().then((result) => {
@@ -37,15 +49,5 @@ createWidget("search-menu-recent-searches", {
         );
       }
     });
-  },
-
-  init() {
-    if (
-      this.currentUser &&
-      this.siteSettings.log_search_queries &&
-      !this.currentUser.recent_searches?.length
-    ) {
-      this.loadRecentSearches();
-    }
-  },
-});
+  }
+}

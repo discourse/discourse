@@ -19,8 +19,6 @@ export default class InitialOptions extends Component {
   @service siteSettings;
   @service currentUser;
 
-  @tracked contextTypeSlug;
-
   constructor() {
     super(...arguments);
 
@@ -41,12 +39,7 @@ export default class InitialOptions extends Component {
       : false;
   }
 
-  get slugOrGlobalTerm() {
-    return this.contextTypeSlug || this.search.activeGlobalSearchTerm;
-  }
-
   attributesForSearchContextType(type) {
-    console.log(type);
     switch (type) {
       case "topic":
         this.topicContextType();
@@ -79,7 +72,7 @@ export default class InitialOptions extends Component {
   }
 
   privateMessageContextType() {
-    this.slug = `${this.search.activeGlobalSearchTerm} in:messages`;
+    this.slug = "in:messages";
   }
 
   categoryContextType() {
@@ -88,14 +81,14 @@ export default class InitialOptions extends Component {
       ? `#${searchContextCategory.parentCategory.slug}:${searchContextCategory.slug}`
       : `#${searchContextCategory.slug}`;
 
-    this.contextTypeSlug = `${this.search.activeGlobalSearchTerm} ${fullSlug}`;
+    this.slug = fullSlug;
     this.contextTypeKeyword = "#";
     this.initialResults = [{ model: this.search.searchContext.category }];
     this.withInLabel = true;
   }
 
   tagContextType() {
-    this.contextTypeSlug = `${this.search.activeGlobalSearchTerm} #${this.search.searchContext.name}`;
+    this.slug = `#${this.search.searchContext.name}`;
     this.contextTypeKeyword = "#";
     this.initialResults = [{ name: this.search.searchContext.name }];
     this.withInLabel = true;
@@ -107,9 +100,9 @@ export default class InitialOptions extends Component {
     let tagTerm;
     if (searchContext.additionalTags) {
       const tags = [searchContext.tagId, ...searchContext.additionalTags];
-      tagTerm = `${this.search.activeGlobalSearchTerm} tags:${tags.join("+")}`;
+      tagTerm = `tags:${tags.join("+")}`;
     } else {
-      tagTerm = `${this.search.activeGlobalSearchTerm} #${searchContext.tagId}`;
+      tagTerm = `#${searchContext.tagId}`;
     }
     let suggestionOptions = {
       tagName: searchContext.tagId,
@@ -124,14 +117,14 @@ export default class InitialOptions extends Component {
       tagTerm = tagTerm + ` ${categorySlug}`;
     }
 
-    this.contextTypeSlug = tagTerm;
+    this.slug = tagTerm;
     this.contextTypeKeyword = "+";
     this.initialResults = [suggestionOptions];
     this.withInLabel = true;
   }
 
   userContextType() {
-    this.slug = `${this.search.activeGlobalSearchTerm} @${this.search.searchContext.user.username}`;
+    this.slug = `@${this.search.searchContext.user.username}`;
     //this.label = [
     //h("span", `${term} `),
     //h(

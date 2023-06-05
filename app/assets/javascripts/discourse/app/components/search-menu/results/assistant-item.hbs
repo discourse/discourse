@@ -1,12 +1,14 @@
 <li class="search-menu-assistant-item" {{on "keyup" this.onKeyup}}>
-  {{! We need to change up styling to removing the "widget-link" class }}
   {{! "data-topic-id": topic.id }}
   <a class="search-link" href={{this.href}}>
     <span aria-label={{I18n "search.title"}}>{{d-icon this.icon}}</span>
 
-    {{#if this.prefix}}
-      <span class="search-item-prefix">{{this.prefix}}</span>
-    {{/if}}
+    <span class="search-item-prefix">
+      {{this.search.activeGlobalSearchTerm}}
+      {{#if this.prefix}}
+        {{this.prefix}}
+      {{/if}}
+    </span>
 
     {{#if @withInLabel}}
       <span class="label-suffix">{{I18n "search.in"}}</span>
@@ -32,7 +34,19 @@
         <SearchMenu::Results::Type::User @result={{@user}} />
       </span>
     {{else}}
-      <span class="search-item-slug">{{this.labelOrSlug}}</span>
+      <span class="search-item-slug">
+        {{#if @withLabel}}
+          <span class="label-suffix">
+            {{i18n "search.in_topics_posts"}}
+          </span>
+        {{/if}}
+        {{@label}}
+      </span>
+      {{#if @extraHint}}
+        <span class="extra-hint">
+          {{i18n "search.enter_hint"}}
+        </span>
+      {{/if}}
     {{/if}}
   </a>
 </li>

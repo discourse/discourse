@@ -611,6 +611,7 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
 
     await fillIn("#search-term", "dude #monk");
     await triggerKeyEvent("#search-term", "keyup", 51);
+    debugger;
 
     const firstItem =
       ".search-menu .results ul.search-menu-assistant .search-link";

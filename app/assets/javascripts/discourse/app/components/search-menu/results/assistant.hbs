@@ -7,11 +7,11 @@
         @tag={{result.tagName}}
         @additionalTags={{result.additionalTags}}
         @category={{result.category}}
-        @slug={{@contextTypeSlug}}
+        @slug={{@slug}}
         @withInLabel={{@withInLabel}}
         @isIntersection={{true}}
+        @closeSearchMenu={{@closeSearchMenu}}
       />
-      {{result}}
     {{/each}}
   {{else if (eq this.suggestionType "category")}}
     {{#each @results as |result|}}
@@ -21,6 +21,7 @@
           @category={{result.model}}
           @slug={{get this.fullSlugForCategoryMap result.model.id}}
           @withInLabel={{@withInLabel}}
+          @closeSearchMenu={{@closeSearchMenu}}
         />
       {{else}}
         <SearchMenu::Results::AssistantItem
@@ -28,17 +29,19 @@
           @tag={{result.model.name}}
           @slug={{concat this.prefix "#" result.model.name}}
           @withInLabel={{@withInLabel}}
+          @closeSearchMenu={{@closeSearchMenu}}
         />
       {{/if}}
     {{/each}}
   {{else if (eq this.suggestionType "user")}}
     {{#if this.userMatchesInTopic}}
       <SearchMenu::Results::AssistantItem
-        @extraHint={{I18n "search.enter_hint"}}
+        @extraHint={{true}}
         @prefix={{this.prefix}}
         @user={{this.user}}
         @slug={{concat this.prefix "@" this.user.username}}
         @suffix={{I18n "search.in_topics_posts"}}
+        @closeSearchMenu={{@closeSearchMenu}}
       />
       <SearchMenu::Results::AssistantItem
         @prefix={{this.prefix}}
@@ -46,6 +49,7 @@
         @setTopicContext={{true}}
         @slug={{concat this.prefix "@" this.user.username}}
         @suffix={{I18n "search.in_this_topic"}}
+        @closeSearchMenu={{@closeSearchMenu}}
       />
     {{else}}
       {{#each @results as |result|}}
@@ -53,13 +57,17 @@
           @prefix={{this.prefix}}
           @user={{result.model}}
           @slug={{concat this.prefix "@" result.model.username}}
+          @closeSearchMenu={{@closeSearchMenu}}
         />
       {{/each}}
     {{/if}}
   {{else}}
     {{#each this.suggestionShortcuts as |item|}}
       {{#if this.isSuggestionKeyword}}
-        <SearchMenu::Results::AssistantItem @slug={{concat this.prefix item}} />
+        <SearchMenu::Results::AssistantItem
+          @slug={{concat this.prefix item}}
+          @closeSearchMenu={{@closeSearchMenu}}
+        />
       {{/if}}
     {{/each}}
   {{/if}}
