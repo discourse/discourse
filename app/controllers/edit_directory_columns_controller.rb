@@ -24,7 +24,6 @@ class EditDirectoryColumnsController < ApplicationController
       raise Discourse::InvalidParameters, "Must have at least one column enabled"
     end
 
-    changes = ""
     new_values = ""
     previous_values = ""
     staff_action_logger = StaffActionLogger.new(current_user)
@@ -35,10 +34,9 @@ class EditDirectoryColumnsController < ApplicationController
            existing_column.enabled != ActiveModel::Type::Boolean.new.cast(column_data[:enabled]) ||
              existing_column.position != column_data[:position].to_i
          )
-        change, new_value, previous_value =
+        new_value, previous_value =
           staff_action_logger.edit_directory_columns_details(column_data, existing_column)
 
-        changes += change
         new_values += new_value
         previous_values += previous_value
 
@@ -49,12 +47,7 @@ class EditDirectoryColumnsController < ApplicationController
       end
     end
 
-    details =
-      if changes.empty?
-        { Detail: "Nothing was changed" }
-      else
-        { Changes: changes }
-      end
+    details = {}
 
     details.merge!({ previous_value: previous_values, new_value: new_values })
     staff_action_logger.log_custom("update_directory_columns", details = details)
