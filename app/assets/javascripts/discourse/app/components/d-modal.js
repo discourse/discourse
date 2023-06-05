@@ -6,7 +6,6 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 
 @disableImplicitInjections
 export default class DModal extends Component {

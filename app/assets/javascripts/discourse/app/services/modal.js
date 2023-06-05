@@ -4,7 +4,6 @@ import I18n from "I18n";
 import { dasherize } from "@ember/string";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 
 @disableImplicitInjections
 export default class ModalService extends Service {
