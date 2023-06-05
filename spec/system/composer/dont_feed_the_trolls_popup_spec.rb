@@ -9,13 +9,15 @@ describe "Composer don't feed the trolls popup", type: :system, js: true do
   fab!(:flag) { Fabricate(:flag, post: reply, user: user) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before { sign_in user }
+  before do
+    @original_disable_animation = Capybara.disable_animation
+    Capybara.disable_animation = false
+    sign_in user
+  end
+
+  after { Capybara.disable_animation = @original_disable_animation }
 
   it "shows a popup when about to reply to a troll" do
-    skip(
-      "TGX: This does not work when Capybara.disable_animation is set to true. We're in the midst of fixing this.",
-    )
-
     SiteSetting.educate_until_posts = 0
 
     topic_page.visit_topic(topic)
