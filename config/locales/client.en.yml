@@ -4778,6 +4778,7 @@ en:
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
+              list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
             categories:
