@@ -1,18 +1,5 @@
-import { cloneJSON } from "discourse-common/lib/object";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import {
-  acceptance,
-  count,
-  exists,
-  loggedInUser,
-  publishToMessageBus,
-  query,
-  queryAll,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import I18n from "I18n";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { visit } from "@ember/test-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
 acceptance("User invites", function (needs) {
