@@ -352,6 +352,7 @@ export default class ChatLivePane extends Component {
     );
   }
 
+  @bind
   fetchMessagesByDate(date) {
     this.requestedTargetDate = date;
     this.debounceFetchMessages();
