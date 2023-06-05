@@ -378,6 +378,13 @@ export default class ChatComposer extends Component {
     }
   }
 
+  @action
+  showChannelSummaryModal() {
+    showModal("channel-summary").setProperties({
+      channelId: this.args.channel.id,
+    });
+  }
+
   #addMentionedUser(userData) {
     const user = User.create(userData);
     this.currentMessage.mentionedUsers.set(user.id, user);

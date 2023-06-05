@@ -22,6 +22,14 @@ module Summarization
 
     attr_reader :model
 
+    def can_request_summaries?(user)
+      user_group_ids = user.group_ids
+
+      SiteSetting.custom_summarization_allowed_groups_map.any? do |group_id|
+        user_group_ids.include?(group_id)
+      end
+    end
+
     def correctly_configured?
       raise NotImplemented
     end
