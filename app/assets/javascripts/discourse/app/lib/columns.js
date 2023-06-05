@@ -36,14 +36,16 @@ export default class Columns {
   }
 
   render() {
-    const count = this.count();
-    const columns = this._prepareColumns(count);
+    if (this.container.dataset.columns) {
+      return;
+    }
 
-    this.items.forEach((item, index) => {
-      columns[index % count].append(item);
-    });
+    const columns = this._allItemsAreImages()
+      ? this._distributeEvenly()
+      : this._distributeInOrder();
 
-    this.container.dataset.columns = count;
+    this.container.dataset.columns = this.count();
+
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }
@@ -74,5 +76,48 @@ export default class Columns {
     return Array.from(targets).filter((item) => {
       return !this.excluded.includes(item.nodeName);
     });
+  }
+
+  _allItemsAreImages() {
+    return this.items.every(
+      (item) => item.querySelector("img") || item.nodeName === "IMG"
+    );
+  }
+
+  _distributeEvenly() {
+    const count = this.count();
+    const columns = this._prepareColumns(count);
+
+    const columnHeights = [];
+    for (let n = 0; n < count; n++) {
+      columnHeights[n] = 0;
+    }
+    this.items.forEach((item) => {
+      const img = item.querySelector("img") || item;
+      let shortest = 0;
+
+      for (let j = 1; j < count; ++j) {
+        if (columnHeights[j] < columnHeights[shortest]) {
+          shortest = j;
+        }
+      }
+
+      // use aspect ratio to compare image heights
+      columnHeights[shortest] += (img.height / img.width) * 100;
+      columns[shortest].append(item);
+    });
+
+    return columns;
+  }
+
+  _distributeInOrder() {
+    const count = this.count();
+    const columns = this._prepareColumns(count);
+
+    this.items.forEach((item, index) => {
+      columns[index % count].append(item);
+    });
+
+    return columns;
   }
 }

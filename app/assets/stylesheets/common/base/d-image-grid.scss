@@ -27,6 +27,13 @@
       margin-bottom: $grid-column-gap;
     }
 
+    // Forces images in the grid to fill each column
+    img,
+    > .lightbox-wrapper,
+    > .lightbox-wrapper > .lightbox {
+      width: 100%;
+    }
+
     .lightbox-wrapper {
       .meta .informations {
         display: none;
@@ -34,6 +41,13 @@
       .meta .filename {
         flex-grow: 3;
       }
+    }
+
+    // when staging edits
+    .image-wrapper {
+      display: block;
+      padding-bottom: $grid-column-gap;
+      margin-bottom: 0em;
     }
   }
 
