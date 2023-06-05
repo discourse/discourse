@@ -12,26 +12,24 @@ export default DiscourseRoute.extend({
 
   model(params) {
     // If we're viewing the currently logged in user, return that object instead
+    let user;
+
     if (
       this.currentUser &&
       params.username.toLowerCase() === this.currentUser.username_lower
     ) {
-      return this.currentUser;
+      user = this.currentUser;
+    } else {
+      user = User.create({
+        username: encodeURIComponent(params.username),
+      });
     }
 
-    return User.create({
-      username: encodeURIComponent(params.username),
-    });
+    return user.findDetails();
   },
 
   afterModel() {
-    const user = this.modelFor("user");
-
-    return user
-      .findDetails()
-      .then(() => user.findStaffInfo())
-      .then(() => user.trackStatus())
-      .catch(() => this.replaceWith("/404"));
+    return this.modelFor("user").trackStatus();
   },
 
   serialize(model) {

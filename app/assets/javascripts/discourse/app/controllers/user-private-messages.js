@@ -28,12 +28,9 @@ export default class extends Controller {
   @service router;
   @controller user;
 
-  @tracked group;
   @tracked tagId;
 
-  @alias("group.name") groupFilter;
   @and("user.viewingSelf", "currentUser.can_send_private_messages") showNewPM;
-  @equal("currentParentRouteName", "userPrivateMessages.group") isGroup;
   @readOnly("user.viewingSelf") viewingSelf;
   @readOnly("router.currentRoute.parent.name") currentParentRouteName;
   @readOnly("site.can_tag_pms") pmTaggingEnabled;

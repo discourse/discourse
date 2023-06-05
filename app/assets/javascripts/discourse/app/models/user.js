@@ -787,17 +787,6 @@ const User = RestModel.extend({
     });
   },
 
-  findStaffInfo() {
-    if (!User.currentProp("staff")) {
-      return Promise.resolve(null);
-    }
-    return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
-      (info) => {
-        this.setProperties(info);
-      }
-    );
-  },
-
   pickAvatar(upload_id, type) {
     return ajax(userPath(`${this.username_lower}/preferences/avatar/pick`), {
       type: "PUT",

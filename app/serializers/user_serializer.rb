@@ -31,7 +31,15 @@ class UserSerializer < UserCardSerializer
     can_edit
   end
 
-  staff_attributes :post_count, :can_be_deleted, :can_delete_all_posts
+  staff_attributes :post_count,
+                   :can_be_deleted,
+                   :can_delete_all_posts,
+                   :number_of_deleted_posts,
+                   :number_of_flagged_posts,
+                   :number_of_flags_given,
+                   :number_of_suspensions,
+                   :warnings_received_count,
+                   :number_of_rejected_posts
 
   private_attributes :locale,
                      :muted_category_ids,

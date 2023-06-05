@@ -105,10 +105,6 @@ module UserGuardian
     (user.trust_level == TrustLevel[0] && anonymous?) || !can_see_profile?(user)
   end
 
-  def can_see_staff_info?(user)
-    user && is_staff?
-  end
-
   def can_see_suspension_reason?(user)
     return true unless SiteSetting.hide_suspension_reasons?
     user == @user || is_staff?

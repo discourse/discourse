@@ -13,7 +13,7 @@ export default DiscourseRoute.extend({
   },
 
   afterModel() {
-    return this.pmTopicTrackingState.startTracking();
+    // return this.pmTopicTrackingState.startTracking();
   },
 
   setupController() {

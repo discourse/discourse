@@ -1435,24 +1435,6 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def staff_info
-    @user = fetch_user_from_params(include_inactive: true)
-    guardian.ensure_can_see_staff_info!(@user)
-
-    result = {}
-
-    %W[
-      number_of_deleted_posts
-      number_of_flagged_posts
-      number_of_flags_given
-      number_of_suspensions
-      warnings_received_count
-      number_of_rejected_posts
-    ].each { |info| result[info] = @user.public_send(info) }
-
-    render json: result
-  end
-
   def confirm_admin
     @confirmation = AdminConfirmation.find_by_code(params[:token])
 

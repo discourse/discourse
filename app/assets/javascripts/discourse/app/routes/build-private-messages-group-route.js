@@ -2,6 +2,7 @@ import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "I18n";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { capitalize } from "@ember/string";
+import user from "discourse/controllers/user";
 
 export default (inboxType, filter) => {
   return createPMRoute(inboxType, "private-messages-groups", filter).extend({
@@ -23,7 +24,7 @@ export default (inboxType, filter) => {
 
     model() {
       const username = this.modelFor("user").get("username_lower");
-      const groupName = this.modelFor("userPrivateMessages.group");
+      const groupName = this.modelFor("userPrivateMessages.group").name;
 
       let topicListFilter = `topics/private-messages-group/${username}/${groupName}`;
 
@@ -60,25 +61,18 @@ export default (inboxType, filter) => {
         groupName = filters.pop();
       }
 
-      const group = this.modelFor("user")
-        .get("groups")
-        .filterBy("name", groupName)[0];
-
-      this.setProperties({ groupName, group });
+      this.setProperties({ groupName });
     },
 
     setupController() {
       this._super.apply(this, arguments);
 
-      const userTopicsListController = this.controllerFor("user-topics-list");
-      userTopicsListController.set("group", this.group);
+      const group = this.modelFor("userPrivateMessages");
 
-      userTopicsListController.set(
-        "pmTopicTrackingState.activeGroup",
-        this.group
-      );
-
-      this.controllerFor("user-private-messages").set("group", this.group);
+      this.controllerFor("user-topics-list").setProperties({
+        group,
+        "pmTopicTrackingState.activeGroup": group,
+      });
     },
 
     emptyState() {

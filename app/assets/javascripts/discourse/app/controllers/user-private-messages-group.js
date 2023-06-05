@@ -25,10 +25,14 @@ export default class extends Controller {
     return this.#linkText("unread");
   }
 
+  get navigationControlsButton() {
+    return document.getElementById("navigation-controls__button");
+  }
+
   #linkText(type) {
     const count = this.pmTopicTrackingState?.lookupCount(type, {
       inboxFilter: "group",
-      groupName: this.groupName,
+      groupName: this.group.name,
     });
 
     if (count === 0) {

@@ -332,8 +332,6 @@ export function applyDefaultHandlers(pretender) {
   pretender.delete("/drafts/:draft_key.json", success);
   pretender.post("/drafts.json", success);
 
-  pretender.get("/u/:username/staff-info.json", () => response({}));
-
   pretender.get("/post_action_users", () => {
     return response({
       post_action_users: [
