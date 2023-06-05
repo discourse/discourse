@@ -5,7 +5,7 @@
       aria-label={{concat (I18n "search.results") " " resultType.type}}
     >
       {{#each resultType.results as |result|}}
-        <li class="item">
+        <li class="item" {{on "keyup" this.onKeyup}}>
           <a href={{(or result.url result.path)}} class="search-link">
             <resultType.component @result={{result}} />
           </a>

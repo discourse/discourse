@@ -7,20 +7,6 @@
     />
   {{else}}
     {{#if (or this.search.activeGlobalSearchTerm this.search.searchContext)}}
-      {{#if this.search.searchContext}}
-        <this.contextTypeComponent
-          @contextTypeSlug={{or
-            this.contextTypeSlug
-            this.search.activeGlobalSearchTerm
-          }}
-          @suggestionKeyword={{this.suggestionKeyword}}
-          @results={{this.results}}
-          @withInLabel={{this.withInLabel}}
-          @label={{this.label}}
-          @setTopicContext={{this.setTopicContext}}
-        />
-      {{/if}}
-
       {{#if this.search.activeGlobalSearchTerm}}
         {{! <span class="keyword"> }}
         {{!-- {{@slug}} --}}
@@ -33,6 +19,18 @@
         <SearchMenu::Results::AssistantItem
           @slug={{this.search.activeGlobalSearchTerm}}
           @withLabel={{true}}
+        />
+      {{/if}}
+
+      {{#if this.search.searchContext}}
+        {{log this.slugOrGlobalTerm}}
+        <this.contextTypeComponent
+          @contextTypeSlug={{this.slugOrGlobalTerm}}
+          @suggestionKeyword={{this.contextTypeKeyword}}
+          @results={{this.initialResults}}
+          @withInLabel={{this.withInLabel}}
+          @label={{this.label}}
+          @setTopicContext={{this.setTopicContext}}
         />
       {{/if}}
     {{else}}

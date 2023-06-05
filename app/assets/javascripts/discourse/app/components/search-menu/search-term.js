@@ -10,6 +10,7 @@ const SECOND_ENTER_MAX_DELAY = 15000;
 
 export default class SearchTerm extends Component {
   @service search;
+  @service appEvents;
 
   @tracked lastEnterTimestamp = null;
 
@@ -32,7 +33,7 @@ export default class SearchTerm extends Component {
   }
 
   @action
-  keyDown(e) {
+  onKeyup(e) {
     if (e.key === "Escape") {
       document.querySelector("#search-button").focus();
       this.args.closeSearchMenu();
@@ -44,83 +45,9 @@ export default class SearchTerm extends Component {
       return;
     }
 
-    if (e.which === 65 /* a */) {
-      if (document.activeElement?.classList.contains("search-link")) {
-        if (document.querySelector("#reply-control.open")) {
-          // add a link and focus composer
+    this.search.handleArrowUpOrDown(e);
 
-          this.appEvents.trigger(
-            "composer:insert-text",
-            document.activeElement.href,
-            {
-              ensureSpace: true,
-            }
-          );
-          this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
-
-          e.preventDefault();
-          document.querySelector("#reply-control.open textarea").focus();
-          return false;
-        }
-      }
-    }
-
-    const up = e.key === "ArrowUp";
-    const down = e.key === "ArrowDown";
-    if (up || down) {
-      let focused = document.activeElement.closest(".search-menu")
-        ? document.activeElement
-        : null;
-
-      if (!focused) {
-        return;
-      }
-
-      let links = document.querySelectorAll(".search-menu .results a");
-      let results = document.querySelectorAll(
-        ".search-menu .results .search-link"
-      );
-
-      if (!results.length) {
-        return;
-      }
-
-      let prevResult;
-      let result;
-
-      links.forEach((item) => {
-        if (item.classList.contains("search-link")) {
-          prevResult = item;
-        }
-
-        if (item === focused) {
-          result = prevResult;
-        }
-      });
-
-      let index = -1;
-
-      if (result) {
-        index = Array.prototype.indexOf.call(results, result);
-      }
-
-      if (index === -1 && down) {
-        document.querySelector(".search-menu .results .search-link").focus();
-      } else if (index === 0 && up) {
-        document.querySelector(".search-menu input#search-term").focus();
-      } else if (index > -1) {
-        index += down ? 1 : -1;
-        if (index >= 0 && index < results.length) {
-          results[index].focus();
-        }
-      }
-
-      e.preventDefault();
-      return false;
-    }
-
-    const searchInput = document.querySelector("#search-term");
-    if (e.key === "Enter" && e.target === searchInput) {
+    if (e.key === "Enter") {
       const recentEnterHit =
         this.lastEnterTimestamp &&
         Date.now() - this.lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
@@ -141,8 +68,8 @@ export default class SearchTerm extends Component {
       this.lastEnterTimestamp = Date.now();
     }
 
-    if (e.target === searchInput && e.key === "Backspace") {
-      if (!searchInput.value) {
+    if (e.key === "Backspace") {
+      if (!document.querySelector("#search-term").value) {
         this.args.clearTopicContext();
         this.args.clearPMInboxContext();
         this.focus(e.target);

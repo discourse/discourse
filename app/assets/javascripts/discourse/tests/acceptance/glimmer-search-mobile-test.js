@@ -7,7 +7,7 @@ import {
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
-acceptance("Search - Mobile", function (needs) {
+acceptance("Search - Glimmer - Mobile", function (needs) {
   needs.mobileView();
   needs.settings({ experimental_search_menu: true });
 

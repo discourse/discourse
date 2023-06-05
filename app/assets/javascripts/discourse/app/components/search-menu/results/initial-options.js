@@ -19,6 +19,8 @@ export default class InitialOptions extends Component {
   @service siteSettings;
   @service currentUser;
 
+  @tracked contextTypeSlug;
+
   constructor() {
     super(...arguments);
 
@@ -39,7 +41,12 @@ export default class InitialOptions extends Component {
       : false;
   }
 
+  get slugOrGlobalTerm() {
+    return this.contextTypeSlug || this.search.activeGlobalSearchTerm;
+  }
+
   attributesForSearchContextType(type) {
+    console.log(type);
     switch (type) {
       case "topic":
         this.topicContextType();
@@ -82,19 +89,15 @@ export default class InitialOptions extends Component {
       : `#${searchContextCategory.slug}`;
 
     this.contextTypeSlug = `${this.search.activeGlobalSearchTerm} ${fullSlug}`;
-    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
-    //this.suggestionKeyword = "#";
-    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
-    //this.results = [{ model: this.search.searchContext.category }];
+    this.contextTypeKeyword = "#";
+    this.initialResults = [{ model: this.search.searchContext.category }];
     this.withInLabel = true;
   }
 
   tagContextType() {
     this.contextTypeSlug = `${this.search.activeGlobalSearchTerm} #${this.search.searchContext.name}`;
-    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
-    //this.suggestionKeyword = "#";
-    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
-    //this.results = [{ name: this.search.searchContext.name }];
+    this.contextTypeKeyword = "#";
+    this.initialResults = [{ name: this.search.searchContext.name }];
     this.withInLabel = true;
   }
 
@@ -122,10 +125,8 @@ export default class InitialOptions extends Component {
     }
 
     this.contextTypeSlug = tagTerm;
-    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
-    //this.suggestionKeyword = "+";
-    //THIS SHOULD NOT BE OVERRIDING THE TRACKED VAL
-    //this.results = [suggestionOptions];
+    this.contextTypeKeyword = "+";
+    this.initialResults = [suggestionOptions];
     this.withInLabel = true;
   }
 

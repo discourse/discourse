@@ -5,7 +5,7 @@
   @value={{this.search.activeGlobalSearchTerm}}
   placeholder={{I18n "search.title"}}
   aria-label={{I18n "search.title"}}
+  {{on "keyup" this.onKeyup}}
   {{on "input" this.updateSearchTerm}}
-  {{on "keydown" this.keyDown}}
   {{did-insert this.focus}}
 />

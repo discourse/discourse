@@ -1,4 +1,4 @@
-<li class="search-menu-assistant-item">
+<li class="search-menu-assistant-item" {{on "keyup" this.onKeyup}}>
   {{! We need to change up styling to removing the "widget-link" class }}
   {{! "data-topic-id": topic.id }}
   <a class="search-link" href={{this.href}}>
@@ -16,8 +16,7 @@
       <SearchMenu::Results::Type::Category @result={{@category}} />
       {{#if (and @tag @isIntersection)}}
         <span class="search-item-tag">
-          {{d-icon "tag"}}
-          {{@tag}}
+          {{d-icon "tag"}}{{@tag}}
         </span>
       {{/if}}
     {{else if @tag}}

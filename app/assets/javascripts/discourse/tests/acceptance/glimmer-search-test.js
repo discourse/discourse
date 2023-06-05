@@ -7,18 +7,20 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
+  currentURL,
   fillIn,
   settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
 
-acceptance("Search - Anonymous", function (needs) {
+acceptance("Search - Glimmer - Anonymous", function (needs) {
   needs.settings({
     experimental_search_menu: true,
   });
@@ -91,7 +93,7 @@ acceptance("Search - Anonymous", function (needs) {
       "shows matching user results"
     );
 
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -204,8 +206,8 @@ acceptance("Search - Anonymous", function (needs) {
 
     await fillIn("#search-term", "a proper");
     await query("input#search-term").focus();
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
 
     await click(document.activeElement);
     assert.ok(
@@ -235,8 +237,8 @@ acceptance("Search - Anonymous", function (needs) {
 
     await fillIn("#search-term", "dev");
     await query("input#search-term").focus();
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -246,7 +248,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     await fillIn("#search-term", "");
     await query("input#search-term").focus();
-    await triggerKeyEvent("input#search-term", "keydown", "Backspace");
+    await triggerKeyEvent("input#search-term", "keyup", "Backspace");
 
     assert.ok(
       !exists(".search-menu .search-context"),
@@ -269,8 +271,8 @@ acceptance("Search - Anonymous", function (needs) {
 
     await fillIn("#search-term", "proper");
     await query("input#search-term").focus();
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -341,7 +343,7 @@ acceptance("Search - Anonymous", function (needs) {
   });
 });
 
-acceptance("Search - Authenticated", function (needs) {
+acceptance("Search - Glimmer - Authenticated", function (needs) {
   needs.user();
   needs.settings({
     log_search_queries: true,
@@ -420,13 +422,13 @@ acceptance("Search - Authenticated", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "plans");
     await query("input#search-term").focus();
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert.notStrictEqual(count(".search-menu .results .item"), 0);
 
     await fillIn("#search-term", "plans empty");
-    await triggerKeyEvent("#search-term", "keydown", 13);
+    await triggerKeyEvent("#search-term", "keyup", 13);
 
     assert.strictEqual(count(".search-menu .results .item"), 0);
     assert.strictEqual(count(".search-menu .results .no-results"), 1);
@@ -441,13 +443,13 @@ acceptance("Search - Authenticated", function (needs) {
 
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
 
-    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
     assert.ok(
       exists(query(`${container} .search-result-topic`)),
       "has topic results"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
 
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
@@ -455,7 +457,7 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow down selects first element"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
 
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
@@ -463,10 +465,10 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow down selects next element"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keydown", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
 
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
@@ -474,7 +476,7 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow down sets focus to more results link"
     );
 
-    await triggerKeyEvent(".search-menu", "keydown", "Escape");
+    await triggerKeyEvent("#search-term", "keyup", "Escape");
     assert.strictEqual(
       document.activeElement,
       query("#search-button"),
@@ -483,8 +485,8 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
 
     await click("#search-button");
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowUp");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowUp");
 
     assert.strictEqual(
       document.activeElement.tagName.toLowerCase(),
@@ -492,32 +494,34 @@ acceptance("Search - Authenticated", function (needs) {
       "arrow up sets focus to search term input"
     );
 
-    await triggerKeyEvent(".search-menu", "keydown", "Escape");
+    await triggerKeyEvent("#search-term", "keyup", "Escape");
     await click("#create-topic");
     await click("#search-button");
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
+
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
 
     const firstLink = query(`${container} li:nth-child(1) a`).getAttribute(
       "href"
     );
-    await triggerKeyEvent(".search-menu", "keydown", "A");
+
+    await triggerKeyEvent(document.activeElement, "keyup", "A");
     await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,
-      `${window.location.origin}${firstLink}`,
+      `${currentURL()}${firstLink}`,
       "hitting A when focused on a search result copies link to composer"
     );
 
     await click("#search-button");
-    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
 
     assert.ok(
       exists(query(`${container} .search-result-topic`)),
       "has topic results"
     );
 
-    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
 
     assert.ok(
       exists(query(`.search-container`)),
@@ -528,10 +532,10 @@ acceptance("Search - Authenticated", function (needs) {
       "search dropdown is collapsed after second Enter hit"
     );
 
-    // new search launched, Enter key should be reset
+    //new search launched, Enter key should be reset
     await click("#search-button");
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
-    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
     assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
   });
 
@@ -542,9 +546,9 @@ acceptance("Search - Authenticated", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "dev");
 
-    await triggerKeyEvent("#search-term", "keydown", "Enter");
-    await triggerKeyEvent(".search-menu", "keydown", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keydown", 65); // maps to lowercase a
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", 65); // maps to lowercase a
 
     assert.ok(
       query(".d-editor-input").value.includes("a link"),
@@ -581,7 +585,7 @@ acceptance("Search - Authenticated", function (needs) {
   });
 });
 
-acceptance("Search - with tagging enabled", function (needs) {
+acceptance("Search - Glimmer - with tagging enabled", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true, experimental_search_menu: true });
 
@@ -589,7 +593,7 @@ acceptance("Search - with tagging enabled", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keydown", 13);
+    await triggerKeyEvent("#search-term", "keyup", 13);
 
     assert.strictEqual(
       query(
@@ -617,7 +621,7 @@ acceptance("Search - with tagging enabled", function (needs) {
   });
 });
 
-acceptance("Search - assistant", function (needs) {
+acceptance("Search - Glimmer - assistant", function (needs) {
   needs.user();
   needs.settings({
     experimental_search_menu: true,
@@ -990,7 +994,7 @@ acceptance("Search - assistant", function (needs) {
 
     await fillIn("#search-term", "");
     await query("input#search-term").focus();
-    await triggerKeyEvent("input#search-term", "keydown", "Backspace");
+    await triggerKeyEvent("input#search-term", "keyup", "Backspace");
 
     assert.notOk(exists(".btn.search-context"), "it removes the button");
 
@@ -1003,7 +1007,7 @@ acceptance("Search - assistant", function (needs) {
 
     await fillIn("#search-term", "emoji");
     await query("input#search-term").focus();
-    await triggerKeyEvent("#search-term", "keydown", "Enter");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
 
     assert.strictEqual(
       count(".search-menu .search-result-topic"),

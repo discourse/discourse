@@ -284,18 +284,10 @@ export default class SearchMenu extends Component {
     return false;
   }
 
-  //mouseDownOutside() {
-  //this.sendWidgetAction("toggleSearchMenu");
-  //}
-
   @action
   triggerSearch() {
     this.noResults = false;
     if (this.includesTopics) {
-      //if (this.inTopicContext) {
-      //this.search.set("highlightTerm", this.search.activeGlobalSearchTerm);
-      //}
-
       this.loading = true;
       cancel(this._debouncer);
       this.perform();

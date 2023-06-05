@@ -1,8 +1,13 @@
 import Component from "@glimmer/component";
 import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 export default class AssistantItem extends Component {
+  @service search;
+  @service appEvents;
+
   icon = this.args.icon || "search";
 
   get href() {
@@ -43,6 +48,19 @@ export default class AssistantItem extends Component {
 
   get labelOrSlug() {
     return this.args.label || this.args.slug;
+  }
+
+  @action
+  onKeyup(e) {
+    if (e.key === "Escape") {
+      document.querySelector("#search-button").focus();
+      this.args.closeSearchMenu();
+      e.preventDefault();
+      return false;
+    }
+
+    this.search.handleResultInsertion(e);
+    this.search.handleArrowUpOrDown(e);
   }
 
   //click(e) {
