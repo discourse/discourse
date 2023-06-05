@@ -105,14 +105,6 @@ export default class SearchMenu extends Component {
     this.triggerSearch();
   }
 
-  //triggerAutocomplete(opts = {}) {
-  //if (opts.setTopicContext) {
-  //this.sendWidgetAction("setTopicContext");
-  //this.state.inTopicContext = true;
-  //}
-  //this.searchTermChanged(opts.value, { searchTopics: opts.searchTopics });
-  //}
-
   @action
   fullSearch() {
     this.loading = false;
@@ -123,10 +115,10 @@ export default class SearchMenu extends Component {
     }
   }
 
-  @action
-  updateInTopicContext(value) {
-    this.inTopicContext = value;
-  }
+  //@action
+  //updateInTopicContext(value) {
+  //this.inTopicContext = value;
+  //}
 
   @action
   updateTypeFilter(value) {

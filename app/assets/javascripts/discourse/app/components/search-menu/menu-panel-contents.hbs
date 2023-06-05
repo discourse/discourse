@@ -53,9 +53,7 @@
 </div>
 
 {{#if (and @inTopicContext @includesTopics)}}
-  {{#unless this.site.isMobileDevice}}
-    <SearchMenu::BrowserSearchTip />
-  {{/unless}}
+  <SearchMenu::BrowserSearchTip />
 {{else}}
   {{#unless @loading}}
     <SearchMenu::Results
@@ -70,6 +68,8 @@
       @triggerSearch={{@triggerSearch}}
       @updateTypeFilter={{@updateTypeFilter}}
       @closeSearchMenu={{@closeSearchMenu}}
+      @setTopicContext={{@setTopicContext}}
+      @searchTermChanged={{@searchTermChanged}}
     />
   {{/unless}}
 {{/if}}

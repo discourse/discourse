@@ -33,10 +33,6 @@ export default class AssistantItem extends Component {
     return this.args.prefix?.trim();
   }
 
-  get formattedUsername() {
-    return formatUsername(this.args.user.username);
-  }
-
   // this could be renamed to something more practical
   get tags() {
     if (!this.args.tag || !this.args.additionalTags) {
@@ -57,16 +53,14 @@ export default class AssistantItem extends Component {
     this.search.handleArrowUpOrDown(e);
   }
 
-  //click(e) {
-  //const searchInput = document.querySelector("#search-term");
-  //searchInput.value = this.attrs.slug;
-  //searchInput.focus();
-  //this.sendWidgetAction("triggerAutocomplete", {
-  //value: this.attrs.slug,
-  //searchTopics: true,
-  //setTopicContext: this.attrs.setTopicContext,
-  //});
-  //e.preventDefault();
-  //return false;
-  //}
+  @action
+  onClick(e) {
+    const searchInput = document.querySelector("#search-term");
+    searchInput.value = this.args.slug;
+    searchInput.focus();
+
+    this.args.searchTermChanged(this.args.slug, { searchTopics: true });
+    e.preventDefault();
+    return false;
+  }
 }

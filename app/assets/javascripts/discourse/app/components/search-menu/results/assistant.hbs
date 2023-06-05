@@ -54,10 +54,10 @@
     {{else}}
       {{#each @results as |result|}}
         <SearchMenu::Results::AssistantItem
-          @prefix={{this.prefix}}
-          @user={{result.model}}
-          @slug={{concat this.prefix "@" result.model.username}}
+          @user={{result}}
+          @slug={{concat this.prefix "@" result.username}}
           @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
         />
       {{/each}}
     {{/if}}

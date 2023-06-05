@@ -1,14 +1,20 @@
-<li class="search-menu-assistant-item" {{on "keyup" this.onKeyup}}>
+<li
+  class="search-menu-assistant-item"
+  {{on "keyup" this.onKeyup}}
+  {{on "click" this.onClick}}
+>
   {{! "data-topic-id": topic.id }}
   <a class="search-link" href={{this.href}}>
     <span aria-label={{I18n "search.title"}}>{{d-icon this.icon}}</span>
 
-    <span class="search-item-prefix">
-      {{this.search.activeGlobalSearchTerm}}
-      {{#if this.prefix}}
-        {{this.prefix}}
-      {{/if}}
-    </span>
+    {{#unless @user}}
+      <span class="search-item-prefix">
+        {{this.search.activeGlobalSearchTerm}}
+        {{#if this.prefix}}
+          {{this.prefix}}
+        {{/if}}
+      </span>
+    {{/unless}}
 
     {{#if @withInLabel}}
       <span class="label-suffix">{{I18n "search.in"}}</span>

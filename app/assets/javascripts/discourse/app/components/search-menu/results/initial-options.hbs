@@ -4,6 +4,7 @@
       @extraHint={{true}}
       @withLabel={{false}}
       @closeSearchMenu={{@closeSearchMenu}}
+      @setTopicContext={{@setTopicContext}}
     />
   {{else}}
     {{#if (or this.search.activeGlobalSearchTerm this.search.searchContext)}}
@@ -12,6 +13,7 @@
           @withLabel={{true}}
           @closeSearchMenu={{@closeSearchMenu}}
           @extraHint={{true}}
+          @setTopicContext={{@setTopicContext}}
         />
       {{/if}}
 
@@ -22,7 +24,7 @@
           @results={{this.initialResults}}
           @withInLabel={{this.withInLabel}}
           @label={{this.label}}
-          @setTopicContext={{this.setTopicContext}}
+          @setTopicContext={{@setTopicContext}}
           @closeSearchMenu={{@closeSearchMenu}}
         />
       {{/if}}

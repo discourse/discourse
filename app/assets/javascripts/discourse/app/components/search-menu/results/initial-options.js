@@ -64,7 +64,7 @@ export default class InitialOptions extends Component {
 
   topicContextType() {
     this.slug = this.search.activeGlobalSearchTerm;
-    this.setTopicContext = true;
+    this.args.setTopicContext();
     //this.label = [
     //h("span", `${this.search.activeGlobalSearchTerm} `),
     //h("span.label-suffix", I18n.t("search.in_this_topic")),

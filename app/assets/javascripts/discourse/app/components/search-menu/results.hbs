@@ -4,6 +4,7 @@
       @suggestionKeyword={{@suggestionKeyword}}
       @results={{@suggestionResults}}
       @closeSearchMenu={{@closeSearchMenu}}
+      @searchTermChanged={{@searchTermChanged}}
     />
   {{else if this.termTooShort}}
     <div class="no-results">{{i18n "search.too_short"}}</div>
@@ -15,7 +16,7 @@
     />
   {{else}}
     {{#if (not @searchTopics)}}
-      {{#unless @inPMInboxContext}}
+      {{#if (not @inPMInboxContext)}}
         <SearchMenu::Results::InitialOptions
           @closeSearchMenu={{@closeSearchMenu}}
         />
@@ -25,7 +26,7 @@
             @closeSearchMenu={{@closeSearchMenu}}
           />
         {{/if}}
-      {{/unless}}
+      {{/if}}
     {{else}}
       {{#if this.resultTypesWithComponent}}
         <SearchMenu::Results::Types

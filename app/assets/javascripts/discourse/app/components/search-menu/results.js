@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import TopicViewComponent from "./results/type/topic";
 import PostViewComponent from "./results/type/post";
 import UserViewComponent from "./results/type/user";
@@ -18,6 +20,8 @@ const SEARCH_RESULTS_COMPONENT_TYPE = {
 
 export default class Results extends Component {
   @service search;
+
+  @tracked searchTopics = this.args.searchTopics;
 
   get renderInitialOptions() {
     return !this.search.activeGlobalSearchTerm && !this.args.inPMInboxContext;
@@ -40,5 +44,10 @@ export default class Results extends Component {
       });
     });
     return content;
+  }
+
+  @action
+  updateSearchTopics(value) {
+    this.searchTopics = value;
   }
 }
