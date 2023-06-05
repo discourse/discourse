@@ -36,11 +36,6 @@ class UserActionsController < ApplicationController
     render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
   end
 
-  def private_messages
-    # DO NOT REMOVE
-    # TODO should preload messages to avoid extra http req
-  end
-
   private
 
   def user_actions_params
