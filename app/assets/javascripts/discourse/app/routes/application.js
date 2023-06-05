@@ -212,11 +212,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
   },
 
-  renderTemplate() {
-    this.render("application");
-    this.render("modal", { into: "application", outlet: "modal" });
-  },
-
   handleShowLogin() {
     if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);

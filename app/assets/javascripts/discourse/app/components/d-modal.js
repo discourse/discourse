@@ -11,6 +11,7 @@ import { getOwner } from "@ember/application";
 @disableImplicitInjections
 export default class DModal extends Component {
   @service appEvents;
+  @service modal;
 
   @tracked wrapperElement;
   @tracked modalBodyData = {};
@@ -147,7 +148,7 @@ export default class DModal extends Component {
     }
 
     if (data.fixed) {
-      getOwner(this).lookup("controller:modal").hidden = false;
+      this.modal.hidden = false;
     }
 
     this.modalBodyData = data;

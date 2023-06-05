@@ -18,6 +18,7 @@ function pick(object, keys) {
 @disableImplicitInjections
 export default class DModalBody extends Component {
   @service appEvents;
+  @service modal;
 
   @tracked fixed = false;
 
@@ -29,7 +30,7 @@ export default class DModalBody extends Component {
     if (fixedParent) {
       this.fixed = true;
       $(fixedParent).modal("show");
-      getOwner(this).lookup("controller:modal").hidden = false;
+      this.modal.hidden = false;
     }
 
     this.appEvents.trigger(
