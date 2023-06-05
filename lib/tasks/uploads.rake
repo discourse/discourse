@@ -119,7 +119,6 @@ def create_migration
     s3_options: FileStore::ToS3Migration.s3_options_from_env,
     dry_run: !!ENV["DRY_RUN"],
     migrate_to_multisite: !!ENV["MIGRATE_TO_MULTISITE"],
-    skip_etag_verify: !!ENV["SKIP_ETAG_VERIFY"],
   )
 end
 
