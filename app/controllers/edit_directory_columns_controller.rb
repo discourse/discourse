@@ -24,7 +24,10 @@ class EditDirectoryColumnsController < ApplicationController
       raise Discourse::InvalidParameters, "Must have at least one column enabled"
     end
 
-    changes = "\n"
+    changes = ""
+    new_values = ""
+    previous_values = ""
+    staff_action_logger = StaffActionLogger.new(current_user)
 
     directory_column_params[:directory_columns].values.each do |column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
@@ -32,8 +35,13 @@ class EditDirectoryColumnsController < ApplicationController
            existing_column.enabled != ActiveModel::Type::Boolean.new.cast(column_data[:enabled]) ||
              existing_column.position != column_data[:position].to_i
          )
-        changes +=
-          "#{existing_column.name} - enabled: #{existing_column.enabled} -> #{column_data[:enabled]}, position: #{existing_column.position} -> #{column_data[:position]}\n"
+        change, new_value, previous_value =
+          staff_action_logger.edit_directory_columns_details(column_data, existing_column)
+
+        changes += change
+        new_values += new_value
+        previous_values += previous_value
+
         existing_column.update(
           enabled: column_data[:enabled],
           position: column_data[:position].to_i,
@@ -43,12 +51,13 @@ class EditDirectoryColumnsController < ApplicationController
 
     details =
       if changes.empty?
-        { Detail: "" }
+        { Detail: "Nothing was changed" }
       else
         { Changes: changes }
       end
 
-    StaffActionLogger.new(current_user).log_custom("update_directory_columns", details = details)
+    details.merge!({ previous_value: previous_values, new_value: new_values })
+    staff_action_logger.log_custom("update_directory_columns", details = details)
     render json: success_json
   end
 
