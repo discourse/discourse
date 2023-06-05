@@ -274,7 +274,7 @@
       color: var(--primary);
       .d-icon {
         margin: auto;
-        font-size: math.div(var(--avatar-width), 1.5);
+        font-size: calc(var(--avatar-width) / 1.5);
       }
       &.rounded {
         border-radius: 50%;
