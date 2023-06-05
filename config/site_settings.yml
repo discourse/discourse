@@ -341,7 +341,7 @@ basic:
     list_type: compact
     default: "14"
     allow_any: false
-    refresh: true  
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true
@@ -991,7 +991,6 @@ posting:
   experimental_post_image_grid:
     client: true
     default: false
-    hidden: true
   highlighted_languages:
     default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
