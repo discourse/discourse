@@ -109,7 +109,9 @@ export default DiscoverySortableController.extend(
         dismissTopics,
         untrack,
       }).then((result) => {
-        this.topicTrackingState.removeTopics(result.topic_ids);
+        if (result.topics_ids) {
+          this.topicTrackingState.removeTopics(result.topic_ids);
+        }
         this.refresh(tracked ? { skipResettingParams: ["filter", "f"] } : {});
       });
     },
