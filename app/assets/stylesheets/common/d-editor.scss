@@ -183,7 +183,7 @@
     width: 100%;
 
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 0 0.5em;
 
@@ -235,15 +235,15 @@
     }
 
     .alt-text-readonly-container {
-      flex: 1 1;
-      width: 100%;
+      flex: 1 1 auto;
+      // arbitrary min-width value allows for correct shrinking
+      min-width: 100px;
 
       .alt-text {
         margin-right: 0.5em;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 100%;
       }
 
       .alt-text-edit-btn {

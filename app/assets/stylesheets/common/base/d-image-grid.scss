@@ -41,8 +41,11 @@
     .image-wrapper {
       padding-bottom: $grid-column-gap;
       margin-bottom: 0em;
-      .button-wrapper .scale-btn-container {
-        display: none;
+      .button-wrapper {
+        .scale-btn-container,
+        &[editing] .wrap-image-grid-button {
+          display: none;
+        }
       }
     }
   }
