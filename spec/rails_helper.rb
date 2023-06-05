@@ -346,7 +346,7 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    FileUtils.remove_dir(file_from_fixtures_tmp_folder, true) if SpecSecureRandom.value
+    FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
   end
 
   config.before :each, &TestSetup.method(:test_setup)
@@ -559,15 +559,27 @@ def unfreeze_time
 end
 
 def file_from_fixtures(filename, directory = "images")
-  SpecSecureRandom.value ||= SecureRandom.hex
-  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exist?(file_from_fixtures_tmp_folder)
-  tmp_file_path = File.join(file_from_fixtures_tmp_folder, SecureRandom.hex << filename)
+  tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
 end
 
-def file_from_fixtures_tmp_folder
-  File.join(Dir.tmpdir, "rspec_#{Process.pid}_#{SpecSecureRandom.value}")
+def plugin_from_fixtures(plugin_name)
+  tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
+
+  FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
+  FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
+
+  plugin = Plugin::Instance.new
+  plugin.path = File.join(tmp_plugins_dir, plugin_name, "plugin.rb")
+  plugin
+end
+
+def concurrency_safe_tmp_dir
+  SpecSecureRandom.value ||= SecureRandom.hex
+  dir_path = File.join(Dir.tmpdir, "rspec_#{Process.pid}_#{SpecSecureRandom.value}")
+  FileUtils.mkdir_p(dir_path) unless Dir.exist?(dir_path)
+  dir_path
 end
 
 def has_trigger?(trigger_name)
