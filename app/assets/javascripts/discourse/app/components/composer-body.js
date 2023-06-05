@@ -180,8 +180,10 @@ export default Component.extend(KeyEnterEscape, {
     };
     triggerOpen();
 
-    this.element.addEventListener("transitionend", () => {
-      triggerOpen();
+    this.element.addEventListener("transitionend", (event) => {
+      if (event.propertyName === "height") {
+        triggerOpen();
+      }
     });
 
     positioningWorkaround(this.element);
