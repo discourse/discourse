@@ -1,5 +1,6 @@
 import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import DismissTopics from "discourse/mixins/dismiss-topics";
 import DiscoveryController from "discourse/controllers/discovery";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
@@ -115,7 +116,7 @@ const controllerOpts = {
       });
     },
 
-    resetNew() {
+    callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
       const tracked =
         (this.router.currentRoute.queryParams["f"] ||
           this.router.currentRoute.queryParams["filter"]) === "tracked";
@@ -127,6 +128,15 @@ const controllerOpts = {
       Topic.resetNew(this.category, !this.noSubcategories, {
         tracked,
         topicIds,
+        dismissPosts,
+        dismissTopics,
+        untrack,
+      }).then((result) => {
+        this.topicTrackingState.removeTopics(result.topic_ids);
+        this.send(
+          "refresh",
+          tracked ? { skipResettingParams: ["filter", "f"] } : {}
+        );
       });
     },
   },
@@ -203,4 +213,8 @@ const controllerOpts = {
   },
 };
 
-export default DiscoveryController.extend(controllerOpts, BulkTopicSelection);
+export default DiscoveryController.extend(
+  controllerOpts,
+  BulkTopicSelection,
+  DismissTopics
+);

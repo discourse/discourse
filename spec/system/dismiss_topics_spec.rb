@@ -4,13 +4,10 @@ describe "Filtering topics", type: :system, js: true do
   fab!(:user) { Fabricate(:user) }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:dismiss_new_modal) { PageObjects::Modals::DismissNew.new }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
   fab!(:topic) { Fabricate(:topic) }
 
-  before do
-    user.groups << group
-    SiteSetting.experimental_new_new_view_groups = group.id
-  end
+  before { SiteSetting.experimental_new_new_view_groups = group.id }
 
   it "displays confirmation modal with preselected options" do
     sign_in(user)

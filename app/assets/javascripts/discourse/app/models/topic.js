@@ -23,8 +23,6 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
-import showModal from "discourse/lib/show-modal";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -853,23 +851,19 @@ Topic.reopenClass({
       data.topic_ids = topicIds;
     }
 
-    const user = User.current();
-    if (user.new_new_view_enabled) {
-      data.dismissTopics = true;
-      data.dismissPosts = true;
-      showModal("dismiss-new", {
-        model: data,
-        titleTranslated: I18n.t("topics.bulk.dismiss_new_modal.title"),
-      });
-    } else {
-      return ajax("/topics/reset-new", { type: "PUT", data }).then(() => {
-        const controller = getOwner(this).lookup("controller:discovery/topics");
-        controller.send(
-          "refresh",
-          tracked ? { skipResettingParams: ["filter", "f"] } : {}
-        );
-      });
+    if (opts.dismissPosts) {
+      data.dismiss_posts = opts.dismissPosts;
     }
+
+    if (opts.dismissTopics) {
+      data.dismiss_topics = opts.dismissTopics;
+    }
+
+    if (opts.untrack) {
+      data.untrack = opts.untrack;
+    }
+
+    return ajax("/topics/reset-new", { type: "PUT", data });
   },
 
   pmResetNew(opts = {}) {

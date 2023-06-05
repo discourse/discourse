@@ -1061,7 +1061,15 @@ class TopicsController < ApplicationController
       else
         new_results =
           if current_user.new_new_view_enabled?
-            TopicQuery.new(current_user).new_and_unread_results(limit: false)
+            if (params[:dismiss_topics] && params[:dismiss_posts])
+              TopicQuery.new(current_user).new_and_unread_results(limit: false)
+            elsif params[:dismiss_topics]
+              TopicQuery.new(current_user).new_results(limit: false)
+            elsif params[:dismiss_posts]
+              TopicQuery.new(current_user).unread_results(limit: false)
+            else
+              Topic.none
+            end
           else
             TopicQuery.new(current_user).new_results(limit: false)
           end
@@ -1091,21 +1099,21 @@ class TopicsController < ApplicationController
     end
 
     if params[:dismiss_posts]
-      dismissed_post_topic_ids =
-        TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_posts").perform!
+      if params[:untrack]
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(
+            current_user,
+            topic_scope.pluck(:id),
+            type: "change_notification_level",
+            notification_level_id: NotificationLevels.topic_levels[:regular],
+          ).perform!
+      else
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_posts").perform!
+      end
     end
 
-    topic_ids = dismissed_topic_ids.concat(dismissed_post_topic_ids)
-    if params[:untrack]
-      TopicsBulkAction.new(
-        current_user,
-        topic_ids,
-        type: "change_notification_level",
-        notification_level_id: NotificationLevels.topic_levels[:regular],
-      ).perform!
-    end
-
-    render_json_dump topic_ids: topic_ids
+    render_json_dump topic_ids: dismissed_topic_ids.concat(dismissed_post_topic_ids).uniq
   end
 
   def convert_topic
