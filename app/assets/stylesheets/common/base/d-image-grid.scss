@@ -12,7 +12,7 @@
   }
 
   &[data-columns="3"] > * {
-    flex-basis: calc(33.33% - ($grid-column-gap * 0.75));
+    flex-basis: calc(33.33% - ($grid-column-gap * 0.667));
     margin-right: $grid-column-gap;
   }
 
