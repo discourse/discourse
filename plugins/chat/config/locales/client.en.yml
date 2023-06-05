@@ -113,7 +113,12 @@ en:
       in_reply_to: "In reply to"
       heading: "Chat"
       join: "Join"
-      last_visit: "last visit"
+      last_visit: "Last visit"
+
+      summary:
+        action: "Summarize"
+        since_last_visit:
+          title: "Since your last visit"
       mention_warning:
         dismiss: "dismiss"
         cannot_see: "%{username} can't access this channel and was not notified."

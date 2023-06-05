@@ -1,0 +1,14 @@
+<DModalBody @title="chat.summary.since_last_visit.title">
+  <div class="channel-summary" {{did-insert this.summarize}}>
+    <ConditionalLoadingSpinner @condition={{this.loading}} />
+
+    {{#unless this.loading}}
+      <p class="summary-area">{{this.summary}}</p>
+    {{/unless}}
+  </div>
+
+</DModalBody>
+
+<div class="modal-footer">
+  <DModalCancel @close={{route-action "closeModal"}} />
+</div>

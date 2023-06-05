@@ -1132,17 +1132,10 @@ class TopicsController < ApplicationController
   def custom_summary
     topic = Topic.find(params[:topic_id])
     guardian.ensure_can_see!(topic)
-    strategy = Summarization::Base.selected_strategy&.new
+    strategy = Summarization::Base.selected_strategy
     raise Discourse::NotFound.new unless strategy
 
-    user_group_ids = current_user.group_ids
-
-    forbidden =
-      SiteSetting.custom_summarization_allowed_groups_map.none? do |group_id|
-        user_group_ids.include?(group_id)
-      end
-
-    raise Discourse::InvalidAccess if forbidden
+    raise Discourse::InvalidAccess unless strategy.can_request_summaries?(current_user)
 
     RateLimiter.new(current_user, "custom_summary", 6, 5.minutes).performed!
 

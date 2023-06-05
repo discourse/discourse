@@ -18,6 +18,36 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background-color: var(--secondary);
+
+      .chat-message-separator__pill {
+        background-color: var(--danger-low-mid);
+        border-radius: 6px;
+        margin: 0 10px;
+        height: 25px;
+        display: flex;
+
+        .chat-message-separator__text {
+          border-right: 1px solid var(--danger-medium);
+        }
+
+        .chat-message-separator__button-summarize {
+          border-radius: 0 6px 6px 0px;
+          height: 100%;
+
+          &:hover {
+            background-color: var(--danger-low);
+          }
+        }
+
+        .chat-message-separator__text,
+        .chat-message-separator__button-summarize {
+          padding: 0.25rem 0.5rem;
+          color: unset;
+          background-color: unset;
+          font-size: var(--font-down-1);
+        }
+      }
 
       .chat-message-separator__text {
         color: var(--danger-medium);
