@@ -341,7 +341,7 @@ basic:
     list_type: compact
     default: "14"
     allow_any: false
-    refresh: true  
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true
@@ -2701,6 +2701,9 @@ user_preferences:
     choices:
       - notifications
       - contextual
+  enable_offline_indicator:
+    default: false
+    client: true
 api:
   retain_web_hook_events_period_days:
     default: 30
