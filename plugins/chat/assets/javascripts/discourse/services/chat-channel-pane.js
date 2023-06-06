@@ -40,22 +40,6 @@ export default class ChatChannelPane extends Service {
     this.selectingMessages = true;
   }
 
-  get lastCurrentUserMessage() {
-    const lastCurrentUserMessage = this.chat.activeChannel.messages.findLast(
-      (message) => message.user.id === this.currentUser.id
-    );
-
-    if (!lastCurrentUserMessage) {
-      return;
-    }
-
-    if (lastCurrentUserMessage.staged || lastCurrentUserMessage.error) {
-      return;
-    }
-
-    return lastCurrentUserMessage;
-  }
-
   get lastMessage() {
     return this.chat.activeChannel.messages.lastObject;
   }

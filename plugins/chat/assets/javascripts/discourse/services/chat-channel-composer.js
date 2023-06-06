@@ -8,6 +8,11 @@ export default class ChatChannelComposer extends ChatComposer {
   @service router;
 
   @action
+  cancelEditing() {
+    this.reset(this.message.channel);
+  }
+
+  @action
   reset(channel) {
     this.message = ChatMessage.createDraftMessage(channel, {
       user: this.currentUser,
@@ -31,7 +36,7 @@ export default class ChatChannelComposer extends ChatComposer {
         message.thread = thread;
       }
 
-      this.chat.activeMessage = null;
+      this.reset(channel);
       this.router.transitionTo("chat.channel.thread", ...thread.routeModels);
     } else {
       this.message.inReplyTo = message;

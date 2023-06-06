@@ -443,6 +443,7 @@ uk:
         original_message:
           started_by: "Розпочато"
         settings: "Налаштування"
+        last_reply: "остання відповідь"
       threads:
         open: "Відкрийте тему"
       draft_channel_screen:

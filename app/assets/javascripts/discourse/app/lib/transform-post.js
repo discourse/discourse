@@ -57,6 +57,7 @@ export function transformBasicPost(post) {
     canPermanentlyDelete: false,
     showFlagDelete: false,
     canRecover: post.can_recover,
+    canSeeHiddenPost: post.can_see_hidden_post,
     canEdit: post.can_edit,
     canFlag: !post.get("topic.deleted") && !isEmpty(post.get("flagsAvailable")),
     canReviewTopic: false,

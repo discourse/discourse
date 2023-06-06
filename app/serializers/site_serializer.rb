@@ -41,6 +41,8 @@ class SiteSerializer < ApplicationSerializer
     :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
     :denied_emojis,
+    :tos_url,
+    :privacy_policy_url,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -283,6 +285,30 @@ class SiteSerializer < ApplicationSerializer
 
   def include_denied_emojis?
     denied_emojis.present?
+  end
+
+  def tos_url
+    if SiteSetting.tos_url.present?
+      SiteSetting.tos_url
+    elsif SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
+      "#{Discourse.base_path}/tos"
+    end
+  end
+
+  def include_tos_url?
+    tos_url.present?
+  end
+
+  def privacy_policy_url
+    if SiteSetting.privacy_policy_url.present?
+      SiteSetting.privacy_policy_url
+    elsif SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
+      "#{Discourse.base_path}/privacy"
+    end
+  end
+
+  def include_privacy_policy_url?
+    privacy_policy_url.present?
   end
 
   private

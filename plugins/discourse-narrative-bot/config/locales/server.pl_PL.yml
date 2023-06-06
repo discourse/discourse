@@ -376,12 +376,22 @@ pl_PL:
           Czy wiesz, że możesz się odwoływać do kategorii i tagów w swoim poście? Na przykład, czy widziałeś/łaś kategorię %{category}?
 
           Wpisz '#' w środku zdania i wybierz kategorię lub tag.
+        instructions_experimental: |-
+          Czy wiesz, że w swoim poście możesz odwoływać się do kategorii i tagów? Na przykład, czy widziałeś kategorię %{category} ?
+
+          Wpisz `#` w dowolnym miejscu zdania i wybierz dowolną kategorię lub tag.
         not_found: |-
           Hmm, nie widzę nigdzie kategorii. Pamiętaj, że '#' nie może być pierwszym znakiem. Czy możesz skopiować tą część w następnej odpowiedzi?
 
           '''tekst
           Mogę stworzyć link do kategorii poprzez #
           '''
+        not_found_experimental: |-
+          Hmm, nie widzę tam nigdzie kategorii. Czy możesz to skopiować w swojej następnej odpowiedzi?
+
+          ``text
+          Mogę stworzyć link do kategorii poprzez #
+          ``
         reply: |-
           Wspaniale! Pamiętaj, że działa to zarówno dla kategorii _i_ tagów, jeśli taka możliwość jest dostępna.
       change_topic_notification_level:

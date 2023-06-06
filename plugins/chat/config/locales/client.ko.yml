@@ -243,6 +243,7 @@ ko:
         replies:
           other: "%{count} 댓글"
         settings: "사이트 설정"
+        last_reply: "마지막 댓글"
       draft_channel_screen:
         header: "새로운 메시지"
         cancel: "취소"

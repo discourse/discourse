@@ -95,7 +95,7 @@ RSpec.describe UserAvatar do
 
         stub_request(
           :get,
-          "https://www.gravatar.com/avatar/#{avatar.user.email_hash}.png?d=404&reset_cache=5555&s=360",
+          "https://www.gravatar.com/avatar/#{avatar.user.email_hash}.png?d=404&reset_cache=5555&s=#{Discourse.avatar_sizes.max}",
         ).to_return(status: 404, body: "", headers: {})
 
         expect do avatar.update_gravatar! end.to_not change { Upload.count }
@@ -184,12 +184,39 @@ RSpec.describe UserAvatar do
   end
 
   describe "ensure_consistency!" do
+    it "cleans up incorrectly sized avatars" do
+      SiteSetting.avatar_sizes = "10|20|30"
+
+      upload = Fabricate(:upload)
+      user_avatar = Fabricate(:user).user_avatar
+      user_avatar.update_columns(custom_upload_id: upload.id)
+
+      Fabricate(:optimized_image, upload: upload, width: 10, height: 10)
+      Fabricate(:optimized_image, upload: upload, width: 15, height: 15)
+      Fabricate(:optimized_image, upload: upload, width: 20, height: 20)
+
+      UserAvatar.ensure_consistency!
+
+      expect(OptimizedImage.where(upload_id: upload.id).pluck(:width, :height).sort).to eq(
+        [[10, 10], [20, 20]],
+      )
+
+      # will not clean up if referenced
+      Fabricate(:optimized_image, upload: upload, width: 15, height: 15)
+      UploadReference.create!(upload: upload, target: Fabricate(:post))
+
+      UserAvatar.ensure_consistency!
+
+      expect(OptimizedImage.where(upload_id: upload.id).pluck(:width, :height).sort).to eq(
+        [[10, 10], [15, 15], [20, 20]],
+      )
+    end
+
     it "will clean up dangling avatars" do
       upload1 = Fabricate(:upload)
       upload2 = Fabricate(:upload)
 
       user_avatar = Fabricate(:user).user_avatar
-
       user_avatar.update_columns(gravatar_upload_id: upload1.id, custom_upload_id: upload2.id)
 
       upload1.destroy!

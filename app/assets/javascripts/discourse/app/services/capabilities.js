@@ -29,7 +29,7 @@ export default class Capabilities extends Service {
     this.isChrome = !!window.chrome && !this.isOpera;
     this.isSafari =
       /Constructor/.test(window.HTMLElement) ||
-      window.safari?.pushNotification.toString() ===
+      window.safari?.pushNotification?.toString() ===
         "[object SafariRemoteNotification]";
 
     this.hasContactPicker =

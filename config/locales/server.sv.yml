@@ -623,6 +623,22 @@ sv:
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
   discourse_welcome_topic:
     title: "Välkommen till %{site_title}! :wave:"
+    body: |
+      Vi är så glada att du kom till oss.
+
+      > ## %{site_title}
+      >
+      > %{site_description}
+
+      Här är några saker du kan göra för att komma igång:
+
+      :speaking_head: **Presentera dig** genom att lägga till en bild och information om dig själv och dina intressen i [din profil](%{base_path}/my/preferences/account). Vad skulle du vilja få frågor om?
+
+      :open_book: **Lär känna forumet** genom att [bläddra i diskussioner](%{base_path}/top) som redan pågår här. När du tycker att ett inlägg är intressant, informativt eller underhållande, använd :heart: för att visa din uppskattning eller ditt stöd!
+
+      :handshake: **Bidrag** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
+
+      > Om du behöver hjälp eller har ett förslag, fråga gärna i [#feedback](%{base_path}/c/site-feedback) eller [kontakta administratörerna](%{base_path}/about).
   admin_quick_start_title: "LÄS MIG FÖRST: Administratörers Snabbstartsguide"
   category:
     topic_prefix: "Om kategorin %{category}"

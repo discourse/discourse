@@ -1,6 +1,6 @@
 <%= discourse_stylesheet_link_tag 'publish', theme_id: nil %>
 
-<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request).each do |file| %>
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request, rtl: rtl?).each do |file| %>
   <%= discourse_stylesheet_link_tag(file) %>
 <%- end %>
 

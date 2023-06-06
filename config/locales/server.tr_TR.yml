@@ -615,6 +615,22 @@ tr_TR:
   staff_category_description: "Personel tartışmaları için özel kategori. Konular sadece yöneticiler ve moderatörler tarafından görülebilir."
   discourse_welcome_topic:
     title: "Burası %{site_title}, hoş geldiniz! :wave:"
+    body: |
+      Bize katıldığınız için çok mutluyuz.
+
+      > ## %{site_title}
+      >
+      > %{site_description}
+
+      Başlamak için yapabileceğiniz bazı şeyler:
+
+      :speaking_head: Resminizi, kendiniz ve ilgi alanlarınız hakkındaki bilgileri [profilinize](%{base_path}/my/preferences/account) ekleyerek **kendinizi tanıtın**. Size sorulmasını istediğiniz tek bir soru olsa bu ne olurdu?
+
+      :open_book: Zaten başlamış olan [tartışmalara göz atarak](%{base_path}/top) **topluluğu tanıyın**. Bir gönderiyi ilginç, bilgilendirici veya eğlenceli bulduğunuzda, takdirinizi veya desteğinizi göstermek için :heart: kullanın!
+
+      :handshake: Tartışmalara yorum yaparak, kendi bakış açınızı paylaşarak, sorular sorarak veya geri bildirimde bulunarak **katkıda bulunun**. Yanıt vermeden veya yeni konulara başlamadan önce lütfen [Topluluk Kuralları](%{base_path}/sss)nı inceleyin.
+
+      > Yardıma ihtiyacınız olursa veya bir öneriniz varsa, [#feedback](%{base_path}/c/site-feedback) bölümünde veya [yöneticilerle ile iletişime geçerek](%{base_path}/about) sorabilirsiniz.
   admin_quick_start_title: "ÖNCE BURAYI OKUYUN: Yönetici Hızlı Başlangıç Kılavuzu"
   category:
     topic_prefix: "%{category} kategorisi hakkında"

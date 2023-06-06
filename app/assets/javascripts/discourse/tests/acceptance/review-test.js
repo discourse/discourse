@@ -113,9 +113,7 @@ acceptance("Review", function (needs) {
     );
 
     assert.strictEqual(
-      query(
-        ".reviewable-flagged-post .post-body .post-body__scroll"
-      ).innerHTML.trim(),
+      query(".reviewable-flagged-post .post-body").innerHTML.trim(),
       "<b>cooked content</b>"
     );
 

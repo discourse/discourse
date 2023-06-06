@@ -94,7 +94,7 @@ RSpec.describe Oneboxer do
 
       onebox = preview(public_reply.url, user, public_category, public_topic)
       expect(onebox).not_to include(public_topic.title)
-      expect(onebox).to include(replier.avatar_template_url.sub("{size}", "40"))
+      expect(onebox).to include(replier.avatar_template_url.sub("{size}", "48"))
 
       expect(preview(public_hidden.url, user, public_category)).to match_html(
         link(public_hidden.url),

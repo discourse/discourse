@@ -37,7 +37,19 @@ export default class ChatComposerChannel extends ChatComposer {
 
   @action
   _debouncedPersistDraft(channelId, jsonDraft) {
-    this.chatApi.saveDraft(channelId, jsonDraft);
+    this.chatApi.saveDraft(channelId, jsonDraft).then(() => {
+      if (this.currentMessage) {
+        this.currentMessage.draftSaved = true;
+      }
+    });
+  }
+
+  get lastMessage() {
+    return this.args.channel.lastMessage;
+  }
+
+  lastUserMessage(user) {
+    return this.args.channel.lastUserMessage(user);
   }
 
   get placeholder() {

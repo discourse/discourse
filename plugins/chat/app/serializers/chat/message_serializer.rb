@@ -30,6 +30,7 @@ module Chat
       object
         .chat_mentions
         .map(&:user)
+        .compact
         .sort_by(&:id)
         .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
         .as_json

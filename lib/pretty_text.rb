@@ -208,6 +208,7 @@ module PrettyText
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace, engine: :js).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link, engine: :js).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
+        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
       JS
 
       buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n" if opts[:topic_id]
@@ -256,6 +257,8 @@ module PrettyText
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
     protect { v8.eval(<<~JS) }
+        __optInput = {};
+        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
         __paths = #{paths_json};
         __utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
       JS

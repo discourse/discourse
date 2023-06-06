@@ -8,7 +8,7 @@ import {
   escapeExpression,
   extractDomainFromUrl,
   fillMissingDates,
-  getRawSize,
+  getRawAvatarSize,
   inCodeBlock,
   initializeDefaultHomepage,
   mergeSortedLists,
@@ -86,17 +86,26 @@ module("Unit | Utilities", function (hooks) {
     );
   });
 
+  test("getRawAvatarSize avoids redirects", function (assert) {
+    assert.strictEqual(
+      getRawAvatarSize(1),
+      24,
+      "returns the first size larger on the menu"
+    );
+
+    assert.strictEqual(getRawAvatarSize(2000), 288, "caps at highest");
+  });
+
   test("avatarUrl", function (assert) {
-    let rawSize = getRawSize;
     assert.blank(avatarUrl("", "tiny"), "no template returns blank");
     assert.strictEqual(
       avatarUrl("/fake/template/{size}.png", "tiny"),
-      "/fake/template/" + rawSize(20) + ".png",
+      "/fake/template/" + getRawAvatarSize(24) + ".png",
       "simple avatar url"
     );
     assert.strictEqual(
       avatarUrl("/fake/template/{size}.png", "large"),
-      "/fake/template/" + rawSize(45) + ".png",
+      "/fake/template/" + getRawAvatarSize(48) + ".png",
       "different size"
     );
 
@@ -104,7 +113,9 @@ module("Unit | Utilities", function (hooks) {
 
     assert.strictEqual(
       avatarUrl("/fake/template/{size}.png", "large"),
-      "https://app-cdn.example.com/fake/template/" + rawSize(45) + ".png",
+      "https://app-cdn.example.com/fake/template/" +
+        getRawAvatarSize(48) +
+        ".png",
       "uses CDN if present"
     );
   });
@@ -124,7 +135,7 @@ module("Unit | Utilities", function (hooks) {
     let avatarTemplate = "/path/to/avatar/{size}.png";
     assert.strictEqual(
       avatarImg({ avatarTemplate, size: "tiny" }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
+      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar'>",
       "it returns the avatar html"
     );
 
@@ -134,7 +145,7 @@ module("Unit | Utilities", function (hooks) {
         size: "tiny",
         title: "evilest trout",
       }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
+      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
       "it adds a title if supplied"
     );
 
@@ -144,7 +155,7 @@ module("Unit | Utilities", function (hooks) {
         size: "tiny",
         extraClasses: "evil fish",
       }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
+      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar evil fish'>",
       "it adds extra classes if supplied"
     );
 

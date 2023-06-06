@@ -16,6 +16,7 @@ import pretender, { response } from "../helpers/create-pretender";
 
 acceptance("Composer - Messages", function (needs) {
   needs.user();
+
   needs.pretender((server, helper) => {
     server.get("/composer_messages/user_not_seen_in_a_while", () => {
       return helper.response({
@@ -139,7 +140,9 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
     await click("button.create");
 
     // Work around the lack of CSS transitions in the test env
-    query("#reply-control").dispatchEvent(new Event("transitionend"));
+    const event = new Event("transitionend");
+    event.propertyName = "height";
+    query("#reply-control").dispatchEvent(event);
 
     assert
       .dom(".composer-popup")

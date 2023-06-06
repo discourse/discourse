@@ -40,6 +40,7 @@ RSpec.describe "Edited message", type: :system, js: true do
       chat_page.visit_channel(channel_1)
 
       channel_page.edit_message(message_1, '[date=2025-03-10 timezone="Europe/Paris"]')
+
       expect(page).to have_css(".cooked-date")
     end
   end

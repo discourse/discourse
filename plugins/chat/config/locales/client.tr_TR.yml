@@ -197,6 +197,9 @@ tr_TR:
       select: "Seç"
       return_to_list: "Kanal listesine dön"
       return_to_threads_list: "Devam eden tartışmalara dön"
+      unread_threads_count:
+        one: "Henüz okumadığınız %{count} tartışma var"
+        other: "Henüz okumadığınız %{count} tartışma var"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"
       sound:
@@ -438,6 +441,7 @@ tr_TR:
         original_message:
           started_by: "Başlatan"
         settings: "Ayarlar"
+        last_reply: "son yanıt"
       threads:
         open: "Konu Aç"
         list: "Devam eden tartışmalar"

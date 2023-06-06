@@ -11,6 +11,7 @@ import ChatChannel, {
 } from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
+import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import User from "discourse/models/user";
@@ -44,8 +45,6 @@ function messageFabricator(args = {}) {
   } else {
     message.excerpt = text.slice(0, excerptLength) + "...";
   }
-
-  message.cook();
 
   return message;
 }
@@ -126,6 +125,14 @@ function threadFabricator(args = {}) {
   return ChatThread.create(channel, {
     id: args.id || sequence++,
     original_message: args.original_message || messageFabricator({ channel }),
+    preview: args.preview || threadPreviewFabricator({ channel }),
+  });
+}
+function threadPreviewFabricator(args = {}) {
+  return ChatThreadPreview.create({
+    last_reply_id: args.last_reply_id || sequence++,
+    last_reply_created_at: args.last_reply_created_at || Date.now(),
+    last_reply_excerpt: args.last_reply_excerpt || "This is a reply",
   });
 }
 
@@ -163,6 +170,7 @@ export default {
   directMessageChannel: directMessageChannelFabricator,
   message: messageFabricator,
   thread: threadFabricator,
+  threadPreview: threadPreviewFabricator,
   reaction: reactionFabricator,
   upload: uploadFabricator,
   category: categoryFabricator,

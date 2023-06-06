@@ -11,10 +11,15 @@ export default class ChatComposer extends Service {
   @action
   cancel() {
     if (this.message.editing) {
-      this.reset();
+      this.cancelEditing();
     } else if (this.message.inReplyTo) {
-      this.message.inReplyTo = null;
+      this.cancelReply();
     }
+  }
+
+  @action
+  cancelReply() {
+    this.message.inReplyTo = null;
   }
 
   @action
@@ -27,10 +32,5 @@ export default class ChatComposer extends Service {
     this.chat.activeMessage = null;
     message.editing = true;
     this.message = message;
-  }
-
-  @action
-  onCancelEditing() {
-    this.reset();
   }
 }

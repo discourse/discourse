@@ -67,6 +67,12 @@ module PageObjects
         all("[data-section-name='#{slug}'] .sidebar-section-link-wrapper").map(&:text)
       end
 
+      def primary_section_icons(slug)
+        all("[data-section-name='#{slug}'] .sidebar-section-link-wrapper use").map do |icon|
+          icon[:href].delete_prefix("#")
+        end
+      end
+
       private
 
       def section_link_present?(name, href: nil, active: false, present:)

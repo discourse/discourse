@@ -18,14 +18,11 @@ module PageObjects
       end
 
       def has_drawer?(channel_id: nil, expanded: true)
-        selector = ".chat-drawer"
-        selector += ".is-expanded" if expanded
-        selector += "[data-chat-channel-id=\"#{channel_id}\"]" if channel_id
-        has_css?(selector)
+        drawer?(expectation: true, channel_id: channel_id, expanded: expanded)
       end
 
-      def has_no_drawer?(**args)
-        !has_drawer?(**args)
+      def has_no_drawer?(channel_id: nil, expanded: true)
+        drawer?(expectation: false, channel_id: channel_id, expanded: expanded)
       end
 
       def visit_channel(channel, message_id: nil)
@@ -84,6 +81,15 @@ module PageObjects
 
       def has_no_new_channel_button?
         has_no_css?(NEW_CHANNEL_BUTTON_SELECTOR)
+      end
+
+      private
+
+      def drawer?(expectation:, channel_id: nil, expanded: true)
+        selector = ".chat-drawer"
+        selector += ".is-expanded" if expanded
+        selector += "[data-chat-channel-id=\"#{channel_id}\"]" if channel_id
+        expectation ? has_css?(selector) : has_no_css?(selector)
       end
     end
   end

@@ -119,17 +119,19 @@ class CategoryList
   end
 
   def find_categories
-    @categories = Category.includes(CategoryList.included_associations).secured(@guardian)
+    query = Category.includes(CategoryList.included_associations).secured(@guardian)
 
-    @categories =
-      @categories.where(
+    query =
+      query.where(
         "categories.parent_category_id = ?",
         @options[:parent_category_id].to_i,
       ) if @options[:parent_category_id].present?
 
-    @categories = self.class.order_categories(@categories)
+    query = self.class.order_categories(query)
+    query =
+      DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
-    @categories = @categories.to_a
+    @categories = query.to_a
 
     include_subcategories = @options[:include_subcategories] == true
 

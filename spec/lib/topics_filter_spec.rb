@@ -1246,13 +1246,13 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `order:#{order}-invalid`" do
-          it "should return topics ordered by the default order" do
+          it "should return topics ordered by the database's default order" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
                 .filter_from_query_string("order:#{order}-invalid")
                 .pluck(:id),
-            ).to eq(Topic.all.order(:id).pluck(:id))
+            ).to contain_exactly(*Topic.all.pluck(:id))
           end
         end
       end

@@ -181,8 +181,7 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       it "first navigates to the channel's category before opening the topic composer with the quote prefilled",
          mobile: true do
         chat_page.visit_channel(chat_channel_1)
-
-        chat_channel_page.click_message_action_mobile(message_1, "select")
+        chat_channel_page.select_message(message_1)
         click_selection_button("quote")
 
         expect(topic_page).to have_expanded_composer

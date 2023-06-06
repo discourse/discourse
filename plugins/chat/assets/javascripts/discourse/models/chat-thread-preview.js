@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 
 export default class ChatThreadPreview {
-  static create(channel, args = {}) {
-    return new ChatThreadPreview(channel, args);
+  static create(args = {}) {
+    return new ChatThreadPreview(args);
   }
 
   @tracked lastReplyId;

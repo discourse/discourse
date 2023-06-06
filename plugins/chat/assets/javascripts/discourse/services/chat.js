@@ -115,14 +115,10 @@ export default class Chat extends Service {
     if (present) {
       // NOTE: channels is more than a simple array, it also contains
       // tracking and membership data, see Chat::StructuredChannelSerializer
-      this.chatApi.listCurrentUserChannels().then((channels) => {
-        this.chatSubscriptionsManager.restartChannelsSubscriptions(
-          channels.meta.message_bus_last_ids
-        );
-
+      this.chatApi.listCurrentUserChannels().then((channelsView) => {
         [
-          ...channels.public_channels,
-          ...channels.direct_message_channels,
+          ...channelsView.public_channels,
+          ...channelsView.direct_message_channels,
         ].forEach((channelObject) => {
           this.chatChannelsManager
             .find(channelObject.id, { fetchIfNotFound: false })
@@ -135,10 +131,11 @@ export default class Chat extends Service {
               // endpoint that gives you all channel tracking state and the
               // thread tracking state for the current channel.
               if (channel) {
+                channel.meta.message_bus_last_ids =
+                  channelObject.meta.message_bus_last_ids;
                 channel.updateMembership(channelObject.current_user_membership);
-
                 const channelTrackingState =
-                  channels.tracking.channel_tracking[channel.id];
+                  channelsView.tracking.channel_tracking[channel.id];
                 channel.tracking.unreadCount =
                   channelTrackingState.unread_count;
                 channel.tracking.mentionCount =
