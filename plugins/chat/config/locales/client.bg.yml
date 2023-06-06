@@ -153,6 +153,7 @@ bg:
           one: "%{count} отговор"
           other: "%{count} отговора"
         settings: "Настройки"
+        last_reply: "последен отговор"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"

@@ -2877,6 +2877,7 @@ zh_CN:
         radio_label: "现有话题"
         instructions:
           other: "请选择您要将这 <b>%{count}</b> 个帖子移至的话题。"
+        chronological_order: "合并后保留时间顺序"
       move_to_new_message:
         title: "移至新消息"
         action: "移至新消息"
@@ -3851,10 +3852,13 @@ zh_CN:
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此板块吗？"
+          reset_confirm: "你确定要把这部分重置为默认值吗？"
           public: "将此板块公开并对所有人可见"
+          more_menu: "更多菜单"
           links:
             add: "添加另一个链接"
             delete: "删除链接"
+            reset: "重置为默认值"
             icon:
               label: "图标"
               validation:
@@ -3911,7 +3915,8 @@ zh_CN:
           configure_defaults: "配置默认值"
         community:
           header_link_text: "社区"
-          header_action_title: "创建话题"
+          header_action_create_topic_title: "创建话题"
+          header_action_edit_section_title: "编辑社区部分"
           links:
             about:
               content: "关于"
@@ -3952,6 +3957,8 @@ zh_CN:
     until: "直到："
     char_counter:
       exceeded: "已超过允许的最大字符数。"
+    form_template_chooser:
+      select_template: "选择表单模板"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

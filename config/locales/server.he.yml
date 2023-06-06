@@ -675,6 +675,22 @@ he:
   staff_category_description: "קטגוריה פרטית לדיוני הסגל. הנושאים חשופים רק בפני מנהלים ומפקחים."
   discourse_welcome_topic:
     title: "ברוך בואך אל %{site_title}! :wave:"
+    body: |
+      אנחנו מאוד שמחים שהצטרפת אלינו.
+
+      > ## %{site_title}
+      >
+      > %{site_description}
+
+      הנה מספר דברים שניתן לעשות כדי להתחיל:
+
+      :speaking_head: **לערוך היכרות** על ידי הוספת התמונה שלך ומידע עליך ועל תחומי העניין שלך ל[פרופיל שלך](%{base_path}/my/preferences/account). על מה הכי מעניין אותך שישאלו אותך?
+
+      :open_book: **היכרות עם הקהילה** על ידי [עיון בדיונים](%{base_path}/top) שכבר מתרחשים להם. אם מצאת פוסט מעניין, מעשיר או מבדר אפשר ללחוץ על :heart: כדי להביע את הערכתך או תמיכתך!
+
+      :handshake: **תרומה** על ידי תגובה, שיתוף נקודת המבט שלך, פרסום שאלות או הצעת משוב בדיון. בטרם פרסום תגובות או נושאים חדשים, נא לעיין ב[כללי הקהילה](%{base_path}/faq).
+
+      > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך [‎#feedback](%{base_path}/c/site-feedback) או [ליצור קשר עם המנהלים](%{base_path}/about).
   admin_quick_start_title: "לקרוא אותי קודם: מדריך זריז למנהלים מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
@@ -1839,7 +1855,7 @@ he:
     composer_media_optimization_image_encode_quality: "איכות קידוד JPG המשמשת בתהליך הקידוד מחדש."
     min_ratio_to_crop: "יחס לחיתוך תמונות גבוהות. יש להקליד את התוצאה ברוחב / גובה."
     simultaneous_uploads: "מספר הקבצים המרבי שניתן לגרור ולהשליך אל מחבר ההודעות"
-    default_invitee_trust_level: "דרגת האמון כבררת המחדל למשתמשים שהוזמנו (0‏-4)"
+    default_invitee_trust_level: "דרגת האמון כברירת המחדל למשתמשים שהוזמנו (0‏-4)"
     default_trust_level: "דרגת האמון כבררת המחדל (0‏-4) לכל המשתמשים החדשים. אזהרה! שינוי הערך הזה חושף אותך בפני סכנה ממשית לספאם."
     tl1_requires_topics_entered: "לכמה נושאים על משתמש חדש להיכנס בטרם קידומו לדרגת אמון 1."
     tl1_requires_read_posts: "כמה פוסטים על משתמש חדש לקרוא בטרם קידומו לדרגת אמון 1."
@@ -2178,7 +2194,7 @@ he:
     default_other_external_links_in_new_tab: "פתח קישורים חיצונים בטאב חדש, בתור ברירת מחדל."
     default_other_enable_quoting: "איפשור תגובות עם ציטוט לטקסט מצוטט כברירת מחדל."
     default_other_enable_defer: "הפעלת תכונת „אחר כך” כבררת מחדל."
-    default_other_dynamic_favicon: "להציג מניין נושאים חדשים/עדכניים בסמל הדפדפן כבררת מחדל."
+    default_other_dynamic_favicon: "להציג מניין נושאים חדשים/עדכניים בסמל הדפדפן כברירת מחדל."
     default_other_skip_new_user_tips: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים."
     default_other_like_notification_frequency: "הודיעו למשתמשים על לייקים כברירת מחדל"
     default_topics_automatic_unpin: "ביטול אוטומטי של נעיצת נושאים כאשר משתמשים מגיעים לתחתית - כברירת מחדל."
@@ -3935,7 +3951,7 @@ he:
     solarized_dark_theme_name: "חשיפה כהה לשמש"
     wcag_dark: "נגיש כהה"
     wcag_dark_theme_name: "נגיש כהה"
-    default_theme_name: "בררת מחדל"
+    default_theme_name: "ברירת מחדל"
     light_theme_name: "בהיר"
     dark_theme_name: "כהה"
     neutral_theme_name: "נייטרלי"

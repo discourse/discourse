@@ -1184,6 +1184,25 @@ hu:
       save_to_change_theme: 'A téma a „%{save_text}” gombra kattintás után frissül'
       home: "Alapértelmezett főoldal"
       staged: "Lépcsőzetes"
+      staff_counters:
+        flags_given:
+          one: '<span class="%{className}">%{count}</span> hasznos jelentés'
+          other: '<span class="%{className}">%{count}</span> hasznos jelentés'
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> jelentett bejegyzés'
+          other: '<span class="%{className}">%{count}</span> jelentett bejegyzés'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> törölt bejegyzés'
+          other: '<span class="%{className}">%{count}</span> törölt bejegyzés'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> felfüggesztés'
+          other: '<span class="%{className}">%{count}</span> felfüggesztés'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> figyelmeztetés'
+          other: '<span class="%{className}">%{count}</span> figyelmeztetés'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> elutasított bejegyzés'
+          other: '<span class="%{className}">%{count}</span> elutasított bejegyzés'
       messages:
         all: "összes bejövő postaláda"
         inbox: "Bejövő"
@@ -3629,6 +3648,7 @@ hu:
           delete: "Törlés"
           public: "Tegye ezt a részt nyilvánossá és mindenki számára láthatóvá"
           links:
+            reset: "Alapértelmezés visszaállítása"
             icon:
               label: "Ikon"
               validation:
@@ -3683,7 +3703,7 @@ hu:
           configure_defaults: "Alapértelmezések beállítása"
         community:
           header_link_text: "Közösség"
-          header_action_title: "Téma létrehozása"
+          header_action_create_topic_title: "Téma létrehozása"
           links:
             about:
               content: "Névjegy"
@@ -3721,6 +3741,8 @@ hu:
     until: "Eddig:"
     char_counter:
       exceeded: "Túllépte a megengedett maximális karakterszámot."
+    form_template_chooser:
+      select_template: "Űrlapsablonok kiválasztása"
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

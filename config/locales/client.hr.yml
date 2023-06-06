@@ -4173,6 +4173,7 @@ hr:
           save: "Spremi"
           delete: "Pobriši"
           links:
+            reset: "Vrati na zadano"
             icon:
               label: "Ikona"
             name:
@@ -4214,7 +4215,7 @@ hr:
           configure_defaults: "Konfigurirajte zadane postavke"
         community:
           header_link_text: "Zajednica"
-          header_action_title: "Napravite temu"
+          header_action_create_topic_title: "Napravite temu"
           links:
             about:
               content: "O nama"

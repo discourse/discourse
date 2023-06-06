@@ -21,6 +21,7 @@ import {
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 import { tracked } from "@glimmer/tracking";
 import discourseDebounce from "discourse-common/lib/debounce";
+import DiscourseURL from "discourse/lib/url";
 
 const PAGE_SIZE = 50;
 const PAST = "past";
@@ -646,11 +647,11 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  onSendMessage(message) {
+  async onSendMessage(message) {
     if (message.editing) {
-      this.#sendEditMessage(message);
+      await this.#sendEditMessage(message);
     } else {
-      this.#sendNewMessage(message);
+      await this.#sendNewMessage(message);
     }
   }
 
@@ -659,8 +660,8 @@ export default class ChatLivePane extends Component {
     this.chatChannelComposer.reset(this.args.channel);
   }
 
-  #sendEditMessage(message) {
-    message.cook();
+  async #sendEditMessage(message) {
+    await message.cook();
     this.chatChannelPane.sending = true;
 
     const data = {
@@ -670,16 +671,21 @@ export default class ChatLivePane extends Component {
 
     this.resetComposer();
 
-    return this.chatApi
-      .editMessage(this.args.channel.id, message.id, data)
-      .catch(popupAjaxError)
-      .finally(() => {
-        this.chatDraftsManager.remove({ channelId: this.args.channel.id });
-        this.chatChannelPane.sending = false;
-      });
+    try {
+      return await this.chatApi.editMessage(
+        this.args.channel.id,
+        message.id,
+        data
+      );
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.chatDraftsManager.remove({ channelId: this.args.channel.id });
+      this.chatChannelPane.sending = false;
+    }
   }
 
-  #sendNewMessage(message) {
+  async #sendNewMessage(message) {
     this.chatChannelPane.sending = true;
 
     resetIdle();
@@ -711,7 +717,7 @@ export default class ChatLivePane extends Component {
       );
     }
 
-    this.args.channel.stageMessage(message);
+    await this.args.channel.stageMessage(message);
     this.resetComposer();
 
     if (!this.args.channel.canLoadMoreFuture) {
@@ -815,11 +821,14 @@ export default class ChatLivePane extends Component {
   @action
   onCloseFullScreen() {
     this.chatStateManager.prefersDrawer();
-    this.router.transitionTo(this.chatStateManager.lastKnownAppURL).then(() => {
-      this.appEvents.trigger(
-        "chat:open-url",
-        this.chatStateManager.lastKnownChatURL
-      );
+
+    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL, {
+      afterRouteComplete: () => {
+        this.appEvents.trigger(
+          "chat:open-url",
+          this.chatStateManager.lastKnownChatURL
+        );
+      },
     });
   }
 

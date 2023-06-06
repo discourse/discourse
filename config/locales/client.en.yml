@@ -453,6 +453,8 @@ en:
         placeholder: "type the message title, url or id here"
 
     review:
+      show_more: "Show more"
+      show_less: "Show less"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -2068,6 +2070,10 @@ en:
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
       value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
 
+    offline_indicator:
+      no_internet: "No internet connection."
+      refresh_page: "Refresh page"
+
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
       description:
@@ -2968,6 +2974,7 @@ en:
       read_more_in_category: "Want to read more? Browse other topics in %{categoryLink} or <a href='%{latestLink}'>view latest topics</a>."
       read_more: "Want to read more? <a href='%{categoryLink}'>Browse all categories</a> or <a href='%{latestLink}'>view latest topics</a>."
       unread_indicator: "No member has read the last post of this topic yet."
+      participant_groups: "Participant groups"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       #
@@ -4790,6 +4797,7 @@ en:
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
+              list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
             categories:

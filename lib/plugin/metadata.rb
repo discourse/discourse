@@ -92,6 +92,7 @@ class Plugin::Metadata
         "discourse-whos-online",
         "discourse-yearly-review",
         "discourse-zendesk-plugin",
+        "discourse-zoom",
         "docker_manager",
         "chat",
         "poll",

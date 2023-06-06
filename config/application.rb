@@ -94,7 +94,6 @@ module Discourse
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
-    config.active_record.legacy_connection_handling = true
     config.active_record.yaml_column_permitted_classes = [
       Hash,
       HashWithIndifferentAccess,

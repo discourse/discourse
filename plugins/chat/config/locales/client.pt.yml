@@ -180,6 +180,7 @@ pt:
           one: "%{count} resposta"
           other: "%{count} respostas"
         settings: "Configurações"
+        last_reply: "última resposta"
       draft_channel_screen:
         header: "Nova Mensagem"
         cancel: "Cancelar"

@@ -3525,6 +3525,7 @@ ko:
           save: "저장"
           delete: "삭제하기"
           links:
+            reset: "기본값으로 재설정"
             icon:
               label: "아이콘"
             name:

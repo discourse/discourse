@@ -235,17 +235,27 @@ class TopicQuery
           builder.add_results(unread_messages(pm_params.merge(count: builder.results_left)))
         end
       else
-        builder.add_results(
-          unread_results(
-            topic: topic,
-            per_page: builder.results_left,
-            max_age: SiteSetting.suggested_topics_unread_max_days_old,
-          ),
-          :high,
-        )
+        if @user.new_new_view_enabled?
+          builder.add_results(
+            new_and_unread_results(
+              topic:,
+              per_page: builder.results_left,
+              max_age: SiteSetting.suggested_topics_unread_max_days_old,
+            ),
+          )
+        else
+          builder.add_results(
+            unread_results(
+              topic: topic,
+              per_page: builder.results_left,
+              max_age: SiteSetting.suggested_topics_unread_max_days_old,
+            ),
+            :high,
+          )
 
-        unless builder.full?
-          builder.add_results(new_results(topic: topic, per_page: builder.category_results_left))
+          unless builder.full?
+            builder.add_results(new_results(topic: topic, per_page: builder.category_results_left))
+          end
         end
       end
     end
@@ -498,7 +508,13 @@ class TopicQuery
     end
 
     topics.each do |t|
-      t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map { |u| u.id } : []
+      if filter == :private_messages
+        t.allowed_user_ids = t.allowed_users.map { |u| u.id }
+        t.allowed_group_ids = t.allowed_groups.map { |g| g.id }
+      else
+        t.allowed_user_ids = []
+        t.allowed_group_ids = []
+      end
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
@@ -575,6 +591,7 @@ class TopicQuery
         base,
         treat_as_new_topic_start_date: @user.user_option.treat_as_new_topic_start_date,
       )
+
     new_results = remove_muted(new_results, @user, options)
     new_results = remove_dismissed(new_results, @user)
 

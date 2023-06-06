@@ -286,12 +286,12 @@ export default class ChatChannel {
     return thread;
   }
 
-  stageMessage(message) {
+  async stageMessage(message) {
     message.id = guid();
     message.staged = true;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
-    message.cook();
+    await message.cook();
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {

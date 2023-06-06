@@ -3977,6 +3977,7 @@ nl:
           save: "Opslaan"
           delete: "Verwijderen"
           links:
+            reset: "Standaard herstellen"
             icon:
               label: "Pictogram"
             name:
@@ -4018,7 +4019,7 @@ nl:
           configure_defaults: "Standaardinstellingen configureren"
         community:
           header_link_text: "Community"
-          header_action_title: "Maak een topic"
+          header_action_create_topic_title: "Maak een topic"
           links:
             about:
               content: "Over"

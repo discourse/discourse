@@ -3578,6 +3578,7 @@ da:
           save: "Gem"
           delete: "Slet"
           links:
+            reset: "Nulstil til standard"
             icon:
               label: "Ikon"
             name:

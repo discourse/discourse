@@ -107,6 +107,7 @@ ro:
           few: "%{count} răspunsuri"
           other: "%{count} răspunsuri"
         settings: "Opțiuni"
+        last_reply: "Ultimul răspuns"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"

@@ -3467,6 +3467,7 @@ pt:
           save: "Guardar"
           delete: "Eliminar"
           links:
+            reset: "Restaurar ao padrão"
             icon:
               label: "Ícone"
             name:

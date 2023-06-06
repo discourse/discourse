@@ -3406,6 +3406,7 @@ bg:
           links:
             add: "Добавете друга връзка"
             delete: "Изтриване на връзката"
+            reset: "Обновявам до първоначалното"
             icon:
               label: "Икона"
               validation:
@@ -3453,6 +3454,8 @@ bg:
               content: "Моите публикации"
             review:
               content: "Преглед"
+    form_template_chooser:
+      select_template: "Изберете шаблони за формуляри"
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

@@ -40,6 +40,9 @@
       {{/unless}}
     {{/unless}}
     {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+    {{#if participantGroups}}
+      {{raw "list/participant-groups" groups=participantGroups}}
+    {{/if}}
     {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
   </div>
   {{#if expandPinned}}

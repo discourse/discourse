@@ -30,7 +30,7 @@ module PageObjects
       end
 
       def click_send_message
-        find(".chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
       def message_by_id_selector(id)
@@ -130,9 +130,7 @@ module PageObjects
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
-        messages.has_message?(text: text, persisted: true)
         click_composer
-        has_no_loading_skeleton?
         text
       end
 
@@ -225,18 +223,19 @@ module PageObjects
 
       def open_thread_list
         find(thread_list_button_selector).click
+        PageObjects::Components::Chat::ThreadList.new.has_loaded?
       end
 
       def has_unread_thread_indicator?(count:)
-        has_css?("#{thread_list_button_selector}.-has-unreads") &&
+        has_css?("#{thread_list_button_selector}.has-unreads") &&
           has_css?(
-            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number-wrap",
+            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number",
             text: count.to_s,
           )
       end
 
       def has_no_unread_thread_indicator?
-        has_no_css?("#{thread_list_button_selector}.-has-unreads")
+        has_no_css?("#{thread_list_button_selector}.has-unreads")
       end
 
       def thread_list_button_selector

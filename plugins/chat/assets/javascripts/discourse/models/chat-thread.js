@@ -63,12 +63,12 @@ export default class ChatThread {
     }
   }
 
-  stageMessage(message) {
+  async stageMessage(message) {
     message.id = guid();
     message.staged = true;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
-    message.cook();
+    await message.cook();
 
     this.messagesManager.addMessages([message]);
   }

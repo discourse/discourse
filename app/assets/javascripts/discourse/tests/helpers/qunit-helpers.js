@@ -26,7 +26,10 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
-import { initSearchData } from "discourse/widgets/search-menu";
+import {
+  initSearchData,
+  resetOnKeyDownCallbacks,
+} from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -213,6 +216,7 @@ export function testCleanup(container, app) {
   resetSidebarSection();
   resetNotificationTypeRenderers();
   clearExtraHeaderIcons();
+  resetOnKeyDownCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();

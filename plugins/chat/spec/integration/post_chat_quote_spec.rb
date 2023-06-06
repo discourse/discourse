@@ -237,7 +237,7 @@ martin</div>
 <div class="chat-transcript" data-message-id="#{message1.id}" data-username="#{message1.user.username}" data-datetime="#{message1.created_at.iso8601}" data-channel-name="#{channel.name}" data-channel-id="#{channel.id}">
 <div class="chat-transcript-user">
 <div class="chat-transcript-user-avatar">
-<img loading="lazy" alt="" width="20" height="20" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "40")}" class="avatar">
+<img loading="lazy" alt="" width="24" height="24" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "48")}" class="avatar">
 </div>
 <div class="chat-transcript-username">
 #{message1.user.username}</div>
@@ -251,7 +251,7 @@ martin</div>
 <div class="chat-transcript" data-message-id="#{message2.id}" data-username="#{message2.user.username}" data-datetime="#{message2.created_at.iso8601}" data-channel-name="#{channel.name}" data-channel-id="#{channel.id}">
 <div class="chat-transcript-user">
 <div class="chat-transcript-user-avatar">
-<img loading="lazy" alt="" width="20" height="20" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "40")}" class="avatar">
+<img loading="lazy" alt="" width="24" height="24" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "48")}" class="avatar">
 </div>
 <div class="chat-transcript-username">
 #{message2.user.username}</div>

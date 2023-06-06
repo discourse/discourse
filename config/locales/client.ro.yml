@@ -2925,6 +2925,7 @@ ro:
           save: "Salvare"
           delete: "Șterge"
           links:
+            reset: "Resetare la valorile implicite"
             icon:
               label: "Pictogramă"
             name:

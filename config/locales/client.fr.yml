@@ -3977,6 +3977,7 @@ fr:
           save: "Enregistrer"
           delete: "Supprimer"
           links:
+            reset: "Rétablir les valeurs par défaut"
             icon:
               label: "Icône"
             name:
@@ -4018,7 +4019,7 @@ fr:
           configure_defaults: "Configurer les valeurs par défaut"
         community:
           header_link_text: "Communauté"
-          header_action_title: "Créer un sujet"
+          header_action_create_topic_title: "Créer un sujet"
           links:
             about:
               content: "À propos"

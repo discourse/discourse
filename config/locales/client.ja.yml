@@ -3774,6 +3774,7 @@ ja:
           save: "保存"
           delete: "削除"
           links:
+            reset: "デフォルトにリセット"
             icon:
               label: "アイコン"
             name:
@@ -3815,7 +3816,7 @@ ja:
           configure_defaults: "デフォルトの構成"
         community:
           header_link_text: "コミュニティー"
-          header_action_title: "トピックの作成"
+          header_action_create_topic_title: "トピックの作成"
           links:
             about:
               content: "サイト情報"

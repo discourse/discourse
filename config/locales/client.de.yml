@@ -572,6 +572,8 @@ de:
           title: "Benutzer"
         reviewable_post:
           title: "Beitrag"
+        reviewable_chat_message:
+          title: "Markierte Chat-Nachricht"
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
@@ -3033,6 +3035,7 @@ de:
         instructions:
           one: "Bitte wähle das Thema, in welches du den Beitrag verschieben möchtest."
           other: "Bitte wähle das Thema, in welches du die <b>%{count}</b> Beiträge verschieben möchtest."
+        chronological_order: "die chronologische Reihenfolge nach dem Zusammenführen beibehalten"
       move_to_new_message:
         title: "Verschieben in neue Unterhaltung"
         action: "verschieben in neue Unterhaltung"
@@ -4062,10 +4065,13 @@ de:
           save: "Speichern"
           delete: "Löschen"
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
+          reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
           public: "Mache diesen Bereich öffentlich und für alle sichtbar"
+          more_menu: "Mehr Menü"
           links:
             add: "Einen weiteren Link hinzufügen"
             delete: "Link löschen"
+            reset: "Auf Standard zurücksetzen"
             icon:
               label: "Symbol"
               validation:
@@ -4122,7 +4128,8 @@ de:
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           header_link_text: "Community"
-          header_action_title: "Thema erstellen"
+          header_action_create_topic_title: "Thema erstellen"
+          header_action_edit_section_title: "Community-Abschnitt bearbeiten"
           links:
             about:
               content: "Über uns"
@@ -4164,6 +4171,8 @@ de:
     until: "Bis:"
     char_counter:
       exceeded: "Die maximal zulässige Anzahl von Zeichen wurde überschritten."
+    form_template_chooser:
+      select_template: "Formularvorlagen auswählen"
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:

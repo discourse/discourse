@@ -111,6 +111,7 @@ sl:
           few: "%{count} odgovori"
           other: "%{count} odgovorov"
         settings: "Nastavitve"
+        last_reply: "zadnji odgovor"
       draft_channel_screen:
         header: "Novo zasebno sporočilo"
         cancel: "Prekliči"
