@@ -4,10 +4,33 @@ RSpec.describe "List channels | mobile", type: :system, js: true, mobile: true d
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
     chat_system_bootstrap
     sign_in(current_user)
+  end
+
+  context "when navigating from a long topic" do
+    fab!(:topic) { Fabricate(:topic) }
+
+    before do
+      20.times do
+        channel = Fabricate(:chat_channel)
+        channel.add(current_user)
+      end
+
+      20.times { Fabricate(:post, topic: topic) }
+    end
+
+    it "doesn’t scroll to the bottom" do
+      sign_in(current_user)
+      topic_page.visit_topic(topic)
+      scroll_to(find("#post_19"))
+      chat.open_from_header
+
+      expect(page.evaluate_script("window.scrollY")).to be_within(1).of(0)
+    end
   end
 
   context "when channels present" do
