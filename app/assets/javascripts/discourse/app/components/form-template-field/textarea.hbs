@@ -6,5 +6,9 @@
     name={{@attributes.label}}
     class="form-template-field__textarea"
     placeholder={{@attributes.placeholder}}
+    pattern={{@validations.pattern}}
+    minLength={{@validations.min}}
+    maxLength={{@validations.max}}
+    required={{if @validations.required "required" ""}}
   />
 </div>

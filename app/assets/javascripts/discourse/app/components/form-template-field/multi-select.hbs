@@ -8,14 +8,14 @@
   <select
     name={{@attributes.label}}
     class="form-template-field__multi-select"
-    multiple
+    required={{if @validations.required "required" ""}}
+    multiple="multiple"
   >
     {{#if @attributes.none_label}}
       <option
         class="form-template-field__multi-select-placeholder"
         value=""
         disabled
-        selected
         hidden
       >{{@attributes.none_label}}</option>
     {{/if}}

@@ -4,6 +4,7 @@
       name={{@attributes.label}}
       class="form-template-field__checkbox"
       @type="checkbox"
+      required={{if @validations.required "required" ""}}
     />
     {{@attributes.label}}
   </label>

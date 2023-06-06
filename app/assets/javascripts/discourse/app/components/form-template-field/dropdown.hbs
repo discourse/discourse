@@ -5,7 +5,11 @@
 
   {{! TODO(@keegan): Update implementation to use <ComboBox/> instead }}
   {{! Current using <select> as it integrates easily with FormData (will update in v2) }}
-  <select name={{@attributes.label}} class="form-template-field__dropdown">
+  <select
+    name={{@attributes.label}}
+    class="form-template-field__dropdown"
+    required={{if @validations.required "required" ""}}
+  >
     {{#if @attributes.none_label}}
       <option
         class="form-template-field__dropdown-placeholder"
