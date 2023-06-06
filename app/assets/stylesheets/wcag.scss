@@ -308,9 +308,53 @@ html {
 
 // sidebar
 
-.sidebar-wrapper
-  .sidebar-sections
-  .sidebar-section-link-suffix.icon.unread
-  svg {
-  color: var(--tertiary);
+.sidebar-wrapper {
+  .sidebar-sections .sidebar-section-link-suffix.icon.unread svg {
+    color: var(--tertiary);
+  }
+
+  // applying an inverted color sidebar for the light theme only (for now)
+  // the lack of high-contrast sidebar color differentiation has been reported as an accessibility issue
+  // but a too-bright sidebar in dark mode may clash with some other accessibility needs
+  // this hopefully provides a reasonable amount of flexibility
+  @if #{schemeType()} == "light" {
+    --d-sidebar-background: var(--primary-high);
+    --d-sidebar-prefix-background: var(--primary-medium);
+
+    --d-sidebar-header-color: var(--secondary);
+    --d-sidebar-header-icon-color: var(--secondary-very-high);
+
+    --d-sidebar-link-color: var(--secondary);
+    --d-sidebar-link-icon-color: var(--secondary-very-high);
+    --d-sidebar-link-badge-color: var(--secondary-very-high);
+
+    --d-sidebar-highlight-background: var(--primary);
+    --d-sidebar-highlight-color: var(--secondary);
+    --d-sidebar-highlight-prefix-background: var(--primary-medium);
+    --d-sidebar-highlight-hover-background: var(--secondary);
+    --d-sidebar-highlight-hover-icon: var(--primary);
+
+    .btn-flat {
+      .d-icon {
+        color: var(--secondary-very-high);
+      }
+      &:focus,
+      .discourse-no-touch & {
+        &:hover {
+          color: var(--secondary);
+          .d-icon {
+            color: currentColor;
+          }
+        }
+      }
+    }
+
+    .sidebar-footer-wrapper .sidebar-footer-container:before {
+      background: linear-gradient(
+        to bottom,
+        rgba(var(--primary-high-rgb), 0),
+        rgba(var(--primary-high-rgb), 1)
+      );
+    }
+  }
 }

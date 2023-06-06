@@ -19,6 +19,7 @@
 
   --always-black-rgb: 0, 0, 0;
   --primary-rgb: #{hexToRGB($primary)};
+  --primary-high-rgb: #{hexToRGB($primary-high)};
   --primary-low-rgb: #{hexToRGB($primary-low)};
   --primary-very-low-rgb: #{hexToRGB($primary-very-low)};
   --secondary-rgb: #{hexToRGB($secondary)};
