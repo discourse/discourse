@@ -200,6 +200,10 @@ class PostAlerter
 
     DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
+    if !SiteSetting.watched_precedence_over_muted
+      notified = notified + (category_muters(post.topic) | tag_muters(post.topic))
+    end
+
     if new_record
       if post.topic.private_message?
         # private messages
@@ -263,6 +267,22 @@ class PostAlerter
       .category_users
       .where(notification_level: CategoryUser.notification_levels[:watching_first_post])
       .pluck(:user_id)
+  end
+
+  def tag_muters(topic)
+    topic
+      .tag_users
+      .includes(:user)
+      .notification_level_visible([TagUser.notification_levels[:muted]])
+      .map(&:user)
+  end
+
+  def category_muters(topic)
+    topic
+      .category_users
+      .includes(:user)
+      .where(notification_level: CategoryUser.notification_levels[:muted])
+      .map(&:user)
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)

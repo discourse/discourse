@@ -897,16 +897,29 @@ class TopicQuery
     category_id = get_category_id(opts[:exclude]) if opts
 
     if user
+      watched_tag_ids =
+        if SiteSetting.watched_precedence_over_muted
+          TagUser
+            .where(user: user)
+            .where("notification_level >= ?", TopicUser.notification_levels[:watching])
+            .pluck(:tag_id)
+        else
+          []
+        end
+
+      # OR watched_topic_tags.id IS NOT NULL",
       list =
         list
           .references("cu")
           .joins(
-            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}",
+            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
+             LEFT JOIN topic_tags watched_topic_tags ON topic_tags.topic_id = topics.id AND #{DB.sql_fragment("topic_tags.tag_id IN (?)", watched_tag_ids)}",
           )
           .where(
             "topics.category_id = :category_id
                 OR
                 (COALESCE(category_users.notification_level, :default) <> :muted AND (topics.category_id IS NULL OR topics.category_id NOT IN(:indirectly_muted_category_ids)))
+                OR watched_topic_tags.id IS NOT NULL
                 OR tu.notification_level > :regular",
             category_id: category_id || -1,
             default: CategoryUser.default_notification_level,
@@ -971,8 +984,18 @@ class TopicQuery
           SELECT 1
             FROM topic_tags tt
            WHERE tt.tag_id IN (:tag_ids)
-             AND tt.topic_id = topics.id)",
+             AND tt.topic_id = topics.id
+             #{user && !opts[:skip_categories] ? "AND COALESCE(category_users.notification_level, :regular) < :watching_or_infinite" : ""})",
           tag_ids: muted_tag_ids,
+          regular: CategoryUser.notification_levels[:regular],
+          watching_or_infinite:
+            (
+              if SiteSetting.watched_precedence_over_muted
+                CategoryUser.notification_levels[:watching]
+              else
+                99
+              end
+            ),
         )
     else
       list =
@@ -981,10 +1004,20 @@ class TopicQuery
         EXISTS (
           SELECT 1
             FROM topic_tags tt
-           WHERE tt.tag_id NOT IN (:tag_ids)
-             AND tt.topic_id = topics.id
+           WHERE (tt.tag_id NOT IN (:tag_ids)
+             AND tt.topic_id = topics.id)
+             #{user && !opts[:skip_categories] ? "OR COALESCE(category_users.notification_level, :regular) >= :watching_or_infinite" : ""}
         ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)",
           tag_ids: muted_tag_ids,
+          regular: CategoryUser.notification_levels[:regular],
+          watching_or_infinite:
+            (
+              if SiteSetting.watched_precedence_over_muted
+                CategoryUser.notification_levels[:watching]
+              else
+                99
+              end
+            ),
         )
     end
   end

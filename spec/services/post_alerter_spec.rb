@@ -1871,6 +1871,45 @@ RSpec.describe PostAlerter do
       end
     end
 
+    context "with category and tags" do
+      fab!(:topic) { Fabricate(:topic, category: category) }
+      fab!(:muted_tag) { Fabricate(:tag) }
+      fab!(:topic_tag) { Fabricate(:topic_tag, topic: topic, tag: muted_tag) }
+      fab!(:post) { Fabricate(:post, topic: topic) }
+
+      it "adds notification when watched_precedence_over_mute setting is true" do
+        SiteSetting.watched_precedence_over_muted = true
+        TagUser.create!(
+          user: user,
+          tag: muted_tag,
+          notification_level: TagUser.notification_levels[:muted],
+        )
+        CategoryUser.set_notification_level_for_category(
+          user,
+          CategoryUser.notification_levels[:watching],
+          category.id,
+        )
+        expect { PostAlerter.post_created(topic.posts.first) }.to change { Notification.count }.by(
+          1,
+        )
+      end
+
+      it "does not add notification when watched_precedence_over_mute setting is false" do
+        SiteSetting.watched_precedence_over_muted = false
+        TagUser.create!(
+          user: user,
+          tag: muted_tag,
+          notification_level: TagUser.notification_levels[:muted],
+        )
+        CategoryUser.set_notification_level_for_category(
+          user,
+          CategoryUser.notification_levels[:watching],
+          category.id,
+        )
+        expect { PostAlerter.post_created(topic.posts.first) }.not_to change { Notification.count }
+      end
+    end
+
     context "with on change" do
       fab!(:user) { Fabricate(:user) }
       fab!(:other_tag) { Fabricate(:tag) }
