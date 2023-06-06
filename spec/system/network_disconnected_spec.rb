@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Network Disconnected", type: :system, js: true do
+RSpec.describe "Network Disconnected", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   before { skip(<<~TEXT) }

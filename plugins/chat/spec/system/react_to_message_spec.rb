@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "React to message", type: :system, js: true do
+RSpec.describe "React to message", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   fab!(:category_channel_1) { Fabricate(:category_channel) }

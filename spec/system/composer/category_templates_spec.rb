@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer Form Templates", type: :system, js: true do
+describe "Composer Form Templates", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:form_template_1) do
     Fabricate(:form_template, name: "Bug Reports", template: "- type: checkbox")

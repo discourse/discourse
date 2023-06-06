@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, mobile: true do
+RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: true do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }

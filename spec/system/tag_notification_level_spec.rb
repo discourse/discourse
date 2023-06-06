@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Tag notification level", type: :system, js: true do
+describe "Tag notification level", type: :system do
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:select_kit) { PageObjects::Components::SelectKit.new(".tag-notifications-button") }
 

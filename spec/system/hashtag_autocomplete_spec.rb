@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 describe "Using #hashtag autocompletion to search for and lookup categories and tags",
-         type: :system,
-         js: true do
+         type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:category) do
     Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)
