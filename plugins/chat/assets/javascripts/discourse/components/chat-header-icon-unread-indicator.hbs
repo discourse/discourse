@@ -1,12 +1,7 @@
 {{#if this.showUrgentIndicator}}
   <div class="chat-channel-unread-indicator urgent">
-    <div
-      class={{concat-class
-        "chat-channel-unread-indicator__number"
-        this.numberIsTooHigh
-      }}
-    >
-      {{html-safe this.unreadCountLabel}}
+    <div class="chat-channel-unread-indicator__number">
+      {{this.unreadCountLabel}}
     </div>
   </div>
 {{else if this.showUnreadIndicator}}
