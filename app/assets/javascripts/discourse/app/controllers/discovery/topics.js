@@ -195,14 +195,19 @@ const controllerOpts = {
 
     const segments = (this.get("model.filter") || "").split("/");
 
-    const tab = segments[segments.length - 1];
+    let tab = segments[segments.length - 1];
+
     if (tab !== "new" && tab !== "unread") {
       return;
     }
 
+    if (tab === "new" && this.currentUser.new_new_view_enabled) {
+      tab = "new_new";
+    }
+
     return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
-        `${this.currentUser.get("username_lower")}/preferences/notifications`
+        `${this.currentUser.get("username_lower")}/preferences/tracking`
       ),
     });
   },
