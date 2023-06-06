@@ -57,6 +57,32 @@ const controllerOpts = {
     return this._isFilterPage(filter, "new") && topicsLength > 0;
   },
 
+  callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
+    const tracked =
+      (this.router.currentRoute.queryParams["f"] ||
+        this.router.currentRoute.queryParams["filter"]) === "tracked";
+
+    let topicIds = this.selected
+      ? this.selected.map((topic) => topic.id)
+      : null;
+
+    Topic.resetNew(this.category, !this.noSubcategories, {
+      tracked,
+      topicIds,
+      dismissPosts,
+      dismissTopics,
+      untrack,
+    }).then((result) => {
+      if (result.topic_ids) {
+        this.topicTrackingState.removeTopics(result.topic_ids);
+      }
+      this.send(
+        "refresh",
+        tracked ? { skipResettingParams: ["filter", "f"] } : {}
+      );
+    });
+  },
+
   // Show newly inserted topics
   @action
   showInserted(event) {
@@ -113,32 +139,6 @@ const controllerOpts = {
         } else {
           this.afterRefresh(filter, list);
         }
-      });
-    },
-
-    callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
-      const tracked =
-        (this.router.currentRoute.queryParams["f"] ||
-          this.router.currentRoute.queryParams["filter"]) === "tracked";
-
-      let topicIds = this.selected
-        ? this.selected.map((topic) => topic.id)
-        : null;
-
-      Topic.resetNew(this.category, !this.noSubcategories, {
-        tracked,
-        topicIds,
-        dismissPosts,
-        dismissTopics,
-        untrack,
-      }).then((result) => {
-        if (result.topics_ids) {
-          this.topicTrackingState.removeTopics(result.topic_ids);
-        }
-        this.send(
-          "refresh",
-          tracked ? { skipResettingParams: ["filter", "f"] } : {}
-        );
       });
     },
   },

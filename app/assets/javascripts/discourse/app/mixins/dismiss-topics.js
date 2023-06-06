@@ -8,7 +8,7 @@ export default Mixin.create({
     resetNew() {
       const user = User.current();
       if (!user.new_new_view_enabled) {
-        return this.send("callResetNew");
+        return this.callResetNew();
       }
       const controller = showModal("dismiss-new", {
         model: {
@@ -19,8 +19,7 @@ export default Mixin.create({
       });
 
       controller.set("dismissCallback", () => {
-        this.send(
-          "callResetNew",
+        this.callResetNew(
           controller.model.dismissPosts,
           controller.model.dismissTopics,
           controller.model.untrack

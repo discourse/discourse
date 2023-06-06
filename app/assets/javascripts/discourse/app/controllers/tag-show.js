@@ -93,7 +93,6 @@ export default DiscoverySortableController.extend(
       return this._isFilterPage(filter, "new") && topicsLength > 0;
     },
 
-    @action
     callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
       const tracked =
         (this.router.currentRoute.queryParams["f"] ||
@@ -109,7 +108,7 @@ export default DiscoverySortableController.extend(
         dismissTopics,
         untrack,
       }).then((result) => {
-        if (result.topics_ids) {
+        if (result.topic_ids) {
           this.topicTrackingState.removeTopics(result.topic_ids);
         }
         this.refresh(tracked ? { skipResettingParams: ["filter", "f"] } : {});
