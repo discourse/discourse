@@ -129,6 +129,8 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 
       &__number {
         font-size: 0.7rem;
+        line-height: 15px;
+        height: inherit;
 
         &.-too-high {
           font-size: 1.25rem;
