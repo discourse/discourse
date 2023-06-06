@@ -47,8 +47,9 @@ describe "Fast edit", type: :system, js: true do
       fast_editor.fill_content("day")
       fast_editor.save
 
-      expect(find("#{topic_page.post_by_number_selector(2)} .cooked p")).to have_content(
-        "It ‘twas a great’ “day”!",
+      expect(page).to have_selector(
+        "#{topic_page.post_by_number_selector(2)} .cooked p",
+        text: "It ‘twas a great’ “day”!",
       )
     end
   end
