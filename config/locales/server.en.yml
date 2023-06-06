@@ -683,9 +683,7 @@ en:
     body: |
       We are so glad you joined us.
 
-      > ## %{site_title}
-      >
-      > %{site_description}
+      %{site_info_quote}
 
       Here are some things you can do to get started:
 
