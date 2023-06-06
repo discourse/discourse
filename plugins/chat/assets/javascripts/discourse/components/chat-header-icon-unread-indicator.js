@@ -41,4 +41,16 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
     return preferences.includes(this.indicatorPreference);
   }
+
+  get unreadCountLabel() {
+    return this.chatTrackingStateManager.allChannelUrgentCount > 999
+      ? "&#x221E"
+      : this.chatTrackingStateManager.allChannelUrgentCount;
+  }
+
+  get numberIsTooHigh() {
+    return this.chatTrackingStateManager.allChannelUrgentCount > 999
+      ? "-too-high"
+      : "";
+  }
 }

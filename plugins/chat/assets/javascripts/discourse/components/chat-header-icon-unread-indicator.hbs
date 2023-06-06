@@ -1,12 +1,13 @@
 {{#if this.showUrgentIndicator}}
   <div class="chat-channel-unread-indicator urgent">
-    {{#if (gte this.chatTrackingStateManager.allChannelUrgentCount 1000)}}
-      <div class="chat-channel-unread-indicator__number -infinity">&#x221E;
-      </div>
-    {{else}}
-      <div class="chat-channel-unread-indicator__number">
-        {{this.chatTrackingStateManager.allChannelUrgentCount}}</div>
-    {{/if}}
+    <div
+      class={{concat-class
+        "chat-channel-unread-indicator__number"
+        this.numberIsTooHigh
+      }}
+    >
+      {{html-safe this.unreadCountLabel}}
+    </div>
   </div>
 {{else if this.showUnreadIndicator}}
   <div class="chat-channel-unread-indicator"></div>
