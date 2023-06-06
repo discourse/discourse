@@ -3,13 +3,23 @@
 RSpec.describe "Network Disconnected", type: :system, js: true do
   fab!(:current_user) { Fabricate(:user) }
 
+  before { skip(<<~TEXT) }
+    This group of tests is flaky and needs to be fixed. Example of error:
+
+    Failures:
+
+     1) Network Disconnected Doesn't show the offline indicator when the site setting isn't present
+     Failure/Error: expect(page).to have_css("html.message-bus-offline")
+       expected to find css "html.message-bus-offline" but there were no matches
+    TEXT
+
   def with_network_disconnected
     page.driver.browser.network_conditions = { offline: true }
     yield
     page.driver.browser.network_conditions = { offline: false }
   end
 
-  xit "Message bus connectivity service adds class to DOM and displays offline indicator" do
+  it "Message bus connectivity service adds class to DOM and displays offline indicator" do
     SiteSetting.enable_offline_indicator = true
 
     visit("/c")
