@@ -27,6 +27,7 @@ RSpec.describe "List channels | mobile", type: :system, js: true, mobile: true d
       sign_in(current_user)
       topic_page.visit_topic(topic)
       scroll_to(find("#post_19"))
+      page.evaluate_script("window.scrollBy(0,-100)") # ensures header buttons are displayed
       chat.open_from_header
 
       expect(page.evaluate_script("window.scrollY")).to be_within(1).of(0)
