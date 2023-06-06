@@ -521,29 +521,28 @@ Discourse::Application.routes.draw do
            :constraints => {
              token: /[0-9a-f]+/,
            }
-      get "#{root_path}/:username/private-messages" => "user_actions#private_messages",
+      get "#{root_path}/:username/private-messages" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/private-messages/:filter" => "user_actions#private_messages",
+      get "#{root_path}/:username/private-messages/:filter" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages" => "user_actions#private_messages",
+      get "#{root_path}/:username/messages" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages",
+      get "#{root_path}/:username/messages/:filter" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages",
+      get "#{root_path}/:username/messages/group/:group_name" => "users#show",
           :constraints => {
             username: RouteFormat.username,
             group_name: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/group/:group_name/:filter" =>
-            "user_actions#private_messages",
+      get "#{root_path}/:username/messages/group/:group_name/:filter" => "users#show",
           :constraints => {
             username: RouteFormat.username,
             group_name: RouteFormat.username,

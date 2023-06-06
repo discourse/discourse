@@ -38,15 +38,15 @@ acceptance("Modal", function (needs) {
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
 
-    const controller = getOwner(this).lookup("controller:modal");
-    assert.strictEqual(controller.name, "login");
+    const service = getOwner(this).lookup("service:modal");
+    assert.strictEqual(service.name, "login");
 
     await click(".modal-outer-container");
     assert.ok(
       !exists(".d-modal:visible"),
       "modal should disappear when you click outside"
     );
-    assert.strictEqual(controller.name, null);
+    assert.strictEqual(service.name, null);
 
     await click(".login-button");
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should reappear");

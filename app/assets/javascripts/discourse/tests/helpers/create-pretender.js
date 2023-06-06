@@ -224,7 +224,40 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/u/eviltrout/invited.json", () => {
     return response({
-      invites: [],
+      invites: [
+        {
+          id: 8,
+          invite_key: "hMFT8G1oKP",
+          link: "http://localhost:3000/invites/hMFT8G1oKP",
+          email: "steak@cat.com",
+          domain: null,
+          emailed: false,
+          can_delete_invite: true,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          topics: [],
+          groups: [],
+        },
+        {
+          id: 9,
+          invite_key: "hMFT8G1WHA",
+          link: "http://localhost:3000/invites/hMFT8G1WHA",
+          email: "tomtom@cat.com",
+          domain: null,
+          emailed: false,
+          can_delete_invite: false,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          topics: [],
+          groups: [],
+        },
+      ],
       can_see_invite_details: true,
       counts: {
         pending: 0,

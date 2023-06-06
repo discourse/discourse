@@ -197,7 +197,9 @@ describe "Custom sidebar sections", type: :system, js: true do
     sign_in admin
     visit("/latest")
 
-    expect(sidebar.primary_section_icons("community")).to eq(%w[layer-group user wrench ellipsis-v])
+    expect(sidebar.primary_section_icons("community")).to eq(
+      %w[layer-group user flag wrench ellipsis-v],
+    )
 
     sidebar.edit_custom_section("Community")
     section_modal.fill_link("Everything", "/latest", "paper-plane")
@@ -207,10 +209,10 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(sidebar).to have_section("Edited community section")
     expect(sidebar.primary_section_links("edited-community-section")).to eq(
-      ["My Posts", "Everything", "Admin", "More"],
+      ["My Posts", "Everything", "Review", "Admin", "More"],
     )
     expect(sidebar.primary_section_icons("edited-community-section")).to eq(
-      %w[user paper-plane wrench ellipsis-v],
+      %w[user paper-plane flag wrench ellipsis-v],
     )
 
     sidebar.edit_custom_section("Edited community section")
@@ -218,9 +220,11 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(sidebar).to have_section("Community")
     expect(sidebar.primary_section_links("community")).to eq(
-      ["Everything", "My Posts", "Admin", "More"],
+      ["Everything", "My Posts", "Review", "Admin", "More"],
     )
-    expect(sidebar.primary_section_icons("community")).to eq(%w[layer-group user wrench ellipsis-v])
+    expect(sidebar.primary_section_icons("community")).to eq(
+      %w[layer-group user flag wrench ellipsis-v],
+    )
   end
 
   it "shows anonymous public sections" do
