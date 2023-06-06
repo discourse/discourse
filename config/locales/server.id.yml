@@ -572,6 +572,7 @@ id:
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
       description_incomplete: "Post deskripsi kategori harus memiliki setidaknya satu paragraf."
+      disallowed_tags_generic: "Topik ini memiliki tag yang tidak diizinkan."
       slug_contains_non_ascii_chars: "berisi karakter non-ascii"
       is_already_in_use: "sedang digunakan"
     cannot_delete:
@@ -588,6 +589,9 @@ id:
       blocked_hotlinked: "Gambar Eksternal"
     media_placeholder:
       blocked_hotlinked_title: "Media dihosting di situs lain. Klik untuk membuka di tab baru."
+      blocked_hotlinked: "Media Eksternal"
+    has_likes:
+      other: "%{count} Suka"
   rate_limiter:
     hours:
       other: "%{count} jam"
@@ -692,8 +696,14 @@ id:
       title: "Konfirmasi email baru Anda"
       description: "Konfirmasikan bahwa Anda ingin alamat email Anda diubah menjadi:"
     authorizing_old:
+      title: "Ubah alamat email Anda"
+      description: "Harap konfirmasi perubahan alamat email Anda"
+      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
       old_email: "Email lama: %{email}"
       new_email: "Email baru: %{email}"
+      almost_done_title: "Konfirmasi alamat email baru"
+  associated_accounts:
+    connected: "(terhubung)"
   activation:
     action: "Klik disini untuk mengaktifkan akun anda"
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
@@ -702,8 +712,12 @@ id:
     welcome_to: "Selamat datang ke %{site_name}!"
     approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
     missing_session: "Kami tidak dapat mendeteksi apakah akun anda telah dibuat, mohon pastikan cookies anda aktif."
+    activated: "Maaf, akun ini sudah diaktifkan."
     admin_confirm:
       title: "Konfirmasi Akun Admin"
+      description: "Anda yakin ingin <b>%{target_username} (%{target_email})</b> menjadi administrator?"
+      grant: "Berikan Akses Admin"
+      complete: "<b>%{target_username}</b> sekarang menjadi administrator."
       back_to: "Kembali ke %{title}"
   reviewable_score_types:
     needs_approval:
@@ -711,6 +725,7 @@ id:
   post_action_types:
     off_topic:
       title: "Diluar topik"
+      description: "Post ini tidak relevan dengan diskusi saat ini seperti yang didefinisikan oleh judul dan post pertama, dan mungkin harus dipindahkan ke tempat lain."
       short_description: "Tidak relevan dengan diskusi"
     spam:
       title: "Spam"
@@ -780,6 +795,10 @@ id:
   archetypes:
     regular:
       title: "Topik Reguler"
+    banner:
+      title: "Topik Spanduk"
+      message:
+        make: "Topik ini sekarang menjadi spanduk. Itu akan muncul di bagian atas setiap halaman sampai ditutup oleh pengguna."
   unsubscribe:
     title: "Berhenti berlangganan"
     log_out: "Keluar"
@@ -848,6 +867,11 @@ id:
       description: Daftar aktivitas moderator termasuk penanda yang ditinjau, waktu pembacaan, topik yang dibuat, post yang dibuat, pesan pribadi yang dibuat, dan revisi.
     flags_status:
       title: "Status Penanda"
+      values:
+        agreed: Setuju
+        disagreed: Tidak setuju
+        deferred: Ditangguhkan
+        no_action: Tidak ada tindakan
       labels:
         flag: Tipe
     visits:
