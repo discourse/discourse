@@ -1,5 +1,7 @@
+<PluginOutlet @name="before-sidebar-sections" />
 {{#if @currentUser}}
   <Sidebar::User::Sections @collapsableSections={{@collapsableSections}} />
 {{else}}
   <Sidebar::Anonymous::Sections @collapsableSections={{@collapsableSections}} />
 {{/if}}
+<PluginOutlet @name="after-sidebar-sections" />
