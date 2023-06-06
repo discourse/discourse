@@ -107,7 +107,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
 
     it "shows a default color and css class for the category icon square" do
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
-      expect(page).to have_css(".hashtag-cooked .hashtag-no-permission")
+      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
     end
   end
 end

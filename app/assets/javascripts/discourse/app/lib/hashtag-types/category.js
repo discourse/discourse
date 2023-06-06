@@ -31,7 +31,8 @@ export default class CategoryHashtagType extends HashtagTypeBase {
   }
 
   generateIconHTML(hashtag) {
-    const colorCssClass = !this.preloadedData.mapBy("id").includes(hashtag.id)
+    const hashtagId = parseInt(hashtag.id, 10);
+    const colorCssClass = !this.preloadedData.mapBy("id").includes(hashtagId)
       ? "hashtag-missing"
       : `hashtag-color--${this.type}-${hashtag.id}`;
     return `<span class="hashtag-category-badge ${colorCssClass}"></span>`;
