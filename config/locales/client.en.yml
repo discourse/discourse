@@ -2866,7 +2866,7 @@ en:
           title: "Dismiss new"
           topics: "Dismiss new topics"
           posts: "Dismiss new posts"
-          untrack: "Stop tracking these topics so they stop appearing in my new lists"
+          untrack: "Stop tracking these topics so they stop appearing in my new list"
         dismiss_new_with_selected:
           one: "Dismiss New (%{count})"
           other: "Dismiss New (%{count})"
