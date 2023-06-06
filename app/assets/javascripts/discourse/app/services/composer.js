@@ -1668,16 +1668,18 @@ export default class ComposerController extends Controller {
     this.set("lastValidatedAt", null);
   }
 
-  prepareFormTemplateData(event) {
+  prepareFormTemplateData(event, skipValidation = false) {
     event?.preventDefault();
 
     const form = document.querySelector("#form-template-form");
     const formData = new FormData(form);
 
     // Validate the form template
-    this._validateFormTemplateData(form);
-    if (!form.checkValidity()) {
-      return;
+    if (skipValidation === false) {
+      this._validateFormTemplateData(form);
+      if (!form.checkValidity()) {
+        return;
+      }
     }
 
     // Gather form template data
@@ -1752,5 +1754,10 @@ export default class ComposerController extends Controller {
         field.checkValidity();
       });
     });
+  }
+
+  @action
+  previewTemplate(event) {
+    this.prepareFormTemplateData(event, true);
   }
 }

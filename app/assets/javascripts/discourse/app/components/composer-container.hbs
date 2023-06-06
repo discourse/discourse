@@ -247,6 +247,15 @@
               @disableSubmit={{this.composer.disableSubmit}}
             />
 
+            {{#if this.composer.formTemplateIds}}
+              <DButton
+                @class="preview-template"
+                @icon="eye"
+                @label="composer.preview_template"
+                @action={{this.composer.previewTemplate}}
+              />
+            {{/if}}
+
             {{#if this.composer.site.mobileView}}
               <a
                 href

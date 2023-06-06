@@ -2419,6 +2419,7 @@ en:
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
       title: "Or press %{modifier}Enter"
+      preview_template: "Preview Post"
 
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
