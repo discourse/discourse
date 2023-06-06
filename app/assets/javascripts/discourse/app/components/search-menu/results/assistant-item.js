@@ -33,8 +33,7 @@ export default class AssistantItem extends Component {
     return this.args.prefix?.trim();
   }
 
-  // this could be renamed to something more practical
-  get tags() {
+  get tagsSlug() {
     if (!this.args.tag || !this.args.additionalTags) {
       return;
     }

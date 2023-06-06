@@ -63,7 +63,7 @@
     {{/if}}
   {{else}}
     {{#each this.suggestionShortcuts as |item|}}
-      {{#if this.isSuggestionKeyword}}
+      {{#if (fn this.isSuggestionKeyword item)}}
         <SearchMenu::Results::AssistantItem
           @slug={{concat this.prefix item}}
           @closeSearchMenu={{@closeSearchMenu}}

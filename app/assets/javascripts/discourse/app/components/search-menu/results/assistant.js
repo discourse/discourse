@@ -50,8 +50,6 @@ export default class Assistant extends Component {
       addSearchSuggestion("in:tagged");
       addSearchSuggestion("in:untagged");
     }
-
-    this.attributesForSuggestionKeyword();
   }
 
   get userMatchesInTopic() {
@@ -62,72 +60,70 @@ export default class Assistant extends Component {
   }
 
   isSuggestionKeyword(item) {
-    debugger;
     return (
       item.includes(this.args.suggestionKeyword) || !this.args.suggestionKeyword
     );
   }
 
-  attributesForSuggestionKeyword() {
+  get suggestionType() {
+    switch (this.args.suggestionKeyword) {
+      case "+":
+        return SUGGESTION_KEYWORD_MAP[this.args.suggestionKeyword];
+      case "#":
+        return SUGGESTION_KEYWORD_MAP[this.args.suggestionKeyword];
+      case "@":
+        return SUGGESTION_KEYWORD_MAP[this.args.suggestionKeyword];
+    }
+  }
+
+  get prefix() {
+    let prefix = "";
     if (this.args.suggestionKeyword !== "+") {
-      this.prefix =
+      prefix =
         this.args.slug?.split(this.args.suggestionKeyword)[0].trim() || "";
-      if (this.prefix.length) {
-        this.prefix = `${this.prefix} `;
+      if (prefix.length) {
+        prefix = `${prefix} `;
       }
     }
 
-    switch (this.args.suggestionKeyword) {
-      case "+":
-        this.args.results.forEach((result) => {
-          if (result.additionalTags) {
-            this.prefix =
-              this.args.slug?.split(" ").slice(0, -1).join(" ").trim() || "";
-          } else {
-            this.prefix = this.args.slug?.split("#")[0].trim() || "";
-          }
-          if (this.prefix.length) {
-            this.prefix = `${this.prefix} `;
-          }
-        });
-
-        this.suggestionType =
-          SUGGESTION_KEYWORD_MAP[this.args.suggestionKeyword];
-        break;
-      case "#":
-        // For all results that are a category we need to assign
-        // a 'fullSlug' for each object. It would place too much logic
-        // to do this on the fly within the view so instead we build
-        // a 'fullSlugForCategoryMap' which we can then
-        // access in the view by 'category.id'
-        this.fullSlugForCategoryMap = {};
-        this.args.results.forEach((result) => {
-          if (result.model) {
-            const fullSlug = result.model.parentCategory
-              ? `#${result.model.parentCategory.slug}:${result.model.slug}`
-              : `#${result.model.slug}`;
-            this.fullSlugForCategoryMap[
-              result.model.id
-            ] = `${this.prefix}${fullSlug}`;
-          }
-        });
-
-        this.suggestionType =
-          SUGGESTION_KEYWORD_MAP[this.args.suggestionKeyword];
-        break;
-      case "@":
-        // when only one user matches while in topic
-        // quick suggest user search in the topic or globally
-        if (this.userMatchesInTopic) {
-          this.user = this.args.results[0];
+    if (this.args.suggestionKeyword === "+") {
+      this.args.results.forEach((result) => {
+        if (result.additionalTags) {
+          prefix =
+            this.args.slug?.split(" ").slice(0, -1).join(" ").trim() || "";
+        } else {
+          prefix = this.args.slug?.split("#")[0].trim() || "";
+        }
+        if (prefix.length) {
+          prefix = `${prefix} `;
         }
 
-        this.suggestionType =
-          SUGGESTION_KEYWORD_MAP[this.args.suggestionKeyword];
-        break;
+        return prefix;
+      });
     }
-    // SOMEHOW WE NEED TO ONLY RENDER 8 OPTIONS
-    //return content.filter((c, i) => i <= 8);
+  }
+
+  // For all results that are a category we need to assign
+  // a 'fullSlug' for each object. It would place too much logic
+  // to do this on the fly within the view so instead we build
+  // a 'fullSlugForCategoryMap' which we can then
+  // access in the view by 'category.id'
+  get fullSlugForCategoryMap() {
+    const categoryMap = {};
+    this.args.results.forEach((result) => {
+      if (result.model) {
+        const fullSlug = result.model.parentCategory
+          ? `#${result.model.parentCategory.slug}:${result.model.slug}`
+          : `#${result.model.slug}`;
+        categoryMap[result.model.id] = `${this.prefix}${fullSlug}`;
+      }
+    });
+  }
+
+  get user() {
+    // when only one user matches while in topic
+    // quick suggest user search in the topic or globally
+    return this.args.results[0];
   }
 }
 

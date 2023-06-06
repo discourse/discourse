@@ -29,7 +29,7 @@
       {{/if}}
     {{else if @tag}}
       {{#if (and @isIntersection @additionalTags.length)}}
-        <span class="search-item-tag">{{this.tags}}</span>
+        <span class="search-item-tag">{{this.tagsSlug}}</span>
       {{else}}
         <span class="search-item-tag">
           <SearchMenu::Results::Type::Tag @result={{@tag}} />
