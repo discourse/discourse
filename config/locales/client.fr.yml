@@ -144,6 +144,8 @@ fr:
       facebook: "Partager sur Facebook"
       email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "A rendu ce sujet public (%{when})"
       open_topic: "A converti ceci en sujet (%{when})"
@@ -155,6 +157,8 @@ fr:
       removed_user: "A retiré %{who} (%{when})"
       removed_group: "A retiré %{who} (%{when})"
       autobumped: "Remonté automatiquement dans la liste (%{when})"
+      tags_changed: "Tags mis à jour %{when}"
+      category_changed: "Catégorie mise à jour %{when}"
       autoclosed:
         enabled: "A fermé ce sujet (%{when})"
         disabled: "A ouvert ce sujet (%{when})"
@@ -179,11 +183,13 @@ fr:
       forwarded: "A transmis l'e-mail ci-dessus"
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
+    skip_user_nav: "Aller au contenu du profil"
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
       message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Ignorer"
+    bootstrap_mode: "Mode Bootstrap"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -296,6 +302,7 @@ fr:
       edit_bookmark: "Modifier le signet"
       clear_bookmarks: "Retirer les signets"
       help:
+        bookmark: "Cliquez pour mettre ce sujet en favori"
         edit_bookmark_for_topic: "Cliquez pour modifier le signet associé à ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
@@ -2597,7 +2604,7 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
-          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge unread-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondu</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
+          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge unread-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondu</li><li>que vous avez lus plus de 5 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
       bottom:
         latest: "Il n'y a pas d'autres sujets récents à consulter."
         posted: "Il n'y a pas d'autres sujets publiés à consulter."

@@ -1845,6 +1845,9 @@ fi:
       hidden_for_session: "OK, kysymme sinulta huomenna. Voit myös aina käyttää 'Kirjaudu sisään' -linkkiä tilin luomiseen."
       intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
       value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan. :heart:"
+    offline_indicator:
+      no_internet: "Ei Internet-yhteyttä."
+      refresh_page: "Päivitä sivu"
     summary:
       enabled_description: "Tarkastelet yhteenvetoa tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description:
@@ -2623,7 +2626,7 @@ fi:
         top: "Suosittuja ketjuja ei ole."
         educate:
           new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
-          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge unread-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvälä painikkeella.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
+          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge unread-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään kuin 5 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvälä painikkeella.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         posted: "Ketjuja, joihin olet kirjoittanut, ei ole enempää."
@@ -2686,6 +2689,7 @@ fi:
       read_more_in_category: "Haluatko lukea lisää? Selaa muita ketjuja alueelta %{categoryLink} tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       read_more: "Haluatko lukea lisää? <a href='%{categoryLink}'>Selaa kaikkia alueita</a> tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
+      participant_groups: "Osallistujaryhmät"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -4318,6 +4322,7 @@ fi:
               read_lists: Lue ketjuluetteloita, kuten suositut, uudet, tuoreimmat jne. RSS on myös tuettu.
             posts:
               edit: Muokkaa mitä tahansa viestiä tai tiettyä viestiä.
+              list: Listaa viimeisimmät viestit ja yksityisviestit. Myös RSS on tuettu.
             categories:
               list: Hae luettelo alueista.
               show: Hae yksittäinen alue tunnuksen perusteella.

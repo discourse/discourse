@@ -403,6 +403,8 @@ sv:
         search: "Sök efter ett meddelande"
         placeholder: "skriv meddelandets titel, url eller id här"
     review:
+      show_more: "Visa mer"
+      show_less: "Visa mindre"
       order_by: "Sortera efter"
       date_filter: "Publicerat mellan"
       in_reply_to: "som svar till"
@@ -572,6 +574,8 @@ sv:
           title: "Användare"
         reviewable_post:
           title: "Inlägg"
+        reviewable_chat_message:
+          title: "Flaggat chattmeddelande"
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det måste godkännas av en moderator innan det kan visas. Ha tålamod."
@@ -2635,7 +2639,7 @@ sv:
         filter: "Det finns inga ämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
-          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 4 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
+          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 5 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -2700,6 +2704,7 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
+      participant_groups: "Deltagargrupper"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -4039,7 +4044,9 @@ sv:
           save: "Spara"
           delete: "Radera"
           delete_confirm: "Är du säker på att du vill radera det här avsnittet?"
+          reset_confirm: "Är du säker på att du vill återställa den här sektionen till standardvärdet?"
           public: "Gör denna sektion offentligt och synligt för alla"
+          more_menu: "Menyn Mer"
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
@@ -4101,6 +4108,7 @@ sv:
         community:
           header_link_text: "Community"
           header_action_create_topic_title: "Skapa ett ämne"
+          header_action_edit_section_title: "Redigera sektionen Forum"
           links:
             about:
               content: "Om"

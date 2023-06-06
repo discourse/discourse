@@ -2297,7 +2297,7 @@ ko:
         top: "주요 주제가 없습니다."
         educate:
           new: '<p>새 주제가 여기에 표시됩니다. 기본적으로 지난 2일 이내에 작성된 주제는 새 주제로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 표시로 확인할 수 있습니다.</p><p>이 기준을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a>에서 변경하세요.</p>'
-          unread: '<p>읽지 않은 주제는 여기에 표시됩니다.</p><p>기본적으로 주제는 읽지 않은 것으로 간주되며 다음과 같은 조건 중 하나를 만족하면 읽지 않은 주제 개수 <span class="badge unread-posts badge-notification">1</span>이 표시됩니다.</p><ul><li>새 주제 작성</li><li>주제에 댓글 작성</li><li>주제를 4분 이상 읽음</li></ul><p>또는 각 주제의 알림 아이콘에서 주제를 추적하거나 구독하도록 설정하는 경우도 포함됩니다.</p><p>설정을 변경하려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 이동하세요.</p>'
+          unread: '<p>읽지 않은 글은 여기에 표시됩니다.</p><p>기본적으로 글은 읽지 않은 것으로 간주하고 다음과 같은 조건 중 하나를 만족하면 읽지 않은 글수 <span class="badge unread-posts badge-notification">1</span> 을 표시합니다:</p><ul><li>새로운 글 작성</li><li>글에 댓글 작성</li><li>글을 5분 이상 읽기</li></ul><p>또는 글을 팔로우 하거나 지켜보기 위해 각 글의 밑부분에 달린 알림 제어판에서 설정하는 경우도 포함됩니다.</p><p>설정을 바꾸려면 <a href="%{userPrefsUrl}">환경설정</a> 페이지로 가세요.</p>'
       bottom:
         latest: "더 이상 최근 주제가 없습니다."
         posted: "더 이상 게시한 주제가 없습니다."

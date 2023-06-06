@@ -190,7 +190,6 @@ ja:
       page_publishing_requirements: "セキュリティで保護されているメディアが有効である場合、ページの公開を有効にできません。"
       s3_backup_requires_s3_settings: "'%{setting_name}' が入力されていない場合、S3 をバックアップとして使用することはできません。"
       s3_bucket_reused: "'s3_upload_bucket' and 's3_backup_bucket' に同じバケットを使用することはできません。別のバケットを選択するか、バケットごとに異なるパスを使用してください。"
-      secure_uploads_requirements: "安全なアップロードを有効にする前に、S3 アップロードを有効にする必要があります。"
       share_quote_facebook_requirements: "Facebook に引用を共有できるようにするには、Facebook アプリの ID を設定する必要があります。"
       second_factor_cannot_enforce_with_socials: "ソーシャルログインが有効になっている状態で 2FA を適用することはできません。先に、%{auth_provider_names} でログインを無効にする必要があります。"
       second_factor_cannot_be_enforced_with_disabled_local_login: "ログインが無効になっている場合、2FA を適用することはできません。"

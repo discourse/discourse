@@ -2535,7 +2535,7 @@ hu:
         top: "Nincsenek népszerű témák."
         educate:
           new: '<p>Az új témák fognak itt megjelenni. Alapértelmezésként itt jelennek meg a friss témák, és egy ilyen jelet <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> talál majd azok mellett, amelyek az elmúlt két napban lettek közzétéve.</p><p>A beállításait <a href="%{userPrefsUrl}">ezen az oldalon</a> tudja módosítani.</p>'
-          unread: "<p>Az Ön olvasatlan témái itt jelennek meg.</p><p>Alapértelmezés szerint a témák olvasatlannak minősülnek, és az olvasatlan témák száma <span class=\"badge unread-posts badge-notification\">1</span> lesz látható, ha:</p><ul><li>Létrehozta a témát</li><li>Válaszolt a témára</li><li>Olvasta a témát több mint 4 percig</li></ul><p>Vagy ha a témát kifejezetten Nyomon követte vagy Figyelt témának állította be az egyes témákban található \U0001F514 segítségével.</p><p>Ennek megváltoztatásához látogasson el a <a href=\"%{userPrefsUrl}\">beállítások</a> oldalára.</p>"
+          unread: "<p>Az Ön olvasatlan témái itt jelennek meg.</p><p>Alapértelmezés szerint a témák olvasatlannak minősülnek, és az olvasatlan témák száma <span class=\"badge unread-posts badge-notification\">1</span> lesz látható, ha:</p><ul><li>Létrehozta a témát</li><li>Válaszolt a témára</li><li>Olvasta a témát több mint 5 percig</li></ul><p>Vagy ha a témát kifejezetten Nyomon követte vagy Figyelt témának állította be az egyes témákban található \U0001F514 segítségével.</p><p>Ennek megváltoztatásához látogasson el a <a href=\"%{userPrefsUrl}\">beállítások</a> oldalára.</p>"
       bottom:
         latest: "Nincs több friss téma."
         posted: "Nincs több közzétett téma."
@@ -2854,7 +2854,7 @@ hu:
         radio_label: "Új üzenet"
         participants: "Résztvevők"
         instructions:
-          one: "Új üzenet létrehozására készül, amelyet a kiválasztott <b>%{count}</b> bejegyzéssel fog megtölteni."
+          one: "Új üzenet létrehozására készül, amelyet a kiválasztott bejegyzéssel fog megtölteni."
           other: "Új üzenet létrehozására készül, amelyet a kiválasztott <b>%{count}</b> bejegyzéssel fog megtölteni."
       move_to_existing_message:
         title: "Áthelyezés egy meglévő üzenethez"
@@ -3250,7 +3250,7 @@ hu:
       archived:
         help: "Ez a témakör jelenleg archiválva van; be lett fagyasztva, szóval nem lehet megváltoztatni semmilyen módon."
       locked_and_archived:
-        help: "Ez egy lezárt és archívált témakör ezért nem lehet bele írni vagy módosítani rajta."
+        help: "Ez egy lezárt és archívált téma, ezért nem fogad új válaszokat, és nem módosítható"
       unpinned:
         title: "Nincs kiemelve"
         help: "Ez a téma nincs kiemelve neked ezért a szokásos helyén lesz látható."
@@ -3279,7 +3279,7 @@ hu:
     sr_replies: "Rendezés válaszok szerint"
     views_long:
       one: "ezt a témát %{count} alkalommal nézték meg"
-      other: "ezt a témát %{number} alkalommal nézték meg"
+      other: "ezt a témát %{count} alkalommal nézték meg"
     activity: "Aktivitás"
     sr_activity: "Rendezés aktivitás szerint"
     likes: "Kedvelések"
@@ -3389,7 +3389,7 @@ hu:
       title: "Billentyűkombinációk"
       jump_to:
         title: "Ugrás oda"
-        home: "%{shortcut} Home"
+        home: "%{shortcut} Kezdőlap"
         latest: "%{shortcut} Legutóbbi"
         new: "%{shortcut} Új"
         unread: "%{shortcut} Olvasatlan"
@@ -3410,7 +3410,7 @@ hu:
         title: "Alkalmazás"
         create: "%{shortcut} Új téma létrehozása"
         notifications: "%{shortcut}Értesítés megnyitása"
-        hamburger_menu: "%{shortcut}Hamburger menű megnyítása"
+        hamburger_menu: "%{shortcut} Hamburger menű megnyítása"
         user_profile_menu: "%{shortcut} Felhasználói menü megnyitása"
         show_incoming_updated_topics: "%{shortcut}Frissített téma mutatása"
         search: "%{shortcut} Keresés"
@@ -3440,7 +3440,7 @@ hu:
         reply_topic: "%{shortcut}Válasz a témára"
         reply_post: "%{shortcut} Válasz a bejegyzésre"
         quote_post: "%{shortcut}Bejegyzés idézése"
-        like: "%{shortcut}Bejegyzés likeolása"
+        like: "%{shortcut} Bejegyzés kedvelése"
         bookmark: "%{shortcut} Bejegyzés könyvjelzővel való ellátása"
         edit: "%{shortcut}Bejegyzés szerkesztése"
         delete: "%{shortcut}Bejegyzés törlése"
@@ -3469,7 +3469,7 @@ hu:
       awarded: elnyerte
       select_badge_for_title: Válassz egy jelvényt, hogy címként használd
       none: "(semmi)"
-      successfully_granted: "Sikeresen adományoztott %{badge} %{username} számára"
+      successfully_granted: "Sikeresen megadta a(z) %{badge} jelvényt %{username} számára"
       badge_grouping:
         getting_started:
           name: Elkezdeni
@@ -3504,7 +3504,7 @@ hu:
       choose_for_topic_required_group:
         one: "válasszon %{count} címkét innen: „%{name}”…"
         other: "válasszon %{count} címkét innen: „%{name}”…"
-      info: "Info"
+      info: "Információ"
       default_info: "Ez a címke nincs kategóriára korlátozva, és nincsenek szinonimái."
       staff_info: "Korlátozások hozzáadásához tegye ezt a címkét egy <a href=%{basePath}/tag_groups>címkecsoportba</a>."
       synonyms: "Szinonimák"
@@ -3763,7 +3763,7 @@ hu:
         critical_available: "Egy fontos frissítés érhető el!"
         updates_available: "Frissítések érhetőek el!"
         please_upgrade: "Kérünk frissíts!"
-        no_check_performed: "Nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
+        no_check_performed: "Nem volt ellenőrizve, hogy van-e új frissítés. Győződjön meg arról hogy a Sidekiq fut."
         stale_data: "Rég nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
         version_check_pending: "Úgy nézik nem rég frissítettél. Fantasztikus!"
         installed_version: "Telepítve"
@@ -3873,12 +3873,12 @@ hu:
               title: "Ki láthatja ennek a csoportnak a tagjait?"
           membership:
             automatic: Automatikus
-            trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott Bizalmi szint: "
+            trust_levels_title: "Új tagok hozzáadásakor automatikusan kapott bizalmi szint:"
             trust_levels_none: "Egyik sem"
             automatic_membership_associated_groups: "Azok a felhasználók, akik egy itt felsorolt szolgáltatás csoportjának tagjai, automatikusan hozzáadódnak ehhez a csoporthoz, amikor bejelentkeznek a szolgáltatásba."
             primary_group: "Automatikusan beállítva elsődleges csoportnak"
           alert:
-            primary_group: "Mivel ez egy elsődleges csoport, a(z) '%{group_name}' nevet fogja használni a CSS osztályokban, amelyeket bárki megtekinthet."
+            primary_group: "Mivel ez egy elsődleges csoport, a(z) „%{group_name}” nevet fogja használni a CSS osztályokban, melyeket bárki láthat."
         name_placeholder: "Csoport neve szóközök nélkül, a felhasználónév szabályaival"
         primary: "Elsődleges csoport"
         no_primary: "(nincs elsődleges csoport)"
@@ -3988,7 +3988,7 @@ hu:
         controls: "Irányítás"
         go_back: "Vissza a listára"
         payload_url_placeholder: "https://example.com/postreceive"
-        secret_invalid: "A Secret mezőben nem lehet üres karakter."
+        secret_invalid: "A titokban nem lehet üres karakter."
         secret_too_short: "A titoknak legalább 12 karakteresnek kell lennie"
         secret_placeholder: "Egy opcionális karakterlánc, amelyet aláírás létrehozásához használnak"
         event_type_missing: "Legalább egy eseménytípust be kell állítania."
@@ -4066,11 +4066,11 @@ hu:
         none: "Nincsenek elérhető biztonsági mentések."
         read_only:
           enable:
-            title: "Olvasásvédett mód bekapcsolása"
+            title: "Írásvédett mód bekapcsolása"
             label: "Csak olvasás bekapcsolása"
             confirm: "Biztos vagy benne hogy be szeretnéd kapcsolni az írásvédett módot"
           disable:
-            title: "olvasásvédett mód kikapcsolása"
+            title: "Írásvédett mód kikapcsolása"
         logs:
           none: "Még nincsenek naplók..."
         columns:
@@ -4078,12 +4078,12 @@ hu:
           size: "Méret"
         upload:
           label: "Feltöltés"
-          uploading: "Feltültés..."
+          uploading: "Feltöltés…"
           success: "'%{filename}' sikeresen feltöltésre került. A fájl feldolgozása folyamatban van, és egy percig eltarthat, amíg megjelenik a listán."
           error: "Egy hiba lépett fel feltöltés közben '%{filename}': %{message}"
         operations:
           is_running: "Egy folyamat jelenleg fut már."
-          failed: "A %{operation} meghiusúlt. Kérlek ellenőrízd a naplókat."
+          failed: "A(z) %{operation} sikertelen. Nézze meg a naplókat."
           cancel:
             label: "Mégse"
             title: "Művelet visszavonása"
@@ -4095,7 +4095,7 @@ hu:
             without_uploads: "Igen (fájlok feltöltésének kihagyása)"
           download:
             label: "Letöltés"
-            title: "Küldj egy letöltési linket emailben"
+            title: "Letöltési hivatkozás küldése e-mailben"
             alert: "Egy link a biztonsági mentésben el lett küldve neked emailben"
           destroy:
             title: "Biztonsági mentés törlése"

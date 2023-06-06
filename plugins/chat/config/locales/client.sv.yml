@@ -251,6 +251,9 @@ sv:
       select: "Välj"
       return_to_list: "Återgå till listan över kanaler"
       return_to_threads_list: "Gå tillbaka till pågående diskussioner"
+      unread_threads_count:
+        one: "Du har %{count} oläst diskussion"
+        other: "Du har %{count} olästa diskussioner"
       scroll_to_bottom: "Scrolla till botten"
       scroll_to_new_messages: "Se nya meddelanden"
       sound:
