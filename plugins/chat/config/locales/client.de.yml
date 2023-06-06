@@ -386,7 +386,7 @@ de:
           one: "Du, %{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
           other: "Du, %{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
         single_user: "%{username} haben reagiert mit :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} und %{username} reagierten mit:%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} und %{username} reagierten mit :%{emoji}:"
         multiple_users_and_more:
           one: "%{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
           other: "%{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"

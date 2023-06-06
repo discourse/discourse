@@ -472,6 +472,8 @@ pl_PL:
         search: "Wyszukaj wiadomość"
         placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub id"
     review:
+      show_more: "Pokaż więcej"
+      show_less: "Pokaż mniej"
       order_by: "Segreguj według:"
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
@@ -2897,7 +2899,7 @@ pl_PL:
         filter: "Brak tematów."
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
-          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge unread-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
+          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge unread-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 5 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
@@ -2972,6 +2974,7 @@ pl_PL:
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{categoryLink} lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
+      participant_groups: "Grupy uczestników"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -4802,6 +4805,7 @@ pl_PL:
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń post.
+              list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
             tags:
               list: Lista tagów.
             categories:

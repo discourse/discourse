@@ -2522,7 +2522,8 @@ zh_CN:
         filter: "没有话题。"
         educate:
           new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
-          unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 4 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
+          unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 5 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
+          new_new: "<p>你的新话题会出现在这里，你的未读话题也会显示出来。默认情况下，如果它们是在最近 2 天内创建的，话题会被视为新话题，并且会显示 <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> 指示符。未读主题将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span> 如果你：创建主题、回复主题、阅读主题超过 5 分钟，或者通过每个话题中的\U0001F514 明确将话题设置为已跟踪或已读。</p><p>访问你的 <a href=\"%{userPrefsUrl}\">选项</a> 以更改此设置。</p>"
       bottom:
         latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"
