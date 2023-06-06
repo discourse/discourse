@@ -10,6 +10,10 @@ module PageObjects
       def has_dismiss_posts_checked?
         find(".dismiss-posts label").has_checked_field?
       end
+
+      def has_untrack_unchecked?
+        find(".untrack label").has_no_checked_field?
+      end
     end
   end
 end

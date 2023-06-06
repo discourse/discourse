@@ -18,5 +18,6 @@ describe "Filtering topics", type: :system, js: true do
     find(".dismiss-read").click
     expect(dismiss_new_modal).to have_dismiss_topics_checked
     expect(dismiss_new_modal).to have_dismiss_posts_checked
+    expect(dismiss_new_modal).to have_untrack_unchecked
   end
 end
