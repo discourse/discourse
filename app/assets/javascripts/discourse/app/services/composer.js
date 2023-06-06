@@ -509,6 +509,13 @@ export default class ComposerController extends Controller {
   @action
   updateCategory(categoryId) {
     this.model.categoryId = categoryId;
+
+    // Hides preview when category has form template
+    if (this.siteSettings.experimental_form_templates) {
+      if (this.model?.category?.form_template_ids.length > 0) {
+        this.set("showPreview", false);
+      }
+    }
   }
 
   @action
@@ -1250,8 +1257,16 @@ export default class ComposerController extends Controller {
         "id",
         opts.prioritizedCategoryId
       );
+
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
+
+        // Hide preview if prioritized category has a form template
+        if (this.siteSettings.experimental_form_templates) {
+          if (category.form_template_ids.length > 0) {
+            this.set("showPreview", false);
+          }
+        }
       }
     }
 
@@ -1754,10 +1769,5 @@ export default class ComposerController extends Controller {
         field.checkValidity();
       });
     });
-  }
-
-  @action
-  previewTemplate(event) {
-    this.prepareFormTemplateData(event, true);
   }
 }
