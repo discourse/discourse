@@ -53,7 +53,7 @@ export default class TextareaInteractor extends EmberObject.extend(
     });
   }
 
-  focus(opts = { ensureAtEnd: false, refreshHeight: true }) {
+  focus(opts = { ensureAtEnd: false, refreshHeight: true, addText: null }) {
     next(() => {
       schedule("afterRender", () => {
         if (opts.refreshHeight) {
@@ -66,6 +66,10 @@ export default class TextareaInteractor extends EmberObject.extend(
 
         if (this.capabilities.isIpadOS || this.site.mobileView) {
           return;
+        }
+
+        if (opts.addText) {
+          this.addText(this.getSelected(), opts.addText);
         }
 
         this.focusTextArea();

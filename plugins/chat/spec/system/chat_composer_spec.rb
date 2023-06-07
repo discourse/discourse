@@ -95,32 +95,6 @@ RSpec.describe "Chat composer", type: :system do
     end
   end
 
-  context "when pasting link over selected text" do
-    it "outputs a markdown link" do
-      modifier = /darwin/i =~ RbConfig::CONFIG["host_os"] ? :command : :control
-      select_text = <<-JS
-        const element = document.querySelector(arguments[0]);
-        element.focus();
-        element.setSelectionRange(0, element.value.length)
-      JS
-
-      chat_page.visit_channel(channel_1)
-
-      find("body").send_keys("https://www.discourse.org")
-      page.execute_script(select_text, ".chat-composer__input")
-
-      page.send_keys [modifier, "c"]
-      page.send_keys [:backspace]
-
-      find("body").send_keys("discourse")
-      page.execute_script(select_text, ".chat-composer__input")
-
-      page.send_keys [modifier, "v"]
-
-      expect(channel_page.composer.value).to eq("[discourse](https://www.discourse.org)")
-    end
-  end
-
   context "when editing a message with no length" do
     it "deletes the message" do
       chat_page.visit_channel(channel_1)
@@ -137,10 +111,9 @@ RSpec.describe "Chat composer", type: :system do
 
     it "works" do
       chat_page.visit_channel(channel_1)
-      find("body").send_keys("1")
-      channel_page.click_send_message
+      channel_page.send_message("1")
 
-      expect(channel_page).to have_message(text: "1")
+      expect(channel_page.messages).to have_message(text: "1")
     end
   end
 

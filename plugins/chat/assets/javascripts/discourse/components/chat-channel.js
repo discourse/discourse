@@ -931,7 +931,8 @@ export default class ChatLivePane extends Component {
     }
 
     if (!this.args.channel.isDraft) {
-      this.composer.focus();
+      event.preventDefault();
+      this.composer.focus({ addText: event.key });
       return;
     }
 
