@@ -602,27 +602,35 @@ module Discourse
   end
 
   def self.tos_url
-    urls_cache["tos"] ||= if SiteSetting.tos_url.present?
+    if SiteSetting.tos_url.present?
       SiteSetting.tos_url
-    elsif SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
-      "#{Discourse.base_path}/tos"
     else
-      :nil
-    end
+      urls_cache["tos"] ||= (
+        if SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
+          "#{Discourse.base_path}/tos"
+        else
+          :nil
+        end
+      )
 
-    urls_cache["tos"] != :nil ? url : nil
+      urls_cache["tos"] != :nil ? urls_cache["tos"] : nil
+    end
   end
 
   def self.privacy_policy_url
-    urls_cache["privacy_policy"] ||= if SiteSetting.privacy_policy_url.present?
+    if SiteSetting.privacy_policy_url.present?
       SiteSetting.privacy_policy_url
-    elsif SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
-      "#{Discourse.base_path}/privacy"
     else
-      :nil
-    end
+      urls_cache["privacy_policy"] ||= (
+        if SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
+          "#{Discourse.base_path}/privacy"
+        else
+          :nil
+        end
+      )
 
-    urls_cache["privacy_policy"] != :nil ? url : nil
+      urls_cache["privacy_policy"] != :nil ? urls_cache["privacy_policy"] : nil
+    end
   end
 
   def self.clear_urls!

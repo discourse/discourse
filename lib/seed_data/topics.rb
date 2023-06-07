@@ -72,7 +72,6 @@ module SeedData
             ),
           category: staff_category,
           static_first_reply: true,
-          after_create: proc { Discourse.clear_urls! },
         }
       end
 
@@ -93,7 +92,6 @@ module SeedData
           raw: I18n.t("privacy_topic.body"),
           category: staff_category,
           static_first_reply: true,
-          after_create: proc { Discourse.clear_urls! },
         }
       end
 
