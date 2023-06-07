@@ -41,6 +41,7 @@ export default class ChatThreadComposer extends Service {
     this.chat.activeMessage = null;
     message.editing = true;
     this.message = message;
+    this.focus({ refreshHeight: true, ensureAtEnd: true });
   }
 
   @action

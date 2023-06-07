@@ -45,7 +45,7 @@ export default class ChatChannelComposer extends Service {
     this.chat.activeMessage = null;
     message.editing = true;
     this.message = message;
-    this.focus({ refreshHeight: true });
+    this.focus({ refreshHeight: true, ensureAtEnd: true });
   }
 
   @action

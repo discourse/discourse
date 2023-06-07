@@ -277,7 +277,7 @@ export default class ChatThreadPanel extends Component {
       this.#onSendError(message.id, error);
     } finally {
       if (!this._selfDeleted) {
-        this.chatChannelThreadPane.sending = false;
+        this.chatThreadPane.sending = false;
       }
     }
   }

@@ -309,7 +309,7 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    if (event.key === "Escape") {
+    if (event.key === "Escape" && !event.shiftKey) {
       return this.handleEscape(event);
     }
 
