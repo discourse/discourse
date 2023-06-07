@@ -2,7 +2,7 @@
 
 module Chat
   class ChannelSearchSerializer < ::Chat::StructuredChannelSerializer
-    has_many :users, serializer: BasicUserSerializer, embed: :objects
+    has_many :users, serializer: ChatableUserSerializer, embed: :objects
 
     def users
       object[:users]

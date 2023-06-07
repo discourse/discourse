@@ -200,6 +200,95 @@ RSpec.describe Chat::Api::ChatablesController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["public_channels"][0]["id"]).to eq(chat_channel.id)
       end
+
+      describe "with 'include_cannot_chat' param" do
+        fab!(:cannot_chat_user) { Fabricate(:user, username: "janeday", name: "Jane Day") }
+        fab!(:chat_group) { Fabricate(:group, users: [user, other_user]) }
+
+        before { SiteSetting.chat_allowed_groups = chat_group.id }
+
+        it "Serializes 'cannot_chat' for user who does not have chat permissions" do
+          get "/chat/api/chatables", params: { filter: "jane", include_cannot_chat: true }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["users"].count).to eq(2)
+
+          cannot_chat_user_json =
+            response.parsed_body["users"].detect { |u| u["id"] == cannot_chat_user.id }
+          expect(cannot_chat_user_json["cannot_chat"]).to eq(true)
+        end
+
+        it "Serializes 'cannot_chat' for user who has chat disabled via user_option" do
+          GroupUser.create!(user: cannot_chat_user, group: chat_group)
+          cannot_chat_user.user_option.update!(chat_enabled: false)
+
+          get "/chat/api/chatables", params: { filter: "jane", include_cannot_chat: true }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["users"].count).to eq(2)
+
+          cannot_chat_user_json =
+            response.parsed_body["users"].detect { |u| u["id"] == cannot_chat_user.id }
+          expect(cannot_chat_user_json["cannot_chat"]).to eq(true)
+        end
+
+        it "Doesn't serialize 'cannot_chat' for users who can chat" do
+          get "/chat/api/chatables", params: { filter: "jane", include_cannot_chat: true }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["users"].count).to eq(2)
+
+          can_chat_json = response.parsed_body["users"].detect { |u| u["id"] == other_user.id }
+          expect(can_chat_json["cannot_chat"]).to be_nil
+        end
+      end
+
+      describe "with 'chatable_types' param present" do
+        fab!(:other_dm_chat_channel) do
+          Fabricate(:direct_message_channel, users: [user, other_user])
+        end
+        before { chat_channel.update(name: "jane") }
+
+        it "can only return DMs" do
+          get "/chat/api/chatables",
+              params: {
+                filter: "jane",
+                chatable_types: ["direct_message_channel"],
+              }
+
+          expect(response.parsed_body["public_channels"].count).to eq(0)
+          expect(response.parsed_body["direct_message_channels"].count).to eq(1)
+          expect(response.parsed_body["users"].count).to eq(0)
+        end
+
+        it "can only return public channels" do
+          get "/chat/api/chatables", params: { filter: "jane", chatable_types: ["public_channel"] }
+
+          expect(response.parsed_body["public_channels"].count).to eq(1)
+          expect(response.parsed_body["direct_message_channels"].count).to eq(0)
+          expect(response.parsed_body["users"].count).to eq(0)
+        end
+
+        it "can only return users" do
+          get "/chat/api/chatables", params: { filter: "jane", chatable_types: ["user"] }
+
+          expect(response.parsed_body["public_channels"].count).to eq(0)
+          expect(response.parsed_body["direct_message_channels"].count).to eq(0)
+          expect(response.parsed_body["users"].count).to eq(1)
+        end
+
+        it "can return multiple types" do
+          get "/chat/api/chatables",
+              params: {
+                filter: "jane",
+                chatable_types: %w[public_channel direct_message_channel],
+              }
+
+          expect(response.parsed_body["public_channels"].count).to eq(1)
+          expect(response.parsed_body["direct_message_channels"].count).to eq(1)
+          expect(response.parsed_body["users"].count).to eq(0)
+        end
+      end
     end
   end
 end
