@@ -18,6 +18,12 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import I18n from "I18n";
 
+const removedSecondaryButtons = new Set();
+
+export function removeChatComposerSecondaryButtons(buttonIds) {
+  buttonIds.forEach((id) => removedSecondaryButtons.add(id));
+}
+
 export default class ChatMessageInteractor {
   @service appEvents;
   @service dialog;
@@ -38,13 +44,12 @@ export default class ChatMessageInteractor {
 
   cachedFavoritesReactions = null;
 
-  constructor(owner, message, context, options = {}) {
+  constructor(owner, message, context) {
     setOwner(this, owner);
 
     this.message = message;
     this.context = context;
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
-    this.hiddenSecondaryButtons = options.hiddenSecondaryButtons || [];
   }
 
   get capabilities() {
@@ -205,9 +210,7 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons.reject((button) =>
-      this.hiddenSecondaryButtons.includes(button.id)
-    );
+    return buttons.reject((button) => removedSecondaryButtons.has(button.id));
   }
 
   select(checked = true) {
