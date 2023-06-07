@@ -11,12 +11,12 @@ export default class ChatThreadComposer extends Service {
 
   @action
   focus(options = {}) {
-    this.textarea.focus(options);
+    this.textarea?.focus(options);
   }
 
   @action
   blur() {
-    this.textarea.blur();
+    this.textarea?.blur();
   }
 
   @action

@@ -21,10 +21,8 @@ export default class ChatThreadPaneSubscriptionsManager extends ChatPaneBaseSubs
       }
     }
 
-    const message = ChatMessage.create(
-      this.chat.activeChannel,
-      data.chat_message
-    );
+    const message = ChatMessage.create(this.model.channel, data.chat_message);
+    message.thread = this.model;
     this.messagesManager.addMessages([message]);
   }
 

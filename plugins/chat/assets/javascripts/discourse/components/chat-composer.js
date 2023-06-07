@@ -215,21 +215,8 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onSend() {
+  async onSend() {
     if (!this.sendEnabled) {
-      return;
-    }
-
-    if (
-      this.currentMessage.editing &&
-      this.currentMessage.message.length === 0
-    ) {
-      new ChatMessageInteractor(
-        getOwner(this),
-        this.currentMessage,
-        this.context
-      ).delete();
-      this.reset(this.args.channel, this.args.thread);
       return;
     }
 
@@ -240,13 +227,8 @@ export default class ChatComposer extends Component {
       this.composer.textarea.textarea.focus();
     }
 
-    this.args.onSendMessage(this.currentMessage);
+    await this.args.onSendMessage(this.currentMessage);
     this.composer.focus({ refreshHeight: true });
-  }
-
-  @action
-  onCancel() {
-    this.composer.cancel();
   }
 
   reportReplyingPresence() {

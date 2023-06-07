@@ -100,7 +100,7 @@ export default class ChatComposerChannel extends ChatComposer {
     if (this.currentMessage?.inReplyTo) {
       this.reset();
     } else if (this.currentMessage?.editing) {
-      this.composer.cancel();
+      this.composer.cancel(this.args.channel);
     } else {
       event.target.blur();
     }

@@ -241,8 +241,6 @@ export default class ChatThreadPanel extends Component {
   }
 
   async #sendNewMessage(message) {
-    message.thread = this.args.thread;
-
     if (this.chatThreadPane.sending) {
       return;
     }

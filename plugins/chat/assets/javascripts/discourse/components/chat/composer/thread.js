@@ -45,7 +45,7 @@ export default class ChatComposerThread extends ChatComposer {
   handleEscape(event) {
     if (this.currentMessage.editing) {
       event.stopPropagation();
-      this.composer.cancel();
+      this.composer.cancel(this.args.thread);
       return;
     }
 

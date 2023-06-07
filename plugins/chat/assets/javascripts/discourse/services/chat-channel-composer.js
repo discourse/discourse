@@ -56,19 +56,15 @@ export default class ChatChannelComposer extends Service {
       this.siteSettings.enable_experimental_chat_threaded_discussions &&
       message.channel.threadingEnabled
     ) {
-      let thread;
-      if (message.thread?.id) {
-        thread = message.thread;
-      } else {
-        thread = message.channel.createStagedThread(message);
-        message.thread = thread;
+      if (!message.thread?.id) {
+        message.thread = message.channel.createStagedThread(message);
       }
 
       this.reset(message.channel);
 
       await this.router.transitionTo(
         "chat.channel.thread",
-        ...thread.routeModels
+        ...message.thread.routeModels
       );
 
       this.threadComposer.focus({ ensureAtEnd: true, refreshHeight: true });
