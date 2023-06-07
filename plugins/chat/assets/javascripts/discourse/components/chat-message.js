@@ -1,4 +1,3 @@
-import { isTesting } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
