@@ -16,7 +16,8 @@ export default Mixin.create({
 
   actions: {
     closeModal() {
-      this.modal.close();
+      this.modal.send("closeModal");
+      this.set("panels", []);
     },
   },
 });
