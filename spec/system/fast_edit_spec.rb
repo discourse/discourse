@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Fast edit", type: :system, js: true do
+describe "Fast edit", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:fast_editor) { PageObjects::Components::FastEditor.new }
   fab!(:topic) { Fabricate(:topic) }

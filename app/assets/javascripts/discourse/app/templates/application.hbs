@@ -24,7 +24,10 @@
   {{/if}}
 
   <SoftwareUpdatePrompt />
-  <OfflineIndicator />
+
+  {{#if this.siteSettings.enable_offline_indicator}}
+    <OfflineIndicator />
+  {{/if}}
 
   <PluginOutlet
     @name="below-site-header"

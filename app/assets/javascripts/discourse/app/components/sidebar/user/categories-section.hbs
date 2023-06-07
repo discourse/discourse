@@ -33,6 +33,20 @@
             data-category-id={{sectionLink.category.id}}
           />
         {{/each}}
+      {{else if this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled}}
+        <Sidebar::SectionLink
+          @linkName="configure-categories"
+          @prefixType="icon"
+          @prefixValue="pencil-alt"
+          @model={{this.currentUser}}
+          @content={{i18n
+            "sidebar.sections.categories.links.add_categories.content"
+          }}
+          @title={{i18n
+            "sidebar.sections.categories.links.add_categories.title"
+          }}
+          {{on "click" this.editTracked}}
+        />
       {{else}}
         <Sidebar::SectionLink
           @linkName="configure-categories"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread tracking state | full page", type: :system, js: true do
+describe "Thread tracking state | full page", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user) { Fabricate(:user) }

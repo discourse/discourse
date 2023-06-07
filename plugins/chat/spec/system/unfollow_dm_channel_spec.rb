@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Unfollow dm channel", type: :system, js: true do
+RSpec.describe "Unfollow dm channel", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
