@@ -47,13 +47,8 @@ module Chat
       include_participant_data?
     end
 
-    # TODO (martin) Fix this since it will be an N1
     def participant_users
-      @participant_users ||=
-        User
-          .where(id: @participants[:user_ids])
-          .select(:id, :username, :name, :uploaded_avatar_id)
-          .in_order_of(:id, @participants[:user_ids])
+      @participant_users ||= @participants[:users].map { |user| User.new(user) }
     end
 
     def participant_count

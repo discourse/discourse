@@ -63,15 +63,6 @@ module Chat
       end
 
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel)
-        # preview =
-        #   ::Chat::ThreadPreviewSerializer.new(
-        #     chat_message.thread,
-        #     participants:
-        #       ::Chat::ThreadParticipantQuery.call(thread_ids: [chat_message.thread_id])[
-        #         chat_message.thread_id
-        #       ],
-        #     root: false,
-        #   ).as_json
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
@@ -81,8 +72,6 @@ module Chat
             user_id: chat_message.user.id,
             username: chat_message.user.username,
             thread_id: chat_message.thread_id,
-            # TODO (martin) Maybe instead of doing this, just call publish_thread_original_message_metadata! here?
-            # thread_preview: preview.as_json,
           },
           permissions(chat_channel),
         )
