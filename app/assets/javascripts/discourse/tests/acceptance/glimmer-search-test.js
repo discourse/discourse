@@ -76,10 +76,18 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 
     assert.strictEqual(
       query(
+        ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-prefix"
+      ).innerText.trim(),
+      "dev",
+      "first dropdown item includes correct prefix"
+    );
+
+    assert.strictEqual(
+      query(
         ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-slug"
       ).innerText.trim(),
-      `dev${I18n.t("search.in_topics_posts")}`,
-      "shows topic search as first dropdown item"
+      I18n.t("search.in_topics_posts"),
+      "first dropdown item includes correct suffix"
     );
 
     assert.ok(
@@ -92,7 +100,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       "shows matching user results"
     );
 
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
