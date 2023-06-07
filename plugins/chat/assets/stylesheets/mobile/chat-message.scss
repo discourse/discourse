@@ -8,4 +8,25 @@
       @include user-select(none);
     }
   }
+
+  .chat-message-container {
+    transition: transform 400ms;
+    transform: scale(1);
+
+    &.is-long-pressed {
+      animation: scale-animation 400ms;
+    }
+  }
+
+  @keyframes scale-animation {
+    0% {
+      transform: scale(1);
+    }
+    80% {
+      transform: scale(0.95);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 }
