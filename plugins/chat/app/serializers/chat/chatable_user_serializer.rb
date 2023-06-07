@@ -2,14 +2,14 @@
 
 module Chat
   class ChatableUserSerializer < BasicUserSerializer
-    attributes :cannot_chat
+    attributes :can_chat
 
-    def cannot_chat
+    def can_chat
       true
     end
 
-    def include_cannot_chat?
-      object.cannot_chat
+    def include_can_chat?
+      object.can_chat
     end
   end
 end

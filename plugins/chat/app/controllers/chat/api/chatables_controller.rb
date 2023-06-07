@@ -2,7 +2,6 @@
 
 class Chat::Api::ChatablesController < Chat::ApiController
   def index
-    params.require(:filter)
     filter = params[:filter].downcase
 
     users = filtered_users(filter: filter)
@@ -44,10 +43,18 @@ class Chat::Api::ChatablesController < Chat::ApiController
 
   private
 
+  def limit
+    params[:limit] || 25
+  end
+
   def included_chatable_types
     return "user", "public_channel", "direct_message_channel" if params["chatable_types"].blank?
 
     params["chatable_types"]
+  end
+
+  def last_seen_users
+    !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
   end
 
   def public_channels(filter:, memberships:)
@@ -88,14 +95,14 @@ class Chat::Api::ChatablesController < Chat::ApiController
 
   def filter_users_including_cannot_chat(filter:, users:)
     # We limit at the top and then loop over with Ruby to set `can_chat`
-    users = filter_users_by_username(filter: filter, users: users).limit(25).uniq
+    users = filter_users_by_params(filter: filter, users: users).limit(limit).uniq
 
     chat_group_ids = Chat.allowed_group_ids
     everyone_can_chat = chat_group_ids.include?(Group::AUTO_GROUPS[:everyone])
     users.each do |user|
-      user.cannot_chat =
-        !(everyone_can_chat || (user.group_ids & chat_group_ids).present? || user.staff?) ||
-          !user.user_option.chat_enabled
+      user.can_chat =
+        (everyone_can_chat || (user.group_ids & chat_group_ids).present? || user.staff?) &&
+          user.user_option.chat_enabled
     end
 
     users
@@ -111,20 +118,35 @@ class Chat::Api::ChatablesController < Chat::ApiController
     end
 
     users = users.where(user_option: { chat_enabled: true })
-    filter_users_by_username(filter: filter, users: users).limit(25).uniq
+    users =
+      filter_users_by_params(filter: filter, users: users)
+        .limit(limit)
+        .uniq
+        .each { |u| u.can_chat = true }
+
+    users
   end
 
-  def filter_users_by_username(filter:, users:)
+  def filter_users_by_params(filter:, users:)
     like_filter = "%#{filter}%"
 
     if SiteSetting.prioritize_username_in_ux || !SiteSetting.enable_names
-      users.where("users.username_lower ILIKE ?", like_filter)
+      users = users.where("users.username_lower ILIKE ?", like_filter)
     else
-      users.where(
-        "LOWER(users.name) ILIKE ? OR users.username_lower ILIKE ?",
-        like_filter,
-        like_filter,
-      )
+      users =
+        users.where(
+          "LOWER(users.name) ILIKE ? OR users.username_lower ILIKE ?",
+          like_filter,
+          like_filter,
+        )
     end
+
+    if params[:exclude].present?
+      users = users.where("users.username_lower NOT IN (?)", params[:exclude])
+    end
+
+    users = users.order("last_seen_at DESC NULLS LAST") if last_seen_users
+
+    users
   end
 end

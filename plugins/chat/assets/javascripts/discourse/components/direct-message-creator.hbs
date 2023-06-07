@@ -61,7 +61,9 @@
           <ul class="results">
             {{#each this.users as |user|}}
               <li
-                class="user {{if (eq this.focusedUser user) 'is-focused'}}"
+                class="user
+                  {{if (eq this.focusedUser user) 'is-focused'}}
+                  {{unless user.can_chat 'cannot-chat'}}"
                 data-username={{user.username}}
                 role="button"
                 tabindex="-1"
@@ -78,6 +80,9 @@
                   @showStatus={{true}}
                   @showStatusDescription={{true}}
                 />
+                {{#unless user.can_chat}}
+                  {{d-icon "comment-slash"}}
+                {{/unless}}
               </li>
             {{/each}}
           </ul>

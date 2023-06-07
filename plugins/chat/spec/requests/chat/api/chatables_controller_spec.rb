@@ -215,7 +215,7 @@ RSpec.describe Chat::Api::ChatablesController do
 
           cannot_chat_user_json =
             response.parsed_body["users"].detect { |u| u["id"] == cannot_chat_user.id }
-          expect(cannot_chat_user_json["cannot_chat"]).to eq(true)
+          expect(cannot_chat_user_json["can_chat"]).to be_nil
         end
 
         it "Serializes 'cannot_chat' for user who has chat disabled via user_option" do
@@ -229,7 +229,7 @@ RSpec.describe Chat::Api::ChatablesController do
 
           cannot_chat_user_json =
             response.parsed_body["users"].detect { |u| u["id"] == cannot_chat_user.id }
-          expect(cannot_chat_user_json["cannot_chat"]).to eq(true)
+          expect(cannot_chat_user_json["can_chat"]).to be_nil
         end
 
         it "Doesn't serialize 'cannot_chat' for users who can chat" do
@@ -239,7 +239,7 @@ RSpec.describe Chat::Api::ChatablesController do
           expect(response.parsed_body["users"].count).to eq(2)
 
           can_chat_json = response.parsed_body["users"].detect { |u| u["id"] == other_user.id }
-          expect(can_chat_json["cannot_chat"]).to be_nil
+          expect(can_chat_json["can_chat"]).to eq(true)
         end
       end
 

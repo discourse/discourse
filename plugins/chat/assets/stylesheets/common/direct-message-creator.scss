@@ -140,6 +140,22 @@
         background: var(--tertiary-very-low);
       }
 
+      &.cannot-chat {
+        .username,
+        .name {
+          color: var(--primary-medium);
+        }
+        .chat-user-avatar {
+          opacity: 0.5;
+        }
+
+        .d-icon {
+          font-size: var(--font-up-2);
+          color: var(--primary-low-mid);
+          margin-right: 0.5em;
+        }
+      }
+
       * {
         pointer-events: none;
       }

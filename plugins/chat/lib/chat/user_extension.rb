@@ -3,7 +3,7 @@
 module Chat
   module UserExtension
     extend ActiveSupport::Concern
-    attr_accessor :cannot_chat
+    attr_accessor :can_chat
 
     prepended do
       has_many :user_chat_channel_memberships,
