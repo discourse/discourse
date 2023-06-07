@@ -25,6 +25,10 @@ a.hashtag {
   .d-icon {
     font-size: var(--font-down-1);
     margin: 0 0.2em 0 0.1em;
+
+    &.hashtag-missing {
+      color: var(--primary-medium);
+    }
   }
 
   img.emoji {
@@ -43,6 +47,10 @@ a.hashtag {
     height: 9px;
     margin-right: 5px;
     display: inline-block;
+
+    &.hashtag-missing {
+      background-color: var(--primary-medium);
+    }
   }
 }
 
