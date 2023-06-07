@@ -5153,6 +5153,82 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#lookup" do
+    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_3) { Fabricate(:user) }
+
+    it "lookups users by username" do
+      get "/u/lookup/users.json",
+          params: {
+            usernames: [user_1.username, user_2.username, user_3.username],
+          }
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+      expect(users.length).to be(3)
+
+      ids = users.map { |user| user["id"] }
+      expect(ids).to include(user_1.id)
+      expect(ids).to include(user_2.id)
+      expect(ids).to include(user_3.id)
+    end
+
+    it "ignores non-existent usernames" do
+      get "/u/lookup/users.json",
+          params: {
+            usernames: [user_1.username, "unknown_username", "another_unknown_username"],
+          }
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+      expect(users.length).to be(1)
+      expect(users[0]["id"]).to be(user_1.id)
+    end
+
+    it "returns users with ids, names and avatar_templates" do
+      get "/u/lookup/users.json", params: { usernames: [user_1.username] }
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+
+      expect(users.length).to be(1)
+      expect(users[0]["id"]).to be(user_1.id)
+      expect(users[0]["username"]).to eq(user_1.username)
+      expect(users[0]["name"]).to eq(user_1.name)
+      expect(users[0]["avatar_template"]).to eq(user_1.avatar_template)
+    end
+
+    it "returns users with user status if status is enabled in settings" do
+      SiteSetting.enable_user_status = true
+      user_1.set_status!("off to dentist", "tooth")
+      user_1.reload
+
+      get "/u/lookup/users.json", params: { usernames: [user_1.username] }
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+      expect(users.length).to be(1)
+      status = users[0]["status"]
+
+      expect(status["description"]).to eq(user_1.user_status.description)
+      expect(status["emoji"]).to eq(user_1.user_status.emoji)
+    end
+
+    it "returns users without user status if status is disabled in settings" do
+      SiteSetting.enable_user_status = false
+      user_1.set_status!("off to dentist", "tooth")
+      user_1.reload
+
+      get "/u/lookup/users.json", params: { usernames: [user_1.username] }
+
+      expect(response.status).to eq(200)
+      users = response.parsed_body["users"]
+      expect(users.length).to be(1)
+      expect(users[0]["status"]).to be_nil
+    end
+  end
+
   describe "#email_login" do
     before { SiteSetting.enable_local_logins_via_email = true }
 

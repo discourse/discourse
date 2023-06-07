@@ -6,7 +6,13 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { skip, test } from "qunit";
-import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
+import {
+  click,
+  fillIn,
+  triggerEvent,
+  visit,
+  waitFor,
+} from "@ember/test-helpers";
 import pretender, { OK } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
@@ -265,6 +271,61 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
+  test("messages typed in without using autocomplete | it shows status on mentions ", async function (assert) {
+    setupUsersLookupResponse([mentionedUser2]);
+
+    await visit(`/chat/c/-/${channelId}`);
+    await fillIn(
+      ".chat-composer__input",
+      `mentioning @${mentionedUser2.username}`
+    );
+    await click(".chat-composer-button.-send");
+
+    assertStatusIsRendered(
+      assert,
+      statusSelector(mentionedUser2.username),
+      mentionedUser2.status
+    );
+  });
+
+  test("messages typed in without using autocomplete | it updates status on mentions", async function (assert) {
+    setupUsersLookupResponse([mentionedUser2]);
+
+    await visit(`/chat/c/-/${channelId}`);
+    await fillIn(
+      ".chat-composer__input",
+      `mentioning @${mentionedUser2.username}`
+    );
+    await click(".chat-composer-button.-send");
+
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser2.id]: newStatus,
+    });
+
+    const selector = statusSelector(mentionedUser2.username);
+    await waitFor(selector);
+    assertStatusIsRendered(assert, selector, newStatus);
+  });
+
+  test("messages typed in without using autocomplete | it deletes status on mentions", async function (assert) {
+    setupUsersLookupResponse([mentionedUser2]);
+
+    await visit(`/chat/c/-/${channelId}`);
+    await fillIn(
+      ".chat-composer__input",
+      `mentioning @${mentionedUser2.username}`
+    );
+    await click(".chat-composer-button.-send");
+
+    loggedInUser().appEvents.trigger("user-status:changed", {
+      [mentionedUser2.id]: null,
+    });
+
+    const selector = statusSelector(mentionedUser2.username);
+    await waitFor(selector, { count: 0 });
+    assert.dom(selector).doesNotExist("status is deleted");
+  });
+
   function assertStatusIsRendered(assert, selector, status) {
     assert
       .dom(selector)
@@ -316,27 +377,27 @@ acceptance("Chat | User status on mentions", function (needs) {
   }
 
   function setupAutocompleteResponses(results) {
-    pretender.get("/u/search/users", () => {
-      return [
-        200,
-        {},
-        {
-          users: results,
-        },
-      ];
-    });
+    pretender.get("/u/search/users", () =>
+      OK({
+        users: results,
+      })
+    );
 
-    pretender.get("/chat/api/mentions/groups.json", () => {
-      return [
-        200,
-        {},
-        {
-          unreachable: [],
-          over_members_limit: [],
-          invalid: ["and"],
-        },
-      ];
-    });
+    pretender.get("/chat/api/mentions/groups.json", () =>
+      OK({
+        unreachable: [],
+        over_members_limit: [],
+        invalid: ["and"],
+      })
+    );
+  }
+
+  function setupUsersLookupResponse(results) {
+    pretender.get("/u/lookup/users.json", () =>
+      OK({
+        users: results,
+      })
+    );
   }
 
   function statusSelector(username) {
