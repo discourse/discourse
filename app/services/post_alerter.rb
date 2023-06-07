@@ -382,7 +382,7 @@ class PostAlerter
     stats = (@group_stats[topic.id] ||= group_stats(topic))
     return unless stats
 
-    group_id = topic.topic_allowed_groups.where(group_id: user.groups.pluck(:id)).pick(:group_id)
+    group_id = topic.topic_allowed_groups.where(group_id: user.groups).pick(:group_id)
 
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat
