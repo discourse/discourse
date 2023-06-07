@@ -1059,7 +1059,20 @@ class TopicsController < ApplicationController
       elsif params[:tag_id].present?
         Topic.joins(:tags).where(tags: { name: params[:tag_id] })
       else
-        new_results = TopicQuery.new(current_user).new_results(limit: false)
+        new_results =
+          if current_user.new_new_view_enabled?
+            if (params[:dismiss_topics] && params[:dismiss_posts])
+              TopicQuery.new(current_user).new_and_unread_results(limit: false)
+            elsif params[:dismiss_topics]
+              TopicQuery.new(current_user).new_results(limit: false)
+            elsif params[:dismiss_posts]
+              TopicQuery.new(current_user).unread_results(limit: false)
+            else
+              Topic.none
+            end
+          else
+            TopicQuery.new(current_user).new_results(limit: false)
+          end
         if params[:tracked].to_s == "true"
           TopicQuery.tracked_filter(new_results, current_user.id)
         else
@@ -1077,11 +1090,30 @@ class TopicsController < ApplicationController
       topic_scope = topic_scope.where(id: topic_ids)
     end
 
-    dismissed_topic_ids =
-      TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
-    TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+    dismissed_topic_ids = []
+    dismissed_post_topic_ids = []
+    if !current_user.new_new_view_enabled? || params[:dismiss_topics]
+      dismissed_topic_ids =
+        TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
+      TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+    end
 
-    render body: nil
+    if params[:dismiss_posts]
+      if params[:untrack]
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(
+            current_user,
+            topic_scope.pluck(:id),
+            type: "change_notification_level",
+            notification_level_id: NotificationLevels.topic_levels[:regular],
+          ).perform!
+      else
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_posts").perform!
+      end
+    end
+
+    render_json_dump topic_ids: dismissed_topic_ids.concat(dismissed_post_topic_ids).uniq
   end
 
   def convert_topic
