@@ -1,0 +1,81 @@
+<DModalBody
+  @title="sidebar.categories_form.title"
+  @class="sidebar-categories-form-modal"
+>
+  <form class="sidebar-categories-form">
+    {{#each this.siteCategories as |category|}}
+      <div
+        class="sidebar-categories-form__row"
+        style={{html-safe (border-color category.color "left")}}
+      >
+        <div
+          class="sidebar-categories-form__category-row"
+          data-category-id={{category.id}}
+        >
+          <label
+            class="sidebar-categories-form__category-label"
+            for={{concat "sidebar-categories-form__input--" category.id}}
+          >
+            <div
+              class="sidebar-categories-form__category-badge sidebar-categories-form__category-badge--parent-category"
+            >
+              {{category-badge category}}
+            </div>
+
+            <div class="sidebar-categories-form__category-description">
+              {{dir-span category.description_excerpt htmlSafe="true"}}
+            </div>
+          </label>
+
+          <Input
+            id={{concat "sidebar-categories-form__input--" category.id}}
+            class="sidebar-categories-form__input"
+            @type="checkbox"
+            @checked={{includes this.selectedSidebarCategoryIds category.id}}
+            {{on "click" (action "toggleCategory" category.id)}}
+          />
+        </div>
+
+        {{#if (gt category.subcategories.length 0)}}
+          {{#each category.subcategories as |subcategory|}}
+            <div
+              class="sidebar-categories-form__category-row"
+              data-category-id={{subcategory.id}}
+            >
+              <label
+                class="sidebar-categories-form__category-label"
+                for={{concat "sidebar-categories-form__input--" subcategory.id}}
+              >
+                <div
+                  class="sidebar-categories-form__category-badge sidebar-categories-form__category-badge--subcategory"
+                >
+                  {{category-badge subcategory}}
+                </div>
+              </label>
+
+              <Input
+                id={{concat "sidebar-categories-form__input--" subcategory.id}}
+                class="sidebar-categories-form__input"
+                @type="checkbox"
+                @checked={{includes
+                  this.selectedSidebarCategoryIds
+                  subcategory.id
+                }}
+                {{on "click" (action "toggleCategory" subcategory.id)}}
+              />
+            </div>
+          {{/each}}
+        {{/if}}
+      </div>
+    {{/each}}
+  </form>
+</DModalBody>
+
+<div class="modal-footer">
+  <DButton
+    @class="btn-primary sidebar-categories-form__save-button"
+    @label="sidebar.categories_form.save"
+    @disabled={{this.saving}}
+    @action={{this.save}}
+  />
+</div>
