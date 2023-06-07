@@ -19,6 +19,7 @@ import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -212,6 +213,19 @@ export default class ChatComposer extends Component {
   @action
   async onSend() {
     if (!this.sendEnabled) {
+      return;
+    }
+
+    if (
+      this.currentMessage.editing &&
+      this.currentMessage.message.length === 0
+    ) {
+      new ChatMessageInteractor(
+        getOwner(this),
+        this.currentMessage,
+        this.context
+      ).delete();
+      this.reset(this.args.channel, this.args.thread);
       return;
     }
 
