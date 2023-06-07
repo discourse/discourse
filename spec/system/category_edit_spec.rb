@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Edit Category", type: :system, js: true do
+describe "Edit Category", type: :system do
   fab!(:color_scheme) { Fabricate(:color_scheme) }
   fab!(:theme) { Fabricate(:theme) }
   fab!(:admin) { Fabricate(:admin) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User presence", type: :system, js: true do
+RSpec.describe "User presence", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:user) }
 

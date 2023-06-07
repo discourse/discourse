@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Move message to channel", type: :system, js: true do
+RSpec.describe "Move message to channel", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 

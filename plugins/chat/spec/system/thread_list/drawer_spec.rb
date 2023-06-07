@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread list in side panel | drawer", type: :system, js: true do
+describe "Thread list in side panel | drawer", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel) { Fabricate(:chat_channel) }
   fab!(:other_user) { Fabricate(:user) }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Custom sidebar sections", type: :system, js: true do
+describe "Custom sidebar sections", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }

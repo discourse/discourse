@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile: true do
+RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
   fab!(:current_user) { Fabricate(:user) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }

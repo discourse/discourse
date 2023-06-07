@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
+RSpec.describe "Quoting chat message transcripts", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:chat_channel_1) { Fabricate(:chat_channel) }
