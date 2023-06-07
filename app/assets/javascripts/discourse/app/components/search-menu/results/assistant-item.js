@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
@@ -66,11 +65,18 @@ export default class AssistantItem extends Component {
 
   @action
   onClick(e) {
-    let updatedValue = this.prefix;
+    if (this.search.searchContext?.type === "topic") {
+      this.args.setTopicContext();
+    }
+
+    let updatedValue = this.prefix.trim();
     if (this.args.slug) {
       updatedValue = updatedValue.concat(this.args.slug);
     }
-    this.args.searchTermChanged(updatedValue, { searchTopics: true });
+
+    this.args.searchTermChanged(updatedValue, {
+      searchTopics: this.search.searchContext?.type !== "topic",
+    });
     e.preventDefault();
     return false;
   }

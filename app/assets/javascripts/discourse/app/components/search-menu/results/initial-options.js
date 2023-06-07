@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 import AssistantItem from "./assistant-item";
 import Assistant from "./assistant";

@@ -14,7 +14,6 @@
           @suffix={{i18n "search.in_topics_posts"}}
           @closeSearchMenu={{@closeSearchMenu}}
           @extraHint={{true}}
-          @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{this.contextTypeKeyword}}
         />
@@ -30,6 +29,7 @@
           @label={{this.label}}
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
+          @setTopicContext={{@setTopicContext}}
         />
       {{/if}}
     {{else}}

@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
-import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 
 const DEFAULT_QUICK_TIPS = [

@@ -52,7 +52,7 @@
   {{/if}}
 </div>
 
-{{#if (and @inTopicContext @includesTopics)}}
+{{#if (and @inTopicContext (not @includesTopics))}}
   <SearchMenu::BrowserSearchTip />
 {{else}}
   {{#unless @loading}}

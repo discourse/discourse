@@ -1,5 +1,5 @@
 {{#if this.topicResults}}
-  <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
+  <div class="search-menu__show-more" {{on "keyup" this.onKeyup}} role="button">
     {{#if this.moreUrl}}
       <a href={{this.moreUrl}} class="filter search-link">
         {{i18n "more"}}...

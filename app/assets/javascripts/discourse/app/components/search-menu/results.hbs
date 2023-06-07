@@ -17,22 +17,7 @@
       @searchTermChanged={{@searchTermChanged}}
     />
   {{else}}
-    {{#if (not @searchTopics)}}
-      {{#if (not @inPMInboxContext)}}
-        {{! render the first couple suggestions before a search has been performed}}
-        <SearchMenu::Results::InitialOptions
-          @closeSearchMenu={{@closeSearchMenu}}
-          @searchTermChanged={{@searchTermChanged}}
-        />
-        {{#if this.resultTypesWithComponent}}
-          <SearchMenu::Results::Types
-            @resultTypes={{this.resultTypesWithComponent}}
-            @closeSearchMenu={{@closeSearchMenu}}
-            @searchTermChanged={{@searchTermChanged}}
-          />
-        {{/if}}
-      {{/if}}
-    {{else}}
+    {{#if @searchTopics}}
       {{! render results after a search has been performed }}
       {{#if this.resultTypesWithComponent}}
         <SearchMenu::Results::Types
@@ -48,6 +33,22 @@
           @searchTermChanged={{@searchTermChanged}}
         />
       {{/if}}
+    {{else}}
+      {{#unless @inPMInboxContext}}
+        {{! render the first couple suggestions before a search has been performed}}
+        <SearchMenu::Results::InitialOptions
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+          @setTopicContext={{@setTopicContext}}
+        />
+        {{#if this.resultTypesWithComponent}}
+          <SearchMenu::Results::Types
+            @resultTypes={{this.resultTypesWithComponent}}
+            @closeSearchMenu={{@closeSearchMenu}}
+            @searchTermChanged={{@searchTermChanged}}
+          />
+        {{/if}}
+      {{/unless}}
     {{/if}}
   {{/if}}
 </div>

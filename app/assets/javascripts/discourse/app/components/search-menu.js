@@ -151,9 +151,7 @@ export default class SearchMenu extends Component {
   perform() {
     this.cancel();
 
-    const fullSearchUrl = this.fullSearchUrl();
     const matchSuggestions = this.matchesSuggestions();
-
     if (matchSuggestions) {
       this.noResults = true;
       this.results = {};
