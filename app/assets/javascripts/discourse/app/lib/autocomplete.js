@@ -404,6 +404,10 @@ export default function (options) {
       scrollElement = div.find(options.scrollElementSelector);
     }
 
+    if (options.onRender) {
+      options.onRender(autocompleteOptions);
+    }
+
     if (isInput || options.treatAsTextarea) {
       _autoCompletePopper && _autoCompletePopper.destroy();
       _autoCompletePopper = createPopper(me[0], div[0], {

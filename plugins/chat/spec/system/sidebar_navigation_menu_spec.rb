@@ -146,7 +146,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
           visit("/")
 
           expect(sidebar_page.dms_section.find("a.sidebar-section-link:nth-child(1)")).to have_css(
-            ".user-status",
+            ".user-status-message",
           )
         end
       end

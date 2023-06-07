@@ -42,6 +42,7 @@ import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
+import createUserStatusMessage from "discourse/lib/user-status-message";
 
 // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
 // group 1 `image|foo=bar`
@@ -127,6 +128,7 @@ export default Component.extend(
       this._super(...arguments);
       this.warnedCannotSeeMentions = [];
       this.warnedGroupMentions = [];
+      this.tippyInstances = [];
     },
 
     @discourseComputed("composer.requiredCategoryMissing")
@@ -213,6 +215,13 @@ export default Component.extend(
       });
     },
 
+    _destroyTippyInstances() {
+      this.tippyInstances.forEach((instance) => {
+        instance.destroy();
+      });
+      this.tippyInstances = [];
+    },
+
     @on("didInsertElement")
     _composerEditorInit() {
       const $input = $(this.element.querySelector(".d-editor-input"));
@@ -220,13 +229,41 @@ export default Component.extend(
       if (this.siteSettings.enable_mentions) {
         $input.autocomplete({
           template: findRawTemplate("user-selector-autocomplete"),
-          dataSource: (term) =>
-            userSearch({
+          dataSource: (term) => {
+            this._destroyTippyInstances();
+            return userSearch({
               term,
               topicId: this.topic?.id,
               categoryId: this.topic?.category_id || this.composer?.categoryId,
               includeGroups: true,
-            }),
+            }).then((result) => {
+              if (result?.users?.length > 0) {
+                result.users.forEach((user, index) => {
+                  if (user.status) {
+                    user.index = index;
+                    user.statusHtml = createUserStatusMessage(user.status, {
+                      showTooltip: true,
+                      showDescription: true,
+                    });
+                    this.tippyInstances.push(user.statusHtml._tippy);
+                  }
+                });
+              }
+              return result;
+            });
+          },
+          onRender: (options) => {
+            const users = document.querySelectorAll(".autocomplete.ac-user li");
+            users.forEach((user) => {
+              const index = user.dataset.index;
+              const statusHtml = options.find(function (el) {
+                return el.index === parseInt(index, 10);
+              })?.statusHtml;
+              if (statusHtml) {
+                user.querySelector(".user-status").replaceWith(statusHtml);
+              }
+            });
+          },
           key: "@",
           transformComplete: (v) => v.username || v.name,
           afterComplete: this._afterMentionComplete,
@@ -781,6 +818,9 @@ export default Component.extend(
         "keypress",
         this._handleAltTextInputKeypress
       );
+      if (this.siteSettings.enable_mentions) {
+        this._destroyTippyInstances();
+      }
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {

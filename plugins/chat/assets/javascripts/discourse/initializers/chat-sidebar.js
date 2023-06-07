@@ -218,24 +218,26 @@ export default {
             }
 
             get title() {
-              return I18n.t("chat.placeholder_channel", {
-                channelName: this.channel.escapedTitle,
-              });
+              return "";
             }
 
             get oneOnOneMessage() {
               return this.channel.chatable.users.length === 1;
             }
 
+            get contentComponentArgs() {
+              return this.channel.chatable.users[0].get("status");
+            }
+
+            get contentComponent() {
+              return "user-status-message";
+            }
+
             get text() {
               const username = this.channel.escapedTitle.replaceAll("@", "");
               if (this.oneOnOneMessage) {
-                const status = this.channel.chatable.users[0].get("status");
-                const statusHtml = status ? this._userStatusHtml(status) : "";
                 return htmlSafe(
-                  `${escapeExpression(
-                    username
-                  )}${statusHtml} ${decorateUsername(
+                  `${escapeExpression(username)}${decorateUsername(
                     escapeExpression(username)
                   )}`
                 );
@@ -310,8 +312,9 @@ export default {
             _userStatusHtml(status) {
               const emoji = escapeExpression(`:${status.emoji}:`);
               const title = this._userStatusTitle(status);
-              return `<span class="user-status">${emojiUnescape(emoji, {
+              return `<span class="user-">${emojiUnescape(emoji, {
                 title,
+                status,
               })}</span>`;
             }
 

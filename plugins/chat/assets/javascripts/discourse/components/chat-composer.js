@@ -20,6 +20,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import createUserStatusMessage from "discourse/lib/user-status-message";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -38,6 +39,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
+  @tracked tippyInstances = [];
 
   get shouldRenderReplyingIndicator() {
     return !this.args.channel?.isDraft;
@@ -160,6 +162,10 @@ export default class ChatComposer extends Component {
       "openInsertLinkModal"
     );
     this.pane.sending = false;
+
+    if (this.siteSettings.enable_mentions) {
+      this.#destroyTippyInstances();
+    }
   }
 
   @action
@@ -415,6 +421,13 @@ export default class ChatComposer extends Component {
     }
   }
 
+  #destroyTippyInstances() {
+    this.tippyInstances.forEach((instance) => {
+      instance.destroy();
+    });
+    this.tippyInstances = [];
+  }
+
   #addMentionedUser(userData) {
     const user = User.create(userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
@@ -439,17 +452,38 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
+        this.#destroyTippyInstances();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
               this.chat.presenceChannel.users?.mapBy("username");
-            result.users.forEach((user) => {
+            result.users.forEach((user, index) => {
               if (presentUserNames.includes(user.username)) {
                 user.cssClasses = "is-online";
+              }
+              if (user.status) {
+                user.index = index;
+                user.statusHtml = createUserStatusMessage(user.status, {
+                  showTooltip: true,
+                  showDescription: true,
+                });
+                this.tippyInstances.push(user.statusHtml._tippy);
               }
             });
           }
           return result;
+        });
+      },
+      onRender: (options) => {
+        const users = document.querySelectorAll(".autocomplete.ac-user li");
+        users.forEach((user) => {
+          const index = user.dataset.index;
+          const statusHtml = options.find(function (el) {
+            return el.index === parseInt(index, 10);
+          })?.statusHtml;
+          if (statusHtml) {
+            user.querySelector(".user-status").replaceWith(statusHtml);
+          }
         });
       },
       afterComplete: (text, event) => {
