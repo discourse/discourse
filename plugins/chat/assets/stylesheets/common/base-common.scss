@@ -114,11 +114,28 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 .header-dropdown-toggle.chat-header-icon {
   .icon {
     .chat-channel-unread-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      min-width: 14px;
+      padding: 3px;
+      border-radius: 1em;
       border: 2px solid var(--header_background);
       position: absolute;
-      right: 2px;
+      right: 0;
       bottom: 2px;
       transition: border-color linear 0.15s;
+
+      &__number {
+        font-size: 0.7rem;
+        line-height: 15px;
+        height: inherit;
+
+        &.-too-high {
+          font-size: 1.25rem;
+        }
+      }
     }
   }
 
