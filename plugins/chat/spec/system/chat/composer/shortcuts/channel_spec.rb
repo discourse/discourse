@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat | composer | shortcuts | channel", type: :system, js: true do
+RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:admin) }
 

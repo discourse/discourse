@@ -22,8 +22,6 @@ import {
 } from "discourse/lib/sidebar/custom-community-section-links";
 import showModal from "discourse/lib/show-modal";
 
-const LINKS_IN_BOTH_SEGMENTS = ["/review"];
-
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
   "/new": EverythingSectionLink,
@@ -66,10 +64,7 @@ export default class CommunitySection {
       .map((link) => this.#initializeSectionLink(link, { inMoreDrawer: true }));
 
     this.links = this.section.links.reduce((filtered, link) => {
-      if (
-        link.segment === "primary" ||
-        LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-      ) {
+      if (link.segment === "primary") {
         const generatedLink = this.#generateLink(link);
 
         if (generatedLink) {
@@ -82,10 +77,7 @@ export default class CommunitySection {
 
     this.moreLinks = this.section.links
       .reduce((filtered, link) => {
-        if (
-          link.segment === "secondary" ||
-          LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-        ) {
+        if (link.segment === "secondary") {
           const generatedLink = this.#generateLink(link, true);
 
           if (generatedLink) {

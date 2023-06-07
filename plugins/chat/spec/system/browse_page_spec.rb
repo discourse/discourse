@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Browse page", type: :system, js: true do
+RSpec.describe "Browse page", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }

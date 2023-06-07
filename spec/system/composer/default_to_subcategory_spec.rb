@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-describe "Default to Subcategory when parent Category doesn't allow posting",
-         type: :system,
-         js: true do
+describe "Default to Subcategory when parent Category doesn't allow posting", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
   fab!(:group_user) { Fabricate(:group_user, user: user, group: group) }

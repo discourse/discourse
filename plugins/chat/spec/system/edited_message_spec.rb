@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Edited message", type: :system, js: true do
+RSpec.describe "Edited message", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 

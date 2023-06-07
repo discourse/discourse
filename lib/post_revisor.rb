@@ -762,4 +762,17 @@ class PostRevisor
   def guardian
     @guardian ||= Guardian.new(@editor)
   end
+
+  def raw_changed?
+    @fields.has_key?(:raw) && @fields[:raw] != cached_original_raw && @post_successfully_saved
+  end
+
+  def topic_title_changed?
+    topic_changed? && @fields.has_key?(:title) && topic_diff.has_key?(:title) &&
+      !@topic_changes.errored?
+  end
+
+  def reviewable_content_changed?
+    raw_changed? || topic_title_changed?
+  end
 end

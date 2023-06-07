@@ -56,15 +56,15 @@ module PageObjects
       end
 
       def has_unread_thread_indicator?(count:)
-        has_css?("#{thread_list_button_selector}.-has-unreads") &&
+        has_css?("#{thread_list_button_selector}.has-unreads") &&
           has_css?(
-            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number-wrap",
+            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number",
             text: count.to_s,
           )
       end
 
       def has_no_unread_thread_indicator?
-        has_no_css?("#{thread_list_button_selector}.-has-unreads")
+        has_no_css?("#{thread_list_button_selector}.has-unreads")
       end
     end
   end

@@ -120,9 +120,11 @@ export default class LockOn {
       return this.clearLock();
     }
 
-    if (!within(4, top, this.previousTop) || !within(4, window.scrollY, top)) {
+    if (!within(4, top, this.previousTop)) {
       window.scrollTo(window.pageXOffset, top);
       this.previousTop = top;
+    } else {
+      return this.clearLock();
     }
 
     // Stop early when maintaining the original offset

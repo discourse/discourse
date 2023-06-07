@@ -117,6 +117,9 @@ fa_IR:
       select: "انتخاب کنید"
       return_to_list: "بازگشت به فهرست کانال‌ها"
       return_to_threads_list: "بازگشت به گفتگوی جاری"
+      unread_threads_count:
+        one: "شما %{count} گفتگوی خوانده نشده دارید"
+        other: "شما %{count} گفتگوی خوانده نشده دارید"
       scroll_to_bottom: "حرکت به پایین"
       scroll_to_new_messages: "مشاهده پیام‌های جدید"
       sound:

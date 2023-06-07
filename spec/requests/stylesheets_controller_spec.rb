@@ -64,8 +64,7 @@ RSpec.describe StylesheetsController do
     fab!(:user) { Fabricate(:user) }
 
     let(:plugin) do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
       plugin.register_css "body { padding: 1px 2px 3px 4px; }"
       plugin
     end

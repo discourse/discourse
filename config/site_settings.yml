@@ -341,7 +341,7 @@ basic:
     list_type: compact
     default: "14"
     allow_any: false
-    refresh: true  
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true
@@ -1450,6 +1450,8 @@ files:
     regex: '^https?:\/\/.+[^\/]$'
   s3_configure_tombstone_policy:
     default: true
+  s3_use_acls:
+    default: true
   enable_s3_inventory:
     default: false
   s3_configure_inventory_policy:
@@ -2088,6 +2090,7 @@ developer:
   enable_experimental_hashtag_autocomplete:
     default: true
     client: true
+    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2701,6 +2704,9 @@ user_preferences:
     choices:
       - notifications
       - contextual
+  enable_offline_indicator:
+    default: false
+    client: true
 api:
   retain_web_hook_events_period_days:
     default: 30
