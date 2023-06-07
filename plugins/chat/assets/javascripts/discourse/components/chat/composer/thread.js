@@ -43,14 +43,15 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   handleEscape(event) {
-    if (this.isFocused) {
+    if (this.currentMessage.editing) {
       event.stopPropagation();
-      this.composer.blur();
+      this.composer.cancel();
       return;
     }
 
-    if (this.currentMessage.editing) {
-      this.composer.cancel();
+    if (this.isFocused) {
+      event.stopPropagation();
+      this.composer.blur();
     } else {
       this.pane.close().then(() => {
         this.channelComposer.focus();
