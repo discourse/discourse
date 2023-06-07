@@ -49,8 +49,10 @@ class EditDirectoryColumnsController < ApplicationController
 
     details = {}
 
-    details.merge!({ previous_value: previous_values, new_value: new_values })
-    staff_action_logger.log_custom("update_directory_columns", details = details)
+    staff_action_logger.log_custom(
+      "update_directory_columns",
+      { previous_value: previous_values, new_value: new_values },
+    )
     render json: success_json
   end
 
