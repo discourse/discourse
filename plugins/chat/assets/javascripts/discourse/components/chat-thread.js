@@ -20,9 +20,9 @@ export default class ChatThreadPanel extends Component {
   @service router;
   @service chatApi;
   @service chatComposerPresenceManager;
-  @service chatChannelThreadComposer;
-  @service chatChannelThreadPane;
-  @service chatChannelThreadPaneSubscriptionsManager;
+  @service chatThreadComposer;
+  @service chatThreadPane;
+  @service chatThreadPaneSubscriptionsManager;
   @service appEvents;
   @service capabilities;
 
@@ -31,19 +31,21 @@ export default class ChatThreadPanel extends Component {
 
   scrollable = null;
 
-  get thread() {
-    return this.args.thread;
-  }
-
-  get channel() {
-    return this.thread?.channel;
+  @action
+  handleKeydown(event) {
+    if (event.key === "Escape") {
+      return this.router.transitionTo(
+        "chat.channel",
+        ...this.args.thread.channel.routeModels
+      );
+    }
   }
 
   @action
   didUpdateThread() {
     this.subscribeToUpdates();
     this.loadMessages();
-    this.resetComposer();
+    this.resetComposerMessage();
   }
 
   @action
@@ -53,12 +55,12 @@ export default class ChatThreadPanel extends Component {
 
   @action
   subscribeToUpdates() {
-    this.chatChannelThreadPaneSubscriptionsManager.subscribe(this.thread);
+    this.chatThreadPaneSubscriptionsManager.subscribe(this.args.thread);
   }
 
   @action
   unsubscribeFromUpdates() {
-    this.chatChannelThreadPaneSubscriptionsManager.unsubscribe();
+    this.chatThreadPaneSubscriptionsManager.unsubscribe();
   }
 
   // TODO (martin) This needs to have the extended scroll/message visibility/
@@ -71,7 +73,7 @@ export default class ChatThreadPanel extends Component {
       return;
     }
 
-    this.resetActiveMessage();
+    this.chat.activeMessage = null;
 
     if (this.#isAtBottom()) {
       this.updateLastReadMessage();
@@ -128,7 +130,7 @@ export default class ChatThreadPanel extends Component {
 
   @action
   loadMessages() {
-    this.thread.messagesManager.clearMessages();
+    this.args.thread.messagesManager.clearMessages();
     this.fetchMessages();
   }
 
@@ -147,8 +149,10 @@ export default class ChatThreadPanel extends Component {
       return Promise.resolve();
     }
 
-    if (this.thread.staged) {
-      this.thread.messagesManager.addMessages([this.thread.originalMessage]);
+    if (this.args.thread.staged) {
+      const message = this.args.thread.originalMessage;
+      message.thread = this.args.thread;
+      this.args.thread.messagesManager.addMessages([message]);
       return Promise.resolve();
     }
 
@@ -156,23 +160,25 @@ export default class ChatThreadPanel extends Component {
 
     const findArgs = {
       pageSize: PAGE_SIZE,
-      threadId: this.thread.id,
+      threadId: this.args.thread.id,
       includeMessages: true,
     };
     return this.chatApi
-      .channel(this.channel.id, findArgs)
+      .channel(this.args.thread.channel.id, findArgs)
       .then((result) => {
-        if (this._selfDeleted || this.channel.id !== result.meta.channel_id) {
+        if (
+          this._selfDeleted ||
+          this.args.thread.channel.id !== result.meta.channel_id
+        ) {
           this.router.transitionTo("chat.channel", "-", result.meta.channel_id);
         }
 
         const [messages, meta] = this.afterFetchCallback(
-          this.channel,
-          this.thread,
+          this.args.thread,
           result
         );
-        this.thread.messagesManager.addMessages(messages);
-        this.thread.details = meta;
+        this.args.thread.messagesManager.addMessages(messages);
+        this.args.thread.details = meta;
         this.markThreadAsRead();
       })
       .catch(this.#handleErrors)
@@ -186,7 +192,7 @@ export default class ChatThreadPanel extends Component {
   }
 
   @bind
-  afterFetchCallback(channel, thread, result) {
+  afterFetchCallback(thread, result) {
     const messages = [];
 
     result.chat_messages.forEach((messageData) => {
@@ -200,7 +206,7 @@ export default class ChatThreadPanel extends Component {
       }
 
       messageData.expanded = !(messageData.hidden || messageData.deleted_at);
-      const message = ChatMessage.create(channel, messageData);
+      const message = ChatMessage.create(thread.channel, messageData);
       message.thread = thread;
       messages.push(message);
     });
@@ -212,7 +218,10 @@ export default class ChatThreadPanel extends Component {
   // and scrolling; for now it's enough to do it when the thread panel
   // opens/messages are loaded since we have no pagination for threads.
   markThreadAsRead() {
-    return this.chatApi.markThreadAsRead(this.channel.id, this.thread.id);
+    return this.chatApi.markThreadAsRead(
+      this.args.thread.channel.id,
+      this.args.thread.id
+    );
   }
 
   @action
@@ -227,59 +236,60 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  resetComposer() {
-    this.chatChannelThreadComposer.reset(this.channel, this.thread);
-  }
-
-  @action
-  resetActiveMessage() {
-    this.chat.activeMessage = null;
+  resetComposerMessage() {
+    this.chatThreadComposer.reset(this.args.thread);
   }
 
   async #sendNewMessage(message) {
-    message.thread = this.thread;
-
-    if (this.chatChannelThreadPane.sending) {
+    if (this.chatThreadPane.sending) {
       return;
     }
 
-    this.chatChannelThreadPane.sending = true;
-
-    await this.thread.stageMessage(message);
-    this.resetComposer();
-
+    this.chatThreadPane.sending = true;
+    await this.args.thread.stageMessage(message);
+    this.resetComposerMessage();
     this.scrollToBottom();
 
     try {
-      await this.chatApi.sendMessage(this.channel.id, {
-        message: message.message,
-        in_reply_to_id: message.thread.staged
-          ? message.thread.originalMessage.id
-          : null,
-        staged_id: message.id,
-        upload_ids: message.uploads.map((upload) => upload.id),
-        thread_id: message.thread.staged ? null : message.thread.id,
-        staged_thread_id: message.thread.staged ? message.thread.id : null,
-      });
+      await this.chatApi
+        .sendMessage(this.args.thread.channel.id, {
+          message: message.message,
+          in_reply_to_id: message.thread.staged
+            ? message.thread.originalMessage.id
+            : null,
+          staged_id: message.id,
+          upload_ids: message.uploads.map((upload) => upload.id),
+          thread_id: message.thread.staged ? null : message.thread.id,
+          staged_thread_id: message.thread.staged ? message.thread.id : null,
+        })
+        .catch((error) => {
+          this.#onSendError(message.id, error);
+        })
+        .finally(() => {
+          if (this._selfDeleted) {
+            return;
+          }
+          this.chatThreadPane.sending = false;
+        });
     } catch (error) {
       this.#onSendError(message.id, error);
     } finally {
       if (!this._selfDeleted) {
-        this.chatChannelThreadPane.sending = false;
+        this.chatThreadPane.sending = false;
       }
     }
   }
 
   async #sendEditMessage(message) {
     await message.cook();
-    this.chatChannelThreadPane.sending = true;
+    this.chatThreadPane.sending = true;
 
     const data = {
       new_message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    this.resetComposer();
+    this.resetComposerMessage();
 
     try {
       return await this.chatApi.editMessage(
@@ -290,7 +300,7 @@ export default class ChatThreadPanel extends Component {
     } catch (e) {
       popupAjaxError(e);
     } finally {
-      this.chatChannelThreadPane.sending = false;
+      this.chatThreadPane.sending = false;
     }
   }
 
@@ -370,7 +380,7 @@ export default class ChatThreadPanel extends Component {
 
   #onSendError(stagedId, error) {
     const stagedMessage =
-      this.thread.messagesManager.findStagedMessage(stagedId);
+      this.args.thread.messagesManager.findStagedMessage(stagedId);
     if (stagedMessage) {
       if (error.jqXHR?.responseJSON?.errors?.length) {
         stagedMessage.error = error.jqXHR.responseJSON.errors[0];
@@ -380,6 +390,6 @@ export default class ChatThreadPanel extends Component {
       }
     }
 
-    this.resetComposer();
+    this.resetComposerMessage();
   }
 }

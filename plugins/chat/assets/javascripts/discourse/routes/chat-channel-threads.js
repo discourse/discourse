@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 
 export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
-  @service chatChannelThreadListPane;
+  @service chatThreadListPane;
   @service chatStateManager;
 
   beforeModel(transition) {
@@ -21,12 +21,12 @@ export default class ChatChannelThreads extends DiscourseRoute {
 
   @action
   willTransition(transition) {
-    if (transition.targetName !== "chat.channel.thread") {
-      this.chatChannelThreadListPane.close();
+    if (transition.targetName === "chat.channel.index") {
+      this.chatStateManager.closeSidePanel();
     }
   }
 
   activate() {
-    this.chatChannelThreadListPane.open();
+    this.chatThreadListPane.open();
   }
 }

@@ -16,7 +16,7 @@ import { SKIP } from "discourse/lib/autocomplete";
 import I18n from "I18n";
 import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
-import { isEmpty, isPresent } from "@ember/utils";
+import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -69,15 +69,6 @@ export default class ChatComposer extends Component {
     );
   }
 
-  get disabled() {
-    return (
-      (this.args.channel.isDraft &&
-        isEmpty(this.args.channel?.chatable?.users)) ||
-      !this.chat.userCanInteractWithChat ||
-      !this.args.channel.canModifyMessages(this.currentUser)
-    );
-  }
-
   @action
   persistDraft() {}
 
@@ -91,21 +82,23 @@ export default class ChatComposer extends Component {
 
   @action
   setupTextareaInteractor(textarea) {
-    this.textareaInteractor = new TextareaInteractor(getOwner(this), textarea);
+    this.composer.textarea = new TextareaInteractor(getOwner(this), textarea);
+
+    if (this.site.desktopView) {
+      this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
+    }
   }
 
   @action
   didUpdateMessage() {
     this.cancelPersistDraft();
-    this.textareaInteractor.value = this.currentMessage.message || "";
-    this.textareaInteractor.focus({ refreshHeight: true });
+    this.composer.value = this.currentMessage.message;
     this.persistDraft();
   }
 
   @action
   didUpdateInReplyTo() {
     this.cancelPersistDraft();
-    this.textareaInteractor.focus({ ensureAtEnd: true, refreshHeight: true });
     this.persistDraft();
   }
 
@@ -166,18 +159,13 @@ export default class ChatComposer extends Component {
   insertDiscourseLocalDate() {
     showModal("discourse-local-dates-create-modal").setProperties({
       insertDate: (markup) => {
-        this.textareaInteractor.addText(
-          this.textareaInteractor.getSelected(),
+        this.composer.textarea.addText(
+          this.composer.textarea.getSelected(),
           markup
         );
-        this.textareaInteractor.focus();
+        this.composer.focus();
       },
     });
-  }
-
-  @action
-  focusTextarea() {
-    this.textareaInteractor.focus();
   }
 
   @action
@@ -196,7 +184,7 @@ export default class ChatComposer extends Component {
   onInput(event) {
     this.currentMessage.draftSaved = false;
     this.currentMessage.message = event.target.value;
-    this.textareaInteractor.refreshHeight();
+    this.composer.textarea.refreshHeight();
     this.reportReplyingPresence();
     this.persistDraft();
     this.captureMentions();
@@ -204,10 +192,6 @@ export default class ChatComposer extends Component {
 
   @action
   onUploadChanged(uploads, { inProgressUploadsCount }) {
-    if (!this.args.channel) {
-      return;
-    }
-
     this.currentMessage.draftSaved = false;
 
     this.inProgressUploadsCount = inProgressUploadsCount || 0;
@@ -221,13 +205,13 @@ export default class ChatComposer extends Component {
       this.currentMessage.uploads = cloneJSON(uploads);
     }
 
-    this.textareaInteractor?.focus();
+    this.composer.textarea?.focus();
     this.reportReplyingPresence();
     this.persistDraft();
   }
 
   @action
-  onSend() {
+  async onSend() {
     if (!this.sendEnabled) {
       return;
     }
@@ -249,16 +233,11 @@ export default class ChatComposer extends Component {
       // prevents to hide the keyboard after sending a message
       // we use direct DOM manipulation here because textareaInteractor.focus()
       // is using the runloop which is too late
-      this.textareaInteractor.textarea.focus();
+      this.composer.textarea.textarea.focus();
     }
 
-    this.args.onSendMessage(this.currentMessage);
-    this.textareaInteractor.focus({ refreshHeight: true });
-  }
-
-  @action
-  onCancel() {
-    this.composer.cancel();
+    await this.args.onSendMessage(this.currentMessage);
+    this.composer.focus({ refreshHeight: true });
   }
 
   reportReplyingPresence() {
@@ -282,13 +261,13 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    const sel = this.textareaInteractor.getSelected("", { lineVal: true });
+    const sel = this.composer.textarea.getSelected("", { lineVal: true });
     if (options.type === "bold") {
-      this.textareaInteractor.applySurround(sel, "**", "**", "bold_text");
+      this.composer.textarea.applySurround(sel, "**", "**", "bold_text");
     } else if (options.type === "italic") {
-      this.textareaInteractor.applySurround(sel, "_", "_", "italic_text");
+      this.composer.textarea.applySurround(sel, "_", "_", "italic_text");
     } else if (options.type === "code") {
-      this.textareaInteractor.applySurround(sel, "`", "`", "code_text");
+      this.composer.textarea.applySurround(sel, "`", "`", "code_text");
     }
   }
 
@@ -321,6 +300,10 @@ export default class ChatComposer extends Component {
       return;
     }
 
+    if (event.key === "Escape" && !event.shiftKey) {
+      return this.handleEscape(event);
+    }
+
     if (event.key === "Enter") {
       if (event.shiftKey) {
         // Shift+Enter: insert newline
@@ -330,8 +313,8 @@ export default class ChatComposer extends Component {
       // Ctrl+Enter, plain Enter: send
       if (!event.ctrlKey) {
         // if we are inside a code block just insert newline
-        const { pre } = this.textareaInteractor.getSelected({ lineVal: true });
-        if (this.textareaInteractor.isInside(pre, /(^|\n)```/g)) {
+        const { pre } = this.composer.textarea.getSelected({ lineVal: true });
+        if (this.composer.textarea.isInside(pre, /(^|\n)```/g)) {
           return;
         }
       }
@@ -351,27 +334,10 @@ export default class ChatComposer extends Component {
       } else {
         const editableMessage = this.lastUserMessage(this.currentUser);
         if (editableMessage?.editable) {
-          this.composer.editMessage(editableMessage);
+          this.composer.edit(editableMessage);
         }
       }
     }
-
-    if (event.key === "Escape" && this.isFocused) {
-      event.stopPropagation();
-
-      if (this.currentMessage?.inReplyTo) {
-        this.reset();
-      } else if (this.currentMessage?.editing) {
-        this.composer.cancel();
-      } else {
-        event.target.blur();
-      }
-    }
-  }
-
-  @action
-  reset() {
-    this.composer.reset(this.args.channel, this.args.thread);
   }
 
   @action
@@ -380,12 +346,12 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    const selected = this.textareaInteractor.getSelected("", { lineVal: true });
+    const selected = this.composer.textarea.getSelected("", { lineVal: true });
     const linkText = selected?.value;
     showModal("insert-hyperlink").setProperties({
       linkText,
       toolbarEvent: {
-        addText: (text) => this.textareaInteractor.addText(selected, text),
+        addText: (text) => this.composer.textarea.addText(selected, text),
       },
     });
   }
@@ -394,13 +360,10 @@ export default class ChatComposer extends Component {
   onSelectEmoji(emoji) {
     const code = `:${emoji}:`;
     this.chatEmojiReactionStore.track(code);
-    this.textareaInteractor.addText(
-      this.textareaInteractor.getSelected(),
-      code
-    );
+    this.composer.textarea.addText(this.composer.textarea.getSelected(), code);
 
     if (this.site.desktopView) {
-      this.textareaInteractor.focus();
+      this.composer.focus();
     } else {
       this.chatEmojiPickerManager.close();
     }
@@ -454,8 +417,8 @@ export default class ChatComposer extends Component {
       },
       afterComplete: (text, event) => {
         event.preventDefault();
-        this.textareaInteractor.value = text;
-        this.textareaInteractor.focus();
+        this.composer.value = text;
+        this.composer.focus();
         this.captureMentions();
       },
     });
@@ -470,8 +433,8 @@ export default class ChatComposer extends Component {
         treatAsTextarea: true,
         afterComplete: (text, event) => {
           event.preventDefault();
-          this.textareaInteractor.value = text;
-          this.textareaInteractor.focus();
+          this.composer.value = text;
+          this.composer.focus();
         },
       }
     );
@@ -487,8 +450,8 @@ export default class ChatComposer extends Component {
       key: ":",
       afterComplete: (text, event) => {
         event.preventDefault();
-        this.textareaInteractor.value = text;
-        this.textareaInteractor.focus();
+        this.composer.value = text;
+        this.composer.focus();
       },
       treatAsTextarea: true,
       onKeyUp: (text, cp) => {

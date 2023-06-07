@@ -9,7 +9,7 @@
         this.currentMessage
         this.currentMessage.inReplyTo
       }}
-      @cancelAction={{this.onCancel}}
+      @cancelAction={{this.composer.cancel}}
     />
   {{/if}}
 
@@ -46,7 +46,7 @@
 
         <div
           class="chat-composer__input-container"
-          {{on "click" this.focusTextarea}}
+          {{on "click" this.composer.focus}}
         >
           <DTextarea
             id={{this.composerId}}

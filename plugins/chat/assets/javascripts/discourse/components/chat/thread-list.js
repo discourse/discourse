@@ -9,12 +9,12 @@ export default class ChatThreadList extends Component {
   @tracked threads;
   @tracked loading = true;
 
+  get shouldRender() {
+    return !!this.args.channel;
+  }
+
   @action
   loadThreads() {
-    if (!this.args.channel) {
-      return;
-    }
-
     this.loading = true;
     this.args.channel.threadsManager
       .index(this.args.channel.id)

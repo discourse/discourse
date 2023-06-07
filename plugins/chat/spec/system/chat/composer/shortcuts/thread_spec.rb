@@ -4,9 +4,11 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+  fab!(:thread_1) { Fabricate(:chat_message, user: current_user, in_reply_to: message_1).thread }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
+  let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
   before do
     SiteSetting.enable_experimental_chat_threaded_discussions = true
@@ -15,8 +17,19 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
     sign_in(current_user)
   end
 
+  describe "Escape" do
+    context "when composer is focused" do
+      it "blurs the composer" do
+        chat_page.visit_thread(thread_1)
+        thread_page.composer.focus
+        thread_page.composer.cancel_shortcut
+
+        expect(side_panel_page).to have_open_thread
+      end
+    end
+  end
+
   describe "ArrowUp" do
-    fab!(:thread_1) { Fabricate(:chat_message, user: current_user, in_reply_to: message_1).thread }
     let(:last_thread_message) { thread_1.replies.last }
 
     context "when there are editable messages" do

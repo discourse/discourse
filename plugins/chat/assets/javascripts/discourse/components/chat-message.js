@@ -38,7 +38,7 @@ export default class ChatMessage extends Component {
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelPane;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
 
@@ -51,7 +51,7 @@ export default class ChatMessage extends Component {
 
   get pane() {
     return this.args.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadPane
+      ? this.chatThreadPane
       : this.chatChannelPane;
   }
 

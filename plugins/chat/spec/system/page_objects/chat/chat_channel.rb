@@ -122,7 +122,7 @@ module PageObjects
 
       def edit_message(message, text = nil)
         open_edit_message(message)
-        send_message(text) if text
+        send_message(message.message + text) if text
       end
 
       def send_message(text = nil)

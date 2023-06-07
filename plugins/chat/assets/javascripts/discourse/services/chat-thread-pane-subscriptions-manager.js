@@ -1,7 +1,7 @@
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-manager";
 
-export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
+export default class ChatThreadPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
   get messageBusChannel() {
     return `/chat/${this.model.channel.id}/thread/${this.model.id}`;
   }
@@ -21,10 +21,8 @@ export default class ChatChannelThreadPaneSubscriptionsManager extends ChatPaneB
       }
     }
 
-    const message = ChatMessage.create(
-      this.chat.activeChannel,
-      data.chat_message
-    );
+    const message = ChatMessage.create(this.model.channel, data.chat_message);
+    message.thread = this.model;
     this.messagesManager.addMessages([message]);
   }
 
