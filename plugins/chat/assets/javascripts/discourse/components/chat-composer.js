@@ -19,7 +19,6 @@ import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
-import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 export default class ChatComposer extends Component {
   @service capabilities;

@@ -17,6 +17,7 @@ export default class ChatChannelComposer extends Service {
   focus(options = {}) {
     this.textarea.focus(options);
   }
+
   @action
   blur() {
     this.textarea.blur();
