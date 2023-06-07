@@ -795,8 +795,10 @@ export default class ComposerController extends Controller {
 
   @action
   saveAction(ignore, event) {
-    if (this.formTemplateIds.length > 0) {
-      this.prepareFormTemplateData(event);
+    if (this.siteSettings.experimental_form_templates) {
+      if (this.formTemplateIds?.length > 0) {
+        this.prepareFormTemplateData(event);
+      }
     }
 
     this.save(false, {
