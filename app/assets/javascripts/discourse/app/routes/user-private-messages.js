@@ -8,12 +8,8 @@ export default DiscourseRoute.extend({
   templateName: "user/messages",
   composer: service(),
 
-  model() {
-    return this.modelFor("user");
-  },
-
   afterModel() {
-    return this.pmTopicTrackingState.startTracking();
+    this.pmTopicTrackingState.startTracking();
   },
 
   setupController() {
