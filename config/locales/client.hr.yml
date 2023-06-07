@@ -2719,7 +2719,7 @@ hr:
         top: "Nema glavnih tema."
         educate:
           new: '<p>Vaše nove teme će se pojaviti ovdje. Prema zadanim postavkama teme se smatraju novim i pokazat će indikator <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> ako su stvorene u posljednja 2 dana.</p><p>Posjetite <a href="%{userPrefsUrl}">preferenci</a> da biste to promijenili.</p>'
-          unread: "<p>Vaše nepročitane teme pojavljuju se ovdje.</p><p>Prema zadanim postavkama, teme se smatraju nepročitanima i prikazat će se nepročitane brojke <span class=\"badge unread-posts badge-notification\">1</span> ako:</p><ul><li>Izrađeno je temu</li><li>Odgovoreno na temu</li><li>Pročitajte temu više od 4 minute</li></ul><p>Ili ako ste izričito postavili temu na Praćeni ili promatrani putem \U0001F514 u svakoj temi.</p><p>Posjetite <a href=\"%{userPrefsUrl}\">preferenci</a> da biste to promijenili.</p>"
+          unread: "<p>Vaše nepročitane teme pojavljuju se ovdje.</p><p>Prema zadanim postavkama, teme se smatraju nepročitanima i prikazat će se nepročitane brojke <span class=\"badge unread-posts badge-notification\">1</span> ako:</p><ul><li>Izrađeno je temu</li><li>Odgovoreno na temu</li><li>Pročitajte temu više od 5 minute</li></ul><p>Ili ako ste izričito postavili temu na Praćeni ili promatrani putem \U0001F514 u svakoj temi.</p><p>Posjetite <a href=\"%{userPrefsUrl}\">preferenci</a> da biste to promijenili.</p>"
       bottom:
         latest: "Nema više najnovijih tema."
         posted: "Nema više objavljenih članaka."

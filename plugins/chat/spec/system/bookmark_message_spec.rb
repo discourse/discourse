@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Bookmark message", type: :system, js: true do
+RSpec.describe "Bookmark message", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }

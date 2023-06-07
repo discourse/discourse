@@ -32,7 +32,11 @@ module PageObjects
           selector_method = args[:does_not_exist] ? :has_no_selector? : :has_selector?
 
           if text
-            find(context).send(selector_method, selectors + " " + ".chat-message-text", text: text)
+            find(context).send(
+              selector_method,
+              selectors + " " + ".chat-message-text",
+              text: /#{Regexp.escape(text)}/,
+            )
           else
             find(context).send(selector_method, selectors)
           end

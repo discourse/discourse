@@ -150,10 +150,11 @@ jobs:
       - name: Fetch turbo_rspec_runtime.log cache
         uses: actions/cache@v3
         id: test-runtime-cache
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
           path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-backend-core
+          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
+          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       - name: Run Zeitwerk check
         if: matrix.build_type == 'backend'
@@ -173,11 +174,11 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --verbose
+        run: bin/turbo_rspec --use-runtime-info --verbose
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format documentation']
+        run: bin/rake plugin:turbo_spec['*','--verbose --format documentation --use-runtime-info']
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
@@ -194,11 +195,11 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --profile=50 --verbose --format documentation spec/system
+        run: PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --profile=50 --verbose --format documentation plugins/*/spec/system
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots

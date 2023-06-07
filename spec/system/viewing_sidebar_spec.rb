@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar", type: :system, js: true do
+describe "Viewing sidebar", type: :system do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }

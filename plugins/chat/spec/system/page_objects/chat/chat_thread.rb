@@ -34,7 +34,7 @@ module PageObjects
 
       def has_unread_list_indicator?(count:)
         has_css?(
-          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number-wrap",
+          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
           text: count.to_s,
         )
       end
@@ -62,7 +62,6 @@ module PageObjects
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
         composer.fill_in(with: text)
         click_send_message
-        messages.has_message?(text: text, persisted: true)
         click_composer
         text
       end

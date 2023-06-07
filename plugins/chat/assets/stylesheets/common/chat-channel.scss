@@ -1,33 +1,13 @@
-@mixin chat-channel-header-button {
-  color: var(--primary-low-mid);
-
-  &:visited {
-    color: var(--primary-low-mid);
-  }
-
-  &:hover {
-    color: var(--primary);
-  }
-
-  > * {
-    pointer-events: none;
-  }
-}
-
 .chat-channel {
   display: flex;
   flex-direction: column;
+  width: 100%;
   min-height: 1px;
   position: relative;
   overflow: hidden;
   grid-area: main;
-  width: 100%;
   min-width: 250px;
   @include chat-height;
-
-  .open-drawer-btn {
-    @include chat-channel-header-button;
-  }
 
   .chat-messages-scroll {
     flex-grow: 1;
@@ -89,18 +69,6 @@
     &.visible {
       transform: translateY(-32px) scale(1);
       opacity: 0.8;
-    }
-
-    &__text {
-      color: var(--secondary);
-      padding: 0.5rem;
-      margin-bottom: 0.5rem;
-      background: var(--primary-medium);
-      border-radius: 3px;
-      text-align: center;
-      font-size: var(--font-down-1);
-      bottom: 40px;
-      position: absolute;
     }
 
     &__arrow {

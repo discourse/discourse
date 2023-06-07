@@ -252,26 +252,34 @@ export default class ChatThreadPanel extends Component {
     this.resetComposerMessage();
     this.scrollToBottom();
 
-    return this.chatApi
-      .sendMessage(this.args.thread.channel.id, {
-        message: message.message,
-        in_reply_to_id: message.thread.staged
-          ? message.thread.originalMessage.id
-          : null,
-        staged_id: message.id,
-        upload_ids: message.uploads.map((upload) => upload.id),
-        thread_id: message.thread.staged ? null : message.thread.id,
-        staged_thread_id: message.thread.staged ? message.thread.id : null,
-      })
-      .catch((error) => {
-        this.#onSendError(message.id, error);
-      })
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.chatThreadPane.sending = false;
-      });
+    try {
+      await this.chatApi
+        .sendMessage(this.args.thread.channel.id, {
+          message: message.message,
+          in_reply_to_id: message.thread.staged
+            ? message.thread.originalMessage.id
+            : null,
+          staged_id: message.id,
+          upload_ids: message.uploads.map((upload) => upload.id),
+          thread_id: message.thread.staged ? null : message.thread.id,
+          staged_thread_id: message.thread.staged ? message.thread.id : null,
+        })
+        .catch((error) => {
+          this.#onSendError(message.id, error);
+        })
+        .finally(() => {
+          if (this._selfDeleted) {
+            return;
+          }
+          this.chatThreadPane.sending = false;
+        });
+    } catch (error) {
+      this.#onSendError(message.id, error);
+    } finally {
+      if (!this._selfDeleted) {
+        this.chatChannelThreadPane.sending = false;
+      }
+    }
   }
 
   async #sendEditMessage(message) {

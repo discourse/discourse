@@ -243,8 +243,7 @@ RSpec.describe Plugin::Instance do
     end
 
     it "can activate plugins correctly" do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
       junk_file = "#{plugin.auto_generated_path}/junk"
 
       plugin.ensure_directory(junk_file)
@@ -260,8 +259,7 @@ RSpec.describe Plugin::Instance do
     end
 
     it "registers auth providers correctly" do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
       plugin.activate!
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(0)
       plugin.notify_before_auth
@@ -271,8 +269,7 @@ RSpec.describe Plugin::Instance do
     end
 
     it "finds all the custom assets" do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
 
       plugin.register_asset("test.css")
       plugin.register_asset("test2.scss")
@@ -397,8 +394,8 @@ RSpec.describe Plugin::Instance do
   end
 
   describe "locales" do
-    let(:plugin_path) { "#{Rails.root}/spec/fixtures/plugins/custom_locales" }
-    let!(:plugin) { Plugin::Instance.new(nil, "#{plugin_path}/plugin.rb") }
+    let!(:plugin) { plugin_from_fixtures("custom_locales") }
+    let(:plugin_path) { File.dirname(plugin.path) }
     let(:plural) do
       {
         keys: %i[one few other],

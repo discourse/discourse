@@ -271,6 +271,11 @@ he:
       select: "בחירה"
       return_to_list: "חזרה לרשימת הערוצים"
       return_to_threads_list: "חזרה לדיונים שמתקיימים כרגע"
+      unread_threads_count:
+        one: "יש דיון שטרם קראת"
+        two: "יש %{count} דיונים שטרם קראת"
+        many: "יש %{count} דיונים שטרם קראת"
+        other: "יש %{count} דיונים שטרם קראת"
       scroll_to_bottom: "גלילה לתחתית"
       scroll_to_new_messages: "הצגת הודעות חדשות"
       sound:

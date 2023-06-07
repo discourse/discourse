@@ -1014,15 +1014,13 @@ RSpec.describe Stylesheet::Manager do
 
     context "when there are enabled plugins" do
       let(:plugin1) do
-        plugin1 = Plugin::Instance.new
-        plugin1.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+        plugin1 = plugin_from_fixtures("my_plugin")
         plugin1.register_css "body { padding: 1px 2px 3px 4px; }"
         plugin1
       end
 
       let(:plugin2) do
-        plugin2 = Plugin::Instance.new
-        plugin2.path = "#{Rails.root}/spec/fixtures/plugins/scss_plugin/plugin.rb"
+        plugin2 = plugin_from_fixtures("scss_plugin")
         plugin2
       end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Custom sidebar sections", type: :system, js: true do
+describe "Custom sidebar sections", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
@@ -197,14 +197,22 @@ describe "Custom sidebar sections", type: :system, js: true do
     sign_in admin
     visit("/latest")
 
+    expect(sidebar.primary_section_icons("community")).to eq(
+      %w[layer-group user flag wrench ellipsis-v],
+    )
+
     sidebar.edit_custom_section("Community")
+    section_modal.fill_link("Everything", "/latest", "paper-plane")
     section_modal.fill_name("Edited community section")
     section_modal.everything_link.drag_to(section_modal.review_link, delay: 0.4)
     section_modal.save
 
     expect(sidebar).to have_section("Edited community section")
     expect(sidebar.primary_section_links("edited-community-section")).to eq(
-      ["My Posts", "Everything", "Admin", "More"],
+      ["My Posts", "Everything", "Review", "Admin", "More"],
+    )
+    expect(sidebar.primary_section_icons("edited-community-section")).to eq(
+      %w[user paper-plane flag wrench ellipsis-v],
     )
 
     sidebar.edit_custom_section("Edited community section")
@@ -212,7 +220,10 @@ describe "Custom sidebar sections", type: :system, js: true do
 
     expect(sidebar).to have_section("Community")
     expect(sidebar.primary_section_links("community")).to eq(
-      ["Everything", "My Posts", "Admin", "More"],
+      ["Everything", "My Posts", "Review", "Admin", "More"],
+    )
+    expect(sidebar.primary_section_icons("community")).to eq(
+      %w[layer-group user flag wrench ellipsis-v],
     )
   end
 

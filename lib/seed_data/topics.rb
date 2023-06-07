@@ -98,6 +98,17 @@ module SeedData
       if include_welcome_topics
         # Welcome Topic
         if general_category = Category.find_by(id: SiteSetting.general_category_id)
+          site_info_quote =
+            if SiteSetting.title.present? && SiteSetting.site_description.present?
+              <<~RAW
+              > ## #{SiteSetting.title}
+              >
+              > #{SiteSetting.site_description}
+              RAW
+            else
+              ""
+            end
+
           topics << {
             site_setting_name: "welcome_topic_id",
             title: I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
@@ -107,6 +118,7 @@ module SeedData
                 base_path: Discourse.base_path,
                 site_title: SiteSetting.title,
                 site_description: SiteSetting.site_description,
+                site_info_quote: site_info_quote,
               ),
             category: general_category,
             after_create: proc { |post| post.topic.update_pinned(true, true) },

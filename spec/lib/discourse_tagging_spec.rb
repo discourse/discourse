@@ -1552,6 +1552,19 @@ RSpec.describe DiscourseTagging do
       expect(tag2.reload.target_tag).to eq(tag1)
     end
 
+    it "replaces topic synonym tags with target tag" do
+      tag4, tag5 = 2.times.collect { Fabricate(:tag) }
+      topic = Fabricate(:topic, tags: [tag2, tag3, tag4])
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name, tag3.name])).to eq(
+          true,
+        )
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2, tag3])
+      expect_same_tag_names(topic.reload.tags, [tag1, tag4])
+      expect(tag5.reload).to be_present
+    end
+
     it "can create new tags" do
       expect {
         expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, ["synonym1"])).to eq(true)

@@ -6,7 +6,7 @@ class ApiKeyScope < ActiveRecord::Base
 
   class << self
     def list_actions
-      actions = %w[list#category_feed list#category_default]
+      actions = %w[list#category_feed list#category_default list#latest_feed]
 
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
@@ -60,6 +60,9 @@ class ApiKeyScope < ActiveRecord::Base
           },
           delete: {
             actions: %w[posts#destroy],
+          },
+          list: {
+            actions: %w[posts#latest],
           },
         },
         tags: {
