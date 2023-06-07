@@ -9,7 +9,11 @@ module Jobs
       @prev_email = args[:prev_email]
       @anonymize_ip = args[:anonymize_ip]
 
-      make_anonymous
+      DistributedMutex.synchronize(
+        "anonymize_user",
+        redis: Discourse.redis.without_namespace,
+        validity: 1.hour,
+      ) { make_anonymous }
     end
 
     def make_anonymous
