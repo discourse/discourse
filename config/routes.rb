@@ -35,7 +35,6 @@ Discourse::Application.routes.draw do
     post "webhooks/aws" => "webhooks#aws"
     post "webhooks/mailgun" => "webhooks#mailgun"
     post "webhooks/mailjet" => "webhooks#mailjet"
-    post "webhooks/mailgun" => "webhooks#mailgun"
     post "webhooks/mailpace" => "webhooks#mailpace"
     post "webhooks/mandrill" => "webhooks#mandrill"
     get "webhooks/mandrill" => "webhooks#mandrill_head"
