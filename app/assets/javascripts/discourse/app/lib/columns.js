@@ -4,6 +4,7 @@
  *
  * Inspired/adapted from https://github.com/mladenilic/columns.js
  *
+ * TODO: Add unit tests
  */
 export default class Columns {
   constructor(container, options = {}) {
