@@ -18,8 +18,8 @@ const suggestionShortcuts = [
 ];
 
 const SUGGESTION_KEYWORD_MAP = {
-  "+": "tag",
-  "#": "category",
+  "+": "tagIntersection",
+  "#": "categoryOrTag",
   "@": "user",
 };
 
@@ -84,9 +84,7 @@ export default class Assistant extends Component {
       if (prefix.length) {
         prefix = `${prefix} `;
       }
-    }
-
-    if (this.args.suggestionKeyword === "+") {
+    } else {
       this.args.results.forEach((result) => {
         if (result.additionalTags) {
           prefix =
@@ -97,10 +95,9 @@ export default class Assistant extends Component {
         if (prefix.length) {
           prefix = `${prefix} `;
         }
-
-        return prefix;
       });
     }
+    return prefix;
   }
 
   // For all results that are a category we need to assign
@@ -118,6 +115,7 @@ export default class Assistant extends Component {
         categoryMap[result.model.id] = `${this.prefix}${fullSlug}`;
       }
     });
+    return categoryMap;
   }
 
   get user() {

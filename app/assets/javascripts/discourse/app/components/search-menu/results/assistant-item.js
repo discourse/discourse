@@ -30,7 +30,19 @@ export default class AssistantItem extends Component {
   }
 
   get prefix() {
-    return this.args.prefix?.trim();
+    let prefix = "";
+    if (this.args.suggestionKeyword !== "+") {
+      prefix =
+        this.search.activeGlobalSearchTerm
+          ?.split(this.args.suggestionKeyword)[0]
+          .trim() || "";
+      if (prefix.length) {
+        prefix = `${prefix} `;
+      }
+    } else {
+      prefix = this.search.activeGlobalSearchTerm;
+    }
+    return prefix;
   }
 
   get tagsSlug() {
@@ -57,7 +69,6 @@ export default class AssistantItem extends Component {
     const searchInput = document.querySelector("#search-term");
     searchInput.value = this.args.slug;
     searchInput.focus();
-
     this.args.searchTermChanged(this.args.slug, { searchTopics: true });
     e.preventDefault();
     return false;

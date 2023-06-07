@@ -1,19 +1,23 @@
 <ul class="search-menu-initial-options">
-  {{#if this.termMatch}}
+  {{#if this.termMatchesContextTypeKeyword}}
     <SearchMenu::Results::AssistantItem
+      @slug={{this.slug}}
       @extraHint={{true}}
-      @withLabel={{false}}
       @closeSearchMenu={{@closeSearchMenu}}
-      @setTopicContext={{@setTopicContext}}
+      @searchTermChanged={{@searchTermChanged}}
+      @suggestionKeyword={{this.contextTypeKeyword}}
     />
   {{else}}
     {{#if (or this.search.activeGlobalSearchTerm this.search.searchContext)}}
       {{#if this.search.activeGlobalSearchTerm}}
         <SearchMenu::Results::AssistantItem
-          @withLabel={{true}}
+          @slug={{this.slug}}
+          @suffix="search.in_topics_posts"
           @closeSearchMenu={{@closeSearchMenu}}
           @extraHint={{true}}
-          @setTopicContext={{@setTopicContext}}
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+          @suggestionKeyword={{this.contextTypeKeyword}}
         />
       {{/if}}
 
@@ -23,9 +27,10 @@
           @suggestionKeyword={{this.contextTypeKeyword}}
           @results={{this.initialResults}}
           @withInLabel={{this.withInLabel}}
+          @suffix={{this.suffix}}
           @label={{this.label}}
-          @setTopicContext={{@setTopicContext}}
           @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
         />
       {{/if}}
     {{else}}
@@ -36,6 +41,7 @@
       {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
         <SearchMenu::Results::RecentSearches
           @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
         />
       {{/if}}
     {{/if}}

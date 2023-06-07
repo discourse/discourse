@@ -13,7 +13,7 @@ export default class MoreLink extends Component {
   }
 
   get moreUrl() {
-    return this.topicResults.moreUrl();
+    return this.topicResults.moreUrl && this.topicResults.moreUrl();
   }
 
   @action

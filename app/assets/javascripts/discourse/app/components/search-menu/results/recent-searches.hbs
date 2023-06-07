@@ -12,8 +12,10 @@
   {{#each this.currentUser.recent_searches as |slug|}}
     <SearchMenu::Results::AssistantItem
       @icon="history"
+      @label={{slug}}
       @slug={{slug}}
       @closeSearchMenu={{@closeSearchMenu}}
+      @searchTermChanged={{@searchTermChanged}}
     />
   {{/each}}
 </div>

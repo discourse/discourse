@@ -7,14 +7,9 @@
   <a class="search-link" href={{this.href}}>
     <span aria-label={{I18n "search.title"}}>{{d-icon this.icon}}</span>
 
-    {{#unless @user}}
-      <span class="search-item-prefix">
-        {{this.search.activeGlobalSearchTerm}}
-        {{#if this.prefix}}
-          {{this.prefix}}
-        {{/if}}
-      </span>
-    {{/unless}}
+    <span class="search-item-prefix">
+      {{this.prefix}}
+    </span>
 
     {{#if @withInLabel}}
       <span class="label-suffix">{{I18n "search.in"}}</span>
@@ -41,10 +36,9 @@
       </span>
     {{else}}
       <span class="search-item-slug">
-        {{#if @withLabel}}
-          <span class="label-suffix">
-            {{i18n "search.in_topics_posts"}}
-          </span>
+        {{log @suffix}}
+        {{#if @suffix}}
+          <span class="label-suffix">{{i18n @suffix}}</span>
         {{/if}}
         {{@label}}
       </span>

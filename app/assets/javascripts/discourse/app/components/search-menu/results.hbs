@@ -13,21 +13,26 @@
   {{else if this.renderInitialOptions}}
     <SearchMenu::Results::InitialOptions
       @closeSearchMenu={{@closeSearchMenu}}
+      @searchTermChanged={{@searchTermChanged}}
     />
   {{else}}
     {{#if (not @searchTopics)}}
       {{#if (not @inPMInboxContext)}}
+        {{! render the first couple suggestions before a search has been performed}}
         <SearchMenu::Results::InitialOptions
           @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
         />
         {{#if this.resultTypesWithComponent}}
           <SearchMenu::Results::Types
             @resultTypes={{this.resultTypesWithComponent}}
             @closeSearchMenu={{@closeSearchMenu}}
+            @searchTermChanged={{@searchTermChanged}}
           />
         {{/if}}
       {{/if}}
     {{else}}
+      {{! render results after a search has been performed }}
       {{#if this.resultTypesWithComponent}}
         <SearchMenu::Results::Types
           @resultTypes={{this.resultTypesWithComponent}}
@@ -39,6 +44,7 @@
           @triggerSearch={{@triggerSearch}}
           @resultTypes={{this.resultTypesWithComponent}}
           @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
         />
       {{/if}}
     {{/if}}

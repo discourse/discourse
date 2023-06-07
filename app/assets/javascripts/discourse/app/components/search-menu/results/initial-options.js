@@ -33,7 +33,7 @@ export default class InitialOptions extends Component {
     }
   }
 
-  get termMatch() {
+  get termMatchesContextTypeKeyword() {
     return this.search.activeGlobalSearchTerm?.match(MODIFIER_REGEXP)
       ? true
       : false;
@@ -64,7 +64,8 @@ export default class InitialOptions extends Component {
 
   topicContextType() {
     this.slug = this.search.activeGlobalSearchTerm;
-    this.args.setTopicContext();
+    this.suffix = "search.in_this_topic";
+    //this.args.setTopicContext();
     //this.label = [
     //h("span", `${this.search.activeGlobalSearchTerm} `),
     //h("span.label-suffix", I18n.t("search.in_this_topic")),
