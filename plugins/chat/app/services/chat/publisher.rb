@@ -63,8 +63,15 @@ module Chat
       end
 
       if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel)
-        # TODO (martin) Handle publishing the additional user data here so
-        # the last_reply_user on the client can be updated.
+        # preview =
+        #   ::Chat::ThreadPreviewSerializer.new(
+        #     chat_message.thread,
+        #     participants:
+        #       ::Chat::ThreadParticipantQuery.call(thread_ids: [chat_message.thread_id])[
+        #         chat_message.thread_id
+        #       ],
+        #     root: false,
+        #   ).as_json
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
@@ -74,25 +81,31 @@ module Chat
             user_id: chat_message.user.id,
             username: chat_message.user.username,
             thread_id: chat_message.thread_id,
-            created_at: chat_message.created_at,
-            excerpt:
-              chat_message.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH),
+            # TODO (martin) Maybe instead of doing this, just call publish_thread_original_message_metadata! here?
+            # thread_preview: preview.as_json,
           },
           permissions(chat_channel),
         )
+
+        publish_thread_original_message_metadata!(chat_message.thread)
       end
     end
 
-    # TODO (martin) Make this publish all the data needed for preview e.g.
-    # last reply, participants.
+    # TODO (martin) Make calling this more explicit for new/delete/restore
+    # thread messages.
     def self.publish_thread_original_message_metadata!(thread)
+      preview =
+        ::Chat::ThreadPreviewSerializer.new(
+          thread,
+          participants: ::Chat::ThreadParticipantQuery.call(thread_ids: [thread.id])[thread.id],
+          root: false,
+        ).as_json
       publish_to_channel!(
         thread.channel,
         {
           type: :update_thread_original_message,
           original_message_id: thread.original_message_id,
-          replies_count: thread.replies_count_cache,
-          title: thread.title,
+          preview: preview.as_json,
         },
       )
     end

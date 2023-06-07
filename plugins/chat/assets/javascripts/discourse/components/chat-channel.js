@@ -1,6 +1,5 @@
 import { capitalize } from "@ember/string";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -415,11 +414,11 @@ export default class ChatLivePane extends Component {
 
       const message = ChatMessage.create(channel, messageData);
 
-      if (messageData.thread_id) {
-        message.thread = ChatThread.create(channel, {
-          id: messageData.thread_id,
-        });
-      }
+      // if (messageData.thread_id) {
+      //   message.thread = ChatThread.create(channel, {
+      //     id: messageData.thread_id,
+      //   });
+      // }
 
       messages.push(message);
     });

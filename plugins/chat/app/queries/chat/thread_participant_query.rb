@@ -66,6 +66,9 @@ module Chat
         thread_participants[thread_id][:user_ids].push(user_id)
       end
 
+      # TODO (martin) Maybe return actual users here instead of `user_ids`? Then we
+      # don't have N1s when serializing...but also only having the user_ids would
+      # be easier to cache.
       thread_participants
     end
   end

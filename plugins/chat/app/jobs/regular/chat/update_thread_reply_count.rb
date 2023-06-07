@@ -17,7 +17,7 @@ module Jobs
         )
         thread.set_replies_count_cache(thread.replies.count, update_db: true)
 
-        ::Chat::Publisher.publish_thread_original_message_metadata!(thread)
+        # ::Chat::Publisher.publish_thread_original_message_metadata!(thread)
       end
     end
   end

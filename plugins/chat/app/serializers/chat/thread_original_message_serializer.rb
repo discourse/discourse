@@ -2,13 +2,10 @@
 
 module Chat
   class ThreadOriginalMessageSerializer < Chat::MessageSerializer
+    has_one :user, serializer: BasicUserWithStatusSerializer, embed: :objects
+
     def excerpt
       object.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH)
-    end
-
-    # No need for this since at the top-level we already serialize original_message_user.
-    def include_user?
-      false
     end
 
     def include_available_flags?

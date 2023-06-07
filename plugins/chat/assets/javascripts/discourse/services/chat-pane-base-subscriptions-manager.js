@@ -230,7 +230,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
           stagedThread.staged = false;
           stagedThread.id = data.thread_id;
           stagedThread.originalMessage.thread = stagedThread;
-          stagedThread.originalMessage.threadReplyCount ??= 1;
+          stagedThread.originalMessage.thread.preview.replyCount ??= 1;
         } else if (data.thread_id) {
           this.model.threadsManager
             .find(this.model.id, data.thread_id, { fetchIfNotFound: true })
