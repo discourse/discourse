@@ -76,6 +76,7 @@ module Chat
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
     def validate_message(has_uploads:)
+      strip_message
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")
@@ -355,6 +356,10 @@ module Chat
 
     def ensure_last_editor_id
       self.last_editor_id ||= self.user_id
+    end
+
+    def strip_message
+      self.message = message.to_s.strip
     end
   end
 end
