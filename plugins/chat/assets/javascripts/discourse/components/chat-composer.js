@@ -92,7 +92,7 @@ export default class ChatComposer extends Component {
   @action
   didUpdateMessage() {
     this.cancelPersistDraft();
-    this.composer.value = this.currentMessage.message;
+    this.composer.textarea.value = this.currentMessage.message;
     this.persistDraft();
   }
 
@@ -417,7 +417,7 @@ export default class ChatComposer extends Component {
       },
       afterComplete: (text, event) => {
         event.preventDefault();
-        this.composer.value = text;
+        this.composer.textarea.value = text;
         this.composer.focus();
         this.captureMentions();
       },
@@ -433,7 +433,7 @@ export default class ChatComposer extends Component {
         treatAsTextarea: true,
         afterComplete: (text, event) => {
           event.preventDefault();
-          this.composer.value = text;
+          this.composer.textarea.value = text;
           this.composer.focus();
         },
       }
@@ -450,7 +450,7 @@ export default class ChatComposer extends Component {
       key: ":",
       afterComplete: (text, event) => {
         event.preventDefault();
-        this.composer.value = text;
+        this.composer.textarea.value = text;
         this.composer.focus();
       },
       treatAsTextarea: true,
