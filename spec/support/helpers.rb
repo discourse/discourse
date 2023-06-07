@@ -156,13 +156,18 @@ module Helpers
     ActionController::Base.config.relative_url_root = new_root
     Rails.application.routes.stubs(:relative_url_root).returns(new_root)
 
-    Capybara.app.map("/") { run lambda { |env| [404, {}, [""]] } }
-    Capybara.app.map(new_root) { run Rails.application }
+    if RSpec.current_example.metadata[:type] == :system
+      Capybara.app.map("/") { run lambda { |env| [404, {}, [""]] } }
+      Capybara.app.map(new_root) { run Rails.application }
+    end
 
     before_next_spec do
       ActionController::Base.config.relative_url_root = old_root
-      Capybara.app.map(new_root) { run lambda { |env| [404, {}, [""]] } }
-      Capybara.app.map("/") { run Rails.application }
+
+      if RSpec.current_example.metadata[:type] == :system
+        Capybara.app.map(new_root) { run lambda { |env| [404, {}, [""]] } }
+        Capybara.app.map("/") { run Rails.application }
+      end
     end
   end
 
