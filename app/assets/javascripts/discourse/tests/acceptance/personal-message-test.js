@@ -79,7 +79,7 @@ acceptance("Personal Message - invite", function (needs) {
   test("suggested messages", async function (assert) {
     await visit("/t/pm-for-testing/12");
     await click(".add-remove-participant-btn");
-    await click(".private-message-map .controls .btn:has(.d-icon-plus)");
+    await click(".private-message-map .controls .add-participant-btn");
 
     assert
       .dom(".d-modal.share-and-invite .invite-user-control")
