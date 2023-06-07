@@ -28,7 +28,7 @@ export default class Columns {
   }
 
   count() {
-    // a 2x2 grid looks better for 2 or 4 items
+    // a 2x2 grid looks better in most cases for 2 or 4 items
     if (this.items.length === 4 || this.items.length === 2) {
       return 2;
     }
@@ -40,17 +40,14 @@ export default class Columns {
       return;
     }
 
-    const columns = this._allItemsAreImages()
-      ? this._distributeEvenly()
-      : this._distributeInOrder();
-
     this.container.dataset.columns = this.count();
+
+    const columns = this._distributeEvenly();
 
     while (this.container.firstChild) {
       this.container.removeChild(this.container.firstChild);
     }
     this.container.append(...columns);
-
     return this;
   }
 
@@ -66,22 +63,20 @@ export default class Columns {
   }
 
   _prepareItems() {
-    let targets = this.container.children;
+    let targets = [];
 
-    // if all children are wrapped in a paragraph, pull them out
-    if (targets.length === 1 && targets[0].nodeName === "P") {
-      targets = targets[0].children;
-    }
+    Array.from(this.container.children).forEach((child) => {
+      if (child.nodeName === "P" && child.children.length > 0) {
+        // sometimes children are wrapped in a paragraph
+        targets.push(...child.children);
+      } else {
+        targets.push(child);
+      }
+    });
 
-    return Array.from(targets).filter((item) => {
+    return targets.filter((item) => {
       return !this.excluded.includes(item.nodeName);
     });
-  }
-
-  _allItemsAreImages() {
-    return this.items.every(
-      (item) => item.querySelector("img") || item.nodeName === "IMG"
-    );
   }
 
   _distributeEvenly() {
@@ -93,7 +88,6 @@ export default class Columns {
       columnHeights[n] = 0;
     }
     this.items.forEach((item) => {
-      const img = item.querySelector("img") || item;
       let shortest = 0;
 
       for (let j = 1; j < count; ++j) {
@@ -102,20 +96,12 @@ export default class Columns {
         }
       }
 
-      // use aspect ratio to compare image heights
-      columnHeights[shortest] += (img.height / img.width) * 100;
+      // use aspect ratio to compare heights and append to shortest column
+      // if element is not an image, assue ratio is 1:1
+      const img = item.querySelector("img") || item;
+      const aR = img.nodeName === "IMG" ? img.height / img.width : 1;
+      columnHeights[shortest] += aR;
       columns[shortest].append(item);
-    });
-
-    return columns;
-  }
-
-  _distributeInOrder() {
-    const count = this.count();
-    const columns = this._prepareColumns(count);
-
-    this.items.forEach((item, index) => {
-      columns[index % count].append(item);
     });
 
     return columns;

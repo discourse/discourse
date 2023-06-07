@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, typeIn, visit } from "@ember/test-helpers";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
@@ -143,6 +143,84 @@ and a second group of images
         .length,
       2,
       "Special case of two columns for 4 images"
+    );
+  });
+
+  test("Image Grid - Distribute Evenly", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    // This test needs real images, otherwise height calculations will be off
+    // 5 images are used, in a 1-2-2 grid (since discourse-logo-sketch is not tall)
+    await fillIn(
+      ".d-editor-input",
+      "[grid]\n<img src='/images/avatar.png'><img src='/images/discourse-logo-sketch.png'><img src='/images/discourse-logo-sketch.png'><img src='/images/avatar.png'><img src='/images/avatar.png'>\n"
+    );
+    await typeIn(".d-editor-input", "[/grid]");
+
+    assert.strictEqual(
+      document.querySelectorAll(".d-editor-preview .d-image-grid-column")
+        .length,
+      3,
+      "Grid has three columns"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(
+        ".d-editor-preview .d-image-grid-column:first-child > img"
+      ).length,
+      1,
+      "First column has one item"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(
+        ".d-editor-preview .d-image-grid-column:nth-child(2) > img"
+      ).length,
+      2,
+      "Second column has two items"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(
+        ".d-editor-preview .d-image-grid-column:nth-child(3) > img"
+      ).length,
+      2,
+      "Third column has two items"
+    );
+  });
+
+  test("Image Grid - Nested items", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    // Ensure that images in paragraphs still get the grid treatment
+    await fillIn(
+      ".d-editor-input",
+      "[grid]\n<p><img src='/images/avatar.png'><img src='/images/avatar.png'></p><p><img src='/images/avatar.png'><img src='/images/avatar.png'></p>\n[/grid]"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(".d-editor-preview .d-image-grid-column")
+        .length,
+      2,
+      "Grid has two columns"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(
+        ".d-editor-preview .d-image-grid-column:first-child > img"
+      ).length,
+      2,
+      "First column has two items"
+    );
+
+    assert.strictEqual(
+      document.querySelectorAll(
+        ".d-editor-preview .d-image-grid-column:nth-child(2) > img"
+      ).length,
+      2,
+      "Second column has two items"
     );
   });
 });
