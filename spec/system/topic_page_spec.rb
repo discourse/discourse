@@ -15,6 +15,9 @@ describe "Topic page", type: :system, js: true do
 
     find("#toc-h2-testing").hover
     find("a.anchor").click
+
+    # DEBUG
+    sleep 2
     expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
   end
 
@@ -26,6 +29,9 @@ describe "Topic page", type: :system, js: true do
 
       find("#toc-h2-testing").hover
       find("a.anchor").click
+
+      # DEBUG
+      sleep 2
       expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
     end
   end
