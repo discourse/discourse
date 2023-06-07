@@ -263,6 +263,19 @@
     .discourse-tag.box {
       margin-right: 0.25em;
     }
+    .participant-groups {
+      margin-left: 0.5em;
+      font-weight: normal;
+      font-size: var(--font-down-1);
+
+      > a {
+        color: var(--primary-medium);
+        border: solid 1px var(--primary-low);
+        padding: 0 0.3em 0.07em;
+        border-radius: 0.6em;
+        margin-right: 0.25em;
+      }
+    }
   }
 
   .topic-featured-link {

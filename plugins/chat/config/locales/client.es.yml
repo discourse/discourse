@@ -153,6 +153,10 @@ es:
       save: "Guardar"
       select: "Seleccionar"
       return_to_list: "Volver a la lista de canales"
+      return_to_threads_list: "Volver a los debates en curso"
+      unread_threads_count:
+        one: "Tienes %{count} discusiones sin leer"
+        other: "Tienes %{count} discusiones sin leer"
       scroll_to_bottom: "Desplazar hacia abajo"
       scroll_to_new_messages: "Ver nuevos mensajes"
       sound:
@@ -363,10 +367,17 @@ es:
         no_results: "No hay resultados"
       thread:
         title: "Título"
+        default_title: "Tema #%{thread_id}"
         replies:
           one: "%{count} respuesta"
           other: "%{count} respuestas"
+        original_message:
+          started_by: "Iniciado por"
         settings: "Ajustes"
+        last_reply: "última respuesta"
+      threads:
+        list: "Debates en curso"
+        none: "No participas en ningún hilo de este canal."
       draft_channel_screen:
         header: "Nuevo mensaje"
         cancel: "Cancelar"

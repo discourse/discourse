@@ -4,12 +4,10 @@
   title={{i18n "chat.threads.list"}}
   class={{concat-class
     "chat-threads-list-button btn btn-flat"
-    (if @channel.unreadThreadCount "-has-unreads")
+    (if @channel.unreadThreadCount "has-unreads")
   }}
 >
   {{d-icon "discourse-threads"}}
 
-  {{#unless this.currentUserInDnD}}
-    <Chat::Thread::HeaderUnreadIndicator @channel={{@channel}} />
-  {{/unless}}
+  <Chat::Thread::HeaderUnreadIndicator @channel={{@channel}} />
 </LinkTo>

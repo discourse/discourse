@@ -28,6 +28,7 @@ RSpec.describe SeedData::Topics do
           base_path: Discourse.base_path,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
+          site_info_quote: "",
         ).rstrip,
       )
       expect(topic.category_id).to eq(SiteSetting.general_category_id)
@@ -78,6 +79,27 @@ RSpec.describe SeedData::Topics do
       expect(SiteSetting.tos_topic_id).to eq(-1)
     end
 
+    it "creates a welcome topic without site title" do
+      SiteSetting.title = "My Awesome Community"
+      SiteSetting.site_description = ""
+
+      create_topic
+
+      post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
+      expect(post.raw).not_to include("> ## My Awesome Community")
+    end
+
+    it "creates a welcome topic with site title and description" do
+      SiteSetting.title = "My Awesome Community"
+      SiteSetting.site_description = "The best community"
+
+      create_topic
+
+      post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
+      expect(post.raw).to include("> ## My Awesome Community")
+      expect(post.raw).to include("> The best community")
+    end
+
     it "creates a legal topic if company_name is set" do
       SiteSetting.company_name = "Company Name"
       subject.create(site_setting_names: ["tos_topic_id"])
@@ -110,6 +132,7 @@ RSpec.describe SeedData::Topics do
           base_path: Discourse.base_path,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
+          site_info_quote: "",
         ).rstrip,
       )
     end

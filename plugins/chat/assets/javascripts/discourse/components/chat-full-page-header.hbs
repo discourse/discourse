@@ -35,12 +35,12 @@
             <DButton
               @icon="discourse-compress"
               @title="chat.close_full_page"
-              class="open-drawer-btn btn-flat no-text"
+              class="open-drawer-btn btn-flat"
               @action={{@onCloseFullScreen}}
             />
           {{/if}}
 
-          {{#if @channel.threadingEnabled}}
+          {{#if this.showThreadsListButton}}
             <Chat::Thread::ThreadsListButton @channel={{@channel}} />
           {{/if}}
         </div>

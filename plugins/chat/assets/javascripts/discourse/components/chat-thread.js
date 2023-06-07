@@ -40,6 +40,13 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
+  didUpdateThread() {
+    this.subscribeToUpdates();
+    this.loadMessages();
+    this.resetComposer();
+  }
+
+  @action
   setUploadDropZone(element) {
     this.uploadDropZone = element;
   }
@@ -121,13 +128,6 @@ export default class ChatThreadPanel extends Component {
 
   @action
   loadMessages() {
-    const message = ChatMessage.createDraftMessage(this.channel, {
-      user: this.currentUser,
-    });
-    message.thread = this.thread;
-    message.inReplyTo = this.thread.originalMessage;
-    this.chatChannelThreadComposer.message = message;
-
     this.thread.messagesManager.clearMessages();
     this.fetchMessages();
   }
@@ -216,13 +216,13 @@ export default class ChatThreadPanel extends Component {
   }
 
   @action
-  onSendMessage(message) {
+  async onSendMessage(message) {
     resetIdle();
 
     if (message.editing) {
-      this.#sendEditMessage(message);
+      await this.#sendEditMessage(message);
     } else {
-      this.#sendNewMessage(message);
+      await this.#sendNewMessage(message);
     }
   }
 
@@ -236,7 +236,7 @@ export default class ChatThreadPanel extends Component {
     this.chat.activeMessage = null;
   }
 
-  #sendNewMessage(message) {
+  async #sendNewMessage(message) {
     message.thread = this.thread;
 
     if (this.chatChannelThreadPane.sending) {
@@ -245,33 +245,33 @@ export default class ChatThreadPanel extends Component {
 
     this.chatChannelThreadPane.sending = true;
 
-    this.thread.stageMessage(message);
+    await this.thread.stageMessage(message);
     this.resetComposer();
 
     this.scrollToBottom();
 
-    return this.chatApi
-      .sendMessage(this.channel.id, {
+    try {
+      await this.chatApi.sendMessage(this.channel.id, {
         message: message.message,
-        in_reply_to_id: message.inReplyTo?.id,
+        in_reply_to_id: message.thread.staged
+          ? message.thread.originalMessage.id
+          : null,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-        thread_id: this.thread.staged ? null : message.thread.id,
-        staged_thread_id: this.thread.staged ? message.thread.id : null,
-      })
-      .catch((error) => {
-        this.#onSendError(message.id, error);
-      })
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-        this.chatChannelThreadPane.sending = false;
+        thread_id: message.thread.staged ? null : message.thread.id,
+        staged_thread_id: message.thread.staged ? message.thread.id : null,
       });
+    } catch (error) {
+      this.#onSendError(message.id, error);
+    } finally {
+      if (!this._selfDeleted) {
+        this.chatChannelThreadPane.sending = false;
+      }
+    }
   }
 
-  #sendEditMessage(message) {
-    message.cook();
+  async #sendEditMessage(message) {
+    await message.cook();
     this.chatChannelThreadPane.sending = true;
 
     const data = {
@@ -281,12 +281,17 @@ export default class ChatThreadPanel extends Component {
 
     this.resetComposer();
 
-    return this.chatApi
-      .editMessage(message.channel.id, message.id, data)
-      .catch(popupAjaxError)
-      .finally(() => {
-        this.chatChannelThreadPane.sending = false;
-      });
+    try {
+      return await this.chatApi.editMessage(
+        message.channel.id,
+        message.id,
+        data
+      );
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.chatChannelThreadPane.sending = false;
+    }
   }
 
   // A more consistent way to scroll to the bottom when we are sure this is our goal

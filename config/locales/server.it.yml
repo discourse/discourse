@@ -198,7 +198,6 @@ it:
       page_publishing_requirements: "La pubblicazione di pagine non può essere attivata se sono attivati i supporti sicuri."
       s3_backup_requires_s3_settings: "Non è possibile utilizzare S3 per i backup a meno che non sia stato fornito '%{setting_name}'."
       s3_bucket_reused: "Non puoi usare lo stesso bucket per 's3_upload_bucket' e 's3_backup_bucket'. Scegli un bucket differente, o un percorso diverso per ciascun bucket."
-      secure_uploads_requirements: "I caricamenti S3 devono essere abilitati prima di abilitare i caricamenti sicuri."
       share_quote_facebook_requirements: "Devi impostare un ID app Facebook per attivare la condivisione delle citazioni per Facebook."
       second_factor_cannot_enforce_with_socials: "Non si può applicare l'autenticazione a due fattori se l'acceso tramite social è attivo. Devi prima disattivarlo tramite %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Non è possibile applicare l'autenticazione a due fattori se gli accessi locali sono disabilitati."

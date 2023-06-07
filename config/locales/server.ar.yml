@@ -225,7 +225,6 @@ ar:
       page_publishing_requirements: "لا يمكن تفعيل نشر الصفحة في حال تفعيل الوسائط الآمنة."
       s3_backup_requires_s3_settings: "لا يمكنك استخدام S3 كمكان للنسخ الاحتياطي ما لم تُدخِل \"%{setting_name}\"."
       s3_bucket_reused: "لا يمكنك استخدام الحاوية نفسها لـ \"s3_upload_bucket\" و\"s3_backup_bucket\" معًا. اختر حاويةً أخرى أو استخدم مسارًا مختلفًا لكل حاوية."
-      secure_uploads_requirements: "يجب تفعيل التحميل إلى S3 قبل تفعيل التحميلات الآمنة."
       share_quote_facebook_requirements: "يجب عليك تعيين معرِّف تطبيق Facebook لتفعيل مشاركة الاقتباسات على Facebook."
       second_factor_cannot_enforce_with_socials: "لا يمكنك فرض المصادقة الثنائية عند تفعيل عمليات تسجيل الدخول بحسابات التواصل الاجتماعي. يجب عليك أولًا إيقاف تسجيل الدخول عبر: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "لا يمكنك فرض المصادقة الثنائية في حال إيقاف عمليات تسجيل الدخول المحلية."

@@ -95,9 +95,11 @@ import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { addSearchResultsCallback } from "discourse/lib/search";
+import { addOnKeyDownCallback } from "discourse/widgets/search-menu";
 import {
   addQuickSearchRandomTip,
   addSearchSuggestion,
+  removeDefaultQuickSearchRandomTips,
 } from "discourse/widgets/search-menu-results";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -1708,6 +1710,25 @@ class PluginApi {
   }
 
   /**
+   * Add a function to be called when there is a keyDown even on the search-menu widget.
+   * This function runs before the default logic, and if one callback returns a falsey value
+   * the logic chain will stop, to prevent the core behavior from occuring.
+   *
+   * Example usage:
+   * ```
+   * api.addSearchMenuOnKeyDownCallback((searchMenu, event) => {
+   *  if (searchMenu.term === "stop") {
+   *    return false;
+   *  }
+   * });
+   * ```
+   *
+   */
+  addSearchMenuOnKeyDownCallback(fn) {
+    addOnKeyDownCallback(fn);
+  }
+
+  /**
    * Add a quick search tip shown randomly when the search dropdown is invoked on desktop.
    *
    * Example usage:
@@ -1724,6 +1745,19 @@ class PluginApi {
    */
   addQuickSearchRandomTip(tip) {
     addQuickSearchRandomTip(tip);
+  }
+
+  /**
+   * Remove the default quick search tips shown randomly when the search dropdown is invoked on desktop.
+   *
+   * Usage:
+   * ```
+   * api.removeDefaultQuickSearchRandomTips();
+   * ```
+   *
+   */
+  removeDefaultQuickSearchRandomTips(tip) {
+    removeDefaultQuickSearchRandomTips(tip);
   }
 
   /**

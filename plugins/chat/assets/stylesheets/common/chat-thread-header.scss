@@ -6,10 +6,21 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-inline: 1rem;
+  padding-inline: 0.5rem;
+
+  .chat-thread__back-to-list {
+    padding: 0.5rem 0;
+    margin-right: 0.5rem;
+  }
 
   &__buttons {
     display: flex;
+    margin-left: auto;
+  }
+
+  &__left-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 }

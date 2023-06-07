@@ -7,7 +7,7 @@ import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { next } from "@ember/runloop";
+
 export default class ChatMessage {
   static cookFunction = null;
 
@@ -24,8 +24,9 @@ export default class ChatMessage {
   @tracked error;
   @tracked selected;
   @tracked channel;
-  @tracked staged = false;
-  @tracked draft = false;
+  @tracked staged;
+  @tracked draftSaved;
+  @tracked draft;
   @tracked channelId;
   @tracked createdAt;
   @tracked deletedAt;
@@ -38,34 +39,35 @@ export default class ChatMessage {
   @tracked expanded;
   @tracked bookmark;
   @tracked userFlagStatus;
-  @tracked hidden = false;
+  @tracked hidden;
   @tracked version = 0;
-  @tracked edited = false;
-  @tracked editing = false;
+  @tracked edited;
+  @tracked editing;
   @tracked chatWebhookEvent = new TrackedObject();
   @tracked mentionWarning;
   @tracked availableFlags;
-  @tracked newest = false;
-  @tracked highlighted = false;
-  @tracked firstOfResults = false;
+  @tracked newest;
+  @tracked highlighted;
+  @tracked firstOfResults;
   @tracked message;
   @tracked thread;
   @tracked threadReplyCount;
-  @tracked manager = null;
-  @tracked threadTitle = null;
+  @tracked manager;
+  @tracked threadTitle;
 
   @tracked _cooked;
 
   constructor(channel, args = {}) {
     // when modifying constructor, be sure to update duplicate function accordingly
     this.id = args.id;
-    this.newest = args.newest;
-    this.firstOfResults = args.firstOfResults;
-    this.staged = args.staged;
-    this.edited = args.edited;
-    this.editing = args.editing;
+    this.newest = args.newest || false;
+    this.draftSaved = args.draftSaved || args.draft_saved || false;
+    this.firstOfResults = args.firstOfResults || args.first_of_results || false;
+    this.staged = args.staged || false;
+    this.edited = args.edited || false;
+    this.editing = args.editing || false;
     this.availableFlags = args.availableFlags || args.available_flags;
-    this.hidden = args.hidden;
+    this.hidden = args.hidden || false;
     this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
     this.threadTitle = args.threadTitle || args.thread_title;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
@@ -124,6 +126,14 @@ export default class ChatMessage {
     return message;
   }
 
+  get replyable() {
+    return !this.staged && !this.error;
+  }
+
+  get editable() {
+    return !this.staged && !this.error;
+  }
+
   get cooked() {
     return this._cooked;
   }
@@ -137,40 +147,37 @@ export default class ChatMessage {
     }
   }
 
-  cook() {
+  async cook() {
     const site = getOwner(this).lookup("service:site");
 
-    next(() => {
-      if (this.isDestroyed || this.isDestroying) {
-        return;
-      }
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
 
-      const markdownOptions = {
-        featuresOverride:
-          site.markdown_additional_options?.chat?.limited_pretty_text_features,
-        markdownItRules:
-          site.markdown_additional_options?.chat
-            ?.limited_pretty_text_markdown_rules,
-        hashtagTypesInPriorityOrder:
-          site.hashtag_configurations?.["chat-composer"],
-        hashtagIcons: site.hashtag_icons,
+    const markdownOptions = {
+      featuresOverride:
+        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+      markdownItRules:
+        site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: site.hashtag_icons,
+    };
+
+    if (ChatMessage.cookFunction) {
+      this.cooked = ChatMessage.cookFunction(this.message);
+    } else {
+      const cookFunction = await generateCookFunction(markdownOptions);
+      ChatMessage.cookFunction = (raw) => {
+        return simpleCategoryHashMentionTransform(
+          cookFunction(raw),
+          site.categories
+        );
       };
 
-      if (ChatMessage.cookFunction) {
-        this.cooked = ChatMessage.cookFunction(this.message);
-      } else {
-        generateCookFunction(markdownOptions).then((cookFunction) => {
-          ChatMessage.cookFunction = (raw) => {
-            return simpleCategoryHashMentionTransform(
-              cookFunction(raw),
-              site.categories
-            );
-          };
-
-          this.cooked = ChatMessage.cookFunction(this.message);
-        });
-      }
-    });
+      this.cooked = ChatMessage.cookFunction(this.message);
+    }
   }
 
   get read() {

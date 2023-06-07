@@ -131,6 +131,10 @@
       @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
+
+      span {
+        display: inline-flex;
+      }
     }
 
     .nav-pills {

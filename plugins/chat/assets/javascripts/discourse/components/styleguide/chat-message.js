@@ -10,7 +10,11 @@ export default class ChatStyleguideChatMessage extends Component {
 
   manager = new ChatMessagesManager(getOwner(this));
 
-  message = fabricators.message({ user: this.currentUser });
+  constructor() {
+    super(...arguments);
+    this.message = fabricators.message({ user: this.currentUser });
+    this.message.cook();
+  }
 
   @action
   toggleDeleted() {
@@ -61,9 +65,9 @@ export default class ChatStyleguideChatMessage extends Component {
   }
 
   @action
-  updateMessage(event) {
+  async updateMessage(event) {
     this.message.message = event.target.value;
-    this.message.cook();
+    await this.message.cook();
   }
 
   @action

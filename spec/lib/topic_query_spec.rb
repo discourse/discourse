@@ -1365,7 +1365,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  describe "suggested_for" do
+  describe "#list_suggested_for" do
     def clear_cache!
       Discourse.redis.keys("random_topic_cache*").each { |k| Discourse.redis.del k }
     end
@@ -1433,12 +1433,139 @@ RSpec.describe TopicQuery do
       end
     end
 
+    context "when logged in and user is part of the `experimental_new_new_view_groups` site setting groups" do
+      fab!(:group) { Fabricate(:group) }
+      fab!(:topic) { Fabricate(:topic) }
+
+      before do
+        SiteSetting.experimental_new_new_view_groups = group.name
+        group.add(user)
+      end
+
+      after { clear_cache! }
+
+      context "when there are no new topics for user" do
+        it "should return random topics excluding topics that are muted by user and not older than `suggested_topics_max_days_old` site setting" do
+          topic2 = Fabricate(:topic, user: user)
+          topic3 = Fabricate(:topic, user: user)
+          topic4 = Fabricate(:topic, user: user, created_at: 8.days.ago)
+          topic5 = Fabricate(:topic).tap { |t| TopicNotifier.new(t).mute!(user) }
+
+          SiteSetting.suggested_topics_max_days_old = 7
+
+          expect(topic_query.list_suggested_for(topic).topics.map(&:id)).to eq(
+            [topic3.id, topic2.id],
+          )
+        end
+      end
+
+      context "when there are new topics for user" do
+        fab!(:category) { Fabricate(:category) }
+        fab!(:category2) { Fabricate(:category) }
+
+        fab!(:topic_in_category_that_user_created_and_has_partially_read) do
+          Fabricate(:topic, user: user, category:).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category2_that_user_created_and_has_partially_read) do
+          Fabricate(:topic, user: user, category: category2).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category_that_user_has_partially_read) do
+          Fabricate(:topic, category:).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category2_that_user_has_partially_read) do
+          Fabricate(:topic, category: category2).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category_that_user_has_not_read) { Fabricate(:topic, category:) }
+        fab!(:topic_in_category2_that_user_has_not_read) { Fabricate(:topic, category: category2) }
+
+        before { topic.update!(category:) }
+
+        it "should return new topics for user ordered by topics that user has created first, in the same category as the topic and then topic's bumped at" do
+          expect(
+            topic_query.list_suggested_for(topic, include_random: false).topics.map(&:id),
+          ).to eq(
+            [
+              topic_in_category_that_user_created_and_has_partially_read.id,
+              topic_in_category2_that_user_created_and_has_partially_read.id,
+              topic_in_category_that_user_has_not_read.id,
+              topic_in_category_that_user_has_partially_read.id,
+              topic_in_category2_that_user_has_not_read.id,
+            ],
+          )
+
+          SiteSetting.suggested_topics = 6
+
+          expect(
+            topic_query.list_suggested_for(topic, include_random: false).topics.map(&:id),
+          ).to eq(
+            [
+              topic_in_category_that_user_created_and_has_partially_read.id,
+              topic_in_category2_that_user_created_and_has_partially_read.id,
+              topic_in_category_that_user_has_not_read.id,
+              topic_in_category_that_user_has_partially_read.id,
+              topic_in_category2_that_user_has_not_read.id,
+              topic_in_category2_that_user_has_partially_read.id,
+            ],
+          )
+        end
+      end
+    end
+
     context "when logged in" do
       def suggested_for(topic)
         topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
       end
 
       let(:topic) { Fabricate(:topic) }
+
       let(:suggested_topics) do
         tt = topic
         # lets clear cache once category is created - working around caching is hard

@@ -24,6 +24,21 @@ module PageObjects
         header.find(".chat-thread__close").click
       end
 
+      def back_to_list
+        header.find(".chat-thread__back-to-list").click
+      end
+
+      def has_no_unread_list_indicator?
+        has_no_css?(".chat-thread__back-to-list .chat-thread-header-unread-indicator")
+      end
+
+      def has_unread_list_indicator?(count:)
+        has_css?(
+          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
+          text: count.to_s,
+        )
+      end
+
       def has_no_loading_skeleton?
         has_no_css?(".chat-thread__messages .chat-skeleton")
       end
@@ -45,13 +60,14 @@ module PageObjects
       def send_message(text = nil)
         text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        fill_composer(text)
+        composer.fill_in(with: text)
         click_send_message
         click_composer
+        text
       end
 
       def click_send_message
-        find(".chat-thread .chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-thread .chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
       def has_message?(text: nil, id: nil, thread_id: nil)

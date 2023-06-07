@@ -1,4 +1,18 @@
 <div class="chat-thread-header">
+  <div class="chat-thread-header__left-buttons">
+    {{#if @thread}}
+      <LinkTo
+        class="chat-thread__back-to-list btn-flat btn btn-icon no-text"
+        @route="chat.channel.threads"
+        @models={{@channel.routeModels}}
+        title={{i18n "chat.return_to_threads_list"}}
+      >
+        <Chat::Thread::HeaderUnreadIndicator @channel={{@channel}} />
+        {{d-icon "chevron-left"}}
+      </LinkTo>
+    {{/if}}
+  </div>
+
   <span class="chat-thread-header__label overflow-ellipsis">
     {{replace-emoji this.label}}
   </span>

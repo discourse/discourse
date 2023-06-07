@@ -110,6 +110,7 @@ el:
           one: "%{count} απάντηση"
           other: "%{count} απαντήσεις"
         settings: "Ρυθμίσεις"
+        last_reply: "τελευταία απάντηση"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"

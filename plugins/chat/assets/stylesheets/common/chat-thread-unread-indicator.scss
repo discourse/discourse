@@ -1,22 +1,18 @@
 @mixin chat-thread-unread-indicator {
-  color: var(--tertiary);
-  padding-left: 0.25rem;
-
-  &__number-wrap {
-    background-color: var(--tertiary-med-or-tertiary);
-    display: flex;
-    padding: 0.25rem 0.5rem;
-    border-radius: 20px;
-    width: 35px;
-    box-sizing: border-box;
-    flex-direction: column;
-    align-items: center;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 14px;
+  padding: 3px;
+  font-size: 0.8rem;
+  border-radius: 1em;
+  background: var(--tertiary-med-or-tertiary);
 
   &__number {
-    color: var(--secondary);
-    font-size: var(--font-down-3);
     font-weight: bold;
+    color: var(--secondary);
+    line-height: 1;
   }
 }
 

@@ -2871,6 +2871,7 @@ zh_TW:
           save: "保存"
           delete: "刪除"
           links:
+            reset: "重設為預設值"
             icon:
               label: "圖示"
             name:

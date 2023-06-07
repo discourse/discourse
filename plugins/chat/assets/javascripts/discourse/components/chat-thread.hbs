@@ -6,10 +6,8 @@
   }}
   data-id={{this.thread.id}}
   {{did-insert this.setUploadDropZone}}
-  {{did-insert this.subscribeToUpdates}}
-  {{did-update this.subscribeToUpdates this.thread.id}}
-  {{did-insert this.loadMessages}}
-  {{did-update this.loadMessages this.thread}}
+  {{did-insert this.didUpdateThread}}
+  {{did-update this.didUpdateThread this.thread.id}}
   {{will-destroy this.unsubscribeFromUpdates}}
 >
   {{#if @includeHeader}}
@@ -22,7 +20,7 @@
     {{on "scroll" this.computeScrollState passive=true}}
   >
     <div
-      class="chat-thread__messages chat-messages-container"
+      class="chat-thread__messages chat-messages-scroll chat-messages-container"
       {{chat/on-resize this.didResizePane (hash delay=10)}}
     >
       {{#each this.thread.messages key="id" as |message|}}

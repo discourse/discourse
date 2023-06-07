@@ -197,6 +197,7 @@ zh_TW:
         replies:
           other: "%{count}個回覆"
         settings: "設定"
+        last_reply: "最新回覆"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"

@@ -30,7 +30,7 @@ RSpec.describe "Silenced user", type: :system, js: true do
     it "disables the send button" do
       chat.visit_channel(channel_1)
 
-      expect(page).to have_css(".chat-composer__send-btn[disabled]")
+      expect(page).to have_css(".chat-composer-button.-send[disabled]")
     end
 
     it "prevents reactions" do

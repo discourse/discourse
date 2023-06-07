@@ -108,6 +108,7 @@ cs:
           many: "%{count} odpovědí"
           other: "%{count} odpovědí"
         settings: "Nastavení"
+        last_reply: "poslední odpověď"
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"

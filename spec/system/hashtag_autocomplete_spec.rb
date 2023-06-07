@@ -93,4 +93,21 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"cooltag\" data-id=\"#{tag.id}\"><svg class=\"fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#tag\"></use></svg><span>cooltag</span></a>
     HTML
   end
+
+  context "when a user cannot access the category for a hashtag cooked in another post" do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:manager_group) { Fabricate(:group, name: "Managers") }
+    fab!(:private_category) do
+      Fabricate(:private_category, name: "Management", slug: "management", group: manager_group)
+    end
+    fab!(:admin_group_user) { Fabricate(:group_user, user: admin, group: manager_group) }
+    fab!(:post_with_private_category) do
+      Fabricate(:post, topic: topic, raw: "this is a secret #management category", user: admin)
+    end
+
+    it "shows a default color and css class for the category icon square" do
+      topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
+      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
+    end
+  end
 end

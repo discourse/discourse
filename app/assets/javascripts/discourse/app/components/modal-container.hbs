@@ -1,0 +1,17 @@
+<DModal
+  @modalClass={{concat-class
+    this.modal.modalClass
+    (if this.modal.opts.panels "has-tabs")
+  }}
+  @title={{this.modal.title}}
+  @titleAriaElementId={{this.modal.opts.titleAriaElementId}}
+  @panels={{this.modal.opts.panels}}
+  @selectedPanel={{this.modal.selectedPanel}}
+  @onSelectPanel={{this.modal.onSelectPanel}}
+  @hidden={{this.modal.hidden}}
+  @class="hidden"
+  @errors={{this.modal.errors}}
+  @closeModal={{this.closeModal}}
+>
+  {{outlet "modalBody"}}
+</DModal>

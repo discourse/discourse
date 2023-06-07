@@ -2783,6 +2783,7 @@ lv:
           save: "Saglabāt"
           delete: "Dzēst"
           links:
+            reset: "Atiestatīt uz noklusējumu"
             icon:
               label: "Ikona"
             name:

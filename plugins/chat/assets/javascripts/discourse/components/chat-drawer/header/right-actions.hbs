@@ -1,6 +1,6 @@
 <div class="chat-drawer-header__right-actions">
   <div class="chat-drawer-header__top-line">
-    {{#if this.chat.activeChannel.threadingEnabled}}
+    {{#if this.showThreadsListButton}}
       <Chat::Thread::ThreadsListButton @channel={{this.chat.activeChannel}} />
     {{/if}}
 

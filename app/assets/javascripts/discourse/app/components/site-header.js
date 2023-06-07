@@ -432,6 +432,10 @@ export default SiteHeaderComponent.extend({
   updateHeaderOffset() {
     let headerWrapTop = this.headerWrap.getBoundingClientRect().top;
 
+    if (headerWrapTop !== 0) {
+      headerWrapTop -= Math.max(0, document.body.getBoundingClientRect().top);
+    }
+
     if (DEBUG && isTesting()) {
       headerWrapTop -= document
         .getElementById("ember-testing-container")

@@ -169,6 +169,14 @@ export default class ChatChannel {
     this.messagesManager.removeMessage(message);
   }
 
+  get lastMessage() {
+    return this.messagesManager.findLastMessage();
+  }
+
+  lastUserMessage(user) {
+    return this.messagesManager.findLastUserMessage(user);
+  }
+
   get messages() {
     return this.messagesManager.messages;
   }
@@ -278,12 +286,12 @@ export default class ChatChannel {
     return thread;
   }
 
-  stageMessage(message) {
+  async stageMessage(message) {
     message.id = guid();
     message.staged = true;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
-    message.cook();
+    await message.cook();
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {

@@ -75,12 +75,6 @@ export default class ChatDrawerRouter extends Service {
     }
 
     this.drawerRoute = ROUTES[route.name];
-
-    if (!this.drawerRoute) {
-      // TODO (joffrey) maybe we should implement the equivalent of a 404 here?
-      return;
-    }
-
     this.params = this.drawerRoute?.extractParams?.(route) || route.params;
     this.component = this.drawerRoute?.name || ChatDrawerIndex;
 

@@ -1,50 +1,27 @@
 // Right to left styles.
-// *** These styles are all going to be flipped by the r2 gem ***
-// Adding the !important declaration to a rule prevents it from being flipped.
 
-// This is used to flip the .d-icon-caret-right
-@mixin rotate($degrees) {
-  transform: rotate(#{$degrees}deg);
-}
+.rtl {
+  .d-icon-align-right,
+  .d-icon-angle-double-right,
+  .d-icon-angle-right,
+  .d-icon-arrow-right,
+  .d-icon-caret-right,
+  .d-icon-chevron-right,
+  .d-icon-hand-point-right,
+  .d-icon-quote-right {
+    transform: rotate(180deg);
+  }
 
-// Get the right caret to point left
-.rtl .d-icon-caret-right {
-  @include rotate(180);
-}
-
-// Changes the triangle arrow direction in .nav-stacked .active
-// The 'left' and 'right' in these selectors is not being flipped by r2.
-.rtl .nav-stacked a.active::after {
-  border-left-color: transparent !important;
-  border-right-color: var(--secondary) !important;
-}
-.rtl code {
-  direction: ltr !important;
-  text-align: left !important;
-}
-.rtl .pull-left {
-  float: right !important;
-}
-.rtl .pull-right {
-  float: left !important;
-}
-.rtl .autocomplete {
-  left: 27px;
-}
-
-.rtl .admin-customize .current-style .toggle-mobile {
-  position: static !important;
-  float: left !important;
-}
-.rtl .admin-customize .current-style .toggle-maximize {
-  position: static !important;
-  float: left !important;
-}
-.rtl .dashboard-left {
-  float: right !important;
-}
-.rtl .dashboard-right {
-  float: left !important;
+  .d-icon-align-left,
+  .d-icon-angle-double-left,
+  .d-icon-angle-left,
+  .d-icon-arrow-left,
+  .d-icon-caret-left,
+  .d-icon-chevron-left,
+  .d-icon-hand-point-left,
+  .d-icon-quote-left {
+    transform: rotate(180deg);
+  }
 }
 
 // For the support_mixed_text_direction setting
@@ -55,66 +32,6 @@ html:not(.rtl) .d-editor-preview ul[dir="rtl"],
   padding-left: 0;
   padding-right: 1.25em;
   margin-right: 1.25em;
-}
-
-// Fixes github oneboxes for RTL sites
-.rtl aside.onebox.githubblob {
-  padding: 12px 25px 12px 12px !important;
-  direction: ltr !important;
-}
-
-.rtl aside.onebox.githubblob .source {
-  background-position: 0 50% !important;
-  padding-right: 20px;
-}
-
-.rtl pre.onebox code ol.lines {
-  margin: 0 0 0 40px !important;
-}
-
-.rtl pre.onebox code ol.lines li:before {
-  right: -40px;
-  padding-left: 5px;
-  padding-right: 0;
-  text-align: right !important;
-}
-
-.rtl pre.onebox code ol.lines li {
-  padding-right: 5px;
-  padding-left: 0;
-  margin-right: 0;
-  border-right: 1px solid #cfcfcf;
-  border-left: none !important;
-}
-
-.rtl {
-  $mobile-breakpoint: 700px;
-
-  .admin-detail.mobile-open {
-    @media (max-width: $mobile-breakpoint) {
-      transition: transform 0.3s ease;
-      @include transform(translateX(-250px));
-    }
-    @media (max-width: 500px) {
-      transition: transform 0.3s ease;
-      @include transform(translateX(-50%));
-    }
-  }
-
-  .admin-detail.mobile-closed {
-    @media (max-width: $mobile-breakpoint) {
-      transition: transform 0.3s ease;
-      @include transform(translateX(0));
-      margin-left: -10px !important;
-      padding-left: 10px !important;
-    }
-  }
-
-  .admin-nav {
-    .nav-stacked {
-      margin: 0 -10px 0 10px !important;
-    }
-  }
 }
 
 .rtl .ace_placeholder {

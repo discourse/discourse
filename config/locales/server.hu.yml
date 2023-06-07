@@ -171,7 +171,6 @@ hu:
       default_tags_already_selected: "Más listában használt címke nem választható ki."
       s3_upload_bucket_is_required: "Nem lehet engedélyezni a feltöltést az S3-ba, amíg nincs megadva az „s3_upload_bucket”."
       enable_s3_uploads_is_required: "Az S3 leltár használatát csak akkor engedélyezheti, ha engedélyezte az S3 feltöltéseket."
-      secure_uploads_requirements: "A biztonságos feltöltés engedélyezése előtt engedélyezni kell az S3 feltöltést."
       share_quote_facebook_requirements: "Be kell állítania egy Facebook-alkalmazás azonosítót, hogy engedélyezhesse a megosztást Facebookon."
       second_factor_cannot_enforce_with_socials: "A közösségi bejelentkezések engedélyezése mellett nem lehet 2FA-t érvényesíteni. Először le kell tiltania ezt a bejelentkezést: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "A 2FA nem kényszeríthető, ha a helyi bejelentkezés le van tiltva."

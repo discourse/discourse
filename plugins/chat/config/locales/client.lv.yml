@@ -110,6 +110,7 @@ lv:
           one: "%{count} atbilde"
           other: "%{count} atbildes"
         settings: "Iestatījumi"
+        last_reply: "pēdējā atbilde"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

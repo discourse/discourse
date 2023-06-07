@@ -73,7 +73,6 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
     this.set("inProgressUploads", []);
-    this._triggerInProgressUploadsEvent();
 
     this._bindFileInputChange();
 
@@ -298,8 +297,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     this._uppyInstance.on("cancel-all", () => {
       this.appEvents.trigger(`upload-mixin:${this.id}:uploads-cancelled`);
       if (!this.isDestroyed && !this.isDestroying) {
-        this.set("inProgressUploads", []);
-        this._triggerInProgressUploadsEvent();
+        if (this.inProgressUploads.length) {
+          this.set("inProgressUploads", []);
+          this._triggerInProgressUploadsEvent();
+        }
       }
     });
 

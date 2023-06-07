@@ -25,7 +25,7 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
 
   it "searches for channels, categories, and tags with # and prioritises channels in the results" do
     chat_page.visit_channel(channel1)
-    chat_channel_page.type_in_composer("this is #ra")
+    chat_channel_page.composer.fill_in(with: "this is #ra")
     expect(page).to have_css(
       ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
       count: 3,
@@ -79,5 +79,45 @@ describe "Using #hashtag autocompletion to search for and lookup channels",
     expect(cooked_hashtags[2]["outerHTML"]).to eq(<<~HTML.chomp)
     <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\" data-id="#{tag.id}"><svg class=\"fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#tag\"></use></svg><span>razed</span></a>
     HTML
+  end
+
+  context "when a user cannot access the category for a cooked channel hashtag" do
+    fab!(:admin) { Fabricate(:admin) }
+    fab!(:manager_group) { Fabricate(:group, name: "Managers") }
+    fab!(:private_category) do
+      Fabricate(:private_category, name: "Management", slug: "management", group: manager_group)
+    end
+    fab!(:admin_group_user) { Fabricate(:group_user, user: admin, group: manager_group) }
+    fab!(:management_channel) do
+      Fabricate(:chat_channel, chatable: private_category, slug: "management")
+    end
+    fab!(:post_with_private_category) do
+      Fabricate(
+        :post,
+        topic: topic,
+        raw: "this is a secret #management::channel channel",
+        user: admin,
+      )
+    end
+    fab!(:message_with_private_channel) do
+      Fabricate(
+        :chat_message,
+        chat_channel: channel1,
+        user: admin,
+        message: "this is a secret #management channel",
+      )
+    end
+
+    before { management_channel.add(admin) }
+
+    it "shows a default color and css class for the channel icon in a post" do
+      topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
+      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
+    end
+
+    it "shows a default color and css class for the channel icon in a channel" do
+      chat_page.visit_channel(channel1)
+      expect(page).to have_css(".hashtag-cooked .hashtag-missing")
+    end
   end
 end

@@ -141,6 +141,13 @@ RSpec.describe PostSerializer do
         )
       end
 
+      it "includes if the user can see it" do
+        expect(serialized_post_for_user(Fabricate(:moderator))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:admin))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(user)[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:user))[:can_see_hidden_post]).to eq(false)
+      end
+
       it "shows the raw post only if authorized to see it" do
         expect(serialized_post_for_user(nil)[:raw]).to eq(nil)
         expect(serialized_post_for_user(Fabricate(:user))[:raw]).to eq(nil)
