@@ -10,7 +10,14 @@
     }}
     data-id={{this.message.id}}
   >
-    <div class="chat-message-actions">
+    <div
+      class={{concat-class
+        "chat-message-actions"
+        (unless
+          this.messageInteractor.secondaryButtons.length "-no-more-buttons"
+        )
+      }}
+    >
       {{#if this.shouldRenderFavoriteReactions}}
         {{#each
           this.messageInteractor.emojiReactions

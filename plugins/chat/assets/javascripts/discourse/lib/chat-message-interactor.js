@@ -38,12 +38,13 @@ export default class ChatMessageInteractor {
 
   cachedFavoritesReactions = null;
 
-  constructor(owner, message, context) {
+  constructor(owner, message, context, options = {}) {
     setOwner(this, owner);
 
     this.message = message;
     this.context = context;
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
+    this.hiddenSecondaryButtons = options.hiddenSecondaryButtons || [];
   }
 
   get capabilities() {
@@ -204,7 +205,9 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons;
+    return buttons.reject((button) =>
+      this.hiddenSecondaryButtons.includes(button.id)
+    );
   }
 
   select(checked = true) {
