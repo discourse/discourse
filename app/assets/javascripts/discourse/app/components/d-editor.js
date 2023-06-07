@@ -247,6 +247,15 @@ export default Component.extend(TextareaTextManipulation, {
     this.selectedFormTemplateId = formTemplateId;
   },
 
+  @discourseComputed("formTemplateIds", "replyingToTopic")
+  showFormTemplateForm(formTemplateIds, replyingToTopic) {
+    if (formTemplateIds && !replyingToTopic) {
+      return true;
+    }
+
+    return false;
+  },
+
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
     if (placeholder) {
