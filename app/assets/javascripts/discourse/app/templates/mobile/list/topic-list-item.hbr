@@ -1,5 +1,5 @@
+{{~raw-plugin-outlet name="topic-list-before-columns"}}
 <td class="topic-list-data">
-  {{~raw-plugin-outlet name="topic-list-before-columns"}}
   <div class='pull-left'>
     {{#if bulkSelectEnabled}}
       <label for="bulk-select-{{topic.id}}">
