@@ -7,9 +7,11 @@
   <a class="search-link" href={{this.href}}>
     <span aria-label={{I18n "search.title"}}>{{d-icon this.icon}}</span>
 
-    <span class="search-item-prefix">
-      {{this.prefix}}
-    </span>
+    {{#if this.prefix}}
+      <span class="search-item-prefix">
+        {{this.prefix}}
+      </span>
+    {{/if}}
 
     {{#if @withInLabel}}
       <span class="label-suffix">{{I18n "search.in"}}</span>
@@ -34,19 +36,18 @@
       <span class="search-item-user">
         <SearchMenu::Results::Type::User @result={{@user}} />
       </span>
-    {{else}}
-      <span class="search-item-slug">
-        {{log @suffix}}
-        {{#if @suffix}}
-          <span class="label-suffix">{{i18n @suffix}}</span>
-        {{/if}}
-        {{@label}}
-      </span>
-      {{#if @extraHint}}
-        <span class="extra-hint">
-          {{i18n "search.enter_hint"}}
-        </span>
+    {{/if}}
+
+    <span class="search-item-slug">
+      {{#if @suffix}}
+        <span class="label-suffix">{{@suffix}}</span>
       {{/if}}
+      {{@label}}
+    </span>
+    {{#if @extraHint}}
+      <span class="extra-hint">
+        {{i18n "search.enter_hint"}}
+      </span>
     {{/if}}
   </a>
 </li>

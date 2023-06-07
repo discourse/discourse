@@ -11,8 +11,7 @@
     {{#if (or this.search.activeGlobalSearchTerm this.search.searchContext)}}
       {{#if this.search.activeGlobalSearchTerm}}
         <SearchMenu::Results::AssistantItem
-          @slug={{this.slug}}
-          @suffix="search.in_topics_posts"
+          @suffix={{i18n "search.in_topics_posts"}}
           @closeSearchMenu={{@closeSearchMenu}}
           @extraHint={{true}}
           @closeSearchMenu={{@closeSearchMenu}}

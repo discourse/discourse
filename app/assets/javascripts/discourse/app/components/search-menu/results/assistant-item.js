@@ -66,10 +66,11 @@ export default class AssistantItem extends Component {
 
   @action
   onClick(e) {
-    const searchInput = document.querySelector("#search-term");
-    searchInput.value = this.args.slug;
-    searchInput.focus();
-    this.args.searchTermChanged(this.args.slug, { searchTopics: true });
+    let updatedValue = this.prefix;
+    if (this.args.slug) {
+      updatedValue = updatedValue.concat(this.args.slug);
+    }
+    this.args.searchTermChanged(updatedValue, { searchTopics: true });
     e.preventDefault();
     return false;
   }

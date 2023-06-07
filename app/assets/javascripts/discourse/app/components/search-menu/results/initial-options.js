@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 import AssistantItem from "./assistant-item";
 import Assistant from "./assistant";
+import I18n from "I18n";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,
@@ -63,17 +64,12 @@ export default class InitialOptions extends Component {
   }
 
   topicContextType() {
-    this.slug = this.search.activeGlobalSearchTerm;
-    this.suffix = "search.in_this_topic";
-    //this.args.setTopicContext();
-    //this.label = [
-    //h("span", `${this.search.activeGlobalSearchTerm} `),
-    //h("span.label-suffix", I18n.t("search.in_this_topic")),
-    //];
+    this.suffix = I18n.t("search.in_this_topic");
   }
 
   privateMessageContextType() {
     this.slug = "in:messages";
+    this.label = "in:messages";
   }
 
   categoryContextType() {
@@ -126,14 +122,9 @@ export default class InitialOptions extends Component {
 
   userContextType() {
     this.slug = `@${this.search.searchContext.user.username}`;
-    //this.label = [
-    //h("span", `${term} `),
-    //h(
-    //"span.label-suffix",
-    //I18n.t("search.in_posts_by", {
-    //username: this.search.searchContext.user.username,
-    //})
-    //),
-    //];
+    this.suffix = I18n.t("search.in_posts_by", {
+      username: this.search.searchContext.user.username,
+    });
+    //this.contextTypeKeyword = "@";
   }
 }
