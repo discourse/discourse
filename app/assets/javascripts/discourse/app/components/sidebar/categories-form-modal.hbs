@@ -3,69 +3,42 @@
   @class="sidebar-categories-form-modal"
 >
   <form class="sidebar-categories-form">
-    {{#each this.siteCategories as |category|}}
+    {{#each this.categoryGroupings as |categories|}}
       <div
         class="sidebar-categories-form__row"
-        style={{html-safe (border-color category.color "left")}}
+        style={{html-safe (border-color categories.1.color "left")}}
       >
-        <div
-          class="sidebar-categories-form__category-row"
-          data-category-id={{category.id}}
-        >
-          <label
-            class="sidebar-categories-form__category-label"
-            for={{concat "sidebar-categories-form__input--" category.id}}
+
+        {{#each categories as |category|}}
+          <div
+            class="sidebar-categories-form__category-row"
+            data-category-id={{category.id}}
+            data-category-level={{category.level}}
           >
-            <div
-              class="sidebar-categories-form__category-badge sidebar-categories-form__category-badge--parent-category"
+            <label
+              class="sidebar-categories-form__category-label"
+              for={{concat "sidebar-categories-form__input--" category.id}}
             >
-              {{category-badge category}}
-            </div>
+              <div class="sidebar-categories-form__category-badge">
+                {{category-badge category}}
+              </div>
 
-            <div class="sidebar-categories-form__category-description">
-              {{dir-span category.description_excerpt htmlSafe="true"}}
-            </div>
-          </label>
-
-          <Input
-            id={{concat "sidebar-categories-form__input--" category.id}}
-            class="sidebar-categories-form__input"
-            @type="checkbox"
-            @checked={{includes this.selectedSidebarCategoryIds category.id}}
-            {{on "click" (action "toggleCategory" category.id)}}
-          />
-        </div>
-
-        {{#if (gt category.subcategories.length 0)}}
-          {{#each category.subcategories as |subcategory|}}
-            <div
-              class="sidebar-categories-form__category-row"
-              data-category-id={{subcategory.id}}
-            >
-              <label
-                class="sidebar-categories-form__category-label"
-                for={{concat "sidebar-categories-form__input--" subcategory.id}}
-              >
-                <div
-                  class="sidebar-categories-form__category-badge sidebar-categories-form__category-badge--subcategory"
-                >
-                  {{category-badge subcategory}}
+              {{#unless category.parentCategory}}
+                <div class="sidebar-categories-form__category-description">
+                  {{dir-span category.description_excerpt htmlSafe="true"}}
                 </div>
-              </label>
+              {{/unless}}
+            </label>
 
-              <Input
-                id={{concat "sidebar-categories-form__input--" subcategory.id}}
-                class="sidebar-categories-form__input"
-                @type="checkbox"
-                @checked={{includes
-                  this.selectedSidebarCategoryIds
-                  subcategory.id
-                }}
-                {{on "click" (action "toggleCategory" subcategory.id)}}
-              />
-            </div>
-          {{/each}}
-        {{/if}}
+            <Input
+              id={{concat "sidebar-categories-form__input--" category.id}}
+              class="sidebar-categories-form__input"
+              @type="checkbox"
+              @checked={{includes this.selectedSidebarCategoryIds category.id}}
+              {{on "click" (action "toggleCategory" category.id)}}
+            />
+          </div>
+        {{/each}}
       </div>
     {{/each}}
   </form>

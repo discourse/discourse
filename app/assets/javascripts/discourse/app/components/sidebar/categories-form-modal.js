@@ -13,9 +13,30 @@ export default class extends Component {
     ...this.currentUser.sidebar_category_ids,
   ];
 
-  @tracked siteCategories = this.site.categoriesList.filter((category) => {
-    return !category.parent_category_id && !category.isUncategorizedCategory;
-  });
+  categoryGroupings = [];
+
+  constructor() {
+    super(...arguments);
+
+    this.site.sortedCategories.reduce(
+      (categoryGrouping, category, index, arr) => {
+        if (category.isUncategorizedCategory) {
+          return categoryGrouping;
+        }
+
+        categoryGrouping.push(category);
+
+        const nextCategory = arr[index + 1];
+        if (!nextCategory || nextCategory.level === 0) {
+          this.categoryGroupings.push(categoryGrouping);
+          return [];
+        }
+
+        return categoryGrouping;
+      },
+      []
+    );
+  }
 
   @action
   toggleCategory(categoryId) {
