@@ -274,11 +274,10 @@
         display: flex;
         align-items: center;
         height: 1.25em;
+        color: var(--primary-high);
         .mobile-view & {
           height: 1.1em;
         }
-        color: var(--primary-high);
-
         .d-icon {
           margin-right: 5px;
         }
