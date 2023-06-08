@@ -5,7 +5,7 @@ import {
 } from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
-import { removeChatComposerSecondaryButtons } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import { removeChatComposerSecondaryActions } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 /**
  * Class exposing the javascript API available to plugins and themes.
@@ -113,15 +113,15 @@ import { removeChatComposerSecondaryButtons } from "discourse/plugins/chat/disco
  */
 
 /**
- * Removes secondary buttons from the chat composer
+ * Removes secondary actions from the chat composer
  *
  * @memberof PluginApi
  * @instance
- * @function removeChatComposerSecondaryButtons
- * @param {...string} [1] - List of secondary button ids to remove, eg: `"foo", "bar"
+ * @function removeChatComposerSecondaryActions
+ * @param {...string} [1] - List of secondary action ids to remove, eg: `"copyLink", "select"
  * @example
  *
- * api.removeChatComposerSecondaryButtons("foo", "bar");
+ * api.removeChatComposerSecondaryActions("copyLink", "select");
  */
 
 export default {
@@ -170,13 +170,13 @@ export default {
         });
       }
 
-      if (!apiPrototype.hasOwnProperty("removeChatComposerSecondaryButtons")) {
+      if (!apiPrototype.hasOwnProperty("removeChatComposerSecondaryActions")) {
         Object.defineProperty(
           apiPrototype,
-          "removeChatComposerSecondaryButtons",
+          "removeChatComposerSecondaryActions",
           {
-            value(...buttonIds) {
-              removeChatComposerSecondaryButtons(buttonIds);
+            value(...actionIds) {
+              removeChatComposerSecondaryActions(actionIds);
             },
           }
         );

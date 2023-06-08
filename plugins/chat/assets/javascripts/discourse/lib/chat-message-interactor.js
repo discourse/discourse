@@ -18,10 +18,14 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import I18n from "I18n";
 
-const removedSecondaryButtons = new Set();
+const removedSecondaryActions = new Set();
 
-export function removeChatComposerSecondaryButtons(buttonIds) {
-  buttonIds.forEach((id) => removedSecondaryButtons.add(id));
+export function removeChatComposerSecondaryActions(actionIds) {
+  actionIds.forEach((id) => removedSecondaryActions.add(id));
+}
+
+export function resetRemovedChatComposerSecondaryActions() {
+  removedSecondaryActions.clear();
 }
 
 export default class ChatMessageInteractor {
@@ -153,7 +157,7 @@ export default class ChatMessageInteractor {
       : this.chatChannelComposer;
   }
 
-  get secondaryButtons() {
+  get secondaryActions() {
     const buttons = [];
 
     buttons.push({
@@ -210,7 +214,7 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons.reject((button) => removedSecondaryButtons.has(button.id));
+    return buttons.reject((button) => removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {
@@ -383,7 +387,7 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  handleSecondaryButtons(id) {
+  handleSecondaryActions(id) {
     this[id](this.message);
   }
 }

@@ -1,7 +1,14 @@
-import { module, test } from "qunit";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import User from "discourse/models/user";
+import ChatMessageInteractor, {
+  resetRemovedChatComposerSecondaryActions,
+} from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Chat | Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
@@ -18,6 +25,54 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
 
     withPluginApi("1.1.0", async (api) => {
       await api.sendChatMessage(1, { message: "hello", threadId: 2 });
+    });
+  });
+
+  test("#removeChatComposerSecondaryActions", async function (assert) {
+    withPluginApi("1.1.0", async (api) => {
+      // assert that the api method is defined
+      assert.equal(typeof api.removeChatComposerSecondaryActions, "function");
+
+      logIn();
+      const currentUser = User.current();
+      getOwner(this).unregister("service:current-user");
+      getOwner(this).register("service:current-user", currentUser, {
+        instantiate: false,
+      });
+
+      const message = fabricators.message({ user: currentUser });
+      const context = "channel";
+      const interactor = new ChatMessageInteractor(
+        getOwner(this),
+        message,
+        context
+      );
+
+      // assert that the initial secondary actions are present
+      const secondaryActions = interactor.secondaryActions;
+      assert.ok(secondaryActions.length > 0);
+
+      try {
+        // remove the first secondary action listed
+        api.removeChatComposerSecondaryActions(secondaryActions[0].id);
+
+        const updatedSecondaryActions = interactor.secondaryActions;
+
+        // assert that the secondary action was removed
+        assert.ok(
+          updatedSecondaryActions.length < secondaryActions.length,
+          "the updated secondary actions must contain less items than the original"
+        );
+        assert.notOk(
+          updatedSecondaryActions
+            .map((v) => v.id)
+            .includes(secondaryActions[0]),
+          "the updated secondary actions must not include the removed action"
+        );
+      } finally {
+        // reset the secondary actions removed to prevent leakage to other tests
+        resetRemovedChatComposerSecondaryActions();
+      }
     });
   });
 });

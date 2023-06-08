@@ -76,7 +76,7 @@
     }
   }
 
-  &.-no-more-buttons {
+  &.has-no-secondary-actions {
     .reply-btn {
       border-right: 1px solid var(--primary-300);
       border-top: 1px solid var(--primary-300);
