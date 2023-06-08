@@ -17,6 +17,10 @@ export default {
     const router = container.lookup("service:router");
     const appEvents = container.lookup("service:app-events");
     const chatStateManager = container.lookup("service:chat-state-manager");
+    const chatThreadPane = container.lookup("service:chat-thread-pane");
+    const chatThreadListPane = container.lookup(
+      "service:chat-thread-list-pane"
+    );
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
@@ -87,14 +91,27 @@ export default {
       router.transitionTo(chatStateManager.lastKnownChatURL || "chat");
     };
 
-    const closeChatDrawer = (event) => {
-      if (!chatStateManager.isDrawerActive) {
+    const closeChat = (event) => {
+      if (chatStateManager.isDrawerActive) {
+        event.preventDefault();
+        event.stopPropagation();
+        appEvents.trigger("chat:toggle-close", event);
         return;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
-      appEvents.trigger("chat:toggle-close", event);
+      if (chatThreadPane.isOpened) {
+        event.preventDefault();
+        event.stopPropagation();
+        chatThreadPane.close();
+        return;
+      }
+
+      if (chatThreadListPane.isOpened) {
+        event.preventDefault();
+        event.stopPropagation();
+        chatThreadListPane.close();
+        return;
+      }
     };
 
     const markAllChannelsRead = (event) => {
@@ -205,7 +222,7 @@ export default {
           },
         },
       });
-      api.addKeyboardShortcut("esc", (event) => closeChatDrawer(event), {
+      api.addKeyboardShortcut("esc", (event) => closeChat(event), {
         global: true,
         help: {
           category: "chat",

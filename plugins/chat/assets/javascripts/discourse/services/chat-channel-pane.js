@@ -3,11 +3,7 @@ import { action } from "@ember/object";
 import Service, { inject as service } from "@ember/service";
 
 export default class ChatChannelPane extends Service {
-  @service appEvents;
   @service chat;
-  @service chatChannelComposer;
-  @service chatApi;
-  @service chatComposerPresenceManager;
 
   @tracked reacting = false;
   @tracked selectingMessages = false;
@@ -16,10 +12,6 @@ export default class ChatChannelPane extends Service {
 
   get selectedMessageIds() {
     return this.chat.activeChannel?.selectedMessages?.mapBy("id") || [];
-  }
-
-  get composerService() {
-    return this.chatChannelComposer;
   }
 
   get channel() {
@@ -35,6 +27,7 @@ export default class ChatChannelPane extends Service {
     });
   }
 
+  @action
   onSelectMessage(message) {
     this.lastSelectedMessage = message;
     this.selectingMessages = true;

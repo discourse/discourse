@@ -291,6 +291,7 @@ export default class ChatChannel {
     message.staged = true;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
+    message.channel = this;
     await message.cook();
 
     if (message.inReplyTo) {

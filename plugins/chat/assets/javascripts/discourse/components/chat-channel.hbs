@@ -2,7 +2,7 @@
   class={{concat-class
     "chat-channel"
     (if this.loading "loading")
-    (if this.chatChannelPane.sending "chat-channel--sending")
+    (if this.pane.sending "chat-channel--sending")
     (unless this.loadedOnce "chat-channel--not-loaded-once")
   }}
   {{did-insert this.setUploadDropZone}}
@@ -67,12 +67,12 @@
     @channel={{@channel}}
   />
 
-  {{#if this.chatChannelPane.selectingMessages}}
+  {{#if this.pane.selectingMessages}}
     <ChatSelectionManager
-      @selectedMessageIds={{this.chatChannelPane.selectedMessageIds}}
+      @selectedMessageIds={{this.pane.selectedMessageIds}}
       @chatChannel={{@channel}}
       @cancelSelecting={{action
-        this.chatChannelPane.cancelSelecting
+        this.pane.cancelSelecting
         @channel.selectedMessages
       }}
       @context="channel"
