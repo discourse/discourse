@@ -15,7 +15,7 @@ export default class Types extends Component {
   }
 
   @action
-  onKeyup(e) {
+  onKeydown(e) {
     if (e.key === "Escape") {
       document.querySelector("#search-button").focus();
       this.args.closeSearchMenu();

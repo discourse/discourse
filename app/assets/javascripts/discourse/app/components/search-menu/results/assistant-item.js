@@ -53,7 +53,7 @@ export default class AssistantItem extends Component {
   }
 
   @action
-  onKeyup(e) {
+  onKeydown(e) {
     if (e.key === "Escape") {
       document.querySelector("#search-button").focus();
       this.args.closeSearchMenu();
@@ -65,18 +65,17 @@ export default class AssistantItem extends Component {
 
   @action
   onClick(e) {
-    if (this.search.searchContext?.type === "topic") {
-      this.args.setTopicContext();
-    }
-
     let updatedValue = this.prefix.trim();
     if (this.args.slug) {
       updatedValue = updatedValue.concat(this.args.slug);
     }
-
+    const inTopicContext = this.search.searchContext?.type === "topic";
     this.args.searchTermChanged(updatedValue, {
-      searchTopics: this.search.searchContext?.type !== "topic",
+      searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,
+      ...(inTopicContext && { setTopicContext: true }),
     });
+
+    e.stopPropagation();
     e.preventDefault();
     return false;
   }

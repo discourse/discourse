@@ -9,6 +9,7 @@ export default Component.extend({
   @observes("highlight")
   _highlightOnInsert() {
     const term = this.highlight;
+
     highlightSearch(this.element, term);
   },
 });

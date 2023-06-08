@@ -101,6 +101,7 @@ export default class SearchMenu extends Component {
   @action
   searchTermChanged(term, opts = {}) {
     this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
+    opts.setTopicContext && this.setTopicContext();
     this.search.updateActiveGlobalSearchTerm(term);
     this.triggerSearch();
   }
@@ -278,6 +279,9 @@ export default class SearchMenu extends Component {
   triggerSearch() {
     this.noResults = false;
     if (this.includesTopics) {
+      if (this.search.contextType === "topic") {
+        this.search.setHighlightTerm(this.search.activeGlobalSearchTerm);
+      }
       this.loading = true;
       cancel(this._debouncer);
       this.perform();

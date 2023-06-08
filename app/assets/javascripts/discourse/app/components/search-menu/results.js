@@ -10,12 +10,12 @@ import GroupViewComponent from "./results/type/group";
 import CategoryViewComponent from "./results/type/category";
 
 const SEARCH_RESULTS_COMPONENT_TYPE = {
-  category: CategoryViewComponent,
-  topic: TopicViewComponent,
-  post: PostViewComponent,
-  user: UserViewComponent,
-  tag: TagViewComponent,
-  group: GroupViewComponent,
+  "search-result-category": CategoryViewComponent,
+  "search-result-topic": TopicViewComponent,
+  "search-result-post": PostViewComponent,
+  "search-result-user": UserViewComponent,
+  "search-result-tag": TagViewComponent,
+  "search-result-group": GroupViewComponent,
 };
 
 export default class Results extends Component {
@@ -40,9 +40,10 @@ export default class Results extends Component {
     this.args.results.resultTypes?.map((resultType) => {
       content.push({
         ...resultType,
-        component: SEARCH_RESULTS_COMPONENT_TYPE[resultType.type],
+        component: SEARCH_RESULTS_COMPONENT_TYPE[resultType.componentName],
       });
     });
+    console.log(content);
     return content;
   }
 

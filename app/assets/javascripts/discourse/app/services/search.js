@@ -7,10 +7,10 @@ export default class Search extends Service {
 
   @tracked activeGlobalSearchTerm = "";
   @tracked searchContext;
+  @tracked highlightTerm;
 
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search
-  highlightTerm = null;
 
   get contextType() {
     return this.searchContext?.type || null;
@@ -24,6 +24,11 @@ export default class Search extends Service {
   @action
   setSearchContext(value) {
     this.searchContext = value;
+  }
+
+  @action
+  setHighlightTerm(value) {
+    this.highlightTerm = value;
   }
 
   // The need to navigate with the keyboard creates a lot shared logic
@@ -53,6 +58,7 @@ export default class Search extends Service {
           );
           this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
 
+          e.stopPropagation();
           e.preventDefault();
           document.querySelector("#reply-control.open textarea").focus();
           return false;
@@ -113,6 +119,7 @@ export default class Search extends Service {
         }
       }
 
+      e.stopPropagation();
       e.preventDefault();
       return false;
     }

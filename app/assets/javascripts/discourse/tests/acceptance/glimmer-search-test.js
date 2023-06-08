@@ -149,26 +149,60 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     await click("#search-button");
 
     assert.strictEqual(
-      queryAll(contextSelector)[0].firstChild.textContent.trim(),
-      `${I18n.t("search.in")} important`,
-      "contextual tag search is first available option with no term"
+      query(".search-link .label-suffix").textContent.trim(),
+      I18n.t("search.in"),
+      "first option includes suffix for tag search with no term"
+    );
+
+    assert.strictEqual(
+      query(".search-link .search-item-tag").textContent.trim(),
+      "important",
+      "frst option includes tag for tag search with no term"
     );
 
     await fillIn("#search-term", "smth");
 
+    const secondOption = queryAll(contextSelector)[1];
     assert.strictEqual(
-      queryAll(contextSelector)[1].firstChild.textContent.trim(),
-      `smth ${I18n.t("search.in")} important`,
-      "tag-scoped search is second available option"
+      secondOption.querySelector(".search-item-prefix").textContent.trim(),
+      "smth",
+      "second option includes term for tag-scoped search"
+    );
+
+    assert.strictEqual(
+      secondOption.querySelector(".label-suffix").textContent.trim(),
+      I18n.t("search.in"),
+      "second option includes suffix for tag-scoped search"
+    );
+
+    assert.strictEqual(
+      secondOption.querySelector(".search-item-tag").textContent.trim(),
+      "important",
+      "second option includes tag for tag-scoped search"
     );
 
     await visit("/c/bug");
     await click("#search-button");
 
+    const secondOptionCategory = queryAll(contextSelector)[1];
     assert.strictEqual(
-      queryAll(contextSelector)[1].firstChild.textContent.trim(),
-      `smth ${I18n.t("search.in")} bug`,
-      "category-scoped search is first available option with no search term"
+      secondOptionCategory
+        .querySelector(".search-item-prefix")
+        .textContent.trim(),
+      "smth",
+      "second option includes term for category-scoped search with no term"
+    );
+
+    assert.strictEqual(
+      secondOptionCategory.querySelector(".label-suffix").textContent.trim(),
+      I18n.t("search.in"),
+      "second option includes suffix for category-scoped search with no term"
+    );
+
+    assert.strictEqual(
+      secondOptionCategory.querySelector(".category-name").textContent.trim(),
+      "bug",
+      "second option includes category slug for category-scoped search with no term"
     );
 
     assert.ok(
@@ -179,21 +213,33 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
 
+    const secondOptionTopic = queryAll(contextSelector)[1];
     assert.strictEqual(
-      queryAll(contextSelector)[1].firstChild.textContent.trim(),
-      `smth ${I18n.t("search.in_this_topic")}`,
-      "topic-scoped search is first available option with no search term"
+      secondOptionTopic.querySelector(".search-item-prefix").textContent.trim(),
+      "smth",
+      "second option includes term for topic-scoped search with no term"
+    );
+
+    assert.strictEqual(
+      secondOptionTopic.querySelector(".label-suffix").textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "second option includes suffix for topic-scoped search with no term"
     );
 
     await visit("/u/eviltrout");
     await click("#search-button");
 
+    const secondOptionUser = queryAll(contextSelector)[1];
     assert.strictEqual(
-      queryAll(contextSelector)[1].firstChild.textContent.trim(),
-      `smth ${I18n.t("search.in_posts_by", {
-        username: "eviltrout",
-      })}`,
-      "user-scoped search is first available option with no search term"
+      secondOptionUser.querySelector(".search-item-prefix").textContent.trim(),
+      "smth",
+      "second option includes term for user-scoped search with no term"
+    );
+
+    assert.strictEqual(
+      secondOptionUser.querySelector(".label-suffix").textContent.trim(),
+      I18n.t("search.in_posts_by", { username: "eviltrout" }),
+      "second option includes suffix for user-scoped search with no term"
     );
   });
 
@@ -213,8 +259,8 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 
     await fillIn("#search-term", "a proper");
     await query("input#search-term").focus();
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
 
     await click(document.activeElement);
     assert.ok(
