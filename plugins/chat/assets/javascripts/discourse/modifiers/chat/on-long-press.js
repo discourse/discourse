@@ -35,7 +35,6 @@ export default class ChatOnLongPress extends Modifier {
 
     element.addEventListener("touchstart", this.handleTouchStart, {
       passive: true,
-      capture: true,
     });
   }
 
@@ -43,15 +42,9 @@ export default class ChatOnLongPress extends Modifier {
   onCancel() {
     cancel(this.timeout);
 
-    this.element.removeEventListener("touchmove", this.onCancel, {
-      capture: true,
-    });
-    this.element.removeEventListener("touchend", this.onCancel, {
-      capture: true,
-    });
-    this.element.removeEventListener("touchcancel", this.onCancel, {
-      capture: true,
-    });
+    this.element.removeEventListener("touchmove", this.onCancel);
+    this.element.removeEventListener("touchend", this.onCancel);
+    this.element.removeEventListener("touchcancel", this.onCancel);
 
     this.onLongPressCancel(this.element);
   }
@@ -65,15 +58,9 @@ export default class ChatOnLongPress extends Modifier {
 
     this.onLongPressStart(this.element, event);
 
-    this.element.addEventListener("touchmove", this.onCancel, {
-      capture: true,
-    });
-    this.element.addEventListener("touchend", this.onCancel, {
-      capture: true,
-    });
-    this.element.addEventListener("touchcancel", this.onCancel, {
-      capture: true,
-    });
+    this.element.addEventListener("touchmove", this.onCancel);
+    this.element.addEventListener("touchend", this.onCancel);
+    this.element.addEventListener("touchcancel", this.onCancel);
 
     this.timeout = discourseLater(() => {
       if (this.isDestroying || this.isDestroyed) {
@@ -82,7 +69,6 @@ export default class ChatOnLongPress extends Modifier {
 
       this.element.addEventListener("touchend", cancelEvent, {
         once: true,
-        capture: true,
       });
 
       this.onLongPressEnd(this.element, event);
