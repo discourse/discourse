@@ -1,4 +1,12 @@
 .mobile-view.has-full-page-chat {
+  &.disable-message-actions-touch {
+    .chat-message-actions-backdrop {
+      > * {
+        pointer-events: none;
+      }
+    }
+  }
+
   #skip-link,
   .d-header,
   .chat-message-actions-mobile-outlet,
