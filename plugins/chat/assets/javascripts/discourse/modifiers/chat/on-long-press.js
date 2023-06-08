@@ -34,40 +34,60 @@ export default class ChatOnLongPress extends Modifier {
     this.onLongPressCancel = onLongPressCancel || (() => {});
 
     element.addEventListener("touchstart", this.handleTouchStart, {
-      passive: true,
+      passive: false,
+      capture: true,
     });
   }
 
   @bind
   onCancel() {
     cancel(this.timeout);
-    this.element.removeEventListener("touchmove", this.onCancel);
-    this.element.removeEventListener("touchend", this.onCancel);
-    this.element.removeEventListener("touchcancel", this.onCancel);
+
+    this.element.removeEventListener("touchmove", this.onCancel, {
+      capture: true,
+    });
+    this.element.removeEventListener("touchend", this.onCancel, {
+      capture: true,
+    });
+    this.element.removeEventListener("touchcancel", this.onCancel, {
+      capture: true,
+    });
+
     this.onLongPressCancel(this.element);
   }
 
   @bind
   handleTouchStart(event) {
     if (event.touches.length > 1) {
+      this.onCancel();
       return;
     }
 
+    cancelEvent(event);
+
     this.onLongPressStart(this.element, event);
 
-    this.element.addEventListener("touchmove", this.onCancel);
-    this.element.addEventListener("touchend", this.onCancel);
-    this.element.addEventListener("touchcancel", this.onCancel);
+    this.element.addEventListener("touchmove", this.onCancel, {
+      capture: true,
+    });
+    this.element.addEventListener("touchend", this.onCancel, {
+      capture: true,
+    });
+    this.element.addEventListener("touchcancel", this.onCancel, {
+      capture: true,
+    });
 
     this.timeout = discourseLater(() => {
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
 
-      this.onLongPressEnd(this.element, event);
       this.element.addEventListener("touchend", cancelEvent, {
         once: true,
+        capture: true,
       });
+
+      this.onLongPressEnd(this.element, event);
     }, 400);
   }
 
