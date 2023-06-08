@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
@@ -9,11 +8,7 @@ export default class ChatThreadHeader extends Component {
   @service router;
 
   get label() {
-    if (this.args.thread) {
-      return this.args.thread.escapedTitle;
-    } else {
-      return I18n.t("chat.threads.list");
-    }
+    return this.args.thread.escapedTitle;
   }
 
   get canChangeThreadSettings() {

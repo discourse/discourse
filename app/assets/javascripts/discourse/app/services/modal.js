@@ -79,8 +79,11 @@ export default class ModalService extends Service {
     const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
     route.render(fullName, renderArgs);
 
-    if (controller.actions.onSelectPanel) {
-      this.onSelectPanel = controller.actions.onSelectPanel.bind(controller);
+    if (opts.panels) {
+      if (controller.actions.onSelectPanel) {
+        this.onSelectPanel = controller.actions.onSelectPanel.bind(controller);
+      }
+      this.selectedPanel = opts.panels[0];
     }
 
     controller.set("modal", this);

@@ -35,8 +35,8 @@ export default class ChatLivePane extends Component {
   @service chatEmojiPickerManager;
   @service chatComposerPresenceManager;
   @service chatStateManager;
-  @service chatChannelComposer;
-  @service chatChannelPane;
+  @service("chat-channel-composer") composer;
+  @service("chat-channel-pane") pane;
   @service chatChannelPaneSubscriptionsManager;
   @service chatApi;
   @service currentUser;
@@ -120,7 +120,7 @@ export default class ChatLivePane extends Component {
 
     if (this._loadedChannelId !== this.args.channel.id) {
       this.unsubscribeToUpdates(this._loadedChannelId);
-      this.chatChannelPane.selectingMessages = false;
+      this.pane.selectingMessages = false;
       this._loadedChannelId = this.args.channel.id;
     }
 
@@ -128,9 +128,9 @@ export default class ChatLivePane extends Component {
       channelId: this.args.channel.id,
     });
     if (existingDraft) {
-      this.chatChannelComposer.message = existingDraft;
+      this.composer.message = existingDraft;
     } else {
-      this.resetComposer();
+      this.resetComposerMessage();
     }
 
     this.loadMessages();
@@ -367,7 +367,6 @@ export default class ChatLivePane extends Component {
     }
 
     const firstMessage = this.args.channel?.messages?.firstObject;
-
     if (!firstMessage?.visible) {
       return;
     }
@@ -665,20 +664,20 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  resetComposer() {
-    this.chatChannelComposer.reset(this.args.channel);
+  resetComposerMessage() {
+    this.composer.reset(this.args.channel);
   }
 
   async #sendEditMessage(message) {
     await message.cook();
-    this.chatChannelPane.sending = true;
+    this.pane.sending = true;
 
     const data = {
       new_message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    this.resetComposer();
+    this.resetComposerMessage();
 
     try {
       return await this.chatApi.editMessage(
@@ -690,12 +689,12 @@ export default class ChatLivePane extends Component {
       popupAjaxError(e);
     } finally {
       this.chatDraftsManager.remove({ channelId: this.args.channel.id });
-      this.chatChannelPane.sending = false;
+      this.pane.sending = false;
     }
   }
 
   async #sendNewMessage(message) {
-    this.chatChannelPane.sending = true;
+    this.pane.sending = true;
 
     resetIdle();
 
@@ -713,21 +712,21 @@ export default class ChatLivePane extends Component {
         upload_ids: message.uploads.map((upload) => upload.id),
       };
 
-      this.resetComposer();
+      this.resetComposerMessage();
 
       return this._upsertChannelWithMessage(this.args.channel, data).finally(
         () => {
           if (this._selfDeleted) {
             return;
           }
-          this.chatChannelPane.sending = false;
+          this.pane.sending = false;
           this.scrollToLatestMessage();
         }
       );
     }
 
     await this.args.channel.stageMessage(message);
-    this.resetComposer();
+    this.resetComposerMessage();
 
     if (!this.args.channel.canLoadMoreFuture) {
       this.scrollToLatestMessage();
@@ -748,7 +747,7 @@ export default class ChatLivePane extends Component {
     } finally {
       if (!this._selfDeleted) {
         this.chatDraftsManager.remove({ channelId: this.args.channel.id });
-        this.chatChannelPane.sending = false;
+        this.pane.sending = false;
       }
     }
   }
@@ -767,7 +766,7 @@ export default class ChatLivePane extends Component {
         type: "POST",
         data,
       }).then(() => {
-        this.chatChannelPane.sending = false;
+        this.pane.sending = false;
         this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
@@ -787,12 +786,12 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    this.resetComposer();
+    this.resetComposerMessage();
   }
 
   @action
   resendStagedMessage(stagedMessage) {
-    this.chatChannelPane.sending = true;
+    this.pane.sending = true;
 
     stagedMessage.error = null;
 
@@ -815,7 +814,7 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelPane.sending = false;
+        this.pane.sending = false;
       });
   }
 
@@ -940,9 +939,9 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    const composer = document.querySelector(".chat-composer__input");
-    if (composer && !this.args.channel.isDraft) {
-      composer.focus();
+    if (!this.args.channel.isDraft) {
+      event.preventDefault();
+      this.composer.focus({ addText: event.key });
       return;
     }
 

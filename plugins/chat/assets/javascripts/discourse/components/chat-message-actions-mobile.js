@@ -48,7 +48,7 @@ export default class ChatMessageActionsMobile extends Component {
 
   @action
   collapseMenu(event) {
-    event.stopPropagation();
+    event.preventDefault();
     this.#onCloseMenu();
   }
 

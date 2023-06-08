@@ -20,12 +20,7 @@
         {{if this.noCategoryStyle 'no-category-style'}}"
       style={{unless
         this.noCategoryStyle
-        (html-safe
-          (concat
-            (border-color this.category.color)
-            (category-color-variable this.category.color)
-          )
-        )
+        (category-color-variable this.category.color)
       }}
     >
       <CategoryTitleLink @category={{this.category}} />

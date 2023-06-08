@@ -122,6 +122,17 @@ module PageObjects
           text: I18n.t("js.chat.deleted", count: count),
         )
       end
+
+      def open_edit_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='edit']").click
+      end
+
+      def edit_message(message, text = nil)
+        open_edit_message(message)
+        send_message(message.message + text) if text
+      end
     end
   end
 end

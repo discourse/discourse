@@ -2525,6 +2525,7 @@ en:
         aria_label: Alt text for image
 
       delete_image_button: Delete Image
+      toggle_image_grid: Toggle image grid
 
     notifications:
       tooltip:
@@ -4421,6 +4422,12 @@ en:
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
+      categories_form:
+        save: "Save"
+        title: "Edit categories navigation"
+        filter_placeholder: "Filter categories"
+        no_categories: "There are no categories matching the given term."
+
       sections:
         custom:
           add: "Add custom section"
@@ -5458,6 +5465,7 @@ en:
             revoke_moderation: "revoke moderation"
             backup_create: "create backup"
             deleted_tag: "deleted tag"
+            update_directory_columns: "update directory columns"
             deleted_unused_tags: "deleted unused tags"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"

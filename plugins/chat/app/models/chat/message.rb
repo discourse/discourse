@@ -76,6 +76,9 @@ module Chat
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
     def validate_message(has_uploads:)
+      self.message =
+        TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
+
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")

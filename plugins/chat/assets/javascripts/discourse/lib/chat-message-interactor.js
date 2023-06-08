@@ -25,9 +25,9 @@ export default class ChatMessageInteractor {
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelComposer;
-  @service chatChannelThreadComposer;
+  @service chatThreadComposer;
   @service chatChannelPane;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
   @service chatApi;
   @service currentUser;
   @service site;
@@ -52,7 +52,7 @@ export default class ChatMessageInteractor {
 
   get pane() {
     return this.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadPane
+      ? this.chatThreadPane
       : this.chatChannelPane;
   }
 
@@ -143,7 +143,7 @@ export default class ChatMessageInteractor {
 
   get composer() {
     return this.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadComposer
+      ? this.chatThreadComposer
       : this.chatChannelComposer;
   }
 
@@ -354,7 +354,7 @@ export default class ChatMessageInteractor {
 
   @action
   edit() {
-    this.composer.editMessage(this.message);
+    this.composer.edit(this.message);
   }
 
   @action

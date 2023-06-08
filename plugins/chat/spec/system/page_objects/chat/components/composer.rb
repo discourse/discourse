@@ -58,6 +58,10 @@ module PageObjects
           input.send_keys([MODIFIER, "i"])
         end
 
+        def cancel_shortcut
+          input.send_keys(:escape)
+        end
+
         def indented_text_shortcut
           input.send_keys([MODIFIER, "e"])
         end
@@ -70,8 +74,24 @@ module PageObjects
           find(context).find(SELECTOR).find(".chat-composer-button.-emoji").click
         end
 
+        def cancel_editing
+          component.click_button(class: "cancel-message-action")
+        end
+
         def editing_message?(message)
           value == message.message && message_details.editing?(message)
+        end
+
+        def editing_no_message?
+          value == "" && message_details.has_no_message?
+        end
+
+        def focus
+          component.click
+        end
+
+        def focused?
+          component.has_css?(".chat-composer.is-focused")
         end
       end
     end

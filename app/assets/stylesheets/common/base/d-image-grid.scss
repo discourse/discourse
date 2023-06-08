@@ -1,0 +1,66 @@
+.d-image-grid:not([data-disabled]) {
+  $grid-column-gap: 6px;
+
+  &[data-columns] {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &[data-columns="2"] > * {
+    flex-basis: calc(50% - ($grid-column-gap / 2));
+    margin-right: $grid-column-gap;
+  }
+
+  &[data-columns="3"] > * {
+    flex-basis: calc(33.33% - ($grid-column-gap * 0.667));
+    margin-right: $grid-column-gap;
+  }
+
+  .d-image-grid-column {
+    box-sizing: border-box;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    > img {
+      margin-bottom: $grid-column-gap;
+    }
+
+    // Forces images in the grid to fill each column
+    img,
+    > .lightbox-wrapper,
+    > .lightbox-wrapper > .lightbox {
+      width: 100%;
+    }
+
+    .lightbox-wrapper {
+      .meta .informations {
+        display: none;
+      }
+      .meta .filename {
+        flex-grow: 3;
+      }
+    }
+
+    // when staging edits
+    .image-wrapper {
+      display: block;
+      padding-bottom: $grid-column-gap;
+      margin-bottom: 0em;
+    }
+  }
+
+  .desktop-view .d-editor-preview & {
+    .image-wrapper {
+      padding-bottom: $grid-column-gap;
+      margin-bottom: 0em;
+      .button-wrapper {
+        .scale-btn-container,
+        &[editing] .wrap-image-grid-button {
+          display: none;
+        }
+      }
+    }
+  }
+}
