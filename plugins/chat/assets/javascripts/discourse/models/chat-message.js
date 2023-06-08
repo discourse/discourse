@@ -186,7 +186,7 @@ export default class ChatMessage {
 
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
-      return this.createdAt;
+      return this.#startOfDay(this.createdAt);
     }
 
     if (
@@ -195,7 +195,7 @@ export default class ChatMessage {
         new Date(this.createdAt)
       )
     ) {
-      return this.createdAt;
+      return this.#startOfDay(this.createdAt);
     }
   }
 
@@ -360,5 +360,9 @@ export default class ChatMessage {
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate()
     );
+  }
+
+  #startOfDay(date) {
+    return moment(date).startOf("day").format();
   }
 }

@@ -185,6 +185,8 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       findArgs.targetMessageId = this.requestedTargetMessageId;
       scrollToMessageId = this.requestedTargetMessageId;
+    } else if (this.requestedTargetDate) {
+      findArgs.targetDate = this.requestedTargetDate;
     } else if (fetchingFromLastRead) {
       findArgs.fetchFromLastRead = true;
       scrollToMessageId =
@@ -222,7 +224,7 @@ export default class ChatLivePane extends Component {
           });
           return;
         } else if (this.requestedTargetDate) {
-          const message = this.args.channel?.findMessageByDate(
+          const message = this.args.channel?.findFirstMessageOfDay(
             this.requestedTargetDate
           );
 

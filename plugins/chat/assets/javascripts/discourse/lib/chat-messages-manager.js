@@ -35,8 +35,11 @@ export default class ChatMessagesManager {
     );
   }
 
-  findMessageByDate(messageDate) {
-    return this.messages.find((message) => message.createdAt === messageDate);
+  findFirstMessageOfDay(messageDate) {
+    const targetDay = new Date(messageDate).toDateString();
+    return this.messages.find(
+      (message) => new Date(message.createdAt).toDateString() === targetDay
+    );
   }
 
   removeMessage(message) {
