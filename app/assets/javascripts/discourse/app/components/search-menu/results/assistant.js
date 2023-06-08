@@ -26,9 +26,6 @@ export default class Assistant extends Component {
   @service siteSettings;
   @service search;
 
-  //  we need access to the shorcuts in the view
-  suggestionShortcuts = suggestionShortcuts;
-
   constructor() {
     super(...arguments);
 
@@ -49,16 +46,18 @@ export default class Assistant extends Component {
     }
   }
 
+  get suggestionShortcuts() {
+    const shortcut = this.search.activeGlobalSearchTerm.split(" ").slice(-1);
+    const suggestions = suggestionShortcuts.filter((suggestion) =>
+      suggestion.includes(shortcut)
+    );
+    return suggestions.slice(0, 8);
+  }
+
   get userMatchesInTopic() {
     return (
       this.args.results.length === 1 &&
       this.router.currentRouteName.startsWith("topic.")
-    );
-  }
-
-  isSuggestionKeyword(item) {
-    return (
-      item.includes(this.args.suggestionKeyword) || !this.args.suggestionKeyword
     );
   }
 

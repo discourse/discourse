@@ -245,12 +245,10 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 
   test("search scope for topics", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
-
     await click("#search-button");
 
     const firstResult =
       ".search-menu .results .search-menu-assistant-item:first-child";
-
     assert.strictEqual(
       query(firstResult).textContent.trim(),
       I18n.t("search.in_this_topic"),
@@ -279,19 +277,22 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       "search context indicator is visible"
     );
     await click(".clear-search");
-    assert.strictEqual(query("#search-term").value, "", "clear button works");
+    assert.strictEqual(
+      query("#search-term").textContent.trim(),
+      "",
+      "clear button works"
+    );
 
     await click(".search-context");
-
     assert.ok(
       !exists(".search-menu .search-context"),
       "search context indicator is no longer visible"
     );
 
     await fillIn("#search-term", "dev");
-    await query("input#search-term").focus();
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await query("#search-term").focus();
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -300,8 +301,8 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
 
     await fillIn("#search-term", "");
-    await query("input#search-term").focus();
-    await triggerKeyEvent("input#search-term", "keyup", "Backspace");
+    await query("#search-term").focus();
+    await triggerKeyEvent("#search-term", "keyup", "Backspace");
 
     assert.ok(
       !exists(".search-menu .search-context"),
@@ -311,27 +312,13 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 
   test("topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
-
     await click("#search-button");
-
-    const contextSelector = ".search-menu .results .search-menu-assistant-item";
-
-    assert.strictEqual(
-      queryAll(contextSelector)[0].firstChild.textContent.trim(),
-      I18n.t("search.in_this_topic"),
-      "contextual topic search is first available option with no search term"
-    );
 
     await fillIn("#search-term", "proper");
     await query("input#search-term").focus();
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await click(document.activeElement);
-
-    assert.ok(
-      exists(".search-menu .search-context"),
-      "search context indicator is visible"
-    );
 
     await click(".show-advanced-search");
 
@@ -349,15 +336,13 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 
   test("topic search scope - special case when matching a single user", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
-
     await click("#search-button");
     await fillIn("#search-term", "@admin");
 
     assert.strictEqual(count(".search-menu-assistant-item"), 2);
-
     assert.strictEqual(
       query(
-        ".search-menu-assistant-item:first-child .search-item-user .label-suffix"
+        ".search-menu-assistant-item:first-child .search-item-slug .label-suffix"
       ).textContent.trim(),
       I18n.t("search.in_topics_posts"),
       "first result hints at global search"
@@ -365,7 +350,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 
     assert.strictEqual(
       query(
-        ".search-menu-assistant-item:nth-child(2) .search-item-user .label-suffix"
+        ".search-menu-assistant-item:nth-child(2) .search-item-slug .label-suffix"
       ).textContent.trim(),
       I18n.t("search.in_this_topic"),
       "second result hints at search within current topic"
@@ -551,18 +536,15 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     await click("#create-topic");
     await click("#search-button");
 
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-
-    const firstLink = query(`${container} li:nth-child(1) a`).getAttribute(
-      "href"
-    );
-
-    await triggerKeyEvent(document.activeElement, "keyup", "A");
+    const firstLink = document.activeElement.getAttribute("href");
+    await triggerKeyEvent(document.activeElement, "keydown", "A");
     await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,
-      `${currentURL()}${firstLink}`,
+      `${window.location.origin}${firstLink}`,
       "hitting A when focused on a search result copies link to composer"
     );
 
@@ -600,8 +582,8 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     await fillIn("#search-term", "dev");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    await triggerKeyEvent(".search-menu", "keyup", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keyup", 65); // maps to lowercase a
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", 65); // maps to lowercase a
 
     assert.ok(
       query(".d-editor-input").value.includes("a link"),
@@ -1007,18 +989,31 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     await click("#search-button");
 
     const firstTarget =
-      ".search-menu .results ul.search-menu-assistant .search-link .search-item-slug";
+      ".search-menu .results ul.search-menu-assistant .search-link ";
 
     await fillIn("#search-term", "in:");
-    await triggerKeyEvent("#search-term", "keyup", 51);
-    assert.strictEqual(query(firstTarget).innerText, "in:title");
+    await triggerKeyEvent("#search-term", "keydown", 51);
+    assert.strictEqual(
+      query(firstTarget.concat(".search-item-slug")).innerText,
+      "in:title",
+      "keyword is present in suggestion"
+    );
 
     await fillIn("#search-term", "sam in:");
-    await triggerKeyEvent("#search-term", "keyup", 51);
-    assert.strictEqual(query(firstTarget).innerText, "sam in:title");
+    await triggerKeyEvent("#search-term", "keydown", 51);
+    assert.strictEqual(
+      query(firstTarget.concat(".search-item-prefix")).innerText,
+      "sam",
+      "term is present in suggestion"
+    );
+    assert.strictEqual(
+      query(firstTarget.concat(".search-item-slug")).innerText,
+      "in:title",
+      "keyword is present in suggestion"
+    );
 
     await fillIn("#search-term", "in:mess");
-    await triggerKeyEvent("#search-term", "keyup", 51);
+    await triggerKeyEvent("#search-term", "keydown", 51);
     assert.strictEqual(query(firstTarget).innerText, "in:messages");
   });
 

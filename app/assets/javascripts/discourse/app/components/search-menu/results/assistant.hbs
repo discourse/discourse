@@ -74,14 +74,13 @@
     {{/if}}
   {{else}}
     {{#each this.suggestionShortcuts as |item|}}
-      {{#if (fn this.isSuggestionKeyword item)}}
-        <SearchMenu::Results::AssistantItem
-          @slug={{concat this.prefix item}}
-          @closeSearchMenu={{@closeSearchMenu}}
-          @searchTermChanged={{@searchTermChanged}}
-          @suggestionKeyword={{@suggestionKeyword}}
-        />
-      {{/if}}
+      <SearchMenu::Results::AssistantItem
+        @slug={{concat this.prefix item}}
+        @label={{item}}
+        @closeSearchMenu={{@closeSearchMenu}}
+        @searchTermChanged={{@searchTermChanged}}
+        @suggestionKeyword={{@suggestionKeyword}}
+      />
     {{/each}}
   {{/if}}
 </ul>

@@ -89,8 +89,8 @@ export default class SearchMenu extends Component {
 
   @bind
   clearSearch(e) {
+    e.stopPropagation();
     e.preventDefault();
-
     this.search.updateActiveGlobalSearchTerm("");
     const searchInput = document.getElementById("search-term");
     searchInput.value = "";

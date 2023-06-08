@@ -65,9 +65,11 @@ export default class AssistantItem extends Component {
 
   @action
   onClick(e) {
-    let updatedValue = this.prefix.trim();
+    let updatedValue = "";
     if (this.args.slug) {
-      updatedValue = updatedValue.concat(this.args.slug);
+      updatedValue = this.prefix.concat(this.args.slug);
+    } else {
+      updatedValue = this.prefix.trim();
     }
     const inTopicContext = this.search.searchContext?.type === "topic";
     this.args.searchTermChanged(updatedValue, {
