@@ -96,7 +96,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
         expect(SiteSettings::TypeSupervisor.types[:emoji_list]).to eq(24)
       end
       it "'tag_group_list' should be at the right position" do
-        expect(SiteSettings::TypeSupervisor.types[:emoji_list]).to eq(26)
+        expect(SiteSettings::TypeSupervisor.types[:tag_group_list]).to eq(26)
       end
     end
   end
