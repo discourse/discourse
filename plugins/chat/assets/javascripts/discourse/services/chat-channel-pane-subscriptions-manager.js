@@ -25,10 +25,6 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
     const message = this.messagesManager.findMessage(data.original_message_id);
     if (message) {
       message.thread.preview = ChatThreadPreview.create(data.preview);
-      // if (data.replies_count) {
-      //   message.thread.preview.replyCount = data.replies_count;
-      // }
-      // message.threadTitle = data.title;
     }
   }
 

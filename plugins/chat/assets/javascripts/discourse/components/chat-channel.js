@@ -412,13 +412,6 @@ export default class ChatLivePane extends Component {
       }
 
       const message = ChatMessage.create(channel, messageData);
-
-      // if (messageData.thread_id) {
-      //   message.thread = ChatThread.create(channel, {
-      //     id: messageData.thread_id,
-      //   });
-      // }
-
       messages.push(message);
     });
 

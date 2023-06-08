@@ -80,8 +80,6 @@ module Chat
       end
     end
 
-    # TODO (martin) Make calling this more explicit for new/delete/restore
-    # thread messages.
     def self.publish_thread_original_message_metadata!(thread)
       preview =
         ::Chat::ThreadPreviewSerializer.new(

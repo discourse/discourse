@@ -17,6 +17,9 @@ module Chat
     # @param thread_ids [Array<Integer>] The IDs of the threads to query.
     # @return [Hash<Integer, Hash>] A hash of thread IDs to participant data.
     def self.call(thread_ids:)
+      # We only want enough data for BasicUserSerializer, since the participants
+      # are just showing username & avatar.
+
       thread_messager_stats = DB.query(<<~SQL, thread_ids: thread_ids)
         SELECT thread_messager_stats.*, users.username, users.name, users.uploaded_avatar_id FROM (
           SELECT chat_messages.thread_id, chat_messages.user_id, COUNT(*) AS message_count,
@@ -89,16 +92,7 @@ module Chat
         thread_participants[thread_id][:users].push(user)
       end
 
-      # all_user_ids = thread_participants.map { |thread_id, user_ids| user_ids }.uniq.compact
-      # users =
-      #   User
-      #     .where(id: thread_participants[:user_ids])
-      #     .select(:id, :username, :name, :uploaded_avatar_id)
-      #     .in_order_of(:id, thread_participants[:user_ids])
-
-      # We only want enough data for BasicUserSerializer, since the participants
-      # are just showing username & avatar.
-      thread_participants[:users] = thread_participants
+      thread_participants
     end
   end
 end
