@@ -1672,6 +1672,10 @@ export default class ComposerController extends Controller {
   }
 
   prepareFormTemplateData(event, skipValidation = false) {
+    if (this.model.replyingToTopic) {
+      return;
+    }
+
     event?.preventDefault();
 
     const form = document.querySelector("#form-template-form");
