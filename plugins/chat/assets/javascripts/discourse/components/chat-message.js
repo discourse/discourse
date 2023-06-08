@@ -1,4 +1,3 @@
-import { isTesting } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
@@ -258,47 +257,19 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleTouchStart(event) {
-    event.stopPropagation();
-
-    // if zoomed don't track long press
-    if (isZoomed()) {
-      return;
-    }
-
-    // when testing this must be triggered immediately because there
-    // is no concept of "long press" there, the Ember `tap` test helper
-    // does send the touchstart/touchend events but immediately, see
-    // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
-    if (isTesting()) {
-      this._handleLongPress();
-    }
-
-    this._touchStartAt = Date.now();
-    this._isPressingHandler = discourseLater(this._handleLongPress, 500);
+  handleLongPressStart(element) {
+    element.classList.add("is-long-pressed");
   }
 
   @action
-  handleTouchMove(event) {
-    event.stopPropagation();
-
-    cancel(this._isPressingHandler);
+  onLongPressCancel(element) {
+    element.classList.remove("is-long-pressed");
   }
 
   @action
-  handleTouchEnd(event) {
-    event.stopPropagation();
+  handleLongPressEnd(element) {
+    element.classList.remove("is-long-pressed");
 
-    // this is to prevent the long press to register as a click
-    if (Date.now() - this._touchStartAt >= 500) {
-      event.preventDefault();
-    }
-
-    cancel(this._isPressingHandler);
-  }
-
-  @action
-  _handleLongPress() {
     if (isZoomed()) {
       // if zoomed don't handle long press
       return;

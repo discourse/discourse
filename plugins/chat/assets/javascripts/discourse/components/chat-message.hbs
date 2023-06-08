@@ -11,12 +11,14 @@
     {{did-insert this.decorateCookedMessage}}
     {{did-update this.decorateCookedMessage @message.id}}
     {{did-update this.decorateCookedMessage @message.version}}
-    {{on "touchmove" this.handleTouchMove passive=true}}
-    {{on "touchstart" this.handleTouchStart passive=true}}
-    {{on "touchend" this.handleTouchEnd}}
     {{on "mouseenter" this.onMouseEnter passive=true}}
     {{on "mouseleave" this.onMouseLeave passive=true}}
     {{on "mousemove" this.onMouseMove passive=true}}
+    {{chat/on-long-press
+      this.handleLongPressStart
+      this.handleLongPressEnd
+      this.onLongPressCancel
+    }}
     class={{concat-class
       "chat-message-container"
       (if this.pane.selectingMessages "selecting-messages")

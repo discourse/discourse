@@ -47,17 +47,18 @@ export default class ChatMessageReaction extends Component {
 
   @action
   handleTouchStart(event) {
-    event.stopPropagation();
+    this.handleClick(event);
   }
 
   @action
-  handleClick() {
+  handleClick(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
     this.args.onReaction?.(
       this.args.reaction.emoji,
       this.args.reaction.reacted ? "remove" : "add"
     );
-
-    return false;
   }
 
   get popoverContent() {
