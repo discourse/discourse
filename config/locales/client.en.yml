@@ -4425,8 +4425,8 @@ en:
       categories_form:
         save: "Save"
         title: "Edit categories navigation"
-        filter_input:
-          placeholder: "Filter categories"
+        filter_placeholder: "Filter categories"
+        no_categories: "There are no categories matching the given term."
 
       sections:
         custom:

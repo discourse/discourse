@@ -3,11 +3,15 @@ import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class extends Component {
   @service site;
   @service currentUser;
+
+  @tracked filter = "";
 
   @tracked selectedSidebarCategoryIds = [
     ...this.currentUser.sidebar_category_ids,
@@ -36,6 +40,49 @@ export default class extends Component {
       },
       []
     );
+  }
+
+  get filteredCategoriesGroupings() {
+    if (this.filter.length === 0) {
+      return this.categoryGroupings;
+    } else {
+      return this.categoryGroupings.reduce((acc, categoryGrouping) => {
+        const filteredCategories = new Set();
+
+        categoryGrouping.forEach((category) => {
+          if (this.#matchesFilter(category, this.filter)) {
+            if (category.parentCategory?.parentCategory) {
+              filteredCategories.add(category.parentCategory.parentCategory);
+            }
+
+            if (category.parentCategory) {
+              filteredCategories.add(category.parentCategory);
+            }
+
+            filteredCategories.add(category);
+          }
+        });
+
+        if (filteredCategories.size > 0) {
+          acc.push(Array.from(filteredCategories));
+        }
+
+        return acc;
+      }, []);
+    }
+  }
+
+  #matchesFilter(category, filter) {
+    return category.nameLower.includes(filter);
+  }
+
+  @action
+  onFilterInput(filter) {
+    discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
+  }
+
+  #performFiltering(filter) {
+    this.filter = filter.toLowerCase();
   }
 
   @action
