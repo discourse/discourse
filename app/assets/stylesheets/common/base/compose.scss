@@ -16,9 +16,19 @@ html.composer-open {
   margin-right: auto;
   max-width: $reply-area-max-width;
   width: 100%;
+
   &.hide-preview {
     max-width: 740px;
   }
+
+  &:has(.has-form-template) {
+    max-width: 740px;
+
+    .toggle-preview {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }

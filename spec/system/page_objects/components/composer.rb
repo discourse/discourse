@@ -112,6 +112,22 @@ module PageObjects
         page.has_css?("#{COMPOSER_ID} .d-editor .d-editor-input")
       end
 
+      def has_composer_preview?
+        page.has_css?("#{COMPOSER_ID} .d-editor-preview-wrapper")
+      end
+
+      def has_no_composer_preview?
+        page.has_no_css?("#{COMPOSER_ID} .d-editor-preview-wrapper")
+      end
+
+      def has_composer_preview_toggle?
+        page.has_css?("#{COMPOSER_ID} .toggle-preview")
+      end
+
+      def has_no_composer_preview_toggle?
+        page.has_no_css?("#{COMPOSER_ID} .toggle-preview")
+      end
+
       def has_form_template?
         page.has_css?(".form-template-form__wrapper")
       end

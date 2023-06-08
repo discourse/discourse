@@ -104,6 +104,20 @@ describe "Composer Form Templates", type: :system, js: true do
     expect(composer).to have_form_template_field("input")
   end
 
+  it "shows the preview when a category without a form template is selected" do
+    category_page.visit(category_no_template)
+    category_page.new_topic_button.click
+    expect(composer).to have_composer_preview
+    expect(composer).to have_composer_preview_toggle
+  end
+
+  it "hides the preivew when a category with a form template is selected" do
+    category_page.visit(category_with_template_1)
+    category_page.new_topic_button.click
+    expect(composer).to have_no_composer_preview
+    expect(composer).to have_no_composer_preview_toggle
+  end
+
   it "shows the correct template when switching categories" do
     category_page.visit(category_no_template)
     category_page.new_topic_button.click
