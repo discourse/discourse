@@ -26,7 +26,11 @@ module Jobs
         )
       /ix
 
-      @raw_quote_regex = /(\[quote\s*=\s*["'']?)#{@old_username}(\,?[^\]]*\])/i
+      @raw_quote_regexp =
+        Regexp.union(
+          /(?<pre>\[quote\s*=\s*["'']?.*username:)#{@old_username}(?<post>\,?[^\]]*\])/i,
+          /(?<pre>\[quote\s*=\s*["'']?)#{@old_username}(?<post>\,?[^\]]*\])/i,
+        )
 
       cooked_username = PrettyText::Helpers.format_username(@old_username)
       @cooked_mention_username_regex = /\A@#{cooked_username}\z/i
@@ -161,8 +165,8 @@ module Jobs
 
     def update_raw(raw)
       raw.gsub(@raw_mention_regex, "@#{@new_username}").gsub(
-        @raw_quote_regex,
-        "\\1#{@new_username}\\2",
+        @raw_quote_regexp,
+        "\\k<pre>#{@new_username}\\k<post>",
       )
     end
 
