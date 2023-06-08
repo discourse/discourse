@@ -3,7 +3,7 @@
   <DNavigationItem
     @route="userPrivateMessages.group.index"
     @class="user-nav__messages-group-latest"
-    @model={{this.groupName}}
+    @model={{this.group.name}}
     @ariaCurrentContext="subNav"
   >
     {{d-icon "envelope"}}
@@ -13,7 +13,7 @@
   {{#if this.viewingSelf}}
     <DNavigationItem
       @route="userPrivateMessages.group.new"
-      @model={{this.groupName}}
+      @model={{this.group.name}}
       @class="user-nav__messages-group-new"
       @ariaCurrentContext="subNav"
     >
@@ -23,7 +23,7 @@
 
     <DNavigationItem
       @route="userPrivateMessages.group.unread"
-      @model={{this.groupName}}
+      @model={{this.group.name}}
       @class="user-nav__messages-group-unread"
       @ariaCurrentContext="subNav"
     >
@@ -34,7 +34,7 @@
     <DNavigationItem
       @route="userPrivateMessages.group.archive"
       @class="user-nav__messages-group-archive"
-      @model={{this.groupName}}
+      @model={{this.group.name}}
       @ariaCurrentContext="subNav"
     >
       {{d-icon "archive"}}
@@ -42,5 +42,12 @@
     </DNavigationItem>
   {{/if}}
 </UserNav::MessagesSecondaryNav>
+
+{{#in-element this.navigationControlsButton}}
+  <GroupNotificationsButton
+    @value={{this.group.group_user.notification_level}}
+    @onChange={{this.changeGroupNotificationLevel}}
+  />
+{{/in-element}}
 
 {{outlet}}

@@ -831,6 +831,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         :system_message_sent,
         post: Post.last,
         message_type: "tl2_promotion_message",
+        recipient: recipient,
       )
     }.to change { Topic.count }
     expect(Topic.last.title).to eq(
@@ -849,6 +850,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         :system_message_sent,
         post: Post.last,
         message_type: "tl2_promotion_message",
+        recipient: recipient,
       )
     }.to change { Topic.count }
     expect(Topic.last.title).to eq(
@@ -879,11 +881,25 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         :system_message_sent,
         post: Post.last,
         message_type: "tl2_promotion_message",
+        recipient: recipient,
       )
     }.to change { Topic.count }
 
     topic = Topic.last
     expect(topic.title).to eq("german title")
     expect(topic.first_post.raw).to eq("german body")
+  end
+
+  it "invites the correct user when users in site_contact_group_name are invited to the system message" do
+    recipient = Fabricate(:user)
+    group = Fabricate(:group)
+    group.add(Fabricate(:user))
+    SiteSetting.site_contact_group_name = "#{group.name}"
+
+    SystemMessage.new(recipient).create("tl2_promotion_message", {})
+
+    expect(Topic.last.topic_users.map(&:user_id).sort).to eq(
+      [DiscourseNarrativeBot::Base.new.discobot_user.id, recipient.id],
+    )
   end
 end

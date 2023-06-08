@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Info pages", type: :system, js: true do
+RSpec.describe "Info pages", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
   fab!(:current_user) { Fabricate(:user) }

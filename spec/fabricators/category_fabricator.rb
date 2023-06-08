@@ -3,6 +3,7 @@
 Fabricator(:category) do
   name { sequence(:name) { |n| "Amazing Category #{n}" } }
   skip_category_definition true
+  color { SecureRandom.hex(3) }
   user
 end
 

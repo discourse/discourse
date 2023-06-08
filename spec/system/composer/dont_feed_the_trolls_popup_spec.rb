@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Composer don't feed the trolls popup", type: :system, js: true do
+describe "Composer don't feed the trolls popup", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:troll) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic, user: user) }

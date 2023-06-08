@@ -198,7 +198,6 @@ id:
       page_publishing_requirements: "Penerbitan halaman tidak dapat diaktifkan jika media aman diaktifkan."
       s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
       s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
-      secure_uploads_requirements: "Unggahan S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
       share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
       second_factor_cannot_enforce_with_socials: "Anda tidak dapat menerapkan 2FA dengan login sosial diaktifkan. Anda harus terlebih dahulu menonaktifkan login melalui: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
@@ -597,6 +596,7 @@ id:
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
       description_incomplete: "Post deskripsi kategori harus memiliki setidaknya satu paragraf."
+      disallowed_tags_generic: "Topik ini memiliki tag yang tidak diizinkan."
       slug_contains_non_ascii_chars: "berisi karakter non-ascii"
       is_already_in_use: "sedang digunakan"
       move_topic_to_category_disallowed: "Anda tidak dapat memindahkan topik ini ke kategori di mana Anda tidak memiliki izin untuk membuat topik baru."
@@ -614,6 +614,9 @@ id:
       blocked_hotlinked: "Gambar Eksternal"
     media_placeholder:
       blocked_hotlinked_title: "Media dihosting di situs lain. Klik untuk membuka di tab baru."
+      blocked_hotlinked: "Media Eksternal"
+    has_likes:
+      other: "%{count} Suka"
   rate_limiter:
     hours:
       other: "%{count} jam"
@@ -718,8 +721,14 @@ id:
       title: "Konfirmasi email baru Anda"
       description: "Konfirmasikan bahwa Anda ingin alamat email Anda diubah menjadi:"
     authorizing_old:
+      title: "Ubah alamat email Anda"
+      description: "Harap konfirmasi perubahan alamat email Anda"
+      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
       old_email: "Email lama: %{email}"
       new_email: "Email baru: %{email}"
+      almost_done_title: "Konfirmasi alamat email baru"
+  associated_accounts:
+    connected: "(terhubung)"
   activation:
     action: "Klik disini untuk mengaktifkan akun anda"
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
@@ -728,8 +737,12 @@ id:
     welcome_to: "Selamat datang ke %{site_name}!"
     approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
     missing_session: "Kami tidak dapat mendeteksi apakah akun anda telah dibuat, mohon pastikan cookies anda aktif."
+    activated: "Maaf, akun ini sudah diaktifkan."
     admin_confirm:
       title: "Konfirmasi Akun Admin"
+      description: "Anda yakin ingin <b>%{target_username} (%{target_email})</b> menjadi administrator?"
+      grant: "Berikan Akses Admin"
+      complete: "<b>%{target_username}</b> sekarang menjadi administrator."
       back_to: "Kembali ke %{title}"
   reviewable_score_types:
     needs_approval:
@@ -737,6 +750,7 @@ id:
   post_action_types:
     off_topic:
       title: "Diluar topik"
+      description: "Post ini tidak relevan dengan diskusi saat ini seperti yang didefinisikan oleh judul dan post pertama, dan mungkin harus dipindahkan ke tempat lain."
       short_description: "Tidak relevan dengan diskusi"
     spam:
       title: "Spam"
@@ -806,6 +820,10 @@ id:
   archetypes:
     regular:
       title: "Topik Reguler"
+    banner:
+      title: "Topik Spanduk"
+      message:
+        make: "Topik ini sekarang menjadi spanduk. Itu akan muncul di bagian atas setiap halaman sampai ditutup oleh pengguna."
   unsubscribe:
     title: "Berhenti berlangganan"
     log_out: "Keluar"
@@ -874,6 +892,11 @@ id:
       description: Daftar aktivitas moderator termasuk penanda yang ditinjau, waktu pembacaan, topik yang dibuat, post yang dibuat, pesan pribadi yang dibuat, dan revisi.
     flags_status:
       title: "Status Penanda"
+      values:
+        agreed: Setuju
+        disagreed: Tidak setuju
+        deferred: Ditangguhkan
+        no_action: Tidak ada tindakan
       labels:
         flag: Tipe
     visits:
@@ -1053,6 +1076,7 @@ id:
     include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
     display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
+    hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
     blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
     allowed_email_domains: "Daftar domain email yang dibatasi pipa yang HARUS digunakan pengguna untuk mendaftarkan akun. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. PERINGATAN: Pengguna dengan domain email selain yang terdaftar tidak akan diizinkan!"
     auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."

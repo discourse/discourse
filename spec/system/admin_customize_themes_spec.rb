@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin Customize Themes", type: :system, js: true do
+describe "Admin Customize Themes", type: :system do
   fab!(:color_scheme) { Fabricate(:color_scheme) }
   fab!(:theme) { Fabricate(:theme) }
   fab!(:admin) { Fabricate(:admin) }

@@ -988,6 +988,9 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
+  experimental_post_image_grid:
+    client: true
+    default: false
   highlighted_languages:
     default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
@@ -1449,6 +1452,8 @@ files:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
   s3_configure_tombstone_policy:
+    default: true
+  s3_use_acls:
     default: true
   enable_s3_inventory:
     default: false
@@ -2088,6 +2093,7 @@ developer:
   enable_experimental_hashtag_autocomplete:
     default: true
     client: true
+    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2112,6 +2118,12 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  new_edit_sidebar_categories_tags_interface_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    hidden: true
 
 navigation:
   navigation_menu:

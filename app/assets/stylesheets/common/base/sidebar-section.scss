@@ -15,15 +15,15 @@
 
     .discourse-no-touch & {
       &:hover {
-        background: var(--d-sidebar-highlight-color);
+        background: var(--d-sidebar-highlight-background);
         .d-icon-globe {
-          color: var(--primary-medium);
+          color: var(--d-sidebar-highlight-color);
         }
       }
     }
 
     &:focus-within {
-      background: var(--d-sidebar-highlight-color);
+      background: var(--d-sidebar-highlight-background);
     }
 
     .sidebar-section-header-button {
@@ -49,23 +49,23 @@
 
       .d-icon {
         font-size: var(--font-down-1);
-        color: var(--primary-medium);
+        color: var(--d-sidebar-header-icon-color);
         margin: 0;
       }
 
       &:focus {
         outline: none;
-        background: var(--primary-medium);
+        background: var(--d-sidebar-highlight-hover-background);
         .d-icon {
-          color: var(--primary-very-low);
+          color: var(--d-sidebar-highlight-hover-icon);
         }
       }
 
       .discourse-no-touch & {
         &:hover {
-          background: var(--primary-medium);
+          background: var(--d-sidebar-highlight-hover-background);
           .d-icon {
-            color: var(--primary-very-low);
+            color: var(--d-sidebar-highlight-hover-icon);
           }
         }
       }
@@ -74,7 +74,7 @@
 
   .sidebar-section-header {
     flex: 1 1 auto;
-    color: var(--primary);
+    color: var(--d-sidebar-header-color);
     align-items: center;
     min-width: 0;
     padding: 0;
@@ -106,7 +106,7 @@
 
     svg {
       font-size: var(--font-down-1);
-      color: var(--primary-medium);
+      color: var(--d-sidebar-header-icon-color);
     }
   }
 

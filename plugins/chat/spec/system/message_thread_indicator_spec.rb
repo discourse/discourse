@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread indicator for chat messages", type: :system, js: true do
+describe "Thread indicator for chat messages", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
 

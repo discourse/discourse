@@ -783,7 +783,7 @@ class PostsController < ApplicationController
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: "private_message")
       topics = topics.secured(guardian)
 
-      posts = posts.where(topic_id: topics.pluck(:id))
+      posts = posts.where(topic_id: topics)
     end
 
     posts.offset(opts[:offset]).limit(opts[:limit])

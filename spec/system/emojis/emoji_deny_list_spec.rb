@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Emoji deny list", type: :system, js: true do
+describe "Emoji deny list", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }

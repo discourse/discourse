@@ -21,8 +21,17 @@ module PageObjects
           selectors += "[data-id=\"#{args[:id]}\"]" if args[:id]
           selectors += "[data-action=\"#{args[:action]}\"]" if args[:action]
           selector_method = args[:does_not_exist] ? :has_no_selector? : :has_selector?
+          predicate = component.send(selector_method, selectors)
 
-          component.send(selector_method, selectors)
+          text_options = {}
+          text_options[:text] = args[:text] if args[:text]
+          text_options[:exact_text] = args[:exact_text] if args[:exact_text]
+          if text_options.present?
+            predicate &&=
+              component.send(selector_method, "#{selectors} .chat-reply__excerpt", **text_options)
+          end
+
+          predicate
         end
 
         def has_no_message?(**args)
