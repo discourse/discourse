@@ -34,7 +34,7 @@ export default class ChatOnLongPress extends Modifier {
     this.onLongPressCancel = onLongPressCancel || (() => {});
 
     element.addEventListener("touchstart", this.handleTouchStart, {
-      passive: false,
+      passive: true,
       capture: true,
     });
   }
@@ -62,8 +62,6 @@ export default class ChatOnLongPress extends Modifier {
       this.onCancel();
       return;
     }
-
-    cancelEvent(event);
 
     this.onLongPressStart(this.element, event);
 
