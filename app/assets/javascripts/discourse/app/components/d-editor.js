@@ -249,7 +249,7 @@ export default Component.extend(TextareaTextManipulation, {
 
   @discourseComputed("formTemplateIds", "replyingToTopic")
   showFormTemplateForm(formTemplateIds, replyingToTopic) {
-    if (formTemplateIds && !replyingToTopic) {
+    if (formTemplateIds?.length > 0 && !replyingToTopic) {
       return true;
     }
 

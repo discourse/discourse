@@ -16,7 +16,7 @@ describe "Composer Form Templates", type: :system, js: true do
     )
   end
   fab!(:form_template_2) do
-    Fabricate(:form_template, name: "Feature Request", template: "- type: input")
+    Fabricate(:form_template, name: "Feature Request", template: "- type: checkbox")
   end
   fab!(:form_template_3) do
     Fabricate(:form_template, name: "Awesome Possum", template: "- type: dropdown")
@@ -101,7 +101,7 @@ describe "Composer Form Templates", type: :system, js: true do
     category_page.new_topic_button.click
     expect(composer).not_to have_composer_input
     expect(composer).to have_form_template
-    expect(composer).to have_form_template_field("checkbox")
+    expect(composer).to have_form_template_field("input")
   end
 
   it "shows the correct template when switching categories" do
@@ -116,11 +116,11 @@ describe "Composer Form Templates", type: :system, js: true do
     # switch to category with form template
     composer.switch_category(category_with_template_1.name)
     expect(composer).to have_form_template
-    expect(composer).to have_form_template_field("checkbox")
+    expect(composer).to have_form_template_field("input")
     # switch to category with a different form template
     composer.switch_category(category_with_template_2.name)
     expect(composer).to have_form_template
-    expect(composer).to have_form_template_field("input")
+    expect(composer).to have_form_template_field("checkbox")
   end
 
   it "does not show form template chooser when a category only has form template" do
@@ -138,9 +138,9 @@ describe "Composer Form Templates", type: :system, js: true do
   it "updates the form template when a different template is selected" do
     category_page.visit(category_with_multiple_templates_1)
     category_page.new_topic_button.click
-    expect(composer).to have_form_template_field("checkbox")
-    form_template_chooser.select_row_by_name(form_template_2.name)
     expect(composer).to have_form_template_field("input")
+    form_template_chooser.select_row_by_name(form_template_2.name)
+    expect(composer).to have_form_template_field("checkbox")
   end
 
   it "shows the correct template options when switching categories" do
