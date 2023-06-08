@@ -63,8 +63,6 @@ export default class ChatOnLongPress extends Modifier {
       return;
     }
 
-    cancelEvent(event);
-
     this.onLongPressStart(this.element, event);
 
     this.element.addEventListener("touchmove", this.onCancel, {
