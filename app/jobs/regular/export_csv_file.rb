@@ -184,7 +184,7 @@ module Jobs
 
       ScreenedEmail
         .order("last_match_at DESC")
-        .each { |screened_email| yield get_screened_email_fields(screened_email) }
+        .find_each { |screened_email| yield get_screened_email_fields(screened_email) }
     end
 
     def screened_ip_export
