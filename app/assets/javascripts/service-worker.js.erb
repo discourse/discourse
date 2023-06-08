@@ -1,7 +1,7 @@
 'use strict';
 
 <%
-  asset_base = if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
+  base = if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
     GlobalSetting.s3_asset_cdn_url.presence || GlobalSetting.s3_cdn_url
   elsif GlobalSetting.cdn_url
     GlobalSetting.cdn_url + Discourse.base_path
@@ -9,7 +9,7 @@
     Discourse.base_path
   end
 
-  workbox_base = "#{asset_base}/#{EmberCli.workbox_dir_name}"
+  workbox_base = "#{base}/assets/#{EmberCli.workbox_dir_name}"
 %>
 
 importScripts("<%= "#{workbox_base}/workbox-sw.js" %>");
