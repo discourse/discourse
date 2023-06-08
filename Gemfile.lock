@@ -306,8 +306,9 @@ GEM
     parallel (1.23.0)
     parallel_tests (4.2.1)
       parallel
-    parser (3.2.2.1)
+    parser (3.2.2.3)
       ast (~> 2.4.1)
+      racc
     pg (1.4.6)
     prettier_print (1.2.1)
     progress (3.6.0)
