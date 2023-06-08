@@ -1,4 +1,4 @@
-{{#if @message.firstMessageOfTheDayAt}}
+{{#if @message.formattedFirstMessageDate}}
   <div
     class={{concat-class
       "chat-message-separator-date"
@@ -15,10 +15,10 @@
           class="chat-message-separator__button"
           @action={{action
             @fetchMessagesByDate
-            @message.firstMessageOfTheDayAtNoFormat
+            @message.firstMessageOfTheDayAt
           }}
         >
-          {{@message.firstMessageOfTheDayAt}}
+          {{@message.formattedFirstMessageDate}}
         </DButton>
 
         {{#if @message.newest}}

@@ -186,7 +186,7 @@ export default class ChatMessage {
 
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
-      return this.#calendarDate(this.createdAt);
+      return this.createdAt;
     }
 
     if (
@@ -195,22 +195,13 @@ export default class ChatMessage {
         new Date(this.createdAt)
       )
     ) {
-      return this.#calendarDate(this.createdAt);
+      return this.createdAt;
     }
   }
 
-  get firstMessageOfTheDayAtNoFormat() {
-    if (!this.previousMessage) {
-      return this.createdAt;
-    }
-
-    if (
-      !this.#areDatesOnSameDay(
-        new Date(this.previousMessage.createdAt),
-        new Date(this.createdAt)
-      )
-    ) {
-      return this.createdAt;
+  get formattedFirstMessageDate() {
+    if (this.firstMessageOfTheDayAt) {
+      return this.#calendarDate(this.firstMessageOfTheDayAt);
     }
   }
 

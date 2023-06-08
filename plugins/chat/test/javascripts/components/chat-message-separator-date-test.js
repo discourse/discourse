@@ -11,7 +11,7 @@ module(
 
     test("first message of the day", async function (assert) {
       this.set("date", moment().format("LLL"));
-      this.set("message", { firstMessageOfTheDayAt: this.date });
+      this.set("message", { formattedFirstMessageDate: this.date });
 
       await render(hbs`<ChatMessageSeparatorDate @message={{this.message}} />`);
 
