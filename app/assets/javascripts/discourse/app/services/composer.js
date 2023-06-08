@@ -1671,7 +1671,7 @@ export default class ComposerController extends Controller {
     this.set("lastValidatedAt", null);
   }
 
-  prepareFormTemplateData(event, skipValidation = false) {
+  prepareFormTemplateData(event) {
     if (this.model.replyingToTopic) {
       return;
     }
@@ -1682,11 +1682,9 @@ export default class ComposerController extends Controller {
     const formData = new FormData(form);
 
     // Validate the form template
-    if (skipValidation === false) {
-      this._validateFormTemplateData(form);
-      if (!form.checkValidity()) {
-        return;
-      }
+    this._validateFormTemplateData(form);
+    if (!form.checkValidity()) {
+      return;
     }
 
     // Gather form template data
