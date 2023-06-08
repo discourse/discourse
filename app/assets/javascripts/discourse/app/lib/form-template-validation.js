@@ -1,13 +1,10 @@
-export default function prepareFormTemplateData(event) {
-  event?.preventDefault();
-
-  const form = document.querySelector("#form-template-form");
+export default function prepareFormTemplateData(form) {
   const formData = new FormData(form);
 
   // Validate the form template
   _validateFormTemplateData(form);
   if (!form.checkValidity()) {
-    return;
+    return false;
   }
 
   // Gather form template data
@@ -41,7 +38,7 @@ export default function prepareFormTemplateData(event) {
     }
   });
 
-  this.model.set("reply", formattedOutput.join("\n\n"));
+  return formattedOutput.join("\n\n");
 }
 
 function _validateFormTemplateData(form) {

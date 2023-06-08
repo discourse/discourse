@@ -789,15 +789,6 @@ export default class ComposerController extends Controller {
 
   @action
   saveAction(ignore, event) {
-    if (this.siteSettings.experimental_form_templates) {
-      if (
-        this.formTemplateIds?.length > 0 &&
-        !this.get("model.replyingToTopic")
-      ) {
-        prepareFormTemplateData(event);
-      }
-    }
-
     this.save(false, {
       jump:
         !(event?.shiftKey && this.get("model.replyingToTopic")) &&
@@ -937,6 +928,22 @@ export default class ComposerController extends Controller {
 
     if (this.site.mobileView && this.showPreview) {
       this.set("showPreview", false);
+    }
+
+    if (this.siteSettings.experimental_form_templates) {
+      if (
+        this.formTemplateIds?.length > 0 &&
+        !this.get("model.replyingToTopic")
+      ) {
+        const formTemplateData = prepareFormTemplateData(
+          document.querySelector("#form-template-form")
+        );
+        if (formTemplateData) {
+          this.model.set("reply", formTemplateData);
+        } else {
+          return;
+        }
+      }
     }
 
     const composer = this.model;
