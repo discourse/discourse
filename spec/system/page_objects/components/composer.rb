@@ -124,6 +124,10 @@ module PageObjects
         page.has_css?(".composer-select-form-template")
       end
 
+      def has_form_template_field_error?(error)
+        page.has_css?(".form-template-field__error", text: error)
+      end
+
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
       end
