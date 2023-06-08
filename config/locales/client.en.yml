@@ -5641,15 +5641,19 @@ en:
             minimum:
               key: "minimum"
               type: "integer"
-              description: "In text fields, specifies the minimum number of characters allowed."
+              description: "For text fields, specifies the minimum number of characters allowed."
             maximum:
               key: "maximum"
               type: "integer"
-              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+              description: "For text fields, specifies the maximum number of characters allowed."
             pattern:
               key: "pattern"
               type: "regex string"
-              description: "In text fields, a regular expression specifying the allowed input."
+              description: "For text fields, a regular expression specifying the allowed input."
+            type:
+              key: "type"
+              type: "string"
+              description: "For input fields, you can specify the type of input that should be expected (text|email|date|number|url|tel|color)"
         preview_modal:
           title: "Preview Template"
         field_placeholders:

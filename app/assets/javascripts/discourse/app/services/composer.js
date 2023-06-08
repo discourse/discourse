@@ -33,6 +33,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import prepareFormTemplateData from "discourse/lib/form-template-validation";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -929,6 +930,22 @@ export default class ComposerController extends Controller {
       this.set("showPreview", false);
     }
 
+    if (this.siteSettings.experimental_form_templates) {
+      if (
+        this.formTemplateIds?.length > 0 &&
+        !this.get("model.replyingToTopic")
+      ) {
+        const formTemplateData = prepareFormTemplateData(
+          document.querySelector("#form-template-form")
+        );
+        if (formTemplateData) {
+          this.model.set("reply", formTemplateData);
+        } else {
+          return;
+        }
+      }
+    }
+
     const composer = this.model;
 
     if (composer?.cantSubmitPost) {
@@ -1246,6 +1263,7 @@ export default class ComposerController extends Controller {
         "id",
         opts.prioritizedCategoryId
       );
+
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }

@@ -2,6 +2,13 @@
   display: flex;
   flex-grow: 1;
   max-width: 100%;
+
+  &.has-form-template {
+    .d-editor-preview-wrapper {
+      display: none;
+      flex: 0;
+    }
+  }
 }
 
 .d-editor {
@@ -353,7 +360,7 @@
   }
 }
 
-.d-editor .form-template-form__wrapper {
+.d-editor #form-template-form {
   overflow: auto;
   background: var(--primary-very-low);
   padding: 1rem;
