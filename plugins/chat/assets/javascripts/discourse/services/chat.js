@@ -113,6 +113,11 @@ export default class Chat extends Service {
       // NOTE: channels is more than a simple array, it also contains
       // tracking and membership data, see Chat::StructuredChannelSerializer
       this.chatApi.listCurrentUserChannels().then((channelsView) => {
+        this.chatSubscriptionsManager.stopChannelsSubscriptions();
+        this.chatSubscriptionsManager.startChannelsSubscriptions(
+          channelsView.meta.message_bus_last_ids
+        );
+
         [
           ...channelsView.public_channels,
           ...channelsView.direct_message_channels,
@@ -120,6 +125,9 @@ export default class Chat extends Service {
           this.chatChannelsManager
             .find(channelObject.id, { fetchIfNotFound: false })
             .then((channel) => {
+              if (!channel) {
+                return;
+              }
               // TODO (martin) We need to do something here for thread tracking
               // state as well on presence change, otherwise we will be back in
               // the same place as the channels were.
@@ -127,17 +135,18 @@ export default class Chat extends Service {
               // At some point it would likely be better to just fetch an
               // endpoint that gives you all channel tracking state and the
               // thread tracking state for the current channel.
-              if (channel) {
-                channel.meta.message_bus_last_ids =
-                  channelObject.meta.message_bus_last_ids;
-                channel.updateMembership(channelObject.current_user_membership);
-                const channelTrackingState =
-                  channelsView.tracking.channel_tracking[channel.id];
-                channel.tracking.unreadCount =
-                  channelTrackingState.unread_count;
-                channel.tracking.mentionCount =
-                  channelTrackingState.mention_count;
-              }
+
+              // ensures we have the latest message bus ids
+              channel.meta.message_bus_last_ids =
+                channelObject.meta.message_bus_last_ids;
+
+              const state = channelsView.tracking.channel_tracking[channel.id];
+              channel.tracking.unreadCount = state.unread_count;
+              channel.tracking.mentionCount = state.mention_count;
+
+              channel.updateMembership(channelObject.current_user_membership);
+
+              this.chatSubscriptionsManager.startChannelSubscription(channel);
             });
         });
       });
