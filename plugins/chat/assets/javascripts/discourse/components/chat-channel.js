@@ -356,7 +356,13 @@ export default class ChatLivePane extends Component {
 
   @bind
   fetchMessagesByDate(date) {
-    this.requestedTargetDate = date;
+    const message = this.args.channel?.findFirstMessageOfDay(date);
+
+    if (message.firstOfResults && this.args.channel?.canLoadMorePast) {
+      this.requestedTargetDate = date;
+    } else {
+      this.requestedTargetMessageId = message.id;
+    }
     this.debounceFetchMessages();
   }
 
