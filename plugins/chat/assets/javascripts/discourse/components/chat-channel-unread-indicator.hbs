@@ -6,10 +6,12 @@
         (or
           @channel.isDirectMessageChannel (gt @channel.tracking.mentionCount 0)
         )
-        "urgent"
+        "-urgent"
       )
     }}
   >
-    <div class="number">{{@channel.tracking.unreadCount}}</div>
+    <div
+      class="chat-channel-unread-indicator__number"
+    >{{@channel.tracking.unreadCount}}</div>
   </div>
 {{/if}}
