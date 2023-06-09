@@ -9846,10 +9846,10 @@ workbox-strategies@^4.3.1:
   dependencies:
     workbox-core "^4.3.1"
 
-workbox-sw@^4.3.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/workbox-sw/-/workbox-sw-4.3.1.tgz#df69e395c479ef4d14499372bcd84c0f5e246164"
-  integrity sha512-0jXdusCL2uC5gM3yYFT6QMBzKfBr2XTk0g5TPAV4y8IZDyVNDyj1a8uSXy3/XrvkVTmQvLN4O5k3JawGReXr9w==
+workbox-sw@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/workbox-sw/-/workbox-sw-7.0.0.tgz#7350126411e3de1409f7ec243df8d06bb5b08b86"
+  integrity sha512-SWfEouQfjRiZ7GNABzHUKUyj8pCoe+RwjfOIajcx6J5mtgKkN+t8UToHnpaJL5UVVOf5YhJh+OHhbVNIHe+LVA==
 
 workerpool@^3.1.1:
   version "3.1.2"

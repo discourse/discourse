@@ -119,6 +119,6 @@
     "workbox-expiration": "^4.3.1",
     "workbox-routing": "^4.3.1",
     "workbox-strategies": "^4.3.1",
-    "workbox-sw": "^4.3.1"
+    "workbox-sw": "^7.0.0"
   }
 }
