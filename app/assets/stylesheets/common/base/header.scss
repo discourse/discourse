@@ -236,6 +236,7 @@
     position: relative;
   }
   .badge-notification {
+    border: 2px solid var(--header_background);
     position: absolute;
     z-index: z("base");
     left: 0;
