@@ -62,6 +62,7 @@ export default class ChatRoute extends DiscourseRoute {
     schedule("afterRender", () => {
       document.body.classList.add("has-full-page-chat");
       document.documentElement.classList.add("has-full-page-chat");
+      scrollTop();
     });
   }
 
@@ -77,7 +78,6 @@ export default class ChatRoute extends DiscourseRoute {
     schedule("afterRender", () => {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
-      scrollTop();
     });
   }
 }
