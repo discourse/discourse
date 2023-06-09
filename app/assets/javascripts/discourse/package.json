@@ -117,7 +117,7 @@
     "workbox-cacheable-response": "^4.3.1",
     "workbox-core": "^4.3.1",
     "workbox-expiration": "^4.3.1",
-    "workbox-routing": "^4.3.1",
+    "workbox-routing": "^7.0.0",
     "workbox-strategies": "^4.3.1",
     "workbox-sw": "^4.3.1"
   }
