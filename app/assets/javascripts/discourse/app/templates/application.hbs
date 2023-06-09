@@ -1,6 +1,7 @@
 <DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
+  <PageLoadingSlider />
   <PluginOutlet
     @name="above-site-header"
     @connectorTagName="div"
@@ -44,6 +45,7 @@
       {{/if}}
     </div>
 
+    <div class="loading-slider-fallback-spinner">{{loading-spinner}}</div>
     <PluginOutlet @name="before-main-outlet" />
 
     <div id="main-outlet">

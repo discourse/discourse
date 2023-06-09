@@ -4,7 +4,6 @@ import DismissTopics from "discourse/mixins/dismiss-topics";
 import DiscoveryController from "discourse/controllers/discovery";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
-import TopicList from "discourse/models/topic-list";
 import { inject as controller } from "@ember/controller";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
