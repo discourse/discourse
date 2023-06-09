@@ -7,6 +7,10 @@
     }
   }
 
+  #skip-link {
+    @include user-select(none);
+  }
+
   #skip-link,
   .d-header,
   .chat-message-actions-mobile-outlet,
