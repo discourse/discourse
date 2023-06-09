@@ -113,6 +113,12 @@
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
     "terser": "^5.17.7",
-    "webpack": "^5.85.1"
+    "webpack": "^5.85.1",
+    "workbox-cacheable-response": "^4.3.1",
+    "workbox-core": "^4.3.1",
+    "workbox-expiration": "^4.3.1",
+    "workbox-routing": "^4.3.1",
+    "workbox-strategies": "^4.3.1",
+    "workbox-sw": "^4.3.1"
   }
 }
