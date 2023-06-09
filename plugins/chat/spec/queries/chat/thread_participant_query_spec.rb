@@ -22,15 +22,37 @@ RSpec.describe Chat::ThreadParticipantQuery do
       thread_1.add(user_3)
     end
 
+    it "has all the user details needed for BasicUserSerializer" do
+      result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
+      expect(result[thread_1.id][:users].first).to eq(
+        {
+          id: user_1.id,
+          username: user_1.username,
+          name: user_1.name,
+          uploaded_avatar_id: user_1.uploaded_avatar_id,
+        },
+      )
+    end
+
+    it "does not return more than 3 thread participants" do
+      other_user = Fabricate(:user)
+      thread_1.add(other_user)
+      Fabricate(:chat_message, thread: thread_1, user: other_user)
+      result = described_class.call(thread_ids: [thread_1.id])
+      expect(result[thread_1.id][:users].length).to eq(3)
+    end
+
     it "calculates the top messagers in a thread as well as the last messager" do
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:user_ids]).to eq([user_1.id, user_2.id, user_3.id])
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
+        [user_1.id, user_2.id, user_3.id],
+      )
     end
 
     it "does not count deleted messages for last messager" do
       thread_1.replies.where(user: user_3).each(&:trash!)
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:user_ids]).to eq(
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
         [user_1.id, thread_1.original_message_user_id, user_2.id],
       )
     end
@@ -38,7 +60,7 @@ RSpec.describe Chat::ThreadParticipantQuery do
     it "does not count deleted messages for participation" do
       thread_1.replies.where(user: user_1).each(&:trash!)
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:user_ids]).to eq(
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
         [user_2.id, thread_1.original_message_user_id, user_3.id],
       )
     end
@@ -46,7 +68,7 @@ RSpec.describe Chat::ThreadParticipantQuery do
     it "does not count users who are not members of the thread any longer for participation" do
       thread_1.remove(user_1)
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:user_ids]).to eq(
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
         [user_2.id, thread_1.original_message_user_id, user_3.id],
       )
     end
@@ -61,17 +83,25 @@ RSpec.describe Chat::ThreadParticipantQuery do
       Fabricate(:chat_message, thread: thread_2, user: user_2)
       Fabricate(:chat_message, thread: thread_2, user: user_2)
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:user_ids]).to eq([user_1.id, user_2.id, user_3.id])
-      expect(result[thread_2.id][:user_ids]).to eq([thread_2.original_message_user_id, user_2.id])
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
+        [user_1.id, user_2.id, user_3.id],
+      )
+      expect(result[thread_2.id][:users].map { |u| u[:id] }).to eq(
+        [thread_2.original_message_user_id, user_2.id],
+      )
     end
   end
 
   context "when no one has messaged in either thread but the original message user" do
     it "only returns that user as a participant" do
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:user_ids]).to eq([thread_1.original_message.user_id])
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
+        [thread_1.original_message.user_id],
+      )
       expect(result[thread_1.id][:total_count]).to eq(1)
-      expect(result[thread_2.id][:user_ids]).to eq([thread_2.original_message.user_id])
+      expect(result[thread_2.id][:users].map { |u| u[:id] }).to eq(
+        [thread_2.original_message.user_id],
+      )
       expect(result[thread_2.id][:total_count]).to eq(1)
     end
   end
