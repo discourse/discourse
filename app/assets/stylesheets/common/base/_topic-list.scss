@@ -265,15 +265,23 @@
     }
     .participant-groups {
       margin-left: 0.5em;
-      font-weight: normal;
-      font-size: var(--font-down-1);
+      padding: 0 5px;
+      border: 1px solid var(--primary-low);
+      border-radius: 0.25em;
+      min-width: 3em;
+      @include ellipsis;
 
       > a {
-        color: var(--primary-medium);
-        border: solid 1px var(--primary-low);
-        padding: 0 0.3em 0.07em;
-        border-radius: 0.6em;
-        margin-right: 0.25em;
+        display: flex;
+        align-items: center;
+        height: 1.25em;
+        color: var(--primary-high);
+        .mobile-view & {
+          height: 1.1em;
+        }
+        .d-icon {
+          margin-right: 5px;
+        }
       }
     }
   }
