@@ -106,41 +106,11 @@ const controllerOpts = {
       );
       return routeAction("changeSort", this.router._router, ...arguments)();
     },
+  },
 
-    refresh(options = { skipResettingParams: [] }) {
-      const filter = this.get("model.filter");
-      this.send("resetParams", options.skipResettingParams);
-
-      // Don't refresh if we're still loading
-      if (this.discovery.loading) {
-        return;
-      }
-
-      // If we `send('loading')` here, due to returning true it bubbles up to the
-      // router and ember throws an error due to missing `handlerInfos`.
-      // Lesson learned: Don't call `loading` yourself.
-      this.discovery.loadingBegan();
-
-      this.topicTrackingState.resetTracking();
-
-      this.store.findFiltered("topicList", { filter }).then((list) => {
-        TopicList.hideUniformCategory(list, this.category);
-
-        // If query params are present in the current route, we need still need to sync topic
-        // tracking with the topicList without any query params. Then we set the topic
-        // list to the list filtered with query params in the afterRefresh.
-        const params = this.router.currentRoute.queryParams;
-        if (Object.keys(params).length) {
-          this.store
-            .findFiltered("topicList", { filter, params })
-            .then((listWithParams) => {
-              this.afterRefresh(filter, list, listWithParams);
-            });
-        } else {
-          this.afterRefresh(filter, list);
-        }
-      });
-    },
+  @action
+  refresh() {
+    this.send("triggerRefresh");
   },
 
   afterRefresh(filter, list, listModel = list) {
