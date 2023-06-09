@@ -1,6 +1,7 @@
 .tippy-box[data-theme="user-tips"] {
   background-color: var(--tertiary);
   color: var(--secondary);
+  border-color: var(--tertiary);
 
   .btn-flat {
     color: var(--secondary);
@@ -17,6 +18,10 @@
     &:hover {
       color: var(--tertiary-hover);
     }
+  }
+
+  > .tippy-svg-arrow > svg {
+    color: var(--tertiary);
   }
 }
 
