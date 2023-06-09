@@ -2771,6 +2771,7 @@ tags:
   max_tags_per_email_subject:
     default: 5
     client: true
+    min: 0
   max_tag_length:
     default: 20
     client: true
