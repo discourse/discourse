@@ -106,12 +106,10 @@ module Chat
       skip_notifications = @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
 
       to_notify = {}
+      already_covered_ids = []
 
       # The order of these methods is the precedence
       # between different mention types.
-
-      already_covered_ids = []
-
       expand_direct_mentions(to_notify, already_covered_ids, skip_notifications)
       if !skip_notifications
         expand_group_mentions(to_notify, already_covered_ids)
@@ -122,6 +120,7 @@ module Chat
       filter_users_ignoring_or_muting_creator(to_notify, already_covered_ids)
 
       to_notify[:all_mentioned_user_ids] = already_covered_ids
+      to_notify
     end
 
     def expand_global_mention(to_notify, already_covered_ids)
