@@ -3,17 +3,16 @@
 module Jobs
   class AnonymizeUser < ::Jobs::Base
     sidekiq_options queue: "low"
+    # this is an extremely expensive job
+    # we are limiting it so only 1 per cluster runs
+    cluster_concurrency 1
 
     def execute(args)
       @user_id = args[:user_id]
       @prev_email = args[:prev_email]
       @anonymize_ip = args[:anonymize_ip]
 
-      DistributedMutex.synchronize(
-        "anonymize_user",
-        redis: Discourse.redis.without_namespace,
-        validity: 1.hour,
-      ) { make_anonymous }
+      make_anonymous
     end
 
     def make_anonymous

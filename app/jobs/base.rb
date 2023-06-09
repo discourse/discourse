@@ -161,6 +161,14 @@ module Jobs
 
     include Sidekiq::Worker
 
+    def self.cluster_concurrency(val)
+      @cluster_concurrency = val
+    end
+
+    def self.get_cluster_concurrency
+      @cluster_concurrency
+    end
+
     def log(*args)
       args.each do |arg|
         Rails.logger.info "#{Time.now.to_formatted_s(:db)}: [#{self.class.name.upcase}] #{arg}"
@@ -216,7 +224,51 @@ module Jobs
       end
     end
 
+    def self.cluster_concurrency_redis_key
+      "cluster_concurrency:#{self}"
+    end
+
+    def self.clear_cluster_concurrency_semaphore!
+      Discourse.redis.without_namespace.del(cluster_concurrency_redis_key)
+    end
+
+    def self.acquire_cluster_concurrency_semaphore!
+      incr = nil
+      Discourse.redis.without_namespace.multi do |transaction|
+        incr = transaction.incr(cluster_concurrency_redis_key)
+        # 10 hours is the max time, if we have jobs taking longer
+        # we will catch them in other monitoring
+        transaction.expire(cluster_concurrency_redis_key, 3600)
+      end
+
+      if incr.value > get_cluster_concurrency
+        release_cluster_concurrency_semaphore!
+        false
+      else
+        true
+      end
+    end
+
+    def self.release_cluster_concurrency_semaphore!
+      val = Discourse.redis.without_namespace.decr(cluster_concurrency_redis_key)
+      if val < 0
+        # this can happen in exceptional cases when an expiry happens mid job
+        clear_cluster_concurrency_semaphore!
+      end
+      val
+    end
+
     def perform(*args)
+      requeued = false
+
+      if self.class.get_cluster_concurrency
+        if !self.class.acquire_cluster_concurrency_semaphore!
+          self.class.perform_in(10.seconds, *args)
+          requeued = true
+          return
+        end
+      end
+
       opts = args.extract_options!.with_indifferent_access
 
       Sidekiq.redis { |r| r.set("last_job_perform_at", Time.now.to_i) } if ::Jobs.run_later?
@@ -278,6 +330,9 @@ module Jobs
 
       nil
     ensure
+      if self.class.get_cluster_concurrency && !requeued
+        self.class.release_cluster_concurrency_semaphore!
+      end
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end
