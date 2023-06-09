@@ -170,9 +170,5 @@ module Chat
     def include_thread_id?
       include_threading_data?
     end
-
-    def include_thread_reply_count?
-      include_threading_data? && object.thread_id.present?
-    end
   end
 end

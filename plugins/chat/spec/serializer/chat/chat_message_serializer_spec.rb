@@ -238,7 +238,6 @@ describe Chat::MessageSerializer do
       it "does not include thread data" do
         serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
         expect(serialized).not_to have_key(:thread_id)
-        expect(serialized).not_to have_key(:thread_reply_count)
       end
     end
 
@@ -251,7 +250,6 @@ describe Chat::MessageSerializer do
       it "does not include thread data" do
         serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
         expect(serialized).not_to have_key(:thread_id)
-        expect(serialized).not_to have_key(:thread_reply_count)
       end
     end
 
@@ -264,7 +262,6 @@ describe Chat::MessageSerializer do
       it "does include thread data" do
         serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
         expect(serialized).to have_key(:thread_id)
-        expect(serialized).to have_key(:thread_reply_count)
       end
     end
   end
