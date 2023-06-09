@@ -11,7 +11,10 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   @service currentUser;
 
   get urgentCount() {
-    return this.args.urgentCount || this.chatTrackingStateManager.urgentCount;
+    return (
+      this.args.urgentCount ||
+      this.chatTrackingStateManager.allChannelUrgentCount
+    );
   }
 
   get unreadCount() {
