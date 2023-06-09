@@ -243,7 +243,7 @@ export default class ChatMessage {
   async ensureMentionsLoaded() {
     const notLoaded = this.#notLoadedMentions;
     if (notLoaded.length > 0) {
-      const users = await this.usersApi.list(notLoaded);
+      const users = await this.usersApi.lookupUsers(notLoaded);
       users.forEach((user) => this.addMentionedUser(user));
       this.incrementVersion();
     }
