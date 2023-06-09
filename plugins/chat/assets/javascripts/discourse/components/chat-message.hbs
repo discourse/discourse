@@ -26,6 +26,7 @@
       (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
       (if @message.staged "is-staged" "is-persisted")
       (if @message.deletedAt "is-deleted")
+      (if (eq @message.id this.chat.activeMessage.model.id) "is-active")
     }}
     data-id={{@message.id}}
     data-thread-id={{@message.thread.id}}
@@ -75,7 +76,6 @@
             (if this.hideUserInfo "user-info-hidden")
             (if @message.error "errored")
             (if @message.bookmark "chat-message-bookmarked")
-            (if (eq @message.id this.chat.activeMessage.model.id) "is-active")
           }}
         >
           {{#unless this.hideReplyToInfo}}
