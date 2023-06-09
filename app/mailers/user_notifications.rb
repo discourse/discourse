@@ -603,7 +603,7 @@ class UserNotifications < ActionMailer::Base
     if opts[:show_tags_in_subject] && post.topic_id
       max_tags =
         if SiteSetting.enable_max_tags_per_email_subject
-          [SiteSetting.max_tags_per_topic, SiteSetting.max_tags_per_email_subject].min
+          SiteSetting.max_tags_per_email_subject
         else
           SiteSetting.max_tags_per_topic
         end

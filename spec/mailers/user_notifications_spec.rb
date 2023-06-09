@@ -563,28 +563,10 @@ RSpec.describe UserNotifications do
       describe "max_tags_per_email_subject siteSetting enabled" do
         before { SiteSetting.enable_max_tags_per_email_subject = true }
 
-        it "should match max_tags_per_topic" do
-          SiteSetting.email_subject =
-            "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
-          SiteSetting.max_tags_per_topic = 1
-          SiteSetting.max_tags_per_email_subject = 2
-
-          mail =
-            UserNotifications.user_replied(
-              user,
-              post: response,
-              notification_type: notification.notification_type,
-              notification_data_hash: notification.data_hash,
-            )
-          expect(mail.subject).to match(/Taggo/)
-          expect(mail.subject).not_to match(/Taggie/)
-          expect(mail.subject).not_to match(/Teggo/)
-        end
-
         it "should match max_tags_per_email_subject" do
           SiteSetting.email_subject =
             "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
-          SiteSetting.max_tags_per_topic = 3
+          SiteSetting.max_tags_per_topic = 1
           SiteSetting.max_tags_per_email_subject = 2
           mail =
             UserNotifications.user_replied(
