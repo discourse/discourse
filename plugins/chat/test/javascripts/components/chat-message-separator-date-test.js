@@ -12,8 +12,11 @@ module(
     test("first message of the day", async function (assert) {
       this.set("date", moment().format("LLL"));
       this.set("message", { formattedFirstMessageDate: this.date });
+      this.set("fetchMessagesByDate", () => {});
 
-      await render(hbs`<ChatMessageSeparatorDate @message={{this.message}} />`);
+      await render(
+        hbs`<ChatMessageSeparatorDate @message={{this.message}} @fetchMessagesByDate={{this.fetchMessagesByDate}} />`
+      );
 
       assert.strictEqual(
         query(".chat-message-separator-date").innerText.trim(),

@@ -21,6 +21,7 @@ RSpec.describe Chat::ChannelViewBuilder do
     let(:direction) { nil }
     let(:thread_id) { nil }
     let(:fetch_from_last_read) { nil }
+    let(:target_date) { nil }
     let(:params) do
       {
         guardian: guardian,
@@ -30,6 +31,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         page_size: page_size,
         direction: direction,
         thread_id: thread_id,
+        target_date: target_date,
       }
     end
 
