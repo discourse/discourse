@@ -19,6 +19,10 @@ module.exports = function generateWorkboxTree() {
   const versions = workboxDeps.map((name) => {
     return require(`../../node_modules/${name}/package.json`).version;
   });
+
+  // Normally Sprockets will create a cachebuster per-file. In this case we need it at the directory level since
+  // workbox is responsible for loading its own files and doesn't support customized names per-file.
+  // Sprockets' default behaviour for these files is disabled via freedom_patches/sprockets.rb.
   const versionHash = crypto
     .createHash("md5")
     .update(versions.join("|"))
