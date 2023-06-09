@@ -1,0 +1,14 @@
+<a
+  href={{this.href}}
+  tabindex="0"
+  class={{concat-class "icon" "btn-flat" (if this.isActive "active")}}
+>
+  {{d-icon "d-chat"}}
+  {{#unless this.currentUserInDnD}}
+    <Chat::Header::Icon::UnreadIndicator
+      @urgentCount={{@urgentCount}}
+      @unreadCount={{@unreadCount}}
+      @indicatorPreference={{@indicatorPreference}}
+    />
+  {{/unless}}
+</a>

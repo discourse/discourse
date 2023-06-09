@@ -9,7 +9,15 @@ export default class ChatHeaderIcon extends Component {
   @service router;
 
   get currentUserInDnD() {
-    return this.currentUser.isInDoNotDisturb();
+    return this.args.currentUserInDnD || this.currentUser.isInDoNotDisturb();
+  }
+
+  get isActive() {
+    return (
+      this.args.isActive ||
+      this.chatStateManager.isFullPageActive ||
+      this.chatStateManager.isDrawerActive
+    );
   }
 
   get href() {
@@ -26,12 +34,5 @@ export default class ChatHeaderIcon extends Component {
     }
 
     return getURL(this.chatStateManager.lastKnownChatURL || "/chat");
-  }
-
-  get isActive() {
-    return (
-      this.chatStateManager.isFullPageActive ||
-      this.chatStateManager.isDrawerActive
-    );
   }
 }
