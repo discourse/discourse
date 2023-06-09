@@ -31,9 +31,9 @@ module Chat
           WHERE chat_messages.thread_id IN (:thread_ids)
           AND chat_messages.deleted_at IS NULL
           GROUP BY chat_messages.thread_id, chat_messages.user_id
-          ORDER BY chat_messages.thread_id ASC, message_count DESC, chat_messages.user_id ASC
         ) AS thread_messager_stats
         INNER JOIN users ON users.id = thread_messager_stats.user_id
+        ORDER BY thread_messager_stats.thread_id ASC, thread_messager_stats.message_count DESC, thread_messager_stats.user_id ASC
       SQL
 
       most_recent_messagers = DB.query(<<~SQL, thread_ids: thread_ids)
