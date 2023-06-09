@@ -16,7 +16,7 @@ module(
     });
 
     test("returns an empty array if there are no mentions", function (assert) {
-      const mentions = parseMentionedUsernames("<p>No mentions here</p>>");
+      const mentions = parseMentionedUsernames("<p>No mentions here</p>");
       assert.equal(mentions.length, 0);
     });
   }
