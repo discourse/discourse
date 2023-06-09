@@ -15,14 +15,8 @@ $d-popover-border: var(--primary-low);
   top: -10px;
 }
 
-.tippy-rounded-arrow {
-  fill: $d-popover-background;
-  .svg-arrow {
-    fill: $d-popover-border;
-  }
-  .svg-content {
-    fill: $d-popover-background;
-  }
+.tippy-svg-arrow > svg {
+  color: $d-popover-background;
 }
 
 [data-tooltip] > *,
