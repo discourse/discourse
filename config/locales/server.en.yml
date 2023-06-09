@@ -2360,7 +2360,7 @@ en:
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
-    enable_max_tags_per_email_subject: "Allows to control the maximum tags that can be in the subject of an email"
+    enable_max_tags_per_email_subject: "Use max_tags_per_email_subject when generating the subject of an email"
     max_tags_per_email_subject: "The maximum tags that can be in the subject of an email"
     max_tag_length: "The maximum amount of characters that can be used in a tag."
     max_tag_search_results: "When searching for tags, the maximum number of results to show."
