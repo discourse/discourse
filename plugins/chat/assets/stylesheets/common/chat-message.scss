@@ -21,7 +21,6 @@
 .chat-message {
   align-items: flex-start;
   padding: 0.25em 0.5em 0.25em 0.75em;
-  background-color: var(--secondary);
   display: flex;
   min-width: 0;
 
@@ -214,15 +213,21 @@
     .chat-message-reaction-list .chat-message-react-btn {
       display: none;
     }
+  }
+
+  .chat-message-container {
+    background-color: var(--secondary);
 
     .touch & {
-      &:active {
+      &:active,
+      &.is-active {
         background: var(--d-hover);
         border-radius: 5px;
       }
 
       &.chat-message-bookmarked {
-        &:active {
+        &:active,
+        &.is-active {
           background: var(--highlight-low);
         }
       }

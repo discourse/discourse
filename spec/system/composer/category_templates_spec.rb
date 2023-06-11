@@ -3,10 +3,20 @@
 describe "Composer Form Templates", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:form_template_1) do
-    Fabricate(:form_template, name: "Bug Reports", template: "- type: checkbox")
+    Fabricate(
+      :form_template,
+      name: "Bug Reports",
+      template:
+        "- type: input
+  attributes:
+    label: What is your full name?
+    placeholder: John Doe
+  validations:
+    required: true",
+    )
   end
   fab!(:form_template_2) do
-    Fabricate(:form_template, name: "Feature Request", template: "- type: input")
+    Fabricate(:form_template, name: "Feature Request", template: "- type: checkbox")
   end
   fab!(:form_template_3) do
     Fabricate(:form_template, name: "Awesome Possum", template: "- type: dropdown")
@@ -66,6 +76,7 @@ describe "Composer Form Templates", type: :system do
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:form_template_chooser) { PageObjects::Components::SelectKit.new(".form-template-chooser") }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
     SiteSetting.experimental_form_templates = true
@@ -90,7 +101,21 @@ describe "Composer Form Templates", type: :system do
     category_page.new_topic_button.click
     expect(composer).to have_no_composer_input
     expect(composer).to have_form_template
-    expect(composer).to have_form_template_field("checkbox")
+    expect(composer).to have_form_template_field("input")
+  end
+
+  it "shows the preview when a category without a form template is selected" do
+    category_page.visit(category_no_template)
+    category_page.new_topic_button.click
+    expect(composer).to have_composer_preview
+    expect(composer).to have_composer_preview_toggle
+  end
+
+  it "hides the preivew when a category with a form template is selected" do
+    category_page.visit(category_with_template_1)
+    category_page.new_topic_button.click
+    expect(composer).to have_no_composer_preview
+    expect(composer).to have_no_composer_preview_toggle
   end
 
   it "shows the correct template when switching categories" do
@@ -105,11 +130,11 @@ describe "Composer Form Templates", type: :system do
     # switch to category with form template
     composer.switch_category(category_with_template_1.name)
     expect(composer).to have_form_template
-    expect(composer).to have_form_template_field("checkbox")
+    expect(composer).to have_form_template_field("input")
     # switch to category with a different form template
     composer.switch_category(category_with_template_2.name)
     expect(composer).to have_form_template
-    expect(composer).to have_form_template_field("input")
+    expect(composer).to have_form_template_field("checkbox")
   end
 
   it "does not show form template chooser when a category only has form template" do
@@ -127,9 +152,9 @@ describe "Composer Form Templates", type: :system do
   it "updates the form template when a different template is selected" do
     category_page.visit(category_with_multiple_templates_1)
     category_page.new_topic_button.click
-    expect(composer).to have_form_template_field("checkbox")
-    form_template_chooser.select_row_by_name(form_template_2.name)
     expect(composer).to have_form_template_field("input")
+    form_template_chooser.select_row_by_name(form_template_2.name)
+    expect(composer).to have_form_template_field("checkbox")
   end
 
   it "shows the correct template options when switching categories" do
@@ -151,5 +176,23 @@ describe "Composer Form Templates", type: :system do
     expect(form_template_chooser).to have_selected_name(form_template_1.name)
     form_template_chooser.select_row_by_name(form_template_2.name)
     expect(form_template_chooser).to have_selected_name(form_template_2.name)
+  end
+
+  it "forms a post when template fields are filled in" do
+    topic_title = "A topic about Batman"
+
+    category_page.visit(category_with_template_1)
+    category_page.new_topic_button.click
+    composer.fill_title(topic_title)
+    composer.fill_form_template_field("input", "Bruce Wayne")
+    composer.create
+    topic = Topic.where(user: user, title: topic_title)
+    topic_id = Topic.where(user: user, title: topic_title).pluck(:id)
+    post = Post.where(topic_id: topic_id).first
+
+    expect(topic_page).to have_topic_title(topic_title)
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked p")).to have_content(
+      "Bruce Wayne",
+    )
   end
 end

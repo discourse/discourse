@@ -9,6 +9,7 @@ export default class ChatUserAvatar extends Component {
   user = null;
 
   avatarSize = "tiny";
+  showPresence = true;
 
   @computed("chat.presenceChannel.users.[]", "user.{id,username}")
   get isOnline() {

@@ -1,8 +1,8 @@
 {{#if (and @reaction this.emojiUrl)}}
   <button
     type="button"
-    {{on "touchstart" this.handleTouchStart}}
-    {{on "click" this.handleClick}}
+    {{on "click" this.handleClick bubbles=false}}
+    {{on "touchstart" this.handleClick bubbles=false}}
     tabindex="0"
     class={{concat-class
       "chat-message-reaction"

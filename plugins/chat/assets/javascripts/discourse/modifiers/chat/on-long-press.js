@@ -41,33 +41,39 @@ export default class ChatOnLongPress extends Modifier {
   @bind
   onCancel() {
     cancel(this.timeout);
-    this.element.removeEventListener("touchmove", this.onCancel);
+
+    this.element.removeEventListener("touchmove", this.onCancel, {
+      passive: true,
+    });
     this.element.removeEventListener("touchend", this.onCancel);
     this.element.removeEventListener("touchcancel", this.onCancel);
+
     this.onLongPressCancel(this.element);
   }
 
   @bind
   handleTouchStart(event) {
     if (event.touches.length > 1) {
+      this.onCancel();
       return;
     }
-
     this.onLongPressStart(this.element, event);
-
-    this.element.addEventListener("touchmove", this.onCancel);
+    this.element.addEventListener("touchmove", this.onCancel, {
+      passive: true,
+    });
     this.element.addEventListener("touchend", this.onCancel);
     this.element.addEventListener("touchcancel", this.onCancel);
-
     this.timeout = discourseLater(() => {
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
 
-      this.onLongPressEnd(this.element, event);
       this.element.addEventListener("touchend", cancelEvent, {
         once: true,
+        passive: true,
       });
+
+      this.onLongPressEnd(this.element, event);
     }, 400);
   }
 
@@ -75,6 +81,10 @@ export default class ChatOnLongPress extends Modifier {
     if (!this.enabled) {
       return;
     }
+
+    this.element.removeEventListener("touchstart", this.handleTouchStart, {
+      passive: true,
+    });
 
     this.onCancel();
   }

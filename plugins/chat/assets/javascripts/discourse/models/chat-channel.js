@@ -292,7 +292,6 @@ export default class ChatChannel {
     message.draft = false;
     message.createdAt ??= moment.utc().format();
     message.channel = this;
-    await message.cook();
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
