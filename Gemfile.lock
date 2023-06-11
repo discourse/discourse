@@ -189,7 +189,7 @@ GEM
       hana (~> 1.3)
       regexp_parser (~> 2.0)
       simpleidn (~> 0.2)
-    jwt (2.7.0)
+    jwt (2.7.1)
     kgio (2.11.4)
     libv8-node (18.16.0.0)
     libv8-node (18.16.0.0-aarch64-linux)
