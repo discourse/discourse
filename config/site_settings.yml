@@ -2446,10 +2446,6 @@ uncategorized:
     type: float
     default: 48
 
-  show_create_topics_notice:
-    client: true
-    default: true
-
   enable_system_avatars:
     hidden: true
     default: true

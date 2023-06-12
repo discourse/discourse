@@ -228,6 +228,7 @@ export default class ChatThreadPanel extends Component {
   async onSendMessage(message) {
     resetIdle();
 
+    await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);
     } else {
@@ -281,7 +282,6 @@ export default class ChatThreadPanel extends Component {
   }
 
   async #sendEditMessage(message) {
-    await message.cook();
     this.chatThreadPane.sending = true;
 
     const data = {

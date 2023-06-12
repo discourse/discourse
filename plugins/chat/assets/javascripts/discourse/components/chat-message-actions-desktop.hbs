@@ -10,7 +10,15 @@
     }}
     data-id={{this.message.id}}
   >
-    <div class="chat-message-actions">
+    <div
+      class={{concat-class
+        "chat-message-actions"
+        (unless
+          this.messageInteractor.secondaryActions.length
+          "has-no-secondary-actions"
+        )
+      }}
+    >
       {{#if this.shouldRenderFavoriteReactions}}
         {{#each
           this.messageInteractor.emojiReactions
@@ -57,14 +65,14 @@
       {{#if
         (and
           this.messageInteractor.message
-          this.messageInteractor.secondaryButtons.length
+          this.messageInteractor.secondaryActions.length
         )
       }}
         <DropdownSelectBox
-          @class="more-buttons"
+          @class="more-buttons secondary-actions"
           @options={{hash icon="ellipsis-v" placement="left"}}
-          @content={{this.messageInteractor.secondaryButtons}}
-          @onChange={{action this.messageInteractor.handleSecondaryButtons}}
+          @content={{this.messageInteractor.secondaryActions}}
+          @onChange={{action this.messageInteractor.handleSecondaryActions}}
         />
       {{/if}}
     </div>

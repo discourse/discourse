@@ -69,7 +69,6 @@ export default class ChatThread {
     message.draft = false;
     message.createdAt ??= moment.utc().format();
     message.thread = this;
-    await message.cook();
 
     this.messagesManager.addMessages([message]);
   }

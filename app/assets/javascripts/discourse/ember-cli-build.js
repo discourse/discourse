@@ -11,6 +11,7 @@ const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("./lib/deprecation-silencer");
+const generateWorkboxTree = require("./lib/workbox-tree-builder");
 
 module.exports = function (defaults) {
   const discourseRoot = resolve("../../../..");
@@ -193,6 +194,7 @@ module.exports = function (defaults) {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
+    generateWorkboxTree(),
     applyTerser(
       concat(mergeTrees([app.options.adminTree]), {
         inputFiles: ["**/*.js"],

@@ -3,14 +3,7 @@
     padding-bottom: 0;
   }
   .sidebar-section-header {
-    position: relative;
-    .d-icon-globe {
-      position: absolute;
-      left: -0.75em;
-      align-self: stretch;
-      width: 0.6em;
-      height: 100%;
-    }
+    display: flex;
   }
 
   .sidebar-section-link-prefix.icon {

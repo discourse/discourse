@@ -26,7 +26,8 @@
 .sidebar-more-section-links-details-content {
   background-color: var(--d-sidebar-background);
   transition: background-color 0.25s;
-  box-shadow: shadow("dropdown");
+  box-shadow: shadow("card");
+  border: 1px solid var(--primary-low);
   margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
 
   .sidebar-row {

@@ -56,13 +56,15 @@ RSpec.describe "Setting changes" do
 
       topic = Topic.find(SiteSetting.welcome_topic_id)
       expect(topic.title).to include(SiteSetting.title)
-      expect(topic.first_post.raw).to include(SiteSetting.title)
     end
 
     it "updates the welcome topic when site_description changes" do
+      SiteSetting.title = SecureRandom.alphanumeric
       SiteSetting.site_description = SecureRandom.alphanumeric
 
       topic = Topic.find(SiteSetting.welcome_topic_id)
+      expect(topic.title).to include(SiteSetting.title)
+      expect(topic.first_post.raw).to include(SiteSetting.title)
       expect(topic.first_post.raw).to include(SiteSetting.site_description)
     end
   end

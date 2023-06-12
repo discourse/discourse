@@ -107,12 +107,18 @@
     "imports-loader": "^4.0.1",
     "loader.js": "^4.7.0",
     "pretender": "^3.4.7",
-    "sass": "^1.62.1",
+    "sass": "^1.63.3",
     "sinon": "^15.1.0",
     "source-map": "^0.7.4",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
     "terser": "^5.17.7",
-    "webpack": "^5.85.1"
+    "webpack": "^5.85.1",
+    "workbox-cacheable-response": "^4.3.1",
+    "workbox-core": "^4.3.1",
+    "workbox-expiration": "^4.3.1",
+    "workbox-routing": "^4.3.1",
+    "workbox-strategies": "^4.3.1",
+    "workbox-sw": "^4.3.1"
   }
 }

@@ -1,7 +1,6 @@
 import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
 import { bind } from "discourse-common/utils/decorators";
-import { throttle } from "@ember/runloop";
 
 const MINIMUM_SIZE = 20;
 
@@ -66,11 +65,6 @@ export default class ResizableNode extends Modifier {
     window.addEventListener("mouseup", this._stopResize);
   }
 
-  @bind
-  _resize(event) {
-    throttle(this, this._resizeThrottled, event, 50);
-  }
-
   /*
     The bulk of the logic is to calculate the new width and height of the element
     based on the current mouse position: width is calculated by subtracting
@@ -87,7 +81,7 @@ export default class ResizableNode extends Modifier {
     -------
   */
   @bind
-  _resizeThrottled(event) {
+  _resize(event) {
     let width = this._originalWidth;
     let diffWidth = event.pageX - this._originalMouseX;
     if (document.documentElement.classList.contains("rtl")) {

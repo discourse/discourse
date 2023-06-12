@@ -23,8 +23,8 @@ a.hashtag {
   }
 
   .d-icon {
-    font-size: var(--font-down-1);
-    margin: 0 0.2em 0 0.1em;
+    font-size: var(--font-down-2);
+    margin: 0 0.33em 0 0.1em;
 
     &.hashtag-missing {
       color: var(--primary-medium);
@@ -43,9 +43,10 @@ a.hashtag {
 
   .hashtag-category-badge {
     flex: 0 0 auto;
-    width: 9px;
-    height: 9px;
-    margin-right: 5px;
+    width: 0.72em;
+    height: 0.72em;
+    margin-right: 0.25em;
+    margin-left: 0.1em;
     display: inline-block;
 
     &.hashtag-missing {
