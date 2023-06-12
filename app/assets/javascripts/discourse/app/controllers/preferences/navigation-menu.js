@@ -4,6 +4,10 @@ import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  hasDefaultSidebarCategories,
+  hasDefaultSidebarTags,
+} from "discourse/lib/sidebar/helpers";
 
 export const DEFAULT_LIST_DESTINATION = "default";
 export const UNREAD_LIST_DESTINATION = "unread_new";
@@ -30,6 +34,34 @@ export default class extends Controller {
       value: UNREAD_LIST_DESTINATION,
     },
   ];
+
+  get categoryInstructions() {
+    return `${I18n.t(
+      "user.experimental_sidebar.categories_section.instruction.main"
+    )} ${
+      hasDefaultSidebarCategories(this.siteSettings)
+        ? I18n.t(
+            "user.experimental_sidebar.categories_section.instruction.context.admin_configured_categories_shown"
+          )
+        : I18n.t(
+            "user.experimental_sidebar.categories_section.instruction.context.default_site_categories_shown"
+          )
+    }`;
+  }
+
+  get tagInstructions() {
+    return `${I18n.t(
+      "user.experimental_sidebar.tags_section.instruction.main"
+    )} ${
+      hasDefaultSidebarTags(this.siteSettings)
+        ? I18n.t(
+            "user.experimental_sidebar.tags_section.instruction.context.admin_configured_tags_shown"
+          )
+        : I18n.t(
+            "user.experimental_sidebar.tags_section.instruction.context.default_site_tags_shown"
+          )
+    }`;
+  }
 
   @action
   save() {

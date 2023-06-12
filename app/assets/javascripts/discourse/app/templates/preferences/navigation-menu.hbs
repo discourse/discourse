@@ -1,6 +1,6 @@
 <div class="control-group preferences-navigation-menu-categories">
   <legend class="control-label">{{i18n
-      "user.experimental_sidebar.categories_section"
+      "user.experimental_sidebar.categories_section.title"
     }}</legend>
 
   <div class="controls">
@@ -14,15 +14,13 @@
     />
   </div>
 
-  <div class="instructions">{{i18n
-      "user.experimental_sidebar.categories_section_instruction"
-    }}</div>
+  <div class="instructions">{{this.categoryInstructions}}</div>
 </div>
 
 {{#if this.model.display_sidebar_tags}}
   <div class="control-group preferences-navigation-menu-tags">
     <legend class="control-label">{{i18n
-        "user.experimental_sidebar.tags_section"
+        "user.experimental_sidebar.tags_section.title"
       }}</legend>
 
     <div class="controls">
@@ -35,9 +33,7 @@
       />
     </div>
 
-    <div class="instructions">{{i18n
-        "user.experimental_sidebar.tags_section_instruction"
-      }}</div>
+    <div class="instructions">{{this.tagInstructions}}</div>
   </div>
 {{/if}}
 
