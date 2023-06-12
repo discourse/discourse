@@ -208,7 +208,8 @@ export default class ChatLivePane extends Component {
           result.threads.forEach((thread) => {
             const storedThread = this.args.channel.threadsManager.store(
               this.args.channel,
-              thread
+              thread,
+              { replace: true }
             );
             messages.findBy("id", storedThread.originalMessage.id).thread =
               storedThread;
@@ -303,7 +304,8 @@ export default class ChatLivePane extends Component {
           result.threads.forEach((thread) => {
             const storedThread = this.args.channel.threadsManager.store(
               this.args.channel,
-              thread
+              thread,
+              { replace: true }
             );
             messages.findBy("id", storedThread.originalMessage.id).thread =
               storedThread;
