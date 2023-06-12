@@ -84,8 +84,8 @@ module Service
         )
       end
 
-      def policy(name = :default)
-        steps << PolicyStep.new(name)
+      def policy(name = :default, class_name: nil)
+        steps << PolicyStep.new(name, class_name: class_name)
       end
 
       def step(name)
@@ -108,10 +108,11 @@ module Service
       end
 
       def call(instance, context)
-        method = instance.method(method_name)
+        object = class_name&.new(context)
+        method = object&.method(:call) || instance.method(method_name)
         args = {}
         args = context.to_h if method.arity.nonzero?
-        context[result_key] = Context.build
+        context[result_key] = Context.build(object: object)
         instance.instance_exec(**args, &method)
       end
 
@@ -145,7 +146,7 @@ module Service
     class PolicyStep < Step
       def call(instance, context)
         if !super
-          context[result_key].fail
+          context[result_key].fail(reason: context[result_key].object&.reason)
           context.fail!
         end
       end
@@ -248,18 +249,41 @@ module Service
     #   end
 
     # @!scope class
-    # @!method policy(name = :default)
+    # @!method policy(name = :default, class_name: nil)
     # @param name [Symbol] name for this policy
+    # @param class_name [Class] a policy object (should inherit from +PolicyBase+)
     # Performs checks related to the state of the system. If the
     # step doesn’t return a truthy value, then the policy will fail.
     #
-    # @example
+    # When using a policy object, there is no need to define a method on the
+    # service for the policy step. The policy object `#call` method will be
+    # called and if the result isn’t truthy, a `#reason` method is expected to
+    # be implemented to explain the failure.
+    #
+    # Policy objects are usually useful for more complex logic.
+    #
+    # @example Without a policy object
     #   policy :no_direct_message_channel
     #
     #   private
     #
     #   def no_direct_message_channel(channel:, **)
     #     !channel.direct_message_channel?
+    #   end
+    #
+    # @example With a policy object
+    #   # in the service object
+    #   policy :no_direct_message_channel, class_name: NoDirectMessageChannelPolicy
+    #
+    #   # in the policy object File
+    #   class NoDirectMessageChannelPolicy < PolicyBase
+    #     def call
+    #       !context.channel.direct_message_channel?
+    #     end
+    #
+    #     def reason
+    #       "Direct message channels aren’t supported"
+    #     end
     #   end
 
     # @!scope class

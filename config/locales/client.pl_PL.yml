@@ -409,6 +409,7 @@ pl_PL:
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
       abandon:
+        confirm: "Masz już wersję roboczą w toku. Co chcesz z nią zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
     topic_count_categories:
@@ -471,6 +472,8 @@ pl_PL:
         search: "Wyszukaj wiadomość"
         placeholder: "wpisz tutaj tytuł wiadomości, adres URL lub id"
     review:
+      show_more: "Pokaż więcej"
+      show_less: "Pokaż mniej"
       order_by: "Segreguj według:"
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
@@ -605,21 +608,41 @@ pl_PL:
       scores:
         about: "Wynik jest obliczany na podstawie poziomu zaufania raportującego, akceptacji poprzednich flag i priorytetu raportowanego postu."
         score: "Wynik"
+        date: "Data zgłoszenia"
         type: "Powód"
         status: "Status"
         submitted_by: "Zgłoszony przez"
+        reviewed_by: "Sprawdzony przez"
+        reviewed_timestamp: "Data sprawdzenia"
       statuses:
         pending:
           title: "Oczekujące"
         approved:
           title: "Zaakceptowany"
+        approved_flag:
+          title: "Flaga zatwierdzona"
+        approved_user:
+          title: "Użytkownik zatwierdzony"
+        approved_post:
+          title: "Post zatwierdzony"
         rejected:
           title: "Odrzucony"
+        rejected_flag:
+          title: "Flaga odrzucona"
+        rejected_user:
+          title: "Użytkownik odrzucony"
+        rejected_post:
+          title: "Post odrzucony"
+        ignored:
+          title: "Flaga zignorowana"
+        deleted:
+          title: "Temat lub post usunięty"
         reviewed:
           title: "Wszystkie sprawdzone"
         all:
           title: "Wszystko"
       context_question:
+        is_this_post: "Czy ten post %{reviewable_human_score_types}?"
         delimiter: "lub"
         something_else_wrong: "Czy coś jest nie tak z tym postem?"
       types:
@@ -1930,9 +1953,6 @@ pl_PL:
       suggested_topics:
         title: "Czytaj dalej!"
         content: "Oto kilka tematów, które naszym zdaniem warto przeczytać w następnej kolejności."
-      welcome_topic:
-        title: "Edytuj temat powitalny"
-        content: "Pomóż nowym członkom poczuć się jak w domu, dostosowując ten temat do potrzeb swojej społeczności."
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -2879,7 +2899,7 @@ pl_PL:
         filter: "Brak tematów."
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
-          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge unread-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 4 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
+          unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge unread-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 5 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
@@ -2954,6 +2974,7 @@ pl_PL:
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{categoryLink} lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
+      participant_groups: "Grupy uczestników"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -3003,6 +3024,7 @@ pl_PL:
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply: "Przejdź do pierwotnej lokalizacji posta"
+      jump_reply_aria: "Przejdź do postu @%{username} w jego oryginalnej lokalizacji"
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
@@ -3290,6 +3312,7 @@ pl_PL:
           few: "Wybierz temat, do którego chcesz przenieść wybrane <b>%{count}</b> wpisy."
           many: "Wybierz temat, do którego chcesz przenieść <b>%{count}</b> wybranych wpisów."
           other: "Wybierz temat, do którego chcesz przenieść <b>%{count}</b> wybranych wpisów."
+        chronological_order: "zachować porządek chronologiczny po połączeniu"
       move_to_new_message:
         title: "Przejdź do nowej wiadomości"
         action: "przejdź do nowej wiadomości"
@@ -4433,6 +4456,7 @@ pl_PL:
           links:
             add: "Dodaj kolejny link"
             delete: "Usuń link"
+            reset: "Przywróć ustawienia domyślne"
             icon:
               label: "Ikona"
               validation:
@@ -4489,7 +4513,7 @@ pl_PL:
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         community:
           header_link_text: "Społeczność"
-          header_action_title: "Utwórz temat"
+          header_action_create_topic_title: "Utwórz temat"
           links:
             about:
               content: "O stronie"
@@ -4533,6 +4557,8 @@ pl_PL:
     until: "Aż do:"
     char_counter:
       exceeded: "Przekroczono maksymalną dozwoloną liczbę znaków."
+    form_template_chooser:
+      select_template: "Wybierz szablony formularzy"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -4668,7 +4694,7 @@ pl_PL:
               description: "Administratorzy mogą widzieć wszystkie grupy."
             members_visibility_levels:
               title: "Kto może widzieć członków grupy?"
-              description: "Administratorzy widzą członków wszystkich grup. Flair jest widoczny dla wszystkich użytkowników."
+              description: "Administratorzy widzą członków wszystkich grup. Ikona jest widoczna dla wszystkich użytkowników."
             publish_read_state: "Wyświetlaj status przeczytania w grupowych wiadomościach"
           membership:
             automatic: Automatyczne
@@ -4685,6 +4711,7 @@ pl_PL:
             primary_group: "Automatycznie ustawiaj jako główną grupę"
           alert:
             primary_group: "Ponieważ jest to grupa podstawowa, nazwa '%{group_name}' będzie używana w klasach CSS, które każdy może zobaczyć."
+            flair_group: "Ponieważ ta grupa ma ikonę dla swoich członków, nazwa '%{group_name}' będzie widoczna dla każdego."
         name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
         primary: "Główna grupa"
         no_primary: "(brak podstawowej grupy)"
@@ -4778,6 +4805,7 @@ pl_PL:
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń post.
+              list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
             tags:
               list: Lista tagów.
             categories:
@@ -4801,6 +4829,8 @@ pl_PL:
               update: Zaktualizuj status użytkownika.
             email:
               receive_emails: Połącz ten zakres z odbiorcą poczty w celu przetwarzania przychodzących wiadomości e-mail.
+            invites:
+              create: Wysyłaj zaproszenia e-mailem lub generuj linki do zaproszeń.
             badges:
               create: Utwórz nową odznakę.
               show: Uzyskaj informacje o odznace.
@@ -5484,6 +5514,9 @@ pl_PL:
             delete_group: "usuń grupę"
             watched_word_create: "dodaj obserwowane słowo"
             watched_word_destroy: "usuń obserwowane słowo"
+            create_public_sidebar_section: "utwórz publiczną sekcję paska bocznego"
+            update_public_sidebar_section: "aktualizuj publiczną sekcję paska bocznego"
+            destroy_public_sidebar_section: "zniszcz publiczną sekcję paska bocznego"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -5550,7 +5583,12 @@ pl_PL:
           link: "Odnośnik"
         action_descriptions:
           block: "Komunikat o błędzie zostanie wyświetlony podczas próby utworzenia posta zawierającego te słowa."
+          censor: "Zezwalaj na posty zawierające te słowa, ale zastąp je znakami ukrywającymi ocenzurowane słowa."
+          require_approval: "Wymagaj zatwierdzenia przez personel postów zawierających te słowa, zanim będą one widoczne dla innych."
+          flag: "Zezwalaj na posty zawierające te słowa, ale oflaguj je jako nieodpowiednie do sprawdzenia przez moderatorów."
           replace: "Zastąp słowa w postach innymi słowami."
+          tag: "Automatycznie otaguj tematy, jeśli pierwszy post zawiera konkretne słowo."
+          silence: "Wycisz nowe konta, jeśli ich pierwszy post zawiera którekolwiek z tych słów. Post zostanie automatycznie ukryty, dopóki personel go nie zatwierdzi."
           link: "Zastąp słowa w postach linkami."
         form:
           label: "Zawiera słowo lub frazę"
@@ -5582,6 +5620,7 @@ pl_PL:
         list_table:
           headings:
             name: "Nazwa"
+            active_categories: "Aktywne kategorie"
             actions: "Akcje"
           actions:
             view: "Zobacz szablon"
@@ -5591,6 +5630,7 @@ pl_PL:
           close: "Zamknij"
           edit: "Edytuj"
           delete: "Usuń"
+          toggle_preview: "Przełącz podgląd"
         new_template_form:
           submit: "Zapisz"
           cancel: "Anuluj"
@@ -5611,6 +5651,8 @@ pl_PL:
           upload: "Prześlij plik"
           multiselect: "Wielokrotny wybór"
         validations_modal:
+          button_title: "Walidacje"
+          modal_title: "Opcje walidacji"
           table_headers:
             key: "Klucz"
             type: "Typ"
@@ -5618,10 +5660,31 @@ pl_PL:
           validations:
             required:
               key: "wymagane"
+              description: "Wymaga wypełnienia pola w celu wysłania formularza."
             minimum:
               key: "minimum"
+              description: "W polach tekstowych określa minimalną dozwoloną liczbę znaków."
             maximum:
               key: "maksimum"
+              description: "W polach tekstowych określa maksymalną dozwoloną liczbę znaków. W listach rozwijanych wielokrotnego wyboru określa maksymalną liczbę opcji, które można wybrać."
+            pattern:
+              type: "ciąg regex"
+              description: "W polach tekstowych wyrażenie regularne określające dozwolone dane wejściowe."
+        preview_modal:
+          title: "Podgląd szablonu"
+        field_placeholders:
+          validations: "wprowadź walidacje tutaj"
+          label: "Wprowadź etykietę tutaj"
+          none_label: "Wybierz element"
+          choices:
+            first: "Opcja 1"
+            second: "Opcja 2"
+            third: "Opcja 3"
+        edit_category:
+          toggle_freeform: "szablon formularza wyłączony"
+          toggle_form_template: "szablon formularza włączony"
+          select_template: "Wybierz szablony formularzy"
+          select_template_help: "Dodaj/edytuj szablony formularzy"
       impersonate:
         title: "Podszywaj się"
         help: "Użyj tego narzędzia, aby podszywać się pod konto użytkownika do celów debugowania. Będziesz musiał się wylogować po zakończeniu."

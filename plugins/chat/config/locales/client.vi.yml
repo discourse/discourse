@@ -116,6 +116,7 @@ vi:
         replies:
           other: "%{count} trả lời"
         settings: "Cài đặt"
+        last_reply: "trả lời cuối cùng"
       draft_channel_screen:
         header: "Tin nhắn mới"
         cancel: "Huỷ"

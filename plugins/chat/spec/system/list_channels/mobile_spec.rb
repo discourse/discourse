@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | mobile", type: :system, js: true, mobile: true do
+RSpec.describe "List channels | mobile", type: :system, mobile: true do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
     chat_system_bootstrap

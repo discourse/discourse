@@ -3369,6 +3369,7 @@ fa_IR:
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
           links:
             delete: "حذف پیوند"
+            reset: "بازگردانی به پیش‌فرض"
             icon:
               label: "آیکن"
             name:
@@ -3402,7 +3403,7 @@ fa_IR:
           configure_defaults: "تنظیمات پیش‌فرض"
         community:
           header_link_text: "انجمن"
-          header_action_title: "ایجاد موضوع"
+          header_action_create_topic_title: "ایجاد موضوع"
           links:
             about:
               content: "درباره"
@@ -4422,6 +4423,9 @@ fa_IR:
             label: "افزودن شکلک"
         title: "تنظیمات"
         no_results: "چیزی یافت نشد."
+        more_site_setting_results:
+          one: "بیش از %{count} نتیجه وجود دارد. لطفا جستجوی خود را اصلاح کنید یا یک دسته‌بندی را انتخاب کنید."
+          other: "بیش از %{count} نتیجه وجود دارد. لطفا جستجوی خود را اصلاح کنید یا یک دسته‌بندی را انتخاب کنید."
         clear_filter: "واضح"
         add_url: "اضافه کردن URL"
         add_host: "اضافه کردن هاست"

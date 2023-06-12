@@ -443,6 +443,7 @@ uk:
         original_message:
           started_by: "Розпочато"
         settings: "Налаштування"
+        last_reply: "остання відповідь"
       threads:
         open: "Відкрийте тему"
       draft_channel_screen:
@@ -516,3 +517,7 @@ uk:
           few: "Повідомлення чату – %{count} непрочитані повідомлення"
           many: "Повідомлення чату – %{count} непрочитаних повідомлень"
           other: "Повідомлення чату – %{count} непрочитаних повідомлень"
+    styleguide:
+      sections:
+        chat:
+          title: Чат

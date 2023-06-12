@@ -11,16 +11,22 @@
     {{did-insert this.decorateCookedMessage}}
     {{did-update this.decorateCookedMessage @message.id}}
     {{did-update this.decorateCookedMessage @message.version}}
-    {{on "touchmove" this.handleTouchMove passive=true}}
-    {{on "touchstart" this.handleTouchStart passive=true}}
-    {{on "touchend" this.handleTouchEnd passive=true}}
     {{on "mouseenter" this.onMouseEnter passive=true}}
     {{on "mouseleave" this.onMouseLeave passive=true}}
     {{on "mousemove" this.onMouseMove passive=true}}
+    {{chat/on-long-press
+      this.handleLongPressStart
+      this.handleLongPressEnd
+      this.onLongPressCancel
+    }}
     class={{concat-class
       "chat-message-container"
       (if this.pane.selectingMessages "selecting-messages")
       (if @message.highlighted "highlighted")
+      (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
+      (if @message.staged "is-staged" "is-persisted")
+      (if @message.deletedAt "is-deleted")
+      (if (eq @message.id this.chat.activeMessage.model.id) "is-active")
     }}
     data-id={{@message.id}}
     data-thread-id={{@message.thread.id}}
@@ -42,7 +48,7 @@
       {{/if}}
 
       {{#if this.deletedAndCollapsed}}
-        <div class="chat-message-deleted">
+        <div class="chat-message-text chat-message-deleted">
           <DButton
             @class="btn-flat chat-message-expand"
             @action={{this.expand}}
@@ -59,16 +65,17 @@
         </div>
       {{else}}
         <div
+          {{did-insert this.refreshStatusOnMentions}}
+          {{did-update this.refreshStatusOnMentions @message.version}}
+          {{did-update this.initMentionedUsers @message.version}}
           class={{concat-class
             "chat-message"
-            (if @message.staged "chat-message-staged")
             (if @message.deletedAt "deleted")
             (if (and @message.inReplyTo (not this.hideReplyToInfo)) "is-reply")
             (if this.showThreadIndicator "is-threaded")
             (if this.hideUserInfo "user-info-hidden")
             (if @message.error "errored")
             (if @message.bookmark "chat-message-bookmarked")
-            (if (eq @message.id this.chat.activeMessage.model.id) "is-active")
           }}
         >
           {{#unless this.hideReplyToInfo}}

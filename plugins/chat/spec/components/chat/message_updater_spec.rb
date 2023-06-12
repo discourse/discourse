@@ -85,6 +85,27 @@ describe Chat::MessageUpdater do
     expect(chat_message.reload.message).to eq(og_message)
   end
 
+  it "errors when a blank message is sent" do
+    og_message = "This won't be changed!"
+    chat_message = create_chat_message(user1, og_message, public_chat_channel)
+    new_message = "    "
+
+    updater =
+      Chat::MessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: new_message,
+      )
+    expect(updater.failed?).to eq(true)
+    expect(updater.error.message).to match(
+      I18n.t(
+        "chat.errors.minimum_length_not_met",
+        { count: SiteSetting.chat_minimum_message_length },
+      ),
+    )
+    expect(chat_message.reload.message).to eq(og_message)
+  end
+
   it "errors if a user other than the message user is trying to edit the message" do
     og_message = "This won't be changed!"
     chat_message = create_chat_message(user1, og_message, public_chat_channel)
@@ -122,6 +143,23 @@ describe Chat::MessageUpdater do
         )
       end
     expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
+  end
+
+  it "publishes updated message to message bus" do
+    chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+    new_content = "New content"
+    messages =
+      MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+        described_class.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: new_content,
+        )
+      end
+
+    expect(messages.count).to be(1)
+    message = messages[0].data
+    expect(message["chat_message"]["message"]).to eq(new_content)
   end
 
   context "with mentions" do
@@ -226,6 +264,56 @@ describe Chat::MessageUpdater do
       mention = user1.chat_mentions.where(chat_message: chat_message).first
       expect(mention).to be_present
       expect(mention.notification).to be_nil
+    end
+
+    it "adds mentioned user and their status to the message bus message" do
+      SiteSetting.enable_user_status = true
+      status = { description: "dentist", emoji: "tooth" }
+      user2.set_status!(status[:description], status[:emoji])
+      chat_message = create_chat_message(user1, "This will be updated", public_chat_channel)
+      new_content = "Hey @#{user2.username}"
+
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          described_class.update(
+            guardian: guardian,
+            chat_message: chat_message,
+            new_content: new_content,
+          )
+        end
+
+      expect(messages.count).to be(1)
+      message = messages[0].data
+      expect(message["chat_message"]["mentioned_users"].count).to be(1)
+      mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+      expect(mentioned_user["id"]).to eq(user2.id)
+      expect(mentioned_user["username"]).to eq(user2.username)
+      expect(mentioned_user["status"]).to be_present
+      expect(mentioned_user["status"].slice(:description, :emoji)).to eq(status)
+    end
+
+    it "doesn't add mentioned user's status to the message bus message when status is disabled" do
+      SiteSetting.enable_user_status = false
+      user2.set_status!("dentist", "tooth")
+      chat_message = create_chat_message(user1, "This will be updated", public_chat_channel)
+      new_content = "Hey @#{user2.username}"
+
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          described_class.update(
+            guardian: guardian,
+            chat_message: chat_message,
+            new_content: new_content,
+          )
+        end
+
+      expect(messages.count).to be(1)
+      message = messages[0].data
+      expect(message["chat_message"]["mentioned_users"].count).to be(1)
+      mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+      expect(mentioned_user["status"]).to be_blank
     end
 
     context "when updating a mentioned user" do

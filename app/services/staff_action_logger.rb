@@ -46,6 +46,23 @@ class StaffActionLogger
     UserHistory.create!(attrs)
   end
 
+  def edit_directory_columns_details(column_data, directory_column)
+    directory_column = directory_column.attributes.transform_values(&:to_s)
+    previous_value = directory_column
+    new_value = directory_column.clone
+
+    directory_column.each do |key, value|
+      if column_data[key] != value && column_data[key].present?
+        new_value[key] = column_data[key]
+      elsif key != "name"
+        previous_value.delete key
+        new_value.delete key
+      end
+    end
+
+    [previous_value.to_json, new_value.to_json]
+  end
+
   def log_post_deletion(deleted_post, opts = {})
     unless deleted_post && deleted_post.is_a?(Post)
       raise Discourse::InvalidParameters.new(:deleted_post)

@@ -1,4 +1,5 @@
 import HashtagTypeBase from "discourse/lib/hashtag-types/base";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import { inject as service } from "@ember/service";
 
 export default class ChannelHashtagType extends HashtagTypeBase {
@@ -17,9 +18,19 @@ export default class ChannelHashtagType extends HashtagTypeBase {
     }
   }
 
-  generateColorCssClasses(model) {
+  generateColorCssClasses(channel) {
     return [
-      `.hashtag-color--${this.type}-${model.id} { color: var(--category-${model.chatable.id}-color); }`,
+      `.d-icon.hashtag-color--${this.type}-${channel.id} { color: var(--category-${channel.chatable.id}-color); }`,
     ];
+  }
+
+  generateIconHTML(hashtag) {
+    const hashtagId = parseInt(hashtag.id, 10);
+    const colorCssClass = !this.preloadedData.mapBy("id").includes(hashtagId)
+      ? "hashtag-missing"
+      : `hashtag-color--${this.type}-${hashtag.id}`;
+    return iconHTML(hashtag.icon, {
+      class: colorCssClass,
+    });
   }
 }

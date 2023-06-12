@@ -11,24 +11,11 @@ export default class ChatSidePanel extends Component {
   @service chatSidePanelSize;
   @service site;
 
-  @tracked sidePanel;
+  @tracked widthStyle;
 
   @action
-  setSidePanel(element) {
-    this.sidePanel = element;
-  }
-
-  get width() {
-    if (!this.sidePanel) {
-      return;
-    }
-
-    const maxWidth = Math.min(
-      this.#maxWidth(this.sidePanel),
-      this.chatSidePanelSize.width
-    );
-
-    return htmlSafe(`width:${maxWidth}px`);
+  setupSize() {
+    this.widthStyle = htmlSafe(`width:${this.chatSidePanelSize.width}px`);
   }
 
   @action
@@ -40,9 +27,10 @@ export default class ChatSidePanel extends Component {
     const parentWidth = element.parentElement.getBoundingClientRect().width;
     const mainPanelWidth = parentWidth - size.width;
 
-    if (mainPanelWidth > MIN_CHAT_CHANNEL_WIDTH) {
+    if (mainPanelWidth >= MIN_CHAT_CHANNEL_WIDTH) {
       this.chatSidePanelSize.width = size.width;
       element.style.width = size.width + "px";
+      this.widthStyle = htmlSafe(`width:${size.width}px`);
     }
   }
 

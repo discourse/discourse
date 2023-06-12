@@ -803,8 +803,16 @@ class TopicsController < ApplicationController
   end
 
   def set_notifications
+    user =
+      if is_api? && @guardian.is_admin? &&
+           (params[:username].present? || params[:external_id].present?)
+        fetch_user_from_params
+      else
+        current_user
+      end
+
     topic = Topic.find(params[:topic_id].to_i)
-    TopicUser.change(current_user, topic.id, notification_level: params[:notification_level].to_i)
+    TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
 
@@ -812,6 +820,7 @@ class TopicsController < ApplicationController
     topic_id = params.require(:topic_id)
     destination_topic_id = params.require(:destination_topic_id)
     params.permit(:participants)
+    params.permit(:chronological_order)
     params.permit(:archetype)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
@@ -824,6 +833,7 @@ class TopicsController < ApplicationController
 
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
+    args[:chronological_order] = params[:chronological_order] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]
@@ -841,6 +851,7 @@ class TopicsController < ApplicationController
     params.permit(:category_id)
     params.permit(:tags)
     params.permit(:participants)
+    params.permit(:chronological_order)
     params.permit(:archetype)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
@@ -1048,7 +1059,20 @@ class TopicsController < ApplicationController
       elsif params[:tag_id].present?
         Topic.joins(:tags).where(tags: { name: params[:tag_id] })
       else
-        new_results = TopicQuery.new(current_user).new_results(limit: false)
+        new_results =
+          if current_user.new_new_view_enabled?
+            if (params[:dismiss_topics] && params[:dismiss_posts])
+              TopicQuery.new(current_user).new_and_unread_results(limit: false)
+            elsif params[:dismiss_topics]
+              TopicQuery.new(current_user).new_results(limit: false)
+            elsif params[:dismiss_posts]
+              TopicQuery.new(current_user).unread_results(limit: false)
+            else
+              Topic.none
+            end
+          else
+            TopicQuery.new(current_user).new_results(limit: false)
+          end
         if params[:tracked].to_s == "true"
           TopicQuery.tracked_filter(new_results, current_user.id)
         else
@@ -1066,11 +1090,30 @@ class TopicsController < ApplicationController
       topic_scope = topic_scope.where(id: topic_ids)
     end
 
-    dismissed_topic_ids =
-      TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
-    TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+    dismissed_topic_ids = []
+    dismissed_post_topic_ids = []
+    if !current_user.new_new_view_enabled? || params[:dismiss_topics]
+      dismissed_topic_ids =
+        TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
+      TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+    end
 
-    render body: nil
+    if params[:dismiss_posts]
+      if params[:untrack]
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(
+            current_user,
+            topic_scope.pluck(:id),
+            type: "change_notification_level",
+            notification_level_id: NotificationLevels.topic_levels[:regular],
+          ).perform!
+      else
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_posts").perform!
+      end
+    end
+
+    render_json_dump topic_ids: dismissed_topic_ids.concat(dismissed_post_topic_ids).uniq
   end
 
   def convert_topic
@@ -1265,6 +1308,7 @@ class TopicsController < ApplicationController
       :destination_topic_id
     ].present?
     args[:tags] = params[:tags] if params[:tags].present?
+    args[:chronological_order] = params[:chronological_order] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]

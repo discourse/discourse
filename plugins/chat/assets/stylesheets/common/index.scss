@@ -1,3 +1,4 @@
+@import "chat-unread-indicator";
 @import "chat-height-mixin";
 @import "base-common";
 @import "sidebar-extensions";
@@ -10,7 +11,6 @@
 @import "chat-channel-settings-saved-indicator";
 @import "chat-channel-title";
 @import "chat-composer-dropdown";
-@import "chat-composer-inline-button";
 @import "chat-composer-upload";
 @import "chat-composer-uploads";
 @import "chat-composer";
@@ -51,4 +51,8 @@
 @import "reviewable-chat-message";
 @import "chat-thread-list-item";
 @import "chat-threads-list";
-@import "chat-thread-original-message";
+@import "chat-composer-separator";
+@import "chat-thread-header-buttons";
+@import "chat-thread-header";
+@import "chat-thread-list-header";
+@import "chat-thread-unread-indicator";

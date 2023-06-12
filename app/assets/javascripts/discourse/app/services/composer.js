@@ -33,6 +33,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import prepareFormTemplateData from "discourse/lib/form-template-validation";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -156,6 +157,14 @@ export default class ComposerController extends Controller {
 
   set disableSubmit(value) {
     return this.set("_disableSubmit", value);
+  }
+
+  get formTemplateIds() {
+    if (!this.siteSettings.experimental_form_templates) {
+      return null;
+    }
+
+    return this.model.category?.get("form_template_ids");
   }
 
   @discourseComputed("showPreview")
@@ -397,9 +406,13 @@ export default class ComposerController extends Controller {
     }
   }
 
-  @discourseComputed("model.creatingPrivateMessage", "model.targetRecipients")
-  showWarning(creatingPrivateMessage, usernames) {
-    if (!this.get("currentUser.staff")) {
+  @discourseComputed(
+    "model.creatingPrivateMessage",
+    "model.targetRecipients",
+    "model.warningsDisabled"
+  )
+  showWarning(creatingPrivateMessage, usernames, warningsDisabled) {
+    if (!this.get("currentUser.staff") || warningsDisabled) {
       return false;
     }
 
@@ -492,6 +505,11 @@ export default class ComposerController extends Controller {
         this.model.appendText(insertText, null, { new_line: true });
       }
     });
+  }
+
+  @action
+  updateCategory(categoryId) {
+    this.model.categoryId = categoryId;
   }
 
   @action
@@ -912,6 +930,22 @@ export default class ComposerController extends Controller {
       this.set("showPreview", false);
     }
 
+    if (this.siteSettings.experimental_form_templates) {
+      if (
+        this.formTemplateIds?.length > 0 &&
+        !this.get("model.replyingToTopic")
+      ) {
+        const formTemplateData = prepareFormTemplateData(
+          document.querySelector("#form-template-form")
+        );
+        if (formTemplateData) {
+          this.model.set("reply", formTemplateData);
+        } else {
+          return;
+        }
+      }
+    }
+
     const composer = this.model;
 
     if (composer?.cantSubmitPost) {
@@ -1229,6 +1263,7 @@ export default class ComposerController extends Controller {
         "id",
         opts.prioritizedCategoryId
       );
+
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
@@ -1335,6 +1370,7 @@ export default class ComposerController extends Controller {
       composeState: Composer.OPEN,
       isWarning: false,
       hasTargetGroups: opts.hasGroups,
+      warningsDisabled: opts.warningsDisabled,
     });
 
     if (!this.model.targetRecipients) {

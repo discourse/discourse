@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User status | sidebar", type: :system, js: true do
+RSpec.describe "User status | sidebar", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
 

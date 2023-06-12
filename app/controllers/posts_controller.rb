@@ -662,32 +662,6 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def flagged_posts
-    Discourse.deprecate(
-      "PostsController#flagged_posts is deprecated. Please use /review instead.",
-      since: "2.8.0.beta4",
-      drop_from: "2.9",
-    )
-
-    params.permit(:offset, :limit)
-    guardian.ensure_can_see_flagged_posts!
-
-    user = fetch_user_from_params
-    offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
-
-    posts =
-      user_posts(guardian, user.id, offset: offset, limit: limit).where(
-        id:
-          PostAction
-            .where(post_action_type_id: PostActionType.notify_flag_type_ids)
-            .where(disagreed_at: nil)
-            .select(:post_id),
-      )
-
-    render_serialized(posts, AdminUserActionSerializer)
-  end
-
   def deleted_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_deleted_posts!
@@ -809,7 +783,7 @@ class PostsController < ApplicationController
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: "private_message")
       topics = topics.secured(guardian)
 
-      posts = posts.where(topic_id: topics.pluck(:id))
+      posts = posts.where(topic_id: topics)
     end
 
     posts.offset(opts[:offset]).limit(opts[:limit])

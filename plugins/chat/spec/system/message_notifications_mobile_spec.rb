@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile: true do
+RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
   fab!(:current_user) { Fabricate(:user) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
@@ -155,9 +155,14 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               session.quit
             end
 
-            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
+            expect(page).to have_css(
+              ".chat-header-icon .chat-channel-unread-indicator",
+              text: "1",
+              wait: 25,
+            )
             expect(page).to have_css(
               ".chat-channel-row[data-chat-channel-id=\"#{dm_channel_1.id}\"] .chat-channel-unread-indicator",
+              wait: 25,
             )
 
             using_session(:user_1) do |session|
@@ -165,7 +170,11 @@ RSpec.describe "Message notifications - mobile", type: :system, js: true, mobile
               session.quit
             end
 
-            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
+            expect(page).to have_css(
+              ".chat-header-icon .chat-channel-unread-indicator",
+              text: "2",
+              wait: 25,
+            )
           end
 
           it "reorders channels" do

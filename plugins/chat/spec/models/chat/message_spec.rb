@@ -75,7 +75,7 @@ describe Chat::Message do
       post = Fabricate(:post, topic: topic)
       SiteSetting.external_system_avatars_enabled = false
       avatar_src =
-        "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "48")}"
 
       cooked = described_class.cook(<<~RAW)
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
@@ -87,7 +87,7 @@ describe Chat::Message do
       <aside class="quote no-group" data-username="#{post.user.username}" data-post="#{post.post_number}" data-topic="#{topic.id}">
       <div class="title">
       <div class="quote-controls"></div>
-      <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a>
+      <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a>
       </div>
       <blockquote>
       <p>Mark me...this will go down in history.</p>
@@ -101,9 +101,9 @@ describe Chat::Message do
       user = Fabricate(:user, username: "chatbbcodeuser")
       user2 = Fabricate(:user, username: "otherbbcodeuser")
       avatar_src =
-        "//test.localhost#{User.system_avatar_template(user.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(user.username).gsub("{size}", "48")}"
       avatar_src2 =
-        "//test.localhost#{User.system_avatar_template(user2.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(user2.username).gsub("{size}", "48")}"
       msg1 =
         Fabricate(
           :chat_message,
@@ -135,7 +135,7 @@ describe Chat::Message do
         </div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src}" class="avatar">
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar">
         </div>
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
@@ -150,7 +150,7 @@ describe Chat::Message do
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src2}" class="avatar">
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src2}" class="avatar">
         </div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
@@ -259,7 +259,7 @@ describe Chat::Message do
       cooked = described_class.cook("##{category.slug}", user_id: user.id)
 
       expect(cooked).to eq(
-        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>#{category.name}</span></a></p>",
+        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\" data-id=\"#{category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>#{category.name}</span></a></p>",
       )
     end
 
@@ -451,7 +451,7 @@ describe Chat::Message do
       notification = Fabricate(:notification)
       mention_1 = Fabricate(:chat_mention, chat_message: message_1, notification: notification)
 
-      message_1.destroy!
+      message_1.reload.destroy!
 
       expect { mention_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -461,7 +461,9 @@ describe Chat::Message do
       message_1 = Fabricate(:chat_message)
       webhook_1 = Fabricate(:chat_webhook_event, chat_message: message_1)
 
-      message_1.destroy!
+      # Need to reload because chat_webhook_event instantiates the message
+      # before the relationship is created
+      message_1.reload.destroy!
 
       expect { webhook_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -485,7 +487,7 @@ describe Chat::Message do
         message_1 = Fabricate(:chat_message)
         bookmark_1 = Fabricate(:bookmark, bookmarkable: message_1)
 
-        message_1.destroy!
+        message_1.reload.destroy!
 
         expect { bookmark_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
@@ -583,8 +585,6 @@ describe Chat::Message do
       Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
     end
     let(:already_mentioned) { [user1.id, user2.id] }
-
-    before { message.create_mentions }
 
     it "creates newly added mentions" do
       existing_mention_ids = message.chat_mentions.pluck(:id)

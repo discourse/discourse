@@ -6,7 +6,7 @@ export default class AdminFormTemplateValidationOptions extends Controller.exten
   ModalFunctionality
 ) {
   TABLE_HEADER_KEYS = ["key", "type", "description"];
-  VALIDATION_KEYS = ["required", "minimum", "maximum", "pattern"];
+  VALIDATION_KEYS = ["required", "minimum", "maximum", "pattern", "type"];
 
   get tableHeaders() {
     const translatedHeaders = [];

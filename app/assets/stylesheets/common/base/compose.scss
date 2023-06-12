@@ -16,9 +16,19 @@ html.composer-open {
   margin-right: auto;
   max-width: $reply-area-max-width;
   width: 100%;
+
   &.hide-preview {
     max-width: 740px;
   }
+
+  &:has(.has-form-template) {
+    max-width: 740px;
+
+    .toggle-preview {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
@@ -120,11 +130,9 @@ html.composer-open {
       width: auto;
       max-width: 100%;
 
-      .avatar {
-        width: 20px;
-      }
-
       .action-title {
+        display: flex;
+        align-items: center;
         line-height: normal;
         @include ellipsis;
       }
@@ -358,6 +366,10 @@ html.composer-open {
         color: var(--danger);
       }
     }
+
+    .preview-template {
+      margin-left: 0.5rem;
+    }
   }
 
   #draft-status,
@@ -393,6 +405,17 @@ html.composer-open {
 
   #file-uploader {
     display: none;
+  }
+
+  .composer-select-form-template {
+    margin-bottom: 8px;
+    width: 100%;
+
+    .name,
+    .formatted-selection,
+    .d-icon {
+      color: var(--primary-high);
+    }
   }
 }
 

@@ -35,6 +35,7 @@ Discourse::Application.routes.draw do
     post "webhooks/aws" => "webhooks#aws"
     post "webhooks/mailgun" => "webhooks#mailgun"
     post "webhooks/mailjet" => "webhooks#mailjet"
+    post "webhooks/mailpace" => "webhooks#mailpace"
     post "webhooks/mandrill" => "webhooks#mandrill"
     get "webhooks/mandrill" => "webhooks#mandrill_head"
     post "webhooks/postmark" => "webhooks#postmark"
@@ -521,29 +522,28 @@ Discourse::Application.routes.draw do
            :constraints => {
              token: /[0-9a-f]+/,
            }
-      get "#{root_path}/:username/private-messages" => "user_actions#private_messages",
+      get "#{root_path}/:username/private-messages" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/private-messages/:filter" => "user_actions#private_messages",
+      get "#{root_path}/:username/private-messages/:filter" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages" => "user_actions#private_messages",
+      get "#{root_path}/:username/messages" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/:filter" => "user_actions#private_messages",
+      get "#{root_path}/:username/messages/:filter" => "users#show",
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/group/:group_name" => "user_actions#private_messages",
+      get "#{root_path}/:username/messages/group/:group_name" => "users#show",
           :constraints => {
             username: RouteFormat.username,
             group_name: RouteFormat.username,
           }
-      get "#{root_path}/:username/messages/group/:group_name/:filter" =>
-            "user_actions#private_messages",
+      get "#{root_path}/:username/messages/group/:group_name/:filter" => "users#show",
           :constraints => {
             username: RouteFormat.username,
             group_name: RouteFormat.username,
@@ -790,10 +790,6 @@ Discourse::Application.routes.draw do
           :constraints => {
             external_id: %r{[^/]+},
           }
-      get "#{root_path}/:username/flagged-posts" => "users#show",
-          :constraints => {
-            username: RouteFormat.username,
-          }
       get "#{root_path}/:username/deleted-posts" => "users#show",
           :constraints => {
             username: RouteFormat.username,
@@ -1000,10 +996,6 @@ Discourse::Application.routes.draw do
     get "posts/:id/reply-ids" => "posts#reply_ids"
     get "posts/:id/reply-ids/all" => "posts#all_reply_ids"
     get "posts/:username/deleted" => "posts#deleted_posts",
-        :constraints => {
-          username: RouteFormat.username,
-        }
-    get "posts/:username/flagged" => "posts#flagged_posts",
         :constraints => {
           username: RouteFormat.username,
         }
@@ -1594,7 +1586,11 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index create update destroy]
     post "/sidebar_sections/reorder" => "sidebar_sections#reorder"
+    put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
+
+    get "/form-templates/:id" => "form_templates#show"
+    get "/form-templates" => "form_templates#index"
   end
 end

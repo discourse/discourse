@@ -271,11 +271,12 @@ export default Controller.extend(
 
     @discourseComputed
     disclaimerHtml() {
-      return I18n.t("create_account.disclaimer", {
-        tos_link: this.siteSettings.tos_url || getUrl("/tos"),
-        privacy_link:
-          this.siteSettings.privacy_policy_url || getUrl("/privacy"),
-      });
+      if (this.site.tos_url && this.site.privacy_policy_url) {
+        return I18n.t("create_account.disclaimer", {
+          tos_link: this.site.tos_url,
+          privacy_link: this.site.privacy_policy_url,
+        });
+      }
     },
 
     @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")

@@ -211,7 +211,7 @@ RSpec.describe EmbedController do
         )
 
         topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
-        post = Fabricate(:post, topic: topic_embed.topic)
+        Fabricate(:post, topic: topic_embed.topic)
 
         get "/embed/comments", params: { embed_url: embed_url }, headers: { "REFERER" => embed_url }
 

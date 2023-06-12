@@ -113,6 +113,7 @@ nb_NO:
           one: "%{count} svar"
           other: "%{count} svar"
         settings: "Instillinger"
+        last_reply: "siste svar"
       draft_channel_screen:
         header: "Ny Melding"
         cancel: "Avbryt"

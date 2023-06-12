@@ -263,7 +263,7 @@ createWidget("topic-map-summary", {
       })
     );
 
-    return [nav, h("ul.clearfix", contents)];
+    return [nav, h("ul", contents)];
   },
 });
 
@@ -311,7 +311,7 @@ createWidget("topic-map-expanded", {
     let avatars;
 
     if (attrs.participants && attrs.participants.length > 0) {
-      avatars = h("section.avatars.clearfix", [
+      avatars = h("section.avatars", [
         h("h3", I18n.t("topic_map.participants_title")),
         renderParticipants.call(this, attrs.userFilters, attrs.participants),
       ]);

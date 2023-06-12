@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-describe "Tag notification level", type: :system, js: true do
+describe "Tag notification level", type: :system do
   let(:tags_page) { PageObjects::Pages::Tag.new }
-  let(:select_kit) do
-    PageObjects::Components::SelectKit.new(page.find(".tag-notifications-button"))
-  end
+  let(:select_kit) { PageObjects::Components::SelectKit.new(".tag-notifications-button") }
 
   fab!(:tag_1) { Fabricate(:tag) }
   fab!(:current_user) { Fabricate(:admin) }

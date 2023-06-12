@@ -27,12 +27,7 @@
       {{/if}}
     {{/if}}
 
-    {{#if this.isGroup}}
-      <GroupNotificationsButton
-        @value={{this.group.group_user.notification_level}}
-        @onChange={{this.changeGroupNotificationLevel}}
-      />
-    {{/if}}
+    <span id="navigation-controls__button"></span>
 
     {{#if this.showNewPM}}
       <DButton

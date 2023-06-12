@@ -2855,6 +2855,7 @@ hy:
           save: "Պահպանել"
           delete: "Ջնջել"
           links:
+            reset: "Վերականգնել լռելյայն"
             icon:
               label: "Պատկերակ"
             name:

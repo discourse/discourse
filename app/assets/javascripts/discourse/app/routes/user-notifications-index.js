@@ -3,9 +3,7 @@ import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   controllerName: "user-notifications",
-  renderTemplate() {
-    this.render("user/notifications-index");
-  },
+  templateName: "user/notifications-index",
 
   titleToken() {
     return I18n.t("user.filters.all");

@@ -14,10 +14,12 @@ import MembershipRequestConsolidated from "discourse/lib/notification-types/memb
 import NewFeatures from "discourse/lib/notification-types/new-features";
 import MovedPost from "discourse/lib/notification-types/moved-post";
 import WatchingFirstPost from "discourse/lib/notification-types/watching-first-post";
+import Edited from "discourse/lib/notification-types/edited";
 
 const CLASS_FOR_TYPE = {
   bookmark_reminder: BookmarkReminder,
   custom: Custom,
+  edited: Edited,
   granted_badge: GrantedBadge,
   group_mentioned: GroupMentioned,
   group_message_summary: GroupMessageSummary,

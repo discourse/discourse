@@ -46,7 +46,7 @@ export function isValidLink(link) {
   return (
     link.classList.contains("track-link") ||
     !link.closest(
-      ".hashtag, .hashtag-cooked, .badge-category, .onebox-result, .onebox-body"
+      ".hashtag, .hashtag-cooked, .hashtag-icon-placeholder, .badge-category, .onebox-result, .onebox-body"
     )
   );
 }

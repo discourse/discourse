@@ -10,7 +10,7 @@ const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
 /*
   The ChatChannelsManager service is responsible for managing the loaded chat channels.
-  It provides helpers to facilitate using and managing laoded channels instead of constantly
+  It provides helpers to facilitate using and managing loaded channels instead of constantly
   fetching them from the server.
 */
 
@@ -35,11 +35,19 @@ export default class ChatChannelsManager extends Service {
     return Object.values(this._cached);
   }
 
-  store(channelObject) {
-    let model = this.#findStale(channelObject.id);
+  store(channelObject, options = {}) {
+    let model;
+
+    if (!options.replace) {
+      model = this.#findStale(channelObject.id);
+    }
 
     if (!model) {
-      model = ChatChannel.create(channelObject);
+      if (channelObject instanceof ChatChannel) {
+        model = channelObject;
+      } else {
+        model = ChatChannel.create(channelObject);
+      }
       this.#cache(model);
     }
 
@@ -119,9 +127,8 @@ export default class ChatChannelsManager extends Service {
     return this.chatApi
       .channel(id)
       .catch(popupAjaxError)
-      .then((channel) => {
-        this.#cache(channel);
-        return channel;
+      .then((result) => {
+        return this.store(result.channel);
       });
   }
 

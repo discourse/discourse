@@ -107,6 +107,7 @@ et:
           one: "%{count} vastus"
           other: "%{count} vastust"
         settings: "Sätted"
+        last_reply: "viimane vastus"
       draft_channel_screen:
         header: "Uus sõnum"
         cancel: "Tühista"

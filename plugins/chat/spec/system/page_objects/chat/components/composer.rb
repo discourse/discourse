@@ -8,12 +8,38 @@ module PageObjects
 
         SELECTOR = ".chat-composer__wrapper"
 
+        MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+
         def initialize(context)
           @context = context
         end
 
+        def blank?
+          input.value.blank?
+        end
+
+        def has_saved_draft?
+          component.has_css?(".chat-composer.is-draft-saved")
+        end
+
+        def has_unsaved_draft?
+          component.has_css?(".chat-composer.is-draft-unsaved")
+        end
+
+        def message_details
+          @message_details ||= PageObjects::Components::Chat::ComposerMessageDetails.new(context)
+        end
+
         def input
-          find(context).find(SELECTOR).find(".chat-composer__input")
+          component.find(".chat-composer__input")
+        end
+
+        def component
+          find(context).find(SELECTOR)
+        end
+
+        def fill_in(**args)
+          input.fill_in(**args)
         end
 
         def value
@@ -26,6 +52,46 @@ module PageObjects
 
         def edit_last_message_shortcut
           input.send_keys(%i[arrow_up])
+        end
+
+        def emphasized_text_shortcut
+          input.send_keys([MODIFIER, "i"])
+        end
+
+        def cancel_shortcut
+          input.send_keys(:escape)
+        end
+
+        def indented_text_shortcut
+          input.send_keys([MODIFIER, "e"])
+        end
+
+        def bold_text_shortcut
+          input.send_keys([MODIFIER, "b"])
+        end
+
+        def open_emoji_picker
+          find(context).find(SELECTOR).find(".chat-composer-button.-emoji").click
+        end
+
+        def cancel_editing
+          component.click_button(class: "cancel-message-action")
+        end
+
+        def editing_message?(message)
+          value == message.message && message_details.editing?(message)
+        end
+
+        def editing_no_message?
+          value == "" && message_details.has_no_message?
+        end
+
+        def focus
+          component.click
+        end
+
+        def focused?
+          component.has_css?(".chat-composer.is-focused")
         end
       end
     end

@@ -2,7 +2,7 @@
 
 module Chat
   ##
-  # Handles counting unread messages and mentions scoped to threads for a list
+  # Handles counting unread messages scoped to threads for a list
   # of channels. A list of thread IDs can be provided to further focus the query.
   # Alternatively, a list of thread IDs can be provided by itself to only get
   # specific threads regardless of channel.
@@ -25,8 +25,17 @@ module Chat
     # @param user_id [Integer] The ID of the user to count for.
     # @param include_missing_memberships [Boolean] Whether to include threads
     #   that the user is not a member of. These counts will always be 0.
-    def self.call(channel_ids: [], thread_ids: [], user_id:, include_missing_memberships: false)
-      return [] if channel_ids.empty? && thread_ids.empty?
+    # @param include_read [Boolean] Whether to include threads that the user
+    #   is a member of where they have read all the messages. This overrides
+    #   include_missing_memberships.
+    def self.call(
+      channel_ids: nil,
+      thread_ids: nil,
+      user_id:,
+      include_missing_memberships: false,
+      include_read: true
+    )
+      return [] if channel_ids.blank? && thread_ids.blank?
 
       sql = <<~SQL
         SELECT (
@@ -36,6 +45,7 @@ module Chat
           INNER JOIN chat_threads ON chat_threads.id = chat_messages.thread_id AND chat_threads.channel_id = chat_messages.chat_channel_id
           INNER JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
           AND chat_messages.thread_id = memberships.thread_id
+          AND chat_messages.user_id != :user_id
           AND user_chat_thread_memberships.user_id = :user_id
           AND chat_messages.id > COALESCE(user_chat_thread_memberships.last_read_message_id, 0)
           AND chat_messages.deleted_at IS NULL
@@ -56,7 +66,14 @@ module Chat
         #{include_missing_memberships ? "" : "LIMIT :limit"}
       SQL
 
-      sql += <<~SQL if include_missing_memberships
+      sql = <<~SQL if !include_read
+          SELECT * FROM (
+            #{sql}
+          ) AS thread_tracking
+          WHERE (unread_count > 0 OR mention_count > 0)
+        SQL
+
+      sql += <<~SQL if include_missing_memberships && include_read
         UNION ALL
         SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
         FROM chat_channels

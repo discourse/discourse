@@ -284,8 +284,12 @@ module PostGuardian
   end
 
   def can_see_hidden_post?(post)
+    if SiteSetting.hidden_post_visible_groups_map.include?(Group::AUTO_GROUPS[:everyone])
+      return true
+    end
     return false if anonymous?
-    post.user_id == @user.id || @user.has_trust_level_or_staff?(TrustLevel[4])
+    return true if is_staff?
+    post.user_id == @user.id || @user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
   end
 
   def can_view_edit_history?(post)

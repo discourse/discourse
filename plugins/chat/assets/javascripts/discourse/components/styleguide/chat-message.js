@@ -3,11 +3,18 @@ import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { action } from "@ember/object";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { inject as service } from "@ember/service";
 
 export default class ChatStyleguideChatMessage extends Component {
+  @service currentUser;
+
   manager = new ChatMessagesManager(getOwner(this));
 
-  message = fabricators.message();
+  constructor() {
+    super(...arguments);
+    this.message = fabricators.message({ user: this.currentUser });
+    this.message.cook();
+  }
 
   @action
   toggleDeleted() {
@@ -58,9 +65,9 @@ export default class ChatStyleguideChatMessage extends Component {
   }
 
   @action
-  updateMessage(event) {
+  async updateMessage(event) {
     this.message.message = event.target.value;
-    this.message.cook();
+    await this.message.cook();
   }
 
   @action

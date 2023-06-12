@@ -196,7 +196,7 @@ class PostAlerter
     if new_record
       if post.topic.private_message?
         # private messages
-        notified += notify_pm_users(post, reply_to_user, quoted_users, notified)
+        notified += notify_pm_users(post, reply_to_user, quoted_users, notified, new_record)
       elsif notify_about_reply?(post)
         # posts
         notified +=
@@ -382,7 +382,7 @@ class PostAlerter
     stats = (@group_stats[topic.id] ||= group_stats(topic))
     return unless stats
 
-    group_id = topic.topic_allowed_groups.where(group_id: user.groups.pluck(:id)).pick(:group_id)
+    group_id = topic.topic_allowed_groups.where(group_id: user.groups).pick(:group_id)
 
     stat = stats.find { |s| s[:group_id] == group_id }
     return unless stat
@@ -724,7 +724,7 @@ class PostAlerter
     end
   end
 
-  def notify_pm_users(post, reply_to_user, quoted_users, notified)
+  def notify_pm_users(post, reply_to_user, quoted_users, notified, new_record = false)
     return [] unless post.topic
 
     warn_if_not_sidekiq
@@ -761,7 +761,12 @@ class PostAlerter
       when TopicUser.notification_levels[:watching]
         create_pm_notification(user, post, emails_to_skip_send)
       when TopicUser.notification_levels[:tracking]
-        if is_replying?(user, reply_to_user, quoted_users)
+        # TopicUser is the canonical source of topic notification levels, except for
+        # new topics created within a group with default notification level set to
+        # `watching_first_post`. TopicUser notification level is set to `tracking`
+        # for these.
+        if is_replying?(user, reply_to_user, quoted_users) ||
+             (new_record && group_watched_first_post?(user, post))
           create_pm_notification(user, post, emails_to_skip_send)
         else
           notify_group_summary(user, post.topic)
@@ -1008,5 +1013,9 @@ class PostAlerter
       topic_id: topic.id,
       notification_level: TopicUser.notification_levels[:watching],
     )
+  end
+
+  def group_watched_first_post?(user, post)
+    post.is_first_post? && group_watchers(post.topic).include?(user.id)
   end
 end

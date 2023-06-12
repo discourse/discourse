@@ -107,6 +107,15 @@ RSpec.describe UserAnonymizer do
       end
     end
 
+    it "clears existing user status" do
+      user_status = Fabricate(:user_status, user: user)
+
+      expect do
+        make_anonymous
+        user.reload
+      end.to change { user.user_status }.from(user_status).to(nil)
+    end
+
     context "when Site Settings require full name" do
       before { SiteSetting.full_name_required = true }
 
@@ -153,12 +162,12 @@ RSpec.describe UserAnonymizer do
         [/quote]
       RAW
 
-      old_avatar_url = user.avatar_template.gsub("{size}", "40")
+      old_avatar_url = user.avatar_template.gsub("{size}", "48")
       expect(post.cooked).to include(old_avatar_url)
 
       make_anonymous
       post.reload
-      new_avatar_url = user.reload.avatar_template.gsub("{size}", "40")
+      new_avatar_url = user.reload.avatar_template.gsub("{size}", "48")
 
       expect(post.cooked).to_not include(old_avatar_url)
       expect(post.cooked).to include(new_avatar_url)

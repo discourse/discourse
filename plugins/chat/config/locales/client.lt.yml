@@ -113,6 +113,7 @@ lt:
           many: "%{count} atsakymai"
           other: "%{count} atsakymai"
         settings: "Nustatymai"
+        last_reply: "Paskutinis atsakymas"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"

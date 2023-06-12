@@ -76,6 +76,9 @@ module Chat
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
     def validate_message(has_uploads:)
+      self.message =
+        TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
+
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")
@@ -130,7 +133,7 @@ module Chat
 
     # TODO (martin) Replace the above #excerpt method usage with this one. The
     # issue with the above one is that we cannot actually render nice HTML
-    # fore replies/excerpts in the UI because text_entitites: true will
+    # fore replies/excerpts in the UI because text_entities: true will
     # allow through even denied HTML because of 07ab20131a15ab907c1974fee405d9bdce0c0723.
     #
     # For now only the thread index uses this new version since it is not interactive,
@@ -144,6 +147,12 @@ module Chat
 
       # this may return blank for some complex things like quotes, that is acceptable
       PrettyText.excerpt(cooked, max_length)
+    end
+
+    def censored_excerpt(rich: false, max_length: 50)
+      WordWatcher.censor(
+        rich ? rich_excerpt(max_length: max_length) : excerpt(max_length: max_length),
+      )
     end
 
     def cooked_for_excerpt

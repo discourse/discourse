@@ -355,7 +355,6 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
-        welcome_topic: 6,
       )
   end
 
@@ -1826,6 +1825,10 @@ class User < ActiveRecord::Base
 
   def new_new_view_enabled?
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  end
+
+  def new_edit_sidebar_categories_tags_interface_groups_enabled?
+    in_any_groups?(SiteSetting.new_edit_sidebar_categories_tags_interface_groups_map)
   end
 
   protected

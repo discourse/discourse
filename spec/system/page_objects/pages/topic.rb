@@ -8,8 +8,10 @@ module PageObjects
         @fast_edit_component = PageObjects::Components::FastEditor.new
       end
 
-      def visit_topic(topic)
-        page.visit "/t/#{topic.id}"
+      def visit_topic(topic, post_number: nil)
+        url = "/t/#{topic.id}"
+        url += "/#{post_number}" if post_number
+        page.visit url
         self
       end
 
@@ -119,7 +121,8 @@ module PageObjects
         @composer_component.has_popup_content?(content)
       end
 
-      def send_reply
+      def send_reply(content = nil)
+        fill_in_composer(content) if content
         find("#reply-control .save-or-cancel .create").click
       end
 

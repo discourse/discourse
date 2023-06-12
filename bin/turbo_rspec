@@ -11,6 +11,9 @@ formatters = []
 verbose = false
 fail_fast = nil
 seed = rand(2**16)
+profile = false
+profile_print_slowest_examples_count = 10
+use_runtime_info = nil
 
 OptionParser
   .new do |opts|
@@ -27,6 +30,15 @@ OptionParser
 
     opts.on("-v", "--verbose", "More output") { verbose = true }
 
+    opts.on(
+      "-p",
+      "--profile=[COUNT]",
+      "Benchmark the runtime of each example and list the slowest examples (default: 10)",
+    ) do |count|
+      profile = true
+      profile_print_slowest_examples_count = count.to_i if count
+    end
+
     opts.on("--fail-fast=[N]") do |n|
       n =
         begin
@@ -38,6 +50,10 @@ OptionParser
     end
 
     opts.on("--seed SEED", "The seed for the random order") { |s| seed = s.to_i }
+
+    opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
+      use_runtime_info = true
+    end
   end
   .parse!(ARGV)
 
@@ -49,10 +65,10 @@ formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].
 
 if ARGV.empty?
   files = TurboTests::Runner.default_spec_folders
-  use_runtime_info = true
+  use_runtime_info = true if use_runtime_info.nil?
 else
   files = ARGV
-  use_runtime_info = false
+  use_runtime_info = false if use_runtime_info.nil?
 end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
@@ -67,6 +83,8 @@ success =
     fail_fast: fail_fast,
     use_runtime_info: use_runtime_info,
     seed: seed.to_s,
+    profile:,
+    profile_print_slowest_examples_count:,
   )
 
 if success

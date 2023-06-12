@@ -1,4 +1,3 @@
-import { isTesting } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
@@ -12,6 +11,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 
 let _chatMessageDecorators = [];
 
@@ -37,15 +37,20 @@ export default class ChatMessage extends Component {
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelPane;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
 
   @optionalService adminTools;
 
+  constructor() {
+    super(...arguments);
+    this.initMentionedUsers();
+  }
+
   get pane() {
     return this.args.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadPane
+      ? this.chatThreadPane
       : this.chatChannelPane;
   }
 
@@ -104,7 +109,7 @@ export default class ChatMessage extends Component {
     };
 
     this.args.message.expanded = true;
-
+    this.refreshStatusOnMentions();
     recursiveExpand(this.args.message);
   }
 
@@ -120,6 +125,28 @@ export default class ChatMessage extends Component {
   @action
   teardownChatMessage() {
     cancel(this._invitationSentTimer);
+    cancel(this._disableMessageActionsHandler);
+    this.#teardownMentionedUsers();
+  }
+
+  @action
+  refreshStatusOnMentions() {
+    schedule("afterRender", () => {
+      if (!this.messageContainer) {
+        return;
+      }
+
+      this.args.message.mentionedUsers.forEach((user) => {
+        const href = `/u/${user.username.toLowerCase()}`;
+        const mentions = this.messageContainer.querySelectorAll(
+          `a.mention[href="${href}"]`
+        );
+
+        mentions.forEach((mention) => {
+          updateUserStatusOnMention(mention, user.status, this.currentUser);
+        });
+      });
+    });
   }
 
   @action
@@ -132,6 +159,18 @@ export default class ChatMessage extends Component {
       _chatMessageDecorators.forEach((decorator) => {
         decorator.call(this, this.messageContainer, this.args.message.channel);
       });
+    });
+  }
+
+  @action
+  initMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      if (user.isTrackingStatus()) {
+        return;
+      }
+
+      user.trackStatus();
+      user.on("status-changed", this, "refreshStatusOnMentions");
     });
   }
 
@@ -219,46 +258,36 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleTouchStart(event) {
-    event.stopPropagation();
-
-    // if zoomed don't track long press
-    if (isZoomed()) {
-      return;
-    }
-
-    // when testing this must be triggered immediately because there
-    // is no concept of "long press" there, the Ember `tap` test helper
-    // does send the touchstart/touchend events but immediately, see
-    // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
-    if (isTesting()) {
-      this._handleLongPress();
-    }
-
-    this._isPressingHandler = discourseLater(this._handleLongPress, 500);
+  handleLongPressStart(element) {
+    element.classList.add("is-long-pressed");
   }
 
   @action
-  handleTouchMove(event) {
-    event.stopPropagation();
+  onLongPressCancel(element) {
+    element.classList.remove("is-long-pressed");
 
-    cancel(this._isPressingHandler);
+    // this a tricky bit of code which is needed to prevent the long press
+    // from triggering a click on the message actions panel when releasing finger press
+    // we can't prevent default as we need to keep the event passive for performance reasons
+    // this class will prevent any click from being triggered until removed
+    // this number has been chosen from testing but might need to be increased
+    this._disableMessageActionsHandler = discourseLater(() => {
+      document.documentElement.classList.remove(
+        "disable-message-actions-touch"
+      );
+    }, 200);
   }
 
   @action
-  handleTouchEnd(event) {
-    event.stopPropagation();
+  handleLongPressEnd(element) {
+    element.classList.remove("is-long-pressed");
 
-    cancel(this._isPressingHandler);
-  }
-
-  @action
-  _handleLongPress() {
     if (isZoomed()) {
       // if zoomed don't handle long press
       return;
     }
 
+    document.documentElement.classList.add("disable-message-actions-touch");
     document.activeElement.blur();
     document.querySelector(".chat-composer__input")?.blur();
 
@@ -405,5 +434,12 @@ export default class ChatMessage extends Component {
   @action
   dismissMentionWarning() {
     this.args.message.mentionWarning = null;
+  }
+
+  #teardownMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      user.stopTrackingStatus();
+      user.off("status-changed", this, "refreshStatusOnMentions");
+    });
   }
 }

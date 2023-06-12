@@ -24,10 +24,9 @@ export default class ChatMessagesManager {
       message.manager = this;
     });
 
-    this.messages = this.messages
-      .concat(messages)
-      .uniqBy("id")
-      .sortBy("createdAt");
+    this.messages = new TrackedArray(
+      this.messages.concat(messages).uniqBy("id").sortBy("createdAt")
+    );
   }
 
   findMessage(messageId) {
@@ -48,5 +47,15 @@ export default class ChatMessagesManager {
 
   findIndexOfMessage(id) {
     return this.messages.findIndex((m) => m.id === id);
+  }
+
+  findLastMessage() {
+    return this.messages.findLast((message) => !message.deletedAt);
+  }
+
+  findLastUserMessage(user) {
+    return this.messages.findLast(
+      (message) => message.user.id === user.id && !message.deletedAt
+    );
   }
 }

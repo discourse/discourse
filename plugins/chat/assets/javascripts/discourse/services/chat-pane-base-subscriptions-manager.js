@@ -27,7 +27,7 @@ export function handleStagedMessage(channel, messagesManager, data) {
 /**
  * Handles subscriptions for MessageBus messages sent from Chat::Publisher
  * to the channel and thread panes. There are individual services for
- * each (ChatChannelPaneSubscriptionsManager and ChatChannelThreadPaneSubscriptionsManager)
+ * each (ChatChannelPaneSubscriptionsManager and ChatThreadPaneSubscriptionsManager)
  * that implement their own logic where necessary. Functions which will
  * always be different between the two raise a "not implemented" error in
  * the base class, and the child class must define the associated function,
@@ -182,6 +182,8 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     } else {
       this.messagesManager.removeMessage(targetMsg);
     }
+
+    this._afterDeleteMessage(targetMsg, data);
   }
 
   handleRestoreMessage(data) {
@@ -247,6 +249,10 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   }
 
   handleThreadOriginalMessageUpdate() {
+    throw "not implemented";
+  }
+
+  _afterDeleteMessage() {
     throw "not implemented";
   }
 }
