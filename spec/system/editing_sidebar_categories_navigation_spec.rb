@@ -22,7 +22,6 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   before do
     SiteSetting.new_edit_sidebar_categories_tags_interface_groups = group.name
-    SiteSetting.default_navigation_menu_categories = "#{category.id}|#{category2.id}"
     sign_in(user)
   end
 
@@ -33,11 +32,12 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
     modal = sidebar.click_edit_categories_button
 
-    expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form.title"))
+    expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form_modal.title"))
     expect(modal).to have_parent_category_color(category)
     expect(modal).to have_category_description_excerpt(category)
     expect(modal).to have_parent_category_color(category2)
     expect(modal).to have_category_description_excerpt(category2)
+    expect(modal).to have_no_reset_to_defaults_button
 
     expect(modal).to have_categories(
       [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
@@ -69,6 +69,47 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     expect(sidebar).to have_section_link(category.name)
     expect(sidebar).to have_no_section_link(category_subcategory2.name)
     expect(sidebar).to have_no_section_link(category2.name)
+  end
+
+  it "allows a user to deselect all categories in the modal" do
+    Fabricate(:category_sidebar_section_link, linkable: category, user: user)
+    Fabricate(:category_sidebar_section_link, linkable: category_subcategory2, user: user)
+
+    visit "/latest"
+
+    expect(sidebar).to have_categories_section
+
+    modal = sidebar.click_edit_categories_button
+    modal.deselect_all.save
+
+    expect(sidebar).to have_section_link(category.name)
+    expect(sidebar).to have_no_section_link(category_subcategory2.name)
+    expect(sidebar).to have_section_link(category2.name)
+    expect(sidebar).to have_section_link("Uncategorized")
+  end
+
+  it "allows a user to reset to the default navigation menu categories site setting" do
+    Fabricate(:category_sidebar_section_link, linkable: category, user: user)
+    Fabricate(:category_sidebar_section_link, linkable: category2, user: user)
+
+    SiteSetting.default_navigation_menu_categories =
+      "#{category_subcategory2.id}|#{category2_subcategory.id}"
+
+    visit "/latest"
+
+    expect(sidebar).to have_categories_section
+    expect(sidebar).to have_section_link(category.name)
+    expect(sidebar).to have_section_link(category2.name)
+
+    modal = sidebar.click_edit_categories_button
+    modal.click_reset_to_defaults_button.save
+
+    expect(modal).to be_closed
+
+    expect(sidebar).to have_no_section_link(category.name)
+    expect(sidebar).to have_no_section_link(category2.name)
+    expect(sidebar).to have_section_link(category_subcategory2.name)
+    expect(sidebar).to have_section_link(category2_subcategory.name)
   end
 
   it "allows a user to filter the categories in the modal by the category's name" do
@@ -127,7 +168,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
       modal = sidebar.click_edit_categories_button
 
-      expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form.title"))
+      expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form_modal.title"))
 
       modal
         .toggle_category_checkbox(category_subcategory_subcategory)
