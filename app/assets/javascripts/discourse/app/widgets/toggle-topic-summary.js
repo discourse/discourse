@@ -38,7 +38,7 @@ export default createWidget("toggle-topic-summary", {
     const html = [];
     const summarizationButtons = [];
 
-    if (attrs.hasTopicSummary) {
+    if (attrs.hasTopRepliesSummary) {
       html.push(this.attach("toggle-summary-description", attrs));
       summarizationButtons.push(
         this.attach("button", {
@@ -48,23 +48,21 @@ export default createWidget("toggle-topic-summary", {
           label: attrs.topicSummaryEnabled
             ? "summary.disable"
             : "summary.enable",
-          action: attrs.topicSummaryEnabled ? "cancelFilter" : "showSummary",
+          action: attrs.topicSummaryEnabled ? "cancelFilter" : "showTopReplies",
         })
       );
     }
 
-    if (attrs.includeCustomSummary) {
-      const title = I18n.t("summary.custom.button_title", {
-        strategy: this.siteSettings.summarization_strategy,
-      });
+    if (attrs.includeSummary) {
+      const title = I18n.t("summary.strategy.button_title");
 
       summarizationButtons.push(
         this.attach("button", {
-          className: "btn btn-primary custom-summarization",
+          className: "btn btn-primary topic-strategy-summarization",
           icon: "magic",
           translatedTitle: title,
           translatedLabel: title,
-          action: "showCustomSummary",
+          action: "showSummary",
         })
       );
     }

@@ -520,9 +520,9 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    showSummary() {
+    showTopReplies() {
       return this.get("model.postStream")
-        .showSummary()
+        .showTopReplies()
         .then(() => {
           this.updateQueryParams();
         });

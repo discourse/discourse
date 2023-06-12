@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Topic custom summarization", type: :system, js: true do
+RSpec.describe "Topic summarization", type: :system, js: true do
   fab!(:user) { Fabricate(:admin) }
 
   # has_summary to force topic map to be present.
@@ -20,9 +20,9 @@ RSpec.describe "Topic custom summarization", type: :system, js: true do
   it "returns a summary using the selected timeframe" do
     visit("/t/-/#{topic.id}")
 
-    find(".custom-summarization").click
+    find(".topic-strategy-summarization").click
 
-    expect(page.has_css?(".topic-custom-summary-modal", wait: 5)).to eq(true)
+    expect(page.has_css?(".topic-summary-modal", wait: 5)).to eq(true)
 
     expect(find(".summary-area").text).to eq(DummyCustomSummarization::RESPONSE)
   end

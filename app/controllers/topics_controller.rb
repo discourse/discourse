@@ -30,7 +30,7 @@ class TopicsController < ApplicationController
                    publish
                    reset_bump_date
                    set_slow_mode
-                   custom_summary
+                   summary
                  ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -1161,7 +1161,7 @@ class TopicsController < ApplicationController
     head :ok
   end
 
-  def custom_summary
+  def summary
     topic = Topic.find(params[:topic_id])
     guardian.ensure_can_see!(topic)
     strategy = Summarization::Base.selected_strategy
@@ -1169,7 +1169,7 @@ class TopicsController < ApplicationController
 
     raise Discourse::InvalidAccess unless strategy.can_request_summaries?(current_user)
 
-    RateLimiter.new(current_user, "custom_summary", 6, 5.minutes).performed!
+    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
 
     hijack do
       summary_opts = {

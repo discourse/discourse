@@ -269,8 +269,8 @@ export default MountWidget.extend({
     this.screenTrack.setOnscreen(onscreenPostNumbers, readPostNumbers);
   },
 
-  showCustomSummary() {
-    showModal("topic-custom-summary").setProperties({
+  showSummary() {
+    showModal("topic-summary").setProperties({
       topicId: this.posts["posts"][0].topic_id,
     });
   },

@@ -1315,7 +1315,7 @@ Discourse::Application.routes.draw do
           topic_id: /\d+/,
         }
     get "t/:topic_id/summary" => "topics#show", :constraints => { topic_id: /\d+/ }
-    get "t/:topic_id/custom-summary" => "topics#custom_summary",
+    get "t/:topic_id/strategy-summary" => "topics#summary",
         :constraints => {
           topic_id: /\d+/,
         },

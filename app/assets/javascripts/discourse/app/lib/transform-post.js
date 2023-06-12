@@ -185,7 +185,6 @@ export default function transformPost(
     (post.post_number === 1 &&
       topic.archetype === "regular" &&
       topic.posts_count > 1);
-
   if (showTopicMap) {
     postAtts.showTopicMap = true;
     postAtts.topicCreatedAt = topic.created_at;
@@ -219,7 +218,7 @@ export default function transformPost(
     postAtts.userFilters = postStream.userFilters;
     postAtts.topicSummaryEnabled = postStream.summary;
     postAtts.topicWordCount = topic.word_count;
-    postAtts.hasTopicSummary = topic.has_summary;
+    postAtts.hasTopRepliesSummary = topic.has_summary;
   }
 
   if (postAtts.isDeleted) {

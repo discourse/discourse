@@ -5,7 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 
-export default class TopicCustomSummary extends Component {
+export default class TopicSummary extends Component {
   @tracked loading = false;
   @tracked summary = null;
 
@@ -14,7 +14,7 @@ export default class TopicCustomSummary extends Component {
     schedule("afterRender", () => {
       this.loading = true;
 
-      ajax(`/t/${this.args.topicId}/custom-summary`)
+      ajax(`/t/${this.args.topicId}/strategy-summary`)
         .then((data) => {
           this.summary = data.summary;
         })

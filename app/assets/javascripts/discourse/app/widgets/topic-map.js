@@ -376,7 +376,7 @@ export default createWidget("topic-map", {
   buildKey: (attrs) => `topic-map-${attrs.id}`,
 
   defaultState(attrs) {
-    return { collapsed: !attrs.hasTopicSummary };
+    return { collapsed: !attrs.hasTopRepliesSummary };
   },
 
   html(attrs, state) {
@@ -386,8 +386,8 @@ export default createWidget("topic-map", {
       contents.push(this.attach("topic-map-expanded", attrs));
     }
 
-    if (attrs.hasTopicSummary || this._includesCustomSummary()) {
-      attrs.includeCustomSummary = this._includesCustomSummary();
+    if (attrs.hasTopRepliesSummary || this._includesSummary()) {
+      attrs.includeSummary = this._includesSummary();
       contents.push(this.attach("toggle-topic-summary", attrs));
     }
 
@@ -401,7 +401,7 @@ export default createWidget("topic-map", {
     this.state.collapsed = !this.state.collapsed;
   },
 
-  _includesCustomSummary() {
+  _includesSummary() {
     const customSummaryAllowedGroups =
       this.siteSettings.custom_summarization_allowed_groups
         .split("|")

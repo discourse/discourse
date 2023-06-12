@@ -5284,7 +5284,7 @@ RSpec.describe TopicsController do
     end
   end
 
-  describe "#custom_summary" do
+  describe "#summary" do
     fab!(:topic) { Fabricate(:topic) }
     let(:plugin) { Plugin::Instance.new }
 
@@ -5296,7 +5296,7 @@ RSpec.describe TopicsController do
 
     context "for anons" do
       it "returns a 404" do
-        get "/t/#{topic.id}/custom-summary.json"
+        get "/t/#{topic.id}/strategy-summary.json"
 
         expect(response.status).to eq(403)
       end
@@ -5310,7 +5310,7 @@ RSpec.describe TopicsController do
       it "returns a 404 if there is no topic" do
         invalid_topic_id = 999
 
-        get "/t/#{invalid_topic_id}/custom-summary.json"
+        get "/t/#{invalid_topic_id}/strategy-summary.json"
 
         expect(response.status).to eq(404)
       end
@@ -5318,7 +5318,7 @@ RSpec.describe TopicsController do
       it "returns a 403 if not allowed to see the topic" do
         pm = Fabricate(:private_message_topic)
 
-        get "/t/#{pm.id}/custom-summary.json"
+        get "/t/#{pm.id}/strategy-summary.json"
 
         expect(response.status).to eq(403)
       end
@@ -5330,7 +5330,7 @@ RSpec.describe TopicsController do
       before { sign_in(user) }
 
       it "return a 404" do
-        get "/t/#{topic.id}/custom-summary.json"
+        get "/t/#{topic.id}/strategy-summary.json"
 
         expect(response.status).to eq(403)
       end
