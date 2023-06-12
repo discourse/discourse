@@ -9,18 +9,26 @@
       @avatarSize="medium"
     />
   </div>
-
   <div class="chat-message-thread-indicator__body">
     <div class="chat-message-thread-indicator__last-reply-metadata">
-      <span
-        class="chat-message-thread-indicator__last-reply-username"
-      >{{@message.thread.preview.lastReplyUser.username}}</span>
+      <span class="chat-message-thread-indicator__last-reply-username">
+        {{#if this.site.mobileView}}
+          <div class="chat-message-thread-indicator__last-reply-avatar -mobile">
+            <ChatUserAvatar
+              @user={{@message.thread.preview.lastReplyUser}}
+              @avatarSize="small"
+            />
+          </div>
+        {{/if}}
+        {{@message.thread.preview.lastReplyUser.username}}
+      </span>
+      <span>{{i18n "chat.thread.last_reply"}}</span>
+      {{format-date @message.thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+      |
       <span class="chat-message-thread-indicator__replies-count">
         {{i18n "chat.thread.replies" count=@message.thread.preview.replyCount}}
       </span>
-      |
-      {{i18n "chat.thread.last_reply"}}
-      {{format-date @message.thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+
     </div>
     <div
       class="chat-message-thread-indicator__last-reply-excerpt overflow-ellipsis"

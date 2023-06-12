@@ -64,7 +64,7 @@
   &.is-threaded {
     display: grid;
     grid-template-columns: var(--message-left-width) 1fr;
-    grid-template-rows: auto 80px;
+    grid-template-rows: auto;
     grid-template-areas:
       "avatar message"
       "threadindicator threadindicator";
