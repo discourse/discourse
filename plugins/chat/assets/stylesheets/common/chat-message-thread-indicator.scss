@@ -4,6 +4,7 @@
   gap: 1rem;
   cursor: pointer;
   grid-area: threadindicator;
+  max-width: 1000px;
   background-color: var(--primary-very-low);
   margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
   padding-block: 0.5rem;
