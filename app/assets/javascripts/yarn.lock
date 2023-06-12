@@ -3775,7 +3775,7 @@ ember-auto-import-chunks-json-generator@^1.1.0:
     ember-cli-babel "^7.26.11"
     ember-cli-htmlbars "^6.1.1"
 
-ember-auto-import@^2.2.3, ember-auto-import@^2.6.0, ember-auto-import@^2.6.3:
+ember-auto-import@^2.2.3, ember-auto-import@^2.6.1, ember-auto-import@^2.6.3:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/ember-auto-import/-/ember-auto-import-2.6.3.tgz#f18d1b93dd10b08ba5496518436f9d56dd4e000a"
   integrity sha512-uLhrRDJYWCRvQ4JQ1e64XlSrqAKSd6PXaJ9ZsZI6Tlms9T4DtQFxNXasqji2ZRJBVrxEoLCRYX3RTldsQ0vNGQ==
@@ -4331,15 +4331,15 @@ ember-on-resize-modifier@^1.1.0:
     ember-modifier "^3.2.7"
     ember-resize-observer-service "^1.1.0"
 
-ember-qunit@^6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-6.2.0.tgz#4d492951035d1df5c7802c4ae6cf299c8f41d75b"
-  integrity sha512-mC+0bp8DwWzJLn8SW3GS8KDZIkl4yLsNYwMi5Dw6+aFllq7FM2crd/dfY4MuOIHK7GKdjtmWJTMGnjSpeSayaw==
+ember-qunit@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-7.0.0.tgz#658aa51dcb376b5eda7fa77c83be89aaf0bedbd1"
+  integrity sha512-KhrndHYEXsHnXvmsGyJLJQ6VCudXaRs5dzPZBsdttZJIhsB6PmYAvq2Q+mh3GRDT/59T/sRDrB3FD3/lATS8aA==
   dependencies:
     broccoli-funnel "^3.0.8"
     broccoli-merge-trees "^3.0.2"
     common-tags "^1.8.0"
-    ember-auto-import "^2.6.0"
+    ember-auto-import "^2.6.1"
     ember-cli-babel "^7.26.11"
     ember-cli-test-loader "^3.0.0"
     resolve-package-path "^4.0.3"

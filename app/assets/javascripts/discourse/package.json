@@ -100,7 +100,7 @@
     "ember-cli-progress-ci": "1.0.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
-    "ember-qunit": "^6.2.0",
+    "ember-qunit": "^7.0.0",
     "ember-exam": "^8.0.0",
     "eslint": "^8.42.0",
     "eslint-plugin-qunit": "^7.3.4",
