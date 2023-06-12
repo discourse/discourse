@@ -112,7 +112,7 @@
     "source-map": "^0.7.4",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "terser": "^5.17.7",
+    "terser": "^5.18.0",
     "webpack": "^5.86.0",
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",
