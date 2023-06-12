@@ -112,8 +112,6 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
     updateCurrentUser({ admin: false, display_sidebar_tags: false });
     await visit("/u/eviltrout/preferences/navigation-menu");
 
-    assert.notOk(exists(".sidebar-section[data-section-name='categories']"));
-
     const categorySelector = selectKit(".category-selector");
     await categorySelector.expand();
     await categorySelector.selectKitSelectRowByName("support");

@@ -16,6 +16,7 @@ import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { TOP_SITE_CATEGORIES_TO_SHOW } from "discourse/components/sidebar/common/categories-section";
 
 acceptance(
   "Sidebar - Logged on user - Categories Section - allow_uncategorized_topics disabled",
@@ -142,21 +143,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("categories section is hidden when user has not added any categories and there are no default categories configured", async function (assert) {
+  test("categories section is shown with site's top categories when user has not added any categories and there are no default categories set for the user", async function (assert) {
     updateCurrentUser({ sidebar_category_ids: [] });
-
-    await visit("/");
-
-    assert.notOk(
-      exists(".sidebar-section[data-section-name='categories']"),
-      "categories section is not shown"
-    );
-  });
-
-  test("categories section is shown when user has not added any categories but default categories have been configured", async function (assert) {
-    updateCurrentUser({ sidebar_category_ids: [] });
-    const categories = Site.current().categories;
-    this.siteSettings.default_navigation_menu_categories = `${categories[0].id}|${categories[1].id}`;
 
     await visit("/");
 
@@ -165,22 +153,29 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "categories section is shown"
     );
 
-    assert.ok(
-      exists(
-        ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='configure-categories']"
-      ),
-      "section link to add categories to sidebar is displayed"
-    );
-
-    await click(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='configure-categories']"
+    const categorySectionLinks = queryAll(
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id]"
     );
 
     assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/navigation-menu",
-      "it should transition to user preferences navigation menu page"
+      categorySectionLinks.length,
+      TOP_SITE_CATEGORIES_TO_SHOW,
+      "the right number of category section links are shown"
     );
+
+    const topCategories = Site.current().categoriesByCount.splice(
+      0,
+      TOP_SITE_CATEGORIES_TO_SHOW
+    );
+
+    topCategories.forEach((category) => {
+      assert.ok(
+        exists(
+          `.sidebar-section-link-wrapper[data-category-id=${category.id}]`
+        ),
+        `${category.name} section link is shown`
+      );
+    });
   });
 
   test("uncategorized category is shown when added to sidebar", async function (assert) {
