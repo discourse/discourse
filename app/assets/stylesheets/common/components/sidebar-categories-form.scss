@@ -10,8 +10,24 @@
     flex-direction: row;
     margin-right: auto;
     width: 100%;
-    margin-bottom: 1em;
     position: relative;
+  }
+
+  .sidebar-categories-form__deselect-all {
+    margin-bottom: 1em;
+
+    p {
+      margin: 0;
+    }
+
+    .sidebar-categories-form__deselect-all-button {
+      padding: 0;
+
+      &:focus,
+      &:active {
+        background: none;
+      }
+    }
   }
 
   .sidebar-categories-form__filter-input-icon {

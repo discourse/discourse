@@ -65,6 +65,11 @@ module PageObjects
 
         self
       end
+
+      def deselect_all
+        click_button(I18n.t("js.sidebar.categories_form.deselect_all.button_label"))
+        self
+      end
     end
   end
 end

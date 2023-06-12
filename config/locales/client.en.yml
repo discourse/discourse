@@ -4394,6 +4394,9 @@ en:
         title: "Edit categories navigation"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+        deselect_all:
+          button_label: "Deselect all"
+          text: "and we'll automatically show this site's most popular categories"
 
       sections:
         custom:

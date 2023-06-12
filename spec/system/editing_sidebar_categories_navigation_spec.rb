@@ -69,6 +69,15 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     expect(sidebar).to have_section_link(category.name)
     expect(sidebar).to have_no_section_link(category_subcategory2.name)
     expect(sidebar).to have_no_section_link(category2.name)
+
+    modal = sidebar.click_edit_categories_button
+    modal.deselect_all.save
+
+    expect(modal).to be_closed
+
+    expect(sidebar).to have_no_section_link(category.name)
+    expect(sidebar).to have_no_section_link(category_subcategory2.name)
+    expect(sidebar).to have_no_section_link(category2.name)
   end
 
   it "allows a user to filter the categories in the modal by the category's name" do

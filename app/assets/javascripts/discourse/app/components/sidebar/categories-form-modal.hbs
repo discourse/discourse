@@ -15,6 +15,21 @@
       />
     </div>
 
+    <div class="sidebar-categories-form__deselect-all">
+      <p>
+        <DButton
+          @class="btn-flat sidebar-categories-form__deselect-all-button"
+          @label="sidebar.categories_form.deselect_all.button_label"
+          @ariaLabel="sidebar.categories_form.deselect_all.button_label"
+          @action={{this.deselectAll}}
+        />
+
+        <span class="sidebar-categories-form__deselect-all-text">
+          {{i18n "sidebar.categories_form.deselect_all.text"}}
+        </span>
+      </p>
+    </div>
+
     {{#if (gt this.filteredCategoriesGroupings.length 0)}}
       {{#each this.filteredCategoriesGroupings as |categories|}}
         <div
