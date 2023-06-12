@@ -451,6 +451,9 @@ en:
 
       admin:
         title: "Chat"
+        export_messages:
+          title: "Export chat messages"
+          create_export: "Create export"
 
       direct_messages:
         title: "Personal chat"
