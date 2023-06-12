@@ -61,7 +61,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     registerTemporaryModule(
       `${PREFIX}/test-name/hi`,
       hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
-        <span class='hi-result'>{{hi}}</span>`
+        <span class='hi-result'>{{this.hi}}</span>`
     );
     registerTemporaryModule(
       `${PREFIX}/test-name/conditional-render`,
