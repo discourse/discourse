@@ -181,7 +181,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
                 ".chat-header-icon .chat-channel-unread-indicator.-urgent",
                 text: "1",
               )
-              expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .icon.-urgent")
+              expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .icon.urgent")
             end
           end
         end
@@ -204,7 +204,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
             end
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
-            expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.-urgent")
+            expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
 
             using_session(:user_1) do |session|
               create_message(channel: dm_channel_1, creator: user_1)
@@ -267,7 +267,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
             end
 
             using_session(:current_user) do |session|
-              expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.-urgent")
+              expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
               expect(page).to have_css(
                 ".chat-header-icon .chat-channel-unread-indicator",
                 text: "1",
