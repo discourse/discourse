@@ -75,7 +75,7 @@
     "edition": "default"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.1",
+    "@babel/core": "^7.22.5",
     "@babel/standalone": "^7.22.5",
     "@ember/optional-features": "^2.0.0",
     "@uppy/aws-s3": "^3.0.6",
