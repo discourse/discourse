@@ -30,6 +30,10 @@
       flex-grow: 1;
       overflow: hidden;
 
+      // hardcoded max-height here prevents extra tall images
+      // from having an outsized effect on the grid
+      max-height: 1200px;
+
       img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
         height: 100%;
         object-fit: cover;
