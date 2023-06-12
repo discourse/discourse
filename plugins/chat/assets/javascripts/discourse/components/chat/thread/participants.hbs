@@ -8,12 +8,12 @@
       />
     {{/each}}
   </div>
-  <span class="chat-thread-participants__other-count">
+  <div class="chat-thread-participants__other-count">
     {{#if @thread.preview.otherParticipantCount}}
       {{i18n
         "chat.thread.participants_other_count"
         count=@thread.preview.otherParticipantCount
       }}
     {{/if}}
-  </span>
+  </div>
 </div>
