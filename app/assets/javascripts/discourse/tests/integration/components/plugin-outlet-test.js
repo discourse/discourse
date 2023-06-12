@@ -53,10 +53,10 @@ module("Integration | Component | plugin-outlet", function (hooks) {
 
     registerTemporaryModule(
       `${PREFIX}/test-name/hello`,
-      hbs`<span class='hello-username'>{{username}}</span>
+      hbs`<span class='hello-username'>{{this.username}}</span>
         <button class='say-hello' {{on "click" (action "sayHello")}}></button>
         <button class='say-hello-using-this' {{on "click" this.sayHello}}></button>
-        <span class='hello-result'>{{hello}}</span>`
+        <span class='hello-result'>{{this.hello}}</span>`
     );
     registerTemporaryModule(
       `${PREFIX}/test-name/hi`,
