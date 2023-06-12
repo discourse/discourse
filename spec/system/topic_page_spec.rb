@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic page", type: :system, js: true do
+describe "Topic page", type: :system do
   fab!(:topic) { Fabricate(:topic) }
 
   before { Fabricate(:post, topic: topic, cooked: <<~HTML) }
@@ -16,9 +16,9 @@ describe "Topic page", type: :system, js: true do
     find("#toc-h2-testing").hover
     find("a.anchor").click
 
-    # DEBUG
-    sleep 2
-    expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+    try_until_success(timeout: 5) do
+      expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+    end
   end
 
   context "with a subfolder setup" do
@@ -30,9 +30,9 @@ describe "Topic page", type: :system, js: true do
       find("#toc-h2-testing").hover
       find("a.anchor").click
 
-      # DEBUG
-      sleep 2
-      expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+      try_until_success(timeout: 5) do
+        expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
+      end
     end
   end
 end
