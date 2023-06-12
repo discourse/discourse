@@ -13,10 +13,9 @@ describe "Topic page", type: :system do
   it "allows TOC anchor navigation" do
     visit("/t/#{topic.slug}/#{topic.id}")
 
-    find("#toc-h2-testing").hover
-    find("a.anchor").click
+    find("#toc-h2-testing .anchor", visible: :all).click
 
-    try_until_success(timeout: 10) do
+    try_until_success do
       expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
     end
   end
@@ -27,10 +26,9 @@ describe "Topic page", type: :system do
     it "allows TOC anchor navigation" do
       visit("/forum/t/#{topic.slug}/#{topic.id}")
 
-      find("#toc-h2-testing").hover
-      find("a.anchor").click
+      find("#toc-h2-testing .anchor", visible: :all).click
 
-      try_until_success(timeout: 10) do
+      try_until_success do
         expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
       end
     end
