@@ -524,11 +524,15 @@ export default class PresenceService extends Service {
         ) {
           presentChannels.push(channelName);
         } else {
+          // The user is not present. Update the proxies and add the channel to the leave list.
+          Array.from(proxies).forEach((p) => {
+            this._removePresent(p);
+          });
           channelsToLeave.push(channelName);
         }
       }
 
-      if (queue.length === 0 && presentChannels.length === 0) {
+      if (queue.length === 0 && presentChannels.length === 0 && channelsToLeave.length === 0) {
         return;
       }
 
