@@ -49,19 +49,15 @@ module Chat
         ORDER BY chat_messages.thread_id ASC, chat_messages.created_at DESC
       SQL
       most_recent_messagers =
-        most_recent_messagers
-          .map do |mrm|
-            [
-              mrm.thread_id,
-              {
-                id: mrm.user_id,
-                username: mrm.username,
-                name: mrm.name,
-                uploaded_avatar_id: mrm.uploaded_avatar_id,
-              },
-            ]
-          end
-          .to_h
+        most_recent_messagers.reduce({}) do |hash, mrm|
+          hash[mrm.thread_id] = {
+            id: mrm.user_id,
+            username: mrm.username,
+            name: mrm.name,
+            uploaded_avatar_id: mrm.uploaded_avatar_id,
+          }
+          hash
+        end
 
       thread_participants = {}
       thread_messager_stats.each do |thread_messager_stat|
