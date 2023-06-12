@@ -82,7 +82,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 .header-dropdown-toggle.chat-header-icon {
   .icon {
     .chat-channel-unread-indicator {
-      @include unselectable;
       @include chat-unread-indicator;
       border: 2px solid var(--header_background);
       position: absolute;
