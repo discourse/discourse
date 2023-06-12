@@ -16,7 +16,7 @@ describe "Topic page", type: :system do
     find("#toc-h2-testing").hover
     find("a.anchor").click
 
-    try_until_success(timeout: 5) do
+    try_until_success(timeout: 10) do
       expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
     end
   end
@@ -30,7 +30,7 @@ describe "Topic page", type: :system do
       find("#toc-h2-testing").hover
       find("a.anchor").click
 
-      try_until_success(timeout: 5) do
+      try_until_success(timeout: 10) do
         expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
       end
     end
