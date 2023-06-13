@@ -1135,6 +1135,7 @@ export default Component.extend(
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
         i18nPrefix: "options.i18nPrefix",
+        btnCustomClasses: "options.btnCustomClasses",
         castInteger: "options.castInteger",
       };
 

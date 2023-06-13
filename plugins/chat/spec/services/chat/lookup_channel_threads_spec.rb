@@ -79,6 +79,19 @@ RSpec.describe Chat::LookupChannelThreads do
           expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
         end
 
+        it "does return threads where the user has their thread notification level as tracking or regular" do
+          new_thread_1 = Fabricate(:chat_thread, channel: channel)
+          new_thread_2 = Fabricate(:chat_thread, channel: channel)
+
+          new_thread_1.add(current_user)
+          new_thread_2.add(current_user)
+          new_thread_2.membership_for(current_user).update!(notification_level: :normal)
+
+          expect(result.threads.map(&:id)).to eq(
+            [thread_3.id, thread_1.id, thread_2.id, new_thread_1.id, new_thread_2.id],
+          )
+        end
+
         it "does not return threads from another channel" do
           thread_4 = Fabricate(:chat_thread)
           Fabricate(

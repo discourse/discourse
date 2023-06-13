@@ -137,6 +137,21 @@ describe Chat::ThreadUnreadsQuery do
         end
       end
 
+      context "when the notification_level for the thread is normal" do
+        before do
+          thread_1
+            .user_chat_thread_memberships
+            .find_by(user: current_user)
+            .update!(notification_level: :normal)
+        end
+
+        it "gets a zeroed out count for the thread" do
+          expect(subject.map(&:to_h)).to include(
+            { channel_id: channel_1.id, mention_count: 0, thread_id: thread_1.id, unread_count: 0 },
+          )
+        end
+      end
+
       context "when the user is not a member of a thread" do
         before { thread_1.user_chat_thread_memberships.find_by(user: current_user).destroy! }
 

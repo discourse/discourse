@@ -73,7 +73,7 @@ module Chat
       ::Chat::Publisher.publish_user_tracking_state!(
         guardian.user,
         thread.channel,
-        thread.replies.last,
+        thread.last_reply,
       )
     end
   end

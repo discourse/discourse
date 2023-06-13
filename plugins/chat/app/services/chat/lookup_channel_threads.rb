@@ -65,7 +65,17 @@ module Chat
         .joins(
           "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
         )
-        .where("chat_messages.user_id = ? OR chat_messages.user_id IS NULL", guardian.user.id)
+        .joins(
+          "LEFT JOIN user_chat_thread_memberships ON user_chat_thread_memberships.user_id = #{guardian.user.id} AND user_chat_thread_memberships.thread_id = chat_threads.id",
+        )
+        .where(
+          "chat_messages.user_id = ? OR chat_messages.user_id IS NULL OR user_chat_thread_memberships.notification_level IN (?)",
+          guardian.user.id,
+          [
+            Chat::UserChatThreadMembership.notification_levels[:normal],
+            Chat::UserChatThreadMembership.notification_levels[:tracking],
+          ],
+        )
         .where(channel_id: channel.id)
         .where(
           "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL",
