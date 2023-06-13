@@ -30,6 +30,7 @@ class TopicsController < ApplicationController
                    publish
                    reset_bump_date
                    set_slow_mode
+                   summary
                  ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -1165,6 +1166,30 @@ class TopicsController < ApplicationController
     topic.set_or_create_timer(slow_mode_type, time, by_user: timer&.user)
 
     head :ok
+  end
+
+  def summary
+    topic = Topic.find(params[:topic_id])
+    guardian.ensure_can_see!(topic)
+    strategy = Summarization::Base.selected_strategy
+    raise Discourse::NotFound.new unless strategy
+
+    raise Discourse::InvalidAccess unless strategy.can_request_summaries?(current_user)
+
+    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+
+    hijack do
+      summary_opts = {
+        filter: "summary",
+        exclude_deleted_users: true,
+        exclude_hidden: true,
+        show_deleted: false,
+      }
+
+      content = TopicView.new(topic, current_user, summary_opts).posts.pluck(:raw).join("\n")
+
+      render json: { summary: strategy.summarize(content) }
+    end
   end
 
   private

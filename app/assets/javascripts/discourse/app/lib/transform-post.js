@@ -218,7 +218,7 @@ export default function transformPost(
     postAtts.userFilters = postStream.userFilters;
     postAtts.topicSummaryEnabled = postStream.summary;
     postAtts.topicWordCount = topic.word_count;
-    postAtts.hasTopicSummary = topic.has_summary;
+    postAtts.hasTopRepliesSummary = topic.has_summary;
   }
 
   if (postAtts.isDeleted) {

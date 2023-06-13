@@ -2351,6 +2351,17 @@ uncategorized:
     client: true
     default: false
 
+  summarization_strategy:
+    client: true
+    default: ""
+    enum: "SummarizationStrategy"
+    validator: "SummarizationValidator"
+  custom_summarization_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
+
   automatic_topic_heat_values: true
 
   # View heat thresholds

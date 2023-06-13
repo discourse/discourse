@@ -833,6 +833,12 @@ aside.quote {
       margin-left: 0.25em;
     }
   }
+
+  .toggle-summary {
+    .summarization-buttons {
+      display: flex;
+    }
+  }
 }
 
 .topic-avatar,
