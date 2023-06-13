@@ -1,16 +1,17 @@
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
-import User from "discourse/models/user";
 import discourseLater from "discourse-common/lib/later";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import Component from "@ember/component";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "",
   classNames: ["topic-dismiss-buttons"],
 
+  currentUser: service(),
   position: null,
   selectedTopics: null,
   model: null,
@@ -61,8 +62,7 @@ export default Component.extend({
 
   @discourseComputed("selectedTopics.length")
   dismissNewLabel(selectedTopicCount) {
-    const user = User.current();
-    if (user.new_new_view_enabled) {
+    if (this.currentUser.new_new_view_enabled) {
       return I18n.t("topics.bulk.dismiss_button");
     } else if (selectedTopicCount === 0) {
       return I18n.t("topics.bulk.dismiss_new");
