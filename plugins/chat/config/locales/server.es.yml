@@ -54,6 +54,7 @@ es:
       delete_channel_failed: "No se pudo eliminar el canal, inténtalo de nuevo."
       minimum_length_not_met: "El mensaje es demasiado corto, debe tener un mínimo de %{minimum} caracteres."
       message_too_long: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{maximum} caracteres."
+      draft_too_long: "El borrador es demasiado largo."
       max_reactions_limit_reached: "No se permiten nuevas reacciones en este mensaje."
       message_move_invalid_channel: "El canal de origen y el de destino deben ser canales públicos."
       message_move_no_messages_found: "No se ha encontrado ningún mensaje con los identificadores de mensaje proporcionados."
