@@ -1511,52 +1511,6 @@ cs:
       enabled: "Tato stránka je v režimu jen pro čtení. Prosim pokračujte v prohlížení, ale odpovídání a ostatní operace jsou momentálně vypnuté."
       login_disabled: "Přihlášení je zakázáno jelikož je stránka v režimu jen pro čtení."
       logout_disabled: "Odhlášení je zakázáno zatímco je stránka v režimu jen pro čtení."
-    too_few_topics_and_posts_notice_MF: |
-      Pojďme <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">zahájit diskusi!</a>{ currentTopics, plural,
-          one {Je tu <strong>#</strong> téma }
-          few {Jsou tu <strong>#</strong> témata}
-          many {Je tu <strong>#</strong> témat}
-        other {Je tu <strong>#</strong> témat}
-      } a { currentPosts, plural,
-          one {<strong>#</strong> příspěvek}
-          few {<strong>#</strong> příspěvků}
-          many {<strong>#</strong> příspěvků}
-        other {<strong>#</strong> příspěvků}
-      }. Návštěvníci jich potřebují více, aby si mohli číst a odpovídat na ně - doporučujeme alespoň { requiredTopics, plural,
-          one {<strong>#</strong> téma}
-          few {<strong>#</strong> témat}
-          many {<strong>#</strong> témat}
-        other {<strong>#</strong> témat}
-      } a { requiredPosts, plural,
-          one {<strong>#</strong> příspěvek}
-          few {<strong>#</strong> příspěvky}
-          many {<strong>#</strong> příspěvků}
-        other {<strong>#</strong> příspěvků}
-      }. Tuto zprávu mohou vidět pouze členové redakce.
-    too_few_topics_notice_MF: |
-      Pojďme <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">zahájit diskusi!</a>{ currentTopics, plural,
-          one {Je tu <strong>#</strong> téma}
-          few {Jsou tu <strong>#</strong> témata}
-          many {Je tu <strong>#</strong> témat}
-        other {Je tu <strong>#</strong> témat}
-      }. Návštěvníci jich potřebují více, aby si mohli číst a odpovídat na ně - doporučujeme alespoň { requiredTopics, plural,
-          one {<strong>#</strong> téma}
-          few {<strong>#</strong> témata}
-          many {<strong>#</strong> témat}
-        other {<strong>#</strong> témat}
-      }. Tuto zprávu mohou vidět pouze členové redakce.
-    too_few_posts_notice_MF: |
-      Pojďme <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">zahájit diskusi!</a>{ currentPosts, plural,
-          one {Je tu <strong>#</strong> příspěvek}
-          few {Jsou tu <strong>#</strong> příspěvky}
-          many {Je tu <strong>#</strong> příspěvků}
-        other {Je tu <strong>#</strong> příspěvků}
-      }. Návštěvníci jich potřebují více, aby si mohli číst a odpovídat na ně - doporučujeme alespoň { requiredPosts, plural,
-          one {<strong>#</strong> příspěvek}
-          few {<strong>#</strong> příspěvky}
-          many {<strong>#</strong> příspěvků}
-        other {<strong>#</strong> příspěvků}
-      }. Tuto zprávu mohou vidět pouze členové redakce.
     learn_more: "více informací..."
     mute: Ignorovat
     unmute: Zrušit ignorování
@@ -3136,6 +3090,8 @@ cs:
       more: "Více"
       all_categories: "Všechny kategorie"
       all_tags: "Všechny štítky"
+      categories_form:
+        save: "Uložit"
       sections:
         custom:
           save: "Uložit"
@@ -3861,6 +3817,8 @@ cs:
           validations:
             required:
               key: "povinné"
+            type:
+              key: "typ"
       impersonate:
         title: "Přihlásit se jako"
         help: "Použijte tento nástroj k přihlášení za jiného uživatele pro ladící a vývojové potřeby. Po dokončení se budete muset odhlásit."

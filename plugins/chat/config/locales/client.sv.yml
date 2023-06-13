@@ -520,7 +520,7 @@ sv:
       thread:
         title: "Rubrik"
         view_thread: Visa tråd
-        default_title: "Tråd nr %{thread_id}"
+        default_title: "Tråd"
         replies:
           one: "%{count} svar"
           other: "%{count} svar"

@@ -210,6 +210,8 @@ es:
           members: Miembros
           settings: Ajustes
       channel_edit_name_slug_modal:
+        title: Editar canal
+        input_placeholder: Añade un nombre
         name: Nombre del canal
       channel_edit_description_modal:
         title: Editar descripción
@@ -367,7 +369,7 @@ es:
         no_results: "No hay resultados"
       thread:
         title: "Título"
-        default_title: "Tema #%{thread_id}"
+        default_title: "Hilo"
         replies:
           one: "%{count} respuesta"
           other: "%{count} respuestas"

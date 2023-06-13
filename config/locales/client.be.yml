@@ -1365,6 +1365,8 @@ be:
     sidebar:
       more: "Больш"
       all_categories: "Усе катэгорыі"
+      categories_form:
+        save: "захаваць"
       sections:
         custom:
           save: "захаваць"
@@ -1834,6 +1836,8 @@ be:
           validations:
             required:
               key: "абавязкова"
+            type:
+              key: "тып"
         field_placeholders:
           choices:
             first: "Варыянт 1"

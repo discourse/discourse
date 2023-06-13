@@ -433,7 +433,7 @@ tr_TR:
       thread:
         title: "Başlık"
         view_thread: Konuyu görüntüle
-        default_title: "Konu #%{thread_id}"
+        default_title: "Konu"
         replies:
           one: "%{count} yanıt"
           other: "%{count} yanıt"

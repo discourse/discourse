@@ -427,7 +427,7 @@ zh_CN:
       thread:
         title: "标题"
         view_thread: 查看对话
-        default_title: "话题 #%{thread_id}"
+        default_title: "话题"
         replies:
           other: "%{count} 个回复"
         label: 话题

@@ -115,7 +115,7 @@ id:
         flags: "Flags"
       thread:
         title: "Judul"
-        default_title: "Utas #%{thread_id}"
+        default_title: "Utas"
         replies:
           other: "%{count} balasan"
         original_message:

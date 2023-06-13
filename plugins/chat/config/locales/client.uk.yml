@@ -206,6 +206,12 @@ uk:
       save: "Зберегти"
       select: "Вибрати"
       return_to_list: "Повернутися до списку каналів"
+      return_to_threads_list: "Повернутися до поточних дискусій"
+      unread_threads_count:
+        one: "У вас %{count} непрочитане обговорення"
+        few: "У вас %{count} непрочитаних обговорень"
+        many: "У вас %{count} непрочитані обговорення"
+        other: "У вас %{count} непрочитані обговорення"
       scroll_to_bottom: "Прокрутити вниз"
       scroll_to_new_messages: "Переглянути нові повідомлення"
       sound:
@@ -433,6 +439,7 @@ uk:
       thread:
         title: "Назва"
         view_thread: Відкрити діалог
+        default_title: "Нитка"
         replies:
           one: "%{count} відповідь"
           few: "%{count} відповіді"
@@ -446,6 +453,8 @@ uk:
         last_reply: "остання відповідь"
       threads:
         open: "Відкрийте тему"
+        list: "Поточні обговорення"
+        none: "Ви не берете участі в жодній темі на цьому каналі."
       draft_channel_screen:
         header: "Нове повідомлення"
         cancel: "Скасувати"
