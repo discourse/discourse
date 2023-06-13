@@ -4067,7 +4067,7 @@ fi:
             badges:
               content: "Kunniamerkit"
               title: "Kaikki ansaittavissa olevat kunniamerkit"
-            everything:
+            topics:
               content: "Kaikki"
               title: "Kaikki ketjut"
             faq:

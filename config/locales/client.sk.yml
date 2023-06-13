@@ -2325,7 +2325,7 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
-            everything:
+            topics:
               content: "Všetko"
             faq:
               content: "Časté otázky"

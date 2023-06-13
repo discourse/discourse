@@ -3583,7 +3583,7 @@ vi:
               content: "Quản trị"
             badges:
               content: "Huy hiệu"
-            everything:
+            topics:
               content: "Mọi thứ"
               title: "Tất cả các chủ đề"
             faq:

@@ -202,14 +202,14 @@ describe "Custom sidebar sections", type: :system do
     )
 
     sidebar.edit_custom_section("Community")
-    section_modal.fill_link("Everything", "/latest", "paper-plane")
+    section_modal.fill_link("Topics", "/latest", "paper-plane")
     section_modal.fill_name("Edited community section")
-    section_modal.everything_link.drag_to(section_modal.review_link, delay: 0.4)
+    section_modal.topics_link.drag_to(section_modal.review_link, delay: 0.4)
     section_modal.save
 
     expect(sidebar).to have_section("Edited community section")
     expect(sidebar.primary_section_links("edited-community-section")).to eq(
-      ["My Posts", "Everything", "Review", "Admin", "More"],
+      ["My Posts", "Topics", "Review", "Admin", "More"],
     )
     expect(sidebar.primary_section_icons("edited-community-section")).to eq(
       %w[user paper-plane flag wrench ellipsis-v],
@@ -220,7 +220,7 @@ describe "Custom sidebar sections", type: :system do
 
     expect(sidebar).to have_section("Community")
     expect(sidebar.primary_section_links("community")).to eq(
-      ["Everything", "My Posts", "Review", "Admin", "More"],
+      ["Topics", "My Posts", "Review", "Admin", "More"],
     )
     expect(sidebar.primary_section_icons("community")).to eq(
       %w[layer-group user flag wrench ellipsis-v],

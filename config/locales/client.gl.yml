@@ -3352,7 +3352,7 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
-            everything:
+            topics:
               content: "Todo"
             faq:
               content: "PMF"

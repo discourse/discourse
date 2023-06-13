@@ -3714,7 +3714,7 @@ hu:
             badges:
               content: "Jelvények"
               title: "Az összes megszerezhető jelvény"
-            everything:
+            topics:
               content: "Összes"
               title: "Minden téma"
             faq:

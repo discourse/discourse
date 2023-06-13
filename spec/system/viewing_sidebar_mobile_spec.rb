@@ -41,7 +41,7 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
 
     expect(sidebar_dropdown).to be_visible
 
-    sidebar_dropdown.click_everything_link
+    sidebar_dropdown.click_topics_link
 
     expect(sidebar_dropdown).to be_hidden
   end

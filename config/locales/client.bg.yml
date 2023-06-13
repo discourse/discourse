@@ -3442,7 +3442,7 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
-            everything:
+            topics:
               content: "Всичко"
             faq:
               content: "FAQ"

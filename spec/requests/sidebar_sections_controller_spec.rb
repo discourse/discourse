@@ -303,12 +303,12 @@ RSpec.describe SidebarSectionsController do
     it "allows admin to edit community section" do
       sign_in(admin)
 
-      everything_link = community_section.sidebar_urls.find_by(name: "Everything")
+      topics_link = community_section.sidebar_urls.find_by(name: "Topics")
       my_posts_link = community_section.sidebar_urls.find_by(name: "My Posts")
 
       community_section
         .sidebar_section_links
-        .where.not(linkable_id: [everything_link.id, my_posts_link.id])
+        .where.not(linkable_id: [topics_link.id, my_posts_link.id])
         .destroy_all
 
       put "/sidebar_sections/#{community_section.id}.json",
@@ -316,12 +316,7 @@ RSpec.describe SidebarSectionsController do
             title: "community section edited",
             links: [
               { icon: "link", id: my_posts_link.id, name: "my posts edited", value: "/my_posts" },
-              {
-                icon: "link",
-                id: everything_link.id,
-                name: "everything edited",
-                value: "/everything",
-              },
+              { icon: "link", id: topics_link.id, name: "topics edited", value: "/new" },
             ],
           }
 
@@ -330,8 +325,8 @@ RSpec.describe SidebarSectionsController do
       expect(community_section.reload.title).to eq("community section edited")
       expect(community_section.sidebar_urls[0].name).to eq("my posts edited")
       expect(community_section.sidebar_urls[0].value).to eq("/my_posts")
-      expect(community_section.sidebar_urls[1].name).to eq("everything edited")
-      expect(community_section.sidebar_urls[1].value).to eq("/everything")
+      expect(community_section.sidebar_urls[1].name).to eq("topics edited")
+      expect(community_section.sidebar_urls[1].value).to eq("/new")
     end
   end
 
@@ -461,7 +456,6 @@ RSpec.describe SidebarSectionsController do
     let(:community_section) do
       SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     end
-    let(:everything_link) { community_section.sidebar_section_links.first }
 
     it "doesn't allow user to reset community section" do
       sign_in(user)

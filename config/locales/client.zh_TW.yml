@@ -2907,7 +2907,7 @@ zh_TW:
               content: "管理員"
             badges:
               content: "徽章"
-            everything:
+            topics:
               content: "所有"
               title: "所有話題"
             faq:

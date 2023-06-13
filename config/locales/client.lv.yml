@@ -2813,7 +2813,7 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
-            everything:
+            topics:
               content: "Viss"
             faq:
               content: "BUJ"

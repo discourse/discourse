@@ -4524,7 +4524,7 @@ pl_PL:
             badges:
               content: "Odznaki"
               title: "Wszystkie odznaki dostępne do zdobycia"
-            everything:
+            topics:
               content: "Wszystko"
               title: "Wszystkie tematy"
             faq:

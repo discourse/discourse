@@ -3348,7 +3348,7 @@ el:
               content: "Διαχείριση"
             badges:
               content: "Παράσημα"
-            everything:
+            topics:
               content: "Τα πάνΤα"
               title: "Όλα τα θέματα"
             faq:
