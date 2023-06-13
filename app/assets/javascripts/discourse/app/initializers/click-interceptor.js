@@ -4,9 +4,17 @@ import interceptClick from "discourse/lib/intercept-click";
 export default {
   name: "click-interceptor",
   initialize(container, app) {
-    this.selector = app.rootElement;
-    $(this.selector).on("click.discourse", "a", interceptClick);
+    this.rootElement = document.querySelector(app.rootElement);
+    this.rootElement.addEventListener("click", this.interceptClick);
     window.addEventListener("hashchange", this.hashChanged);
+  },
+
+  interceptClick(event) {
+    if (event.currentTarget.tagName !== "A") {
+      return;
+    }
+
+    return interceptClick(event);
   },
 
   hashChanged() {
@@ -14,7 +22,7 @@ export default {
   },
 
   teardown() {
-    $(this.selector).off("click.discourse", "a", interceptClick);
+    this.rootElement.removeEventListener("click", this.interceptClick);
     window.removeEventListener("hashchange", this.hashChanged);
   },
 };
