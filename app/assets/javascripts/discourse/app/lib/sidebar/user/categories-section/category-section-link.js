@@ -72,6 +72,39 @@ export function resetCustomCountables() {
   customCountables.length = 0;
 }
 
+let customCategoryLockIcon;
+
+export function registerCustomCategoryLockIcon(icon) {
+  customCategoryLockIcon = icon;
+}
+
+export function resetCustomCategoryLockIcon() {
+  customCategoryLockIcon = null;
+}
+
+let customCategoryPrefixes = {};
+
+export function registerCustomCategorySectionLinkPrefix({
+  categoryId,
+  prefixValue,
+  prefixType,
+  prefixColor,
+}) {
+  customCategoryPrefixes[categoryId] = {
+    prefixValue,
+    prefixType,
+    prefixColor,
+  };
+}
+
+export function resetCustomCategorySectionLinkPrefix() {
+  for (let key in customCategoryPrefixes) {
+    if (customCategoryPrefixes.hasOwnProperty(key)) {
+      delete customCategoryPrefixes[key];
+    }
+  }
+}
+
 export default class CategorySectionLink {
   @tracked activeCountable;
 
@@ -156,20 +189,34 @@ export default class CategorySectionLink {
   }
 
   get prefixType() {
-    return "span";
+    return customCategoryPrefixes[this.category.id]?.prefixType || "span";
   }
 
-  get prefixElementColors() {
-    return [this.category.parentCategory?.color, this.category.color];
+  get prefixValue() {
+    const customPrefixValue =
+      customCategoryPrefixes[this.category.id]?.prefixValue;
+
+    if (customPrefixValue) {
+      return customPrefixValue;
+    }
+
+    if (this.category.parentCategory?.color) {
+      return [this.category.parentCategory?.color, this.category.color];
+    } else {
+      return [this.category.color];
+    }
   }
 
   get prefixColor() {
-    return this.category.color;
+    return (
+      customCategoryPrefixes[this.category.id]?.prefixColor ||
+      this.category.color
+    );
   }
 
   get prefixBadge() {
     if (this.category.read_restricted) {
-      return "lock";
+      return customCategoryLockIcon || "lock";
     }
   }
 

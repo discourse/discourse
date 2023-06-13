@@ -1,20 +1,23 @@
 import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { htmlSafe } from "@ember/template";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
+import { setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 
 export default class Section {
+  @service currentUser;
+  @service router;
+
   @tracked dragCss;
   @tracked links;
 
-  constructor({ section, currentUser, router }) {
+  constructor({ section, owner }) {
+    setOwner(this, owner);
+
     this.section = section;
-    this.router = router;
-    this.currentUser = currentUser;
     this.slug = section.slug;
 
     this.links = this.section.links.map((link) => {
@@ -23,9 +26,11 @@ export default class Section {
   }
 
   get decoratedTitle() {
-    return this.section.public && this.currentUser?.staff
-      ? htmlSafe(`${iconHTML("globe")} ${this.section.title}`)
-      : this.section.title;
+    return this.section.title;
+  }
+
+  get indicatePublic() {
+    return this.section.public && this.currentUser?.staff;
   }
 
   get headerActions() {

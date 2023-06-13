@@ -8,8 +8,6 @@ export default class UserChatChannelMembership {
 
   @tracked following = false;
   @tracked muted = false;
-  @tracked unreadCount = 0;
-  @tracked unreadMentions = 0;
   @tracked desktopNotificationLevel = null;
   @tracked mobileNotificationLevel = null;
   @tracked lastReadMessageId = null;
@@ -18,8 +16,6 @@ export default class UserChatChannelMembership {
   constructor(args = {}) {
     this.following = args.following;
     this.muted = args.muted;
-    this.unreadCount = args.unread_count;
-    this.unreadMentions = args.unread_mentions;
     this.desktopNotificationLevel = args.desktop_notification_level;
     this.mobileNotificationLevel = args.mobile_notification_level;
     this.lastReadMessageId = args.last_read_message_id;

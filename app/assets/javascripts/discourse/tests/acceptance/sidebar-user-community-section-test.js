@@ -25,6 +25,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     tracked_tags: ["tag1"],
     watched_tags: ["tag2"],
     watching_first_post_tags: ["tag3"],
+    admin: false,
   });
 
   needs.settings({
@@ -47,6 +48,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
+
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-section-header-button"
     );
@@ -791,6 +793,14 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "shows suffix indicator for unread posts on everything link"
     );
 
+    const topicTrackingState = this.container.lookup(
+      "service:topic-tracking-state"
+    );
+
+    const initialCallbackCount = Object.keys(
+      topicTrackingState.stateChangeCallbacks
+    ).length;
+
     // simulate reading topic 2
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -807,6 +817,12 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
       ),
       "shows suffix indicator for new topics on categories link"
+    );
+
+    assert.equal(
+      Object.keys(topicTrackingState.stateChangeCallbacks).length,
+      initialCallbackCount,
+      "it does not add a new topic tracking state callback when the topic is read"
     );
 
     // simulate reading topic 1
@@ -983,9 +999,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       reviewable_count: 0,
     });
 
-    await visit("/reivew");
+    await visit("/review");
 
-    assert.notOk(
+    assert.ok(
       exists(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'].active"
       ),
@@ -1012,7 +1028,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "review link is displayed in the more drawer"
     );
 
-    await publishToMessageBus("/reviewable_counts", {
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       reviewable_count: 34,
     });
 
@@ -1050,6 +1066,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         route: "discovery.unread",
         text: "unread topics",
         title: "List of unread topics",
+        icon: "wrench",
       });
     });
 
@@ -1071,6 +1088,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(".sidebar-section-link[data-link-name='unread']").title,
       "List of unread topics",
       "displays the right title for the link"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-link[data-link-name='unread'] .sidebar-section-link-prefix.icon .d-icon-wrench"
+      ),
+      "displays the wrench icon for the link"
     );
 
     await click(".sidebar-section-link[data-link-name='unread']");
@@ -1137,6 +1161,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(".sidebar-section-link[data-link-name='user-summary']").title,
       "eviltrout summary",
       "displays the right title for the link"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-link[data-link-name='user-summary'] .sidebar-section-link-prefix.icon .d-icon-link"
+      ),
+      "displays the link icon for the link"
     );
 
     await click(".btn-sidebar-toggle");

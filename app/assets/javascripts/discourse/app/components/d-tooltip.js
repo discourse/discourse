@@ -6,6 +6,7 @@ import Ember from "ember";
 export default class DiscourseTooltip extends Component {
   tagName = "";
   interactive = false;
+  placement = this.args?.placement || "bottom-start";
 
   didInsertElement() {
     this._super(...arguments);
@@ -36,7 +37,7 @@ export default class DiscourseTooltip extends Component {
         trigger: this.capabilities.touch ? "click" : "mouseenter",
         theme: "d-tooltip",
         arrow: false,
-        placement: "bottom-start",
+        placement: this.placement,
         onTrigger: this.stopPropagation,
         onUntrigger: this.stopPropagation,
       });

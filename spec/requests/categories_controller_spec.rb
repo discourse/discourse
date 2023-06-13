@@ -244,6 +244,23 @@ RSpec.describe CategoriesController do
             [topic1.id, topic3.id, topic2.id],
           )
         end
+
+        it "does not include the sort parameter in more_topics_url" do
+          # we need to create more topics for more_topics_url to be serialized
+          SiteSetting.categories_topics = 5
+          Fabricate.times(
+            5,
+            :topic,
+            category: category,
+            created_at: 1.day.ago,
+            bumped_at: 1.day.ago,
+          )
+
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/latest")
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).not_to include("sort")
+        end
       end
 
       context "when order is set to created" do
@@ -258,74 +275,23 @@ RSpec.describe CategoriesController do
             [topic3.id, topic2.id, topic1.id],
           )
         end
-      end
-    end
 
-    describe "welcome topic" do
-      fab!(:category) { Fabricate(:category) }
-      fab!(:topic1) do
-        Fabricate(
-          :topic,
-          category: category,
-          created_at: 5.days.ago,
-          updated_at: Time.now,
-          bumped_at: Time.now,
-        )
-      end
-      fab!(:topic2) do
-        Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago)
-      end
-      fab!(:topic3) do
-        Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago)
-      end
-      fab!(:welcome_topic) { Fabricate(:topic) }
-      fab!(:post) { Fabricate(:post, topic: welcome_topic) }
+        it "includes the sort parameter in more_topics_url" do
+          # we need to create more topics for more_topics_url to be serialized
+          SiteSetting.categories_topics = 5
+          Fabricate.times(
+            5,
+            :topic,
+            category: category,
+            created_at: 1.day.ago,
+            bumped_at: 1.day.ago,
+          )
 
-      before do
-        SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
-        SiteSetting.welcome_topic_id = welcome_topic.id
-        SiteSetting.editing_grace_period = 1.minute.to_i
-        SiteSetting.bootstrap_mode_enabled = true
-      end
-
-      it "is hidden for non-admins" do
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).not_to include(
-          welcome_topic.id,
-        )
-      end
-
-      it "is shown to non-admins when there is an edit" do
-        post.revise(post.user, { raw: "#{post.raw}2" }, revised_at: post.updated_at + 2.minutes)
-        post.reload
-        expect(post.version).to eq(2)
-
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to include(
-          welcome_topic.id,
-        )
-      end
-
-      it "is hidden to admins" do
-        sign_in(admin)
-
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).not_to include(
-          welcome_topic.id,
-        )
-      end
-
-      it "is shown to users when bootstrap mode is disabled" do
-        SiteSetting.bootstrap_mode_enabled = false
-
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to include(
-          welcome_topic.id,
-        )
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/latest")
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).to include("sort=created")
+        end
       end
     end
 
@@ -951,6 +917,25 @@ RSpec.describe CategoriesController do
       expect(
         response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
       ).not_to include(uncategorized.id)
+    end
+
+    it "includes more_topics_url in the response to /categories_and_latest" do
+      SiteSetting.categories_topics = 5
+
+      get "/categories_and_latest.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/latest")
+    end
+
+    it "includes more_topics_url in the response to /categories_and_top" do
+      SiteSetting.categories_topics = 5
+
+      Fabricate.times(10, :topic, category: category, like_count: 1000, posts_count: 100)
+      TopTopic.refresh!
+
+      get "/categories_and_top.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/top")
     end
 
     describe "Showing top topics from private categories" do

@@ -362,9 +362,12 @@ nl:
         search_placeholder: "Zoek op emojinaam en -alias..."
         no_results: "Geen resultaten"
       thread:
+        title: "Titel"
         replies:
           one: "%{count} antwoord"
           other: "%{count} antwoorden"
+        settings: "Instellingen"
+        last_reply: "laatste antwoord"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
@@ -441,3 +444,7 @@ nl:
         chat_notifications_with_unread:
           one: "Chatmeldingen - %{count} ongelezen melding"
           other: "Chatmeldingen - %{count} ongelezen meldingen"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

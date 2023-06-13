@@ -28,7 +28,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
+  attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
 
   def self.max_fancy_title_length
     400
@@ -293,6 +293,7 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :posters # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
+  attr_accessor :participant_groups
   attr_accessor :topic_list
   attr_accessor :meta_data
   attr_accessor :include_last_poster
@@ -1236,7 +1237,11 @@ class Topic < ActiveRecord::Base
       )
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
+      topic =
+        post_mover.to_topic(
+          opts[:destination_topic_id],
+          **opts.slice(:participants, :chronological_order),
+        )
 
       DiscourseEvent.trigger(:topic_merged, post_mover.original_topic, post_mover.destination_topic)
 
@@ -1268,6 +1273,10 @@ class Topic < ActiveRecord::Base
 
   def participants_summary(options = {})
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
+  end
+
+  def participant_groups_summary(options = {})
+    @participant_groups_summary ||= TopicParticipantGroupsSummary.new(self, options).summary
   end
 
   def make_banner!(user, bannered_until = nil)

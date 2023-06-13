@@ -207,8 +207,8 @@ en:
       invalid_site_setting: "No setting named '%{name}' exists"
       invalid_category_id: "You specified a category that does not exist"
       invalid_choice:
-        one: "You specified the invalid choice %{name}"
-        other: "You specified the invalid choices %{name}"
+        one: "'%{name}' is an invalid choice."
+        other: "'%{name}' are invalid choices."
       default_categories_already_selected: "You cannot select a category used in another list."
       default_tags_already_selected: "You cannot select a tag used in another list."
       s3_upload_bucket_is_required: "You cannot enable uploads to S3 unless you've provided the 's3_upload_bucket'."
@@ -216,7 +216,8 @@ en:
       page_publishing_requirements: "Page publishing cannot be enabled if secure media is enabled."
       s3_backup_requires_s3_settings: "You cannot use S3 as backup location unless you've provided the '%{setting_name}'."
       s3_bucket_reused: "You cannot use the same bucket for 's3_upload_bucket' and 's3_backup_bucket'. Choose a different bucket or use a different path for each bucket."
-      secure_uploads_requirements: "S3 uploads must be enabled before enabling secure uploads."
+      secure_uploads_requirements: "S3 uploads and S3 ACLs must be enabled before enabling secure uploads."
+      s3_use_acls_requirements: "You must have S3 ACLs enabled when secure uploads are enabled."
       share_quote_facebook_requirements: "You must set a Facebook app id to enable quote sharing for Facebook."
       second_factor_cannot_enforce_with_socials: "You cannot enforce 2FA with social logins enabled. You must first disable login via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "You cannot enforce 2FA if local logins are disabled."
@@ -652,8 +653,8 @@ en:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'The following interpolation key is invalid: %{keys}'
-                other: 'The following interpolation keys are invalid: %{keys}'
+                one: "The following interpolation key is invalid: %{keys}"
+                other: "The following interpolation keys are invalid: %{keys}"
         watched_word:
           attributes:
             word:
@@ -678,21 +679,21 @@ en:
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
   discourse_welcome_topic:
-    title: "Welcome to our community!"
+    title: "Welcome to %{site_title}! :wave:"
     body: |
+      We are so glad you joined us.
 
-      The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
+      %{site_info_quote}
 
-      **Edit this** into a brief description of your community:
+      Here are some things you can do to get started:
 
-      - Who is it for?
-      - What can they find here?
-      - Why should they come here?
-      - Where can they read more (links, resources, etc)?
+      :speaking_head: **Introduce yourself** by adding your picture and information about yourself and your interests to [your profile](%{base_path}/my/preferences/account). What is one thing you’d like to be asked about?
 
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      :open_book: **Get to know the community** by [browsing discussions](%{base_path}/top) that are already happening here. When you find a post interesting, informative, or entertaining, use the :heart: to show your appreciation or support!
 
-      You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
+      :handshake: **Contribute** by commenting, sharing your own perspective, asking questions, or offering feedback in the discussion. Before replying or starting new topics, please review the [Community Guidelines](%{base_path}/faq).
+
+      > If you need help or have a suggestion, feel free to ask in [#feedback](%{base_path}/c/site-feedback) or [contact the admins](%{base_path}/about).
 
   admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
 
@@ -1577,7 +1578,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
-    apple_touch_icon: "Icon used for Apple touch devices. A transparent backround is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
     twitter_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
@@ -1698,6 +1699,7 @@ en:
     enable_badges: "Enable the badge system"
     max_favorite_badges: "Maximum number of badges that user can select"
     whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
+    hidden_post_visible_groups: "Allow members of these groups to view hidden posts. Staff users can always view hidden posts."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. In exceptional cases you can permanently <a href='%{base_path}/admin/customize/robots'>override robots.txt</a>."
     blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com|trashmail.net"
@@ -1790,6 +1792,7 @@ en:
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
     enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
+    s3_use_acls: "AWS recommends not using ACLs on S3 buckets; if you are following this advice, uncheck this option. This must be enabled if you are using secure uploads."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
     backup_location: "Location where backups are stored. IMPORTANT: S3 requires valid S3 credentials entered in Files settings."
@@ -2095,7 +2098,7 @@ en:
     pop3_polling_password: "The password for the POP3 account to poll for email."
     pop3_polling_delete_from_server: "Delete emails from server. NOTE: If you disable this you should manually clean your mail inbox"
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories.'
+    email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "The email header to detect spam."
@@ -2228,7 +2231,7 @@ en:
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
     svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
-    max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
+    max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
     full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
@@ -2252,7 +2255,6 @@ en:
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
     notify_about_reviewable_item_after: "If there are reviewable items that haven’t been handled after this many hours, send a personal message to moderators. Set to 0 to disable."
-    show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
@@ -2340,6 +2342,7 @@ en:
     default_text_size: "Text size which is selected by default"
 
     default_title_count_mode: "Default mode for the page title counter"
+    enable_offline_indicator: "Display a message to users when it is detected that they have no network connection"
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
@@ -2415,9 +2418,8 @@ en:
     navigation_menu: "Determine which navigation menu to use. Sidebar and header navigation are customizable by users. Legacy option is available for backward compatibility."
     default_sidebar_categories: "Selected categories will be displayed under Sidebar's Categories section by default."
     default_sidebar_tags: "Selected tags will be displayed under Sidebar's Tags section by default."
-    enable_new_notifications_menu: "Enables the new notifications menu. Disabling this setting is deprecated. The new notifications menu is always used for non-legacy 'navigation menu' choices. <a href='https://meta.discourse.org/t/260358'>Learn more</a>"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use the new #hashtag autocompletion system for categories and tags that renders the selected item differently and has improved search"
-    experimental_new_new_view_groups: "EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the \"Everything\" link in the sidebar link to it."
+    experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
 
@@ -4918,6 +4920,7 @@ en:
     required_tags_from_group:
       one: "You must include at least %{count} %{tag_group_name} tag. The tags in this group are: %{tags}."
       other: "You must include at least %{count} %{tag_group_name} tags. The tags in this group are: %{tags}."
+    limited_to_one_tag_from_group: "The tags %{tags} cannot be used simultaneously. Please include only one of them."
     invalid_target_tag: "cannot be a synonym of a synonym"
     synonyms_exist: "is not allowed while synonyms exist"
   rss_by_tag: "Topics tagged %{tag}"

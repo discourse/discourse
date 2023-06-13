@@ -251,6 +251,9 @@ en:
       select: "Select"
       return_to_list: "Return to channels list"
       return_to_threads_list: "Return to ongoing discussions"
+      unread_threads_count:
+        one: "You have %{count} unread discussion"
+        other: "You have %{count} unread discussions"
       scroll_to_bottom: "Scroll to bottom"
       scroll_to_new_messages: "See new messages"
       sound:
@@ -544,7 +547,7 @@ en:
       thread:
         title: "Title"
         view_thread: View thread
-        default_title: "Thread #%{thread_id}"
+        default_title: "Thread"
         replies:
           one: "%{count} reply"
           other: "%{count} replies"
@@ -553,6 +556,7 @@ en:
         original_message:
           started_by: "Started by"
         settings: "Settings"
+        last_reply: "last reply"
       threads:
         open: "Open Thread"
         list: "Ongoing discussions"
@@ -641,3 +645,8 @@ en:
         chat_notifications_with_unread:
           one: "Chat notifications - %{count} unread notification"
           other: "Chat notifications - %{count} unread notifications"
+
+    styleguide:
+      sections:
+        chat:
+          title: Chat

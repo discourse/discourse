@@ -327,19 +327,12 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + %i[categories top]
   end
 
+  # list of pixel ratios Discourse tries to optimize for
   PIXEL_RATIOS ||= [1, 1.5, 2, 3]
 
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
-    set = Set.new
-
-    SiteSetting
-      .avatar_sizes
-      .split("|")
-      .map(&:to_i)
-      .each { |size| PIXEL_RATIOS.each { |pixel_ratio| set << (size * pixel_ratio).to_i } }
-
-    set
+    Set.new(SiteSetting.avatar_sizes.split("|").map(&:to_i))
   end
 
   def self.activate_plugins!
@@ -438,6 +431,7 @@ module Discourse
           end
     end
 
+    assets.map! { |asset| "#{asset}_rtl" } if args[:rtl]
     assets
   end
 
@@ -601,6 +595,46 @@ module Discourse
 
   class << self
     alias_method :base_url_no_path, :base_url_no_prefix
+  end
+
+  def self.urls_cache
+    @urls_cache ||= DistributedCache.new("urls_cache")
+  end
+
+  def self.tos_url
+    if SiteSetting.tos_url.present?
+      SiteSetting.tos_url
+    else
+      urls_cache["tos"] ||= (
+        if SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
+          "#{Discourse.base_path}/tos"
+        else
+          :nil
+        end
+      )
+
+      urls_cache["tos"] != :nil ? urls_cache["tos"] : nil
+    end
+  end
+
+  def self.privacy_policy_url
+    if SiteSetting.privacy_policy_url.present?
+      SiteSetting.privacy_policy_url
+    else
+      urls_cache["privacy_policy"] ||= (
+        if SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
+          "#{Discourse.base_path}/privacy"
+        else
+          :nil
+        end
+      )
+
+      urls_cache["privacy_policy"] != :nil ? urls_cache["privacy_policy"] : nil
+    end
+  end
+
+  def self.clear_urls!
+    urls_cache.clear
   end
 
   LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
@@ -977,14 +1011,14 @@ module Discourse
 
     raise Deprecation.new(warning) if raise_error
 
-    STDERR.puts(warning) if Rails.env == "development"
+    STDERR.puts(warning) if Rails.env.development?
 
-    STDERR.puts(warning) if output_in_test && Rails.env == "test"
+    STDERR.puts(warning) if output_in_test && Rails.env.test?
 
     digest = Digest::MD5.hexdigest(warning)
     redis_key = "deprecate-notice-#{digest}"
 
-    if Rails.logger && !GlobalSetting.skip_redis? &&
+    if !Rails.env.development? && Rails.logger && !GlobalSetting.skip_redis? &&
          !Discourse.redis.without_namespace.get(redis_key)
       Rails.logger.warn(warning)
       begin

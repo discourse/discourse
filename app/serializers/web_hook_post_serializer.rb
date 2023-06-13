@@ -20,6 +20,7 @@ class WebHookPostSerializer < PostSerializer
     can_edit
     can_delete
     can_recover
+    can_see_hidden_post
     can_wiki
     actions_summary
     can_view_edit_history

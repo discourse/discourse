@@ -3112,7 +3112,6 @@ el:
         one: "Κέρδισε αυτό το παράσημο %{count} φορά"
         other: "Κέρδισε αυτό το παράσημο %{count} φορές"
       granted_on: "Χορηγήθηκε στις %{date}"
-      others_count: "Άλλοι με αυτό το παράσημο (%{count})"
       title: Παράσημα
       allow_title: "Μπορείς να χρησιμοποιήσεις αυτό το παράσημο σαν τίτλο"
       multiple_grant: "Μπορείς να το κερδίσεις πολλές φορές"
@@ -3301,6 +3300,7 @@ el:
           save: "Αποθήκευση"
           delete: "Σβήσιμο"
           links:
+            reset: "Επαναφορά στο προεπιλεγμένο"
             icon:
               label: "Σύμβολο"
             name:
@@ -3340,7 +3340,7 @@ el:
           configure_defaults: "Ρύθμιση προεπιλογών"
         community:
           header_link_text: "Κοινότητα"
-          header_action_title: "Δημιουργήστε ένα θέμα"
+          header_action_create_topic_title: "Δημιουργήστε ένα θέμα"
           links:
             about:
               content: "Σχετικά"
@@ -4551,7 +4551,6 @@ el:
       site_settings:
         title: "Ρυθμίσεις"
         no_results: "Δεν βρέθηκαν αποτελέσματα."
-        more_than_30_results: "Υπάρχουν περισσότερα από 30 αποτελέσματα. Κάντε πιο συγκεκριμένη την αναζήτησή σας ή επιλέξτε μια κατηγορία."
         clear_filter: "Καθάρισμα φίλτρου"
         add_url: "προσθήκη URL"
         add_host: "προσθήκη host"

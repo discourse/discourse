@@ -419,6 +419,18 @@ RSpec.describe UploadCreator do
       end
     end
 
+    context "when the video thumbnail already exists based on the sha1" do
+      let(:filename) { "smallest.png" }
+      let(:file) { file_from_fixtures(filename, "images") }
+      let!(:existing_upload) { Fabricate(:upload, sha1: Upload.generate_digest(file)) }
+      let(:opts) { { type: "thumbnail" } }
+      let(:result) { UploadCreator.new(file, filename, opts).create_for(user.id) }
+
+      it "does not return the existing upload, as duplicate uploads are allowed" do
+        expect(result).not_to eq(existing_upload)
+      end
+    end
+
     context "with secure uploads functionality" do
       let(:filename) { "logo.jpg" }
       let(:file) { file_from_fixtures(filename) }

@@ -90,12 +90,7 @@ class PostRevisor
     elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
       tags = fields[:tags] || tc.topic.tags.map(&:name)
       if new_category &&
-           !DiscourseTagging.validate_min_required_tags_for_category(
-             tc.guardian,
-             tc.topic,
-             new_category,
-             tags,
-           )
+           !DiscourseTagging.validate_category_tags(tc.guardian, tc.topic, new_category, tags)
         tc.check_result(false)
         next
       end
@@ -694,7 +689,6 @@ class PostRevisor
 
     update_topic_excerpt
     update_category_description
-    hide_welcome_topic_banner
   end
 
   def update_topic_excerpt
@@ -714,15 +708,6 @@ class PostRevisor
     else
       @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
-  end
-
-  def hide_welcome_topic_banner
-    return unless guardian.is_admin?
-    return unless @topic.id == SiteSetting.welcome_topic_id
-    return unless Discourse.cache.read(Site.welcome_topic_banner_cache_key(@editor.id))
-
-    Discourse.cache.write(Site.welcome_topic_banner_cache_key(@editor.id), false)
-    MessageBus.publish("/site/welcome-topic-banner", false)
   end
 
   def advance_draft_sequence
@@ -776,5 +761,18 @@ class PostRevisor
 
   def guardian
     @guardian ||= Guardian.new(@editor)
+  end
+
+  def raw_changed?
+    @fields.has_key?(:raw) && @fields[:raw] != cached_original_raw && @post_successfully_saved
+  end
+
+  def topic_title_changed?
+    topic_changed? && @fields.has_key?(:title) && topic_diff.has_key?(:title) &&
+      !@topic_changes.errored?
+  end
+
+  def reviewable_content_changed?
+    raw_changed? || topic_title_changed?
   end
 end

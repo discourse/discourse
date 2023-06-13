@@ -366,12 +366,16 @@ pt_BR:
         search_placeholder: "Pesquisar por nome de emoji e codinomes..."
         no_results: "Nenhum resultado"
       thread:
+        title: "Título"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
         label: Tópico
+        original_message:
+          started_by: "Iniciado por"
+        settings: "Definições"
+        last_reply: "última resposta"
       threads:
-        started_by: "Iniciado por"
         open: "Tópico Aberto"
       draft_channel_screen:
         header: "Novas mensagens"
@@ -450,3 +454,7 @@ pt_BR:
         chat_notifications_with_unread:
           one: "Notificações do chat - %{count} notificação não lida"
           other: "Notificações do chat - %{count} notificações não lidas"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

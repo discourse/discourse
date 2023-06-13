@@ -1,9 +1,11 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+
 export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
-  @service chatChannelThreadListPane;
+  @service chatThreadListPane;
+  @service chatStateManager;
 
   beforeModel(transition) {
     const channel = this.modelFor("chat.channel");
@@ -13,14 +15,18 @@ export default class ChatChannelThreads extends DiscourseRoute {
       this.router.transitionTo("chat.channel", ...channel.routeModels);
       return;
     }
+
+    this.chatStateManager.openSidePanel();
   }
 
   @action
-  willTransition() {
-    this.chatChannelThreadListPane.close();
+  willTransition(transition) {
+    if (transition.targetName === "chat.channel.index") {
+      this.chatStateManager.closeSidePanel();
+    }
   }
 
   activate() {
-    this.chatChannelThreadListPane.open();
+    this.chatThreadListPane.open();
   }
 }

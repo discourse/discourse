@@ -11,7 +11,7 @@ RSpec.describe SeedData::Topics do
   end
 
   def create_topic(name = "welcome_topic_id")
-    subject.create(site_setting_names: [name])
+    subject.create(site_setting_names: [name], include_legal_topics: true)
   end
 
   describe "#create" do
@@ -19,9 +19,17 @@ RSpec.describe SeedData::Topics do
       expect { create_topic }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
 
       topic = Topic.last
-      expect(topic.title).to eq(I18n.t("discourse_welcome_topic.title"))
+      expect(topic.title).to eq(
+        I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
+      )
       expect(topic.first_post.raw).to eq(
-        I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path).rstrip,
+        I18n.t(
+          "discourse_welcome_topic.body",
+          base_path: Discourse.base_path,
+          site_title: SiteSetting.title,
+          site_description: SiteSetting.site_description,
+          site_info_quote: "",
+        ).rstrip,
       )
       expect(topic.category_id).to eq(SiteSetting.general_category_id)
       expect(topic.user_id).to eq(Discourse::SYSTEM_USER_ID)
@@ -64,6 +72,40 @@ RSpec.describe SeedData::Topics do
 
       expect { create_topic }.to_not change { Topic.count }
     end
+
+    it "does not create a legal topic if company_name is not set" do
+      subject.create(site_setting_names: ["tos_topic_id"])
+
+      expect(SiteSetting.tos_topic_id).to eq(-1)
+    end
+
+    it "creates a welcome topic without site title" do
+      SiteSetting.title = "My Awesome Community"
+      SiteSetting.site_description = ""
+
+      create_topic
+
+      post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
+      expect(post.raw).not_to include("> ## My Awesome Community")
+    end
+
+    it "creates a welcome topic with site title and description" do
+      SiteSetting.title = "My Awesome Community"
+      SiteSetting.site_description = "The best community"
+
+      create_topic
+
+      post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
+      expect(post.raw).to include("> ## My Awesome Community")
+      expect(post.raw).to include("> The best community")
+    end
+
+    it "creates a legal topic if company_name is set" do
+      SiteSetting.company_name = "Company Name"
+      subject.create(site_setting_names: ["tos_topic_id"])
+
+      expect(SiteSetting.tos_topic_id).to_not eq(-1)
+    end
   end
 
   describe "#update" do
@@ -81,9 +123,17 @@ RSpec.describe SeedData::Topics do
       update_topic
       topic.reload
 
-      expect(topic.title).to eq(I18n.t("discourse_welcome_topic.title"))
+      expect(topic.title).to eq(
+        I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
+      )
       expect(topic.first_post.raw).to eq(
-        I18n.t("discourse_welcome_topic.body", base_path: Discourse.base_path).rstrip,
+        I18n.t(
+          "discourse_welcome_topic.body",
+          base_path: Discourse.base_path,
+          site_title: SiteSetting.title,
+          site_description: SiteSetting.site_description,
+          site_info_quote: "",
+        ).rstrip,
       )
     end
 
@@ -112,6 +162,29 @@ RSpec.describe SeedData::Topics do
 
       expect(topic.title).to eq("New topic title")
       expect(topic.first_post.raw).to eq("New text of first post.")
+    end
+  end
+
+  describe "#delete" do
+    def delete_topic(name = "welcome_topic_id", skip_changed: false)
+      subject.delete(site_setting_names: [name], skip_changed: skip_changed)
+    end
+
+    it "deletes the topic" do
+      create_topic
+
+      topic = Topic.last
+
+      expect { delete_topic }.to change { Topic.count }.by(-1)
+    end
+
+    it "does not delete the topic if changed" do
+      create_topic
+
+      topic = Topic.last
+      topic.first_post.revise(Fabricate(:admin), raw: "New text of first post.")
+
+      expect { delete_topic(skip_changed: true) }.not_to change { Topic.count }
     end
   end
 

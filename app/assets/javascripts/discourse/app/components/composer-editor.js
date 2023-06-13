@@ -249,7 +249,7 @@ export default Component.extend(
         this._bindMobileUploadButton();
       }
 
-      this.appEvents.trigger("composer:will-open");
+      this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
     },
 
     @discourseComputed(
@@ -603,7 +603,7 @@ export default Component.extend(
           );
 
           this.appEvents.trigger(
-            "composer:replace-text",
+            `${this.composerEventPrefix}:replace-text`,
             matchingPlaceholder[index],
             replacement,
             { regex: IMAGE_MARKDOWN_REGEX, index }
@@ -648,7 +648,11 @@ export default Component.extend(
         `![${input.value}|$2$3$4]($5)`
       );
 
-      this.appEvents.trigger("composer:replace-text", match, replacement);
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:replace-text`,
+        match,
+        replacement
+      );
 
       this.resetImageControls(buttonWrapper);
     },
@@ -731,10 +735,39 @@ export default Component.extend(
       const matchingPlaceholder =
         this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
       this.appEvents.trigger(
-        "composer:replace-text",
+        `${this.composerEventPrefix}:replace-text`,
         matchingPlaceholder[index],
         "",
         { regex: IMAGE_MARKDOWN_REGEX, index }
+      );
+    },
+
+    @bind
+    _handleImageGridButtonClick(event) {
+      if (!event.target.classList.contains("wrap-image-grid-button")) {
+        return;
+      }
+
+      const index = parseInt(
+        event.target.closest(".button-wrapper").dataset.imageIndex,
+        10
+      );
+      const reply = this.get("composer.reply");
+      const matches = reply.match(IMAGE_MARKDOWN_REGEX);
+      const closingIndex =
+        index + parseInt(event.target.dataset.imageCount, 10) - 1;
+
+      const textArea = this.element.querySelector(".d-editor-input");
+      textArea.selectionStart = reply.indexOf(matches[index]);
+      textArea.selectionEnd =
+        reply.indexOf(matches[closingIndex]) + matches[closingIndex].length;
+
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:apply-surround`,
+        "[grid]",
+        "[/grid]",
+        "grid_surround",
+        { useBlockMode: true }
       );
     },
 
@@ -744,16 +777,19 @@ export default Component.extend(
       preview.addEventListener("click", this._handleAltTextCancelButtonClick);
       preview.addEventListener("click", this._handleImageDeleteButtonClick);
       preview.addEventListener("keypress", this._handleAltTextInputKeypress);
+      if (this.siteSettings.experimental_post_image_grid) {
+        preview.addEventListener("click", this._handleImageGridButtonClick);
+      }
     },
 
     @on("willDestroyElement")
     _composerClosed() {
       this._unbindMobileUploadButton();
-      this.appEvents.trigger("composer:will-close");
+      this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
       next(() => {
         // need to wait a bit for the "slide down" transition of the composer
         discourseLater(
-          () => this.appEvents.trigger("composer:closed"),
+          () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
           isTesting() ? 0 : 400
         );
       });
@@ -769,6 +805,10 @@ export default Component.extend(
       preview?.removeEventListener("click", this._handleImageScaleButtonClick);
       preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
       preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
+      preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
+      if (this.siteSettings.experimental_post_image_grid) {
+        preview?.removeEventListener("click", this._handleImageGridButtonClick);
+      }
       preview?.removeEventListener(
         "click",
         this._handleAltTextCancelButtonClick

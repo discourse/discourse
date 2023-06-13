@@ -4,7 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { Promise } from "rsvp";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { module, test } from "qunit";
 
 function mockChat(context, options = {}) {
@@ -15,7 +15,7 @@ function mockChat(context, options = {}) {
     });
   };
   mock.getDmChannelForUsernames = () => {
-    return Promise.resolve({ chat_channel: fabricators.chatChannel() });
+    return Promise.resolve({ chat_channel: fabricators.channel() });
   };
   return mock;
 }
@@ -114,7 +114,7 @@ module("Discourse Chat | Component | direct-message-creator", function (hooks) {
     await fillIn(".filter-usernames", "hawk");
     assert.strictEqual(query(".filter-usernames").value, "hawk");
 
-    this.set("channel", fabricators.chatChannel());
+    this.set("channel", fabricators.channel());
     this.set("channel", ChatChannel.createDirectMessageChannelDraft());
 
     assert.strictEqual(query(".filter-usernames").value, "");

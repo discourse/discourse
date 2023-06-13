@@ -110,12 +110,15 @@ class UsersController < ApplicationController
 
     @user =
       fetch_user_from_params(
-        include_inactive:
-          current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts),
+        include_inactive: current_user&.staff? || for_card || SiteSetting.show_inactive_accounts,
       )
 
     user_serializer = nil
-    if guardian.can_see_profile?(@user)
+    if !current_user&.staff? && !@user.active?
+      user_serializer = InactiveUserSerializer.new(@user, scope: guardian, root: "user")
+    elsif !guardian.can_see_profile?(@user)
+      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
+    else
       serializer_class = for_card ? UserCardSerializer : UserSerializer
       user_serializer = serializer_class.new(@user, scope: guardian, root: "user")
 
@@ -125,8 +128,6 @@ class UsersController < ApplicationController
           topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count,
         }
       end
-    else
-      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
     end
 
     track_visit_to_user_profile if !params[:skip_track_visit] && (@user != current_user)
@@ -2013,12 +2014,31 @@ class UsersController < ApplicationController
       result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    modify_user_params(result)
+    deprecate_modify_user_params_method
+    result = modify_user_params(result)
+    DiscoursePluginRegistry.apply_modifier(
+      :users_controller_update_user_params,
+      result,
+      current_user,
+      params,
+    )
   end
 
   # Plugins can use this to modify user parameters
   def modify_user_params(attrs)
     attrs
+  end
+
+  def deprecate_modify_user_params_method
+    # only issue a deprecation warning if the method is overriden somewhere
+    if method(:modify_user_params).source_location[0] !=
+         "#{Rails.root}/app/controllers/users_controller.rb"
+      Discourse.deprecate(
+        "`UsersController#modify_user_params` method is deprecated. Please use the `users_controller_update_user_params` modifier instead.",
+        since: "3.1.0.beta4",
+        drop_from: "3.2.0",
+      )
+    end
   end
 
   def fail_with(key)

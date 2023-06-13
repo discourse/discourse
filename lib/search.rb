@@ -20,7 +20,7 @@ class Search
   end
 
   def self.per_filter
-    50
+    SiteSetting.search_page_size
   end
 
   def self.facets
@@ -630,7 +630,7 @@ class Search
       Group
         .visible_groups(@guardian.user)
         .members_visible_groups(@guardian.user)
-        .where("groups.name ILIKE ? OR (id = ? AND id > 0)", match, match.to_i)
+        .where("groups.name ILIKE ? OR (groups.id = ? AND groups.id > 0)", match, match.to_i)
 
     DiscoursePluginRegistry.search_groups_set_query_callbacks.each do |cb|
       group_query = cb.call(group_query, @term, @guardian)
@@ -1124,11 +1124,23 @@ class Search
       else
         posts = posts.reorder("posts.created_at DESC")
       end
+    elsif @order == :oldest
+      if aggregate_search
+        posts = posts.order("MAX(posts.created_at) ASC")
+      else
+        posts = posts.reorder("posts.created_at ASC")
+      end
     elsif @order == :latest_topic
       if aggregate_search
         posts = posts.order("MAX(topics.created_at) DESC")
       else
         posts = posts.order("topics.created_at DESC")
+      end
+    elsif @order == :oldest_topic
+      if aggregate_search
+        posts = posts.order("MAX(topics.created_at) ASC")
+      else
+        posts = posts.order("topics.created_at ASC")
       end
     elsif @order == :views
       if aggregate_search

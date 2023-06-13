@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe "Deleted message", type: :system, js: true do
+RSpec.describe "Deleted message", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
 
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel_1) { Fabricate(:category_channel) }
@@ -17,7 +18,9 @@ RSpec.describe "Deleted message", type: :system, js: true do
     it "shows as deleted" do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("aaaaaaaaaaaaaaaaaaaa")
-      expect(page).to have_no_css(".chat-message-staged")
+
+      expect(page).to have_css(".is-persisted")
+
       last_message = find(".chat-message-container:last-child")
       channel_page.delete_message(OpenStruct.new(id: last_message["data-id"]))
 
@@ -25,6 +28,52 @@ RSpec.describe "Deleted message", type: :system, js: true do
         OpenStruct.new(id: last_message["data-id"]),
         count: 1,
       )
+    end
+
+    it "does not error when coming back to the channel from another channel" do
+      message = Fabricate(:chat_message, chat_channel: channel_1)
+      channel_2 = Fabricate(:category_channel, name: "other channel")
+      channel_2.add(current_user)
+      channel_1
+        .user_chat_channel_memberships
+        .find_by(user: current_user)
+        .update!(last_read_message_id: message.id)
+      chat_page.visit_channel(channel_1)
+      channel_page.delete_message(message)
+      expect(channel_page).to have_deleted_message(message, count: 1)
+      sidebar_component.click_link(channel_2.name)
+      expect(channel_page).to have_no_loading_skeleton
+
+      sidebar_component.click_link(channel_1.name)
+      expect(channel_page).to have_deleted_message(message, count: 1)
+    end
+
+    context "when the current user is not admin" do
+      fab!(:current_user) { Fabricate(:user) }
+
+      it "does not error when coming back to the channel from another channel" do
+        message = Fabricate(:chat_message, chat_channel: channel_1)
+        channel_2 = Fabricate(:category_channel, name: "other channel")
+        channel_2.add(current_user)
+        channel_1
+          .user_chat_channel_memberships
+          .find_by(user: current_user)
+          .update!(last_read_message_id: message.id)
+        chat_page.visit_channel(channel_1)
+        sidebar_component.click_link(channel_2.name)
+
+        other_user = Fabricate(:admin)
+        chat_system_user_bootstrap(user: other_user, channel: channel_1)
+        using_session(:tab_2) do |session|
+          sign_in(other_user)
+          chat_page.visit_channel(channel_1)
+          channel_page.delete_message(message)
+          session.quit
+        end
+
+        sidebar_component.click_link(channel_1.name)
+        expect(channel_page).to have_no_message(id: message.id)
+      end
     end
   end
 

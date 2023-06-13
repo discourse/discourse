@@ -63,13 +63,13 @@ class CurrentUserSerializer < BasicUserSerializer
              :pending_posts_count,
              :status,
              :grouped_unread_notifications,
-             :redesigned_user_menu_enabled,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
              :sidebar_list_destination,
              :sidebar_sections,
-             :new_new_view_enabled?
+             :new_new_view_enabled?,
+             :new_edit_sidebar_categories_tags_interface_groups_enabled?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -80,7 +80,7 @@ class CurrentUserSerializer < BasicUserSerializer
     SidebarSection
       .public_sections
       .or(SidebarSection.where(user_id: object.id))
-      .includes(sidebar_section_links: :linkable)
+      .includes(:sidebar_urls)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
@@ -279,25 +279,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(object)
-  end
-
-  def redesigned_user_menu_enabled
-    object.redesigned_user_menu_enabled?
-  end
-
-  def include_all_unread_notifications_count?
-    redesigned_user_menu_enabled
-  end
-
-  def include_grouped_unread_notifications?
-    redesigned_user_menu_enabled
-  end
-
-  def include_unseen_reviewable_count?
-    redesigned_user_menu_enabled
-  end
-
-  def include_new_personal_messages_notifications_count?
-    redesigned_user_menu_enabled
   end
 end

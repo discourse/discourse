@@ -131,6 +131,9 @@ RSpec.describe "posts" do
                        can_recover: {
                          type: :boolean,
                        },
+                       can_see_hidden_post: {
+                         type: :boolean,
+                       },
                        can_wiki: {
                          type: :boolean,
                        },

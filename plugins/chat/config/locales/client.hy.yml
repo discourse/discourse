@@ -105,9 +105,12 @@ hy:
         flags: "Դրոշակներ"
         symbols: "Նշաններ"
       thread:
+        title: "Վերնագիր"
         replies:
           one: "%{count} պատասխան"
           other: "%{count} պատասխան"
+        settings: "Կարգավորումներ"
+        last_reply: "վերջին պատասխանը"
       draft_channel_screen:
         header: "Նոր Հաղորդագրություն"
         cancel: "Չեղարկել"

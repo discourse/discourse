@@ -292,8 +292,7 @@ after_initialize do
     next if !SiteSetting.discourse_narrative_bot_enabled
     next if args[:message_type] != "tl2_promotion_message"
 
-    recipient = args[:post].topic.topic_users.where.not(user_id: args[:post].user_id).last&.user
-    recipient ||= Discourse.site_contact_user if args[:post].user == Discourse.site_contact_user
+    recipient = args[:recipient]
     next if recipient.nil?
 
     I18n.with_locale(recipient.effective_locale) do

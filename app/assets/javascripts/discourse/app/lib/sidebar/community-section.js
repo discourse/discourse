@@ -1,7 +1,8 @@
 import I18n from "I18n";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import Composer from "discourse/models/composer";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner, setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -19,8 +20,8 @@ import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
+import showModal from "discourse/lib/show-modal";
 
-const LINKS_IN_BOTH_SEGMENTS = ["/review"];
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
   "/new": EverythingSectionLink,
@@ -35,25 +36,20 @@ const SPECIAL_LINKS_MAP = {
 };
 
 export default class CommunitySection {
+  @service appEvents;
+  @service currentUser;
+  @service router;
+  @service topicTrackingState;
+  @service siteSettings;
+
   @tracked links;
   @tracked moreLinks;
 
-  constructor({
-    section,
-    currentUser,
-    router,
-    topicTrackingState,
-    appEvents,
-    siteSettings,
-  }) {
+  constructor({ section, owner }) {
+    setOwner(this, owner);
+
     this.section = section;
-    this.router = router;
-    this.currentUser = currentUser;
     this.slug = section.slug;
-    this.topicTrackingState = topicTrackingState;
-    this.appEvents = appEvents;
-    this.siteSettings = siteSettings;
-    this.section_type = section.section_type;
 
     this.callbackId = this.topicTrackingState?.onStateChange(() => {
       this.links.forEach((link) => {
@@ -67,34 +63,38 @@ export default class CommunitySection {
       .concat(secondaryCustomSectionLinks)
       .map((link) => this.#initializeSectionLink(link, { inMoreDrawer: true }));
 
-    this.links = this.section.links
-      .filter(
-        (link) =>
-          link.segment === "primary" ||
-          LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-      )
-      .map((link) => {
-        return this.#generateLink(link);
-      })
-      .filter((link) => link);
+    this.links = this.section.links.reduce((filtered, link) => {
+      if (link.segment === "primary") {
+        const generatedLink = this.#generateLink(link);
+
+        if (generatedLink) {
+          filtered.push(generatedLink);
+        }
+      }
+
+      return filtered;
+    }, []);
 
     this.moreLinks = this.section.links
-      .filter(
-        (link) =>
-          link.segment === "secondary" ||
-          LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-      )
-      .map((link) => {
-        return this.#generateLink(link, true);
-      })
-      .concat(this.apiLinks)
-      .filter((link) => link);
+      .reduce((filtered, link) => {
+        if (link.segment === "secondary") {
+          const generatedLink = this.#generateLink(link, true);
+
+          if (generatedLink) {
+            filtered.push(generatedLink);
+          }
+        }
+
+        return filtered;
+      }, [])
+      .concat(this.apiLinks);
   }
 
   teardown() {
     if (this.callbackId) {
       this.topicTrackingState.offStateChange(this.callbackId);
     }
+
     [...this.links, ...this.moreLinks].forEach((sectionLink) => {
       sectionLink.teardown?.();
     });
@@ -102,14 +102,25 @@ export default class CommunitySection {
 
   #generateLink(link, inMoreDrawer = false) {
     const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
+
     if (sectionLinkClass) {
-      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+      return this.#initializeSectionLink(
+        sectionLinkClass,
+        inMoreDrawer,
+        link.name,
+        link.icon
+      );
     } else {
       return new SectionLink(link, this, this.router);
     }
   }
 
-  #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
+  #initializeSectionLink(
+    sectionLinkClass,
+    inMoreDrawer,
+    overridenName,
+    overridenIcon
+  ) {
     if (this.router.isDestroying) {
       return;
     }
@@ -120,32 +131,48 @@ export default class CommunitySection {
       router: this.router,
       siteSettings: this.siteSettings,
       inMoreDrawer,
+      overridenName,
+      overridenIcon,
     });
-  }
-
-  get displayShortSiteDescription() {
-    return !this.currentUser && !!this.siteSettings.short_site_description;
   }
 
   get decoratedTitle() {
     return I18n.t(
-      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`
+      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`,
+      { defaultValue: this.section.title }
     );
   }
 
   get headerActions() {
+    if (this.currentUser?.admin) {
+      return [
+        {
+          action: this.editSection,
+          title: I18n.t(
+            "sidebar.sections.community.header_action_edit_section_title"
+          ),
+        },
+      ];
+    }
     if (this.currentUser) {
       return [
         {
           action: this.composeTopic,
-          title: I18n.t("sidebar.sections.community.header_action_title"),
+          title: I18n.t(
+            "sidebar.sections.community.header_action_create_topic_title"
+          ),
         },
       ];
     }
   }
 
   get headerActionIcon() {
-    return "plus";
+    return this.currentUser?.admin ? "pencil-alt" : "plus";
+  }
+
+  @action
+  editSection() {
+    showModal("sidebar-section-form", { model: this.section });
   }
 
   @action

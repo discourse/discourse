@@ -3,6 +3,14 @@
 module PageObjects
   module Pages
     class ChatChannel < PageObjects::Pages::Base
+      def composer
+        @composer ||= PageObjects::Components::Chat::Composer.new(".chat-channel")
+      end
+
+      def messages
+        @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
+      end
+
       def replying_to?(message)
         find(".chat-channel .chat-reply", text: message.message)
       end
@@ -22,7 +30,7 @@ module PageObjects
       end
 
       def click_send_message
-        find(".chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
       def message_by_id_selector(id)
@@ -51,8 +59,7 @@ module PageObjects
       end
 
       def click_message_action_mobile(message, message_action)
-        expand_message_actions_mobile(message, delay: 0.5)
-        wait_for_animation(find(".chat-message-actions"), timeout: 5)
+        expand_message_actions_mobile(message, delay: 0.6)
         find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
@@ -61,8 +68,22 @@ module PageObjects
       end
 
       def bookmark_message(message)
-        hover_message(message)
-        find(".bookmark-btn").click
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "bookmark")
+        else
+          hover_message(message)
+          find(".bookmark-btn").click
+        end
+      end
+
+      def select_message(message)
+        if page.has_css?("html.mobile-view", wait: 0)
+          click_message_action_mobile(message, "select")
+        else
+          hover_message(message)
+          click_more_button
+          find("[data-value='select']").click
+        end
       end
 
       def click_more_button
@@ -87,12 +108,6 @@ module PageObjects
         find("[data-value='flag']").click
       end
 
-      def select_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='select']").click
-      end
-
       def delete_message(message)
         hover_message(message)
         click_more_button
@@ -107,14 +122,16 @@ module PageObjects
 
       def edit_message(message, text = nil)
         open_edit_message(message)
-        send_message(text) if text
+        send_message(message.message + text) if text
       end
 
       def send_message(text = nil)
+        text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        fill_composer(text)
+        composer.fill_in(with: text)
         click_send_message
         click_composer
+        text
       end
 
       def reply_to(message)
@@ -202,6 +219,27 @@ module PageObjects
 
       def message_thread_indicator(message)
         find(message_thread_indicator_selector(message))
+      end
+
+      def open_thread_list
+        find(thread_list_button_selector).click
+        PageObjects::Components::Chat::ThreadList.new.has_loaded?
+      end
+
+      def has_unread_thread_indicator?(count:)
+        has_css?("#{thread_list_button_selector}.has-unreads") &&
+          has_css?(
+            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number",
+            text: count.to_s,
+          )
+      end
+
+      def has_no_unread_thread_indicator?
+        has_no_css?("#{thread_list_button_selector}.has-unreads")
+      end
+
+      def thread_list_button_selector
+        ".chat-threads-list-button"
       end
 
       private

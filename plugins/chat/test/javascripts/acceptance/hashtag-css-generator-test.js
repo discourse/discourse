@@ -39,6 +39,14 @@ acceptance("Chat | Hashtag CSS Generator", function (needs) {
       ],
       direct_message_channels: [],
       meta: { message_bus_last_ids: {} },
+      tracking: {
+        channel_tracking: {
+          44: { unread_count: 0, mention_count: 0 },
+          74: { unread_count: 0, mention_count: 0 },
+          88: { unread_count: 0, mention_count: 0 },
+        },
+        thread_tracking: {},
+      },
     },
   });
   needs.site({
@@ -51,7 +59,7 @@ acceptance("Chat | Hashtag CSS Generator", function (needs) {
     assert.equal(
       cssTag.innerHTML,
 
-      ".hashtag-color--category-1 {\n  background: linear-gradient(90deg, var(--category-1-color) 50%, var(--category-1-color) 50%);\n}\n.hashtag-color--category-2 {\n  background: linear-gradient(90deg, var(--category-2-color) 50%, var(--category-2-color) 50%);\n}\n.hashtag-color--category-4 {\n  background: linear-gradient(90deg, var(--category-4-color) 50%, var(--category-1-color) 50%);\n}\n.hashtag-color--channel-44 { color: var(--category-1-color); }\n.hashtag-color--channel-74 { color: var(--category-2-color); }\n.hashtag-color--channel-88 { color: var(--category-4-color); }"
+      ".hashtag-color--category-1 {\n  background: linear-gradient(90deg, var(--category-1-color) 50%, var(--category-1-color) 50%);\n}\n.hashtag-color--category-2 {\n  background: linear-gradient(90deg, var(--category-2-color) 50%, var(--category-2-color) 50%);\n}\n.hashtag-color--category-4 {\n  background: linear-gradient(90deg, var(--category-4-color) 50%, var(--category-1-color) 50%);\n}\n.d-icon.hashtag-color--channel-44 { color: var(--category-1-color); }\n.d-icon.hashtag-color--channel-74 { color: var(--category-2-color); }\n.d-icon.hashtag-color--channel-88 { color: var(--category-4-color); }"
     );
   });
 });

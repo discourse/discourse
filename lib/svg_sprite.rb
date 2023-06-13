@@ -72,6 +72,7 @@ module SvgSprite
         discourse-emojis
         discourse-expand
         discourse-other-tab
+        discourse-threads
         download
         ellipsis-h
         ellipsis-v
@@ -81,6 +82,7 @@ module SvgSprite
         exclamation-circle
         exclamation-triangle
         external-link-alt
+        eye
         fab-android
         fab-apple
         fab-chrome
@@ -202,6 +204,7 @@ module SvgSprite
         tag
         tags
         tasks
+        th
         thermometer-three-quarters
         thumbs-down
         thumbs-up

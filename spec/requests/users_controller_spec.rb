@@ -2973,6 +2973,32 @@ RSpec.describe UsersController do
         end
       end
     end
+
+    context "when a plugin introduces a users_controller_update_user_params modifier" do
+      before { sign_in(user) }
+
+      after { DiscoursePluginRegistry.clear_modifiers! }
+
+      it "allows the plugin to modify the user params" do
+        block_called = false
+
+        plugin = Plugin::Instance.new
+        plugin.register_modifier(
+          :users_controller_update_user_params,
+        ) do |result, current_user, params|
+          block_called = true
+          expect(current_user.id).to eq(user.id)
+          result[:location] = params[:plugin_location_alias]
+          result
+        end
+
+        put "/u/#{user.username}.json", params: { location: "abc", plugin_location_alias: "xyz" }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_profile.location).to eq("xyz")
+        expect(block_called).to eq(true)
+      end
+    end
   end
 
   describe "#badge_title" do
@@ -4592,13 +4618,13 @@ RSpec.describe UsersController do
       before { sign_in(user1) }
 
       it "works correctly" do
-        get "/u/#{user1.username}/card.json"
+        get "/u/#{user.username}/card.json"
         expect(response.status).to eq(200)
 
         json = response.parsed_body
 
         expect(json["user"]["associated_accounts"]).to eq(nil) # Not serialized in card
-        expect(json["user"]["username"]).to eq(user1.username)
+        expect(json["user"]["username"]).to eq(user.username)
       end
 
       it "returns not found when the username doesn't exist" do
@@ -4606,9 +4632,23 @@ RSpec.describe UsersController do
         expect(response).not_to be_successful
       end
 
+      it "returns partial response when inactive user" do
+        user.update!(active: false)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["inactive"]).to eq(true)
+      end
+
+      it "returns partial response when hidden users" do
+        user.user_option.update!(hide_profile_and_presence: true)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+      end
+
       it "raises an error on invalid access" do
-        Guardian.any_instance.expects(:can_see?).with(user1).returns(false)
-        get "/u/#{user1.username}/card.json"
+        Guardian.any_instance.expects(:can_see?).with(user).returns(false)
+        get "/u/#{user.username}/card.json"
         expect(response).to be_forbidden
       end
     end

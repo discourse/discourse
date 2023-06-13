@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Update last read", type: :system, js: true do
+RSpec.describe "Update last read", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:first_unread) { Fabricate(:chat_message, chat_channel: channel_1) }

@@ -24,6 +24,7 @@ module Chat
     model :thread, :fetch_thread
     policy :invalid_access
     policy :threading_enabled_for_channel
+    step :fetch_membership
 
     # @!visibility private
     class Contract
@@ -53,6 +54,10 @@ module Chat
 
     def threading_enabled_for_channel(thread:, **)
       thread.channel.threading_enabled
+    end
+
+    def fetch_membership(thread:, guardian:, **)
+      context.membership = thread.membership_for(guardian.user)
     end
   end
 end

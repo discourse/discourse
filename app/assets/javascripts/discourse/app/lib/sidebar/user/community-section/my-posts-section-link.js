@@ -13,6 +13,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   constructor() {
     super(...arguments);
+
     if (this.shouldDisplay) {
       this.appEvents.on(
         USER_DRAFTS_CHANGED_EVENT,
@@ -23,7 +24,13 @@ export default class MyPostsSectionLink extends BaseSectionLink {
   }
 
   teardown() {
-    this.appEvents.off(USER_DRAFTS_CHANGED_EVENT, this, this._updateDraftCount);
+    if (this.shouldDisplay) {
+      this.appEvents.off(
+        USER_DRAFTS_CHANGED_EVENT,
+        this,
+        this._updateDraftCount
+      );
+    }
   }
 
   _updateDraftCount() {
@@ -64,7 +71,12 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
       return I18n.t("sidebar.sections.community.links.my_posts.content_drafts");
     } else {
-      return I18n.t("sidebar.sections.community.links.my_posts.content");
+      return I18n.t(
+        `sidebar.sections.community.links.${this.overridenName
+          .toLowerCase()
+          .replace(" ", "/")}.content`,
+        { defaultValue: this.overridenName }
+      );
     }
   }
 
@@ -83,7 +95,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     return this.draftCount > 0;
   }
 
-  get prefixValue() {
+  get defaultPrefixValue() {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
       return "pencil-alt";
     }

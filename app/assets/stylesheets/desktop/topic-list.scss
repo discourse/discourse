@@ -249,21 +249,3 @@
 .container.list-container {
   position: relative;
 }
-
-.welcome-cta {
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-low);
-  box-shadow: shadow("menu-panel");
-  border-radius: 4px;
-  padding: 12px 20px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  z-index: z("usercard");
-  &__content {
-    width: 70%;
-  }
-  &__button {
-    align-self: center;
-  }
-}

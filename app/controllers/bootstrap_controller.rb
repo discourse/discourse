@@ -26,8 +26,8 @@ class BootstrapController < ApplicationController
     else
       add_style(mobile_view? ? :mobile : :desktop)
     end
-    add_style(:admin) if staff?
-    add_style(:wizard) if admin?
+    add_style(rtl? ? :admin_rtl : :admin) if staff?
+    add_style(rtl? ? :wizard_rtl : :wizard) if admin?
 
     assets_fake_request = ActionDispatch::Request.new(request.env.dup)
     assets_for_url = params[:for_url]
@@ -44,6 +44,7 @@ class BootstrapController < ApplicationController
         mobile_view: mobile_view?,
         desktop_view: !mobile_view?,
         request: assets_fake_request,
+        rtl: rtl?,
       )
       .each { |file| add_style(file, plugin: true) }
     add_style(mobile_view? ? :mobile_theme : :desktop_theme) if theme_id.present?

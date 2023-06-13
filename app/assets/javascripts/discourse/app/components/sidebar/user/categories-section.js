@@ -5,6 +5,7 @@ import { cached } from "@glimmer/tracking";
 import { debounce } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
+import showModal from "discourse/lib/show-modal";
 
 export const REFRESH_COUNTS_APP_EVENT_NAME =
   "sidebar:refresh-categories-section-counts";
@@ -74,6 +75,12 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
 
   @action
   editTracked() {
-    this.router.transitionTo("preferences.sidebar", this.currentUser);
+    if (
+      this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
+    ) {
+      showModal("sidebar-categories-form");
+    } else {
+      this.router.transitionTo("preferences.sidebar", this.currentUser);
+    }
   }
 }

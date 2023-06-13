@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Channel thread message echoing", type: :system, js: true do
+describe "Channel thread message echoing", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
 

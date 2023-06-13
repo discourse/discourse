@@ -90,9 +90,12 @@ sq:
       emoji_picker:
         flags: "Sinjalizime"
       thread:
+        title: "Titulli"
         replies:
           one: "%{count} përgjigje"
           other: "%{count} përgjigje"
+        settings: "Rregullimet"
+        last_reply: "përgjigja e fundit"
       draft_channel_screen:
         header: "Mesazh i ri"
         cancel: "Anulo"

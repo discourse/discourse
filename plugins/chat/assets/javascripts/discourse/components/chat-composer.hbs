@@ -1,4 +1,6 @@
 {{! template-lint-disable no-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
+
 <div class="chat-composer__wrapper">
   {{#if this.shouldRenderMessageDetails}}
     <ChatComposerMessageDetails
@@ -7,8 +9,7 @@
         this.currentMessage
         this.currentMessage.inReplyTo
       }}
-      @icon={{if this.currentMessage.editing "pencil-alt" "reply"}}
-      @cancelAction={{this.onCancel}}
+      @cancelAction={{this.composer.cancel}}
     />
   {{/if}}
 
@@ -20,11 +21,12 @@
       (if this.isFocused "is-focused")
       (if this.pane.sending "is-sending")
       (if this.sendEnabled "is-send-enabled" "is-send-disabled")
-      (if this.disabled "is-disabled")
+      (if this.disabled "is-disabled" "is-enabled")
+      (if this.currentMessage.draftSaved "is-draft-saved" "is-draft-unsaved")
     }}
     {{did-update this.didUpdateMessage this.currentMessage}}
     {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
-    {{did-insert this.setupAppEvents}}
+    {{did-insert this.setup}}
     {{will-destroy this.teardown}}
     {{will-destroy this.cancelPersistDraft}}
   >
@@ -38,9 +40,14 @@
             this.context
           }}
           @onCloseActivePanel={{this.chatEmojiPickerManager.close}}
+          {{on "focus" (fn this.computeIsFocused true)}}
+          {{on "blur" (fn this.computeIsFocused false)}}
         />
 
-        <div class="chat-composer__input-container">
+        <div
+          class="chat-composer__input-container"
+          {{on "click" this.composer.focus}}
+        >
           <DTextarea
             id={{this.composerId}}
             value={{readonly this.currentMessage.message}}
@@ -62,22 +69,37 @@
           />
         </div>
 
-        <DButton
-          @action={{this.onSend}}
+        {{#if this.inlineButtons.length}}
+          {{#each this.inlineButtons as |button|}}
+            <Chat::Composer::Button
+              @icon={{button.icon}}
+              class="-{{button.id}}"
+              disabled={{or this.disabled button.disabled}}
+              tabindex={{if button.disabled -1 0}}
+              {{on
+                "click"
+                (fn this.handleInlineButonAction button.action)
+                bubbles=false
+              }}
+              {{on "focus" (fn this.computeIsFocused true)}}
+              {{on "blur" (fn this.computeIsFocused false)}}
+            />
+          {{/each}}
+
+          <Chat::Composer::Separator />
+        {{/if}}
+
+        <Chat::Composer::Button
           @icon="paper-plane"
-          class="chat-composer__send-btn icon-only"
-          @title="chat.composer.send"
-          @disabled={{or this.disabled (not this.sendEnabled)}}
+          class="-send"
+          title={{i18n "chat.composer.send"}}
+          disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
+          {{on "click" this.onSend}}
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
         />
-
-        {{#unless this.disabled}}
-          <ChatComposerInlineButtons @buttons={{this.inlineButtons}} />
-        {{/unless}}
       </div>
-
     </div>
   </div>
 
@@ -87,7 +109,7 @@
       @onUploadChanged={{this.onUploadChanged}}
       @existingUploads={{this.currentMessage.uploads}}
       @uploadDropZone={{@uploadDropZone}}
-      @composerInputEl={{this.textareaInteractor.textarea}}
+      @composerInputEl={{this.composer.textarea.element}}
     />
   {{/if}}
 

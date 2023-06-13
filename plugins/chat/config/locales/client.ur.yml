@@ -106,9 +106,12 @@ ur:
         flags: "فلَیگز"
         symbols: "علامات"
       thread:
+        title: "عنوان"
         replies:
           one: "%{count} جواب"
           other: "%{count} جوابات"
+        settings: "ترتیبات"
+        last_reply: "آخری جواب"
       draft_channel_screen:
         header: "نیا پیغام"
         cancel: "منسوخ"

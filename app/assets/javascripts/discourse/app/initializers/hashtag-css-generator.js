@@ -25,8 +25,7 @@ export default {
 
     let generatedCssClasses = [];
 
-    Object.values(getHashtagTypeClasses()).forEach((hashtagTypeClass) => {
-      const hashtagType = new hashtagTypeClass(container);
+    Object.values(getHashtagTypeClasses()).forEach((hashtagType) => {
       hashtagType.preloadedData.forEach((model) => {
         generatedCssClasses = generatedCssClasses.concat(
           hashtagType.generateColorCssClasses(model)

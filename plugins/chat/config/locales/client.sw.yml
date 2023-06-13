@@ -100,9 +100,12 @@ sw:
         objects: "Vitu"
         flags: "Bendera"
       thread:
+        title: "Kichwa cha Habari"
         replies:
           one: "%{count} jibu"
           other: "%{count} majibu"
+        settings: "Mipangilio"
+        last_reply: "jibu la mwisho"
       draft_channel_screen:
         header: "Ujumbe Mpya"
         cancel: "Ghairi"

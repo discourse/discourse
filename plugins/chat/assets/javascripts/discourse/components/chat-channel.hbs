@@ -2,15 +2,15 @@
   class={{concat-class
     "chat-channel"
     (if this.loading "loading")
-    (if this.chatChannelPane.sending "chat-channel--sending")
+    (if this.pane.sending "chat-channel--sending")
     (unless this.loadedOnce "chat-channel--not-loaded-once")
   }}
   {{did-insert this.setUploadDropZone}}
   {{did-insert this.setupListeners}}
   {{will-destroy this.teardownListeners}}
-  {{did-insert this.updateChannel}}
   {{did-update this.loadMessages @targetMessageId}}
-  {{did-update this.updateChannel @channel.id}}
+  {{did-insert this.didUpdateChannel}}
+  {{did-update this.didUpdateChannel @channel.id}}
   {{did-insert this.addAutoFocusEventListener}}
   {{will-destroy this.removeAutoFocusEventListener}}
   data-id={{@channel.id}}
@@ -34,14 +34,13 @@
   >
     <div
       class="chat-messages-container"
-      {{chat/on-resize this.didResizePane (hash delay=25 immediate=true)}}
+      {{chat/on-resize this.didResizePane (hash delay=100 immediate=true)}}
     >
 
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
             @message={{message}}
-            @channel={{@channel}}
             @resendStagedMessage={{this.resendStagedMessage}}
             @messageDidEnterViewport={{this.messageDidEnterViewport}}
             @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
@@ -68,12 +67,12 @@
     @channel={{@channel}}
   />
 
-  {{#if this.chatChannelPane.selectingMessages}}
+  {{#if this.pane.selectingMessages}}
     <ChatSelectionManager
-      @selectedMessageIds={{this.chatChannelPane.selectedMessageIds}}
+      @selectedMessageIds={{this.pane.selectedMessageIds}}
       @chatChannel={{@channel}}
       @cancelSelecting={{action
-        this.chatChannelPane.cancelSelecting
+        this.pane.cancelSelecting
         @channel.selectedMessages
       }}
       @context="channel"

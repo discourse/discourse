@@ -204,10 +204,11 @@ module PrettyText
         __optInput.emojiUnicodeReplacer = __emojiUnicodeReplacer;
         __optInput.emojiDenyList = #{Emoji.denied.to_json};
         __optInput.lookupUploadUrls = __lookupUploadUrls;
-        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor).to_json};
-        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace).to_json};
-        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link).to_json};
+        __optInput.censoredRegexp = #{WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js).to_json};
+        __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace, engine: :js).to_json};
+        __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link, engine: :js).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
+        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
       JS
 
       buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n" if opts[:topic_id]
@@ -224,10 +225,8 @@ module PrettyText
           .ordered_types_for_context(opts[:hashtag_context])
           .map { |t| "'#{t}'" }
           .join(",")
-      hashtag_icons_as_js =
-        HashtagAutocompleteService.data_source_icons.map { |i| "'#{i}'" }.join(",")
       buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
-      buffer << "__optInput.hashtagIcons = [#{hashtag_icons_as_js}];\n"
+      buffer << "__optInput.hashtagIcons = #{HashtagAutocompleteService.data_source_icon_map.to_json};\n"
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
       buffer << ("__pt = new __PrettyText(__textOptions);")
@@ -258,6 +257,8 @@ module PrettyText
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
     protect { v8.eval(<<~JS) }
+        __optInput = {};
+        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
         __paths = #{paths_json};
         __utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
       JS

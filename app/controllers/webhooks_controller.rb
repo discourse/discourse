@@ -64,6 +64,23 @@ class WebhooksController < ActionController::Base
     success
   end
 
+  def mailpace
+    # see https://docs.mailpace.com/guide/webhooks#email-events
+
+    message_id = Email::MessageIdService.message_id_clean(params["payload"]["message_id"])
+    to_address = params["payload"]["to"]
+    status = params["payload"]["status"]
+
+    case status
+    when "bounced"
+      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+    when "deferred"
+      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
+    end
+
+    success
+  end
+
   def mandrill
     if SiteSetting.mandrill_authentication_key.present?
       return signature_failure if !valid_mandrill_signature?

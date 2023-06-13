@@ -2282,7 +2282,7 @@ lt:
         category: "Nėra jokių temų kategorijoje %{category}."
         top: "Nėra jokių TOP temų."
         educate:
-          unread: "<p>Jūsų neskaitytos temos rodomos čia.</p><p>Pagal numatytuosius nustatymus temos laikomos neskaitytomis ir bus rodomas neskaitytų skaičius <span class=\"badge unread-posts badge-notification\">1</span> jei:</p><ul><li>sukūrėte temą</li><li>atsakėte į temą</li><li>Temą skaitėte ilgiau nei 4 minutes</li></ul><p>Arba aiškiai kiekvienoje temoje nustatykite temą į Stebimą arba Stebimą naudodami \U0001F514.</p><p>Norėdami tai pakeisti, aplankykite savo <a href=\"%{userPrefsUrl}\">nustatymus</a></p>"
+          unread: "<p>Jūsų neskaitytos temos rodomos čia.</p><p>Pagal numatytuosius nustatymus temos laikomos neskaitytomis ir bus rodomas neskaitytų skaičius <span class=\"badge unread-posts badge-notification\">1</span> jei:</p><ul><li>sukūrėte temą</li><li>atsakėte į temą</li><li>Temą skaitėte ilgiau nei 5 minutes</li></ul><p>Arba aiškiai kiekvienoje temoje nustatykite temą į Stebimą arba Stebimą naudodami \U0001F514.</p><p>Norėdami tai pakeisti, aplankykite savo <a href=\"%{userPrefsUrl}\">nustatymus</a></p>"
       bottom:
         latest: "Daugiau nėra jokių naujausių temų."
         posted: "Daugiau nėra jokių paskelbtų temų."
@@ -3333,7 +3333,6 @@ lt:
         full_page_search: "%{shortcut} Paleidžiama viso puslapio paieška"
     badges:
       granted_on: "Suteikta %{date}"
-      others_count: "Kiti, turintys šį ženklelį (%{count})"
       title: Ženkleliai
       allow_title: "Šį ženklelį galite naudoti kaip pavadinimą"
       multiple_grant: "Jūs galite uždirbti šį kelis kartus"
@@ -3537,6 +3536,7 @@ lt:
           save: "Išsaugoti"
           delete: "Pašalinti"
           links:
+            reset: "Atstatyti numatytuosius nustatymus"
             icon:
               label: "Ikona"
             name:
@@ -4785,7 +4785,6 @@ lt:
             label: "Pridėti jaustukus"
         title: "Nustatymai"
         no_results: "Nerasta jokių rezultatų."
-        more_than_30_results: "Yra daugiau nei 30 rezultatų. Patikslinkite paiešką arba pasirinkite kategoriją."
         clear_filter: "Išvalyti"
         add_url: "pridėti URL"
         add_host: "pridėti šeimininką"

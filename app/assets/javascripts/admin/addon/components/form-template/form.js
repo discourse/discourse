@@ -32,10 +32,11 @@ export default class FormTemplateForm extends Component {
       type: "dropdown",
       icon: "chevron-circle-down",
     },
-    {
-      type: "upload",
-      icon: "cloud-upload-alt",
-    },
+    // TODO(@keegan): add support for uploads
+    // {
+    //   type: "upload",
+    //   icon: "cloud-upload-alt",
+    // },
     {
       type: "multiselect",
       icon: "bullseye",

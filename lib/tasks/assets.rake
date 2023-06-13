@@ -312,6 +312,7 @@ task "assets:precompile" => "assets:precompile:before" do
         manifest
           .files
           .select { |k, v| k =~ /\.js\z/ }
+          .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
             _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"

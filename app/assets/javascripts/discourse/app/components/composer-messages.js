@@ -183,6 +183,11 @@ export default class ComposerMessages extends Component {
       return;
     }
 
+    // We don't care about similar topics when creating with a form template
+    if (this.composer?.category?.form_template_ids.length > 0) {
+      return;
+    }
+
     // TODO: pass the 200 in from somewhere
     const raw = (this.composer.reply || "").slice(0, 200);
     const title = this.composer.title || "";

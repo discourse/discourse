@@ -4,33 +4,58 @@ import I18n from "I18n";
 import { action } from "@ember/object";
 
 export default class ChatComposerThread extends ChatComposer {
-  @service("chat-channel-thread-composer") composer;
   @service("chat-channel-composer") channelComposer;
-  @service("chat-channel-thread-pane") pane;
-  @service router;
+  @service("chat-thread-composer") composer;
+  @service("chat-thread-pane") pane;
+  @service currentUser;
 
   context = "thread";
 
   composerId = "thread-composer";
 
+  @action
+  reset() {
+    this.composer.reset(this.args.thread);
+  }
+
+  get disabled() {
+    return (
+      !this.chat.userCanInteractWithChat ||
+      !this.args.thread.channel.canModifyMessages(this.currentUser)
+    );
+  }
+
   get presenceChannelName() {
-    return `/chat-reply/${this.args.channel.id}/thread/${this.args.thread.id}`;
+    const thread = this.args.thread;
+    return `/chat-reply/${thread.channel.id}/thread/${thread.id}`;
   }
 
   get placeholder() {
     return I18n.t("chat.placeholder_thread");
   }
 
-  @action
-  onKeyDown(event) {
-    if (event.key === "Escape") {
-      this.router.transitionTo(
-        "chat.channel",
-        ...this.args.channel.routeModels
-      );
+  get lastMessage() {
+    return this.args.thread.lastMessage;
+  }
+
+  lastUserMessage(user) {
+    return this.args.thread.lastUserMessage(user);
+  }
+
+  handleEscape(event) {
+    if (this.currentMessage.editing) {
+      event.stopPropagation();
+      this.composer.cancel(this.args.thread);
       return;
     }
 
-    super.onKeyDown(event);
+    if (this.isFocused) {
+      event.stopPropagation();
+      this.composer.blur();
+    } else {
+      this.pane.close().then(() => {
+        this.channelComposer.focus();
+      });
+    }
   }
 }

@@ -761,7 +761,7 @@ class User < ActiveRecord::Base
   end
 
   def reviewable_count
-    Reviewable.list_for(self, include_claimed_by_others: !redesigned_user_menu_enabled?).count
+    Reviewable.list_for(self, include_claimed_by_others: false).count
   end
 
   def saw_notification_id(notification_id)
@@ -868,13 +868,9 @@ class User < ActiveRecord::Base
       seen_notification_id: seen_notification_id,
     }
 
-    if self.redesigned_user_menu_enabled?
-      payload[:all_unread_notifications_count] = all_unread_notifications_count
-      payload[:grouped_unread_notifications] = grouped_unread_notifications
-      payload[
-        :new_personal_messages_notifications_count
-      ] = new_personal_messages_notifications_count
-    end
+    payload[:all_unread_notifications_count] = all_unread_notifications_count
+    payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
@@ -1827,12 +1823,12 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  def redesigned_user_menu_enabled?
-    !SiteSetting.legacy_navigation_menu? || SiteSetting.enable_new_notifications_menu
-  end
-
   def new_new_view_enabled?
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  end
+
+  def new_edit_sidebar_categories_tags_interface_groups_enabled?
+    in_any_groups?(SiteSetting.new_edit_sidebar_categories_tags_interface_groups_map)
   end
 
   protected

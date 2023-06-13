@@ -30,6 +30,10 @@ export default {
 
   @bind
   onMessage(seenUserTips) {
+    if (!this.site.user_tips) {
+      return;
+    }
+
     this.currentUser.set("seen_popups", seenUserTips);
 
     if (!this.currentUser.user_option) {

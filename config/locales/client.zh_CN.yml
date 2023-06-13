@@ -2522,7 +2522,8 @@ zh_CN:
         filter: "没有话题。"
         educate:
           new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
-          unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 4 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
+          unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 5 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
+          new_new: "<p>你的新话题会出现在这里，你的未读话题也会显示出来。默认情况下，如果它们是在最近 2 天内创建的，话题会被视为新话题，并且会显示 <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> 指示符。未读主题将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span> 如果你：创建主题、回复主题、阅读主题超过 5 分钟，或者通过每个话题中的\U0001F514 明确将话题设置为已跟踪或已读。</p><p>访问你的 <a href=\"%{userPrefsUrl}\">选项</a> 以更改此设置。</p>"
       bottom:
         latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"
@@ -2877,6 +2878,7 @@ zh_CN:
         radio_label: "现有话题"
         instructions:
           other: "请选择您要将这 <b>%{count}</b> 个帖子移至的话题。"
+        chronological_order: "合并后保留时间顺序"
       move_to_new_message:
         title: "移至新消息"
         action: "移至新消息"
@@ -3620,7 +3622,8 @@ zh_CN:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
       granted_on: "%{date}授予"
-      others_count: "其他拥有此徽章的人 (%{count})"
+      others_count:
+        other: "授予他人 %{count} 次"
       title: 徽章
       allow_title: "您可以将此徽章用作头衔"
       multiple_grant: "您可以多次获得"
@@ -3850,10 +3853,13 @@ zh_CN:
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此板块吗？"
+          reset_confirm: "你确定要把这部分重置为默认值吗？"
           public: "将此板块公开并对所有人可见"
+          more_menu: "更多菜单"
           links:
             add: "添加另一个链接"
             delete: "删除链接"
+            reset: "重置为默认值"
             icon:
               label: "图标"
               validation:
@@ -3910,7 +3916,8 @@ zh_CN:
           configure_defaults: "配置默认值"
         community:
           header_link_text: "社区"
-          header_action_title: "创建话题"
+          header_action_create_topic_title: "创建话题"
+          header_action_edit_section_title: "编辑社区部分"
           links:
             about:
               content: "关于"
@@ -3951,6 +3958,8 @@ zh_CN:
     until: "直到："
     char_counter:
       exceeded: "已超过允许的最大字符数。"
+    form_template_chooser:
+      select_template: "选择表单模板"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -5411,7 +5420,8 @@ zh_CN:
             label: "添加表情符号"
         title: "设置"
         no_results: "找不到结果。"
-        more_than_30_results: "结果超过 30 个。请优化您的搜索或选择一个类别。"
+        more_site_setting_results:
+          other: "结果超过 %{count} 个。请优化你的搜索或选择一个类别。"
         clear_filter: "清除"
         add_url: "添加 URL"
         add_host: "添加主机"

@@ -201,9 +201,12 @@ da:
         flags: "Flag"
         symbols: "Symboler"
       thread:
+        title: "Titel"
         replies:
           one: "%{count} svar"
           other: "%{count} svar"
+        settings: "Indstillinger"
+        last_reply: "seneste svar"
       draft_channel_screen:
         header: "Ny Besked"
         cancel: "Annuller"

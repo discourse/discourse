@@ -65,6 +65,18 @@ describe Chat::MessageCreator do
       )
     end
 
+    it "errors when a blank message is sent" do
+      creator =
+        described_class.create(chat_channel: public_chat_channel, user: user1, content: "   ")
+      expect(creator.failed?).to eq(true)
+      expect(creator.error.message).to match(
+        I18n.t(
+          "chat.errors.minimum_length_not_met",
+          { count: SiteSetting.chat_minimum_message_length },
+        ),
+      )
+    end
+
     it "errors when length is greater than `chat_maximum_message_length`" do
       SiteSetting.chat_maximum_message_length = 100
       creator =
@@ -134,6 +146,19 @@ describe Chat::MessageCreator do
           )
         end
       expect(events.map { _1[:event_name] }).to include(:chat_message_created)
+    end
+
+    it "publishes created message to message bus" do
+      content = "a test chat message"
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          described_class.create(chat_channel: public_chat_channel, user: user1, content: content)
+        end
+
+      expect(messages.count).to be(1)
+      message = messages[0].data
+      expect(message["chat_message"]["message"]).to eq(content)
+      expect(message["chat_message"]["user"]["id"]).to eq(user1.id)
     end
 
     context "with mentions" do
@@ -405,6 +430,52 @@ describe Chat::MessageCreator do
         mention = user2.chat_mentions.where(chat_message: message).first
         expect(mention.notification).to be_nil
       end
+
+      it "adds mentioned user and their status to the message bus message" do
+        SiteSetting.enable_user_status = true
+        status = { description: "dentist", emoji: "tooth" }
+        user2.set_status!(status[:description], status[:emoji])
+
+        messages =
+          MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "Hey @#{user2.username}",
+            )
+          end
+
+        expect(messages.count).to be(1)
+        message = messages[0].data
+        expect(message["chat_message"]["mentioned_users"].count).to be(1)
+        mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+        expect(mentioned_user["id"]).to eq(user2.id)
+        expect(mentioned_user["username"]).to eq(user2.username)
+        expect(mentioned_user["status"]).to be_present
+        expect(mentioned_user["status"].slice(:description, :emoji)).to eq(status)
+      end
+
+      it "doesn't add mentioned user's status to the message bus message when status is disabled" do
+        SiteSetting.enable_user_status = false
+        user2.set_status!("dentist", "tooth")
+
+        messages =
+          MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "Hey @#{user2.username}",
+            )
+          end
+
+        expect(messages.count).to be(1)
+        message = messages[0].data
+        expect(message["chat_message"]["mentioned_users"].count).to be(1)
+        mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+        expect(mentioned_user["status"]).to be_blank
+      end
     end
 
     it "creates a chat_mention record without notification when self mentioning" do
@@ -499,10 +570,27 @@ describe Chat::MessageCreator do
               content: "this is a message",
               in_reply_to_id: reply_message.id,
             ).chat_message
-        }.to change { Chat::UserChatThreadMembership.count }
+        }.to change { Chat::UserChatThreadMembership.count }.by(2)
 
         expect(
           Chat::UserChatThreadMembership.exists?(user: user1, thread: message.thread),
+        ).to be_truthy
+      end
+
+      it "creates a thread membership for the original message user" do
+        message = nil
+        expect {
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              in_reply_to_id: reply_message.id,
+            ).chat_message
+        }.to change { Chat::UserChatThreadMembership.count }.by(2)
+
+        expect(
+          Chat::UserChatThreadMembership.exists?(user: reply_message.user, thread: message.thread),
         ).to be_truthy
       end
 
@@ -605,6 +693,11 @@ describe Chat::MessageCreator do
 
         it "does not create a thread membership if one exists" do
           Fabricate(:user_chat_thread_membership, user: user1, thread: existing_thread)
+          Fabricate(
+            :user_chat_thread_membership,
+            user: existing_thread.original_message_user,
+            thread: existing_thread,
+          )
           expect {
             described_class.create(
               chat_channel: public_chat_channel,
@@ -726,6 +819,13 @@ describe Chat::MessageCreator do
         end
 
         it "creates a thread and updates all the messages in the chain" do
+          # This must be done since the fabricator uses Chat::MessageCreator
+          # under the hood and it creates the thread already.
+          old_message_1.update!(thread_id: nil)
+          old_message_2.update!(thread_id: nil)
+          old_message_3.update!(thread_id: nil)
+          reply_message.update!(thread_id: nil)
+
           thread_count = Chat::Thread.count
           message =
             described_class.create(
@@ -844,12 +944,13 @@ describe Chat::MessageCreator do
           end
         end
 
-        context "if the root message alread had a thread" do
+        context "if the root message already had a thread" do
           fab!(:old_thread) { Fabricate(:chat_thread, original_message: old_message_1) }
           fab!(:incorrect_thread) { Fabricate(:chat_thread, channel: public_chat_channel) }
 
           before do
             old_message_1.update!(thread: old_thread)
+            old_message_2.update!(thread: old_thread)
             old_message_3.update!(thread: incorrect_thread)
           end
 

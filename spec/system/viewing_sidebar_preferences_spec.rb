@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar preferences", type: :system, js: true do
+describe "Viewing sidebar preferences", type: :system do
   let(:user_preferences_sidebar_page) { PageObjects::Pages::UserPreferencesSidebar.new }
 
   before { SiteSetting.navigation_menu = "sidebar" }

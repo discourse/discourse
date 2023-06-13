@@ -25,7 +25,7 @@ module PageObjects
 
       def click_community_header_button
         page.click_button(
-          I18n.t("js.sidebar.sections.community.header_action_title"),
+          I18n.t("js.sidebar.sections.community.header_action_create_topic_title"),
           class: "sidebar-section-header-button",
         )
       end
@@ -42,8 +42,8 @@ module PageObjects
       end
 
       def click_outside
-        dropdown = page.find(SIDEBAR_HAMBURGER_DROPDOWN)
-        dropdown.click(x: dropdown.rect.width + 1, y: 1)
+        width = page.evaluate_script("document.body.clientWidth")
+        page.find("body").click(x: width - 1, y: 1)
       end
     end
   end

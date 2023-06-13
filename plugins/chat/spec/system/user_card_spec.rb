@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User card", type: :system, js: true do
+RSpec.describe "User card", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:topic_1) { Fabricate(:topic) }
 

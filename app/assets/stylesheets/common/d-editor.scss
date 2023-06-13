@@ -2,6 +2,13 @@
   display: flex;
   flex-grow: 1;
   max-width: 100%;
+
+  &.has-form-template {
+    .d-editor-preview-wrapper {
+      display: none;
+      flex: 0;
+    }
+  }
 }
 
 .d-editor {
@@ -183,11 +190,12 @@
     width: 100%;
 
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: 0 0.5em;
 
     position: absolute;
-    height: var(--resizer-height);
+    height: calc(var(--resizer-height) + 0.5em);
     bottom: 0;
     left: 0;
     opacity: 0;
@@ -234,15 +242,15 @@
     }
 
     .alt-text-readonly-container {
-      flex: 1 1;
-      width: 100%;
+      flex: 1 1 auto;
+      // arbitrary min-width value allows for correct shrinking
+      min-width: 100px;
 
       .alt-text {
         margin-right: 0.5em;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 100%;
       }
 
       .alt-text-edit-btn {
@@ -256,9 +264,9 @@
     }
 
     .alt-text-edit-container {
-      margin-top: 0.25em;
       gap: 0 0.25em;
       flex: 1;
+      max-width: 100%;
 
       .alt-text-input,
       .alt-text-edit-ok,
@@ -267,11 +275,13 @@
       }
 
       .alt-text-input {
+        display: inline-flex;
         flex: 1;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         margin: 0;
+        padding-left: 0.25em;
       }
 
       .alt-text-edit-ok,
@@ -292,6 +302,11 @@
       .d-icon-trash-alt {
         margin-left: 0.5em;
       }
+    }
+
+    .wrap-image-grid-button {
+      cursor: pointer;
+      color: var(--tertiary);
     }
 
     svg {
@@ -343,4 +358,11 @@
   .select-kit-header-wrapper {
     justify-content: center;
   }
+}
+
+.d-editor #form-template-form {
+  overflow: auto;
+  background: var(--primary-very-low);
+  padding: 1rem;
+  border: 1px solid var(--primary-medium);
 }

@@ -127,6 +127,22 @@ export default Component.extend({
   },
 
   @action
+  setDirectMessageCreatorHeight(element) {
+    document.documentElement.style.setProperty(
+      "--chat-direct-message-creator-height",
+      `${element.clientHeight}px`
+    );
+  },
+
+  @action
+  unsetDirectMessageCreatorHeight() {
+    document.documentElement.style.setProperty(
+      "--chat-direct-message-creator-height",
+      "0px"
+    );
+  },
+
+  @action
   onFilterInput(term) {
     this.set("term", term);
     this.set("users", []);

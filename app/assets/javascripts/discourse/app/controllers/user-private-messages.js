@@ -98,11 +98,6 @@ export default class extends Controller {
   }
 
   @action
-  changeGroupNotificationLevel(notificationLevel) {
-    this.group.setNotification(notificationLevel, this.get("user.model.id"));
-  }
-
-  @action
   onMessagesDropdownChange(item) {
     return DiscourseURL.routeTo(item);
   }

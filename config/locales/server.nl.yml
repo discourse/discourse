@@ -189,9 +189,6 @@ nl:
       load_from_remote: "Er is een fout opgetreden bij het laden van dat bericht."
     site_settings:
       invalid_category_id: "Je hebt een categorie opgegeven die niet bestaat"
-      invalid_choice:
-        one: "Je hebt de ongeldige keuze %{name} opgegeven"
-        other: "Je hebt de ongeldige keuzes %{name} opgegeven"
       default_categories_already_selected: "Je kunt geen categorie selecteren die in een andere lijst wordt gebruikt."
       default_tags_already_selected: "Je kunt geen tag selecteren die in een andere lijst wordt gebruikt."
       s3_upload_bucket_is_required: "Je kunt uploads naar S3 niet inschakelen voordat je de 's3_upload_bucket' hebt opgegeven."
@@ -199,7 +196,6 @@ nl:
       page_publishing_requirements: "Het publiceren van pagina's kan niet worden ingeschakeld als beveiligde media is ingeschakeld."
       s3_backup_requires_s3_settings: "Je kunt S3 niet als back-uplocatie gebruiken voordat je een '%{setting_name}' hebt opgegeven."
       s3_bucket_reused: "Je kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
-      secure_uploads_requirements: "S3-uploads moeten zijn ingeschakeld voordat beveiligde uploads worden ingeschakeld."
       share_quote_facebook_requirements: "Je moet een Facebook-app-ID instellen om het delen van citaten in te schakelen voor Facebook."
       second_factor_cannot_enforce_with_socials: "Je kunt 2FA niet afdwingen terwijl sociaal aanmelden is ingeschakeld. Je moet eerst aanmelden uitschakelen via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Je kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
@@ -606,22 +602,6 @@ nl:
   meta_category_description: "Discussies over deze website, de organisatie, hoe deze werkt en hoe we deze kunnen verbeteren."
   staff_category_name: "Medewerkers"
   staff_category_description: "Privécategorie voor medewerkergesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
-  discourse_welcome_topic:
-    title: "Welkom bij onze community!"
-    body: |2
-
-      De eerste alinea van dit vastgemaakte topic is zichtbaar op je startpagina als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
-
-      **Bewerk dit** tot een korte beschrijving van je community:
-
-      - Voor wie is deze bestemd?
-      - Wat kunnen ze hier vinden?
-      - Waarom zouden ze hier moeten komen?
-      - Waar kunnen ze meer lezen (links, bronnen, enz.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Mogelijk wilt je dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
   admin_quick_start_title: "LEES MIJ EERST: Snelstartgids voor beheerders"
   category:
     topic_prefix: "Over de categorie %{category}"
@@ -1889,7 +1869,6 @@ nl:
     pop3_polling_password: "Het wachtwoord voor de te pollen POP3-account voor e-mail."
     pop3_polling_delete_from_server: "Verwijder e-mails van de server. OPMERKING: als je dit uitschakelt, moet je je e-mail handmatig opschonen."
     log_mail_processing_failures: "Alle fouten van e-mailverwerking opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Gebruikers mogen nieuwe topics maken via e-mail (vereist handmatige of POP3-polling). Configureer de adressen in het tabblad ''Instellingen'' van elke categorie.'
     email_in_min_trust: "Het minimale vertrouwensniveau dat een gebruiker moet hebben om nieuwe topics te kunnen plaatsen via e-mail."
     email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "De e-mailheader voor het detecteren van spam."

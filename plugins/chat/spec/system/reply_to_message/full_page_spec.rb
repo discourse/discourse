@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Reply to message - channel - full page", type: :system, js: true do
+RSpec.describe "Reply to message - channel - full page", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
@@ -42,6 +42,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system, js: true
         thread_page.click_send_message
 
         expect(thread_page).to have_message(text: "reply to message")
+        expect(channel_page).to have_thread_indicator(original_message)
 
         refresh
 
@@ -91,7 +92,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system, js: true
 
       expect(page).to have_selector(
         ".chat-channel .chat-reply__excerpt",
-        text: original_message.message,
+        text: original_message.excerpt,
       )
 
       channel_page.fill_composer("reply to message")

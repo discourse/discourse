@@ -1,3 +1,31 @@
+.btn-floating.open-draft-channel-page-btn {
+  position: fixed;
+  background: var(--tertiary);
+  bottom: 2rem;
+  right: 2rem;
+  border-radius: 50%;
+  font-size: var(--font-up-4);
+  padding: 1rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  z-index: z("usercard");
+  box-shadow: 0px 5px 5px -1px rgba(0, 0, 0, 0.25);
+
+  .d-icon {
+    color: var(--primary-very-low);
+  }
+
+  &:active {
+    box-shadow: 0px 0px 5px -1px rgba(0, 0, 0, 0.25);
+    transform: scale(0.9);
+  }
+
+  &:focus {
+    @include default-focus;
+    border-color: var(--quaternary);
+    outline-color: var(--quaternary);
+  }
+}
+
 .channels-list {
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -174,23 +202,14 @@
       }
 
       .chat-channel-unread-indicator {
+        @include chat-unread-indicator;
         display: flex;
         align-items: center;
         justify-content: center;
         width: auto;
-        min-width: 14px;
-        padding: 2px;
-        font-size: var(--font-down-3);
-        border-radius: 1em;
-        background: var(--tertiary-med-or-tertiary);
-
-        &.urgent {
-          background: var(--success);
-        }
-
-        .number {
-          line-height: 1rem;
-        }
+        height: auto;
+        min-width: 0.6em;
+        padding: 0.3em 0.5em;
       }
     }
 

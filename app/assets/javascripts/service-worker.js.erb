@@ -1,9 +1,21 @@
 'use strict';
 
-importScripts("<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox/workbox-sw.js" %>");
+<%
+  base = if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
+    GlobalSetting.s3_asset_cdn_url.presence || GlobalSetting.s3_cdn_url
+  elsif GlobalSetting.cdn_url
+    GlobalSetting.cdn_url + Discourse.base_path
+  else
+    Discourse.base_path
+  end
+
+  workbox_base = "#{base}/assets/#{EmberCli.workbox_dir_name}"
+%>
+
+importScripts("<%= "#{workbox_base}/workbox-sw.js" %>");
 
 workbox.setConfig({
-  modulePathPrefix: "<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox" %>",
+  modulePathPrefix: "<%= workbox_base %>",
   debug: false
 });
 

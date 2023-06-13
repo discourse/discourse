@@ -37,11 +37,12 @@ class SiteSerializer < ApplicationSerializer
     :hashtag_configurations,
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
-    :show_welcome_topic_banner,
     :anonymous_default_sidebar_tags,
     :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
     :denied_emojis,
+    :tos_url,
+    :privacy_policy_url,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -206,7 +207,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serializable_word_matcher_regexp(:censor)
+    WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js)
   end
 
   def custom_emoji_translation
@@ -222,11 +223,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.word_matcher_regexps(:replace)
+    WordWatcher.word_matcher_regexps(:replace, engine: :js)
   end
 
   def watched_words_link
-    WordWatcher.word_matcher_regexps(:link)
+    WordWatcher.word_matcher_regexps(:link, engine: :js)
   end
 
   def categories
@@ -242,15 +243,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def hashtag_icons
-    HashtagAutocompleteService.data_source_icons
+    HashtagAutocompleteService.data_source_icon_map
   end
 
   def displayed_about_plugin_stat_groups
     About.displayed_plugin_stat_groups
-  end
-
-  def show_welcome_topic_banner
-    Site.show_welcome_topic_banner?(scope)
   end
 
   def anonymous_default_sidebar_tags
@@ -265,7 +262,7 @@ class SiteSerializer < ApplicationSerializer
   def anonymous_sidebar_sections
     SidebarSection
       .public_sections
-      .includes(sidebar_section_links: :linkable)
+      .includes(:sidebar_urls)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
@@ -288,6 +285,22 @@ class SiteSerializer < ApplicationSerializer
 
   def include_denied_emojis?
     denied_emojis.present?
+  end
+
+  def tos_url
+    Discourse.tos_url
+  end
+
+  def include_tos_url?
+    tos_url.present?
+  end
+
+  def privacy_policy_url
+    Discourse.privacy_policy_url
+  end
+
+  def include_privacy_policy_url?
+    privacy_policy_url.present?
   end
 
   private

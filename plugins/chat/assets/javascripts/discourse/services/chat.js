@@ -27,13 +27,12 @@ export default class Chat extends Service {
   @service chatNotificationManager;
   @service chatSubscriptionsManager;
   @service chatStateManager;
+  @service chatDraftsManager;
   @service presence;
   @service router;
   @service site;
-
   @service chatChannelsManager;
-  @service chatChannelPane;
-  @service chatChannelThreadPane;
+  @service chatTrackingStateManager;
 
   cook = null;
   presenceChannel = null;
@@ -52,6 +51,10 @@ export default class Chat extends Service {
   set activeChannel(channel) {
     if (!channel) {
       this._activeMessage = null;
+    }
+
+    if (this._activeChannel) {
+      this._activeChannel.activeThread = null;
     }
 
     this._activeChannel = channel;
@@ -107,21 +110,43 @@ export default class Chat extends Service {
   @bind
   onPresenceChangeCallback(present) {
     if (present) {
-      this.chatApi.listCurrentUserChannels().then((channels) => {
-        this.chatSubscriptionsManager.restartChannelsSubscriptions(
-          channels.meta.message_bus_last_ids
+      // NOTE: channels is more than a simple array, it also contains
+      // tracking and membership data, see Chat::StructuredChannelSerializer
+      this.chatApi.listCurrentUserChannels().then((channelsView) => {
+        this.chatSubscriptionsManager.stopChannelsSubscriptions();
+        this.chatSubscriptionsManager.startChannelsSubscriptions(
+          channelsView.meta.message_bus_last_ids
         );
 
         [
-          ...channels.public_channels,
-          ...channels.direct_message_channels,
+          ...channelsView.public_channels,
+          ...channelsView.direct_message_channels,
         ].forEach((channelObject) => {
           this.chatChannelsManager
             .find(channelObject.id, { fetchIfNotFound: false })
             .then((channel) => {
-              if (channel) {
-                channel.updateMembership(channelObject.current_user_membership);
+              if (!channel) {
+                return;
               }
+              // TODO (martin) We need to do something here for thread tracking
+              // state as well on presence change, otherwise we will be back in
+              // the same place as the channels were.
+              //
+              // At some point it would likely be better to just fetch an
+              // endpoint that gives you all channel tracking state and the
+              // thread tracking state for the current channel.
+
+              // ensures we have the latest message bus ids
+              channel.meta.message_bus_last_ids =
+                channelObject.meta.message_bus_last_ids;
+
+              const state = channelsView.tracking.channel_tracking[channel.id];
+              channel.tracking.unreadCount = state.unread_count;
+              channel.tracking.mentionCount = state.mention_count;
+
+              channel.updateMembership(channelObject.current_user_membership);
+
+              this.chatSubscriptionsManager.startChannelSubscription(channel);
             });
         });
       });
@@ -157,19 +182,18 @@ export default class Chat extends Service {
     [...channels.public_channels, ...channels.direct_message_channels].forEach(
       (channelObject) => {
         const channel = this.chatChannelsManager.store(channelObject);
+        const storedDraft = (this.currentUser?.chat_drafts || []).find(
+          (draft) => draft.channel_id === channel.id
+        );
 
-        if (this.currentUser.chat_drafts) {
-          const storedDraft = this.currentUser.chat_drafts.find(
-            (draft) => draft.channel_id === channel.id
-          );
-
-          channel.draft = ChatMessage.createDraftMessage(
-            channel,
-            Object.assign(
-              {
-                user: this.currentUser,
-              },
-              storedDraft ? JSON.parse(storedDraft.data) : {}
+        if (storedDraft) {
+          this.chatDraftsManager.add(
+            ChatMessage.createDraftMessage(
+              channel,
+              Object.assign(
+                { user: this.currentUser },
+                JSON.parse(storedDraft.data)
+              )
             )
           );
         }
@@ -177,6 +201,8 @@ export default class Chat extends Service {
         return this.chatChannelsManager.follow(channel);
       }
     );
+
+    this.chatTrackingStateManager.setupWithPreloadedState(channels.tracking);
   }
 
   willDestroy() {
@@ -208,7 +234,7 @@ export default class Chat extends Service {
 
   getDocumentTitleCount() {
     return this.chatNotificationManager.shouldCountChatInDocTitle()
-      ? this.chatChannelsManager.unreadUrgentCount
+      ? this.chatTrackingStateManager.allChannelUrgentCount
       : 0;
   }
 
@@ -283,7 +309,7 @@ export default class Chat extends Service {
       const membership = channel.currentUserMembership;
 
       if (channel.isDirectMessageChannel) {
-        if (!dmChannelWithUnread && membership.unreadCount > 0) {
+        if (!dmChannelWithUnread && channel.tracking.unreadCount > 0) {
           dmChannelWithUnread = channel.id;
         } else if (!dmChannel) {
           dmChannel = channel.id;
@@ -292,7 +318,10 @@ export default class Chat extends Service {
         if (membership.unread_mentions > 0) {
           publicChannelWithMention = channel.id;
           return; // <- We have a public channel with a mention. Break and return this.
-        } else if (!publicChannelWithUnread && membership.unreadCount > 0) {
+        } else if (
+          !publicChannelWithUnread &&
+          channel.tracking.unreadCount > 0
+        ) {
           publicChannelWithUnread = channel.id;
         } else if (
           !defaultChannel &&

@@ -16,7 +16,7 @@ def generate_chat_documentation
   ]
   `yarn --silent jsdoc --readme plugins/chat/README.md -c #{config} #{files.join(" ")} -d #{destination}`
 
-  # unecessary files
+  # unnecessary files
   %w[
     documentation/chat/frontend/scripts/prism.min.js
     documentation/chat/frontend/scripts/prism.js

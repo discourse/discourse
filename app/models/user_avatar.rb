@@ -144,13 +144,13 @@ class UserAvatar < ActiveRecord::Base
         user.update!(uploaded_avatar_id: upload.id)
       end
     end
-  rescue Net::ReadTimeout, OpenURI::HTTPError
-    # skip saving, we are not connected to the net
+  rescue Net::ReadTimeout, OpenURI::HTTPError, FinalDestination::SSRFError
+    # Skip saving. We are not connected to the net, or SSRF checks failed.
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
 
-  def self.ensure_consistency!
+  def self.ensure_consistency!(max_optimized_avatars_to_remove: 20_000)
     DB.exec <<~SQL
       UPDATE user_avatars
       SET gravatar_upload_id = NULL
@@ -174,6 +174,29 @@ class UserAvatar < ActiveRecord::Base
           up.id IS NULL
       )
     SQL
+
+    ids =
+      DB.query_single(<<~SQL, sizes: Discourse.avatar_sizes, limit: max_optimized_avatars_to_remove)
+      SELECT oi.id FROM user_avatars a
+      JOIN optimized_images oi ON oi.upload_id = a.custom_upload_id
+      LEFT JOIN upload_references ur ON ur.upload_id = a.custom_upload_id and ur.target_type <> 'UserAvatar'
+      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes) AND ur.upload_id IS NULL
+      LIMIT :limit
+    SQL
+
+    warnings_reported = 0
+
+    ids.each do |id|
+      begin
+        OptimizedImage.find(id).destroy!
+      rescue ActiveRecord::RecordNotFound
+      rescue => e
+        if warnings_reported < 10
+          Discourse.warn_exception(e, message: "Failed to remove optimized image")
+          warnings_reported += 1
+        end
+      end
+    end
   end
 end
 

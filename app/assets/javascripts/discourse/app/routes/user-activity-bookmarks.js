@@ -5,6 +5,8 @@ import { Promise } from "rsvp";
 import I18n from "I18n";
 
 export default DiscourseRoute.extend({
+  templateName: "user/bookmarks",
+
   queryParams: {
     acting_username: { refreshModel: true },
     q: { refreshModel: true },
@@ -45,10 +47,6 @@ export default DiscourseRoute.extend({
       })
       .catch(() => controller.set("permissionDenied", true))
       .finally(() => controller.set("loading", false));
-  },
-
-  renderTemplate() {
-    this.render("user_bookmarks");
   },
 
   titleToken() {

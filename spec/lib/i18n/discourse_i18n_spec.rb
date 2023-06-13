@@ -86,14 +86,13 @@ RSpec.describe I18n::Backend::DiscourseI18n do
         items: {
           one: "%{count} Russian item",
           many: "%{count} Russian items are many",
-          other: "%{count} Russian items",
         },
       )
 
       expect(backend.translate(:ru, :items, count: 1)).to eq("1 Russian item")
       expect(backend.translate(:ru, :items, count: 2)).to eq("2 items")
       expect(backend.translate(:ru, :items, count: 5)).to eq("5 Russian items are many")
-      expect(backend.translate(:ru, :items, count: 10.2)).to eq("10.2 Russian items")
+      expect(backend.translate(:ru, :items, count: 10.2)).to eq("10.2 items")
 
       backend.store_translations(
         :ru,
@@ -104,7 +103,9 @@ RSpec.describe I18n::Backend::DiscourseI18n do
           other: "%{count} Russian items",
         },
       )
+
       expect(backend.translate(:ru, :items, count: 2)).to eq("2 Russian items are a few")
+      expect(backend.translate(:ru, :items, count: 10.2)).to eq("10.2 Russian items")
 
       backend.store_translations(:en, airplanes: { one: "%{count} airplane" })
       expect(backend.translate(:ru, :airplanes, count: 1)).to eq("1 airplane")

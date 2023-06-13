@@ -21,7 +21,6 @@ import DButton from "discourse/components/d-button";
 
 acceptance("User menu", function (needs) {
   needs.user({
-    redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 73,
     trust_level: 3,
     grouped_unread_notifications: {
@@ -824,7 +823,6 @@ acceptance("User menu", function (needs) {
 
 acceptance("User menu - Dismiss button", function (needs) {
   needs.user({
-    redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 10,
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,

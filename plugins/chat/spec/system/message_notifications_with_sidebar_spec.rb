@@ -1,22 +1,23 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message notifications - with sidebar", type: :system, js: true do
+RSpec.describe "Message notifications - with sidebar", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
-  let!(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
+  let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
   end
 
-  def create_message(text: "this is fine", channel:, creator: Fabricate(:user))
+  def create_message(text: nil, channel:, creator: Fabricate(:user))
     sign_in(creator)
     chat_page.visit_channel(channel)
-    chat_channel_page.send_message(text)
-    expect(chat_channel_page).to have_no_css(".chat-message-staged")
-    expect(chat_channel_page).to have_message(text: text)
+    channel_page.send_message(text)
+    args = { persisted: true }
+    args[:text] = text if text
+    expect(channel_page.messages).to have_message(**args)
   end
 
   context "as a user" do
@@ -34,7 +35,11 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
           context "when a message is created" do
             it "doesn't show anything" do
               visit("/")
-              using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+
+              using_session(:user_1) do |session|
+                create_message(channel: channel_1, creator: user_1)
+                session.quit
+              end
 
               expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
               expect(page).to have_no_css(".sidebar-row.channel-#{channel_1.id}")
@@ -59,7 +64,10 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
               Jobs.run_immediately!
 
               visit("/")
-              using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+              using_session(:user_1) do |session|
+                create_message(channel: channel_1, creator: user_1)
+                session.quit
+              end
 
               expect(page).to have_css(".do-not-disturb-background")
               expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
@@ -72,7 +80,10 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
             context "when a message is created" do
               it "doesn't show anything" do
                 visit("/")
-                using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+                using_session(:user_1) do |session|
+                  create_message(channel: channel_1, creator: user_1)
+                  session.quit
+                end
 
                 expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
                 expect(page).to have_no_css(".sidebar-row.channel-#{channel_1.id} .unread")
@@ -91,7 +102,10 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
             context "when a message is created" do
               it "doesn't show any indicator on chat-header-icon" do
                 visit("/")
-                using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+                using_session(:user_1) do |session|
+                  create_message(channel: channel_1, creator: user_1)
+                  session.quit
+                end
 
                 expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
               end
@@ -109,10 +123,13 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
             context "when a message is created" do
               it "doesn't show any indicator on chat-header-icon" do
                 visit("/")
-                using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+                using_session(:user_1) do |session|
+                  create_message(channel: channel_1, creator: user_1)
+                  session.quit
+                end
 
                 expect(page).to have_no_css(
-                  ".chat-header-icon .chat-channel-unread-indicator.urgent",
+                  ".chat-header-icon .chat-channel-unread-indicator.-urgent",
                 )
               end
             end
@@ -129,7 +146,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
                     creator: user_1,
                   )
                 end
-                expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator.urgent")
+                expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator.-urgent")
               end
             end
           end
@@ -137,7 +154,10 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
           context "when a message is created" do
             it "correctly renders notifications" do
               visit("/")
-              using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
+              using_session(:user_1) do |session|
+                create_message(channel: channel_1, creator: user_1)
+                session.quit
+              end
 
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
               expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .unread")
@@ -158,7 +178,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
               end
 
               expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator.urgent",
+                ".chat-header-icon .chat-channel-unread-indicator.-urgent",
                 text: "1",
               )
               expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .icon.urgent")
@@ -178,12 +198,18 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
         context "when a message is created" do
           it "correctly renders notifications" do
             visit("/")
-            using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_1, creator: user_1)
+              session.quit
+            end
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
             expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
 
-            using_session(:user_1) { create_message(channel: dm_channel_1, creator: user_1) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_1, creator: user_1)
+              session.quit
+            end
 
             expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "2")
           end
@@ -198,7 +224,10 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
               "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_2.id}",
             )
 
-            using_session(:user_1) { create_message(channel: dm_channel_2, creator: user_2) }
+            using_session(:user_1) do |session|
+              create_message(channel: dm_channel_2, creator: user_2)
+              session.quit
+            end
 
             expect(page).to have_css(
               "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(1) .channel-#{dm_channel_2.id}",
@@ -237,12 +266,13 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
               session.quit
             end
 
-            using_session(:current_user) do
+            using_session(:current_user) do |session|
               expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
               expect(page).to have_css(
                 ".chat-header-icon .chat-channel-unread-indicator",
                 text: "1",
               )
+              session.quit
             end
           end
         end

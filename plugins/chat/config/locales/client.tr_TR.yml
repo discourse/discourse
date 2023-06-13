@@ -196,6 +196,10 @@ tr_TR:
       save: "Kaydet"
       select: "Seç"
       return_to_list: "Kanal listesine dön"
+      return_to_threads_list: "Devam eden tartışmalara dön"
+      unread_threads_count:
+        one: "Henüz okumadığınız %{count} tartışma var"
+        other: "Henüz okumadığınız %{count} tartışma var"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"
       sound:
@@ -427,14 +431,21 @@ tr_TR:
         search_placeholder: "Emoji adına ve takma ada göre arama yapın..."
         no_results: "Sonuç yok"
       thread:
+        title: "Başlık"
         view_thread: Konuyu görüntüle
+        default_title: "Konu #%{thread_id}"
         replies:
           one: "%{count} yanıt"
           other: "%{count} yanıt"
         close: "Konuyu Kapat"
+        original_message:
+          started_by: "Başlatan"
+        settings: "Ayarlar"
+        last_reply: "son yanıt"
       threads:
-        started_by: "Başlatan"
         open: "Konu Aç"
+        list: "Devam eden tartışmalar"
+        none: "Bu kanaldaki herhangi bir ileti dizisine katılmamışsınız."
       draft_channel_screen:
         header: "Yeni Mesaj"
         cancel: "İptal et"
@@ -512,3 +523,7 @@ tr_TR:
         chat_notifications_with_unread:
           one: "Sohbet bildirimleri - %{count} okunmamış bildirim"
           other: "Sohbet bildirimleri - %{count} okunmamış bildirim"
+    styleguide:
+      sections:
+        chat:
+          title: Sohbet

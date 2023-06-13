@@ -239,8 +239,11 @@ ko:
         search_placeholder: "이모티콘 이름과 별칭으로 검색..."
         no_results: "결과 없음"
       thread:
+        title: "제목"
         replies:
           other: "%{count} 댓글"
+        settings: "사이트 설정"
+        last_reply: "마지막 댓글"
       draft_channel_screen:
         header: "새로운 메시지"
         cancel: "취소"
@@ -276,3 +279,7 @@ ko:
         chat_notifications: "채팅 알림"
         chat_notifications_with_unread:
           other: "채팅 알림 - 읽지 않은 알림 %{count}개"
+    styleguide:
+      sections:
+        chat:
+          title: 채팅

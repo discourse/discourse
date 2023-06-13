@@ -1,4 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -11,6 +12,7 @@ import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
 import Category from "discourse/models/category";
+import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
@@ -79,7 +81,6 @@ export default class ChatChannel {
   @tracked canFlag;
   @tracked canModerate;
   @tracked userSilenced;
-  @tracked draft = null;
   @tracked meta;
   @tracked chatableType;
   @tracked chatableUrl;
@@ -87,9 +88,13 @@ export default class ChatChannel {
   @tracked allowChannelWideMentions = true;
   @tracked membershipsCount = 0;
   @tracked archive;
+  @tracked tracking;
+  @tracked threadingEnabled = false;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
+
+  @tracked _unreadThreadIds = new TrackedSet();
 
   constructor(args = {}) {
     this.id = args.id;
@@ -112,7 +117,10 @@ export default class ChatChannel {
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
     this.chatable = this.isDirectMessageChannel
-      ? ChatDirectMessage.create(args)
+      ? ChatDirectMessage.create({
+          id: args.chatable?.id,
+          users: args.chatable?.users,
+        })
       : Category.create(args.chatable);
     this.currentUserMembership = UserChatChannelMembership.create(
       args.current_user_membership
@@ -121,6 +129,20 @@ export default class ChatChannel {
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
     }
+
+    this.tracking = new ChatTrackingState(getOwner(this));
+  }
+
+  get unreadThreadCount() {
+    return this.unreadThreadIds.size;
+  }
+
+  get unreadThreadIds() {
+    return this._unreadThreadIds;
+  }
+
+  set unreadThreadIds(unreadThreadIds) {
+    this._unreadThreadIds = new TrackedSet(unreadThreadIds);
   }
 
   findIndexOfMessage(id) {
@@ -145,6 +167,14 @@ export default class ChatChannel {
 
   removeMessage(message) {
     this.messagesManager.removeMessage(message);
+  }
+
+  get lastMessage() {
+    return this.messagesManager.findLastMessage();
+  }
+
+  lastUserMessage(user) {
+    return this.messagesManager.findLastUserMessage(user);
   }
 
   get messages() {
@@ -256,12 +286,12 @@ export default class ChatChannel {
     return thread;
   }
 
-  stageMessage(message) {
+  async stageMessage(message) {
     message.id = guid();
     message.staged = true;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
-    message.cook();
+    message.channel = this;
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
@@ -288,8 +318,6 @@ export default class ChatChannel {
       membership.desktop_notification_level;
     this.currentUserMembership.mobileNotificationLevel =
       membership.mobile_notification_level;
-    this.currentUserMembership.unreadCount = membership.unread_count;
-    this.currentUserMembership.unreadMentions = membership.unread_mentions;
     this.currentUserMembership.muted = membership.muted;
   }
 

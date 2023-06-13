@@ -761,12 +761,13 @@ class Theme < ActiveRecord::Base
     return if !keys
 
     current_values = CSV.parse(setting_row.value, **{ col_sep: "|" }).flatten
-    new_values = []
-    current_values.each do |item|
-      parts = CSV.parse(item, **{ col_sep: "," }).flatten
-      props = parts.map.with_index { |p, idx| [keys[idx], p] }.to_h
-      new_values << props
-    end
+
+    new_values =
+      current_values.map do |item|
+        parts = CSV.parse(item, **{ col_sep: "," }).flatten
+        raise "Schema validation failed" if keys.size < parts.size
+        parts.zip(keys).map(&:reverse).to_h
+      end
 
     schemer = JSONSchemer.schema(schema)
     raise "Schema validation failed" if !schemer.valid?(new_values)

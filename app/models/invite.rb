@@ -31,6 +31,7 @@ class Invite < ActiveRecord::Base
 
   validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
+  validates :custom_message, length: { maximum: 1000 }
   validate :ensure_max_redemptions_allowed
   validate :valid_redemption_count
   validate :valid_domain, if: :will_save_change_to_domain?
@@ -273,10 +274,12 @@ class Invite < ActiveRecord::Base
   end
 
   def self.invalidate_for_email(email)
-    invite = Invite.find_by(email: Email.downcase(email))
-    invite.update!(invalidated_at: Time.zone.now) if invite
+    Invite.find_by(email: Email.downcase(email))&.invalidate!
+  end
 
-    invite
+  def invalidate!
+    update_attribute(:invalidated_at, Time.current)
+    self
   end
 
   def resend_invite

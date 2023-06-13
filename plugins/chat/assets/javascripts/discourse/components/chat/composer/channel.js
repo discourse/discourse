@@ -3,10 +3,13 @@ import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
+  @service chatDraftsManager;
+  @service currentUser;
 
   context = "channel";
 
@@ -17,25 +20,52 @@ export default class ChatComposerChannel extends ChatComposer {
     return `/chat-reply/${channel.id}`;
   }
 
+  get disabled() {
+    return (
+      (this.args.channel.isDraft &&
+        isEmpty(this.args.channel?.chatable?.users)) ||
+      !this.chat.userCanInteractWithChat ||
+      !this.args.channel.canModifyMessages(this.currentUser)
+    );
+  }
+
+  @action
+  reset() {
+    this.composer.reset(this.args.channel);
+  }
+
   @action
   persistDraft() {
     if (this.args.channel?.isDraft) {
       return;
     }
 
+    this.chatDraftsManager.add(this.currentMessage);
+
     this._persistHandler = discourseDebounce(
       this,
       this._debouncedPersistDraft,
+      this.args.channel.id,
+      this.currentMessage.toJSONDraft(),
       2000
     );
   }
 
   @action
-  _debouncedPersistDraft() {
-    this.chatApi.saveDraft(
-      this.args.channel.id,
-      this.currentMessage.toJSONDraft()
-    );
+  _debouncedPersistDraft(channelId, jsonDraft) {
+    this.chatApi.saveDraft(channelId, jsonDraft).then(() => {
+      if (this.currentMessage) {
+        this.currentMessage.draftSaved = true;
+      }
+    });
+  }
+
+  get lastMessage() {
+    return this.args.channel.lastMessage;
+  }
+
+  lastUserMessage(user) {
+    return this.args.channel.lastUserMessage(user);
   }
 
   get placeholder() {
@@ -61,6 +91,18 @@ export default class ChatComposerChannel extends ChatComposer {
       return I18n.t("chat.placeholder_silenced");
     } else {
       return this.#messageRecipients(this.args.channel);
+    }
+  }
+
+  handleEscape(event) {
+    event.stopPropagation();
+
+    if (this.currentMessage?.inReplyTo) {
+      this.reset();
+    } else if (this.currentMessage?.editing) {
+      this.composer.cancel(this.args.channel);
+    } else {
+      event.target.blur();
     }
   }
 
