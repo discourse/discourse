@@ -520,7 +520,7 @@ de:
       thread:
         title: "Titel"
         view_thread: Thread ansehen
-        default_title: "Thema #%{thread_id}"
+        default_title: "Thread"
         replies:
           one: "%{count} Antwort"
           other: "%{count} Antworten"

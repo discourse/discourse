@@ -1740,8 +1740,6 @@ hu:
       logout_disabled: "A kilépés le van tiltva, amíg az oldal írásvédett módban van."
     staff_writes_only_mode:
       enabled: "Ez az oldal csak a munkatársaknak van fenntartva. Továbbra is böngészheted, de a válaszadás és egyéb műveletek csak a munkatársak számára elérhetők."
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot.
@@ -3642,6 +3640,8 @@ hu:
       more: "Több"
       all_categories: "Minden kategória"
       all_tags: "Összes címke"
+      categories_form:
+        save: "Mentés"
       sections:
         custom:
           save: "Mentés"
@@ -4610,13 +4610,13 @@ hu:
             minimum:
               key: "legalább"
               type: "egész szám"
-              description: "Szöveges mezőkben megadja a minimálisan megengedett karakterek számát."
             maximum:
               key: "legfeljebb"
-              description: "Szöveges mezőkben megadja a megengedett maximális karakterek számát. A többszörös kiválasztású legördülő menüpontokban megadja a kiválasztható lehetőségek maximális számát."
             pattern:
               key: "minta"
               type: "regex karakterlánc"
+            type:
+              key: "típus"
         edit_category:
           toggle_freeform: "űrlap sablon letiltva"
           toggle_form_template: "űrlap sablon engedélyezve"

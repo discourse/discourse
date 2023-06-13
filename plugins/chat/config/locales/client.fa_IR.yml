@@ -284,7 +284,6 @@ fa_IR:
       thread:
         title: "عنوان"
         view_thread: مشاهده موضوع
-        default_title: "موضوع #%{thread_id}"
         replies:
           one: "%{count} پاسخ"
           other: "%{count} پاسخ"

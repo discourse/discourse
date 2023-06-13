@@ -147,7 +147,7 @@ sv:
     word_connector:
       comma: ", "
     action_codes:
-      public_topic: "Gjorde det här ämnet publikt %{when}"
+      public_topic: "Gjorde det här ämnet offentligt %{when}"
       open_topic: "Konverterade detta till ett ämne %{when}"
       private_topic: "Gjorde det här ämnet till ett personligt meddelande %{when}"
       split_topic: "Dela det här ämnet %{when}"
@@ -1825,12 +1825,6 @@ sv:
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge."
     staff_writes_only_mode:
       enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
-    too_few_topics_and_posts_notice_MF: |
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
-    too_few_topics_notice_MF: |
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande.
-    too_few_posts_notice_MF: |
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentPosts, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
@@ -1860,6 +1854,9 @@ sv:
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
       value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
+    offline_indicator:
+      no_internet: "Ingen internetanslutning."
+      refresh_page: "Uppdatera sida"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description:
@@ -2270,6 +2267,7 @@ sv:
       image_alt_text:
         aria_label: Alternativ text för bild
       delete_image_button: Radera bild
+      toggle_image_grid: Växla bildrutnät
     notifications:
       tooltip:
         regular:
@@ -2599,6 +2597,11 @@ sv:
         dismiss_tooltip: "Avfärda nya inlägg eller sluta följa ämnen"
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
         dismiss_new: "Avfärda nya"
+        dismiss_new_modal:
+          title: "Avfärda nya"
+          topics: "Avfärda nya ämnen"
+          posts: "Avfärda nya inlägg"
+          untrack: "Sluta spåra dessa ämnen så att de inte längre visas i min lista över nya"
         dismiss_new_with_selected:
           one: "Avfärda nya (%{count})"
           other: "Avfärda nya (%{count})"
@@ -2640,6 +2643,7 @@ sv:
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
           unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 5 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
+          new_new: "<p>Dina nya ämnen kommer att visas här, och dina olästa ämnen kommer också att visas. Som standard betraktas ämnen som nya, med en <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-indikator om de skapades under de senaste 2 dagarna. Olästa ämnen visar oläst-antalet <span class=\"badge unread-posts badge-notification\">1</span> om du: skapade ämnet, svarade på ämnet, läste ämnet i mer än 5 minuter eller om du uttryckligen har ställt in ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -4037,6 +4041,11 @@ sv:
       more: "Mer"
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
+      categories_form:
+        save: "Spara"
+        title: "Redigera kategorinavigering"
+        filter_placeholder: "Filterkategorier"
+        no_categories: "Det finns inga kategorier som matchar den angivna termen."
       sections:
         custom:
           add: "Lägg till ett anpassat avsnitt"
@@ -4143,6 +4152,7 @@ sv:
               content: "Granska"
               title: "Flaggade inlägg och andra objekt i kö"
               pending_count: "%{count} väntande"
+        global_section: "Globalt avsnitt, synligt för alla"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -4390,6 +4400,7 @@ sv:
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
               delete: Ta bort ett inlägg.
+              list: Lista över senaste inlägg och privata inlägg. RSS stöds också.
             tags:
               list: Lista etiketter
             categories:
@@ -5044,6 +5055,7 @@ sv:
             revoke_moderation: "återkalla moderering"
             backup_create: "Skapa en säkerhetskopia"
             deleted_tag: "raderad tagg"
+            update_directory_columns: "uppdatera katalogkolumner"
             deleted_unused_tags: "radera oanvända taggar"
             renamed_tag: "omdöpt tagg"
             revoke_email: "återkalla e-post"
@@ -5252,15 +5264,19 @@ sv:
             minimum:
               key: "minst"
               type: "heltal"
-              description: "I textfält anges det minsta tillåtna antalet tecken."
+              description: "För textfält anges det minsta tillåtna antalet tecken."
             maximum:
               key: "maximalt"
               type: "heltal"
-              description: "I textfält anges det högsta tillåtna antalet tecken. I flervalsrullgardinsmenyer anges det högsta tillåtna antalet alternativ som kan väljas."
+              description: "För textfält anges det största tillåtna antalet tecken."
             pattern:
               key: "mönster"
               type: "regex-sträng"
-              description: "I textfält är detta ett reguljärt uttryck som anger tillåten inmatning."
+              description: "För textfält är detta ett reguljärt uttryck som anger tillåten inmatning."
+            type:
+              key: "typ"
+              type: "sträng"
+              description: "För inmatningsfält kan du ange vilken typ av inmatning som bör förväntas (text|e-post|datum|nummer|url|tel|färg)"
         preview_modal:
           title: "Förhandsgranskningsmall"
         field_placeholders:

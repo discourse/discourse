@@ -1572,8 +1572,6 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    too_few_posts_notice_MF: |
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}.
@@ -3542,6 +3540,8 @@ vi:
       more: "Thêm"
       all_categories: "Tất cả danh mục"
       all_tags: "Tất cả các thẻ"
+      categories_form:
+        save: "Lưu lại"
       sections:
         custom:
           save: "Lưu lại"
@@ -4574,6 +4574,8 @@ vi:
               key: "tối thiểu"
             maximum:
               key: "tối đa"
+            type:
+              key: "loại"
       impersonate:
         title: "Mạo danh"
         help: "Sử dụng công cụ này để mạo danh một tài khoản thành viên cho mục đích gỡ lỗi, bạn sẽ phải đăng xuất sau khi hoàn tất."

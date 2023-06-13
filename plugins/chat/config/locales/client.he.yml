@@ -568,7 +568,7 @@ he:
       thread:
         title: "כותרת"
         view_thread: הצגת שרשור
-        default_title: "שרשור מס׳ %{thread_id}"
+        default_title: "שרשור"
         replies:
           one: "תגובה אחת"
           two: "%{count} תגובות"

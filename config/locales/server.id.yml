@@ -198,6 +198,8 @@ id:
       page_publishing_requirements: "Penerbitan halaman tidak dapat diaktifkan jika media aman diaktifkan."
       s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
       s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
+      secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
+      s3_use_acls_requirements: "Anda harus mengaktifkan ACL S3 saat unggahan aman diaktifkan."
       share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
       second_factor_cannot_enforce_with_socials: "Anda tidak dapat menerapkan 2FA dengan login sosial diaktifkan. Anda harus terlebih dahulu menonaktifkan login melalui: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
@@ -569,15 +571,13 @@ id:
     body: |
       Kami sangat senang Anda bergabung dengan kami.
 
-      > ## %{site_title}
-      >
-      > %{site_description}
+      %{site_info_quote}
 
       Berikut adalah beberapa hal yang dapat Anda lakukan untuk memulai:
 
       :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Apa satu hal yang ingin Anda tanyakan?
 
-      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan postingan yang menarik, informatif, atau menghibur, gunakan angka :heart: untuk menunjukkan penghargaan atau dukungan Anda!
+      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan post yang menarik, informatif, atau menghibur, gunakan :heart: untuk menunjukkan penghargaan atau dukungan Anda!
 
       :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
 
@@ -728,6 +728,7 @@ id:
       new_email: "Email baru: %{email}"
       almost_done_title: "Konfirmasi alamat email baru"
   associated_accounts:
+    revoke_failed: "Gagal mencabut akun Anda di %{provider_name}."
     connected: "(terhubung)"
   activation:
     action: "Klik disini untuk mengaktifkan akun anda"
@@ -789,8 +790,17 @@ id:
   draft_backup:
     pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
     pm_body: "Topik berisi draf cadangan"
+  email_settings:
+    smtp_server_busy_error: "Server SMTP sedang sibuk, coba lagi nanti."
+    smtp_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server SMTP. %{message}"
+    imap_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server IMAP. %{message}"
+    connection_error: "Terjadi masalah saat menghubungkan dengan server, periksa nama dan port server, lalu coba lagi."
+    timeout_error: "Waktu koneksi ke server habis, periksa nama server dan port, lalu coba lagi."
+    unhandled_error: "Kesalahan tidak tertangani saat menguji setelan email. %{message}"
   webauthn:
     validation:
+      invalid_type_error: "Jenis webauthn yang diberikan tidak valid. Jenis yang valid adalah webauthn.get dan webauthn.create."
+      malformed_attestation_error: "Terjadi kesalahan saat mengartikan data pengesahan."
       user_verification_error: "Verifikasi pengguna diperlukan."
       unsupported_public_key_algorithm_error: "Algoritma kunci publik yang disediakan tidak didukung oleh server."
       unsupported_attestation_format_error: "Format pengesahan tidak didukung oleh server."
@@ -817,6 +827,8 @@ id:
       short_description: "Membutuhkan perhatian staf karena alasan lain"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
       email_body: "%{link}\n\n%{message}"
+  ignored:
+    hidden_content: "<p>Konten yang diabaikan</p>"
   archetypes:
     regular:
       title: "Topik Reguler"
@@ -824,11 +836,30 @@ id:
       title: "Topik Spanduk"
       message:
         make: "Topik ini sekarang menjadi spanduk. Itu akan muncul di bagian atas setiap halaman sampai ditutup oleh pengguna."
+        remove: "Topik ini bukan lagi spanduk. Itu tidak akan lagi muncul di bagian atas setiap halaman."
+  unsubscribed:
+    title: "Preferensi email diperbarui!"
+    description: "Preferensi email untuk <b>%{email}</b> telah diperbarui. Untuk mengubah pengaturan email Anda <a href='%{url}'>kunjungi preferensi pengguna Anda</a>."
+    topic_description: "Untuk berlangganan ulang %{link}, gunakan kontrol notifikasi di bagian bawah atau kanan topik."
+    private_topic_description: "Untuk berlangganan kembali, gunakan kontrol notifikasi di bagian bawah atau kanan topik."
+  uploads:
+    marked_insecure_from_theme_component_reason: "upload digunakan dalam komponen tema"
   unsubscribe:
     title: "Berhenti berlangganan"
+    stop_watching_topic: "Berhenti mengikuti topik ini, %{link}"
+    mute_topic: "Nonaktifkan semua notifikasi untuk topik ini, %{link}"
+    unwatch_category: "Berhenti mengikuti semua topik di %{category}"
+    mailing_list_mode: "Nonaktifkan mode milis"
+    all: "Jangan kirimi saya email apa pun dari %{sitename}"
+    different_user_description: "Anda saat ini masuk sebagai pengguna yang berbeda dari yang kami kirimi email. Keluar, atau masuk ke mode anonim, dan coba lagi."
+    not_found_description: "Maaf, kami tidak dapat menemukan langganan tersebut. Mungkin tautan di email Anda terlalu lama dan telah kedaluwarsa?"
+    user_not_found_description: "Maaf, kami tidak dapat menemukan pengguna untuk langganan ini. Anda mungkin mencoba berhenti berlangganan akun yang sudah tidak ada lagi."
     log_out: "Keluar"
     submit: "Simpan preferensi"
     digest_frequency:
+      title: "Anda menerima email ringkasan %{frequency}"
+      never_title: "Anda tidak menerima email ringkasan"
+      select_title: "Atur frekuensi email ringkasan ke:"
       never: "tidak pernah"
       every_30_minutes: "setiap 30 menit"
       every_hour: "per jam"
@@ -841,11 +872,22 @@ id:
     authorize: "Izinkan"
     read: "baca"
     read_write: "baca/tulis"
+    description: '"%{application_name}" meminta akses berikut ke akun Anda:'
+    instructions: 'Kami baru saja membuat kunci API pengguna baru untuk Anda gunakan dengan "%{application_name}", harap tempelkan kunci berikut ke dalam aplikasi Anda:'
+    otp_description: 'Apakah Anda ingin mengizinkan "%{application_name}" untuk mengakses situs ini?'
     otp_confirmation:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{username}
       confirm_button: Selesai Login
+    no_trust_level: "Maaf, Anda tidak memiliki trust level yang diperlukan untuk mengakses API pengguna"
+    generic_error: "Maaf, kami tidak dapat mengeluarkan kunci API pengguna, fitur ini mungkin dinonaktifkan oleh admin situs"
     scopes:
+      message_bus: "Pembaruan langsung"
+      notifications: "Baca dan hapus notifikasi"
+      push: "Pengiriman notifikasi ke layanan eksternal"
+      session_info: "Baca info sesi pengguna"
+      read: "Baca semua"
+      write: "Tulis semua"
       one_time_password: "Membuat token masuk satu kali"
       bookmarks_calendar: "Baca pengingat bookmark"
       user_status: "Baca dan perbarui status pengguna"
@@ -899,30 +941,62 @@ id:
         no_action: Tidak ada tindakan
       labels:
         flag: Tipe
+        assigned: Ditugaskan
+        poster: Poster
+        flagger: Pemberi penanda
+        time_to_resolution: Waktu resolusi
     visits:
       title: "Kunjungan Pengguna"
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
       xaxis: "Hari"
+      yaxis: "Jumlah pendaftaran"
     new_contributors:
       xaxis: "Hari"
     trust_level_growth:
+      title: "Pertumbuhan Trust Level"
+      xaxis:
+        tl1_reached: "Mencapai TL1"
+        tl2_reached: "Mencapai TL2"
+        tl3_reached: "Mencapai TL3"
+        tl4_reached: "Mencapai TL4"
       yaxis: "Hari"
+      description: "Jumlah pengguna yang meningkatkan Trust Level mereka selama periode ini."
     consolidated_page_views:
+      title: "Tampilan Halaman Terkonsolidasi"
+      xaxis:
+        page_view_crawler: "Perayap"
+        page_view_anon: "Pengguna anonim"
+        page_view_logged_in: "Pengguna yang masuk"
       yaxis: "Hari"
       labels:
         post: Postingan
+        editor: Editor
+        author: Pengarang
         edit_reason: Alasan
     consolidated_api_requests:
+      title: "Permintaan API Terkonsolidasi"
+      xaxis:
+        api: "API"
+        user_api: "API Pengguna"
       yaxis: "Hari"
+      description: "Permintaan API untuk kunci API reguler dan kunci API pengguna."
     dau_by_mau:
+      title: "DAU/MAU"
       xaxis: "Hari"
+      yaxis: "DAU/MAU"
       description: "Jumlah anggota yang masuk pada hari terakhir dibagi dengan jumlah anggota yang masuk pada bulan lalu – menghasilkan % yang menunjukkan 'stickiness' komunitas. Bertujuan untuk >20%."
     daily_engaged_users:
+      title: "Pengguna yang Terlibat Harian"
       xaxis: "Hari"
+      yaxis: "Pengguna Terlibat"
+      description: "Jumlah pengguna yang menyukai atau memposting di sehari terakhir."
     profile_views:
+      title: "Penampilan Profil Pengguna"
       xaxis: "Hari"
+      yaxis: "Jumlah profil pengguna dilihat"
+      description: "Total penampilan baru dari profil pengguna."
     topics:
       title: "Topik"
       xaxis: "Hari"
@@ -948,6 +1022,9 @@ id:
       title: "Pengguna per Level Kepercayaan"
       xaxis: "Level Kepercayaan"
       yaxis: "Jumlah Pengguna"
+      labels:
+        level: Tingkat
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Tipe"
       yaxis: "Jumlah Pengguna"
@@ -1006,28 +1083,43 @@ id:
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Hari"
+      yaxis: "Penampilan-halaman Anonim"
+      description: "Jumlah penampilan-halaman baru oleh pengunjung yang tidak masuk ke akun."
     page_view_logged_in_reqs:
+      title: "Masuk"
       xaxis: "Hari"
     page_view_crawler_reqs:
       xaxis: "Hari"
     page_view_total_reqs:
+      title: "Tampilan halaman"
       xaxis: "Hari"
+      yaxis: "Total Penampilan-halaman"
     page_view_logged_in_mobile_reqs:
+      title: "Tampilan Halaman Masuk"
       xaxis: "Hari"
+      yaxis: "Tampilan Halaman Masuk Seluler"
+      description: "Jumlah tampilan halaman baru dari pengguna di perangkat seluler dan masuk ke akun."
     page_view_anon_mobile_reqs:
+      title: "Tampilan Halaman Anon"
       xaxis: "Hari"
+      yaxis: "Tampilan Halaman Anon Seluler"
+      description: "Jumlah tampilan halaman baru dari pengunjung di perangkat seluler yang tidak masuk."
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"
+      yaxis: "Permintaan digunakan untuk pembaruan dan pelacakan langsung"
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Hari"
       yaxis: "Permohonan Sukses (Status 2xx)"
     http_3xx_reqs:
+      title: "HTTP 3xx (Pengalihan)"
       xaxis: "Hari"
+      yaxis: "Permintaan pengalihan (Status 3xx)"
     http_4xx_reqs:
       title: "HTTP 4xx (Error pada Client)"
       xaxis: "Hari"
+      yaxis: "Kesalahan Klien (Status 4xx)"
     http_5xx_reqs:
       xaxis: "Hari"
     http_total_reqs:
@@ -1046,30 +1138,48 @@ id:
       labels:
         user: Pengguna
         location: Lokasi
+        browser: Peramban
+        device: Perangkat
+        os: Sistem operasi
+        login_time: Waktu Masuk
     staff_logins:
       labels:
         user: Pengguna
         location: Lokasi
     top_users_by_likes_received:
+      title: "Pengguna Teratas berdasarkan suka yang diterima"
       labels:
         user: Pengguna
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas yang telah menerima suka."
     top_users_by_likes_received_from_inferior_trust_level:
+      title: "Pengguna Teratas berdasarkan suka yang diterima dari pengguna dengan trust level lebih rendah"
       labels:
         user: Pengguna
+        trust_level: Trust level
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas dengan trust level yang lebih tinggi disukai oleh orang-orang dengan tingkat kepercayaan yang lebih rendah."
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "Pengguna Teratas berdasarkan suka yang diterima dari berbagai orang"
       labels:
         user: Pengguna
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas yang memiliki suka dari banyak orang."
   dashboard:
+    group_email_credentials_warning: 'Ada masalah dengan kredensial email untuk grup <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Tidak ada email yang akan dikirim dari kotak masuk grup hingga masalah ini diatasi. %{error}'
     rails_env_warning: "Server Anda berjalan dalam modus %{env}."
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
+    sidekiq_warning: 'Sidekiq tidak berjalan. Banyak tugas, seperti mengirim email, dijalankan secara asinkron oleh Sidekiq. Harap pastikan setidaknya satu proses Sidekiq sedang berjalan. <a href="https://github.com/mperham/sidekiq" target="_blank">Pelajari tentang Sidekiq di sini</a>.'
+    queue_size_warning: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
     memory_warning: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
+    email_polling_errored_recently:
+      other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
+    missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
     v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
+    topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     default_subcategory_on_read_only_category: "Mengaktifkan tombol 'Topik Baru' dan memilih subkategori bawaan untuk membuat post pada kategori di mana pengguna tidak diizinkan untuk membuat topik baru."
     apple_touch_icon: "Ikon yang digunakan untuk perangkat sentuh Apple. Backround transparan tidak disarankan. Akan secara otomatis diubah ukurannya menjadi 180x180. Jika dibiarkan kosong, large_icon akan digunakan."
@@ -1082,6 +1192,7 @@ id:
     auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
+    s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
     composer_media_optimization_image_encode_quality: "Kualitas penyandian JPG digunakan dalam proses penyandian ulang."
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     dark_mode_none: "Tidak ada"
@@ -1095,10 +1206,12 @@ id:
     dont_feed_the_trolls_threshold: "Jumlah penanda dari pengguna lain sebelum diperingatkan."
     native_app_install_banner_ios: "Menampilkan spanduk aplikasi DiscourseHub di perangkat iOS ke pengguna dasar (trust level 1) dan lebih tinggi."
     native_app_install_banner_android: "Menampilkan spanduk aplikasi DiscourseHub di perangkat Android ke pengguna dasar (trust level 1) dan lebih tinggi."
+    max_prints_per_hour_per_user: "Jumlah maksimum tayangan halaman /print (atur ke 0 untuk menonaktifkan pencetakan)"
     notify_about_reviewable_item_after: "Jika ada item yang dapat ditinjau yang belum ditangani setelah berjam-jam ini, kirim pesan pribadi ke moderator. Setel ke 0 untuk menonaktifkan."
     bootstrap_mode_min_users: "Jumlah minimum pengguna yang diperlukan untuk menonaktifkan mode bootstrap (diatur ke 0 untuk menonaktifkan, dapat memakan waktu hingga 24 jam)"
     emoji_set: "Bagaimana dengan emoji Anda?"
     emoji_deny_list: "Emoji ini tidak akan tersedia untuk digunakan dalam menu atau kode singkat."
+    enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
     min_trust_level_for_user_api_key: |
       Trust level diperlukan untuk membuat kunci API pengguna.<br>
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
