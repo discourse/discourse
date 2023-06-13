@@ -247,9 +247,9 @@ export default Component.extend(TextareaTextManipulation, {
     this.selectedFormTemplateId = formTemplateId;
   },
 
-  @discourseComputed("formTemplateIds", "replyingToTopic")
-  showFormTemplateForm(formTemplateIds, replyingToTopic) {
-    if (formTemplateIds?.length > 0 && !replyingToTopic) {
+  @discourseComputed("formTemplateIds", "replyingToTopic", "editingPost")
+  showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
+    if (formTemplateIds?.length > 0 && !replyingToTopic && !editingPost) {
       return true;
     }
 
