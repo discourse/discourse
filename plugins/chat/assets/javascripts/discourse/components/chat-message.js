@@ -144,7 +144,6 @@ export default class ChatMessage extends Component {
         return;
       }
 
-      // this.#destroyTippyInstances();
       this.args.message.mentionedUsers.forEach((user) => {
         const href = `/u/${user.username.toLowerCase()}`;
         const mentions = this.messageContainer.querySelectorAll(

@@ -10,5 +10,5 @@ export function updateUserStatusOnMention(mention, status, tippyInstances) {
 }
 
 function removeStatus(mention) {
-  mention.querySelector("img.user-status-message")?.remove();
+  mention.querySelector("span.user-status-message")?.remove();
 }

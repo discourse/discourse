@@ -35,7 +35,6 @@ export default class DiscourseTooltip extends Component {
         interactive,
         content: element,
         trigger: this.capabilities.touch ? "click" : "mouseenter",
-        // trigger: "mouseenter",
         theme: "d-tooltip",
         arrow: false,
         placement: "bottom-start",

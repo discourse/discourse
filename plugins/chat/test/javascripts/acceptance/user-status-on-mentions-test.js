@@ -108,6 +108,11 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser2.username),
       mentionedUser2.status
     );
+    await assertStatusTooltipIsRendered(
+      assert,
+      statusSelector(mentionedUser2.username),
+      mentionedUser2.status
+    );
   });
 
   skip("just posted messages | it updates status on mentions", async function (assert) {
@@ -121,6 +126,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser2.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
+    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
   skip("just posted messages | it deletes status on mentions", async function (assert) {
@@ -150,6 +156,11 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser3.username),
       mentionedUser3.status
     );
+    await assertStatusTooltipIsRendered(
+      assert,
+      statusSelector(mentionedUser3.username),
+      mentionedUser3.status
+    );
   });
 
   skip("edited messages | it updates status on mentions", async function (assert) {
@@ -166,6 +177,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser3.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
+    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
   skip("edited messages | it deletes status on mentions", async function (assert) {
@@ -196,6 +208,11 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser1.username),
       mentionedUser1.status
     );
+    await assertStatusTooltipIsRendered(
+      assert,
+      statusSelector(mentionedUser1.username),
+      mentionedUser1.status
+    );
   });
 
   test("deleted messages | it updates status on mentions", async function (assert) {
@@ -211,6 +228,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
+    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
   test("deleted messages | it deletes status on mentions", async function (assert) {
@@ -239,6 +257,11 @@ acceptance("Chat | User status on mentions", function (needs) {
       statusSelector(mentionedUser1.username),
       mentionedUser1.status
     );
+    await assertStatusTooltipIsRendered(
+      assert,
+      statusSelector(mentionedUser1.username),
+      mentionedUser1.status
+    );
   });
 
   test("restored messages | it updates status on mentions", async function (assert) {
@@ -254,6 +277,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector);
     assertStatusIsRendered(assert, selector, newStatus);
+    await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
   test("restored messages | it deletes status on mentions", async function (assert) {
@@ -276,15 +300,31 @@ acceptance("Chat | User status on mentions", function (needs) {
       .dom(selector)
       .exists("status is rendered")
       .hasAttribute(
-        "title",
-        status.description,
-        "status description is updated"
-      )
-      .hasAttribute(
         "src",
         new RegExp(`${status.emoji}.png`),
         "status emoji is updated"
       );
+  }
+
+  async function assertStatusTooltipIsRendered(assert, selector, status) {
+    await triggerEvent(selector, "mouseenter");
+
+    assert.equal(
+      document
+        .querySelector(".user-status-tooltip-description")
+        .textContent.trim(),
+      status.description,
+      "status description is correct"
+    );
+
+    assert.ok(
+      document.querySelector(
+        `.user-status-message-tooltip img[alt='${status.emoji}']`
+      ),
+      "status emoji is correct"
+    );
+
+    await triggerEvent(selector, "mouseleave");
   }
 
   async function deleteMessage(messageSelector) {
@@ -346,6 +386,6 @@ acceptance("Chat | User status on mentions", function (needs) {
   }
 
   function statusSelector(username) {
-    return `.mention[href='/u/${username}'] .user-status`;
+    return `.mention[href='/u/${username}'] .user-status-message img`;
   }
 });
