@@ -68,6 +68,12 @@ describe "Composer Form Template Validations", type: :system, js: true do
     sign_in user
   end
 
+  it "shows an asterisk on the label of the required fields" do
+    category_page.visit(category_with_template)
+    category_page.new_topic_button.click
+    expect(composer).to have_form_template_field_required_indicator("input")
+  end
+
   it "shows an error when a required input is not filled in" do
     category_page.visit(category_with_template)
     category_page.new_topic_button.click
