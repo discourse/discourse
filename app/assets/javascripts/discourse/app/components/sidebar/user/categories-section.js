@@ -80,7 +80,7 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
     ) {
       showModal("sidebar-categories-form");
     } else {
-      this.router.transitionTo("preferences.sidebar", this.currentUser);
+      this.router.transitionTo("preferences.navigation-menu", this.currentUser);
     }
   }
 }

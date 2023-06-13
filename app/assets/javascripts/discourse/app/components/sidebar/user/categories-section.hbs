@@ -33,7 +33,9 @@
             data-category-id={{sectionLink.category.id}}
           />
         {{/each}}
-      {{else if this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled}}
+      {{else if
+        this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
+      }}
         <Sidebar::SectionLink
           @linkName="configure-categories"
           @prefixType="icon"
@@ -50,7 +52,7 @@
       {{else}}
         <Sidebar::SectionLink
           @linkName="configure-categories"
-          @route="preferences.sidebar"
+          @route="preferences.navigation-menu"
           @prefixType="icon"
           @prefixValue="pencil-alt"
           @model={{this.currentUser}}

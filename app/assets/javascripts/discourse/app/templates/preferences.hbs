@@ -78,12 +78,12 @@
 
     {{#if (not (eq this.siteSettings.navigation_menu "legacy"))}}
       <DNavigationItem
-        @route="preferences.sidebar"
-        @class="user-nav__preferences-sidebar"
+        @route="preferences.navigation-menu"
+        @class="user-nav__preferences-navigation-menu"
         @ariaCurrentContext="subNav"
       >
         {{d-icon "bars"}}
-        <span>{{i18n "user.preferences_nav.sidebar"}}</span>
+        <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
       </DNavigationItem>
     {{/if}}
 

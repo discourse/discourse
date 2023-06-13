@@ -110,8 +110,8 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/u/eviltrout/preferences/sidebar",
-      "it should transition to user preferences sidebar page"
+      "/u/eviltrout/preferences/navigation-menu",
+      "it should transition to user preferences navigation menu page"
     );
   });
 
@@ -155,8 +155,8 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/u/eviltrout/preferences/sidebar",
-      "it should transition to user preferences sidebar page"
+      "/u/eviltrout/preferences/navigation-menu",
+      "it should transition to user preferences navigation menu page"
     );
   });
 

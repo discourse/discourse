@@ -79,6 +79,6 @@ export default class SidebarUserTagsSection extends Component {
 
   @action
   editTracked() {
-    this.router.transitionTo("preferences.sidebar", this.currentUser);
+    this.router.transitionTo("preferences.navigation-menu", this.currentUser);
   }
 }
