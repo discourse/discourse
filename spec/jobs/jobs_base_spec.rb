@@ -42,7 +42,7 @@ RSpec.describe ::Jobs::Base do
   end
 
   it "handles job concurrency" do
-    ConcurrentJob.clear_cluster_concurrency_semaphore!
+    ConcurrentJob.clear_cluster_concurrency_lock!
 
     expect(ConcurrentJob.get_cluster_concurrency).to eq(1)
     expect(BadJob.get_cluster_concurrency).to eq(nil)

@@ -162,6 +162,7 @@ module Jobs
     include Sidekiq::Worker
 
     def self.cluster_concurrency(val)
+      raise ArgumentError, "cluster_concurrency must be 1 or nil" if val != 1 && val != nil
       @cluster_concurrency = val
     end
 
@@ -228,45 +229,35 @@ module Jobs
       "cluster_concurrency:#{self}"
     end
 
-    def self.clear_cluster_concurrency_semaphore!
+    def self.clear_cluster_concurrency_lock!
       Discourse.redis.without_namespace.del(cluster_concurrency_redis_key)
     end
 
-    def self.acquire_cluster_concurrency_semaphore!
-      incr = nil
-      Discourse.redis.without_namespace.multi do |transaction|
-        incr = transaction.incr(cluster_concurrency_redis_key)
-        # 10 hours is the max time, if we have jobs taking longer
-        # we will catch them in other monitoring
-        transaction.expire(cluster_concurrency_redis_key, 3600)
-      end
-
-      if incr.value > get_cluster_concurrency
-        release_cluster_concurrency_semaphore!
-        false
-      else
-        true
-      end
-    end
-
-    def self.release_cluster_concurrency_semaphore!
-      val = Discourse.redis.without_namespace.decr(cluster_concurrency_redis_key)
-      if val < 0
-        # this can happen in exceptional cases when an expiry happens mid job
-        clear_cluster_concurrency_semaphore!
-      end
-      val
+    def self.acquire_cluster_concurrency_lock!
+      !!Discourse.redis.without_namespace.set(cluster_concurrency_redis_key, 0, nx: true, ex: 120)
     end
 
     def perform(*args)
       requeued = false
+      keepalive_thread = nil
+      finished = false
 
       if self.class.get_cluster_concurrency
-        if !self.class.acquire_cluster_concurrency_semaphore!
+        if !self.class.acquire_cluster_concurrency_lock!
           self.class.perform_in(10.seconds, *args)
           requeued = true
           return
         end
+        parent_thread = Thread.current
+        cluster_concurrency_redis_key = self.class.cluster_concurrency_redis_key
+
+        keepalive_thread =
+          Thread.new do
+            while parent_thread.alive? && !finished
+              Discourse.redis.without_namespace.expire(cluster_concurrency_redis_key, 120)
+              sleep 60
+            end
+          end
       end
 
       opts = args.extract_options!.with_indifferent_access
@@ -331,7 +322,10 @@ module Jobs
       nil
     ensure
       if self.class.get_cluster_concurrency && !requeued
-        self.class.release_cluster_concurrency_semaphore!
+        finished = true
+        keepalive_thread.wakeup
+        keepalive_thread.join
+        self.class.clear_cluster_concurrency_lock!
       end
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
