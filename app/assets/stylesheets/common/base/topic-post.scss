@@ -1536,6 +1536,11 @@ span.mention {
   }
 }
 
+iframe {
+  max-width: 100%;
+  max-height: #{"min(1000px, 200vh)"};
+}
+
 .post-admin-menu {
   display: inline-flex;
   flex-direction: column;
