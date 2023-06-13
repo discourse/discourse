@@ -1020,26 +1020,34 @@ class TopicsController < ApplicationController
   end
 
   def reset_new
+    topic_scope = TopicQuery.new(current_user).new_results(limit: false)
+    if tag_name = params[:tag_id]
+      tag_name = DiscourseTagging.visible_tags(guardian).where(name: tag_name).pluck(:name).first
+    end
     topic_scope =
       if params[:category_id].present?
-        category_ids = [params[:category_id]]
-        if params[:include_subcategories] == "true"
+        category_ids = [params[:category_id].to_i]
+        if ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
           category_ids =
             category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
         end
 
-        scope = Topic.where(category_id: category_ids)
-        scope = scope.joins(:tags).where(tags: { name: params[:tag_id] }) if params[:tag_id]
+        category_ids &= guardian.allowed_category_ids
+        if category_ids.blank?
+          scope = topic_scope.none
+        else
+          scope = topic_scope.where(category_id: category_ids)
+          scope = scope.joins(:tags).where(tags: { name: tag_name }) if tag_name
+        end
         scope
-      elsif params[:tag_id].present?
-        Topic.joins(:tags).where(tags: { name: params[:tag_id] })
+      elsif tag_name.present?
+        topic_scope.joins(:tags).where(tags: { name: tag_name })
       else
-        new_results = TopicQuery.new(current_user).new_results(limit: false)
         if params[:tracked].to_s == "true"
-          TopicQuery.tracked_filter(new_results, current_user.id)
+          TopicQuery.tracked_filter(topic_scope, current_user.id)
         else
           current_user.user_stat.update_column(:new_since, Time.zone.now)
-          new_results
+          topic_scope
         end
       end
 
@@ -1048,7 +1056,7 @@ class TopicsController < ApplicationController
         raise Discourse::InvalidParameters.new("Expecting topic_ids to contain a list of topic ids")
       end
 
-      topic_ids = params[:topic_ids].map { |t| t.to_i }
+      topic_ids = params[:topic_ids].map(&:to_i)
       topic_scope = topic_scope.where(id: topic_ids)
     end
 
