@@ -127,7 +127,7 @@
 
     .select-kit-body {
       padding: 0.5rem;
-      box-shadow: shadow("card");
+      box-shadow: var(--shadow-card);
       border: 1px solid var(--primary-300);
     }
 
