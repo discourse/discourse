@@ -988,9 +988,6 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
-  experimental_post_image_grid:
-    client: true
-    default: false
   highlighted_languages:
     default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
@@ -2113,6 +2110,9 @@ developer:
     allow_any: false
     refresh: true
   experimental_topics_filter:
+    client: true
+    default: false
+  experimental_post_image_grid:
     client: true
     default: false
   new_edit_sidebar_categories_tags_interface_groups:

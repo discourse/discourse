@@ -69,15 +69,28 @@ export default class Columns {
     Array.from(this.container.children).forEach((child) => {
       if (child.nodeName === "P" && child.children.length > 0) {
         // sometimes children are wrapped in a paragraph
-        targets.push(...child.children);
+        Array.from(child.children).forEach((c) => {
+          targets.push(this._wrapDirectImage(c));
+        });
       } else {
-        targets.push(child);
+        targets.push(this._wrapDirectImage(child));
       }
     });
 
     return targets.filter((item) => {
       return !this.excluded.includes(item.nodeName);
     });
+  }
+
+  _wrapDirectImage(item) {
+    if (item.nodeName !== "IMG") {
+      return item;
+    }
+
+    const wrapper = document.createElement("span");
+    wrapper.classList.add("image-wrapper");
+    wrapper.append(item);
+    return wrapper;
   }
 
   _distributeEvenly() {
