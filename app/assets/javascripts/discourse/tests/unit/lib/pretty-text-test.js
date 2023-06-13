@@ -1683,6 +1683,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsReplace: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "times",
           case_sensitive: false,
         },
@@ -1697,6 +1698,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsLink: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "https://discourse.org",
           case_sensitive: false,
         },
@@ -1711,18 +1713,21 @@ var bar = 'bar';
   });
 
   test("watched words replace with bad regex", function (assert) {
-    const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
       watchedWordsReplace: {
-        "(\\bu?\\b)": { replacement: "you", case_sensitive: false },
+        "(\\bu?\\b)": {
+          word: "(\\bu?\\b)",
+          replacement: "you",
+          case_sensitive: false,
+        },
       },
     };
 
     assert.cookedOptions(
       "one",
       opts,
-      `<p>${"you".repeat(maxMatches)}one</p>`,
+      `<p>youoneyou</p>`,
       "does not loop infinitely"
     );
   });
