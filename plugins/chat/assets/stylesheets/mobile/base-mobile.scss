@@ -102,5 +102,8 @@ html.has-full-page-chat {
         color: var(--primary-medium);
       }
     }
+    .chat-channel-unread-indicator {
+      border-color: var(--primary-very-low);
+    }
   }
 }
