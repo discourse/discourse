@@ -184,7 +184,7 @@ RSpec.describe TopicConverter do
       it "invites only users with regular posts" do
         post2 = Fabricate(:post, topic: topic)
         Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
-       Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+        Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
 
         topic.convert_to_private_message(admin)
 
