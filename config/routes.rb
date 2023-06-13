@@ -1005,7 +1005,10 @@ Discourse::Application.routes.draw do
         }
 
     %w[groups g].each do |root_path|
-      resources :groups, id: RouteFormat.username, path: root_path do
+      resources :groups,
+                only: %i[index show new edit update],
+                id: RouteFormat.username,
+                path: root_path do
         get "posts.rss" => "groups#posts_feed", :format => :rss
         get "mentions.rss" => "groups#mentions_feed", :format => :rss
 
@@ -1064,7 +1067,7 @@ Discourse::Application.routes.draw do
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
     put "admin/groups/:id/members" => "groups#add_members", :constraints => AdminConstraint.new
 
-    resources :posts do
+    resources :posts, only: %i[show update create destroy] do
       delete "bookmark", to: "posts#destroy_bookmark"
       put "wiki"
       put "post_type"
