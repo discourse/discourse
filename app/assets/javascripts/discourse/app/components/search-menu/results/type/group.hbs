@@ -1,7 +1,7 @@
 <div class="group-result">
   {{#if @result.flairUrl}}
     <AvatarFlair
-      @flairName={{this.name}}
+      @flairName={{@result.name}}
       @flairUrl={{@result.flairUrl}}
       @flairBgColor={{@result.flairBgColor}}
       @flairColor={{@result.flairColor}}
@@ -10,9 +10,10 @@
     {{d-icon "users"}}
   {{/if}}
   <div class="group-names">
-    <span class="name">{{if this.fullName this.fullName this.name}}</span>
-    {{#if this.fullName}}
-      <div class="slug">{{this.name}}</div>
+    <span class="name">{{or @result.fullName @result.name}}</span>
+    {{! show the name of the group if we also show the full name }}
+    {{#if @result.fullName}}
+      <div class="slug">{{@result.name}}</div>
     {{/if}}
   </div>
 </div>

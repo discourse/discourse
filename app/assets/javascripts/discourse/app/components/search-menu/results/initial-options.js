@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
+import { MODIFIER_REGEXP } from "discourse/components/search-menu";
 import AssistantItem from "./assistant-item";
 import Assistant from "./assistant";
 import I18n from "I18n";
@@ -124,6 +124,5 @@ export default class InitialOptions extends Component {
     this.suffix = I18n.t("search.in_posts_by", {
       username: this.search.searchContext.user.username,
     });
-    //this.contextTypeKeyword = "@";
   }
 }

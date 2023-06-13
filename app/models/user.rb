@@ -1831,6 +1831,10 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.new_edit_sidebar_categories_tags_interface_groups_map)
   end
 
+  def experimental_search_menu_groups_enabled?
+    in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
+  end
+
   protected
 
   def badge_grant

@@ -58,30 +58,25 @@ export default class SearchMenu extends Component {
   @bind
   fullSearchUrl(opts) {
     let url = "/search";
-    const params = [];
+    let params = "";
 
     if (this.search.activeGlobalSearchTerm) {
-      let query = "";
-
-      query += `q=${encodeURIComponent(this.search.activeGlobalSearchTerm)}`;
+      params = `q=${this.search.activeGlobalSearchTerm}`;
 
       if (this.searchContext?.type === "topic") {
-        query += encodeURIComponent(` topic:${this.searchContext.id}`);
+        params += ` topic:${this.searchContext.id}`;
       } else if (this.searchContext?.type === "private_messages") {
-        query += encodeURIComponent(` in:messages`);
-      }
-
-      if (query) {
-        params.push(query);
+        params += " in:messages";
       }
     }
 
-    if (opts && opts.expanded) {
-      params.push("expanded=true");
+    if (opts?.expanded) {
+      params += "&expanded=true";
     }
 
-    if (params.length > 0) {
-      url = `${url}?${params.join("&")}`;
+    if (params) {
+      params = new URLSearchParams(params);
+      url = `${url}?${params}`;
     }
 
     return getURL(url);
@@ -101,7 +96,9 @@ export default class SearchMenu extends Component {
   @action
   searchTermChanged(term, opts = {}) {
     this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
-    opts.setTopicContext && this.setTopicContext();
+    if (opts.setTopicContext) {
+      this.inTopicContext = true;
+    }
     this.search.updateActiveGlobalSearchTerm(term);
     this.triggerSearch();
   }
@@ -111,15 +108,9 @@ export default class SearchMenu extends Component {
     this.loading = false;
     const url = this.fullSearchUrl();
     if (url) {
-      //this.sendWidgetEvent("linkClicked");
       DiscourseURL.routeTo(url);
     }
   }
-
-  //@action
-  //updateInTopicContext(value) {
-  //this.inTopicContext = value;
-  //}
 
   @action
   updateTypeFilter(value) {
@@ -129,11 +120,6 @@ export default class SearchMenu extends Component {
   @action
   clearPMInboxContext() {
     this.inPMInboxContext = false;
-  }
-
-  @action
-  setTopicContext() {
-    this.inTopicContext = true;
   }
 
   @action

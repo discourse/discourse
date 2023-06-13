@@ -3,7 +3,6 @@
   {{#if (eq this.suggestionType "tagIntersection")}}
     {{#each @results as |result|}}
       <SearchMenu::Results::AssistantItem
-        {{!-- @prefix={{this.prefix}} --}}
         @tag={{result.tagName}}
         @additionalTags={{result.additionalTags}}
         @category={{result.category}}
@@ -28,7 +27,6 @@
         />
       {{else}}
         <SearchMenu::Results::AssistantItem
-          {{!-- @prefix={{this.prefix}} --}}
           @tag={{result.name}}
           @slug={{concat this.prefix "#" result.name}}
           @withInLabel={{@withInLabel}}
@@ -42,21 +40,18 @@
     {{#if this.userMatchesInTopic}}
       <SearchMenu::Results::AssistantItem
         @extraHint={{true}}
-        {{!-- @prefix={{this.prefix}} --}}
         @user={{this.user}}
         @slug={{concat this.prefix "@" this.user.username}}
-        @suffix={{I18n "search.in_topics_posts"}}
+        @suffix={{i18n "search.in_topics_posts"}}
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
       />
 
       <SearchMenu::Results::AssistantItem
-        {{!-- @prefix={{this.prefix}} --}}
         @user={{this.user}}
-        @setTopicContext={{true}}
         @slug={{concat this.prefix "@" this.user.username}}
-        @suffix={{I18n "search.in_this_topic"}}
+        @suffix={{i18n "search.in_this_topic"}}
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}

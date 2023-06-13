@@ -57,7 +57,7 @@ export default class RandomQuickTip extends Component {
   }
 
   @action
-  onClick(e) {
+  tipSelected(e) {
     if (e.target.classList.contains("tip-clickable")) {
       this.search.updateActiveGlobalSearchTerm(this.randomTip.label);
       const searchInput = document.querySelector("#search-term");

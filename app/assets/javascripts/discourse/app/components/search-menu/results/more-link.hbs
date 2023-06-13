@@ -1,5 +1,7 @@
 {{#if this.topicResults}}
-  <div class="search-menu__show-more" {{on "keyup" this.onKeyup}} role="button">
+  {{! template-lint-disable no-down-event-binding }}
+  {{! template-lint-disable no-invalid-interactive }}
+  <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
     {{#if this.moreUrl}}
       <a href={{this.moreUrl}} class="filter search-link">
         {{i18n "more"}}...

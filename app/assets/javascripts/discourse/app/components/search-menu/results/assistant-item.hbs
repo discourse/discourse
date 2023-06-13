@@ -1,12 +1,14 @@
+{{! template-lint-disable no-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
 <li
   class="search-menu-assistant-item"
   {{on "keydown" this.onKeydown}}
   {{on "click" this.onClick}}
-  role="presentation"
 >
-  {{! "data-topic-id": topic.id }}
   <a class="search-link" href={{this.href}}>
-    <span aria-label={{I18n "search.title"}}>{{d-icon this.icon}}</span>
+    <span aria-label={{i18n "search.title"}}>
+      {{d-icon (or @icon "search")}}
+    </span>
 
     {{#if this.prefix}}
       <span class="search-item-prefix">
@@ -15,7 +17,7 @@
     {{/if}}
 
     {{#if @withInLabel}}
-      <span class="label-suffix">{{I18n "search.in"}}</span>
+      <span class="label-suffix">{{i18n "search.in"}}</span>
     {{/if}}
 
     {{#if @category}}

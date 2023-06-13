@@ -12,7 +12,6 @@
     <div class="no-results">{{i18n "search.no_results"}}</div>
   {{else if this.renderInitialOptions}}
     <SearchMenu::Results::InitialOptions
-      @setTopicContext={{@setTopicContext}}
       @closeSearchMenu={{@closeSearchMenu}}
       @searchTermChanged={{@searchTermChanged}}
     />
@@ -39,7 +38,6 @@
         <SearchMenu::Results::InitialOptions
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
-          @setTopicContext={{@setTopicContext}}
         />
         {{#if this.resultTypesWithComponent}}
           <SearchMenu::Results::Types

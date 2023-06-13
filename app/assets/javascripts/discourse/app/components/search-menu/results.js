@@ -43,7 +43,6 @@ export default class Results extends Component {
         component: SEARCH_RESULTS_COMPONENT_TYPE[resultType.componentName],
       });
     });
-    console.log(content);
     return content;
   }
 

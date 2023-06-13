@@ -7,7 +7,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
-  currentURL,
   fillIn,
   settled,
   triggerKeyEvent,
@@ -17,11 +16,11 @@ import I18n from "I18n";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
-import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
+import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 
 acceptance("Search - Glimmer - Anonymous", function (needs) {
-  needs.settings({
-    experimental_search_menu: true,
+  needs.user({
+    experimental_search_menu_groups_enabled: true,
   });
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
@@ -30,7 +29,6 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
         return helper.response({
           users: searchFixtures["search/query"]["users"],
           categories: searchFixtures["search/query"]["categories"],
-          tags: searchFixtures["search/query"]["tags"],
           groups: searchFixtures["search/query"]["groups"],
           grouped_search_result:
             searchFixtures["search/query"]["grouped_search_result"],
@@ -48,6 +46,12 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
             avatar_template: "/images/avatar.png",
           },
         ],
+      });
+    });
+
+    server.get("/tag/important/notifications", () => {
+      return helper.response({
+        tag_notification: { id: "important", notification_level: 2 },
       });
     });
   });
@@ -382,11 +386,12 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
 });
 
 acceptance("Search - Glimmer - Authenticated", function (needs) {
-  needs.user();
+  needs.user({
+    experimental_search_menu_groups_enabled: true,
+  });
   needs.settings({
     log_search_queries: true,
     allow_uncategorized_topics: true,
-    experimental_search_menu: true,
   });
 
   needs.pretender((server, helper) => {
@@ -621,8 +626,10 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
 });
 
 acceptance("Search - Glimmer - with tagging enabled", function (needs) {
-  needs.user();
-  needs.settings({ tagging_enabled: true, experimental_search_menu: true });
+  needs.user({
+    experimental_search_menu_groups_enabled: true,
+  });
+  needs.settings({ tagging_enabled: true });
 
   test("displays tags", async function (assert) {
     await visit("/");
@@ -657,9 +664,8 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
 });
 
 acceptance("Search - Glimmer - assistant", function (needs) {
-  needs.user();
-  needs.settings({
-    experimental_search_menu: true,
+  needs.user({
+    experimental_search_menu_groups_enabled: true,
   });
 
   needs.pretender((server, helper) => {

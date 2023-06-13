@@ -3,8 +3,8 @@
   @type="text"
   autocomplete="off"
   @value={{this.search.activeGlobalSearchTerm}}
-  placeholder={{I18n "search.title"}}
-  aria-label={{I18n "search.title"}}
+  placeholder={{i18n "search.title"}}
+  aria-label={{i18n "search.title"}}
   {{on "keyup" this.onKeyup}}
   {{on "input" this.updateSearchTerm}}
   {{did-insert this.focus}}

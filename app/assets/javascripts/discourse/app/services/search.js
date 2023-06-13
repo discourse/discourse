@@ -1,7 +1,9 @@
 import Service, { inject as service } from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 
+@disableImplicitInjections
 export default class Search extends Service {
   @service appEvents;
 
@@ -69,9 +71,7 @@ export default class Search extends Service {
 
   @action
   handleArrowUpOrDown(e) {
-    const up = e.key === "ArrowUp";
-    const down = e.key === "ArrowDown";
-    if (up || down) {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       let focused = document.activeElement.closest(".search-menu")
         ? document.activeElement
         : null;
@@ -108,12 +108,12 @@ export default class Search extends Service {
         index = Array.prototype.indexOf.call(results, result);
       }
 
-      if (index === -1 && down) {
+      if (index === -1 && e.key === "ArrowDown") {
         document.querySelector(".search-menu .results .search-link").focus();
-      } else if (index === 0 && up) {
+      } else if (index === 0 && e.key === "ArrowUp") {
         document.querySelector(".search-menu input#search-term").focus();
       } else if (index > -1) {
-        index += down ? 1 : -1;
+        index += e.key === "ArrowDown" ? 1 : -1;
         if (index >= 0 && index < results.length) {
           results[index].focus();
         }

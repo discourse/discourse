@@ -9,7 +9,9 @@ import { test } from "qunit";
 
 acceptance("Search - Glimmer - Mobile", function (needs) {
   needs.mobileView();
-  needs.settings({ experimental_search_menu: true });
+  needs.user({
+    experimental_search_menu_groups_enabled: true,
+  });
 
   test("search", async function (assert) {
     await visit("/");

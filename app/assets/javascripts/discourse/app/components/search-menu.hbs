@@ -1,9 +1,7 @@
-<MenuPanel @animationClass={{@animationClass}} @maxWidth={{500}}>
+<MenuPanel @animationClass={{@animationClass}}>
   <SearchMenu::MenuPanelContents
     @inTopicContext={{this.inTopicContext}}
-    @clearContext={{@clearContext}}
     @clearTopicContext={{this.clearTopicContext}}
-    @setTopicContext={{this.setTopicContext}}
     @clearPMInboxContext={{this.clearPMInboxContext}}
     @inPMInboxContext={{this.inPMInboxContext}}
     @searchTermChanged={{this.searchTermChanged}}
@@ -12,7 +10,6 @@
     @fullSearch={{this.fullSearch}}
     @triggerSearch={{this.triggerSearch}}
     @clearSearch={{this.clearSearch}}
-    {{!-- @focusSearchInput={{this.focusSearchInput}} --}}
     @includesTopics={{this.includesTopics}}
     @noResults={{this.noResults}}
     @results={{this.results}}
@@ -22,7 +19,6 @@
     @searchTopics={{this.includesTopics}}
     @typeFilter={{this.typeFilter}}
     @updateTypeFilter={{this.updateTypeFilter}}
-    @searchVisible={{@searchVisible}}
     @toggleSearchMenu={{@toggleSearchMenu}}
     @closeSearchMenu={{@closeSearchMenu}}
   />

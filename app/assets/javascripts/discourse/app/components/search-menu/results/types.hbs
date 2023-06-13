@@ -2,10 +2,12 @@
   <div class={{resultType.componentName}}>
     <ul
       class="list"
-      aria-label={{concat (I18n "search.results") " " resultType.type}}
+      aria-label={{concat (i18n "search.results") " " resultType.type}}
     >
       {{#each resultType.results as |result|}}
-        <li class="item" {{on "keydown" this.onKeydown}} role="presentation">
+        {{! template-lint-disable no-down-event-binding }}
+        {{! template-lint-disable no-invalid-interactive }}
+        <li class="item" {{on "keydown" this.onKeydown}}>
           <a href={{(or result.url result.path)}} class="search-link">
             <resultType.component @result={{result}} />
           </a>

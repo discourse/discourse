@@ -39,11 +39,10 @@ export default (type) => {
         showPosters: true,
       });
 
-      const currentUser = this.currentUser;
       this.searchService.setSearchContext({
         type: "private_messages",
-        id: currentUser.get("username_lower"),
-        user: currentUser,
+        id: this.currentUser.get("username_lower"),
+        user: this.currentUser,
       });
     },
 
