@@ -1,5 +1,6 @@
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
+import User from "discourse/models/user";
 import discourseLater from "discourse-common/lib/later";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
@@ -60,7 +61,10 @@ export default Component.extend({
 
   @discourseComputed("selectedTopics.length")
   dismissNewLabel(selectedTopicCount) {
-    if (selectedTopicCount === 0) {
+    const user = User.current();
+    if (user.new_new_view_enabled) {
+      return I18n.t("topics.bulk.dismiss_button");
+    } else if (selectedTopicCount === 0) {
       return I18n.t("topics.bulk.dismiss_new");
     }
     return I18n.t("topics.bulk.dismiss_new_with_selected", {
