@@ -556,7 +556,7 @@ aside.quote {
   z-index: z("dropdown");
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   flex-direction: column;
 
   &.animated {
@@ -1394,7 +1394,7 @@ span.mention {
         margin-left: 8px;
         background-color: var(--primary-low);
         color: var(--primary);
-        box-shadow: shadow("dropdown");
+        box-shadow: var(--shadow-dropdown);
       }
     }
   }

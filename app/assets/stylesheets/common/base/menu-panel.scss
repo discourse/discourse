@@ -1,7 +1,7 @@
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
-  box-shadow: shadow("header");
+  box-shadow: var(--shadow-header);
 
   .panel-body {
     width: 100%;
@@ -21,7 +21,7 @@
 
 .menu-panel {
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("menu-panel");
+  box-shadow: var(--shadow-menu-panel);
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;

@@ -54,7 +54,7 @@ $discourse-tooltip-border: var(--primary-medium);
     max-width: 250px;
     font-size: var(--font-down-1);
     color: var(--primary);
-    box-shadow: shadow("dropdown");
+    box-shadow: var(--shadow-dropdown);
     line-height: 1.4em;
   }
 }
