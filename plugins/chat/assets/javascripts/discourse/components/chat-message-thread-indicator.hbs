@@ -23,16 +23,19 @@
         {{@message.thread.preview.lastReplyUser.username}}
       </span>
       <span>{{i18n "chat.thread.last_reply"}}</span>
-      {{format-date @message.thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+      <span class="chat-message-thread-indicator__last-reply-datetime">
+        {{format-date
+          @message.thread.preview.lastReplyCreatedAt
+          leaveAgo="true"
+        }}
+      </span>
       |
       <span class="chat-message-thread-indicator__replies-count">
         {{i18n "chat.thread.replies" count=@message.thread.preview.replyCount}}
       </span>
 
     </div>
-    <div
-      class="chat-message-thread-indicator__last-reply-excerpt overflow-ellipsis"
-    >
+    <div class="chat-message-thread-indicator__last-reply-excerpt">
       {{replace-emoji (html-safe @message.thread.preview.lastReplyExcerpt)}}
     </div>
   </div>

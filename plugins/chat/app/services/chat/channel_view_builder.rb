@@ -220,12 +220,8 @@ module Chat
     end
 
     def fetch_thread_participants(threads:, **)
-      if threads.empty?
-        context.thread_participants = {}
-      else
-        context.thread_participants =
-          ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
-      end
+      context.thread_participants =
+        ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
     def build_view(

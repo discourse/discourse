@@ -1,19 +1,19 @@
 <div class="chat-thread-participants">
   <div class="chat-thread-participants__avatar-group">
-    {{#each @thread.preview.participantUsers as |participant|}}
+    {{#each @thread.preview.participantUsers as |user|}}
       <ChatUserAvatar
-        @user={{participant}}
+        @user={{user}}
         @avatarSize="small"
         @showPresence={{false}}
       />
     {{/each}}
   </div>
-  <div class="chat-thread-participants__other-count">
-    {{#if @thread.preview.otherParticipantCount}}
+  {{#if @thread.preview.otherParticipantCount}}
+    <div class="chat-thread-participants__other-count">
       {{i18n
         "chat.thread.participants_other_count"
         count=@thread.preview.otherParticipantCount
       }}
-    {{/if}}
-  </div>
+    </div>
+  {{/if}}
 </div>

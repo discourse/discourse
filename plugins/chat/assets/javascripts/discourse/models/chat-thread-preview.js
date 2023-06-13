@@ -12,9 +12,13 @@ export default class ChatThreadPreview {
   @tracked lastReplyExcerpt;
   @tracked lastReplyUser;
   @tracked participantCount;
-  @tracked participantUsers = [];
+  @tracked participantUsers;
 
   constructor(args = {}) {
+    if (!args) {
+      args = {};
+    }
+
     this.replyCount = args.reply_count || args.replyCount || 0;
     this.lastReplyId = args.last_reply_id || args.lastReplyId;
     this.lastReplyCreatedAt =

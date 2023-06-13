@@ -27,6 +27,7 @@
   }
 
   &__last-reply-excerpt {
+    @include ellipsis;
     white-space: wrap;
     display: -webkit-box;
     -webkit-line-clamp: 3;

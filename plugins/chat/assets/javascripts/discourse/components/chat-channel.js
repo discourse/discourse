@@ -211,8 +211,13 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
-            messages.findBy("id", storedThread.originalMessage.id).thread =
-              storedThread;
+            const originalMessage = messages.findBy(
+              "id",
+              storedThread.originalMessage.id
+            );
+            if (originalMessage) {
+              originalMessage.thread = storedThread;
+            }
           });
         }
 
@@ -307,8 +312,13 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
-            messages.findBy("id", storedThread.originalMessage.id).thread =
-              storedThread;
+            const originalMessage = messages.findBy(
+              "id",
+              storedThread.originalMessage.id
+            );
+            if (originalMessage) {
+              originalMessage.thread = storedThread;
+            }
           });
         }
 
