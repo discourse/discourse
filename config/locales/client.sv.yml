@@ -145,7 +145,7 @@ sv:
       email: "Skicka via e-post"
       url: "Kopiera och dela URL"
     action_codes:
-      public_topic: "Gjorde det här ämnet publikt %{when}"
+      public_topic: "Gjorde det här ämnet offentligt %{when}"
       open_topic: "Konverterade detta till ett ämne %{when}"
       private_topic: "Gjorde det här ämnet till ett personligt meddelande %{when}"
       split_topic: "Dela det här ämnet %{when}"

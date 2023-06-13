@@ -2013,7 +2013,7 @@ sv:
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     notify_about_flags_after: "Om det finns flaggor som inte har hanterats efter detta antal timmar skickas ett personligt meddelande till moderatorerna. Inaktivera genom att ställa in till 0."
-    show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
+    show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 offentliga ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"

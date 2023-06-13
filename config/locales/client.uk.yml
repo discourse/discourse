@@ -1365,6 +1365,42 @@ uk:
             }
             other {}
           }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a>}
+                   few {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+                   many {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+                other {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { і <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   few { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   many { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                other { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   few {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   many {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                other {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   few {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   many {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                other {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Обліковий запис"
         security: "Безпека"
@@ -1908,6 +1944,40 @@ uk:
       logout_disabled: "Вихід вимкнено, поки сайт перебуває в режимі лише для читання."
     staff_writes_only_mode:
       enabled: "Сайт працює в режимі \"тільки для команди обслуговування\". Зараз ви можете продовжувати переглядати сайт, але інші дії доступні лише членам команди обслуговування."
+    too_few_topics_and_posts_notice_MF: |
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">почнемо дискусію!</a> Є { currentTopics, plural,
+          one {це <strong>#</strong> тема}
+          few {є <strong>#</strong> тем}
+          many {є <strong>#</strong> тем}
+        other {є <strong>#</strong> тем}
+      } і { currentPosts, plural,
+          one {<strong>#</strong> допис}
+          few {<strong>#</strong> дописи}
+          many {<strong>#</strong> дописів}
+        other {<strong>#</strong> дописів}
+      }. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо принаймні { requiredTopics, plural,
+          one {<strong>#</strong> тема}
+          few {<strong>#</strong> теми}
+          many {<strong>#</strong> тем}
+        other {<strong>#</strong> теми}
+      } і { requiredPosts, plural,
+          one {<strong>#</strong> пост}
+          few {<strong>#</strong> повідомлення}
+          many {<strong>#</strong> повідомлень}
+        other {<strong>#</strong> повідомлень}
+      }. Лише співробітники можуть бачити це повідомлення.
+    too_few_topics_notice_MF: |
+      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">почнемо обговорення!</a> Є { currentTopics, plural,
+          one {це <strong>#</strong> тема}
+          few {це <strong>#</strong> тем}
+          many {це <strong>#</strong> тем}
+        other {це <strong>#</strong> тем}
+      }. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо принаймні { requiredTopics, plural,
+          one {<strong>#</strong> тема}
+          few {<strong>#</strong> теми}
+          many {<strong>#</strong> теми}
+        other {<strong>#</strong> теми}
+      }. Лише співробітники можуть бачити це повідомлення.
     too_few_posts_notice_MF: |
       Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">старт дискусії!</a> Тут {currentPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Це повідомлення може бачити лише члени команди обслуговування.
     logs_error_rate_notice:
