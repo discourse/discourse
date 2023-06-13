@@ -222,7 +222,7 @@ RSpec.describe ScreenedIpAddress do
       expect(screened_ip_address.reload.match_count).to eq(0)
     end
 
-    it "returns false if a more specific recrord matches and action is :do_nothing" do
+    it "returns false if a more specific record matches and action is :do_nothing" do
       Fabricate(
         :screened_ip_address,
         ip_address: "111.234.23.0/24",

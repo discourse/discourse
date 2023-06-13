@@ -3097,7 +3097,7 @@ RSpec.describe Topic do
     end
 
     describe "removing oneself" do
-      it "should remove onself" do
+      it "should remove oneself" do
         topic.allowed_users << user1
 
         expect(topic.remove_allowed_user(user1, user1)).to eq(true)

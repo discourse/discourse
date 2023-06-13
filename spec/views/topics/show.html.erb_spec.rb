@@ -21,7 +21,7 @@ RSpec.describe "topics/show.html.erb" do
     )
   end
 
-  it "adds sturctured data" do
+  it "adds structured data" do
     view.stubs(:include_crawler_content?).returns(true)
     post = Fabricate(:post, topic: topic)
     TopicLink.create!(

@@ -27,7 +27,7 @@ describe "Tag synonyms", type: :system do
       tags_page.visit_tag(tag_1)
       tags_page.tag_info_btn.click
       tags_page.edit_synonyms_btn.click
-      # searched tag doesnt exist but will show option to create tag
+      # searched tag doesn't exist but will show option to create tag
       tags_page.search_tags("graphics")
       tags_page.select_tag(value: "graphics")
       tags_page.add_synonym_btn.click
