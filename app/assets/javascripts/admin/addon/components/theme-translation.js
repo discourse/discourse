@@ -3,7 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import { alias } from "@ember/object/computed";
 
-export default class extends SiteSettingComponent {
+export default class ThemeTranslation extends SiteSettingComponent {
   @alias("translation") setting;
   @alias("translation.key") settingName;
   @url("model.id", "/admin/themes/%@") updateUrl;
