@@ -236,7 +236,7 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "fails to import with a failing status" do
-        post "/admin/themes/import.json", params: { remote: "non-existant" }
+        post "/admin/themes/import.json", params: { remote: "non-existent" }
 
         expect(response.status).to eq(422)
       end
