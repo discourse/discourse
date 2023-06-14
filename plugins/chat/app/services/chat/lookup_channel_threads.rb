@@ -52,12 +52,14 @@ module Chat
 
     def fetch_threads(guardian:, channel:, **)
       Chat::Thread
+        .strict_loading
         .includes(
           :channel,
-          :last_reply,
+          last_reply: [:uploads],
           original_message_user: :user_status,
-          original_message: :chat_webhook_event,
+          original_message: %i[chat_webhook_event chat_mentions chat_channel],
         )
+        .includes(original_message: { user: :user_status })
         .select("chat_threads.*, MAX(chat_messages.created_at) AS last_posted_at")
         .joins(
           "LEFT JOIN chat_messages ON chat_threads.id = chat_messages.thread_id AND chat_messages.chat_channel_id = #{channel.id}",
