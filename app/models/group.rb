@@ -165,7 +165,18 @@ class Group < ActiveRecord::Base
             if user.blank?
               sql = "groups.visibility_level = :public"
             elsif is_staff
-              sql = "groups.visibility_level IN (:public, :logged_on_users, :members, :staff)"
+              sql = <<~SQL
+                groups.visibility_level IN (:public, :logged_on_users, :members, :staff)
+                OR
+                groups.id IN (
+                  SELECT g.id
+                    FROM groups g
+                    JOIN group_users gu ON gu.group_id = g.id
+                    AND gu.user_id = :user_id
+                    AND gu.owner
+                  WHERE g.visibility_level = :owners
+                )
+              SQL
             else
               sql = <<~SQL
           groups.id IN (
@@ -209,8 +220,18 @@ class Group < ActiveRecord::Base
             if user.blank?
               sql = "groups.members_visibility_level = :public"
             elsif is_staff
-              sql =
-                "groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)"
+              sql = <<~SQL
+                groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)
+                OR
+                groups.id IN (
+                  SELECT g.id
+                    FROM groups g
+                    JOIN group_users gu ON gu.group_id = g.id
+                    AND gu.user_id = :user_id
+                    AND gu.owner
+                  WHERE g.members_visibility_level = :owners
+                )
+              SQL
             else
               sql = <<~SQL
           groups.id IN (
