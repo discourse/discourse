@@ -20,7 +20,11 @@ end
 #  user_id              :bigint           not null
 #  thread_id            :bigint           not null
 #  last_read_message_id :bigint
-#  notification_level   :integer          default(2), not null
+#  notification_level   :integer          default("tracking"), not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
+#
+# Indexes
+#
+#  user_chat_thread_unique_memberships  (user_id,thread_id) UNIQUE
 #
