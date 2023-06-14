@@ -54,6 +54,10 @@
       &:focus {
         color: var(--primary);
       }
+      &:hover {
+        color: var(--primary);
+        background: none;
+      }
     }
 
     &.with-last-visit {
