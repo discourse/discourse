@@ -288,6 +288,114 @@ describe Chat::MessageCreator do
         end
       end
 
+      context "with group mentions" do
+        it "creates chat mentions for group mentions where the group is mentionable" do
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "hello @#{admin_group.name}",
+            )
+          }.to change { admin1.chat_mentions.count }.by(1).and change {
+                  admin2.chat_mentions.count
+                }.by(1)
+        end
+
+        it "doesn't mention users twice if they are direct mentioned and group mentioned" do
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "hello @#{admin_group.name} @#{admin1.username} and @#{admin2.username}",
+            )
+          }.to change { admin1.chat_mentions.count }.by(1).and change {
+                  admin2.chat_mentions.count
+                }.by(1)
+        end
+
+        it "creates chat mentions for group mentions and direct mentions" do
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "hello @#{admin_group.name} @#{user2.username}",
+            )
+          }.to change { admin1.chat_mentions.count }.by(1).and change {
+                  admin2.chat_mentions.count
+                }.by(1).and change { user2.chat_mentions.count }.by(1)
+        end
+
+        it "creates chat mentions for group mentions and direct mentions" do
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "hello @#{admin_group.name} @#{user_group.name}",
+            )
+          }.to change { admin1.chat_mentions.count }.by(1).and change {
+                  admin2.chat_mentions.count
+                }.by(1).and change { user2.chat_mentions.count }.by(1).and change {
+                              user3.chat_mentions.count
+                            }.by(1)
+        end
+
+        it "doesn't create chat mentions for group mentions where the group is un-mentionable" do
+          admin_group.update(mentionable_level: Group::ALIAS_LEVELS[:nobody])
+          expect {
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "hello @#{admin_group.name}",
+            )
+          }.not_to change { Chat::Mention.count }
+        end
+
+        it "creates a chat mention without notification for acting user" do
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "@#{user_group.name}",
+            ).chat_message
+
+          mention = user1.chat_mentions.where(chat_message: message).first
+          expect(mention).to be_present
+          expect(mention.notification).to be_blank
+        end
+      end
+
+      context "when ignore_channel_wide_mention is enabled" do
+        before { user2.user_option.update(ignore_channel_wide_mention: true) }
+
+        it "when mentioning @all creates a mention without notification" do
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "hi! @all",
+            ).chat_message
+
+          mention = user2.chat_mentions.where(chat_message: message).first
+          expect(mention).to be_present
+          expect(mention.notification).to be_nil
+        end
+
+        it "when mentioning @here creates a mention without notification" do
+          user2.update(last_seen_at: Time.now)
+
+          message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "@here",
+            ).chat_message
+
+          mention = user2.chat_mentions.where(chat_message: message).first
+          expect(mention).to be_present
+          expect(mention.notification).to be_nil
+        end
+      end
+
       it "doesn't create mention notifications for users without a membership record" do
         message =
           described_class.create(
@@ -476,48 +584,16 @@ describe Chat::MessageCreator do
 
         expect(mentioned_user["status"]).to be_blank
       end
-    end
 
-    it "creates a chat_mention record without notification when self mentioning" do
-      message =
-        described_class.create(
-          chat_channel: direct_message_channel,
-          user: user1,
-          content: "hello @#{user1.username}",
-        ).chat_message
-
-      mention = user1.chat_mentions.where(chat_message: message).first
-      expect(mention).to be_present
-      expect(mention.notification).to be_nil
-    end
-
-    context "when ignore_channel_wide_mention is enabled" do
-      before { user2.user_option.update(ignore_channel_wide_mention: true) }
-
-      it "when mentioning @all creates a mention without notification" do
+      it "creates a chat_mention record without notification when self mentioning" do
         message =
           described_class.create(
-            chat_channel: public_chat_channel,
+            chat_channel: direct_message_channel,
             user: user1,
-            content: "hi! @all",
+            content: "hello @#{user1.username}",
           ).chat_message
 
-        mention = user2.chat_mentions.where(chat_message: message).first
-        expect(mention).to be_present
-        expect(mention.notification).to be_nil
-      end
-
-      it "when mentioning @here creates a mention without notification" do
-        user2.update(last_seen_at: Time.now)
-
-        message =
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "@here",
-          ).chat_message
-
-        mention = user2.chat_mentions.where(chat_message: message).first
+        mention = user1.chat_mentions.where(chat_message: message).first
         expect(mention).to be_present
         expect(mention.notification).to be_nil
       end
@@ -973,82 +1049,6 @@ describe Chat::MessageCreator do
             expect(message.thread.chat_messages.count).to eq(4)
           end
         end
-      end
-    end
-
-    describe "group mentions" do
-      it "creates chat mentions for group mentions where the group is mentionable" do
-        expect {
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "hello @#{admin_group.name}",
-          )
-        }.to change { admin1.chat_mentions.count }.by(1).and change {
-                admin2.chat_mentions.count
-              }.by(1)
-      end
-
-      it "doesn't mention users twice if they are direct mentioned and group mentioned" do
-        expect {
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "hello @#{admin_group.name} @#{admin1.username} and @#{admin2.username}",
-          )
-        }.to change { admin1.chat_mentions.count }.by(1).and change {
-                admin2.chat_mentions.count
-              }.by(1)
-      end
-
-      it "creates chat mentions for group mentions and direct mentions" do
-        expect {
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "hello @#{admin_group.name} @#{user2.username}",
-          )
-        }.to change { admin1.chat_mentions.count }.by(1).and change {
-                admin2.chat_mentions.count
-              }.by(1).and change { user2.chat_mentions.count }.by(1)
-      end
-
-      it "creates chat mentions for group mentions and direct mentions" do
-        expect {
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "hello @#{admin_group.name} @#{user_group.name}",
-          )
-        }.to change { admin1.chat_mentions.count }.by(1).and change {
-                admin2.chat_mentions.count
-              }.by(1).and change { user2.chat_mentions.count }.by(1).and change {
-                            user3.chat_mentions.count
-                          }.by(1)
-      end
-
-      it "doesn't create chat mentions for group mentions where the group is un-mentionable" do
-        admin_group.update(mentionable_level: Group::ALIAS_LEVELS[:nobody])
-        expect {
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "hello @#{admin_group.name}",
-          )
-        }.not_to change { Chat::Mention.count }
-      end
-
-      it "creates a chat mention without notification for acting user" do
-        message =
-          described_class.create(
-            chat_channel: public_chat_channel,
-            user: user1,
-            content: "@#{user_group.name}",
-          ).chat_message
-
-        mention = user1.chat_mentions.where(chat_message: message).first
-        expect(mention).to be_present
-        expect(mention.notification).to be_blank
       end
     end
 

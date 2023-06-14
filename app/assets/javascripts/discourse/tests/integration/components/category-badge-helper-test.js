@@ -11,7 +11,7 @@ module("Integration | Component | category-badge helper", function (hooks) {
   test("displays category", async function (assert) {
     this.set("category", Category.findById(1));
 
-    await render(hbs`{{category-badge category}}`);
+    await render(hbs`{{category-badge this.category}}`);
 
     assert.strictEqual(
       query(".category-name").innerText.trim(),
@@ -22,7 +22,7 @@ module("Integration | Component | category-badge helper", function (hooks) {
   test("options.link", async function (assert) {
     this.set("category", Category.findById(1));
 
-    await render(hbs`{{category-badge category link=true}}`);
+    await render(hbs`{{category-badge this.category link=true}}`);
 
     assert.ok(
       exists(

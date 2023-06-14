@@ -10,7 +10,7 @@ module("Integration | Component | html-safe-helper", function (hooks) {
   test("default", async function (assert) {
     this.set("string", "<p class='cookies'>biscuits</p>");
 
-    await render(hbs`{{html-safe string}}`);
+    await render(hbs`{{html-safe this.string}}`);
 
     assert.ok(exists("p.cookies"), "it displays the string as html");
   });
