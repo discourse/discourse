@@ -2777,8 +2777,14 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_anonymize_user?(user)).to be_falsey
     end
 
-    it "it false for an anonymized user" do
+    it "is false for an anonymized user" do
       expect(Guardian.new(user).can_anonymize_user?(anonymous_user)).to be_falsey
+    end
+
+    it "is true for a user with no email" do
+      bad_state_user = Fabricate.build(:user, email: nil)
+      bad_state_user.skip_email_validation = true
+      expect(Guardian.new(moderator).can_anonymize_user?(bad_state_user)).to eq(true)
     end
 
     it "is true for admin anonymizing a regular user" do
