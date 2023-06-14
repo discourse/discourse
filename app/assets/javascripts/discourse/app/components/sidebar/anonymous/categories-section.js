@@ -6,15 +6,15 @@ export default class SidebarAnonymousCategoriesSection extends SidebarCommonCate
   constructor() {
     super(...arguments);
 
-    if (!this.siteSettings.default_sidebar_categories) {
+    if (!this.siteSettings.default_navigation_menu_categories) {
       this.shouldSortCategoriesByDefault = false;
     }
   }
 
   get categories() {
-    if (this.siteSettings.default_sidebar_categories) {
+    if (this.siteSettings.default_navigation_menu_categories) {
       return Category.findByIds(
-        this.siteSettings.default_sidebar_categories
+        this.siteSettings.default_navigation_menu_categories
           .split("|")
           .map((categoryId) => parseInt(categoryId, 10))
       );

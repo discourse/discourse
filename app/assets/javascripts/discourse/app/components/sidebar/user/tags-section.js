@@ -74,7 +74,7 @@ export default class SidebarUserTagsSection extends Component {
   }
 
   get hasDefaultSidebarTags() {
-    return this.siteSettings.default_sidebar_tags.length > 0;
+    return this.siteSettings.default_navigation_menu_tags.length > 0;
   }
 
   @action

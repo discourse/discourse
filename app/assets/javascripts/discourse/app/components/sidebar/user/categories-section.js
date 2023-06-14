@@ -70,7 +70,7 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
   }
 
   get hasDefaultSidebarCategories() {
-    return this.siteSettings.default_sidebar_categories.length > 0;
+    return this.siteSettings.default_navigation_menu_categories.length > 0;
   }
 
   @action

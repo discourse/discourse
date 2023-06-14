@@ -12,7 +12,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     navigation_menu: "sidebar",
   });
 
-  test("category section links ordered by category's topic count when default_sidebar_categories has not been configured and site setting to fix categories positions is disabled", async function (assert) {
+  test("category section links ordered by category's topic count when default_navigation_menu_categories has not been configured and site setting to fix categories positions is disabled", async function (assert) {
     this.siteSettings.fixed_category_positions = false;
 
     await visit("/");
@@ -58,7 +58,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     );
   });
 
-  test("category section links ordered by default category's position when default_sidebar_categories has not been configured and site setting to fix categories positions is enabled", async function (assert) {
+  test("category section links ordered by default category's position when default_navigation_menu_categories has not been configured and site setting to fix categories positions is enabled", async function (assert) {
     this.siteSettings.fixed_category_positions = true;
 
     await visit("/");
@@ -102,9 +102,9 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     );
   });
 
-  test("category section links in sidebar when default_sidebar_categories site setting has been configured and site setting to fix category position is enabled", async function (assert) {
+  test("category section links in sidebar when default_navigation_menu_categories site setting has been configured and site setting to fix category position is enabled", async function (assert) {
     this.siteSettings.fixed_category_positions = true;
-    this.siteSettings.default_sidebar_categories = "1|3|13";
+    this.siteSettings.default_navigation_menu_categories = "1|3|13";
 
     await visit("/");
 

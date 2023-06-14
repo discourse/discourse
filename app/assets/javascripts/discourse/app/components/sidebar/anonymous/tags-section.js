@@ -10,7 +10,7 @@ export default class SidebarAnonymousTagsSection extends Component {
 
   get displaySection() {
     return (
-      this.site.anonymous_default_sidebar_tags?.length > 0 ||
+      this.site.anonymous_default_navigation_menu_tags?.length > 0 ||
       this.site.top_tags?.length > 0
     );
   }
@@ -19,8 +19,8 @@ export default class SidebarAnonymousTagsSection extends Component {
   get sectionLinks() {
     let tags;
 
-    if (this.site.anonymous_default_sidebar_tags) {
-      tags = this.site.anonymous_default_sidebar_tags;
+    if (this.site.anonymous_default_navigation_menu_tags) {
+      tags = this.site.anonymous_default_navigation_menu_tags;
     } else {
       tags = this.site.top_tags.slice(0, 5);
     }
