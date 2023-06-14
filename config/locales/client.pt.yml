@@ -3462,6 +3462,8 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
+      categories_form:
+        save: "Guardar"
       sections:
         custom:
           save: "Guardar"
@@ -4316,6 +4318,8 @@ pt:
               key: "mínimo"
             maximum:
               key: "máximo"
+            type:
+              key: "tipo"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."

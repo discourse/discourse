@@ -367,6 +367,7 @@ pt_BR:
         no_results: "Nenhum resultado"
       thread:
         title: "Título"
+        default_title: "Tópico"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"

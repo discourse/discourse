@@ -363,6 +363,7 @@ pl_PL:
       clear_bookmarks: "Wyczyść zakładki"
       help:
         bookmark: "Kliknij, aby dodać ten temat do zakładek"
+        edit_bookmark: "Kliknij, aby edytować zakładkę w poście w tym temacie"
         edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie"
@@ -657,6 +658,8 @@ pl_PL:
           title: "Użytkownik"
         reviewable_post:
           title: "Post"
+        reviewable_chat_message:
+          title: "Oflagowana wiadomość na czacie"
       approval:
         title: "Post wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
@@ -1987,22 +1990,6 @@ pl_PL:
       logout_disabled: "Wylogowanie jest zablokowane gdy strona jest w trybie tylko do odczytu."
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
-    too_few_topics_and_posts_notice_MF: |
-      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">dyskutować!</a> Mamy {currentTopics, plural, one {<strong>#</strong> temat}  few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredTopics, plural, one {<strong>#</strong> temat} few {<strong>#</strong> tematy} other {<strong>#</strong> tematów}} i {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie personelu widzą tę wiadomość.
-    too_few_topics_notice_MF: |
-      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">dyskusję!</a> Tam { currentTopics, plural,
-          one {jest <strong>#</strong> temat}
-          few {są <strong>#</strong> tematy}
-          many {są <strong>#</strong> tematy}
-        other {są <strong>#</strong> tematy}
-      }. Odwiedzający potrzebują więcej do czytania i odpowiadania - zalecamy co najmniej { requiredTopics, plural,
-          one {<strong>#</strong> temat}
-          few {<strong>#</strong> tematy}
-          many {<strong>#</strong> tematy}
-        other {<strong>#</strong> tematy}
-      }. Tylko personel może zobaczyć tę wiadomość.
-    too_few_posts_notice_MF: |
-      Zacznijmy <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">dyskutować!</a> Mamy {currentPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Odwiedzający potrzebują więcej do dyskusji – zalecamy przynajmniej {requiredPosts, plural, one {<strong>#</strong> wpis} few {<strong>#</strong> wpisy} other {<strong>#</strong> wpisów}}. Tylko członkowie zespołu widzą tę wiadomość.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}</a> osiągnięto limit ustawień witryny wynoszący {limit, plural, one {# error/hour} few {# errors/hour} many {# errors/hour} other {# errors/hour}}.
@@ -2034,6 +2021,9 @@ pl_PL:
       hidden_for_session: "OK, zapytamy Cię jutro. Zawsze możesz też użyć opcji „Zaloguj się”, aby utworzyć konto."
       intro: "Hej! Wygląda na to, że zainteresowała Cię ta dyskusja, ale nie posiadasz jeszcze konta."
       value_prop: "Masz dość przewijania tych samych postów? Kiedy stworzysz konto, zawsze wrócisz do miejsca, w którym przerwałeś. Z kontem możesz również otrzymywać powiadomienia o nowych odpowiedziach, zapisywać zakładki i używać polubień, aby podziękować innym. Wszyscy możemy współpracować, aby ta społeczność była świetna. :heart:"
+    offline_indicator:
+      no_internet: "Brak połączenia z internetem."
+      refresh_page: "Odśwież stronę"
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description:
@@ -2474,6 +2464,7 @@ pl_PL:
       image_alt_text:
         aria_label: Tekst alternatywny dla obrazu
       delete_image_button: Usuń obraz
+      toggle_image_grid: Przełącz siatkę obrazu
     notifications:
       tooltip:
         regular:
@@ -2851,6 +2842,11 @@ pl_PL:
         dismiss_tooltip: "Wyczyść nowe wpisy lub przestań śledzić tematy"
         also_dismiss_topics: "Przestać śledzić wskazane tematy. Nie chcę, aby pojawiały się w zakładce nieprzeczytane."
         dismiss_new: "Wyczyść nowe"
+        dismiss_new_modal:
+          title: "Odrzuć nowe"
+          topics: "Odrzuć nowe tematy"
+          posts: "Odrzuć nowe posty"
+          untrack: "Przestań śledzić te tematy, aby przestały pojawiać się na mojej nowej liście"
         dismiss_new_with_selected:
           one: "Oddalenie nowe (%{count})"
           few: "Oddalenie nowe (%{count})"
@@ -4445,6 +4441,11 @@ pl_PL:
       more: "Więcej"
       all_categories: "Wszystkie kategorie"
       all_tags: "Wszystkie tagi"
+      categories_form:
+        save: "Zapisz"
+        title: "Edytuj nawigację kategorii"
+        filter_placeholder: "Filtruj kategorie"
+        no_categories: "Brak kategorii pasujących do podanego terminu."
       sections:
         custom:
           add: "Dodaj niestandardową sekcję"
@@ -4452,6 +4453,7 @@ pl_PL:
           save: "Zapisz"
           delete: "Usuń"
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
+          reset_confirm: "Czy na pewno chcesz przywrócić tę sekcję do ustawień domyślnych?"
           public: "Ustaw tę sekcję jako publiczną i widoczną dla wszystkich"
           links:
             add: "Dodaj kolejny link"
@@ -4514,6 +4516,7 @@ pl_PL:
         community:
           header_link_text: "Społeczność"
           header_action_create_topic_title: "Utwórz temat"
+          header_action_edit_section_title: "Edytuj sekcję Społeczność"
           links:
             about:
               content: "O stronie"
@@ -4550,6 +4553,7 @@ pl_PL:
               content: "Sprawdź"
               title: "Oflagowane posty i inne elementy w kolejce"
               pending_count: "%{count} oczekujących"
+        global_section: "Sekcja globalna, widoczna dla wszystkich"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -4842,6 +4846,9 @@ pl_PL:
             groups:
               manage_groups: Wyświetlaj, dodawaj i usuwaj członków grupy.
               administer_groups: Wyświetlaj, pokazuj, twórz, aktualizuj i usuwaj grupy.
+            search:
+              show: Szukaj przy użyciu punktu końcowego `/search.json?q=term`.
+              query: Szukaj przy użyciu punktu końcowego `/search/query?term=term`.
             wordpress:
               publishing: Niezbędne do funkcji publikowania wtyczki WP Discourse (wymagane).
               commenting: Niezbędne do funkcji komentowania wtyczki WP Discourse.
@@ -4907,6 +4914,8 @@ pl_PL:
         user_promoted_event:
           name: "Wydarzenie promowania użytkownika"
           details: "Gdy użytkownik awansuje z jednego poziomu zaufania na inny."
+        user_badge_event:
+          details: "Kiedy odznaka zostaje przyznana lub odebrana."
         group_user_event:
           name: "Grupowy event użytkownika"
           details: "Gdy użytkownik jest dodany lub usunięty w grupie."
@@ -5456,6 +5465,7 @@ pl_PL:
             revoke_moderation: "cofnąć moderację"
             backup_create: "Wykonaj kopię zapasową"
             deleted_tag: "usunięty tag"
+            update_directory_columns: "zaktualizuj kolumny katalogu"
             deleted_unused_tags: "usunięto nieużywane tagi"
             renamed_tag: "zmieniona nazwa tag'u"
             revoke_email: "cofnąć e-mail"
@@ -5663,13 +5673,12 @@ pl_PL:
               description: "Wymaga wypełnienia pola w celu wysłania formularza."
             minimum:
               key: "minimum"
-              description: "W polach tekstowych określa minimalną dozwoloną liczbę znaków."
             maximum:
               key: "maksimum"
-              description: "W polach tekstowych określa maksymalną dozwoloną liczbę znaków. W listach rozwijanych wielokrotnego wyboru określa maksymalną liczbę opcji, które można wybrać."
             pattern:
               type: "ciąg regex"
-              description: "W polach tekstowych wyrażenie regularne określające dozwolone dane wejściowe."
+            type:
+              key: "typ"
         preview_modal:
           title: "Podgląd szablonu"
         field_placeholders:
@@ -6045,6 +6054,11 @@ pl_PL:
             label: "Dodaj emoji"
         title: "Ustawienia"
         no_results: "Brak wyników wyszukiwania"
+        more_site_setting_results:
+          one: "Jest więcej niż %{count} wynik. Zawęź wyszukiwanie lub wybierz kategorię."
+          few: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
+          many: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
+          other: "Jest więcej niż %{count} wyników. Zawęź wyszukiwanie lub wybierz kategorię."
         clear_filter: "Wyczyść"
         add_url: "dodaj URL"
         add_host: "dodaj host"

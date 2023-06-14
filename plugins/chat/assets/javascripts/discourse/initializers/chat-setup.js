@@ -21,6 +21,7 @@ export default {
     this.chatService = container.lookup("service:chat");
     this.site = container.lookup("service:site");
     this.siteSettings = container.lookup("service:site-settings");
+    this.currentUser = container.lookup("service:current-user");
     this.appEvents = container.lookup("service:app-events");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
@@ -85,6 +86,28 @@ export default {
           chatEmojiPickerManager.open({ context: "thread" });
         },
       });
+
+      const summarizationAllowedGroups =
+        this.siteSettings.custom_summarization_allowed_groups
+          .split("|")
+          .map(parseInt);
+
+      const canSummarize =
+        this.siteSettings.summarization_strategy &&
+        this.currentUser &&
+        this.currentUser.groups.some((g) =>
+          summarizationAllowedGroups.includes(g.id)
+        );
+
+      if (canSummarize) {
+        api.registerChatComposerButton({
+          translatedLabel: "chat.summarization.title",
+          id: "channel-summary",
+          icon: "magic",
+          position: "dropdown",
+          action: "showChannelSummaryModal",
+        });
+      }
 
       // we want to decorate the chat quote dates regardless
       // of whether the current user has chat enabled

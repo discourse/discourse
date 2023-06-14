@@ -37,7 +37,7 @@
   position: relative;
   background-color: var(--secondary);
   animation: fade-in 250ms both;
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   min-width: 40vw;
 }
 

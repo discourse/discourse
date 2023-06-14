@@ -28,6 +28,28 @@ RSpec.describe PrettyText do
 
       before { User.stubs(:default_template).returns(default_avatar) }
 
+      it "correctly extracts usernames from the new quote format" do
+        topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
+        expected = <<~HTML
+          <aside class="quote no-group" data-username="codinghorror" data-post="2" data-topic="#{topic.id}">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a>
+          </div>
+          <blockquote>
+          <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(
+          cook(
+            "[quote=\"Jeff, post:2, topic:#{topic.id}, username:codinghorror\"]\nddd\n[/quote]",
+            topic_id: 1,
+          ),
+        ).to eq(n(expected))
+      end
+
       it "do off topic quoting with emoji unescape" do
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML

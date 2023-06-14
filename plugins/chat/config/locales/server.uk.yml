@@ -14,9 +14,13 @@ uk:
     chat_channel_archive_complete:
       title: "Архівацію каналу чату завершено"
       subject_template: "Архівацію каналу чату успішно завершено"
+      text_body_template: |
+        Архівування каналу чату %{channel_hashtag_or_name} успішно завершено. Повідомлення були скопійовані в тему [%{topic_title}] (%{topic_url}).
     chat_channel_archive_failed:
       title: "Не вдалося створити архів каналу чату"
       subject_template: "Не вдалося архівувати канали чату"
+      text_body_template: |
+        Не вдалося архівувати канал чату %{channel_hashtag_or_name} . %{messages_archived} повідомлення заархівовано. Частково заархівовані повідомлення скопійовано в тему [%{topic_title}](%{topic_url}). Перейдіть на канал %{channel_url} , щоб повторити спробу.
     chat_channel_archive_failed_no_topic:
       title: "Не вдалося створити архів каналу чату"
       subject_template: "Помилка архіву каналу чату"

@@ -8,7 +8,7 @@
     right: 0;
     height: 50vh;
     width: 100%;
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     z-index: z("header") + 2;
     max-width: 100vw;
     box-sizing: border-box;

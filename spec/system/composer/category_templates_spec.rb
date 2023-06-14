@@ -46,7 +46,7 @@ describe "Composer Form Templates", type: :system do
     Fabricate(
       :category,
       name: "Multiple",
-      slug: "mulitple",
+      slug: "multiple",
       topic_count: 10,
       form_template_ids: [form_template_1.id, form_template_2.id],
     )
@@ -111,7 +111,7 @@ describe "Composer Form Templates", type: :system do
     expect(composer).to have_composer_preview_toggle
   end
 
-  it "hides the preivew when a category with a form template is selected" do
+  it "hides the preview when a category with a form template is selected" do
     category_page.visit(category_with_template_1)
     category_page.new_topic_button.click
     expect(composer).to have_no_composer_preview

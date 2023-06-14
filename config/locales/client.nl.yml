@@ -1760,36 +1760,6 @@ nl:
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in de alleen-lezenmodus bevindt."
     staff_writes_only_mode:
       enabled: "Deze site is in de medewerkermodus. Ga door met bekijken, maar antwoorden, liken en andere acties zijn beperkt tot medewerkers."
-    too_few_topics_and_posts_notice_MF: |
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">de discussie starten!</a> Er { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {zijn <strong>#</strong> topics}
-      } en { currentPosts, plural,
-          one {<strong>#</strong> bericht}
-        other {<strong>#</strong> berichten}
-      }. Bezoekers hebben meer nodig om te lezen en op te antwoorden – wij raden minimaal { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      } en { requiredPosts, plural,
-          one {<strong>#</strong> bericht}
-        other {<strong>#</strong> berichten}
-      } aan. Alleen personeel kan dit bericht zien.
-    too_few_topics_notice_MF: |
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">de discussie starten!</a> Er { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {zijn <strong>#</strong> topics}
-      }. Bezoekers hebben meer nodig om te lezen en op te antwoorden – wij raden minimaal { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      } aan. Alleen personeel kan dit bericht zien.
-    too_few_posts_notice_MF: |
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">de discussie starten!</a> Er { currentPosts, plural,
-          one {is <strong>#</strong> post}
-        other {zijn <strong>#</strong> posts}
-      }. Bezoekers hebben meer nodig om te lezen en op te antwoorden – wij raden minimaal { requiredPosts, plural,
-          one {<strong>#</strong> bericht}
-        other {<strong>#</strong> berichten}
-      } aan. Alleen personeel kan dit bericht zien.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt.
@@ -3972,6 +3942,8 @@ nl:
       more: "Meer"
       all_categories: "Alle categorieën"
       all_tags: "Alle tags"
+      categories_form:
+        save: "Opslaan"
       sections:
         custom:
           save: "Opslaan"
@@ -5089,6 +5061,8 @@ nl:
               key: "minimum"
             maximum:
               key: "maximum"
+            type:
+              key: "type"
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."
