@@ -1547,8 +1547,6 @@ nb_NO:
       enabled: "Dette nettstedet er i lesemodus. Fortsett gjerne å lese, men du kan ikke svare, gi likes eller utføre andre handlinger som er slått av."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
       logout_disabled: "Du kan ikke logge ut når nettstedet er i lese-modus."
-    too_few_posts_notice_MF: |
-      La oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskusjonen!</a> Der {currentPosts, plural, one {er <strong>#</strong> innlegg} other {er <strong>#</strong> innlegg}}. Besøkende trenger mer å lese og svare på — vi anbefaler minst {requiredPosts, plural, one {<strong>#</strong> innlegg} other {<strong>#</strong> innlegg}}. Bare ansatte kan se denne meldingen.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> nådd området innstillingen grense for {limit, plural, one {# feil/time} other {# feil/time}}.
@@ -2165,7 +2163,7 @@ nb_NO:
         top: "Det finnes ingen populære emner."
         educate:
           new: '<p>Dine nye emner vil vises her. Som standard betraktes emner som nye, og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator hvis de ble opprettet i de siste 2 dagene.</p><p>Besøk dine <a href="%{userPrefsUrl}">preferanser</a> for å endre dette.</p>'
-          unread: '<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class="badge unread-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
+          unread: '<p>Dine uleste emner vil vises her.</p><p>Som forvalg anses emner som ulest og vil vise ulest-tall <span class="badge unread-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 5 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller følges via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
       bottom:
         latest: "Det finnes ingen flere siste emner."
         posted: "Det finnes ingen flere emner med innlegg."
@@ -3376,6 +3374,8 @@ nb_NO:
         other: "%{count} nye"
       more: "Mer"
       all_categories: "Alle kategorier"
+      categories_form:
+        save: "Lagre"
       sections:
         custom:
           save: "Lagre"
@@ -4248,6 +4248,8 @@ nb_NO:
               key: "minst"
             maximum:
               key: "største"
+            type:
+              key: "type"
       impersonate:
         title: "Fremstå som"
         help: "Bruk dette verktøyet for å fremstå som en annen bruker for feilsøking. Du må logge ut når du er ferdig."

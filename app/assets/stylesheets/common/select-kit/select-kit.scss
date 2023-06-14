@@ -40,7 +40,7 @@
       border-radius: 0;
       border: none;
       border: 1px solid var(--primary-low);
-      box-shadow: shadow("dropdown");
+      box-shadow: var(--shadow-dropdown);
       background: var(--secondary);
       max-width: 600px;
     }

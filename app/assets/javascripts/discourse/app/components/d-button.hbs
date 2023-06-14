@@ -1,11 +1,13 @@
 {{! template-lint-disable no-down-event-binding }}
 <button
   {{! For legacy compatibility. Prefer passing class as attributes. }}
-  class="{{@class}}
-    {{if @isLoading 'is-loading'}}
-    {{if this.btnLink 'btn-link' 'btn'}}
-    {{if this.noText 'no-text'}}
-    {{this.btnType}}"
+  class={{concat-class
+    @class
+    (if @isLoading "is-loading")
+    (if this.btnLink "btn-link" "btn")
+    (if this.noText "no-text")
+    this.btnType
+  }}
   {{! For legacy compatibility. Prefer passing these as html attributes. }}
   id={{@id}}
   form={{@form}}

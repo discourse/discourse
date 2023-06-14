@@ -124,6 +124,15 @@ RSpec.describe PostAlerter do
       fab!(:group) do
         Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2)
       end
+      fab!(:watching_first_post_group) do
+        Fabricate(
+          :group,
+          name: "some_group",
+          users: [evil_trout, coding_horror],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+          default_notification_level: NotificationLevels.all[:watching_first_post],
+        )
+      end
       fab!(:pm) do
         Fabricate(:topic, archetype: "private_message", category_id: nil, allowed_groups: [group])
       end
@@ -333,6 +342,86 @@ RSpec.describe PostAlerter do
             post_type: Post.types[:whisper],
           )
         }.not_to change(user2.notifications, :count)
+      end
+
+      context "with watching_first_post notification level" do
+        it "notifies group members of first post" do
+          post =
+            PostCreator.create!(
+              user,
+              title: "Hi there, welcome to my topic",
+              raw: "This is my awesome message",
+              archetype: Archetype.private_message,
+              target_group_names: watching_first_post_group.name,
+            )
+
+          PostAlerter.new.after_save_post(post, true)
+
+          expect(
+            evil_trout
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+          expect(
+            coding_horror
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+        end
+
+        it "doesn't notify group members of replies" do
+          post =
+            PostCreator.create!(
+              user,
+              title: "Hi there, welcome to my topic",
+              raw: "This is my awesome message",
+              archetype: Archetype.private_message,
+              target_group_names: watching_first_post_group.name,
+            )
+
+          expect(
+            evil_trout
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(0)
+          expect(
+            coding_horror
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(0)
+
+          PostAlerter.new.after_save_post(post, true)
+
+          expect(
+            evil_trout
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+          expect(
+            coding_horror
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+
+          reply =
+            Fabricate(
+              :post,
+              raw: "Reply to PM",
+              user: user,
+              topic: post.topic,
+              reply_to_post_number: post.post_number,
+            )
+
+          expect do PostAlerter.new.after_save_post(reply, false) end.to_not change {
+            Notification.count
+          }
+        end
       end
     end
   end

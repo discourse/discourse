@@ -2064,60 +2064,6 @@ ar:
       logout_disabled: "يتم إيقاف تسجيل الخروج عندما يكون الموقع في وضع القراءة فقط."
     staff_writes_only_mode:
       enabled: "هذا الموقع في وضع القراءة فقط. يُرجى المتابعة للتصفح، لكن سيقتصر التصفح والرد وتسجيل الإعجاب والإجراءات الأخرى على الأعضاء في طاقم العمل فقط."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">لنبدأ المناقشة!</a> هناك { currentTopics, plural,
-          zero {}one {<strong></strong>موضوع واحد}
-          two {<strong></strong>موضوعان}
-          few {<strong>#</strong> موضوعات}
-          many {<strong>#</strong> موضوعًا}
-        other {<strong>#</strong> موضوع}
-      } و{ currentPosts, plural,
-          zero {}one {<strong></strong>منشور واحد}
-          two {<strong></strong>منشوران}
-          few {<strong>#</strong> منشورات}
-          many {<strong>#</strong> منشورًا}
-        other {<strong>#</strong> منشور}
-      }. يحتاج الزوار إلى المزيد لقراءته والرد عليه – نحن نقترح على الأقل { requiredTopics, plural,
-          zero {}one {<strong></strong>موضوعًا واحدًا}
-          two {<strong></strong>موضوعين}
-          few {<strong>#</strong> موضوعات}
-          many {<strong>#</strong> موضوعًا}
-        other {<strong>#</strong> موضوع}
-      } و{ requiredPosts, plural,
-          zero {}one {<strong></strong>منشورًا واحدًا}
-          two {<strong></strong>منشورين}
-          few {<strong>#</strong> منشورات}
-          many {<strong>#</strong> منشورًا}
-        other {<strong>#</strong> منشور}
-      }. لا يمكن إلا لفريق العمل رؤية هذه الرسالة.
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">لنبدأ المناقشة!</a> هناك { currentTopics, plural,
-          zero {}one {<strong></strong>موضوع واحد}
-          two {<strong></strong>موضوعان}
-          few {<strong>#</strong> موضوعات}
-          many {<strong>#</strong> موضوعًا}
-        other {<strong>#</strong> موضوع}
-      }. يحتاج الزوار إلى المزيد لقراءته والرد عليه – نحن نقترح على الأقل { requiredTopics, plural,
-          zero {}one {<strong></strong>موضوعًا واحدًا}
-          two {<strong></strong>موضوعين}
-          few {<strong>#</strong> موضوعات}
-          many {<strong>#</strong> موضوعًا}
-        other {<strong>#</strong> موضوع}
-      }. لا يمكن إلا لفريق العمل رؤية هذه الرسالة.
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">لنبدأ المناقشة!</a> هناك { currentPosts, plural,
-          zero {}one {<strong></strong>منشور واحد}
-          two {<strong></strong>منشوران}
-          few {<strong>#</strong> منشورات}
-          many {<strong>#</strong> منشورًا}
-        other {<strong>#</strong> منشور}
-      }. يحتاج الزوار إلى المزيد لقراءته والرد عليه – نحن نقترح على الأقل { requiredPosts, plural,
-          zero {}one {<strong></strong>منشورًا واحدًا}
-          two {<strong></strong>منشورين}
-          few {<strong>#</strong> منشورات}
-          many {<strong>#</strong> منشورًا}
-        other {<strong>#</strong> منشور}
-      }. لا يمكن إلا لفريق العمل رؤية هذه الرسالة.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – لقد بلغ معدل الخطأ <a href='{url}' target='_blank'>{rate, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}</a> حد إعدادات الموقع البالغ {limit, plural, zero {<strong>#</strong> خطأ/الساعة} one {خطأ واحد (#)/الساعة} two {خطآن (#)/الساعة} few {# أخطاء/الساعة} many {# خطأ/الساعة} other {# خطأ/الساعة}}.
@@ -3101,7 +3047,7 @@ ar:
         top: "لا توجد موضوعات في الأكثر نشاطًا."
         educate:
           new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
-          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍ افتراضي وستعرض الأعداد غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 4 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
+          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍ افتراضي وستعرض الأعداد غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 5 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
       bottom:
         latest: "لا يوجد المزيد من الموضوعات الحديثة."
         posted: "لا يوجد المزيد من الموضوعات المنشورة."
@@ -4760,6 +4706,8 @@ ar:
       more: "المزيد"
       all_categories: "كل الفئات"
       all_tags: "كل الوسوم"
+      categories_form:
+        save: "حفظ"
       sections:
         custom:
           save: "حفظ"
@@ -5906,6 +5854,8 @@ ar:
               key: "الحد الأدنى"
             maximum:
               key: "الحد الأقصى"
+            type:
+              key: "النوع"
       impersonate:
         title: "الانتحال"
         help: "استخدم هذه الأداة لانتحال شخصية حساب مستخدم لأغراض تصحيح الأخطاء. عليك تسجيل الخروج بعد الانتهاء."

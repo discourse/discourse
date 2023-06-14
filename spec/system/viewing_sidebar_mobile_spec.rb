@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Viewing sidebar mobile", type: :system, js: true, mobile: true do
+describe "Viewing sidebar mobile", type: :system, mobile: true do
   fab!(:user) { Fabricate(:user) }
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -34,7 +34,7 @@ describe "Viewing sidebar mobile", type: :system, js: true, mobile: true do
     expect(sidebar_dropdown).to be_hidden
   end
 
-  it "collpases the sidebar when clicking on a link in the sidebar" do
+  it "collapses the sidebar when clicking on a link in the sidebar" do
     visit("/latest")
 
     sidebar_dropdown.click

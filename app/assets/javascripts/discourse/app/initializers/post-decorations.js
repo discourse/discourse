@@ -3,6 +3,7 @@ import discourseLater from "discourse-common/lib/later";
 import I18n from "I18n";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import lightbox from "discourse/lib/lightbox";
+import Columns from "discourse/lib/columns";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
@@ -32,6 +33,25 @@ export default {
         },
         { id: "discourse-lightbox" }
       );
+
+      if (siteSettings.experimental_post_image_grid) {
+        api.decorateCookedElement(
+          (elem) => {
+            const grids = elem.querySelectorAll(".d-image-grid");
+
+            if (!grids.length) {
+              return;
+            }
+
+            grids.forEach((grid) => {
+              return new Columns(grid, {
+                columns: site.mobileView ? 2 : 3,
+              });
+            });
+          },
+          { id: "discourse-image-grid" }
+        );
+      }
 
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCookedElement(setTextDirections, {

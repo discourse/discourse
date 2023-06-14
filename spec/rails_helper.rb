@@ -388,18 +388,16 @@ RSpec.configure do |config|
   end
 
   # Match the request hostname to the value in `database.yml`
-  config.before(:all, type: %i[request multisite system]) { host! "test.localhost" }
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
   last_driven_by = nil
   config.before(:each, type: :system) do |example|
-    if example.metadata[:js]
-      driver = [:selenium]
-      driver << :mobile if example.metadata[:mobile]
-      driver << :chrome
-      driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
-      driven_by driver.join("_").to_sym
-    end
+    driver = [:selenium]
+    driver << :mobile if example.metadata[:mobile]
+    driver << :chrome
+    driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
+    driven_by driver.join("_").to_sym
+
     setup_system_test
   end
 

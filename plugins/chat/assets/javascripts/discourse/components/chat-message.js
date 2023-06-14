@@ -1,4 +1,3 @@
-import { isTesting } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
@@ -39,7 +38,7 @@ export default class ChatMessage extends Component {
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelPane;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
 
@@ -52,7 +51,7 @@ export default class ChatMessage extends Component {
 
   get pane() {
     return this.args.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadPane
+      ? this.chatThreadPane
       : this.chatChannelPane;
   }
 
@@ -127,6 +126,7 @@ export default class ChatMessage extends Component {
   @action
   teardownChatMessage() {
     cancel(this._invitationSentTimer);
+    cancel(this._disableMessageActionsHandler);
     this.#teardownMentionedUsers();
   }
 
@@ -266,52 +266,36 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleTouchStart(event) {
-    event.stopPropagation();
-
-    // if zoomed don't track long press
-    if (isZoomed()) {
-      return;
-    }
-
-    // when testing this must be triggered immediately because there
-    // is no concept of "long press" there, the Ember `tap` test helper
-    // does send the touchstart/touchend events but immediately, see
-    // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
-    if (isTesting()) {
-      this._handleLongPress();
-    }
-
-    this._touchStartAt = Date.now();
-    this._isPressingHandler = discourseLater(this._handleLongPress, 500);
+  handleLongPressStart(element) {
+    element.classList.add("is-long-pressed");
   }
 
   @action
-  handleTouchMove(event) {
-    event.stopPropagation();
+  onLongPressCancel(element) {
+    element.classList.remove("is-long-pressed");
 
-    cancel(this._isPressingHandler);
+    // this a tricky bit of code which is needed to prevent the long press
+    // from triggering a click on the message actions panel when releasing finger press
+    // we can't prevent default as we need to keep the event passive for performance reasons
+    // this class will prevent any click from being triggered until removed
+    // this number has been chosen from testing but might need to be increased
+    this._disableMessageActionsHandler = discourseLater(() => {
+      document.documentElement.classList.remove(
+        "disable-message-actions-touch"
+      );
+    }, 200);
   }
 
   @action
-  handleTouchEnd(event) {
-    event.stopPropagation();
+  handleLongPressEnd(element) {
+    element.classList.remove("is-long-pressed");
 
-    // this is to prevent the long press to register as a click
-    if (Date.now() - this._touchStartAt >= 500) {
-      event.preventDefault();
-    }
-
-    cancel(this._isPressingHandler);
-  }
-
-  @action
-  _handleLongPress() {
     if (isZoomed()) {
       // if zoomed don't handle long press
       return;
     }
 
+    document.documentElement.classList.add("disable-message-actions-touch");
     document.activeElement.blur();
     document.querySelector(".chat-composer__input")?.blur();
 

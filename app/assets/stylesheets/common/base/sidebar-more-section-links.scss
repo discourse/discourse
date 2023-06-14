@@ -2,13 +2,13 @@
   &:focus-within,
   &:active,
   &:hover {
-    background: var(--d-sidebar-highlight-color);
+    background: var(--d-sidebar-highlight-background);
     svg.d-icon {
-      color: var(--primary-medium);
+      color: var(--d-sidebar-highlight-color);
     }
   }
   height: var(--d-sidebar-row-height);
-  color: var(--primary-high);
+  color: var(--d-sidebar-link-color);
   display: flex;
   list-style: none;
   box-sizing: border-box;
@@ -16,17 +16,18 @@
   padding: 0 var(--d-sidebar-row-horizontal-padding);
   justify-content: left;
 
-  svg.d-icon {
+  .d-icon {
     width: var(--d-sidebar-section-link-prefix-width);
     margin-right: var(--d-sidebar-section-link-prefix-margin-right);
-    color: var(--primary-medium);
+    color: var(--d-sidebar-link-icon-color);
     font-size: var(--font-down-1);
   }
 }
 .sidebar-more-section-links-details-content {
-  background-color: var(--secondary);
+  background-color: var(--d-sidebar-background);
   transition: background-color 0.25s;
-  box-shadow: shadow("dropdown");
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--primary-low);
   margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
 
   .sidebar-row {

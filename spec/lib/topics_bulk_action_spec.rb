@@ -12,7 +12,7 @@ RSpec.describe TopicsBulkAction do
     before { topic.destroy! }
 
     it "dismisses private messages" do
-      pm = Fabricate(:private_message_topic)
+      pm = Fabricate(:private_message_topic, recipient: user)
 
       TopicsBulkAction.new(user, [pm.id], type: "dismiss_topics").perform!
 
@@ -72,6 +72,29 @@ RSpec.describe TopicsBulkAction do
       expect(dismissed_topic_user.user_id).to eq(user.id)
       expect(dismissed_topic_user.topic_id).to eq(topic2.id)
       expect(dismissed_topic_user.created_at).not_to be_nil
+    end
+
+    it "doesn't dismiss topics the user can't see" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      topic2.update!(category_id: private_category.id)
+
+      expect do
+        TopicsBulkAction.new(user, [topic2.id, topic3.id], type: "dismiss_topics").perform!
+      end.to change { DismissedTopicUser.count }.by(1)
+
+      expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([topic3.id])
+
+      group.add(user)
+
+      expect do
+        TopicsBulkAction.new(user, [topic2.id, topic3.id], type: "dismiss_topics").perform!
+      end.to change { DismissedTopicUser.count }.by(1)
+
+      expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to contain_exactly(
+        topic2.id,
+        topic3.id,
+      )
     end
   end
 

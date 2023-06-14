@@ -241,7 +241,7 @@ module FileStore
         end
 
         options = {
-          acl: "public-read",
+          acl: SiteSetting.s3_use_acls ? "public-read" : nil,
           body: File.open(path, "rb"),
           bucket: bucket,
           content_type: MiniMime.lookup_by_filename(name)&.content_type,

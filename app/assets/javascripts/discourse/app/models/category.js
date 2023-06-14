@@ -70,7 +70,11 @@ const Category = RestModel.extend({
 
   @discourseComputed("parentCategory.level")
   level(parentLevel) {
-    return (parentLevel || -1) + 1;
+    if (!parentLevel) {
+      return parentLevel === 0 ? 1 : 0;
+    } else {
+      return parentLevel + 1;
+    }
   },
 
   @discourseComputed("subcategories")

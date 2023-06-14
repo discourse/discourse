@@ -230,17 +230,19 @@ export default Component.extend({
     }
 
     const topic = this.topic;
-    if (e.target.classList.contains("bulk-select")) {
+    const target = e.target;
+    const classList = target.classList;
+    if (classList.contains("bulk-select")) {
       const selected = this.selected;
 
-      if (e.target.checked) {
+      if (target.checked) {
         selected.addObject(topic);
 
         if (this.lastChecked && e.shiftKey) {
           const bulkSelects = Array.from(
               document.querySelectorAll("input.bulk-select")
             ),
-            from = bulkSelects.indexOf(e.target),
+            from = bulkSelects.indexOf(target),
             to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
             start = Math.min(from, to),
             end = Math.max(from, to);
@@ -253,19 +255,19 @@ export default Component.extend({
             });
         }
 
-        this.set("lastChecked", e.target);
+        this.set("lastChecked", target);
       } else {
         selected.removeObject(topic);
         this.set("lastChecked", null);
       }
     }
 
-    if (e.target.classList.contains("raw-topic-link")) {
+    if (classList.contains("raw-topic-link")) {
       if (wantsNewWindow(e)) {
         return true;
       }
       e.preventDefault();
-      return this.navigateToTopic(topic, e.target.getAttribute("href"));
+      return this.navigateToTopic(topic, target.getAttribute("href"));
     }
 
     // make full row click target on mobile, due to size constraints
@@ -282,7 +284,10 @@ export default Component.extend({
       return this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
 
-    if (e.target.closest("a.topic-status")) {
+    if (
+      classList.contains("d-icon-thumbtack") &&
+      target.closest("a.topic-status")
+    ) {
       this.topic.togglePinnedForUser();
       return false;
     }

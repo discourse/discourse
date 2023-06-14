@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat channel", type: :system, js: true do
+RSpec.describe "Chat channel", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }

@@ -1450,6 +1450,8 @@ files:
     regex: '^https?:\/\/.+[^\/]$'
   s3_configure_tombstone_policy:
     default: true
+  s3_use_acls:
+    default: true
   enable_s3_inventory:
     default: false
   s3_configure_inventory_policy:
@@ -2088,6 +2090,7 @@ developer:
   enable_experimental_hashtag_autocomplete:
     default: true
     client: true
+    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2109,6 +2112,15 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  experimental_post_image_grid:
+    client: true
+    default: false
+  new_edit_sidebar_categories_tags_interface_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2339,6 +2351,17 @@ uncategorized:
     client: true
     default: false
 
+  summarization_strategy:
+    client: true
+    default: ""
+    enum: "SummarizationStrategy"
+    validator: "SummarizationValidator"
+  custom_summarization_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
+
   automatic_topic_heat_values: true
 
   # View heat thresholds
@@ -2433,10 +2456,6 @@ uncategorized:
   notify_about_reviewable_item_after:
     type: float
     default: 48
-
-  show_create_topics_notice:
-    client: true
-    default: true
 
   enable_system_avatars:
     hidden: true

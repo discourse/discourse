@@ -288,11 +288,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def tos_url
-    if SiteSetting.tos_url.present?
-      SiteSetting.tos_url
-    elsif SiteSetting.tos_topic_id > 0 && Topic.exists?(id: SiteSetting.tos_topic_id)
-      "#{Discourse.base_path}/tos"
-    end
+    Discourse.tos_url
   end
 
   def include_tos_url?
@@ -300,11 +296,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def privacy_policy_url
-    if SiteSetting.privacy_policy_url.present?
-      SiteSetting.privacy_policy_url
-    elsif SiteSetting.privacy_topic_id > 0 && Topic.exists?(id: SiteSetting.privacy_topic_id)
-      "#{Discourse.base_path}/privacy"
-    end
+    Discourse.privacy_policy_url
   end
 
   def include_privacy_policy_url?

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, mobile: true do
+RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: true do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
@@ -40,14 +40,13 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
       it "correctly loads the thread" do
         chat_page.visit_channel(channel_1)
         channel_page.reply_to(original_message)
-        thread_page.fill_composer("reply to message")
-        thread_page.click_send_message
+        thread_page.send_message("reply to message")
 
-        expect(thread_page).to have_message(text: "reply to message")
+        expect(thread_page.messages).to have_message(text: "reply to message")
 
         refresh
 
-        expect(thread_page).to have_message(text: "reply to message")
+        expect(thread_page.messages).to have_message(text: "reply to message")
       end
     end
   end
@@ -90,7 +89,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, js: true, m
       channel_page.fill_composer("reply to message")
       channel_page.click_send_message
 
-      expect(channel_page).to have_message(text: "reply to message")
+      expect(channel_page.messages).to have_message(text: "reply to message")
     end
   end
 end

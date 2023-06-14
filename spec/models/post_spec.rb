@@ -7,6 +7,8 @@ RSpec.describe Post do
 
   before { Oneboxer.stubs :onebox }
 
+  it_behaves_like "it has custom fields"
+
   it { is_expected.to have_many(:reviewables).dependent(:destroy) }
 
   describe "#hidden_reasons" do

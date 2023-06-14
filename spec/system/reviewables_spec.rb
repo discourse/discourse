@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Reviewables", type: :system, js: true do
+describe "Reviewables", type: :system do
   let(:review_page) { PageObjects::Pages::Review.new }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:theme) { Fabricate(:theme) }

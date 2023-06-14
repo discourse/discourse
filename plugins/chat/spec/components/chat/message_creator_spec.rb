@@ -65,6 +65,18 @@ describe Chat::MessageCreator do
       )
     end
 
+    it "errors when a blank message is sent" do
+      creator =
+        described_class.create(chat_channel: public_chat_channel, user: user1, content: "   ")
+      expect(creator.failed?).to eq(true)
+      expect(creator.error.message).to match(
+        I18n.t(
+          "chat.errors.minimum_length_not_met",
+          { count: SiteSetting.chat_minimum_message_length },
+        ),
+      )
+    end
+
     it "errors when length is greater than `chat_maximum_message_length`" do
       SiteSetting.chat_maximum_message_length = 100
       creator =

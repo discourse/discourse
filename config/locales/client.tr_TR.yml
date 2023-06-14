@@ -398,6 +398,8 @@ tr_TR:
         search: "Mesaj Arama"
         placeholder: "mesaj başlığını, url'yi veya kimliği buraya yazın"
     review:
+      show_more: "Daha fazla göster"
+      show_less: "Daha az göster"
       order_by: "Şuna göre sırala"
       date_filter: "Şu tarihler arasında gönderildi"
       in_reply_to: "şuna yanıt olarak"
@@ -1784,12 +1786,6 @@ tr_TR:
       logout_disabled: "Site salt okunur moddayken çıkış yapma devre dışı bırakılır."
     staff_writes_only_mode:
       enabled: "Bu site sadece personel modundadır. Lütfen göz atmaya devam edin, ancak yanıtlama, beğenme ve diğer işlemler yalnızca personel üyeleriyle sınırlıdır."
-    too_few_topics_and_posts_notice_MF: |
-      Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} ve {currentPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} ve {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Bu mesajı sadece personel görebilir.
-    too_few_topics_notice_MF: |
-      Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> Şu an {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
-    too_few_posts_notice_MF: |
-      Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışma başlatalım!</a> Şu an {currentPosts, plural, one { <strong>#</strong> gönderi} other { <strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var; en azından {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
@@ -2229,6 +2225,7 @@ tr_TR:
       image_alt_text:
         aria_label: Görüntü için alternatif metin
       delete_image_button: Görüntüyü Sil
+      toggle_image_grid: Resim ızgarasını aç/kapat
     notifications:
       tooltip:
         regular:
@@ -2598,7 +2595,7 @@ tr_TR:
         filter: "Konu yok."
         educate:
           new: '<p>Yeni konularınız burada görünür. Varsayılan olarak, konular yeni kabul edilir ve son 2 gün içinde oluşturulmuşlarsa <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> göstergesi görünür.</p><p>Bunu değiştirmek için <a href="%{userPrefsUrl}"> tercihlerinizi</a> ziyaret edin.</p>'
-          unread: "<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve şu durumlarda okunmamış ileti sayısı <span class=\"badge unread-posts badge-notification\">1</span> olarak gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuya yanıt vermişseniz</li><li>Konuyu 4 dakikadan fazla okumuşsanız</li></ul><p>Her bir konuda \U0001F514 aracılığıyla konuyu Takip Edildi veya İzlendi olarak seçmişseniz.</p><p><a href=\"%{userPrefsUrl}\">Tercihler</a> bölümünden bunu değiştirebilirsiniz.</p>"
+          unread: "<p>Okunmamış konularınız burada görünür.</p><p>Konular varsayılan olarak okunmamış sayılır ve şu durumlarda okunmamış ileti sayısı <span class=\"badge unread-posts badge-notification\">1</span> olarak gösterilir: </p><ul><li>Konuyu siz oluşturmuşsanız</li><li>Konuya yanıt vermişseniz</li><li>Konuyu 5 dakikadan fazla okumuşsanız</li></ul><p>Her bir konuda \U0001F514 aracılığıyla konuyu Takip Edildi veya İzlendi olarak seçmişseniz.</p><p><a href=\"%{userPrefsUrl}\">Tercihler</a> bölümünden bunu değiştirebilirsiniz.</p>"
       bottom:
         latest: "Başka en son konu yok."
         posted: "Başka gönderi yapılan konu yok."
@@ -2663,6 +2660,7 @@ tr_TR:
       read_more_in_category: "Daha fazla okumak ister misiniz? %{categoryLink} kategorisindeki diğer konulara göz atın veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       read_more: "Daha fazla okumak ister misiniz? <a href='%{categoryLink}'>Tüm kategorilere göz atın</a> veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
+      participant_groups: "Katılımcı grupları"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -3981,6 +3979,11 @@ tr_TR:
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
+      categories_form:
+        save: "Kaydet"
+        title: "Kategorilerde gezinmeyi düzenle"
+        filter_placeholder: "Kategorileri filtrele"
+        no_categories: "Bu terimle eşleşen kategori yok."
       sections:
         custom:
           save: "Kaydet"
@@ -4081,6 +4084,7 @@ tr_TR:
               content: "İncele"
               title: "Bayrak eklenen gönderiler ve diğer sıraya alınmış ögeler"
               pending_count: "%{count} beklemede"
+        global_section: "Genel bölüm, herkes tarafından görülebilir"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
@@ -4957,6 +4961,7 @@ tr_TR:
             revoke_moderation: "moderasyonu iptal et"
             backup_create: "yedekleme oluştur"
             deleted_tag: "silinmiş etiket"
+            update_directory_columns: "dizin sütunlarını güncelle"
             deleted_unused_tags: "kullanılmayan etiketler silindi"
             renamed_tag: "yeniden adlandırılmış etiket"
             revoke_email: "e-postayı iptal et"
@@ -5139,12 +5144,19 @@ tr_TR:
             minimum:
               key: "en az"
               type: "tamsayı"
+              description: "Metin alanları için, izin verilen minimum karakter sayısı."
             maximum:
               key: "en fazla"
               type: "tamsayı"
+              description: "Metin alanları için izin verilen maksimum karakter sayısı."
             pattern:
               key: "desen"
               type: "regex dizesi"
+              description: "Metin alanları için, izin verilen girdiyi belirten düzenli ifade."
+            type:
+              key: "tür"
+              type: "metin"
+              description: "Giriş alanları için, beklenen giriş türünü belirtebilirsiniz (metin|e-posta|tarih|numara|url|tel|renk)"
         preview_modal:
           title: "Şablon Önizlemesi"
         field_placeholders:

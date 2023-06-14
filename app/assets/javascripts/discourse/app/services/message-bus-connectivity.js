@@ -8,6 +8,7 @@ export default class MessageBusConnectivity extends Service {
 
   setConnectivity(connected) {
     this.connected = connected;
+
     document.documentElement.classList.toggle(
       CONNECTIVITY_ERROR_CLASS,
       !connected

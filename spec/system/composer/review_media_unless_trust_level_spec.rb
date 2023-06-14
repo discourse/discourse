@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-describe "Composer using review_media", type: :system, js: true do
+describe "Composer using review_media", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic, category: Category.find(SiteSetting.uncategorized_category_id)) }
   fab!(:post) { Fabricate(:post, topic: topic) }
-  # fab!(:upload) { Fabricate(:upload) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do

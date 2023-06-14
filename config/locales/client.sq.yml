@@ -1924,6 +1924,8 @@ sq:
         other: "%{count} të reja"
       more: "Më shumë"
       all_categories: "Të gjitha kategoritë"
+      categories_form:
+        save: "Ruaj"
       sections:
         custom:
           save: "Ruaj"
@@ -2426,6 +2428,8 @@ sq:
           validations:
             required:
               key: "i nevojshëm"
+            type:
+              key: "lloji"
       impersonate:
         title: "Personifiko"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

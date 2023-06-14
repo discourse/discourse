@@ -851,6 +851,18 @@ Topic.reopenClass({
       data.topic_ids = topicIds;
     }
 
+    if (opts.dismissPosts) {
+      data.dismiss_posts = opts.dismissPosts;
+    }
+
+    if (opts.dismissTopics) {
+      data.dismiss_topics = opts.dismissTopics;
+    }
+
+    if (opts.untrack) {
+      data.untrack = opts.untrack;
+    }
+
     return ajax("/topics/reset-new", { type: "PUT", data });
   },
 

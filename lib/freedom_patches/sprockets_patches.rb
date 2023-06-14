@@ -49,3 +49,13 @@ Sprockets::DirectiveProcessor.prepend(
     end
   end,
 )
+
+# Skip digest path for workbox assets. They are already in a folder with a digest in the name.
+Sprockets::Asset.prepend(
+  Module.new do
+    def digest_path
+      return logical_path if logical_path.match?(%r{^workbox-.*/})
+      super
+    end
+  end,
+)
