@@ -271,7 +271,7 @@ export default MountWidget.extend({
 
   showSummary() {
     showModal("topic-summary").setProperties({
-      topicId: this.posts["posts"][0].topic_id,
+      topicId: this.posts.objectAt(0).topic_id,
     });
   },
 
