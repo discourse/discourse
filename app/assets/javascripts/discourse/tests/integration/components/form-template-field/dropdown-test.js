@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | form-template-field | dropdown",
@@ -16,7 +16,6 @@ module(
 
     test("renders a dropdown with choices", async function (assert) {
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
-
       this.set("choices", choices);
 
       await render(
@@ -27,22 +26,22 @@ module(
         "A dropdown component exists"
       );
 
-      await this.subject.expand();
-
-      const dropdown = this.subject.displayedContent();
+      const dropdown = queryAll(
+        ".form-template-field__dropdown option:not(.form-template-field__dropdown-placeholder)"
+      );
       assert.strictEqual(dropdown.length, 3, "it has 3 choices");
       assert.strictEqual(
-        dropdown[0].name,
+        dropdown[0].value,
         "Choice 1",
         "it has the correct name for choice 1"
       );
       assert.strictEqual(
-        dropdown[1].name,
+        dropdown[1].value,
         "Choice 2",
         "it has the correct name for choice 2"
       );
       assert.strictEqual(
-        dropdown[2].name,
+        dropdown[2].value,
         "Choice 3",
         "it has the correct name for choice 3"
       );
@@ -66,9 +65,8 @@ module(
         "A dropdown component exists"
       );
 
-      await this.subject.expand();
       assert.strictEqual(
-        this.subject.header().label(),
+        query(".form-template-field__dropdown-placeholder").innerText,
         attributes.none_label,
         "None label is correct"
       );

@@ -2850,6 +2850,8 @@ hy:
         other: "%{count} նոր"
       more: "Ավելին"
       all_categories: "Բոլոր կատեգորիաները"
+      categories_form:
+        save: "Պահպանել"
       sections:
         custom:
           save: "Պահպանել"
@@ -3756,6 +3758,8 @@ hy:
           validations:
             required:
               key: "պարտադիր է"
+            type:
+              key: "տիպը"
       impersonate:
         title: "Նմանակել"
         help: "Օգտագործեք այս գործիքը՝ վրիպազերծման նպատակով օգտատիրոջ հաշիվը նմանակելու համար: Դուք պետք է ավարտելուց հետո դուրս գրվեք:"

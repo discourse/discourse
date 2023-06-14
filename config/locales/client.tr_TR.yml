@@ -1786,12 +1786,6 @@ tr_TR:
       logout_disabled: "Site salt okunur moddayken çıkış yapma devre dışı bırakılır."
     staff_writes_only_mode:
       enabled: "Bu site sadece personel modundadır. Lütfen göz atmaya devam edin, ancak yanıtlama, beğenme ve diğer işlemler yalnızca personel üyeleriyle sınırlıdır."
-    too_few_topics_and_posts_notice_MF: |
-      Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} ve {currentPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} ve {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} var. Bu mesajı sadece personel görebilir.
-    too_few_topics_notice_MF: |
-      Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışmayı başlatalım!</a> Şu an {currentTopics, plural, one { <strong>#</strong> konu} other { <strong>#</strong> konu}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var, en azından {requiredTopics, plural, one {<strong>#</strong> konu} other {<strong>#</strong> konu}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
-    too_few_posts_notice_MF: |
-      Hadi <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">tartışma başlatalım!</a> Şu an {currentPosts, plural, one { <strong>#</strong> gönderi} other { <strong>#</strong> gönderi}} var. Ziyaretçilerin okumak ve yanıtlamak için daha fazlasına ihtiyacı var; en azından {requiredPosts, plural, one {<strong>#</strong> gönderi} other {<strong>#</strong> gönderi}} olmasını tavsiye ediyoruz. Bu mesajı yalnızca personel görebilir.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hata/saat} other {# hata/saat}}</a> site limitlerine ulaştı {limit, plural, one {# hata/saat} other {# hata/saat}}.
@@ -2231,6 +2225,7 @@ tr_TR:
       image_alt_text:
         aria_label: Görüntü için alternatif metin
       delete_image_button: Görüntüyü Sil
+      toggle_image_grid: Resim ızgarasını aç/kapat
     notifications:
       tooltip:
         regular:
@@ -3984,6 +3979,11 @@ tr_TR:
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
+      categories_form:
+        save: "Kaydet"
+        title: "Kategorilerde gezinmeyi düzenle"
+        filter_placeholder: "Kategorileri filtrele"
+        no_categories: "Bu terimle eşleşen kategori yok."
       sections:
         custom:
           save: "Kaydet"
@@ -4084,6 +4084,7 @@ tr_TR:
               content: "İncele"
               title: "Bayrak eklenen gönderiler ve diğer sıraya alınmış ögeler"
               pending_count: "%{count} beklemede"
+        global_section: "Genel bölüm, herkes tarafından görülebilir"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
@@ -4960,6 +4961,7 @@ tr_TR:
             revoke_moderation: "moderasyonu iptal et"
             backup_create: "yedekleme oluştur"
             deleted_tag: "silinmiş etiket"
+            update_directory_columns: "dizin sütunlarını güncelle"
             deleted_unused_tags: "kullanılmayan etiketler silindi"
             renamed_tag: "yeniden adlandırılmış etiket"
             revoke_email: "e-postayı iptal et"
@@ -5142,12 +5144,19 @@ tr_TR:
             minimum:
               key: "en az"
               type: "tamsayı"
+              description: "Metin alanları için, izin verilen minimum karakter sayısı."
             maximum:
               key: "en fazla"
               type: "tamsayı"
+              description: "Metin alanları için izin verilen maksimum karakter sayısı."
             pattern:
               key: "desen"
               type: "regex dizesi"
+              description: "Metin alanları için, izin verilen girdiyi belirten düzenli ifade."
+            type:
+              key: "tür"
+              type: "metin"
+              description: "Giriş alanları için, beklenen giriş türünü belirtebilirsiniz (metin|e-posta|tarih|numara|url|tel|renk)"
         preview_modal:
           title: "Şablon Önizlemesi"
         field_placeholders:

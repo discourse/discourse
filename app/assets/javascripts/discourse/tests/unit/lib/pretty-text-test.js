@@ -1683,6 +1683,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsReplace: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "times",
           case_sensitive: false,
         },
@@ -1697,6 +1698,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsLink: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "https://discourse.org",
           case_sensitive: false,
         },
@@ -1711,18 +1713,21 @@ var bar = 'bar';
   });
 
   test("watched words replace with bad regex", function (assert) {
-    const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
       watchedWordsReplace: {
-        "(\\bu?\\b)": { replacement: "you", case_sensitive: false },
+        "(\\bu?\\b)": {
+          word: "(\\bu?\\b)",
+          replacement: "you",
+          case_sensitive: false,
+        },
       },
     };
 
     assert.cookedOptions(
       "one",
       opts,
-      `<p>${"you".repeat(maxMatches)}one</p>`,
+      `<p>youoneyou</p>`,
       "does not loop infinitely"
     );
   });
@@ -1743,6 +1748,62 @@ var bar = 'bar';
       `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
 </code></pre>`,
       "code block with html alias work"
+    );
+  });
+
+  test("image grid", function (assert) {
+    assert.cooked(
+      "[grid]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
+      `<p>[grid]<br>
+<img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"><br>
+[/grid]</p>`,
+      "image grid without site setting does not work"
+    );
+
+    assert.cookedOptions(
+      "[grid]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>
+</div>`,
+      "image grid with site setting works"
+    );
+
+    assert.cookedOptions(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png)
+![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with 3 images works"
+    );
+
+    assert.cookedOptions(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with mixed block and inline images works"
+    );
+
+    assert.cookedOptions(
+      "[grid]![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)[/grid]",
+      { siteSettings: { experimental_post_image_grid: true } },
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"></p>
+</div>`,
+      "image grid with inline images works"
     );
   });
 });

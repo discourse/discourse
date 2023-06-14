@@ -1838,36 +1838,6 @@ hr:
       logout_disabled: "Odjava je onemogućena dok je forum u načinu rada samo za čitanje."
     staff_writes_only_mode:
       enabled: "Ova stranica je u načinu rada samo za osoblje. Nastavite s pregledavanjem, ali odgovaranje, sviđanje i druge radnje ograničeni su samo na članove osoblja."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">raspravu!</a> Tamo { currentTopics, plural,
-          one {je <strong>#</strong> tema}
-          few {su <strong>#</strong> tema}
-        other {su <strong>#</strong> tema}
-      } i { currentPosts, plural,
-          one {<strong>#</strong> post}
-          few {<strong>#</strong> postovi}
-        other {<strong>#</strong> postovi}
-      }. Posjetitelji trebaju više za čitanje i odgovaranje – preporučujemo barem { requiredTopics, plural,
-          one {<strong>#</strong> tema}
-          few {<strong>#</strong> tema}
-        other {<strong>#</strong> tema}
-      } i { requiredPosts, plural,
-          one {<strong>#</strong> post}
-          few {<strong>#</strong> postova}
-        other {<strong>#</strong> postova}
-      }. Samo osoblje može vidjeti ovu poruku.
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">raspravu!</a> Tamo { currentTopics, plural,
-          one {je <strong>#</strong> tema}
-          few {su <strong>#</strong> tema}
-        other {su <strong>#</strong> tema}
-      }. Posjetitelji trebaju više za čitanje i odgovaranje – preporučujemo barem { requiredTopics, plural,
-          one {<strong>#</strong> tema}
-          few {<strong>#</strong> tema}
-        other {<strong>#</strong> tema}
-      }. Samo osoblje može vidjeti ovu poruku.
-    too_few_posts_notice_MF: |
-      Hajde da <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">započnemo diskusiju!</a> Tamo {currentPosts, plural, one {je <strong>#</strong> tema} few {su <strong>#</strong> teme} other {su <strong>#</strong> teme}}. Posjetiteljima je potrebno više čitati i odgovoriti na — preporučujemo barem {requiredPosts, plural, one {<strong>#</strong> tema} few {<strong>#</strong> teme} other {<strong>#</strong> teme}}. Samo osoblje može vidjeti ovu poruku.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
@@ -4168,6 +4138,8 @@ hr:
       more: "Više"
       all_categories: "Sve kategorije"
       all_tags: "Sve oznake"
+      categories_form:
+        save: "Spremi"
       sections:
         custom:
           save: "Spremi"
@@ -5291,6 +5263,8 @@ hr:
               key: "minimum"
             maximum:
               key: "maksimum"
+            type:
+              key: "tip"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavljate kao određeni korisnički račun za potrebe ispravljanja grešaka. Morat će te se odjaviti kad završite."

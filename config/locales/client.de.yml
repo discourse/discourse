@@ -1825,36 +1825,6 @@ de:
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     staff_writes_only_mode:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
-          one {gibt <strong>#</strong> Thema}
-        other {gibt <strong>#</strong> Themen}
-      } und { currentPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
-          one {<strong>#</strong> Thema}
-        other {<strong>#</strong> Themen}
-      } und { requiredPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Nur das Team kann diese Nachricht sehen.
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
-          one {gibt <strong>#</strong> Thema}
-        other {gibt <strong>#</strong> Themen}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
-          one {<strong>#</strong> Thema}
-        other {<strong>#</strong> Themen}
-      }. Nur das Team kann diese Nachricht sehen.
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentPosts, plural,
-          one {gibt <strong>#</strong> Beitrag}
-        other {gibt <strong>#</strong> Beiträge}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Nur das Team kann diese Nachricht sehen.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht.
@@ -2297,6 +2267,7 @@ de:
       image_alt_text:
         aria_label: Alternativ-Text für Bild
       delete_image_button: Bild löschen
+      toggle_image_grid: Bildraster umschalten
     notifications:
       tooltip:
         regular:
@@ -2626,6 +2597,11 @@ de:
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
+        dismiss_new_modal:
+          title: "Neu verwerfen"
+          topics: "Neue Themen verwerfen"
+          posts: "Neue Beiträge verwerfen"
+          untrack: "Hör auf, diese Themen zu verfolgen, damit sie nicht mehr in deiner \"neuen\" Liste auftauchen"
         dismiss_new_with_selected:
           one: "Neues Thema ignorieren (%{count})"
           other: "Neue Themen ignorieren (%{count})"
@@ -4065,6 +4041,11 @@ de:
       more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
+      categories_form:
+        save: "Speichern"
+        title: "Kategorien-Navigation bearbeiten"
+        filter_placeholder: "Kategorien filtern"
+        no_categories: "Es gibt keine Kategorien, die dem angegebenen Begriff entsprechen."
       sections:
         custom:
           add: "Benutzerdefinierten Abschnitt hinzufügen"
@@ -4171,6 +4152,7 @@ de:
               content: "Überprüfen"
               title: "Gemeldete Beiträge und andere Elemente in der Warteschlange"
               pending_count: "%{count} ausstehend"
+        global_section: "Globaler Bereich, für alle sichtbar"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -5073,6 +5055,7 @@ de:
             revoke_moderation: "Moderationsrechte entziehen"
             backup_create: "Backup erstellen"
             deleted_tag: "Schlagwort gelöscht"
+            update_directory_columns: "Verzeichnisspalten aktualisieren"
             deleted_unused_tags: "nicht verwendete Schlagwörter gelöscht"
             renamed_tag: "Schlagwort umbenannt"
             revoke_email: "E-Mail widerrufen"
@@ -5281,15 +5264,14 @@ de:
             minimum:
               key: "Minimum"
               type: "Ganzzahl"
-              description: "Legt in Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
             maximum:
               key: "Maximum"
               type: "Ganzzahl"
-              description: "Legt in Textfeldern die maximale Anzahl der zulässigen Zeichen fest. Legt in Dropdown-Listen mit Mehrfachauswahl die maximale Anzahl der Optionen fest, die ausgewählt werden können."
             pattern:
               key: "Muster"
               type: "Regex-Zeichenfolge"
-              description: "In Textfeldern ein regulärer Ausdruck, der die zulässige Eingabe angibt."
+            type:
+              key: "art"
         preview_modal:
           title: "Vorschau Vorlage"
         field_placeholders:

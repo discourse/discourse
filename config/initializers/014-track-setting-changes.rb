@@ -66,6 +66,8 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   Emoji.clear_cache && Discourse.request_refresh! if name == :emoji_deny_list
 
+  Discourse.clear_urls! if %i[tos_topic_id privacy_topic_id].include?(name)
+
   # Update seeded topics
   if %i[title site_description].include?(name)
     topics = SeedData::Topics.with_default_locale

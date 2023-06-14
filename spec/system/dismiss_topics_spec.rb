@@ -15,7 +15,7 @@ describe "Filtering topics", type: :system, js: true do
     visit("/new")
 
     expect(topic_list).to have_topic(topic)
-    find(".dismiss-read").click
+    find(".dismiss-read", text: "Dismiss…").click
     expect(dismiss_new_modal).to have_dismiss_topics_checked
     expect(dismiss_new_modal).to have_dismiss_posts_checked
     expect(dismiss_new_modal).to have_untrack_unchecked

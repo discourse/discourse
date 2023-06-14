@@ -1430,7 +1430,7 @@ RSpec.describe Admin::UsersController do
     end
 
     shared_examples "user log out not allowed" do
-      it "prevents loging out of user with a 404 response" do
+      it "prevents logging out of user with a 404 response" do
         post "/admin/users/#{reg_user.id}/log_out.json"
 
         expect(response.status).to eq(404)

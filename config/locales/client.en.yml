@@ -1970,42 +1970,6 @@ en:
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
 
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_and_posts_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {are <strong>#</strong> topics}
-      } and { currentPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      } and { requiredPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Only staff can see this message.
-
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {are <strong>#</strong> topics}
-      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      }. Only staff can see this message.
-
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_posts_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentPosts, plural,
-          one {is <strong>#</strong> post}
-        other {are <strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least { requiredPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Only staff can see this message.
-
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_hour_MF: |
@@ -2090,10 +2054,13 @@ en:
           other {# minutes}
         }</b>.
 
-      enable: "Summarize This Topic"
+      enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Summarize"
       short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      strategy: 
+        button_title: "Summarize this topic"
+        title: "Topic summary"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -2525,6 +2492,7 @@ en:
         aria_label: Alt text for image
 
       delete_image_button: Delete Image
+      toggle_image_grid: Toggle image grid
 
     notifications:
       tooltip:
@@ -4421,6 +4389,12 @@ en:
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
+      categories_form:
+        save: "Save"
+        title: "Edit categories navigation"
+        filter_placeholder: "Filter categories"
+        no_categories: "There are no categories matching the given term."
+
       sections:
         custom:
           add: "Add custom section"
@@ -4527,6 +4501,7 @@ en:
               content: "Review"
               title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
+        global_section: "Global section, visible to everyone"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5458,6 +5433,7 @@ en:
             revoke_moderation: "revoke moderation"
             backup_create: "create backup"
             deleted_tag: "deleted tag"
+            update_directory_columns: "update directory columns"
             deleted_unused_tags: "deleted unused tags"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
@@ -5668,15 +5644,19 @@ en:
             minimum:
               key: "minimum"
               type: "integer"
-              description: "In text fields, specifies the minimum number of characters allowed."
+              description: "For text fields, specifies the minimum number of characters allowed."
             maximum:
               key: "maximum"
               type: "integer"
-              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+              description: "For text fields, specifies the maximum number of characters allowed."
             pattern:
               key: "pattern"
               type: "regex string"
-              description: "In text fields, a regular expression specifying the allowed input."
+              description: "For text fields, a regular expression specifying the allowed input."
+            type:
+              key: "type"
+              type: "string"
+              description: "For input fields, you can specify the type of input that should be expected (text|email|date|number|url|tel|color)"
         preview_modal:
           title: "Preview Template"
         field_placeholders:

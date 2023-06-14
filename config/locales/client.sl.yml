@@ -3355,6 +3355,8 @@ sl:
         other: "%{count} novih"
       more: "Več"
       all_categories: "Vse kategorije"
+      categories_form:
+        save: "Shrani"
       sections:
         custom:
           save: "Shrani"
@@ -3934,6 +3936,8 @@ sl:
               key: "najmanj"
             maximum:
               key: "največ"
+            type:
+              key: "tip"
       impersonate:
         title: "Poosebi uporabnika"
         help: "Uporabljajte to orodje za poosebljanje uporabnika za iskanje in odpravljanje napak. Ko končate se morate odjaviti."

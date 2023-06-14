@@ -19,7 +19,7 @@
 {{#if this.chatStateManager.isDrawerExpanded}}
   <div class="chat-drawer-content" {{did-insert this.fetchChannel}}>
     {{#if this.chat.activeChannel}}
-      <Chat::Thread::List
+      <Chat::ThreadList
         @channel={{this.chat.activeChannel}}
         @includeHeader={{false}}
       />

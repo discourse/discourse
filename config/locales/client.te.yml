@@ -1341,6 +1341,8 @@ te:
         one: "%{count} కొత్త"
         other: "%{count} కొత్త"
       more: "ఇంకా"
+      categories_form:
+        save: "భద్రపరుచు"
       sections:
         custom:
           save: "భద్రపరుచు"
@@ -1762,6 +1764,8 @@ te:
           validations:
             required:
               key: "కావాలి"
+            type:
+              key: "రకం"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."

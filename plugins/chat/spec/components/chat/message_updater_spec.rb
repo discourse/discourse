@@ -85,6 +85,27 @@ describe Chat::MessageUpdater do
     expect(chat_message.reload.message).to eq(og_message)
   end
 
+  it "errors when a blank message is sent" do
+    og_message = "This won't be changed!"
+    chat_message = create_chat_message(user1, og_message, public_chat_channel)
+    new_message = "    "
+
+    updater =
+      Chat::MessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: new_message,
+      )
+    expect(updater.failed?).to eq(true)
+    expect(updater.error.message).to match(
+      I18n.t(
+        "chat.errors.minimum_length_not_met",
+        { count: SiteSetting.chat_minimum_message_length },
+      ),
+    )
+    expect(chat_message.reload.message).to eq(og_message)
+  end
+
   it "errors if a user other than the message user is trying to edit the message" do
     og_message = "This won't be changed!"
     chat_message = create_chat_message(user1, og_message, public_chat_channel)

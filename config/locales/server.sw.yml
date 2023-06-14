@@ -905,7 +905,6 @@ sw:
     embed_support_markdown: "Ruhusu umbizo wa Markdown kwa ajili ya machapisho yaliyoambatanishwa."
     embed_post_limit: "Kiwango cha juu cha machapisho yakuambatanisha."
     embed_username_required: "Jina la mtumiaji kwa ajili ya kutengeneza mada linahitajika."
-    show_create_topics_notice: "Kama tovuti ina machapisho chini ya 5, onyesha notisi kuwaambia viongozi kutengeneza mada mpya."
     delete_drafts_older_than_n_days: "Futa mswadajaribio zenye umri zaidi ya siku (n)."
     enable_emoji: "Ruhusu ishara"
     emoji_set: "Ungependa ishara yako iwe vipi?"

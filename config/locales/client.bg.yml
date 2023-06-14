@@ -1812,36 +1812,6 @@ bg:
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
     staff_writes_only_mode:
       enabled: "Този сайт е в режим само за персонал. Моля, продължете да сърфирате, но отговарянето, харесванията и други действия са ограничени само до членове на персонала."
-    too_few_topics_and_posts_notice_MF: |
-      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentTopics, plural,
-          one {е <strong>#</strong> тема}
-        other {са <strong>#</strong> теми}
-      } и { currentPosts, plural,
-          one {<strong>#</strong> публикация}
-        other {<strong>#</strong> публикации}
-      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredTopics, plural,
-          one {<strong>#</strong> тема}
-        other {<strong>#</strong> теми}
-      } и { requiredPosts, plural,
-          one {<strong>#</strong> публикация}
-        other {<strong>#</strong> публикации}
-      }. Само служителите могат да видят това съобщение.
-    too_few_topics_notice_MF: |
-      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentTopics, plural,
-          one {е <strong>#</strong> тема}
-        other {са <strong>#</strong> теми}
-      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredTopics, plural,
-          one {<strong>#</strong> тема}
-        other {<strong>#</strong> теми}
-      }. Само служителите могат да видят това съобщение.
-    too_few_posts_notice_MF: |
-      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentPosts, plural,
-          one {е <strong>#</strong> публикация}
-        other {са <strong>#</strong> публикации}
-      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredPosts, plural,
-          one {<strong>#</strong> публикация}
-        other {<strong>#</strong> публикации}
-      }. Само служителите могат да видят това съобщение.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
@@ -3395,6 +3365,8 @@ bg:
         other: "%{count} нови"
       more: "Повече"
       all_categories: "Всички категории"
+      categories_form:
+        save: "Запази "
       sections:
         custom:
           add: "Добавяне на персонализиран раздел"
@@ -3974,13 +3946,13 @@ bg:
             minimum:
               key: "минимум"
               type: "цяло число"
-              description: "В текстовите полета указва минималния разрешен брой знаци."
             maximum:
               key: "максимум"
               type: "цяло число"
-              description: "В текстовите полета указва максималния разрешен брой знаци. В падащите менюта за множествен избор указва максималния брой опции, които могат да бъдат избрани."
             pattern:
               key: "модел"
+            type:
+              key: "тип"
         preview_modal:
           title: "Преглед на шаблон"
         field_placeholders:

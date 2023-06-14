@@ -19,13 +19,7 @@
     "moment": "2.29.4",
     "moment-timezone": "0.5.39",
     "pikaday": "1.8.2",
-    "squoosh": "discourse/squoosh#dc9649d",
-    "workbox-cacheable-response": "^4.3.1",
-    "workbox-core": "^4.3.1",
-    "workbox-expiration": "^4.3.1",
-    "workbox-routing": "^4.3.1",
-    "workbox-strategies": "^4.3.1",
-    "workbox-sw": "^4.3.1"
+    "squoosh": "discourse/squoosh#dc9649d"
   },
   "devDependencies": {
     "@mixer/parallel-prettier": "^2.0.3",

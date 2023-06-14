@@ -202,23 +202,14 @@
       }
 
       .chat-channel-unread-indicator {
+        @include chat-unread-indicator;
         display: flex;
         align-items: center;
         justify-content: center;
         width: auto;
-        min-width: 14px;
-        padding: 2px;
-        font-size: var(--font-down-3);
-        border-radius: 1em;
-        background: var(--tertiary-med-or-tertiary);
-
-        &.urgent {
-          background: var(--success);
-        }
-
-        .number {
-          line-height: 1rem;
-        }
+        height: auto;
+        min-width: 0.6em;
+        padding: 0.3em 0.5em;
       }
     }
 

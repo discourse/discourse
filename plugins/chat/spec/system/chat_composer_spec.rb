@@ -14,80 +14,6 @@ RSpec.describe "Chat composer", type: :system do
     sign_in(current_user)
   end
 
-  context "when replying to a message" do
-    it "adds the reply indicator to the composer" do
-      chat_page.visit_channel(channel_1)
-      channel_page.reply_to(message_1)
-
-      expect(page).to have_selector(
-        ".chat-composer-message-details .chat-reply__username",
-        text: message_1.user.username,
-      )
-    end
-
-    context "with HTML tags" do
-      before { message_1.update!(message: "<mark>not marked</mark>") }
-
-      it "renders text in the details" do
-        chat_page.visit_channel(channel_1)
-        channel_page.reply_to(message_1)
-
-        expect(
-          find(".chat-composer-message-details .chat-reply__excerpt")["innerHTML"].strip,
-        ).to eq("not marked")
-      end
-    end
-  end
-
-  context "when editing a message" do
-    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
-
-    it "adds the edit indicator" do
-      chat_page.visit_channel(channel_1)
-      channel_page.edit_message(message_2)
-
-      expect(page).to have_selector(
-        ".chat-composer-message-details .chat-reply__username",
-        text: current_user.username,
-      )
-      expect(channel_page.composer.value).to eq(message_2.message)
-    end
-
-    it "updates the message instantly" do
-      chat_page.visit_channel(channel_1)
-      page.driver.browser.network_conditions = { offline: true }
-
-      channel_page.edit_message(message_2)
-      find(".chat-composer__input").send_keys("instant")
-      channel_page.click_send_message
-
-      expect(channel_page).to have_message(text: message_2.message + "instant")
-      page.driver.browser.network_conditions = { offline: false }
-    end
-
-    context "when pressing escape" do
-      it "cancels editing" do
-        chat_page.visit_channel(channel_1)
-        channel_page.edit_message(message_2)
-        find(".chat-composer__input").send_keys(:escape)
-
-        expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
-        expect(channel_page.composer.value).to eq("")
-      end
-    end
-
-    context "when closing edited message" do
-      it "cancels editing" do
-        chat_page.visit_channel(channel_1)
-        channel_page.edit_message(message_2)
-        find(".cancel-message-action").click
-
-        expect(page).to have_no_selector(".chat-composer-message-details .chat-reply__username")
-        expect(channel_page.composer.value).to eq("")
-      end
-    end
-  end
-
   context "when adding an emoji through the picker" do
     xit "adds the emoji to the composer" do
       chat_page.visit_channel(channel_1)
@@ -169,32 +95,6 @@ RSpec.describe "Chat composer", type: :system do
     end
   end
 
-  context "when pasting link over selected text" do
-    it "outputs a markdown link" do
-      modifier = /darwin/i =~ RbConfig::CONFIG["host_os"] ? :command : :control
-      select_text = <<-JS
-        const element = document.querySelector(arguments[0]);
-        element.focus();
-        element.setSelectionRange(0, element.value.length)
-      JS
-
-      chat_page.visit_channel(channel_1)
-
-      find("body").send_keys("https://www.discourse.org")
-      page.execute_script(select_text, ".chat-composer__input")
-
-      page.send_keys [modifier, "c"]
-      page.send_keys [:backspace]
-
-      find("body").send_keys("discourse")
-      page.execute_script(select_text, ".chat-composer__input")
-
-      page.send_keys [modifier, "v"]
-
-      expect(channel_page.composer.value).to eq("[discourse](https://www.discourse.org)")
-    end
-  end
-
   context "when editing a message with no length" do
     it "deletes the message" do
       chat_page.visit_channel(channel_1)
@@ -211,10 +111,9 @@ RSpec.describe "Chat composer", type: :system do
 
     it "works" do
       chat_page.visit_channel(channel_1)
-      find("body").send_keys("1")
-      channel_page.click_send_message
+      channel_page.send_message("1")
 
-      expect(channel_page).to have_message(text: "1")
+      expect(channel_page.messages).to have_message(text: "1")
     end
   end
 

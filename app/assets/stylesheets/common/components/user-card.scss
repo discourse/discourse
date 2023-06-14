@@ -37,7 +37,7 @@
 .user-card,
 .group-card {
   width: var(--card-width);
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;

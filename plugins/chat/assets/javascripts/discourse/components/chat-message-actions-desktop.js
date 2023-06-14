@@ -31,12 +31,10 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   get messageInteractor() {
-    const activeMessage = this.chat.activeMessage;
-
     return new ChatMessageInteractor(
       getOwner(this),
-      activeMessage.model,
-      activeMessage.context
+      this.message,
+      this.context
     );
   }
 

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe User do
+  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+
   fab!(:group) { Fabricate(:group) }
 
-  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+  it_behaves_like "it has custom fields"
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")

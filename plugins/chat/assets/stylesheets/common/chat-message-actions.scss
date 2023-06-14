@@ -76,6 +76,15 @@
     }
   }
 
+  &.has-no-secondary-actions {
+    .reply-btn {
+      border-right: 1px solid var(--primary-300);
+      border-top: 1px solid var(--primary-300);
+      border-bottom: 1px solid var(--primary-300);
+      border-radius: 0 0.25em 0.25em 0;
+    }
+  }
+
   .more-buttons.dropdown-select-box {
     .select-kit-header {
       background: none;
@@ -118,7 +127,7 @@
 
     .select-kit-body {
       padding: 0.5rem;
-      box-shadow: shadow("card");
+      box-shadow: var(--shadow-card);
       border: 1px solid var(--primary-300);
     }
 
