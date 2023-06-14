@@ -331,7 +331,7 @@ RSpec.describe Admin::SiteSettingsController do
           end
         end
 
-        it "enqueus the backfilling job if update_existing_user param is present when updating default sidebar tags" do
+        it "enqueues the backfilling job if update_existing_user param is present when updating default sidebar tags" do
           SiteSetting.default_sidebar_tags = "tag3"
 
           expect_enqueued_with(
@@ -352,7 +352,7 @@ RSpec.describe Admin::SiteSettingsController do
           end
         end
 
-        it "enqueus the backfilling job if update_existing_user param is present when updating default sidebar categories" do
+        it "enqueues the backfilling job if update_existing_user param is present when updating default sidebar categories" do
           SiteSetting.default_sidebar_categories = "3|4"
 
           expect_enqueued_with(
@@ -607,7 +607,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(200)
         end
 
-        it "does not allow changing of unconfigurable settings" do
+        it "does not allow changing of non-configurable settings" do
           SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
 
           put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "not allowed" }

@@ -245,6 +245,10 @@ en:
     errors:
       <<: *errors
 
+  custom_fields:
+    validations:
+      max_items: "Maximum number of custom fields for this entity has been reached (%{max_items_number})"
+      max_value_length: "Maximum length for a custom field value has been reached (%{max_value_length})"
   invite:
     expired: "Your invite token has expired. Please <a href='%{base_url}/about'>contact staff</a>."
     not_found: "Your invite token is invalid. Please <a href='%{base_url}/about'>contact staff</a>."
@@ -1596,6 +1600,8 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summarize This Topic'"
     summary_timeline_button: "Show a 'Summarize' button in the timeline"
+    summarization_strategy: "Additional ways to summarize content registered by plugins"
+    custom_summarization_allowed_groups: "Groups allowed to summarize contents using the `summarization_strategy`."
 
     enable_personal_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
     personal_message_enabled_groups: "Allow users within these groups to create messages and reply to messages. Trust level groups include all trust levels above that number, for example choosing trust_level_1 also allows trust_level_2, 3, 4 users to send PMs. Note that staff can always send messages no matter what."
@@ -2422,6 +2428,7 @@ en:
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
+    experimental_post_image_grid: "EXPERIMENTAL: Enables a [grid] tag in posts to display images in a grid layout."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

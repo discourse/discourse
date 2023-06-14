@@ -4,6 +4,8 @@
 RSpec.describe Category do
   fab!(:user) { Fabricate(:user) }
 
+  it_behaves_like "it has custom fields"
+
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
 

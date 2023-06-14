@@ -20,7 +20,7 @@
   &.bad {
     background: var(--danger-medium);
     color: white;
-    box-shadow: shadow("dropdown");
+    box-shadow: var(--shadow-dropdown);
   }
   &.hide,
   &.good {

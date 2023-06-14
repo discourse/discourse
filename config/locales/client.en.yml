@@ -2054,10 +2054,13 @@ en:
           other {# minutes}
         }</b>.
 
-      enable: "Summarize This Topic"
+      enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Summarize"
       short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      strategy: 
+        button_title: "Summarize this topic"
+        title: "Topic summary"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."

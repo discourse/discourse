@@ -89,7 +89,7 @@
   overflow-y: auto;
   z-index: z("composer", "dropdown") + 1;
   padding: 1.5em;
-  box-shadow: shadow("dropdown");
+  box-shadow: var(--shadow-dropdown);
   background: var(--highlight-bg);
 
   &.urgent {

@@ -595,7 +595,7 @@ RSpec.describe Admin::BackupsController do
           )
         end
 
-        it "works with multiple chunks when the final chunk is just the remaninder" do
+        it "works with multiple chunks when the final chunk is just the remainder" do
           freeze_time
           described_class.any_instance.expects(:has_enough_space_on_disk?).times(3).returns(true)
 

@@ -1591,8 +1591,6 @@ ko:
       enabled: "이 사이트는 현재 읽기 전용 모드입니다. 탐색은 가능하지만 댓글, 좋아요 및 기타 작업은 일시적으로 비활성화되었습니다."
       login_disabled: "사이트가 읽기 전용 모드인 동안에는 로그인이 비활성화됩니다."
       logout_disabled: "사이트가 읽기 전용 모드인 동안에는 로그아웃이 비활성화됩니다."
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">토론을 시작</a> 합시다 <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/">!</a> {currentPosts, plural, one {is <strong>#</strong> post} other {are <strong>#</strong> posts}}가 있습니다. 방문자는 더 읽고 답장해야합니다. – {requiredPosts, plural, one { <strong>#</strong> post} other { <strong>#</strong> posts}} 이상을 권장합니다. 직원 만이 메시지를 볼 수 있습니다.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {#개의 오류/시간} other {#개의 오류/시간}}</a>이 사이트 설정 한계인 {limit, plural, one {#개의 오류/시간} other {#개의 오류/시간}}에 도달했습니다.
@@ -3520,6 +3518,8 @@ ko:
       more: "더 보기"
       all_categories: "모든 카테고리"
       all_tags: "모든 태그"
+      categories_form:
+        save: "저장"
       sections:
         custom:
           save: "저장"
@@ -4587,6 +4587,8 @@ ko:
               key: "최소"
             maximum:
               key: "최대"
+            type:
+              key: "유형"
       impersonate:
         title: "가장"
         help: "이 툴을 사용하면 디버깅을 위해 사용자 계정으로 로그인할 수 있습니다. 사용이 끝나면 로그아웃해야 합니다."

@@ -3531,6 +3531,8 @@ lt:
         other: "%{count} nauja"
       more: "Daugiau"
       all_categories: "Visos kategorijos"
+      categories_form:
+        save: "Išsaugoti"
       sections:
         custom:
           save: "Išsaugoti"
@@ -4478,6 +4480,8 @@ lt:
               key: "minimumas"
             maximum:
               key: "maksimalus"
+            type:
+              key: "tipas"
       impersonate:
         title: "Apsimesti"
         help: "Naudok šį įrankį, kad pavaizduotum kito vartotojo paskyrą dėl klaidų paieškos ir sistemos atstatymo. Kai tik baigsi procedūrą, turėsi atsijungti."

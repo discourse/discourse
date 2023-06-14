@@ -1916,52 +1916,6 @@ ru:
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
     staff_writes_only_mode:
       enabled: "Сайт находится в режиме «только для персонала». Продолжайте просмотр, но отвечать, ставить лайки и выполнять другие действия, влияющие на контент, могут только сотрудники."
-    too_few_topics_and_posts_notice_MF: |
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentTopics, plural,
-          one {<strong>#</strong> тема}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      } и { currentPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredTopics, plural,
-          one {<strong>#</strong> тему}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      } и { requiredPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Только персонал может видеть это сообщение.
-    too_few_topics_notice_MF: |
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentTopics, plural,
-          one {<strong>#</strong> тема}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredTopics, plural,
-          one {<strong>#</strong> тему}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      }. Только персонал может видеть это сообщение.
-    too_few_posts_notice_MF: |
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Только персонал может видеть это сообщение.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}</a>: достигнут предел для настроек сайта — {limit, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}.
@@ -4376,6 +4330,8 @@ ru:
       more: "Ещё"
       all_categories: "Все категории"
       all_tags: "Все теги"
+      categories_form:
+        save: "Сохранить"
       sections:
         custom:
           save: "Сохранить"
@@ -5504,6 +5460,8 @@ ru:
               key: "минимум"
             maximum:
               key: "максимум"
+            type:
+              key: "тип опроса"
       impersonate:
         title: "Войти от имени пользователя"
         help: "Позволяет войти от имени пользователя в целях отладки. По окончании отладки необходимо выйти из системы и зайти снова под своим аккаунтом."

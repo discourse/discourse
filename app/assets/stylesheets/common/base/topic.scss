@@ -69,7 +69,7 @@ $topic-progress-height: 42px;
       overflow-y: auto;
       z-index: z("timeline");
       padding: 10px 10px 35px 10px;
-      box-shadow: shadow("dropdown");
+      box-shadow: var(--shadow-dropdown);
       background: var(--tertiary-low);
 
       .close {

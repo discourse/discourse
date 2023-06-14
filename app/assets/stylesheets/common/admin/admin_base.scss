@@ -380,7 +380,7 @@ $mobile-breakpoint: 700px;
     width: 460px;
     right: 0;
     z-index: z("dropdown");
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     margin-top: -2px;
     background-color: var(--secondary);
     padding: 12px 12px 5px;

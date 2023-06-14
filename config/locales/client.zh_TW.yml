@@ -2866,6 +2866,8 @@ zh_TW:
       more: "更多"
       all_categories: "所有分類"
       all_tags: "所有標籤"
+      categories_form:
+        save: "保存"
       sections:
         custom:
           save: "保存"
@@ -3710,6 +3712,8 @@ zh_TW:
           validations:
             required:
               key: "必填"
+            type:
+              key: "類型"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
