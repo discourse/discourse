@@ -12,7 +12,7 @@ export default function createDTooltip(target, content) {
   return tippy(target, {
     interactive: false,
     content,
-    trigger: hasTouchCapabilities ? "click" : "mouseenter",
+    trigger: hasTouchCapabilities() ? "click" : "mouseenter",
     theme: "d-tooltip",
     arrow: false,
     placement: "bottom-start",
