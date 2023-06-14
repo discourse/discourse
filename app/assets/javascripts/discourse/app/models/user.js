@@ -423,6 +423,8 @@ const User = RestModel.extend({
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "POST",
       data: { email },
+    }).then(() => {
+      this.unconfirmed_emails.pushObject(email);
     });
   },
 
@@ -430,6 +432,8 @@ const User = RestModel.extend({
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "PUT",
       data: { email },
+    }).then(() => {
+      this.unconfirmed_emails.pushObject(email);
     });
   },
 
