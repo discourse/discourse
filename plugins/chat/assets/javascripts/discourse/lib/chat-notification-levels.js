@@ -3,7 +3,7 @@ import {
   buttonDetails,
 } from "discourse/lib/notification-levels";
 
-export const threadLevels = [
+export const threadNotificationButtonLevels = [
   NotificationLevels.TRACKING,
   NotificationLevels.REGULAR,
 ].map(buttonDetails);

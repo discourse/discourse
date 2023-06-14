@@ -303,14 +303,10 @@ export default class ChatApi extends Service {
    *  "regular" and "tracking" for now.
    * @returns {Promise}
    */
-  updateCurrentUserThreadNotificationsSettings(
-    channelId,
-    threadId,
-    notificationLevel
-  ) {
+  updateCurrentUserThreadNotificationsSettings(channelId, threadId, data) {
     return this.#putRequest(
       `/channels/${channelId}/threads/${threadId}/notifications-settings/me`,
-      { notification_level: notificationLevel }
+      { notification_level: data.notificationLevel }
     );
   }
 

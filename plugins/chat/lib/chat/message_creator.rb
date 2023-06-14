@@ -231,14 +231,12 @@ module Chat
 
     def post_process_resolved_thread
       return if resolved_thread.blank?
+
       resolved_thread.increment_replies_count_cache
-      Chat::UserChatThreadMembership.find_or_create_by!(user: @user, thread: resolved_thread)
+      resolved_thread.add(@user)
 
       if resolved_thread.original_message_user != @user
-        Chat::UserChatThreadMembership.find_or_create_by!(
-          user: resolved_thread.original_message_user,
-          thread: resolved_thread,
-        )
+        resolved_thread.add(resolved_thread.original_message_user)
       end
     end
   end

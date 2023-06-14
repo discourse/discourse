@@ -1,10 +1,10 @@
 import NotificationsButtonComponent from "select-kit/components/notifications-button";
-import { threadLevels } from "discourse/plugins/chat/discourse/lib/chat-notification-levels";
+import { threadNotificationButtonLevels } from "discourse/plugins/chat/discourse/lib/chat-notification-levels";
 
 export default NotificationsButtonComponent.extend({
   pluginApiIdentifiers: ["thread-notifications-button"],
   classNames: ["thread-notifications-button"],
-  content: threadLevels,
+  content: threadNotificationButtonLevels,
 
   selectKitOptions: {
     i18nPrefix: "chat.thread.notifications",

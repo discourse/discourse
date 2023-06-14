@@ -27,10 +27,11 @@ export default class ChatThreadHeader extends Component {
   }
 
   get threadNotificationLevel() {
-    return (
-      this.args.thread.currentUserMembership?.notificationLevel ||
-      NotificationLevels.REGULAR
-    );
+    return this.membership?.notificationLevel || NotificationLevels.REGULAR;
+  }
+
+  get membership() {
+    return this.args.thread.currentUserMembership;
   }
 
   @action
@@ -41,10 +42,11 @@ export default class ChatThreadHeader extends Component {
 
   @action
   updateThreadNotificationLevel(val) {
-    const originalVal =
-      this.args.thread.currentUserMembership?.notificationLevel;
-    if (this.args.thread.currentUserMembership) {
-      this.args.thread.currentUserMembership.notificationLevel = val;
+    let originalVal;
+
+    if (this.membership) {
+      originalVal = this.membership.notificationLevel;
+      this.membership.notificationLevel = val;
     } else {
       this.args.thread.currentUserMembership = UserChatThreadMembership.create({
         notification_level: val,
@@ -56,12 +58,15 @@ export default class ChatThreadHeader extends Component {
       .updateCurrentUserThreadNotificationsSettings(
         this.args.thread.channel.id,
         this.args.thread.id,
-        val
+        { notificationLevel: val }
       )
+      .then((response) => {
+        this.membership.last_read_message_id =
+          response.membership.last_read_message_id;
+      })
       .catch((err) => {
-        if (this.args.thread.currentUserMembership) {
-          this.args.thread.currentUserMembership.notificationLevel =
-            originalVal;
+        if (this.membership && originalVal) {
+          this.membership.notificationLevel = originalVal;
         }
         popupAjaxError(err);
       });
