@@ -11,7 +11,10 @@ module Jobs
 
       @old_username = args[:old_username].unicode_normalize
       @new_username = args[:new_username].unicode_normalize
-      @avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
+
+      avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
+
+      @quote_rewriter = QuoteRewriter.new(@user_id, @old_username, @new_username, avatar_img)
 
       @raw_mention_regex =
         /
@@ -26,13 +29,10 @@ module Jobs
         )
       /ix
 
-      @raw_quote_regex = /(\[quote\s*=\s*["'']?)#{@old_username}(\,?[^\]]*\])/i
-
       cooked_username = PrettyText::Helpers.format_username(@old_username)
       @cooked_mention_username_regex = /\A@#{cooked_username}\z/i
       @cooked_mention_user_path_regex =
         %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
-      @cooked_quote_username_regex = /(?<=\s)#{cooked_username}(?=:)/i
 
       update_posts
       update_revisions
@@ -160,10 +160,7 @@ module Jobs
     end
 
     def update_raw(raw)
-      raw.gsub(@raw_mention_regex, "@#{@new_username}").gsub(
-        @raw_quote_regex,
-        "\\1#{@new_username}\\2",
-      )
+      @quote_rewriter.rewrite_raw(raw.gsub(@raw_mention_regex, "@#{@new_username}"))
     end
 
     # Uses Nokogiri instead of rebake, because it works for posts and revisions
@@ -182,28 +179,7 @@ module Jobs
           ) if a["href"]
         end
 
-      doc
-        .css("aside.quote")
-        .each do |aside|
-          next unless div = aside.at_css("div.title")
-
-          username_replaced = false
-
-          aside["data-username"] = @new_username if aside["data-username"] == @old_username
-
-          div.children.each do |child|
-            if child.text?
-              content = child.content
-              username_replaced =
-                content.gsub!(@cooked_quote_username_regex, @new_username).present?
-              child.content = content if username_replaced
-            end
-          end
-
-          if username_replaced || quotes_correct_user?(aside)
-            div.at_css("img.avatar")&.replace(@avatar_img)
-          end
-        end
+      @quote_rewriter.rewrite_cooked(doc)
 
       doc.to_html
     end
