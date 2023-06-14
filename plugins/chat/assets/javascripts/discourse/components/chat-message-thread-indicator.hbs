@@ -11,7 +11,7 @@
   </div>
   <div class="chat-message-thread-indicator__body">
     <div class="chat-message-thread-indicator__last-reply-metadata">
-      <span class="chat-message-thread-indicator__last-reply-username">
+      <span class="chat-message-thread-indicator__last-reply-user">
         {{#if this.site.mobileView}}
           <div class="chat-message-thread-indicator__last-reply-avatar -mobile">
             <ChatUserAvatar
@@ -20,7 +20,9 @@
             />
           </div>
         {{/if}}
-        {{@message.thread.preview.lastReplyUser.username}}
+        <span class="chat-message-thread-indicator__last-reply-username">
+          {{@message.thread.preview.lastReplyUser.username}}
+        </span>
       </span>
       <span>{{i18n "chat.thread.last_reply"}}</span>
       <span class="chat-message-thread-indicator__last-reply-datetime">
