@@ -12,9 +12,9 @@ module Jobs
       @old_username = args[:old_username].unicode_normalize
       @new_username = args[:new_username].unicode_normalize
 
-      avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
+      @avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
 
-      @quote_rewriter = QuoteRewriter.new(@user_id, @old_username, @new_username, avatar_img)
+      @quote_rewriter = QuoteRewriter.new(@user_id)
 
       @raw_mention_regex =
         /
@@ -160,7 +160,11 @@ module Jobs
     end
 
     def update_raw(raw)
-      @quote_rewriter.rewrite_raw(raw.gsub(@raw_mention_regex, "@#{@new_username}"))
+      @quote_rewriter.rewrite_raw_username(
+        raw.gsub(@raw_mention_regex, "@#{@new_username}"),
+        @old_username,
+        @new_username,
+      )
     end
 
     # Uses Nokogiri instead of rebake, because it works for posts and revisions
@@ -179,7 +183,7 @@ module Jobs
           ) if a["href"]
         end
 
-      @quote_rewriter.rewrite_cooked(doc)
+      @quote_rewriter.rewrite_cooked_username(doc, @old_username, @new_username, @avatar_img)
 
       doc.to_html
     end

@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
 class QuoteRewriter
-  def initialize(user_id, old_username, new_username, avatar_img)
+  def initialize(user_id)
     @user_id = user_id
-    @old_username = old_username
-    @new_username = new_username
-    @avatar_img = avatar_img
   end
 
-  def rewrite_raw(raw)
+  def rewrite_raw_username(raw, old_username, new_username)
     pattern =
       Regexp.union(
         /(?<pre>\[quote\s*=\s*["'']?.*username:)#{old_username}(?<post>\,?[^\]]*\])/i,
@@ -18,7 +15,7 @@ class QuoteRewriter
     raw.gsub(pattern, "\\k<pre>#{new_username}\\k<post>")
   end
 
-  def rewrite_cooked(cooked)
+  def rewrite_cooked_username(cooked, old_username, new_username, avatar_img)
     pattern = /(?<=\s)#{PrettyText::Helpers.format_username(old_username)}(?=:)/i
 
     cooked
@@ -70,7 +67,7 @@ class QuoteRewriter
 
   private
 
-  attr_reader :user_id, :old_username, :new_username, :avatar_img
+  attr_reader :user_id
 
   def quotes_correct_user?(aside)
     Post.exists?(topic_id: aside["data-topic"], post_number: aside["data-post"], user_id: user_id)

@@ -25,28 +25,6 @@ module Jobs
     attr_reader :user, :old_display_name, :new_display_name, :quote_rewriter
 
     def update_posts
-      updated_post_ids = Set.new
-
-      # Other people mentioning this user
-      Post
-        .with_deleted
-        .joins(mentioned("posts.id"))
-        .where("a.user_id = :user_id", user_id: @user_id)
-        .find_each do |post|
-          update_post(post)
-          updated_post_ids << post.id
-        end
-
-      # User mentioning self (not included in post_actions table)
-      Post
-        .with_deleted
-        .where("raw ILIKE ?", "%@#{@old_username}%")
-        .where("posts.user_id = :user_id", user_id: @user_id)
-        .find_each do |post|
-          update_post(post)
-          updated_post_ids << post.id
-        end
-
       Post
         .with_deleted
         .joins(quoted("posts.id"))
@@ -90,36 +68,18 @@ module Jobs
     end
 
     def update_raw(raw)
-      @quote_rewriter.rewrite_raw(raw.gsub(@raw_mention_regex, "@#{@new_username}"))
+      @quote_rewriter.rewrite_raw_display_name(raw, old_display_name, new_display_name)
     end
 
     # Uses Nokogiri instead of rebake, because it works for posts and revisions
     # and there is no reason to invalidate oneboxes, run the post analyzer etc.
-    # when only the username changes.
+    # when only the display name changes.
     def update_cooked(cooked)
       doc = Nokogiri::HTML5.fragment(cooked)
 
-      doc
-        .css("a.mention")
-        .each do |a|
-          a.content = a.content.gsub(@cooked_mention_username_regex, "@#{@new_username}")
-          a["href"] = a["href"].gsub(
-            @cooked_mention_user_path_regex,
-            "/u/#{UrlHelper.encode_component(@new_username)}",
-          ) if a["href"]
-        end
-
-      @quote_rewriter.rewrite_cooked(doc)
+      @quote_rewriter.rewrite_cooked_display_name(doc, old_display_name, new_display_name)
 
       doc.to_html
-    end
-
-    def quotes_correct_user?(aside)
-      Post.exists?(
-        topic_id: aside["data-topic"],
-        post_number: aside["data-post"],
-        user_id: @user_id,
-      )
     end
   end
 end

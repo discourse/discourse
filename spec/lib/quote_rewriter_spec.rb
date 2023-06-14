@@ -88,7 +88,7 @@ RSpec.describe QuoteRewriter do
     end
   end
 
-  describe "#rewrite_raw_display_name" do
+  describe "#rewrite_cooked_display_name" do
     let(:doc) { Nokogiri::HTML5.fragment(post.cooked) }
 
     context "when using the old quote format" do
