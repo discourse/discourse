@@ -39,6 +39,14 @@ body.invite-page {
   .d-header {
     display: none;
   }
+  &.has-sidebar-page {
+    #main-outlet-wrapper {
+      grid-template-columns: 0; // hides the sidebar
+    }
+    .d-header {
+      display: none;
+    }
+  }
 }
 
 // Create Account + Login
