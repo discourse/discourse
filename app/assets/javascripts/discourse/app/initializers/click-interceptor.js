@@ -6,9 +6,7 @@ export default {
 
   initialize(container, app) {
     this.rootElement = document.querySelector(app.rootElement);
-    this.rootElement.addEventListener("click", this.interceptClick, {
-      capture: true,
-    });
+    this.rootElement.addEventListener("click", this.interceptClick);
     window.addEventListener("hashchange", this.hashChanged);
   },
 
