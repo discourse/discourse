@@ -11,6 +11,13 @@
     margin-bottom: 0.25rem;
   }
 
+  &__last-reply-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: auto;
+  }
+
   &__last-reply-avatar {
     align-self: center;
     .avatar {
@@ -20,10 +27,7 @@
   }
 
   &__last-reply-username {
-    display: flex;
-    align-items: center;
     margin-right: auto;
-    gap: 0.5rem;
   }
 
   &__last-reply-excerpt {

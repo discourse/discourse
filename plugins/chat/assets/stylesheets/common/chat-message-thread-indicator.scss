@@ -4,7 +4,6 @@
   gap: 1rem;
   cursor: pointer;
   grid-area: threadindicator;
-  width: min-content;
   max-width: 1000px;
   background-color: var(--primary-very-low);
   margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
@@ -12,14 +11,6 @@
   padding-inline: 0.5rem;
   border-radius: 8px;
   color: var(--primary);
-
-  .chat-drawer & {
-    align-items: stretch;
-    flex-wrap: wrap;
-    width: auto;
-    max-width: 100%;
-    gap: 0.25rem;
-  }
 
   &:visited,
   &:hover {
@@ -33,47 +24,25 @@
   &__participants {
     flex-shrink: 0;
     align-self: flex-start;
-
-    .chat-drawer & {
-      align-self: flex-end;
-      flex-basis: 100%;
-    }
   }
 
   &__last-reply-avatar {
     align-self: flex-start;
     .chat-user-avatar {
       width: auto !important;
-
-      .chat-drawer & {
-        display: inline-block;
-      }
     }
   }
 
   &__last-reply-metadata {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
-
-    .chat-drawer & {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-    }
   }
 
   &__last-reply-label {
     margin-right: 0.25rem;
-  }
-
-  &__last-reply-user {
-    .chat-drawer & {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-right: auto;
-    }
   }
 
   &__last-reply-username {
@@ -83,23 +52,13 @@
   }
 
   &__last-reply-excerpt {
-    .chat-drawer & {
-      white-space: wrap;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      margin-left: calc(26px + 0.5rem);
-    }
+    @include ellipsis;
   }
 
   &__body {
     overflow: hidden;
     white-space: nowrap;
     flex-shrink: 1;
-
-    .chat-drawer & {
-      flex-grow: 1;
-    }
   }
 
   &__replies-count {
