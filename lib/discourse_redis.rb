@@ -213,10 +213,6 @@ class DiscourseRedis
     end
   end
 
-  def delete_prefixed(prefix)
-    DiscourseRedis.ignore_readonly { keys("#{prefix}*").each { |k| Discourse.redis.del(k) } }
-  end
-
   def reconnect
     @redis._client.reconnect
   end

@@ -8,10 +8,8 @@ RSpec.describe TopicViewSerializer do
     JSON.parse(MultiJson.dump(serializer)).deep_symbolize_keys!
   end
 
-  before do
-    # ensure no suggested ids are cached cause that can muck up suggested
-    RandomTopicSelector.clear_cache!
-  end
+  # Ensure no suggested ids are cached cause that can muck up suggested
+  use_redis_snapshotting
 
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { Fabricate(:user) }

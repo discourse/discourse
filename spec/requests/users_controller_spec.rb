@@ -327,10 +327,9 @@ RSpec.describe UsersController do
       end
 
       context "with rate limiting" do
-        before do
-          RateLimiter.clear_all!
-          RateLimiter.enable
-        end
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
 
         it "rate limits reset passwords" do
           freeze_time
@@ -4179,6 +4178,8 @@ RSpec.describe UsersController do
     end
 
     context "with a session variable" do
+      use_redis_snapshotting
+
       it "raises an error with an invalid session value" do
         post_user
 
@@ -4250,7 +4251,6 @@ RSpec.describe UsersController do
 
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
-        RateLimiter.clear_all!
         freeze_time
 
         user = post_user
@@ -4352,7 +4352,6 @@ RSpec.describe UsersController do
 
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
-        RateLimiter.clear_all!
         freeze_time
 
         user = inactive_user
@@ -5279,6 +5278,8 @@ RSpec.describe UsersController do
   describe "#enable_second_factor_totp" do
     before { sign_in(user1) }
 
+    use_redis_snapshotting
+
     def create_totp
       stub_secure_session_confirmed
       post "/users/create_second_factor_totp.json"
@@ -5301,7 +5302,6 @@ RSpec.describe UsersController do
 
     it "rate limits by IP address" do
       RateLimiter.enable
-      RateLimiter.clear_all!
 
       create_totp
       staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
@@ -5320,7 +5320,6 @@ RSpec.describe UsersController do
 
     it "rate limits by username" do
       RateLimiter.enable
-      RateLimiter.clear_all!
 
       create_totp
       staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
