@@ -72,7 +72,7 @@ module Reports::ModeratorsActivity
       ),
       flag_count AS (
           WITH period_actions AS (
-          SELECT agreed_by_id, 
+          SELECT agreed_by_id,
           disagreed_by_id,
           deferred_by_id
           FROM post_actions
@@ -106,7 +106,7 @@ module Reports::ModeratorsActivity
           )
       SELECT
       COALESCE(af.user_id, df.user_id, def.user_id) AS user_id,
-      COALESCE(af.flag_count, 0) + COALESCE(df.flag_count, 0) + COALESCE(def.flag_count, 0) AS flag_count 
+      COALESCE(af.flag_count, 0) + COALESCE(df.flag_count, 0) + COALESCE(def.flag_count, 0) AS flag_count
       FROM agreed_flags af
       FULL OUTER JOIN disagreed_flags df
       ON df.user_id = af.user_id
