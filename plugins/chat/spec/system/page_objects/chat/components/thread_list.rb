@@ -16,7 +16,7 @@ module PageObjects
         end
 
         def has_thread?(id)
-          item_by_id(id).exists?
+          item_by_id(id)
         end
 
         def item_by_id(id)

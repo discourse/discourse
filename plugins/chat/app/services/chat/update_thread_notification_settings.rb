@@ -36,6 +36,11 @@ module Chat
       attribute :notification_level, :integer
 
       validates :thread_id, :channel_id, :notification_level, presence: true
+
+      validates :notification_level,
+                inclusion: {
+                  in: Chat::UserChatThreadMembership.notification_levels.values,
+                }
     end
 
     private
