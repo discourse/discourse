@@ -41,8 +41,10 @@ body.invite-page {
   }
   &.has-sidebar-page {
     #main-outlet-wrapper {
-      grid-template-columns: 0; // hides the sidebar
+      grid-template-columns: 0; // collapse the sidebar
+      gap: 0;
     }
+    .sidebar-wrapper,
     .d-header {
       display: none;
     }
