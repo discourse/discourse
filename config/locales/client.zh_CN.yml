@@ -1736,28 +1736,6 @@ zh_CN:
       logout_disabled: "当站点处于只读模式时，退出被禁用。"
     staff_writes_only_mode:
       enabled: "此站点处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
-    too_few_topics_and_posts_notice_MF: |
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">开始讨论</a>吧！现在有 { currentTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }和 { currentPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。访客需要阅读和回复更多 – 我们建议至少有 { requiredTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }和 { requiredPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。只有管理人员可以看到此消息。
-    too_few_topics_notice_MF: |
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">开始讨论</a>吧！/a>现在有 { currentTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }。访客需要阅读和回复更多 - 我们建议至少有 { requiredTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }。只有管理人员可以看到此消息。
-    too_few_posts_notice_MF: |
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">开始讨论</a>吧！现在有{ currentPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。访客需要阅读和回复更多 - 我们建议至少有 { requiredPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。只有管理人员可以看到此消息。
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。
@@ -2181,6 +2159,7 @@ zh_CN:
       image_alt_text:
         aria_label: 图片的替换文字
       delete_image_button: 删除图片
+      toggle_image_grid: 切换图像网格
     notifications:
       tooltip:
         regular:
@@ -3846,6 +3825,8 @@ zh_CN:
       more: "更多"
       all_categories: "所有类别"
       all_tags: "所有标签"
+      categories_form:
+        save: "保存"
       sections:
         custom:
           add: "添加自定义部分"
@@ -3951,6 +3932,7 @@ zh_CN:
               content: "审核"
               title: "被举报的帖子和其他排队的条目"
               pending_count: "%{count} 待处理"
+        global_section: "全球部分，所有人可见"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -5051,14 +5033,13 @@ zh_CN:
             minimum:
               key: "最小值"
               type: "整数"
-              description: "在文本字段中，指定允许的最小字符数。"
             maximum:
               key: "最大值"
               type: "整数"
-              description: "在文本字段中，指定允许的最大字符数。在多选下拉列表中，指定可以选择的最大选项数。"
             pattern:
               type: "正则表达式"
-              description: "在文本字段中，指定允许输入的正则表达式。"
+            type:
+              key: "类型"
         preview_modal:
           title: "预览模板"
         field_placeholders:

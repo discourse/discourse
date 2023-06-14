@@ -2513,6 +2513,8 @@ et:
         other: "%{count} uut"
       more: "Veel"
       all_categories: "Kõik foorumid"
+      categories_form:
+        save: "Salvesta"
       sections:
         custom:
           save: "Salvesta"
@@ -3164,6 +3166,8 @@ et:
               key: "miinimum"
             maximum:
               key: "maksimum"
+            type:
+              key: "tüüp"
       impersonate:
         title: "Kehasta"
         help: "Kasuta seda töövahendit kasutajakonto ülevõtmiseks silumise eesmärgil. Tühistamiseks pead välja logima."

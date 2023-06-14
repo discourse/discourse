@@ -5,6 +5,8 @@ RSpec.describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
+  it_behaves_like "it has custom fields"
+
   describe "Validations" do
     it { is_expected.to allow_value("#{"a" * 996}.com").for(:automatic_membership_email_domains) }
     it do

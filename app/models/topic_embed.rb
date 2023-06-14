@@ -21,10 +21,14 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   class FetchResponse
-    attr_accessor :title, :body, :author
+    attr_accessor :title, :body, :author, :url
   end
 
   def self.normalize_url(url)
+    # downcase
+    # remove trailing forward slash/
+    # remove consecutive hyphens
+    # remove leading and trailing whitespace
     url.downcase.sub(%r{/\z}, "").sub(/\-+/, "-").strip
   end
 
@@ -45,7 +49,7 @@ class TopicEmbed < ActiveRecord::Base
 
     url = normalize_url(url)
 
-    embed = TopicEmbed.find_by("lower(embed_url) = ?", url)
+    embed = topic_embed_by_url(url)
     content_sha1 = Digest::SHA1.hexdigest(contents)
     post = nil
 
@@ -127,7 +131,7 @@ class TopicEmbed < ActiveRecord::Base
       return
     end
 
-    parse_html(html, url)
+    parse_html(html, uri.to_s)
   end
 
   def self.parse_html(html, url)
@@ -151,6 +155,9 @@ class TopicEmbed < ActiveRecord::Base
     response = FetchResponse.new
 
     raw_doc = Nokogiri.HTML5(html)
+
+    response.url = url
+
     auth_element =
       raw_doc.at('meta[@name="discourse-username"]') || raw_doc.at('meta[@name="author"]')
     if auth_element.present?
@@ -217,6 +224,7 @@ class TopicEmbed < ActiveRecord::Base
     response.title = opts[:title] if opts[:title].present?
     import_user = opts[:user] if opts[:user].present?
     import_user = response.author if response.author.present?
+    url = normalize_url(response.url) if response.url.present?
 
     TopicEmbed.import(import_user, url, response.title, response.body)
   end
@@ -260,9 +268,14 @@ class TopicEmbed < ActiveRecord::Base
     fragment.at("div").inner_html
   end
 
-  def self.topic_id_for_embed(embed_url)
+  def self.topic_embed_by_url(embed_url)
     embed_url = normalize_url(embed_url).sub(%r{\Ahttps?\://}, "")
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pick(:topic_id)
+    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").first
+  end
+
+  def self.topic_id_for_embed(embed_url)
+    topic_embed = topic_embed_by_url(embed_url)
+    topic_embed&.topic_id
   end
 
   def self.first_paragraph_from(html)

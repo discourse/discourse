@@ -1,3 +1,30 @@
+.tippy-box[data-theme="user-tips"] {
+  background-color: var(--tertiary);
+  color: var(--secondary);
+  border-color: var(--tertiary);
+
+  .btn-flat {
+    color: var(--secondary);
+
+    &:hover {
+      color: var(--d-hover);
+    }
+  }
+
+  .btn-primary {
+    background: var(--secondary);
+    color: var(--tertiary);
+
+    &:hover {
+      color: var(--tertiary-hover);
+    }
+  }
+
+  > .tippy-svg-arrow > svg {
+    color: var(--tertiary);
+  }
+}
+
 .user-tip {
   z-index: z("composer", "content") - 1;
 }

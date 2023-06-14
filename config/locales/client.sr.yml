@@ -1808,6 +1808,8 @@ sr:
         few: "%{count} novih"
         other: "%{count} nova"
       more: "Više"
+      categories_form:
+        save: "Sačuvaj"
       sections:
         custom:
           save: "Sačuvaj"
@@ -2227,6 +2229,8 @@ sr:
           validations:
             required:
               key: "potrebno"
+            type:
+              key: "tip"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."

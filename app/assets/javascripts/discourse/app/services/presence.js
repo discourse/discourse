@@ -606,7 +606,7 @@ export default class PresenceService extends Service {
       );
     } else if (
       !this._nextUpdateTimer &&
-      this._presentChannels.length > 0 &&
+      this._presentChannels.size > 0 &&
       !isTesting()
     ) {
       this._nextUpdateTimer = discourseLater(

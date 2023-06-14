@@ -144,6 +144,8 @@ es:
       facebook: "Compartir en Facebook"
       email: "Enviar por correo electrónico"
       url: "Copiar y compartir la URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Hizo este tema público %{when}"
       open_topic: "Convirtió esto en un tema %{when}"
@@ -179,6 +181,7 @@ es:
       forwarded: "Reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     skip_to_main_content: "Saltar al contenido principal"
+    skip_user_nav: "Saltar al contenido del perfil"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
@@ -519,6 +522,8 @@ es:
         type: "Motivo"
         status: "Estado"
         submitted_by: "Denunciado por"
+        reviewed_by: "Revisado por"
+        reviewed_timestamp: "Fecha de revisión"
       statuses:
         pending:
           title: "Pendiente"
@@ -968,6 +973,13 @@ es:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferencias"
+      download_archive:
+        title: "Exporta tus datos"
+        description: "Descarga un archivo con la actividad y preferencias de tu cuenta."
+        button_text: "Solicitar archivo"
+        confirm: "¿Realmente quieres descargar un archivo con la actividad y preferencias de tu cuenta?"
+        success: "Hemos empezado a recopilar tu archivo, recibirás un mensaje cuando se complete el proceso."
+        rate_limit_error: "Los archivos de cuenta solo pueden descargarse una vez al día, inténtalo de nuevo mañana."
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
@@ -1360,6 +1372,7 @@ es:
         success: "Te hemos enviado un correo electrónico a esa dirección. Sigue las instrucciones de confirmación."
         success_via_admin: "Hemos enviado un correo electrónico a esa dirección. El usuario tendrá que seguir las instrucciones de confirmación."
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Sigue las instrucciones de confirmación."
+        back_to_preferences: "Volver a preferencias"
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basado en"
@@ -1765,23 +1778,6 @@ es:
       logout_disabled: "No se puede cerrar sesión mientras el sitio se encuentre en modo de solo lectura."
     staff_writes_only_mode:
       enabled: "Este sitio está en modo solo para el personal. Sigue navegando, pero las respuestas, los «me gusta» y otras acciones están limitadas solo a los miembros del personal."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">¡Comencemos la discusión!</a> Hay { currentTopics, plural,
-          one {<strong>#</strong> tema}
-        other {<strong>#</strong> temas}
-      } y { currentPosts, plural,
-          one {<strong>#</strong> publicación}
-        other {<strong>#</strong> publicaciones}
-      }. Los visitantes necesitan más contenido para leer y responder: nosotros recomendamos al menos { requiredTopics, plural,
-          one {<strong>#</strong> tema}
-        other {<strong>#</strong> temas}
-      } y { requiredPosts, plural,
-          one {<strong>#</strong> publicación}
-        other {<strong>#</strong> publicaciones}
-      }. Solo los miembros del equipo pueden ver este mensaje.
-    too_few_topics_notice_MF: "<a href=\"https://blog.discourse.org/2014/08/building-a-discourse-community/\" target=\"_blank\" rel=\"noopener noreferrer\">¡Comencemos la discusión!</a> Hay { currentTopics, plural, \n    one {<strong>#</strong> tema}\n  other {<strong>#</strong> temas}}.\nLos visitantes necesitan más contenido para leer y responder: nosotros recomendamos al menos { requiredTopics, plural, \n    one {<strong>#</strong> tema} \n  other {<strong>#</strong> temas}}. \nSolo los miembros del equipo pueden ver este mensaje.\n"
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">¡Comencemos la discusión!</a> Hay { currentPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos { requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Solo los miembros del equipo pueden ver este mensaje.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hora} other {# errores/hora}}.
@@ -2553,6 +2549,11 @@ es:
         dismiss_tooltip: "Descartar solamente las nuevas publicaciones o dejar de seguir los temas"
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
         dismiss_new: "Descartar nuevos"
+        dismiss_new_modal:
+          title: "Descartar nuevo"
+          topics: "Descartar nuevos temas"
+          posts: "Rechazar nuevos mensajes"
+          untrack: "Dejar de seguir estos temas para que dejen de aparecer en mi nueva lista"
         dismiss_new_with_selected:
           one: "Descartar nuevo (%{count})"
           other: "Descartar nuevos (%{count})"
@@ -2590,6 +2591,7 @@ es:
         bookmarks: "Todavía no tienes temas guardados en marcadores."
         category: "No hay temas con la categoría %{category}."
         top: "No hay temas destacados."
+        filter: "No hay temas."
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
           unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 5 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
@@ -2604,11 +2606,13 @@ es:
         tag: "No hay más temas con la etiqueta %{tag}."
         top: "No hay más temas destacados."
         bookmarks: "No hay más temas guardados en marcadores."
+        filter: "No hay más temas."
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
         other: "%{count} publicaciones en el tema"
       create: "Nuevo tema"
+      create_disabled_category: "No tienes permiso para crear temas en esta categoría."
       create_long: "Crear un tema nuevo"
       open_draft: "Abrir borrador"
       private_message: "Comenzar un mensaje"
@@ -3972,20 +3976,38 @@ es:
       more: "Más"
       all_categories: "Todas las categorías"
       all_tags: "Todas las etiquetas"
+      categories_form:
+        save: "Guardar"
+        title: "Editar navegación de las categorías"
+        filter_placeholder: "Filtrar categorías"
+        no_categories: "No hay categorías que coincidan con el término proporcionado."
       sections:
         custom:
           save: "Guardar"
           delete: "Eliminar"
+          delete_confirm: "¿Realmente quieres eliminar esta sección?"
           reset_confirm: "¿Está seguro de que desea restablecer esta sección a los valores predeterminados?"
           more_menu: "Más opciones menú"
           links:
+            add: "Añadir otro enlace"
             reset: "Restablecer valores por defecto"
             icon:
               label: "Icono"
+              validation:
+                blank: "El icono no puede estar en blanco"
             name:
               label: "Nombre"
+              validation:
+                blank: "El nombre no puede estar en blanco"
             value:
               label: "Enlace"
+              validation:
+                blank: "El enlace no puede estar en blanco"
+                invalid: "El formato no es válido"
+          title:
+            label: "Título de la sección"
+            validation:
+              blank: "El título no puede estar en blanco"
         about:
           header_link_text: "Acerca de"
         messages:
@@ -4047,6 +4069,7 @@ es:
               title: "Lista de todos los usuarios"
             my_posts:
               content: "Mis publicaciones"
+              content_drafts: "Mis borradores"
               title: "Mi actividad de tema reciente"
               title_drafts: "Mis borradores no publicados"
               draft_count:
@@ -4056,6 +4079,7 @@ es:
               content: "Revisión"
               title: "Publicaciones denunciadas y otros elementos en cola"
               pending_count: "%{count} pendiente(s)"
+        global_section: "Sección global, visible para todos"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."
@@ -4289,6 +4313,8 @@ es:
             posts:
               edit: Edita cualquier publicación o una específica.
               list: Listar los últimos mensajes y mensajes privados. RSS también es compatible.
+            tags:
+              list: Listar etiquetas.
             categories:
               list: Obtener la lista de categorías.
               show: Obtener una sola categoría por id.
@@ -4302,6 +4328,7 @@ es:
               update: Actualizar información del perfil de usuario.
               log_out: Cerrar sesión todas las sesiones del usuario.
               anonymize: Anonimizar cuentas de usuario.
+              suspend: Suspender cuentas de usuario.
               delete: Eliminar cuentas de usuario.
               list: Obtener una lista de usuarios.
             user_status:
@@ -4920,6 +4947,7 @@ es:
             revoke_moderation: "revocar moderación"
             backup_create: "crear copia de seguridad"
             deleted_tag: "etiqueta eliminada"
+            update_directory_columns: "actualizar columnas del directorio"
             deleted_unused_tags: "etiquetas sin usar eliminadas"
             renamed_tag: "etiqueta renombrada"
             revoke_email: "revocar correo electrónico"
@@ -5081,8 +5109,14 @@ es:
           preview: "Vista previa"
         quick_insert_fields:
           add_new_field: "Añadir"
+          input: "Respuesta corta"
+          textarea: "Respuesta larga"
           dropdown: "Desplegable"
+          upload: "Subir un archivo"
+          multiselect: "Opción múltiple"
         validations_modal:
+          button_title: "Validaciones"
+          modal_title: "Opciones de validación"
           table_headers:
             key: "Clave"
             type: "Tipo"
@@ -5094,6 +5128,15 @@ es:
               key: "mínimo"
             maximum:
               key: "máximo"
+            pattern:
+              key: "patrón"
+            type:
+              key: "tipo"
+        field_placeholders:
+          choices:
+            first: "Opción 1"
+            second: "Opción 2"
+            third: "Opción 3"
       impersonate:
         title: "Suplantar"
         help: "Utiliza esta herramienta para suplantar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."

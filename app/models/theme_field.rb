@@ -5,6 +5,8 @@ class ThemeField < ActiveRecord::Base
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
 
+  validates :value, { length: { maximum: 1024**2 } }
+
   after_save do
     if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)

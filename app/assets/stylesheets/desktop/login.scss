@@ -417,7 +417,7 @@
   }
   .invite-form,
   .invite-success {
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
   }
 }
 

@@ -114,6 +114,14 @@ en:
       heading: "Chat"
       join: "Join"
       last_visit: "last visit"
+
+      summarization:
+        title: "Summarize messages"
+        description: "Select an option below to summarize the conversation sent during the desired timeframe."
+        summarize: "Summarize"
+        since:
+          one: "Last hour" 
+          other: "Last %{count} hours"
       mention_warning:
         dismiss: "dismiss"
         cannot_see: "%{username} can't access this channel and was not notified."

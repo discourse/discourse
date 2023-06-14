@@ -5,11 +5,13 @@ import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import Component from "@ember/component";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "",
   classNames: ["topic-dismiss-buttons"],
 
+  currentUser: service(),
   position: null,
   selectedTopics: null,
   model: null,
@@ -60,7 +62,9 @@ export default Component.extend({
 
   @discourseComputed("selectedTopics.length")
   dismissNewLabel(selectedTopicCount) {
-    if (selectedTopicCount === 0) {
+    if (this.currentUser.new_new_view_enabled) {
+      return I18n.t("topics.bulk.dismiss_button");
+    } else if (selectedTopicCount === 0) {
       return I18n.t("topics.bulk.dismiss_new");
     }
     return I18n.t("topics.bulk.dismiss_new_with_selected", {

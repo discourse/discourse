@@ -39,6 +39,11 @@ pl_PL:
       browse_all_channels: "Przeglądaj wszystkie kanały"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
+        instructions:
+          one: "Przenosisz <strong>%{count}</strong> wiadomość. Wybierz kanał docelowy. W kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza, aby wskazać, że ta wiadomość została przeniesiona. Pamiętaj, że łańcuchy odpowiedzi nie zostaną zachowane w nowym kanale, a wiadomości w starym kanale nie będą już wyświetlane jako odpowiedzi na przeniesione wiadomości."
+          few: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. W kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza, aby wskazać, że te wiadomości zostały przeniesione. Pamiętaj, że łańcuchy odpowiedzi nie zostaną zachowane w nowym kanale, a wiadomości w starym kanale nie będą już wyświetlane jako odpowiedzi na przeniesione wiadomości."
+          many: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. W kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza, aby wskazać, że te wiadomości zostały przeniesione. Pamiętaj, że łańcuchy odpowiedzi nie zostaną zachowane w nowym kanale, a wiadomości w starym kanale nie będą już wyświetlane jako odpowiedzi na przeniesione wiadomości."
+          other: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. W kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza, aby wskazać, że te wiadomości zostały przeniesione. Pamiętaj, że łańcuchy odpowiedzi nie zostaną zachowane w nowym kanale, a wiadomości w starym kanale nie będą już wyświetlane jako odpowiedzi na przeniesione wiadomości."
         confirm_move: "Przenieś wiadomości"
       channel_settings:
         title: "Ustawienia kanału"
@@ -69,6 +74,7 @@ pl_PL:
         instructions: "Zamknięcie kanału uniemożliwia użytkownikom niebędącym personelem wysyłanie nowych wiadomości ani edytowanie istniejących wiadomości. Czy na pewno chcesz zamknąć ten kanał?"
       channel_delete:
         title: "Usuń kanał"
+        instructions: "<p>Usuwa kanał <strong>%{name}</strong> i historię czatu. Wszystkie wiadomości i powiązane dane, takie jak reakcje i przesłane pliki, zostaną trwale usunięte. Jeśli chcesz zachować historię kanału i zlikwidować go, możesz zamiast tego zarchiwizować kanał.</p> <p>Czy na pewno chcesz <strong>trwale usunąć</strong> kanał? Aby potwierdzić, wpisz nazwę kanału w polu poniżej.</p>"
         confirm: "Rozumiem konsekwencje, usuń kanał"
         confirm_channel_name: "Wpisz nazwę kanału"
         process_started: "Rozpoczął się proces usuwania kanału. Ten modal zostanie wkrótce zamknięty, nigdzie nie zobaczysz już usuniętego kanału."
@@ -135,12 +141,23 @@ pl_PL:
           many: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
           other: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
         group_mentions_disabled: "%{group_name} nie zezwala na wzmianki."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} i %{count} inna grupa nie zezwala na wzmianki."
+          few: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
+          many: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
+          other: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
         too_many_members: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony."
+        too_many_members_multiple:
+          one: "%{group_name} i %{count} inna grupa ma zbyt wielu członków. Nikt nie został powiadomiony."
+          few: "%{group_name} i %{count} inne grupy mają zbyt wielu członków. Nikt nie został powiadomiony."
+          many: "%{group_name} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
+          other: "%{group_name} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
         groups:
           header:
             some: "Niektórzy użytkownicy nie zostaną powiadomieni"
             all: "Nikt nie zostanie powiadomiony"
           unreachable_1: "@%{group} nie zezwala na wzmianki."
+          unreachable_2: "@%{group1} i @%{group2} nie zezwalają na wzmianki."
       aria_roles:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
@@ -185,6 +202,11 @@ pl_PL:
       select: "Wybierz"
       return_to_list: "Powrót do listy kanałów"
       return_to_threads_list: "Wróć do trwających dyskusji"
+      unread_threads_count:
+        one: "Masz %{count} nieprzeczytaną dyskusje"
+        few: "Masz %{count} nieprzeczytane dyskusje"
+        many: "Masz %{count} nieprzeczytanych dyskusji"
+        other: "Masz %{count} nieprzeczytanych dyskusji"
       scroll_to_bottom: "Przewiń na dół"
       scroll_to_new_messages: "Zobacz nowe wiadomości"
       sound:
@@ -306,6 +328,13 @@ pl_PL:
           few: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
           many: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
           other: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
+        single_user: "%{username} zareagował za pomocą :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} i %{username} zareagowali za pomocą :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
+          few: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
+          many: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
+          other: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
       composer:
         toggle_toolbar: "Przełącz pasek narzędzi"
         italic_text: "wyróżniony tekst"
@@ -323,6 +352,8 @@ pl_PL:
         channel_wide_mentions_label: "Zezwalaj na wzmianki @all i @here"
         channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
         auto_join_users_label: "Automatycznie dodawaj użytkowników"
+        auto_join_users_info: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do kategorii %{category}."
+        auto_join_users_info_no_category: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do wybranej kategorii."
         auto_join_users_warning: "Każdy użytkownik, który nie jest członkiem tego kanału i ma dostęp do kategorii %{category} , dołączy do niego. Czy jesteś pewien?"
         desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
@@ -396,6 +427,19 @@ pl_PL:
           few: "%{commaSeparatedUsernames} i %{count} inni piszą"
           many: "%{commaSeparatedUsernames} i %{count} inni piszą"
           other: "%{commaSeparatedUsernames} i %{count} innych piszą"
+      retention_reminders:
+        public_none: "Historia kanału jest przechowywana przez czas nieokreślony."
+        public:
+          one: "Historia kanału jest przechowywana przez %{count} dzień."
+          few: "Historia kanału jest przechowywana przez %{count} dni."
+          many: "Historia kanału jest przechowywana przez %{count} dni."
+          other: "Historia kanału jest przechowywana przez %{count} dni."
+        dm_none: "Osobista historia czatu jest przechowywana przez czas nieokreślony."
+        dm:
+          one: "Osobista historia czatu jest zachowywana przez %{count} dzień."
+          few: "Osobista historia czatu jest zachowywana przez %{count} dni."
+          many: "Osobista historia czatu jest zachowywana przez %{count} dni."
+          other: "Osobista historia czatu jest zachowywana przez %{count} dni."
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
@@ -420,7 +464,7 @@ pl_PL:
       thread:
         title: "Tytuł"
         view_thread: Zobacz wątek
-        default_title: "Wątek #%{thread_id}"
+        default_title: "Wątek"
         replies:
           one: "%{count} odpowiedź"
           few: "%{count} odpowiedzi"

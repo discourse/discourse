@@ -1995,12 +1995,6 @@ he:
       logout_disabled: "היציאה מושבתת בזמן שהאתר במצב של קריאה בלבד."
     staff_writes_only_mode:
       enabled: "אתר זה נמצא במצב סגל בלבד. אפשר להמשיך לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע מוגבלות לחברי הסגל בלבד."
-    too_few_topics_and_posts_notice_MF: |
-      הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">נתחיל להתדיין!</a> כרגע יש {currentTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{currentPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredTopics, plural, one {נושא<strong>אחד</strong>} other {<strong>#</strong> נושאים}} ו{requiredPosts, plural, one {פוסט <strong>אחד</strong>} other {־<strong>#</strong> פוסטים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
-    too_few_topics_notice_MF: |
-      הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">נתחיל להתדיין!</a> כרגע יש {currentTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredTopics, plural, one {נושא <strong>אחד</strong>} other {<strong>#</strong> נושאים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
-    too_few_posts_notice_MF: |
-      הבה <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">נתחיל להתדיין!</a> כרגע יש {currentPosts, plural, one {פוסט <strong>אחד</strong>} other {<strong>#</strong> פוסטים}}. המבקרים זקוקים ליותר מכך כדי לקרוא ולהיות מעורבים – אנו ממליצים על {requiredPosts, plural, one {פוסט <strong>אחד</strong>} other {<strong>#</strong> פוסטים}} לפחות. רק חברי הסגל יכולים לראות את ההודעה הזאת.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {שגיאה אחת בשעה הגיעה} other {# שגיאות בשעה הגיעו}}</a> למגבלת האתר שהיא {limit, plural, one {שגיאה אחת בשעה} other {# שגיאות בשעה}}.
@@ -2032,6 +2026,9 @@ he:
       hidden_for_session: "סבבה, השאלה תופיע מחר. תמיד ניתן להשתמש ב‚כניסה’ גם כדי ליצור חשבון."
       intro: "שלום! נראה שאתם נהנים מהדיון, אבל לא נרשמתם לחשבון עדיין."
       value_prop: "נמאס לך לעיין באותם הפוסטים? יצירת חשבון תאפשר לך לחזור בדיוק לנקודה בה עזבת בפעם האחרונה. חשבון מאפשר לך גם לקבל התראות על תגובות חדשות, לשמור סימניות ולהשתמש בלייקים כדי להודות לאחרים. כולנו יכולים לפעול ביחד כדי שהקהילה הזאת תהיה מצוינת. :heart:"
+    offline_indicator:
+      no_internet: "אין חיבור לאינטרנט."
+      refresh_page: "רענון עמוד"
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description:
@@ -2472,6 +2469,7 @@ he:
       image_alt_text:
         aria_label: כיתוב חלופי לתמונה
       delete_image_button: מחיקת תמונ
+      toggle_image_grid: החלפת מצב רשת תמונות
     notifications:
       tooltip:
         regular:
@@ -2849,6 +2847,11 @@ he:
         dismiss_tooltip: "ביטול הצגת פוסטים חדשים או מעקב אחר נושאים"
         also_dismiss_topics: "הפסיקו לעקוב אחרי נושאים אלו כדי שהם לא יופיעו שוב בתור לא-נקראו"
         dismiss_new: "ביטול חדשים"
+        dismiss_new_modal:
+          title: "התעלמות מחדשים"
+          topics: "התעלמות מנושאים חדשים"
+          posts: "התעלמות מפוסטים חדשים"
+          untrack: "הפסקת המעקב אחר הנושאים האלו כדי שלא יופיעו עוד ברשימת החדשים שלי"
         dismiss_new_with_selected:
           one: "להתעלם מחדש (%{count})"
           two: "להתעלם מחדשים (%{count})"
@@ -2898,6 +2901,7 @@ he:
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן. כבררת מחדל, נושאים נחשבים חדשים ויופיעו עם המחוון <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> אם הם נוצרו ביומיים האחרונים. </p><p>ניתן לבקר בעמוד ה<a href="%{userPrefsUrl}">העדפות</a> שלך כדי לשנות זאת.</p>'
           unread: "<p>הנושאים שלא קראת יופיעו כאן.</p><p>כברירת מחדל, נושאים ייחשבו שטרם קראת אותם ויוצג עליהם מונה <span class=\"badge unread-posts badge-notification\">1</span> בספירה של הפריטים שלא נקראו אם: </p> <ul><li>יצרת את הנושא</li><li>הגבת לנושא</li><li>קראת את הנושא במשך יותר מ־5 דקות</li></ul><p>או אם בחרת לעקוב או לצפות בנושא דרך \U0001F514 המופיע בכל נושא.</p><p>ניתן לבקר בעמוד ה<a href=\"%{userPrefsUrl}\">העדפות</a> שלך כדי לשנות זאת.</p>"
+          new_new: "<p>הנושאים החדשים שלך יופיעו כאן לצד הנושאים שטרם קראת. כברירת מחדל, נושאים נחשבים חדשים ויופיע לידם מחוון <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> אם נוצרו ביומיים האחרונים. ליד נושאים שלא נקראו יופיע הסימון <span class=\"badge unread-posts badge-notification\">1</span> אם: יצרת את הנושא, הגבת לנושא, קראת את הנושא במשך למעלה מ־5 דקות או אם ביקשת מפורשות לעקוב או להשגיח אחר הנושא באמצעות \U0001F514 בכל נושא ונושא.</p><p>נא לגשת אל ה<a href=\"%{userPrefsUrl}\">העדפות</a> כדי לשנות זאת.</p>"
       bottom:
         latest: "אין עוד נושאים אחרונים."
         posted: "אין עוד נושאים שפורסמו."
@@ -4443,6 +4447,11 @@ he:
       more: "עוד"
       all_categories: "כל הקטגוריות"
       all_tags: "כל התגיות"
+      categories_form:
+        save: "שמירה"
+        title: "עריכת ניווט בקטגוריות"
+        filter_placeholder: "סינון קטגוריות"
+        no_categories: "אין קטגוריות שעונות למונח שצוין."
       sections:
         custom:
           add: "הוספת מקטע משלך"
@@ -4551,6 +4560,7 @@ he:
               content: "סקירה"
               title: "פוסטים מסומנים ופריטים אחרים בתור"
               pending_count: "%{count} ממתינים"
+        global_section: "סעיף כללי, גלוי לכולם"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -4806,6 +4816,7 @@ he:
             posts:
               edit: לערוך כל פוסט שהוא או אחד מסוים.
               delete: מחיקת פוסט.
+              list: הצגת הפוסטים העדכניים ביותר ופוסטים פרטיים. יש תמיכה גם ב־RSS.
             tags:
               list: הצגת תגיות.
             categories:
@@ -5466,6 +5477,7 @@ he:
             revoke_moderation: "שלילת פיקוח"
             backup_create: "יצירת גיבוי"
             deleted_tag: "תגית נמחקה"
+            update_directory_columns: "עדכון עמודות תיקייה"
             deleted_unused_tags: "נמחקו תגיות שאינן בשימוש"
             renamed_tag: "תגית שונתה"
             revoke_email: "שלילת דוא״ל"
@@ -5676,15 +5688,19 @@ he:
             minimum:
               key: "מזערי"
               type: "מספר שלם וחיובי"
-              description: "בשדות טקסט, מציין את כמות התווים המזערית המותרת."
+              description: "לשדות טקסט, מציין את כמות התווים המזערית המותרת."
             maximum:
               key: "מרבי"
               type: "מספר שלם וחיובי"
-              description: "בשדות טקסט, מציין את המספר התווים המרבי המותר. בתפריטים נפתחים של ריבוי בחירה, מציין את המספר המרבי של אפשרויות שניתן לבחור."
+              description: "לשדות טקסט, מציין את כמות התווים המרבית המותרת."
             pattern:
               key: "תבנית"
               type: "מחרוזת ביטוי רגולרי"
               description: "בשדות טקסט, ביטוי רגולרי המציין את הקלט המותר."
+            type:
+              key: "סוג"
+              type: "מחרוזת"
+              description: "לשדות קלט, אפשר לציין את סוג הקלט הצפוי (text|email|date|number|url|tel|color)"
         preview_modal:
           title: "תצוגה מקדימה של תבנית"
         field_placeholders:

@@ -92,7 +92,6 @@ module Jobs
 
       # ensure directory exists
       FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
-
       # Generate a compressed CSV file
       begin
         entities.each do |entity|
@@ -177,7 +176,7 @@ module Jobs
           UserHistory.where(admin_only: false).only_staff_actions.order("id DESC")
         end
 
-      staff_action_data.each { |staff_action| yield get_staff_action_fields(staff_action) }
+      staff_action_data.find_each { |staff_action| yield get_staff_action_fields(staff_action) }
     end
 
     def screened_email_export
@@ -185,7 +184,7 @@ module Jobs
 
       ScreenedEmail
         .order("last_match_at DESC")
-        .each { |screened_email| yield get_screened_email_fields(screened_email) }
+        .find_each { |screened_email| yield get_screened_email_fields(screened_email) }
     end
 
     def screened_ip_export

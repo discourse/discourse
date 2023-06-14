@@ -86,7 +86,7 @@ describe "Navigating with breadcrumbs", type: :system do
     end
   end
 
-  describe "initial pageloads for nosubcategories" do
+  describe "initial page loads for no-subcategories" do
     it "shows correct data for /c/" do
       visit("/c/#{category3.id}")
       expect(page).to have_current_path("/c/#{category3.slug}/#{category3.id}/none")

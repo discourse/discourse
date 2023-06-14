@@ -1264,6 +1264,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
   end
 
+  ##
+  # Register an object that inherits from [Summarization::Base], which provides a way
+  # to summarize content. Staff can select which strategy to use
+  # through the `summarization_strategy` setting.
+  def register_summarization_strategy(strategy)
+    if !strategy.class.ancestors.include?(Summarization::Base)
+      raise ArgumentError.new("Not a valid summarization strategy")
+    end
+    DiscoursePluginRegistry.register_summarization_strategy(strategy, self)
+  end
+
   protected
 
   def self.js_path
