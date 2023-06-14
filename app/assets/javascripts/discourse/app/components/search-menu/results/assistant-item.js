@@ -2,6 +2,10 @@ import Component from "@glimmer/component";
 import getURL from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import {
+  focusSearchButton,
+  focusSearchInput,
+} from "discourse/components/search-menu";
 
 export default class AssistantItem extends Component {
   @service search;
@@ -55,7 +59,7 @@ export default class AssistantItem extends Component {
   @action
   onKeydown(e) {
     if (e.key === "Escape") {
-      document.querySelector("#search-button").focus();
+      focusSearchButton();
       this.args.closeSearchMenu();
       e.preventDefault();
       return false;
@@ -76,6 +80,7 @@ export default class AssistantItem extends Component {
       searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,
       ...(inTopicContext && { setTopicContext: true }),
     });
+    focusSearchInput();
 
     e.stopPropagation();
     e.preventDefault();

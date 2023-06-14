@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import I18n from "I18n";
+import { focusSearchInput } from "discourse/components/search-menu";
 
 const DEFAULT_QUICK_TIPS = [
   {
@@ -60,8 +61,7 @@ export default class RandomQuickTip extends Component {
   tipSelected(e) {
     if (e.target.classList.contains("tip-clickable")) {
       this.search.updateActiveGlobalSearchTerm(this.randomTip.label);
-      const searchInput = document.querySelector("#search-term");
-      searchInput.focus();
+      focusSearchInput();
     }
   }
 }

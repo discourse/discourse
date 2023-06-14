@@ -2,6 +2,7 @@ import Service, { inject as service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { focusSearchInput } from "discourse/components/search-menu";
 
 @disableImplicitInjections
 export default class Search extends Service {
@@ -46,25 +47,22 @@ export default class Search extends Service {
   // that can be reused across all of the components
   @action
   handleResultInsertion(e) {
-    if (e.which === 65 /* a */) {
-      if (document.activeElement?.classList.contains("search-link")) {
-        if (document.querySelector("#reply-control.open")) {
-          // add a link and focus composer
+    if (e.keyCode === 65 /* a or A */) {
+      // add a link and focus composer if open
+      if (document.querySelector("#reply-control.open")) {
+        this.appEvents.trigger(
+          "composer:insert-text",
+          document.activeElement.href,
+          {
+            ensureSpace: true,
+          }
+        );
+        this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
+        document.querySelector("#reply-control.open textarea").focus();
 
-          this.appEvents.trigger(
-            "composer:insert-text",
-            document.activeElement.href,
-            {
-              ensureSpace: true,
-            }
-          );
-          this.appEvents.trigger("header:keyboard-trigger", { type: "search" });
-
-          e.stopPropagation();
-          e.preventDefault();
-          document.querySelector("#reply-control.open textarea").focus();
-          return false;
-        }
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
       }
     }
   }
@@ -72,10 +70,7 @@ export default class Search extends Service {
   @action
   handleArrowUpOrDown(e) {
     if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-      let focused = document.activeElement.closest(".search-menu")
-        ? document.activeElement
-        : null;
-
+      let focused = e.target.closest(".search-menu") ? e.target : null;
       if (!focused) {
         return;
       }
@@ -103,16 +98,18 @@ export default class Search extends Service {
       });
 
       let index = -1;
-
       if (result) {
         index = Array.prototype.indexOf.call(results, result);
       }
 
       if (index === -1 && e.key === "ArrowDown") {
-        document.querySelector(".search-menu .results .search-link").focus();
+        // change focus from the search input to the first result item
+        const firstResult = results[0] || links[0];
+        firstResult.focus();
       } else if (index === 0 && e.key === "ArrowUp") {
-        document.querySelector(".search-menu input#search-term").focus();
+        focusSearchInput();
       } else if (index > -1) {
+        // change focus to the next result item if present
         index += e.key === "ArrowDown" ? 1 : -1;
         if (index >= 0 && index < results.length) {
           results[index].focus();

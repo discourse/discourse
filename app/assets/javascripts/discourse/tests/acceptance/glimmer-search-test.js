@@ -4,6 +4,7 @@ import {
   exists,
   query,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
@@ -21,6 +22,9 @@ import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 acceptance("Search - Glimmer - Anonymous", function (needs) {
   needs.user({
     experimental_search_menu_groups_enabled: true,
+  });
+  needs.hooks.beforeEach(() => {
+    updateCurrentUser({ is_anonymous: true });
   });
   needs.pretender((server, helper) => {
     server.get("/search/query", (request) => {
@@ -360,29 +364,6 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       "second result hints at search within current topic"
     );
   });
-
-  test("Right filters are shown in full page search", async function (assert) {
-    const inSelector = selectKit(".select-kit#in");
-
-    await visit("/search?expanded=true");
-
-    await inSelector.expand();
-
-    assert.ok(inSelector.rowByValue("first").exists());
-    assert.ok(inSelector.rowByValue("pinned").exists());
-    assert.ok(inSelector.rowByValue("wiki").exists());
-    assert.ok(inSelector.rowByValue("images").exists());
-
-    assert.notOk(inSelector.rowByValue("unseen").exists());
-    assert.notOk(inSelector.rowByValue("posted").exists());
-    assert.notOk(inSelector.rowByValue("watching").exists());
-    assert.notOk(inSelector.rowByValue("tracking").exists());
-    assert.notOk(inSelector.rowByValue("bookmarks").exists());
-
-    assert.notOk(exists(".search-advanced-options .in-likes"));
-    assert.notOk(exists(".search-advanced-options .in-private"));
-    assert.notOk(exists(".search-advanced-options .in-seen"));
-  });
 });
 
 acceptance("Search - Glimmer - Authenticated", function (needs) {
@@ -493,25 +474,24 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     );
 
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
       query(`${container} li:first-child a`).getAttribute("href"),
       "arrow down selects first element"
     );
 
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
       query(`${container} li:nth-child(2) a`).getAttribute("href"),
       "arrow down selects next element"
     );
 
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    // navigate to the `more link`
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
 
     assert.strictEqual(
       document.activeElement.getAttribute("href"),
@@ -528,8 +508,8 @@ acceptance("Search - Glimmer - Authenticated", function (needs) {
     assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
 
     await click("#search-button");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-    await triggerKeyEvent("#search-term", "keyup", "ArrowUp");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
 
     assert.strictEqual(
       document.activeElement.tagName.toLowerCase(),

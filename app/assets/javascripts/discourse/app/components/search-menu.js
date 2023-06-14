@@ -21,8 +21,18 @@ import { cancel } from "@ember/runloop";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
+const SEARCH_INPUT_ID = "search-term";
+const SEARCH_BUTTON_ID = "search-button";
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
+
+export function focusSearchInput() {
+  document.getElementById(SEARCH_INPUT_ID).focus();
+}
+
+export function focusSearchButton() {
+  document.getElementById(SEARCH_BUTTON_ID).focus();
+}
 
 export default class SearchMenu extends Component {
   @service search;
@@ -87,9 +97,7 @@ export default class SearchMenu extends Component {
     e.stopPropagation();
     e.preventDefault();
     this.search.updateActiveGlobalSearchTerm("");
-    const searchInput = document.getElementById("search-term");
-    searchInput.value = "";
-    searchInput.focus();
+    focusSearchInput();
     this.triggerSearch();
   }
 
