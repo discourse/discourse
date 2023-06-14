@@ -45,5 +45,7 @@ export default function interceptClick(event, target) {
   }
 
   event.preventDefault();
+  event.stopPropagation();
+
   DiscourseURL.routeTo(href);
 }
