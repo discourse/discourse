@@ -3348,9 +3348,6 @@ el:
               content: "Διαχείριση"
             badges:
               content: "Παράσημα"
-            topics:
-              content: "Τα πάνΤα"
-              title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
             groups:

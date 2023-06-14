@@ -3568,9 +3568,6 @@ lt:
               content: "Adminas"
             badges:
               content: "Trofėjai"
-            topics:
-              content: "Viskas"
-              title: "Visos temos"
             faq:
               content: "DUK"
             groups:

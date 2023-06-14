@@ -3442,8 +3442,6 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
-            topics:
-              content: "Всичко"
             faq:
               content: "FAQ"
             groups:

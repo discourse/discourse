@@ -4018,9 +4018,6 @@ it:
             badges:
               content: "Distintivi"
               title: "Tutti i distintivi disponibili"
-            topics:
-              content: "Tutti"
-              title: "Tutti gli argomenti"
             faq:
               content: "FAQ"
               title: "Linee guida per l'utilizzo di questo sito"

@@ -3352,8 +3352,6 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
-            topics:
-              content: "Todo"
             faq:
               content: "PMF"
             groups:

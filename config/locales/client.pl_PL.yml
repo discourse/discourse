@@ -4524,9 +4524,6 @@ pl_PL:
             badges:
               content: "Odznaki"
               title: "Wszystkie odznaki dostępne do zdobycia"
-            topics:
-              content: "Wszystko"
-              title: "Wszystkie tematy"
             faq:
               content: "FAQ"
               title: "Wskazówki dotyczące korzystania z tej witryny"
