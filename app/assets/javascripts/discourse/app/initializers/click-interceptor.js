@@ -3,6 +3,7 @@ import interceptClick from "discourse/lib/intercept-click";
 
 export default {
   name: "click-interceptor",
+
   initialize(container, app) {
     this.rootElement = document.querySelector(app.rootElement);
     this.rootElement.addEventListener("click", this.interceptClick);
@@ -10,11 +11,12 @@ export default {
   },
 
   interceptClick(event) {
-    if (event.currentTarget.tagName !== "A") {
+    const link = event.target.closest("a");
+    if (!link) {
       return;
     }
 
-    return interceptClick(event);
+    interceptClick(event, link);
   },
 
   hashChanged() {

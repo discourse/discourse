@@ -1,14 +1,13 @@
 import DiscourseURL from "discourse/lib/url";
 
-export function wantsNewWindow(e) {
+export function wantsNewWindow(e, target) {
   return (
     e.defaultPrevented ||
-    (e.isDefaultPrevented && e.isDefaultPrevented()) ||
     e.shiftKey ||
     e.metaKey ||
     e.ctrlKey ||
     (e.button && e.button !== 0) ||
-    (e.currentTarget && e.currentTarget.target === "_blank")
+    target?.target === "_blank"
   );
 }
 
@@ -17,28 +16,27 @@ export function wantsNewWindow(e) {
   posts. The downside of this in an Ember app is the links will not go through the router.
   This jQuery code intercepts clicks on those links and routes them properly.
 **/
-export default function interceptClick(e) {
-  if (wantsNewWindow(e)) {
+export default function interceptClick(event, target) {
+  if (wantsNewWindow(event, target)) {
     return;
   }
 
-  const currentTarget = e.currentTarget;
-  const href = currentTarget.getAttribute("href");
+  const href = target.getAttribute("href");
 
   if (
     !href ||
     href.startsWith("#") ||
-    currentTarget.getAttribute("target") ||
-    currentTarget.dataset.emberAction ||
-    currentTarget.dataset.autoRoute ||
-    currentTarget.dataset.shareUrl ||
-    currentTarget.classList.contains("widget-link") ||
-    currentTarget.classList.contains("raw-link") ||
-    currentTarget.classList.contains("mention") ||
-    (!currentTarget.classList.contains("d-link") &&
-      !currentTarget.dataset.userCard &&
-      currentTarget.classList.contains("ember-view")) ||
-    currentTarget.classList.contains("lightbox") ||
+    target.getAttribute("target") ||
+    target.dataset.emberAction ||
+    target.dataset.autoRoute ||
+    target.dataset.shareUrl ||
+    target.classList.contains("widget-link") ||
+    target.classList.contains("raw-link") ||
+    target.classList.contains("mention") ||
+    (!target.classList.contains("d-link") &&
+      !target.dataset.userCard &&
+      target.classList.contains("ember-view")) ||
+    target.classList.contains("lightbox") ||
     href.startsWith("mailto:") ||
     (href.match(/^http[s]?:\/\//i) &&
       !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))
@@ -46,7 +44,6 @@ export default function interceptClick(e) {
     return;
   }
 
-  e.preventDefault();
+  event.preventDefault();
   DiscourseURL.routeTo(href);
-  return false;
 }
