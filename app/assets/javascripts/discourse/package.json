@@ -52,7 +52,7 @@
     "ember-source": "~3.28.12",
     "ember-test-selectors": "^6.0.0",
     "handlebars": "^4.7.7",
-    "html-entities": "^2.3.5",
+    "html-entities": "^2.3.6",
     "js-yaml": "^4.1.0",
     "jsdom": "^22.1.0",
     "markdown-it": "^13.0.1",
