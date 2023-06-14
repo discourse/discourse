@@ -21,8 +21,8 @@ import { cancel } from "@ember/runloop";
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
-const SEARCH_INPUT_ID = "search-term";
-const SEARCH_BUTTON_ID = "search-button";
+export const SEARCH_INPUT_ID = "search-term";
+export const SEARCH_BUTTON_ID = "search-button";
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 

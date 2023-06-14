@@ -32,9 +32,7 @@
         />
       {{/if}}
     {{else}}
-      <SearchMenu::Results::RandomQuickTip
-        @focusSearchInput={{@focusSearchInput}}
-      />
+      <SearchMenu::Results::RandomQuickTip />
 
       {{#if (and this.currentUser this.siteSettings.log_search_queries)}}
         <SearchMenu::Results::RecentSearches

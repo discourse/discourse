@@ -3,9 +3,12 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { isiPad } from "discourse/lib/utilities";
-import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { inject as service } from "@ember/service";
-import { focusSearchButton } from "discourse/components/search-menu";
+import {
+  DEFAULT_TYPE_FILTER,
+  SEARCH_INPUT_ID,
+  focusSearchButton,
+} from "discourse/components/search-menu";
 
 const SECOND_ENTER_MAX_DELAY = 15000;
 
@@ -14,6 +17,11 @@ export default class SearchTerm extends Component {
   @service appEvents;
 
   @tracked lastEnterTimestamp = null;
+
+  // make constant available in template
+  get inputId() {
+    return SEARCH_INPUT_ID;
+  }
 
   @action
   updateSearchTerm(input) {

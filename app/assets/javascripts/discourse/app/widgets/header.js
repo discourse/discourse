@@ -13,6 +13,7 @@ import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
 import { hideUserTip } from "discourse/lib/user-tips";
+import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 
 let _extraHeaderIcons = [];
 
@@ -266,7 +267,7 @@ createWidget("header-icons", {
     const search = this.attach("header-dropdown", {
       title: "search.title",
       icon: "search",
-      iconId: "search-button",
+      iconId: SEARCH_BUTTON_ID,
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
       href: getURL("/search"),
@@ -506,7 +507,7 @@ export default createWidget("header", {
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
-        if (this.currentUser.experimental_search_menu_groups_enabled) {
+        if (this.currentUser?.experimental_search_menu_groups_enabled) {
           panels.push(
             this.attach("glimmer-search-menu-wrapper", {
               inTopicContext: state.inTopicContext && inTopicRoute,
@@ -771,7 +772,7 @@ export default createWidget("header", {
     // input within the search component
     if (
       this.state.searchVisible &&
-      !this.currentUser.experimental_search_menu_groups_enabled
+      !this.currentUser?.experimental_search_menu_groups_enabled
     ) {
       schedule("afterRender", () => {
         const searchInput = document.querySelector("#search-term");
