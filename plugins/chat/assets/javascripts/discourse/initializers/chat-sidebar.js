@@ -218,7 +218,9 @@ export default {
             }
 
             get title() {
-              return "";
+              return I18n.t("chat.placeholder_channel", {
+                channelName: this.channel.escapedTitle,
+              });
             }
 
             get oneOnOneMessage() {
