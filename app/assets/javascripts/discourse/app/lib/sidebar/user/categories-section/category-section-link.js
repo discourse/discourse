@@ -5,7 +5,7 @@ import { get, set } from "@ember/object";
 
 import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/navigation-menu";
 
 const UNREAD_AND_NEW_COUNTABLE = {
   propertyName: "unreadAndNewCount",

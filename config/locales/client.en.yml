@@ -1207,11 +1207,11 @@ en:
         enable: "Enable sidebar"
         options: "Options"
         categories_section: "Categories Section"
-        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
+        categories_section_instruction: "Selected categories will be displayed under Navigation Menu's categories section."
         tags_section: "Tags Section"
-        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
+        tags_section_instruction: "Selected tags will be displayed under Navigation Menu's tags section."
         navigation_section: "Navigation"
-        list_destination_instruction: "When there's new content in the sidebar..."
+        list_destination_instruction: "When there's new content in the navigation menu..."
         list_destination_default: "use the default link and show a badge for new items"
         list_destination_unread_new: "link to unread/new and show a count of new items"
       change: "change"
@@ -1408,7 +1408,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        sidebar: "Sidebar"
+        navigation_menu: "Navigation Menu"
 
       change_password:
         success: "(email sent)"

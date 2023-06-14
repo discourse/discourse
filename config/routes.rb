@@ -650,7 +650,7 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/preferences/sidebar" => "users#preferences",
+      get "#{root_path}/:username/preferences/navigation-menu" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,
           }

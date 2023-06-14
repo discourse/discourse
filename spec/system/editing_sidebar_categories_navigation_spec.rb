@@ -22,7 +22,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   before do
     SiteSetting.new_edit_sidebar_categories_tags_interface_groups = group.name
-    SiteSetting.default_sidebar_categories = "#{category.id}|#{category2.id}"
+    SiteSetting.default_navigation_menu_categories = "#{category.id}|#{category2.id}"
     sign_in(user)
   end
 

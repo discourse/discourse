@@ -118,14 +118,14 @@ RSpec.describe SeedData::Categories do
       expect(category.category_groups.first).to have_attributes(permissions(:staff, :full))
     end
 
-    it "adds default categories SiteSetting.default_sidebar_categories" do
+    it "adds default categories SiteSetting.default_navigation_menu_categories" do
       create_category("staff_category_id")
       staff_category = Category.last
       create_category("meta_category_id")
       site_feedback_category = Category.last
       create_category("general_category_id")
       general_category = Category.last
-      site_setting_ids = SiteSetting.default_sidebar_categories.split("|")
+      site_setting_ids = SiteSetting.default_navigation_menu_categories.split("|")
       create_category("uncategorized_category_id")
 
       expect(site_setting_ids[0].to_i).to eq(staff_category.id)

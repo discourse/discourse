@@ -9,7 +9,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("User Preferences - Sidebar", function (needs) {
+acceptance("User Preferences - Navigation Menu", function (needs) {
   needs.user({
     sidebar_category_ids: [],
     sidebar_tags: [],
@@ -110,7 +110,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
 
   test("user adding categories to sidebar when default sidebar categories have not been configured", async function (assert) {
     updateCurrentUser({ admin: false, display_sidebar_tags: false });
-    await visit("/u/eviltrout/preferences/sidebar");
+    await visit("/u/eviltrout/preferences/navigation-menu");
 
     assert.notOk(exists(".sidebar-section[data-section-name='categories']"));
 
@@ -137,7 +137,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   });
 
   test("user adding categories to sidebar when default sidebar categories have been configured", async function (assert) {
-    this.siteSettings.default_sidebar_categories = "5";
+    this.siteSettings.default_navigation_menu_categories = "5";
 
     await visit("/");
     await click(
@@ -223,13 +223,13 @@ acceptance("User Preferences - Sidebar", function (needs) {
   test("user should not see tag chooser when display_sidebar_tags property is false", async function (assert) {
     updateCurrentUser({ display_sidebar_tags: false });
 
-    await visit("/u/eviltrout/preferences/sidebar");
+    await visit("/u/eviltrout/preferences/navigation-menu");
 
     assert.ok(!exists(".tag-chooser"), "tag chooser is not displayed");
   });
 
   test("user adding tags to sidebar when default tags have not been configured", async function (assert) {
-    await visit("/u/eviltrout/preferences/sidebar");
+    await visit("/u/eviltrout/preferences/navigation-menu");
 
     const tagChooser = selectKit(".tag-chooser");
     await tagChooser.expand();
@@ -246,7 +246,7 @@ acceptance("User Preferences - Sidebar", function (needs) {
   });
 
   test("user adding tags to sidebar when default tags have been configured", async function (assert) {
-    this.siteSettings.default_sidebar_tags = "tag1|tag2";
+    this.siteSettings.default_navigation_menu_tags = "tag1|tag2";
 
     await visit("/");
     await click(

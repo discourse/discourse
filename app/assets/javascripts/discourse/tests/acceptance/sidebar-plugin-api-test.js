@@ -16,7 +16,7 @@ import {
   resetCustomCountables,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/navigation-menu";
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {
