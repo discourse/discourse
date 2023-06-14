@@ -1786,36 +1786,6 @@ fi:
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
     staff_writes_only_mode:
       enabled: "Sivusto on vain henkilökunta -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on rajoitettu vain henkilökunnan jäsenille."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Aloitetaan keskustelu!</a> Sivustolla on { currentTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      } ja { currentPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vierailijat tarvitsevat enemmän luettavaa ja vastattavaa – suosittelemme, että sivustolla olisi vähintään { requiredTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      } ja { requiredPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vain henkilökunta voi nähdä tämän viestin.
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Aloitetaan keskustelu!</a> Sivustolla on { currentTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      }. Vierailijat tarvitset enemmän luettavaa ja vastattavaa – suosittelemme, että sivustolla olisi vähintään { requiredTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      }. Vain henkilökunta voi nähdä tämän viestin.
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Aloitetaan keskustelu!</a> Sivustolla on { currentPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vierailijat tarvitset enemmän luettavaa ja vastattavaa – suosittelemme, että sivustolla olisi vähintään { requiredPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vain henkilökunta voi nähdä tämän viestin.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}.
@@ -4006,6 +3976,8 @@ fi:
       more: "Lisää"
       all_categories: "Kaikki alueet"
       all_tags: "Kaikki tunnisteet"
+      categories_form:
+        save: "Tallenna"
       sections:
         custom:
           save: "Tallenna"
@@ -5131,6 +5103,8 @@ fi:
               key: "vähintään"
             maximum:
               key: "enintään"
+            type:
+              key: "tyyppi"
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."

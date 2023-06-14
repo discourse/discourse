@@ -24,7 +24,7 @@ RSpec.describe FormTemplate, type: :model do
     expect(t.save).to eq(false)
   end
 
-  it "must have a type propety" do
+  it "must have a type property" do
     template = "- hello: world"
     t = Fabricate.build(:form_template, name: "Basic Template", template: template)
     expect(t.save).to eq(false)

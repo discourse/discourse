@@ -10,7 +10,7 @@
   width: 100%;
   z-index: z("header");
   background-color: var(--header_background);
-  box-shadow: shadow("header");
+  box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
 
   > .wrap {
@@ -236,6 +236,7 @@
     position: relative;
   }
   .badge-notification {
+    border: 2px solid var(--header_background);
     position: absolute;
     z-index: z("base");
     left: 0;

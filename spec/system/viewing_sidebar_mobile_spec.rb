@@ -34,7 +34,7 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
     expect(sidebar_dropdown).to be_hidden
   end
 
-  it "collpases the sidebar when clicking on a link in the sidebar" do
+  it "collapses the sidebar when clicking on a link in the sidebar" do
     visit("/latest")
 
     sidebar_dropdown.click

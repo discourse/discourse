@@ -277,7 +277,7 @@ RSpec.describe Notification do
       PostAlerter.post_created(@post)
     end
 
-    it "should create and rollup private message notifications" do
+    it "should create and roll up private message notifications" do
       expect(@target.notifications.first.notification_type).to eq(
         Notification.types[:private_message],
       )

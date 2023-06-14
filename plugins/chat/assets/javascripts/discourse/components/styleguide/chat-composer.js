@@ -18,6 +18,7 @@ export default class ChatStyleguideChatComposer extends Component {
       this.channel.status = CHANNEL_STATUSES.open;
     }
   }
+
   @action
   toggleSending() {
     this.chatChannelPane.sending = !this.chatChannelPane.sending;

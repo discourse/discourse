@@ -475,6 +475,8 @@ uk:
         search: "Пошук повідомлення"
         placeholder: "введіть тут назву, URL-адресу або ідентифікатор"
     review:
+      show_more: "Показати більше"
+      show_less: "Показати менше"
       order_by: "Сортувати за"
       date_filter: "Опубліковано між"
       in_reply_to: "у відповідь на"
@@ -1167,6 +1169,7 @@ uk:
           warning: "Ви впевнені, що хочете очистити свої закріплені теми?"
       use_current_timezone: "Використовувати поточний часовий пояс"
       profile_hidden: "Публічний профіль цього користувача прихований."
+      inactive_user: "Цей користувач більше не активний."
       expand_profile: "Розгорнути"
       sr_expand_profile: "Розгорнути детальну інформацію"
       collapse_profile: "Згорнути"
@@ -1405,6 +1408,42 @@ uk:
                    few {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлення або перегляньте інші повідомлення в {groupLink}}
                    many {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
                 other {Залишилося <a href='{basePath}/u/{username}/messages/group/{groupName}/new'># нових</a> повідомлень або перегляньте інші повідомлення в {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a>}
+                   few {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+                   many {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+                other {Є <a href='{basePath}/u/{username}/messages/unread'># непрочитані</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { і <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   few { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   many { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                other { і <a href='{basePath}/u/{username}/messages/new'># нові</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитане</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   few {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   many {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                other {У вас залишилося <a href='{basePath}/u/{username}/messages/unread'># непрочитаних</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {У вас залишилося <a href='{basePath}/u/{username}/messages/new'># нове</a> повідомлення, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   few {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                   many {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
+                other {Залишилося <a href='{basePath}/u/{username}/messages/new'># нових</a> повідомлень, або перегляньте інші <a href='{basePath}/u/{username}/messages'>особисті повідомлення</a>}
               }
             }
             other {}
@@ -1954,8 +1993,6 @@ uk:
       logout_disabled: "Вихід вимкнено, поки сайт перебуває в режимі лише для читання."
     staff_writes_only_mode:
       enabled: "Сайт працює в режимі \"тільки для команди обслуговування\". Зараз ви можете продовжувати переглядати сайт, але інші дії доступні лише членам команди обслуговування."
-    too_few_posts_notice_MF: |
-      Почнемо <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">старт дискусії!</a> Тут {currentPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Відвідувачам потрібно більше читати та відповідати – ми рекомендуємо {requiredPosts, plural, one {<strong>#</strong> допис} few {<strong>#</strong> дописи} many {<strong>#</strong> дописів} other {<strong>#</strong> дописів}}. Це повідомлення може бачити лише члени команди обслуговування.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# помилка/година} other {# помилок/година}}</a> досягнуто обмеження налаштувань сайту {limit, plural, one {# помилка/година} other {# помилок/година}}.
@@ -2430,6 +2467,7 @@ uk:
       image_alt_text:
         aria_label: Альтернативний текст для зображення
       delete_image_button: Видалити зображення
+      toggle_image_grid: Перемкнути сітку зображень
     notifications:
       tooltip:
         regular:
@@ -2807,6 +2845,11 @@ uk:
         dismiss_tooltip: "Відхилити нові дописи, або перестати стежити за цими темами"
         also_dismiss_topics: "Перестати стежити за цими темами, щоб вони ніколи більше не показувались як непрочитані"
         dismiss_new: "Відхилити Нові"
+        dismiss_new_modal:
+          title: "Відхилити нові"
+          topics: "Відхилити нові теми"
+          posts: "Відхилити нові повідомлення"
+          untrack: "Припинити відстежувати ці теми, щоб вони більше не з’являлися в моєму списку нового"
         dismiss_new_with_selected:
           one: "Відхилити (%{count}) новий…"
           few: "Відхилити (%{count}) нових…"
@@ -2856,6 +2899,7 @@ uk:
         educate:
           new: '<p>Ваші нові теми з’являтимуться тут. Типово теми вважаються новими і показуватимуть індикатор <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, якщо її створено за останні 2 дні.</p><p>Відвідайте свої <a href="%{userPrefsUrl}">налаштування</a>, щоб змінити це.</p>'
           unread: "<p>Ваші непрочитані теми показуватимуться тут.</p><p>Типово теми вважаються непрочитаними та показують кількість непрочитаних <span class=\"badge unread-posts badge-notification\">1</span>, якщо ви:</p><ul><li>створили тему</li><li>відповіли на тему</li><li>читали тему більше ніж 5 хвилини,</li></ul><p>або якщо ви явно додасте тему у перелік на Відстеження або Перегляд за допомогою \U0001F514 в кожній темі.</p><p>Відвідайте свої <a href=\"%{userPrefsUrl}\">налаштування</a>, щоб змінити це.</p>"
+          new_new: "<p>Тут з’являться ваші нові теми, а також непрочитані теми. За замовчуванням теми вважаються новими та відображатимуть індикатор <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> , якщо вони були створені протягом останніх 2 днів. Непрочитані теми відображатимуть кількість непрочитаних <span class=\"badge unread-posts badge-notification\">1</span> , якщо ви: створили тему, відповіли на тему, читали тему більше 5 хвилин, або якщо ви явно встановили тему як Відстежувана або Спостережувана через \U0001F514 у кожній темі.</p><p>Відвідайте свої <a href=\"%{userPrefsUrl}\">налаштування</a> , щоб змінити це.</p>"
       bottom:
         latest: "Більше немає останніх тем."
         posted: "Створених тем більше немає."
@@ -2930,6 +2974,7 @@ uk:
       read_more_in_category: "Хочете прочитати більше? Перегляньте інші теми на %{categoryLink} або <a href='%{latestLink}'>перегляньте останні теми</a>."
       read_more: "Хочете прочитати більше? <a href='%{categoryLink}'>Перегляньте всі категорії</a> або <a href='%{latestLink}'>перегляньте останні теми</a>."
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
+      participant_groups: "Групи учасників"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -3267,6 +3312,7 @@ uk:
           few: "Будь ласка, виберіть тему, в яку ви хотіли б перемістити ці <b>%{count}</b> дописи."
           many: "Будь ласка, виберіть тему, в яку ви хотіли б перемістити цих <b>%{count}</b> дописів."
           other: "Будь ласка, виберіть тему, в яку ви хотіли б перемістити цих <b>%{count}</b> дописів."
+        chronological_order: "зберегти хронологічний порядок після злиття"
       move_to_new_message:
         title: "Перейти до нового повідомленням"
         action: "перейти до нового повідомлення"
@@ -4130,6 +4176,11 @@ uk:
         many: "Заробили цю нагороду %{count} раз"
         other: "Заробили цю нагороду %{count} раз"
       granted_on: "Видана %{date}"
+      others_count:
+        one: "Надано іншим %{count} раз"
+        few: "Надано іншим %{count} рази"
+        many: "Надано іншим %{count} разів"
+        other: "Надано іншим %{count} разів"
       title: Значки
       allow_title: "Ви можете использовать эту нагороду в качестве титула."
       multiple_grant: "Ви можете получить её несколько раз"
@@ -4394,6 +4445,11 @@ uk:
       more: "Більше"
       all_categories: "Всі розділи"
       all_tags: "Всі теґи"
+      categories_form:
+        save: "Зберегти"
+        title: "Редагувати навігацію по категоріях"
+        filter_placeholder: "Фільтр категорій"
+        no_categories: "Немає категорій, що відповідають даним умовам."
       sections:
         custom:
           add: "Додати власний розділ"
@@ -4401,7 +4457,9 @@ uk:
           save: "Зберегти"
           delete: "Видалити"
           delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
+          reset_confirm: "Ви впевнені, що бажаєте повернути цей розділ до стандартних?"
           public: "Зробіть цей розділ загальнодоступним і видимим для всіх"
+          more_menu: "Більше меню"
           links:
             add: "Додати ще одне посилання"
             delete: "Видалити посилання"
@@ -4463,6 +4521,7 @@ uk:
         community:
           header_link_text: "Спільнота"
           header_action_create_topic_title: "Створити тему"
+          header_action_edit_section_title: "Редагувати розділ спільноти"
           links:
             about:
               content: "Про"
@@ -4499,6 +4558,7 @@ uk:
               content: "Переглянути"
               title: "Позначені публікації та інші елементи в черзі"
               pending_count: "%{count} очікує на розгляд"
+        global_section: "Глобальний розділ, видимий для всіх"
     welcome_topic_banner:
       title: "Створіть тему привітання"
       description: "Ваша привітальна тема – це перше, що прочитають нові учасники. Думайте про це як про свою «початкову презентацію» або «програмну заяву». Повідомте всім, для кого ця спільнота, що вони можуть очікувати тут знайти та що ви хочете, щоб вони зробили в першу чергу."
@@ -4754,6 +4814,7 @@ uk:
             posts:
               edit: Редагуйте будь-який допис або якийсь конкретний.
               delete: Видалити допис.
+              list: Список останніх публікацій і приватних повідомлень. Також підтримується RSS.
             tags:
               list: Список тегів.
             categories:
@@ -5414,6 +5475,7 @@ uk:
             revoke_moderation: "відкликати повноваження модератора"
             backup_create: "створити резервну копію"
             deleted_tag: "вилучити теґ"
+            update_directory_columns: "оновити стовпці каталогу"
             deleted_unused_tags: "вилучити теґи, що не використовуються"
             renamed_tag: "перейменований теґ"
             revoke_email: "відкликати e-mail"
@@ -5624,15 +5686,19 @@ uk:
             minimum:
               key: "мінімум"
               type: "ціле число"
-              description: "У текстових полях вказує мінімально допустиму кількість символів."
+              description: "Для текстових полів вкажіть мінімально допустиму кількість символів."
             maximum:
               key: "максимум"
               type: "ціле число"
-              description: "У текстових полях вказує максимальну кількість символів, яку можна ввести. У випадаючих списках з можливістю вибору вказує максимальну кількість варіантів, які можна вибрати."
+              description: "Для текстових полів вкажіть максимально дозволену кількість символів."
             pattern:
               key: "шаблон"
               type: "регулярний вираз"
-              description: "У текстових полях – регулярний вираз, що визначає дозволене введення."
+              description: "Для текстових полів — регулярний вираз, що визначає дозволене введення."
+            type:
+              key: "тип"
+              type: "рядок"
+              description: "Для полів введення ви можете вказати тип введення, який слід очікувати (text|email|date|number|url|tel|color)"
         preview_modal:
           title: "Попередній перегляд шаблону"
         field_placeholders:
@@ -6009,6 +6075,11 @@ uk:
             label: "Додати емодзі"
         title: "Налаштування"
         no_results: "Не знайдено результатів."
+        more_site_setting_results:
+          one: "Є більше %{count} результату. Уточніть пошук або виберіть категорію."
+          few: "Є більше %{count} результатів. Уточніть пошук або виберіть категорію."
+          many: "Є більше %{count} результатів. Уточніть пошук або виберіть категорію."
+          other: "Є більше ніж %{count} результатів. Уточніть пошук або виберіть категорію."
         clear_filter: "Очистити"
         add_url: "додати URL"
         add_host: "додати хост"

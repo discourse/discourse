@@ -46,14 +46,8 @@ export default class ChatMessageReaction extends Component {
   }
 
   @action
-  handleTouchStart(event) {
-    this.handleClick(event);
-  }
-
-  @action
   handleClick(event) {
     event.stopPropagation();
-    event.preventDefault();
 
     this.args.onReaction?.(
       this.args.reaction.emoji,

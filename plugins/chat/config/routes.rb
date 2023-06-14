@@ -35,6 +35,8 @@ Chat::Engine.routes.draw do
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
+
+    get "/channels/:channel_id/summarize" => "summaries#get_summary"
   end
 
   # direct_messages_controller routes

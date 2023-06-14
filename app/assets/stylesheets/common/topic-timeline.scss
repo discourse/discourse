@@ -55,7 +55,7 @@
     left: 0;
     right: 0;
     border-top: 1px solid var(--primary-low);
-    box-shadow: shadow("composer");
+    box-shadow: var(--shadow-composer);
     padding: 20px 0px;
     z-index: z("fullscreen");
     @media screen and (max-height: 425px) {

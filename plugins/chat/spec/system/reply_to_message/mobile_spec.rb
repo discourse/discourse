@@ -89,7 +89,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
       channel_page.fill_composer("reply to message")
       channel_page.click_send_message
 
-      expect(channel_page).to have_message(text: "reply to message")
+      expect(channel_page.messages).to have_message(text: "reply to message")
     end
   end
 end

@@ -3,7 +3,7 @@
   width: 14em;
   border: 1px solid var(--primary-low);
   z-index: z("dropdown");
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
 
   ul {
     margin: 0;

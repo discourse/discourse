@@ -1681,28 +1681,6 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }と{ currentPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }があります。訪問者が読んで返信するトピックと投稿がもっと必要です。少なくとも { requiredTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }と { requiredPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }があります。訪問者が読んで返信できるトピックがもっと必要です。少なくとも { requiredTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }があります。訪問者が読んで返信できる投稿がもっと必要です。少なくとも { requiredPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
@@ -3769,6 +3747,8 @@ ja:
       more: "もっと"
       all_categories: "すべてのカテゴリ"
       all_tags: "すべてのタグ"
+      categories_form:
+        save: "保存"
       sections:
         custom:
           save: "保存"
@@ -4879,6 +4859,8 @@ ja:
               key: "最小"
             maximum:
               key: "最大"
+            type:
+              key: "タイプ"
       impersonate:
         title: "代理操作"
         help: "このツールを使用して、デバッグ目的でユーザーアカウントを代理操作します。作業を終了したら、ログアウトしてください。"

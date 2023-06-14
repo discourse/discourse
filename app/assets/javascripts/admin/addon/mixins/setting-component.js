@@ -27,6 +27,7 @@ const CUSTOM_TYPES = [
   "upload",
   "group_list",
   "tag_list",
+  "tag_group_list",
   "color",
   "simple_list",
   "emoji_list",

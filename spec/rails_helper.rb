@@ -388,7 +388,6 @@ RSpec.configure do |config|
   end
 
   # Match the request hostname to the value in `database.yml`
-  config.before(:all, type: %i[request multisite system]) { host! "test.localhost" }
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
   last_driven_by = nil

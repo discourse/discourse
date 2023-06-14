@@ -18,7 +18,7 @@
   margin: 0 auto;
   max-width: var(--modal-max-width);
   background-color: var(--secondary);
-  box-shadow: shadow("modal");
+  box-shadow: var(--shadow-modal);
 
   .select-kit {
     width: 220px;
@@ -44,7 +44,7 @@
   overflow: auto;
   height: auto;
   background-color: var(--secondary);
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   background-clip: padding-box;
 }
 
@@ -208,7 +208,7 @@
           position: absolute;
           top: 70%;
           padding: 5px 10px;
-          box-shadow: shadow("card");
+          box-shadow: var(--shadow-card);
           z-index: 5;
           background-color: var(--secondary);
           max-height: 150px;
