@@ -445,6 +445,7 @@ RSpec.describe UserNotifications do
     let(:category) { Fabricate(:category, name: "India") }
     let(:tag1) { Fabricate(:tag, name: "Taggo") }
     let(:tag2) { Fabricate(:tag, name: "Taggie") }
+    let(:tag3) { Fabricate(:tag, name: "Teggo") }
 
     let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
     let!(:hidden_tag_group) do
@@ -455,7 +456,7 @@ RSpec.describe UserNotifications do
       Fabricate(
         :topic,
         category: category,
-        tags: [tag1, tag2, hidden_tag],
+        tags: [tag1, tag2, tag3, hidden_tag],
         title: "Super cool topic",
       )
     end
@@ -558,19 +559,49 @@ RSpec.describe UserNotifications do
       expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
 
-    it "the number of tags shown in subject should match max_tags_per_topic" do
-      SiteSetting.email_subject =
-        "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
-      SiteSetting.max_tags_per_topic = 1
-      mail =
-        UserNotifications.user_replied(
-          user,
-          post: response,
-          notification_type: notification.notification_type,
-          notification_data_hash: notification.data_hash,
-        )
-      expect(mail.subject).to match(/Taggo/)
-      expect(mail.subject).not_to match(/Taggie/)
+    describe "number of tags shown in subject line" do
+      describe "max_tags_per_email_subject siteSetting enabled" do
+        before { SiteSetting.enable_max_tags_per_email_subject = true }
+
+        it "should match max_tags_per_email_subject" do
+          SiteSetting.email_subject =
+            "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
+          SiteSetting.max_tags_per_topic = 1
+          SiteSetting.max_tags_per_email_subject = 2
+          mail =
+            UserNotifications.user_replied(
+              user,
+              post: response,
+              notification_type: notification.notification_type,
+              notification_data_hash: notification.data_hash,
+            )
+          expect(mail.subject).to match(/Taggo/)
+          expect(mail.subject).to match(/Taggie/)
+          expect(mail.subject).not_to match(/Teggo/)
+        end
+      end
+
+      describe "max_tags_per_email_subject siteSetting disabled" do
+        before { SiteSetting.enable_max_tags_per_email_subject = false }
+
+        it "should match max_tags_per_topic" do
+          SiteSetting.email_subject =
+            "[%{site_name}] %{optional_pm}%{optional_cat}%{optional_tags}%{topic_title}"
+          SiteSetting.max_tags_per_topic = 2
+          SiteSetting.max_tags_per_email_subject = 1
+
+          mail =
+            UserNotifications.user_replied(
+              user,
+              post: response,
+              notification_type: notification.notification_type,
+              notification_data_hash: notification.data_hash,
+            )
+          expect(mail.subject).to match(/Taggo/)
+          expect(mail.subject).to match(/Taggie/)
+          expect(mail.subject).not_to match(/Teggo/)
+        end
+      end
     end
 
     it "doesn't include details when private_email is enabled" do

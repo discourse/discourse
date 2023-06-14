@@ -37,7 +37,7 @@ class SiteSerializer < ApplicationSerializer
     :hashtag_configurations,
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
-    :anonymous_default_sidebar_tags,
+    :anonymous_default_navigation_menu_tags,
     :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
     :denied_emojis,
@@ -250,13 +250,13 @@ class SiteSerializer < ApplicationSerializer
     About.displayed_plugin_stat_groups
   end
 
-  def anonymous_default_sidebar_tags
-    SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
+  def anonymous_default_navigation_menu_tags
+    SiteSetting.default_navigation_menu_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
 
-  def include_anonymous_default_sidebar_tags?
+  def include_anonymous_default_navigation_menu_tags?
     scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled &&
-      SiteSetting.default_sidebar_tags.present?
+      SiteSetting.default_navigation_menu_tags.present?
   end
 
   def anonymous_sidebar_sections

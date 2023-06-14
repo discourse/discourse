@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 describe "Viewing sidebar preferences", type: :system do
-  let(:user_preferences_sidebar_page) { PageObjects::Pages::UserPreferencesSidebar.new }
+  let(:user_preferences_navigation_menu_page) do
+    PageObjects::Pages::UserPreferencesNavigationMenu.new
+  end
 
   before { SiteSetting.navigation_menu = "sidebar" }
 
@@ -27,19 +29,22 @@ describe "Viewing sidebar preferences", type: :system do
 
     before { sign_in(admin) }
 
-    it "should be able to view sidebar preferences of another user" do
+    it "should be able to view navigation menu preferences of another user" do
       user.user_option.update!(sidebar_list_destination: "unread_new")
 
-      user_preferences_sidebar_page.visit(user)
+      user_preferences_navigation_menu_page.visit(user)
 
-      expect(user_preferences_sidebar_page).to have_sidebar_categories_preference(
+      expect(user_preferences_navigation_menu_page).to have_navigation_menu_categories_preference(
         category,
         category2,
       )
-      expect(user_preferences_sidebar_page).to have_sidebar_tags_preference(tag, tag2)
-      expect(user_preferences_sidebar_page).to have_sidebar_list_destination_preference(
-        "unread_new",
+      expect(user_preferences_navigation_menu_page).to have_navigation_menu_tags_preference(
+        tag,
+        tag2,
       )
+      expect(
+        user_preferences_navigation_menu_page,
+      ).to have_navigation_menu_list_destination_preference("unread_new")
     end
   end
 end
