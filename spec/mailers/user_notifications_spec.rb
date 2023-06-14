@@ -559,7 +559,7 @@ RSpec.describe UserNotifications do
       expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
 
-    describe "the number of tags shown in subject should match max_tags_per_topic or max_tags_per_email_subject" do
+    describe "number of tags shown in subject line" do
       describe "max_tags_per_email_subject siteSetting enabled" do
         before { SiteSetting.enable_max_tags_per_email_subject = true }
 
