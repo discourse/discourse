@@ -143,7 +143,7 @@ module PageObjects
       end
 
       def has_bookmarked_message?(message)
-        within(message_by_id(message.id)) { find(".chat-message-bookmarked") }
+        find(message_by_id_selector(message.id) + ".-bookmarked")
       end
 
       def find_reaction(message, emoji)
