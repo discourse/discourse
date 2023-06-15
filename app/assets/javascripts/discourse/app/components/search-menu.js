@@ -12,6 +12,7 @@ import DiscourseURL from "discourse/lib/url";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import userSearch from "discourse/lib/user-search";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
@@ -162,7 +163,7 @@ export default class SearchMenu extends Component {
           categorySearchTerm,
           this.siteSettings
         );
-        await categoryTagSearch.then((results) => {
+        Promise.resolve(categoryTagSearch).then((results) => {
           if (results !== CANCELLED_STATUS) {
             this.suggestionResults = results;
             this.suggestionKeyword = "#";
