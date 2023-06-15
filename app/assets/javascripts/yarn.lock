@@ -3842,10 +3842,10 @@ ember-cached-decorator-polyfill@^1.0.1:
     ember-cli-babel "^7.26.11"
     ember-cli-babel-plugin-helpers "^1.1.1"
 
-ember-cli-app-version@^6.0.0:
-  version "6.0.0"
-  resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-6.0.0.tgz#531cdd40c30076f0b14122c76d35a30543de21ef"
-  integrity sha512-XhzETSTy+RMTIyxM/FaZ/8aJvAwT/iIp8HC9zukpOaSPEm5i6Vm4tskeXY4OBnY3VwFWNXWssDt1hgIkUP76WQ==
+ember-cli-app-version@^6.0.1:
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-6.0.1.tgz#401cdd440c7fef2059aa54bbadae9ca581d4faa0"
+  integrity sha512-XA1FwkWA5QytmWF0jcJqEr3jcZoiCl9Fb33TZgOVfClL7Voxe+/RwzISEprBRQgbf7j8z1xf8/RJCKfclUy3rQ==
   dependencies:
     ember-cli-babel "^7.26.11"
     git-repo-info "^2.1.1"
