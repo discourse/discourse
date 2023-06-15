@@ -58,9 +58,7 @@ export default class ChatThread {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
-    if (args.preview) {
-      this.preview = ChatThreadPreview.create(args.preview);
-    }
+    this.preview = ChatThreadPreview.create(args.preview);
   }
 
   async stageMessage(message) {

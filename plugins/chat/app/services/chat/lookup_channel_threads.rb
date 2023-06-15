@@ -55,11 +55,17 @@ module Chat
 
     def fetch_threads(guardian:, channel:, **)
       Chat::Thread
+        .strict_loading
         .includes(
           :channel,
-          :last_reply,
+          last_reply: %i[user uploads],
           original_message_user: :user_status,
-          original_message: :chat_webhook_event,
+          original_message: [
+            :chat_webhook_event,
+            :chat_mentions,
+            :chat_channel,
+            user: :user_status,
+          ],
         )
         .joins(:chat_messages, :user_chat_thread_memberships)
         .joins(

@@ -137,8 +137,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/u/eviltrout/preferences/sidebar",
-      "it should transition to user preferences sidebar page"
+      "/u/eviltrout/preferences/navigation-menu",
+      "it should transition to user preferences navigation menu page"
     );
   });
 
@@ -156,7 +156,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
   test("categories section is shown when user has not added any categories but default categories have been configured", async function (assert) {
     updateCurrentUser({ sidebar_category_ids: [] });
     const categories = Site.current().categories;
-    this.siteSettings.default_sidebar_categories = `${categories[0].id}|${categories[1].id}`;
+    this.siteSettings.default_navigation_menu_categories = `${categories[0].id}|${categories[1].id}`;
 
     await visit("/");
 
@@ -178,8 +178,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/u/eviltrout/preferences/sidebar",
-      "it should transition to user preferences sidebar page"
+      "/u/eviltrout/preferences/navigation-menu",
+      "it should transition to user preferences navigation menu page"
     );
   });
 
@@ -974,18 +974,18 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-link[data-link-name='configure-default-sidebar-categories']"
+        ".sidebar-section-link[data-link-name='configure-default-navigation-menu-categories']"
       ),
-      "section link to configure default sidebar categories is shown"
+      "section link to configure default navigation menu categories is shown"
     );
 
     await click(
-      ".sidebar-section-link[data-link-name='configure-default-sidebar-categories']"
+      ".sidebar-section-link[data-link-name='configure-default-navigation-menu-categories']"
     );
 
     assert.strictEqual(
       currentURL(),
-      "/admin/site_settings/category/all_results?filter=default_sidebar_categories",
+      "/admin/site_settings/category/all_results?filter=default_navigation_menu_categories",
       "it links to the admin site settings page correctly"
     );
   });

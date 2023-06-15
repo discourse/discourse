@@ -356,7 +356,7 @@ export default class ChatMessage extends Component {
       this.args.context !== MESSAGE_CONTEXT_THREAD &&
       this.threadingEnabled &&
       this.args.message?.thread &&
-      this.args.message?.threadReplyCount > 0
+      this.args.message?.thread.preview.replyCount > 0
     );
   }
 

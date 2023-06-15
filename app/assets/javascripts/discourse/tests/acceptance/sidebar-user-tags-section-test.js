@@ -110,8 +110,8 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/u/eviltrout/preferences/sidebar",
-      "it should transition to user preferences sidebar page"
+      "/u/eviltrout/preferences/navigation-menu",
+      "it should transition to user preferences navigation menu page"
     );
   });
 
@@ -133,7 +133,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       sidebar_tags: [],
     });
 
-    this.siteSettings.default_sidebar_tags = "tag1|tag2";
+    this.siteSettings.default_navigation_menu_tags = "tag1|tag2";
 
     await visit("/");
 
@@ -155,8 +155,8 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/u/eviltrout/preferences/sidebar",
-      "it should transition to user preferences sidebar page"
+      "/u/eviltrout/preferences/navigation-menu",
+      "it should transition to user preferences navigation menu page"
     );
   });
 
@@ -693,7 +693,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/admin/site_settings/category/all_results?filter=default_sidebar_tags",
+      "/admin/site_settings/category/all_results?filter=default_navigation_menu_tags",
       "it links to the admin site settings page correctly"
     );
   });

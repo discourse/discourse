@@ -3414,8 +3414,6 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
-            everything:
-              content: "Всичко"
             faq:
               content: "FAQ"
             groups:

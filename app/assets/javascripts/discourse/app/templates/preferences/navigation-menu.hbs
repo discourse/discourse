@@ -1,4 +1,4 @@
-<div class="control-group preferences-sidebar-categories">
+<div class="control-group preferences-navigation-menu-categories">
   <legend class="control-label">{{i18n
       "user.experimental_sidebar.categories_section"
     }}</legend>
@@ -20,7 +20,7 @@
 </div>
 
 {{#if this.model.display_sidebar_tags}}
-  <div class="control-group preferences-sidebar-tags">
+  <div class="control-group preferences-navigation-menu-tags">
     <legend class="control-label">{{i18n
         "user.experimental_sidebar.tags_section"
       }}</legend>
@@ -41,7 +41,7 @@
   </div>
 {{/if}}
 
-<div class="control-group preferences-sidebar-navigation">
+<div class="control-group preferences-navigation-menu-navigation">
   <legend class="control-label">{{i18n
       "user.experimental_sidebar.navigation_section"
     }}</legend>
@@ -51,7 +51,7 @@
         "user.experimental_sidebar.list_destination_instruction"
       }}</label>
     <ComboBox
-      @class="preferences-sidebar-navigation__list-destination-selector"
+      @class="preferences-navigation-menu-navigation__list-destination-selector"
       @valueProperty="value"
       @content={{this.sidebarListDestinations}}
       @value={{this.newSidebarListDestination}}

@@ -66,13 +66,11 @@ describe "Thread indicator for chat messages", type: :system do
 
     it "shows the correct reply counts" do
       chat_page.visit_channel(channel)
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_css(
-        ".chat-message-thread-indicator__replies-count",
-        text: I18n.t("js.chat.thread.replies", count: 3),
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(
+        3,
       )
-      expect(channel_page.message_thread_indicator(thread_2.original_message)).to have_css(
-        ".chat-message-thread-indicator__replies-count",
-        text: I18n.t("js.chat.thread.replies", count: 1),
+      expect(channel_page.message_thread_indicator(thread_2.original_message)).to have_reply_count(
+        1,
       )
     end
 
@@ -103,9 +101,8 @@ describe "Thread indicator for chat messages", type: :system do
     it "increments the indicator when a new reply is sent in the thread" do
       chat_page.visit_channel(channel)
 
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_css(
-        ".chat-message-thread-indicator__replies-count",
-        text: I18n.t("js.chat.thread.replies", count: 3),
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(
+        3,
       )
 
       channel_page.message_thread_indicator(thread_1.original_message).click
@@ -114,9 +111,54 @@ describe "Thread indicator for chat messages", type: :system do
 
       open_thread.send_message
 
-      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_css(
-        ".chat-message-thread-indicator__replies-count",
-        text: I18n.t("js.chat.thread.replies", count: 4),
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(
+        4,
+      )
+    end
+
+    it "shows participants of the thread" do
+      chat_page.visit_channel(channel)
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
+        current_user,
+      )
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
+        other_user,
+      )
+    end
+
+    it "shows an excerpt of the last reply in the thread" do
+      chat_page.visit_channel(channel)
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_excerpt(
+        thread_1.replies.last,
+      )
+    end
+
+    it "updates the last reply excerpt and participants when a new message is added to the thread" do
+      new_user = Fabricate(:user)
+      chat_system_user_bootstrap(user: new_user, channel: channel)
+      original_last_reply = thread_1.replies.last
+
+      chat_page.visit_channel(channel)
+
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_excerpt(
+        original_last_reply,
+      )
+
+      using_session(:new_user) do |session|
+        sign_in(new_user)
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(thread_1.original_message).click
+
+        expect(side_panel).to have_open_thread(thread_1)
+
+        open_thread.send_message("wow i am happy to join this thread!")
+      end
+
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
+        new_user,
+      )
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_excerpt(
+        thread_1.replies.where(user: new_user).first,
       )
     end
   end

@@ -1,0 +1,22 @@
+.chat-thread-participants {
+  &__other-count {
+    font-size: var(--font-down-2);
+    text-align: right;
+    color: var(--primary-medium);
+  }
+
+  &__avatar-group {
+    display: flex;
+    justify-content: flex-end;
+
+    .chat-user-avatar {
+      width: auto !important;
+
+      .avatar {
+        width: 24px;
+        height: 24px;
+        padding: 0;
+      }
+    }
+  }
+}

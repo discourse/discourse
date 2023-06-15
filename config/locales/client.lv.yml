@@ -2815,8 +2815,6 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
-            everything:
-              content: "Viss"
             faq:
               content: "BUJ"
             groups:

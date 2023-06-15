@@ -3076,8 +3076,6 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
-            everything:
-              content: "Sve"
             faq:
               content: "Česta pitanja"
             groups:

@@ -62,13 +62,13 @@ module Chat
         create_thread
         @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
+        post_process_resolved_thread
         Chat::Publisher.publish_new!(
           @chat_channel,
           @chat_message,
           @staged_id,
           staged_thread_id: @staged_thread_id,
         )
-        post_process_resolved_thread
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
         @chat_channel.touch(:last_message_sent_at)

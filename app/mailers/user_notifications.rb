@@ -601,12 +601,19 @@ class UserNotifications < ActionMailer::Base
 
     # tag names
     if opts[:show_tags_in_subject] && post.topic_id
+      max_tags =
+        if SiteSetting.enable_max_tags_per_email_subject
+          SiteSetting.max_tags_per_email_subject
+        else
+          SiteSetting.max_tags_per_topic
+        end
+
       tags =
         DiscourseTagging
           .visible_tags(Guardian.new(user))
           .joins(:topic_tags)
           .where("topic_tags.topic_id = ?", post.topic_id)
-          .limit(SiteSetting.max_tags_per_topic)
+          .limit(max_tags)
           .pluck(:name)
 
       show_tags_in_subject = tags.any? ? tags.join(" ") : nil

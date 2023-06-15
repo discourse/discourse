@@ -4061,9 +4061,6 @@ tr_TR:
             badges:
               content: "Rozetler"
               title: "Kazanılabilecek tüm rozetler"
-            everything:
-              content: "Her şey"
-              title: "Tüm konular"
             faq:
               content: "SSS"
               title: "Bu siteyi kullanmak için kılavuz"

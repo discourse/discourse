@@ -59,7 +59,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
     it "replies to the existing thread" do
       chat_page.visit_channel(channel_1)
 
-      expect(channel_page).to have_thread_indicator(original_message, text: "1")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
       channel_page.reply_to(original_message)
       thread_page.send_message("reply to message")
@@ -69,7 +69,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
 
       thread_page.close
 
-      expect(channel_page).to have_thread_indicator(original_message, text: "2")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
       expect(channel_page.messages).to have_no_message(text: "reply to message")
     end
   end

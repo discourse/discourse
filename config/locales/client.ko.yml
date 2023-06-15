@@ -3568,9 +3568,6 @@ ko:
               content: "관리자"
             badges:
               content: "배지"
-            everything:
-              content: "모두"
-              title: "모든 글"
             faq:
               content: "자주하는 질문"
             groups:

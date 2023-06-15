@@ -2909,9 +2909,6 @@ zh_TW:
               content: "管理員"
             badges:
               content: "徽章"
-            everything:
-              content: "所有"
-              title: "所有話題"
             faq:
               content: "常見問答"
             groups:

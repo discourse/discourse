@@ -4198,9 +4198,6 @@ hr:
             badges:
               content: "Značke"
               title: "Sve značke dostupne za osvajanje"
-            everything:
-              content: "Sve"
-              title: "Sve teme"
             faq:
               content: "ČPP"
               title: "Smjernice za korištenje ove stranice"

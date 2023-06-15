@@ -57,7 +57,7 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
       chat_page.open_from_header
       drawer_page.open_channel(channel_1)
 
-      expect(channel_page).to have_thread_indicator(original_message, text: "1")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
       channel_page.reply_to(original_message)
 
@@ -70,7 +70,7 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
 
       drawer_page.back
 
-      expect(channel_page).to have_thread_indicator(original_message, text: "2")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
       expect(channel_page.messages).to have_no_message(text: "reply to message")
     end
   end
