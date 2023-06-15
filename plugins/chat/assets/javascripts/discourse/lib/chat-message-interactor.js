@@ -122,7 +122,6 @@ export default class ChatMessageInteractor {
   get canFlagMessage() {
     return (
       this.currentUser?.id !== this.message?.user?.id &&
-      !this.message.channel?.isDirectMessageChannel &&
       this.message?.userFlagStatus === undefined &&
       this.message.channel?.canFlag &&
       !this.message?.chatWebhookEvent &&
