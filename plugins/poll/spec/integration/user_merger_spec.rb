@@ -5,12 +5,6 @@ RSpec.describe UserMerger do
   fab!(:source_user) { Fabricate(:user, username: "lancelot", email: "lancelot@knights.com") }
   fab!(:poll) { Fabricate(:poll) }
 
-  def merge_users!(source = nil, target = nil)
-    source ||= source_user
-    target ||= target_user
-    UserMerger.new(source, target).merge!
-  end
-
   it "deletes source_user vote if target_user already voted" do
     Fabricate(:poll_vote, poll: poll, user: target_user)
     Fabricate(:poll_vote, poll: poll, user: source_user)
