@@ -98,6 +98,38 @@ RSpec.describe Guardian do
     fab!(:user) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post) }
 
+    describe "an anonymous user" do
+      before { SiteSetting.allow_anonymous_posting = true }
+
+      context "when allow_anonymous_likes is enabled" do
+        before { SiteSetting.allow_anonymous_likes = true }
+
+        it "returns true when liking" do
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :like)).to be_truthy
+        end
+
+        it "cannot perform any other action" do
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :flag)).to be_falsey
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :bookmark)).to be_falsey
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :notify_user)).to be_falsey
+        end
+      end
+
+      context "when allow_anonymous_likes is disabled" do
+        before { SiteSetting.allow_anonymous_likes = false }
+
+        it "returns false when liking" do
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :like)).to be_falsey
+        end
+
+        it "cannot perform any other action" do
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :flag)).to be_falsey
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :bookmark)).to be_falsey
+          expect(Guardian.new(anonymous_user).post_can_act?(post, :notify_user)).to be_falsey
+        end
+      end
+    end
+
     it "returns false when the user is nil" do
       expect(Guardian.new(nil).post_can_act?(post, :like)).to be_falsey
     end
