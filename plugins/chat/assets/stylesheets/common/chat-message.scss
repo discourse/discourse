@@ -234,7 +234,7 @@
       grid-template-areas:
         "avatar message"
         "threadindicator threadindicator";
-      padding: 0.65rem 1rem !important;
+      padding-bottom: 0.65rem !important;
 
       .chat-user-avatar {
         grid-area: avatar;

@@ -32,10 +32,6 @@
   }
 }
 
-.chat-message-container:not(.-user-info-hidden) {
-  padding: 0.65rem 1rem 0.15rem;
-}
-
 .chat-message-text {
   img:not(.emoji):not(.avatar, .onebox-avatar-inline) {
     transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -49,8 +45,16 @@
   }
 }
 
+.chat-message-container:not(.-user-info-hidden) {
+  .chat-message {
+    padding: 0.65rem 1rem 0.15rem;
+  }
+}
+
 .chat-message-container.-user-info-hidden {
-  padding: 0.15rem 1rem;
+  .chat-message {
+    padding: 0.15rem 1rem;
+  }
 
   .chat-time {
     color: var(--secondary-medium);
