@@ -381,7 +381,6 @@ sr:
     warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     autohighlight_all_code: "Forsiraj primenu označavanja koda za sve preformatirane blokove koda i kada nije eksplicitno naveden jezik."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
-    show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
     delete_drafts_older_than_n_days: "Izbriši radne verzije poruka starije od (n) dana"
     enable_emoji: "Omogući emotikone"
     emoji_set: "Koliko bi ste želeli vas emoji?"

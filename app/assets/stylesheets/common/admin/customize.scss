@@ -961,7 +961,7 @@ table.permalinks {
       height: calc(100vh - 450px);
       min-height: 200px;
       width: 100%;
-      box-shadow: shadow("footer-nav");
+      box-shadow: var(--shadow-footer-nav);
       border-radius: 4px;
     }
 

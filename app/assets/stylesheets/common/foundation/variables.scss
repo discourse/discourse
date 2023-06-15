@@ -132,49 +132,6 @@ $z-layers: (
   @return map-deep-get($z-layers, $layers...);
 }
 
-// Box-shadow
-// --------------------------------------------------
-
-$box-shadow-light: (
-  "modal": 0 8px 60px rgba(0, 0, 0, 0.6),
-  "composer": 0 -1px 40px rgba(0, 0, 0, 0.12),
-  "menu-panel": 0 12px 12px rgba(0, 0, 0, 0.15),
-  "card": 0 4px 14px rgba(0, 0, 0, 0.15),
-  "dropdown": 0 2px 3px 0 rgba(0, 0, 0, 0.2),
-  "dropdown-lite": 0px 2px 12px 0px rgba(0, 0, 0, 0.1),
-  "header": 0 2px 4px -1px rgba(0, 0, 0, 0.25),
-  "footer-nav": 0 0 2px 0 rgba(0, 0, 0, 0.25),
-  "kbd": (
-    0 2px 0 rgba(0, 0, 0, 0.2),
-    0 0 0 1px dark-light-choose(#fff, #000) inset,
-  ),
-  "focus": 0 0 3px 0 $tertiary,
-  "focus-danger": 0 0 6px 0 $danger,
-);
-
-// do not add a dark shadow without a light equivilant
-$box-shadow-dark: (
-  "modal": 0 8px 60px rgba(0, 0, 0, 1),
-  "composer": 0 -1px 40px rgba(0, 0, 0, 0.35),
-  "menu-panel": 0 8px 12px rgba(0, 0, 0, 0.35),
-  "card": 0 4px 14px rgba(0, 0, 0, 0.5),
-  "dropdown": 0 2px 3px 0 rgba(0, 0, 0, 0.35),
-  "dropdown-lite": 0px 2px 12px 0px rgba(0, 0, 0, 0.25),
-);
-
-@function shadow($key) {
-  @if is-light-color-scheme() {
-    @return map-get($box-shadow-light, $key);
-  } @else {
-    $shadow-dark: map-get($box-shadow-dark, $key);
-    @if $shadow-dark != null {
-      @return $shadow-dark;
-    } @else {
-      @return map-get($box-shadow-light, $key);
-    }
-  }
-}
-
 // Color utilities
 // --------------------------------------------------
 

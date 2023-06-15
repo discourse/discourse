@@ -34,7 +34,7 @@
       {{else}}
         <Sidebar::SectionLink
           @linkName="configure-tags"
-          @route="preferences.sidebar"
+          @route="preferences.navigation-menu"
           @prefixType="icon"
           @prefixValue="pencil-alt"
           @model={{this.currentUser}}
@@ -54,7 +54,7 @@
         @prefixValue="wrench"
         @route="adminSiteSettingsCategory"
         @model="sidebar"
-        @query={{hash filter="default_sidebar_tags"}}
+        @query={{hash filter="default_navigation_menu_tags"}}
       />
     {{/if}}
   </Sidebar::Section>

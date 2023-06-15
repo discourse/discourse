@@ -2875,6 +2875,8 @@ ca:
         other: "%{count} nous"
       more: "Més"
       all_categories: "Totes les categories"
+      categories_form:
+        save: "Desa"
       sections:
         custom:
           save: "Desa"
@@ -2910,8 +2912,6 @@ ca:
               content: "Administració"
             badges:
               content: "Insígnies"
-            everything:
-              content: "Qualsevol cosa"
             faq:
               content: "PMF"
             groups:
@@ -3761,6 +3761,8 @@ ca:
           validations:
             required:
               key: "necessari"
+            type:
+              key: "tipus"
       impersonate:
         title: "Suplanta"
         help: "Feu servir aquesta eina per a suplantar comptes amb l'objectiu de depurar. Haureu de tancar la sessió quan acabeu."

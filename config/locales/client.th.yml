@@ -2419,6 +2419,8 @@ th:
         other: "%{count} ใหม่"
       more: "อื่น"
       all_categories: "หมวดหมู่ทั้งหมด"
+      categories_form:
+        save: "บันทึก"
       sections:
         custom:
           save: "บันทึก"
@@ -2455,8 +2457,6 @@ th:
               content: "แอดมิน"
             badges:
               content: "เหรียญ"
-            everything:
-              content: "ทุกสิ่ง"
             faq:
               content: "คำถามที่พบบ่อย"
             groups:
@@ -2892,6 +2892,8 @@ th:
           validations:
             required:
               key: "ต้องการ"
+            type:
+              key: "ชนิด"
       impersonate:
         not_found: "ไม่พบผู้ใช้นั้น"
       users:

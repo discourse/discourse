@@ -13,9 +13,9 @@ class SidebarSiteSettingsBackfiller
 
     @linkable_klass, previous_ids, new_ids =
       case setting_name
-      when "default_sidebar_categories"
+      when "default_navigation_menu_categories"
         [Category, previous_value.split("|"), new_value.split("|")]
-      when "default_sidebar_tags"
+      when "default_navigation_menu_tags"
         klass = Tag
 
         [

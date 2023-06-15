@@ -988,9 +988,6 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
-  experimental_post_image_grid:
-    client: true
-    default: false
   highlighted_languages:
     default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
@@ -2115,6 +2112,9 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  experimental_post_image_grid:
+    client: true
+    default: false
   new_edit_sidebar_categories_tags_interface_groups:
     type: group_list
     list_type: compact
@@ -2128,11 +2128,11 @@ navigation:
     default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
-  default_sidebar_categories:
+  default_navigation_menu_categories:
     type: category_list
     default: ""
     client: true
-  default_sidebar_tags:
+  default_navigation_menu_tags:
     type: tag_list
     default: ""
     client: true
@@ -2350,6 +2350,17 @@ uncategorized:
   summary_timeline_button:
     client: true
     default: false
+
+  summarization_strategy:
+    client: true
+    default: ""
+    enum: "SummarizationStrategy"
+    validator: "SummarizationValidator"
+  custom_summarization_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
 
   automatic_topic_heat_values: true
 
@@ -2765,6 +2776,13 @@ tags:
   max_tags_per_topic:
     default: 5
     client: true
+  enable_max_tags_per_email_subject:
+    default: false
+    client: true
+  max_tags_per_email_subject:
+    default: 5
+    client: true
+    min: 0
   max_tag_length:
     default: 20
     client: true

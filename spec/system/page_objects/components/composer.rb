@@ -142,6 +142,12 @@ module PageObjects
         page.has_css?(".form-template-field[data-field-type='#{field}']")
       end
 
+      def has_form_template_field_required_indicator?(field)
+        page.has_css?(
+          ".form-template-field[data-field-type='#{field}'] .form-template-field__required-indicator",
+        )
+      end
+
       FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
 
       def has_no_form_template_chooser?

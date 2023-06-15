@@ -2244,6 +2244,8 @@ sw:
         other: "Mada mpya %{count} "
       more: "Zaidi"
       all_categories: "Kategoria Zote"
+      categories_form:
+        save: "Hifadhi"
       sections:
         custom:
           save: "Hifadhi"
@@ -2911,6 +2913,8 @@ sw:
           validations:
             required:
               key: "muhimu"
+            type:
+              key: "aina"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."

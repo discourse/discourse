@@ -8,6 +8,7 @@ import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
+import showModal from "discourse/lib/show-modal";
 
 const DEBOUNCE_DELAY = 50;
 
@@ -266,6 +267,12 @@ export default MountWidget.extend({
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers, readPostNumbers);
+  },
+
+  showSummary() {
+    showModal("topic-summary").setProperties({
+      topicId: this.posts.objectAt(0).topic_id,
+    });
   },
 
   _scrollTriggered() {

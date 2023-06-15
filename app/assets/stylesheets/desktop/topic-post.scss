@@ -325,6 +325,10 @@ pre.codeblock-buttons:hover {
       background: var(--primary-low);
     }
   }
+
+  .toggle-summary .summarization-buttons .topic-strategy-summarization {
+    margin-left: 10px;
+  }
 }
 
 #topic-footer-buttons {
@@ -371,10 +375,6 @@ span.post-count {
 button.expand-post {
   margin-top: 10px;
   margin-left: var(--topic-body-width-padding);
-}
-
-iframe {
-  max-width: 100%;
 }
 
 video {
@@ -547,7 +547,7 @@ blockquote {
   width: 200px;
   position: fixed;
   z-index: z("dropdown") + 1; // 1 higher than .select-posts
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   padding: 0.714em;
   margin-bottom: 5px;
   right: 10px;

@@ -3,7 +3,6 @@ import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatChannelArchive from "../models/chat-channel-archive";
-import ChatThreadPreview from "../models/chat-thread-preview";
 
 export default class ChatSubscriptionsManager extends Service {
   @service store;
@@ -224,12 +223,6 @@ export default class ChatSubscriptionsManager extends Service {
       channel.threadsManager
         .find(busData.channel_id, busData.thread_id)
         .then((thread) => {
-          thread.preview = ChatThreadPreview.create({
-            lastReplyId: busData.message_id,
-            lastReplyExcerpt: busData.excerpt,
-            lastReplyCreatedAt: busData.created_at,
-          });
-
           if (busData.user_id === this.currentUser.id) {
             // Thread should no longer be considered unread.
             if (thread.currentUserMembership) {

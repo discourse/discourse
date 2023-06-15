@@ -2,26 +2,26 @@
 
 module PageObjects
   module Pages
-    class UserPreferencesSidebar < PageObjects::Pages::Base
+    class UserPreferencesNavigationMenu < PageObjects::Pages::Base
       def visit(user)
-        page.visit("/u/#{user.username}/preferences/sidebar")
+        page.visit("/u/#{user.username}/preferences/navigation-menu")
         self
       end
 
-      def has_sidebar_categories_preference?(*categories)
+      def has_navigation_menu_categories_preference?(*categories)
         category_selector_header = page.find(".category-selector .select-kit-header-wrapper")
         category_selector_header.has_content?(categories.map(&:name).join(", "))
       end
 
-      def has_sidebar_tags_preference?(*tags)
+      def has_navigation_menu_tags_preference?(*tags)
         tag_selector_header = page.find(".tag-chooser .select-kit-header-wrapper")
         tag_selector_header.has_content?(tags.map(&:name).join(", "))
       end
 
-      def has_sidebar_list_destination_preference?(type)
+      def has_navigation_menu_list_destination_preference?(type)
         list_selector_header =
           page.find(
-            ".preferences-sidebar-navigation__list-destination-selector .select-kit-header-wrapper",
+            ".preferences-navigation-menu-navigation__list-destination-selector .select-kit-header-wrapper",
           )
         list_selector_header.has_content?(
           I18n.t("js.user.experimental_sidebar.list_destination_#{type}"),

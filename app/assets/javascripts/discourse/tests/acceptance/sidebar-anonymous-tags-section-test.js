@@ -38,7 +38,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
 
   test("tag section links when site has default sidebar tags configured", async function (assert) {
     const site = Site.current();
-    site.set("anonymous_default_sidebar_tags", ["random", "meta"]);
+    site.set("anonymous_default_navigation_menu_tags", ["random", "meta"]);
 
     await visit("/");
 
@@ -71,7 +71,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
 
     site.setProperties({
       top_tags: [],
-      anonymous_default_sidebar_tags: [],
+      anonymous_default_navigation_menu_tags: [],
     });
 
     await visit("/");

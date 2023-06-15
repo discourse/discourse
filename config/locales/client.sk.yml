@@ -2291,6 +2291,8 @@ sk:
         other: "%{count} nových"
       more: "Viac"
       all_categories: "Všetky kategórie"
+      categories_form:
+        save: "Uložiť"
       sections:
         custom:
           save: "Uložiť"
@@ -2325,8 +2327,6 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Všetko"
             faq:
               content: "Časté otázky"
             groups:
@@ -2840,6 +2840,8 @@ sk:
           validations:
             required:
               key: "povinné"
+            type:
+              key: "typ"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."

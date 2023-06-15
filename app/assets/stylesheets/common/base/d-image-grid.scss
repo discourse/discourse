@@ -18,6 +18,26 @@
 
   .d-image-grid-column {
     box-sizing: border-box;
+    // use flex layout, flex-grow and object-fit: cover
+    // to better have the images fill their containers
+    // and line up vertically (it's not perfect!)
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    > div,
+    > span {
+      flex-grow: 1;
+      overflow: hidden;
+      // hardcoded max-height here prevents extra tall images
+      // from having an outsized effect on the grid
+      max-height: 1200px;
+
+      img:not(.thumbnail):not(.ytp-thumbnail-image):not(.emoji) {
+        height: 100%;
+        object-fit: cover;
+      }
+    }
 
     &:last-child {
       margin-right: 0;
@@ -28,7 +48,7 @@
       margin-bottom: $grid-column-gap;
     }
 
-    // Forces images in the grid to fill each column
+    // Forces images in the grid to fill each column width-wise
     img,
     > .lightbox-wrapper,
     > .lightbox-wrapper > .lightbox {
@@ -42,25 +62,40 @@
       .meta .filename {
         flex-grow: 3;
       }
+      // full-height lightbox element in container
+      > .lightbox {
+        height: 100%;
+      }
     }
 
     // when staging edits
     .image-wrapper {
       display: block;
-      padding-bottom: $grid-column-gap;
-      margin-bottom: 0em;
+      margin-bottom: $grid-column-gap;
+      padding-bottom: 0em;
     }
   }
 
-  .desktop-view .d-editor-preview & {
+  .d-editor-preview & {
     .image-wrapper {
-      padding-bottom: $grid-column-gap;
-      margin-bottom: 0em;
+      margin-bottom: $grid-column-gap;
+      padding-bottom: 0em;
       .button-wrapper {
         .scale-btn-container,
         &[editing] .wrap-image-grid-button {
           display: none;
         }
+      }
+    }
+  }
+
+  .mobile-view .d-editor-preview & {
+    .image-wrapper {
+      .button-wrapper {
+        opacity: 0;
+      }
+      &:hover .button-wrapper {
+        opacity: 1;
       }
     }
   }

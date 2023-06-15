@@ -2920,6 +2920,8 @@ ro:
         other: "%{count} nou"
       more: "Mai multe"
       all_categories: "Toate categoriile"
+      categories_form:
+        save: "Salvare"
       sections:
         custom:
           save: "Salvare"
@@ -2955,8 +2957,6 @@ ro:
               content: "Administrator"
             badges:
               content: "Ecusoane"
-            everything:
-              content: "Totul"
             faq:
               content: "Întrebări frecvente"
             groups:
@@ -3574,6 +3574,8 @@ ro:
               key: "minim"
             maximum:
               key: "maxim"
+            type:
+              key: "tip"
       impersonate:
         title: "Joacă rolul utilizatorului"
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."

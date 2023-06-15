@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe User do
+  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+
   fab!(:group) { Fabricate(:group) }
 
-  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+  it_behaves_like "it has custom fields"
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
@@ -46,8 +48,8 @@ RSpec.describe User do
       before do
         SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
-        SiteSetting.default_sidebar_categories = "#{category.id}|#{secured_category.id}"
-        SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
+        SiteSetting.default_navigation_menu_categories = "#{category.id}|#{secured_category.id}"
+        SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{hidden_tag.name}"
       end
 
       it "creates the right sidebar section link records for categories and tags that a user can see" do

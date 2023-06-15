@@ -92,24 +92,24 @@ RSpec.describe Admin::SiteSettingsController do
       end
 
       context "for sidebar defaults" do
-        it "returns the right count for the default_sidebar_categories site setting" do
+        it "returns the right count for the default_navigation_menu_categories site setting" do
           category = Fabricate(:category)
 
-          put "/admin/site_settings/default_sidebar_categories/user_count.json",
+          put "/admin/site_settings/default_navigation_menu_categories/user_count.json",
               params: {
-                default_sidebar_categories: "#{category.id}",
+                default_navigation_menu_categories: "#{category.id}",
               }
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["user_count"]).to eq(User.real.not_staged.count)
         end
 
-        it "returns the right count for the default_sidebar_tags site setting" do
+        it "returns the right count for the default_navigation_menu_tags site setting" do
           tag = Fabricate(:tag)
 
-          put "/admin/site_settings/default_sidebar_tags/user_count.json",
+          put "/admin/site_settings/default_navigation_menu_tags/user_count.json",
               params: {
-                default_sidebar_tags: "#{tag.name}",
+                default_navigation_menu_tags: "#{tag.name}",
               }
 
           expect(response.status).to eq(200)
@@ -319,32 +319,32 @@ RSpec.describe Admin::SiteSettingsController do
         end
       end
 
-      context "when updating default sidebar categories and tags" do
+      context "when updating default navigation menu categories and tags" do
         it "does not enqueue the backfilling job if update_existing_user param is not present" do
           expect_not_enqueued_with(job: :backfill_sidebar_site_settings) do
-            put "/admin/site_settings/default_sidebar_categories.json",
+            put "/admin/site_settings/default_navigation_menu_categories.json",
                 params: {
-                  default_sidebar_categories: "1|2",
+                  default_navigation_menu_categories: "1|2",
                 }
 
             expect(response.status).to eq(200)
           end
         end
 
-        it "enqueus the backfilling job if update_existing_user param is present when updating default sidebar tags" do
-          SiteSetting.default_sidebar_tags = "tag3"
+        it "enqueues the backfilling job if update_existing_user param is present when updating default navigation menu tags" do
+          SiteSetting.default_navigation_menu_tags = "tag3"
 
           expect_enqueued_with(
             job: :backfill_sidebar_site_settings,
             args: {
-              setting_name: "default_sidebar_tags",
+              setting_name: "default_navigation_menu_tags",
               new_value: "tag1|tag2",
               previous_value: "tag3",
             },
           ) do
-            put "/admin/site_settings/default_sidebar_tags.json",
+            put "/admin/site_settings/default_navigation_menu_tags.json",
                 params: {
-                  default_sidebar_tags: "tag1|tag2",
+                  default_navigation_menu_tags: "tag1|tag2",
                   update_existing_user: true,
                 }
 
@@ -352,20 +352,20 @@ RSpec.describe Admin::SiteSettingsController do
           end
         end
 
-        it "enqueus the backfilling job if update_existing_user param is present when updating default sidebar categories" do
-          SiteSetting.default_sidebar_categories = "3|4"
+        it "enqueues the backfilling job if update_existing_user param is present when updating default navigation_menu categories" do
+          SiteSetting.default_navigation_menu_categories = "3|4"
 
           expect_enqueued_with(
             job: :backfill_sidebar_site_settings,
             args: {
-              setting_name: "default_sidebar_categories",
+              setting_name: "default_navigation_menu_categories",
               new_value: "1|2",
               previous_value: "3|4",
             },
           ) do
-            put "/admin/site_settings/default_sidebar_categories.json",
+            put "/admin/site_settings/default_navigation_menu_categories.json",
                 params: {
-                  default_sidebar_categories: "1|2",
+                  default_navigation_menu_categories: "1|2",
                   update_existing_user: true,
                 }
 
@@ -607,7 +607,7 @@ RSpec.describe Admin::SiteSettingsController do
           expect(response.status).to eq(200)
         end
 
-        it "does not allow changing of unconfigurable settings" do
+        it "does not allow changing of non-configurable settings" do
           SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
 
           put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "not allowed" }

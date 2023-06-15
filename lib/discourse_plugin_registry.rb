@@ -113,6 +113,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :list_suggested_for_providers
 
+  define_filtered_register :summarization_strategies
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

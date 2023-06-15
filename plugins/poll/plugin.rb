@@ -169,7 +169,22 @@ after_initialize do
   end
 
   on(:merging_users) do |source_user, target_user|
-    PollVote.where(user_id: source_user.id).update_all(user_id: target_user.id)
+    DB.exec(<<-SQL, source_user_id: source_user.id, target_user_id: target_user.id)
+      DELETE FROM poll_votes
+      WHERE poll_id IN (
+        SELECT poll_id
+        FROM poll_votes
+        WHERE user_id = :source_user_id
+        INTERSECT
+        SELECT poll_id
+        FROM poll_votes
+        WHERE user_id = :target_user_id
+      ) AND user_id = :source_user_id;
+
+      UPDATE poll_votes
+      SET user_id = :target_user_id
+      WHERE user_id = :source_user_id;
+    SQL
   end
 
   add_to_class(:topic_view, :polls) do

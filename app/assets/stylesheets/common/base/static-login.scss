@@ -34,7 +34,7 @@ body.static-login {
     border: 1px solid var(--primary-low);
     text-align: center;
     padding: 2em;
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     border-radius: 5px;
     display: grid;
     place-items: center;

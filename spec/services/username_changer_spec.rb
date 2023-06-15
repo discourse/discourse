@@ -494,6 +494,41 @@ RSpec.describe UsernameChanger do
           HTML
         end
 
+        it "replaces the username in new quote format" do
+          post = create_post_and_change_username(raw: <<~RAW)
+            Lorem ipsum
+
+            [quote="Foo Bar, post:1, topic:#{quoted_post.topic.id}, username:foo"]
+            quoted post
+            [/quote]
+
+            dolor sit amet
+          RAW
+
+          expect(post.raw).to eq(<<~RAW.strip)
+            Lorem ipsum
+
+            [quote="Foo Bar, post:1, topic:#{quoted_post.topic.id}, username:bar"]
+            quoted post
+            [/quote]
+
+            dolor sit amet
+          RAW
+
+          expect(post.cooked).to match_html(<<~HTML)
+            <p>Lorem ipsum</p>
+            <aside class="quote no-group" data-username="bar" data-post="1" data-topic="#{quoted_post.topic.id}">
+            <div class="title">
+            <div class="quote-controls"></div>
+            <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/letter_avatar_proxy/v4/letter/b/b77776/48.png" class="avatar"> Foo Bar:</div>
+            <blockquote>
+            <p>quoted post</p>
+            </blockquote>
+            </aside>
+            <p>dolor sit amet</p>
+          HTML
+        end
+
         context "when there is a simple quote" do
           let(:raw) { <<~RAW }
               Lorem ipsum
@@ -599,7 +634,6 @@ RSpec.describe UsernameChanger do
                 quoted post
               </blockquote>
             </aside>
-
             <aside class="quote" data-post="#{another_quoted_post.post_number}" data-topic="#{another_quoted_post.topic.id}">
               <div class="title">
                 <div class="quote-controls"></div>

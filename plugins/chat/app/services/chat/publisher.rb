@@ -72,23 +72,27 @@ module Chat
             user_id: chat_message.user.id,
             username: chat_message.user.username,
             thread_id: chat_message.thread_id,
-            created_at: chat_message.created_at,
-            excerpt:
-              chat_message.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH),
           },
           permissions(chat_channel),
         )
+
+        publish_thread_original_message_metadata!(chat_message.thread)
       end
     end
 
     def self.publish_thread_original_message_metadata!(thread)
+      preview =
+        ::Chat::ThreadPreviewSerializer.new(
+          thread,
+          participants: ::Chat::ThreadParticipantQuery.call(thread_ids: [thread.id])[thread.id],
+          root: false,
+        ).as_json
       publish_to_channel!(
         thread.channel,
         {
           type: :update_thread_original_message,
           original_message_id: thread.original_message_id,
-          replies_count: thread.replies_count_cache,
-          title: thread.title,
+          preview: preview.as_json,
         },
       )
     end

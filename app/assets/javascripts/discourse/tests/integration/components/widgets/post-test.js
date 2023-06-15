@@ -840,12 +840,12 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.ok(!exists(".toggle-summary"));
   });
 
-  test("topic map - has summary", async function (assert) {
-    this.set("args", { showTopicMap: true, hasTopicSummary: true });
-    this.set("showSummary", () => (this.summaryToggled = true));
+  test("topic map - has top replies summary", async function (assert) {
+    this.set("args", { showTopicMap: true, hasTopRepliesSummary: true });
+    this.set("showTopReplies", () => (this.summaryToggled = true));
 
     await render(
-      hbs`<MountWidget @widget="post" @args={{this.args}} @showSummary={{this.showSummary}} />`
+      hbs`<MountWidget @widget="post" @args={{this.args}} @showTopReplies={{this.showTopReplies}} />`
     );
 
     assert.strictEqual(count(".toggle-summary"), 1);

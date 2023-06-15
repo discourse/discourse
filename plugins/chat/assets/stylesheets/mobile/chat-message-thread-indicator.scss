@@ -1,0 +1,39 @@
+.chat-message-thread-indicator {
+  &__participants,
+  &__last-reply-avatar:not(.-mobile) {
+    display: none;
+  }
+
+  &__last-reply-metadata {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  &__last-reply-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: auto;
+  }
+
+  &__last-reply-avatar {
+    align-self: center;
+    .avatar {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__last-reply-username {
+    margin-right: auto;
+  }
+
+  &__last-reply-excerpt {
+    white-space: wrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+}

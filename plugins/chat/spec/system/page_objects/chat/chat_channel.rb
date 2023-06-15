@@ -209,16 +209,16 @@ module PageObjects
         end
       end
 
-      def has_thread_indicator?(message, text: nil)
-        has_css?(message_thread_indicator_selector(message), text: text)
+      def has_thread_indicator?(message)
+        message_thread_indicator(message).exists?
       end
 
-      def has_no_thread_indicator?(message, text: nil)
-        has_no_css?(message_thread_indicator_selector(message), text: text)
+      def has_no_thread_indicator?(message)
+        message_thread_indicator(message).does_not_exist?
       end
 
       def message_thread_indicator(message)
-        find(message_thread_indicator_selector(message))
+        PageObjects::Components::Chat::ThreadIndicator.new(message_by_id_selector(message.id))
       end
 
       def open_thread_list

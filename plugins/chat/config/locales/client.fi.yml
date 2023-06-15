@@ -378,7 +378,6 @@ fi:
       thread:
         title: "Otsikko"
         view_thread: Näytä ketju
-        default_title: "Ketju #%{thread_id}"
         replies:
           one: "%{count} vastaus"
           other: "%{count} vastausta"

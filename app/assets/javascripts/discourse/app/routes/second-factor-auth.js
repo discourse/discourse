@@ -2,8 +2,9 @@ import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "discourse/lib/preload-store";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import DisableSidebar from "discourse/mixins/disable-sidebar";
 
-export default DiscourseRoute.extend({
+export default DiscourseRoute.extend(DisableSidebar, {
   queryParams: {
     nonce: { refreshModel: true },
   },
@@ -24,18 +25,6 @@ export default DiscourseRoute.extend({
         }
       });
     }
-  },
-
-  activate() {
-    this.controllerFor("application").setProperties({
-      sidebarDisabledRouteOverride: true,
-    });
-  },
-
-  deactivate() {
-    this.controllerFor("application").setProperties({
-      sidebarDisabledRouteOverride: false,
-    });
   },
 
   setupController(controller, model) {
