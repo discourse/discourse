@@ -186,6 +186,10 @@
     &.-deleted {
       background-color: var(--danger-medium);
     }
+
+    &.-highlighted {
+      background-color: var(--tertiary-medium);
+    }
   }
 }
 
@@ -205,7 +209,7 @@
     background: var(--highlight-bg);
   }
 
-  &-.highlighted {
+  &.-highlighted {
     background-color: var(--tertiary-low);
   }
 
