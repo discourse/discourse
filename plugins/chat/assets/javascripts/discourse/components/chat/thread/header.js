@@ -6,6 +6,23 @@ import { action } from "@ember/object";
 export default class ChatThreadHeader extends Component {
   @service currentUser;
   @service router;
+  @service chatStateManager;
+
+  get backLinkRoute() {
+    if (this.chatStateManager.openedThreadFrom === "channel") {
+      return "chat.channel.index";
+    }
+
+    return "chat.channel.threads";
+  }
+
+  get backLinkModels() {
+    if (this.chatStateManager.openedThreadFrom === "channel") {
+      return this.args.channel.routeModels;
+    }
+
+    return [];
+  }
 
   get label() {
     return this.args.thread.escapedTitle;
