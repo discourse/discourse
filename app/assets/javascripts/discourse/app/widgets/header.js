@@ -24,7 +24,7 @@ export function clearExtraHeaderIcons() {
   _extraHeaderIcons = [];
 }
 
-const dropdown = {
+export const dropdown = {
   buildClasses(attrs) {
     let classes = attrs.classNames || [];
     if (attrs.active) {
