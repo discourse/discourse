@@ -566,6 +566,45 @@ RSpec.describe PrettyText do
         ).to match_html '<p>Hello <span class="mention">@狮子</span></p>'
       end
     end
+
+    context "with pretty_text_extract_mentions modifier" do
+      it "allows changing the mentions extracted" do
+        cooked_html = <<~HTML
+        <p>
+          <a class="mention" href="/u/test">@test</a>,
+          <a class="mention-group" href="/g/test-group">@test-group</a>,
+          <a class="custom-mention" href="/custom-mention">@test-custom</a>,
+          this is a test
+        </p>
+        HTML
+
+        extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
+        expect(extracted_mentions).to include("test", "test-group")
+        expect(extracted_mentions).not_to include("test-custom")
+
+        Plugin::Instance
+          .new
+          .register_modifier(:pretty_text_extract_mentions) do |mentions, cooked_text|
+            custom_mentions =
+              cooked_text
+                .css(".custom-mention")
+                .map do |e|
+                  if (name = e.inner_text)
+                    name = name[1..-1]
+                    name = User.normalize_username(name)
+                    name
+                  end
+                end
+
+            mentions + custom_mentions
+          end
+
+        extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
+        expect(extracted_mentions).to include("test", "test-group", "test-custom")
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
   end
 
   describe "code fences" do
