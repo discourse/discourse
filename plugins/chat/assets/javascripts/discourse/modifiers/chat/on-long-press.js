@@ -7,7 +7,6 @@ import discourseLater from "discourse-common/lib/later";
 
 function cancelEvent(event) {
   event.stopPropagation();
-  event.preventDefault();
 }
 
 export default class ChatOnLongPress extends Modifier {
@@ -33,7 +32,18 @@ export default class ChatOnLongPress extends Modifier {
     this.onLongPressEnd = onLongPressEnd || (() => {});
     this.onLongPressCancel = onLongPressCancel || (() => {});
 
-    element.addEventListener("touchstart", this.handleTouchStart, {
+    if (this.capabilities.touch) {
+      this.element.addEventListener("touchstart", this.onTouchStart, {
+        passive: true,
+      });
+      this.element.addEventListener("touchmove", this.cancelTouch, {
+        passive: true,
+      });
+      this.element.addEventListener("touchend", this.onTouchEnd);
+      this.element.addEventListener("touchCancel", this.cancelTouch);
+    }
+
+    this.element.addEventListener("click", this.handleClick, {
       passive: true,
     });
   }

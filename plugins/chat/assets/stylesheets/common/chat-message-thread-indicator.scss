@@ -12,6 +12,10 @@
   border-radius: 8px;
   color: var(--primary);
 
+  > * {
+    pointer-events: none;
+  }
+
   &:visited,
   &:hover {
     color: var(--primary);

@@ -1,7 +1,12 @@
-<LinkTo
-  @route="chat.channel.thread"
-  @models={{@message.thread.routeModels}}
-  class="chat-message-thread-indicator"
+<div
+  class={{concat-class
+    "chat-message-thread-indicator"
+    (if this.isActive "-active")
+  }}
+  {{did-insert this.setup}}
+  {{will-destroy this.teardown}}
+  role="button"
+  title={{i18n "chat.threads.open"}}
 >
   {{#unless this.chatStateManager.isDrawerActive}}
     <div class="chat-message-thread-indicator__last-reply-avatar">
@@ -49,4 +54,4 @@
   <div class="chat-message-thread-indicator__participants">
     <Chat::Thread::Participants @thread={{@message.thread}} />
   </div>
-</LinkTo>
+</div>

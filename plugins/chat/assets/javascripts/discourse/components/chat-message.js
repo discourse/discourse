@@ -12,6 +12,7 @@ import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-mes
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import { tracked } from "@glimmer/tracking";
 
 let _chatMessageDecorators = [];
 
@@ -40,6 +41,8 @@ export default class ChatMessage extends Component {
   @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
+
+  @tracked isActive = false;
 
   @optionalService adminTools;
 
@@ -260,11 +263,13 @@ export default class ChatMessage extends Component {
   @action
   handleLongPressStart(element) {
     element.classList.add("is-long-pressed");
+    this.isActive = true;
   }
 
   @action
   onLongPressCancel(element) {
     element.classList.remove("is-long-pressed");
+    this.isActive = false;
 
     // this a tricky bit of code which is needed to prevent the long press
     // from triggering a click on the message actions panel when releasing finger press
@@ -281,6 +286,7 @@ export default class ChatMessage extends Component {
   @action
   handleLongPressEnd(element) {
     element.classList.remove("is-long-pressed");
+    this.isActive = false;
 
     if (isZoomed()) {
       // if zoomed don't handle long press
