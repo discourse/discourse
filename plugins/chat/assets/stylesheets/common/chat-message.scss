@@ -202,7 +202,7 @@
 
   &.-deleted {
     background-color: var(--danger-low);
-    padding: 0.5rem 0.65rem !important;
+    padding-block: 0.25rem;
   }
 
   &.-bookmarked {
