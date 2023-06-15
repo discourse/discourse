@@ -67,7 +67,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
     it "replies to the existing thread" do
       chat_page.visit_channel(channel_1)
 
-      expect(channel_page).to have_thread_indicator(original_message, text: "1")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
       channel_page.reply_to(original_message)
 
@@ -78,7 +78,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
 
       expect(thread_page).to have_message(text: message_1.message)
       expect(thread_page).to have_message(text: "reply to message")
-      expect(channel_page).to have_thread_indicator(original_message, text: "2")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
       expect(channel_page).to have_no_message(text: "reply to message")
     end
   end

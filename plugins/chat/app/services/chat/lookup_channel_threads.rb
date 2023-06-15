@@ -55,7 +55,7 @@ module Chat
         .strict_loading
         .includes(
           :channel,
-          last_reply: [:uploads],
+          last_reply: %i[user uploads],
           original_message_user: :user_status,
           original_message: [
             :chat_webhook_event,

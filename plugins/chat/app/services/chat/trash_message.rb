@@ -73,6 +73,10 @@ module Chat
     def publish_events(guardian:, message:, **)
       DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
       Chat::Publisher.publish_delete!(message.chat_channel, message)
+
+      if message.thread.present?
+        Chat::Publisher.publish_thread_original_message_metadata!(message.thread)
+      end
     end
   end
 end

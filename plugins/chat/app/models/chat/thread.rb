@@ -42,7 +42,7 @@ module Chat
     end
 
     def replies
-      self.chat_messages.where.not(id: self.original_message_id)
+      self.chat_messages.where.not(id: self.original_message_id).order("created_at ASC, id ASC")
     end
 
     def url

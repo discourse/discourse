@@ -565,6 +565,9 @@ en:
           started_by: "Started by"
         settings: "Settings"
         last_reply: "last reply"
+        participants_other_count:
+          one: "+%{count} other"
+          other: "+%{count} others"
       threads:
         open: "Open Thread"
         list: "Ongoing discussions"

@@ -182,7 +182,6 @@ module(
           created_at: "2023-05-18T16:07:59.588Z",
           excerpt: `Hey @${mentionedUser2.username}`,
           available_flags: [],
-          thread_title: null,
           chat_channel_id: 7,
           mentioned_users: [mentionedUser2],
           user: actingUser,
