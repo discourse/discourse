@@ -68,14 +68,12 @@
   />
 
   {{#if this.pane.selectingMessages}}
-    <ChatSelectionManager
-      @selectedMessageIds={{this.pane.selectedMessageIds}}
-      @chatChannel={{@channel}}
-      @cancelSelecting={{action
-        this.pane.cancelSelecting
-        @channel.selectedMessages
+    <Chat::SelectionManager
+      @enableMove={{and
+        (not @channel.isDirectMessageChannel)
+        @channel.canModerate
       }}
-      @context="channel"
+      @pane={{this.pane}}
     />
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}

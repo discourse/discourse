@@ -79,6 +79,10 @@ export default class ChatThread {
     return this.messagesManager.findLastUserMessage(user);
   }
 
+  clearSelectedMessages() {
+    this.selectedMessages.forEach((message) => (message.selected = false));
+  }
+
   get routeModels() {
     return [...this.channel.routeModels, this.id];
   }

@@ -11,6 +11,15 @@ module PageObjects
         @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
       end
 
+      def selection_management
+        @selection_management ||=
+          PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
+      end
+
+      def has_selected_messages?(*messages)
+        self.messages.has_selected_messages?(*messages)
+      end
+
       def replying_to?(message)
         find(".chat-channel .chat-reply", text: message.message)
       end
@@ -73,16 +82,6 @@ module PageObjects
         else
           hover_message(message)
           find(".bookmark-btn").click
-        end
-      end
-
-      def select_message(message)
-        if page.has_css?("html.mobile-view", wait: 0)
-          click_message_action_mobile(message, "select")
-        else
-          hover_message(message)
-          click_more_button
-          find("[data-value='select']").click
         end
       end
 
