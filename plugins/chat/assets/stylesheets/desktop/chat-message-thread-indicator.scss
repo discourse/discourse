@@ -1,11 +1,14 @@
 .chat-message-thread-indicator {
   width: min-content;
+  min-width: 400px;
+  max-width: 600px;
 
   .chat-drawer & {
     align-items: stretch;
     flex-wrap: wrap;
     width: auto;
     max-width: 100%;
+    min-width: auto;
     gap: 0.25rem;
   }
 
@@ -16,7 +19,8 @@
   }
 
   &__last-reply-user {
-    margin-right: 1rem;
+    margin-right: 0.25rem;
+
     .chat-drawer & {
       display: flex;
       align-items: center;
@@ -47,6 +51,8 @@
     }
   }
   &__participants {
+    margin-left: auto;
+
     .chat-drawer & {
       align-self: flex-end;
       flex-basis: 100%;

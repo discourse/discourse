@@ -41,6 +41,10 @@ module Chat
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_edit(chat_message: @chat_message, timestamp: revision.created_at)
         DiscourseEvent.trigger(:chat_message_edited, @chat_message, @chat_channel, @user)
+
+        if @chat_message.thread.present?
+          Chat::Publisher.publish_thread_original_message_metadata!(@chat_message.thread)
+        end
       rescue => error
         @error = error
       end
