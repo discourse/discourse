@@ -187,13 +187,5 @@ module Jobs
 
       doc.to_html
     end
-
-    def quotes_correct_user?(aside)
-      Post.exists?(
-        topic_id: aside["data-topic"],
-        post_number: aside["data-post"],
-        user_id: @user_id,
-      )
-    end
   end
 end
