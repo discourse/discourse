@@ -27,7 +27,7 @@
     }}
     data-id={{@message.id}}
     data-thread-id={{@message.thread.id}}
-    {{did-insert this.decorateCookedMessage}}
+    {{did-insert this.setup}}
     {{did-update this.decorateCookedMessage @message.id}}
     {{did-update this.decorateCookedMessage @message.version}}
     {{will-destroy this.teardownChatMessage}}

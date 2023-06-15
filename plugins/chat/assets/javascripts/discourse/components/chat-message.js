@@ -135,10 +135,6 @@ export default class ChatMessage extends Component {
   @action
   refreshStatusOnMentions() {
     schedule("afterRender", () => {
-      if (!this.messageContainer) {
-        return;
-      }
-
       this.args.message.mentionedUsers.forEach((user) => {
         const href = `/u/${user.username.toLowerCase()}`;
         const mentions = this.messageContainer.querySelectorAll(
@@ -153,12 +149,14 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  setup(element) {
+    this.messageContainer = element;
+    this.decorateCookedMessage();
+  }
+
+  @action
   decorateCookedMessage() {
     schedule("afterRender", () => {
-      if (!this.messageContainer) {
-        return;
-      }
-
       _chatMessageDecorators.forEach((decorator) => {
         decorator.call(this, this.messageContainer, this.args.message.channel);
       });
@@ -175,13 +173,6 @@ export default class ChatMessage extends Component {
       user.trackStatus();
       user.on("status-changed", this, "refreshStatusOnMentions");
     });
-  }
-
-  get messageContainer() {
-    const id = this.args.message?.id;
-    if (id) {
-      return document.querySelector(`.chat-message-container[data-id='${id}']`);
-    }
   }
 
   get show() {
@@ -265,14 +256,12 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressStart(element) {
-    element.classList.add("is-long-pressed");
+  handleLongPressStart() {
     this.isActive = true;
   }
 
   @action
-  onLongPressCancel(element) {
-    element.classList.remove("is-long-pressed");
+  onLongPressCancel() {
     this.isActive = false;
 
     // this a tricky bit of code which is needed to prevent the long press
@@ -288,8 +277,7 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressEnd(element) {
-    element.classList.remove("is-long-pressed");
+  handleLongPressEnd() {
     this.isActive = false;
 
     if (isZoomed()) {
