@@ -3714,9 +3714,6 @@ hu:
             badges:
               content: "Jelvények"
               title: "Az összes megszerezhető jelvény"
-            everything:
-              content: "Összes"
-              title: "Minden téma"
             faq:
               content: "GYIK"
               title: "Útmutató az oldal használatához"

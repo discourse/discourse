@@ -1962,8 +1962,6 @@ id:
               content: "Tentang"
             admin:
               content: "Admin"
-            everything:
-              content: "Semuanya"
             faq:
               content: "FAQ"
             groups:

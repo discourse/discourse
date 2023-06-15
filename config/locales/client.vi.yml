@@ -3583,9 +3583,6 @@ vi:
               content: "Quản trị"
             badges:
               content: "Huy hiệu"
-            everything:
-              content: "Mọi thứ"
-              title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
             groups:

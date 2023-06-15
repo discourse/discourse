@@ -2457,8 +2457,6 @@ th:
               content: "แอดมิน"
             badges:
               content: "เหรียญ"
-            everything:
-              content: "ทุกสิ่ง"
             faq:
               content: "คำถามที่พบบ่อย"
             groups:

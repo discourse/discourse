@@ -3570,9 +3570,6 @@ lt:
               content: "Adminas"
             badges:
               content: "Trofėjai"
-            everything:
-              content: "Viskas"
-              title: "Visos temos"
             faq:
               content: "DUK"
             groups:

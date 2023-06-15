@@ -3617,8 +3617,6 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
-            everything:
-              content: "Alting"
             faq:
               content: "OSS"
             groups:

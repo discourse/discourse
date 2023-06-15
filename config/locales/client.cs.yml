@@ -3126,8 +3126,6 @@ cs:
               content: "Administrace"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Vše"
             faq:
               content: "FAQ"
             groups:

@@ -3499,8 +3499,6 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
-            everything:
-              content: "Tudo"
             faq:
               content: "FAQ"
             groups:

@@ -4039,9 +4039,6 @@ fi:
             badges:
               content: "Kunniamerkit"
               title: "Kaikki ansaittavissa olevat kunniamerkit"
-            everything:
-              content: "Kaikki"
-              title: "Kaikki ketjut"
             faq:
               content: "UKK"
               title: "Ohjeet tämän sivuston käyttöön"

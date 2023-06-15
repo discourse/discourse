@@ -3350,9 +3350,6 @@ el:
               content: "Διαχείριση"
             badges:
               content: "Παράσημα"
-            everything:
-              content: "Τα πάνΤα"
-              title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
             groups:

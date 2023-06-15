@@ -4477,8 +4477,8 @@ en:
             badges:
               content: "Badges"
               title: "All the badges available to earn"
-            everything:
-              content: "Everything"
+            topics:
+              content: "Topics"
               title: "All topics"
             faq:
               content: "FAQ"
