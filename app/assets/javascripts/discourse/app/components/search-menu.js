@@ -68,27 +68,24 @@ export default class SearchMenu extends Component {
   @bind
   fullSearchUrl(opts) {
     let url = "/search";
-    let params = "";
+    let params = new URLSearchParams();
 
     if (this.search.activeGlobalSearchTerm) {
-      params = `q=${this.search.activeGlobalSearchTerm}`;
+      let q = this.search.activeGlobalSearchTerm;
 
       if (this.searchContext?.type === "topic") {
-        params += ` topic:${this.searchContext.id}`;
+        q += ` topic:${this.searchContext.id}`;
       } else if (this.searchContext?.type === "private_messages") {
-        params += " in:messages";
+        q += " in:messages";
       }
+      params.set("q", q);
     }
-
     if (opts?.expanded) {
-      params += "&expanded=true";
+      params.set("expanded", "true");
     }
-
-    if (params) {
-      params = new URLSearchParams(params);
+    if (params.toString() !== "") {
       url = `${url}?${params}`;
     }
-
     return getURL(url);
   }
 
