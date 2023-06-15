@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import getURL from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { debounce } from "discourse-common/utils/decorators";
 import {
   focusSearchButton,
   focusSearchInput,
@@ -64,11 +65,25 @@ export default class AssistantItem extends Component {
       e.preventDefault();
       return false;
     }
+
+    if (e.key === "Enter") {
+      this.itemSelected();
+    }
+
     this.search.handleArrowUpOrDown(e);
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   @action
   onClick(e) {
+    this.itemSelected();
+    e.preventDefault();
+    return false;
+  }
+
+  @debounce(100)
+  itemSelected() {
     let updatedValue = "";
     if (this.args.slug) {
       updatedValue = this.prefix.concat(this.args.slug);
@@ -81,9 +96,5 @@ export default class AssistantItem extends Component {
       ...(inTopicContext && { setTopicContext: true }),
     });
     focusSearchInput();
-
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
   }
 }

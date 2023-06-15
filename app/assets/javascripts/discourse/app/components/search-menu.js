@@ -269,6 +269,7 @@ export default class SearchMenu extends Component {
   @action
   triggerSearch() {
     this.noResults = false;
+
     if (this.includesTopics) {
       if (this.search.contextType === "topic") {
         this.search.setHighlightTerm(this.search.activeGlobalSearchTerm);

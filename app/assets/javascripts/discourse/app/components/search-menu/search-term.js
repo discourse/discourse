@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { isiPad } from "discourse/lib/utilities";
@@ -25,13 +24,9 @@ export default class SearchTerm extends Component {
 
   @action
   updateSearchTerm(input) {
-    // utilze discourseDebounce as @debounce does not work for native class syntax
-    discourseDebounce(
-      this,
-      this.parseAndUpdateSearchTerm,
+    this.parseAndUpdateSearchTerm(
       this.search.activeGlobalSearchTerm,
-      input,
-      200
+      input.target.value
     );
   }
 
@@ -80,12 +75,13 @@ export default class SearchTerm extends Component {
         this.focus(e.target);
       }
     }
+
+    e.preventDefault();
   }
 
   parseAndUpdateSearchTerm(originalVal, newVal) {
     // remove zero-width chars
-    const parsedVal = newVal.target.value.replace(/[\u200B-\u200D\uFEFF]/, "");
-
+    const parsedVal = newVal.replace(/[\u200B-\u200D\uFEFF]/, "");
     if (parsedVal !== originalVal) {
       this.args.searchTermChanged(parsedVal);
     }

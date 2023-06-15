@@ -44,10 +44,7 @@ export default class RecentSearches extends Component {
   loadRecentSearches() {
     User.loadRecentSearches().then((result) => {
       if (result.success && result.recent_searches?.length) {
-        this.currentUser.set(
-          "recent_searches",
-          Object.assign(result.recent_searches)
-        );
+        this.currentUser.set("recent_searches", result.recent_searches);
       }
     });
   }
