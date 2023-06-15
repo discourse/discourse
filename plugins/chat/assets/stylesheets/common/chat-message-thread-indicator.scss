@@ -21,8 +21,9 @@
     color: var(--primary);
   }
 
-  &:hover {
-    box-shadow: var(--shadow-dropdown-lite);
+  &:hover,
+  &.-active {
+    box-shadow: var(--shadow-header);
   }
 
   &__participants {
@@ -64,6 +65,12 @@
     overflow: hidden;
     white-space: nowrap;
     flex-shrink: 1;
+  }
+
+  &:hover {
+    .chat-message-thread-indicator__replies-count {
+      text-decoration: underline;
+    }
   }
 
   &__replies-count {
