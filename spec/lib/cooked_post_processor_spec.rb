@@ -1621,6 +1621,7 @@ RSpec.describe CookedPostProcessor do
               <p>This post has an S3 video onebox:</p><div class="onebox video-onebox">
                 <video width="100%" height="100%" controls="">
                   <source src="#{secure_url}">
+                  <a href="#{secure_url}">#{secure_url}</a>
                 </video>
               </div>
             HTML
@@ -1667,14 +1668,23 @@ RSpec.describe CookedPostProcessor do
               audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
-              <p>This post has a video upload.</p>
-              <div class="onebox video-onebox">
+              <p>This post has a video upload.</p><div class="onebox video-onebox">
                 <video width="100%" height="100%" controls="">
                   <source src="#{secure_video_url}">
+                  <a href="#{secure_video_url}">
+                    #{secure_video_url}
+                  </a>
                 </video>
               </div>
+
               <p>This post has an audio upload.<br>
-              <audio controls=""><source src="#{secure_audio_url}"></audio></p>
+              <audio controls="">
+                <source src="#{secure_audio_url}">
+                <a href="#{secure_audio_url}">
+                  #{secure_audio_url}
+                </a>
+              </audio>
+              </p>
               <p>And an image upload.<br>
               <img src="#{image_upload.url}" alt="#{image_upload.original_filename}" data-base62-sha1="#{image_upload.base62_sha1}"></p>
             HTML
