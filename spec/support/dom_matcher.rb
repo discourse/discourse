@@ -10,7 +10,5 @@ RSpec::Matchers.define :be_same_dom do |expected|
     end
   end
 
-  failure_message_for_should do |actual|
-    "Expected DOM:\n#{expected}\nto be the same as:\n#{actual}"
-  end
+  failure_message { |actual| "Expected DOM:\n#{expected}\nto be the same as:\n#{actual}" }
 end
