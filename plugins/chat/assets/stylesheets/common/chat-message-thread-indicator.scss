@@ -53,6 +53,7 @@
 
   &__last-reply-excerpt {
     @include ellipsis;
+    line-height: 1.8rem;
   }
 
   &__body {
