@@ -15,8 +15,8 @@ module PageObjects
           component.has_no_css?(".spinner")
         end
 
-        def has_thread?(id)
-          item_by_id(id)
+        def has_thread?(thread)
+          item_by_id(thread.id)
         end
 
         def item_by_id(id)

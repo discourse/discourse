@@ -25,7 +25,7 @@ module PageObjects
           PageObjects::Components::SelectKit.new(".thread-notifications-button")
       end
 
-      def change_notification_level(level)
+      def notification_level=(level)
         notifications_button.expand
         notifications_button.select_row_by_value(
           ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
