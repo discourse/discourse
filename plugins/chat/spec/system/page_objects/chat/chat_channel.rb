@@ -68,7 +68,7 @@ module PageObjects
       end
 
       def click_message_action_mobile(message, message_action)
-        expand_message_actions_mobile(message, delay: 0.6)
+        expand_message_actions_mobile(message, delay: 0.4)
         find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
