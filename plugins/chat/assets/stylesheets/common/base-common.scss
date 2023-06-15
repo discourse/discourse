@@ -137,7 +137,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   .chat-message-container {
     display: grid;
 
-    &.selecting-messages {
+    &.-selectable {
       grid-template-columns: 1.5em 1fr;
     }
 
@@ -191,7 +191,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   display: flex;
   align-items: center;
 
-  .chat-message:not(.is-reply) & {
+  .chat-message-container:not(.has-reply) & {
     width: var(--message-left-width);
     flex-shrink: 0;
   }

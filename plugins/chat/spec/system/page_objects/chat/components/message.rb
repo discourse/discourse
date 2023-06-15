@@ -85,10 +85,10 @@ module PageObjects
         def build_selector(**args)
           selector = SELECTOR
           selector += "[data-id=\"#{args[:id]}\"]" if args[:id]
-          selector += "[data-selected]" if args[:selected]
-          selector += ".is-persisted" if args[:persisted]
-          selector += ".is-staged" if args[:staged]
-          selector += ".is-deleted" if args[:deleted]
+          selector += ".-selected" if args[:selected]
+          selector += ".-persisted" if args[:persisted]
+          selector += ".-staged" if args[:staged]
+          selector += ".-deleted" if args[:deleted]
           selector
         end
       end
