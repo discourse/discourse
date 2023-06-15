@@ -18,9 +18,9 @@ RSpec.describe "Move message to channel", type: :system do
 
     it "is not available" do
       chat_page.visit_channel(channel_1)
-      channel_page.select_message(message_1)
+      channel_page.messages.select(message_1)
 
-      expect(page).to have_no_content(I18n.t("js.chat.selection.move_selection_to_channel"))
+      expect(channel_page.selection_management).to have_no_move_action
     end
 
     context "when can moderate channel" do
@@ -37,9 +37,9 @@ RSpec.describe "Move message to channel", type: :system do
 
       it "is available" do
         chat_page.visit_channel(channel_1)
-        channel_page.select_message(message_1)
+        channel_page.messages.select(message_1)
 
-        expect(page).to have_content(I18n.t("js.chat.selection.move_selection_to_channel"))
+        expect(channel_page.selection_management).to have_move_action
       end
     end
   end
@@ -57,9 +57,9 @@ RSpec.describe "Move message to channel", type: :system do
 
       it "is not available" do
         chat_page.visit_channel(dm_channel_1)
-        channel_page.select_message(message_1)
+        channel_page.messages.select(message_1)
 
-        expect(page).to have_no_content(I18n.t("js.chat.selection.move_selection_to_channel"))
+        expect(channel_page.selection_management).to have_no_move_action
       end
     end
 
@@ -77,8 +77,8 @@ RSpec.describe "Move message to channel", type: :system do
 
       it "moves the message" do
         chat_page.visit_channel(channel_1)
-        channel_page.select_message(message_1)
-        click_button(I18n.t("js.chat.selection.move_selection_to_channel"))
+        channel_page.messages.select(message_1)
+        channel_page.selection_management.move
         find(".chat-move-message-channel-chooser").click
         find("[data-value='#{channel_2.id}']").click
         click_button(I18n.t("js.chat.move_to_channel.confirm_move"))

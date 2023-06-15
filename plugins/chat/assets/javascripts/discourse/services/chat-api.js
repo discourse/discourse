@@ -431,6 +431,19 @@ export default class ChatApi extends Service {
     return this.#putRequest(`/channels/${channelId}/threads/${threadId}`, data);
   }
 
+  /**
+   * Generate a quote for a list of messages.
+   *
+   * @param {number} channelId - The ID of the channel containing the messages.
+   * @param {Array<number>} messageIds - The IDs of the messages to quote.
+   */
+  generateQuote(channelId, messageIds) {
+    return ajax(`/chat/${channelId}/quote`, {
+      type: "POST",
+      data: { message_ids: messageIds },
+    });
+  }
+
   get #basePath() {
     return "/chat/api";
   }

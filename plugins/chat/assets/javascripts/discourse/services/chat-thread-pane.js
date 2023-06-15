@@ -5,15 +5,20 @@ export default class ChatThreadPane extends ChatChannelPane {
   @service chat;
   @service router;
 
+  get thread() {
+    return this.channel?.activeThread;
+  }
+
   get isOpened() {
     return this.router.currentRoute.name === "chat.channel.thread";
   }
 
+  get selectedMessages() {
+    return this.thread?.selectedMessages;
+  }
+
   async close() {
-    await this.router.transitionTo(
-      "chat.channel",
-      ...this.chat.activeChannel.routeModels
-    );
+    await this.router.transitionTo("chat.channel", ...this.channel.routeModels);
   }
 
   async open(thread) {
@@ -21,9 +26,5 @@ export default class ChatThreadPane extends ChatChannelPane {
       "chat.channel.thread",
       ...thread.routeModels
     );
-  }
-
-  get selectedMessageIds() {
-    return this.chat.activeChannel.activeThread.selectedMessages.mapBy("id");
   }
 }

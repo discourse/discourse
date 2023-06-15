@@ -20,6 +20,15 @@ module PageObjects
         @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
       end
 
+      def selection_management
+        @selection_management ||=
+          PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
+      end
+
+      def has_selected_messages?(*messages)
+        self.messages.has_selected_messages?(*messages)
+      end
+
       def close
         header.find(".chat-thread__close").click
       end
@@ -108,12 +117,6 @@ module PageObjects
 
       def message_by_id_selector(id)
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
-      end
-
-      def select_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='select']").click
       end
 
       def has_deleted_message?(message, count: 1)
