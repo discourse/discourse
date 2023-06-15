@@ -1,4 +1,4 @@
-import { decorateGithubOneboxBody } from "discourse/initializers/onebox-decorators";
+import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
 import { replaceHashtagIconPlaceholder } from "discourse/lib/hashtag-autocomplete";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import highlightSyntax from "discourse/lib/highlight-syntax";
