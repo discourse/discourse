@@ -22,7 +22,7 @@ module PageObjects
         end
 
         def select(shift: false)
-          if component[:class].include?("selecting-message")
+          if component[:class].include?("-selectable")
             message_selector = component.find(".chat-message-selector")
             if shift
               message_selector.click(:shift)
