@@ -1,7 +1,5 @@
-import Helper from "@ember/component/helper";
-
-export function gt([left, right], hash) {
-  if (hash.forceNumber) {
+export default function gt(left, right, { forceNumber = false } = {}) {
+  if (forceNumber) {
     if (typeof left !== "number") {
       left = Number(left);
     }
@@ -11,5 +9,3 @@ export function gt([left, right], hash) {
   }
   return left > right;
 }
-
-export default Helper.helper(gt);

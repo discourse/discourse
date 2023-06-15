@@ -1,13 +1,13 @@
-import Helper from "@ember/component/helper";
 import truthConvert from "../utils/truth-convert";
 
-export function or(params) {
-  for (let i = 0, len = params.length; i < len; i++) {
-    if (truthConvert(params[i]) === true) {
-      return params[i];
+export default function or(...args) {
+  let arg = false;
+
+  for (arg of args) {
+    if (truthConvert(arg) === true) {
+      return arg;
     }
   }
-  return params[params.length - 1];
-}
 
-export default Helper.helper(or);
+  return arg;
+}
