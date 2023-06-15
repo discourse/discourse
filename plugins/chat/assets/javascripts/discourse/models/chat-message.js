@@ -36,7 +36,7 @@ export default class ChatMessage {
   @tracked reviewableId;
   @tracked user;
   @tracked inReplyTo;
-  @tracked expanded;
+  @tracked expanded = true;
   @tracked bookmark;
   @tracked userFlagStatus;
   @tracked hidden;
@@ -70,6 +70,7 @@ export default class ChatMessage {
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
     this.deletedAt = args.deletedAt || args.deleted_at;
+    this.expanded = this.deletedAt ? false : args.expanded || true;
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;

@@ -254,6 +254,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
+    if (!this.args.message.expanded) {
+      return;
+    }
+
     this.chat.activeMessage = {
       model: this.args.message,
       context: this.args.context,
