@@ -126,7 +126,7 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  teardownChatMessage() {
+  willDestroyMesage() {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
     this.#teardownMentionedUsers();
@@ -149,9 +149,22 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  setup(element) {
+  didInsertMessage(element) {
     this.messageContainer = element;
     this.decorateCookedMessage();
+    this.refreshStatusOnMentions();
+  }
+
+  @action
+  didUpdateMessageId() {
+    this.decorateCookedMessage();
+  }
+
+  @action
+  didUpdateMessageVersion() {
+    this.decorateCookedMessage();
+    this.refreshStatusOnMentions();
+    this.initMentionedUsers();
   }
 
   @action
@@ -190,7 +203,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+    if (this.isActive) {
       return;
     }
 
@@ -207,7 +220,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+    if (this.isActive) {
       return;
     }
 
@@ -253,6 +266,8 @@ export default class ChatMessage extends Component {
       model: this.args.message,
       context: this.args.context,
     };
+
+    this.isActive = true;
   }
 
   @action
@@ -290,6 +305,10 @@ export default class ChatMessage extends Component {
     document.querySelector(".chat-composer__input")?.blur();
 
     this._setActiveMessage();
+  }
+
+  get hasReply() {
+    return this.args.inReplyTo && !this.hideReplyToInfo;
   }
 
   get hideUserInfo() {

@@ -13,24 +13,21 @@
       (if @message.highlighted "-highlighted")
       (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
       (if @message.staged "-staged" "-persisted")
-      (if
-        (or (eq @message.id this.chat.activeMessage.model.id) this.isActive)
-        "-active"
-      )
+      (if this.isActive "-active")
       (if @message.bookmark "-bookmarked")
       (if @message.deletedAt "-deleted")
       (if @message.selected "-selected")
       (if @message.error "-errored")
-      (if (and @message.inReplyTo (not this.hideReplyToInfo)) "has-reply")
       (if this.showThreadIndicator "has-thread-indicator")
       (if this.hideUserInfo "-user-info-hidden")
+      (if this.hasReply "has-reply")
     }}
     data-id={{@message.id}}
     data-thread-id={{@message.thread.id}}
-    {{did-insert this.setup}}
-    {{did-update this.decorateCookedMessage @message.id}}
-    {{did-update this.decorateCookedMessage @message.version}}
-    {{will-destroy this.teardownChatMessage}}
+    {{did-insert this.didInsertMessage}}
+    {{did-update this.didUpdateMessageId @message.id}}
+    {{did-update this.didUpdateMessageVersion @message.version}}
+    {{will-destroy this.willDestroyMessage}}
     {{on "mouseenter" this.onMouseEnter passive=true}}
     {{on "mouseleave" this.onMouseLeave passive=true}}
     {{on "mousemove" this.onMouseMove passive=true}}
@@ -73,12 +70,7 @@
           />
         </div>
       {{else}}
-        <div
-          class="chat-message"
-          {{did-insert this.refreshStatusOnMentions}}
-          {{did-update this.refreshStatusOnMentions @message.version}}
-          {{did-update this.initMentionedUsers @message.version}}
-        >
+        <div class="chat-message">
           {{#unless this.hideReplyToInfo}}
             <ChatMessageInReplyToIndicator @message={{@message}} />
           {{/unless}}
