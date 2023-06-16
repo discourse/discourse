@@ -106,6 +106,11 @@ export default class ChatMessageReaction extends Component {
       interactive: false,
       allowHTML: true,
       offset: [0, 10],
+      onShow(instance) {
+        if (instance.props.content === "") {
+          return false;
+        }
+      },
     });
   }
 
@@ -116,7 +121,7 @@ export default class ChatMessageReaction extends Component {
 
   @action
   refreshTooltip() {
-    this._tippyInstance?.setContent(this.popoverContent);
+    this._tippyInstance?.setContent(this.popoverContent || "");
   }
 
   get emojiString() {

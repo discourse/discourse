@@ -203,7 +203,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.isActive) {
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
       return;
     }
 
@@ -220,7 +220,7 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    if (this.isActive) {
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
       return;
     }
 
@@ -244,7 +244,6 @@ export default class ChatMessage extends Component {
     }
 
     this.chat.activeMessage = null;
-    this.isActive = false;
   }
 
   @bind
@@ -267,12 +266,14 @@ export default class ChatMessage extends Component {
       model: this.args.message,
       context: this.args.context,
     };
-
-    this.isActive = true;
   }
 
   @action
   handleLongPressStart() {
+    if (!this.args.message.expanded) {
+      return;
+    }
+
     this.isActive = true;
   }
 
@@ -306,6 +307,13 @@ export default class ChatMessage extends Component {
     document.querySelector(".chat-composer__input")?.blur();
 
     this._setActiveMessage();
+  }
+
+  get hasActiveState() {
+    return (
+      this.isActive ||
+      this.chat.activeMessage?.model?.id === this.args.message.id
+    );
   }
 
   get hasReply() {
