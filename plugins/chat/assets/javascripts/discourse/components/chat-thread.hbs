@@ -39,15 +39,7 @@
   </div>
 
   {{#if this.chatThreadPane.selectingMessages}}
-    <ChatSelectionManager
-      @selectedMessageIds={{this.chatThreadPane.selectedMessageIds}}
-      @chatChannel={{@channel}}
-      @cancelSelecting={{action
-        this.chatThreadPane.cancelSelecting
-        @channel.selectedMessages
-      }}
-      @context="thread"
-    />
+    <Chat::SelectionManager @pane={{this.chatThreadPane}} />
   {{else}}
     <Chat::Composer::Thread
       @channel={{@channel}}
