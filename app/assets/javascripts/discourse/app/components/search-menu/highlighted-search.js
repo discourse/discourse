@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import highlightSearch from "discourse/lib/highlight-search";
 import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 
 export default class HighlightedSearch extends Component {
   @service search;
