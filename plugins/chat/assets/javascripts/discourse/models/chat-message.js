@@ -29,7 +29,6 @@ export default class ChatMessage {
   @tracked draft;
   @tracked channelId;
   @tracked createdAt;
-  @tracked deletedAt;
   @tracked uploads;
   @tracked excerpt;
   @tracked reactions;
@@ -54,6 +53,7 @@ export default class ChatMessage {
   @tracked manager;
   @tracked threadTitle;
 
+  @tracked _deletedAt;
   @tracked _cooked;
 
   constructor(channel, args = {}) {
@@ -69,9 +69,9 @@ export default class ChatMessage {
     this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
-    this.deletedAt = args.deletedAt || args.deleted_at;
+    this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
-      this.hidden || this.deletedAt ? false : args.expanded || true;
+      this.hidden || this._deletedAt ? false : args.expanded || true;
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
@@ -130,6 +130,16 @@ export default class ChatMessage {
 
   get editable() {
     return !this.staged && !this.error;
+  }
+
+  get deletedAt() {
+    return this._deletedAt;
+  }
+
+  set deletedAt(value) {
+    this._deletedAt = value;
+    this.incrementVersion();
+    return this._deletedAt;
   }
 
   get cooked() {
