@@ -19,6 +19,22 @@ export default DiscourseRoute.extend(DisableSidebar, {
     }
   },
 
+  activate() {
+    this._super(...arguments);
+
+    this.controllerFor("application").setProperties({
+      showSiteHeader: false,
+    });
+  },
+
+  deactivate() {
+    this._super(...arguments);
+
+    this.controllerFor("application").setProperties({
+      showSiteHeader: true,
+    });
+  },
+
   setupController(controller, model) {
     this._super(...arguments);
 
