@@ -327,31 +327,22 @@ export default class ChatThreadPanel extends Component {
   // we now use this hack to disable it
   @bind
   forceRendering(callback) {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
+    if (this.capabilities.isIOS) {
+      this.scrollable.style.overflow = "hidden";
+    }
 
-      if (!this.scrollable) {
-        return;
-      }
+    callback?.();
 
-      if (this.capabilities.isIOS) {
-        this.scrollable.style.overflow = "hidden";
-      }
-
-      callback?.();
-
-      if (this.capabilities.isIOS) {
-        discourseLater(() => {
-          if (!this.scrollable) {
+    if (this.capabilities.isIOS) {
+      next(() => {
+        schedule("afterRender", () => {
+          if (this._selfDeleted || !this.scrollable) {
             return;
           }
-
           this.scrollable.style.overflow = "auto";
-        }, 50);
-      }
-    });
+        });
+      });
+    }
   }
 
   @action

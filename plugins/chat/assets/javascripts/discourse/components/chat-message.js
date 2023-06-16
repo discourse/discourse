@@ -12,6 +12,7 @@ import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-mes
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import { tracked } from "@glimmer/tracking";
 
 let _chatMessageDecorators = [];
 
@@ -40,6 +41,8 @@ export default class ChatMessage extends Component {
   @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
+
+  @tracked isActive = false;
 
   @optionalService adminTools;
 
@@ -123,7 +126,7 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  teardownChatMessage() {
+  willDestroyMessage() {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
     this.#teardownMentionedUsers();
@@ -132,10 +135,6 @@ export default class ChatMessage extends Component {
   @action
   refreshStatusOnMentions() {
     schedule("afterRender", () => {
-      if (!this.messageContainer) {
-        return;
-      }
-
       this.args.message.mentionedUsers.forEach((user) => {
         const href = `/u/${user.username.toLowerCase()}`;
         const mentions = this.messageContainer.querySelectorAll(
@@ -150,12 +149,27 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  didInsertMessage(element) {
+    this.messageContainer = element;
+    this.decorateCookedMessage();
+    this.refreshStatusOnMentions();
+  }
+
+  @action
+  didUpdateMessageId() {
+    this.decorateCookedMessage();
+  }
+
+  @action
+  didUpdateMessageVersion() {
+    this.decorateCookedMessage();
+    this.refreshStatusOnMentions();
+    this.initMentionedUsers();
+  }
+
+  @action
   decorateCookedMessage() {
     schedule("afterRender", () => {
-      if (!this.messageContainer) {
-        return;
-      }
-
       _chatMessageDecorators.forEach((decorator) => {
         decorator.call(this, this.messageContainer, this.args.message.channel);
       });
@@ -172,13 +186,6 @@ export default class ChatMessage extends Component {
       user.trackStatus();
       user.on("status-changed", this, "refreshStatusOnMentions");
     });
-  }
-
-  get messageContainer() {
-    const id = this.args.message?.id;
-    if (id) {
-      return document.querySelector(`.chat-message-container[data-id='${id}']`);
-    }
   }
 
   get show() {
@@ -251,6 +258,10 @@ export default class ChatMessage extends Component {
       return;
     }
 
+    if (!this.args.message.expanded) {
+      return;
+    }
+
     this.chat.activeMessage = {
       model: this.args.message,
       context: this.args.context,
@@ -258,13 +269,17 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressStart(element) {
-    element.classList.add("is-long-pressed");
+  handleLongPressStart() {
+    if (!this.args.message.expanded) {
+      return;
+    }
+
+    this.isActive = true;
   }
 
   @action
-  onLongPressCancel(element) {
-    element.classList.remove("is-long-pressed");
+  onLongPressCancel() {
+    this.isActive = false;
 
     // this a tricky bit of code which is needed to prevent the long press
     // from triggering a click on the message actions panel when releasing finger press
@@ -279,8 +294,8 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressEnd(element) {
-    element.classList.remove("is-long-pressed");
+  handleLongPressEnd() {
+    this.isActive = false;
 
     if (isZoomed()) {
       // if zoomed don't handle long press
@@ -292,6 +307,17 @@ export default class ChatMessage extends Component {
     document.querySelector(".chat-composer__input")?.blur();
 
     this._setActiveMessage();
+  }
+
+  get hasActiveState() {
+    return (
+      this.isActive ||
+      this.chat.activeMessage?.model?.id === this.args.message.id
+    );
+  }
+
+  get hasReply() {
+    return this.args.inReplyTo && !this.hideReplyToInfo;
   }
 
   get hideUserInfo() {

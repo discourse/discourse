@@ -102,6 +102,11 @@ export function autoUpdatingRelativeAge(date, options) {
     append += "' title='" + longDate(date);
   }
 
+  let prefix = "";
+  if (options.prefix) {
+    prefix = options.prefix + " ";
+  }
+
   return (
     "<span class='relative-date" +
     append +
@@ -110,6 +115,7 @@ export function autoUpdatingRelativeAge(date, options) {
     "' data-format='" +
     format +
     "'>" +
+    prefix +
     relAge +
     "</span>"
   );

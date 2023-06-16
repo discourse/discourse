@@ -45,8 +45,6 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
         )
       ),
       channel,
-      afterExpand: () => {},
-      onHoverMessage: () => {},
       messageDidEnterViewport: () => {},
       messageDidLeaveViewport: () => {},
     };
