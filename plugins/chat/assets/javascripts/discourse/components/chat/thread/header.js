@@ -7,9 +7,13 @@ export default class ChatThreadHeader extends Component {
   @service currentUser;
   @service router;
   @service chatStateManager;
+  @service site;
 
   get backLinkRoute() {
-    if (this.chatStateManager.openedThreadFrom === "channel") {
+    if (
+      this.chatStateManager.openedThreadFrom === "channel" &&
+      this.site.mobileView
+    ) {
       return "chat.channel.index";
     }
 
@@ -17,7 +21,10 @@ export default class ChatThreadHeader extends Component {
   }
 
   get backLinkModels() {
-    if (this.chatStateManager.openedThreadFrom === "channel") {
+    if (
+      this.chatStateManager.openedThreadFrom === "channel" &&
+      this.site.mobileView
+    ) {
       return this.args.channel.routeModels;
     }
 
