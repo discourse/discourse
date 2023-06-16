@@ -424,6 +424,10 @@ const User = RestModel.extend({
       type: "POST",
       data: { email },
     }).then(() => {
+      if (!this.unconfirmed_emails) {
+        this.set("unconfirmed_emails", []);
+      }
+
       this.unconfirmed_emails.pushObject(email);
     });
   },
@@ -433,6 +437,10 @@ const User = RestModel.extend({
       type: "PUT",
       data: { email },
     }).then(() => {
+      if (!this.unconfirmed_emails) {
+        this.set("unconfirmed_emails", []);
+      }
+
       this.unconfirmed_emails.pushObject(email);
     });
   },
