@@ -100,6 +100,7 @@ import {
   addSearchSuggestion,
   removeDefaultQuickSearchRandomTips,
 } from "discourse/widgets/search-menu-results";
+import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
@@ -1667,6 +1668,7 @@ class PluginApi {
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+    addGlimmerSearchSuggestion(value);
   }
 
   /**

@@ -44,7 +44,7 @@ export default DiscourseRoute.extend({
 
   setupController(controller, user) {
     controller.set("model", user);
-    this.searchService.set("searchContext", user.searchContext);
+    this.searchService.searchContext = user.searchContext;
   },
 
   activate() {
@@ -73,7 +73,7 @@ export default DiscourseRoute.extend({
     user.stopTrackingStatus();
 
     // Remove the search context
-    this.searchService.set("searchContext", null);
+    this.searchService.searchContext = null;
   },
 
   @bind

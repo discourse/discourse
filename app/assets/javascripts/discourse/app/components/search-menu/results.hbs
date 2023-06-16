@@ -1,0 +1,52 @@
+<div class="results">
+  {{#if @suggestionKeyword}}
+    <SearchMenu::Results::Assistant
+      @suggestionKeyword={{@suggestionKeyword}}
+      @results={{@suggestionResults}}
+      @closeSearchMenu={{@closeSearchMenu}}
+      @searchTermChanged={{@searchTermChanged}}
+    />
+  {{else if this.termTooShort}}
+    <div class="no-results">{{i18n "search.too_short"}}</div>
+  {{else if this.noTopicResults}}
+    <div class="no-results">{{i18n "search.no_results"}}</div>
+  {{else if this.renderInitialOptions}}
+    <SearchMenu::Results::InitialOptions
+      @closeSearchMenu={{@closeSearchMenu}}
+      @searchTermChanged={{@searchTermChanged}}
+    />
+  {{else}}
+    {{#if @searchTopics}}
+      {{! render results after a search has been performed }}
+      {{#if this.resultTypesWithComponent}}
+        <SearchMenu::Results::Types
+          @resultTypes={{this.resultTypesWithComponent}}
+          @topicResultsOnly={{true}}
+          @closeSearchMenu={{@closeSearchMenu}}
+        />
+        <SearchMenu::Results::MoreLink
+          @updateTypeFilter={{@updateTypeFilter}}
+          @triggerSearch={{@triggerSearch}}
+          @resultTypes={{this.resultTypesWithComponent}}
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+        />
+      {{/if}}
+    {{else}}
+      {{#unless @inPMInboxContext}}
+        {{! render the first couple suggestions before a search has been performed}}
+        <SearchMenu::Results::InitialOptions
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+        />
+        {{#if this.resultTypesWithComponent}}
+          <SearchMenu::Results::Types
+            @resultTypes={{this.resultTypesWithComponent}}
+            @closeSearchMenu={{@closeSearchMenu}}
+            @searchTermChanged={{@searchTermChanged}}
+          />
+        {{/if}}
+      {{/unless}}
+    {{/if}}
+  {{/if}}
+</div>
