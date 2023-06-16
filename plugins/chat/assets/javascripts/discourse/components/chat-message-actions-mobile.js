@@ -15,8 +15,6 @@ export default class ChatMessageActionsMobile extends Component {
   @tracked hasExpandedReply = false;
   @tracked showFadeIn = false;
 
-  messageActions = null;
-
   get message() {
     return this.chat.activeMessage.model;
   }
