@@ -777,9 +777,7 @@ export default Component.extend(
       preview.addEventListener("click", this._handleAltTextCancelButtonClick);
       preview.addEventListener("click", this._handleImageDeleteButtonClick);
       preview.addEventListener("keypress", this._handleAltTextInputKeypress);
-      if (this.siteSettings.experimental_post_image_grid) {
-        preview.addEventListener("click", this._handleImageGridButtonClick);
-      }
+      preview.addEventListener("click", this._handleImageGridButtonClick);
     },
 
     @on("willDestroyElement")
@@ -806,9 +804,7 @@ export default Component.extend(
       preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
       preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
       preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
-      if (this.siteSettings.experimental_post_image_grid) {
-        preview?.removeEventListener("click", this._handleImageGridButtonClick);
-      }
+      preview?.removeEventListener("click", this._handleImageGridButtonClick);
       preview?.removeEventListener(
         "click",
         this._handleAltTextCancelButtonClick
