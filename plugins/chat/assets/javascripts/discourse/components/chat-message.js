@@ -244,6 +244,7 @@ export default class ChatMessage extends Component {
     }
 
     this.chat.activeMessage = null;
+    this.isActive = false;
   }
 
   @bind
