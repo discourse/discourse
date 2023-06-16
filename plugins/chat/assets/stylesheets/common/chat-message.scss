@@ -167,7 +167,7 @@
 
 .no-touch .chat-message-container {
   &:hover,
-  &-active {
+  &.-active {
     background: var(--d-hover);
   }
 
