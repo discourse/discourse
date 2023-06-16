@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 import RawHtml from "discourse/widgets/raw-html";
 import { ajax } from "discourse/lib/ajax";
 import { avatarFor } from "discourse/widgets/post";

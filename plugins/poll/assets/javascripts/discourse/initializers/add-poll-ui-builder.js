@@ -1,6 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import PollUiBuilder from "../components/modal/poll-ui-builder";
 
 function initializePollUIBuilder(api) {
   api.modifyClass("controller:composer", {
@@ -22,7 +23,9 @@ function initializePollUIBuilder(api) {
 
     actions: {
       showPollBuilder() {
-        showModal("poll-ui-builder").set("toolbarEvent", this.toolbarEvent);
+        showModal(PollUiBuilder, {
+          model: { toolbarEvent: this.toolbarEvent },
+        });
       },
     },
   });
