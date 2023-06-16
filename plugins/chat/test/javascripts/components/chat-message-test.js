@@ -20,10 +20,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     this.message = fabricators.message({ edited: true });
     await render(template);
 
-    assert.true(
-      exists(".chat-message-edited"),
-      "has the correct edited css class"
-    );
+    assert.true(exists(".chat-message-edited"), "has the correct css class");
   });
 
   test("Deleted message", async function (assert) {
@@ -35,7 +32,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
 
     assert.true(
       exists(".chat-message-deleted .chat-message-expand"),
-      "has the correct deleted css class and expand button within"
+      "has the correct css class and expand button within"
     );
   });
 
@@ -45,7 +42,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
 
     assert.true(
       exists(".chat-message-hidden .chat-message-expand"),
-      "has the correct hidden css class and expand button within"
+      "has the correct css class and expand button within"
     );
   });
 
@@ -55,7 +52,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
 
     assert.true(
       exists(".chat-message-container.has-reply"),
-      "has the correct hidden css class and expand button within"
+      "has the correct css class"
     );
   });
 });
