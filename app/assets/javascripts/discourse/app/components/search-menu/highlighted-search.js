@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import highlightSearch from "discourse/lib/highlight-search";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 
 export default class HighlightedSearch extends Component {
   @service search;
@@ -9,7 +10,6 @@ export default class HighlightedSearch extends Component {
     super(...arguments);
     const span = document.createElement("span");
     span.textContent = this.args.string;
-    this.content = span;
 
     highlightSearch(span, this.search.activeGlobalSearchTerm);
   }

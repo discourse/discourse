@@ -134,6 +134,34 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
   });
 
+  test("Topic type search result escapes html in topic title", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+
+    assert.ok(
+      exists(
+        ".search-menu .search-result-topic .item .topic-title span#topic-with-html"
+      ),
+      "html in the topic title is properly escaped"
+    );
+  });
+
+  test("Topic type search result escapes emojis in topic title", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+
+    assert.ok(
+      exists(
+        ".search-menu .search-result-topic .item .topic-title img[alt='+1']"
+      ),
+      ":+1: in the topic title is properly converted to an emoji"
+    );
+  });
+
   test("search button toggles search menu", async function (assert) {
     await visit("/");
 
