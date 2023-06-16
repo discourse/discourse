@@ -13,6 +13,8 @@ import {
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import Site from "discourse/models/site";
+import { TOP_SITE_TAGS_TO_SHOW } from "discourse/components/sidebar/common/tags-section";
 
 acceptance(
   "Sidebar - Logged on user - Tags section - tagging disabled",
@@ -115,49 +117,41 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("tags section is hidden when user has not added any tags and there are no default tags configured", async function (assert) {
+  test("tags section is displayed with site's top tags when user has not added any tags and there are no default tags configured", async function (assert) {
     updateCurrentUser({
       sidebar_tags: [],
     });
 
-    await visit("/");
-
-    assert.notOk(
-      exists(".sidebar-section[data-section-name='tags']"),
-      "tags section is not displayed"
-    );
-  });
-
-  test("tags section is shown when user has not added any tags but default tags have been configured", async function (assert) {
-    updateCurrentUser({
-      sidebar_tags: [],
-    });
-
-    this.siteSettings.default_navigation_menu_tags = "tag1|tag2";
+    Site.current().top_tags = [
+      "test1",
+      "test2",
+      "test3",
+      "test4",
+      "test5",
+      "test6",
+    ];
 
     await visit("/");
 
     assert.ok(
       exists(".sidebar-section[data-section-name='tags']"),
-      "tags section is shown"
-    );
-
-    assert.ok(
-      exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
-      ),
-      "section link to add tags to sidebar is displayed"
-    );
-
-    await click(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
+      "tags section is displayed"
     );
 
     assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/navigation-menu",
-      "it should transition to user preferences navigation menu page"
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]"
+      ),
+      TOP_SITE_TAGS_TO_SHOW,
+      "right number of tag section links are displayed"
     );
+
+    ["test1", "test2", "test3", "test4", "test5"].forEach((tagName) => {
+      assert.ok(
+        exists(`.sidebar-section-link-wrapper[data-tag-name=${tagName}]`),
+        `${tagName} tag section link is displayed`
+      );
+    });
   });
 
   test("tag section links are sorted alphabetically by tag's name", async function (assert) {
@@ -682,13 +676,13 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+        ".sidebar-section-link[data-link-name='configure-default-navigation-menu-tags']"
       ),
       "section link to configure default sidebar tags is shown"
     );
 
     await click(
-      ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+      ".sidebar-section-link[data-link-name='configure-default-navigation-menu-tags']"
     );
 
     assert.strictEqual(

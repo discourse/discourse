@@ -1207,9 +1207,9 @@ en:
         enable: "Enable sidebar"
         options: "Options"
         categories_section: "Categories Section"
-        categories_section_instruction: "Selected categories will be displayed under Navigation Menu's categories section."
+        categories_section_instruction: "Selected categories will be displayed under Navigation Menu's categories section. If no categories are selected, the site's top categories will be displayed."
         tags_section: "Tags Section"
-        tags_section_instruction: "Selected tags will be displayed under Navigation Menu's tags section."
+        tags_section_instruction: "Selected tags will be displayed under Navigation Menu's tags section. If no tags are selected, the site's top tags will be displayed."
         navigation_section: "Navigation"
         list_destination_instruction: "When there's new content in the navigation menu..."
         list_destination_default: "use the default link and show a badge for new items"
@@ -2058,7 +2058,7 @@ en:
       disable: "Show All Posts"
       short_label: "Summarize"
       short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
-      strategy: 
+      strategy:
         button_title: "Summarize this topic"
         title: "Topic summary"
 
@@ -4444,20 +4444,12 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
-          links:
-            add_tags:
-              content: "Add tags"
-              title: "You have not added any tags. Click to get started."
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "Edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
-          links:
-            add_categories:
-              content: "Add categories"
-              title: "You have not added any categories. Click to get started."
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"

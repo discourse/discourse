@@ -1,9 +1,10 @@
 import { cached } from "@glimmer/tracking";
-import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+
+import SidebarCommonTagsSection from "discourse/components/sidebar/common/tags-section";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 
-export default class SidebarAnonymousTagsSection extends Component {
+export default class SidebarAnonymousTagsSection extends SidebarCommonTagsSection {
   @service router;
   @service topicTrackingState;
   @service site;
@@ -11,20 +12,15 @@ export default class SidebarAnonymousTagsSection extends Component {
   get displaySection() {
     return (
       this.site.anonymous_default_navigation_menu_tags?.length > 0 ||
-      this.site.top_tags?.length > 0
+      this.topSiteTags?.length > 0
     );
   }
 
   @cached
   get sectionLinks() {
-    let tags;
-
-    if (this.site.anonymous_default_navigation_menu_tags) {
-      tags = this.site.anonymous_default_navigation_menu_tags;
-    } else {
-      tags = this.site.top_tags.slice(0, 5);
-    }
-    return tags.map((tagName) => {
+    return (
+      this.site.anonymous_default_navigation_menu_tags || this.topSiteTags
+    ).map((tagName) => {
       return new TagSectionLink({
         tagName,
         topicTrackingState: this.topicTrackingState,

@@ -22,10 +22,10 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]"
     );
 
-    assert.strictEqual(categories.length, 4);
+    assert.strictEqual(categories.length, 3);
     assert.strictEqual(categories[0].textContent.trim(), "design");
     assert.strictEqual(categories[1].textContent.trim(), "development");
     assert.strictEqual(categories[2].textContent.trim(), "fun");

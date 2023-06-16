@@ -4,11 +4,12 @@ import { test } from "qunit";
 
 acceptance("CSS Generator", function (needs) {
   needs.user();
+
   needs.site({
     categories: [
-      { id: 1, color: "ff0000" },
-      { id: 2, color: "333" },
-      { id: 4, color: "2B81AF", parentCategory: { id: 1 } },
+      { id: 1, color: "ff0000", name: "category1" },
+      { id: 2, color: "333", name: "category2" },
+      { id: 4, color: "2B81AF", parentCategory: { id: 1 }, name: "category3" },
     ],
   });
 
