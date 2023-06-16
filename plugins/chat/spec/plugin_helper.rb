@@ -53,6 +53,15 @@ module ChatSystemHelpers
     last_message.thread.update!(thread_attrs) if thread_attrs.any?
     last_message.thread
   end
+
+  def thread_excerpt(message)
+    CGI.escapeHTML(
+      message.censored_excerpt(rich: true, max_length: ::Chat::Thread::EXCERPT_LENGTH).gsub(
+        "&hellip;",
+        "…",
+      ),
+    )
+  end
 end
 
 RSpec.configure do |config|

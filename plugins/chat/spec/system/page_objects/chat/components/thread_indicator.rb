@@ -37,13 +37,8 @@ module PageObjects
           )
         end
 
-        def has_excerpt?(message)
-          excerpt_text =
-            message.censored_excerpt(rich: true, max_length: ::Chat::Thread::EXCERPT_LENGTH).gsub(
-              "&hellip;",
-              "…",
-            )
-          find(@context).find("#{SELECTOR}__last-reply-excerpt").has_content?(excerpt_text)
+        def excerpt
+          find(@context).find("#{SELECTOR}__last-reply-excerpt")
         end
       end
     end
