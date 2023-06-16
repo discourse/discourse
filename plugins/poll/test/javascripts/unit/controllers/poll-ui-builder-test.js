@@ -4,7 +4,7 @@ import {
   MULTIPLE_POLL_TYPE,
   NUMBER_POLL_TYPE,
   REGULAR_POLL_TYPE,
-} from "discourse/plugins/poll/controllers/poll-ui-builder";
+} from "discourse/plugins/poll/discourse/controllers/poll-ui-builder";
 import { settled } from "@ember/test-helpers";
 
 function setupController(ctx) {

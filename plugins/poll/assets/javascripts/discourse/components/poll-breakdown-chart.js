@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import { PIE_CHART_TYPE } from "discourse/plugins/poll/controllers/poll-ui-builder";
+import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { htmlSafe } from "@ember/template";
