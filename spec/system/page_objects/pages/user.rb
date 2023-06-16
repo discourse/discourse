@@ -24,10 +24,31 @@ module PageObjects
         page.has_current_path?("/u/#{user.username}/messages/warnings")
       end
 
+      def staff_info_section
+        begin
+          page.find(".staff-counters")
+        rescue Capybara::ElementNotFound
+          nil
+        end
+      end
+
       def click_staff_info_warnings_link(user, warnings_count: 0)
-        staff_counters = page.find(".staff-counters")
-        staff_counters.find("a[href='/u/#{user.username}/messages/warnings']").click
+        staff_info_section.find("a[href='/u/#{user.username}/messages/warnings']").click
         self
+      end
+
+      def has_reviewable_flagged_posts_path?(user)
+        params = {
+          status: "approved",
+          sort_order: "score",
+          type: "ReviewableFlaggedPost",
+          username: user.username,
+        }
+        page.has_current_path?("/review?#{params.to_query}")
+      end
+
+      def staff_info_flagged_posts_counter
+        staff_info_section&.find(".flagged-posts")
       end
     end
   end

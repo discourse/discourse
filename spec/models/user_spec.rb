@@ -2045,14 +2045,24 @@ RSpec.describe User do
     end
 
     describe "#number_of_flagged_posts" do
-      it "counts flagged posts from the user" do
-        Fabricate(:reviewable_flagged_post, target_created_by: user)
+      it "counts approved flagged posts from the user" do
+        ReviewableFlaggedPost
+          .statuses
+          .except(:approved)
+          .keys
+          .map do |status|
+            Fabricate(:reviewable_flagged_post, status: status, target_created_by: user)
+          end
+        Fabricate.times(2, :reviewable_flagged_post, status: :approved, target_created_by: user)
 
-        expect(user.number_of_flagged_posts).to eq(1)
+        expect(user.number_of_flagged_posts).to eq(2)
       end
 
       it "ignores flagged posts from another user" do
-        Fabricate(:reviewable_flagged_post, target_created_by: Fabricate(:user))
+        other_user = Fabricate(:user)
+        ReviewableFlaggedPost.statuses.keys.map do |status|
+          Fabricate(:reviewable_flagged_post, status: status, target_created_by: other_user)
+        end
 
         expect(user.number_of_flagged_posts).to eq(0)
       end

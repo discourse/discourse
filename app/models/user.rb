@@ -1214,6 +1214,7 @@ class User < ActiveRecord::Base
     posts
       .includes(:post_actions)
       .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .where("post_actions.agreed_at IS NOT NULL")
       .count
   end
 
@@ -1555,7 +1556,7 @@ class User < ActiveRecord::Base
   end
 
   def number_of_flagged_posts
-    ReviewableFlaggedPost.where(target_created_by: self.id).count
+    ReviewableFlaggedPost.where(target_created_by: self.id).approved.count
   end
 
   def number_of_rejected_posts
