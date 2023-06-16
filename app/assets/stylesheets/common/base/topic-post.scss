@@ -315,6 +315,11 @@ nav.post-controls {
       vertical-align: top;
       background: transparent;
       border: none;
+      .d-icon {
+        // this avoids an issue where hovering off the icon
+        // removes the .d-hover class from the button prematurely
+        pointer-events: none;
+      }
       &.d-hover,
       &:focus,
       &:active {
@@ -329,7 +334,7 @@ nav.post-controls {
         position: relative;
       }
       &.delete.d-hover,
-      &.delete:hover,
+      &.delete:active,
       &.delete:focus {
         background: var(--danger);
         color: var(--secondary);
@@ -982,17 +987,13 @@ aside.quote {
     .widget-button {
       display: flex;
       align-items: center;
-
       .d-button-label {
         order: 0;
         padding-right: 0.25em;
         color: var(--primary-med-or-secondary-med);
-        transition: color 0.25s;
       }
-
       .d-icon {
         order: 1;
-        transition: color 0.25s;
         color: var(--primary-med-or-secondary-med);
       }
       .discourse-no-touch & {
