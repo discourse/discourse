@@ -1,3 +1,4 @@
+import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -8,20 +9,22 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
 
-export default Controller.extend(ModalFunctionality, {
-  dialog: service(),
-  model: null,
-  charts: null,
-  groupedBy: null,
-  highlightedOption: null,
-  displayMode: "percentage",
+export default class PollBreakdownController extends Controller.extend(
+  ModalFunctionality
+) {
+  @service dialog;
+
+  model = null;
+  charts = null;
+  groupedBy = null;
+  highlightedOption = null;
+  displayMode = "percentage";
 
   @discourseComputed("model.poll.title", "model.post.topic.title")
   title(pollTitle, topicTitle) {
     return pollTitle ? htmlSafe(pollTitle) : topicTitle;
-  },
+  }
 
   @discourseComputed("model.groupableUserFields")
   groupableUserFields(fields) {
@@ -34,12 +37,12 @@ export default Controller.extend(ModalFunctionality, {
 
       return { id: field, label: transformed.join(" ") };
     });
-  },
+  }
 
   @discourseComputed("model.poll.options")
   totalVotes(options) {
     return options.reduce((sum, option) => sum + option.votes, 0);
-  },
+  }
 
   onShow() {
     this.set("charts", null);
@@ -51,7 +54,7 @@ export default Controller.extend(ModalFunctionality, {
       .then(() => {
         this.fetchGroupedPollData();
       });
-  },
+  }
 
   fetchGroupedPollData() {
     return ajax("/polls/grouped_poll_results.json", {
@@ -75,16 +78,16 @@ export default Controller.extend(ModalFunctionality, {
 
         this.set("charts", result.grouped_results);
       });
-  },
+  }
 
   @action
   setGrouping(value) {
     this.set("groupedBy", value);
     this.fetchGroupedPollData();
-  },
+  }
 
   @action
   onSelectPanel(panel) {
     this.set("displayMode", panel.id);
-  },
-});
+  }
+}

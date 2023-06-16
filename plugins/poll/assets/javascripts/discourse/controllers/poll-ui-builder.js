@@ -1,6 +1,6 @@
+import { gt, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { gt, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
@@ -18,21 +18,25 @@ const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
-export default Controller.extend(ModalFunctionality, {
-  showAdvanced: false,
+export default class PollUiBuilderController extends Controller.extend(
+  ModalFunctionality
+) {
+  showAdvanced = false;
+  pollType = REGULAR_POLL_TYPE;
+  pollTitle = "";
+  pollOptions = null;
+  pollOptionsText = null;
+  pollMin = 1;
+  pollMax = 2;
+  pollStep = 1;
+  pollGroups = null;
+  pollAutoClose = null;
+  pollResult = ALWAYS_POLL_RESULT;
+  chartType = BAR_CHART_TYPE;
+  publicPoll = null;
 
-  pollType: REGULAR_POLL_TYPE,
-  pollTitle: "",
-  pollOptions: null,
-  pollOptionsText: null,
-  pollMin: 1,
-  pollMax: 2,
-  pollStep: 1,
-  pollGroups: null,
-  pollAutoClose: null,
-  pollResult: ALWAYS_POLL_RESULT,
-  chartType: BAR_CHART_TYPE,
-  publicPoll: null,
+  @or("showAdvanced", "isNumber") showNumber;
+  @gt("pollOptions.length", 1) canRemoveOption;
 
   onShow() {
     this.setProperties({
@@ -50,7 +54,7 @@ export default Controller.extend(ModalFunctionality, {
       chartType: BAR_CHART_TYPE,
       publicPoll: false,
     });
-  },
+  }
 
   @discourseComputed
   pollResults() {
@@ -77,43 +81,39 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return options;
-  },
+  }
 
   @discourseComputed("pollType")
   isRegular(pollType) {
     return pollType === REGULAR_POLL_TYPE;
-  },
+  }
 
   @discourseComputed("pollType")
   isNumber(pollType) {
     return pollType === NUMBER_POLL_TYPE;
-  },
+  }
 
   @discourseComputed("pollType")
   isMultiple(pollType) {
     return pollType === MULTIPLE_POLL_TYPE;
-  },
-
-  showNumber: or("showAdvanced", "isNumber"),
+  }
 
   @discourseComputed("pollOptions.@each.value")
   pollOptionsCount(pollOptions) {
     return (pollOptions || []).filter((option) => option.value.length > 0)
       .length;
-  },
+  }
 
   @discourseComputed("site.groups")
   siteGroups(groups) {
     // prevents group "everyone" to be listed
     return groups.filter((g) => g.id !== 0);
-  },
+  }
 
   @discourseComputed("chartType", "pollType")
   isPie(chartType, pollType) {
     return pollType !== NUMBER_POLL_TYPE && chartType === PIE_CHART_TYPE;
-  },
-
-  canRemoveOption: gt("pollOptions.length", 1),
+  }
 
   @observes("pollType", "pollOptionsCount")
   _setPollMinMax() {
@@ -136,7 +136,7 @@ export default Controller.extend(ModalFunctionality, {
     } else if (this.isNumber) {
       this.set("pollMax", this.siteSettings.poll_maximum_options);
     }
-  },
+  }
 
   @discourseComputed(
     "pollType",
@@ -225,7 +225,7 @@ export default Controller.extend(ModalFunctionality, {
 
     output += "[/poll]\n";
     return output;
-  },
+  }
 
   @discourseComputed("isNumber", "pollOptionsCount")
   minNumOfOptionsValidation(isNumber, pollOptionsCount) {
@@ -250,12 +250,12 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return EmberObject.create(options);
-  },
+  }
 
   @discourseComputed("pollOptions.@each.value")
   showMinNumOfOptionsValidation(pollOptions) {
     return pollOptions.length !== 1 || pollOptions[0].value !== "";
-  },
+  }
 
   @discourseComputed(
     "isMultiple",
@@ -326,19 +326,19 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return EmberObject.create({ ok: true });
-  },
+  }
 
   @discourseComputed("minMaxValueValidation", "minNumOfOptionsValidation")
   disableInsert(minMaxValueValidation, minNumOfOptionsValidation) {
     return !minMaxValueValidation.ok || !minNumOfOptionsValidation.ok;
-  },
+  }
 
   _comboboxOptions(startIndex, endIndex) {
     return [...Array(endIndex - startIndex).keys()].map((number) => ({
       value: number + startIndex,
       name: number + startIndex,
     }));
-  },
+  }
 
   @action
   onOptionsTextChange(e) {
@@ -349,13 +349,13 @@ export default Controller.extend(ModalFunctionality, {
         .split("\n")
         .map((value) => EmberObject.create({ idx: idx++, value }))
     );
-  },
+  }
 
   @action
   insertPoll() {
     this.toolbarEvent.addText(this.pollOutput);
     this.send("closeModal");
-  },
+  }
 
   @action
   toggleAdvanced() {
@@ -366,7 +366,7 @@ export default Controller.extend(ModalFunctionality, {
         this.pollOptions.map((x) => x.value).join("\n")
       );
     }
-  },
+  }
 
   @action
   addOption(beforeOption, value, e) {
@@ -392,16 +392,16 @@ export default Controller.extend(ModalFunctionality, {
     if (e) {
       e.preventDefault();
     }
-  },
+  }
 
   @action
   removeOption(option) {
     this.pollOptions.removeObject(option);
-  },
+  }
 
   @action
   updatePollType(pollType, event) {
     event?.preventDefault();
     this.set("pollType", pollType);
-  },
-});
+  }
+}
