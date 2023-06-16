@@ -154,9 +154,10 @@ class PostAlerter
         to_notify =
           DiscoursePluginRegistry.apply_modifier(
             :expand_group_mention_users,
-            group,
             users - notified,
+            group,
           )
+
         notified +=
           notify_users(to_notify, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
