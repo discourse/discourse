@@ -179,7 +179,6 @@ export default function () {
 
         this.route("email");
         this.route("second-factor");
-        this.route("second-factor-backup");
       });
 
       this.route(
