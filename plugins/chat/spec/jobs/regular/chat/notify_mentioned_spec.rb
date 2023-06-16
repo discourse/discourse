@@ -14,7 +14,14 @@ describe Jobs::Chat::NotifyMentioned do
 
     @chat_group = Fabricate(:group, users: [user_1, user_2])
     @personal_chat_channel =
-      Chat::DirectMessageChannelCreator.create!(acting_user: user_1, target_users: [user_1, user_2])
+      with_service(
+        Chat::CreateDirectMessageChannel,
+        guardian: user_1.guardian,
+        target_usernames: [user_1.username, user_2.username],
+      ) do
+        on_failure { service_failed!(result) }
+        on_success { result.channel }
+      end
 
     [user_1, user_2].each do |u|
       Fabricate(:user_chat_channel_membership, chat_channel: public_channel, user: u)
