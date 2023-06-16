@@ -43,7 +43,7 @@ module PageObjects
               "&hellip;",
               "…",
             )
-          find(@context).has_css?("#{SELECTOR}__last-reply-excerpt", text: excerpt_text)
+          find(@context).find("#{SELECTOR}__last-reply-excerpt").has_content?(excerpt_text)
         end
       end
     end

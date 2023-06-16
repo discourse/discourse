@@ -34,7 +34,7 @@ module PageObjects
           ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
         )
       end
-      
+
       def selection_management
         @selection_management ||=
           PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
