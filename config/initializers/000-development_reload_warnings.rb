@@ -21,7 +21,8 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
       not_autoloaded =
         files.filter_map do |file|
           autoloaded = Rails.autoloaders.main.__autoloads.key? file
-          if !autoloaded && !file.end_with?("spec.rb")
+
+          if !autoloaded && !file.match(%r{/spec/})
             Pathname.new(file).relative_path_from(Rails.root)
           end
         end
