@@ -31,4 +31,4 @@ DiscourseAutomation::Engine.routes.draw do
   end
 end
 
-Discourse::Application.routes.append { mount ::DiscourseAutomation::Engine, at: "/" }
+Discourse::Application.routes.draw { mount ::DiscourseAutomation::Engine, at: "/" }
