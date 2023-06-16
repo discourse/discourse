@@ -148,7 +148,7 @@ module I18n
       elsif should_raise
         raise I18n::MissingTranslationData.new(locale, key)
       else
-        -"translation missing: #{locale}.#{key}"
+        -"Translation missing: #{locale}.#{key}"
       end
     end
 
