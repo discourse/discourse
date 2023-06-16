@@ -21,9 +21,16 @@
     color: var(--primary);
   }
 
-  &:hover,
-  &.-active {
-    box-shadow: var(--shadow-dropdown);
+  .touch & {
+    &.-active {
+      box-shadow: var(--shadow-dropdown);
+    }
+  }
+
+  .no-touch & {
+    &:hover {
+      box-shadow: var(--shadow-dropdown);
+    }
   }
 
   &__participants {
