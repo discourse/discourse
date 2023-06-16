@@ -2431,6 +2431,7 @@ en:
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     experimental_post_image_grid: "EXPERIMENTAL: Enables a [grid] tag in posts to display images in a grid layout."
+    experimental_search_menu_groups: "EXPERIMENTAL: Enables the new search menu that has been upgraded to use glimmer"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
