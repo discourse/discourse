@@ -64,6 +64,9 @@ export default Component.extend(UtilsMixin, {
     event.preventDefault();
     event.stopPropagation();
 
+    if (event.target.parentNode.classList.contains("selected-choice")) {
+      return false;
+    }
     this.selectKit.toggle(event);
   },
 
