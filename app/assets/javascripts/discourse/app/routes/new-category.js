@@ -3,8 +3,8 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 
-let _newCategoryColor = "0088CC",
-  _newCategoryTextColor = "FFFFFF";
+let _newCategoryColor = "0088CC";
+let _newCategoryTextColor = "FFFFFF";
 
 export function setNewCategoryDefaultColors(backgroundColor, textColor) {
   _newCategoryColor = backgroundColor;
@@ -12,6 +12,9 @@ export function setNewCategoryDefaultColors(backgroundColor, textColor) {
 }
 
 export default DiscourseRoute.extend({
+  controllerName: "edit-category-tabs",
+  templateName: "edit-category-tabs",
+
   beforeModel() {
     if (!this.currentUser) {
       this.replaceWith("/404");
@@ -70,12 +73,5 @@ export default DiscourseRoute.extend({
         permission_type: 1,
       },
     ];
-  },
-
-  renderTemplate() {
-    this.render("edit-category-tabs", {
-      controller: "edit-category-tabs",
-      model: this.currentModel,
-    });
   },
 });
