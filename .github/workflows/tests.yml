@@ -177,12 +177,12 @@ jobs:
         env:
           LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
         run: |
-          if ! rails runner 'Rails.application.reloader.reload!'; then
+          if ! bin/rails runner 'Rails.application.reloader.reload!'; then
             echo
             echo "---------------------------------------------"
             echo
             echo "::error::Zeitwerk reload failed - the app will not be able to reload properly in development."
-            echo "To reproduce locally, run `rails runner 'Rails.application.reloader.reload!'`."
+            echo "To reproduce locally, run `bin/rails runner 'Rails.application.reloader.reload!'`."
             echo
             exit 1
           fi
