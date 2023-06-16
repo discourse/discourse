@@ -177,7 +177,7 @@ jobs:
         env:
           LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
         run: |
-          if ! rails runner 'Rails.application.reloader.reload!' then
+          if ! rails runner 'Rails.application.reloader.reload!'; then
             echo
             echo "---------------------------------------------"
             echo
