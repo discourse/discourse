@@ -8,7 +8,7 @@
     flex-direction: column;
   }
 
-  .chat-selection-management-buttons {
+  &__buttons {
     display: flex;
     gap: 0.5rem;
 
@@ -18,7 +18,7 @@
     }
   }
 
-  .chat-selection-message {
+  &__copy-success {
     animation: chat-quote-message-background-fade-highlight 2s ease-out 3s;
     animation-fill-mode: forwards;
     background-color: var(--success-low);

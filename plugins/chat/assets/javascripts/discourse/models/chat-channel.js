@@ -336,4 +336,8 @@ export default class ChatChannel {
       method: "PUT",
     });
   }
+
+  clearSelectedMessages() {
+    this.selectedMessages.forEach((message) => (message.selected = false));
+  }
 }

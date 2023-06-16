@@ -30,6 +30,7 @@
     }}
     data-id={{@message.id}}
     data-thread-id={{@message.thread.id}}
+    data-selected={{@message.selected}}
     {{chat/track-message
       (hash
         didEnterViewport=(fn @messageDidEnterViewport @message)

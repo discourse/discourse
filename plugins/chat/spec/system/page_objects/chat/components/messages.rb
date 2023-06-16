@@ -13,11 +13,23 @@ module PageObjects
         end
 
         def component
-          find(context)
+          page.find(context)
         end
 
-        def message
-          PageObjects::Components::Chat::Message.new(context + " " + SELECTOR)
+        def select(args)
+          find(args).select
+        end
+
+        def shift_select(args)
+          find(args).select(shift: true)
+        end
+
+        def find(args)
+          if args.is_a?(Hash)
+            message.find(**args)
+          else
+            message.find(id: args.id)
+          end
         end
 
         def has_message?(**args)
@@ -26,6 +38,16 @@ module PageObjects
 
         def has_no_message?(**args)
           message.does_not_exist?(**args)
+        end
+
+        def has_selected_messages?(*messages)
+          messages.all? { |message| has_message?(id: message.id, selected: true) }
+        end
+
+        private
+
+        def message
+          PageObjects::Components::Chat::Message.new("#{context} #{SELECTOR}")
         end
       end
     end
