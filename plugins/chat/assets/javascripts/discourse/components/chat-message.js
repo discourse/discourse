@@ -317,7 +317,7 @@ export default class ChatMessage extends Component {
   }
 
   get hasReply() {
-    return this.args.inReplyTo && !this.hideReplyToInfo;
+    return this.args.message.inReplyTo && !this.hideReplyToInfo;
   }
 
   get hideUserInfo() {
