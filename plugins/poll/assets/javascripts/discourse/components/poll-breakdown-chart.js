@@ -1,61 +1,61 @@
+import { classNames } from "@ember-decorators/component";
+import { mapBy } from "@ember/object/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { htmlSafe } from "@ember/template";
-import { mapBy } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 
-export default Component.extend({
+@classNames("poll-breakdown-chart-container")
+export default class PollBreakdownChart extends Component {
   // Arguments:
-  group: null,
-  options: null,
-  displayMode: null,
-  highlightedOption: null,
-  setHighlightedOption: null,
+  group = null;
+  options = null;
+  displayMode = null;
+  highlightedOption = null;
+  setHighlightedOption = null;
 
-  classNames: "poll-breakdown-chart-container",
+  @mapBy("options", "votes") data;
 
-  _optionToSlice: null,
-  _previousHighlightedSliceIndex: null,
-  _previousDisplayMode: null,
-
-  data: mapBy("options", "votes"),
+  _optionToSlice = null;
+  _previousHighlightedSliceIndex = null;
+  _previousDisplayMode = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this._optionToSlice = {};
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     const canvas = this.element.querySelector("canvas");
     this._chart = new window.Chart(canvas.getContext("2d"), this.chartConfig);
-  },
+  }
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
 
     if (this._chart) {
       this._updateDisplayMode();
       this._updateHighlight();
     }
-  },
+  }
 
   willDestroy() {
-    this._super(...arguments);
+    super.willDestroy(...arguments);
 
     if (this._chart) {
       this._chart.destroy();
     }
-  },
+  }
 
   @discourseComputed("optionColors", "index")
   colorStyle(optionColors, index) {
     return htmlSafe(`background: ${optionColors[index]};`);
-  },
+  }
 
   @discourseComputed("data", "displayMode")
   chartConfig(data, displayMode) {
@@ -149,7 +149,7 @@ export default Component.extend({
         },
       },
     };
-  },
+  }
 
   _updateDisplayMode() {
     if (this.displayMode !== this._previousDisplayMode) {
@@ -160,7 +160,7 @@ export default Component.extend({
       this._chart.update();
       this._previousDisplayMode = this.displayMode;
     }
-  },
+  }
 
   _updateHighlight() {
     const meta = this._chart.getDatasetMeta(0);
@@ -186,5 +186,5 @@ export default Component.extend({
     this._previousHighlightedSliceIndex = sliceIndex;
     meta.controller.setHoverStyle(slice);
     this._chart.draw();
-  },
-});
+  }
+}
