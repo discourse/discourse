@@ -238,7 +238,14 @@ describe Chat::MessageUpdater do
 
     it "doesn't create mention notification in direct message for users without access" do
       direct_message_channel =
-        Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
+        with_service(
+          Chat::CreateDirectMessageChannel,
+          guardian: user1.guardian,
+          target_usernames: [user1.username, user2.username],
+        ) do
+          on_failure { service_failed!(result) }
+          on_success { result.channel }
+        end
       message = create_chat_message(user1, "ping nobody", direct_message_channel)
 
       Chat::MessageUpdater.update(

@@ -88,7 +88,7 @@ module Chat
     def update_memberships(guardian:, channel:, target_users:, **)
       sql_params = {
         acting_user_id: guardian.user.id,
-        user_ids: target_users.map(&:id),
+        user_ids: target_users.map(&:id) + [guardian.user.id],
         chat_channel_id: channel.id,
         always_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
       }
@@ -108,7 +108,7 @@ module Chat
           unnest(array[:user_ids]),
           :chat_channel_id,
           false,
-          false,
+          true,
           :always_notification_level,
           :always_notification_level,
           NOW(),
