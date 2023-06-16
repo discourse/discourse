@@ -79,7 +79,7 @@ export default Component.extend(UtilsMixin, {
       return true;
     }
 
-    if (event.key === "Backspace") {
+    if (event.key === "Backspace" && !this.selectKit.filter) {
       this.selectKit.deselectLast();
       event.preventDefault();
       return false;
