@@ -14,6 +14,7 @@ import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import PollBreakdownModal from "../components/modal/poll-breakdown";
 
 const FETCH_VOTERS_COUNT = 25;
 
@@ -1070,12 +1071,8 @@ export default createWidget("discourse-poll", {
   },
 
   showBreakdown() {
-    showModal("poll-breakdown", {
+    showModal(PollBreakdownModal, {
       model: this.attrs,
-      panels: [
-        { id: "percentage", title: "poll.breakdown.percentage" },
-        { id: "count", title: "poll.breakdown.count" },
-      ],
     });
   },
 });

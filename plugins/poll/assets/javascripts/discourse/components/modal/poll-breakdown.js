@@ -1,7 +1,6 @@
 import { inject as service } from "@ember/service";
-import Controller from "@ember/controller";
+import Component from "@ember/component";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { classify } from "@ember/string";
@@ -10,9 +9,7 @@ import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default class PollBreakdownController extends Controller.extend(
-  ModalFunctionality
-) {
+export default class PollBreakdownModal extends Component {
   @service dialog;
 
   model = null;
@@ -20,6 +17,16 @@ export default class PollBreakdownController extends Controller.extend(
   groupedBy = null;
   highlightedOption = null;
   displayMode = "percentage";
+
+  init() {
+    this.set("groupedBy", this.model.groupableUserFields[0]);
+    loadScript("/javascripts/Chart.min.js")
+      .then(() => loadScript("/javascripts/chartjs-plugin-datalabels.min.js"))
+      .then(() => {
+        this.fetchGroupedPollData();
+      });
+    super.init(...arguments);
+  }
 
   @discourseComputed("model.poll.title", "model.post.topic.title")
   title(pollTitle, topicTitle) {
@@ -42,18 +49,6 @@ export default class PollBreakdownController extends Controller.extend(
   @discourseComputed("model.poll.options")
   totalVotes(options) {
     return options.reduce((sum, option) => sum + option.votes, 0);
-  }
-
-  onShow() {
-    this.set("charts", null);
-    this.set("displayMode", "percentage");
-    this.set("groupedBy", this.model.groupableUserFields[0]);
-
-    loadScript("/javascripts/Chart.min.js")
-      .then(() => loadScript("/javascripts/chartjs-plugin-datalabels.min.js"))
-      .then(() => {
-        this.fetchGroupedPollData();
-      });
   }
 
   fetchGroupedPollData() {
@@ -90,4 +85,11 @@ export default class PollBreakdownController extends Controller.extend(
   onSelectPanel(panel) {
     this.set("displayMode", panel.id);
   }
+
+  panels = [
+    [
+      { id: "percentage", title: "poll.breakdown.percentage" },
+      { id: "count", title: "poll.breakdown.count" },
+    ],
+  ];
 }
