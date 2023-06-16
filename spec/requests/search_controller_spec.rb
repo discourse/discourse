@@ -228,6 +228,10 @@ RSpec.describe SearchController do
     end
 
     context "when rate limited" do
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
+
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search/query.json", params: { term: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -246,8 +250,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         start = Time.now
         freeze_time start
@@ -268,8 +270,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -289,8 +289,6 @@ RSpec.describe SearchController do
 
         it "rate limits logged in searches" do
           SiteSetting.rate_limit_search_user = 3
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           3.times do
             get "/search/query.json", params: { term: "wookie" }
@@ -367,6 +365,10 @@ RSpec.describe SearchController do
     end
 
     context "when rate limited" do
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
+
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search.json", params: { q: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -385,8 +387,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -405,8 +405,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -426,8 +424,6 @@ RSpec.describe SearchController do
 
         it "rate limits searches" do
           SiteSetting.rate_limit_search_user = 3
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           3.times do
             get "/search.json", params: { q: "bantha" }
