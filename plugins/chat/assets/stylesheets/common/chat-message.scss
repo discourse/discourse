@@ -214,19 +214,21 @@
   }
 
   &.has-reply {
-    display: grid;
-    grid-template-columns: var(--message-left-width) 1fr;
-    grid-template-rows: 30px auto;
-    grid-template-areas:
-      "replyto replyto"
-      "avatar message";
+    .chat-message {
+      display: grid;
+      grid-template-columns: var(--message-left-width) 1fr;
+      grid-template-rows: 30px auto;
+      grid-template-areas:
+        "replyto replyto"
+        "avatar message";
 
-    .chat-user-avatar {
-      grid-area: avatar;
-    }
+      .chat-user-avatar {
+        grid-area: avatar;
+      }
 
-    .chat-message-content {
-      grid-area: message;
+      .chat-message-content {
+        grid-area: message;
+      }
     }
   }
 
