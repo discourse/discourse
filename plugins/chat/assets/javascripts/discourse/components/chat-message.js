@@ -126,7 +126,7 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  willDestroyMesage() {
+  willDestroyMessage() {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
     this.#teardownMentionedUsers();
