@@ -26,4 +26,17 @@ export default Component.extend({
       (!isMutedCategory && listType === LIST_TYPE.MUTED)
     );
   },
+
+  @discourseComputed("topicTrackingState.messageCount")
+  unreadTopicsCount() {
+    return this.topicTrackingState.countUnread({
+      categoryId: this.category.id,
+    });
+  },
+  @discourseComputed("topicTrackingState.messageCount")
+  newTopicsCount() {
+    return this.topicTrackingState.countNew({
+      categoryId: this.category.id,
+    });
+  },
 });

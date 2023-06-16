@@ -310,16 +310,6 @@ const Category = RestModel.extend({
     }
   },
 
-  @discourseComputed("id", "topicTrackingState.messageCount")
-  unreadTopics(id) {
-    return this.topicTrackingState.countUnread({ categoryId: id });
-  },
-
-  @discourseComputed("id", "topicTrackingState.messageCount")
-  newTopics(id) {
-    return this.topicTrackingState.countNew({ categoryId: id });
-  },
-
   setNotification(notification_level) {
     User.currentProp(
       "muted_category_ids",
