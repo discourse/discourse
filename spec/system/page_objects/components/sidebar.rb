@@ -88,11 +88,11 @@ module PageObjects
       private
 
       def section_link_present?(name, href: nil, active: false, present:)
-        attributes = {}
+        attributes = { exact_text: name }
         attributes[:href] = href if href
         attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
         attributes[:class] += "--active" if active
-        page.public_send(present ? :has_link? : :has_no_link?, name, **attributes)
+        page.public_send(present ? :has_link? : :has_no_link?, **attributes)
       end
 
       def add_section_button_text
