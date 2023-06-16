@@ -20,6 +20,21 @@ module PageObjects
         @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
       end
 
+      def notifications_button
+        @notifications_button ||=
+          PageObjects::Components::SelectKit.new(".thread-notifications-button")
+      end
+
+      def notification_level=(level)
+        notifications_button.expand
+        notifications_button.select_row_by_value(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+        notifications_button.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
       def selection_management
         @selection_management ||=
           PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")

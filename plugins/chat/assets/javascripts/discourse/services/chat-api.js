@@ -295,6 +295,22 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Update notifications settings of current user for a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} threadId - The ID of the thread.
+   * @param {object} data - The settings to modify.
+   * @param {boolean} [data.notification_level] - The new notification level, c.f. Chat::NotificationLevels. Threads only support
+   *  "regular" and "tracking" for now.
+   * @returns {Promise}
+   */
+  updateCurrentUserThreadNotificationsSettings(channelId, threadId, data) {
+    return this.#putRequest(
+      `/channels/${channelId}/threads/${threadId}/notifications-settings/me`,
+      { notification_level: data.notificationLevel }
+    );
+  }
+
+  /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.

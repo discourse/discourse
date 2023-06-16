@@ -24,31 +24,25 @@ RSpec.describe Chat::LookupChannelThreads do
     end
 
     context "when enable_experimental_chat_threaded_discussions is enabled" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
+      before do
+        SiteSetting.enable_experimental_chat_threaded_discussions = true
+        [thread_1, thread_2, thread_3].each do |t|
+          t.original_message.update!(created_at: 1.week.ago)
+          t.add(current_user)
+        end
+      end
 
       context "when all steps pass" do
         before do
-          Fabricate(
-            :chat_message,
-            user: current_user,
-            chat_channel: channel,
-            thread: thread_1,
-            created_at: 10.minutes.ago,
-          )
-          Fabricate(
-            :chat_message,
-            user: current_user,
-            chat_channel: channel,
-            thread: thread_2,
-            created_at: 1.day.ago,
-          )
-          Fabricate(
-            :chat_message,
-            user: current_user,
-            chat_channel: channel,
-            thread: thread_3,
-            created_at: 2.seconds.ago,
-          )
+          msg_1 =
+            Fabricate(:chat_message, user: current_user, chat_channel: channel, thread: thread_1)
+          msg_1.update!(created_at: 10.minutes.ago)
+          msg_2 =
+            Fabricate(:chat_message, user: current_user, chat_channel: channel, thread: thread_2)
+          msg_2.update!(created_at: 1.day.ago)
+          msg_3 =
+            Fabricate(:chat_message, user: current_user, chat_channel: channel, thread: thread_3)
+          msg_3.update!(created_at: 2.seconds.ago)
         end
 
         it "sets the service result as successful" do
@@ -70,12 +64,18 @@ RSpec.describe Chat::LookupChannelThreads do
         end
 
         it "does not count deleted messages for sort order" do
-          Chat::Message.find_by(user: current_user, thread: thread_3).trash!
+          Chat::Message.where(thread: thread_3).each(&:trash!)
           expect(result.threads.map(&:id)).to eq([thread_1.id, thread_2.id])
         end
 
-        it "does not return threads from the channel where the user has not sent a message" do
-          Fabricate(:chat_thread, channel: channel)
+        it "only returns threads where the user has their thread notification level as tracking or regular" do
+          new_thread_1 = Fabricate(:chat_thread, channel: channel)
+          new_thread_2 = Fabricate(:chat_thread, channel: channel)
+          new_thread_1.add(current_user)
+          new_thread_1.membership_for(current_user).update!(
+            notification_level: Chat::UserChatThreadMembership.notification_levels[:muted],
+          )
+
           expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
         end
 

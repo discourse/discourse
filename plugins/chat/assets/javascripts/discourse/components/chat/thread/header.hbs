@@ -17,6 +17,10 @@
   </span>
 
   <div class="chat-thread-header__buttons">
+    <ThreadNotificationsButton
+      @value={{this.threadNotificationLevel}}
+      @onChange={{this.updateThreadNotificationLevel}}
+    />
     {{#if this.canChangeThreadSettings}}
       <DButton
         @action={{this.openThreadSettings}}
