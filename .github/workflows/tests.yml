@@ -156,7 +156,7 @@ jobs:
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
-      - name: Run Zeitwerk check
+      - name: Check Zeitwerk eager_load
         if: matrix.build_type == 'backend'
         env:
           LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
@@ -172,7 +172,7 @@ jobs:
             exit 1
           fi
 
-      - name: Run Reloading check
+      - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
         env:
           LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
