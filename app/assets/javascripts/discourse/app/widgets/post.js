@@ -23,9 +23,10 @@ import {
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import showModal from "discourse/lib/show-modal";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { hideUserTip } from "discourse/lib/user-tips";
+import ShareTopicModal from "discourse/components/modal/share-topic";
+import { getOwner } from "@ember/application";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -410,8 +411,11 @@ createWidget("post-date", {
   showShareModal() {
     const post = this.findAncestorModel();
     const topic = post.topic;
-    const controller = showModal("share-topic", { model: topic.category });
-    controller.setProperties({ topic, post });
+    getOwner(this)
+      .lookup("service:modal")
+      .show(ShareTopicModal, {
+        model: { category: topic.category, topic, post },
+      });
   },
 });
 
@@ -627,8 +631,11 @@ createWidget("post-contents", {
     const post = this.findAncestorModel();
     nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
       const topic = post.topic;
-      const controller = showModal("share-topic", { model: topic.category });
-      controller.setProperties({ topic, post });
+      getOwner(this)
+        .lookup("service:modal")
+        .show(ShareTopicModal, {
+          model: { category: topic.category, topic, post },
+        });
     });
   },
 

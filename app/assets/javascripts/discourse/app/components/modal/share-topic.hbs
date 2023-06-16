@@ -1,10 +1,14 @@
-<DModalBody
-  @rawTitle={{if
+<DModal
+  @title={{if
     this.post
     (i18n "post.share.title" post_number=this.post.post_number)
     (i18n "topic.share.title")
   }}
-  @rawSubtitle={{if this.post this.displayDate}}
+  @subtitle={{if this.post this.displayDate}}
+  @closeModal={{@closeModal}}
+  @flash={{this.flash}}
+  @flashType={{this.flashType}}
+  class="share-topic-modal"
 >
   <form>
     <div class="input-group invite-link">
@@ -74,4 +78,4 @@
       </div>
     </div>
   </form>
-</DModalBody>
+</DModal>
