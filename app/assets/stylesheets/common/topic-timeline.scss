@@ -5,7 +5,6 @@
 .timeline-container {
   box-sizing: border-box;
   z-index: z("timeline");
-  transform: translateZ(0);
 
   &.timeline-docked-bottom {
     .timeline-footer-controls {
