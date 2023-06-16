@@ -334,7 +334,7 @@ nav.post-controls {
         position: relative;
       }
       &.delete.d-hover,
-      &.delete:hover,
+      &.delete:active,
       &.delete:focus {
         background: var(--danger);
         color: var(--secondary);
