@@ -93,7 +93,7 @@ export default class SearchMenu extends Component {
   clearSearch(e) {
     e.stopPropagation();
     e.preventDefault();
-    this.search.updateActiveGlobalSearchTerm("");
+    this.search.activeGlobalSearchTerm = "";
     focusSearchInput();
     this.triggerSearch();
   }
@@ -104,7 +104,7 @@ export default class SearchMenu extends Component {
     if (opts.setTopicContext) {
       this.inTopicContext = true;
     }
-    this.search.updateActiveGlobalSearchTerm(term);
+    this.search.activeGlobalSearchTerm = term;
     this.triggerSearch();
   }
 
@@ -272,7 +272,7 @@ export default class SearchMenu extends Component {
 
     if (this.includesTopics) {
       if (this.search.contextType === "topic") {
-        this.search.setHighlightTerm(this.search.activeGlobalSearchTerm);
+        this.search.highlightTerm = this.search.activeGlobalSearchTerm;
       }
       this.loading = true;
       cancel(this._debouncer);

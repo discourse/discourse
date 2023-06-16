@@ -19,21 +19,6 @@ export default class Search extends Service {
     return this.searchContext?.type || null;
   }
 
-  @action
-  updateActiveGlobalSearchTerm(term) {
-    this.activeGlobalSearchTerm = term;
-  }
-
-  @action
-  setSearchContext(value) {
-    this.searchContext = value;
-  }
-
-  @action
-  setHighlightTerm(value) {
-    this.highlightTerm = value;
-  }
-
   // The need to navigate with the keyboard creates a lot shared logic
   // between multiple components
   //

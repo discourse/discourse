@@ -161,9 +161,9 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         category: model.category || null,
       };
 
-      this.searchService.setSearchContext(tagIntersectionSearchContext);
+      this.searchService.searchContext = tagIntersectionSearchContext;
     } else {
-      this.searchService.setSearchContext(model.tag.searchContext);
+      this.searchService.searchContext = model.tag.searchContext;
     }
   },
 
@@ -202,7 +202,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
 
   deactivate() {
     this._super(...arguments);
-    this.searchService.setSearchContext(null);
+    this.searchService.searchContext = null;
   },
 
   @action

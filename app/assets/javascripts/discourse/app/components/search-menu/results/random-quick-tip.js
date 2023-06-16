@@ -60,7 +60,7 @@ export default class RandomQuickTip extends Component {
   @action
   tipSelected(e) {
     if (e.target.classList.contains("tip-clickable")) {
-      this.search.updateActiveGlobalSearchTerm(this.randomTip.label);
+      this.search.activeGlobalSearchTerm = this.randomTip.label;
       focusSearchInput();
 
       e.stopPropagation();

@@ -39,11 +39,11 @@ export default (type) => {
         showPosters: true,
       });
 
-      this.searchService.setSearchContext({
+      this.searchService.searchContext = {
         type: "private_messages",
         id: this.currentUser.get("username_lower"),
         user: this.currentUser,
-      });
+      };
     },
 
     emptyState() {
@@ -58,7 +58,7 @@ export default (type) => {
     },
 
     deactivate() {
-      this.searchService.setSearchContext(null);
+      this.searchService.searchContext = null;
     },
   });
 };
