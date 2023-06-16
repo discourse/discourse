@@ -79,6 +79,12 @@ export default Component.extend(UtilsMixin, {
       return true;
     }
 
+    if (event.key === "Backspace") {
+      this.selectKit.deselectLast();
+      event.preventDefault();
+      return false;
+    }
+
     if (event.key === "ArrowUp") {
       this.selectKit.highlightLast();
       event.preventDefault();
@@ -86,6 +92,9 @@ export default Component.extend(UtilsMixin, {
     }
 
     if (event.key === "ArrowDown") {
+      if (!this.selectKit.isExpanded) {
+        this.selectKit.open(event);
+      }
       this.selectKit.highlightFirst();
       event.preventDefault();
       return false;

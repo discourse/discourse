@@ -301,14 +301,16 @@ a.badge-category {
     }
     .category-chooser,
     .mini-tag-chooser {
-      flex: 1 1 49%;
+      flex: 1 1 35%;
       margin: 0 0 9px 0;
       @media all and (max-width: 500px) {
         flex: 1 1 100%;
       }
     }
     .mini-tag-chooser {
-      margin-left: 2%; // category/tag chooser are 49% wide, so this is 1% * 2
+      flex: 1 1 54%;
+      margin: 0 0 9px 0;
+      margin-left: 1%; // category at 40%, tag chooser at 58%
       @media all and (max-width: 500px) {
         margin-left: 0;
       }

@@ -74,7 +74,11 @@ export default Component.extend(UtilsMixin, {
   },
 
   keyDown(event) {
-    if (this.selectKit.isDisabled || this.selectKit.options.disabled) {
+    if (
+      this.selectKit.isDisabled ||
+      this.selectKit.options.disabled ||
+      this.selectKit.options.useHeaderFilter
+    ) {
       return;
     }
 
