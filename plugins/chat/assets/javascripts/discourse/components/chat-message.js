@@ -2,7 +2,6 @@ import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
 import optionalService from "discourse/lib/optional-service";
-import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
