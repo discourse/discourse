@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 import { tracked } from "@glimmer/tracking";
+
 export default class ChatThreadHeader extends Component {
   @service currentUser;
   @service chatApi;
