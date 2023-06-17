@@ -178,9 +178,8 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.ok(!exists(".search-menu"));
   });
 
-  test("search scope", async function (assert) {
+  test("initial options - tag search scope", async function (assert) {
     const contextSelector = ".search-menu .results .search-menu-assistant-item";
-
     await visit("/tag/important");
     await click("#search-button");
 
@@ -197,8 +196,8 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
 
     await fillIn("#search-term", "smth");
-
     const secondOption = queryAll(contextSelector)[1];
+
     assert.strictEqual(
       secondOption.querySelector(".search-item-prefix").textContent.trim(),
       "smth",
@@ -216,27 +215,29 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       "important",
       "second option includes tag for tag-scoped search"
     );
+  });
 
+  test("initial options - category search scope", async function (assert) {
+    const contextSelector = ".search-menu .results .search-menu-assistant-item";
     await visit("/c/bug");
     await click("#search-button");
+    await fillIn("#search-term", "smth");
+    const secondOption = queryAll(contextSelector)[1];
 
-    const secondOptionCategory = queryAll(contextSelector)[1];
     assert.strictEqual(
-      secondOptionCategory
-        .querySelector(".search-item-prefix")
-        .textContent.trim(),
+      secondOption.querySelector(".search-item-prefix").textContent.trim(),
       "smth",
       "second option includes term for category-scoped search with no term"
     );
 
     assert.strictEqual(
-      secondOptionCategory.querySelector(".label-suffix").textContent.trim(),
+      secondOption.querySelector(".label-suffix").textContent.trim(),
       I18n.t("search.in"),
       "second option includes suffix for category-scoped search with no term"
     );
 
     assert.strictEqual(
-      secondOptionCategory.querySelector(".category-name").textContent.trim(),
+      secondOption.querySelector(".category-name").textContent.trim(),
       "bug",
       "second option includes category slug for category-scoped search with no term"
     );
@@ -245,58 +246,101 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       exists(`${contextSelector} span.badge-wrapper`),
       "category badge is a span (i.e. not a link)"
     );
+  });
 
+  test("initial options - topic search scope", async function (assert) {
+    const contextSelector = ".search-menu .results .search-menu-assistant-item";
     await visit("/t/internationalization-localization/280");
     await click("#search-button");
+    await fillIn("#search-term", "smth");
+    const secondOption = queryAll(contextSelector)[1];
 
-    const secondOptionTopic = queryAll(contextSelector)[1];
     assert.strictEqual(
-      secondOptionTopic.querySelector(".search-item-prefix").textContent.trim(),
+      secondOption.querySelector(".search-item-prefix").textContent.trim(),
       "smth",
-      "second option includes term for topic-scoped search with no term"
+      "second option includes term"
     );
 
     assert.strictEqual(
-      secondOptionTopic.querySelector(".label-suffix").textContent.trim(),
+      secondOption.querySelector(".label-suffix").textContent.trim(),
       I18n.t("search.in_this_topic"),
-      "second option includes suffix for topic-scoped search with no term"
+      "second option includes suffix"
+    );
+  });
+
+  test("initial options - topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+    await click("#search-button");
+    await fillIn("#search-term", "proper");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await click(document.activeElement);
+
+    await click(".show-advanced-search");
+
+    assert.strictEqual(
+      query(".full-page-search").value,
+      "proper topic:280",
+      "it goes to full search page and preserves search term + context"
     );
 
+    assert.ok(
+      exists(".search-advanced-options"),
+      "advanced search is expanded"
+    );
+  });
+
+  test("initial options - topic search scope - special case when matching a single user", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+    await click("#search-button");
+    await fillIn("#search-term", "@admin");
+
+    assert.strictEqual(count(".search-menu-assistant-item"), 2);
+    assert.strictEqual(
+      query(
+        ".search-menu-assistant-item:first-child .search-item-slug .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_topics_posts"),
+      "first result hints at global search"
+    );
+
+    assert.strictEqual(
+      query(
+        ".search-menu-assistant-item:nth-child(2) .search-item-slug .label-suffix"
+      ).textContent.trim(),
+      I18n.t("search.in_this_topic"),
+      "second result hints at search within current topic"
+    );
+  });
+
+  test("initial options - user search scope", async function (assert) {
+    const contextSelector = ".search-menu .results .search-menu-assistant-item";
     await visit("/u/eviltrout");
     await click("#search-button");
+    await fillIn("#search-term", "smth");
+    const secondOption = queryAll(contextSelector)[1];
 
-    const secondOptionUser = queryAll(contextSelector)[1];
     assert.strictEqual(
-      secondOptionUser.querySelector(".search-item-prefix").textContent.trim(),
+      secondOption.querySelector(".search-item-prefix").textContent.trim(),
       "smth",
       "second option includes term for user-scoped search with no term"
     );
 
     assert.strictEqual(
-      secondOptionUser.querySelector(".label-suffix").textContent.trim(),
+      secondOption.querySelector(".label-suffix").textContent.trim(),
       I18n.t("search.in_posts_by", { username: "eviltrout" }),
       "second option includes suffix for user-scoped search with no term"
     );
   });
 
-  test("search scope for topics", async function (assert) {
+  test("topic results - topic search scope", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
-
-    const firstResult =
-      ".search-menu .results .search-menu-assistant-item:first-child";
-    assert.strictEqual(
-      query(firstResult).textContent.trim(),
-      I18n.t("search.in_this_topic"),
-      "contextual topic search is first available option with no search term"
-    );
-
     await fillIn("#search-term", "a proper");
-    await query("input#search-term").focus();
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-
     await click(document.activeElement);
+
     assert.ok(
       exists(".search-menu .search-result-post ul li"),
       "clicking second option scopes search to current topic"
@@ -312,6 +356,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       exists(".search-menu .search-context"),
       "search context indicator is visible"
     );
+
     await click(".clear-search");
     assert.strictEqual(
       query("#search-term").textContent.trim(),
@@ -343,53 +388,6 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.ok(
       !exists(".search-menu .search-context"),
       "backspace resets search context"
-    );
-  });
-
-  test("topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
-    await visit("/t/internationalization-localization/280/1");
-    await click("#search-button");
-
-    await fillIn("#search-term", "proper");
-    await query("input#search-term").focus();
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await click(document.activeElement);
-
-    await click(".show-advanced-search");
-
-    assert.strictEqual(
-      query(".full-page-search").value,
-      "proper topic:280",
-      "it goes to full search page and preserves search term + context"
-    );
-
-    assert.ok(
-      exists(".search-advanced-options"),
-      "advanced search is expanded"
-    );
-  });
-
-  test("topic search scope - special case when matching a single user", async function (assert) {
-    await visit("/t/internationalization-localization/280/1");
-    await click("#search-button");
-    await fillIn("#search-term", "@admin");
-
-    assert.strictEqual(count(".search-menu-assistant-item"), 2);
-    assert.strictEqual(
-      query(
-        ".search-menu-assistant-item:first-child .search-item-slug .label-suffix"
-      ).textContent.trim(),
-      I18n.t("search.in_topics_posts"),
-      "first result hints at global search"
-    );
-
-    assert.strictEqual(
-      query(
-        ".search-menu-assistant-item:nth-child(2) .search-item-slug .label-suffix"
-      ).textContent.trim(),
-      I18n.t("search.in_this_topic"),
-      "second result hints at search within current topic"
     );
   });
 });
