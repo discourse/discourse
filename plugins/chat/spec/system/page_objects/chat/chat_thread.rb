@@ -35,6 +35,16 @@ module PageObjects
         )
       end
 
+      def has_notification_level?(level)
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            ".chat-thread-header__buttons.-persisted .thread-notifications-button",
+          )
+        select_kit.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
       def selection_management
         @selection_management ||=
           PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
