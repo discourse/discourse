@@ -60,9 +60,8 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     });
   });
 
-  test("search", async function (assert) {
+  test("presence of elements", async function (assert) {
     await visit("/");
-
     await click("#search-button");
 
     assert.ok(exists("#search-term"), "it shows the search input");
@@ -70,17 +69,59 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       exists(".show-advanced-search"),
       "it shows full page search button"
     );
-    assert.ok(
-      exists(".search-menu .results ul li.search-random-quick-tip"),
-      "shows random quick tip by default"
-    );
+  });
 
+  test("random quick tips", async function (assert) {
+    await visit("/");
+    await click("#search-button");
     await fillIn("#search-term", "dev");
 
     assert.ok(
       !exists(".search-menu .results ul li.search-random-quick-tip"),
-      "quick tip no longer shown"
+      "quick tip is no longer shown"
     );
+  });
+
+  test("advanced search", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await click(document.activeElement);
+    await click(".show-advanced-search");
+
+    assert.strictEqual(
+      query(".full-page-search").value,
+      "dev",
+      "it goes to full search page and preserves the search term"
+    );
+
+    assert.ok(
+      exists(".search-advanced-options"),
+      "advanced search is expanded"
+    );
+  });
+
+  test("search button toggles search menu", async function (assert) {
+    await visit("/");
+
+    await click("#search-button");
+    assert.ok(exists(".search-menu"));
+
+    await click(".d-header"); // click outside
+    assert.ok(!exists(".search-menu"));
+
+    await click("#search-button");
+    assert.ok(exists(".search-menu"));
+
+    await click("#search-button"); // toggle same button
+    assert.ok(!exists(".search-menu"));
+  });
+
+  test("initial options", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
 
     assert.strictEqual(
       query(
@@ -107,75 +148,6 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
       exists(".search-menu .search-result-user ul li"),
       "shows matching user results"
     );
-
-    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-    await click(document.activeElement);
-
-    assert.ok(
-      exists(".search-menu .search-result-topic ul li"),
-      "shows topic results"
-    );
-    assert.ok(
-      exists(".search-menu .results ul li .topic-title[data-topic-id]"),
-      "topic has data-topic-id"
-    );
-
-    await click(".show-advanced-search");
-
-    assert.strictEqual(
-      query(".full-page-search").value,
-      "dev",
-      "it goes to full search page and preserves the search term"
-    );
-
-    assert.ok(
-      exists(".search-advanced-options"),
-      "advanced search is expanded"
-    );
-  });
-
-  test("Topic type search result escapes html in topic title", async function (assert) {
-    await visit("/");
-    await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
-
-    assert.ok(
-      exists(
-        ".search-menu .search-result-topic .item .topic-title span#topic-with-html"
-      ),
-      "html in the topic title is properly escaped"
-    );
-  });
-
-  test("Topic type search result escapes emojis in topic title", async function (assert) {
-    await visit("/");
-    await click("#search-button");
-    await fillIn("#search-term", "dev");
-    await triggerKeyEvent("#search-term", "keyup", "Enter");
-
-    assert.ok(
-      exists(
-        ".search-menu .search-result-topic .item .topic-title img[alt='+1']"
-      ),
-      ":+1: in the topic title is properly converted to an emoji"
-    );
-  });
-
-  test("search button toggles search menu", async function (assert) {
-    await visit("/");
-
-    await click("#search-button");
-    assert.ok(exists(".search-menu"));
-
-    await click(".d-header"); // click outside
-    assert.ok(!exists(".search-menu"));
-
-    await click("#search-button");
-    assert.ok(exists(".search-menu"));
-
-    await click("#search-button"); // toggle same button
-    assert.ok(!exists(".search-menu"));
   });
 
   test("initial options - tag search scope", async function (assert) {
@@ -186,13 +158,13 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.strictEqual(
       query(".search-link .label-suffix").textContent.trim(),
       I18n.t("search.in"),
-      "first option includes suffix for tag search with no term"
+      "first option includes suffix"
     );
 
     assert.strictEqual(
       query(".search-link .search-item-tag").textContent.trim(),
       "important",
-      "frst option includes tag for tag search with no term"
+      "frst option includes tag"
     );
 
     await fillIn("#search-term", "smth");
@@ -201,19 +173,19 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.strictEqual(
       secondOption.querySelector(".search-item-prefix").textContent.trim(),
       "smth",
-      "second option includes term for tag-scoped search"
+      "second option includes term"
     );
 
     assert.strictEqual(
       secondOption.querySelector(".label-suffix").textContent.trim(),
       I18n.t("search.in"),
-      "second option includes suffix for tag-scoped search"
+      "second option includes suffix"
     );
 
     assert.strictEqual(
       secondOption.querySelector(".search-item-tag").textContent.trim(),
       "important",
-      "second option includes tag for tag-scoped search"
+      "second option includes tag"
     );
   });
 
@@ -227,19 +199,19 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.strictEqual(
       secondOption.querySelector(".search-item-prefix").textContent.trim(),
       "smth",
-      "second option includes term for category-scoped search with no term"
+      "second option includes term"
     );
 
     assert.strictEqual(
       secondOption.querySelector(".label-suffix").textContent.trim(),
       I18n.t("search.in"),
-      "second option includes suffix for category-scoped search with no term"
+      "second option includes suffix"
     );
 
     assert.strictEqual(
       secondOption.querySelector(".category-name").textContent.trim(),
       "bug",
-      "second option includes category slug for category-scoped search with no term"
+      "second option includes category slug"
     );
 
     assert.ok(
@@ -323,13 +295,31 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.strictEqual(
       secondOption.querySelector(".search-item-prefix").textContent.trim(),
       "smth",
-      "second option includes term for user-scoped search with no term"
+      "second option includes term for user-scoped search"
     );
 
     assert.strictEqual(
       secondOption.querySelector(".label-suffix").textContent.trim(),
       I18n.t("search.in_posts_by", { username: "eviltrout" }),
-      "second option includes suffix for user-scoped search with no term"
+      "second option includes suffix for user-scoped search"
+    );
+  });
+
+  test("topic results", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
+    await click(document.activeElement);
+
+    assert.ok(
+      exists(".search-menu .search-result-topic ul li"),
+      "shows topic results"
+    );
+
+    assert.ok(
+      exists(".search-menu .results ul li .topic-title[data-topic-id]"),
+      "topic has data-topic-id"
     );
   });
 
@@ -388,6 +378,34 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     assert.ok(
       !exists(".search-menu .search-context"),
       "backspace resets search context"
+    );
+  });
+
+  test("topic results - search result escapes html in topic title", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+
+    assert.ok(
+      exists(
+        ".search-menu .search-result-topic .item .topic-title span#topic-with-html"
+      ),
+      "html in the topic title is properly escaped"
+    );
+  });
+
+  test("topic results - search result escapes emojis in topic title", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#search-term", "dev");
+    await triggerKeyEvent("#search-term", "keyup", "Enter");
+
+    assert.ok(
+      exists(
+        ".search-menu .search-result-topic .item .topic-title img[alt='+1']"
+      ),
+      ":+1: in the topic title is properly converted to an emoji"
     );
   });
 });
