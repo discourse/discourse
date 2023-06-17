@@ -652,7 +652,6 @@ acceptance("Search - Glimmer - with tagging enabled", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "dude #monk");
-    await triggerKeyEvent("#search-term", "keyup", 51);
     const firstItem =
       ".search-menu .results ul.search-menu-assistant .search-link";
 
@@ -976,7 +975,6 @@ acceptance("Search - Glimmer - assistant", function (needs) {
       ".search-menu .results ul.search-menu-assistant .search-link ";
 
     await fillIn("#search-term", "in:");
-    await triggerKeyEvent("#search-term", "keydown", 51);
     assert.strictEqual(
       query(firstTarget.concat(".search-item-slug")).innerText,
       "in:title",
@@ -984,7 +982,6 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     );
 
     await fillIn("#search-term", "sam in:");
-    await triggerKeyEvent("#search-term", "keydown", 51);
     assert.strictEqual(
       query(firstTarget.concat(".search-item-prefix")).innerText,
       "sam",
@@ -997,7 +994,6 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     );
 
     await fillIn("#search-term", "in:mess");
-    await triggerKeyEvent("#search-term", "keydown", 51);
     assert.strictEqual(query(firstTarget).innerText, "in:messages");
   });
 
@@ -1005,7 +1001,6 @@ acceptance("Search - Glimmer - assistant", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "@");
-    await triggerKeyEvent("#search-term", "keyup", 51);
     const firstUser =
       ".search-menu .results ul.search-menu-assistant .search-item-user";
     const firstUsername = query(firstUser).innerText.trim();
