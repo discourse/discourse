@@ -9,11 +9,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
   setupRenderingTest(hooks);
 
   const template = hbs`
-    <ChatMessage
-      @message={{this.message}}
-      @messageDidEnterViewport={{fn (noop)}}
-      @messageDidLeaveViewport={{fn (noop)}}
-    />
+    <ChatMessage @message={{this.message}} />
   `;
 
   test("Message with edits", async function (assert) {

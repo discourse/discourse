@@ -1,5 +1,5 @@
-.chat-message-deleted,
-.chat-message-hidden {
+.chat-message-text.-deleted,
+.chat-message-text.-hidden {
   margin-left: calc(var(--message-left-width) + 0.75em);
   padding: 0;
 
@@ -18,6 +18,12 @@
   }
 }
 
+.chat-message-reaction {
+  > * {
+    pointer-events: none;
+  }
+}
+
 .chat-message {
   align-items: flex-start;
   padding: 0.25em 0.5em 0.25em 0.75em;
@@ -26,10 +32,11 @@
 
   .chat-message-reaction {
     @include chat-reaction;
-  }
+    will-change: scale;
 
-  .not-mobile-device &.deleted:hover {
-    background-color: var(--danger-hover);
+    &:active {
+      transform: scale(0.93);
+    }
   }
 
   .chat-message-content {
@@ -87,23 +94,16 @@
     display: flex;
     flex-wrap: wrap;
 
-    .reaction-users-list {
-      position: absolute;
-      top: -2px;
-      transform: translateY(-100%);
-      border: 1px solid var(--primary-low);
-      border-radius: 6px;
-      padding: 0.5em;
-      background: var(--primary-very-low);
-      max-width: 300px;
-      z-index: 3;
-    }
-
     .chat-message-react-btn {
       vertical-align: top;
       padding: 0em 0.25em;
       background: none;
       border: none;
+      will-change: scale;
+
+      &:active {
+        transform: scale(0.93);
+      }
 
       > * {
         pointer-events: none;
@@ -118,32 +118,6 @@
           color: var(--primary);
         }
       }
-    }
-  }
-
-  .chat-send-error {
-    color: var(--danger-medium);
-  }
-
-  .chat-message-mention-warning {
-    position: relative;
-    margin-top: 0.25em;
-    font-size: var(--font-down-1);
-
-    .dismiss-mention-warning {
-      position: absolute;
-      top: 15px;
-      right: 5px;
-      cursor: pointer;
-    }
-
-    .warning-item {
-      margin: 0.25em 0;
-    }
-
-    .invite-link {
-      color: var(--tertiary);
-      cursor: pointer;
     }
   }
 
@@ -254,96 +228,5 @@
 
   .chat-message-reaction-list .chat-message-react-btn {
     display: none;
-  }
-}
-
-.has-full-page-chat .chat-message .onebox:not(img),
-.chat-drawer-container .chat-message .onebox {
-  margin: 0.5em 0;
-  border-width: 2px;
-
-  header {
-    margin-bottom: 0.5em;
-  }
-
-  h3 a,
-  h4 a {
-    font-size: 14px;
-  }
-
-  pre {
-    display: flex;
-    max-height: 150px;
-  }
-
-  p {
-    overflow: hidden;
-  }
-}
-
-.chat-drawer-container .chat-message .onebox {
-  width: 85%;
-  border: 2px solid var(--primary-low);
-
-  header {
-    margin-bottom: 0.5em;
-  }
-
-  .onebox-body {
-    grid-template-rows: auto auto auto;
-    overflow: auto;
-  }
-
-  h3 {
-    @include line-clamp(2);
-    font-weight: 500;
-    font-size: var(--font-down-1);
-  }
-
-  p {
-    display: none;
-  }
-}
-
-.chat-message-reaction {
-  > * {
-    pointer-events: none;
-  }
-}
-
-.retry-staged-message-btn {
-  padding: 0.5em 0;
-  background: none;
-
-  &:hover,
-  &:focus,
-  .-active & {
-    background: none !important;
-  }
-
-  &:focus .retry-staged-message-btn__action {
-    text-decoration: underline;
-  }
-
-  .d-icon,
-  &__title,
-  &:hover .d-icon {
-    color: var(--danger) !important;
-    font-size: var(--font-down-1);
-  }
-
-  .d-icon {
-    margin-right: 0.25em !important;
-  }
-
-  &__action {
-    color: var(--tertiary);
-    font-size: var(--font-down-1);
-    margin-left: 0.25em;
-
-    &:hover {
-      color: var(--tertiary-high);
-      text-decoration: underline;
-    }
   }
 }

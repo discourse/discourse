@@ -16,7 +16,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       chat_webhook_event: { username: "discobot" },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.strictEqual(
       query(".chat-message-info__username").innerText.trim(),
@@ -33,7 +33,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user: { username: "discobot" },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.strictEqual(
       query(".chat-message-info__username").innerText.trim(),
@@ -47,7 +47,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       created_at: moment(),
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.true(exists(".chat-message-info__date"));
   });
@@ -61,7 +61,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       }),
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.true(
       exists(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
@@ -76,7 +76,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       }),
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.true(exists(".chat-message-info__bookmark .d-icon-bookmark"));
   });
@@ -87,7 +87,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user: { status },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.true(exists(".chat-message-info__status .user-status-message"));
   });
@@ -98,7 +98,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user_flag_status: 0,
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.strictEqual(
       query(".chat-message-info__flag > .svg-icon-title").title,
@@ -110,7 +110,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       reviewable_id: 1,
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.strictEqual(
       query(".chat-message-info__flag a .svg-icon-title").title,
@@ -129,7 +129,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.dom(".chat-message-info__username.is-staff").exists();
     assert.dom(".chat-message-info__username.is-admin").exists();
@@ -143,7 +143,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       user: { username: "discobot" },
     });
 
-    await render(hbs`<ChatMessageInfo @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Info @message={{this.message}} />`);
 
     assert.dom(".chat-message-info__username.is-staff").doesNotExist();
     assert.dom(".chat-message-info__username.is-admin").doesNotExist();
