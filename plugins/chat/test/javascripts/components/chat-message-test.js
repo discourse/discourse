@@ -27,7 +27,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     await render(template);
 
     assert.true(
-      exists(".chat-message-deleted .chat-message-expand"),
+      exists(".chat-message-text.-deleted .chat-message-expand"),
       "has the correct css class and expand button within"
     );
   });
@@ -37,7 +37,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     await render(template);
 
     assert.true(
-      exists(".chat-message-hidden .chat-message-expand"),
+      exists(".chat-message-text.-hidden .chat-message-expand"),
       "has the correct css class and expand button within"
     );
   });
