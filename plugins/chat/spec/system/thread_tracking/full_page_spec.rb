@@ -66,7 +66,7 @@ describe "Thread tracking state | full page", type: :system do
     it "allows the user to change their tracking level for an existing thread" do
       chat_page.visit_thread(thread)
       thread_page.notification_level = :normal
-      expect(thread.reload.membership_for(current_user).notification_level).to eq("normal")
+      expect(thread_page).to have_notification_level("normal")
     end
 
     it "allows the user to start tracking a thread they have not replied to" do
@@ -74,7 +74,7 @@ describe "Thread tracking state | full page", type: :system do
       Fabricate(:chat_message, chat_channel: channel, thread: new_thread)
       chat_page.visit_thread(new_thread)
       thread_page.notification_level = :tracking
-      expect(new_thread.reload.membership_for(current_user).notification_level).to eq("tracking")
+      expect(thread_page).to have_notification_level("tracking")
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(thread_list_page).to have_thread(new_thread)
