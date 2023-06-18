@@ -516,6 +516,23 @@ class Plugin::Instance
     initializers << block
   end
 
+  def commit_hash(short: false)
+    command = "git rev-parse HEAD".split(" ")
+    command = command.insert(2, "--short") if short
+    Discourse::Utils.execute_command(*command, chdir: directory).strip
+  rescue Discourse::Utils::CommandError => e
+    Rails.logger.warn("Unable to get commit hash for plugin #{name}: #{e}")
+    ""
+  end
+
+  def long_commit_hash
+    @long_commit_hash ||= commit_hash
+  end
+
+  def short_commit_hash
+    @short_commit_hash ||= commit_hash(short: true)
+  end
+
   def before_auth(&block)
     if @before_auth_complete
       raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!"

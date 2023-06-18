@@ -42,7 +42,8 @@
           </td>
           <td class="version">
             <div class="label">{{i18n "admin.plugins.version"}}</div>
-            {{plugin.version}}
+            {{plugin.version}}<br />
+            <span class="current commit-hash" title={{plugin.long_commit_hash}}>{{plugin.short_commit_hash}}</span>
           </td>
           <td class="col-enabled">
             <div class="label">{{i18n "admin.plugins.enabled"}}</div>
