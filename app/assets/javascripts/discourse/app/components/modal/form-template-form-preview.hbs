@@ -1,0 +1,9 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @class="form-templates__validation-options"
+  @title={{i18n "admin.form_templates.preview_modal.title"}}
+>
+  <:body>
+    <FormTemplateField::Wrapper @content={{@content}} />
+  </:body>
+</DModal>
