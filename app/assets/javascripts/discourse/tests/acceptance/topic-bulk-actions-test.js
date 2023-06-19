@@ -1,7 +1,6 @@
 import {
   acceptance,
   count,
-  exists,
   invisible,
   queryAll,
   updateCurrentUser,
