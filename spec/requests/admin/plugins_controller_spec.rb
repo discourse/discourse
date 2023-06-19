@@ -27,17 +27,7 @@ RSpec.describe Admin::PluginsController do
 
         plugin = response.parsed_body["plugins"][0]
         expect(plugin.keys).to eq(
-          %w[
-            id
-            name
-            about
-            version
-            enabled
-            has_settings
-            is_official
-            long_commit_hash
-            short_commit_hash
-          ],
+          %w[id name about version enabled has_settings is_official commit_hash commit_url],
         )
       end
     end

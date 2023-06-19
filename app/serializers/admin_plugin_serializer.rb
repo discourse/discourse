@@ -11,8 +11,8 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled_setting,
              :has_settings,
              :is_official,
-             :long_commit_hash,
-             :short_commit_hash
+             :commit_hash,
+             :commit_url
 
   def id
     object.directory_name
@@ -71,11 +71,11 @@ class AdminPluginSerializer < ApplicationSerializer
     Plugin::Metadata::OFFICIAL_PLUGINS.include?(object.name)
   end
 
-  def long_commit_hash
-    object.long_commit_hash
+  def commit_hash
+    object.commit_hash
   end
 
-  def short_commit_hash
-    object.short_commit_hash
+  def commit_url
+    object.commit_url
   end
 end

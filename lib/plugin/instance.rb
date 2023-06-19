@@ -516,21 +516,16 @@ class Plugin::Instance
     initializers << block
   end
 
-  def commit_hash(short: false)
-    command = "git rev-parse HEAD".split(" ")
-    command = command.insert(2, "--short") if short
-    Discourse::Utils.execute_command(*command, chdir: directory).strip
-  rescue Discourse::Utils::CommandError => e
-    Rails.logger.warn("Unable to get commit hash for plugin #{name}: #{e}")
-    ""
+  def commit_hash
+    @commit_hash ||= git_repo.latest_local_commit
   end
 
-  def long_commit_hash
-    @long_commit_hash ||= commit_hash
+  def commit_url
+    @commit_url ||= "#{git_repo.url}/commit/#{git_repo.latest_local_commit}"
   end
 
-  def short_commit_hash
-    @short_commit_hash ||= commit_hash(short: true)
+  def git_repo
+    @git_repo ||= GitRepo.new(directory, name)
   end
 
   def before_auth(&block)
