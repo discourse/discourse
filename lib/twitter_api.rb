@@ -111,7 +111,7 @@ class TwitterApi
     end
 
     def tweet_uri_for(id)
-      URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}&tweet_mode=extended"
+      URI.parse "#{BASE_URL}/2/tweets?ids=#{id}"
     end
 
     def twitter_get(uri)
