@@ -45,20 +45,6 @@
     align-items: flex-start;
     justify-content: center;
     padding-left: 1rem;
-    pointer-events: none;
-
-    .chat-message-separator__button {
-      pointer-events: auto;
-      background: none;
-      padding: 0;
-      &:focus {
-        color: var(--primary);
-      }
-      &:hover {
-        color: var(--primary);
-        background: none;
-      }
-    }
 
     &.with-last-visit {
       & + .chat-message-separator__line-container {
@@ -82,6 +68,10 @@
           border-radius: 4px;
           color: var(--primary-800);
           background: var(--primary-50);
+
+          &:hover {
+            border: 1px solid var(--secondary-high);
+          }
         }
 
         .chat-message-separator__last-visit {
@@ -107,6 +97,14 @@
       padding: 0.25rem 0.5rem;
       box-sizing: border-box;
       display: flex;
+      cursor: pointer;
+
+      &:hover {
+        border: 1px solid var(--secondary-high);
+        border-radius: 4px;
+        color: var(--primary-800);
+        background: var(--primary-50);
+      }
     }
 
     & + .chat-message-separator__line-container {

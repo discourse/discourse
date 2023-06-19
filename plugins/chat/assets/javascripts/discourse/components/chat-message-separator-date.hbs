@@ -4,21 +4,15 @@
       "chat-message-separator-date"
       (if @message.newest "with-last-visit")
     }}
+    role="button"
+    {{on "click" (fn @fetchMessagesByDate @message.firstMessageOfTheDayAt)}}
   >
     <div
       class="chat-message-separator__text-container"
       {{chat/track-message-separator-date}}
     >
       <span class="chat-message-separator__text">
-        <DButton
-          class="chat-message-separator__button"
-          @action={{action
-            @fetchMessagesByDate
-            @message.firstMessageOfTheDayAt
-          }}
-        >
-          {{@message.formattedFirstMessageDate}}
-        </DButton>
+        {{@message.formattedFirstMessageDate}}
 
         {{#if @message.newest}}
           <span class="chat-message-separator__last-visit">
