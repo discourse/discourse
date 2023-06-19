@@ -222,7 +222,10 @@ class Search
   attr_reader :clean_term, :guardian
 
   def initialize(term, opts = nil)
-    opts = opts || {}
+    # @opts is maintained for backwards compatability
+    # additionally some plugins like saved-search will tack on
+    # options
+    @opts = opts = opts || {}
 
     @guardian = opts[:guardian] || Guardian.new
     @search_context = opts[:search_context]
