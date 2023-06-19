@@ -161,7 +161,7 @@ module Chat
     def self.query_by_date(target_date, channel, messages)
       past_messages =
         messages
-          .where("created_at < ?", target_date)
+          .where("created_at <= ?", target_date)
           .order(created_at: :desc)
           .limit(PAST_MESSAGE_LIMIT)
           .to_a
