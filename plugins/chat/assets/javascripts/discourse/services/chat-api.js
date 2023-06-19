@@ -460,6 +460,20 @@ export default class ChatApi extends Service {
     });
   }
 
+  /**
+   * Invite users to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {Array<number>} userIds - The IDs of the users to invite.
+   * @param {Array<number>} [messageId] - The ID of a message to highlight when opening the notification.
+   */
+  invite(channelId, userIds, options = {}) {
+    return ajax(`/chat/${channelId}/invite`, {
+      type: "put",
+      data: { user_ids: userIds, chat_message_id: options.messageId },
+    });
+  }
+
   get #basePath() {
     return "/chat/api";
   }

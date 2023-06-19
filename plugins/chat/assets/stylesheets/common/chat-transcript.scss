@@ -53,6 +53,10 @@
     }
   }
 
+  .chat-transcript-user-avatar .avatar {
+    aspect-ratio: 20 / 20;
+  }
+
   .chat-transcript-user {
     display: flex;
     flex-wrap: wrap-reverse;

@@ -492,16 +492,6 @@ export default class ChatLivePane extends Component {
     });
   }
 
-  @action
-  messageDidEnterViewport(message) {
-    message.visible = true;
-  }
-
-  @action
-  messageDidLeaveViewport(message) {
-    message.visible = false;
-  }
-
   @debounce(READ_INTERVAL_MS)
   updateLastReadMessage() {
     schedule("afterRender", () => {
