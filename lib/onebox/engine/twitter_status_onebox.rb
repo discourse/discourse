@@ -67,7 +67,11 @@ module Onebox
       end
 
       def raw
-        @raw ||= client.status(match[:id]).to_hash if twitter_api_credentials_present?
+        if twitter_api_credentials_present?
+          @raw ||= OpenStruct.new(client.status(match[:id]).to_hash)
+        else
+          super
+        end
       end
 
       def access(*keys)
