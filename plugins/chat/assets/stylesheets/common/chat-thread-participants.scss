@@ -1,7 +1,9 @@
 .chat-thread-participants {
+  margin-left: 0.5rem;
   &__other-count {
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(0, 0, 0, 0);
     box-sizing: border-box;
     font-size: var(--font-down-1);
     color: var(--primary-very-low);
@@ -24,6 +26,27 @@
         height: 24px;
         padding: 0;
       }
+    }
+  }
+}
+
+@container (max-width: 400px) {
+  .chat-thread-participants {
+    &__avatar-group {
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+      .chat-user-avatar:not(:first-child) {
+        margin-right: -15px;
+
+        .avatar {
+          border: 1px solid var(--primary-very-low);
+        }
+      }
+    }
+    &__other-count {
+      margin-right: -15px;
+      z-index: 1;
+      border: 1px solid var(--primary-very-low);
     }
   }
 }

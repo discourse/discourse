@@ -1,9 +1,14 @@
+.chat-message {
+  container-type: inline-size;
+}
 .chat-message-thread-indicator {
   max-width: 600px;
+  box-sizing: border-box;
   display: grid;
   grid-template-areas:
-    "avatar info participants"
-    "avatar excerpt excerpt";
+    "avatar info replies participants"
+    "avatar excerpt excerpt excerpt";
+  grid-template-columns: auto 1fr auto auto;
 
   .chat-drawer & {
     align-items: stretch;
@@ -40,6 +45,12 @@
     }
   }
 
+  &__replies-count {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+  }
+
   &__last-reply-excerpt {
     grid-area: excerpt;
     .chat-drawer & {
@@ -60,12 +71,26 @@
     grid-area: participants;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.5rem;
     margin-left: auto;
 
     .chat-drawer & {
       align-self: flex-end;
       flex-basis: 100%;
+    }
+  }
+}
+
+@container (max-width: 400px) {
+  .chat-message-thread-indicator {
+    grid-template-areas:
+      "avatar info info participants"
+      "avatar excerpt excerpt replies";
+    &__replies-count {
+      align-self: flex-start;
+      grid-area: replies;
+      justify-content: flex-end;
     }
   }
 }
