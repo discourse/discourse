@@ -1,0 +1,35 @@
+<StyleguideExample @title="<Chat::Message::MentionWarning>">
+  <Styleguide::Component>
+    <Chat::Message::MentionWarning @message={{this.message}} />
+  </Styleguide::Component>
+  <Styleguide::Controls::Row @name="Cannot see">
+    <DToggleSwitch
+      @state={{gt this.message.mentionWarning.cannotSee.length 0}}
+      {{on "click" this.toggleCannotSee}}
+    />
+  </Styleguide::Controls::Row>
+  <Styleguide::Controls::Row @name="Group with mentions disabled">
+    <DToggleSwitch
+      @state={{gt
+        this.message.mentionWarning.groupWithMentionsDisabled.length
+        0
+      }}
+      {{on "click" this.toggleGroupWithMentionsDisabled}}
+    />
+  </Styleguide::Controls::Row>
+  <Styleguide::Controls::Row @name="Group with too many members">
+    <DToggleSwitch
+      @state={{gt
+        this.message.mentionWarning.groupsWithTooManyMembers.length
+        0
+      }}
+      {{on "click" this.toggleGroupsWithTooManyMembers}}
+    />
+  </Styleguide::Controls::Row>
+  <Styleguide::Controls::Row @name="Without membership">
+    <DToggleSwitch
+      @state={{gt this.message.mentionWarning.withoutMembership.length 0}}
+      {{on "click" this.toggleWithoutMembership}}
+    />
+  </Styleguide::Controls::Row>
+</StyleguideExample>

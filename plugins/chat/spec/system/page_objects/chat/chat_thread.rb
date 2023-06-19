@@ -35,6 +35,16 @@ module PageObjects
         )
       end
 
+      def has_notification_level?(level)
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            ".chat-thread-header__buttons.-persisted .thread-notifications-button",
+          )
+        select_kit.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
       def selection_management
         @selection_management ||=
           PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
@@ -132,13 +142,6 @@ module PageObjects
 
       def message_by_id_selector(id)
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
-      end
-
-      def has_deleted_message?(message, count: 1)
-        has_css?(
-          ".chat-thread .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
-          text: I18n.t("js.chat.deleted", count: count),
-        )
       end
 
       def open_edit_message(message)

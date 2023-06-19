@@ -1,0 +1,56 @@
+{{#if this.shouldRender}}
+  <div class="chat-message-mention-warning alert alert-info">
+    {{#if this.mentionWarning.invitationSent}}
+      <span
+        class="chat-message-mention-warning__invitation-sent"
+        {{chat/later-fn this.onDismissInvitationSent 3000}}
+      >
+        {{d-icon "check"}}
+        <span>
+          {{i18n
+            "chat.mention_warning.invitations_sent"
+            count=this.mentionWarning.withoutMembership.length
+          }}
+        </span>
+      </span>
+    {{else}}
+      <DButton
+        class="chat-message-mention-warning__dismiss-btn btn-flat"
+        title={{i18n "chat.mention_warning.dismiss"}}
+        @action={{this.onDismissMentionWarning}}
+        @icon="times"
+      />
+
+      {{#if this.mentionWarning.cannotSee}}
+        <p class="chat-message-mention-warning__text -cannot-see">
+          {{this.mentionedCannotSeeText}}
+        </p>
+      {{/if}}
+
+      {{#if this.mentionWarning.withoutMembership}}
+        <p class="chat-message-mention-warning__text -without-membership">
+          <span>{{this.mentionedWithoutMembershipText}}</span>
+          <a href {{on "click" this.onSendInvite bubbles=false}}>
+            {{i18n "chat.mention_warning.invite"}}
+          </a>
+        </p>
+      {{/if}}
+
+      {{#if this.mentionWarning.groupWithMentionsDisabled}}
+        <p
+          class="chat-message-mention-warning__text -groups-with-mentions-disabled"
+        >
+          {{this.groupsWithDisabledMentions}}
+        </p>
+      {{/if}}
+
+      {{#if this.mentionWarning.groupsWithTooManyMembers}}
+        <p
+          class="chat-message-mention-warning__text -groups-with-too-many-members"
+        >
+          {{this.groupsWithTooManyMembers}}
+        </p>
+      {{/if}}
+    {{/if}}
+  </div>
+{{/if}}

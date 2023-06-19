@@ -16,7 +16,12 @@
     {{replace-emoji this.label}}
   </span>
 
-  <div class="chat-thread-header__buttons">
+  <div
+    class={{concat-class
+      "chat-thread-header__buttons"
+      (if this.persistedNotificationLevel "-persisted")
+    }}
+  >
     <ThreadNotificationsButton
       @value={{this.threadNotificationLevel}}
       @onChange={{this.updateThreadNotificationLevel}}

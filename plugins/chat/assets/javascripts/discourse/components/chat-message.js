@@ -2,7 +2,6 @@ import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
 import optionalService from "discourse/lib/optional-service";
-import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
@@ -99,6 +98,10 @@ export default class ChatMessage extends Component {
       !this.args.message.deletedAt ||
       (this.args.message.deletedAt && !this.args.message.nextMessage?.deletedAt)
     );
+  }
+
+  get shouldRenderOpenEmojiPickerButton() {
+    return this.chat.userCanInteractWithChat && this.site.desktopView;
   }
 
   @action
@@ -384,82 +387,6 @@ export default class ChatMessage extends Component {
       this.args.message?.thread &&
       this.args.message?.thread.preview.replyCount > 0
     );
-  }
-
-  get mentionWarning() {
-    return this.args.message.mentionWarning;
-  }
-
-  get mentionedCannotSeeText() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.cannot_see",
-      "chat.mention_warning.cannot_see_multiple",
-      {
-        username: this.mentionWarning?.cannot_see?.[0]?.username,
-        count: this.mentionWarning?.cannot_see?.length,
-      }
-    );
-  }
-
-  get mentionedWithoutMembershipText() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.without_membership",
-      "chat.mention_warning.without_membership_multiple",
-      {
-        username: this.mentionWarning?.without_membership?.[0]?.username,
-        count: this.mentionWarning?.without_membership?.length,
-      }
-    );
-  }
-
-  get groupsWithDisabledMentions() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.group_mentions_disabled",
-      "chat.mention_warning.group_mentions_disabled_multiple",
-      {
-        group_name: this.mentionWarning?.group_mentions_disabled?.[0],
-        count: this.mentionWarning?.group_mentions_disabled?.length,
-      }
-    );
-  }
-
-  get groupsWithTooManyMembers() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.too_many_members",
-      "chat.mention_warning.too_many_members_multiple",
-      {
-        group_name: this.mentionWarning.groups_with_too_many_members?.[0],
-        count: this.mentionWarning.groups_with_too_many_members?.length,
-      }
-    );
-  }
-
-  _findTranslatedWarning(oneKey, multipleKey, args) {
-    const translationKey = args.count === 1 ? oneKey : multipleKey;
-    args.count--;
-    return I18n.t(translationKey, args);
-  }
-
-  @action
-  inviteMentioned() {
-    const userIds = this.mentionWarning.without_membership.mapBy("id");
-
-    ajax(`/chat/${this.args.message.channel.id}/invite`, {
-      method: "PUT",
-      data: { user_ids: userIds, chat_message_id: this.args.message.id },
-    }).then(() => {
-      this.args.message.mentionWarning.set("invitationSent", true);
-      this._invitationSentTimer = discourseLater(() => {
-        this.dismissMentionWarning();
-      }, 3000);
-    });
-
-    return false;
-  }
-
-  @action
-  dismissMentionWarning() {
-    this.args.message.mentionWarning = null;
   }
 
   #teardownMentionedUsers() {

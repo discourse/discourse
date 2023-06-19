@@ -5,11 +5,14 @@ import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
+import { tracked } from "@glimmer/tracking";
 
 export default class ChatThreadHeader extends Component {
   @service currentUser;
   @service chatApi;
   @service router;
+
+  @tracked persistedNotificationLevel = true;
 
   get label() {
     return this.args.thread.escapedTitle;
@@ -42,6 +45,8 @@ export default class ChatThreadHeader extends Component {
 
   @action
   updateThreadNotificationLevel(newNotificationLevel) {
+    this.persistedNotificationLevel = false;
+
     let currentNotificationLevel;
 
     if (this.membership) {
@@ -63,6 +68,8 @@ export default class ChatThreadHeader extends Component {
       .then((response) => {
         this.membership.last_read_message_id =
           response.membership.last_read_message_id;
+
+        this.persistedNotificationLevel = true;
       })
       .catch((err) => {
         this.membership.notificationLevel = currentNotificationLevel;

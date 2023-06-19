@@ -171,12 +171,14 @@ module Jobs
 
       staff_action_data =
         if @current_user.admin?
-          UserHistory.only_staff_actions.order("id DESC")
+          UserHistory.only_staff_actions
         else
-          UserHistory.where(admin_only: false).only_staff_actions.order("id DESC")
+          UserHistory.where(admin_only: false).only_staff_actions
         end
 
-      staff_action_data.find_each { |staff_action| yield get_staff_action_fields(staff_action) }
+      staff_action_data.find_each(order: :desc) do |staff_action|
+        yield get_staff_action_fields(staff_action)
+      end
     end
 
     def screened_email_export

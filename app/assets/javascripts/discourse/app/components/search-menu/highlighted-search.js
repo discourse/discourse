@@ -9,7 +9,6 @@ export default class HighlightedSearch extends Component {
     super(...arguments);
     const span = document.createElement("span");
     span.textContent = this.args.string;
-    this.content = span;
 
     highlightSearch(span, this.search.activeGlobalSearchTerm);
   }

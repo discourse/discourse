@@ -1,0 +1,63 @@
+{{#if @show}}
+  <div
+    class="chat-message-info"
+    {{did-insert this.trackStatus}}
+    {{will-destroy this.stopTrackingStatus}}
+  >
+    {{#if @message.chatWebhookEvent}}
+      {{#if @message.chatWebhookEvent.username}}
+        <span
+          class={{concat-class
+            "chat-message-info__username"
+            this.usernameClasses
+          }}
+        >
+          {{@message.chatWebhookEvent.username}}
+        </span>
+      {{/if}}
+
+      <span class="chat-message-info__bot-indicator">
+        {{i18n "chat.bot"}}
+      </span>
+    {{else}}
+      <span
+        role="button"
+        class={{concat-class
+          "chat-message-info__username"
+          this.usernameClasses
+          "clickable"
+        }}
+        data-user-card={{@message.user.username}}
+      >
+        <span class="chat-message-info__username__name">{{this.name}}</span>
+        {{#if this.showStatus}}
+          <div class="chat-message-info__status">
+            <UserStatusMessage @status={{@message.user.status}} />
+          </div>
+        {{/if}}
+      </span>
+    {{/if}}
+
+    <span class="chat-message-info__date">
+      {{format-chat-date @message}}
+    </span>
+
+    {{#if @message.bookmark}}
+      <span class="chat-message-info__bookmark">
+        <BookmarkIcon @bookmark={{@message.bookmark}} />
+      </span>
+    {{/if}}
+
+    {{#if this.isFlagged}}
+      <span class="chat-message-info__flag">
+        {{#if @message.reviewableId}}
+          <LinkTo @route="review.show" @model={{@message.reviewableId}}>
+            {{d-icon "flag" title="chat.flagged"}}
+          </LinkTo>
+        {{else}}
+          {{d-icon "flag" title="chat.you_flagged"}}
+        {{/if}}
+      </span>
+    {{/if}}
+  </div>
+{{/if}}
