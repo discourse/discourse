@@ -1,6 +1,31 @@
 <DModalBody>
-  <p>{{html-safe
-      (i18n "topics.bulk.selected" count=this.model.topics.length)
-    }}</p>
-  {{outlet "bulkOutlet"}}
+  <p>
+    {{html-safe (i18n "topics.bulk.selected" count=this.model.topics.length)}}
+  </p>
+
+  {{#if this.showProgress}}
+    <p>
+      {{html-safe (i18n "topics.bulk.progress" count=this.processedTopicCount)}}
+    </p>
+  {{else if this.activeComponent}}
+    {{#let this.activeComponent as |Component|}}
+      <Component
+        @loading={{this.loading}}
+        @forEachPerformed={{this.forEachPerformed}}
+        @performAndRefresh={{this.performAndRefresh}}
+        @categoryId={{this.model.category.id}}
+      />
+    {{/let}}
+  {{else}}
+    <div class="bulk-buttons">
+      {{#each this.buttons as |button|}}
+        <DButton
+          @action={{button.action}}
+          @label={{button.label}}
+          @icon={{button.icon}}
+          class={{button.class}}
+        />
+      {{/each}}
+    </div>
+  {{/if}}
 </DModalBody>
