@@ -222,12 +222,22 @@ class Search
   attr_reader :clean_term, :guardian
 
   def initialize(term, opts = nil)
-    @opts = opts || {}
-    @guardian = @opts[:guardian] || Guardian.new
-    @search_context = @opts[:search_context]
-    @blurb_length = @opts[:blurb_length]
+    opts = opts || {}
+
+    @guardian = opts[:guardian] || Guardian.new
+    @search_context = opts[:search_context]
+    @blurb_length = opts[:blurb_length]
+    @page = opts[:page]
+    @type_filter = opts[:type_filter]
+    @search_type = opts[:search_type]
+    @ip_address = opts[:ip_address]
+    @user_id = opts[:user_id]
+    @search_for_id = opts[:search_for_id]
+    @restrict_to_archetype = opts[:restrict_to_archetype]
+    @min_search_term_length = opts[:min_search_term_length]
+    @log_search = opts.key?(:log_search) ? opts[:log_search] : true
+
     @valid = true
-    @page = @opts[:page]
     @search_all_pms = false
 
     term = Search.clean_term(term)
@@ -242,8 +252,9 @@ class Search
       @original_term = Search.escape_string(@term)
     end
 
-    if @search_pms || @search_all_pms || @opts[:type_filter] == "private_messages"
-      @opts[:type_filter] = "private_messages"
+    if @search_pms || @search_all_pms || @type_filter == "private_messages"
+      @type_filter = "private_messages"
+
       @search_context ||= @guardian.user
 
       unless @search_context.present? && @guardian.can_see_private_messages?(@search_context.id)
@@ -251,11 +262,11 @@ class Search
       end
     end
 
-    @opts[:type_filter] = "all_topics" if @search_all_topics && @guardian.user
+    @type_filter = "all_topics" if @search_all_topics && @guardian.user
 
     @results =
       GroupedSearchResults.new(
-        type_filter: @opts[:type_filter],
+        type_filter: @type_filter,
         term: clean_term,
         blurb_term: term,
         search_context: @search_context,
@@ -273,7 +284,7 @@ class Search
   end
 
   def offset
-    if @page && @opts[:type_filter].present?
+    if @page && @type_filter.present?
       (@page - 1) * Search.per_filter
     else
       0
@@ -285,7 +296,7 @@ class Search
   end
 
   def use_full_page_limit
-    @opts[:search_type] == :full_page || Topic === @search_context
+    @search_type == :full_page || Topic === @search_context
   end
 
   def self.execute(term, opts = nil)
@@ -298,14 +309,14 @@ class Search
       status, search_log_id =
         SearchLog.log(
           term: @clean_term,
-          search_type: @opts[:search_type],
-          ip_address: @opts[:ip_address],
-          user_id: @opts[:user_id],
+          search_type: @search_type,
+          ip_address: @ip_address,
+          user_id: @user_id,
         )
       @results.search_log_id = search_log_id unless status == :error
     end
 
-    unless @filters.present? || @opts[:search_for_id]
+    unless @filters.present? || @search_for_id
       min_length = min_search_term_length
       terms = (@term || "").split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject { |t| t.length < min_length }
 
@@ -317,7 +328,7 @@ class Search
     end
 
     # If the term is a number or url to a topic, just include that topic
-    if @opts[:search_for_id] && %w[topic private_messages all_topics].include?(@results.type_filter)
+    if @search_for_id && %w[topic private_messages all_topics].include?(@results.type_filter)
       if @term =~ /\A\d+\z/
         single_topic(@term.to_i)
       else
@@ -871,10 +882,10 @@ class Search
 
   # If we're searching for a single topic
   def single_topic(id)
-    if @opts[:restrict_to_archetype].present?
+    if @restrict_to_archetype.present?
       archetype =
         (
-          if @opts[:restrict_to_archetype] == Archetype.default
+          if @restrict_to_archetype == Archetype.default
             Archetype.default
           else
             Archetype.private_message
@@ -1467,12 +1478,12 @@ class Search
   end
 
   def log_query?(readonly_mode)
-    SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode &&
-      @opts[:type_filter] != "exclude_topics"
+    SiteSetting.log_search_queries? && @search_type.present? && !readonly_mode &&
+      @type_filter != "exclude_topics"
   end
 
   def min_search_term_length
-    return @opts[:min_search_term_length] if @opts[:min_search_term_length]
+    return @min_search_term_length if @min_search_term_length
 
     if SiteSetting.search_tokenize_chinese
       return SiteSetting.defaults.get("min_search_term_length", "zh_CN")

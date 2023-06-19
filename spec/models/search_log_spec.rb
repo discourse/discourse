@@ -139,7 +139,7 @@ RSpec.describe SearchLog, type: :model do
       freeze_time(time)
 
       search_log = Fabricate(:search_log, created_at: time - 1.hour)
-      search_log2 = Fabricate(:search_log, created_at: time + 1.hour)
+      _search_log2 = Fabricate(:search_log, created_at: time + 1.hour)
 
       details = SearchLog.term_details(search_log.term, :daily)
 
