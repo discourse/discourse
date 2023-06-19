@@ -686,10 +686,6 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/preferences/second-factor-backup" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
       delete "#{root_path}/:username/preferences/user_image" => "users#destroy_user_image",
              :constraints => {
                username: RouteFormat.username,

@@ -4279,11 +4279,6 @@ ember-exam@^8.0.0:
     semver "^7.3.2"
     silent-error "^1.1.1"
 
-ember-export-application-global@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/ember-export-application-global/-/ember-export-application-global-2.0.1.tgz#b120a70e322ab208defc9e2daebe8d0dfc2dcd46"
-  integrity sha512-B7wiurPgsxsSGzJuPFkpBWnaeuCu2PGpG2BjyrfA1VcL7//o+5RSnZqiCEY326y7qmxb2GoCgo0ft03KBU0rRw==
-
 ember-functions-as-helper-polyfill@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ember-functions-as-helper-polyfill/-/ember-functions-as-helper-polyfill-2.1.1.tgz#25240db29b4cd0366a2d2954d2ea26ce0872ff8f"

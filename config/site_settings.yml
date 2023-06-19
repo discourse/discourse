@@ -2121,6 +2121,12 @@ developer:
     default: ""
     allow_any: false
     hidden: true
+  experimental_search_menu_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
 
 navigation:
   navigation_menu:

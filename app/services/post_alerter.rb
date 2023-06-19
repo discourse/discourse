@@ -151,8 +151,15 @@ class PostAlerter
 
       expand_group_mentions(mentioned_groups, post) do |group, users|
         users = only_allowed_users(users, post)
+        to_notify =
+          DiscoursePluginRegistry.apply_modifier(
+            :expand_group_mention_users,
+            users - notified,
+            group,
+          )
+
         notified +=
-          notify_users(users - notified, :group_mentioned, post, mentioned_opts.merge(group: group))
+          notify_users(to_notify, :group_mentioned, post, mentioned_opts.merge(group: group))
       end
 
       if mentioned_here

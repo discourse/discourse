@@ -1,37 +1,37 @@
+import { tagName } from "@ember-decorators/component";
+import { equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import { equal } from "@ember/object/computed";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { htmlSafe } from "@ember/template";
 import { propertyEqual } from "discourse/lib/computed";
 
-export default Component.extend({
+@tagName("")
+export default class PollBreakdownOption extends Component {
   // Arguments:
-  option: null,
-  index: null,
-  totalVotes: null,
-  optionsCount: null,
-  displayMode: null,
-  highlightedOption: null,
-  onMouseOver: null,
-  onMouseOut: null,
+  option = null;
+  index = null;
+  totalVotes = null;
+  optionsCount = null;
+  displayMode = null;
+  highlightedOption = null;
+  onMouseOver = null;
+  onMouseOut = null;
 
-  tagName: "",
-
-  highlighted: propertyEqual("highlightedOption", "index"),
-  showPercentage: equal("displayMode", "percentage"),
+  @propertyEqual("highlightedOption", "index") highlighted;
+  @equal("displayMode", "percentage") showPercentage;
 
   @discourseComputed("option.votes", "totalVotes")
   percent(votes, total) {
     return I18n.toNumber((votes / total) * 100.0, { precision: 1 });
-  },
+  }
 
   @discourseComputed("optionsCount")
   optionColors(optionsCount) {
     return getColors(optionsCount);
-  },
+  }
 
   @discourseComputed("highlighted")
   colorBackgroundStyle(highlighted) {
@@ -39,7 +39,7 @@ export default Component.extend({
       // TODO: Use CSS variables (#10341)
       return htmlSafe("background: rgba(0, 0, 0, 0.1);");
     }
-  },
+  }
 
   @discourseComputed("highlighted", "optionColors", "index")
   colorPreviewStyle(highlighted, optionColors, index) {
@@ -48,7 +48,7 @@ export default Component.extend({
       : optionColors[index];
 
     return htmlSafe(`background: ${color};`);
-  },
+  }
 
   @action
   onHover(active) {
@@ -57,5 +57,5 @@ export default Component.extend({
     } else {
       this.onMouseOut();
     }
-  },
-});
+  }
+}
