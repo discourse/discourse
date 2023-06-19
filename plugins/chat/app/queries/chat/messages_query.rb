@@ -5,7 +5,7 @@ module Chat
   #
   # 1. Query messages around a target_message_id or target_date. This is used
   #    when a user needs to jump to the middle of a messages stream or load
-  #    around their last read message ID. There is no pagination or direction
+  #    around a target. There is no pagination or direction
   #    here, just a limit on past and future messages.
   # 2. Query messages with paginations and direction. This is used for normal
   #    scrolling of the messages stream of a channel.
