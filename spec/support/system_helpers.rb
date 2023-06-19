@@ -30,7 +30,7 @@ module SystemHelpers
     SiteSetting.splash_screen = false
   end
 
-  def try_until_success(timeout: 2, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
     start ||= Time.zone.now
     backoff ||= frequency
     yield
