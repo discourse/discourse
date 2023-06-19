@@ -5,6 +5,8 @@ RSpec.describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
+  it_behaves_like "it has custom fields"
+
   describe "Validations" do
     it { is_expected.to allow_value("#{"a" * 996}.com").for(:automatic_membership_email_domains) }
     it do
@@ -764,6 +766,11 @@ RSpec.describe Group do
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
 
+      group.add_owner(moderator)
+
+      expect(can_view?(moderator, group)).to eq(true)
+
+      GroupUser.delete_by(group: group, user: moderator)
       group.update_columns(visibility_level: Group.visibility_levels[:staff])
 
       expect(can_view?(admin, group)).to eq(true)
@@ -827,6 +834,11 @@ RSpec.describe Group do
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
 
+      group.add_owner(moderator)
+
+      expect(can_view?(moderator, group)).to eq(true)
+
+      GroupUser.delete_by(group: group, user: moderator)
       group.update_columns(members_visibility_level: Group.visibility_levels[:staff])
 
       expect(can_view?(admin, group)).to eq(true)

@@ -3,11 +3,13 @@ import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
   @service chatDraftsManager;
+  @service currentUser;
 
   context = "channel";
 
@@ -16,6 +18,20 @@ export default class ChatComposerChannel extends ChatComposer {
   get presenceChannelName() {
     const channel = this.args.channel;
     return `/chat-reply/${channel.id}`;
+  }
+
+  get disabled() {
+    return (
+      (this.args.channel.isDraft &&
+        isEmpty(this.args.channel?.chatable?.users)) ||
+      !this.chat.userCanInteractWithChat ||
+      !this.args.channel.canModifyMessages(this.currentUser)
+    );
+  }
+
+  @action
+  reset() {
+    this.composer.reset(this.args.channel);
   }
 
   @action
@@ -75,6 +91,18 @@ export default class ChatComposerChannel extends ChatComposer {
       return I18n.t("chat.placeholder_silenced");
     } else {
       return this.#messageRecipients(this.args.channel);
+    }
+  }
+
+  handleEscape(event) {
+    event.stopPropagation();
+
+    if (this.currentMessage?.inReplyTo) {
+      this.reset();
+    } else if (this.currentMessage?.editing) {
+      this.composer.cancel(this.args.channel);
+    } else {
+      event.target.blur();
     }
   }
 

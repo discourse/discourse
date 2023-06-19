@@ -2778,6 +2778,8 @@ lv:
         other: "%{count} jauna"
       more: "Vairāk"
       all_categories: "Visas sadaļas"
+      categories_form:
+        save: "Saglabāt"
       sections:
         custom:
           save: "Saglabāt"
@@ -2813,8 +2815,6 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
-            everything:
-              content: "Viss"
             faq:
               content: "BUJ"
             groups:
@@ -3346,6 +3346,8 @@ lv:
               key: "minimums"
             maximum:
               key: "maksimums"
+            type:
+              key: "tips"
       impersonate:
         title: "Izlikties (impersonate)"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished.\nIzmanto šo rīku lai izkliktos (impersonate) par lietotāju priekš kļūdu (bugs) meklēšanas. Vajadzēs izlogoties pēc sesijas beigām."

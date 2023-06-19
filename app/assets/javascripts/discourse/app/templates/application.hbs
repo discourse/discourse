@@ -25,6 +25,10 @@
 
   <SoftwareUpdatePrompt />
 
+  {{#if this.siteSettings.enable_offline_indicator}}
+    <OfflineIndicator />
+  {{/if}}
+
   <PluginOutlet
     @name="below-site-header"
     @connectorTagName="div"
@@ -49,7 +53,6 @@
         <NotificationConsentBanner />
         <PwaInstallBanner />
         <GlobalNotice />
-        <CreateTopicsNotice />
         <PluginOutlet
           @name="top-notices"
           @connectorTagName="div"
@@ -81,7 +84,7 @@
     @outletArgs={{hash showFooter=this.showFooter}}
   />
 
-  {{outlet "modal"}}
+  <ModalContainer />
   <DialogHolder />
   <TopicEntrance />
   <ComposerContainer />

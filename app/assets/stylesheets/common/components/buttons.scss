@@ -27,6 +27,7 @@
     rgba(0, 0, 0, 0)
   );
   border-radius: var(--d-button-border-radius);
+  transition: background 0.25s, color 0.25s;
   cursor: pointer;
   .d-icon {
     color: $icon-color;
@@ -201,7 +202,7 @@
   border-radius: var(--d-border-radius);
   &:hover,
   &:focus {
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     outline: 1px solid #000;
   }
   &[href] {
@@ -293,9 +294,10 @@
   background: transparent;
   border: 0;
   line-height: var(--line-height-small);
-  transition: color 0.25s, background 0.25s;
+  transition: background 0.25s, color 0.25s;
   .d-icon {
     color: var(--primary-low-mid);
+    transition: color 0.25s;
   }
   @include hover {
     background: transparent;

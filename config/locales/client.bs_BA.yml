@@ -3038,6 +3038,8 @@ bs_BA:
         other: "%{count} novih"
       more: "Još"
       all_categories: "Sve kategorije"
+      categories_form:
+        save: "Save"
       sections:
         custom:
           save: "Save"
@@ -3074,8 +3076,6 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
-            everything:
-              content: "Sve"
             faq:
               content: "Česta pitanja"
             groups:
@@ -3922,6 +3922,8 @@ bs_BA:
           validations:
             required:
               key: "required"
+            type:
+              key: "tip"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."

@@ -1,36 +1,102 @@
 .chat-message-thread-indicator {
-  align-items: center;
-  display: grid;
-  grid: 1fr / auto-flow;
   display: flex;
+  align-items: center;
+  gap: 1rem;
   cursor: pointer;
   grid-area: threadindicator;
+  max-width: 1000px;
   background-color: var(--primary-very-low);
   margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
-  padding-block: 0.25rem;
+  padding-block: 0.5rem;
   padding-inline: 0.5rem;
-  max-width: 500px;
-  border-radius: 4px;
+  border-radius: 8px;
+  color: var(--primary);
 
-  &__replies-count {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
+  > * {
+    pointer-events: none;
   }
 
-  &__view-thread {
-    font-size: var(--font-down-1);
-    flex: 1;
+  &:visited,
+  &:hover {
+    color: var(--primary);
+  }
 
-    .chat-message-thread-indicator:hover & {
+  .touch & {
+    &.-active {
+      box-shadow: var(--shadow-dropdown);
+    }
+  }
+
+  .no-touch & {
+    &:hover {
+      box-shadow: var(--shadow-dropdown);
+    }
+  }
+
+  &__participants {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  &__last-reply-avatar {
+    align-self: flex-start;
+    .chat-user-avatar {
+      width: auto !important;
+    }
+  }
+
+  &__last-reply-metadata {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.25rem;
+    color: var(--primary-medium);
+
+    .separator {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  &__last-reply-container {
+    display: inline-flex;
+    align-items: flex-end;
+    font-size: var(--font-down-1);
+    min-width: 0;
+
+    .relative-date {
+      @include ellipsis;
+    }
+  }
+
+  &__last-reply-user {
+    font-weight: bold;
+    color: var(--secondary-low);
+  }
+
+  &__last-reply-username {
+    font-weight: bold;
+    color: var(--secondary-low);
+  }
+
+  &__last-reply-excerpt {
+    @include ellipsis;
+    line-height: 1.8rem;
+  }
+
+  &__body {
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 1;
+  }
+
+  &:hover {
+    .chat-message-thread-indicator__replies-count {
       text-decoration: underline;
     }
   }
 
-  &__replies-count + &__view-thread {
-    padding-left: 0.25rem;
-  }
-
-  &__separator {
-    margin: 0 0.5em;
+  &__replies-count {
+    @include ellipsis;
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
   }
 }

@@ -481,7 +481,7 @@ button {
     color: $caption-title-color;
     word-wrap: break-word;
     padding-right: 36px; // leave some space for counter at right side
-
+    max-width: 100%;
     // add the download icon
     a.image-source-link .d-icon {
       padding-right: 5px;

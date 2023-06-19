@@ -343,9 +343,9 @@ async function handleRequest(proxy, baseURL, req, res) {
   const csp = response.headers.get("content-security-policy");
   if (csp) {
     const emberCliAdditions = [
-      `http://${originalHost}/assets/`,
-      `http://${originalHost}/ember-cli-live-reload.js`,
-      `http://${originalHost}/_lr/`,
+      `http://${originalHost}${baseURL}assets/`,
+      `http://${originalHost}${baseURL}ember-cli-live-reload.js`,
+      `http://${originalHost}${baseURL}_lr/`,
     ].join(" ");
 
     const newCSP = csp
@@ -516,7 +516,7 @@ to serve API requests. For example:
       return false;
     }
 
-    if (request.path.startsWith("/_lr/")) {
+    if (request.path.startsWith(`${baseURL}_lr/`)) {
       return false;
     }
 

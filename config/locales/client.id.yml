@@ -367,6 +367,8 @@ id:
         search: "Cari Pesan"
         placeholder: "ketikkan judul pesan, url atau id di sini"
     review:
+      show_more: "Tampilkan lebih banyak"
+      show_less: "Tampilkan lebih sedikit"
       order_by: "Urutkan berdasarkan"
       date_filter: "Diposting antara"
       in_reply_to: "sebagai balasan"
@@ -578,6 +580,7 @@ id:
       relative: "Waktu relatif"
       none: "Tidak dibutuhkan"
       never: "Tidak pernah"
+      last_custom: "datetime kustom terakhir"
       custom: "Tanggal dan waktu tersuai"
       select_timeframe: "Pilih jangka waktu"
     user_action:
@@ -707,6 +710,7 @@ id:
           title: "Log"
           when: "Ketika"
           action: "Aksi"
+          acting_user: "Pengguna yang bertindak"
           target_user: "Target pengguna"
           subject: "Judul"
           details: "Detil"
@@ -819,6 +823,8 @@ id:
       flair_color_placeholder: "(Opsional) Nilai warna dalam Hex"
       flair_preview_icon: "Pratinjau Ikon"
       flair_preview_image: "Pratinjau Gambar"
+      flair_type:
+        icon: "Pilih ikon"
       default_notifications:
         modal_yes: "Ya"
     user_action_groups:
@@ -853,9 +859,13 @@ id:
       subcategories: "Subkategori"
       topic_sentence:
         other: "%{count} topik"
+      topic_stat:
+        other: "%{number} / %{unit}"
       topic_stat_unit:
         week: "minggu"
         month: "bulan"
+      topic_stat_all_time:
+        other: "%{number} total"
       topic_stat_sentence_week:
         other: "%{count} topik baru dalam seminggu terakhir."
       topic_stat_sentence_month:
@@ -941,6 +951,7 @@ id:
       inactive_user: "Pengguna ini sudah tidak aktif lagi."
       expand_profile: "Perluas"
       collapse_profile: "Persempit"
+      sr_collapse_profile: "Ciutkan detail profil"
       bookmarks: "Markah"
       bio: "About me"
       timezone: "Zona Waktu"
@@ -959,6 +970,7 @@ id:
       dismiss: "Bubar"
       dismiss_notifications: "Bubarkan Semua"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
+      no_messages_title: "Anda tidak memiliki pesan apa pun"
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_scheme_default_on_all_devices: "Setel skema warna default di semua perangkat saya"
       color_scheme: "Skema warna"
@@ -977,7 +989,10 @@ id:
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
       experimental_sidebar:
+        enable: "Aktifkan bilah sisi"
         options: "Pilihan"
+        categories_section: "Bagian Kategori"
+        tags_section: "Bagian Tag"
         navigation_section: "Navigasi"
       change: "ubah"
       featured_topic: "Topik Unggulan"
@@ -1020,6 +1035,7 @@ id:
       admin_delete: "Hapus"
       users: "Pengguna"
       muted_users: "Diredam"
+      allowed_pm_users: "Diizinkan"
       ignored_users: "Diabaikan"
       tracked_topics_link: "Tunjukkan"
       apps: "Aplikasi"
@@ -1354,6 +1370,9 @@ id:
     signup_cta:
       sign_up: "Mendaftar"
       hide_forever: "tidak, terima kasih"
+    offline_indicator:
+      no_internet: "Tidak ada koneksi internet."
+      refresh_page: "Segarkan halaman"
     summary:
       description:
         other: "Terdapat <b>%{count}</b> balasan."
@@ -1537,6 +1556,7 @@ id:
         shared_draft:
           label: "Konsep Bersama"
       ignore: "Abaikan"
+      toggle_image_grid: Beralih kisi gambar
     notifications:
       tooltip:
         message:
@@ -1602,12 +1622,20 @@ id:
       bulk:
         select_all: "Pilih Semua"
         dismiss: "Bubar"
+        dismiss_new_modal:
+          title: "Abaikan yang baru"
+          topics: "Abaikan topik baru"
+          posts: "Abaikan post baru"
+          untrack: "Berhenti melacak topik ini agar tidak lagi muncul di daftar baru saya"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
         notification_level: "Pemberitahuan..."
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
+        educate:
+          unread: "<p>Topik Anda yang belum dibaca muncul di sini.</p><p>Secara bawaan, topik dianggap belum dibaca dan akan menampilkan jumlah yang belum dibaca <span class=\"badge unread-posts badge-notification\">1</span> jika Anda:</p><ul><li>Membuat topik</li><li>Membalas topik</li><li>Membaca topik lebih dari 5 menit</li></ul><p>Atau jika Anda secara eksplisit atur topik ke Dilacak atau Diikuti melalui \U0001F514 di setiap topik.</p><p>Kunjungi <a href=\"%{userPrefsUrl}\">preferensi </a> Anda untuk mengubahnya.</p>"
+          new_new: "<p>Topik baru Anda akan muncul di sini, dan topik Anda yang belum dibaca juga akan ditampilkan. Secara bawaan, topik dianggap baru dan akan menampilkan indikator <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> jika dibuat dalam 2 hari terakhir. Topik yang belum dibaca akan menampilkan jumlah yang belum dibaca <span class=\"badge unread-posts badge-notification\">1</span> jika Anda: membuat topik, membalas topik, membaca topik selama lebih dari 5 menit, atau jika Anda secara eksplisit menyetel topik ke Dilacak atau Diikuti melalui \U0001F514 di setiap topik.</p><p>Kunjungi <a href=\"%{userPrefsUrl}\">preferensi</a> Anda untuk mengubahnya.</p>"
       bottom:
         new: "Tidak ada topik baru lagi"
     topic:
@@ -1632,6 +1660,7 @@ id:
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
+      participant_groups: "Kelompok peserta"
       slow_mode_update:
         enable: "Aktifkan"
         remove: "Nonaktifkan"
@@ -1895,6 +1924,11 @@ id:
         other: "%{count} baru"
       more: "Selengkapnya"
       all_categories: "Semua kategori"
+      categories_form:
+        save: "Simpan"
+        title: "Edit navigasi kategori"
+        filter_placeholder: "Kategori filter"
+        no_categories: "Tidak ada kategori yang cocok dengan istilah yang diberikan."
       sections:
         custom:
           save: "Simpan"
@@ -1928,8 +1962,6 @@ id:
               content: "Tentang"
             admin:
               content: "Admin"
-            everything:
-              content: "Semuanya"
             faq:
               content: "FAQ"
             groups:
@@ -1938,7 +1970,10 @@ id:
               content: "Pengguna"
             review:
               content: "Ulasan"
+        global_section: "Bagian global, dapat dilihat oleh semua orang"
     until: "Sampai:"
+    form_template_chooser:
+      select_template: "Pilih templat formulir"
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:
@@ -1999,6 +2034,9 @@ id:
         continue: Lanjutkan
         scopes:
           action: Aksi
+          descriptions:
+            posts:
+              list: Daftar post terbaru dan post pribadi. RSS juga didukung.
       web_hooks:
         edit: "Ubah"
         save: "Simpan"
@@ -2114,6 +2152,7 @@ id:
           modal_title: "Detil"
           deleted: "Tidak ada nilai baru. Catatan telah dihapus."
           actions:
+            update_directory_columns: "perbarui kolom direktori"
             post_approved: "tulisan disetujui"
         screened_emails:
           email: "Alamat Email"
@@ -2149,6 +2188,17 @@ id:
         validations_modal:
           table_headers:
             type: "Tipe"
+          validations:
+            minimum:
+              description: "Untuk bidang teks, tentukan jumlah minimum karakter yang diperbolehkan."
+            maximum:
+              description: "Untuk bidang teks, tentukan jumlah maksimum karakter yang diperbolehkan."
+            pattern:
+              description: "Untuk bidang teks, ekspresi reguler menentukan input yang diizinkan."
+            type:
+              key: "tipe"
+              type: "string"
+              description: "Untuk bidang input, Anda dapat menentukan jenis masukan yang diharapkan (teks|email|tanggal|nomor|url|tel|warna)"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"

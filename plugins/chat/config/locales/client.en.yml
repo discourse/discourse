@@ -114,6 +114,14 @@ en:
       heading: "Chat"
       join: "Join"
       last_visit: "last visit"
+
+      summarization:
+        title: "Summarize messages"
+        description: "Select an option below to summarize the conversation sent during the desired timeframe."
+        summarize: "Summarize"
+        since:
+          one: "Last hour" 
+          other: "Last %{count} hours"
       mention_warning:
         dismiss: "dismiss"
         cannot_see: "%{username} can't access this channel and was not notified."
@@ -547,7 +555,7 @@ en:
       thread:
         title: "Title"
         view_thread: View thread
-        default_title: "Thread #%{thread_id}"
+        default_title: "Thread"
         replies:
           one: "%{count} reply"
           other: "%{count} replies"
@@ -557,6 +565,16 @@ en:
           started_by: "Started by"
         settings: "Settings"
         last_reply: "last reply"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "You will be notified if someone mentions your @name in this thread."
+          tracking:
+            title: "Tracking"
+            description: "A count of new replies for this thread will be shown in the thread list and the channel. You will be notified if someone mentions your @name in this thread."
+        participants_other_count:
+          one: "+%{count} other"
+          other: "+%{count} others"
       threads:
         open: "Open Thread"
         list: "Ongoing discussions"

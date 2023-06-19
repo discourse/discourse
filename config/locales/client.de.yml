@@ -403,6 +403,8 @@ de:
         search: "Suche nach einer Nachricht"
         placeholder: "gib hier den Titel, die URL oder die ID der Nachricht ein"
     review:
+      show_more: "Mehr anzeigen"
+      show_less: "Weniger anzeigen"
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
@@ -1823,36 +1825,6 @@ de:
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     staff_writes_only_mode:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
-          one {gibt <strong>#</strong> Thema}
-        other {gibt <strong>#</strong> Themen}
-      } und { currentPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
-          one {<strong>#</strong> Thema}
-        other {<strong>#</strong> Themen}
-      } und { requiredPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Nur das Team kann diese Nachricht sehen.
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
-          one {gibt <strong>#</strong> Thema}
-        other {gibt <strong>#</strong> Themen}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
-          one {<strong>#</strong> Thema}
-        other {<strong>#</strong> Themen}
-      }. Nur das Team kann diese Nachricht sehen.
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentPosts, plural,
-          one {gibt <strong>#</strong> Beitrag}
-        other {gibt <strong>#</strong> Beiträge}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Nur das Team kann diese Nachricht sehen.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht.
@@ -1882,6 +1854,9 @@ de:
       hidden_for_session: "In Ordnung, wir fragen dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! Es sieht so aus, als ob dir diese Diskussion gefällt, aber du hast bislang noch kein Konto angelegt."
       value_prop: "Hast du es satt, dich durch die gleichen Beiträge zu scrollen? Wenn du ein Konto erstellst, kommst du immer wieder dorthin zurück, wo du aufgehört hast. Mit einem Konto kannst du auch über neue Antworten benachrichtigt werden, Lesezeichen speichern und anderen mit „Gefällt mir“ danken. Wir können alle zusammenarbeiten, um diese Community zu etwas Großartigem zu machen. :heart:"
+    offline_indicator:
+      no_internet: "Keine Internetverbindung."
+      refresh_page: "Seite aktualisieren"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description:
@@ -2292,6 +2267,7 @@ de:
       image_alt_text:
         aria_label: Alternativ-Text für Bild
       delete_image_button: Bild löschen
+      toggle_image_grid: Bildraster umschalten
     notifications:
       tooltip:
         regular:
@@ -2621,6 +2597,11 @@ de:
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
+        dismiss_new_modal:
+          title: "Neu verwerfen"
+          topics: "Neue Themen verwerfen"
+          posts: "Neue Beiträge verwerfen"
+          untrack: "Hör auf, diese Themen zu verfolgen, damit sie nicht mehr in deiner \"neuen\" Liste auftauchen"
         dismiss_new_with_selected:
           one: "Neues Thema ignorieren (%{count})"
           other: "Neue Themen ignorieren (%{count})"
@@ -2661,7 +2642,8 @@ de:
         filter: "Es gibt keine Themen."
         educate:
           new: '<p>Hier werden deine neuen Themen angezeigt. Standardmäßig werden Themen als neu erachtet und mit einem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-Indikator dargestellt, wenn sie in den letzten 2 Tagen erstellt wurden. </p><p>Besuche deine <a href="%{userPrefsUrl}">Einstellungen</a>, um dies zu ändern.</p>'
-          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Standardmäßig werden Themen als ungelesen erachtet und mit einem Zähler für ungelesene Beiträge <span class=\"badge unread-posts badge-notification\">1</span> dargestellt, wenn du:</p><ul><li>das Thema erstellt hast;</li><li>auf das Thema geantwortet hast;</li><li>das Thema für mehr als 4 Minuten gelesen hast.</li></ul><p>Oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a>, um dies zu ändern.</p>"
+          unread: "<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Standardmäßig werden Themen als ungelesen erachtet und mit einem Zähler für ungelesene Beiträge <span class=\"badge unread-posts badge-notification\">1</span> dargestellt, wenn du:</p><ul><li>das Thema erstellt hast;</li><li>auf das Thema geantwortet hast;</li><li>das Thema für mehr als 5 Minuten gelesen hast.</li></ul><p>Oder falls du das Thema über \U0001F514 ausdrücklich auf „Verfolgen“ oder „Beobachten“ eingestellt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a>, um dies zu ändern.</p>"
+          new_new: "<p>Hier erscheinen deine neuen Themen und deine ungelesenen Themen werden ebenfalls angezeigt. Standardmäßig gelten Themen als neu und werden mit <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> gekennzeichnet, wenn sie in den letzten 2 Tagen erstellt wurden. Ungelesene Themen werden <span class=\"badge unread-posts badge-notification\">1</span> angezeigt, wenn du: das Thema erstellt hast, auf das Thema geantwortet hast, das Thema länger als 5 Minuten gelesen hast oder wenn du das Thema über das \U0001F514 in jedem Thema explizit auf Verfolgt oder Beobachtet gesetzt hast.</p><p>Besuche deine <a href=\"%{userPrefsUrl}\">Einstellungen</a> , um dies zu ändern.</p>"
       bottom:
         latest: "Das waren die aktuellen Themen."
         posted: "Das waren alle Themen."
@@ -2726,6 +2708,7 @@ de:
       read_more_in_category: "Willst du mehr lesen? Durchstöbere andere Themen in %{categoryLink} oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       read_more: "Willst du mehr lesen? <a href='%{categoryLink}'>Durchstöbere alle Kategorien</a> oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
+      participant_groups: "Teilnehmergruppen"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -4058,6 +4041,11 @@ de:
       more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
+      categories_form:
+        save: "Speichern"
+        title: "Kategorien-Navigation bearbeiten"
+        filter_placeholder: "Kategorien filtern"
+        no_categories: "Es gibt keine Kategorien, die dem angegebenen Begriff entsprechen."
       sections:
         custom:
           add: "Benutzerdefinierten Abschnitt hinzufügen"
@@ -4140,9 +4128,6 @@ de:
             badges:
               content: "Abzeichen"
               title: "Alle Abzeichen, die es zu verdienen gibt"
-            everything:
-              content: "Alles"
-              title: "Alle Themen"
             faq:
               content: "FAQ"
               title: "Richtlinien für die Nutzung dieser Website"
@@ -4164,6 +4149,7 @@ de:
               content: "Überprüfen"
               title: "Gemeldete Beiträge und andere Elemente in der Warteschlange"
               pending_count: "%{count} ausstehend"
+        global_section: "Globaler Bereich, für alle sichtbar"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -4411,6 +4397,7 @@ de:
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
               delete: Einen Beitrag löschen.
+              list: Listet die neuesten Beiträge und privaten Beiträge auf. RSS wird ebenfalls unterstützt.
             tags:
               list: Tags auflisten.
             categories:
@@ -5065,6 +5052,7 @@ de:
             revoke_moderation: "Moderationsrechte entziehen"
             backup_create: "Backup erstellen"
             deleted_tag: "Schlagwort gelöscht"
+            update_directory_columns: "Verzeichnisspalten aktualisieren"
             deleted_unused_tags: "nicht verwendete Schlagwörter gelöscht"
             renamed_tag: "Schlagwort umbenannt"
             revoke_email: "E-Mail widerrufen"
@@ -5273,15 +5261,14 @@ de:
             minimum:
               key: "Minimum"
               type: "Ganzzahl"
-              description: "Legt in Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
             maximum:
               key: "Maximum"
               type: "Ganzzahl"
-              description: "Legt in Textfeldern die maximale Anzahl der zulässigen Zeichen fest. Legt in Dropdown-Listen mit Mehrfachauswahl die maximale Anzahl der Optionen fest, die ausgewählt werden können."
             pattern:
               key: "Muster"
               type: "Regex-Zeichenfolge"
-              description: "In Textfeldern ein regulärer Ausdruck, der die zulässige Eingabe angibt."
+            type:
+              key: "art"
         preview_modal:
           title: "Vorschau Vorlage"
         field_placeholders:

@@ -1,9 +1,21 @@
 'use strict';
 
-importScripts("<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox/workbox-sw.js" %>");
+<%
+  base = if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
+    GlobalSetting.s3_asset_cdn_url.presence || GlobalSetting.s3_cdn_url
+  elsif GlobalSetting.cdn_url
+    GlobalSetting.cdn_url + Discourse.base_path
+  else
+    Discourse.base_path
+  end
+
+  workbox_base = "#{base}/assets/#{EmberCli.workbox_dir_name}"
+%>
+
+importScripts("<%= "#{workbox_base}/workbox-sw.js" %>");
 
 workbox.setConfig({
-  modulePathPrefix: "<%= "#{Discourse.asset_host}#{Discourse.base_path}/javascripts/workbox" %>",
+  modulePathPrefix: "<%= workbox_base %>",
   debug: false
 });
 
@@ -29,10 +41,10 @@ workbox.routing.registerRoute(
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
     cacheName: discourseCacheName,
     plugins: [
-      new workbox.cacheableResponse.Plugin({
+      new workbox.cacheableResponse.CacheableResponsePlugin({
         statuses: [200] // opaque responses will return status code '0'
       }), // for s3 secure uploads signed urls
-      new workbox.expiration.Plugin({
+      new workbox.expiration.ExpirationPlugin({
         maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
         maxEntries: 250,
         purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
@@ -81,10 +93,10 @@ if (cdnUrls.length > 0) {
         credentials: 'omit'
       },
       plugins: [
-        new workbox.cacheableResponse.Plugin({
+        new workbox.cacheableResponse.CacheableResponsePlugin({
           statuses: [200] // opaque responses will return status code '0'
         }),
-        new workbox.expiration.Plugin({
+        new workbox.expiration.ExpirationPlugin({
           maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
           maxEntries: 250,
           purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
@@ -112,10 +124,10 @@ workbox.routing.registerRoute(
   new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
     cacheName: externalCacheName,
     plugins: [
-      new workbox.cacheableResponse.Plugin({
+      new workbox.cacheableResponse.CacheableResponsePlugin({
         statuses: [200] // opaque responses will return status code '0'
       }),
-      new workbox.expiration.Plugin({
+      new workbox.expiration.ExpirationPlugin({
         maxAgeSeconds: 7* 24 * 60 * 60, // 7 days
         maxEntries: 250,
         purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage

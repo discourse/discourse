@@ -4,15 +4,15 @@
     @ariaLabel="User primary"
   >
     {{#unless @user.profile_hidden}}
-      <DNavigationItem @route="user.summary" @class="user-nav__summary">
+      <DNavigationItem @route="user.summary" class="user-nav__summary">
         {{d-icon "user"}}
         <span>{{i18n "user.summary.title"}}</span>
       </DNavigationItem>
 
       <DNavigationItem
         @route="userActivity"
-        @class="user-nav__activity"
         @ariaCurrentContext="parentNav"
+        class="user-nav__activity"
       >
         {{d-icon "stream"}}
         <span>{{i18n "user.activity_stream"}}</span>
@@ -23,8 +23,8 @@
     {{#if @showNotificationsTab}}
       <DNavigationItem
         @route="userNotifications"
-        @class="user-nav__notifications"
         @ariaCurrentContext="parentNav"
+        class="user-nav__notifications"
       >
         {{d-icon "bell" class="glyph"}}
         <span>{{i18n "user.notifications"}}</span>
@@ -34,8 +34,8 @@
     {{#if @showPrivateMessages}}
       <DNavigationItem
         @route="userPrivateMessages"
-        @class="user-nav__personal-messages"
         @ariaCurrentContext="parentNav"
+        class="user-nav__personal-messages"
       >
         {{d-icon "envelope"}}
         <span>{{i18n "user.private_messages"}}</span>
@@ -45,8 +45,8 @@
     {{#if @canInviteToForum}}
       <DNavigationItem
         @route="userInvited"
-        @class="user-nav__invites"
         @ariaCurrentContext="parentNav"
+        class="user-nav__invites"
       >
         {{d-icon "user-plus"}}
         <span>{{i18n "user.invited.title"}}</span>
@@ -54,7 +54,7 @@
     {{/if}}
 
     {{#if @showBadges}}
-      <DNavigationItem @route="user.badges" @class="user-nav__badges">
+      <DNavigationItem @route="user.badges" class="user-nav__badges">
         {{d-icon "certificate"}}
         <span>{{i18n "badges.title"}}</span>
       </DNavigationItem>
@@ -69,8 +69,8 @@
     {{#if @user.can_edit}}
       <DNavigationItem
         @route="preferences"
-        @class="user-nav__preferences"
         @ariaCurrentContext="parentNav"
+        class="user-nav__preferences"
       >
         {{d-icon "cog"}}
         <span>{{i18n "user.preferences"}}</span>

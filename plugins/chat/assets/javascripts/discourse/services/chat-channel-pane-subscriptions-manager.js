@@ -1,5 +1,6 @@
 import { inject as service } from "@ember/service";
 import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-manager";
+import ChatThreadPreview from "../models/chat-thread-preview";
 
 export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
   @service chat;
@@ -23,10 +24,7 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
   handleThreadOriginalMessageUpdate(data) {
     const message = this.messagesManager.findMessage(data.original_message_id);
     if (message) {
-      if (data.replies_count) {
-        message.threadReplyCount = data.replies_count;
-      }
-      message.threadTitle = data.title;
+      message.thread.preview = ChatThreadPreview.create(data.preview);
     }
   }
 

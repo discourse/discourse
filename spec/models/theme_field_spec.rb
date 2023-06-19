@@ -3,7 +3,12 @@
 
 RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
-  before { ThemeJavascriptCompiler.disable_terser! }
+
+  before do
+    SvgSprite.clear_plugin_svg_sprite_cache!
+    ThemeJavascriptCompiler.disable_terser!
+  end
+
   after { ThemeJavascriptCompiler.enable_terser! }
 
   describe "scope: find_by_theme_ids" do

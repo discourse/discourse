@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Channel thread message echoing", type: :system, js: true do
+describe "Channel thread message echoing", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
 
@@ -79,10 +79,10 @@ describe "Channel thread message echoing", type: :system, js: true do
       current_user
         .user_chat_channel_memberships
         .find_by(chat_channel: channel)
-        .update!(last_read_message_id: thread.replies.last.id)
+        .update!(last_read_message_id: thread.last_reply.id)
       chat_page.visit_channel(channel)
       expect(channel_page).not_to have_css(
-        channel_page.message_by_id_selector(thread.replies.last.id),
+        channel_page.message_by_id_selector(thread.last_reply.id),
       )
     end
 

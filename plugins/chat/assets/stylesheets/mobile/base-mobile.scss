@@ -2,8 +2,10 @@
   --channel-list-avatar-size: 38px;
 }
 
-.chat-message:not(.user-info-hidden) {
-  padding-top: 0.75em;
+.chat-message-container:not(.-user-info-hidden) {
+  .chat-message {
+    padding-top: 0.75em;
+  }
 }
 
 html.has-full-page-chat {
@@ -60,10 +62,6 @@ html.has-full-page-chat {
     height: 50px;
     min-height: 50px;
   }
-
-  .chat-messages-scroll {
-    padding: 0 10px;
-  }
 }
 
 .sidebar-container .channels-list .chat-channel-divider {
@@ -105,6 +103,9 @@ html.has-full-page-chat {
       .d-icon {
         color: var(--primary-medium);
       }
+    }
+    .chat-channel-unread-indicator {
+      border-color: var(--primary-very-low);
     }
   }
 }

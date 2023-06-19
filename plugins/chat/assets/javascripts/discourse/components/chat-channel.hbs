@@ -2,7 +2,7 @@
   class={{concat-class
     "chat-channel"
     (if this.loading "loading")
-    (if this.chatChannelPane.sending "chat-channel--sending")
+    (if this.pane.sending "chat-channel--sending")
     (unless this.loadedOnce "chat-channel--not-loaded-once")
   }}
   {{did-insert this.setUploadDropZone}}
@@ -34,7 +34,7 @@
   >
     <div
       class="chat-messages-container"
-      {{chat/on-resize this.didResizePane (hash delay=25 immediate=true)}}
+      {{chat/on-resize this.didResizePane (hash delay=100 immediate=true)}}
     >
 
       {{#if this.loadedOnce}}
@@ -42,8 +42,6 @@
           <ChatMessage
             @message={{message}}
             @resendStagedMessage={{this.resendStagedMessage}}
-            @messageDidEnterViewport={{this.messageDidEnterViewport}}
-            @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
             @fetchMessagesByDate={{this.fetchMessagesByDate}}
             @context="channel"
           />
@@ -68,15 +66,13 @@
     @channel={{@channel}}
   />
 
-  {{#if this.chatChannelPane.selectingMessages}}
-    <ChatSelectionManager
-      @selectedMessageIds={{this.chatChannelPane.selectedMessageIds}}
-      @chatChannel={{@channel}}
-      @cancelSelecting={{action
-        this.chatChannelPane.cancelSelecting
-        @channel.selectedMessages
+  {{#if this.pane.selectingMessages}}
+    <Chat::SelectionManager
+      @enableMove={{and
+        (not @channel.isDirectMessageChannel)
+        @channel.canModerate
       }}
-      @context="channel"
+      @pane={{this.pane}}
     />
   {{else}}
     {{#if (or @channel.isDraft @channel.isFollowing)}}

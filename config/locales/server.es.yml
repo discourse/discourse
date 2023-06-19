@@ -202,7 +202,6 @@ es:
       page_publishing_requirements: "No se puede activar la publicación de páginas si secure media está activado."
       s3_backup_requires_s3_settings: "No puedes usar S3 como método de respaldo salvo que hayas rellenado «%{setting_name}»."
       s3_bucket_reused: "No puedes usar el mismo bucket para «s3_upload_bucket» y «s3_backup_bucket». Selecciona otro bucket o usa una ruta diferente para cada bucket."
-      secure_uploads_requirements: "Las subidas en S3 deben estar activadas antes de activar las subidas seguras."
       share_quote_facebook_requirements: "Debes establecer la app id de Facebook para activar compartir citas en Facebook."
       second_factor_cannot_enforce_with_socials: "No puedes obligar el uso de 2FA con inicios de sesión usando redes sociales. Desactiva primero los inicios de sesión con %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "No puedes obligar a usar la autenticación de dos factores si los inicios de sesión locales están desactivados."
@@ -1575,6 +1574,7 @@ es:
     enable_badges: "Activar el sistema de insignias"
     max_favorite_badges: "Número máximo de insignias que el usuario puede seleccionar"
     whispers_allowed_groups: "Permitir la comunicación privada dentro de los temas para los miembros de los grupos especificados."
+    hidden_post_visible_groups: "Permitir a los miembros de estos grupos ver los mensajes ocultos. Los usuarios del personal siempre pueden ver los mensajes ocultos."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sea indexado por los motores de búsqueda en Internet. En casos excepcionales, puedes <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a> permanentemente."
     normalize_emails: "Comprobar si la dirección de correo normalizada es única. Para normalizar las direcciones se eliminan los puntos y todo lo que haya entre los caracteres + y @."
     auto_approve_email_domains: "Los usuarios con direcciones de correo electrónico de esta lista de dominios serán aprobados automáticamente. Los subdominios se gestionan automáticamente para los dominios especificados. No se admiten los símbolos comodín * y ?"
@@ -1977,7 +1977,7 @@ es:
     auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de esta cantidad de días. Las denuncias serán ignoradas. Los mensajes y usuarios en cola serán rechazados. Establece el valor en 0 para desactivar esta función."
     penalty_step_hours: "Tiempo de sanción por defecto al silenciar o suspender usuarios (en horas). El primer valor se usará para la primera sanción, el segundo para la segunda, y así sucesivamente."
     svg_icon_subset: "Añade iconos adicionales de FontAwesome 5 que te gustaría incluir en tus activos. Usa el prefijo «fa-» para iconos sólidos, «far-» para los iconos normales y «fab-» para los iconos de marca."
-    max_prints_per_hour_per_user: "Número máximo de vistas de página /print (establece el valor en 0 para desactivar esta opción)"
+    max_prints_per_hour_per_user: "Número máximo de impresiones de páginas /print (establecer en 0 para deshabilitar la impresión)"
     full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y correos electrónicos. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus publicaciones, además de su @usuario."
@@ -1999,7 +1999,6 @@ es:
     embed_post_limit: "Número máximo de publicaciones que se pueden insertar."
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
-    show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     delete_drafts_older_than_n_days: "Eliminar borradores de más de (n) días de antigüedad."
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Poner a 0 para no eliminar nunca los temas pendientes."
     bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar el modo de arranque (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas)"
@@ -2067,6 +2066,7 @@ es:
     default_tags_watching_first_post: "Lista de etiquetas cuya primera publicación de cada tema nuevo estará vigilada por defecto."
     default_text_size: "Tamaño de texto seleccionado por defecto"
     default_title_count_mode: "Modo por defecto para el contador del título de la página"
+    enable_offline_indicator: "Mostrar un mensaje a los usuarios cuando se detecte que no tienen conexión a la red"
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
     retry_web_hook_events: "Reintentar automáticamente 4 veces los eventos del web hook fallidos. Los intervalos de tiempo entre los reintentos son 1, 5, 25 y 125 minutos."
     revoke_api_keys_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
@@ -3672,6 +3672,8 @@ es:
   offline:
     title: "Se se puede cargar la app"
     offline_page_message: "¡Parece que no estás conectado! Revisa tu conexión a internet e inténtalo de nuevo."
+  login_required:
+    welcome_message: "# [Te damos la bienvenida a %{title}](#welcome)"
   upload:
     edit_reason: "copias locales de imágenes descargadas"
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: %{authorized_extensions})."
@@ -4357,13 +4359,21 @@ es:
     actions:
       agree:
         title: "Sí"
+      agree_and_keep:
+        title: "Mantener publicación"
+      agree_and_keep_hidden:
+        title: "Mantener la publicación oculta"
       agree_and_suspend:
+        title: "Suspender usuario"
         description: "Estar de acuerdo con la denuncia y suspender el usuario."
       agree_and_silence:
         title: "Silenciar al usuario"
         description: "Estar de acuerdo con la denuncia y silenciar al usuario."
       agree_and_restore:
+        title: "Restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
+      agree_and_hide:
+        title: "Ocultar publicación"
       delete_single:
         title: "Eliminar"
       delete:
@@ -4373,6 +4383,7 @@ es:
       delete_and_agree_replies:
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
       disagree_and_restore:
+        title: "No, restaurar publicación"
         description: "Restaurar la publicación para que los usuarios puedan verla."
       disagree:
         title: "No"

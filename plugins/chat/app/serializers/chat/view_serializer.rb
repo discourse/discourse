@@ -12,6 +12,8 @@ module Chat
           thread,
           scope: scope,
           membership: object.thread_memberships.find { |m| m.thread_id == thread.id },
+          participants: object.thread_participants[thread.id],
+          include_preview: true,
           root: nil,
         )
       end

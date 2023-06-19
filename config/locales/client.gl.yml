@@ -1507,8 +1507,6 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    too_few_posts_notice_MF: |
-      Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">a discusión!</a> E {currentPosts, plural, one {hai <strong>#</strong> publicación} other {hai <strong>#</strong> publicacións}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Soamente o equipo pode ver esta mensaxe.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
@@ -2136,7 +2134,6 @@ gl:
         top: "Non hai temas destacados."
         educate:
           new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
-          unread: "<p>Os seus temas pendentes aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse pendentes e amosarase o número dos non lidos. <span class=\"badge unread-posts badge-notification\">1</span> se vostede:</p><ul><li>Creou o tema</li><li>Respondeu ao tema</li><li>Leu o tema durante máis de catro minutos</li></ul><p>Ou estabeleceu explicitamente o tema para ser observado ou seguido con \U0001F514 de cada tema.</p><p>Vaia ás súas <a href=\"%{userPrefsUrl}\">preferencias</a> se quere cambiar isto.</p>"
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."
@@ -3316,6 +3313,8 @@ gl:
         other: "%{count} novos"
       more: "Máis"
       all_categories: "Todas as categorías"
+      categories_form:
+        save: "Gardar"
       sections:
         custom:
           save: "Gardar"
@@ -3353,8 +3352,6 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
-            everything:
-              content: "Todo"
             faq:
               content: "PMF"
             groups:
@@ -4316,6 +4313,8 @@ gl:
               key: "mínimo"
             maximum:
               key: "máximo"
+            type:
+              key: "tipo"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberá saír da sesión ao rematar."

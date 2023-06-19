@@ -295,7 +295,7 @@ export default class ChatChannel {
     message.staged = true;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
-    await message.cook();
+    message.channel = this;
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
@@ -339,5 +339,9 @@ export default class ChatChannel {
     return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
     });
+  }
+
+  clearSelectedMessages() {
+    this.selectedMessages.forEach((message) => (message.selected = false));
   }
 }

@@ -32,9 +32,13 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/threads/:thread_id" => "channel_threads#update"
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
     put "/channels/:channel_id/threads/:thread_id/read" => "thread_reads#update"
+    put "/channels/:channel_id/threads/:thread_id/notifications-settings/me" =>
+          "channel_threads_current_user_notifications_settings#update"
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
+
+    get "/channels/:channel_id/summarize" => "summaries#get_summary"
   end
 
   # direct_messages_controller routes

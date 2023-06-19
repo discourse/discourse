@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message notifications - with sidebar", type: :system, js: true do
+RSpec.describe "Message notifications - with sidebar", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
@@ -129,7 +129,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
                 end
 
                 expect(page).to have_no_css(
-                  ".chat-header-icon .chat-channel-unread-indicator.urgent",
+                  ".chat-header-icon .chat-channel-unread-indicator.-urgent",
                 )
               end
             end
@@ -146,7 +146,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
                     creator: user_1,
                   )
                 end
-                expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator.urgent")
+                expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator.-urgent")
               end
             end
           end
@@ -178,7 +178,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system, js: true d
               end
 
               expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator.urgent",
+                ".chat-header-icon .chat-channel-unread-indicator.-urgent",
                 text: "1",
               )
               expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .icon.urgent")

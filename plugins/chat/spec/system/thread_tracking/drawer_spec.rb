@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Thread tracking state | drawer", type: :system, js: true do
+describe "Thread tracking state | drawer", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user) { Fabricate(:user) }
@@ -9,7 +9,7 @@ describe "Thread tracking state | drawer", type: :system, js: true do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let(:thread_list_page) { PageObjects::Pages::ChatThreadList.new }
+  let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do

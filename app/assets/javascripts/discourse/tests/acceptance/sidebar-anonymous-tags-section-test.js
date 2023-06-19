@@ -22,10 +22,10 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]"
     );
 
-    assert.strictEqual(categories.length, 4);
+    assert.strictEqual(categories.length, 3);
     assert.strictEqual(categories[0].textContent.trim(), "design");
     assert.strictEqual(categories[1].textContent.trim(), "development");
     assert.strictEqual(categories[2].textContent.trim(), "fun");
@@ -38,7 +38,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
 
   test("tag section links when site has default sidebar tags configured", async function (assert) {
     const site = Site.current();
-    site.set("anonymous_default_sidebar_tags", ["random", "meta"]);
+    site.set("anonymous_default_navigation_menu_tags", ["random", "meta"]);
 
     await visit("/");
 
@@ -71,7 +71,7 @@ acceptance("Sidebar - Anonymous Tags Section", function (needs) {
 
     site.setProperties({
       top_tags: [],
-      anonymous_default_sidebar_tags: [],
+      anonymous_default_navigation_menu_tags: [],
     });
 
     await visit("/");

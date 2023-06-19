@@ -16,9 +16,19 @@ html.composer-open {
   margin-right: auto;
   max-width: $reply-area-max-width;
   width: 100%;
+
   &.hide-preview {
     max-width: 740px;
   }
+
+  &:has(.has-form-template) {
+    max-width: 740px;
+
+    .toggle-preview {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
@@ -26,7 +36,7 @@ html.composer-open {
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
     max-width 250ms ease, padding-bottom 250ms ease;
   background-color: var(--secondary);
-  box-shadow: shadow("composer");
+  box-shadow: var(--shadow-composer);
 
   .reply-area {
     display: flex;
@@ -356,6 +366,10 @@ html.composer-open {
         color: var(--danger);
       }
     }
+
+    .preview-template {
+      margin-left: 0.5rem;
+    }
   }
 
   #draft-status,
@@ -412,7 +426,7 @@ html.composer-open {
   width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("dropdown-lite");
+  box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
   ul {

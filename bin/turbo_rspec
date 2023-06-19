@@ -13,14 +13,7 @@ fail_fast = nil
 seed = rand(2**16)
 profile = false
 profile_print_slowest_examples_count = 10
-
-if ARGV.empty?
-  files = TurboTests::Runner.default_spec_folders
-  use_runtime_info = true
-else
-  files = ARGV
-  use_runtime_info = false
-end
+use_runtime_info = nil
 
 OptionParser
   .new do |opts|
@@ -69,6 +62,14 @@ requires.each { |f| require(f) }
 formatters << { name: "progress", outputs: [] } if formatters.empty?
 
 formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
+
+if ARGV.empty?
+  files = TurboTests::Runner.default_spec_folders
+  use_runtime_info = true if use_runtime_info.nil?
+else
+  files = ARGV
+  use_runtime_info = false if use_runtime_info.nil?
+end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
 puts "Running turbo_rspec (seed: #{seed}) using files in: #{files}"

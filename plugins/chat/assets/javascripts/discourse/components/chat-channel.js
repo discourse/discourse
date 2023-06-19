@@ -1,6 +1,5 @@
 import { capitalize } from "@ember/string";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -36,8 +35,8 @@ export default class ChatLivePane extends Component {
   @service chatEmojiPickerManager;
   @service chatComposerPresenceManager;
   @service chatStateManager;
-  @service chatChannelComposer;
-  @service chatChannelPane;
+  @service("chat-channel-composer") composer;
+  @service("chat-channel-pane") pane;
   @service chatChannelPaneSubscriptionsManager;
   @service chatApi;
   @service currentUser;
@@ -122,7 +121,7 @@ export default class ChatLivePane extends Component {
 
     if (this._loadedChannelId !== this.args.channel.id) {
       this.unsubscribeToUpdates(this._loadedChannelId);
-      this.chatChannelPane.selectingMessages = false;
+      this.pane.selectingMessages = false;
       this._loadedChannelId = this.args.channel.id;
     }
 
@@ -130,9 +129,9 @@ export default class ChatLivePane extends Component {
       channelId: this.args.channel.id,
     });
     if (existingDraft) {
-      this.chatChannelComposer.message = existingDraft;
+      this.composer.message = existingDraft;
     } else {
-      this.resetComposer();
+      this.resetComposerMessage();
     }
 
     this.loadMessages();
@@ -210,7 +209,18 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
+            const storedThread = this.args.channel.threadsManager.store(
+              this.args.channel,
+              thread,
+              { replace: true }
+            );
+            const originalMessage = messages.findBy(
+              "id",
+              storedThread.originalMessage.id
+            );
+            if (originalMessage) {
+              originalMessage.thread = storedThread;
+            }
           });
         }
 
@@ -309,7 +319,18 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
+            const storedThread = this.args.channel.threadsManager.store(
+              this.args.channel,
+              thread,
+              { replace: true }
+            );
+            const originalMessage = messages.findBy(
+              "id",
+              storedThread.originalMessage.id
+            );
+            if (originalMessage) {
+              originalMessage.thread = storedThread;
+            }
           });
         }
 
@@ -381,7 +402,6 @@ export default class ChatLivePane extends Component {
     }
 
     const firstMessage = this.args.channel?.messages?.firstObject;
-
     if (!firstMessage?.visible) {
       return;
     }
@@ -427,13 +447,6 @@ export default class ChatLivePane extends Component {
       }
 
       const message = ChatMessage.create(channel, messageData);
-
-      if (messageData.thread_id) {
-        message.thread = ChatThread.create(channel, {
-          id: messageData.thread_id,
-        });
-      }
-
       messages.push(message);
     });
 
@@ -499,16 +512,6 @@ export default class ChatLivePane extends Component {
         });
       });
     });
-  }
-
-  @action
-  messageDidEnterViewport(message) {
-    message.visible = true;
-  }
-
-  @action
-  messageDidLeaveViewport(message) {
-    message.visible = false;
   }
 
   @debounce(READ_INTERVAL_MS)
@@ -671,6 +674,7 @@ export default class ChatLivePane extends Component {
 
   @action
   async onSendMessage(message) {
+    await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);
     } else {
@@ -679,20 +683,19 @@ export default class ChatLivePane extends Component {
   }
 
   @action
-  resetComposer() {
-    this.chatChannelComposer.reset(this.args.channel);
+  resetComposerMessage() {
+    this.composer.reset(this.args.channel);
   }
 
   async #sendEditMessage(message) {
-    await message.cook();
-    this.chatChannelPane.sending = true;
+    this.pane.sending = true;
 
     const data = {
       new_message: message.message,
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    this.resetComposer();
+    this.resetComposerMessage();
 
     try {
       return await this.chatApi.editMessage(
@@ -704,12 +707,12 @@ export default class ChatLivePane extends Component {
       popupAjaxError(e);
     } finally {
       this.chatDraftsManager.remove({ channelId: this.args.channel.id });
-      this.chatChannelPane.sending = false;
+      this.pane.sending = false;
     }
   }
 
   async #sendNewMessage(message) {
-    this.chatChannelPane.sending = true;
+    this.pane.sending = true;
 
     resetIdle();
 
@@ -727,48 +730,44 @@ export default class ChatLivePane extends Component {
         upload_ids: message.uploads.map((upload) => upload.id),
       };
 
-      this.resetComposer();
+      this.resetComposerMessage();
 
       return this._upsertChannelWithMessage(this.args.channel, data).finally(
         () => {
           if (this._selfDeleted) {
             return;
           }
-          this.chatChannelPane.sending = false;
+          this.pane.sending = false;
           this.scrollToLatestMessage();
         }
       );
     }
 
     await this.args.channel.stageMessage(message);
-    this.resetComposer();
+    this.resetComposerMessage();
 
     if (!this.args.channel.canLoadMoreFuture) {
       this.scrollToLatestMessage();
     }
 
-    return this.chatApi
-      .sendMessage(this.args.channel.id, {
+    try {
+      await this.chatApi.sendMessage(this.args.channel.id, {
         message: message.message,
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
-      })
-      .then(() => {
-        this.scrollToLatestMessage();
-      })
-      .catch((error) => {
-        this._onSendError(message.id, error);
-        this.scrollToBottom();
-      })
-      .finally(() => {
-        if (this._selfDeleted) {
-          return;
-        }
-
-        this.chatDraftsManager.remove({ channelId: this.args.channel.id });
-        this.chatChannelPane.sending = false;
       });
+
+      this.scrollToLatestMessage();
+    } catch (error) {
+      this._onSendError(message.id, error);
+      this.scrollToBottom();
+    } finally {
+      if (!this._selfDeleted) {
+        this.chatDraftsManager.remove({ channelId: this.args.channel.id });
+        this.pane.sending = false;
+      }
+    }
   }
 
   async _upsertChannelWithMessage(channel, data) {
@@ -785,7 +784,7 @@ export default class ChatLivePane extends Component {
         type: "POST",
         data,
       }).then(() => {
-        this.chatChannelPane.sending = false;
+        this.pane.sending = false;
         this.router.transitionTo("chat.channel", "-", c.id);
       })
     );
@@ -805,12 +804,12 @@ export default class ChatLivePane extends Component {
       }
     }
 
-    this.resetComposer();
+    this.resetComposerMessage();
   }
 
   @action
   resendStagedMessage(stagedMessage) {
-    this.chatChannelPane.sending = true;
+    this.pane.sending = true;
 
     stagedMessage.error = null;
 
@@ -833,7 +832,7 @@ export default class ChatLivePane extends Component {
         if (this._selfDeleted) {
           return;
         }
-        this.chatChannelPane.sending = false;
+        this.pane.sending = false;
       });
   }
 
@@ -958,9 +957,9 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    const composer = document.querySelector(".chat-composer__input");
-    if (composer && !this.args.channel.isDraft) {
-      composer.focus();
+    if (!this.args.channel.isDraft) {
+      event.preventDefault();
+      this.composer.focus({ addText: event.key });
       return;
     }
 
@@ -994,31 +993,22 @@ export default class ChatLivePane extends Component {
   // we now use this hack to disable it
   @bind
   forceRendering(callback) {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
+    if (this.capabilities.isIOS) {
+      this.scrollable.style.overflow = "hidden";
+    }
 
-      if (!this.scrollable) {
-        return;
-      }
+    callback?.();
 
-      if (this.capabilities.isIOS) {
-        this.scrollable.style.overflow = "hidden";
-      }
-
-      callback?.();
-
-      if (this.capabilities.isIOS) {
-        discourseLater(() => {
-          if (!this.scrollable) {
+    if (this.capabilities.isIOS) {
+      next(() => {
+        schedule("afterRender", () => {
+          if (this._selfDeleted || !this.scrollable) {
             return;
           }
-
           this.scrollable.style.overflow = "auto";
-        }, 50);
-      }
-    });
+        });
+      });
+    }
   }
 
   _computeDatesSeparators() {

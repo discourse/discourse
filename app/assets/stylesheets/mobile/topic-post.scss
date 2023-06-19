@@ -199,6 +199,16 @@ a.reply-to-tab {
     background: var(--blend-primary-secondary-5);
     width: 100%;
   }
+
+  .toggle-summary {
+    .summarization-buttons {
+      flex-direction: column;
+
+      .topic-strategy-summarization {
+        margin-top: 10px;
+      }
+    }
+  }
 }
 
 #topic-footer-buttons {
@@ -274,10 +284,6 @@ span.post-count {
 
 .quote-button.visible {
   z-index: z("tooltip");
-}
-
-iframe {
-  max-width: 100%;
 }
 
 .btn-group {

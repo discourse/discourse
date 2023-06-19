@@ -236,7 +236,7 @@ RSpec.describe Admin::ThemesController do
       end
 
       it "fails to import with a failing status" do
-        post "/admin/themes/import.json", params: { remote: "non-existant" }
+        post "/admin/themes/import.json", params: { remote: "non-existent" }
 
         expect(response.status).to eq(422)
       end
@@ -666,6 +666,42 @@ RSpec.describe Admin::ThemesController do
             }
 
         expect(response.status).to eq(403)
+      end
+
+      it "creates new theme fields" do
+        expect(theme.theme_fields.count).to eq(0)
+
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                theme_fields: [{ name: "scss", target: "common", value: "test" }],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload
+        expect(theme.theme_fields.count).to eq(1)
+        theme_field = theme.theme_fields.first
+        expect(theme_field.name).to eq("scss")
+        expect(theme_field.target_id).to eq(Theme.targets[:common])
+        expect(theme_field.value).to eq("test")
+      end
+
+      it "doesn't create theme fields when they don't pass validation" do
+        expect(theme.theme_fields.count).to eq(0)
+
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                theme_fields: [
+                  { name: "scss", target: "common", value: "Na " * 1024**2 + "Batman!" },
+                ],
+              },
+            }
+
+        expect(response.status).to eq(422)
+        json = JSON.parse(response.body)
+        expect(json["errors"].first).to include("Value is too long")
       end
 
       it "allows zip-imported theme fields to be locally edited" do

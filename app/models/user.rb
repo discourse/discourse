@@ -1827,6 +1827,14 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
+  def new_edit_sidebar_categories_tags_interface_groups_enabled?
+    in_any_groups?(SiteSetting.new_edit_sidebar_categories_tags_interface_groups_map)
+  end
+
+  def experimental_search_menu_groups_enabled?
+    in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
+  end
+
   protected
 
   def badge_grant
@@ -2061,8 +2069,8 @@ class User < ActiveRecord::Base
     return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
-    if SiteSetting.default_sidebar_categories.present?
-      categories_to_update = SiteSetting.default_sidebar_categories.split("|")
+    if SiteSetting.default_navigation_menu_categories.present?
+      categories_to_update = SiteSetting.default_navigation_menu_categories.split("|")
 
       if update
         filtered_default_category_ids =
@@ -2080,8 +2088,8 @@ class User < ActiveRecord::Base
       )
     end
 
-    if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      tags_to_update = SiteSetting.default_sidebar_tags.split("|")
+    if SiteSetting.tagging_enabled && SiteSetting.default_navigation_menu_tags.present?
+      tags_to_update = SiteSetting.default_navigation_menu_tags.split("|")
 
       if update
         default_tag_ids = Tag.where(name: tags_to_update).pluck(:id)

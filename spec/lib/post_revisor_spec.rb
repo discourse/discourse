@@ -293,12 +293,11 @@ RSpec.describe PostRevisor do
   end
 
   describe "revise wiki" do
-    before do
-      # There used to be a bug where wiki changes were considered posting "too similar"
-      # so this is enabled and checked
-      Discourse.redis.delete_prefixed("unique-post")
-      SiteSetting.unique_posts_mins = 10
-    end
+    # There used to be a bug where wiki changes were considered posting "too similar"
+    # so this is enabled and checked
+    use_redis_snapshotting
+
+    before { SiteSetting.unique_posts_mins = 10 }
 
     it "allows the user to change it to a wiki" do
       pc =
@@ -322,6 +321,7 @@ RSpec.describe PostRevisor do
       subject.revise!(admin, raw: "new post body", tags: ["new-tag"])
       expect(post.topic.reload.tags.map(&:name)).to contain_exactly("new-tag")
       expect(post.post_revisions.reload.size).to eq(1)
+      expect(subject.raw_changed?).to eq(true)
 
       subject.revise!(admin, raw: old_raw, tags: [])
       expect(post.topic.reload.tags.map(&:name)).to be_empty
@@ -779,9 +779,10 @@ RSpec.describe PostRevisor do
 
       before do
         RateLimiter.enable
-        RateLimiter.clear_all!
         SiteSetting.editing_grace_period = 0
       end
+
+      use_redis_snapshotting
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
@@ -968,6 +969,8 @@ RSpec.describe PostRevisor do
       post.reload
       expect(post.topic.title).to eq(new_title)
       expect(post.revisions.first.modifications["title"][1]).to eq(new_title)
+      expect(subject.topic_title_changed?).to eq(true)
+      expect(subject.raw_changed?).to eq(false)
     end
 
     it "revises and tracks changes of topic archetypes" do
@@ -983,17 +986,21 @@ RSpec.describe PostRevisor do
       post.reload
       expect(post.topic.archetype).to eq(new_archetype)
       expect(post.revisions.first.modifications["archetype"][1]).to eq(new_archetype)
+      expect(subject.raw_changed?).to eq(false)
     end
 
     it "revises and tracks changes of topic tags" do
       subject.revise!(admin, tags: ["new-tag"])
       expect(post.post_revisions.last.modifications).to eq("tags" => [[], ["new-tag"]])
+      expect(subject.raw_changed?).to eq(false)
 
       subject.revise!(admin, tags: %w[new-tag new-tag-2])
       expect(post.post_revisions.last.modifications).to eq("tags" => [[], %w[new-tag new-tag-2]])
+      expect(subject.raw_changed?).to eq(false)
 
       subject.revise!(admin, tags: ["new-tag-3"])
       expect(post.post_revisions.last.modifications).to eq("tags" => [[], ["new-tag-3"]])
+      expect(subject.raw_changed?).to eq(false)
     end
 
     describe "#publish_changes" do

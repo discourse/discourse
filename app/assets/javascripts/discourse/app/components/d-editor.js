@@ -247,6 +247,16 @@ export default Component.extend(TextareaTextManipulation, {
     this.selectedFormTemplateId = formTemplateId;
   },
 
+  @discourseComputed("formTemplateIds", "replyingToTopic", "editingPost")
+  showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
+    // TODO(@keegan): Remove !editingPost once we add edit/draft support for form templates
+    if (formTemplateIds?.length > 0 && !replyingToTopic && !editingPost) {
+      return true;
+    }
+
+    return false;
+  },
+
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
     if (placeholder) {
@@ -309,6 +319,7 @@ export default Component.extend(TextareaTextManipulation, {
       this.appEvents.on("composer:insert-block", this, "insertBlock");
       this.appEvents.on("composer:insert-text", this, "insertText");
       this.appEvents.on("composer:replace-text", this, "replaceText");
+      this.appEvents.on("composer:apply-surround", this, "_applySurround");
       this.appEvents.on(
         "composer:indent-selected-text",
         this,
@@ -349,6 +360,7 @@ export default Component.extend(TextareaTextManipulation, {
       this.appEvents.off("composer:insert-block", this, "insertBlock");
       this.appEvents.off("composer:insert-text", this, "insertText");
       this.appEvents.off("composer:replace-text", this, "replaceText");
+      this.appEvents.off("composer:apply-surround", this, "_applySurround");
       this.appEvents.off(
         "composer:indent-selected-text",
         this,
@@ -644,6 +656,11 @@ export default Component.extend(TextareaTextManipulation, {
       this.set("value", `${preLines}${number}${post}`);
       this.selectText(preLines.length, number.length);
     }
+  },
+
+  _applySurround(head, tail, exampleKey, opts) {
+    const selected = this.getSelected();
+    this.applySurround(selected, head, tail, exampleKey, opts);
   },
 
   _toggleDirection() {

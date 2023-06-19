@@ -205,7 +205,8 @@ de:
       page_publishing_requirements: "Die Veröffentlichung von Seiten kann nicht aktiviert werden, wenn sichere Medien aktiviert sind."
       s3_backup_requires_s3_settings: "Du kannst S3 nicht als Backup-Ort verwenden, solange du „%{setting_name}“ nicht festgelegt hast."
       s3_bucket_reused: "Du kannst nicht denselben Bucket für „s3_upload_bucket“ und „s3_backup_bucket“ verwenden. Bitte verwende einen anderen Bucket oder verwende für jeden Bucket einen anderen Pfad."
-      secure_uploads_requirements: "S3-Uploads müssen vor dem Aktivieren sicherer Uploads aktiviert sein."
+      secure_uploads_requirements: "S3 Uploads und S3 ACLs müssen aktiviert sein, bevor du sichere Uploads aktivieren kannst."
+      s3_use_acls_requirements: "Du musst S3 ACLs aktiviert haben, wenn sichere Uploads aktiviert sind."
       share_quote_facebook_requirements: "Du musst eine Facebook-App-ID festlegen, um das Teilen von Zitaten für Facebook zu aktivieren."
       second_factor_cannot_enforce_with_socials: "Du kannst 2FA nicht erzwingen, wenn die Anmeldung über soziale Netzwerke aktiviert ist. Du musst zuerst die Anmeldung über %{auth_provider_names} deaktivieren"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kannst 2FA nicht erzwingen, wenn lokale Anmeldungen deaktiviert sind."
@@ -624,22 +625,19 @@ de:
   discourse_welcome_topic:
     title: "Willkommen bei %{site_title}! :wave:"
     body: |
-      Willkommen an Bord. Wir freuen uns.
+      Wir freuen uns sehr, dass du dabei bist.
 
-      > ## %{site_title}
-      >
-      > %{site_description}
-
+      %{site_info_quote}
 
       Hier sind einige Dinge, die du tun kannst, um loszulegen:
 
-      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einträgst. Worüber würdest du gerne gefragt werden?
+      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einstellst. Worüber würdest du gerne befragt werden?
 
-      :open_book: **Lerne die Gemeinschaft kennen**, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze ein :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
+      :open_book: **Lerne die Gemeinschaft** kennen, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze die :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
 
-      :handshake: **Trage bei**, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
+      :handshake: **Beitrage** bei, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
 
-      > Schreibe Vorschläge oder Fragen unter [#feedback](%{base_path}/c/site-feedback) oder [an die Betreiber](%{base_path}/about).
+      > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) oder [contact the admins](%{base_path}/about) fragen.
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -1603,6 +1601,7 @@ de:
     enable_badges: "Abzeichen aktivieren"
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     whispers_allowed_groups: "Private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen erlauben."
+    hidden_post_visible_groups: "Erlaube Mitgliedern dieser Gruppen, versteckte Beiträge einzusehen. Mitarbeiter können jederzeit versteckte Beiträge einsehen."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
     blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domänen, bei denen Benutzer keine Konten registrieren dürfen. Subdomains werden automatisch für die angegebenen Domains behandelt. Wildcard-Symbole * und ? werden nicht unterstützt. Beispiel: mailinator.com|trashmail.net"
     allowed_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domänen, bei denen Benutzer Konten registrieren MÜSSEN. Subdomains werden automatisch für die angegebenen Domains behandelt. Wildcard-Symbole * und ? werden nicht unterstützt. WARNUNG: Benutzer mit anderen als den aufgeführten E-Mail-Domänen sind nicht zugelassen!"
@@ -1679,6 +1678,7 @@ de:
     s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Uploads im Papierkorb. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
     s3_disable_cleanup: "Verhindere das Entfernen von alten Backups aus S3, wenn es mehr Backups als das erlaubte Maximum gibt."
     enable_s3_inventory: "Erstelle Berichte und überprüfe Uploads mit Amazon-S3-Bestand. WICHTIG: Benötigt gültige S3-Anmeldedaten (sowohl „access key id“ als auch „secret access key“)."
+    s3_use_acls: "AWS empfiehlt, keine ACLs auf S3-Buckets zu verwenden; wenn du diesem Rat folgst, deaktiviere diese Option. Diese Option muss aktiviert sein, wenn du sichere Uploads verwendest."
     backup_time_of_day: "Uhrzeit in UTC, zu der Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups einschließen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
     backup_location: "Ort, an dem die Backups abgelegt werden. WICHTIG: S3 erfordert gültige S3-Anmeldedaten in den Datei-Einstellungen."
@@ -2014,7 +2014,7 @@ de:
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignoriert. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     penalty_step_hours: "Standardstrafen für das Stummschalten oder Sperren von Benutzern in Stunden. Beim ersten Verstoß wird standardmäßig der erste Wert verwendet, beim zweiten Verstoß standardmäßig der zweite Wert usw."
     svg_icon_subset: "Füge zusätzliche „FontAwesome 5“-Symbole hinzu, die du in deine Assets einbinden möchtest. Verwende das Präfix „fa-“ für einfarbige Symbole, „far-“ für normale Symbole und „fab-“ für Markensymbole."
-    max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der /print-Seite (zum Deaktivieren auf 0 setzen)"
+    max_prints_per_hour_per_user: "Maximale Anzahl von /print Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
     full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
@@ -2036,7 +2036,6 @@ de:
     embed_post_limit: "Maximale Anzahl der Beiträge, die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig."
     notify_about_reviewable_item_after: "Wenn es überprüfbare Beiträge gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, schicke eine persönliche Nachricht an die Moderatoren. Zum Deaktivieren auf 0 setzen."
-    show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die älter als (n) Tage sind."
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
     bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Bootstrap-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
@@ -2105,6 +2104,7 @@ de:
     default_tags_watching_first_post: "Liste der Schlagwörter, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
     default_text_size: "Schriftgröße, die standardmäßig ausgewählt ist"
     default_title_count_mode: "Standardmodus für den Seitentitel-Zähler"
+    enable_offline_indicator: "Zeigt Benutzern eine Meldung an, wenn festgestellt wird, dass sie keine Netzwerkverbindung haben"
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
     revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"

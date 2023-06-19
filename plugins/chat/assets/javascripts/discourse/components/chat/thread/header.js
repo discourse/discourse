@@ -1,19 +1,21 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
+import { tracked } from "@glimmer/tracking";
 
 export default class ChatThreadHeader extends Component {
   @service currentUser;
+  @service chatApi;
   @service router;
 
+  @tracked persistedNotificationLevel = true;
+
   get label() {
-    if (this.args.thread) {
-      return this.args.thread.escapedTitle;
-    } else {
-      return I18n.t("chat.threads.list");
-    }
+    return this.args.thread.escapedTitle;
   }
 
   get canChangeThreadSettings() {
@@ -27,9 +29,51 @@ export default class ChatThreadHeader extends Component {
     );
   }
 
+  get threadNotificationLevel() {
+    return this.membership?.notificationLevel || NotificationLevels.REGULAR;
+  }
+
+  get membership() {
+    return this.args.thread.currentUserMembership;
+  }
+
   @action
   openThreadSettings() {
     const controller = showModal("chat-thread-settings-modal");
     controller.set("thread", this.args.thread);
+  }
+
+  @action
+  updateThreadNotificationLevel(newNotificationLevel) {
+    this.persistedNotificationLevel = false;
+
+    let currentNotificationLevel;
+
+    if (this.membership) {
+      currentNotificationLevel = this.membership.notificationLevel;
+      this.membership.notificationLevel = newNotificationLevel;
+    } else {
+      this.args.thread.currentUserMembership = UserChatThreadMembership.create({
+        notification_level: newNotificationLevel,
+        last_read_message_id: null,
+      });
+    }
+
+    this.chatApi
+      .updateCurrentUserThreadNotificationsSettings(
+        this.args.thread.channel.id,
+        this.args.thread.id,
+        { notificationLevel: newNotificationLevel }
+      )
+      .then((response) => {
+        this.membership.last_read_message_id =
+          response.membership.last_read_message_id;
+
+        this.persistedNotificationLevel = true;
+      })
+      .catch((err) => {
+        this.membership.notificationLevel = currentNotificationLevel;
+        popupAjaxError(err);
+      });
   }
 }

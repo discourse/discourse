@@ -87,32 +87,6 @@ def dependencies
       source: "@discourse/moment-timezone-names-translations/locales/.",
       destination: "moment-timezone-names-locale",
     },
-    { source: "workbox-sw/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-routing/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    { source: "workbox-core/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-strategies/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-expiration/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-cacheable-response/build/.",
-      destination: "workbox",
-      skip_versioning: true,
-      public: true,
-    },
     {
       source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
       destination: "squoosh",

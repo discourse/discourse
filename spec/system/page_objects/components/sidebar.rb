@@ -23,6 +23,14 @@ module PageObjects
         page.has_no_button?(add_section_button_text)
       end
 
+      def click_edit_categories_button
+        within(".sidebar-section[data-section-name='categories']") do
+          click_button(class: "sidebar-section-header-button", visible: false)
+        end
+
+        PageObjects::Modals::SidebarEditCategories.new
+      end
+
       def edit_custom_section(name)
         find(".sidebar-section[data-section-name='#{name.parameterize}']").hover
 
@@ -59,6 +67,10 @@ module PageObjects
         find(SIDEBAR_WRAPPER_SELECTOR).has_button?(name)
       end
 
+      def has_categories_section?
+        has_section?("Categories")
+      end
+
       def has_no_section?(name)
         find(SIDEBAR_WRAPPER_SELECTOR).has_no_button?(name)
       end
@@ -76,11 +88,11 @@ module PageObjects
       private
 
       def section_link_present?(name, href: nil, active: false, present:)
-        attributes = {}
+        attributes = { exact_text: name }
         attributes[:href] = href if href
         attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
         attributes[:class] += "--active" if active
-        page.public_send(present ? :has_link? : :has_no_link?, name, **attributes)
+        page.public_send(present ? :has_link? : :has_no_link?, **attributes)
       end
 
       def add_section_button_text

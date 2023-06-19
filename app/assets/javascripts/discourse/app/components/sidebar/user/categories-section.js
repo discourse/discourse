@@ -5,6 +5,8 @@ import { cached } from "@glimmer/tracking";
 import { debounce } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
+import showModal from "discourse/lib/show-modal";
+import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
 
 export const REFRESH_COUNTS_APP_EVENT_NAME =
   "sidebar:refresh-categories-section-counts";
@@ -47,20 +49,10 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
 
   @cached
   get categories() {
-    return Category.findByIds(this.currentUser.sidebarCategoryIds);
-  }
-
-  /**
-   * If a site has no default sidebar categories configured, show categories section if the user has categories configured.
-   * Otherwise, hide the categories section from the sidebar for the user.
-   *
-   * If a site has default sidebar categories configured, always show categories section for the user.
-   */
-  get shouldDisplay() {
-    if (this.hasDefaultSidebarCategories) {
-      return true;
+    if (this.currentUser.sidebarCategoryIds?.length > 0) {
+      return Category.findByIds(this.currentUser.sidebarCategoryIds);
     } else {
-      return this.categories.length > 0;
+      return this.topSiteCategories;
     }
   }
 
@@ -69,11 +61,17 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
   }
 
   get hasDefaultSidebarCategories() {
-    return this.siteSettings.default_sidebar_categories.length > 0;
+    return hasDefaultSidebarCategories(this.siteSettings);
   }
 
   @action
   editTracked() {
-    this.router.transitionTo("preferences.sidebar", this.currentUser);
+    if (
+      this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
+    ) {
+      showModal("sidebar-categories-form");
+    } else {
+      this.router.transitionTo("preferences.navigation-menu", this.currentUser);
+    }
   }
 }

@@ -9,7 +9,7 @@
     <div
       role="button"
       class="collapse-area"
-      {{on "touchstart" this.collapseMenu passive=true}}
+      {{on "touchstart" this.collapseMenu passive=false bubbles=false}}
     >
     </div>
 
@@ -31,7 +31,7 @@
       </div>
 
       <ul class="secondary-actions">
-        {{#each this.messageInteractor.secondaryButtons as |button|}}
+        {{#each this.messageInteractor.secondaryActions as |button|}}
           <li class="chat-message-action-item" data-id={{button.id}}>
             <DButton
               @class="chat-message-action"

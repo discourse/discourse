@@ -198,7 +198,7 @@ textarea {
 
   &:focus:required:invalid:focus {
     border-color: var(--danger);
-    box-shadow: shadow("focus-danger");
+    box-shadow: var(--shadow-focus-danger);
   }
 }
 

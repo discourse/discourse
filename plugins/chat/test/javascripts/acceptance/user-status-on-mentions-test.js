@@ -6,13 +6,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { skip, test } from "qunit";
-import {
-  click,
-  triggerEvent,
-  triggerKeyEvent,
-  visit,
-  waitFor,
-} from "@ember/test-helpers";
+import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
 import pretender, { OK } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
@@ -232,7 +226,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
-    await restoreMessage(".chat-message-deleted");
+    await restoreMessage(".chat-message-text.-deleted");
 
     assertStatusIsRendered(
       assert,
@@ -245,7 +239,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
-    await restoreMessage(".chat-message-deleted");
+    await restoreMessage(".chat-message-text.-deleted");
 
     loggedInUser().appEvents.trigger("user-status:changed", {
       [mentionedUser1.id]: newStatus,
@@ -260,7 +254,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
-    await restoreMessage(".chat-message-deleted");
+    await restoreMessage(".chat-message-text.-deleted");
 
     loggedInUser().appEvents.trigger("user-status:changed", {
       [mentionedUser1.id]: null,
@@ -318,7 +312,7 @@ acceptance("Chat | User status on mentions", function (needs) {
   async function typeWithAutocompleteAndSend(text) {
     await emulateAutocomplete(".chat-composer__input", text);
     await click(".autocomplete.ac-user .selected");
-    await triggerKeyEvent(".chat-composer__input", "keydown", "Enter");
+    await click(".chat-composer-button.-send");
   }
 
   function setupAutocompleteResponses(results) {

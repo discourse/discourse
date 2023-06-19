@@ -46,7 +46,7 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
 
     # Lose the cache intentionally.
     Chat::Thread.clear_caches!(thread.id)
-    message_to_destroy = thread.replies.last
+    message_to_destroy = thread.last_reply
     Chat::TrashMessage.call(
       message_id: message_to_destroy.id,
       channel_id: thread.channel_id,

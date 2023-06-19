@@ -4,8 +4,8 @@
   <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
     <DNavigationItem
       @route="preferences.account"
-      @class="user-nav__preferences-account"
       @ariaCurrentContext="subNav"
+      class="user-nav__preferences-account"
     >
       {{d-icon "user"}}
       <span>{{i18n "user.preferences_nav.account"}}</span>
@@ -13,8 +13,8 @@
 
     <DNavigationItem
       @route="preferences.security"
-      @class="user-nav__preferences-security"
       @ariaCurrentContext="subNav"
+      class="user-nav__preferences-security"
     >
       {{d-icon "lock"}}
       <span>{{i18n "user.preferences_nav.security"}}</span>
@@ -22,8 +22,8 @@
 
     <DNavigationItem
       @route="preferences.profile"
-      @class="user-nav__preferences-profile"
       @ariaCurrentContext="subNav"
+      class="user-nav__preferences-profile"
     >
       {{d-icon "user"}}
       <span>{{i18n "user.preferences_nav.profile"}}</span>
@@ -31,8 +31,8 @@
 
     <DNavigationItem
       @route="preferences.emails"
-      @class="user-nav__preferences-emails"
       @ariaCurrentContext="subNav"
+      class="user-nav__preferences-emails"
     >
       {{d-icon "envelope"}}
       <span>{{i18n "user.preferences_nav.emails"}}</span>
@@ -40,8 +40,8 @@
 
     <DNavigationItem
       @route="preferences.notifications"
-      @class="user-nav__preferences-notifications"
       @ariaCurrentContext="subNav"
+      class="user-nav__preferences-notifications"
     >
       {{d-icon "bell"}}
       <span>{{i18n "user.preferences_nav.notifications"}}</span>
@@ -50,8 +50,8 @@
     {{#if this.model.can_change_tracking_preferences}}
       <DNavigationItem
         @route="preferences.tracking"
-        @class="user-nav__preferences-tracking"
         @ariaCurrentContext="subNav"
+        class="user-nav__preferences-tracking"
       >
         {{d-icon "plus"}}
         <span>{{i18n "user.preferences_nav.tracking"}}</span>
@@ -60,8 +60,8 @@
 
     <DNavigationItem
       @route="preferences.users"
-      @class="user-nav__preferences-users"
       @ariaCurrentContext="subNav"
+      class="user-nav__preferences-users"
     >
       {{d-icon "users"}}
       <span>{{i18n "user.preferences_nav.users"}}</span>
@@ -69,8 +69,8 @@
 
     <DNavigationItem
       @route="preferences.interface"
-      @class="user-nav__preferences-interface"
       @ariaCurrentContext="subNav"
+      class="user-nav__preferences-interface"
     >
       {{d-icon "desktop"}}
       <span>{{i18n "user.preferences_nav.interface"}}</span>
@@ -78,12 +78,12 @@
 
     {{#if (not (eq this.siteSettings.navigation_menu "legacy"))}}
       <DNavigationItem
-        @route="preferences.sidebar"
-        @class="user-nav__preferences-sidebar"
+        @route="preferences.navigation-menu"
         @ariaCurrentContext="subNav"
+        class="user-nav__preferences-navigation-menu"
       >
         {{d-icon "bars"}}
-        <span>{{i18n "user.preferences_nav.sidebar"}}</span>
+        <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
       </DNavigationItem>
     {{/if}}
 

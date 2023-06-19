@@ -16,8 +16,6 @@ module Chat
                :bookmark,
                :available_flags,
                :thread_id,
-               :thread_reply_count,
-               :thread_title,
                :chat_channel_id,
                :mentioned_users
 
@@ -171,18 +169,6 @@ module Chat
 
     def include_thread_id?
       include_threading_data?
-    end
-
-    def include_thread_reply_count?
-      include_threading_data? && object.thread_id.present?
-    end
-
-    def thread_reply_count
-      object.thread&.replies_count_cache || 0
-    end
-
-    def thread_title
-      object.thread&.title
     end
   end
 end

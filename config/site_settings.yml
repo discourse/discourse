@@ -341,7 +341,7 @@ basic:
     list_type: compact
     default: "14"
     allow_any: false
-    refresh: true  
+    refresh: true
   enable_bookmarks_with_reminders:
     client: true
     default: true
@@ -1450,6 +1450,8 @@ files:
     regex: '^https?:\/\/.+[^\/]$'
   s3_configure_tombstone_policy:
     default: true
+  s3_use_acls:
+    default: true
   enable_s3_inventory:
     default: false
   s3_configure_inventory_policy:
@@ -2088,6 +2090,7 @@ developer:
   enable_experimental_hashtag_autocomplete:
     default: true
     client: true
+    hidden: true
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -2109,6 +2112,18 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  new_edit_sidebar_categories_tags_interface_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    hidden: true
+  experimental_search_menu_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
 
 navigation:
   navigation_menu:
@@ -2116,11 +2131,11 @@ navigation:
     default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
-  default_sidebar_categories:
+  default_navigation_menu_categories:
     type: category_list
     default: ""
     client: true
-  default_sidebar_tags:
+  default_navigation_menu_tags:
     type: tag_list
     default: ""
     client: true
@@ -2339,6 +2354,17 @@ uncategorized:
     client: true
     default: false
 
+  summarization_strategy:
+    client: true
+    default: ""
+    enum: "SummarizationStrategy"
+    validator: "SummarizationValidator"
+  custom_summarization_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
+
   automatic_topic_heat_values: true
 
   # View heat thresholds
@@ -2433,10 +2459,6 @@ uncategorized:
   notify_about_reviewable_item_after:
     type: float
     default: 48
-
-  show_create_topics_notice:
-    client: true
-    default: true
 
   enable_system_avatars:
     hidden: true
@@ -2701,6 +2723,9 @@ user_preferences:
     choices:
       - notifications
       - contextual
+  enable_offline_indicator:
+    default: false
+    client: true
 api:
   retain_web_hook_events_period_days:
     default: 30
@@ -2754,6 +2779,13 @@ tags:
   max_tags_per_topic:
     default: 5
     client: true
+  enable_max_tags_per_email_subject:
+    default: false
+    client: true
+  max_tags_per_email_subject:
+    default: 5
+    client: true
+    min: 0
   max_tag_length:
     default: 20
     client: true

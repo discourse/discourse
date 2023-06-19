@@ -16,6 +16,7 @@ pl_PL:
     default_emoji_reactions: "Domyślne reakcje emoji dla wiadomości czatu. Dodaj do 5 emotikonów, aby szybko reagować."
     direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie czatów osobistych między użytkownikami. Uwaga: personel zawsze może tworzyć czaty osobiste, a użytkownicy będą mogli odpowiadać na czaty osobiste inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
     chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oflagować wiadomości na czacie."
+    max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
     chat_max_direct_message_users: "Użytkownicy nie mogą dodać więcej niż ta liczba innych użytkowników podczas tworzenia nowej wiadomości bezpośredniej. Ustaw na 0, aby zezwolić na wysyłanie wiadomości tylko do siebie. Personel jest zwolniony z tego ustawienia."
     chat_allow_archiving_channels: "Zezwól personelowi na archiwizowanie wiadomości w temacie podczas zamykania kanału."
     errors:
@@ -26,9 +27,13 @@ pl_PL:
     chat_channel_archive_complete:
       title: "Archiwizacja kanału czatu ukończona"
       subject_template: "Pomyślnie ukończono archiwizację kanału czatu"
+      text_body_template: |
+        Archiwizacja kanału czatu %{channel_hashtag_or_name} została zakończona pomyślnie. Wiadomości zostały skopiowane do tematu [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Archiwizacja kanału czatu nie powiodła się"
       subject_template: "Archiwizacja kanału czatu nie powiodła się"
+      text_body_template: |
+        Archiwizacja kanału czatu %{channel_hashtag_or_name} nie powiodła się. %{messages_archived} wiadomości zostały zarchiwizowane. Częściowo zarchiwizowane wiadomości zostały skopiowane do tematu [%{topic_title}](%{topic_url}). Odwiedź kanał %{channel_url}, aby spróbować ponownie.
     chat_channel_archive_failed_no_topic:
       title: "Archiwizacja kanału czatu nie powiodła się"
       subject_template: "Archiwizacja kanału czatu nie powiodła się"
@@ -72,6 +77,8 @@ pl_PL:
       message_move_no_messages_found: "Nie znaleziono wiadomości z podanymi identyfikatorami wiadomości."
       cant_update_direct_message_channel: "Właściwości kanału wiadomości bezpośrednich, takie jak nazwa i opis, nie mogą być aktualizowane."
       not_accepting_dms: "Przepraszamy, ale użytkownik %{username} nie akceptuje w tej chwili wiadomości "
+      actor_ignoring_target_user: "Ignorujesz %{username}, więc nie możesz wysyłać do niego wiadomości."
+      actor_muting_target_user: "Wyciszasz %{username}, więc nie możesz wysyłać do niego wiadomości."
       actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci wiadomości prywatnych i bezpośrednich, więc nie możesz tworzyć nowych wiadomości bezpośrednich."
       actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do niego."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
@@ -127,6 +134,7 @@ pl_PL:
         other: "@%{acting_username} przeniósł %{count} wiadomości do kanału [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} i %{count} inny"
           few: "%{comma_separated_usernames} i %{count} inni"

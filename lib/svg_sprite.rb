@@ -82,6 +82,7 @@ module SvgSprite
         exclamation-circle
         exclamation-triangle
         external-link-alt
+        eye
         fab-android
         fab-apple
         fab-chrome
@@ -203,6 +204,7 @@ module SvgSprite
         tag
         tags
         tasks
+        th
         thermometer-three-quarters
         thumbs-down
         thumbs-up

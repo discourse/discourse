@@ -1615,8 +1615,6 @@ da:
       enabled: "Dette websted er i skrivebeskyttet tilstand lige nu. Fortsæt endelig med at kigge, men der kan ikke svares, sendes 'Synes godt om' eller andet indtil videre."
       login_disabled: "Login er deaktiveret, mens webstedet er i skrivebeskyttet tilstand."
       logout_disabled: "Log ud er deaktiveret mens webstedet er i skrivebeskyttet tilstand."
-    too_few_posts_notice_MF: |
-      Lad os <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">starte diskussionen!</a> Der {currentPosts, plural, one {er <strong>#</strong> indlæg} other {er <strong>#</strong> indlæg}}. Besøgende har brug for mere at læse og svare på — vi anbefaler i det mindste {requiredPosts, plural, one {<strong>#</strong> indlæg} other {<strong>#</strong> indlæg}}. Kun administratorer kan se denne besked.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fejl/minut} other {# fejl/minut}}</a> har overskredet webstedsindstillingsgrænsen på {limit, plural, one {# fejl / minut} other {# fejl/minut}}.
@@ -2310,7 +2308,7 @@ da:
         top: "Der er ingen top emner"
         educate:
           new: '<p>Dine nye emner vil blive vist her. Som standard betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indikator, hvis de blev oprettet inden for de sidste 2 dage.</p><p>Besøg dine <a href="%{userPrefsUrl}">præferencer</a> for at ændre dette.</p>'
-          unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge unread-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 4 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
+          unread: "<p>Dine ulæste emner vises her.</p><p>Som standard betragtes emner som ulæste og vil vise antal af ulæste <span class=\"badge unread-posts badge-notification\">1</span> hvis du:</p><ul><li>Oprettede emnet</li><li>Svarede på emnet</li><li>Læste emnet i mere end 5 minutter</li></ul><p>Eller hvis du udtrykkeligt har indstillet emnet til fulgt eller overvåget via \U0001F514 i hvert emne.</p><p>Besøg dine <a href=\"%{userPrefsUrl}\">præferencer</a> for at ændre dette.</p>"
       bottom:
         latest: "Der er ikke flere populære emner."
         posted: "Der er ikke flere emner."
@@ -3573,6 +3571,8 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
+      categories_form:
+        save: "Gem"
       sections:
         custom:
           save: "Gem"
@@ -3617,8 +3617,6 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
-            everything:
-              content: "Alting"
             faq:
               content: "OSS"
             groups:
@@ -4620,6 +4618,8 @@ da:
               key: "minimum"
             maximum:
               key: "maksimum"
+            type:
+              key: "type"
       impersonate:
         title: "Skift personlighed"
         help: "Brug dette værktøj til at udgive dig for en anden bruger til brug for debugging. Du skal logge ud når du er færdig."

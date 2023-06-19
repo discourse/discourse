@@ -38,6 +38,7 @@ module Chat
     step :fetch_threads_for_messages
     step :fetch_tracking
     step :fetch_thread_memberships
+    step :fetch_thread_participants
     step :build_view
 
     class Contract
@@ -220,6 +221,11 @@ module Chat
       end
     end
 
+    def fetch_thread_participants(threads:, **)
+      context.thread_participants =
+        ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
+    end
+
     def build_view(
       guardian:,
       channel:,
@@ -230,6 +236,7 @@ module Chat
       can_load_more_past:,
       can_load_more_future:,
       thread_memberships:,
+      thread_participants:,
       **
     )
       context.view =
@@ -243,6 +250,7 @@ module Chat
           threads: threads,
           tracking: tracking,
           thread_memberships: thread_memberships,
+          thread_participants: thread_participants,
         )
     end
   end

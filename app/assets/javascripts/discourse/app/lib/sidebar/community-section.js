@@ -24,7 +24,6 @@ import showModal from "discourse/lib/show-modal";
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
-  "/new": EverythingSectionLink,
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,

@@ -13,10 +13,12 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
+import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import User from "discourse/models/user";
 import Bookmark from "discourse/models/bookmark";
 import Category from "discourse/models/category";
+import Group from "discourse/models/group";
 
 let sequence = 0;
 
@@ -145,6 +147,16 @@ function reactionFabricator(args = {}) {
   });
 }
 
+function groupFabricator(args = {}) {
+  return Group.create({
+    name: args.name || "Engineers",
+  });
+}
+
+function messageMentionWarningFabricator(message, args = {}) {
+  return ChatMessageMentionWarning.create(message, args);
+}
+
 function uploadFabricator() {
   return {
     extension: "jpeg",
@@ -175,4 +187,6 @@ export default {
   upload: uploadFabricator,
   category: categoryFabricator,
   directMessage: directMessageFabricator,
+  messageMentionWarning: messageMentionWarningFabricator,
+  group: groupFabricator,
 };

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Message user info", type: :system, js: true do
+RSpec.describe "Message user info", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }
 

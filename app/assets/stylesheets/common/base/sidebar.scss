@@ -9,6 +9,28 @@
   --d-sidebar-row-horizontal-padding: 1.25rem;
   // ems so height is variable along with font size
   --d-sidebar-row-height: 2.1em;
+
+  --d-sidebar-background: var(--secondary);
+  --d-sidebar-prefix-background: var(
+    --primary-low
+  ); // example: chat participant count
+
+  --d-sidebar-header-color: var(--primary);
+  --d-sidebar-header-icon-color: var(--primary-medium);
+
+  --d-sidebar-link-color: var(--primary-high);
+  --d-sidebar-link-icon-color: var(--primary-500);
+  --d-sidebar-link-badge-color: var(--primary-700); // example: new count
+
+  --d-sidebar-highlight-background: var(--primary-low);
+  --d-sidebar-highlight-color: var(--primary-high);
+  --d-sidebar-highlight-prefix-background: var(--primary-300);
+  --d-sidebar-highlight-hover-background: var(
+    --primary-medium
+  ); // example: hovering a button within a highlighted section
+  --d-sidebar-highlight-hover-icon: var(
+    --primary-very-low
+  ); // example: hovering a button within a highlighted section
 }
 
 .sidebar-row {
@@ -20,11 +42,10 @@
 
 .sidebar-wrapper {
   display: flex;
-  --d-sidebar-highlight-color: var(--primary-low);
-  background-color: var(--primary-very-low);
   grid-area: sidebar;
   position: sticky;
   top: var(--header-offset);
+  background: var(--d-sidebar-background);
 
   @include unselectable;
 
@@ -48,6 +69,7 @@
     height: 100%;
     width: 100%;
     padding: 0;
+    border-right: 1px solid var(--primary-low);
     overflow-x: hidden;
     // allows sidebar to scroll to the bottom when the composer is open
     height: calc(100% - var(--composer-height, 0px));
@@ -98,9 +120,9 @@
     .btn-flat.add-section {
       padding: 0.25em 0.4em;
       &:hover {
-        background: var(--d-sidebar-highlight-color);
+        background: var(--d-sidebar-highlight-background);
         svg {
-          color: var(--primary-medium);
+          color: var(--d-sidebar-link-icon-color);
         }
       }
     }

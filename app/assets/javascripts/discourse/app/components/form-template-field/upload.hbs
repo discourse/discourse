@@ -1,6 +1,11 @@
 <div class="control-group form-template-field" data-field-type="upload">
   {{#if @attributes.label}}
-    <label class="form-template-field__label">{{@attributes.label}}</label>
+    <label class="form-template-field__label">
+      {{@attributes.label}}
+      {{#if @validations.required}}
+        {{d-icon "asterisk" class="form-template-field__required-indicator"}}
+      {{/if}}
+    </label>
   {{/if}}
   <input
     type="file"

@@ -15,19 +15,19 @@ export default class ChatMessageActionsMobile extends Component {
   @tracked hasExpandedReply = false;
   @tracked showFadeIn = false;
 
-  messageActions = null;
-
   get message() {
     return this.chat.activeMessage.model;
   }
 
-  get messageInteractor() {
-    const activeMessage = this.chat.activeMessage;
+  get context() {
+    return this.chat.activeMessage.context;
+  }
 
+  get messageInteractor() {
     return new ChatMessageInteractor(
       getOwner(this),
-      activeMessage.model,
-      activeMessage.context
+      this.message,
+      this.context
     );
   }
 
@@ -48,7 +48,7 @@ export default class ChatMessageActionsMobile extends Component {
 
   @action
   collapseMenu(event) {
-    event.stopPropagation();
+    event.preventDefault();
     this.#onCloseMenu();
   }
 
