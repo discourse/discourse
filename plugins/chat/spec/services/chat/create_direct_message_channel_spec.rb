@@ -49,7 +49,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         )
         result.channel.user_chat_channel_memberships.each do |membership|
           expect(membership).to have_attributes(
-            following: membership.user_id == current_user.id ? true : false,
+            following: true,
             muted: false,
             desktop_notification_level: "always",
             mobile_notification_level: "always",
