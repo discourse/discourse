@@ -208,13 +208,22 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.update"
 
-      - name: Core System Tests
+      - name: Core System Tests (5 processes)
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
-      - name: Plugin System Tests
+      - name: Plugin System Tests (5 processes)
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
         run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+        timeout-minutes: 30
+
+      - name: Core System Tests (4 processes)
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        run: PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+
+      - name: Plugin System Tests (4 processes)
+        if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots
