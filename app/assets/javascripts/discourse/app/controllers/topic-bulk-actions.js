@@ -10,10 +10,10 @@ import NotificationLevel from "../components/bulk-actions/notification-level";
 import ChangeTags from "../components/bulk-actions/change-tags";
 import AppendTags from "../components/bulk-actions/append-tags";
 
-const _buttons = [];
+const _customButtons = [];
 
 export function addBulkButton(opts) {
-  _buttons.push({
+  _customButtons.push({
     label: `topics.bulk.${opts.label}`,
     icon: opts.icon,
     class: opts.class,
@@ -35,29 +35,24 @@ export default class TopicBulkActions extends Controller.extend(
   processedTopicCount = 0;
   activeComponent = null;
 
-  constructor() {
-    super(...arguments);
-
-    // Add default buttons
-    addBulkButton({
-      label: "change_category",
+  defaultButtons = [
+    {
+      label: "topics.bulk.change_category",
       icon: "pencil-alt",
       class: "btn-default",
       buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
       action: () => this.set("activeComponent", ChangeCategory),
-    });
-
-    addBulkButton({
-      label: "close_topics",
+    },
+    {
+      label: "topics.bulk.close_topics",
       icon: "lock",
       class: "btn-default",
       buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
       action: () =>
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true)),
-    });
-
-    addBulkButton({
-      label: "archive_topics",
+    },
+    {
+      label: "topics.bulk.archive_topics",
       icon: "folder",
       class: "btn-default",
       buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
@@ -65,10 +60,9 @@ export default class TopicBulkActions extends Controller.extend(
         this.forEachPerformed({ type: "archive" }, (t) =>
           t.set("archived", true)
         ),
-    });
-
-    addBulkButton({
-      label: "archive_topics",
+    },
+    {
+      label: "topics.bulk.archive_topics",
       icon: "folder",
       class: "btn-default",
       buttonVisible: (topics) => topics.some((t) => t.isPrivateMessage),
@@ -79,10 +73,9 @@ export default class TopicBulkActions extends Controller.extend(
         }
         this.performAndRefresh(params);
       },
-    });
-
-    addBulkButton({
-      label: "move_messages_to_inbox",
+    },
+    {
+      label: "topics.bulk.move_messages_to_inbox",
       icon: "folder",
       class: "btn-default",
       buttonVisible: (topics) => topics.some((t) => t.isPrivateMessage),
@@ -93,25 +86,22 @@ export default class TopicBulkActions extends Controller.extend(
         }
         this.performAndRefresh(params);
       },
-    });
-
-    addBulkButton({
-      label: "notification_level",
+    },
+    {
+      label: "topics.bulk.notification_level",
       icon: "d-regular",
       class: "btn-default",
       action: () => this.set("activeComponent", NotificationLevel),
-    });
-
-    addBulkButton({
-      label: "defer",
+    },
+    {
+      label: "topics.bulk.defer",
       icon: "circle",
       class: "btn-default",
       buttonVisible: () => this.currentUser.user_option.enable_defer,
       action: () => this.performAndRefresh({ type: "destroy_post_timing" }),
-    });
-
-    addBulkButton({
-      label: "unlist_topics",
+    },
+    {
+      label: "topics.bulk.unlist_topics",
       icon: "far-eye-slash",
       class: "btn-default",
       buttonVisible: (topics) =>
@@ -121,10 +111,9 @@ export default class TopicBulkActions extends Controller.extend(
         this.forEachPerformed({ type: "unlist" }, (t) =>
           t.set("visible", false)
         ),
-    });
-
-    addBulkButton({
-      label: "relist_topics",
+    },
+    {
+      label: "topics.bulk.relist_topics",
       icon: "far-eye",
       class: "btn-default",
       buttonVisible: (topics) =>
@@ -134,36 +123,32 @@ export default class TopicBulkActions extends Controller.extend(
         this.forEachPerformed({ type: "relist" }, (t) =>
           t.set("visible", true)
         ),
-    });
-
-    addBulkButton({
-      label: "reset_bump_dates",
+    },
+    {
+      label: "topics.bulk.reset_bump_dates",
       icon: "anchor",
       class: "btn-default",
       buttonVisible: () => this.currentUser.canManageTopic,
       action: () => this.performAndRefresh({ type: "reset_bump_dates" }),
-    });
-
-    addBulkButton({
-      label: "change_tags",
+    },
+    {
+      label: "topics.bulk.change_tags",
       icon: "tag",
       class: "btn-default",
       enabledSetting: "tagging_enabled",
       buttonVisible: () => this.currentUser.canManageTopic,
       action: () => this.set("activeComponent", ChangeTags),
-    });
-
-    addBulkButton({
-      label: "append_tags",
+    },
+    {
+      label: "topics.bulk.append_tags",
       icon: "tag",
       class: "btn-default",
       enabledSetting: "tagging_enabled",
       buttonVisible: () => this.currentUser.canManageTopic,
       action: () => this.set("activeComponent", AppendTags),
-    });
-
-    addBulkButton({
-      label: "remove_tags",
+    },
+    {
+      label: "topics.bulk.remove_tags",
       icon: "tag",
       class: "btn-default",
       enabledSetting: "tagging_enabled",
@@ -176,28 +161,29 @@ export default class TopicBulkActions extends Controller.extend(
           didConfirm: () => this.performAndRefresh({ type: "remove_tags" }),
         });
       },
-    });
-
-    addBulkButton({
-      label: "delete",
+    },
+    {
+      label: "topics.bulk.delete",
       icon: "trash-alt",
       class: "btn-danger delete-topics",
       buttonVisible: () => this.currentUser.staff,
       action: () => this.performAndRefresh({ type: "delete" }),
+    },
+  ];
+
+  get buttons() {
+    return [...this.defaultButtons, ..._customButtons].filter((b) => {
+      if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
+        return false;
+      } else if (b.buttonVisible) {
+        return b.buttonVisible.call(this, this.model.topics);
+      } else {
+        return true;
+      }
     });
   }
 
   onShow() {
-    this.set(
-      "buttons",
-      _buttons.filter((b) => {
-        if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
-          return false;
-        }
-        return b.buttonVisible.call(this, this.model.topics);
-      })
-    );
-
     this.modal.set("modalClass", "topic-bulk-actions-modal small");
     this.set("activeComponent", null);
   }
@@ -226,7 +212,7 @@ export default class TopicBulkActions extends Controller.extend(
     const chunks = [];
 
     while (startIndex < allTopics.length) {
-      let topics = allTopics.slice(startIndex, startIndex + chunkSize);
+      const topics = allTopics.slice(startIndex, startIndex + chunkSize);
       chunks.push(topics);
       startIndex += chunkSize;
     }
