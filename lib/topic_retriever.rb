@@ -50,6 +50,6 @@ class TopicRetriever
     user = User.where(username_lower: username.downcase).first
     return if user.blank?
 
-    TopicEmbed.import_remote(user, @embed_url)
+    TopicEmbed.import_remote(@embed_url, user: user)
   end
 end
