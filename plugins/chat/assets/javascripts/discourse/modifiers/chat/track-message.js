@@ -11,9 +11,9 @@ export default class ChatTrackMessage extends Modifier {
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, [callbacks = {}]) {
-    this.didEnterViewport = callbacks.didEnterViewport;
-    this.didLeaveViewport = callbacks.didLeaveViewport;
+  modify(element, [didEnterViewport, didLeaveViewport]) {
+    this.didEnterViewport = didEnterViewport;
+    this.didLeaveViewport = didLeaveViewport;
 
     this.intersectionObserver = new IntersectionObserver(
       this._intersectionObserverCallback,
