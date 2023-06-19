@@ -139,7 +139,7 @@ module Chat
         context.messages = messages_data[:messages]
       else
         messages_data[:target_message] = (
-          if !include_thread_messages && messages_data[:target_message].thread_reply?
+          if !include_thread_messages && messages_data[:target_message]&.thread_reply?
             []
           else
             [messages_data[:target_message]]
