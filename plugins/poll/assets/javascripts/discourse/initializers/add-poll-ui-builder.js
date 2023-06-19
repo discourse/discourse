@@ -1,7 +1,7 @@
 import discourseComputed from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PollUiBuilder from "../components/modal/poll-ui-builder";
+import { getOwner } from "@ember/application";
 
 function initializePollUIBuilder(api) {
   api.modifyClass("controller:composer", {
@@ -23,9 +23,11 @@ function initializePollUIBuilder(api) {
 
     actions: {
       showPollBuilder() {
-        showModal(PollUiBuilder, {
-          model: { toolbarEvent: this.toolbarEvent },
-        });
+        getOwner(this)
+          .lookup("service:modal")
+          .show(PollUiBuilder, {
+            model: { toolbarEvent: this.toolbarEvent },
+          });
       },
     },
   });

@@ -12,9 +12,9 @@ import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
-import showModal from "discourse/lib/show-modal";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
+import { getOwner } from "@ember/application";
 
 const FETCH_VOTERS_COUNT = 25;
 
@@ -1071,7 +1071,7 @@ export default createWidget("discourse-poll", {
   },
 
   showBreakdown() {
-    showModal(PollBreakdownModal, {
+    getOwner(this).lookup("service:modal").show(PollBreakdownModal, {
       model: this.attrs,
     });
   },
