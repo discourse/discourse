@@ -1,12 +1,19 @@
 .chat-thread-participants {
   &__other-count {
-    font-size: var(--font-down-2);
-    text-align: right;
-    color: var(--primary-medium);
+    width: 22px;
+    height: 22px;
+    box-sizing: border-box;
+    font-size: var(--font-down-1);
+    color: var(--primary-very-low);
+    background: var(--secondary-high);
+    padding: 0.21em 0.42em;
+    border-radius: 1em;
+    text-align: center;
   }
 
   &__avatar-group {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
 
     .chat-user-avatar {

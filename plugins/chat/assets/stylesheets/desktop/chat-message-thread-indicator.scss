@@ -1,5 +1,9 @@
 .chat-message-thread-indicator {
   max-width: 600px;
+  display: grid;
+  grid-template-areas:
+    "avatar info participants"
+    "avatar excerpt excerpt";
 
   .chat-drawer & {
     align-items: stretch;
@@ -11,6 +15,8 @@
   }
 
   &__last-reply-avatar {
+    grid-area: avatar;
+    margin-right: 1rem;
     .chat-drawer & {
       display: inline-block;
     }
@@ -27,13 +33,15 @@
     }
   }
 
-  &__last-reply-metadata {
+  &__last-reply-info {
+    grid-area: info;
     .chat-drawer & {
       flex-wrap: wrap;
     }
   }
 
   &__last-reply-excerpt {
+    grid-area: excerpt;
     .chat-drawer & {
       white-space: wrap;
       display: -webkit-box;
@@ -49,6 +57,10 @@
     }
   }
   &__participants {
+    grid-area: participants;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     margin-left: auto;
 
     .chat-drawer & {

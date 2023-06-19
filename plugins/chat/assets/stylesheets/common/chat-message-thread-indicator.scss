@@ -1,10 +1,7 @@
 .chat-message-thread-indicator {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   cursor: pointer;
   grid-area: threadindicator;
-  max-width: 1000px;
+  max-width: 600px;
   background-color: var(--primary-very-low);
   margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
   padding-block: 0.5rem;
@@ -45,15 +42,15 @@
     }
   }
 
-  &__last-reply-metadata {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.25rem;
+  &__last-reply-timestamp {
     color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
 
-    .separator {
-      font-size: var(--font-down-1);
-    }
+  &__last-reply-info {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 
   &__last-reply-container {
