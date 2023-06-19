@@ -348,16 +348,6 @@ export default class ChatThreadPanel extends Component {
   @action
   resendStagedMessage() {}
 
-  @action
-  messageDidEnterViewport(message) {
-    message.visible = true;
-  }
-
-  @action
-  messageDidLeaveViewport(message) {
-    message.visible = false;
-  }
-
   #handleErrors(error) {
     switch (error?.jqXHR?.status) {
       case 429:

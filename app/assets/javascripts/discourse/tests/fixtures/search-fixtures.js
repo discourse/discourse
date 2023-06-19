@@ -643,9 +643,9 @@ export default {
       },
       {
         id: 2507,
-        title: "Getting dev instance to send email?",
-        fancy_title: "Getting dev instance to send email?",
-        slug: "getting-dev-instance-to-send-email",
+        title: "Topic with html in title",
+        fancy_title: "<span id='topic-with-html'>Topic with html in title :+1:</span>",
+        slug: "topic-with-html-in-title",
         posts_count: 19,
         reply_count: 13,
         highest_post_number: 21,

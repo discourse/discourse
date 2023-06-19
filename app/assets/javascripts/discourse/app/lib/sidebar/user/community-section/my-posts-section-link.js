@@ -74,7 +74,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
       return I18n.t(
         `sidebar.sections.community.links.${this.overridenName
           .toLowerCase()
-          .replace(" ", "/")}.content`,
+          .replace(" ", "_")}.content`,
         { defaultValue: this.overridenName }
       );
     }

@@ -226,7 +226,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
-    await restoreMessage(".chat-message-deleted");
+    await restoreMessage(".chat-message-text.-deleted");
 
     assertStatusIsRendered(
       assert,
@@ -239,7 +239,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
-    await restoreMessage(".chat-message-deleted");
+    await restoreMessage(".chat-message-text.-deleted");
 
     loggedInUser().appEvents.trigger("user-status:changed", {
       [mentionedUser1.id]: newStatus,
@@ -254,7 +254,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
-    await restoreMessage(".chat-message-deleted");
+    await restoreMessage(".chat-message-text.-deleted");
 
     loggedInUser().appEvents.trigger("user-status:changed", {
       [mentionedUser1.id]: null,
