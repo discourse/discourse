@@ -2,8 +2,6 @@
 
 <p><TagChooser @tags={{this.tags}} @categoryId={{@categoryId}} /></p>
 
-{{this.tags}}
-
 <DButton
   @action={{fn @performAndRefresh (hash type="append_tags" tags=this.tags)}}
   @disabled={{not this.tags}}
