@@ -58,9 +58,7 @@ export default class ChatThread {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
-    if (args.preview) {
-      this.preview = ChatThreadPreview.create(args.preview);
-    }
+    this.preview = ChatThreadPreview.create(args.preview);
   }
 
   async stageMessage(message) {
@@ -79,6 +77,10 @@ export default class ChatThread {
 
   lastUserMessage(user) {
     return this.messagesManager.findLastUserMessage(user);
+  }
+
+  clearSelectedMessages() {
+    this.selectedMessages.forEach((message) => (message.selected = false));
   }
 
   get routeModels() {

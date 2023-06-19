@@ -39,9 +39,6 @@ class TranslationOverride < ActiveRecord::Base
   }
 
   include HasSanitizableFields
-  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
-  deprecate_constant "CUSTOM_INTERPOLATION_KEYS_WHITELIST",
-                     "TranslationOverride::ALLOWED_CUSTOM_INTERPOLATION_KEYS"
 
   validates_uniqueness_of :translation_key, scope: :locale
   validates_presence_of :locale, :translation_key, :value

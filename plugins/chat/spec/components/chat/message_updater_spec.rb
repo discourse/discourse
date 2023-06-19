@@ -610,6 +610,29 @@ describe Chat::MessageUpdater do
     end
   end
 
+  context "when the message is in a thread" do
+    fab!(:message) do
+      Fabricate(
+        :chat_message,
+        user: user1,
+        chat_channel: public_chat_channel,
+        thread: Fabricate(:chat_thread, channel: public_chat_channel),
+      )
+    end
+
+    it "publishes a MessageBus event to update the original message metadata" do
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          Chat::MessageUpdater.update(
+            guardian: guardian,
+            chat_message: message,
+            new_content: "some new updated content",
+          )
+        end
+      expect(messages.find { |m| m.data["type"] == "update_thread_original_message" }).to be_present
+    end
+  end
+
   describe "watched words" do
     fab!(:watched_word) { Fabricate(:watched_word) }
 

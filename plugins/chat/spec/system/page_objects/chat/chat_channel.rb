@@ -11,6 +11,15 @@ module PageObjects
         @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
       end
 
+      def selection_management
+        @selection_management ||=
+          PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
+      end
+
+      def has_selected_messages?(*messages)
+        self.messages.has_selected_messages?(*messages)
+      end
+
       def replying_to?(message)
         find(".chat-channel .chat-reply", text: message.message)
       end
@@ -59,7 +68,7 @@ module PageObjects
       end
 
       def click_message_action_mobile(message, message_action)
-        expand_message_actions_mobile(message, delay: 0.6)
+        expand_message_actions_mobile(message, delay: 0.4)
         find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
@@ -73,16 +82,6 @@ module PageObjects
         else
           hover_message(message)
           find(".bookmark-btn").click
-        end
-      end
-
-      def select_message(message)
-        if page.has_css?("html.mobile-view", wait: 0)
-          click_message_action_mobile(message, "select")
-        else
-          hover_message(message)
-          click_more_button
-          find("[data-value='select']").click
         end
       end
 
@@ -144,7 +143,7 @@ module PageObjects
       end
 
       def has_bookmarked_message?(message)
-        within(message_by_id(message.id)) { find(".chat-message-bookmarked") }
+        find(message_by_id_selector(message.id) + ".-bookmarked")
       end
 
       def find_reaction(message, emoji)
@@ -189,13 +188,6 @@ module PageObjects
         check_message_presence(exists: false, text: text, id: id)
       end
 
-      def has_deleted_message?(message, count: 1)
-        has_css?(
-          ".chat-channel .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
-          text: I18n.t("js.chat.deleted", count: count),
-        )
-      end
-
       def check_message_presence(exists: true, text: nil, id: nil)
         css_method = exists ? :has_css? : :has_no_css?
         if text
@@ -209,16 +201,16 @@ module PageObjects
         end
       end
 
-      def has_thread_indicator?(message, text: nil)
-        has_css?(message_thread_indicator_selector(message), text: text)
+      def has_thread_indicator?(message)
+        message_thread_indicator(message).exists?
       end
 
-      def has_no_thread_indicator?(message, text: nil)
-        has_no_css?(message_thread_indicator_selector(message), text: text)
+      def has_no_thread_indicator?(message)
+        message_thread_indicator(message).does_not_exist?
       end
 
       def message_thread_indicator(message)
-        find(message_thread_indicator_selector(message))
+        PageObjects::Components::Chat::ThreadIndicator.new(message_by_id_selector(message.id))
       end
 
       def open_thread_list

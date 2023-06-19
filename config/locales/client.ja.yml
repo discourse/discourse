@@ -3807,9 +3807,6 @@ ja:
             badges:
               content: "バッジ"
               title: "獲得可能なすべてのバッジ"
-            everything:
-              content: "すべて"
-              title: "すべてのトピック"
             faq:
               content: "FAQ"
               title: "このサイトの利用に関するガイドライン"

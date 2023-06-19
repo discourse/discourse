@@ -48,8 +48,8 @@ RSpec.describe User do
       before do
         SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
-        SiteSetting.default_sidebar_categories = "#{category.id}|#{secured_category.id}"
-        SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
+        SiteSetting.default_navigation_menu_categories = "#{category.id}|#{secured_category.id}"
+        SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{hidden_tag.name}"
       end
 
       it "creates the right sidebar section link records for categories and tags that a user can see" do

@@ -206,7 +206,7 @@ export default (filterArg, params) => {
       }
 
       this.controllerFor("discovery/topics").setProperties(topicOpts);
-      this.searchService.set("searchContext", category.get("searchContext"));
+      this.searchService.searchContext = category.get("searchContext");
       this.set("topics", null);
     },
 
@@ -231,7 +231,7 @@ export default (filterArg, params) => {
       this._super(...arguments);
 
       this.composer.set("prioritizedCategoryId", null);
-      this.searchService.set("searchContext", null);
+      this.searchService.searchContext = null;
     },
 
     @action

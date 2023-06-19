@@ -54,12 +54,11 @@ export default class ChatStyleguideChatMessage extends Component {
     if (this.message.thread) {
       this.message.channel.threadingEnabled = false;
       this.message.thread = null;
-      this.message.threadReplyCount = 0;
     } else {
       this.message.thread = fabricators.thread({
         channel: this.message.channel,
       });
-      this.message.threadReplyCount = 1;
+      this.message.thread.preview.replyCount = 1;
       this.message.channel.threadingEnabled = true;
     }
   }

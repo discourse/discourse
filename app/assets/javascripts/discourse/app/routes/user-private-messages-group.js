@@ -4,7 +4,16 @@ export default class extends DiscourseRoute {
   model(params) {
     return this.modelFor("user")
       .get("groups")
-      .filterBy("name", params.name.toLowerCase())[0];
+      .find((group) => {
+        return group.name.toLowerCase() === params.name.toLowerCase();
+      });
+  }
+
+  afterModel(model) {
+    if (!model) {
+      this.transitionTo("exception-unknown");
+      return;
+    }
   }
 
   setupController(controller, model) {

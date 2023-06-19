@@ -20,6 +20,40 @@ module PageObjects
         @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
       end
 
+      def notifications_button
+        @notifications_button ||=
+          PageObjects::Components::SelectKit.new(".thread-notifications-button")
+      end
+
+      def notification_level=(level)
+        notifications_button.expand
+        notifications_button.select_row_by_value(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+        notifications_button.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
+      def has_notification_level?(level)
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            ".chat-thread-header__buttons.-persisted .thread-notifications-button",
+          )
+        select_kit.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
+      def selection_management
+        @selection_management ||=
+          PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
+      end
+
+      def has_selected_messages?(*messages)
+        self.messages.has_selected_messages?(*messages)
+      end
+
       def close
         header.find(".chat-thread__close").click
       end
@@ -108,19 +142,6 @@ module PageObjects
 
       def message_by_id_selector(id)
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
-      end
-
-      def select_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='select']").click
-      end
-
-      def has_deleted_message?(message, count: 1)
-        has_css?(
-          ".chat-thread .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
-          text: I18n.t("js.chat.deleted", count: count),
-        )
       end
 
       def open_edit_message(message)

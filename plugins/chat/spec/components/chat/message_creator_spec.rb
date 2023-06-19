@@ -769,11 +769,6 @@ describe Chat::MessageCreator do
 
         it "does not create a thread membership if one exists" do
           Fabricate(:user_chat_thread_membership, user: user1, thread: existing_thread)
-          Fabricate(
-            :user_chat_thread_membership,
-            user: existing_thread.original_message_user,
-            thread: existing_thread,
-          )
           expect {
             described_class.create(
               chat_channel: public_chat_channel,

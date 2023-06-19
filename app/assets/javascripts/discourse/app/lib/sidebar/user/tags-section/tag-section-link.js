@@ -4,7 +4,7 @@ import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
 import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
+import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/navigation-menu";
 
 export default class TagSectionLink extends BaseTagSectionLink {
   @tracked totalUnread = 0;

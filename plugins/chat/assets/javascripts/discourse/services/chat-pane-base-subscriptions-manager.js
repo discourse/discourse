@@ -1,6 +1,6 @@
 import Service, { inject as service } from "@ember/service";
-import EmberObject from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -200,7 +200,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   handleMentionWarning(data) {
     const message = this.messagesManager.findMessage(data.chat_message_id);
     if (message) {
-      message.mentionWarning = EmberObject.create(data);
+      message.mentionWarning = ChatMessageMentionWarning.create(message, data);
     }
   }
 
@@ -230,7 +230,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
           stagedThread.staged = false;
           stagedThread.id = data.thread_id;
           stagedThread.originalMessage.thread = stagedThread;
-          stagedThread.originalMessage.threadReplyCount ??= 1;
+          stagedThread.originalMessage.thread.preview.replyCount ??= 1;
         } else if (data.thread_id) {
           this.model.threadsManager
             .find(this.model.id, data.thread_id, { fetchIfNotFound: true })

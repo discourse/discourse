@@ -1,0 +1,14 @@
+{{avatar
+  @result
+  imageSize="small"
+  template=@result.avatar_template
+  username=@result.username
+}}
+<span class="username">
+  {{format-username @result.username}}
+</span>
+{{#if @result.custom_data}}
+  {{#each @result.custom_data as |row|}}
+    <span class="custom-field">{{row.name}}: {{row.value}}</span>
+  {{/each}}
+{{/if}}

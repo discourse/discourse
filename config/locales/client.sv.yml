@@ -4128,9 +4128,6 @@ sv:
             badges:
               content: "Utmärkelser"
               title: "Alla utmärkelser som kan förtjänas"
-            everything:
-              content: "Allting"
-              title: "Alla ämnen"
             faq:
               content: "Vanliga frågor och svar"
               title: "Riktlinjer för att använda denna webbplats"

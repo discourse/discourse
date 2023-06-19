@@ -343,9 +343,6 @@ describe Chat::Publisher do
                 message_id: message_1.id,
                 user_id: message_1.user_id,
                 username: message_1.user.username,
-                excerpt:
-                  message_1.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH),
-                created_at: message_1.created_at,
                 thread_id: thread.id,
               },
             )

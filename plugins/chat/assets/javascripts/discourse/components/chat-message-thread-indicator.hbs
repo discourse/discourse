@@ -1,13 +1,57 @@
-<LinkTo
-  @route="chat.channel.thread"
-  @models={{@message.thread.routeModels}}
-  class="chat-message-thread-indicator"
+<div
+  class={{concat-class
+    "chat-message-thread-indicator"
+    (if this.isActive "-active")
+  }}
+  {{did-insert this.setup}}
+  {{will-destroy this.teardown}}
+  role="button"
+  title={{i18n "chat.threads.open"}}
 >
-  <span class="chat-message-thread-indicator__replies-count">
-    {{i18n "chat.thread.replies" count=@message.threadReplyCount}}
-  </span>
-  <span class="chat-message-thread-indicator__view-thread overflow-ellipsis">
-    {{i18n "chat.thread.view_thread"}}{{#if this.threadTitle}}:
-      {{replace-emoji this.threadTitle}}{{/if}}
-  </span>
-</LinkTo>
+  {{#unless this.chatStateManager.isDrawerActive}}
+    <div class="chat-message-thread-indicator__last-reply-avatar">
+      <ChatUserAvatar
+        @user={{@message.thread.preview.lastReplyUser}}
+        @avatarSize="small"
+      />
+    </div>
+  {{/unless}}
+  <div class="chat-message-thread-indicator__body">
+    <div class="chat-message-thread-indicator__last-reply-metadata">
+      <div class="chat-message-thread-indicator__last-reply-user">
+        {{#if (or this.site.mobileView this.chatStateManager.isDrawerActive)}}
+          <span
+            class="chat-message-thread-indicator__last-reply-avatar -mobile"
+          >
+            <ChatUserAvatar
+              @user={{@message.thread.preview.lastReplyUser}}
+              @avatarSize="tiny"
+            />
+          </span>
+        {{/if}}
+        <span class="chat-message-thread-indicator__last-reply-username">
+          {{@message.thread.preview.lastReplyUser.username}}
+        </span>
+      </div>
+      <span class="chat-message-thread-indicator__last-reply-container">
+        {{format-date
+          @message.thread.preview.lastReplyCreatedAt
+          leaveAgo="true"
+          prefix=(i18n "chat.thread.last_reply")
+        }}
+      </span>
+      <span class="separator">|</span>
+      <span class="chat-message-thread-indicator__replies-count">
+        {{i18n "chat.thread.replies" count=@message.thread.preview.replyCount}}
+      </span>
+
+    </div>
+    <div class="chat-message-thread-indicator__last-reply-excerpt">
+      {{replace-emoji (html-safe @message.thread.preview.lastReplyExcerpt)}}
+    </div>
+  </div>
+
+  <div class="chat-message-thread-indicator__participants">
+    <Chat::Thread::Participants @thread={{@message.thread}} />
+  </div>
+</div>

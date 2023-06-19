@@ -756,10 +756,9 @@ RSpec.describe ApplicationController do
     after { I18n.reload! }
 
     context "with rate limits" do
-      before do
-        RateLimiter.clear_all!
-        RateLimiter.enable
-      end
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
 
       it "serves a LimitExceeded error in the preferred locale" do
         SiteSetting.max_likes_per_day = 1
@@ -974,10 +973,9 @@ RSpec.describe ApplicationController do
   describe "Discourse-Rate-Limit-Error-Code header" do
     fab!(:admin) { Fabricate(:admin) }
 
-    before do
-      RateLimiter.clear_all!
-      RateLimiter.enable
-    end
+    before { RateLimiter.enable }
+
+    use_redis_snapshotting
 
     it "is included when API key is rate limited" do
       global_setting :max_admin_api_reqs_per_minute, 1
@@ -1021,10 +1019,9 @@ RSpec.describe ApplicationController do
   end
 
   describe "crawlers in slow_down_crawler_user_agents site setting" do
-    before do
-      RateLimiter.enable
-      RateLimiter.clear_all!
-    end
+    before { RateLimiter.enable }
+
+    use_redis_snapshotting
 
     it "are rate limited" do
       SiteSetting.slow_down_crawler_rate = 128

@@ -2121,6 +2121,12 @@ developer:
     default: ""
     allow_any: false
     hidden: true
+  experimental_search_menu_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
 
 navigation:
   navigation_menu:
@@ -2128,11 +2134,11 @@ navigation:
     default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
-  default_sidebar_categories:
+  default_navigation_menu_categories:
     type: category_list
     default: ""
     client: true
-  default_sidebar_tags:
+  default_navigation_menu_tags:
     type: tag_list
     default: ""
     client: true

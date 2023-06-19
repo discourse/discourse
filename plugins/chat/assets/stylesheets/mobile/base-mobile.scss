@@ -2,8 +2,10 @@
   --channel-list-avatar-size: 38px;
 }
 
-.chat-message:not(.user-info-hidden) {
-  padding-top: 0.75em;
+.chat-message-container:not(.-user-info-hidden) {
+  .chat-message {
+    padding-top: 0.75em;
+  }
 }
 
 html.has-full-page-chat {

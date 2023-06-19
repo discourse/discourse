@@ -52,7 +52,7 @@ module Chat
           AND chat_messages.thread_id IS NOT NULL
           AND chat_messages.id != chat_threads.original_message_id
           AND chat_channels.threading_enabled
-          AND user_chat_thread_memberships.notification_level != :muted_notification_level
+          AND user_chat_thread_memberships.notification_level NOT IN (:quiet_notification_levels)
         ) AS unread_count,
         0 AS mention_count,
         chat_threads.channel_id,
@@ -94,7 +94,10 @@ module Chat
         user_id: user_id,
         notification_type: ::Notification.types[:chat_mention],
         limit: MAX_THREADS,
-        muted_notification_level: ::Chat::UserChatThreadMembership.notification_levels[:muted],
+        quiet_notification_levels: [
+          ::Chat::UserChatThreadMembership.notification_levels[:muted],
+          ::Chat::UserChatThreadMembership.notification_levels[:normal],
+        ],
       )
     end
   end
