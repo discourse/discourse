@@ -2,6 +2,8 @@
 
 module Chat
   module MessagesExporter
+    LIMIT = 10_000
+
     def chat_message_export
       Chat::Message
         .unscoped
@@ -10,6 +12,7 @@ module Chat
         .joins(:user)
         .joins("INNER JOIN users last_editors ON chat_messages.last_editor_id = last_editors.id")
         .order(:created_at)
+        .limit(LIMIT)
         .pluck(
           "chat_messages.id",
           "chat_channels.id",
