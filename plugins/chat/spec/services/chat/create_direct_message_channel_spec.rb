@@ -2,9 +2,9 @@
 
 RSpec.describe Chat::CreateDirectMessageChannel do
   describe Chat::CreateDirectMessageChannel::Contract, type: :model do
-    let(:params) { { target_usernames: %w[lechuck elaine] } }
-
     subject(:contract) { described_class.new(params) }
+
+    let(:params) { { target_usernames: %w[lechuck elaine] } }
 
     it { is_expected.to validate_presence_of :target_usernames }
 
@@ -79,9 +79,9 @@ RSpec.describe Chat::CreateDirectMessageChannel do
     end
 
     context "when the current user cannot make direct messages" do
-      before { SiteSetting.direct_message_enabled_groups = Fabricate(:group).id }
-
       fab!(:current_user) { Fabricate(:user) }
+
+      before { SiteSetting.direct_message_enabled_groups = Fabricate(:group).id }
 
       it { is_expected.to fail_a_policy(:can_create_direct_message) }
     end

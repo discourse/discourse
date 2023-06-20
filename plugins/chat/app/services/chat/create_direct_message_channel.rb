@@ -60,10 +60,7 @@ module Chat
     end
 
     def fetch_target_users(guardian:, contract:, **)
-      users = [guardian.user]
-      other_usernames = contract.target_usernames - [guardian.user.username]
-      users.concat(User.where(username: other_usernames).to_a) if other_usernames.any?
-      users.uniq
+      User.where(username: [guardian.user.username, *contract.target_usernames]).to_a
     end
 
     def fetch_user_comm_screener(target_users:, guardian:, **)
@@ -75,51 +72,45 @@ module Chat
     end
 
     def fetch_or_create_direct_message(target_users:, **)
-      direct_message = Chat::DirectMessage.for_user_ids(target_users.map(&:id))
-      return direct_message if direct_message.present?
-      Chat::DirectMessage.create(user_ids: target_users.map(&:id))
+      Chat::DirectMessage.for_user_ids(target_users.map(&:id)) ||
+        Chat::DirectMessage.create(user_ids: target_users.map(&:id))
     end
 
     def fetch_or_create_channel(direct_message:, **)
-      channel = Chat::Channel.find_by(chatable: direct_message)
-      channel.present? ? channel : direct_message.create_chat_channel
+      Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
     end
 
     def update_memberships(guardian:, channel:, target_users:, **)
-      sql_params = {
-        acting_user_id: guardian.user.id,
-        user_ids: target_users.map(&:id) + [guardian.user.id],
+      always_level = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
+      # sql_params = {
+      #   acting_user_id: guardian.user.id,
+      #   user_ids: target_users.map(&:id) + [guardian.user.id],
+      #   chat_channel_id: channel.id,
+      #   always_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+      # }
+
+      memberships =
+        target_users.map do |user|
+          {
+            user_id: user.id,
+            chat_channel_id: channel.id,
+            muted: false,
+            following: true,
+            desktop_notification_level: always_level,
+            mobile_notification_level: always_level,
+            created_at: Time.zone.now,
+            updated_at: Time.zone.now,
+          }
+        end
+
+      Chat::UserChatChannelMembership.upsert_all(
+        memberships,
+        unique_by: %i[user_id chat_channel_id],
+      )
+      Chat::UserChatChannelMembership.find_by(
+        user_id: guardian.user.id,
         chat_channel_id: channel.id,
-        always_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-      }
-
-      DB.exec(<<~SQL, sql_params)
-        INSERT INTO user_chat_channel_memberships(
-          user_id,
-          chat_channel_id,
-          muted,
-          following,
-          desktop_notification_level,
-          mobile_notification_level,
-          created_at,
-          updated_at
-        )
-        VALUES(
-          unnest(array[:user_ids]),
-          :chat_channel_id,
-          false,
-          true,
-          :always_notification_level,
-          :always_notification_level,
-          NOW(),
-          NOW()
-        )
-        ON CONFLICT (user_id, chat_channel_id) DO NOTHING;
-
-        UPDATE user_chat_channel_memberships
-        SET following = true
-        WHERE user_id = :acting_user_id AND chat_channel_id = :chat_channel_id;
-      SQL
+      ).update!(following: true)
     end
 
     def publish_channel(channel:, target_users:, **)
