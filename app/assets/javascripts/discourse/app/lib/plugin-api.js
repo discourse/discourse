@@ -2299,8 +2299,7 @@ class PluginApi {
    *   label: "super_plugin.bulk.enhance",
    *   icon: "magic",
    *   class: "btn-default",
-   *   enabledSetting: "super_plugin_enabled",
-   *   visible: () => this.currentUser.staff,
+   *   visible: () => this.siteSettings.super_plugin_enabled && this.currentUser.staff,
    *   action: async () => {
    *     await enhance(this.model.topics);
    *     doSomethingElse();
@@ -2312,7 +2311,6 @@ class PluginApi {
    * @param {string} opts.label
    * @param {string} opts.icon
    * @param {string} opts.class
-   * @param {string} opts.enabledSetting
    * @param {function} opts.visible
    * @param {function} opts.action
    */

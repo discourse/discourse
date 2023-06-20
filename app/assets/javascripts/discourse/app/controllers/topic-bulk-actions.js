@@ -22,15 +22,24 @@ export function addBulkButton() {
       dropFrom: "3.1.0.beta6",
     }
   );
+
+  // TODO
+  // _customButtons.push({
+  //   label: `topics.bulk.${opts.label}`,
+  //   icon: opts.icon,
+  //   class: opts.class,
+  //   enabledSetting: opts.enabledSetting,
+  //   visible: opts.visible || (() => true),
+  //   action: opts.action,
+  // });
 }
 
 export function _addBulkButton(opts) {
   _customButtons.push({
-    label: `topics.bulk.${opts.label}`,
+    label: opts.label,
     icon: opts.icon,
     class: opts.class,
-    visible: opts.visible || (() => true),
-    enabledSetting: opts.enabledSetting,
+    visible: opts.visible,
     action: opts.action,
   });
 }
@@ -147,24 +156,24 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.change_tags",
       icon: "tag",
       class: "btn-default",
-      enabledSetting: "tagging_enabled",
-      visible: () => this.currentUser.canManageTopic,
+      visible: () =>
+        this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
       action: () => this.set("activeComponent", ChangeTags),
     },
     {
       label: "topics.bulk.append_tags",
       icon: "tag",
       class: "btn-default",
-      enabledSetting: "tagging_enabled",
-      visible: () => this.currentUser.canManageTopic,
+      visible: () =>
+        this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
       action: () => this.set("activeComponent", AppendTags),
     },
     {
       label: "topics.bulk.remove_tags",
       icon: "tag",
       class: "btn-default",
-      enabledSetting: "tagging_enabled",
-      visible: () => this.currentUser.canManageTopic,
+      visible: () =>
+        this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
       action: () => {
         this.dialog.deleteConfirm({
           message: I18n.t("topics.bulk.confirm_remove_tags", {
@@ -185,11 +194,9 @@ export default class TopicBulkActions extends Controller.extend(
 
   get buttons() {
     return [...this.defaultButtons, ..._customButtons]
-      .filter((b) => {
-        if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
-          return false;
-        } else if (b.visible) {
-          return b.visible.call(this, this.model.topics);
+      .filter(({ visible }) => {
+        if (visible) {
+          return visible.call(this, this.model.topics);
         } else {
           return true;
         }
