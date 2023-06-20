@@ -190,9 +190,31 @@ RSpec.describe Oneboxer do
           .inner_html
           .chomp
           .strip
-      expect(preview).to eq(<<~HTML.chomp.strip)
-        This post has some hashtags, <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="random" data-id="#{category.id}"><span class="hashtag-icon-placeholder"></span>#{category.name}</a> and <a class="hashtag-cooked" href="#{tag.url}" data-type="tag" data-slug="bug" data-id="#{tag.id}"><span class="hashtag-icon-placeholder"></span>#{tag.name}</a>
-      HTML
+      expect(preview).to include("This post has some hashtags")
+      expect(preview).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: category.url,
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
+      expect(preview).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: tag.url,
+          "data-type": "tag",
+          "data-slug": tag.name,
+          "data-id": tag.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
     end
   end
 

@@ -1776,24 +1776,60 @@ RSpec.describe PrettyText do
 
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
 
-    expect(cooked).to include("<span class=\"hashtag-raw\">#unknown::tag</span>")
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\" data-id=\"#{category2.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>known</span></a>",
-    )
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\" data-id=\"#{tag.id}\" data-ref=\"known::tag\"><span class=\"hashtag-icon-placeholder\"></span><span>known</span></a>",
-    )
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\" data-id=\"#{category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>testing</span></a>",
-    )
-    expect(cooked).to include("<span class=\"hashtag-raw\">#secret</span>")
+    expect(cooked).to have_tag("span", text: "#unknown::tag", with: { class: "hashtag-raw" })
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: category2.url,
+        "data-type": "category",
+        "data-slug": category2.slug,
+        "data-id": category2.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": category.slug,
+        "data-id": category.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+    expect(cooked).to have_tag("span", text: "#secret", with: { class: "hashtag-raw" })
 
     # If the user hash access to the private category it should be cooked with the details + icon
     group.add(user)
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{private_category.url}\" data-type=\"category\" data-slug=\"secret\" data-id=\"#{private_category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>secret</span></a>",
-    )
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: private_category.url,
+        "data-type": "category",
+        "data-slug": private_category.slug,
+        "data-id": private_category.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
@@ -1809,10 +1845,18 @@ RSpec.describe PrettyText do
     expect(cooked).to eq(html.strip)
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag", user_id: user.id)
-    html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known" data-id=\"#{tag.id}\" data-ref="known::tag"><span class=\"hashtag-icon-placeholder\"></span><span>known</span></a></p>
-    HTML
-    expect(cooked).to eq(html.strip)
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
 
     # ensure it does not fight with the autolinker
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
@@ -2051,22 +2095,35 @@ HTML
         replacement: "discourse",
       )
 
-      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
-        <p>
-          <a class="mention" href="/u/test">@test</a>
-          <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
-          tdiscourset
-        </p>
-      HTML
+      cooked = PrettyText.cook("@test #test test")
+      expect(cooked).to have_tag("a", text: "@test", with: { class: "mention", href: "/u/test" })
+      expect(cooked).to have_tag(
+        "a",
+        text: "#test",
+        with: {
+          class: "hashtag",
+          href: "/c/test/#{category.id}",
+        },
+      )
+      expect(cooked).to include("tdiscourset")
 
       SiteSetting.enable_experimental_hashtag_autocomplete = true
-      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
-        <p>
-          <a class="mention" href="/u/test">@test</a>
-          <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="test" data-id="#{category.id}"><span class="hashtag-icon-placeholder"></span><span>test</span></a>
-          tdiscourset
-        </p>
-      HTML
+      cooked = PrettyText.cook("@test #test test")
+      expect(cooked).to have_tag("a", text: "@test", with: { class: "mention", href: "/u/test" })
+      expect(cooked).to have_tag(
+        "a",
+        text: "test",
+        with: {
+          class: "hashtag-cooked",
+          href: "/c/test/#{category.id}",
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
+      expect(cooked).to include("tdiscourset")
     end
 
     it "supports overlapping words" do

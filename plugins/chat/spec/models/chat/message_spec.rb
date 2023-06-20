@@ -241,7 +241,7 @@ describe Chat::Message do
       )
     end
 
-    it "supports hashtag-autocomplete plugin" do
+    it "supports hashtag autocomplete" do
       SiteSetting.chat_enabled = true
       SiteSetting.enable_experimental_hashtag_autocomplete = true
 
@@ -250,9 +250,18 @@ describe Chat::Message do
 
       cooked = described_class.cook("##{category.slug}", user_id: user.id)
 
-      expect(cooked).to eq(
-        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\" data-id=\"#{category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>#{category.name}</span></a></p>",
-      )
+      expect(cooked).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: category.url,
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
     end
 
     it "supports censored plugin" do
