@@ -101,11 +101,26 @@
       cursor: pointer;
       pointer-events: all;
 
-      &:hover {
-        border: 1px solid var(--secondary-high);
-        border-radius: 4px;
-        color: var(--primary-800);
-        background: var(--primary-50);
+      .no-touch & {
+        &:hover {
+          border: 1px solid var(--secondary-high);
+          border-radius: 4px;
+          color: var(--primary-800);
+          background: var(--primary-50);
+        }
+      }
+
+      .touch & {
+        &:active {
+          border: 1px solid var(--secondary-high);
+          border-radius: 4px;
+          color: var(--primary-800);
+          background: var(--primary-50);
+        }
+      }
+
+      &:active {
+        transform: scale(0.98);
       }
     }
 
