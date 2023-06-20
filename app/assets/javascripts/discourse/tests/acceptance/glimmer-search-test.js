@@ -267,7 +267,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "proper");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
     await click(".show-advanced-search");
 
@@ -349,7 +349,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "a proper");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -384,7 +384,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     await fillIn("#search-term", "dev");
     await query("#search-term").focus();
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
