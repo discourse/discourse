@@ -111,6 +111,11 @@
   }
 
   .sidebar-categories-form__category-badge {
+    .badge-category {
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
     .category-name {
       color: var(--primary);
       font-size: var(--font-up-1);
