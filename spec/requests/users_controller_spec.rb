@@ -1656,7 +1656,7 @@ RSpec.describe UsersController do
         expect(!!created_user.custom_fields["from_staged"]).to eq(true)
 
         # TODO: Make this pass
-        expect(!!created_user.custom_fields["user_field_#{tennis_field.id}"]).to eq("Nadal")
+        expect(created_user.custom_fields["user_field_#{tennis_field.id}"]).to eq("Nadal")
       end
     end
   end
