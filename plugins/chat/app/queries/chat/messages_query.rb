@@ -3,10 +3,10 @@
 module Chat
   # Queries messages for a specific channel. This can be used in two modes:
   #
-  # 1. Query messages around a target_message_id. This is used when a user
-  #    needs to jump to the middle of a messages stream or load around their
-  #    last read message ID. There is no pagination or direction here, just
-  #    a limit on past and future messages.
+  # 1. Query messages around a target_message_id or target_date. This is used
+  #    when a user needs to jump to the middle of a messages stream or load
+  #    around a target. There is no pagination or direction
+  #    here, just a limit on past and future messages.
   # 2. Query messages with paginations and direction. This is used for normal
   #    scrolling of the messages stream of a channel.
   #
@@ -28,6 +28,7 @@ module Chat
     # @param thread_id [Integer] (optional) The thread ID to filter messages by.
     # @param target_message_id [Integer] (optional) The message ID to query around.
     #   It is assumed that the caller already checked if this exists.
+    # @param target_date [String] (optional) The date to query around.
     # @param include_thread_messages [Boolean] (optional) Whether to include messages
     #   that are linked to a thread.
     # @param page_size [Integer] (optional) The number of messages to fetch when not
@@ -42,7 +43,8 @@ module Chat
       target_message_id: nil,
       include_thread_messages: false,
       page_size: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT,
-      direction: nil
+      direction: nil,
+      target_date: nil
     )
       messages = base_query(channel: channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(channel.chatable)
@@ -61,7 +63,11 @@ module Chat
       if target_message_id.present? && direction.blank?
         query_around_target(target_message_id, channel, messages)
       else
-        query_paginated_messages(direction, page_size, channel, messages, target_message_id)
+        if target_date.present?
+          query_by_date(target_date, channel, messages)
+        else
+          query_paginated_messages(direction, page_size, channel, messages, target_message_id)
+        end
       end
     end
 
@@ -147,6 +153,33 @@ module Chat
 
       {
         messages: direction == FUTURE ? messages : messages.reverse,
+        can_load_more_past: can_load_more_past,
+        can_load_more_future: can_load_more_future,
+      }
+    end
+
+    def self.query_by_date(target_date, channel, messages)
+      past_messages =
+        messages
+          .where("created_at <= ?", target_date)
+          .order(created_at: :desc)
+          .limit(PAST_MESSAGE_LIMIT)
+          .to_a
+
+      future_messages =
+        messages
+          .where("created_at > ?", target_date)
+          .order(created_at: :asc)
+          .limit(FUTURE_MESSAGE_LIMIT)
+          .to_a
+
+      can_load_more_past = past_messages.size == PAST_MESSAGE_LIMIT
+      can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
+
+      {
+        past_messages: past_messages,
+        future_messages: future_messages,
+        target_date: target_date,
         can_load_more_past: can_load_more_past,
         can_load_more_future: can_load_more_future,
       }

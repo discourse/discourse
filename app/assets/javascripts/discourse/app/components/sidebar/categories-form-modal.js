@@ -8,8 +8,9 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class extends Component {
-  @service site;
   @service currentUser;
+  @service site;
+  @service siteSettings;
 
   @tracked filter = "";
 
@@ -86,12 +87,29 @@ export default class extends Component {
   }
 
   @action
+  deselectAll() {
+    this.selectedSidebarCategoryIds.clear();
+  }
+
+  @action
   toggleCategory(categoryId) {
     if (this.selectedSidebarCategoryIds.includes(categoryId)) {
       this.selectedSidebarCategoryIds.removeObject(categoryId);
     } else {
       this.selectedSidebarCategoryIds.addObject(categoryId);
     }
+  }
+
+  get modalHeaderAfterTitleElement() {
+    return document.getElementById("modal-header-after-title");
+  }
+
+  @action
+  resetToDefaults() {
+    this.selectedSidebarCategoryIds =
+      this.siteSettings.default_navigation_menu_categories
+        .split("|")
+        .map((id) => parseInt(id, 10));
   }
 
   @action

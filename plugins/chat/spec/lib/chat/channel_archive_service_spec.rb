@@ -194,9 +194,20 @@ describe Chat::ChannelArchiveService do
           subject.new(@channel_archive).execute
           expect(@channel_archive.reload.complete?).to eq(true)
           pm_topic = Topic.private_messages.last
-          expect(pm_topic.first_post.cooked).to include(
-            "<a class=\"hashtag-cooked\" href=\"#{channel.relative_url}\" data-type=\"channel\" data-slug=\"#{channel.slug}\" data-id=\"#{channel.id}\" data-ref=\"#{channel.slug}::channel\"><span class=\"hashtag-icon-placeholder\"></span><span>#{channel.title(user)}</span></a>",
-          )
+          expect(pm_topic.first_post.cooked).to have_tag(
+            "a",
+            with: {
+              class: "hashtag-cooked",
+              href: channel.relative_url,
+              "data-type": "channel",
+              "data-slug": channel.slug,
+              "data-id": channel.id,
+              "data-ref": "#{channel.slug}::channel",
+            },
+          ) do
+            with_tag("span", with: { class: "hashtag-icon-placeholder" })
+            with_tag("span", text: channel.title(user))
+          end
         end
       end
 

@@ -46,6 +46,10 @@ export default class ChatApi extends Service {
       if (data.threadId) {
         args.thread_id = data.threadId;
       }
+
+      if (data.targetDate) {
+        args.target_date = data.targetDate;
+      }
     }
 
     return this.#getRequest(`/channels/${channelId}`, args).then((result) => {

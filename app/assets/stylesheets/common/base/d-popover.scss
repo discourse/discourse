@@ -6,6 +6,10 @@ $d-popover-border: var(--primary-low);
   background: $d-popover-background;
   border: 1px solid var(--primary-low);
   box-shadow: var(--shadow-menu-panel);
+
+  > .tippy-svg-arrow {
+    color: $d-popover-background;
+  }
 }
 
 .tippy-box[data-placement^="top"] .tippy-svg-arrow > svg {
@@ -16,10 +20,6 @@ $d-popover-border: var(--primary-low);
 }
 
 #tippy-rounded-arrow {
-  .svg-content {
-    fill: $d-popover-background;
-  }
-
   .svg-arrow {
     fill: $d-popover-border;
   }
