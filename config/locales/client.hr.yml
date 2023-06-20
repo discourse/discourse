@@ -4260,7 +4260,7 @@ hr:
               content: "Grupe"
               title: "Popis dostupnih korisničkih grupa"
             users:
-              content: "Korisnika"
+              content: "Korisnici"
               title: "Popis svih korisnika"
             my_posts:
               content: "Moje objave"
@@ -4656,6 +4656,7 @@ hr:
         broken_route: "Nije moguće konfigurirati vezu na '%{name}'. Provjerite jesu li programi za blokiranje oglasa onemogućeni i pokušajte ponovno učitati stranicu."
       navigation_menu:
         sidebar: "Bočna traka"
+        header_dropdown: "Padajući izbornik zaglavlja"
         legacy: "Naslijeđe"
       backups:
         title: "Sigurnosne kopije"
