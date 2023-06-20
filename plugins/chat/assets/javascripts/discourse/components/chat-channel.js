@@ -55,7 +55,6 @@ export default class ChatLivePane extends Component {
   @tracked needsArrow = false;
   @tracked loadedOnce = false;
   @tracked uploadDropZone;
-  @tracked requestedTargetDate;
 
   scrollable = null;
   _loadedChannelId = null;
