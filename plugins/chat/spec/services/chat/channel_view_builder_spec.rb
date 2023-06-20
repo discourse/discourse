@@ -352,14 +352,11 @@ RSpec.describe Chat::ChannelViewBuilder do
         msg.update!(created_at: 1.days.ago)
         msg
       end
+
       let(:target_date) { 2.days.ago }
 
       it "includes past and future messages" do
         expect(subject.view.chat_messages).to eq([past_message, future_message])
-      end
-
-      it "does not include nil values" do
-        expect(subject.view.chat_messages).not_to include(nil)
       end
     end
   end
