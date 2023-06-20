@@ -145,6 +145,7 @@ group :test do
   gem "selenium-webdriver", require: false
   gem "test-prof"
   gem "webdrivers", require: false
+  gem "rails-dom-testing", require: false
 end
 
 group :test, :development do
