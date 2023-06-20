@@ -24,7 +24,7 @@ RSpec.describe "Deleted message", type: :system do
       last_message = find(".chat-message-container:last-child")
       channel_page.delete_message(OpenStruct.new(id: last_message["data-id"]))
 
-      expect(channel_page).to have_deleted_message(
+      expect(channel_page.messages).to have_deleted_message(
         OpenStruct.new(id: last_message["data-id"]),
         count: 1,
       )
@@ -40,12 +40,12 @@ RSpec.describe "Deleted message", type: :system do
         .update!(last_read_message_id: message.id)
       chat_page.visit_channel(channel_1)
       channel_page.delete_message(message)
-      expect(channel_page).to have_deleted_message(message, count: 1)
+      expect(channel_page.messages).to have_deleted_message(message, count: 1)
       sidebar_component.click_link(channel_2.name)
       expect(channel_page).to have_no_loading_skeleton
 
       sidebar_component.click_link(channel_1.name)
-      expect(channel_page).to have_deleted_message(message, count: 1)
+      expect(channel_page.messages).to have_deleted_message(message, count: 1)
     end
 
     context "when the current user is not admin" do
@@ -72,7 +72,7 @@ RSpec.describe "Deleted message", type: :system do
         end
 
         sidebar_component.click_link(channel_1.name)
-        expect(channel_page).to have_no_message(id: message.id)
+        expect(channel_page.messages).to have_no_message(id: message.id)
       end
     end
   end
@@ -93,10 +93,9 @@ RSpec.describe "Deleted message", type: :system do
       channel_page.delete_message(message_4)
       channel_page.delete_message(message_6)
 
-      expect(channel_page).to have_deleted_message(message_1)
-      expect(channel_page).to have_deleted_message(message_4, count: 2)
-      expect(channel_page).to have_deleted_message(message_6)
-      expect(channel_page).to have_no_message(id: message_3.id)
+      expect(channel_page.messages).to have_deleted_messages(message_1, message_6)
+      expect(channel_page.messages).to have_deleted_message(message_4, count: 2)
+      expect(channel_page.messages).to have_no_message(id: message_3.id)
     end
   end
 
@@ -129,20 +128,20 @@ RSpec.describe "Deleted message", type: :system do
       channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
 
-      expect(channel_page).to have_message(id: message_1.id)
-      expect(channel_page).to have_message(id: message_2.id)
-      expect(open_thread).to have_message(thread_id: thread.id, id: message_4.id)
-      expect(open_thread).to have_message(thread_id: thread.id, id: message_5.id)
+      expect(channel_page.messages).to have_message(id: message_2.id)
+      expect(channel_page.messages).to have_message(id: message_1.id)
+      expect(open_thread.messages).to have_message(thread_id: thread.id, id: message_4.id)
+      expect(open_thread.messages).to have_message(thread_id: thread.id, id: message_5.id)
 
       Chat::Publisher.publish_bulk_delete!(
         channel_1,
         [message_1.id, message_2.id, message_4.id, message_5.id].flatten,
       )
 
-      expect(channel_page).to have_no_message(id: message_1.id)
-      expect(channel_page).to have_deleted_message(message_2, count: 2)
-      expect(open_thread).to have_no_message(thread_id: thread.id, id: message_4.id)
-      expect(open_thread).to have_deleted_message(message_5, count: 2)
+      expect(channel_page.messages).to have_no_message(id: message_1.id)
+      expect(channel_page.messages).to have_deleted_message(message_2, count: 2)
+      expect(open_thread.messages).to have_no_message(thread_id: thread.id, id: message_4.id)
+      expect(open_thread.messages).to have_deleted_message(message_5, count: 2)
     end
   end
 end

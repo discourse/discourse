@@ -20,7 +20,7 @@
     }
   }
 
-  > .tippy-svg-arrow > svg {
+  > .tippy-svg-arrow {
     color: var(--tertiary);
   }
 }
@@ -52,19 +52,19 @@
 .tippy-box[data-theme~="user-tips"][data-placement^="left"]
   > .tippy-svg-arrow
   > svg {
-  left: 11px;
+  left: 12px;
 }
 
 .tippy-box[data-theme~="user-tips"][data-placement^="top"]
   > .tippy-svg-arrow
   > svg {
-  top: 11px;
+  top: 12px;
 }
 
 .tippy-box[data-theme~="user-tips"][data-placement^="bottom"]
   > .tippy-svg-arrow
   > svg {
-  top: -13px;
+  top: -14px;
   left: -1px;
 }
 

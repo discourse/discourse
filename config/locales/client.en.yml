@@ -4389,11 +4389,15 @@ en:
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
-      categories_form:
+      categories_form_modal:
         save: "Save"
         title: "Edit categories navigation"
+        subtitle:
+          button_text: "Deselect all"
+          text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+        reset_to_defaults: "Reset to defaults"
 
       sections:
         custom:
