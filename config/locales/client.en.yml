@@ -4390,10 +4390,13 @@ en:
       all_categories: "All categories"
       all_tags: "All tags"
       categories_form:
-        save: "Save"
         title: "Edit categories navigation"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+      tags_form:
+        title: "Edit tags navigation"
+        filter_placeholder: "Filter tags"
+
 
       sections:
         custom:

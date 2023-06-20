@@ -1,0 +1,37 @@
+<DModalBody @title="sidebar.tags_form.title" @class="sidebar-tags-form-modal">
+  <form class="sidebar-tags-form">
+    {{#each this.tags as |tag|}}
+      <div class="sidebar-tags-form__tag" data-category-name={{tag.name}}>
+        <Input
+          id={{concat "sidebar-tags-form__input--" tag.name}}
+          class="sidebar-tags-form__input"
+          @type="checkbox"
+        />
+
+        <label
+          class="sidebar-tags-form__tag-label"
+          for={{concat "sidebar-tags-form__input--" tag.name}}
+        >
+          <p>
+            <span class="sidebar-tags-form__tag-label-name">
+              {{tag.name}}
+            </span>
+
+            <span class="sidebar-tags-form__tag-label-count">
+              ({{tag.count}})
+            </span>
+          </p>
+        </label>
+      </div>
+    {{/each}}
+  </form>
+</DModalBody>
+
+<div class="modal-footer">
+  <DButton
+    @class="btn-primary sidebar-tags-form__save-button"
+    @label="save"
+    @disabled={{this.saving}}
+    @action={{this.save}}
+  />
+</div>
