@@ -8,14 +8,12 @@
       {{html-safe (i18n "topics.bulk.progress" count=this.processedTopicCount)}}
     </p>
   {{else if this.activeComponent}}
-    {{#let this.activeComponent as |Component|}}
-      <Component
-        @loading={{this.loading}}
-        @forEachPerformed={{this.forEachPerformed}}
-        @performAndRefresh={{this.performAndRefresh}}
-        @categoryId={{this.model.category.id}}
-      />
-    {{/let}}
+    <this.activeComponent
+      @loading={{this.loading}}
+      @forEachPerformed={{this.forEachPerformed}}
+      @performAndRefresh={{this.performAndRefresh}}
+      @categoryId={{this.model.category.id}}
+    />
   {{else}}
     <div class="bulk-buttons">
       {{#each this.buttons as |button|}}

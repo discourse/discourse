@@ -12,7 +12,7 @@ import AppendTags from "../components/bulk-actions/append-tags";
 
 const _customButtons = [];
 
-export function addBulkButton(opts) {
+export function _addBulkButton(opts) {
   _customButtons.push({
     label: `topics.bulk.${opts.label}`,
     icon: opts.icon,

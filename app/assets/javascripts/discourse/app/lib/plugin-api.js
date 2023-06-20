@@ -120,6 +120,7 @@ import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
+import { _addBulkButton } from "discourse/controllers/topic-bulk-actions";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -1691,7 +1692,7 @@ class PluginApi {
   /**
    * Add a function to be called when there is a keyDown even on the search-menu widget.
    * This function runs before the default logic, and if one callback returns a falsey value
-   * the logic chain will stop, to prevent the core behavior from occuring.
+   * the logic chain will stop, to prevent the core behavior from occurring.
    *
    * Example usage:
    * ```
@@ -2279,7 +2280,7 @@ class PluginApi {
   }
 
   /**
-   * Registers a hastag type and its corresponding class.
+   * Registers a hashtag type and its corresponding class.
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
    * @param {string} type - The type of the hashtag.
@@ -2288,6 +2289,13 @@ class PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * TODO
+   */
+  addBulkActionButton(opts) {
+    _addBulkButton(opts);
   }
 }
 
