@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import I18n from "I18n";
@@ -51,10 +52,10 @@ export default class TopicBulkActions extends Controller.extend(
   @service dialog;
   @controller("user-private-messages") userPrivateMessages;
 
-  loading = false;
-  showProgress = false;
-  processedTopicCount = 0;
-  activeComponent = null;
+  @tracked loading = false;
+  @tracked showProgress = false;
+  @tracked processedTopicCount = 0;
+  @tracked activeComponent = null;
 
   defaultButtons = [
     {
@@ -62,7 +63,7 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "pencil-alt",
       class: "btn-default",
       visible: (topics) => !topics.some((t) => t.isPrivateMessage),
-      action: () => this.set("activeComponent", ChangeCategory),
+      action: () => (this.activeComponent = ChangeCategory),
     },
     {
       label: "topics.bulk.close_topics",
@@ -112,7 +113,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.notification_level",
       icon: "d-regular",
       class: "btn-default",
-      action: () => this.set("activeComponent", NotificationLevel),
+      action: () => (this.activeComponent = NotificationLevel),
     },
     {
       label: "topics.bulk.defer",
@@ -158,7 +159,7 @@ export default class TopicBulkActions extends Controller.extend(
       class: "btn-default",
       visible: () =>
         this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
-      action: () => this.set("activeComponent", ChangeTags),
+      action: () => (this.activeComponent = ChangeTags),
     },
     {
       label: "topics.bulk.append_tags",
@@ -166,7 +167,7 @@ export default class TopicBulkActions extends Controller.extend(
       class: "btn-default",
       visible: () =>
         this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
-      action: () => this.set("activeComponent", AppendTags),
+      action: () => (this.activeComponent = AppendTags),
     },
     {
       label: "topics.bulk.remove_tags",
@@ -206,14 +207,14 @@ export default class TopicBulkActions extends Controller.extend(
 
   onShow() {
     this.modal.set("modalClass", "topic-bulk-actions-modal small");
-    this.set("activeComponent", null);
+    this.activeComponent = null;
   }
 
   async perform(operation) {
-    this.set("loading", true);
+    this.loading = true;
 
     if (this.model.topics.length > 20) {
-      this.set("showProgress", true);
+      this.showProgress = true;
     }
 
     try {
@@ -221,9 +222,9 @@ export default class TopicBulkActions extends Controller.extend(
     } catch {
       this.dialog.alert(I18n.t("generic_error"));
     } finally {
-      this.set("loading", false);
-      this.set("processedTopicCount", 0);
-      this.set("showProgress", false);
+      this.loading = false;
+      this.processedTopicCount = 0;
+      this.showProgress = false;
     }
   }
 
@@ -248,7 +249,7 @@ export default class TopicBulkActions extends Controller.extend(
 
     const tasks = topicChunks.map((topics) => async () => {
       const result = await Topic.bulkOperation(topics, operation);
-      this.set("processedTopicCount", this.processedTopicCount + topics.length);
+      this.processedTopicCount = this.processedTopicCount + topics.length;
       return result;
     });
 
