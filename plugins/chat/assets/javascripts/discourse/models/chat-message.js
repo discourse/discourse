@@ -240,12 +240,21 @@ export default class ChatMessage {
     this.mentionedUsers.set(user.id, user);
   }
 
-  async ensureMentionsLoaded() {
-    const notLoaded = this.#notLoadedMentions;
-    if (notLoaded.length > 0) {
-      const users = await this.usersApi.lookupUsers(notLoaded);
-      users.forEach((user) => this.addMentionedUser(user));
-      this.incrementVersion();
+  async ensureMentionsLoaded(ignoreFailure) {
+    try {
+      const notLoaded = this.#notLoadedMentions;
+      if (notLoaded.length > 0) {
+        const users = await this.usersApi.lookupUsers(notLoaded);
+        users.forEach((user) => this.addMentionedUser(user));
+        this.incrementVersion();
+      }
+    } catch (e) {
+      if (ignoreFailure) {
+        // eslint-disable-next-line no-console
+        console.warn("Cannot load mentioned users", e);
+      } else {
+        throw e;
+      }
     }
   }
 

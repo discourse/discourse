@@ -248,11 +248,7 @@ export default class ChatThreadPanel extends Component {
 
     this.chatThreadPane.sending = true;
 
-    // We don't want to fail if somethings goes wrong here,
-    // because that would cancel posting a message to the server.
-    // We'd better just show mentions on the message without status on them.
-    await this.#tryToEnsureMentionsLoaded(message);
-
+    await message.ensureMentionsLoaded({ ignoreFailure: true });
     await this.args.thread.stageMessage(message);
     this.resetComposerMessage();
     this.scrollToBottom();
@@ -295,11 +291,7 @@ export default class ChatThreadPanel extends Component {
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    // We don't want to fail if somethings goes wrong here,
-    // because that would cancel posting a message to the server.
-    // We'd better just show mentions on the message without status on them.
-    await this.#tryToEnsureMentionsLoaded(message);
-
+    await message.ensureMentionsLoaded({ ignoreFailure: true });
     this.resetComposerMessage();
 
     try {
@@ -383,14 +375,5 @@ export default class ChatThreadPanel extends Component {
     }
 
     this.resetComposerMessage();
-  }
-
-  async #tryToEnsureMentionsLoaded(message) {
-    try {
-      await message.ensureMentionsLoaded();
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn("Cannot load mentioned users", e);
-    }
   }
 }
