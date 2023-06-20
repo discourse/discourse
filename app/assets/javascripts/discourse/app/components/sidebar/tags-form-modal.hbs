@@ -1,11 +1,13 @@
 <DModalBody @title="sidebar.tags_form.title" @class="sidebar-tags-form-modal">
   <form class="sidebar-tags-form">
     {{#each this.tags as |tag|}}
-      <div class="sidebar-tags-form__tag" data-category-name={{tag.name}}>
+      <div class="sidebar-tags-form__tag" data-tag-name={{tag.name}}>
         <Input
           id={{concat "sidebar-tags-form__input--" tag.name}}
           class="sidebar-tags-form__input"
           @type="checkbox"
+          @checked={{includes this.selectedTags tag.name}}
+          {{on "click" (action "toggleTag" tag.name)}}
         />
 
         <label
