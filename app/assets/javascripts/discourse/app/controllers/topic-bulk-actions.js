@@ -29,7 +29,7 @@ export function _addBulkButton(opts) {
     label: `topics.bulk.${opts.label}`,
     icon: opts.icon,
     class: opts.class,
-    buttonVisible: opts.buttonVisible || (() => true),
+    visible: opts.visible || (() => true),
     enabledSetting: opts.enabledSetting,
     action: opts.action,
   });
@@ -52,14 +52,14 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.change_category",
       icon: "pencil-alt",
       class: "btn-default",
-      buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
+      visible: (topics) => !topics.some((t) => t.isPrivateMessage),
       action: () => this.set("activeComponent", ChangeCategory),
     },
     {
       label: "topics.bulk.close_topics",
       icon: "lock",
       class: "btn-default",
-      buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
+      visible: (topics) => !topics.some((t) => t.isPrivateMessage),
       action: () =>
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true)),
     },
@@ -67,7 +67,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.archive_topics",
       icon: "folder",
       class: "btn-default",
-      buttonVisible: (topics) => !topics.some((t) => t.isPrivateMessage),
+      visible: (topics) => !topics.some((t) => t.isPrivateMessage),
       action: () =>
         this.forEachPerformed({ type: "archive" }, (t) =>
           t.set("archived", true)
@@ -77,7 +77,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.archive_topics",
       icon: "folder",
       class: "btn-default",
-      buttonVisible: (topics) => topics.some((t) => t.isPrivateMessage),
+      visible: (topics) => topics.some((t) => t.isPrivateMessage),
       action: () => {
         let params = { type: "archive_messages" };
         if (this.userPrivateMessages.isGroup) {
@@ -90,7 +90,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.move_messages_to_inbox",
       icon: "folder",
       class: "btn-default",
-      buttonVisible: (topics) => topics.some((t) => t.isPrivateMessage),
+      visible: (topics) => topics.some((t) => t.isPrivateMessage),
       action: () => {
         let params = { type: "move_messages_to_inbox" };
         if (this.userPrivateMessages.isGroup) {
@@ -109,14 +109,14 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.defer",
       icon: "circle",
       class: "btn-default",
-      buttonVisible: () => this.currentUser.user_option.enable_defer,
+      visible: () => this.currentUser.user_option.enable_defer,
       action: () => this.performAndRefresh({ type: "destroy_post_timing" }),
     },
     {
       label: "topics.bulk.unlist_topics",
       icon: "far-eye-slash",
       class: "btn-default",
-      buttonVisible: (topics) =>
+      visible: (topics) =>
         topics.some((t) => t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
       action: () =>
@@ -128,7 +128,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.relist_topics",
       icon: "far-eye",
       class: "btn-default",
-      buttonVisible: (topics) =>
+      visible: (topics) =>
         topics.some((t) => !t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
       action: () =>
@@ -140,7 +140,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.reset_bump_dates",
       icon: "anchor",
       class: "btn-default",
-      buttonVisible: () => this.currentUser.canManageTopic,
+      visible: () => this.currentUser.canManageTopic,
       action: () => this.performAndRefresh({ type: "reset_bump_dates" }),
     },
     {
@@ -148,7 +148,7 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "tag",
       class: "btn-default",
       enabledSetting: "tagging_enabled",
-      buttonVisible: () => this.currentUser.canManageTopic,
+      visible: () => this.currentUser.canManageTopic,
       action: () => this.set("activeComponent", ChangeTags),
     },
     {
@@ -156,7 +156,7 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "tag",
       class: "btn-default",
       enabledSetting: "tagging_enabled",
-      buttonVisible: () => this.currentUser.canManageTopic,
+      visible: () => this.currentUser.canManageTopic,
       action: () => this.set("activeComponent", AppendTags),
     },
     {
@@ -164,7 +164,7 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "tag",
       class: "btn-default",
       enabledSetting: "tagging_enabled",
-      buttonVisible: () => this.currentUser.canManageTopic,
+      visible: () => this.currentUser.canManageTopic,
       action: () => {
         this.dialog.deleteConfirm({
           message: I18n.t("topics.bulk.confirm_remove_tags", {
@@ -178,7 +178,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.delete",
       icon: "trash-alt",
       class: "btn-danger delete-topics",
-      buttonVisible: () => this.currentUser.staff,
+      visible: () => this.currentUser.staff,
       action: () => this.performAndRefresh({ type: "delete" }),
     },
   ];
@@ -188,8 +188,8 @@ export default class TopicBulkActions extends Controller.extend(
       .filter((b) => {
         if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
           return false;
-        } else if (b.buttonVisible) {
-          return b.buttonVisible.call(this, this.model.topics);
+        } else if (b.visible) {
+          return b.visible.call(this, this.model.topics);
         } else {
           return true;
         }

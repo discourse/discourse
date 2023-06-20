@@ -2300,7 +2300,7 @@ class PluginApi {
    *   icon: "magic",
    *   class: "btn-default",
    *   enabledSetting: "super_plugin_enabled",
-   *   buttonVisible: () => this.currentUser.staff,
+   *   visible: () => this.currentUser.staff,
    *   action: async () => {
    *     await enhance(this.model.topics);
    *     doSomethingElse();
@@ -2313,7 +2313,7 @@ class PluginApi {
    * @param {string} opts.icon
    * @param {string} opts.class
    * @param {string} opts.enabledSetting
-   * @param {function} opts.buttonVisible
+   * @param {function} opts.visible
    * @param {function} opts.action
    */
   addBulkActionButton(opts) {
