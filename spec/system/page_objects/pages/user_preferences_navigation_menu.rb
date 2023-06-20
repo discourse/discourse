@@ -18,14 +18,8 @@ module PageObjects
         tag_selector_header.has_content?(tags.map(&:name).join(", "))
       end
 
-      def has_navigation_menu_list_destination_preference?(type)
-        list_selector_header =
-          page.find(
-            ".preferences-navigation-menu-navigation__list-destination-selector .select-kit-header-wrapper",
-          )
-        list_selector_header.has_content?(
-          I18n.t("js.user.experimental_sidebar.list_destination_#{type}"),
-        )
+      def has_navigation_menu_preference_checked?(preference)
+        page.find(".#{preference} input").checked?
       end
     end
   end

@@ -46,16 +46,20 @@
       "user.experimental_sidebar.navigation_section"
     }}</legend>
 
-  <div class="controls controls-dropdown">
+  <div class="controls">
     <label>{{i18n
-        "user.experimental_sidebar.list_destination_instruction"
+        "user.experimental_sidebar.navigation_section_instruction"
       }}</label>
-    <ComboBox
-      @class="preferences-navigation-menu-navigation__list-destination-selector"
-      @valueProperty="value"
-      @content={{this.sidebarListDestinations}}
-      @value={{this.newSidebarListDestination}}
-      @onChange={{action (mut this.newSidebarListDestination)}}
+
+    <PreferenceCheckbox
+      @labelKey="user.experimental_sidebar.link_to_filtered_list_checkbox_description"
+      @checked={{this.newSidebarLinkToFilteredList}}
+      @class="pref-link-to-filtered-list"
+    />
+    <PreferenceCheckbox
+      @labelKey="user.experimental_sidebar.show_count_new_items_checkbox_description"
+      @checked={{this.newSidebarShowCountOfNewItems}}
+      @class="pref-show-count-new-items"
     />
   </div>
 </div>

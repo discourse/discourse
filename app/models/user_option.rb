@@ -3,6 +3,7 @@
 class UserOption < ActiveRecord::Base
   self.ignored_columns = [
     "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
+    "sidebar_list_destination", # TODO(osama): Remove in January 2024
   ]
 
   self.primary_key = :user_id
@@ -14,12 +15,6 @@ class UserOption < ActiveRecord::Base
   scope :human_users, -> { where("user_id > 0") }
 
   enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
-  enum sidebar_list_destination: {
-         none_selected: 0,
-         default: 0,
-         unread_new: 1,
-       },
-       _prefix: "sidebar_list"
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -291,8 +286,9 @@ end
 #  chat_email_frequency                 :integer          default(1), not null
 #  enable_experimental_sidebar          :boolean          default(FALSE)
 #  seen_popups                          :integer          is an Array
-#  sidebar_list_destination             :integer          default("none_selected"), not null
 #  chat_header_indicator_preference     :integer          default(0), not null
+#  sidebar_link_to_filtered_list        :boolean          default(FALSE), not null
+#  sidebar_show_count_of_new_items      :boolean          default(FALSE), not null
 #
 # Indexes
 #

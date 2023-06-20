@@ -16,7 +16,6 @@ import {
   resetCustomCountables,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/navigation-menu";
 import { bind } from "discourse-common/utils/decorators";
 
 acceptance("Sidebar - Plugin API", function (needs) {
@@ -713,7 +712,10 @@ acceptance("Sidebar - Plugin API", function (needs) {
         );
 
         updateCurrentUser({
-          sidebar_list_destination: UNREAD_LIST_DESTINATION,
+          user_option: {
+            sidebar_link_to_filtered_list: true,
+            sidebar_show_count_of_new_items: true,
+          },
         });
 
         assert.strictEqual(
