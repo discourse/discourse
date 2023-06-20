@@ -1626,11 +1626,6 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it "returns false as a TL4 user if edit_all_post_groups is empty" do
-        SiteSetting.edit_all_post_groups = nil
-        expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
-      end
-
       it "returns false when trying to edit a topic with no trust" do
         SiteSetting.min_trust_to_edit_post = 2
         post.user.trust_level = 1
@@ -1876,11 +1871,6 @@ RSpec.describe Guardian do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
         end
 
-        it "returns false as a TL3 user if edit_all_topic_groups is empty" do
-          SiteSetting.edit_all_topic_groups = nil
-          expect(Guardian.new(trust_level_3).can_edit?(post)).to eq(false)
-        end
-
         it "returns false when the category is read only" do
           topic.category.set_permissions(everyone: :readonly)
           topic.category.save
@@ -1930,9 +1920,24 @@ RSpec.describe Guardian do
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to be_truthy
         end
 
-        it "returns false as a TL4 user if edit_all_post_groups is empty" do
-          SiteSetting.edit_all_post_groups = nil
-          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(false)
+        it "returns true if the user is in edit_all_post_groups" do
+          SiteSetting.edit_all_post_groups = 14
+          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(true)
+        end
+
+        it "returns false if the user is not in edit_all_post_groups" do
+          SiteSetting.edit_all_post_groups = 14
+          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to eq(false)
+        end
+
+        it "returns true if the user is in edit_all_topic_groups" do
+          SiteSetting.edit_all_topic_groups = 13
+          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to eq(true)
+        end
+
+        it "returns false if the user is not in edit_all_topic_groups" do
+          SiteSetting.edit_all_topic_groups = 13
+          expect(Guardian.new(trust_level_2).can_edit?(archived_topic)).to eq(false)
         end
 
         it "returns false at trust level 3" do

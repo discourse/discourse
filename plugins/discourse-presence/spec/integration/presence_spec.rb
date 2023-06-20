@@ -149,27 +149,13 @@ RSpec.describe "discourse-presence" do
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
-    it "allows only author and staff when editing a public post with tl4 editing disabled" do
-      SiteSetting.edit_all_post_groups = nil
-
-      p = Fabricate(:post, topic: public_topic, user: user)
-      c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
-      expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
-      expect(c.config.allowed_user_ids).to contain_exactly(user.id)
-    end
-
     it "follows the wiki edit trust level site setting" do
       p = Fabricate(:post, topic: public_topic, user: user, wiki: true)
       SiteSetting.min_trust_to_edit_wiki_post = TrustLevel.levels[:basic]
-      SiteSetting.edit_all_post_groups = nil
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(
-        Group::AUTO_GROUPS[:staff],
-        Group::AUTO_GROUPS[:trust_level_1],
-      )
+      expect(c.config.allowed_group_ids).to contain(Group::AUTO_GROUPS[:trust_level_1])
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
