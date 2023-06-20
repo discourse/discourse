@@ -1649,7 +1649,6 @@ da:
         other: "Der er <b>%{count}</b> svar."
       description_time_MF: |
         Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>.
-      enable: "Opsummér dette emne"
       disable: "Vis alle indlæg"
     deleted_filter:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
@@ -3571,7 +3570,7 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
-      categories_form:
+      categories_form_modal:
         save: "Gem"
       sections:
         custom:
@@ -3598,9 +3597,6 @@ da:
             unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
-          links:
-            add_tags:
-              content: "Tilføj mærker"
           click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
@@ -3617,6 +3613,8 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
+            topics:
+              content: "Emner"
             faq:
               content: "OSS"
             groups:

@@ -1631,7 +1631,6 @@ ur:
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
       description_time_MF: |
         وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
-      enable: "اس ڑاپک کا خلاصہ کریں"
       disable: "تمام پوسٹیں دکھائیں"
       short_label: "خلاصہ"
       short_title: "اس موضوع کا خلاصہ دکھائیں: سب سے دلچسپ پوسٹس جیسا کہ کمیونٹی کے ذریعہ طے کیا گیا ہے۔"
@@ -3587,7 +3586,7 @@ ur:
         other: "%{count} نئے"
       more: "مزید"
       all_categories: "تمام زُمرَہ جات"
-      categories_form:
+      categories_form_modal:
         save: "محفوظ کریں"
       sections:
         custom:
@@ -3626,6 +3625,8 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
+            topics:
+              content: "ٹاپکس"
             faq:
               content: "عمومی سوالات"
             groups:

@@ -115,6 +115,8 @@ uk:
       heading: "Чат"
       join: "Приєднатися"
       last_visit: "останнє відвідування"
+      summarization:
+        summarize: "Підсумок"
       mention_warning:
         dismiss: "відкласти"
         cannot_see: "%{username} не має доступу до цього каналу і не отримав сповіщення."
@@ -451,6 +453,16 @@ uk:
           started_by: "Розпочато"
         settings: "Налаштування"
         last_reply: "остання відповідь"
+        notifications:
+          regular:
+            title: "Нормальний"
+          tracking:
+            title: "Стежити"
+        participants_other_count:
+          one: "+%{count} інший"
+          few: "+%{count} інших"
+          many: "+%{count} інших"
+          other: "+%{count} інших"
       threads:
         open: "Відкрийте тему"
         list: "Поточні обговорення"

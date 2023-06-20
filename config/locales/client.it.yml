@@ -1087,11 +1087,8 @@ it:
         enable: "Abilita barra laterale"
         options: "Opzioni"
         categories_section: "Sezione Categorie"
-        categories_section_instruction: "Le categorie selezionate saranno visualizzate nella sezione Categorie della barra laterale."
         tags_section: "Sezione etichette"
-        tags_section_instruction: "Le etichette selezionate appariranno nella sezione Etichette della barra laterale."
         navigation_section: "Navigazione"
-        list_destination_instruction: "Quando ci sono nuovi contenuti nella barra laterale..."
         list_destination_default: "usa il link predefinito e mostra un distintivo per i nuovi elementi"
         list_destination_unread_new: "collega a elementi non letti/nuovi e mostra un contatore dei nuovi elementi"
       change: "cambia"
@@ -1255,7 +1252,6 @@ it:
         tags: "Etichette"
         interface: "Interfaccia"
         apps: "App"
-        sidebar: "Barra laterale"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -1796,7 +1792,6 @@ it:
         other: "Ci sono <b>%{count}</b> risposte."
       description_time_MF: |
         {replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>.
-      enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
       short_label: "Riassumi"
       short_title: "Mostra un riassunto di questo argomento: i messaggi più interessanti secondo la community"
@@ -3942,7 +3937,7 @@ it:
       more: "Altro"
       all_categories: "Tutte le categorie"
       all_tags: "Tutte le etichette"
-      categories_form:
+      categories_form_modal:
         save: "Salva"
       sections:
         custom:
@@ -3970,20 +3965,12 @@ it:
             unread_with_count: "Non letti (%{count})"
             archive: "Archiviati"
         tags:
-          links:
-            add_tags:
-              content: "Aggiungi etichette"
-              title: "Non hai aggiunto alcuna etichetta. Fai clic per iniziare."
           none: "Non hai aggiunto nessuna etichetta."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Etichette"
           header_action_title: "Modifica le etichette nella barra laterale"
           configure_defaults: "Configura impostazioni predefinite"
         categories:
-          links:
-            add_categories:
-              content: "Aggiungi categorie"
-              title: "Non hai aggiunto alcuna categoria. Fai clic per iniziare."
           none: "Non hai aggiunto nessuna categoria."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Categorie"
@@ -4002,6 +3989,9 @@ it:
             badges:
               content: "Distintivi"
               title: "Tutti i distintivi disponibili"
+            topics:
+              content: "Argomenti"
+              title: "Tutti gli argomenti"
             faq:
               content: "FAQ"
               title: "Linee guida per l'utilizzo di questo sito"

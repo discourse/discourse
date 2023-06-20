@@ -1109,11 +1109,9 @@ tr_TR:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
         categories_section: "Kategoriler Bölümü"
-        categories_section_instruction: "Seçilen kategoriler Kenar Çubuğunun kategoriler bölümünde görüntülenir."
         tags_section: "Etiketler Bölümü"
-        tags_section_instruction: "Seçilen etiketler Kenar Çubuğunun etiketler bölümünde görüntülenir."
         navigation_section: "Gezinti"
-        list_destination_instruction: "Kenar çubuğunda yeni içerik olduğunda..."
+        list_destination_instruction: "Navigasyon menüsünde yeni içerik olduğunda..."
         list_destination_default: "varsayılan bağlantıyı kullan ve yeni ögeler için bir rozet göster"
         list_destination_unread_new: "okunmamış/yeniye bağla ve yeni ögelerin sayısını göster"
       change: "değiştir"
@@ -1277,7 +1275,7 @@ tr_TR:
         tags: "Etiketler"
         interface: "Arayüz"
         apps: "Uygulamalar"
-        sidebar: "Kenar çubuğu"
+        navigation_menu: "Navigasyon Menüsü"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
@@ -1822,10 +1820,13 @@ tr_TR:
         other: "<b>%{count}</b> yanıt var."
       description_time_MF: |
         Tahmini okuma süresi <b>{readingTime, plural, one {# dakika} other {# dakika}}</b> olan {replyCount, plural, one {<b># yanıt</b>} other {<b># yanıt</b>}} var.
-      enable: "Bu Konuyu Özetle"
+      enable: "En iyi yanıtları göster"
       disable: "Tüm Gönderileri Göster"
       short_label: "Özetle"
       short_title: "Bu konunun özetini göster: Topluluk tarafından belirlenen en ilginç gönderiler"
+      strategy:
+        button_title: "Bu konuyu özetle"
+        title: "Konu özeti"
     deleted_filter:
       enabled_description: "Bu konu gizli durumdaki silinen gönderiler içeriyor."
       disabled_description: "Konudaki silinen gönderiler gösteriliyor."
@@ -3979,11 +3980,15 @@ tr_TR:
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
-      categories_form:
+      categories_form_modal:
         save: "Kaydet"
         title: "Kategorilerde gezinmeyi düzenle"
+        subtitle:
+          button_text: "Hiçbirini seçme"
+          text: "ve bu sitenin en popüler kategorilerini otomatik olarak göstereceğiz"
         filter_placeholder: "Kategorileri filtrele"
         no_categories: "Bu terimle eşleşen kategori yok."
+        reset_to_defaults: "Varsayılanlara dön"
       sections:
         custom:
           save: "Kaydet"
@@ -4028,20 +4033,12 @@ tr_TR:
             unread_with_count: "Okunmamış (%{count})"
             archive: "Arşiv"
         tags:
-          links:
-            add_tags:
-              content: "Etiket ekle"
-              title: "Etiket eklemediniz. Başlamak için tıklayın."
           none: "Etiket eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Etiketler"
           header_action_title: "Kenar çubuğu etiketlerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         categories:
-          links:
-            add_categories:
-              content: "Kategori ekle"
-              title: "Kategori eklemediniz. Başlamak için tıklayın."
           none: "Kategori eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Kategoriler"
@@ -4061,6 +4058,9 @@ tr_TR:
             badges:
               content: "Rozetler"
               title: "Kazanılabilecek tüm rozetler"
+            topics:
+              content: "Konular"
+              title: "Tüm konular"
             faq:
               content: "SSS"
               title: "Bu siteyi kullanmak için kılavuz"

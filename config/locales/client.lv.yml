@@ -1486,7 +1486,6 @@ lv:
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
-      enable: "Tēmas kopsavilkums"
       disable: "Parādīt visus ierakstus"
     deleted_filter:
       enabled_description: "Šī tēma satur dzēstus ierakstus, kuri ir paslēpti."
@@ -2778,7 +2777,7 @@ lv:
         other: "%{count} jauna"
       more: "Vairāk"
       all_categories: "Visas sadaļas"
-      categories_form:
+      categories_form_modal:
         save: "Saglabāt"
       sections:
         custom:
@@ -2815,6 +2814,8 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
+            topics:
+              content: "Tēmas"
             faq:
               content: "BUJ"
             groups:

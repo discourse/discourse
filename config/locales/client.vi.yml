@@ -1009,11 +1009,8 @@ vi:
         enable: "Bật thanh bên"
         options: "Tùy chọn"
         categories_section: "Phần danh mục"
-        categories_section_instruction: "Các danh mục đã chọn sẽ được hiển thị trong phần danh mục của Thanh bên."
         tags_section: "Phần thẻ"
-        tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
         navigation_section: "Điều hướng"
-        list_destination_instruction: "Khi có nội dung mới trong thanh bên..."
         list_destination_default: "sử dụng liên kết mặc định và hiển thị huy hiệu cho các mục mới"
         list_destination_unread_new: "liên kết đến chưa đọc/mới và hiển thị số lượng mục mới"
       change: "thay đổi"
@@ -1121,7 +1118,6 @@ vi:
         tags: "Thẻ"
         interface: "Giao diện"
         apps: "Ứng dụng"
-        sidebar: "Thanh bên"
       change_password:
         success: "(email đã gửi)"
         in_progress: "(đang gửi email)"
@@ -1604,7 +1600,6 @@ vi:
       enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
       description:
         other: "Có <b>%{count}</b> trả lời."
-      enable: "Tóm tắt lại chủ đề"
       disable: "HIển thị tất cả các bài viết"
       short_label: "Tóm tắt"
       short_title: "Hiển thị tóm tắt về chủ đề này: các bài đăng thú vị nhất do cộng đồng xác định"
@@ -3540,7 +3535,7 @@ vi:
       more: "Thêm"
       all_categories: "Tất cả danh mục"
       all_tags: "Tất cả các thẻ"
-      categories_form:
+      categories_form_modal:
         save: "Lưu lại"
       sections:
         custom:
@@ -3583,6 +3578,9 @@ vi:
               content: "Quản trị"
             badges:
               content: "Huy hiệu"
+            topics:
+              content: "Chủ đề"
+              title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
             groups:

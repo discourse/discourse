@@ -84,6 +84,8 @@ hr:
       heading: "Čet"
       join: "Pridružite se"
       last_visit: "posljednji posjet"
+      summarization:
+        summarize: "Rezimirati"
       mention_warning:
         dismiss: "skloni"
         invitations_sent:
@@ -186,6 +188,11 @@ hr:
           other: "%{count} odgovora"
         settings: "Postavke"
         last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Normalno"
+          tracking:
+            title: "Praćeno"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"

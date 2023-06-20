@@ -1016,7 +1016,6 @@ ko:
         categories_section: "카테고리 섹션"
         tags_section: "태그 섹션"
         navigation_section: "내비게이션"
-        list_destination_instruction: "사이드바에 새로운 콘텐츠가 있을 때..."
       change: "변경"
       featured_topic: "추천 주제"
       moderator: "%{user} 님은 운영자입니다"
@@ -1130,7 +1129,6 @@ ko:
         tags: "태그"
         interface: "인터페이스"
         apps: "앱"
-        sidebar: "사이드바"
       change_password:
         success: "(이메일 전송됨)"
         in_progress: "(이메일 전송 중)"
@@ -1622,7 +1620,6 @@ ko:
       enabled_description: "이 주제의 요약을 보고 있습니다. 커뮤니티에서 선정한 가장 흥미로운 게시물입니다."
       description:
         other: "<b>%{count}</b>개의 댓글이 있습니다."
-      enable: "이 주제 요약"
       disable: "모든 게시물 표시"
       short_label: "요약하기"
       short_title: "이 주제의 요약 표시: 커뮤니티에서 선정한 가장 흥미로운 게시물입니다"
@@ -3518,7 +3515,7 @@ ko:
       more: "더 보기"
       all_categories: "모든 카테고리"
       all_tags: "모든 태그"
-      categories_form:
+      categories_form_modal:
         save: "저장"
       sections:
         custom:
@@ -3545,17 +3542,11 @@ ko:
             unread_with_count: "읽지 않음(%{count})"
             archive: "보관"
         tags:
-          links:
-            add_tags:
-              content: "태그 추가"
           none: "태그를 추가하지 않았습니다."
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "태그"
           configure_defaults: "기본값 구성"
         categories:
-          links:
-            add_categories:
-              content: "카테고리 추가"
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "카테고리"
           configure_defaults: "기본값 구성"
@@ -3568,6 +3559,9 @@ ko:
               content: "관리자"
             badges:
               content: "배지"
+            topics:
+              content: "글"
+              title: "모든 글"
             faq:
               content: "자주하는 질문"
             groups:
