@@ -172,15 +172,17 @@ export default class TopicBulkActions extends Controller.extend(
   ];
 
   get buttons() {
-    return [...this.defaultButtons, ..._customButtons].filter((b) => {
-      if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
-        return false;
-      } else if (b.buttonVisible) {
-        return b.buttonVisible.call(this, this.model.topics);
-      } else {
-        return true;
-      }
-    });
+    return [...this.defaultButtons, ..._customButtons]
+      .filter((b) => {
+        if (b.enabledSetting && !this.siteSettings[b.enabledSetting]) {
+          return false;
+        } else if (b.buttonVisible) {
+          return b.buttonVisible.call(this, this.model.topics);
+        } else {
+          return true;
+        }
+      })
+      .map((button) => ({ ...button, action: button.action.bind(this) }));
   }
 
   onShow() {
