@@ -1967,15 +1967,15 @@ class PluginApi {
    * })
    * ```
    *
-   * @params {Object} arg - An object
-   * @params {string} arg.categoryId - The id of the category
-   * @params {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
-   * @params {string} arg.prefixValue - The value of the prefix to use.
+   * @param {Object} arg - An object
+   * @param {string} arg.categoryId - The id of the category
+   * @param {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
+   * @param {string} arg.prefixValue - The value of the prefix to use.
    *                                    For "icon", pass in the name of a FontAwesome 5 icon.
    *                                    For "image", pass in the src of the image.
    *                                    For "text", pass in the text to display.
    *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
-   * @params {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
+   * @param {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
    */
   registerCustomCategorySectionLinkPrefix({
     categoryId,
@@ -2006,10 +2006,10 @@ class PluginApi {
    * });
    * ```
    *
-   * @params {Object} arg - An object
-   * @params {string} arg.tagName - The name of the tag
-   * @params {string} arg.prefixValue - The name of a FontAwesome 5 icon.
-   * @params {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
+   * @param {Object} arg - An object
+   * @param {string} arg.tagName - The name of the tag
+   * @param {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @param {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
    */
   registerCustomTagSectionLinkPrefixIcon({
     tagName,
@@ -2292,7 +2292,29 @@ class PluginApi {
   }
 
   /**
-   * TODO
+   * Adds a button to the bulk topic actions modal.
+   *
+   * ```
+   * api.addBulkActionButton({
+   *   label: "super_plugin.bulk.enhance",
+   *   icon: "magic",
+   *   class: "btn-default",
+   *   enabledSetting: "super_plugin_enabled",
+   *   buttonVisible: () => this.currentUser.staff,
+   *   action: async () => {
+   *     await enhance(this.model.topics);
+   *     doSomethingElse();
+   *   },
+   * });
+   * ```
+   *
+   * @param {Object} opts
+   * @param {string} opts.label
+   * @param {string} opts.icon
+   * @param {string} opts.class
+   * @param {string} opts.enabledSetting
+   * @param {function} opts.buttonVisible
+   * @param {function} opts.action
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
