@@ -1527,8 +1527,6 @@ zh_TW:
     push_notifications_prompt: "顯示使用者同意提示"
     short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
-    default_sidebar_categories: "選定的分類將預設顯示在側選單的分類段落中。"
-    default_sidebar_tags: "選定的標籤將預設顯示在側選單的標籤段落中。"
     errors:
       invalid_email: "無效的電子郵件地址"
       invalid_username: "沒有使用者使用該使用者名稱。"

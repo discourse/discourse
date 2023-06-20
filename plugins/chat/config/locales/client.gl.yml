@@ -111,6 +111,11 @@ gl:
           other: "%{count} repostas"
         settings: "Configuración"
         last_reply: "última resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguimento"
       draft_channel_screen:
         header: "Nova mensaxe"
         cancel: "Cancelar"

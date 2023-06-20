@@ -1648,7 +1648,6 @@ lt:
       intro: "Sveiki! Panašu, kad jums patinka diskusija, tačiau dar nesate prisiregistravę prie paskyros."
     summary:
       enabled_description: "Tu šiuo metu žiūri temos aprašymą: pačius įdomiausius įrašus, kuriuos išrinko bendruomenė."
-      enable: "Apibendrinkite šią Temą"
       disable: "Peržiūrėti visus Įrašus"
       short_label: "Apibendrinti"
       short_title: "Rodyti šios temos santrauką: įdomiausius pranešimus, kuriuos nustato bendruomenė"
@@ -3531,7 +3530,7 @@ lt:
         other: "%{count} nauja"
       more: "Daugiau"
       all_categories: "Visos kategorijos"
-      categories_form:
+      categories_form_modal:
         save: "Išsaugoti"
       sections:
         custom:
@@ -3570,6 +3569,9 @@ lt:
               content: "Adminas"
             badges:
               content: "Trofėjai"
+            topics:
+              content: "Temos"
+              title: "Visos temos"
             faq:
               content: "DUK"
             groups:

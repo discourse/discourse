@@ -104,6 +104,8 @@ ru:
       heading: "Чат"
       join: "Подписаться"
       last_visit: "последнее посещение"
+      summarization:
+        summarize: "Сводка"
       mention_warning:
         dismiss: "Отклонить"
         invitations_sent:
@@ -380,6 +382,16 @@ ru:
           other: "%{count} ответ"
         settings: "Настройки"
         last_reply: "последний ответ"
+        notifications:
+          regular:
+            title: "Обычный"
+          tracking:
+            title: "В отслеживаемых"
+        participants_other_count:
+          one: "+еще %{count}"
+          few: "+еще %{count}"
+          many: "+еще %{count}"
+          other: "+еще %{count}"
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"

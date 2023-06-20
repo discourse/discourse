@@ -116,6 +116,12 @@ tr_TR:
       heading: "Sohbet"
       join: "Katıl"
       last_visit: "son ziyaret"
+      summarization:
+        title: "Mesajları özetle"
+        summarize: "Özetle"
+        since:
+          one: "Son bir saat"
+          other: "Son %{count} saat"
       mention_warning:
         dismiss: "kapat"
         cannot_see: "%{username} bu kanala erişemiyor ve bilgilendirilmedi."
@@ -442,6 +448,16 @@ tr_TR:
           started_by: "Başlatan"
         settings: "Ayarlar"
         last_reply: "son yanıt"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Birisi bu başlıkta sizden bahsederse bilgilendirileceksiniz."
+          tracking:
+            title: "Takip Ediliyor"
+            description: "Bu konudaki yeni yanıtların sayısı konu listesinde ve kanalda gösterilecektir. Birisi bu ileti dizisinde sizden bahsederse bilgilendirileceksiniz."
+        participants_other_count:
+          one: "+%{count} tane daha"
+          other: "+%{count} tane daha"
       threads:
         open: "Konu Aç"
         list: "Devam eden tartışmalar"

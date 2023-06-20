@@ -1383,7 +1383,6 @@ ca:
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
     summary:
       enabled_description: "Ara veieu un resum del tema: les publicacions més interessants segons la comunitat."
-      enable: "Resumeix aquest tema"
       disable: "Mostra totes les publicacions"
     deleted_filter:
       enabled_description: "Aquest tema conté publicacions suprimides, que han estat amagades."
@@ -2875,7 +2874,7 @@ ca:
         other: "%{count} nous"
       more: "Més"
       all_categories: "Totes les categories"
-      categories_form:
+      categories_form_modal:
         save: "Desa"
       sections:
         custom:
@@ -2912,6 +2911,8 @@ ca:
               content: "Administració"
             badges:
               content: "Insígnies"
+            topics:
+              content: "Temes"
             faq:
               content: "PMF"
             groups:

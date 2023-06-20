@@ -116,6 +116,13 @@ de:
       heading: "Chat"
       join: "Beitreten"
       last_visit: "letzter Besuch"
+      summarization:
+        title: "Nachrichten zusammenfassen"
+        description: "Wähle unten eine Option aus, um die im gewünschten Zeitraum gesendeten Konversationen zusammenzufassen."
+        summarize: "Zusammenfassen"
+        since:
+          one: "Letzte Stunde"
+          other: "Letzte %{count} Stunden"
       mention_warning:
         dismiss: "verwerfen"
         cannot_see: "%{username} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
@@ -530,6 +537,16 @@ de:
           started_by: "Gestartet von"
         settings: "Einstellungen"
         last_reply: "letzte Antw."
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thread erwähnt."
+          tracking:
+            title: "Verfolgen"
+            description: "Die Anzahl der neuen Antworten auf diesen Thread wird in der Thread-Liste und im Kanal angezeigt. Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thema erwähnt."
+        participants_other_count:
+          one: "+%{count} anderer"
+          other: "+%{count} andere"
       threads:
         open: "Thread öffnen"
         list: "Laufende Diskussionen"
