@@ -377,12 +377,12 @@ export default class ChatLivePane extends Component {
   @bind
   fetchMessagesByDate(date) {
     const message = this.args.channel?.findFirstMessageOfDay(date);
-
     if (message.firstOfResults && this.args.channel?.canLoadMorePast) {
       this.requestedTargetDate = date;
     } else {
       this.requestedTargetMessageId = message.id;
     }
+
     this.debounceFetchMessages();
   }
 
@@ -414,9 +414,7 @@ export default class ChatLivePane extends Component {
     let foundFirstNew = false;
 
     result.chat_messages.forEach((messageData, index) => {
-      if (index === 0) {
-        messageData.firstOfResults = true;
-      }
+      messageData.firstOfResults = index === 0;
 
       if (this.currentUser.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
