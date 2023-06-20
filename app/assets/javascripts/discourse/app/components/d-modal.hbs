@@ -34,15 +34,19 @@
             />
           {{/if}}
 
-          {{#if this.title}}
-            <div class="title">
-              <h3 id="discourse-modal-title">{{this.title}}</h3>
+          <div class="modal-title-wrapper">
+            {{#if this.title}}
+              <div class="title">
+                <h3 id="discourse-modal-title">{{this.title}}</h3>
 
-              {{#if this.subtitle}}
-                <p class="subtitle">{{this.subtitle}}</p>
-              {{/if}}
-            </div>
-          {{/if}}
+                {{#if this.subtitle}}
+                  <p class="subtitle">{{this.subtitle}}</p>
+                {{/if}}
+              </div>
+            {{/if}}
+
+            <span id="modal-header-after-title"></span>
+          </div>
 
           {{#if this.panels}}
             <ul class="modal-tabs">

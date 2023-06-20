@@ -29,7 +29,7 @@ module PageObjects
         has_no_css?(".sidebar-categories-form-modal .sidebar-categories-form__category-row") &&
           has_css?(
             ".sidebar-categories-form-modal .sidebar-categories-form__no-categories",
-            text: I18n.t("js.sidebar.categories_form.no_categories"),
+            text: I18n.t("js.sidebar.categories_form_modal.no_categories"),
           )
       end
 
@@ -64,6 +64,20 @@ module PageObjects
         )
 
         self
+      end
+
+      def deselect_all
+        click_button(I18n.t("js.sidebar.categories_form_modal.subtitle.button_text"))
+        self
+      end
+
+      def click_reset_to_defaults_button
+        click_button(I18n.t("js.sidebar.categories_form_modal.reset_to_defaults"))
+        self
+      end
+
+      def has_no_reset_to_defaults_button?
+        has_no_button?(I18n.t("js.sidebar.categories_form_modal.reset_to_defaults"))
       end
     end
   end
