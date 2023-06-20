@@ -379,11 +379,10 @@ export default class ChatLivePane extends Component {
     const message = this.args.channel?.findFirstMessageOfDay(date);
     if (message.firstOfResults && this.args.channel?.canLoadMorePast) {
       this.requestedTargetDate = date;
+      this.debounceFetchMessages();
     } else {
-      this.requestedTargetMessageId = message.id;
+      this.highlightOrFetchMessage(message.id);
     }
-
-    this.debounceFetchMessages();
   }
 
   fillPaneAttempt() {
