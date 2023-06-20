@@ -31,6 +31,14 @@ module PageObjects
         PageObjects::Modals::SidebarEditCategories.new
       end
 
+      def click_edit_tags_button
+        within(".sidebar-section[data-section-name='tags']") do
+          click_button(class: "sidebar-section-header-button", visible: false)
+        end
+
+        PageObjects::Modals::SidebarEditTags.new
+      end
+
       def edit_custom_section(name)
         find(".sidebar-section[data-section-name='#{name.parameterize}']").hover
 
@@ -69,6 +77,10 @@ module PageObjects
 
       def has_categories_section?
         has_section?("Categories")
+      end
+
+      def has_tags_section?
+        has_section?("Tags")
       end
 
       def has_no_section?(name)

@@ -1,0 +1,34 @@
+.sidebar-tags-form-modal {
+  .modal-body {
+    min-height: 30vh;
+  }
+}
+
+.sidebar-tags-form {
+  display: flex;
+  flex-wrap: wrap;
+
+  .sidebar-tags-form__tag {
+    flex-basis: 30%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5em 0.25em;
+
+    .sidebar-tags-form__tag-label {
+      margin-bottom: 0;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .sidebar-tags-form__input {
+      margin-top: 0;
+    }
+  }
+
+  .sidebar-tags-form__tag-label-count {
+    color: var(--primary-medium);
+  }
+}
