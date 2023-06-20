@@ -181,12 +181,10 @@ This is an inline onebox https://en.wikipedia.org/wiki/Hyperlink.
 <div class="chat-transcript-username">
 martin</div>
 <div class="chat-transcript-datetime">
-<span title="2022-01-25T05:40:39Z"></span>
-</div>
+<span title="2022-01-25T05:40:39Z"></span></div>
 </div>
 <div class="chat-transcript-messages">
-<p>This is a chat message.</p>
-</div>
+<p>This is a chat message.</p></div>
 </div>
 #{full_onebox_html}
 <p>This is an inline onebox <a href="https://en.wikipedia.org/wiki/Hyperlink" class="inline-onebox-loading" rel="noopener nofollow ugc">https://en.wikipedia.org/wiki/Hyperlink</a>.</p>
