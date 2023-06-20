@@ -9,6 +9,7 @@ RSpec.describe Chat::MessagesQuery do
   let(:page_size) { nil }
   let(:direction) { nil }
   let(:target_message_id) { nil }
+  let(:target_date) { nil }
   let(:options) do
     {
       thread_id: thread_id,
@@ -16,6 +17,7 @@ RSpec.describe Chat::MessagesQuery do
       page_size: page_size,
       direction: direction,
       target_message_id: target_message_id,
+      target_date: target_date,
     }
   end
 
@@ -115,6 +117,20 @@ RSpec.describe Chat::MessagesQuery do
         message_3.trash!
         expect(subject[:future_messages]).to eq([message_3])
       end
+    end
+  end
+
+  context "when target_date provided" do
+    let(:target_date) { 1.day.ago }
+
+    it "queries messages in the channel and finds the past and future messages" do
+      expect(subject).to eq(
+        past_messages: [message_1],
+        future_messages: [message_2, message_3],
+        target_date: target_date,
+        can_load_more_past: false,
+        can_load_more_future: false,
+      )
     end
   end
 
