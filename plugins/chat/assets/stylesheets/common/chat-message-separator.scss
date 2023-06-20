@@ -45,6 +45,7 @@
     align-items: flex-start;
     justify-content: center;
     padding-left: 1rem;
+    pointer-events: none;
 
     &.with-last-visit {
       & + .chat-message-separator__line-container {
@@ -98,6 +99,7 @@
       box-sizing: border-box;
       display: flex;
       cursor: pointer;
+      pointer-events: all;
 
       &:hover {
         border: 1px solid var(--secondary-high);
