@@ -1558,7 +1558,6 @@ sl:
         two: "Obstajata <b>%{count}</b> odgovora."
         few: "Obstajajo <b>%{count}</b> odgovori."
         other: "Obstaja <b>%{count}</b> odgovorov."
-      enable: "Pripravi povzetek teme"
       disable: "Prikaži vse prispevke"
     deleted_filter:
       enabled_description: "Ta tema vsebuje izbrisane prispevke, ki so skriti."
@@ -3355,7 +3354,7 @@ sl:
         other: "%{count} novih"
       more: "Več"
       all_categories: "Vse kategorije"
-      categories_form:
+      categories_form_modal:
         save: "Shrani"
       sections:
         custom:
@@ -3393,6 +3392,8 @@ sl:
               content: "Admin"
             badges:
               content: "Značke"
+            topics:
+              content: "Tem"
             faq:
               content: "Pravila skupnosti"
             groups:

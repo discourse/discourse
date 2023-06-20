@@ -1,75 +1,102 @@
-<DModalBody
-  @title="sidebar.categories_form.title"
-  @class="sidebar-categories-form-modal"
->
-  <form class="sidebar-categories-form">
-    <div class="sidebar-categories-form__filter">
-      {{d-icon "search" class="sidebar-categories-form__filter-input-icon"}}
+{{#in-element this.modalHeaderAfterTitleElement}}
+  <p class="sidebar-categories-form__deselect">
+    <DButton
+      @class="btn-flat sidebar-categories-form__deselect-all-btn"
+      @label="sidebar.categories_form_modal.subtitle.button_text"
+      @ariaLabel="sidebar.categories_form_modal.subtitle.button_text"
+      @action={{this.deselectAll}}
+    />
 
-      <Input
-        class="sidebar-categories-form__filter-input-field"
-        placeholder={{i18n "sidebar.categories_form.filter_placeholder"}}
-        @type="text"
-        @value={{this.filter}}
-        {{on "input" (action "onFilterInput" value="target.value")}}
-      />
-    </div>
+    {{i18n "sidebar.categories_form_modal.subtitle.text"}}
+  </p>
+{{/in-element}}
 
-    {{#if (gt this.filteredCategoriesGroupings.length 0)}}
-      {{#each this.filteredCategoriesGroupings as |categories|}}
-        <div
-          class="sidebar-categories-form__row"
-          style={{html-safe (border-color categories.0.color "left")}}
-        >
+<div class="sidebar-categories-form-modal">
+  <DModalBody
+    @title="sidebar.categories_form_modal.title"
+    @class="sidebar-categories-form__modal-body"
+  >
+    <form class="sidebar-categories-form">
+      <div class="sidebar-categories-form__filter">
+        {{d-icon "search" class="sidebar-categories-form__filter-input-icon"}}
 
-          {{#each categories as |category|}}
-            <div
-              class="sidebar-categories-form__category-row"
-              data-category-id={{category.id}}
-              data-category-level={{category.level}}
-            >
-              <label
-                class="sidebar-categories-form__category-label"
-                for={{concat "sidebar-categories-form__input--" category.id}}
-              >
-                <div class="sidebar-categories-form__category-badge">
-                  {{category-badge category}}
-                </div>
-
-                {{#unless category.parentCategory}}
-                  <div class="sidebar-categories-form__category-description">
-                    {{dir-span category.description_excerpt htmlSafe="true"}}
-                  </div>
-                {{/unless}}
-              </label>
-
-              <Input
-                id={{concat "sidebar-categories-form__input--" category.id}}
-                class="sidebar-categories-form__input"
-                @type="checkbox"
-                @checked={{includes
-                  this.selectedSidebarCategoryIds
-                  category.id
-                }}
-                {{on "click" (action "toggleCategory" category.id)}}
-              />
-            </div>
-          {{/each}}
-        </div>
-      {{/each}}
-    {{else}}
-      <div class="sidebar-categories-form__no-categories">
-        {{i18n "sidebar.categories_form.no_categories"}}
+        <Input
+          class="sidebar-categories-form__filter-input-field"
+          placeholder={{i18n
+            "sidebar.categories_form_modal.filter_placeholder"
+          }}
+          @type="text"
+          @value={{this.filter}}
+          {{on "input" (action "onFilterInput" value="target.value")}}
+        />
       </div>
-    {{/if}}
-  </form>
-</DModalBody>
 
-<div class="modal-footer">
-  <DButton
-    @class="btn-primary sidebar-categories-form__save-button"
-    @label="sidebar.categories_form.save"
-    @disabled={{this.saving}}
-    @action={{this.save}}
-  />
+      {{#if (gt this.filteredCategoriesGroupings.length 0)}}
+        {{#each this.filteredCategoriesGroupings as |categories|}}
+          <div
+            class="sidebar-categories-form__row"
+            style={{html-safe (border-color categories.0.color "left")}}
+          >
+
+            {{#each categories as |category|}}
+              <div
+                class="sidebar-categories-form__category-row"
+                data-category-id={{category.id}}
+                data-category-level={{category.level}}
+              >
+                <label
+                  class="sidebar-categories-form__category-label"
+                  for={{concat "sidebar-categories-form__input--" category.id}}
+                >
+                  <div class="sidebar-categories-form__category-badge">
+                    {{category-badge category}}
+                  </div>
+
+                  {{#unless category.parentCategory}}
+                    <div class="sidebar-categories-form__category-description">
+                      {{dir-span category.description_excerpt htmlSafe="true"}}
+                    </div>
+                  {{/unless}}
+                </label>
+
+                <Input
+                  id={{concat "sidebar-categories-form__input--" category.id}}
+                  class="sidebar-categories-form__input"
+                  @type="checkbox"
+                  @checked={{includes
+                    this.selectedSidebarCategoryIds
+                    category.id
+                  }}
+                  {{on "click" (action "toggleCategory" category.id)}}
+                />
+              </div>
+            {{/each}}
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="sidebar-categories-form__no-categories">
+          {{i18n "sidebar.categories_form_modal.no_categories"}}
+        </div>
+      {{/if}}
+    </form>
+  </DModalBody>
+
+  <div class="modal-footer sidebar-categories-form__modal-footer">
+    <DButton
+      @class="btn-primary sidebar-categories-form__save-button"
+      @label="sidebar.categories_form_modal.save"
+      @disabled={{this.saving}}
+      @action={{this.save}}
+    />
+
+    {{#if (gt this.siteSettings.default_navigation_menu_categories.length 0)}}
+      <DButton
+        @icon="undo"
+        @class="btn-flat btn-text sidebar-categories-form__reset-to-defaults-btn"
+        @label="sidebar.categories_form_modal.reset_to_defaults"
+        @disabled={{this.saving}}
+        @action={{this.resetToDefaults}}
+      />
+    {{/if}}
+  </div>
 </div>

@@ -109,6 +109,8 @@ fi:
       heading: "Chat"
       join: "Liity"
       last_visit: "edellinen vierailu"
+      summarization:
+        summarize: "Tee yhteenveto"
       mention_warning:
         dismiss: "hylkää"
         invitations_sent:
@@ -386,6 +388,14 @@ fi:
           started_by: "Aloittanut"
         settings: "Asetukset"
         last_reply: "viimeisin vastaus"
+        notifications:
+          regular:
+            title: "Normaali"
+          tracking:
+            title: "Seuranta"
+        participants_other_count:
+          one: "+%{count} muu"
+          other: "+%{count} muuta"
       threads:
         open: "Avaa ketju"
         list: "Käynnissä olevat keskustelut"

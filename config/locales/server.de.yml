@@ -227,6 +227,10 @@ de:
         other: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da die folgenden oEmbed-/OpenGraph-Tags nicht gefunden werden konnten: %{missing_attributes}"
   word_connector:
     comma: ", "
+  custom_fields:
+    validations:
+      max_items: "Die maximale Anzahl der benutzerdefinierten Felder für diese Entität wurde erreicht (%{max_items_number})"
+      max_value_length: "Die maximale Länge für einen benutzerdefinierten Feldwert wurde erreicht (%{max_value_length})"
   invite:
     expired: "Dein Einladungstoken ist abgelaufen. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found: "Dein Einladungstoken ist ungültig. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
@@ -1507,6 +1511,8 @@ de:
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
     summary_timeline_button: "Schaltfläche „Zusammenfassen“ in der Zeitleiste anzeigen"
+    summarization_strategy: "Zusätzliche Möglichkeiten, von Plugins registrierte Inhalte zusammenzufassen"
+    custom_summarization_allowed_groups: "Gruppen, die Inhalte mit der `Summarization_strategy` zusammenfassen können."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
     personal_message_enabled_groups: "Benutzern innerhalb dieser Gruppen erlauben, Nachrichten zu erstellen und auf Nachrichten zu antworten. Vertrauensstufengruppen umfassen alle Vertrauensstufen über dieser Nummer, zum Beispiel erlaubt die Wahl von trust_level_1 auch Benutzern mit trust_level_2, 3, 4 private Nachrichten zu senden. Team-Mitglieder können immer Nachrichten senden."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
@@ -2119,6 +2125,8 @@ de:
     tagging_enabled: "Schlagwörter für Themen aktivieren?"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
+    enable_max_tags_per_email_subject: "Verwende max_tags_per_email_subject beim Erstellen des Betreffs einer E-Mail"
+    max_tags_per_email_subject: "Die maximale Anzahl von Tags, die im Betreff einer E-Mail enthalten sein können"
     max_tag_length: "Die maximale Anzahl von Zeichen, die in einem Schlagwort verwendet werden kann."
     max_tag_search_results: "Maximale Ergebnisanzahl bei der Suche nach Schlagwörtern."
     max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in der Filter-Drop-down-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
@@ -2162,12 +2170,13 @@ de:
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
-    default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
-    default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
+    default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt \"Kategorien\" des Navigationsmenüs angezeigt."
+    default_navigation_menu_tags: "Ausgewählte Tags werden standardmäßig unter dem Abschnitt Tags im Navigationsmenü angezeigt."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: 'EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf.'
     enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
     experimental_topics_filter: "EXPERIMENTELL: Aktiviert die Filterroute für experimentelle Themen unter /filter"
+    experimental_search_menu_groups: "EXPERIMENTELL: Aktiviert das neue Suchmenü, das für die Verwendung von Glimmer aktualisiert wurde"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

@@ -198,6 +198,11 @@ zh_TW:
           other: "%{count}個回覆"
         settings: "設定"
         last_reply: "最新回覆"
+        notifications:
+          regular:
+            title: "一般"
+          tracking:
+            title: "跟蹤"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"

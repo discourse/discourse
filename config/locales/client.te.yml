@@ -641,7 +641,6 @@ te:
       sign_up: "సైన్ అప్"
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
-      enable: "ఈ విషయాన్ని సంగ్రహించు"
       disable: "అన్ని టపాలూ చూపు"
     deleted_filter:
       enabled_description: "ఈ విషయం తొలగించిన టపాలు కలిగి ఉంది. అవి దాయబడ్డాయి."
@@ -1341,7 +1340,7 @@ te:
         one: "%{count} కొత్త"
         other: "%{count} కొత్త"
       more: "ఇంకా"
-      categories_form:
+      categories_form_modal:
         save: "భద్రపరుచు"
       sections:
         custom:
@@ -1374,6 +1373,8 @@ te:
               content: "అధికారి"
             badges:
               content: "బ్యాడ్జీలు"
+            topics:
+              content: "విషయాలు"
             faq:
               content: "తవసం"
             groups:

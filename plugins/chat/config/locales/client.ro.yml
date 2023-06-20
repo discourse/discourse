@@ -108,6 +108,11 @@ ro:
           other: "%{count} răspunsuri"
         settings: "Opțiuni"
         last_reply: "Ultimul răspuns"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Urmărire"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"

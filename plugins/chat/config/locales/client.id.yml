@@ -57,6 +57,12 @@ id:
         all_new: "Semua Pesan Baru"
         never: "Tidak pernah"
       join: "Gabung"
+      summarization:
+        title: "Meringkas pesan"
+        description: "Pilih opsi di bawah untuk meringkas percakapan yang dikirim selama jangka waktu yang diinginkan."
+        summarize: "Meringkas"
+        since:
+          other: "%{count} jam terakhir"
       mention_warning:
         dismiss: "bubar"
       reply: "Balas"
@@ -122,6 +128,15 @@ id:
           started_by: "Dimulai oleh"
         settings: "Pengaturan"
         last_reply: "balasan terakhir"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+          tracking:
+            title: "Pelacakan"
+            description: "Jumlah balasan baru untuk utas ini akan ditampilkan di daftar utas dan kanal. Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+        participants_other_count:
+          other: "+%{count} lainnya"
       threads:
         list: "Diskusi yang sedang berlangsung"
         none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."

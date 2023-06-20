@@ -105,6 +105,8 @@ hu:
       heading: "Csevegés"
       join: "Belépés"
       last_visit: "utolsó látogatás"
+      summarization:
+        summarize: "Összefoglalás"
       mention_warning:
         dismiss: "elvetés"
         invitations_sent:
@@ -356,6 +358,11 @@ hu:
         label: Szál
         settings: "Beállítások"
         last_reply: "utolsó válasz"
+        notifications:
+          regular:
+            title: "Normális"
+          tracking:
+            title: "Követés"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"

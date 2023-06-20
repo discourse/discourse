@@ -594,7 +594,7 @@ DEPENDENCIES
   mail
   maxminddb
   memory_profiler
-  message_bus
+  message_bus (= 4.3.2)
   mini_mime
   mini_racer
   mini_scheduler
@@ -624,6 +624,7 @@ DEPENDENCIES
   rack
   rack-mini-profiler
   rack-protection
+  rails-dom-testing
   rails_failover
   rails_multisite
   railties (= 7.0.4.3)
@@ -671,4 +672,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.4.4
+   2.4.13

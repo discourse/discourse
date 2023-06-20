@@ -992,8 +992,11 @@ id:
         enable: "Aktifkan bilah sisi"
         options: "Pilihan"
         categories_section: "Bagian Kategori"
+        categories_section_instruction: "Kategori yang dipilih akan ditampilkan di bagian kategori Menu Navigasi. Jika tidak ada kategori yang dipilih, kategori teratas situs akan ditampilkan."
         tags_section: "Bagian Tag"
+        tags_section_instruction: "Tag yang dipilih akan ditampilkan di bawah bagian tag Menu Navigasi. Jika tidak ada tag yang dipilih, tag teratas situs akan ditampilkan."
         navigation_section: "Navigasi"
+        list_destination_instruction: "Apabila ada konten baru dalam menu navigasi..."
       change: "ubah"
       featured_topic: "Topik Unggulan"
       moderator: "%{user} adalah moderator"
@@ -1083,6 +1086,7 @@ id:
         tags: "Label"
         interface: "Antarmuka"
         apps: "Aplikasi"
+        navigation_menu: "Menu Navigasi"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"
@@ -1376,8 +1380,11 @@ id:
     summary:
       description:
         other: "Terdapat <b>%{count}</b> balasan."
-      enable: "Rangkum Topik Ini"
+      enable: "Tampilkan balasan teratas"
       disable: "Tampilkan Semua Postingan"
+      strategy:
+        button_title: "Meringkas topik ini"
+        title: "Ringkasan topik"
     deleted_filter:
       enable: "Sembunyikan Tulisan Terhapus"
       disable: "Tunjukkan Tulisan yang Dihapus"
@@ -1924,11 +1931,15 @@ id:
         other: "%{count} baru"
       more: "Selengkapnya"
       all_categories: "Semua kategori"
-      categories_form:
+      categories_form_modal:
         save: "Simpan"
         title: "Edit navigasi kategori"
+        subtitle:
+          button_text: "Batalkan pilihan semua"
+          text: "dan kami akan menampilkan kategori paling populer dari situs ini secara otomatis"
         filter_placeholder: "Kategori filter"
         no_categories: "Tidak ada kategori yang cocok dengan istilah yang diberikan."
+        reset_to_defaults: "Setel ulang ke bawaan"
       sections:
         custom:
           save: "Simpan"
@@ -1962,6 +1973,9 @@ id:
               content: "Tentang"
             admin:
               content: "Admin"
+            topics:
+              content: "Topik"
+              title: "Semua topik"
             faq:
               content: "FAQ"
             groups:

@@ -1199,11 +1199,8 @@ ru:
         enable: "Включить боковую панель"
         options: "Параметры"
         categories_section: "Раздел категорий"
-        categories_section_instruction: "Выбранные категории будут отображаться в соответствующем разделе боковой панели."
         tags_section: "Раздел тегов"
-        tags_section_instruction: "Выбранные теги будут отображаться в соответствующем разделе боковой панели."
         navigation_section: "Навигация"
-        list_destination_instruction: "Когда на боковой панели появляется новый контент…"
         list_destination_default: "использовать ссылку по умолчанию и показать значок для нового"
         list_destination_unread_new: "использовать ссылку на непрочитанные (новые) и показать количество нового"
       change: "изменить"
@@ -1387,7 +1384,6 @@ ru:
         tags: "Теги"
         interface: "Интерфейс"
         apps: "Приложения"
-        sidebar: "Боковая панель"
       change_password:
         success: "(письмо отправлено)"
         in_progress: "(отправка письма)"
@@ -1956,7 +1952,6 @@ ru:
         other: "Есть <b>%{count}</b> ответа."
       description_time_MF: |
         Есть {replyCount, plural, one { <b>#</b> ответ} few { <b>#</b> ответа} many { <b>#</b> ответов} other { <b>#</b> ответа}} с расчётным временем чтения <b>{readingTime, plural, one {# минута} few {# минуты} many {# минут} other {# минуты}}</b>.
-      enable: "Сводка по теме"
       disable: "Показать все сообщения"
       short_label: "Сводка"
       short_title: "Просмотр сводки по этой теме: отображаются самые интересные сообщения по мнению сообщества."
@@ -4330,7 +4325,7 @@ ru:
       more: "Ещё"
       all_categories: "Все категории"
       all_tags: "Все теги"
-      categories_form:
+      categories_form_modal:
         save: "Сохранить"
       sections:
         custom:
@@ -4358,20 +4353,12 @@ ru:
             unread_with_count: "Непрочитанные (%{count})"
             archive: "Архив"
         tags:
-          links:
-            add_tags:
-              content: "Добавить теги"
-              title: "Вы не добавили ни одного тега. Чтобы добавить их, нажмите сюда."
           none: "Вы не добавили ни одного тега."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Теги"
           header_action_title: "Редактировать теги боковой панели"
           configure_defaults: "Настроить значения по умолчанию"
         categories:
-          links:
-            add_categories:
-              content: "Добавить категории"
-              title: "Вы не добавили ни одной категории. Чтобы добавить их, нажмите сюда."
           none: "Вы не добавили ни одной категории."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Категории"
@@ -4390,6 +4377,9 @@ ru:
             badges:
               content: "Награды"
               title: "Все награды, которые можно получить"
+            topics:
+              content: "Новые темы"
+              title: "Все темы"
             faq:
               content: "Правила"
               title: "Рекомендации по использованию сайта"

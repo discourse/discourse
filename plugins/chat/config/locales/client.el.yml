@@ -111,6 +111,11 @@ el:
           other: "%{count} απαντήσεις"
         settings: "Ρυθμίσεις"
         last_reply: "τελευταία απάντηση"
+        notifications:
+          regular:
+            title: "Φυσιολογικό"
+          tracking:
+            title: "Παρακολουθείται"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"

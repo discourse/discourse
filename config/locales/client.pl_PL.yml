@@ -1239,11 +1239,11 @@ pl_PL:
         enable: "Włącz pasek boczny"
         options: "Opcje"
         categories_section: "Sekcja kategorii"
-        categories_section_instruction: "Wybrane kategorie będą wyświetlane w sekcji kategorii paska bocznego."
+        categories_section_instruction: "Wybrane kategorie zostaną wyświetlone w sekcji kategorii menu nawigacyjnego. Jeśli nie wybrano żadnych kategorii, zostaną wyświetlone najważniejsze kategorie witryny."
         tags_section: "Sekcja tagów"
-        tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów paska bocznego."
+        tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów menu nawigacji. Jeśli żadne tagi nie zostaną wybrane, wyświetlone zostaną najważniejsze tagi witryny."
         navigation_section: "Nawigacja"
-        list_destination_instruction: "Gdy na pasku bocznym pojawi się nowa zawartość..."
+        list_destination_instruction: "Gdy w menu nawigacyjnym pojawi się nowa zawartość..."
         list_destination_default: "użyj linku domyślnego i pokaż odznakę dla nowych elementów"
         list_destination_unread_new: "linkuj do nieprzeczytanych/nowych i pokaż liczbę nowych pozycji"
       change: "zmień"
@@ -1457,7 +1457,7 @@ pl_PL:
         tags: "Tagi"
         interface: "Interfejs"
         apps: "Aplikacje"
-        sidebar: "Pasek boczny"
+        navigation_menu: "Menu nawigacji"
       change_password:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
@@ -2033,10 +2033,13 @@ pl_PL:
         other: "Jest <b>%{count}</b> odpowiedzi."
       description_time_MF: |
         Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>.
-      enable: "Podsumuj ten temat"
+      enable: "Pokaż najlepsze odpowiedzi"
       disable: "Pokaż wszystkie posty"
       short_label: "Podsumuj"
       short_title: "Pokaż podsumowanie tego tematu: najciekawsze posty określone przez społeczność"
+      strategy:
+        button_title: "Podsumuj ten temat"
+        title: "Podsumowanie tematu"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
       disabled_description: "Usunięte wpisy w tym temacie są widoczne."
@@ -2315,8 +2318,8 @@ pl_PL:
         many: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> – czy jesteś pewien?"
         other: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> –czy jesteś pewien?"
       cannot_see_mention:
-        category: "Wspomniano o @%{username}, lecz nie zostannie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
-        private: "Wspomniano o @%{username}, lecz nie zostannie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
+        category: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
+        private: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
         muted_topic: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ wyciszył ten temat."
         not_allowed: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie został zaproszony do tego tematu."
       cannot_see_group_mention:
@@ -2700,7 +2703,7 @@ pl_PL:
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
-          created: ja stworzyłem
+          created: Stworzyłem
           watching: Obserwuję
           tracking: Śledzę
           private: W moich wiadomościach
@@ -4441,11 +4444,15 @@ pl_PL:
       more: "Więcej"
       all_categories: "Wszystkie kategorie"
       all_tags: "Wszystkie tagi"
-      categories_form:
+      categories_form_modal:
         save: "Zapisz"
         title: "Edytuj nawigację kategorii"
+        subtitle:
+          button_text: "Odznacz wszystkie"
+          text: "i automatycznie pokażemy najpopularniejsze kategorie tej witryny"
         filter_placeholder: "Filtruj kategorie"
         no_categories: "Brak kategorii pasujących do podanego terminu."
+        reset_to_defaults: "Przywróć domyślne"
       sections:
         custom:
           add: "Dodaj niestandardową sekcję"
@@ -4494,20 +4501,12 @@ pl_PL:
             unread_with_count: "Nieprzeczytane (%{count})"
             archive: "Archiwum"
         tags:
-          links:
-            add_tags:
-              content: "Dodaj tagi"
-              title: "Nie dodałeś żadnych tagów. Kliknij, aby rozpocząć."
           none: "Nie dodałeś żadnych tagów."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Etykiety"
           header_action_title: "Edytuj tagi paska bocznego"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         categories:
-          links:
-            add_categories:
-              content: "Dodaj kategorie"
-              title: "Nie dodano żadnych kategorii. Kliknij, aby rozpocząć."
           none: "Nie dodałeś żadnych kategorii."
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Kategorie"
@@ -4527,6 +4526,9 @@ pl_PL:
             badges:
               content: "Odznaki"
               title: "Wszystkie odznaki dostępne do zdobycia"
+            topics:
+              content: "Tematy"
+              title: "Wszystkie tematy"
             faq:
               content: "FAQ"
               title: "Wskazówki dotyczące korzystania z tej witryny"
@@ -5295,6 +5297,7 @@ pl_PL:
             description: "Kolor przycisku polubień"
           selected:
             name: "zaznaczone"
+            description: "Kolor tła elementów, takich jak elementy listy, gdy są zaznaczone/aktywne."
           hover:
             name: "najechanie"
             description: "Kolor tła elementów, takich jak elementy listy, gdy są one najechane kursorem lub mają fokus klawiatury."
@@ -5667,15 +5670,24 @@ pl_PL:
           validations:
             required:
               key: "wymagane"
+              type: "wart. logiczna"
               description: "Wymaga wypełnienia pola w celu wysłania formularza."
             minimum:
               key: "minimum"
+              type: "liczba całk."
+              description: "W przypadku pól tekstowych określa minimalną dozwoloną liczbę znaków."
             maximum:
               key: "maksimum"
+              type: "liczba całk."
+              description: "W przypadku pól tekstowych określa maksymalną dozwoloną liczbę znaków."
             pattern:
+              key: "wzór"
               type: "ciąg regex"
+              description: "W przypadku pól tekstowych, wyrażenie regularne określające dozwolone dane wejściowe."
             type:
               key: "typ"
+              type: "ciąg znaków"
+              description: "W przypadku pól wejściowych można określić typ danych wejściowych, których należy się spodziewać (text|email|date|number|url|tel|color)"
         preview_modal:
           title: "Podgląd szablonu"
         field_placeholders:
