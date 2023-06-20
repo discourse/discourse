@@ -126,11 +126,6 @@ module TopicGuardian
       return true
     end
 
-    def is_in_edit_topic_groups?
-      SiteSetting.edit_all_topic_groups.present? &&
-        user.in_any_groups?(SiteSetting.edit_all_topic_groups.split("|").map(&:to_i))
-    end
-
     if (
          is_in_edit_topic_groups? && !topic.archived && !topic.private_message? &&
            can_create_post?(topic)
@@ -142,6 +137,11 @@ module TopicGuardian
 
     is_my_own?(topic) && !topic.edit_time_limit_expired?(user) && !first_post&.locked? &&
       (!first_post&.hidden? || can_edit_hidden_post?(first_post))
+  end
+
+  def is_in_edit_topic_groups?
+    SiteSetting.edit_all_topic_groups.present? &&
+      user.in_any_groups?(SiteSetting.edit_all_topic_groups.split("|").map(&:to_i))
   end
 
   def can_recover_topic?(topic)

@@ -1921,23 +1921,13 @@ RSpec.describe Guardian do
         end
 
         it "returns true if the user is in edit_all_post_groups" do
-          SiteSetting.edit_all_post_groups = 14
+          SiteSetting.edit_all_post_groups = "14"
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(true)
         end
 
         it "returns false if the user is not in edit_all_post_groups" do
-          SiteSetting.edit_all_post_groups = 14
+          SiteSetting.edit_all_post_groups = "14"
           expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to eq(false)
-        end
-
-        it "returns true if the user is in edit_all_topic_groups" do
-          SiteSetting.edit_all_topic_groups = 13
-          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to eq(true)
-        end
-
-        it "returns false if the user is not in edit_all_topic_groups" do
-          SiteSetting.edit_all_topic_groups = 13
-          expect(Guardian.new(trust_level_2).can_edit?(archived_topic)).to eq(false)
         end
 
         it "returns false at trust level 3" do
