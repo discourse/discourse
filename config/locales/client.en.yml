@@ -4522,7 +4522,7 @@ en:
           email: "Please enter a valid email address."
           number: "Please enter a number."
           password: "Please enter a valid password."
-          tel: "Please enter a valid telephone number"
+          tel: "Please enter a valid telephone number."
           text: "Please enter a text value."
           url: "Please enter a valid URL."
         tooShort: "The input must be %{minLength} characters or longer."
