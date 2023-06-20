@@ -24,12 +24,5 @@ export default class ChatChannelThreads extends DiscourseRoute {
     if (transition.targetName === "chat.channel.index") {
       this.chatStateManager.closeSidePanel();
     }
-    if (transition.targetName === "chat.channel.thread") {
-      this.chatStateManager.openedThreadFrom = "threadList";
-    }
-  }
-
-  activate() {
-    this.chatThreadListPane.open();
   }
 }
