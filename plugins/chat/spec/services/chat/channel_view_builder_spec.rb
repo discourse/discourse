@@ -358,7 +358,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         expect(subject.view.chat_messages).to eq([past_message, future_message])
       end
 
-      it "does not include null values" do
+      it "does not include nil values" do
         expect(subject.view.chat_messages).not_to include(nil)
       end
     end
