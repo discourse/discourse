@@ -1269,6 +1269,10 @@ id:
       title: "Kirim Ulang Email Aktivasi"
   wizard:
     step:
+      introduction:
+        fields:
+          title:
+            label: "Nama komunitas"
       privacy:
         fields:
           login_required:

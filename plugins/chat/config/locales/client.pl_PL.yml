@@ -300,6 +300,12 @@ pl_PL:
           label: "Wybierz kategorię"
           none: "wybierz jeden..."
           default_hint: Zarządzaj dostępem, odwiedzając <a href=%{link} target="_blank">ustawienia bezpieczeństwa %{category} </a>
+          hint_groups:
+            one: Użytkownicy w %{hint} będą mieli dostęp do tego kanału zgodnie z <a href=%{link} target="_blank">ustawieniami zabezpieczeń</a>
+            few: Użytkownicy w %{hint} i %{hint_2} będą mieli dostęp do tego kanału zgodnie z <a href=%{link} target="_blank">ustawieniami zabezpieczeń</a>
+            many: Użytkownicy w %{hint} i %{hint_2} będą mieli dostęp do tego kanału zgodnie z <a href=%{link} target="_blank">ustawieniami zabezpieczeń</a>
+            other: Użytkownicy w %{hint} i %{hint_2} będą mieli dostęp do tego kanału zgodnie z <a href=%{link} target="_blank">ustawieniami zabezpieczeń</a>
+          hint_multiple_groups: Użytkownicy w %{hint_1} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href=%{link} target="_blank">ustawieniami zabezpieczeń</a>
         create: "Utwórz kanał"
         description: "Opis (opcjonalnie)"
         name: "Nazwa kanału"
@@ -398,8 +404,18 @@ pl_PL:
           instructions_channel_archive: "Zamierzasz utworzyć nowy temat i zarchiwizować w nim wiadomości z kanału."
         existing_topic:
           title: "Przenieś do Istniejącego Tematu"
+          instructions:
+            one: "Wybierz temat, do którego chcesz przenieść tę wiadomość czatu."
+            few: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
+            many: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
+            other: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
         new_message:
           title: "Przejdź do nowej wiadomości"
+          instructions:
+            one: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybraną wiadomością czatu."
+            few: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybranymi <b>%{count}</b> wiadomościami czatu."
+            many: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybranymi <b>%{count}</b> wiadomościami czatu."
+            other: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybranymi <b>%{count}</b> wiadomościami czatu."
       replying_indicator:
         single_user: "%{username} pisze"
         multiple_users: "%{commaSeparatedUsernames} i %{lastUsername} piszą"
@@ -485,6 +501,10 @@ pl_PL:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
+          open_insert_link_modal: "%{shortcut} Wstaw hiperłącze (tylko kompozytor)"
+          composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
+          composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
+          composer_code: "%{shortcut} Kod (tylko kompozytor)"
           drawer_open: "%{shortcut} Otwórz szufladę czatu"
           drawer_close: "%{shortcut} Zamknij szufladę czatu"
     topic_statuses:

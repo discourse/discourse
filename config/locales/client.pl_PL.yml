@@ -2281,8 +2281,8 @@ pl_PL:
         many: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> – czy jesteś pewien?"
         other: "Wspominając %{group}, powiadomisz <a href='%{group_link}'>%{count} osób</a> –czy jesteś pewien?"
       cannot_see_mention:
-        category: "Wspomniano o @%{username}, lecz nie zostannie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
-        private: "Wspomniano o @%{username}, lecz nie zostannie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
+        category: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
+        private: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
         muted_topic: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ wyciszył ten temat."
         not_allowed: "Wspomniałeś o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie został zaproszony do tego tematu."
       cannot_see_group_mention:
@@ -2666,7 +2666,7 @@ pl_PL:
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
-          created: ja stworzyłem
+          created: Stworzyłem
           watching: Obserwuję
           tracking: Śledzę
           private: W moich wiadomościach
