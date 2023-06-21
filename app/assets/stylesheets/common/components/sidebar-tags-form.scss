@@ -60,3 +60,34 @@
     }
   }
 }
+
+.sidebar-tags-form__modal-footer.modal-footer {
+  .sidebar-tags-form__reset-to-defaults-btn {
+    margin-left: auto;
+    margin-right: 0em;
+
+    .d-icon {
+      font-size: var(--font-down-1);
+      color: var(--tertiary);
+    }
+
+    &:focus,
+    &:active {
+      background: none;
+    }
+  }
+}
+
+.sidebar-tags-form__deselect {
+  margin: 0;
+
+  .btn-flat.sidebar-tags-form__deselect-all-btn {
+    margin-left: auto;
+    padding: 0;
+
+    &:focus,
+    &:active {
+      background: none;
+    }
+  }
+}

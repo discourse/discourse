@@ -4401,6 +4401,10 @@ en:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"
         no_tags: "There are no tags matching the given term."
+        subtitle:
+          button_text: "Deselect all"
+          text: "and we'll automatically show this site's top tags"
+        reset_to_defaults: "Reset to defaults"
 
       sections:
         custom:

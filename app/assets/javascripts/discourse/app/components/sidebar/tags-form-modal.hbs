@@ -1,3 +1,16 @@
+{{#in-element this.modalHeaderAfterTitleElement}}
+  <p class="sidebar-tags-form__deselect">
+    <DButton
+      @class="btn-flat sidebar-tags-form__deselect-all-btn"
+      @label="sidebar.tags_form_modal.subtitle.button_text"
+      @ariaLabel="sidebar.tags_form_modal.subtitle.button_text"
+      @action={{this.deselectAll}}
+    />
+
+    {{i18n "sidebar.tags_form_modal.subtitle.text"}}
+  </p>
+{{/in-element}}
+
 <DModalBody
   @title="sidebar.tags_form_modal.title"
   @class="sidebar-tags-form-modal"
@@ -54,11 +67,22 @@
   </form>
 </DModalBody>
 
-<div class="modal-footer">
+<div class="modal-footer sidebar-tags-form__modal-footer">
   <DButton
     @class="btn-primary sidebar-tags-form__save-button"
     @label="save"
     @disabled={{this.saving}}
     @action={{this.save}}
   />
+
+  {{#if (gt this.siteSettings.default_navigation_menu_tags.length 0)}}
+    <DButton
+      @icon="undo"
+      @class="btn-flat btn-text sidebar-tags-form__reset-to-defaults-btn"
+      @label="sidebar.tags_form_modal.reset_to_defaults"
+      @disabled={{this.saving}}
+      @action={{this.resetToDefaults}}
+    />
+  {{/if}}
+
 </div>
