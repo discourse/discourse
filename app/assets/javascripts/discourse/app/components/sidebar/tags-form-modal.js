@@ -9,6 +9,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 
 export default class extends Component {
   @service currentUser;
+  @service siteSettings;
   @service store;
 
   @tracked filter = "";
@@ -49,6 +50,10 @@ export default class extends Component {
     }
   }
 
+  get modalHeaderAfterTitleElement() {
+    return document.getElementById("modal-header-after-title");
+  }
+
   @action
   onFilterInput(filter) {
     discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
@@ -56,6 +61,17 @@ export default class extends Component {
 
   #performFiltering(filter) {
     this.filter = filter.toLowerCase();
+  }
+
+  @action
+  deselectAll() {
+    this.selectedTags.clear();
+  }
+
+  @action
+  resetToDefaults() {
+    this.selectedTags =
+      this.siteSettings.default_navigation_menu_tags.split("|");
   }
 
   @action

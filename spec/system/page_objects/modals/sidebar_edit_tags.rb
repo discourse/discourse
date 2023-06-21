@@ -45,6 +45,16 @@ module PageObjects
         find(".sidebar-tags-form-modal .sidebar-tags-form__filter-input-field").fill_in(with: text)
         self
       end
+
+      def deselect_all
+        click_button(I18n.t("js.sidebar.tags_form_modal.subtitle.button_text"))
+        self
+      end
+
+      def click_reset_to_defaults_button
+        click_button(I18n.t("js.sidebar.tags_form_modal.reset_to_defaults"))
+        self
+      end
     end
   end
 end
