@@ -11,10 +11,12 @@ RSpec.describe "Summarize a channel since your last visit", type: :system, js: t
 
   let(:chat) { PageObjects::Pages::Chat.new }
 
+  let(:summarization_result) { { summary: "This is a summary", chunks: [] } }
+
   before do
     group.add(current_user)
 
-    strategy = DummyCustomSummarization.new("dummy")
+    strategy = DummyCustomSummarization.new(summarization_result)
     plugin.register_summarization_strategy(strategy)
     SiteSetting.summarization_strategy = strategy.model
     SiteSetting.custom_summarization_allowed_groups = group.id.to_s
@@ -36,6 +38,6 @@ RSpec.describe "Summarize a channel since your last visit", type: :system, js: t
     find(".summarization-since").click
     find(".select-kit-row[data-value=\"3\"]").click
 
-    expect(find(".summary-area").text).to eq(DummyCustomSummarization::RESPONSE)
+    expect(find(".summary-area").text).to eq(summarization_result[:summary])
   end
 end

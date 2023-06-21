@@ -10,9 +10,11 @@ RSpec.describe "Topic summarization", type: :system, js: true do
 
   let(:plugin) { Plugin::Instance.new }
 
+  let(:summarization_result) { { summary: "This is a summary", chunks: [] } }
+
   before do
     sign_in(user)
-    strategy = DummyCustomSummarization.new("dummy")
+    strategy = DummyCustomSummarization.new(summarization_result)
     plugin.register_summarization_strategy(strategy)
     SiteSetting.summarization_strategy = strategy.model
   end
@@ -24,6 +26,6 @@ RSpec.describe "Topic summarization", type: :system, js: true do
 
     expect(page.has_css?(".topic-summary-modal", wait: 5)).to eq(true)
 
-    expect(find(".summary-area").text).to eq(DummyCustomSummarization::RESPONSE)
+    expect(find(".summary-area").text).to eq(summarization_result[:summary])
   end
 end
