@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+include ActionView::Helpers::NumberHelper
 
 RSpec.describe Onebox::Engine::TwitterStatusOnebox do
   shared_examples_for "#to_html" do
@@ -57,13 +58,11 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
 
   shared_context "with quoted tweet info" do
     before do
-      @link = "https://twitter.com/metallica/status/1128068672289890305"
+      @link = "https://twitter.com/Metallica/status/1128068672289890305"
       @onebox_fixture = "twitterstatus_quoted"
 
-      stub_request(:get, @link.downcase).to_return(
-        status: 200,
-        body: onebox_response(@onebox_fixture),
-      )
+      stub_request(:head, @link)
+      stub_request(:get, @link).to_return(status: 200, body: onebox_response(@onebox_fixture))
     end
 
     let(:full_name) { "Metallica" }
@@ -154,7 +153,6 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
           status: api_response,
           prettify_tweet: tweet_content,
           twitter_credentials_missing?: false,
-          prettify_number: favorite_count,
         )
 
       @previous_options = Onebox.options.to_h
