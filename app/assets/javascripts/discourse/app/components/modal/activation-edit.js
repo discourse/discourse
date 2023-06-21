@@ -4,7 +4,7 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { changeEmail } from "discourse/lib/user-activation";
 import { flashAjaxError } from "discourse/lib/ajax-error";
-import ActivationResent from "discourse/components/modal/activation-resent";
+import ActivationResent from "./activation-resent";
 
 export default class ActivationEdit extends Component {
   @service login;
