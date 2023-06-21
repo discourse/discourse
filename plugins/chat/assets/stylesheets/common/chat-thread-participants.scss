@@ -36,7 +36,7 @@
       flex-direction: row-reverse;
       justify-content: flex-start;
       .chat-user-avatar:not(:first-child) {
-        margin-right: -15px;
+        margin-right: -12px;
 
         .avatar {
           border: 1px solid var(--primary-very-low);
@@ -44,7 +44,9 @@
       }
     }
     &__other-count {
-      margin-right: -15px;
+      width: 22px;
+      height: 22px;
+      margin-right: -12px;
       z-index: 1;
       border: 1px solid var(--primary-very-low);
     }
