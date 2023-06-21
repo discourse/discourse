@@ -12,12 +12,12 @@ class TwitterApi
     ]
 
     def prettify_tweet(tweet)
-      text = tweet["data"]["text"].dup
-      if (entities = tweet["data"]["entities"]) && (urls = entities["urls"])
+      text = tweet[:data][:text].dup.to_s
+      if (entities = tweet[:data][:entities]) && (urls = entities[:urls])
         urls.each do |url|
           text.gsub!(
-            url["url"],
-            "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>",
+            url[:url],
+            "<a target='_blank' href='#{url[:expanded_url]}'>#{url[:display_url]}</a>",
           )
         end
       end
@@ -26,23 +26,23 @@ class TwitterApi
 
       result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
 
-      if tweet["includes"] && media = tweet["includes"]["media"]
+      if tweet[:includes] && media = tweet[:includes][:media]
         media.each do |m|
-          if m["type"] == "photo"
-            result << "<div class='tweet-images'><img class='tweet-image' src='#{m["url"]}' width='#{m["width"]}' height='#{m["height"]}'></div>"
-          elsif m["type"] == "video" || m["type"] == "animated_gif"
+          if m[:type] == "photo"
+            result << "<div class='tweet-images'><img class='tweet-image' src='#{m[:url]}' width='#{m[:width]}' height='#{m[:height]}'></div>"
+          elsif m[:type] == "video" || m[:type] == "animated_gif"
             video_to_display =
-              m["variants"]
-                .select { |v| v["content_type"] == "video/mp4" }
-                .sort { |v| v["bit_rate"] }
+              m[:variants]
+                .select { |v| v[:content_type] == "video/mp4" }
+                .sort { |v| v[:bit_rate] }
                 .last # choose highest bitrate
 
-            if video_to_display && url = video_to_display["url"]
-              width = m["width"]
-              height = m["height"]
+            if video_to_display && url = video_to_display[:url]
+              width = m[:width]
+              height = m[:height]
 
               attributes =
-                if m["type"] == "animated_gif"
+                if m[:type] == "animated_gif"
                   %w[playsinline loop muted autoplay disableRemotePlayback disablePictureInPicture]
                 else
                   %w[controls playsinline]
@@ -54,7 +54,7 @@ class TwitterApi
                     <video class='tweet-video' #{attributes}
                       width='#{width}'
                       height='#{height}'
-                      poster='#{m["preview_image_url"]}'>
+                      poster='#{m[:preview_image_url]}'>
                       <source src='#{url}' type="video/mp4">
                     </video>
                   </div>
