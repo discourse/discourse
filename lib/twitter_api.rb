@@ -3,8 +3,6 @@
 # lightweight Twitter api calls
 class TwitterApi
   class << self
-    include ActionView::Helpers::NumberHelper
-
     BASE_URL = "https://api.twitter.com"
     URL_PARAMS = %w[
       tweet.fields=id,author_id,text,created_at,entities,referenced_tweets,public_metrics
@@ -68,19 +66,6 @@ class TwitterApi
       end
 
       result
-    end
-
-    def prettify_number(count)
-      number_to_human(
-        count,
-        format: "%n%u",
-        precision: 2,
-        units: {
-          thousand: "K",
-          million: "M",
-          billion: "B",
-        },
-      )
     end
 
     def tweet_for(id)

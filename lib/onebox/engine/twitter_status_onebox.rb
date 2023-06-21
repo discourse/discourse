@@ -6,6 +6,7 @@ module Onebox
       include Engine
       include LayoutSupport
       include HTML
+      include ActionView::Helpers::NumberHelper
 
       matches_regexp(
         %r{^https?://(mobile\.|www\.)?twitter\.com/.+?/status(es)?/\d+(/(video|photo)/\d?+)?+(/?\?.*)?/?$},
@@ -162,7 +163,18 @@ module Onebox
     end
 
     def prettify_number(count)
-      count > 0 ? client.prettify_number(count) : nil
+      if count > 0
+        number_to_human(
+          count,
+          format: "%n%u",
+          precision: 2,
+          units: {
+            thousand: "K",
+            million: "M",
+            billion: "B",
+          },
+        )
+      end
     end
 
     def attr_at_css(css_property, attribute_name)
