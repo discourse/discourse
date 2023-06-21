@@ -8,7 +8,6 @@ import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { parseMentionedUsernames } from "discourse/lib/parse-mentions";
-import { except } from "discourse/lib/collections";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -363,7 +362,7 @@ export default class ChatMessage {
   get #notLoadedMentions() {
     const parsed = parseMentionedUsernames(this._cooked);
     const loaded = [...this.mentionedUsers.values()].map((u) => u.username);
-    return except(parsed, loaded);
+    return parsed.filter((x) => !loaded.includes(x));
   }
 
   #initChatMessageReactionModel(reactions = []) {
