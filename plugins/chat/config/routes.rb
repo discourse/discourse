@@ -72,7 +72,6 @@ Chat::Engine.routes.draw do
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
   post "/:chat_channel_id/:message_id/flag" => "chat#flag"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
-  put "/:chat_channel_id/read/:message_id" => "chat#update_user_last_read"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   put "/:chat_channel_id/invite" => "chat#invite_users"
   post "/drafts" => "chat#set_draft"
