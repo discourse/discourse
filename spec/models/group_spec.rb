@@ -502,13 +502,13 @@ RSpec.describe Group do
   end
 
   describe "new" do
-    subject { Fabricate.build(:group) }
+    subject(:group) { Fabricate.build(:group) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.first
+      event = DiscourseEvent.track_events { group.save! }.first
 
       expect(event[:event_name]).to eq(:group_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(group)
     end
   end
 

@@ -9,8 +9,8 @@ describe Chat::ChannelArchiveService do
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:user) { Fabricate(:user, admin: true) }
   fab!(:category) { Fabricate(:category) }
+
   let(:topic_params) { { topic_title: "This will be a new topic", category_id: category.id } }
-  subject { Chat::ChannelArchiveService }
 
   before { SiteSetting.chat_enabled = true }
 
@@ -18,7 +18,7 @@ describe Chat::ChannelArchiveService do
     before { 3.times { Fabricate(:chat_message, chat_channel: channel) } }
 
     it "marks the channel as read_only" do
-      subject.create_archive_process(
+      described_class.create_archive_process(
         chat_channel: channel,
         acting_user: user,
         topic_params: topic_params,
@@ -27,7 +27,7 @@ describe Chat::ChannelArchiveService do
     end
 
     it "creates the chat channel archive record to save progress and topic params" do
-      subject.create_archive_process(
+      described_class.create_archive_process(
         chat_channel: channel,
         acting_user: user,
         topic_params: topic_params,
@@ -42,7 +42,7 @@ describe Chat::ChannelArchiveService do
 
     it "enqueues the archive job" do
       channel_archive =
-        subject.create_archive_process(
+        described_class.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
@@ -58,13 +58,13 @@ describe Chat::ChannelArchiveService do
     end
 
     it "does nothing if there is already an archive record for the channel" do
-      subject.create_archive_process(
+      described_class.create_archive_process(
         chat_channel: channel,
         acting_user: user,
         topic_params: topic_params,
       )
       expect {
-        subject.create_archive_process(
+        described_class.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
@@ -76,7 +76,7 @@ describe Chat::ChannelArchiveService do
       new_message = Fabricate(:chat_message, chat_channel: channel)
       new_message.trash!
       channel_archive =
-        subject.create_archive_process(
+        described_class.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
@@ -92,7 +92,7 @@ describe Chat::ChannelArchiveService do
 
     def start_archive
       @channel_archive =
-        subject.create_archive_process(
+        described_class.create_archive_process(
           chat_channel: channel,
           acting_user: user,
           topic_params: topic_params,
@@ -113,7 +113,7 @@ describe Chat::ChannelArchiveService do
           emoji: "+1",
         )
         stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
-          subject.new(@channel_archive).execute
+          described_class.new(@channel_archive).execute
         end
 
         @channel_archive.reload
@@ -146,21 +146,21 @@ describe Chat::ChannelArchiveService do
       it "does not stop the process if the post length is too high (validations disabled)" do
         create_messages(50) && start_archive
         SiteSetting.max_post_length = 1
-        subject.new(@channel_archive).execute
+        described_class.new(@channel_archive).execute
         expect(@channel_archive.reload.complete?).to eq(true)
       end
 
       it "successfully links uploads from messages to the post" do
         create_messages(3) && start_archive
         UploadReference.create!(target: Chat::Message.last, upload: Fabricate(:upload))
-        subject.new(@channel_archive).execute
+        described_class.new(@channel_archive).execute
         expect(@channel_archive.reload.complete?).to eq(true)
         expect(@channel_archive.destination_topic.posts.last.upload_references.count).to eq(1)
       end
 
       it "successfully sends a private message to the archiving user" do
         create_messages(3) && start_archive
-        subject.new(@channel_archive).execute
+        described_class.new(@channel_archive).execute
         expect(@channel_archive.reload.complete?).to eq(true)
         pm_topic = Topic.private_messages.last
         expect(pm_topic.topic_allowed_users.first.user).to eq(@channel_archive.archived_by)
@@ -174,7 +174,7 @@ describe Chat::ChannelArchiveService do
 
         create_messages(3) && start_archive
         @channel_archive.update!(destination_topic_title: "Wow this is the new title :tada: :joy:")
-        subject.new(@channel_archive).execute
+        described_class.new(@channel_archive).execute
         expect(@channel_archive.reload.complete?).to eq(false)
         expect(@channel_archive.reload.failed?).to eq(true)
         expect(@channel_archive.archive_error).to eq("Title can't have more than 1 emoji")
@@ -191,7 +191,7 @@ describe Chat::ChannelArchiveService do
 
         it "uses the channel slug to autolink a hashtag for the channel in the PM" do
           create_messages(3) && start_archive
-          subject.new(@channel_archive).execute
+          described_class.new(@channel_archive).execute
           expect(@channel_archive.reload.complete?).to eq(true)
           pm_topic = Topic.private_messages.last
           expect(pm_topic.first_post.cooked).to have_tag(
@@ -231,7 +231,7 @@ describe Chat::ChannelArchiveService do
             Chat::UserChatChannelMembership.where(chat_channel: channel, following: true).count,
           ).to eq(3)
           start_archive
-          subject.new(@channel_archive).execute
+          described_class.new(@channel_archive).execute
           expect(@channel_archive.reload.complete?).to eq(true)
           expect(
             Chat::UserChatChannelMembership.where(chat_channel: channel, following: true).count,
@@ -243,7 +243,7 @@ describe Chat::ChannelArchiveService do
             last_read_message_id: channel.chat_messages.first.id,
           )
           start_archive
-          subject.new(@channel_archive).execute
+          described_class.new(@channel_archive).execute
           expect(@channel_archive.reload.complete?).to eq(true)
           expect(Chat::UserChatChannelMembership.last.last_read_message_id).to eq(
             channel.chat_messages.last.id,
@@ -257,7 +257,7 @@ describe Chat::ChannelArchiveService do
 
           it "archives the topic" do
             create_messages(3) && start_archive
-            subject.new(@channel_archive).execute
+            described_class.new(@channel_archive).execute
             topic = @channel_archive.destination_topic
             topic.reload
             expect(topic.archived).to eq(true)
@@ -269,7 +269,7 @@ describe Chat::ChannelArchiveService do
 
           it "leaves the topic open" do
             create_messages(3) && start_archive
-            subject.new(@channel_archive).execute
+            described_class.new(@channel_archive).execute
             topic = @channel_archive.destination_topic
             topic.reload
             expect(topic.archived).to eq(false)
@@ -282,7 +282,7 @@ describe Chat::ChannelArchiveService do
 
           it "closes the topic" do
             create_messages(3) && start_archive
-            subject.new(@channel_archive).execute
+            described_class.new(@channel_archive).execute
             topic = @channel_archive.destination_topic
             topic.reload
             expect(topic.archived).to eq(false)
@@ -297,7 +297,7 @@ describe Chat::ChannelArchiveService do
               destination_topic_title: nil,
               destination_topic_id: Fabricate(:topic).id,
             )
-            subject.new(@channel_archive).execute
+            described_class.new(@channel_archive).execute
             topic = @channel_archive.destination_topic
             topic.reload
             expect(topic.archived).to eq(false)
@@ -322,7 +322,7 @@ describe Chat::ChannelArchiveService do
           emoji: "+1",
         )
         stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
-          subject.new(@channel_archive).execute
+          described_class.new(@channel_archive).execute
         end
 
         @channel_archive.reload
@@ -363,7 +363,7 @@ describe Chat::ChannelArchiveService do
           .raises(FakeArchiveError.new("this is a test error"))
 
         stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
-          expect { subject.new(@channel_archive).execute }.to raise_error(FakeArchiveError)
+          expect { described_class.new(@channel_archive).execute }.to raise_error(FakeArchiveError)
         end
 
         expect(@channel_archive.reload.archive_error).to eq("this is a test error")
@@ -376,7 +376,7 @@ describe Chat::ChannelArchiveService do
 
         Chat::ChannelArchiveService.any_instance.unstub(:create_post)
         stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
-          subject.new(@channel_archive).execute
+          described_class.new(@channel_archive).execute
         end
 
         @channel_archive.reload

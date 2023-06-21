@@ -1,15 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::TrackingStateReportQuery do
-  fab!(:current_user) { Fabricate(:user) }
-  let(:guardian) { current_user.guardian }
-
-  let(:channel_ids) { [] }
-  let(:thread_ids) { [] }
-  let(:include_missing_memberships) { false }
-  let(:include_threads) { false }
-  let(:include_read) { true }
-  let(:subject) do
+  subject(:query) do
     described_class.call(
       guardian: guardian,
       channel_ids: channel_ids,
@@ -20,9 +12,17 @@ RSpec.describe Chat::TrackingStateReportQuery do
     )
   end
 
+  fab!(:current_user) { Fabricate(:user) }
+  let(:guardian) { current_user.guardian }
+
+  let(:channel_ids) { [] }
+  let(:thread_ids) { [] }
+  let(:include_missing_memberships) { false }
+  let(:include_threads) { false }
+  let(:include_read) { true }
   context "when channel_ids empty" do
     it "returns empty object for channel_tracking" do
-      expect(subject.channel_tracking).to eq({})
+      expect(query.channel_tracking).to eq({})
     end
   end
 
@@ -41,7 +41,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
           include_read: include_read,
         )
         .returns([])
-      subject
+      query
     end
 
     it "generates a correct unread report for the channels the user is a member of" do
@@ -50,7 +50,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
       Fabricate(:chat_message, chat_channel: channel_1)
       Fabricate(:chat_message, chat_channel: channel_2)
 
-      expect(subject.channel_tracking).to eq(
+      expect(query.channel_tracking).to eq(
         {
           channel_1.id => {
             unread_count: 1,
@@ -66,7 +66,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
 
     it "does not include threads by default" do
       Chat::ThreadUnreadsQuery.expects(:call).never
-      expect(subject.thread_tracking).to eq({})
+      expect(query.thread_tracking).to eq({})
     end
 
     context "when include_threads is true" do
@@ -90,7 +90,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
             include_read: include_read,
           )
           .returns([])
-        subject
+        query
       end
 
       it "generates a correct unread for the threads the user is a member of in the channels" do
@@ -101,7 +101,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
         Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1)
         Fabricate(:chat_message, chat_channel: channel_2, thread: thread_2)
 
-        expect(subject.channel_tracking).to eq(
+        expect(query.channel_tracking).to eq(
           {
             channel_1.id => {
               unread_count: 1,
@@ -113,7 +113,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
             },
           },
         )
-        expect(subject.thread_tracking).to eq(
+        expect(query.thread_tracking).to eq(
           {
             thread_1.id => {
               unread_count: 1,
@@ -135,7 +135,7 @@ RSpec.describe Chat::TrackingStateReportQuery do
 
         it "does not query threads" do
           Chat::ThreadUnreadsQuery.expects(:call).never
-          expect(subject.thread_tracking).to eq({})
+          expect(query.thread_tracking).to eq({})
         end
       end
     end

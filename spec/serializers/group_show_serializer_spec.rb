@@ -59,15 +59,16 @@ RSpec.describe GroupShowSerializer do
   end
 
   describe "admin only fields" do
+    subject(:serializer) { described_class.new(group, scope: guardian, root: false) }
+
     fab!(:group) { Fabricate(:group, email_username: "foo@bar.com", email_password: "pa$$w0rd") }
-    subject { described_class.new(group, scope: guardian, root: false) }
 
     context "for a user" do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
       it "are not visible" do
-        expect(subject.as_json[:email_username]).to be_nil
-        expect(subject.as_json[:email_password]).to be_nil
+        expect(serializer.as_json[:email_username]).to be_nil
+        expect(serializer.as_json[:email_password]).to be_nil
       end
     end
 
@@ -75,15 +76,16 @@ RSpec.describe GroupShowSerializer do
       let(:guardian) { Guardian.new(Fabricate(:admin)) }
 
       it "are visible" do
-        expect(subject.as_json[:email_username]).to eq("foo@bar.com")
-        expect(subject.as_json[:email_password]).to eq("pa$$w0rd")
-        expect(subject.as_json[:message_count]).to eq(0)
+        expect(serializer.as_json[:email_username]).to eq("foo@bar.com")
+        expect(serializer.as_json[:email_password]).to eq("pa$$w0rd")
+        expect(serializer.as_json[:message_count]).to eq(0)
       end
     end
   end
 
   describe "default notification settings" do
-    subject { described_class.new(group, scope: guardian, root: false) }
+    subject(:serializer) { described_class.new(group, scope: guardian, root: false) }
+
     let(:category1) { Fabricate(:category) }
     let(:category2) { Fabricate(:category) }
     let(:tag1) { Fabricate(:tag) }
@@ -118,8 +120,10 @@ RSpec.describe GroupShowSerializer do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
       it "are not visible" do
-        expect(subject.as_json.keys.select { |k| k.to_s.ends_with?("_category_ids") }).to be_empty
-        expect(subject.as_json.keys.select { |k| k.to_s.ends_with?("_tags") }).to be_empty
+        expect(
+          serializer.as_json.keys.select { |k| k.to_s.ends_with?("_category_ids") },
+        ).to be_empty
+        expect(serializer.as_json.keys.select { |k| k.to_s.ends_with?("_tags") }).to be_empty
       end
     end
 
@@ -127,25 +131,25 @@ RSpec.describe GroupShowSerializer do
       let(:guardian) { Guardian.new(Fabricate(:admin)) }
 
       it "are correct" do
-        expect(subject.as_json[:watching_category_ids]).to eq([category1.id])
-        expect(subject.as_json[:tracking_category_ids]).to eq([category2.id])
-        expect(subject.as_json[:watching_first_post_category_ids]).to eq([])
-        expect(subject.as_json[:regular_category_ids]).to eq([])
-        expect(subject.as_json[:muted_category_ids]).to eq([])
+        expect(serializer.as_json[:watching_category_ids]).to eq([category1.id])
+        expect(serializer.as_json[:tracking_category_ids]).to eq([category2.id])
+        expect(serializer.as_json[:watching_first_post_category_ids]).to eq([])
+        expect(serializer.as_json[:regular_category_ids]).to eq([])
+        expect(serializer.as_json[:muted_category_ids]).to eq([])
 
-        expect(subject.as_json[:watching_tags]).to eq([tag1.name])
-        expect(subject.as_json[:tracking_tags]).to eq([tag2.name])
-        expect(subject.as_json[:watching_first_post_tags]).to eq([])
-        expect(subject.as_json[:regular_tags]).to eq([])
-        expect(subject.as_json[:muted_tags]).to eq([])
+        expect(serializer.as_json[:watching_tags]).to eq([tag1.name])
+        expect(serializer.as_json[:tracking_tags]).to eq([tag2.name])
+        expect(serializer.as_json[:watching_first_post_tags]).to eq([])
+        expect(serializer.as_json[:regular_tags]).to eq([])
+        expect(serializer.as_json[:muted_tags]).to eq([])
       end
 
       it "doesn't include tag fields if tags are disabled" do
         SiteSetting.tagging_enabled = false
-        expect(subject.as_json.keys.select { |k| k.to_s.ends_with?("_category_ids") }.length).to eq(
-          5,
-        )
-        expect(subject.as_json.keys.select { |k| k.to_s.ends_with?("_tags") }).to be_empty
+        expect(
+          serializer.as_json.keys.select { |k| k.to_s.ends_with?("_category_ids") }.length,
+        ).to eq(5)
+        expect(serializer.as_json.keys.select { |k| k.to_s.ends_with?("_tags") }).to be_empty
       end
     end
   end

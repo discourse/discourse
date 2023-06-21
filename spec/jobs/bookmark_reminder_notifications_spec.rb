@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::BookmarkReminderNotifications do
-  subject { described_class.new }
+  subject(:job) { described_class.new }
 
   fab!(:user) { Fabricate(:user) }
   let(:five_minutes_ago) { Time.zone.now - 5.minutes }
@@ -19,7 +19,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   end
 
   it "sends every reminder and sets the reminder_last_sent_at" do
-    subject.execute
+    job.execute
     bookmark1.reload
     bookmark2.reload
     bookmark3.reload
@@ -31,7 +31,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
   it "will not send a reminder for a bookmark in the future" do
     freeze_time
     bookmark4 = Fabricate(:bookmark, reminder_at: Time.zone.now + 1.day)
-    expect { subject.execute }.to change { Notification.where(user: user).count }.by(3)
+    expect { job.execute }.to change { Notification.where(user: user).count }.by(3)
     expect(bookmark1.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
     expect(bookmark2.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
     expect(bookmark3.reload.reminder_last_sent_at).to eq_time(Time.zone.now)
@@ -44,7 +44,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
       other_bookmark = Fabricate(:bookmark, user: bookmark1.user)
       other_bookmark.update_column(:reminder_at, five_minutes_ago)
       SiteSetting.max_bookmarks_per_user = 2
-      expect { subject.execute }.not_to raise_error
+      expect { job.execute }.not_to raise_error
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     it "does not send them in the current run, but will send them in the next" do
       begin
         Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
-        subject.execute
+        job.execute
         expect(bookmark1.reload.reminder_last_sent_at).not_to eq(nil)
         expect(bookmark2.reload.reminder_last_sent_at).not_to eq(nil)
         expect(bookmark3.reload.reminder_last_sent_at).to eq(nil)
@@ -64,7 +64,7 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
     bookmark1.bookmarkable.topic.destroy
     bookmark2.bookmarkable.topic.destroy
     bookmark3.bookmarkable.topic.destroy
-    expect { subject.execute }.not_to change {
+    expect { job.execute }.not_to change {
       Notification.where(notification_type: Notification.types[:bookmark_reminder]).count
     }
   end

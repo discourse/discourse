@@ -641,35 +641,33 @@ RSpec.describe User do
   end
 
   describe "new" do
-    subject { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     it { is_expected.to be_valid }
     it { is_expected.not_to be_admin }
     it { is_expected.not_to be_approved }
 
     it "is properly initialized" do
-      expect(subject.approved_at).to be_blank
-      expect(subject.approved_by_id).to be_blank
+      expect(user.approved_at).to be_blank
+      expect(user.approved_by_id).to be_blank
     end
 
     it "triggers an extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.first
+      event = DiscourseEvent.track_events { user.save! }.first
 
       expect(event[:event_name]).to eq(:user_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(user)
     end
 
     context "with after_save" do
-      before { subject.save! }
+      before { user.save! }
 
       it "has correct settings" do
-        expect(subject.email_tokens).to be_present
-        expect(subject.user_stat).to be_present
-        expect(subject.user_profile).to be_present
-        expect(subject.user_option.email_messages_level).to eq(
-          UserOption.email_level_types[:always],
-        )
-        expect(subject.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
+        expect(user.email_tokens).to be_present
+        expect(user.user_stat).to be_present
+        expect(user.user_profile).to be_present
+        expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
+        expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
     end
 
@@ -756,41 +754,37 @@ RSpec.describe User do
   end
 
   describe "staff and regular users" do
-    let(:user) { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     describe "#staff?" do
-      subject { user.staff? }
-
-      it { is_expected.to eq(false) }
+      it { is_expected.not_to be_staff }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
     end
 
     describe "#regular?" do
-      subject { user.regular? }
-
-      it { is_expected.to eq(true) }
+      it { is_expected.to be_regular }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
     end
   end
@@ -3251,7 +3245,7 @@ RSpec.describe User do
     end
 
     it "returns false if no whispers groups exist" do
-      expect(subject.whisperer?).to eq(false)
+      expect(user.whisperer?).to eq(false)
     end
   end
 
