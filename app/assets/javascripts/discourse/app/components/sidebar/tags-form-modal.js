@@ -13,6 +13,7 @@ export default class extends Component {
 
   @tracked filter = "";
   @tracked tags = [];
+  @tracked tagsLoading = true;
   @tracked selectedTags = [...this.currentUser.sidebarTagNames];
 
   constructor() {
@@ -29,6 +30,8 @@ export default class extends Component {
         this.tags = tags.content.sort((a, b) => {
           return a.name.localeCompare(b.name);
         });
+
+        this.tagsLoading = false;
       })
       .catch((error) => {
         popupAjaxError(error);
