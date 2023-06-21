@@ -468,7 +468,7 @@ module Jobs
         entities.each do |entity|
           CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
             csv << get_header(entity[:name]) if entity[:name] != "report"
-            public_send(entity[:method]).each { |d| csv << d }
+            public_send(entity[:method]) { |d| csv << d }
           end
         end
 
