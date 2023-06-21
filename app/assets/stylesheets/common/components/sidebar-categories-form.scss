@@ -86,7 +86,9 @@
     padding: 0.5em 0;
   }
 
-  .sidebar-categories-form__category-row[data-category-level="0"]:not(:only-child) {
+  .sidebar-categories-form__category-row[data-category-level="0"]:not(
+      :only-child
+    ) {
     border-bottom: 1px solid var(--primary-low);
   }
 
@@ -94,7 +96,9 @@
     margin-left: 1em;
   }
 
-  .sidebar-categories-form__category-row[data-category-level="1"]:not(:nth-of-type(2)) {
+  .sidebar-categories-form__category-row[data-category-level="1"]:not(
+      :nth-of-type(2)
+    ) {
     border-top: 1px solid var(--primary-low);
   }
 

@@ -134,7 +134,9 @@
   }
 
   &:not(.history-modal) {
-    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown):not(.sidebar-categories-form-modal):not(.sidebar-tags-form-modal) {
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
+        .poll-breakdown
+      ):not(.sidebar-categories-form-modal):not(.sidebar-tags-form-modal) {
       max-height: 80vh !important;
       @media screen and (max-height: 500px) {
         max-height: 65vh !important;
