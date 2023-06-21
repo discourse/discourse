@@ -132,6 +132,7 @@ export default class ChatMessage extends Component {
   willDestroyMessage() {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
+    cancel(this._makeMessageActiveHandler);
     this.#teardownMentionedUsers();
   }
 
@@ -272,16 +273,22 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressStart() {
+  onLongPressStart() {
     if (!this.args.message.expanded) {
       return;
     }
 
-    this.isActive = true;
+    // prevents message to show as active when starting scroll
+    // at this moment scroll has no momentum and the row can
+    // capture the touch event instead of a scroll
+    this._makeMessageActiveHandler = discourseLater(() => {
+      this.isActive = true;
+    }, 50);
   }
 
   @action
   onLongPressCancel() {
+    cancel(this._makeMessageActiveHandler);
     this.isActive = false;
 
     // this a tricky bit of code which is needed to prevent the long press
@@ -297,7 +304,8 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressEnd() {
+  onLongPressEnd() {
+    cancel(this._makeMessageActiveHandler);
     this.isActive = false;
 
     if (isZoomed()) {

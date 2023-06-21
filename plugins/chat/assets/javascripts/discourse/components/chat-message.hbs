@@ -35,8 +35,8 @@
     {{on "mouseleave" this.onMouseLeave passive=true}}
     {{on "mousemove" this.onMouseMove passive=true}}
     {{chat/on-long-press
-      this.handleLongPressStart
-      this.handleLongPressEnd
+      this.onLongPressStart
+      this.onLongPressEnd
       this.onLongPressCancel
     }}
     {{chat/track-message
