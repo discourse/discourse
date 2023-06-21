@@ -29,15 +29,11 @@ export default Component.extend({
 
   @discourseComputed("topicTrackingState.messageCount")
   unreadTopicsCount() {
-    return this.topicTrackingState.countUnread({
-      categoryId: this.category.id,
-    });
+    return this.category.unreadTopicsCount;
   },
 
   @discourseComputed("topicTrackingState.messageCount")
   newTopicsCount() {
-    return this.topicTrackingState.countNew({
-      categoryId: this.category.id,
-    });
+    return this.category.newTopicsCount;
   },
 });

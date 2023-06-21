@@ -198,26 +198,12 @@ export default createWidget("hamburger-menu", {
         .filter((c) => c.notification_level !== NotificationLevels.MUTED);
 
       categories = allCategories
-        .filter(
-          (c) =>
-            this.site.topicTrackingState.countNew({ categoryId: c.get("id") }) >
-              0 ||
-            this.site.topicTrackingState.countUnread({
-              categoryId: c.get("id"),
-            }) > 0
-        )
+        .filter((c) => c.newTopicsCount > 0 || c.unreadTopicsCount > 0)
         .sort((a, b) => {
           return (
-            this.site.topicTrackingState.countNew({ categoryId: b.get("id") }) +
-            this.site.topicTrackingState.countUnread({
-              categoryId: b.get("id"),
-            }) -
-            (this.site.topicTrackingState.countUnread({
-              categoryId: a.get("id"),
-            }) +
-              this.site.topicTrackingState.countNew({
-                categoryId: a.get("id"),
-              }))
+            b.newTopicsCount +
+            b.unreadTopicsCount -
+            (a.unreadTopicsCount + a.newTopicsCount)
           );
         });
 
