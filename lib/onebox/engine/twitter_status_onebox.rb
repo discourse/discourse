@@ -16,6 +16,10 @@ module Onebox
         { "User-Agent" => "DiscourseBot/1.0" }
       end
 
+      def to_html
+        raw.present? ? super : ""
+      end
+
       private
 
       def get_twitter_data
@@ -64,6 +68,7 @@ module Onebox
 
       def twitter_api_credentials_present?
         client && !client.twitter_credentials_missing?
+        false
       end
 
       def raw
