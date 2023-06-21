@@ -21,7 +21,7 @@ module Onebox
       protected
 
       def get_oembed_url
-        "https://embed.smartcontracts.org/api/onebox?url=#{url}"
+        "https://embed.smartcontracts.org/services/onebox?url=#{url}"
       end
     end
   end

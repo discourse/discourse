@@ -7,7 +7,7 @@ RSpec.describe Onebox::Engine::MotokoOnebox do
 
     stub_request(
       :get,
-      "https://embed.smartcontracts.org/api/onebox?url=https://embed.motoko.org",
+      "https://embed.smartcontracts.org/services/onebox?url=https://embed.motoko.org",
     ).to_return(status: 200, body: body, headers: {})
   end
 
