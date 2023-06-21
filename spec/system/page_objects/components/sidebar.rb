@@ -83,6 +83,27 @@ module PageObjects
         has_section?("Tags")
       end
 
+      def has_no_tags_section?
+        has_no_section?("Tags")
+      end
+
+      def has_all_tags_section_link?
+        has_section_link?(I18n.t("js.sidebar.all_tags"))
+      end
+
+      def has_tags_section_links?(tags)
+        section_selector = ".sidebar-section[data-section-name='tags']"
+        tag_names = tags.map(&:name)
+
+        has_css?(
+          "#{section_selector} .sidebar-section-link-wrapper[data-tag-name]",
+          count: tag_names.length,
+        ) &&
+          all("#{section_selector} .sidebar-section-link-wrapper[data-tag-name]").all? do |row|
+            tag_names.include?(row["data-tag-name"].to_s)
+          end
+      end
+
       def has_no_section?(name)
         find(SIDEBAR_WRAPPER_SELECTOR).has_no_button?(name)
       end
