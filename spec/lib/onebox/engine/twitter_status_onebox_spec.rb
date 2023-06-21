@@ -118,9 +118,9 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
     let(:link) { "https://twitter.com/discourse/status/1428031057186627589" }
     let(:html) { described_class.new(link).to_html }
 
-    it "does not match the url" do
+    it "does match the url" do
       onebox = Onebox::Matcher.new(link, { allowed_iframe_regexes: [/.*/] }).oneboxed
-      expect(onebox).not_to be(described_class)
+      expect(onebox).to be(described_class)
     end
 
     it "logs a warn message if rate limited" do
