@@ -10,7 +10,7 @@ class SidebarSectionsController < ApplicationController
         .strict_loading
         .includes(:sidebar_urls)
         .where("public OR user_id = ?", current_user.id)
-        .order("(public IS TRUE) DESC")
+        .order("(public IS TRUE) DESC, title ASC")
         .map { |section| SidebarSectionSerializer.new(section, root: false) }
 
     render json: sections
