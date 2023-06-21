@@ -157,7 +157,8 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def record_for(key:, value: nil, locale:)
     value ||= I18n.with_locale(locale) { I18n.t(key) }
-    { id: key, value: value, locale: locale }
+    interpolation_keys = I18nInterpolationKeysFinder.find(I18n.overrides_disabled { I18n.t(key) })
+    { id: key, value: value, locale: locale, interpolation_keys: interpolation_keys }
   end
 
   PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
