@@ -111,6 +111,11 @@ hy:
           other: "%{count} պատասխան"
         settings: "Կարգավորումներ"
         last_reply: "վերջին պատասխանը"
+        notifications:
+          regular:
+            title: "Նորմալ"
+          tracking:
+            title: "Հետևում Եմ"
       draft_channel_screen:
         header: "Նոր Հաղորդագրություն"
         cancel: "Չեղարկել"

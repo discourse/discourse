@@ -1129,11 +1129,11 @@ de:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
         categories_section: "Abschnitt „Kategorien“"
-        categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
+        categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt \"Kategorien\" des Navigationsmenüs angezeigt. Wenn keine Kategorien ausgewählt sind, werden die Top-Kategorien der Website angezeigt."
         tags_section: "Abschnitt „Schlagwörter“"
-        tags_section_instruction: "Ausgewählte Schlagwörter werden im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
+        tags_section_instruction: "Ausgewählte Schlagworte werden im Abschnitt \"Tags\" des Navigationsmenüs angezeigt. Wenn keine Tags ausgewählt sind, werden die Top-Tags der Website angezeigt."
         navigation_section: "Navigation"
-        list_destination_instruction: "Wenn es neue Inhalte in der Seitenleiste gibt …"
+        list_destination_instruction: "Wenn es neue Inhalte im Navigationsmenü gibt..."
         list_destination_default: "den Standardlink verwenden und ein Symbol für neue Elemente anzeigen"
         list_destination_unread_new: "auf ungelesen/neu verlinken und die Anzahl der neuen Elemente anzeigen"
       change: "ändern"
@@ -1316,7 +1316,7 @@ de:
         tags: "Schlagwörter"
         interface: "Oberfläche"
         apps: "Apps"
-        sidebar: "Seitenleiste"
+        navigation_menu: "Navigationsmenü"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -1864,10 +1864,13 @@ de:
         other: "Es gibt <b>%{count}</b> Antworten."
       description_time_MF: |
         Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>.
-      enable: "Dieses Thema zusammenfassen"
+      enable: "Top-Antworten anzeigen"
       disable: "Alle Beiträge anzeigen"
       short_label: "Zusammenfassen"
       short_title: "Eine Zusammenfassung dieses Themas anzeigen: die laut der Community interessantesten Beiträge"
+      strategy:
+        button_title: "Dieses Thema zusammenfassen"
+        title: "Zusammenfassung des Themas"
     deleted_filter:
       enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit versteckt sind."
       disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt."
@@ -4041,7 +4044,7 @@ de:
       more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
-      categories_form:
+      categories_form_modal:
         save: "Speichern"
         title: "Kategorien-Navigation bearbeiten"
         filter_placeholder: "Kategorien filtern"
@@ -4095,20 +4098,12 @@ de:
             unread_with_count: "Ungelesen (%{count})"
             archive: "Archiv"
         tags:
-          links:
-            add_tags:
-              content: "Schlagwörter hinzufügen"
-              title: "Du hast noch keine Schlagwörter hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Schlagwörter"
           header_action_title: "Bearbeite die Schlagwörter in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         categories:
-          links:
-            add_categories:
-              content: "Kategorien hinzufügen"
-              title: "Du hast noch keine Kategorien hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
@@ -4128,6 +4123,9 @@ de:
             badges:
               content: "Abzeichen"
               title: "Alle Abzeichen, die es zu verdienen gibt"
+            topics:
+              content: "Themen"
+              title: "Alle Themen"
             faq:
               content: "FAQ"
               title: "Richtlinien für die Nutzung dieser Website"
@@ -5261,14 +5259,19 @@ de:
             minimum:
               key: "Minimum"
               type: "Ganzzahl"
+              description: "Legt für Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
             maximum:
               key: "Maximum"
               type: "Ganzzahl"
+              description: "Legt für Textfelder die maximal zulässige Anzahl von Zeichen fest."
             pattern:
               key: "Muster"
               type: "Regex-Zeichenfolge"
+              description: "Für Textfelder ein regulärer Ausdruck, der die zulässige Eingabe angibt."
             type:
               key: "art"
+              type: "Zeichenfolge"
+              description: "Für Eingabefelder kannst du die Art der Eingabe angeben, die erwartet wird (Text|E-Mail|Datum|Nummer|Url|Tel|Farbe)"
         preview_modal:
           title: "Vorschau Vorlage"
         field_placeholders:

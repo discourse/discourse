@@ -107,6 +107,11 @@ sk:
           other: "%{count} odpovedí"
         settings: "Nastavenia"
         last_reply: "posledná odpoveď"
+        notifications:
+          regular:
+            title: "Normálne"
+          tracking:
+            title: "Pozorovať"
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"

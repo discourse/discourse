@@ -1241,11 +1241,8 @@ uk:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
         categories_section: "Розділи"
-        categories_section_instruction: "Вибрані розділи будуть показуватись у списку розділів бічної панелі."
         tags_section: "Теґи"
-        tags_section_instruction: "Вибрані теґи показуватимуться в розділі теґів бічної панелі."
         navigation_section: "Навігація"
-        list_destination_instruction: "Коли на бічній панелі є новий вміст…"
         list_destination_default: "використовувати типове посилання і показати значок для нових елементів"
         list_destination_unread_new: "посилання на непрочитане/нове і показати кількість нових елементів"
       change: "змінити"
@@ -1460,7 +1457,6 @@ uk:
         tags: "Теґи"
         interface: "Інтерфейс"
         apps: "Застосунки"
-        sidebar: "Бічна панель"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
@@ -2036,7 +2032,6 @@ uk:
         other: "Тут <b>%{count}</b> відповідей."
       description_time_MF: |
         Тут є {replyCount, plural, one {<b>#</b> відповідь} few {<b>#</b> відповіді} many {<b>#</b> відповідей} other {<b>#</b> відповідей}} з розрахунковим часом читання <b>{readingTime, plural, one {# хвилина} few {# хвилини} many {# хвилин} other {# хвилин}}</b>.
-      enable: "Підсумки цієї теми"
       disable: "Показати всі дописи"
       short_label: "Підсумок"
       short_title: "Показати підсумок цієї теми: найцікавіші дописи, визначені спільнотою"
@@ -4445,7 +4440,7 @@ uk:
       more: "Більше"
       all_categories: "Всі розділи"
       all_tags: "Всі теґи"
-      categories_form:
+      categories_form_modal:
         save: "Зберегти"
         title: "Редагувати навігацію по категоріях"
         filter_placeholder: "Фільтр категорій"
@@ -4499,20 +4494,12 @@ uk:
             unread_with_count: "Непрочитані (%{count})"
             archive: "Архів"
         tags:
-          links:
-            add_tags:
-              content: "Додати теґи"
-              title: "Ви не додали жодного теґу. Натисніть, щоб почати."
           none: "Ви не додали жодного теґу."
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Теґи"
           header_action_title: "Редагувати теги бічної панелі"
           configure_defaults: "Налаштувати типові значення"
         categories:
-          links:
-            add_categories:
-              content: "Всі розділи"
-              title: "Ви не додали жодного розділу. Натисніть, щоб почати."
           none: "Ви не додали жодного розділу."
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Розділи"
@@ -4532,6 +4519,9 @@ uk:
             badges:
               content: "Нагороди"
               title: "Всі значки доступні для отримання"
+            topics:
+              content: "Теми"
+              title: "Всі теми"
             faq:
               content: "Часті запитання"
               title: "Правила використання цього сайту"

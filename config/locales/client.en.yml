@@ -4390,13 +4390,20 @@ en:
       all_categories: "All categories"
       all_tags: "All tags"
       categories_form_modal:
-        save: "Save"
         title: "Edit categories navigation"
         subtitle:
           button_text: "Deselect all"
           text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+        reset_to_defaults: "Reset to defaults"
+      tags_form_modal:
+        title: "Edit tags navigation"
+        filter_placeholder: "Filter tags"
+        no_tags: "There are no tags matching the given term."
+        subtitle:
+          button_text: "Deselect all"
+          text: "and we'll automatically show this site's top tags"
         reset_to_defaults: "Reset to defaults"
 
       sections:
@@ -4511,6 +4518,30 @@ en:
 
     form_template_chooser:
       select_template: "Select form templates"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Please fill out this field."
+          text: "Please fill out this field."
+          select-one: "Please select an item in the list."
+          select-multiple: "Please select at least one item in the list."
+          checkbox: "Please check this box if you want to proceed."
+        typeMismatch:
+          default: "Please enter a valid value."
+          color: "Please enter a color."
+          date: "Please enter a date."
+          email: "Please enter a valid email address."
+          number: "Please enter a number."
+          password: "Please enter a valid password."
+          tel: "Please enter a valid telephone number."
+          text: "Please enter a text value."
+          url: "Please enter a valid URL."
+        tooShort: "The input must be %{minLength} characters or longer."
+        tooLong: "The input must be less than %{maxLength} characters."
+        rangeOverflow: "The input must be less than %{max}."
+        rangeUnderflow: "The input must be more than %{min}."
+        patternMismatch: "Please match the requested format."
+        badInput: "Please enter a valid input."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

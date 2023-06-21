@@ -114,6 +114,8 @@ zh_CN:
       heading: "聊天"
       join: "加入"
       last_visit: "上次访问"
+      summarization:
+        summarize: "摘要"
       mention_warning:
         dismiss: "忽略"
         cannot_see: "%{username} 无法访问此频道且未被通知。"
@@ -436,6 +438,13 @@ zh_CN:
           started_by: "开始于"
         settings: "设置"
         last_reply: "最后回复"
+        notifications:
+          regular:
+            title: "正常"
+          tracking:
+            title: "跟踪"
+        participants_other_count:
+          other: "+其他 %{count} 个"
       threads:
         open: "打开主题"
         list: "正在进行的讨论"

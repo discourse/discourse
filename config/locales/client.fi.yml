@@ -1097,11 +1097,8 @@ fi:
         enable: "Ota sivupalkki käyttöön"
         options: "Asetukset"
         categories_section: "Alueet-osio"
-        categories_section_instruction: "Valitut alueet näkyvät sivupalkin alueet-osiossa."
         tags_section: "Tunnisteet-osio"
-        tags_section_instruction: "Valitut tunnisteet näkyvät sivupalkin tunnisteet-osiossa."
         navigation_section: "Navigointi"
-        list_destination_instruction: "Kun sivupalkissa on uutta sisältöä..."
         list_destination_default: "käytä oletuslinkkiä ja näytä merkki uusissa kohteissa"
         list_destination_unread_new: "linkki lukemattomiin/uusiin ja näytä uusien kohteiden määrä"
       change: "vaihda"
@@ -1281,7 +1278,6 @@ fi:
         tags: "Tunnisteet"
         interface: "Käyttöliittymä"
         apps: "Sovellukset"
-        sidebar: "Sivupalkki"
       change_password:
         success: "(sähköposti lähetetty)"
         in_progress: "(sähköpostia lähetetään)"
@@ -1825,7 +1821,6 @@ fi:
         other: "Ketjussa on <b>%{count}</b> vastausta."
       description_time_MF: |
         Ketjussa {replyCount, plural, one {on <b>#</b> vastaus} other {on <b>#</b> vastausta}}, joiden arvioitu lukuaika on <b>{readingTime, plural, one {# minuutti} other {# minuuttia}}</b>.
-      enable: "Näytä ketjun tiivistelmä"
       disable: "Näytä kaikki viestit"
       short_label: "Tee yhteenveto"
       short_title: "Näytä tämän ketjun yhteenveto: mielenkiintoisimmat viestit käyttäjien toiminnan perusteella"
@@ -3976,7 +3971,7 @@ fi:
       more: "Lisää"
       all_categories: "Kaikki alueet"
       all_tags: "Kaikki tunnisteet"
-      categories_form:
+      categories_form_modal:
         save: "Tallenna"
       sections:
         custom:
@@ -4006,20 +4001,12 @@ fi:
             unread_with_count: "Lukematta (%{count})"
             archive: "Arkisto"
         tags:
-          links:
-            add_tags:
-              content: "Lisää tunnisteita"
-              title: "Et ole lisännyt tunnisteita. Aloita klikkaamalla."
           none: "Et ole lisännyt tunnisteita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Tunnisteet"
           header_action_title: "Muokkaa sivupalkin tunnisteitasi"
           configure_defaults: "Määritä oletukset"
         categories:
-          links:
-            add_categories:
-              content: "Lisää alueita"
-              title: "Et ole lisännyt alueita. Aloita klikkaamalla."
           none: "Et ole lisännyt alueita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Alueet"
@@ -4039,6 +4026,9 @@ fi:
             badges:
               content: "Kunniamerkit"
               title: "Kaikki ansaittavissa olevat kunniamerkit"
+            topics:
+              content: "Ketjut"
+              title: "Kaikki ketjut"
             faq:
               content: "UKK"
               title: "Ohjeet tämän sivuston käyttöön"

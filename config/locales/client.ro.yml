@@ -1471,7 +1471,6 @@ ro:
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
     summary:
       enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
-      enable: "Fă rezumatul acestui subiect"
       disable: "Arată toate postările"
     deleted_filter:
       enabled_description: "Acest subiect conține postări șterse, care au fost ascunse. "
@@ -2920,7 +2919,7 @@ ro:
         other: "%{count} nou"
       more: "Mai multe"
       all_categories: "Toate categoriile"
-      categories_form:
+      categories_form_modal:
         save: "Salvare"
       sections:
         custom:
@@ -2957,6 +2956,8 @@ ro:
               content: "Administrator"
             badges:
               content: "Ecusoane"
+            topics:
+              content: "Discuții"
             faq:
               content: "Întrebări frecvente"
             groups:

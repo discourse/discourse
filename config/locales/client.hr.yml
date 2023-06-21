@@ -1143,11 +1143,8 @@ hr:
         enable: "Omogući bočnu traku"
         options: "Mogućnosti"
         categories_section: "Odjeljak s kategorijama"
-        categories_section_instruction: "Odabrane kategorije bit će prikazane u odjeljku kategorija na bočnoj traci."
         tags_section: "Odjeljak s oznakama"
-        tags_section_instruction: "Odabrane oznake bit će prikazane u odjeljku oznaka na bočnoj traci."
         navigation_section: "Navigacija"
-        list_destination_instruction: "Kada se pojavi novi sadržaj na bočnoj traci..."
         list_destination_default: "koristite zadanu vezu i prikažite značku za nove stavke"
         list_destination_unread_new: "poveži na nepročitano/novo i prikaži broj novih stavki"
       change: "promijeni"
@@ -1321,7 +1318,6 @@ hr:
         tags: "Oznake"
         interface: "Sučelje"
         apps: "Aplikacije"
-        sidebar: "Bočna traka"
       change_password:
         success: "(email je poslan)"
         in_progress: "(email se šalje)"
@@ -1876,7 +1872,6 @@ hr:
         other: "Ima <b>%{count}</b> odgovora."
       description_time_MF: |
         Tamo {replyCount, plural, one {je <b>#</b> odgovor} few {su <b>#</b> odgovora} other {su <b>#</b> odgovora}} s predviđenim vremenom čitanja <b>{readingTime, plural, one {# minuta} few {# minuta} other {# minuta}}</b>.
-      enable: "Sažmi ovu temu"
       disable: "Prikaži sve članke"
       short_label: "Rezimirati"
       short_title: "Prikaži sažetak ove teme: najzanimljiviji postovi prema odluci zajednice"
@@ -4138,7 +4133,7 @@ hr:
       more: "Više"
       all_categories: "Sve kategorije"
       all_tags: "Sve oznake"
-      categories_form:
+      categories_form_modal:
         save: "Spremi"
       sections:
         custom:
@@ -4166,20 +4161,12 @@ hr:
             unread_with_count: "Nepročitano (%{count})"
             archive: "Arhiva"
         tags:
-          links:
-            add_tags:
-              content: "Dodaj oznake"
-              title: "Niste dodali nijednu oznaku. Kliknite za početak."
           none: "Niste dodali nijednu oznaku."
           click_to_get_started: "Kliknite ovdje da biste započeli."
           header_link_text: "Oznake"
           header_action_title: "Uredite oznake bočne trake"
           configure_defaults: "Konfigurirajte zadane postavke"
         categories:
-          links:
-            add_categories:
-              content: "Dodajte kategorije"
-              title: "Niste dodali nijednu kategoriju. Kliknite za početak."
           none: "Niste dodali nijednu kategoriju."
           click_to_get_started: "Kliknite ovdje da biste započeli."
           header_link_text: "Kategorije"
@@ -4198,6 +4185,9 @@ hr:
             badges:
               content: "Značke"
               title: "Sve značke dostupne za osvajanje"
+            topics:
+              content: "Tema"
+              title: "Sve teme"
             faq:
               content: "ČPP"
               title: "Smjernice za korištenje ove stranice"
@@ -4205,7 +4195,7 @@ hr:
               content: "Grupe"
               title: "Popis dostupnih korisničkih grupa"
             users:
-              content: "Korisnika"
+              content: "Korisnici"
               title: "Popis svih korisnika"
             my_posts:
               content: "Moje objave"
@@ -4595,6 +4585,7 @@ hr:
         broken_route: "Nije moguće konfigurirati vezu na '%{name}'. Provjerite jesu li programi za blokiranje oglasa onemogućeni i pokušajte ponovno učitati stranicu."
       navigation_menu:
         sidebar: "Bočna traka"
+        header_dropdown: "Padajući izbornik zaglavlja"
         legacy: "Naslijeđe"
       backups:
         title: "Sigurnosne kopije"

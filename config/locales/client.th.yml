@@ -1179,7 +1179,6 @@ th:
       enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
       description:
         other: "มี <b>%{count}</b> คำตอบ"
-      enable: "สรุปกระทู้นี้"
       disable: "แสดงโพสต์ทั้งหมด"
     deleted_filter:
       enabled_description: "กระทู้นี้ซ่อนโพสต์ที่ถูกลบไปแล้ว"
@@ -2419,7 +2418,7 @@ th:
         other: "%{count} ใหม่"
       more: "อื่น"
       all_categories: "หมวดหมู่ทั้งหมด"
-      categories_form:
+      categories_form_modal:
         save: "บันทึก"
       sections:
         custom:
@@ -2457,6 +2456,8 @@ th:
               content: "แอดมิน"
             badges:
               content: "เหรียญ"
+            topics:
+              content: "หัวข้อ"
             faq:
               content: "คำถามที่พบบ่อย"
             groups:
