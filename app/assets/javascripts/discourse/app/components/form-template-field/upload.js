@@ -12,6 +12,12 @@ export default class FormTemplateFieldUpload extends Component.extend(
   type = "jpg";
 
   uploadDone(upload) {
-    this.uploadValue = `![${upload.file_name}|${upload.width}x${upload.height}](${upload.short_url})`;
+    const uploadMarkdown = `![${upload.file_name}|${upload.width}x${upload.height}](${upload.short_url})`;
+
+    if (this.uploadValue && this.allowMultipleFiles) {
+      this.uploadValue = `${this.uploadValue}\n${uploadMarkdown}`;
+    } else {
+      this.uploadValue = uploadMarkdown;
+    }
   }
 }
