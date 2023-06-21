@@ -8,6 +8,7 @@ import ActivationResent from "discourse/components/modal/activation-resent";
 
 export default class ActivationEdit extends Component {
   @service login;
+  @service modal;
 
   @tracked currentEmail;
   @tracked newEmail;
@@ -25,12 +26,8 @@ export default class ActivationEdit extends Component {
     })
       .then(() => {
         this.modal.show(ActivationResent, {
-          model: { title: "log_in", updateTopic: this.updateTopic },
+          model: { currentEmail: this.newEmail },
         });
-        const modal = this.showModal("activation-resent", {
-          title: "log_in",
-        });
-        modal.set("currentEmail", this.newEmail);
       })
       .catch(flashAjaxError(this));
   }

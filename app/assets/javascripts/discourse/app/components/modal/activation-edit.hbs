@@ -1,4 +1,4 @@
-<DModal @closeModal={{route-action "closeModal"}} @label="close">
+<DModal @closeModal={{@closeModal}} @title={{i18n "login.change_email"}}>
   <:body>
     <ActivationEmailForm @email={{this.newEmail}} />
   </:body>
@@ -9,5 +9,6 @@
       @disabled={{this.submitDisabled}}
       class="btn-primary"
     />
+    <DButton @action={{@closeModal}} @label="close" />
   </:footer>
 </DModal>

@@ -1,24 +1,26 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { resendActivationEmail } from "discourse/lib/user-activation";
+import ActivationResent from "discourse/components/modal/activation-resent";
+import ActivationEdit from "discourse/components/modal/activation-edit";
 
 export default class NotActivated extends Component {
+  @service modal;
+
   @action
   sendActivationEmail() {
     resendActivationEmail(this.username).then(() => {
-      const modal = this.showModal("activation-resent", { title: "log_in" });
-      modal.set("currentEmail", this.currentEmail);
+      this.modal.show(ActivationResent, {
+        model: { currentEmail: this.currentEmail },
+      });
     });
   }
 
   @action
   editActivationEmail() {
-    const modal = this.showModal("activation-edit", {
-      title: "login.change_email",
+    this.modal.show(ActivationEdit, {
+      model: { currentEmail: this.currentEmail, newEmail: this.currentEmail },
     });
-
-    const currentEmail = this.currentEmail;
-    modal.set("currentEmail", currentEmail);
-    modal.set("newEmail", currentEmail);
   }
 }
