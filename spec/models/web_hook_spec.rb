@@ -7,30 +7,30 @@ RSpec.describe WebHook do
   it { is_expected.to validate_presence_of :web_hook_event_types }
 
   describe "#content_types" do
-    subject { WebHook.content_types }
+    subject(:content_types) { WebHook.content_types }
 
     it "'json' (application/json) should be at 1st position" do
-      expect(subject["application/json"]).to eq(1)
+      expect(content_types["application/json"]).to eq(1)
     end
 
     it "'url_encoded' (application/x-www-form-urlencoded) should be at 2st position" do
-      expect(subject["application/x-www-form-urlencoded"]).to eq(2)
+      expect(content_types["application/x-www-form-urlencoded"]).to eq(2)
     end
   end
 
   describe "#last_delivery_statuses" do
-    subject { WebHook.last_delivery_statuses }
+    subject(:statuses) { WebHook.last_delivery_statuses }
 
     it "inactive should be at 1st position" do
-      expect(subject[:inactive]).to eq(1)
+      expect(statuses[:inactive]).to eq(1)
     end
 
     it "failed should be at 2st position" do
-      expect(subject[:failed]).to eq(2)
+      expect(statuses[:failed]).to eq(2)
     end
 
     it "successful should be at 3st position" do
-      expect(subject[:successful]).to eq(3)
+      expect(statuses[:successful]).to eq(3)
     end
   end
 
