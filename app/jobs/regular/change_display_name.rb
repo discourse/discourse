@@ -4,6 +4,10 @@ module Jobs
   class ChangeDisplayName < ::Jobs::Base
     sidekiq_options queue: "low"
 
+    # Avoid race conditions if a user's name is updated several times
+    # in quick succession.
+    cluster_concurrency 1
+
     def execute(args)
       @user = User.find_by(id: args[:user_id])
 
