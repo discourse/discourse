@@ -33,6 +33,7 @@ export default Component.extend({
       categoryId: this.category.id,
     });
   },
+
   @discourseComputed("topicTrackingState.messageCount")
   newTopicsCount() {
     return this.topicTrackingState.countNew({
