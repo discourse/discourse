@@ -4399,6 +4399,8 @@ en:
         reset_to_defaults: "Reset to defaults"
       tags_form_modal:
         title: "Edit tags navigation"
+        filter_placeholder: "Filter tags"
+        no_tags: "There are no tags matching the given term."
 
       sections:
         custom:
