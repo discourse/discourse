@@ -6,10 +6,16 @@ class TwitterApi
     include ActionView::Helpers::NumberHelper
 
     BASE_URL = "https://api.twitter.com"
+    URL_PARAMS = %w[
+      tweet.fields=id,author_id,text,created_at,entities,referenced_tweets,public_metrics
+      user.fields=id,name,username,profile_image_url
+      media.fields=type,height,width,variants,preview_image_url,url
+      expansions=attachments.media_keys,referenced_tweets.id.author_id
+    ]
 
     def prettify_tweet(tweet)
-      text = tweet["full_text"].dup
-      if (entities = tweet["entities"]) && (urls = entities["urls"])
+      text = tweet["data"]["text"].dup
+      if (entities = tweet["data"]["entities"]) && (urls = entities["urls"])
         urls.each do |url|
           text.gsub!(
             url["url"],
@@ -22,22 +28,20 @@ class TwitterApi
 
       result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
 
-      if tweet["extended_entities"] && media = tweet["extended_entities"]["media"]
+      if tweet["includes"] && media = tweet["includes"]["media"]
         media.each do |m|
           if m["type"] == "photo"
-            if large = m["sizes"]["large"]
-              result << "<div class='tweet-images'><img class='tweet-image' src='#{m["media_url_https"]}' width='#{large["w"]}' height='#{large["h"]}'></div>"
-            end
+            result << "<div class='tweet-images'><img class='tweet-image' src='#{m["url"]}' width='#{m["width"]}' height='#{m["height"]}'></div>"
           elsif m["type"] == "video" || m["type"] == "animated_gif"
             video_to_display =
-              m["video_info"]["variants"]
+              m["variants"]
                 .select { |v| v["content_type"] == "video/mp4" }
-                .sort { |v| v["bitrate"] }
+                .sort { |v| v["bit_rate"] }
                 .last # choose highest bitrate
 
             if video_to_display && url = video_to_display["url"]
-              width = m["sizes"]["large"]["w"]
-              height = m["sizes"]["large"]["h"]
+              width = m["width"]
+              height = m["height"]
 
               attributes =
                 if m["type"] == "animated_gif"
@@ -52,7 +56,7 @@ class TwitterApi
                     <video class='tweet-video' #{attributes}
                       width='#{width}'
                       height='#{height}'
-                      poster='#{m["media_url_https"]}'>
+                      poster='#{m["preview_image_url"]}'>
                       <source src='#{url}' type="video/mp4">
                     </video>
                   </div>
@@ -111,7 +115,7 @@ class TwitterApi
     end
 
     def tweet_uri_for(id)
-      URI.parse "#{BASE_URL}/2/tweets?ids=#{id}"
+      URI.parse "#{BASE_URL}/2/tweets/#{id}?#{URL_PARAMS.join("&")}"
     end
 
     def twitter_get(uri)

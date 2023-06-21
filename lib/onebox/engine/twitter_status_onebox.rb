@@ -74,13 +74,6 @@ module Onebox
         end
       end
 
-      def access(*keys)
-        keys.reduce(raw) do |memo, key|
-          next unless memo
-          memo[key] || memo[key.to_s]
-        end
-      end
-
       def tweet
         if twitter_api_credentials_present?
           client.prettify_tweet(raw)&.strip
@@ -91,18 +84,14 @@ module Onebox
 
       def timestamp
         if twitter_api_credentials_present?
-          date = DateTime.strptime(access(:created_at), "%a %b %d %H:%M:%S %z %Y")
-          user_offset = access(:user, :utc_offset).to_i
-          offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
-          date.new_offset(offset).strftime("%-l:%M %p - %-d %b %Y")
-        else
-          attr_at_css(".tweet-timestamp", "title")
+          date = DateTime.strptime(raw["data"]["created_at"], "%Y-%m-%dT%H:%M:%S.%L%z")
+          date.strftime("%-l:%M %p - %-d %b %Y")
         end
       end
 
       def title
         if twitter_api_credentials_present?
-          access(:user, :name)
+          raw["includes"]["users"][0]["name"]
         else
           meta_tags_data("givenName")[tweet_index]
         end
@@ -110,7 +99,7 @@ module Onebox
 
       def screen_name
         if twitter_api_credentials_present?
-          access(:user, :screen_name)
+          raw["includes"]["users"][0]["username"]
         else
           meta_tags_data("additionalName")[tweet_index]
         end
@@ -119,7 +108,7 @@ module Onebox
 
     def avatar
       if twitter_api_credentials_present?
-        access(:user, :profile_image_url_https).sub("normal", "400x400")
+        raw["includes"]["users"][0]["profile_image_url"]
       elsif twitter_data[:image]
         twitter_data[:image] unless twitter_data[:image_user_generated]
       end
@@ -127,50 +116,48 @@ module Onebox
 
     def likes
       if twitter_api_credentials_present?
-        prettify_number(access(:favorite_count).to_i)
-      else
-        attr_at_css(".request-favorited-popup", "data-compact-localized-count")
+        prettify_number(raw["data"]["public_metrics"]["like_count"].to_i)
       end
     end
 
     def retweets
       if twitter_api_credentials_present?
-        prettify_number(access(:retweet_count).to_i)
-      else
-        attr_at_css(".request-retweeted-popup", "data-compact-localized-count")
+        prettify_number(raw["data"]["public_metrics"]["retweet_count"].to_i)
       end
     end
 
     def quoted_full_name
-      if twitter_api_credentials_present?
-        access(:quoted_status, :user, :name)
-      else
-        raw.css(".QuoteTweet-fullname")[0]&.text
+      if twitter_api_credentials_present? && quoted_tweet_author.present?
+        quoted_tweet_author["name"]
       end
     end
 
     def quoted_screen_name
-      if twitter_api_credentials_present?
-        access(:quoted_status, :user, :screen_name)
-      else
-        attr_at_css(".QuoteTweet-innerContainer", "data-screen-name")
+      if twitter_api_credentials_present? && quoted_tweet_author.present?
+        quoted_tweet_author["username"]
       end
     end
 
-    def quoted_tweet
-      if twitter_api_credentials_present?
-        access(:quoted_status, :full_text)
-      else
-        raw.css(".QuoteTweet-text")[0]&.text
-      end
+    def quoted_text
+      quoted_tweet["text"] if twitter_api_credentials_present? && quoted_tweet.present?
     end
 
     def quoted_link
       if twitter_api_credentials_present?
-        "https://twitter.com/#{quoted_screen_name}/status/#{access(:quoted_status, :id)}"
-      else
-        "https://twitter.com#{attr_at_css(".QuoteTweet-innerContainer", "href")}"
+        "https://twitter.com/#{quoted_screen_name}/status/#{quoted_status_id}"
       end
+    end
+
+    def quoted_status_id
+      raw.dig("data", "referenced_tweets")&.find { |ref| ref["type"] == "quoted" }&.dig("id")
+    end
+
+    def quoted_tweet
+      raw.dig("includes", "tweets")&.find { |tweet| tweet["id"] == quoted_status_id }
+    end
+
+    def quoted_tweet_author
+      raw.dig("includes", "users")&.find { |user| user["id"] == quoted_tweet&.dig("author_id") }
     end
 
     def prettify_number(count)
@@ -203,7 +190,7 @@ module Onebox
         avatar: avatar,
         likes: likes,
         retweets: retweets,
-        quoted_tweet: quoted_tweet,
+        quoted_text: quoted_text,
         quoted_full_name: quoted_full_name,
         quoted_screen_name: quoted_screen_name,
         quoted_link: quoted_link,
