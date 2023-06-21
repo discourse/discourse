@@ -55,6 +55,11 @@ module PageObjects
         click_button(I18n.t("js.sidebar.tags_form_modal.reset_to_defaults"))
         self
       end
+
+      def has_focus_on_filter_input?
+        evaluate_script("document.activeElement").native ==
+          find(".sidebar-tags-form-modal .sidebar-tags-form__filter-input-field").native
+      end
     end
   end
 end
