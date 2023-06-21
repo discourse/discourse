@@ -198,6 +198,14 @@ const Category = RestModel.extend({
     return notificationLevel >= NotificationLevels.TRACKING;
   },
 
+  get unreadTopics() {
+    return this.topicTrackingState.countUnread({ categoryId: this.id });
+  },
+
+  get newTopics() {
+    return this.topicTrackingState.countNew({ categoryId: this.id });
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";

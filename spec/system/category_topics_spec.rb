@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Catergory topics", type: :system, js: true do
+describe "Viewing top topics on categories page", type: :system, js: true do
   fab!(:user) { Fabricate(:user) }
   let(:category_list) { PageObjects::Components::CategoryList.new }
   fab!(:category) { Fabricate(:category) }
