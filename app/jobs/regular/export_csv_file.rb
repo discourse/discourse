@@ -86,25 +86,9 @@ module Jobs
 
       filename = entities[0][:filename] # use first entity as a name for this export
       user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
-
       filename = "#{filename}-#{user_export.id}"
-      dirname = "#{UserExport.base_directory}/#{filename}"
 
-      # ensure directory exists
-      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
-      # Generate a compressed CSV file
-      begin
-        entities.each do |entity|
-          CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
-            csv << get_header(entity[:name]) if entity[:name] != "report"
-            public_send(entity[:method]).each { |d| csv << d }
-          end
-        end
-
-        zip_filename = Compression::Zip.new.compress(UserExport.base_directory, filename)
-      ensure
-        FileUtils.rm_rf(dirname)
-      end
+      zip_filename = write_to_csv_and_zip(filename, entities)
 
       # create upload
       upload = nil
@@ -475,6 +459,23 @@ module Jobs
       end
 
       post
+    end
+
+    def write_to_csv_and_zip(filename, entities)
+      dirname = "#{UserExport.base_directory}/#{filename}"
+      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
+      begin
+        entities.each do |entity|
+          CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
+            csv << get_header(entity[:name]) if entity[:name] != "report"
+            public_send(entity[:method]).each { |d| csv << d }
+          end
+        end
+
+        Compression::Zip.new.compress(UserExport.base_directory, filename)
+      ensure
+        FileUtils.rm_rf(dirname)
+      end
     end
   end
 end
