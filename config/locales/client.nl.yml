@@ -1087,11 +1087,8 @@ nl:
         enable: "Zijbalk inschakelen"
         options: "Opties"
         categories_section: "Categorieënsectie"
-        categories_section_instruction: "Geselecteerde categorieën worden weergegeven onder de sectie Categorieën van de zijbalk."
         tags_section: "Tagssectie"
-        tags_section_instruction: "Geselecteerde tags worden weergegeven onder de sectie Tags van de zijbalk."
         navigation_section: "Navigatie"
-        list_destination_instruction: "Wanneer er nieuwe inhoud in de zijbalk is..."
         list_destination_default: "standaardlink gebruiken en een badge weergeven voor nieuwe items"
         list_destination_unread_new: "linken naar ongelezen/nieuw en het aantal nieuwe items weergeven"
       change: "wijzigen"
@@ -1255,7 +1252,6 @@ nl:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        sidebar: "Zijbalk"
       change_password:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail verzenden)"
@@ -1796,7 +1792,6 @@ nl:
         other: "Er zijn <b>%{count}</b> antwoorden."
       description_time_MF: |
         Er {replyCount, plural, one {is <b>#</b> antwoord} other {zijn <b>#</b> antwoorden}} met een geschatte leestijd van <b>{readingTime, plural, one {# minuut} other {# minuten}}</b>.
-      enable: "Vat dit topic samen"
       disable: "Alle berichten weergeven"
       short_label: "Samenvatten"
       short_title: "Bekijk een samenvatting van dit topic: de interessantste berichten volgens de community"
@@ -3942,7 +3937,7 @@ nl:
       more: "Meer"
       all_categories: "Alle categorieën"
       all_tags: "Alle tags"
-      categories_form:
+      categories_form_modal:
         save: "Opslaan"
       sections:
         custom:
@@ -3970,20 +3965,12 @@ nl:
             unread_with_count: "Ongelezen (%{count})"
             archive: "Archief"
         tags:
-          links:
-            add_tags:
-              content: "Tags toevoegen"
-              title: "Je hebt geen tags toegevoegd. Klik om te beginnen."
           none: "Je hebt geen tags toegevoegd."
           click_to_get_started: "Klik hier om te beginnen."
           header_link_text: "Tags"
           header_action_title: "Bewerk je zijbalktags"
           configure_defaults: "Standaardinstellingen configureren"
         categories:
-          links:
-            add_categories:
-              content: "Categorieën toevoegen"
-              title: "Je hebt geen categorieën toegevoegd. Klik om te beginnen."
           none: "Je hebt geen categorieën toegevoegd."
           click_to_get_started: "Klik hier om te beginnen."
           header_link_text: "Categorieën"
@@ -4002,6 +3989,9 @@ nl:
             badges:
               content: "Badges"
               title: "Alle beschikbare badges om te verdienen"
+            topics:
+              content: "Topics"
+              title: "Alle topics"
             faq:
               content: "FAQ"
               title: "Richtlijnen voor het gebruik van deze site"

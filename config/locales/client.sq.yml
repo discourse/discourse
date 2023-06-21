@@ -901,7 +901,6 @@ sq:
       hide_forever: "jo faleminderit"
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
-      enable: "Përmblidhe këtë Temë"
       disable: "Shfaq të gjithë postimet"
     deleted_filter:
       enabled_description: "Kjo temë përmban postime të fshira, që tani janë fshehur."
@@ -1924,7 +1923,7 @@ sq:
         other: "%{count} të reja"
       more: "Më shumë"
       all_categories: "Të gjitha kategoritë"
-      categories_form:
+      categories_form_modal:
         save: "Ruaj"
       sections:
         custom:
@@ -1960,6 +1959,8 @@ sq:
               content: "Admin"
             badges:
               content: "Stemat"
+            topics:
+              content: "Topics"
             faq:
               content: "Pyetje të shpeshta"
             groups:

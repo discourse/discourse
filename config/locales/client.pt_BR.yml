@@ -1112,11 +1112,8 @@ pt_BR:
         enable: "Habilitar barra lateral"
         options: "Opções"
         categories_section: "Seção de Categorias"
-        categories_section_instruction: "As categorias selecionadas serão exibidas na seção de categorias do painel lateral."
         tags_section: "Seção de Etiquetas"
-        tags_section_instruction: "As etiquetas selecionadas serão exibidas na seção de etiquetas da barra lateral."
         navigation_section: "Navegação"
-        list_destination_instruction: "Quando houver conteúdo novo na barra lateral..."
         list_destination_default: "usar o link padrão e mostrar um emblema para novos itens"
         list_destination_unread_new: "link para novos/não lidos e mostrar contagem de itens novos"
       change: "alterar"
@@ -1280,7 +1277,6 @@ pt_BR:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicativos"
-        sidebar: "Barra Lateral"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -1821,7 +1817,6 @@ pt_BR:
         other: "Existem <b>%{count}</b> respostas."
       description_time_MF: |
         Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
-      enable: "Resumir este tópico"
       disable: "Exibir todas as postagens"
       short_label: "Resumir"
       short_title: "Exibir um resumo deste tópico: as postagens mais interessantes segundo a comunidade"
@@ -3976,7 +3971,7 @@ pt_BR:
       more: "Mais"
       all_categories: "Todas as categorias"
       all_tags: "Todas as etiquetas"
-      categories_form:
+      categories_form_modal:
         save: "Salvar"
       sections:
         custom:
@@ -4008,20 +4003,12 @@ pt_BR:
             unread_with_count: "Não lido(s) (%{count})"
             archive: "Arquivo"
         tags:
-          links:
-            add_tags:
-              content: "Adicionar etiquetas"
-              title: "Você não adicionou nenhuma etiqueta. Clique para começar."
           none: "Você não adicionou nenhuma etiqueta."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Etiquetas"
           header_action_title: "Editar suas etiquetas da barra lateral"
           configure_defaults: "Configurar padrões"
         categories:
-          links:
-            add_categories:
-              content: "Adicionar categorias"
-              title: "Você não adicionou nenhuma categoria. Clique para começar."
           none: "Você não adicionou nenhuma categoria."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Categorias"
@@ -4040,6 +4027,9 @@ pt_BR:
             badges:
               content: "Emblemas"
               title: "Todos os emblemas disponíveis para ganhar"
+            topics:
+              content: "Tópicos"
+              title: "Todos os Tópicos"
             faq:
               content: "FAQ"
               title: "Diretrizes para usar este site"

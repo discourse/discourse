@@ -411,6 +411,10 @@ $mobile-breakpoint: 700px;
 .admin-container {
   margin-top: 10px;
 
+  .admin-section {
+    margin-bottom: 1em;
+  }
+
   .username {
     input {
       min-width: 15em;

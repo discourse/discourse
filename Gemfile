@@ -65,7 +65,7 @@ gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
 
-gem "message_bus"
+gem "message_bus", "4.3.2"
 
 gem "rails_multisite"
 
@@ -145,6 +145,7 @@ group :test do
   gem "selenium-webdriver", require: false
   gem "test-prof"
   gem "webdrivers", require: false
+  gem "rails-dom-testing", require: false
 end
 
 group :test, :development do

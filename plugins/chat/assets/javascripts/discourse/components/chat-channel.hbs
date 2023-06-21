@@ -36,12 +36,12 @@
       class="chat-messages-container"
       {{chat/on-resize this.didResizePane (hash delay=100 immediate=true)}}
     >
-
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
             @message={{message}}
             @resendStagedMessage={{this.resendStagedMessage}}
+            @fetchMessagesByDate={{this.fetchMessagesByDate}}
             @context="channel"
           />
         {{/each}}

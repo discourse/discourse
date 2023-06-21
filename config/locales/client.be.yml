@@ -735,7 +735,6 @@ be:
       sign_up: "рэгістрацыя"
       hide_forever: "няма дзякуй"
     summary:
-      enable: "Падсумаваць гэтую тэму"
       disable: "Усе паведамленні"
     deleted_filter:
       enabled_description: "Гэтая тэма ўтрымлівае выдаленыя паведамленні, якія былі схаваныя."
@@ -1365,7 +1364,7 @@ be:
     sidebar:
       more: "Больш"
       all_categories: "Усе катэгорыі"
-      categories_form:
+      categories_form_modal:
         save: "захаваць"
       sections:
         custom:
@@ -1411,6 +1410,8 @@ be:
               content: "адміністратар"
             badges:
               content: "значкі"
+            topics:
+              content: "тэмы"
             faq:
               content: "Пытанні і адказы"
             groups:

@@ -112,6 +112,11 @@ sl:
           other: "%{count} odgovorov"
         settings: "Nastavitve"
         last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Običajna"
+          tracking:
+            title: "Sledim"
       draft_channel_screen:
         header: "Novo zasebno sporočilo"
         cancel: "Prekliči"

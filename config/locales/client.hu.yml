@@ -1109,11 +1109,8 @@ hu:
         enable: "Oldalsáv engedélyezése"
         options: "Beállítások"
         categories_section: "Kategóriák szakasz"
-        categories_section_instruction: "A kiválasztott kategóriák az oldalsáv kategóriák szakaszában jelennek meg."
         tags_section: "Címkék szakasz"
-        tags_section_instruction: "A kiválasztott címkék az oldalsáv címkék szakaszában jelennek meg."
         navigation_section: "Navigáció"
-        list_destination_instruction: "Amikor új tartalom van az oldalsávon..."
       change: "módosítás"
       featured_topic: "Kiemelt téma"
       moderator: "%{user} egy moderátor"
@@ -1239,7 +1236,6 @@ hu:
         tags: "Címkék"
         interface: "Felület"
         apps: "Alkalmazások"
-        sidebar: "Oldalsáv"
       change_password:
         success: "(az e-mail elküldve)"
         in_progress: "(az e-mail küldése folyamatban)"
@@ -1776,7 +1772,6 @@ hu:
         other: "<b>%{count}</b> válasz van."
       description_time_MF: |
         {replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>.
-      enable: "Téma összefoglalása"
       disable: "Összes bejegyzés megjelenítése"
       short_label: "Összefoglalás"
       short_title: "A téma összefoglalásának megjelenítése: a legérdekesebb bejegyzéseket a közösség határozta meg"
@@ -3640,7 +3635,7 @@ hu:
       more: "Több"
       all_categories: "Minden kategória"
       all_tags: "Összes címke"
-      categories_form:
+      categories_form_modal:
         save: "Mentés"
       sections:
         custom:
@@ -3684,19 +3679,11 @@ hu:
             unread_with_count: "Olvasatlan (%{count})"
             archive: "Archívum"
         tags:
-          links:
-            add_tags:
-              content: "Címkék hozzáadása"
-              title: "Még nem adott hozzá címkéket. Kattintson a kezdéshez."
           none: "Még nem adott hozzá címkéket."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Címkék"
           configure_defaults: "Alapértelmezések beállítása"
         categories:
-          links:
-            add_categories:
-              content: "Kategóriák hozzáadása"
-              title: "Még nem adott hozzá kategóriákat. Kattintson a kezdéshez."
           none: "Még nem adott hozzá kategóriákat."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Kategóriák"
@@ -3714,6 +3701,9 @@ hu:
             badges:
               content: "Jelvények"
               title: "Az összes megszerezhető jelvény"
+            topics:
+              content: "Témák"
+              title: "Minden téma"
             faq:
               content: "GYIK"
               title: "Útmutató az oldal használatához"

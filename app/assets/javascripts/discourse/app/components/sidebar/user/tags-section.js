@@ -6,6 +6,7 @@ import SidebarCommonTagsSection from "discourse/components/sidebar/common/tags-s
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
 import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
+import showModal from "discourse/lib/show-modal";
 
 export default class SidebarUserTagsSection extends SidebarCommonTagsSection {
   @service router;
@@ -79,6 +80,12 @@ export default class SidebarUserTagsSection extends SidebarCommonTagsSection {
 
   @action
   editTracked() {
-    this.router.transitionTo("preferences.navigation-menu", this.currentUser);
+    if (
+      this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
+    ) {
+      showModal("sidebar-tags-form");
+    } else {
+      this.router.transitionTo("preferences.navigation-menu", this.currentUser);
+    }
   }
 }

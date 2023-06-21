@@ -68,6 +68,8 @@ bg:
       flag: "Сигнализиране"
       join: "Влизане"
       last_visit: "последно посещение"
+      summarization:
+        summarize: "Обобщаване"
       mention_warning:
         dismiss: "отмени"
         cannot_see: "%{username} няма достъп до този канал и не е уведомен."
@@ -154,6 +156,11 @@ bg:
           other: "%{count} отговора"
         settings: "Настройки"
         last_reply: "последен отговор"
+        notifications:
+          regular:
+            title: "Нормален"
+          tracking:
+            title: "Следене"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"

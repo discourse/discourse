@@ -26,7 +26,7 @@ class CookedPostProcessor
     @category_id = @post&.topic&.category_id
 
     cooked = post.cook(post.raw, @cooking_options)
-    @doc = Loofah.fragment(cooked)
+    @doc = Loofah.html5_fragment(cooked)
     @has_oneboxes = post.post_analyzer.found_oneboxes?
     @size_cache = {}
 

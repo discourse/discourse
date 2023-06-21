@@ -25,8 +25,9 @@ export function cleanUpHashtagTypeClasses() {
 export function getHashtagTypeClasses() {
   return hashtagTypeClasses;
 }
-export function replaceHashtagIconPlaceholder(element, site) {
+export function decorateHashtags(element, site) {
   element.querySelectorAll(".hashtag-cooked").forEach((hashtagEl) => {
+    // Replace the empty icon placeholder span with actual icon HTML.
     const iconPlaceholderEl = hashtagEl.querySelector(
       ".hashtag-icon-placeholder"
     );
@@ -41,6 +42,10 @@ export function replaceHashtagIconPlaceholder(element, site) {
         .trim();
       iconPlaceholderEl.replaceWith(domFromString(hashtagIconHTML)[0]);
     }
+
+    // Add an aria-label to the hashtag element so that screen readers
+    // can read the hashtag text.
+    hashtagEl.setAttribute("aria-label", `${hashtagEl.innerText.trim()}`);
   });
 }
 

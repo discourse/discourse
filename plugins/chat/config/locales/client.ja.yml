@@ -104,6 +104,8 @@ ja:
       heading: "チャット"
       join: "参加"
       last_visit: "最後の訪問"
+      summarization:
+        summarize: "要約"
       mention_warning:
         dismiss: "閉じる"
         invitations_sent:
@@ -367,6 +369,13 @@ ja:
           other: "返信: %{count} 件"
         settings: "設定"
         last_reply: "最後の返信"
+        notifications:
+          regular:
+            title: "標準"
+          tracking:
+            title: "追跡中"
+        participants_other_count:
+          other: "+他 %{count} 件"
       draft_channel_screen:
         header: "新しいメッセージ"
         cancel: "キャンセル"

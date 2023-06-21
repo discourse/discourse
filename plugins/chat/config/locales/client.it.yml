@@ -104,6 +104,8 @@ it:
       heading: "Chat"
       join: "Partecipa"
       last_visit: "ultima visita"
+      summarization:
+        summarize: "Riassumi"
       mention_warning:
         dismiss: "ignora"
         invitations_sent:
@@ -368,6 +370,14 @@ it:
           other: "%{count} risposte"
         settings: "Impostazioni"
         last_reply: "ultima risposta"
+        notifications:
+          regular:
+            title: "Normale"
+          tracking:
+            title: "Contenuto seguito"
+        participants_other_count:
+          one: "+%{count} altro"
+          other: "+%{count} altri"
       draft_channel_screen:
         header: "Nuovo messaggio"
         cancel: "Annulla"

@@ -1116,11 +1116,8 @@ bg:
         enable: "Активиране на страничната лента"
         options: "Опции"
         categories_section: "Раздел Категории"
-        categories_section_instruction: "Избраните категории ще бъдат показани в раздел \"Категории\" на страничната лента."
         tags_section: "Раздел за етикети"
-        tags_section_instruction: "Избраните етикети ще бъдат показани в секцията с етикети на страничната лента."
         navigation_section: "Навигация"
-        list_destination_instruction: "Когато има ново съдържание в страничната лента..."
         list_destination_default: "използвайте връзката по подразбиране и покажете значка за нови елементи"
         list_destination_unread_new: "връзка към непрочетени/нови и показване на броя нови елементи"
       change: "промени"
@@ -1303,7 +1300,6 @@ bg:
         tags: "Етикети"
         interface: "Интерфейс"
         apps: "Апликации"
-        sidebar: "Странична лента"
       change_password:
         success: "(имейлът е изпратен)"
         in_progress: "(изпраща се имейл)"
@@ -1851,7 +1847,6 @@ bg:
       enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
       description_time_MF: |
         Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>.
-      enable: "Обобщи Тази Тема"
       disable: "Покажи всички публикации"
       short_label: "Обобщаване"
       short_title: "Покажете обобщение на тази тема: най-интересните публикации, определени от общността"
@@ -3365,7 +3360,7 @@ bg:
         other: "%{count} нови"
       more: "Повече"
       all_categories: "Всички категории"
-      categories_form:
+      categories_form_modal:
         save: "Запази "
       sections:
         custom:
@@ -3414,6 +3409,8 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
+            topics:
+              content: "Теми"
             faq:
               content: "FAQ"
             groups:

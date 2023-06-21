@@ -10,10 +10,10 @@ class PostHotlinkedMedia < ActiveRecord::Base
          upload_create_failed: "upload_create_failed",
        }
 
-  def self.normalize_src(src)
+  def self.normalize_src(src, reset_scheme: true)
     uri = Addressable::URI.heuristic_parse(src)
     uri.normalize!
-    uri.scheme = nil
+    uri.scheme = nil if reset_scheme
     uri.to_s
   rescue URI::Error, Addressable::URI::InvalidURIError
     src

@@ -104,6 +104,8 @@ fr:
       heading: "Discussion"
       join: "Rejoindre"
       last_visit: "dernière visite"
+      summarization:
+        summarize: "Résumer"
       mention_warning:
         dismiss: "rejeter"
         invitations_sent:
@@ -370,6 +372,14 @@ fr:
           other: "%{count} réponses"
         settings: "Paramètres"
         last_reply: "dernière réponse"
+        notifications:
+          regular:
+            title: "Normale"
+          tracking:
+            title: "Suivre"
+        participants_other_count:
+          one: "+%{count} autre"
+          other: "+%{count} autres"
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"
