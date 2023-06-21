@@ -24,7 +24,7 @@ module.exports = {
     },
     "no-negated-condition": false,
     "no-obscure-array-access": false,
-    "require-mandatory-role-attribute": false,
+    "require-mandatory-role-attributes": false,
     "require-media-caption": false,
     // Begin prettier compatibility
     "eol-last": false,
