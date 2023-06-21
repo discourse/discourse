@@ -41,6 +41,10 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/summarize" => "summaries#get_summary"
   end
 
+  namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
+    post "export/messages" => "export#export_messages"
+  end
+
   # direct_messages_controller routes
   get "/direct_messages" => "direct_messages#index"
   post "/direct_messages/create" => "direct_messages#create"

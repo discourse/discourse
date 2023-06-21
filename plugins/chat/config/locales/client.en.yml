@@ -120,7 +120,7 @@ en:
         description: "Select an option below to summarize the conversation sent during the desired timeframe."
         summarize: "Summarize"
         since:
-          one: "Last hour" 
+          one: "Last hour"
           other: "Last %{count} hours"
       mention_warning:
         dismiss: "dismiss"
@@ -451,6 +451,11 @@ en:
 
       admin:
         title: "Chat"
+        export_messages:
+          title: "Export chat messages"
+          description: "Export is currently limited to 10000 most recent messages in the last 6 months."
+          create_export: "Create export"
+          export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       direct_messages:
         title: "Personal chat"
