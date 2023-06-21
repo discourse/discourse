@@ -207,9 +207,7 @@
     },
     "mentioned_users": {
       "type": "array",
-      "items": [
-
-      ]
+      "items": {}
     },
     "name": {
       "type": [
