@@ -107,11 +107,7 @@ module Onebox
     end
 
     def avatar
-      if twitter_api_credentials_present?
-        raw["includes"]["users"][0]["profile_image_url"]
-      elsif twitter_data[:image]
-        twitter_data[:image] unless twitter_data[:image_user_generated]
-      end
+      raw["includes"]["users"][0]["profile_image_url"] if twitter_api_credentials_present?
     end
 
     def likes
