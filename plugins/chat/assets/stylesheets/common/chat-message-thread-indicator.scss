@@ -43,8 +43,8 @@
   }
 
   &__last-reply-timestamp {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
   }
 
   &__last-reply-info {
@@ -76,7 +76,6 @@
 
   &__last-reply-excerpt {
     @include ellipsis;
-    line-height: 1.8rem;
   }
 
   &__body {
