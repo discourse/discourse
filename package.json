@@ -25,7 +25,7 @@
     "@mixer/parallel-prettier": "^2.0.3",
     "chrome-launcher": "^0.15.1",
     "chrome-remote-interface": "^0.31.3",
-    "ember-template-lint": "4.10.1",
+    "ember-template-lint": "5.10.3",
     "eslint": "^8.37.0",
     "eslint-config-discourse": "^3.5.0",
     "eslint-plugin-ember": "11.8.0",
