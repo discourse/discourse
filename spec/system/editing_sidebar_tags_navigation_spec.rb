@@ -49,4 +49,24 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     expect(sidebar).to have_no_section_link(tag2.name)
     expect(sidebar).to have_no_section_link(tag3.name)
   end
+
+  it "allows a user to filter the tags in the modal by the tag's name" do
+    visit "/latest"
+
+    expect(sidebar).to have_tags_section
+
+    modal = sidebar.click_edit_tags_button
+
+    modal.filter("tag")
+
+    expect(modal).to have_tag_checkboxes([tag, tag2, tag3])
+
+    modal.filter("tag2")
+
+    expect(modal).to have_tag_checkboxes([tag2])
+
+    modal.filter("someinvalidterm")
+
+    expect(modal).to have_no_tag_checkboxes
+  end
 end

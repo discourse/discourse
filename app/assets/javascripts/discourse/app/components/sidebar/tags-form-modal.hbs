@@ -3,32 +3,50 @@
   @class="sidebar-tags-form-modal"
 >
   <form class="sidebar-tags-form">
-    {{#each this.tags as |tag|}}
-      <div class="sidebar-tags-form__tag" data-tag-name={{tag.name}}>
-        <Input
-          id={{concat "sidebar-tags-form__input--" tag.name}}
-          class="sidebar-tags-form__input"
-          @type="checkbox"
-          @checked={{includes this.selectedTags tag.name}}
-          {{on "click" (action "toggleTag" tag.name)}}
-        />
+    <div class="sidebar-tags-form__filter">
+      {{d-icon "search" class="sidebar-tags-form__filter-input-icon"}}
 
-        <label
-          class="sidebar-tags-form__tag-label"
-          for={{concat "sidebar-tags-form__input--" tag.name}}
-        >
-          <p>
-            <span class="sidebar-tags-form__tag-label-name">
-              {{tag.name}}
-            </span>
+      <Input
+        class="sidebar-tags-form__filter-input-field"
+        placeholder={{i18n "sidebar.tags_form_modal.filter_placeholder"}}
+        @type="text"
+        @value={{this.filter}}
+        {{on "input" (action "onFilterInput" value="target.value")}}
+      />
+    </div>
 
-            <span class="sidebar-tags-form__tag-label-count">
-              ({{tag.count}})
-            </span>
-          </p>
-        </label>
+    {{#if (gt this.filteredTags.length 0)}}
+      {{#each this.filteredTags as |tag|}}
+        <div class="sidebar-tags-form__tag" data-tag-name={{tag.name}}>
+          <Input
+            id={{concat "sidebar-tags-form__input--" tag.name}}
+            class="sidebar-tags-form__input"
+            @type="checkbox"
+            @checked={{includes this.selectedTags tag.name}}
+            {{on "click" (action "toggleTag" tag.name)}}
+          />
+
+          <label
+            class="sidebar-tags-form__tag-label"
+            for={{concat "sidebar-tags-form__input--" tag.name}}
+          >
+            <p>
+              <span class="sidebar-tags-form__tag-label-name">
+                {{tag.name}}
+              </span>
+
+              <span class="sidebar-tags-form__tag-label-count">
+                ({{tag.count}})
+              </span>
+            </p>
+          </label>
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="sidebar-tags-form__no-tags">
+        {{i18n "sidebar.tags_form_modal.no_tags"}}
       </div>
-    {{/each}}
+    {{/if}}
   </form>
 </DModalBody>
 

@@ -20,6 +20,14 @@ module PageObjects
           end
       end
 
+      def has_no_tag_checkboxes?
+        has_no_css?(".sidebar-tags-form-modal .sidebar-tags-form__tag") &&
+          has_css?(
+            ".sidebar-tags-form-modal .sidebar-tags-form__no-tags",
+            text: I18n.t("js.sidebar.tags_form_modal.no_tags"),
+          )
+      end
+
       def toggle_tag_checkbox(tag)
         find(
           ".sidebar-tags-form-modal .sidebar-tags-form__tag[data-tag-name='#{tag.name}'] .sidebar-tags-form__input",
@@ -30,6 +38,11 @@ module PageObjects
 
       def save
         find(".sidebar-tags-form-modal .sidebar-tags-form__save-button").click
+        self
+      end
+
+      def filter(text)
+        find(".sidebar-tags-form-modal .sidebar-tags-form__filter-input-field").fill_in(with: text)
         self
       end
     end

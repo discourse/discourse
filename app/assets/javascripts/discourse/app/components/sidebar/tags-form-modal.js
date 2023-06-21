@@ -4,10 +4,14 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 export default class extends Component {
   @service currentUser;
   @service store;
+
+  @tracked filter = "";
   @tracked tags = [];
   @tracked selectedTags = [...this.currentUser.sidebarTagNames];
 
@@ -29,6 +33,29 @@ export default class extends Component {
       .catch((error) => {
         popupAjaxError(error);
       });
+  }
+
+  get filteredTags() {
+    if (this.filter.length === 0) {
+      return this.tags;
+    } else {
+      return this.tags.reduce((acc, tag) => {
+        if (tag.name.toLowerCase().includes(this.filter)) {
+          acc.push(tag);
+        }
+
+        return acc;
+      }, []);
+    }
+  }
+
+  @action
+  onFilterInput(filter) {
+    discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
+  }
+
+  #performFiltering(filter) {
+    this.filter = filter.toLowerCase();
   }
 
   @action
