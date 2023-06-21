@@ -119,8 +119,7 @@ describe "Admin Customize Form Templates", type: :system do
       expect(form_template_page).to have_input_field("textarea")
       expect(form_template_page).to have_input_field("checkbox")
       expect(form_template_page).to have_input_field("dropdown")
-      # TODO(@keegan): Add this back when upload functionality is added
-      # expect(form_template_page).to have_input_field("upload")
+      expect(form_template_page).to have_input_field("upload")
       expect(form_template_page).to have_input_field("multi-select")
     end
 
@@ -176,8 +175,7 @@ describe "Admin Customize Form Templates", type: :system do
       )
     end
 
-    # TODO(@keegan): Unskip this test when Upload functionality is added
-    xit "should allow quick insertion of upload field" do
+    it "should allow quick insertion of upload field" do
       quick_insertion_test(
         "upload",
         '- type: upload
