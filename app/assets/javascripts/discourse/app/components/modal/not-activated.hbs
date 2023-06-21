@@ -1,0 +1,11 @@
+<DModal @closeModal={{@closeModal}}>
+  <:body>
+    {{html-safe (i18n "login.not_activated" sentTo=this.sentTo)}}
+  </:body>
+  <:footer>
+    <ActivationControls
+      @sendActivationEmail={{action "sendActivationEmail"}}
+      @editActivationEmail={{action "editActivationEmail"}}
+    />
+  </:footer>
+</DModal>
