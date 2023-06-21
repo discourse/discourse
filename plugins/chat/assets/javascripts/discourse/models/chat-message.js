@@ -361,10 +361,7 @@ export default class ChatMessage {
   }
 
   get #notLoadedMentions() {
-    const parsed = parseMentionedUsernames(this._cooked).slice(
-      0,
-      this.siteSettings.max_mentions_per_chat_message
-    );
+    const parsed = parseMentionedUsernames(this._cooked);
     const loaded = [...this.mentionedUsers.values()].map((u) => u.username);
     return except(parsed, loaded);
   }
