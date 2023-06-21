@@ -4390,7 +4390,6 @@ en:
       all_categories: "All categories"
       all_tags: "All tags"
       categories_form_modal:
-        save: "Save"
         title: "Edit categories navigation"
         subtitle:
           button_text: "Deselect all"
@@ -4398,6 +4397,8 @@ en:
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
         reset_to_defaults: "Reset to defaults"
+      tags_form_modal:
+        title: "Edit tags navigation"
 
       sections:
         custom:
