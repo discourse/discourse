@@ -110,7 +110,11 @@ $radius: 3px;
     position: relative;
     overflow: hidden;
 
-    *[class^="chat-skeleton__message-"]:not(.chat-skeleton__message-content):not(.chat-skeleton__message-text):not(.chat-skeleton__message-reactions):after {
+    *[class^="chat-skeleton__message-"]:not(
+        .chat-skeleton__message-content
+      ):not(.chat-skeleton__message-text):not(
+        .chat-skeleton__message-reactions
+      ):after {
       position: absolute;
       top: 0;
       right: 0;
