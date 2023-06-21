@@ -1,0 +1,13 @@
+<DModal @closeModal={{route-action "closeModal"}} @label="close">
+  <:body>
+    <ActivationEmailForm @email={{this.newEmail}} />
+  </:body>
+  <:footer>
+    <DButton
+      @action={{action "changeEmail"}}
+      @label="login.submit_new_email"
+      @disabled={{this.submitDisabled}}
+      class="btn-primary"
+    />
+  </:footer>
+</DModal>

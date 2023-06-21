@@ -1,24 +1,24 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Component from "@ember/component";
+import { action } from "@ember/object";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 
-export default Controller.extend(ModalFunctionality, {
-  actions: {
-    sendActivationEmail() {
-      resendActivationEmail(this.username).then(() => {
-        const modal = this.showModal("activation-resent", { title: "log_in" });
-        modal.set("currentEmail", this.currentEmail);
-      });
-    },
+export default class NotActivated extends Component {
+  @action
+  sendActivationEmail() {
+    resendActivationEmail(this.username).then(() => {
+      const modal = this.showModal("activation-resent", { title: "log_in" });
+      modal.set("currentEmail", this.currentEmail);
+    });
+  }
 
-    editActivationEmail() {
-      const modal = this.showModal("activation-edit", {
-        title: "login.change_email",
-      });
+  @action
+  editActivationEmail() {
+    const modal = this.showModal("activation-edit", {
+      title: "login.change_email",
+    });
 
-      const currentEmail = this.currentEmail;
-      modal.set("currentEmail", currentEmail);
-      modal.set("newEmail", currentEmail);
-    },
-  },
-});
+    const currentEmail = this.currentEmail;
+    modal.set("currentEmail", currentEmail);
+    modal.set("newEmail", currentEmail);
+  }
+}

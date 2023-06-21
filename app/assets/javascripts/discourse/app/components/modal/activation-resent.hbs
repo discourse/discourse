@@ -1,0 +1,7 @@
+<DModal @title={{i18n "log_in"}} @closeModal={{route-action "closeModal"}}>
+  <:body>
+    {{html-safe
+      (i18n "login.sent_activation_email_again" currentEmail=this.currentEmail)
+    }}
+  </:body>
+</DModal>
