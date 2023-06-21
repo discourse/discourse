@@ -212,7 +212,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("clicking on everything link - sidebar_link_to_filtered_list set to truewith new topics", async function (assert) {
+  test("clicking on everything link - sidebar_link_to_filtered_list set to true with new topics", async function (assert) {
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
     );
