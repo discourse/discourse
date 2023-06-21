@@ -592,7 +592,6 @@ class User < ActiveRecord::Base
     @unread_pms = nil
     @unread_bookmarks = nil
     @unread_high_prios = nil
-    @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
@@ -1515,15 +1514,7 @@ class User < ActiveRecord::Base
   def user_fields(field_ids = nil)
     field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
 
-    @user_fields_cache ||= {}
-
-    # Memoize based on requested fields
-    @user_fields_cache[field_ids.join(":")] ||= {}.tap do |hash|
-      field_ids.each do |fid|
-        # The hash keys are strings for backwards compatibility
-        hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
-      end
-    end
+    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
   end
 
   def validatable_user_fields_values
