@@ -51,6 +51,7 @@
   }
 
   &__last-reply-username {
+    @include ellipsis;
     font-weight: bold;
     color: var(--primary-very-high);
     margin-right: 0.25rem;
