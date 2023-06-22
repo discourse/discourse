@@ -79,6 +79,11 @@ module PageObjects
       def has_no_reset_to_defaults_button?
         has_no_button?(I18n.t("js.sidebar.categories_form_modal.reset_to_defaults"))
       end
+
+      def has_focus_on_filter_input?
+        evaluate_script("document.activeElement").native ==
+          find(".sidebar-categories-form-modal .sidebar-categories-form__filter-input-field").native
+      end
     end
   end
 end
