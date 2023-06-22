@@ -777,7 +777,7 @@ RSpec.describe Oneboxer do
 
       stub_request(
         :get,
-        "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended",
+        "https://api.twitter.com/2/tweets/1428031057186627589?tweet.fields=id,author_id,text,created_at,entities,referenced_tweets,public_metrics&user.fields=id,name,username,profile_image_url&media.fields=type,height,width,variants,preview_image_url,url&expansions=attachments.media_keys,referenced_tweets.id.author_id",
       ).to_return(status: 429, body: "{}", headers: {})
 
       stub_request(:post, "https://api.twitter.com/oauth2/token").to_return(
