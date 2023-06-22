@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import { changeEmail } from "discourse/lib/user-activation";
 import { flashAjaxError } from "discourse/lib/ajax-error";
 import ActivationResent from "./activation-resent";
@@ -9,8 +10,10 @@ export default class ActivationEdit extends Component {
   @service login;
   @service modal;
 
+  @tracked newEmail = this.args.model.newEmail;
+
   get submitDisabled() {
-    return this.args.model.newEmail === this.args.model.currentEmail;
+    return this.newEmail === this.args.model.currentEmail;
   }
 
   @action
@@ -26,5 +29,10 @@ export default class ActivationEdit extends Component {
         });
       })
       .catch(flashAjaxError(this));
+  }
+
+  @action
+  updateNewEmail(e) {
+    this.newEmail = e.target.value;
   }
 }

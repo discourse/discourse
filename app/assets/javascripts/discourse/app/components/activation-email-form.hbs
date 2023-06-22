@@ -1,2 +1,11 @@
 <p>{{i18n "login.provide_new_email"}}</p>
-<Input @value={{@email}} class="activate-new-email" />
+
+{{#if @updateNewEmail}}
+  <Input
+    @value={{@email}}
+    {{on "input" @updateNewEmail}}
+    class="activate-new-email"
+  />
+{{else}}
+  <Input @value={{@email}} class="activate-new-email" />
+{{/if}}

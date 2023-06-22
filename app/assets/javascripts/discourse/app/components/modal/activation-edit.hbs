@@ -1,6 +1,9 @@
 <DModal @closeModal={{@closeModal}} @title={{i18n "login.change_email"}}>
   <:body>
-    <ActivationEmailForm @email={{@model.newEmail}} />
+    <ActivationEmailForm
+      @email={{@model.newEmail}}
+      @updateNewEmail={{this.updateNewEmail}}
+    />
   </:body>
   <:footer>
     <DButton
