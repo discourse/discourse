@@ -26,7 +26,8 @@
         role="form"
         aria-label={{I18n this.composer.saveLabel}}
         class="reply-area
-          {{if this.composer.canEditTags 'with-tags' 'without-tags'}}"
+          {{if this.composer.canEditTags 'with-tags' 'without-tags'}}
+          {{if this.composer.model.showCategoryChooser 'with-category' 'without-category'}}"
       >
         <span class="composer-open-plugin-outlet-container">
           <PluginOutlet
