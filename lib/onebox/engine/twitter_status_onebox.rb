@@ -101,15 +101,15 @@ module Onebox
       end
 
       def timestamp
-        if twitter_api_credentials_present? && raw[:data][:created_at]
-          date = DateTime.strptime(raw[:data][:created_at], "%Y-%m-%dT%H:%M:%S.%L%z")
+        if twitter_api_credentials_present? && (created_at = raw.dig(:data, :created_at))
+          date = DateTime.strptime(created_at, "%Y-%m-%dT%H:%M:%S.%L%z")
           date.strftime("%-l:%M %p - %-d %b %Y")
         end
       end
 
       def title
-        if twitter_api_credentials_present? && raw[:includes][:users][0][:name]
-          raw[:includes][:users][0][:name]
+        if twitter_api_credentials_present?
+          raw.dig(:includes, :users)&.first&.dig(:name)
         else
           meta_tags_data("givenName")[tweet_index]
         end
@@ -117,25 +117,27 @@ module Onebox
 
       def screen_name
         if twitter_api_credentials_present?
-          raw[:includes][:users][0][:username]
+          raw.dig(:includes, :users)&.first&.dig(:username)
         else
           meta_tags_data("additionalName")[tweet_index]
         end
       end
 
       def avatar
-        raw[:includes][:users][0][:profile_image_url] if twitter_api_credentials_present?
+        if twitter_api_credentials_present?
+          raw.dig(:includes, :users)&.first&.dig(:profile_image_url)
+        end
       end
 
       def likes
         if twitter_api_credentials_present?
-          prettify_number(raw[:data][:public_metrics][:like_count].to_i)
+          prettify_number(raw.dig(:data, :public_metrics, :like_count).to_i)
         end
       end
 
       def retweets
         if twitter_api_credentials_present?
-          prettify_number(raw[:data][:public_metrics][:retweet_count].to_i)
+          prettify_number(raw.dig(:data, :public_metrics, :retweet_count).to_i)
         end
       end
 
