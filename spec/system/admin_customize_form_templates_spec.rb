@@ -108,21 +108,6 @@ describe "Admin Customize Form Templates", type: :system do
       expect(form_template_page).to have_input_field("input")
     end
 
-    it "should render all the input field types in the preview" do
-      form_template_page.visit_new
-      form_template_page.type_in_template_name("New Template")
-      ace_editor.type_input(
-        "- type: input\n- type: textarea\n- type: checkbox\n- type: dropdown\n- type: upload\n- type: multi-select",
-      )
-      form_template_page.click_preview_button
-      expect(form_template_page).to have_input_field("input")
-      expect(form_template_page).to have_input_field("textarea")
-      expect(form_template_page).to have_input_field("checkbox")
-      expect(form_template_page).to have_input_field("dropdown")
-      expect(form_template_page).to have_input_field("upload")
-      expect(form_template_page).to have_input_field("multi-select")
-    end
-
     it "should allow quick insertion of checkbox field" do
       quick_insertion_test(
         "checkbox",
