@@ -1212,7 +1212,7 @@ en:
         tags_section_instruction: "Selected tags will be displayed under Navigation Menu's tags section. If no tags are selected, the site's top tags will be displayed."
         navigation_section: "Navigation"
         navigation_section_instruction: "When a topic list in the navigation menu has new or unread items…"
-        link_to_filtered_list_checkbox_description: "Link to the filtered list of new and unread items"
+        link_to_filtered_list_checkbox_description: "Link to the filtered list"
         show_count_new_items_checkbox_description: "Show a count of the new items"
       change: "change"
       featured_topic: "Featured Topic"
