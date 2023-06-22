@@ -9,10 +9,6 @@ class GitRepo
     @memoize = {}
   end
 
-  def valid?
-    File.exist?("#{path}/.git")
-  end
-
   def url
     url = run("config --get remote.origin.url")
     return if url.blank?
@@ -30,7 +26,6 @@ class GitRepo
 
   def run(cmd)
     @memoize[cmd] ||= begin
-      return unless valid?
       cmd = "git #{cmd}".split(" ")
       Discourse::Utils.execute_command(*cmd, chdir: path).strip
     end
