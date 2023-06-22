@@ -1,10 +1,10 @@
 <DModal @closeModal={{@closeModal}} @title={{i18n "login.change_email"}}>
   <:body>
-    <ActivationEmailForm @email={{this.newEmail}} />
+    <ActivationEmailForm @email={{@model.newEmail}} />
   </:body>
   <:footer>
     <DButton
-      @action={{action "changeEmail"}}
+      @action={{this.changeEmail}}
       @label="login.submit_new_email"
       @disabled={{this.submitDisabled}}
       class="btn-primary"

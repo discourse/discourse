@@ -12,7 +12,7 @@ export default class NotActivated extends Component {
   sendActivationEmail() {
     resendActivationEmail(this.username).then(() => {
       this.modal.show(ActivationResent, {
-        model: { currentEmail: this.currentEmail },
+        model: { currentEmail: this.args.model.currentEmail },
       });
     });
   }
@@ -20,7 +20,10 @@ export default class NotActivated extends Component {
   @action
   editActivationEmail() {
     this.modal.show(ActivationEdit, {
-      model: { currentEmail: this.currentEmail, newEmail: this.currentEmail },
+      model: {
+        currentEmail: this.args.model.currentEmail,
+        newEmail: this.args.model.currentEmail,
+      },
     });
   }
 }
