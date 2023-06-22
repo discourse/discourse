@@ -8,7 +8,7 @@ import I18n from "I18n";
 export default class ThemeSettingsEditor extends Component {
   @service dialog;
 
-  @tracked editedContent = null;
+  @tracked editedContent;
   @tracked errors = [];
   @tracked saving = false;
 
