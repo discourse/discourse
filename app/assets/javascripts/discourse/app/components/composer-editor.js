@@ -237,18 +237,16 @@ export default Component.extend(
               categoryId: this.topic?.category_id || this.composer?.categoryId,
               includeGroups: true,
             }).then((result) => {
-              if (result?.users?.length > 0) {
-                result.users.forEach((user, index) => {
-                  if (user.status) {
-                    user.index = index;
-                    user.statusHtml = createUserStatusMessage(user.status, {
-                      showTooltip: true,
-                      showDescription: true,
-                    });
-                    this.tippyInstances.push(user.statusHtml._tippy);
-                  }
-                });
-              }
+              (result.users || []).forEach((user, index) => {
+                if (user.status) {
+                  user.index = index;
+                  user.statusHtml = createUserStatusMessage(user.status, {
+                    showTooltip: true,
+                    showDescription: true,
+                  });
+                  this.tippyInstances.push(user.statusHtml._tippy);
+                }
+              });
               return result;
             });
           },
