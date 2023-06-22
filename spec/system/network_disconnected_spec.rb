@@ -7,7 +7,7 @@ RSpec.describe "Network Disconnected", type: :system do
     page.driver.browser.network_conditions = { offline: false }
   end
 
-  it "Message bus connectivity service adds class to DOM and displays offline indicator" do
+  it "NetworkConnectivity service adds class to DOM and displays offline indicator" do
     SiteSetting.enable_offline_indicator = true
 
     visit("/c")
