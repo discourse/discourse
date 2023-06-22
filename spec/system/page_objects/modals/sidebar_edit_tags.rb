@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require_relative "sidebar_edit_navigation_modal"
+
 module PageObjects
   module Modals
-    class SidebarEditTags < PageObjects::Modals::Base
+    class SidebarEditTags < SidebarEditNavigationModal
       def closed?
         has_no_css?(".sidebar-tags-form-modal")
       end
@@ -34,31 +36,6 @@ module PageObjects
         ).click
 
         self
-      end
-
-      def save
-        find(".sidebar-tags-form-modal .sidebar-tags-form__save-button").click
-        self
-      end
-
-      def filter(text)
-        find(".sidebar-tags-form-modal .sidebar-tags-form__filter-input-field").fill_in(with: text)
-        self
-      end
-
-      def deselect_all
-        click_button(I18n.t("js.sidebar.tags_form_modal.subtitle.button_text"))
-        self
-      end
-
-      def click_reset_to_defaults_button
-        click_button(I18n.t("js.sidebar.tags_form_modal.reset_to_defaults"))
-        self
-      end
-
-      def has_focus_on_filter_input?
-        evaluate_script("document.activeElement").native ==
-          find(".sidebar-tags-form-modal .sidebar-tags-form__filter-input-field").native
       end
     end
   end

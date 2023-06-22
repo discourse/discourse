@@ -4392,19 +4392,22 @@ en:
       categories_form_modal:
         title: "Edit categories navigation"
         subtitle:
-          button_text: "Deselect all"
           text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
-        reset_to_defaults: "Reset to defaults"
       tags_form_modal:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"
         no_tags: "There are no tags matching the given term."
         subtitle:
-          button_text: "Deselect all"
           text: "and we'll automatically show this site's top tags"
+      edit_navigation_modal_form:
+        deselect_button_text: "Deselect all"
         reset_to_defaults: "Reset to defaults"
+        filter_dropdown:
+          all: "All"
+          selected: "Selected"
+          unselected: "Unselected"
 
       sections:
         custom:

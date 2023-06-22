@@ -100,10 +100,6 @@ export default class extends Component {
     }
   }
 
-  get modalHeaderAfterTitleElement() {
-    return document.getElementById("modal-header-after-title");
-  }
-
   @action
   resetToDefaults() {
     this.selectedSidebarCategoryIds =

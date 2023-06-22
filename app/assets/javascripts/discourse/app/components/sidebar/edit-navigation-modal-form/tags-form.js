@@ -53,10 +53,6 @@ export default class extends Component {
     }
   }
 
-  get modalHeaderAfterTitleElement() {
-    return document.getElementById("modal-header-after-title");
-  }
-
   @action
   onFilterInput(filter) {
     discourseDebounce(this, this.#performFiltering, filter, INPUT_DELAY);
