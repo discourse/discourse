@@ -9,6 +9,10 @@ div.profiler-results.profiler-top {
   top: var(--header-offset);
   z-index: z("header") - 1;
 
+  .profiler-result {
+    font-size: var(--font-down-1);
+  }
+
   .profiler-button {
     background-color: var(--header_background);
     color: var(--header_primary);
@@ -19,7 +23,11 @@ div.profiler-results.profiler-top {
     }
 
     .profiler-unit {
-      color: var(--header_primary-medium);
+      color: var(--header_primary);
+    }
+
+    .profiler-reqs {
+      font-size: var(--font-down-1);
     }
   }
 
