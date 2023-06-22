@@ -105,6 +105,22 @@ class TranslationOverride < ActiveRecord::Base
     true
   end
 
+  def self.transform_pluralized_key(key)
+    match = key.match(/(.*)\.(zero|two|few|many)\z/)
+    match ? match.to_a.second + ".other" : key
+  end
+
+  def self.custom_interpolation_keys(key)
+    transformed_key = transform_pluralized_key(key)
+
+    custom_keys =
+      ALLOWED_CUSTOM_INTERPOLATION_KEYS.find do |keys, value|
+        break value if keys.any? { |key| transformed_key.start_with?(key) }
+      end
+
+    custom_keys || []
+  end
+
   private_class_method :reload_locale!
   private_class_method :clear_cached_keys!
   private_class_method :i18n_changed
@@ -113,7 +129,7 @@ class TranslationOverride < ActiveRecord::Base
   private
 
   def check_interpolation_keys
-    transformed_key = transform_pluralized_key(translation_key)
+    transformed_key = self.class.transform_pluralized_key(translation_key)
 
     original_text = I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
 
@@ -143,11 +159,6 @@ class TranslationOverride < ActiveRecord::Base
         false
       end
     end
-  end
-
-  def transform_pluralized_key(key)
-    match = key.match(/(.*)\.(zero|two|few|many)\z/)
-    match ? match.to_a.second + ".other" : key
   end
 end
 
