@@ -1,0 +1,10 @@
+<DModal
+  @closeModal={{this.closeModal}}
+  {{did-insert this.applyCodeblockButtons}}
+>
+  <:body>
+    <pre>
+      <code class={{@model.codeClasses}}>{{@model.code}}</code>
+    </pre>
+  </:body>
+</DModal>
