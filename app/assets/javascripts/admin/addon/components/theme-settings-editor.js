@@ -12,11 +12,6 @@ export default class ThemeSettingsEditor extends Component {
   @tracked errors = [];
   @tracked saving = false;
 
-  didInsertElement() {
-    this.saving = false;
-    this.errors = [];
-  }
-
   @computed("editedContent", "saving")
   get saveButtonDisabled() {
     return !this.documentChanged || this.saving;
@@ -32,15 +27,14 @@ export default class ThemeSettingsEditor extends Component {
         JSON.parse(this.editedContent)
       );
       const themeSettingsString = JSON.stringify(this.condensedThemeSettings());
-      const same = editedContentString.localeCompare(themeSettingsString);
-      return same !== 0;
-    } catch (e) {
+      return editedContentString.localeCompare(themeSettingsString) !== 0;
+    } catch {
       return true;
     }
   }
 
   _theme() {
-    return this.model ? this.model.model : null;
+    return this.model?.model;
   }
 
   condensedThemeSettings() {
@@ -63,18 +57,23 @@ export default class ThemeSettingsEditor extends Component {
     this.editedContent = value;
   }
 
+  // validates the following:
+  // each setting must have a 'setting' and a 'value' key and no other keys
   validateSettingsKeys(settings) {
     return settings.reduce((acc, setting) => {
       if (!acc) {
         return acc;
       }
       if (!("setting" in setting)) {
+        // must have a setting key
         return false;
       }
       if (!("value" in setting)) {
+        // must have a value key
         return false;
       }
       if (Object.keys(setting).length > 2) {
+        // at this point it's verified to have setting and value key - but must have no other keys
         return false;
       }
       return true;
@@ -115,9 +114,9 @@ export default class ThemeSettingsEditor extends Component {
       return;
     }
 
-    const originalNames = this._theme().settings.map(
-      (setting) => setting.setting
-    );
+    const originalNames = this._theme()
+      ? this._theme().settings.map((setting) => setting.setting)
+      : [];
     const newNames = newSettings.map((setting) => setting.setting);
     const deletedNames = originalNames.filter(
       (originalName) => !newNames.find((newName) => newName === originalName)
@@ -126,7 +125,7 @@ export default class ThemeSettingsEditor extends Component {
       (newName) =>
         !originalNames.find((originalName) => originalName === newName)
     );
-    if (deletedNames.length > 0) {
+    if (deletedNames.length) {
       this.errors = [
         ...this.errors,
         {
@@ -135,7 +134,7 @@ export default class ThemeSettingsEditor extends Component {
         },
       ];
     }
-    if (addedNames.length > 0) {
+    if (addedNames.length) {
       this.errors = [
         ...this.errors,
         {
@@ -145,7 +144,7 @@ export default class ThemeSettingsEditor extends Component {
       ];
     }
 
-    if (this.errors.length > 0) {
+    if (this.errors.length) {
       this.saving = false;
       return;
     }

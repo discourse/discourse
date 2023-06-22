@@ -115,6 +115,7 @@ export default EmberObject.extend({
     const data = {};
     const typeField = underscore(this.apiNameFor(type));
     data[typeField] = attrs;
+
     return ajax(
       this.pathFor(store, type, id),
       this.getPayload("PUT", data)
