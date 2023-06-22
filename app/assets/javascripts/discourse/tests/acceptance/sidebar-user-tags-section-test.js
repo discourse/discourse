@@ -945,26 +945,29 @@ acceptance(
 
       await visit("/");
 
-      assert.true(
-        query(
-          '.sidebar-section-link-wrapper[data-tag-name="tag1"] a'
-        ).href.endsWith("/tag/tag1"),
-        "tag1 links to the latest topics list for the tag"
-      );
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag1"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag1",
+          "tag1 links to the latest topics list for the tag"
+        );
 
-      assert.true(
-        query(
-          '.sidebar-section-link-wrapper[data-tag-name="tag2"] a'
-        ).href.endsWith("/tag/tag2"),
-        "tag2 links to the latest topics list for the tag"
-      );
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag2"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag2",
+          "tag2 links to the latest topics list for the tag"
+        );
 
-      assert.true(
-        query(
-          '.sidebar-section-link-wrapper[data-tag-name="tag3"] a'
-        ).href.endsWith("/tag/tag3"),
-        "tag3 links to the latest topics list for the tag"
-      );
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag3"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag3",
+          "tag3 links to the latest topics list for the tag"
+        );
     });
   }
 );

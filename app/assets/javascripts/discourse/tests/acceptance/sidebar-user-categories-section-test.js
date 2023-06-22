@@ -1263,26 +1263,35 @@ acceptance(
 
       await visit("/");
 
-      assert.true(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
-        ).href.endsWith("/c/meta/3"),
-        "category1 links to the latest topics list for the category"
-      );
+        )
+        .hasAttribute(
+          "href",
+          "/c/meta/3",
+          "category1 links to the latest topics list for the category"
+        );
 
-      assert.true(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] a`
-        ).href.endsWith("/c/howto/10"),
-        "category2 links to the latest topics list for the category"
-      );
+        )
+        .hasAttribute(
+          "href",
+          "/c/howto/10",
+          "category2 links to the latest topics list for the category"
+        );
 
-      assert.true(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] a`
-        ).href.endsWith("/c/feature/spec/26"),
-        "category3 links to the latest topics list for the category"
-      );
+        )
+        .hasAttribute(
+          "href",
+          "/c/feature/spec/26",
+          "category3 links to the latest topics list for the category"
+        );
     });
   }
 );

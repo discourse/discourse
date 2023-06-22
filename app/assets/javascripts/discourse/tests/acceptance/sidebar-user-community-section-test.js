@@ -1354,12 +1354,14 @@ acceptance(
 
       await visit("/");
 
-      assert.true(
-        query(
-          ".sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/new"),
-        "links to /new because there are 1 new and 1 unread topics"
-      );
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/new",
+
+          "links to /new because there are 1 new and 1 unread topics"
+        );
 
       await publishToMessageBus("/unread", {
         topic_id: 1,
@@ -1370,12 +1372,13 @@ acceptance(
         },
       });
 
-      assert.true(
-        query(
-          ".sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/new"),
-        "links to /new because there is 1 unread topic"
-      );
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/new",
+          "links to /new because there is 1 unread topic"
+        );
 
       await publishToMessageBus("/unread", {
         topic_id: 2,
@@ -1386,12 +1389,13 @@ acceptance(
         },
       });
 
-      assert.true(
-        query(
-          ".sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/latest"),
-        "links to /latest because there are no unread or new topics"
-      );
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/latest",
+          "links to /latest because there are no unread or new topics"
+        );
 
       await publishToMessageBus("/unread", {
         topic_id: 1,
@@ -1402,12 +1406,13 @@ acceptance(
         },
       });
 
-      assert.true(
-        query(
-          ".sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/new"),
-        "links to /new because there is 1 new topic"
-      );
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/new",
+          "links to /new because there is 1 new topic"
+        );
     });
 
     test("everything link's href is always the latest topics list when sidebar_link_to_filtered_list is false", async function (assert) {
@@ -1431,12 +1436,9 @@ acceptance(
 
       await visit("/");
 
-      assert.true(
-        query(
-          ".sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/latest"),
-        "everything link href is /latest"
-      );
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute("href", "/latest", "everything link href is /latest");
     });
   }
 );

@@ -5,7 +5,6 @@ import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -391,35 +390,43 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
 
     await visit("/u/eviltrout/preferences/navigation-menu");
 
-    assert.true(
-      query('.sidebar-section-link[data-link-name="everything"]').href.endsWith(
-        "/latest"
-      ),
-      "everything link's href is the latest topics list before the preference is enabled"
-    );
-    assert.true(
-      query(
+    assert
+      .dom('.sidebar-section-link[data-link-name="everything"]')
+      .hasAttribute(
+        "href",
+        "/latest",
+        "everything link's href is the latest topics list before the preference is enabled"
+      );
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link`
-      ).href.endsWith("/c/meta/3"),
-      "category1's link href is the latest topics list of the category before the preference is enabled"
-    );
+      )
+      .hasAttribute(
+        "href",
+        "/c/meta/3",
+        "category1's link href is the latest topics list of the category before the preference is enabled"
+      );
 
     await click(
       ".preferences-navigation-menu-navigation .pref-link-to-filtered-list input"
     );
     await click(".save-changes");
 
-    assert.true(
-      query('.sidebar-section-link[data-link-name="everything"]').href.endsWith(
-        "/new"
-      ),
-      "everything link's href is the new topics list after the preference is enabled"
-    );
-    assert.true(
-      query(
+    assert
+      .dom('.sidebar-section-link[data-link-name="everything"]')
+      .hasAttribute(
+        "href",
+        "/new",
+        "everything link's href is the new topics list after the preference is enabled"
+      );
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link`
-      ).href.endsWith("/c/meta/3/l/new"),
-      "category1's link href is the new topics list of the category after the preference is enabled"
-    );
+      )
+      .hasAttribute(
+        "href",
+        "/c/meta/3/l/new",
+        "category1's link href is the new topics list of the category after the preference is enabled"
+      );
   });
 });
