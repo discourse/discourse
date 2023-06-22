@@ -50,15 +50,15 @@ export default class FormTemplateFieldUpload extends Component.extend(
   }
 
   buildMarkdown(upload) {
-    if (isImage(upload.extension)) {
+    if (isImage(upload.url)) {
       return `![${upload.file_name}|${upload.width}x${upload.height}](${upload.short_url})`;
     }
 
-    if (isAudio(upload.extension)) {
+    if (isAudio(upload.url)) {
       return `![${upload.file_name}|audio](${upload.short_url})`;
     }
 
-    if (isVideo(upload.extension)) {
+    if (isVideo(upload.url)) {
       return `![${upload.file_name}|video](${upload.short_url})`;
     }
 

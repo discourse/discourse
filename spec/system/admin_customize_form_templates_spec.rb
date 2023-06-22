@@ -180,7 +180,7 @@ describe "Admin Customize Form Templates", type: :system do
         "upload",
         '- type: upload
   attributes:
-    file_types: "jpg, png, gif"
+    file_types: ".jpg, .png, .gif"
     allow_multiple: false
     label: "Enter label here"
   validations:
