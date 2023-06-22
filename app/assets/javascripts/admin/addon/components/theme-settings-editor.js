@@ -1,4 +1,4 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action, computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
