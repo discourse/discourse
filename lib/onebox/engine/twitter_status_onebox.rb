@@ -28,7 +28,7 @@ module Onebox
           begin
             Onebox::Helpers.fetch_response(url, headers: http_params)
           rescue StandardError
-            nil
+            return nil
           end
         html = Nokogiri.HTML(response)
         twitter_data = {}
