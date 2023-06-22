@@ -30,7 +30,10 @@ describe "Viewing sidebar preferences", type: :system do
     before { sign_in(admin) }
 
     it "should be able to view navigation menu preferences of another user" do
-      user.user_option.update!(sidebar_list_destination: "unread_new")
+      user.user_option.update!(
+        sidebar_link_to_filtered_list: true,
+        sidebar_show_count_of_new_items: true,
+      )
 
       user_preferences_navigation_menu_page.visit(user)
 
@@ -42,9 +45,12 @@ describe "Viewing sidebar preferences", type: :system do
         tag,
         tag2,
       )
-      expect(
-        user_preferences_navigation_menu_page,
-      ).to have_navigation_menu_list_destination_preference("unread_new")
+      expect(user_preferences_navigation_menu_page).to have_navigation_menu_preference_checked(
+        "pref-show-count-new-items",
+      )
+      expect(user_preferences_navigation_menu_page).to have_navigation_menu_preference_checked(
+        "pref-link-to-filtered-list",
+      )
     end
   end
 end
