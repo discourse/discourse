@@ -24,9 +24,7 @@
       {{format-date @message.thread.preview.lastReplyCreatedAt leaveAgo="true"}}
     </span>
   </div>
-  {{! <div class="chat-message-thread-indicator__participants"> }}
   <Chat::Thread::Participants @thread={{@message.thread}} />
-  {{! </div> }}
   <div class="chat-message-thread-indicator__last-reply-excerpt">
     {{replace-emoji (html-safe @message.thread.preview.lastReplyExcerpt)}}
   </div>
