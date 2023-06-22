@@ -18,10 +18,7 @@ div.profiler-results.profiler-top {
     color: var(--header_primary);
     border-bottom: 1px solid var(--header_primary-low);
 
-    .profiler-number {
-      color: var(--header_primary);
-    }
-
+    .profiler-number,
     .profiler-unit {
       color: var(--header_primary);
     }
