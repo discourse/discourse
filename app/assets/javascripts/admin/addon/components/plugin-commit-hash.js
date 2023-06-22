@@ -1,9 +1,7 @@
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@glimmer/component";
 
 export default class PluginCommitHash extends Component {
-  @discourseComputed("plugin.commit_hash")
-  shortCommitHash(commitHash) {
-    return commitHash?.slice(0, 7);
+  get shortCommitHash() {
+    return this.args.plugin.commit_hash?.slice(0, 7);
   }
 }

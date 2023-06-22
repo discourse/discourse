@@ -31,10 +31,10 @@ class GitRepo
   def run(cmd)
     @memoize[cmd] ||= begin
       return unless valid?
-      stdout, stderr, status = Open3.capture3("git #{cmd}", chdir: path)
-      status == 0 ? stdout.strip : nil
+      cmd = "git #{cmd}".split(" ")
+      Discourse::Utils.execute_command(*cmd, chdir: path).strip
     end
   rescue => e
-    puts e.inspect
+    Discourse.warn_exception(e, message: "Error running git command: #{cmd} in #{path}")
   end
 end

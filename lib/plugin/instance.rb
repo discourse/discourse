@@ -517,11 +517,11 @@ class Plugin::Instance
   end
 
   def commit_hash
-    @commit_hash ||= git_repo.latest_local_commit
+    git_repo.latest_local_commit
   end
 
   def commit_url
-    @commit_url ||= "#{git_repo.url}/commit/#{git_repo.latest_local_commit}"
+    "#{git_repo.url}/commit/#{commit_hash}"
   end
 
   def git_repo
