@@ -2139,13 +2139,6 @@ navigation:
     type: tag_list
     default: ""
     client: true
-  default_sidebar_list_destination:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "unread_new"
 
 embedding:
   embed_by_username:

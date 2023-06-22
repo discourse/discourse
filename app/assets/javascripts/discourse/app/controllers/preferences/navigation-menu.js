@@ -5,36 +5,27 @@ import I18n from "I18n";
 
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export const DEFAULT_LIST_DESTINATION = "default";
-export const UNREAD_LIST_DESTINATION = "unread_new";
-
 export default class extends Controller {
   @tracked saved = false;
   @tracked selectedSidebarCategories = [];
   @tracked selectedSidebarTagNames = [];
+
   subpageTitle = I18n.t("user.preferences_nav.navigation_menu");
 
   saveAttrNames = [
     "sidebar_category_ids",
     "sidebar_tag_names",
-    "sidebar_list_destination",
-  ];
-
-  sidebarListDestinations = [
-    {
-      name: I18n.t("user.experimental_sidebar.list_destination_default"),
-      value: DEFAULT_LIST_DESTINATION,
-    },
-    {
-      name: I18n.t("user.experimental_sidebar.list_destination_unread_new"),
-      value: UNREAD_LIST_DESTINATION,
-    },
+    "sidebar_link_to_filtered_list",
+    "sidebar_show_count_of_new_items",
   ];
 
   @action
   save() {
     const initialSidebarCategoryIds = this.model.sidebarCategoryIds;
-    const initialSidebarListDestination = this.model.sidebar_list_destination;
+    const initialSidebarLinkToFilteredList =
+      this.model.sidebarLinkToFilteredList;
+    const initialSidebarShowCountOfNewItems =
+      this.model.sidebarShowCountOfNewItems;
 
     this.model.set(
       "sidebarCategoryIds",
@@ -44,8 +35,12 @@ export default class extends Controller {
     this.model.set("sidebar_tag_names", this.selectedSidebarTagNames);
 
     this.model.set(
-      "user_option.sidebar_list_destination",
-      this.newSidebarListDestination
+      "user_option.sidebar_link_to_filtered_list",
+      this.newSidebarLinkToFilteredList
+    );
+    this.model.set(
+      "user_option.sidebar_show_count_of_new_items",
+      this.newSidebarShowCountOfNewItems
     );
 
     this.model
@@ -54,22 +49,24 @@ export default class extends Controller {
         if (result.user.sidebar_tags) {
           this.model.set("sidebar_tags", result.user.sidebar_tags);
         }
-        this.model.set(
-          "sidebar_list_destination",
-          this.newSidebarListDestination
-        );
 
         this.saved = true;
       })
       .catch((error) => {
         this.model.set("sidebarCategoryIds", initialSidebarCategoryIds);
+        this.model.set(
+          "user_option.sidebar_link_to_filtered_list",
+          initialSidebarLinkToFilteredList
+        );
+        this.model.set(
+          "user_option.sidebar_show_count_of_new_items",
+          initialSidebarShowCountOfNewItems
+        );
+
         popupAjaxError(error);
       })
       .finally(() => {
         this.model.set("sidebar_tag_names", []);
-        if (initialSidebarListDestination !== this.newSidebarListDestination) {
-          window.location.reload();
-        }
       });
   }
 }

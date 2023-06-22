@@ -8,12 +8,13 @@ export default RestrictedUserRoute.extend({
     const props = {
       model: user,
       selectedSidebarCategories: Category.findByIds(user.sidebarCategoryIds),
+      newSidebarLinkToFilteredList: user.sidebarLinkToFilteredList,
+      newSidebarShowCountOfNewItems: user.sidebarShowCountOfNewItems,
     };
 
     if (this.siteSettings.tagging_enabled) {
       props.selectedSidebarTagNames = user.sidebarTagNames;
     }
-    props.newSidebarListDestination = user.sidebarListDestination;
 
     controller.setProperties(props);
   },
