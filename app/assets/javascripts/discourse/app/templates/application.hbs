@@ -65,7 +65,10 @@
       {{outlet}}
 
       <CardContainer />
-      <PluginOutlet @name="main-outlet-bottom" />
+      <PluginOutlet
+        @name="main-outlet-bottom"
+        @outletArgs={{hash showFooter=this.showFooter}}
+      />
     </div>
 
     <PluginOutlet @name="after-main-outlet" />
