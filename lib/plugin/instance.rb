@@ -521,6 +521,7 @@ class Plugin::Instance
   end
 
   def commit_url
+    return if commit_hash.blank?
     "#{git_repo.url}/commit/#{commit_hash}"
   end
 
