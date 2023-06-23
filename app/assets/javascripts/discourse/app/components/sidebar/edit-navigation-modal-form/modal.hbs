@@ -32,6 +32,16 @@
           autofocus="true"
         />
       </div>
+
+      <div class="sidebar__edit-navigation-modal-form__filter-dropdown-wrapper">
+        <DropdownSelectBox
+          @class="sidebar__edit-navigation-modal-form__filter-dropdown"
+          @value={{this.filterDropdownValue}}
+          @content={{this.filterDropdownContent}}
+          @onChange={{this.onFilterDropdownChange}}
+          @options={{hash showCaret=true}}
+        />
+      </div>
     </div>
 
     {{yield}}

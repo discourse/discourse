@@ -60,6 +60,12 @@ module PageObjects
 
         self
       end
+
+      def has_checkbox?(category, disabled: false)
+        has_selector?(
+          ".sidebar-categories-form-modal .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input#{disabled ? "[disabled]" : ""}",
+        )
+      end
     end
   end
 end

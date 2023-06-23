@@ -9,6 +9,27 @@
     margin-bottom: 1em;
     width: 100%;
 
+    .sidebar__edit-navigation-modal-form__filter-dropdown {
+      margin-left: 0.5em;
+
+      .select-kit-header {
+        background: var(--secondary);
+        color: var(--primary);
+        border: 1px solid var(--primary-low-mid);
+        font-size: var(--font-0);
+
+        &:hover,
+        &:focus {
+          background: var(--secondary);
+          color: var(--primary);
+
+          .d-icon {
+            color: var(--primary);
+          }
+        }
+      }
+    }
+
     .sidebar__edit-navigation-modal-form__filter-input {
       display: flex;
       flex-direction: row;

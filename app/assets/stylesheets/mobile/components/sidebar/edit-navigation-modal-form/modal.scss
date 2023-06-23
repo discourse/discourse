@@ -2,4 +2,13 @@
   .modal-inner-container {
     width: 35em;
   }
+
+  .sidebar__edit-navigation-modal-form__filter {
+    flex-direction: column;
+
+    .sidebar__edit-navigation-modal-form__filter-dropdown {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
 }

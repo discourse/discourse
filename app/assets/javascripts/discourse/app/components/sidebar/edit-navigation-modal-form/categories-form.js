@@ -13,6 +13,9 @@ export default class extends Component {
   @service siteSettings;
 
   @tracked filter = "";
+  @tracked filteredCategoryIds;
+  @tracked onlySelected = false;
+  @tracked onlyUnselected = false;
 
   @tracked selectedSidebarCategoryIds = [
     ...this.currentUser.sidebar_category_ids,
@@ -44,37 +47,71 @@ export default class extends Component {
   }
 
   get filteredCategoriesGroupings() {
-    if (this.filter.length === 0) {
-      return this.categoryGroupings;
-    } else {
-      return this.categoryGroupings.reduce((acc, categoryGrouping) => {
-        const filteredCategories = new Set();
+    const filteredCategoryIds = new Set();
 
-        categoryGrouping.forEach((category) => {
-          if (this.#matchesFilter(category, this.filter)) {
-            if (category.parentCategory?.parentCategory) {
-              filteredCategories.add(category.parentCategory.parentCategory);
-            }
+    const groupings = this.categoryGroupings.reduce((acc, categoryGrouping) => {
+      const filteredCategories = new Set();
 
-            if (category.parentCategory) {
-              filteredCategories.add(category.parentCategory);
-            }
-
-            filteredCategories.add(category);
+      const addCategory = (category) => {
+        if (this.#matchesFilter(category)) {
+          if (category.parentCategory?.parentCategory) {
+            filteredCategories.add(category.parentCategory.parentCategory);
           }
-        });
 
-        if (filteredCategories.size > 0) {
-          acc.push(Array.from(filteredCategories));
+          if (category.parentCategory) {
+            filteredCategories.add(category.parentCategory);
+          }
+
+          filteredCategoryIds.add(category.id);
+          filteredCategories.add(category);
         }
+      };
 
-        return acc;
-      }, []);
-    }
+      categoryGrouping.forEach((category) => {
+        if (this.onlySelected) {
+          if (this.selectedSidebarCategoryIds.includes(category.id)) {
+            addCategory(category);
+          }
+        } else if (this.onlyUnselected) {
+          if (!this.selectedSidebarCategoryIds.includes(category.id)) {
+            addCategory(category);
+          }
+        } else {
+          addCategory(category);
+        }
+      });
+
+      if (filteredCategories.size > 0) {
+        acc.push(Array.from(filteredCategories));
+      }
+
+      return acc;
+    }, []);
+
+    this.filteredCategoryIds = Array.from(filteredCategoryIds);
+    return groupings;
   }
 
-  #matchesFilter(category, filter) {
-    return category.nameLower.includes(filter);
+  #matchesFilter(category) {
+    return this.filter.length === 0 || category.nameLower.includes(this.filter);
+  }
+
+  @action
+  resetFilter() {
+    this.onlySelected = false;
+    this.onlyUnselected = false;
+  }
+
+  @action
+  filterSelected() {
+    this.onlySelected = true;
+    this.onlyUnselected = false;
+  }
+
+  @action
+  filterUnselected() {
+    this.onlySelected = false;
+    this.onlyUnselected = true;
   }
 
   @action
