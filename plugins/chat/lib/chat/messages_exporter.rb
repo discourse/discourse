@@ -8,9 +8,9 @@ module Chat
       Chat::Message
         .unscoped
         .where(created_at: 6.months.ago..Time.current)
-        .joins(:chat_channel)
-        .joins(:user)
-        .joins("INNER JOIN users last_editors ON chat_messages.last_editor_id = last_editors.id")
+        .includes(:chat_channel)
+        .includes(:user)
+        .includes(:last_editor)
         .limit(LIMIT)
         .find_each do |chat_message|
           yield(
