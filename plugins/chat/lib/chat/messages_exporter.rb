@@ -11,7 +11,6 @@ module Chat
         .includes(:chat_channel)
         .includes(:user)
         .includes(:last_editor)
-        .order(:created_at)
         .limit(LIMIT)
         .find_each do |chat_message|
           yield(
