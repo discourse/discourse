@@ -13,21 +13,25 @@ module Chat
         .joins("INNER JOIN users last_editors ON chat_messages.last_editor_id = last_editors.id")
         .order(:created_at)
         .limit(LIMIT)
-        .pluck(
-          "chat_messages.id",
-          "chat_channels.id",
-          "chat_channels.name",
-          "users.id",
-          "users.username",
-          "chat_messages.message",
-          "chat_messages.cooked",
-          "chat_messages.created_at",
-          "chat_messages.updated_at",
-          "chat_messages.deleted_at",
-          "chat_messages.in_reply_to_id",
-          "last_editors.id",
-          "last_editors.username",
-        )
+        .find_each do |chat_message|
+          yield(
+            [
+              chat_message.id,
+              chat_message.chat_channel.id,
+              chat_message.chat_channel.name,
+              chat_message.user.id,
+              chat_message.user.username,
+              chat_message.message,
+              chat_message.cooked,
+              chat_message.created_at,
+              chat_message.updated_at,
+              chat_message.deleted_at,
+              chat_message.in_reply_to&.id,
+              chat_message.last_editor&.id,
+              chat_message.last_editor&.username,
+            ]
+          )
+        end
     end
 
     def get_header(entity)
