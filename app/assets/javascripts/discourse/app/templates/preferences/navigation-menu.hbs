@@ -1,4 +1,7 @@
-<div class="control-group preferences-navigation-menu-categories">
+<div
+  class="control-group preferences-navigation-menu-categories"
+  data-setting-name="user-navigation-menu-categories"
+>
   <legend class="control-label">{{i18n
       "user.experimental_sidebar.categories_section"
     }}</legend>
@@ -20,7 +23,10 @@
 </div>
 
 {{#if this.model.display_sidebar_tags}}
-  <div class="control-group preferences-navigation-menu-tags">
+  <div
+    class="control-group preferences-navigation-menu-tags"
+    data-setting-name="user-navigation-menu-tags"
+  >
     <legend class="control-label">{{i18n
         "user.experimental_sidebar.tags_section"
       }}</legend>
@@ -41,7 +47,10 @@
   </div>
 {{/if}}
 
-<div class="control-group preferences-navigation-menu-navigation">
+<div
+  class="control-group preferences-navigation-menu-navigation"
+  data-setting-name="user-navigation-menu-navigation"
+>
   <legend class="control-label">{{i18n
       "user.experimental_sidebar.navigation_section"
     }}</legend>
