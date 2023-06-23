@@ -2094,7 +2094,15 @@ RSpec.describe TopicQuery do
   end
 
   describe "precedence of categories and tag setting" do
-    fab!(:watched_category) { Fabricate(:category) }
+    fab!(:watched_category) do 
+      Fabricate(:category).tap do |category|
+        CategoryUser.create!(
+          user: user,
+          category: category,
+          notification_level: CategoryUser.notification_levels[:watching],
+        )
+      end
+    end
     fab!(:muted_category) { Fabricate(:category) }
     fab!(:watched_tag) { Fabricate(:tag) }
     fab!(:muted_tag) { Fabricate(:tag) }
