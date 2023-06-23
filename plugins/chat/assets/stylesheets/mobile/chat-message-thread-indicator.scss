@@ -15,6 +15,7 @@
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    margin-top: 0.5rem;
   }
   &__replies-count {
     grid-area: replies;
