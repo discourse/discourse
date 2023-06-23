@@ -6,7 +6,7 @@ export default class DismissNew extends Component {
   @service modal;
 
   @action
-  closeModal() {
+  dismissed() {
     this.args.model.dismissCallback();
     this.modal.close();
   }
