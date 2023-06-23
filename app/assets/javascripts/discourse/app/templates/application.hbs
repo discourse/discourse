@@ -44,6 +44,8 @@
       {{/if}}
     </div>
 
+    <PluginOutlet @name="before-main-outlet" @connectorTagName="div" />
+
     <div id="main-outlet">
       <PluginOutlet @name="above-main-container" @connectorTagName="div" />
       <div class="container" id="main-container">
@@ -64,6 +66,9 @@
 
       <CardContainer />
     </div>
+
+    <PluginOutlet @name="after-main-outlet" @connectorTagName="div" />
+
   </div>
 
   <PluginOutlet
