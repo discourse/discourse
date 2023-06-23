@@ -13,27 +13,29 @@ export default class NetworkConnectivity extends Service {
     this.setConnectivity(navigator.onLine);
 
     window.addEventListener("offline", () => {
-      this.handleConnectivityChangeEvent(false);
+      this.setConnectivity(false);
     });
 
-    window.addEventListener("online", () => {
-      this.handleConnectivityChangeEvent(true);
-    });
+    window.addEventListener(
+      "online",
+      this.pingServerAndSetConnectivity.bind(this)
+    );
+
+    window.addEventListener("visibilitychange", this.onFocus.bind(this));
   }
 
-  handleConnectivityChangeEvent(connected) {
-    if (connected) {
-      // Make a super cheap request to the server. If we get a response, we are connected!
-      return ajax("/srv/status", { dataType: "text" })
-        .then((response) => {
-          this.setConnectivity(response === "ok");
-        })
-        .catch(() => {
-          this.setConnectivity(false);
-        });
-    } else {
-      this.setConnectivity(false);
+  onFocus() {
+    if (!this.connected && document.visibilityState === "visible") {
+      this.pingServerAndSetConnectivity();
     }
+  }
+
+  async pingServerAndSetConnectivity() {
+    let response = await ajax("/srv/status", { dataType: "text" }).catch(() => {
+      this.setConnectivity(false);
+    });
+
+    this.setConnectivity(response === "ok");
   }
 
   setConnectivity(connected) {
