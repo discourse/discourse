@@ -699,7 +699,7 @@ en:
 
       > If you need help or have a suggestion, feel free to ask in [#feedback](%{base_path}/c/site-feedback) or [contact the admins](%{base_path}/about).
 
-  admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
+  admin_quick_start_title: "Admin Guide: Getting Started"
 
   category:
     topic_prefix: "About the %{category} category"

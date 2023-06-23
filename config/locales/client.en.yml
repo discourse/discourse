@@ -211,7 +211,9 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode: "Bootstrap mode"
+    bootstrap_mode: "Getting started"
+    bootstrap_mode_title: "Welcome to your new site!"
+    bootstrap_mode_description: "Click the button and read how you can customize your site!"
 
     themes:
       default_description: "Default"

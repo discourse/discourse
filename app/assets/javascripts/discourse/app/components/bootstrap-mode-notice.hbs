@@ -1,3 +1,7 @@
 <a class="btn btn-default bootstrap-mode" href={{this.href}}>
   {{i18n "bootstrap_mode"}}
+  <DTooltip @theme="user-tips" @arrow={{true}}>
+    <h3>{{i18n "bootstrap_mode_title"}}</h3>
+    {{i18n "bootstrap_mode_description"}}
+  </DTooltip>
 </a>
