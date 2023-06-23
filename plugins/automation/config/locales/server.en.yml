@@ -95,6 +95,8 @@ en:
         doc: When triggering `suspend_user_by_email` with an api call, the endpoint expects a valid `email` to be present in the params sent. `reasons` and `suspend_until (ISO 8601 format)` can also be used to override default fields values.
       user_global_notice_with_stalled_topic:
         doc: When triggered through stalled topic, the topic owner will receive the global notice.
+      user_global_notice_with_first_accepted_solution:
+        doc: When triggered through first accepted solution, the solution author will receive the global notice.
       send_pms_with_api_call:
         doc: When using `send pms` script with `api call` trigger, the `usernames` param of your request will be used to fill the receivers list.
       topic_required_words:

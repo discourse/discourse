@@ -19,6 +19,7 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::USER_GLOBAL
   version 1
 
   triggerables [:stalled_topic]
+  triggerables [:first_accepted_solution] if defined?(DiscourseSolved)
 
   placeholder :username
 
@@ -28,6 +29,10 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::USER_GLOBAL
     if context["kind"] == DiscourseAutomation::Triggerable::STALLED_TOPIC
       user = context["topic"].user
       placeholders["username"] = user.username
+    elsif context["kind"] == "first_accepted_solution"
+      username = context["usernames"][0]
+      user = User.find_by(username: username)
+      placeholders["username"] = username
     end
 
     notice = utils.apply_placeholders(fields.dig("notice", "value") || "", placeholders)
