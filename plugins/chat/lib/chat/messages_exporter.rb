@@ -11,7 +11,6 @@ module Chat
         .joins(:chat_channel)
         .joins(:user)
         .joins("INNER JOIN users last_editors ON chat_messages.last_editor_id = last_editors.id")
-        .order(:created_at)
         .limit(LIMIT)
         .find_each do |chat_message|
           yield(
