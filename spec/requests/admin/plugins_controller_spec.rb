@@ -15,21 +15,6 @@ RSpec.describe Admin::PluginsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body.has_key?("plugins")).to eq(true)
       end
-
-      it "returns the plugin metadata" do
-        fixtures = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-        Plugin::Instance.stubs(:find_all).returns(fixtures)
-        Discourse.activate_plugins!
-
-        get "/admin/plugins.json"
-
-        expect(response.status).to eq(200)
-
-        plugin = response.parsed_body["plugins"][0]
-        expect(plugin.keys).to eq(
-          %w[id name about version enabled has_settings is_official commit_hash commit_url],
-        )
-      end
     end
 
     context "when logged in as a moderator" do

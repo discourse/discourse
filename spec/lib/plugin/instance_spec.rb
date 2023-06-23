@@ -11,6 +11,13 @@ RSpec.describe Plugin::Instance do
 
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
+
+      git_repo = plugin.git_repo
+      plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+      plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
+
+      expect(plugin.commit_hash).to eq("123456")
+      expect(plugin.commit_url).to eq("http://github.com/discourse/discourse-plugin/commit/123456")
     end
 
     it "does not blow up on missing directory" do
