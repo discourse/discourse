@@ -136,7 +136,7 @@
   &:not(.history-modal) {
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
         .poll-breakdown
-      ):not(.sidebar-categories-form-modal):not(.sidebar-tags-form-modal) {
+      ):not(.sidebar__edit-navigation-modal-form__body) {
       max-height: 80vh !important;
       @media screen and (max-height: 500px) {
         max-height: 65vh !important;

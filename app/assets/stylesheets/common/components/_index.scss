@@ -28,8 +28,9 @@
 @import "relative-time-picker";
 @import "share-and-invite-modal";
 @import "download-calendar";
-@import "sidebar-categories-form";
-@import "sidebar-tags-form";
+@import "sidebar/edit-navigation-modal-form/categories-form";
+@import "sidebar/edit-navigation-modal-form/modal";
+@import "sidebar/edit-navigation-modal-form/tags-form";
 @import "svg";
 @import "tap-tile";
 @import "time-input";
