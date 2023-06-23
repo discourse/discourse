@@ -91,17 +91,16 @@ module PageObjects
         has_section_link?(I18n.t("js.sidebar.all_tags"))
       end
 
-      def has_tags_section_links?(tags)
-        section_selector = ".sidebar-section[data-section-name='tags']"
+      def has_tag_section_links?(tags)
         tag_names = tags.map(&:name)
 
-        has_css?(
-          "#{section_selector} .sidebar-section-link-wrapper[data-tag-name]",
-          count: tag_names.length,
-        ) &&
-          all("#{section_selector} .sidebar-section-link-wrapper[data-tag-name]").all? do |row|
-            tag_names.include?(row["data-tag-name"].to_s)
-          end
+        tag_section_links =
+          all(
+            ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]",
+            count: tag_names.length,
+          )
+
+        expect(tag_section_links.map(&:text)).to eq(tag_names)
       end
 
       def has_no_section?(name)
