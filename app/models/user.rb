@@ -811,17 +811,9 @@ class User < ActiveRecord::Base
   TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
 
   def read_first_notification?
-    if (
-         trust_level > TrustLevel[1] ||
-           (
-             first_seen_at.present? &&
-               first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago
-           ) || user_option.skip_new_user_tips
-       )
-      return true
-    end
-
-    self.seen_notification_id == 0 ? false : true
+    (
+      first_seen_at.present? && first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago
+    ) || user_option.skip_new_user_tips || self.seen_notification_id != 0
   end
 
   def publish_notifications_state
