@@ -31,6 +31,38 @@ module PageObjects
         click_button(I18n.t("js.sidebar.edit_navigation_modal_form.deselect_button_text"))
         self
       end
+
+      def filter_by_selected
+        dropdown_filter.select_row_by_name(
+          I18n.t("js.sidebar.edit_navigation_modal_form.filter_dropdown.selected"),
+        )
+
+        self
+      end
+
+      def filter_by_unselected
+        dropdown_filter.select_row_by_name(
+          I18n.t("js.sidebar.edit_navigation_modal_form.filter_dropdown.unselected"),
+        )
+
+        self
+      end
+
+      def filter_by_all
+        dropdown_filter.select_row_by_name(
+          I18n.t("js.sidebar.edit_navigation_modal_form.filter_dropdown.all"),
+        )
+
+        self
+      end
+
+      private
+
+      def dropdown_filter
+        PageObjects::Components::SelectKit.new(
+          ".sidebar__edit-navigation-modal-form__filter-dropdown",
+        )
+      end
     end
   end
 end

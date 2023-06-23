@@ -12,6 +12,9 @@
     "sidebar.categories_form_modal.filter_placeholder"
   }}
   @onFilterInput={{this.onFilterInput}}
+  @resetFilter={{this.resetFilter}}
+  @filterSelected={{this.filterSelected}}
+  @filterUnselected={{this.filterUnselected}}
 >
   <form class="sidebar-categories-form">
     {{#if (gt this.filteredCategoriesGroupings.length 0)}}
@@ -50,6 +53,9 @@
                   this.selectedSidebarCategoryIds
                   category.id
                 }}
+                disabled={{(not
+                  (includes this.filteredCategoryIds category.id)
+                )}}
                 {{on "click" (action "toggleCategory" category.id)}}
               />
             </div>

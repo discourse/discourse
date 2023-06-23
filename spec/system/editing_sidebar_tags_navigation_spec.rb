@@ -118,4 +118,30 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     expect(sidebar).to have_section_link(tag2.name)
     expect(sidebar).to have_section_link(tag3.name)
   end
+
+  it "allows a user to filter the tag in the modal by selection" do
+    Fabricate(:tag_sidebar_section_link, linkable: tag1, user: user)
+    Fabricate(:tag_sidebar_section_link, linkable: tag2, user: user)
+
+    visit "/latest"
+
+    expect(sidebar).to have_tags_section
+
+    modal = sidebar.click_edit_tags_button
+    modal.filter_by_selected
+
+    expect(modal).to have_tag_checkboxes([tag1, tag2])
+
+    modal.filter("tag2")
+
+    expect(modal).to have_tag_checkboxes([tag2])
+
+    modal.filter("").filter_by_unselected
+
+    expect(modal).to have_tag_checkboxes([tag3])
+
+    modal.filter_by_all
+
+    expect(modal).to have_tag_checkboxes([tag1, tag2, tag3])
+  end
 end

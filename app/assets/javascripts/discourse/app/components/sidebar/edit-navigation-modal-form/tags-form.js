@@ -13,6 +13,8 @@ export default class extends Component {
   @service store;
 
   @tracked filter = "";
+  @tracked onlySelected = false;
+  @tracked onlyUnSelected = false;
   @tracked tags = [];
   @tracked tagsLoading = true;
   @tracked selectedTags = [...this.currentUser.sidebarTagNames];
@@ -40,17 +42,45 @@ export default class extends Component {
   }
 
   get filteredTags() {
-    if (this.filter.length === 0) {
-      return this.tags;
-    } else {
-      return this.tags.reduce((acc, tag) => {
-        if (tag.name.toLowerCase().includes(this.filter)) {
+    return this.tags.reduce((acc, tag) => {
+      if (this.onlySelected) {
+        if (this.selectedTags.includes(tag.name) && this.#matchesFilter(tag)) {
           acc.push(tag);
         }
+      } else if (this.onlyUnselected) {
+        if (!this.selectedTags.includes(tag.name) && this.#matchesFilter(tag)) {
+          acc.push(tag);
+        }
+      } else if (this.#matchesFilter(tag)) {
+        acc.push(tag);
+      }
 
-        return acc;
-      }, []);
-    }
+      return acc;
+    }, []);
+  }
+
+  #matchesFilter(tag) {
+    return (
+      this.filter.length === 0 || tag.name.toLowerCase().includes(this.filter)
+    );
+  }
+
+  @action
+  resetFilter() {
+    this.onlySelected = false;
+    this.onlyUnselected = false;
+  }
+
+  @action
+  filterSelected() {
+    this.onlySelected = true;
+    this.onlyUnselected = false;
+  }
+
+  @action
+  filterUnselected() {
+    this.onlySelected = false;
+    this.onlyUnselected = true;
   }
 
   @action

@@ -10,6 +10,9 @@
   @deselectAllText={{i18n "sidebar.tags_form_modal.subtitle.text"}}
   @inputFilterPlaceholder={{i18n "sidebar.tags_form_modal.filter_placeholder"}}
   @onFilterInput={{this.onFilterInput}}
+  @resetFilter={{this.resetFilter}}
+  @filterSelected={{this.filterSelected}}
+  @filterUnselected={{this.filterUnselected}}
 >
   <form class="sidebar-tags-form">
     {{#if this.tagsLoading}}

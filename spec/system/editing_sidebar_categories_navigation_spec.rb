@@ -135,6 +135,52 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     expect(modal).to have_no_categories
   end
 
+  it "allows a user to filter the categories in the modal by selection" do
+    Fabricate(:category_sidebar_section_link, linkable: category_subcategory, user: user)
+    Fabricate(:category_sidebar_section_link, linkable: category2, user: user)
+
+    visit "/latest"
+
+    expect(sidebar).to have_categories_section
+
+    modal = sidebar.click_edit_categories_button
+    modal.filter_by_selected
+
+    expect(modal).to have_categories([category, category_subcategory, category2])
+    expect(modal).to have_checkbox(category, disabled: true)
+    expect(modal).to have_checkbox(category_subcategory)
+    expect(modal).to have_checkbox(category2)
+
+    modal.filter("category subcategory")
+
+    expect(modal).to have_categories([category, category_subcategory])
+    expect(modal).to have_checkbox(category, disabled: true)
+    expect(modal).to have_checkbox(category_subcategory)
+
+    modal.filter("").filter_by_unselected
+
+    expect(modal).to have_categories(
+      [category, category_subcategory2, category2, category2_subcategory],
+    )
+
+    expect(modal).to have_checkbox(category)
+    expect(modal).to have_checkbox(category_subcategory2)
+    expect(modal).to have_checkbox(category2, disabled: true)
+    expect(modal).to have_checkbox(category2_subcategory)
+
+    modal.filter_by_all
+
+    expect(modal).to have_categories(
+      [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
+    )
+
+    expect(modal).to have_checkbox(category)
+    expect(modal).to have_checkbox(category_subcategory)
+    expect(modal).to have_checkbox(category_subcategory2)
+    expect(modal).to have_checkbox(category2)
+    expect(modal).to have_checkbox(category2_subcategory)
+  end
+
   describe "when max_category_nesting has been set to 3" do
     before_all { SiteSetting.max_category_nesting = 3 }
 
