@@ -28,8 +28,9 @@ class GitRepo
     @memoize[cmd] ||= begin
       cmd = "git #{cmd}".split(" ")
       Discourse::Utils.execute_command(*cmd, chdir: path).strip
+    rescue => e
+      Discourse.warn_exception(e, message: "Error running git command: #{cmd} in #{path}")
+      nil
     end
-  rescue => e
-    Discourse.warn_exception(e, message: "Error running git command: #{cmd} in #{path}")
   end
 end
