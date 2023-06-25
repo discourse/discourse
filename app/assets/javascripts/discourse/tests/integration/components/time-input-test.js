@@ -49,4 +49,26 @@ module("Integration | Component | time-input", function (hooks) {
     await this.subject.selectRowByIndex(3);
     assert.strictEqual(this.subject.header().name(), "00:45");
   });
+
+  test("dropdown values", async function (assert) {
+    this.setProperties({
+      hours: "22",
+      minutes: "19",
+      relativeDate: moment("2032-01-01 20:40")
+    });
+    this.set("onChange", setTime);
+
+    await render(
+      hbs`<TimeInput @hours={{this.hours}} @minutes={{this.minutes}} @relativeDate={{this.relativeDate}}/>`
+    );
+
+    await this.subject.expand();
+    const rows = this.subject.rows();
+    assert.deepEqual(
+      Array.from(rows).map((r) => {
+        return parseInt(r.dataset.value);
+      }),
+      [1240,1255,1270,1285,1300,1330,1339,1360,1390,1420]
+    );
+  });
 });
