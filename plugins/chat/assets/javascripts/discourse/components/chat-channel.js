@@ -213,6 +213,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            storedThread.tracking.unreadCount =
+              result.tracking.thread_tracking[thread.id].unread_count;
+            storedThread.tracking.mentionCount =
+              result.tracking.thread_tracking[thread.id].mention_count;
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -323,6 +329,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            storedThread.tracking.unreadCount =
+              result.tracking.thread_tracking[thread.id].unread_count;
+            storedThread.tracking.mentionCount =
+              result.tracking.thread_tracking[thread.id].mention_count;
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id

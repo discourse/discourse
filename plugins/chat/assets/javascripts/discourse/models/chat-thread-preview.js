@@ -21,8 +21,9 @@ export default class ChatThreadPreview {
 
     this.replyCount = args.reply_count || args.replyCount || 0;
     this.lastReplyId = args.last_reply_id || args.lastReplyId;
-    this.lastReplyCreatedAt =
-      args.last_reply_created_at || args.lastReplyCreatedAt;
+    this.lastReplyCreatedAt = new Date(
+      args.last_reply_created_at || args.lastReplyCreatedAt
+    );
     this.lastReplyExcerpt = args.last_reply_excerpt || args.lastReplyExcerpt;
     this.lastReplyUser = args.last_reply_user || args.lastReplyUser;
     this.participantCount =

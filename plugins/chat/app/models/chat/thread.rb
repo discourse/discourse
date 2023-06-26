@@ -36,7 +36,7 @@ module Chat
     # a has_one relationship on the model, but that has some awkward behaviour
     # and still caused N1s, and ordering was not applied in complex AR queries.
     def last_reply
-      @last_reply ||= self.chat_messages.order("created_at DESC, id DESC").first
+      @last_reply ||= self.chat_messages.reorder("created_at DESC, id DESC").first
     end
 
     def last_reply=(message)
