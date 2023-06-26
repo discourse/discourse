@@ -6,11 +6,11 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 
 @disableImplicitInjections
 export default class DModal extends Component {
   @service appEvents;
+  @service modal;
 
   @tracked wrapperElement;
   @tracked modalBodyData = {};
@@ -147,7 +147,7 @@ export default class DModal extends Component {
     }
 
     if (data.fixed) {
-      getOwner(this).lookup("controller:modal").hidden = false;
+      this.modal.hidden = false;
     }
 
     this.modalBodyData = data;
@@ -206,9 +206,11 @@ export default class DModal extends Component {
         // attempt to focus the first of the focusable elements or just the modal-body
         // to make it possible to scroll with arrow down/up
         (
+          autofocusedElement ||
           innerContainer.querySelector(
             focusableElements + ", button:not(.modal-close)"
-          ) || innerContainer.querySelector(".modal-body")
+          ) ||
+          innerContainer.querySelector(".modal-body")
         )?.focus();
       }
 

@@ -16,14 +16,23 @@ module Chat
                :bookmark,
                :available_flags,
                :thread_id,
-               :thread_reply_count,
-               :thread_title,
-               :chat_channel_id
+               :chat_channel_id,
+               :mentioned_users
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
     has_one :chat_webhook_event, serializer: Chat::WebhookEventSerializer, embed: :objects
     has_one :in_reply_to, serializer: Chat::InReplyToSerializer, embed: :objects
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
+
+    def mentioned_users
+      object
+        .chat_mentions
+        .map(&:user)
+        .compact
+        .sort_by(&:id)
+        .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+        .as_json
+    end
 
     def channel
       @channel ||= @options.dig(:chat_channel) || object.chat_channel
@@ -34,7 +43,7 @@ module Chat
     end
 
     def excerpt
-      WordWatcher.censor(object.excerpt)
+      object.censored_excerpt
     end
 
     def reactions
@@ -160,18 +169,6 @@ module Chat
 
     def include_thread_id?
       include_threading_data?
-    end
-
-    def include_thread_reply_count?
-      include_threading_data? && object.thread_id.present?
-    end
-
-    def thread_reply_count
-      object.thread&.replies_count_cache || 0
-    end
-
-    def thread_title
-      object.thread&.title
     end
   end
 end

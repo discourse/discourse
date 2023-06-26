@@ -3,13 +3,14 @@
 require "rails_helper"
 
 describe Chat::MessageSerializer do
+  subject(:serializer) { described_class.new(message_1, scope: guardian, root: nil) }
+
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:message_poster) { Fabricate(:user) }
   fab!(:message_1) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
   fab!(:guardian_user) { Fabricate(:user) }
-  let(:guardian) { Guardian.new(guardian_user) }
 
-  subject { described_class.new(message_1, scope: guardian, root: nil) }
+  let(:guardian) { Guardian.new(guardian_user) }
 
   describe "#reactions" do
     fab!(:custom_emoji) { CustomEmoji.create!(name: "trout", upload: Fabricate(:upload)) }
@@ -21,13 +22,13 @@ describe Chat::MessageSerializer do
       it "doesn’t return the reaction" do
         Emoji.clear_cache
 
-        trout_reaction = subject.as_json[:reactions].find { |r| r[:emoji] == "trout" }
+        trout_reaction = serializer.as_json[:reactions].find { |r| r[:emoji] == "trout" }
         expect(trout_reaction).to be_present
 
         custom_emoji.destroy!
         Emoji.clear_cache
 
-        trout_reaction = subject.as_json[:reactions].find { |r| r[:emoji] == "trout" }
+        trout_reaction = serializer.as_json[:reactions].find { |r| r[:emoji] == "trout" }
         expect(trout_reaction).to_not be_present
       end
     end
@@ -49,7 +50,7 @@ describe Chat::MessageSerializer do
         message_1.user.destroy!
         message_1.reload
 
-        expect(subject.as_json[:user][:username]).to eq(I18n.t("chat.deleted_chat_username"))
+        expect(serializer.as_json[:user][:username]).to eq(I18n.t("chat.deleted_chat_username"))
       end
     end
   end
@@ -60,14 +61,14 @@ describe Chat::MessageSerializer do
         message_1.user.destroy!
         message_1.reload
 
-        expect(subject.as_json[:deleted_at]).to(be_within(1.second).of(Time.zone.now))
+        expect(serializer.as_json[:deleted_at]).to(be_within(1.second).of(Time.zone.now))
       end
 
       it "is marked as deleted by system user" do
         message_1.user.destroy!
         message_1.reload
 
-        expect(subject.as_json[:deleted_by_id]).to eq(Discourse.system_user.id)
+        expect(serializer.as_json[:deleted_by_id]).to eq(Discourse.system_user.id)
       end
     end
   end
@@ -209,6 +210,26 @@ describe Chat::MessageSerializer do
     end
   end
 
+  describe "#mentioned_users" do
+    it "doesn't fail if mentioned user was deleted" do
+      mentioned_user = Fabricate(:user)
+      message =
+        Fabricate(
+          :chat_message,
+          message:
+            "here should be a mention, but since we're fabricating objects it doesn't matter",
+        )
+      Fabricate(:chat_mention, chat_message: message, user: mentioned_user)
+
+      mentioned_user.destroy!
+      message.reload
+      serializer = described_class.new(message, scope: guardian, root: nil)
+
+      expect { serializer.as_json }.not_to raise_error
+      expect(serializer.as_json[:mentioned_users]).to be_empty
+    end
+  end
+
   describe "threading data" do
     before { message_1.update!(thread: Fabricate(:chat_thread, channel: chat_channel)) }
 
@@ -218,7 +239,6 @@ describe Chat::MessageSerializer do
       it "does not include thread data" do
         serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
         expect(serialized).not_to have_key(:thread_id)
-        expect(serialized).not_to have_key(:thread_reply_count)
       end
     end
 
@@ -231,7 +251,6 @@ describe Chat::MessageSerializer do
       it "does not include thread data" do
         serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
         expect(serialized).not_to have_key(:thread_id)
-        expect(serialized).not_to have_key(:thread_reply_count)
       end
     end
 
@@ -244,7 +263,6 @@ describe Chat::MessageSerializer do
       it "does include thread data" do
         serialized = described_class.new(message_1, scope: guardian, root: nil).as_json
         expect(serialized).to have_key(:thread_id)
-        expect(serialized).to have_key(:thread_reply_count)
       end
     end
   end

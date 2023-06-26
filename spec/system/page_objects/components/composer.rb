@@ -30,6 +30,11 @@ module PageObjects
         self
       end
 
+      def fill_form_template_field(field, content)
+        form_template_field(field).fill_in(with: content)
+        self
+      end
+
       def type_content(content)
         composer_input.send_keys(content)
         self
@@ -72,6 +77,11 @@ module PageObjects
         find(AUTOCOMPLETE_MENU)
       end
 
+      def switch_category(category_name)
+        find(".category-chooser").click
+        find(".category-row[data-name='#{category_name}']").click
+      end
+
       def has_emoji_autocomplete?
         has_css?(AUTOCOMPLETE_MENU)
       end
@@ -98,12 +108,70 @@ module PageObjects
         page.has_no_css?(emoji_preview_selector(emoji))
       end
 
+      COMPOSER_INPUT_SELECTOR = "#{COMPOSER_ID} .d-editor-input"
+
+      def has_no_composer_input?
+        page.has_no_css?(COMPOSER_INPUT_SELECTOR)
+      end
+
+      def has_composer_input?
+        page.has_css?(COMPOSER_INPUT_SELECTOR)
+      end
+
+      def has_composer_preview?
+        page.has_css?("#{COMPOSER_ID} .d-editor-preview-wrapper")
+      end
+
+      def has_no_composer_preview?
+        page.has_no_css?("#{COMPOSER_ID} .d-editor-preview-wrapper")
+      end
+
+      def has_composer_preview_toggle?
+        page.has_css?("#{COMPOSER_ID} .toggle-preview")
+      end
+
+      def has_no_composer_preview_toggle?
+        page.has_no_css?("#{COMPOSER_ID} .toggle-preview")
+      end
+
+      def has_form_template?
+        page.has_css?(".form-template-form__wrapper")
+      end
+
+      def has_form_template_field?(field)
+        page.has_css?(".form-template-field[data-field-type='#{field}']")
+      end
+
+      def has_form_template_field_required_indicator?(field)
+        page.has_css?(
+          ".form-template-field[data-field-type='#{field}'] .form-template-field__required-indicator",
+        )
+      end
+
+      FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
+
+      def has_no_form_template_chooser?
+        page.has_no_css?(FORM_TEMPLATE_CHOOSER_SELECTOR)
+      end
+
+      def has_form_template_chooser?
+        page.has_css?(FORM_TEMPLATE_CHOOSER_SELECTOR)
+      end
+
+      def has_form_template_field_error?(error)
+        page.has_css?(".form-template-field__error", text: error)
+      end
+
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
       end
 
       def composer_popup
         find("#{COMPOSER_ID} .composer-popup")
+      end
+
+      def form_template_field(field)
+        find(".form-template-field[data-field-type='#{field}']")
       end
 
       private

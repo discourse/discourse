@@ -18,6 +18,16 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import I18n from "I18n";
 
+const removedSecondaryActions = new Set();
+
+export function removeChatComposerSecondaryActions(actionIds) {
+  actionIds.forEach((id) => removedSecondaryActions.add(id));
+}
+
+export function resetRemovedChatComposerSecondaryActions() {
+  removedSecondaryActions.clear();
+}
+
 export default class ChatMessageInteractor {
   @service appEvents;
   @service dialog;
@@ -25,9 +35,9 @@ export default class ChatMessageInteractor {
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelComposer;
-  @service chatChannelThreadComposer;
+  @service chatThreadComposer;
   @service chatChannelPane;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
   @service chatApi;
   @service currentUser;
   @service site;
@@ -52,7 +62,7 @@ export default class ChatMessageInteractor {
 
   get pane() {
     return this.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadPane
+      ? this.chatThreadPane
       : this.chatChannelPane;
   }
 
@@ -112,7 +122,6 @@ export default class ChatMessageInteractor {
   get canFlagMessage() {
     return (
       this.currentUser?.id !== this.message?.user?.id &&
-      !this.message.channel?.isDirectMessageChannel &&
       this.message?.userFlagStatus === undefined &&
       this.message.channel?.canFlag &&
       !this.message?.chatWebhookEvent &&
@@ -143,11 +152,11 @@ export default class ChatMessageInteractor {
 
   get composer() {
     return this.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadComposer
+      ? this.chatThreadComposer
       : this.chatChannelComposer;
   }
 
-  get secondaryButtons() {
+  get secondaryActions() {
     const buttons = [];
 
     buttons.push({
@@ -204,7 +213,7 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons;
+    return buttons.reject((button) => removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {
@@ -354,7 +363,7 @@ export default class ChatMessageInteractor {
 
   @action
   edit() {
-    this.composer.editMessage(this.message);
+    this.composer.edit(this.message);
   }
 
   @action
@@ -377,7 +386,7 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  handleSecondaryButtons(id) {
+  handleSecondaryActions(id) {
     this[id](this.message);
   }
 }

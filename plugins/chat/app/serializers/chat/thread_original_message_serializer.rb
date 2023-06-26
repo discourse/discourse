@@ -2,8 +2,14 @@
 
 module Chat
   class ThreadOriginalMessageSerializer < Chat::MessageSerializer
+    has_one :user, serializer: BasicUserWithStatusSerializer, embed: :objects
+
     def excerpt
-      WordWatcher.censor(object.rich_excerpt(max_length: Chat::Thread::EXCERPT_LENGTH))
+      object.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH)
+    end
+
+    def include_available_flags?
+      false
     end
 
     def include_reactions?

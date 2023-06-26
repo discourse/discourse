@@ -1,0 +1,23 @@
+.form-template-field {
+  // TODO(@keegan): Remove after updating dropdown/multi-select to use select-kit
+  &__dropdown {
+    border: 1px solid var(--primary-medium);
+    border-radius: var(--d-input-border-radius);
+    padding: 0.5em 0.65em;
+    font-size: var(--font-0);
+  }
+
+  &__multi-select {
+    border: 1px solid var(--primary-medium);
+    border-radius: var(--d-input-border-radius);
+    padding: 0.5em 0.65em;
+    font-size: var(--font-0);
+  }
+  // END of what should be removed after updating dropdown/multi-select to use select-kit
+
+  &__required-indicator {
+    color: var(--danger);
+    margin-left: 0.5em;
+    font-size: var(--font-down-4);
+  }
+}

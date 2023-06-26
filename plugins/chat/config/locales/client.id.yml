@@ -34,9 +34,17 @@ id:
       create: "Buat"
       cancel: "Batal"
       cancel_reply: "Batalkan balasan"
+      chat_channels: "Kanal"
+      browse_all_channels: "Jelajahi semua kanal"
+      move_to_channel:
+        title: "Pindahkan pesan ke kanal"
+        confirm_move: "Pindahkan Pesan"
       channel_settings:
+        title: "Pengaturan kanal"
         edit: "Ubah"
         add: "Menambahkan"
+        close_channel: "Tutup kanal"
+        open_channel: "Buka kanal"
         join: "Gabung"
         leave: "Keluar"
       close: "Tutup"
@@ -49,6 +57,12 @@ id:
         all_new: "Semua Pesan Baru"
         never: "Tidak pernah"
       join: "Gabung"
+      summarization:
+        title: "Meringkas pesan"
+        description: "Pilih opsi di bawah untuk meringkas percakapan yang dikirim selama jangka waktu yang diinginkan."
+        summarize: "Meringkas"
+        since:
+          other: "%{count} jam terakhir"
       mention_warning:
         dismiss: "bubar"
       reply: "Balas"
@@ -56,6 +70,7 @@ id:
       bookmark_message: "Penandaan"
       bookmark_message_edit: "Edit Bookmark"
       save: "Simpan"
+      return_to_threads_list: "Kembali ke diskusi yang sedang berlangsung"
       sounds:
         none: "Tidak ada"
       channel_status:
@@ -105,8 +120,26 @@ id:
         objects: "Objek"
         flags: "Flags"
       thread:
+        title: "Judul"
+        default_title: "Utas"
         replies:
           other: "%{count} balasan"
+        original_message:
+          started_by: "Dimulai oleh"
+        settings: "Pengaturan"
+        last_reply: "balasan terakhir"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+          tracking:
+            title: "Pelacakan"
+            description: "Jumlah balasan baru untuk utas ini akan ditampilkan di daftar utas dan kanal. Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+        participants_other_count:
+          other: "+%{count} lainnya"
+      threads:
+        list: "Diskusi yang sedang berlangsung"
+        none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."
       draft_channel_screen:
         header: "Pesan Baru"
         cancel: "Batal"
@@ -116,3 +149,7 @@ id:
           fields:
             message:
               label: pesan
+    styleguide:
+      sections:
+        chat:
+          title: Obrolan

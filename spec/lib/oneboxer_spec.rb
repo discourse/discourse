@@ -94,7 +94,7 @@ RSpec.describe Oneboxer do
 
       onebox = preview(public_reply.url, user, public_category, public_topic)
       expect(onebox).not_to include(public_topic.title)
-      expect(onebox).to include(replier.avatar_template_url.sub("{size}", "40"))
+      expect(onebox).to include(replier.avatar_template_url.sub("{size}", "48"))
 
       expect(preview(public_hidden.url, user, public_category)).to match_html(
         link(public_hidden.url),
@@ -178,14 +178,43 @@ RSpec.describe Oneboxer do
       expect(preview("/u/#{user.username}")).to include("Thunderland")
     end
 
-    it "includes hashtag HTML and icons" do
+    it "includes hashtag HTML" do
       SiteSetting.enable_experimental_hashtag_autocomplete = true
       category = Fabricate(:category, slug: "random")
-      Fabricate(:tag, name: "bug")
+      tag = Fabricate(:tag, name: "bug")
       public_post = Fabricate(:post, raw: "This post has some hashtags, #random and #bug")
-      expect(preview(public_post.url).chomp).to include(<<~HTML.chomp)
-        <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="random"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg>#{category.name}</a> and <a class="hashtag-cooked" href="/tag/bug" data-type="tag" data-slug="bug"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg>bug</a>
-      HTML
+      preview =
+        Nokogiri::HTML5
+          .fragment(preview(public_post.url).chomp)
+          .css("blockquote")
+          .inner_html
+          .chomp
+          .strip
+      expect(preview).to include("This post has some hashtags")
+      expect(preview).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: category.url,
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
+      expect(preview).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: tag.url,
+          "data-type": "tag",
+          "data-slug": tag.name,
+          "data-id": tag.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
     end
   end
 
@@ -748,7 +777,7 @@ RSpec.describe Oneboxer do
 
       stub_request(
         :get,
-        "https://api.twitter.com/1.1/statuses/show.json?id=1428031057186627589&tweet_mode=extended",
+        "https://api.twitter.com/2/tweets/1428031057186627589?tweet.fields=id,author_id,text,created_at,entities,referenced_tweets,public_metrics&user.fields=id,name,username,profile_image_url&media.fields=type,height,width,variants,preview_image_url,url&expansions=attachments.media_keys,referenced_tweets.id.author_id",
       ).to_return(status: 429, body: "{}", headers: {})
 
       stub_request(:post, "https://api.twitter.com/oauth2/token").to_return(
@@ -788,7 +817,8 @@ RSpec.describe Oneboxer do
     it "does keeps SVGs valid" do
       raw = "Onebox\n\nhttps://example.com"
       cooked = PrettyText.cook(raw)
-      cooked = Oneboxer.apply(Loofah.fragment(cooked)) { "<div><svg><path></path></svg></div>" }
+      cooked =
+        Oneboxer.apply(Loofah.html5_fragment(cooked)) { "<div><svg><path></path></svg></div>" }
       doc = Nokogiri::HTML5.fragment(cooked.to_html)
       expect(doc.to_html).to match_html <<~HTML
         <p>Onebox</p>

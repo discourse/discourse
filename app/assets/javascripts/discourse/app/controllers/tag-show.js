@@ -2,6 +2,7 @@ import DiscoverySortableController from "discourse/controllers/discovery-sortabl
 import { inject as controller } from "@ember/controller";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import DismissTopics from "discourse/mixins/dismiss-topics";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import I18n from "I18n";
 import NavItem from "discourse/models/nav-item";
@@ -13,6 +14,7 @@ import { inject as service } from "@ember/service";
 
 export default DiscoverySortableController.extend(
   BulkTopicSelection,
+  DismissTopics,
   FilterModeMixin,
   {
     application: controller(),
@@ -91,8 +93,7 @@ export default DiscoverySortableController.extend(
       return this._isFilterPage(filter, "new") && topicsLength > 0;
     },
 
-    @action
-    resetNew() {
+    callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
       const tracked =
         (this.router.currentRoute.queryParams["f"] ||
           this.router.currentRoute.queryParams["filter"]) === "tracked";
@@ -103,9 +104,15 @@ export default DiscoverySortableController.extend(
         tracked,
         tag: this.tag,
         topicIds,
-      }).then(() =>
-        this.refresh(tracked ? { skipResettingParams: ["filter", "f"] } : {})
-      );
+        dismissPosts,
+        dismissTopics,
+        untrack,
+      }).then((result) => {
+        if (result.topic_ids) {
+          this.topicTrackingState.removeTopics(result.topic_ids);
+        }
+        this.refresh(tracked ? { skipResettingParams: ["filter", "f"] } : {});
+      });
     },
 
     @action

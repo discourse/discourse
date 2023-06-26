@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Draft message", type: :system, js: true do
+RSpec.describe "Draft message", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }

@@ -70,6 +70,8 @@ pt:
       flag: "Denunciar"
       join: "Entrar"
       last_visit: "última visita"
+      summarization:
+        summarize: "Resumir"
       mention_warning:
         dismiss: "marcar Visto"
       only_chat_push_notifications:
@@ -175,9 +177,17 @@ pt:
         flags: "Sinalizações"
         symbols: "Símbolos"
       thread:
+        title: "Título"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
+        settings: "Configurações"
+        last_reply: "última resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "A Seguir"
       draft_channel_screen:
         header: "Nova Mensagem"
         cancel: "Cancelar"

@@ -20,12 +20,10 @@ import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
-
-const LINKS_IN_BOTH_SEGMENTS = ["/review"];
+import showModal from "discourse/lib/show-modal";
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
-  "/new": EverythingSectionLink,
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
@@ -46,6 +44,8 @@ export default class CommunitySection {
   @tracked links;
   @tracked moreLinks;
 
+  reorderable = false;
+
   constructor({ section, owner }) {
     setOwner(this, owner);
 
@@ -65,10 +65,7 @@ export default class CommunitySection {
       .map((link) => this.#initializeSectionLink(link, { inMoreDrawer: true }));
 
     this.links = this.section.links.reduce((filtered, link) => {
-      if (
-        link.segment === "primary" ||
-        LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-      ) {
+      if (link.segment === "primary") {
         const generatedLink = this.#generateLink(link);
 
         if (generatedLink) {
@@ -81,10 +78,7 @@ export default class CommunitySection {
 
     this.moreLinks = this.section.links
       .reduce((filtered, link) => {
-        if (
-          link.segment === "secondary" ||
-          LINKS_IN_BOTH_SEGMENTS.includes(link.value)
-        ) {
+        if (link.segment === "secondary") {
           const generatedLink = this.#generateLink(link, true);
 
           if (generatedLink) {
@@ -111,13 +105,23 @@ export default class CommunitySection {
     const sectionLinkClass = SPECIAL_LINKS_MAP[link.value];
 
     if (sectionLinkClass) {
-      return this.#initializeSectionLink(sectionLinkClass, inMoreDrawer);
+      return this.#initializeSectionLink(
+        sectionLinkClass,
+        inMoreDrawer,
+        link.name,
+        link.icon
+      );
     } else {
       return new SectionLink(link, this, this.router);
     }
   }
 
-  #initializeSectionLink(sectionLinkClass, inMoreDrawer) {
+  #initializeSectionLink(
+    sectionLinkClass,
+    inMoreDrawer,
+    overridenName,
+    overridenIcon
+  ) {
     if (this.router.isDestroying) {
       return;
     }
@@ -128,32 +132,48 @@ export default class CommunitySection {
       router: this.router,
       siteSettings: this.siteSettings,
       inMoreDrawer,
+      overridenName,
+      overridenIcon,
     });
-  }
-
-  get displayShortSiteDescription() {
-    return !this.currentUser && !!this.siteSettings.short_site_description;
   }
 
   get decoratedTitle() {
     return I18n.t(
-      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`
+      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`,
+      { defaultValue: this.section.title }
     );
   }
 
   get headerActions() {
+    if (this.currentUser?.admin) {
+      return [
+        {
+          action: this.editSection,
+          title: I18n.t(
+            "sidebar.sections.community.header_action_edit_section_title"
+          ),
+        },
+      ];
+    }
     if (this.currentUser) {
       return [
         {
           action: this.composeTopic,
-          title: I18n.t("sidebar.sections.community.header_action_title"),
+          title: I18n.t(
+            "sidebar.sections.community.header_action_create_topic_title"
+          ),
         },
       ];
     }
   }
 
   get headerActionIcon() {
-    return "plus";
+    return this.currentUser?.admin ? "pencil-alt" : "plus";
+  }
+
+  @action
+  editSection() {
+    showModal("sidebar-section-form", { model: this.section });
   }
 
   @action

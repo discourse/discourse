@@ -1527,7 +1527,6 @@ el:
       description:
         one: "Υπάρχει <b>%{count}</b> απάντηση."
         other: "Υπάρχουν <b>%{count}</b> απαντήσεις."
-      enable: "Σύνοψη Αυτού του Θέματος"
       disable: "Εμφάνιση όλων των αναρτήσεων"
     deleted_filter:
       enabled_description: "Αυτό το νήμα περιέχει σβησμένες αναρτήσεις, οι οποίες αποκρύπτονται."
@@ -3112,7 +3111,6 @@ el:
         one: "Κέρδισε αυτό το παράσημο %{count} φορά"
         other: "Κέρδισε αυτό το παράσημο %{count} φορές"
       granted_on: "Χορηγήθηκε στις %{date}"
-      others_count: "Άλλοι με αυτό το παράσημο (%{count})"
       title: Παράσημα
       allow_title: "Μπορείς να χρησιμοποιήσεις αυτό το παράσημο σαν τίτλο"
       multiple_grant: "Μπορείς να το κερδίσεις πολλές φορές"
@@ -3296,11 +3294,14 @@ el:
       more: "Περισσότερα"
       all_categories: "Όλες οι κατηγορίες"
       all_tags: "Όλες οι ετικέτες"
+      categories_form_modal:
+        save: "Αποθήκευση"
       sections:
         custom:
           save: "Αποθήκευση"
           delete: "Σβήσιμο"
           links:
+            reset: "Επαναφορά στο προεπιλεγμένο"
             icon:
               label: "Σύμβολο"
             name:
@@ -3321,26 +3322,19 @@ el:
             unread_with_count: "Μη αναγνωσμένα (%{count})"
             archive: "Αρχείο"
         tags:
-          links:
-            add_tags:
-              content: "Προσθήκη ετικετών"
-              title: "Δεν έχετε προσθέσει καμία ετικέτα. Κάντε κλικ για να ξεκινήσετε."
           none: "Δεν έχετε προσθέσει ετικέτες."
           click_to_get_started: "Κάντε κλικ εδώ για να ξεκινήσετε."
           header_link_text: "Ετικέτες"
           header_action_title: "Επεξεργασία των ετικετών πλαϊνής γραμμής"
           configure_defaults: "Ρύθμιση προεπιλογών"
         categories:
-          links:
-            add_categories:
-              content: "Προσθέστε κατηγορίες"
           none: "Δεν έχετε προσθέσει καμία κατηγορία."
           click_to_get_started: "Κάντε κλικ εδώ για να ξεκινήσετε."
           header_link_text: "Κατηγορίες"
           configure_defaults: "Ρύθμιση προεπιλογών"
         community:
           header_link_text: "Κοινότητα"
-          header_action_title: "Δημιουργήστε ένα θέμα"
+          header_action_create_topic_title: "Δημιουργήστε ένα θέμα"
           links:
             about:
               content: "Σχετικά"
@@ -3348,8 +3342,8 @@ el:
               content: "Διαχείριση"
             badges:
               content: "Παράσημα"
-            everything:
-              content: "Τα πάνΤα"
+            topics:
+              content: "Θέματα"
               title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
@@ -4263,6 +4257,8 @@ el:
               key: "απαραίτητο"
             minimum:
               key: "ελάχιστο"
+            type:
+              key: "τύπος"
       impersonate:
         title: "Υποδυθείτε"
         help: "Χρησιμοποίησε αυτό το εργαλείο για να εντοπίσεις λάθη υποδυόμενος κάποιον άλλο χρήστη. Θα πρέπει να αποσυνδεθείς όταν τελειώσεις."
@@ -4551,7 +4547,6 @@ el:
       site_settings:
         title: "Ρυθμίσεις"
         no_results: "Δεν βρέθηκαν αποτελέσματα."
-        more_than_30_results: "Υπάρχουν περισσότερα από 30 αποτελέσματα. Κάντε πιο συγκεκριμένη την αναζήτησή σας ή επιλέξτε μια κατηγορία."
         clear_filter: "Καθάρισμα φίλτρου"
         add_url: "προσθήκη URL"
         add_host: "προσθήκη host"

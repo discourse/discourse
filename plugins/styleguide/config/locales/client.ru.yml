@@ -66,7 +66,7 @@ ru:
         topic_notifications:
           title: "Уведомления темы"
         post:
-          title: "Запись"
+          title: "Сообщение"
         topic_map:
           title: "Карта темы"
         site_header:

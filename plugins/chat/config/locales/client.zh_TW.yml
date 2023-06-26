@@ -193,8 +193,16 @@ zh_TW:
         symbols: "象徵<br>"
         no_results: "沒有結果"
       thread:
+        title: "標題"
         replies:
           other: "%{count}個回覆"
+        settings: "設定"
+        last_reply: "最新回覆"
+        notifications:
+          regular:
+            title: "一般"
+          tracking:
+            title: "跟蹤"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"
@@ -209,3 +217,7 @@ zh_TW:
     keyboard_shortcuts_help:
       chat:
         title: "聊天"
+    styleguide:
+      sections:
+        chat:
+          title: 聊天

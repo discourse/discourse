@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe EnableSsoValidator do
-  subject { described_class.new }
+  subject(:validator) { described_class.new }
 
   describe "#valid_value?" do
     describe "when 'sso url' is empty" do
@@ -9,15 +9,15 @@ RSpec.describe EnableSsoValidator do
 
       describe "when val is false" do
         it "should be valid" do
-          expect(subject.valid_value?("f")).to eq(true)
+          expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
         it "should not be valid" do
-          expect(subject.valid_value?("t")).to eq(false)
+          expect(validator.valid_value?("t")).to eq(false)
 
-          expect(subject.error_message).to eq(
+          expect(validator.error_message).to eq(
             I18n.t("site_settings.errors.discourse_connect_url_is_empty"),
           )
         end
@@ -29,13 +29,13 @@ RSpec.describe EnableSsoValidator do
 
       describe "when value is false" do
         it "should be valid" do
-          expect(subject.valid_value?("f")).to eq(true)
+          expect(validator.valid_value?("f")).to eq(true)
         end
       end
 
       describe "when value is true" do
         it "should be valid" do
-          expect(subject.valid_value?("t")).to eq(true)
+          expect(validator.valid_value?("t")).to eq(true)
         end
       end
     end
@@ -46,13 +46,13 @@ RSpec.describe EnableSsoValidator do
       it "should be invalid" do
         SiteSetting.enforce_second_factor = "all"
 
-        expect(subject.valid_value?("t")).to eq(false)
+        expect(validator.valid_value?("t")).to eq(false)
       end
 
       it "should be valid" do
         SiteSetting.enforce_second_factor = "no"
 
-        expect(subject.valid_value?("t")).to eq(true)
+        expect(validator.valid_value?("t")).to eq(true)
       end
     end
   end

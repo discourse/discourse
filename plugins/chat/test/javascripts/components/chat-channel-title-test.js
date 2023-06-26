@@ -1,7 +1,7 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
@@ -10,7 +10,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel", async function (assert) {
-    this.channel = fabricators.chatChannel({
+    this.channel = fabricators.channel({
       chatable_type: CHATABLE_TYPES.categoryChannel,
     });
 
@@ -27,7 +27,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - escapes title", async function (assert) {
-    this.channel = fabricators.chatChannel({
+    this.channel = fabricators.channel({
       chatable_type: CHATABLE_TYPES.categoryChannel,
       title: "<div class='xss'>evil</div>",
     });
@@ -38,7 +38,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - read restricted", async function (assert) {
-    this.channel = fabricators.chatChannel({
+    this.channel = fabricators.channel({
       chatable_type: CHATABLE_TYPES.categoryChannel,
       chatable: { read_restricted: true },
     });
@@ -49,7 +49,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - not read restricted", async function (assert) {
-    this.channel = fabricators.chatChannel({
+    this.channel = fabricators.channel({
       chatable_type: CHATABLE_TYPES.categoryChannel,
       chatable: { read_restricted: false },
     });
@@ -60,7 +60,11 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("direct message channel - one user", async function (assert) {
-    this.channel = fabricators.directMessageChatChannel();
+    this.channel = fabricators.directMessageChannel({
+      chatable: fabricators.directMessage({
+        users: [fabricators.user()],
+      }),
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -77,7 +81,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("direct message channel - multiple users", async function (assert) {
-    const channel = fabricators.directMessageChatChannel();
+    const channel = fabricators.directMessageChannel();
 
     channel.chatable.users.push({
       id: 2,

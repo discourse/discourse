@@ -19,6 +19,14 @@
         <span class="sidebar-section-header-text">
           {{@headerLinkText}}
         </span>
+        {{#if @indicatePublic}}
+          <span class="sidebar-section-header-global-indicator">
+            {{d-icon "globe"}}
+            <DTooltip @placement="top">{{d-icon "shield-alt"}}
+              {{i18n "sidebar.sections.global_section"}}
+            </DTooltip>
+          </span>
+        {{/if}}
       </Sidebar::SectionHeader>
 
       {{#if this.isSingleHeaderAction}}

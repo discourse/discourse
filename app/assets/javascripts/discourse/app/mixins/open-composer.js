@@ -8,14 +8,19 @@ export default Mixin.create({
     let categoryId = controller.get("category.id");
 
     if (
-      !controller.canCreateTopicOnCategory &&
-      this.siteSettings.default_subcategory_on_read_only_category
+      this.siteSettings.default_subcategory_on_read_only_category &&
+      !controller.canCreateTopicOnCategory
     ) {
-      categoryId = controller.get("defaultSubcategory.id");
+      if (controller.canCreateTopicOnSubCategory) {
+        categoryId = controller.get("defaultSubcategory.id");
+      } else {
+        categoryId = this.siteSettings.default_composer_category;
+      }
     }
 
     if (
       categoryId &&
+      !this.siteSettings.default_subcategory_on_read_only_category &&
       controller.category.isUncategorizedCategory &&
       !this.siteSettings.allow_uncategorized_topics
     ) {

@@ -1,7 +1,5 @@
 // Styles for /admin section
 
-@import "common/foundation/helpers";
-
 $mobile-breakpoint: 700px;
 
 // Common admin styles
@@ -382,7 +380,7 @@ $mobile-breakpoint: 700px;
     width: 460px;
     right: 0;
     z-index: z("dropdown");
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     margin-top: -2px;
     background-color: var(--secondary);
     padding: 12px 12px 5px;
@@ -412,6 +410,10 @@ $mobile-breakpoint: 700px;
 
 .admin-container {
   margin-top: 10px;
+
+  .admin-section {
+    margin-bottom: 1em;
+  }
 
   .username {
     input {

@@ -2,9 +2,8 @@
 
   <DNavigationItem
     @route="userPrivateMessages.group.index"
-    @class="user-nav__messages-group-latest"
-    @model={{this.groupName}}
     @ariaCurrentContext="subNav"
+    class="user-nav__messages-group-latest"
   >
     {{d-icon "envelope"}}
     <span>{{i18n "categories.latest"}}</span>
@@ -13,9 +12,8 @@
   {{#if this.viewingSelf}}
     <DNavigationItem
       @route="userPrivateMessages.group.new"
-      @model={{this.groupName}}
-      @class="user-nav__messages-group-new"
       @ariaCurrentContext="subNav"
+      class="user-nav__messages-group-new"
     >
       {{d-icon "exclamation-circle"}}
       <span>{{this.newLinkText}}</span>
@@ -23,9 +21,8 @@
 
     <DNavigationItem
       @route="userPrivateMessages.group.unread"
-      @model={{this.groupName}}
-      @class="user-nav__messages-group-unread"
       @ariaCurrentContext="subNav"
+      class="user-nav__messages-group-unread"
     >
       {{d-icon "plus-circle"}}
       <span>{{this.unreadLinkText}}</span>
@@ -33,14 +30,20 @@
 
     <DNavigationItem
       @route="userPrivateMessages.group.archive"
-      @class="user-nav__messages-group-archive"
-      @model={{this.groupName}}
       @ariaCurrentContext="subNav"
+      class="user-nav__messages-group-archive"
     >
       {{d-icon "archive"}}
       <span>{{i18n "user.messages.archive"}}</span>
     </DNavigationItem>
   {{/if}}
 </UserNav::MessagesSecondaryNav>
+
+{{#in-element this.navigationControlsButton}}
+  <GroupNotificationsButton
+    @value={{this.group.group_user.notification_level}}
+    @onChange={{this.changeGroupNotificationLevel}}
+  />
+{{/in-element}}
 
 {{outlet}}

@@ -24,6 +24,8 @@ module Chat
     model :thread, :fetch_thread
     policy :invalid_access
     policy :threading_enabled_for_channel
+    step :fetch_membership
+    step :fetch_participants
 
     # @!visibility private
     class Contract
@@ -42,6 +44,7 @@ module Chat
     def fetch_thread(contract:, **)
       Chat::Thread.includes(
         :channel,
+        last_reply: :user,
         original_message_user: :user_status,
         original_message: :chat_webhook_event,
       ).find_by(id: contract.thread_id, channel_id: contract.channel_id)
@@ -53,6 +56,14 @@ module Chat
 
     def threading_enabled_for_channel(thread:, **)
       thread.channel.threading_enabled
+    end
+
+    def fetch_membership(thread:, guardian:, **)
+      context.membership = thread.membership_for(guardian.user)
+    end
+
+    def fetch_participants(thread:, **)
+      context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: [thread.id])[thread.id]
     end
   end
 end

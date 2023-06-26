@@ -147,7 +147,7 @@ sv:
     word_connector:
       comma: ", "
     action_codes:
-      public_topic: "Gjorde det här ämnet publikt %{when}"
+      public_topic: "Gjorde det här ämnet offentligt %{when}"
       open_topic: "Konverterade detta till ett ämne %{when}"
       private_topic: "Gjorde det här ämnet till ett personligt meddelande %{when}"
       split_topic: "Dela det här ämnet %{when}"
@@ -403,6 +403,8 @@ sv:
         search: "Sök efter ett meddelande"
         placeholder: "skriv meddelandets titel, url eller id här"
     review:
+      show_more: "Visa mer"
+      show_less: "Visa mindre"
       order_by: "Sortera efter"
       date_filter: "Publicerat mellan"
       in_reply_to: "som svar till"
@@ -572,6 +574,8 @@ sv:
           title: "Användare"
         reviewable_post:
           title: "Inlägg"
+        reviewable_chat_message:
+          title: "Flaggat chattmeddelande"
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det måste godkännas av en moderator innan det kan visas. Ha tålamod."
@@ -1053,6 +1057,7 @@ sv:
           warning: "Är du säker på att du vill rensa ditt utvalda ämne?"
       use_current_timezone: "Använd nuvarande tidszon"
       profile_hidden: "Den här användarens offentliga profil är dold."
+      inactive_user: "Den här användaren är inte längre aktiv."
       expand_profile: "Utvidga"
       sr_expand_profile: "Expandera profilinformation"
       collapse_profile: "Förminska"
@@ -1124,11 +1129,8 @@ sv:
         enable: "Aktivera sidofältet"
         options: "Alternativ"
         categories_section: "Sektion Kategorier"
-        categories_section_instruction: "Valda kategorier kommer att visas under sidofältets kategorisektion."
         tags_section: "Sektion Taggar"
-        tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
         navigation_section: "Navigering"
-        list_destination_instruction: "När det finns nytt innehåll i sidofältet..."
         list_destination_default: "använd standardlänken och visa en utmärkelse för nya objekt"
         list_destination_unread_new: "länka till oläst/nytt och visa ett antal nya objekt"
       change: "ändra"
@@ -1310,7 +1312,6 @@ sv:
         tags: "Taggar"
         interface: "Gränssnitt"
         apps: "Appar"
-        sidebar: "Sidofält"
       change_password:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
@@ -1820,12 +1821,6 @@ sv:
       logout_disabled: "Det går inte att logga ut medan webbplatsen är i skrivskyddat läge."
     staff_writes_only_mode:
       enabled: "Webbplatsen är i läget endast för personal. Du kan fortsätta bläddra på sidan, men att skriva inlägg, gilla och andra åtgärder är begränsat till personal."
-    too_few_topics_and_posts_notice_MF: |
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}} och {currentPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar åtminstone {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}} och {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
-    too_few_topics_notice_MF: |
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentTopics, plural, one {finns <strong>#</strong> ämne} other {finns <strong>#</strong> ämnen}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredTopics, plural, one {<strong>#</strong> ämne} other {<strong>#</strong> ämnen}}. Enbart personal kan se detta meddelande.
-    too_few_posts_notice_MF: |
-      Låt oss <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">inleda diskussionen!</a> Det {currentPosts, plural, one {finns <strong>#</strong> inlägg} other {finns <strong>#</strong> inlägg}}. Besökare behöver mer att läsa och svara på – vi rekommenderar minst {requiredPosts, plural, one {<strong>#</strong> inlägg} other {<strong>#</strong> inlägg}}. Enbart personal kan se detta meddelande.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# fel/timma} other  {# fel/timma}}</a> har uppnått webbplatsinställningarnas gräns som är {limit, plural, one {# fel/timma} other {# fel/timma}}.
@@ -1855,6 +1850,9 @@ sv:
       hidden_for_session: "Ok, vi frågar dig imorgon. Du kan alltid använda 'Logga in' för att skapa ett konto, också."
       intro: "Hejsan! Det verkar som du gillar diskussionen, men du har ännu inte registrerat dig för ett konto."
       value_prop: "Trött på att bläddra igenom samma inlägg? När du skapar ett konto kommer du alltid tillbaka där du slutade. Med ett konto kan du också bli aviserad om nya svar, spara bokmärken och använda gillningar för att tacka andra. Vi kan alla arbeta tillsammans för att göra denna gemenskap fantastisk. :heart:"
+    offline_indicator:
+      no_internet: "Ingen internetanslutning."
+      refresh_page: "Uppdatera sida"
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description:
@@ -1862,7 +1860,6 @@ sv:
         other: "Det finns <b>%{count}</b> svar."
       description_time_MF: |
         Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>.
-      enable: "Sammanfatta detta ämne"
       disable: "Visa alla inlägg"
       short_label: "Sammanfatta"
       short_title: "Visa en sammanfattning av detta ämne: de mest intressanta inläggen enligt forumet"
@@ -2265,6 +2262,7 @@ sv:
       image_alt_text:
         aria_label: Alternativ text för bild
       delete_image_button: Radera bild
+      toggle_image_grid: Växla bildrutnät
     notifications:
       tooltip:
         regular:
@@ -2594,6 +2592,11 @@ sv:
         dismiss_tooltip: "Avfärda nya inlägg eller sluta följa ämnen"
         also_dismiss_topics: "Sluta följa de här ämnena så att de aldrig syns som olästa för mig igen"
         dismiss_new: "Avfärda nya"
+        dismiss_new_modal:
+          title: "Avfärda nya"
+          topics: "Avfärda nya ämnen"
+          posts: "Avfärda nya inlägg"
+          untrack: "Sluta spåra dessa ämnen så att de inte längre visas i min lista över nya"
         dismiss_new_with_selected:
           one: "Avfärda nya (%{count})"
           other: "Avfärda nya (%{count})"
@@ -2634,7 +2637,8 @@ sv:
         filter: "Det finns inga ämnen."
         educate:
           new: '<p>Dina nya ämnen hamnar här. Standard är att ämnen anses nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-indikator om de skapades de senaste 2 dagarna.</p><p>Gå till dina <a href="%{userPrefsUrl}">användarinställningar</a> för att ändra detta.</p>'
-          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 4 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
+          unread: "<p>Dina olästa ämnen visas här.</p><p>Som standard betraktas ämnen som olästa och visar olästa värden <span class=\"badge unread-posts badge-notification\">1</span> om du:</p><ul><li>skapade ämnet</li><li>svarade på ämnet</li><li>läste ämnet i mer än 5 minuter</li></ul><p>eller om du uttryckligen har satt ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
+          new_new: "<p>Dina nya ämnen kommer att visas här, och dina olästa ämnen kommer också att visas. Som standard betraktas ämnen som nya, med en <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>-indikator om de skapades under de senaste 2 dagarna. Olästa ämnen visar oläst-antalet <span class=\"badge unread-posts badge-notification\">1</span> om du: skapade ämnet, svarade på ämnet, läste ämnet i mer än 5 minuter eller om du uttryckligen har ställt in ämnet till Följt eller Bevakat via \U0001F514 i varje ämne.</p><p>Gå till dina <a href=\"%{userPrefsUrl}\">inställningar</a> för att ändra detta.</p>"
       bottom:
         latest: "Det finns inga fler senaste ämnen."
         posted: "Det finns inga fler postade ämnen."
@@ -2699,6 +2703,7 @@ sv:
       read_more_in_category: "Vill du läsa mer? Bläddra bland andra ämnen i %{categoryLink} eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       read_more: "Vill du läsa mer? <a href='%{categoryLink}'>Bläddra bland alla kategorier</a> eller <a href='%{latestLink}'>visa senaste ämnen</a>."
       unread_indicator: "Ingen medlem har läst det senaste inlägget ännu."
+      participant_groups: "Deltagargrupper"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -3008,6 +3013,7 @@ sv:
         instructions:
           one: "Välj vilket ämne du vill flytta det inlägget till."
           other: "Välj vilket ämne du vill flytta de <b>%{count}</b> inläggen till."
+        chronological_order: "bevara kronologisk ordning efter sammanslagning"
       move_to_new_message:
         title: "Flytta till nytt meddelande"
         action: "flytta till nytt meddelande"
@@ -3791,7 +3797,9 @@ sv:
         one: "Förtjänade den här utmärkelsen %{count} gång"
         other: "Förtjänade den här utmärkelsen %{count} gånger"
       granted_on: "Utfärdad %{date}"
-      others_count: "Andra med den här utmärkelsen (%{count})"
+      others_count:
+        one: "Beviljad till andra %{count} gång"
+        other: "Beviljad till andra %{count} gånger"
       title: Utmärkelser
       allow_title: "Du kan använda denna utmärkelse som en titel"
       multiple_grant: "Du kan förtjäna denna flera gånger"
@@ -4028,6 +4036,11 @@ sv:
       more: "Mer"
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
+      categories_form_modal:
+        save: "Spara"
+        title: "Redigera kategorinavigering"
+        filter_placeholder: "Filterkategorier"
+        no_categories: "Det finns inga kategorier som matchar den angivna termen."
       sections:
         custom:
           add: "Lägg till ett anpassat avsnitt"
@@ -4035,10 +4048,13 @@ sv:
           save: "Spara"
           delete: "Radera"
           delete_confirm: "Är du säker på att du vill radera det här avsnittet?"
+          reset_confirm: "Är du säker på att du vill återställa den här sektionen till standardvärdet?"
           public: "Gör denna sektion offentligt och synligt för alla"
+          more_menu: "Menyn Mer"
           links:
             add: "Lägg till ytterligare en länk"
             delete: "Ta bort länk"
+            reset: "Återställ till standard"
             icon:
               label: "Ikon"
               validation:
@@ -4074,20 +4090,12 @@ sv:
             unread_with_count: "Oläst (%{count})"
             archive: "Arkiv"
         tags:
-          links:
-            add_tags:
-              content: "Lägg till taggar"
-              title: "Du har inte lagt till några taggar. Klicka för att komma igång."
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Taggar"
           header_action_title: "Redigera ditt sidofälts taggar"
           configure_defaults: "Konfigurera standardvärden"
         categories:
-          links:
-            add_categories:
-              content: "Lägg till kategorier"
-              title: "Du har inte lagt till några kategorier. Klicka för att komma igång."
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Kategorier"
@@ -4095,7 +4103,8 @@ sv:
           configure_defaults: "Konfigurera standardvärden"
         community:
           header_link_text: "Community"
-          header_action_title: "Skapa ett ämne"
+          header_action_create_topic_title: "Skapa ett ämne"
+          header_action_edit_section_title: "Redigera sektionen Forum"
           links:
             about:
               content: "Om"
@@ -4106,8 +4115,8 @@ sv:
             badges:
               content: "Utmärkelser"
               title: "Alla utmärkelser som kan förtjänas"
-            everything:
-              content: "Allting"
+            topics:
+              content: "Ämnen"
               title: "Alla ämnen"
             faq:
               content: "Vanliga frågor och svar"
@@ -4130,6 +4139,7 @@ sv:
               content: "Granska"
               title: "Flaggade inlägg och andra objekt i kö"
               pending_count: "%{count} väntande"
+        global_section: "Globalt avsnitt, synligt för alla"
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -4137,6 +4147,8 @@ sv:
     until: "T.o.m.:"
     char_counter:
       exceeded: "Det maximala antalet tillåtna tecken har överskridits."
+    form_template_chooser:
+      select_template: "Välj formulärmallar"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -4375,6 +4387,7 @@ sv:
             posts:
               edit: Redigera ett inlägg eller ett specifikt inlägg.
               delete: Ta bort ett inlägg.
+              list: Lista över senaste inlägg och privata inlägg. RSS stöds också.
             tags:
               list: Lista etiketter
             categories:
@@ -5029,6 +5042,7 @@ sv:
             revoke_moderation: "återkalla moderering"
             backup_create: "Skapa en säkerhetskopia"
             deleted_tag: "raderad tagg"
+            update_directory_columns: "uppdatera katalogkolumner"
             deleted_unused_tags: "radera oanvända taggar"
             renamed_tag: "omdöpt tagg"
             revoke_email: "återkalla e-post"
@@ -5237,15 +5251,19 @@ sv:
             minimum:
               key: "minst"
               type: "heltal"
-              description: "I textfält anges det minsta tillåtna antalet tecken."
+              description: "För textfält anges det minsta tillåtna antalet tecken."
             maximum:
               key: "maximalt"
               type: "heltal"
-              description: "I textfält anges det högsta tillåtna antalet tecken. I flervalsrullgardinsmenyer anges det högsta tillåtna antalet alternativ som kan väljas."
+              description: "För textfält anges det största tillåtna antalet tecken."
             pattern:
               key: "mönster"
               type: "regex-sträng"
-              description: "I textfält är detta ett reguljärt uttryck som anger tillåten inmatning."
+              description: "För textfält är detta ett reguljärt uttryck som anger tillåten inmatning."
+            type:
+              key: "typ"
+              type: "sträng"
+              description: "För inmatningsfält kan du ange vilken typ av inmatning som bör förväntas (text|e-post|datum|nummer|url|tel|färg)"
         preview_modal:
           title: "Förhandsgranskningsmall"
         field_placeholders:
@@ -5612,7 +5630,9 @@ sv:
             label: "Lägg till emoji"
         title: "Webbplatsinställningar"
         no_results: "Inga resultat hittades."
-        more_than_30_results: "Det är fler än 30 resultat. Förfina din sökning eller välj en kategori."
+        more_site_setting_results:
+          one: "Det är över %{count} resultat. Förfina din sökning eller välj en kategori."
+          other: "Det är över %{count} resultat. Förfina din sökning eller välj en kategori."
         clear_filter: "Rensa"
         add_url: "lägg till URL"
         add_host: "lägg till värd"

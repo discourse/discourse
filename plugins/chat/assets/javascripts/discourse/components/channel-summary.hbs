@@ -1,0 +1,22 @@
+<DModalBody @title="chat.summarization.title">
+  <span>{{i18n "chat.summarization.description"}}</span>
+  <ComboBox
+    @value={{this.sinceHours}}
+    @content={{this.sinceOptions}}
+    @onChange={{action this.summarize}}
+    @valueProperty="value"
+    @class="summarization-since"
+  />
+  <div class="channel-summary">
+    <ConditionalLoadingSpinner @condition={{this.loading}} />
+
+    {{#unless this.loading}}
+      <p class="summary-area">{{this.summary}}</p>
+    {{/unless}}
+  </div>
+
+</DModalBody>
+
+<div class="modal-footer">
+  <DModalCancel @close={{route-action "closeModal"}} />
+</div>

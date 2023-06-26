@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-RSpec::Support.require_rspec_core "formatters/base_text_formatter"
-
 module TurboTests
-  class ProgressFormatter < RSpec::Core::Formatters::BaseTextFormatter
+  class ProgressFormatter < ::TurboTests::BaseFormatter
     LINE_LENGTH = 80
 
     RSpec::Core::Formatters.register(
@@ -43,7 +41,7 @@ module TurboTests
     def wrap
       @examples += 1
 
-      if @examples == LINE_LENGTH
+      if ENV["GITHUB_ACTIONS"] && @examples == LINE_LENGTH
         output.print "\n"
         @examples = 0
       end

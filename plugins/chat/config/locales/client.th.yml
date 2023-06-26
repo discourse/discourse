@@ -105,8 +105,16 @@ th:
         flags: "ธง"
         symbols: "สัญลักษณ์"
       thread:
+        title: "ชื่อเรื่อง"
         replies:
           other: "%{count} ตอบ"
+        settings: "การตั้งค่า"
+        last_reply: "การตอบล่าสุด"
+        notifications:
+          regular:
+            title: "ปกติ"
+          tracking:
+            title: "ติดตาม"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"

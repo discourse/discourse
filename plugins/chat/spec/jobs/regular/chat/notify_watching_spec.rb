@@ -197,7 +197,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
               { username: user1.username, channel: channel.title(user2) },
             ),
           tag: Chat::Notifier.push_notification_tag(:message, channel.id),
-          excerpt: message.message,
+          excerpt: message.push_notification_excerpt,
         },
       )
     end
@@ -234,7 +234,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
                   { username: user1.username, channel: channel.title(user2) },
                 ),
               tag: Chat::Notifier.push_notification_tag(:message, channel.id),
-              excerpt: message.message,
+              excerpt: message.push_notification_excerpt,
             },
           ),
         )

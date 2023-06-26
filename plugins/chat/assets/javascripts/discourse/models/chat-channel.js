@@ -1,4 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -80,7 +81,6 @@ export default class ChatChannel {
   @tracked canFlag;
   @tracked canModerate;
   @tracked userSilenced;
-  @tracked draft = null;
   @tracked meta;
   @tracked chatableType;
   @tracked chatableUrl;
@@ -89,9 +89,12 @@ export default class ChatChannel {
   @tracked membershipsCount = 0;
   @tracked archive;
   @tracked tracking;
+  @tracked threadingEnabled = false;
 
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
+
+  @tracked _unreadThreadIds = new TrackedSet();
 
   constructor(args = {}) {
     this.id = args.id;
@@ -114,7 +117,10 @@ export default class ChatChannel {
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
     this.chatable = this.isDirectMessageChannel
-      ? ChatDirectMessage.create(args)
+      ? ChatDirectMessage.create({
+          id: args.chatable?.id,
+          users: args.chatable?.users,
+        })
       : Category.create(args.chatable);
     this.currentUserMembership = UserChatChannelMembership.create(
       args.current_user_membership
@@ -125,6 +131,18 @@ export default class ChatChannel {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
+  }
+
+  get unreadThreadCount() {
+    return this.unreadThreadIds.size;
+  }
+
+  get unreadThreadIds() {
+    return this._unreadThreadIds;
+  }
+
+  set unreadThreadIds(unreadThreadIds) {
+    this._unreadThreadIds = new TrackedSet(unreadThreadIds);
   }
 
   findIndexOfMessage(id) {
@@ -139,6 +157,10 @@ export default class ChatChannel {
     return this.messagesManager.findMessage(id);
   }
 
+  findFirstMessageOfDay(date) {
+    return this.messagesManager.findFirstMessageOfDay(date);
+  }
+
   addMessages(messages) {
     this.messagesManager.addMessages(messages);
   }
@@ -149,6 +171,14 @@ export default class ChatChannel {
 
   removeMessage(message) {
     this.messagesManager.removeMessage(message);
+  }
+
+  get lastMessage() {
+    return this.messagesManager.findLastMessage();
+  }
+
+  lastUserMessage(user) {
+    return this.messagesManager.findLastUserMessage(user);
   }
 
   get messages() {
@@ -260,12 +290,12 @@ export default class ChatChannel {
     return thread;
   }
 
-  stageMessage(message) {
+  async stageMessage(message) {
     message.id = guid();
     message.staged = true;
     message.draft = false;
     message.createdAt ??= moment.utc().format();
-    message.cook();
+    message.channel = this;
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
@@ -309,5 +339,9 @@ export default class ChatChannel {
     return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
       method: "PUT",
     });
+  }
+
+  clearSelectedMessages() {
+    this.selectedMessages.forEach((message) => (message.selected = false));
   }
 }

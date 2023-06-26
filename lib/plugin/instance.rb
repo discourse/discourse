@@ -516,6 +516,19 @@ class Plugin::Instance
     initializers << block
   end
 
+  def commit_hash
+    git_repo.latest_local_commit
+  end
+
+  def commit_url
+    return if commit_hash.blank?
+    "#{git_repo.url}/commit/#{commit_hash}"
+  end
+
+  def git_repo
+    @git_repo ||= GitRepo.new(directory, name)
+  end
+
   def before_auth(&block)
     if @before_auth_complete
       raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!"
@@ -632,6 +645,11 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_html_builder(name) do |*args, **kwargs|
       block.call(*args, **kwargs) if plugin.enabled?
     end
+  end
+
+  def register_email_poller(poller)
+    plugin = self
+    DiscoursePluginRegistry.register_mail_poller(poller) if plugin.enabled?
   end
 
   def register_asset(file, opts = nil)
@@ -1262,6 +1280,17 @@ class Plugin::Instance
   def register_bookmarkable(klass)
     return if Bookmark.registered_bookmarkable_from_type(klass.model.name).present?
     DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
+  end
+
+  ##
+  # Register an object that inherits from [Summarization::Base], which provides a way
+  # to summarize content. Staff can select which strategy to use
+  # through the `summarization_strategy` setting.
+  def register_summarization_strategy(strategy)
+    if !strategy.class.ancestors.include?(Summarization::Base)
+      raise ArgumentError.new("Not a valid summarization strategy")
+    end
+    DiscoursePluginRegistry.register_summarization_strategy(strategy, self)
   end
 
   protected

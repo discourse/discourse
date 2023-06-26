@@ -178,8 +178,6 @@ ko:
     site_settings:
       invalid_site_setting: "'%{name}' 라는 설정이 존재하지 않습니다."
       invalid_category_id: "존재하지 않는 카테고리를 지정했습니다"
-      invalid_choice:
-        other: "유효하지 않은 선택 항목을 지정했습니다. %{name}"
       default_categories_already_selected: "다른 목록에서 사용된 카테고리는 선택할 수 없습니다."
       default_tags_already_selected: "다른 목록에서 사용된 태그는 선택할 수 없습니다."
       s3_upload_bucket_is_required: "'s3_upload_bucket'을 제공하지 않으면 S3 업로드를 활성화할 수 없습니다."
@@ -551,22 +549,6 @@ ko:
   meta_category_description: "사이트, 조직, 운영 방식, 개선 방안에 대해 토론하는 곳입니다."
   staff_category_name: "운영진"
   staff_category_description: "운영진 토론을 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
-  discourse_welcome_topic:
-    body: |2
-
-      고정된 주제의 첫 문단은 홈페이지 방문자에게 환영 메시지로 표시되므로 매우 중요합니다!
-
-      커뮤니티를 간단히 소개할 수 있도록 **이 주제를 편집하세요**
-
-      -  누구를 위한 커뮤니티인가요?
-
-      - 여기에 어떤 정보가 있나요?
-
-      - 이곳만의 특징은 무엇인가요?
-
-      - 자세한 내용은 어디에 있나요(링크, 리소스 등)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
   admin_quick_start_title: "먼저 읽어보기: 관리 퀵스타트 가이드"
   category:
     topic_prefix: "%{category} 카테고리 정보"
@@ -1746,7 +1728,6 @@ ko:
     pop3_polling_password: "이메일을 가져올 POP3 계정의 비밀번호"
     pop3_polling_delete_from_server: "서버에서 이메일을 삭제하세요. 참고: 이 기능을 비활성화하면 받은 편지함을 수동으로 정리해야 합니다."
     log_mail_processing_failures: "모든 이메일 처리 실패를 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
-    email_in: '사용자가 이메일을 통해 새 주제를 게시할 수 있도록 허용합니다(수동 또는 pop3 폴링 필요). 각 카테고리의 ''설정'' 탭에서 주소를 환경설정합니다.'
     email_in_min_trust: "이메일을 통해 새 주제를 게시하기 위한 사용자의 최소 신뢰 레벨"
     email_in_authserv_id: "수신 이메일에 대한 인증 확인을 수행하는 서비스의 식별자입니다. 이를 환경설정하는 방법에 대한 지침은 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>을 참조하세요."
     email_in_spam_header: "스팸을 탐지하는 이메일 헤더입니다."
@@ -1831,7 +1812,6 @@ ko:
     share_anonymized_statistics: "익명화된 사용 통계 공유"
     auto_handle_queued_age: "이 정도 기간이 지나면 검토 대기 기록을 자동으로 처리합니다. 신고는 무시됩니다. 대기 중인 게시물 및 사용자는 거부됩니다. 이 기능을 비활성화하려면 0으로 설정하세요."
     svg_icon_subset: "에셋에 포함할 FontAwesome 5 아이콘을 추가합니다. 솔리드 아이콘에는 접두사 'fa-', 일반 아이콘에는 'far-', 브랜드 아이콘에는 'fab-'를 사용하세요."
-    max_prints_per_hour_per_user: "최대 /print 페이지 노출 수(비활성화하려면 0으로 설정)"
     full_name_required: "전체 이름은 사용자 프로필의 필수 필드입니다."
     enable_names: "사용자의 전체 이름을 프로필, 사용자 카드, 이메일에서 표시합니다. 모든 곳에서 전체 이름을 숨기려면 비활성화하세요."
     display_name_on_posts: "게시물에 @아이디뿐만 아니라 사용자의 전체 이름도 표시합니다."
@@ -1851,7 +1831,6 @@ ko:
     allowed_href_schemes: "http 및 https 외에도 링크에 허용되는 스키마입니다."
     embed_post_limit: "임베드할 최대 게시물 수입니다."
     embed_username_required: "주제 생성을 위해 아이디가 필요합니다."
-    show_create_topics_notice: "사이트에 5개 미만의 공개 주제가 있는 경우 관리자에게 주제를 만들도록 요청하는 공지를 표시합니다."
     delete_drafts_older_than_n_days: "(n)일 지난 초안을 삭제합니다."
     delete_merged_stub_topics_after_days: "완전히 병합된 스텁 주제를 자동으로 삭제하기 전에 대기할 일 수입니다. 스텁 주제를 삭제하지 않으려면 0으로 설정하세요."
     bootstrap_mode_min_users: "부트스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수(비활성화하려면 0으로 설정, 최대 24시간이 소요될 수 있음)"

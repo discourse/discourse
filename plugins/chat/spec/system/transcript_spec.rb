@@ -1,52 +1,26 @@
 # frozen_string_literal: true
 
-RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
+RSpec.describe "Quoting chat message transcripts", type: :system do
   fab!(:current_user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin) }
   fab!(:chat_channel_1) { Fabricate(:chat_channel) }
 
   let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    chat_system_bootstrap(Fabricate(:admin), [chat_channel_1])
+    chat_system_bootstrap(admin, [chat_channel_1])
     chat_channel_1.add(current_user)
     sign_in(current_user)
   end
 
-  def select_message_desktop(message)
-    if page.has_css?(".chat-message-container.selecting-messages")
-      chat_channel_page.message_by_id(message.id).find(".chat-message-selector").click
-    else
-      chat_channel_page.message_by_id(message.id).hover
-      expect(page).to have_css(".chat-message-actions .more-buttons")
-      find(".chat-message-actions .more-buttons").click
-      find(".select-kit-row[data-value=\"select\"]").click
-    end
-  end
-
-  def click_selection_button(button)
-    selector =
-      case button
-      when "quote"
-        "chat-quote-btn"
-      when "copy"
-        "chat-copy-btn"
-      when "cancel"
-        "chat-cancel-selection-btn"
-      when "move"
-        "chat-move-to-channel-btn"
-      end
-    find_button(selector, disabled: false, wait: 5).click
-  end
-
   def copy_messages_to_clipboard(messages)
     messages = Array.wrap(messages)
-    messages.each { |message| select_message_desktop(message) }
-    expect(chat_channel_page).to have_selection_management
-    click_selection_button("copy")
-    expect(page).to have_selector(".chat-copy-success")
+    messages.each { |message| channel_page.messages.select(message) }
+    channel_page.selection_management.copy
+    expect(page).to have_selector(".chat-selection-management__copy-success")
     clip_text = cdp.read_clipboard
     expect(clip_text.chomp).to eq(generate_transcript(messages, current_user))
     clip_text
@@ -139,8 +113,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
         chat_page.visit_channel(chat_channel_1)
 
         clip_text = copy_messages_to_clipboard(message_1)
-        click_selection_button("cancel")
-        chat_channel_page.send_message(clip_text)
+        channel_page.selection_management.cancel
+        channel_page.send_message(clip_text)
 
         expect(page).to have_selector(".chat-message", count: 2)
         expect(page).to have_css(".chat-transcript")
@@ -154,9 +128,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
 
     it "opens the topic composer with correct state" do
       chat_page.visit_channel(chat_channel_1)
-
-      select_message_desktop(message_1)
-      click_selection_button("quote")
+      channel_page.messages.select(message_1)
+      channel_page.selection_management.quote
 
       expect(topic_page).to have_expanded_composer
       expect(topic_page).to have_composer_content(generate_transcript(message_1, current_user))
@@ -180,9 +153,8 @@ RSpec.describe "Quoting chat message transcripts", type: :system, js: true do
       it "first navigates to the channel's category before opening the topic composer with the quote prefilled",
          mobile: true do
         chat_page.visit_channel(chat_channel_1)
-
-        chat_channel_page.click_message_action_mobile(message_1, "select")
-        click_selection_button("quote")
+        channel_page.messages.select(message_1)
+        channel_page.selection_management.quote
 
         expect(topic_page).to have_expanded_composer
         expect(topic_page).to have_composer_content(generate_transcript(message_1, current_user))

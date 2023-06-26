@@ -60,8 +60,6 @@ en_GB:
     read_only_mode:
       login_disabled: "Login is disabled whilst the site is in read only mode."
       logout_disabled: "Logout is disabled whilst the site is in read only mode."
-    summary:
-      enable: "Summarise This Topic"
     composer:
       italic_text: "emphasised text"
       collapse: "minimise the composer panel"

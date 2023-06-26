@@ -120,6 +120,15 @@ he:
       heading: "צ׳אט"
       join: "הצטרף"
       last_visit: "ביקור אחרון"
+      summarization:
+        title: "סיכום הודעות"
+        description: "נא לבחור אפשרות להלן כדי לסכם את הדיון שנשלח בפרק הזמן המבוקש."
+        summarize: "סיכום"
+        since:
+          one: "שעה אחרונה"
+          two: "השעתיים האחרונות"
+          many: "%{count} השעות האחרונות"
+          other: "%{count} השעות האחרונות"
       mention_warning:
         dismiss: "התעלמות"
         cannot_see: "ל־%{username} אין גישה לערוץ הזה ולא נשלחה התראה."
@@ -270,6 +279,12 @@ he:
       save: "שמירה"
       select: "בחירה"
       return_to_list: "חזרה לרשימת הערוצים"
+      return_to_threads_list: "חזרה לדיונים שמתקיימים כרגע"
+      unread_threads_count:
+        one: "יש דיון שטרם קראת"
+        two: "יש %{count} דיונים שטרם קראת"
+        many: "יש %{count} דיונים שטרם קראת"
+        other: "יש %{count} דיונים שטרם קראת"
       scroll_to_bottom: "גלילה לתחתית"
       scroll_to_new_messages: "הצגת הודעות חדשות"
       sound:
@@ -560,7 +575,9 @@ he:
         search_placeholder: "חיפוש לפי שם וכינוי של האמוג׳י…"
         no_results: "אין תוצאות"
       thread:
+        title: "כותרת"
         view_thread: הצגת שרשור
+        default_title: "שרשור"
         replies:
           one: "תגובה אחת"
           two: "%{count} תגובות"
@@ -568,9 +585,26 @@ he:
           other: "%{count} תגובות"
         label: שרשור
         close: "סגירת שרשור"
+        original_message:
+          started_by: "נפתח ע״י"
+        settings: "הגדרות"
+        last_reply: "תגובה אחרונה"
+        notifications:
+          regular:
+            title: "רגיל"
+            description: "תישלח אליך התראה אם @שמך מוזכר בשרשור הזה."
+          tracking:
+            title: "מעקב"
+            description: "מספר התגובות החדשות בשרשור הזה יופיע ברשימת השרשורים ובערוץ. תישלח אליך התראה אם הזכירו את @שמך בשרשור הזה."
+        participants_other_count:
+          one: "+%{count} נוסף"
+          two: "+%{count} נוספים"
+          many: "+%{count} נוספים"
+          other: "+%{count} נוספים"
       threads:
-        started_by: "נפתח ע״י"
         open: "פתיחת שרשור"
+        list: "דיונים שמתקיימים כרגע"
+        none: "אין לך חלק באף אחד מהשרשורים בערוץ הזה."
       draft_channel_screen:
         header: "הודעה חדשה"
         cancel: "ביטול"
@@ -650,3 +684,7 @@ he:
           two: "התראות צ׳אט - %{count} התראות שלא נקראו"
           many: "התראות צ׳אט - %{count} התראות שלא נקראו"
           other: "התראות צ׳אט - %{count} התראות שלא נקראו"
+    styleguide:
+      sections:
+        chat:
+          title: צ׳אט

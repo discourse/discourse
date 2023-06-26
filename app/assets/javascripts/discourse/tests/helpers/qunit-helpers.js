@@ -26,7 +26,10 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
-import { initSearchData } from "discourse/widgets/search-menu";
+import {
+  initSearchData,
+  resetOnKeyDownCallbacks,
+} from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -40,7 +43,6 @@ import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { resetComposerCustomizations } from "discourse/models/composer";
-import { resetQuickAccessProfileItems } from "discourse/widgets/quick-access-profile";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
@@ -185,7 +187,6 @@ export function testCleanup(container, app) {
   resetHighestReadCache();
   resetCardClickListenerSelector();
   resetComposerCustomizations();
-  resetQuickAccessProfileItems();
   resetQuickSearchRandomTips();
   resetPostMenuExtraButtons();
   resetUserMenuProfileTabItems();
@@ -215,6 +216,7 @@ export function testCleanup(container, app) {
   resetSidebarSection();
   resetNotificationTypeRenderers();
   clearExtraHeaderIcons();
+  resetOnKeyDownCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
@@ -592,6 +594,7 @@ export async function emulateAutocomplete(inputSelector, text) {
   await triggerKeyEvent(inputSelector, "keydown", "Backspace");
   await fillIn(inputSelector, text);
   await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+  await settled();
 }
 
 // The order of attributes can vary in different browsers. When comparing

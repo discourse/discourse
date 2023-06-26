@@ -104,6 +104,8 @@ it:
       heading: "Chat"
       join: "Partecipa"
       last_visit: "ultima visita"
+      summarization:
+        summarize: "Riassumi"
       mention_warning:
         dismiss: "ignora"
         invitations_sent:
@@ -362,9 +364,20 @@ it:
         search_placeholder: "Cerca per nome emoji e alias..."
         no_results: "Nessun risultato"
       thread:
+        title: "Titolo"
         replies:
           one: "%{count} risposta"
           other: "%{count} risposte"
+        settings: "Impostazioni"
+        last_reply: "ultima risposta"
+        notifications:
+          regular:
+            title: "Normale"
+          tracking:
+            title: "Contenuto seguito"
+        participants_other_count:
+          one: "+%{count} altro"
+          other: "+%{count} altri"
       draft_channel_screen:
         header: "Nuovo messaggio"
         cancel: "Annulla"
@@ -441,3 +454,7 @@ it:
         chat_notifications_with_unread:
           one: "Notifiche chat - %{count} notifica non letta"
           other: "Notifiche chat - %{count} notifiche non lette"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

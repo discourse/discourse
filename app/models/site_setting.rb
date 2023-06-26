@@ -20,15 +20,21 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
-  def self.load_settings(file, plugin: nil)
-    SiteSettings::YamlLoader
-      .new(file)
-      .load do |category, name, default, opts|
-        setting(name, default, opts.merge(category: category, plugin: plugin))
-      end
-  end
-
   load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+
+  if Rails.env.test?
+    SAMPLE_TEST_PLUGIN =
+      Plugin::Instance.new(
+        Plugin::Metadata.new.tap { |metadata| metadata.name = "discourse-sample-plugin" },
+      )
+
+    Discourse.plugins_by_name[SAMPLE_TEST_PLUGIN.name] = SAMPLE_TEST_PLUGIN
+
+    load_settings(
+      File.join(Rails.root, "spec", "support", "sample_plugin_site_settings.yml"),
+      plugin: SAMPLE_TEST_PLUGIN.name,
+    )
+  end
 
   if GlobalSetting.load_plugins?
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
@@ -109,7 +115,8 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.email_polling_enabled?
-    SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
+    SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled? ||
+      DiscoursePluginRegistry.mail_pollers.any?(&:enabled?)
   end
 
   def self.blocked_attachment_content_types_regex

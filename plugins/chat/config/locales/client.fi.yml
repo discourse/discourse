@@ -109,6 +109,8 @@ fi:
       heading: "Chat"
       join: "Liity"
       last_visit: "edellinen vierailu"
+      summarization:
+        summarize: "Tee yhteenveto"
       mention_warning:
         dismiss: "hylkää"
         invitations_sent:
@@ -159,6 +161,10 @@ fi:
       save: "Tallenna"
       select: "Valitse"
       return_to_list: "Palaa kanavaluetteloon"
+      return_to_threads_list: "Palaa aktiivisiin keskusteluihin"
+      unread_threads_count:
+        one: "Sinulla on %{count} lukematon keskustelu"
+        other: "Sinulla on %{count} lukematonta keskustelua"
       scroll_to_bottom: "Vieritä alas"
       scroll_to_new_messages: "Katso uudet viestit"
       sound:
@@ -372,13 +378,28 @@ fi:
         search_placeholder: "Hae emojin nimen ja aliaksen mukaan..."
         no_results: "Ei tuloksia"
       thread:
+        title: "Otsikko"
         view_thread: Näytä ketju
         replies:
           one: "%{count} vastaus"
           other: "%{count} vastausta"
         close: "Sulje ketju"
+        original_message:
+          started_by: "Aloittanut"
+        settings: "Asetukset"
+        last_reply: "viimeisin vastaus"
+        notifications:
+          regular:
+            title: "Normaali"
+          tracking:
+            title: "Seuranta"
+        participants_other_count:
+          one: "+%{count} muu"
+          other: "+%{count} muuta"
       threads:
         open: "Avaa ketju"
+        list: "Käynnissä olevat keskustelut"
+        none: "Et osallistu mihinkään viestiketjuun tällä kanavalla."
       draft_channel_screen:
         header: "Uusi viesti"
         cancel: "Peruuta"
@@ -455,3 +476,7 @@ fi:
         chat_notifications_with_unread:
           one: "Chat-ilmoitukset – %{count} lukematon ilmoitus"
           other: "Chat-ilmoitukset – %{count} lukematonta ilmoitusta"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

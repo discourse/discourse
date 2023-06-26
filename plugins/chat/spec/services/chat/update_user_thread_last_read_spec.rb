@@ -95,7 +95,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
           it "updates the last_read_message_id of the thread" do
             result
-            expect(membership.reload.last_read_message_id).to eq(thread.replies.last.id)
+            expect(membership.reload.last_read_message_id).to eq(thread.last_reply.id)
           end
         end
       end

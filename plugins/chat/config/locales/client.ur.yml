@@ -26,6 +26,8 @@ ur:
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
       last_visit: "آخری وزٹ"
+      summarization:
+        summarize: "خلاصہ"
       mention_warning:
         dismiss: "بر خاست کریں"
       reply: "جواب"
@@ -106,9 +108,17 @@ ur:
         flags: "فلَیگز"
         symbols: "علامات"
       thread:
+        title: "عنوان"
         replies:
           one: "%{count} جواب"
           other: "%{count} جوابات"
+        settings: "ترتیبات"
+        last_reply: "آخری جواب"
+        notifications:
+          regular:
+            title: "عمومی"
+          tracking:
+            title: "ٹریک کیا جا رہا"
       draft_channel_screen:
         header: "نیا پیغام"
         cancel: "منسوخ"

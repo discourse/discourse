@@ -33,7 +33,7 @@ export default class ChatComposerDropdown extends Component {
   @action
   setupPanel(element) {
     this._tippyInstance = tippy(this.trigger, {
-      theme: "chat-composer-drodown",
+      theme: "chat-composer-dropdown",
       trigger: "click",
       zIndex: 1400,
       arrow: iconHTML("tippy-rounded-arrow"),

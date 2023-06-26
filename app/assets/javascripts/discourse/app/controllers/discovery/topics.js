@@ -1,5 +1,6 @@
 import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import DismissTopics from "discourse/mixins/dismiss-topics";
 import DiscoveryController from "discourse/controllers/discovery";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
@@ -54,6 +55,32 @@ const controllerOpts = {
   @discourseComputed("model.filter", "model.topics.length")
   showResetNew(filter, topicsLength) {
     return this._isFilterPage(filter, "new") && topicsLength > 0;
+  },
+
+  callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
+    const tracked =
+      (this.router.currentRoute.queryParams["f"] ||
+        this.router.currentRoute.queryParams["filter"]) === "tracked";
+
+    let topicIds = this.selected
+      ? this.selected.map((topic) => topic.id)
+      : null;
+
+    Topic.resetNew(this.category, !this.noSubcategories, {
+      tracked,
+      topicIds,
+      dismissPosts,
+      dismissTopics,
+      untrack,
+    }).then((result) => {
+      if (result.topic_ids) {
+        this.topicTrackingState.removeTopics(result.topic_ids);
+      }
+      this.send(
+        "refresh",
+        tracked ? { skipResettingParams: ["filter", "f"] } : {}
+      );
+    });
   },
 
   // Show newly inserted topics
@@ -113,26 +140,6 @@ const controllerOpts = {
           this.afterRefresh(filter, list);
         }
       });
-    },
-
-    resetNew() {
-      const tracked =
-        (this.router.currentRoute.queryParams["f"] ||
-          this.router.currentRoute.queryParams["filter"]) === "tracked";
-
-      let topicIds = this.selected
-        ? this.selected.map((topic) => topic.id)
-        : null;
-
-      Topic.resetNew(this.category, !this.noSubcategories, {
-        tracked,
-        topicIds,
-      }).then(() =>
-        this.send(
-          "refresh",
-          tracked ? { skipResettingParams: ["filter", "f"] } : {}
-        )
-      );
     },
   },
 
@@ -195,17 +202,26 @@ const controllerOpts = {
 
     const segments = (this.get("model.filter") || "").split("/");
 
-    const tab = segments[segments.length - 1];
+    let tab = segments[segments.length - 1];
+
     if (tab !== "new" && tab !== "unread") {
       return;
     }
 
+    if (tab === "new" && this.currentUser.new_new_view_enabled) {
+      tab = "new_new";
+    }
+
     return I18n.t("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
-        `${this.currentUser.get("username_lower")}/preferences/notifications`
+        `${this.currentUser.get("username_lower")}/preferences/tracking`
       ),
     });
   },
 };
 
-export default DiscoveryController.extend(controllerOpts, BulkTopicSelection);
+export default DiscoveryController.extend(
+  controllerOpts,
+  BulkTopicSelection,
+  DismissTopics
+);

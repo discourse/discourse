@@ -37,20 +37,4 @@ RSpec.describe Jobs::Chat::UpdateThreadReplyCount do
       Time.at(Time.zone.now.to_i, in: Time.zone),
     )
   end
-
-  it "publishes the thread original message metadata" do
-    messages =
-      MessageBus.track_publish("/chat/#{thread.channel_id}") do
-        described_class.new.execute(thread_id: thread.id)
-      end
-
-    expect(messages.first.data).to eq(
-      {
-        "original_message_id" => thread.original_message_id,
-        "replies_count" => 2,
-        "type" => "update_thread_original_message",
-        "title" => thread.title,
-      },
-    )
-  end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Local dates", type: :system, js: true do
+describe "Local dates", type: :system do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { Fabricate(:user) }
 

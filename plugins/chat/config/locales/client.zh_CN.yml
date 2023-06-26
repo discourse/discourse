@@ -114,6 +114,8 @@ zh_CN:
       heading: "聊天"
       join: "加入"
       last_visit: "上次访问"
+      summarization:
+        summarize: "摘要"
       mention_warning:
         dismiss: "忽略"
         cannot_see: "%{username} 无法访问此频道且未被通知。"
@@ -186,6 +188,9 @@ zh_CN:
       save: "保存"
       select: "选择"
       return_to_list: "返回频道列表"
+      return_to_threads_list: "返回正在进行的讨论"
+      unread_threads_count:
+        other: "你有 %{count} 个未读的讨论"
       scroll_to_bottom: "滚动到底部"
       scroll_to_new_messages: "查看新消息"
       sound:
@@ -422,14 +427,28 @@ zh_CN:
         search_placeholder: "按表情符号名称和别名搜索…"
         no_results: "没有结果"
       thread:
+        title: "标题"
         view_thread: 查看对话
+        default_title: "话题"
         replies:
           other: "%{count} 个回复"
         label: 话题
         close: "关闭话题"
+        original_message:
+          started_by: "开始于"
+        settings: "设置"
+        last_reply: "最后回复"
+        notifications:
+          regular:
+            title: "正常"
+          tracking:
+            title: "跟踪"
+        participants_other_count:
+          other: "+其他 %{count} 个"
       threads:
-        started_by: "开始于"
         open: "打开主题"
+        list: "正在进行的讨论"
+        none: "你没有参与这个频道中的任何话题。"
       draft_channel_screen:
         header: "新消息"
         cancel: "取消"
@@ -506,3 +525,7 @@ zh_CN:
         chat_notifications: "聊天通知"
         chat_notifications_with_unread:
           other: "聊天通知 - %{count} 个未读通知"
+    styleguide:
+      sections:
+        chat:
+          title: 聊天

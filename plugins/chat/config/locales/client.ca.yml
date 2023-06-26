@@ -106,9 +106,17 @@ ca:
         flags: "Banderes"
         symbols: "Símbols"
       thread:
+        title: "Títol"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostes"
+        settings: "Configuració"
+        last_reply: "darrera resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguint"
       draft_channel_screen:
         header: "Missatge nou"
         cancel: "Cancel·la"

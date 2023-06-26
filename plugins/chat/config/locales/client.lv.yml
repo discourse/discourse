@@ -104,10 +104,18 @@ lv:
         flags: "Sūdzības"
         symbols: "Simboli"
       thread:
+        title: "Virsraksts"
         replies:
           zero: "%{count} atbildes"
           one: "%{count} atbilde"
           other: "%{count} atbildes"
+        settings: "Iestatījumi"
+        last_reply: "pēdējā atbilde"
+        notifications:
+          regular:
+            title: "Normāls"
+          tracking:
+            title: "Sekot"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

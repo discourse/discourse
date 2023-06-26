@@ -1148,7 +1148,6 @@ sk:
       hide_forever: "nie, ďakujem"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -2191,7 +2190,6 @@ sk:
         many: "Získal tento odkaz %{count}-krát"
         other: "Získal tento odkaz %{count}-krát"
       granted_on: "Udelený dňa %{date}"
-      others_count: "Ostatní s týmto odznakom (%{count})"
       title: Odznaky
       more_badges:
         one: "+%{count} Ďalší"
@@ -2292,6 +2290,8 @@ sk:
         other: "%{count} nových"
       more: "Viac"
       all_categories: "Všetky kategórie"
+      categories_form_modal:
+        save: "Uložiť"
       sections:
         custom:
           save: "Uložiť"
@@ -2326,8 +2326,8 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Všetko"
+            topics:
+              content: "Témy"
             faq:
               content: "Časté otázky"
             groups:
@@ -2841,6 +2841,8 @@ sk:
           validations:
             required:
               key: "povinné"
+            type:
+              key: "typ"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."

@@ -2,15 +2,7 @@ import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { camelize } from "@ember/string";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import {
-  alias,
-  equal,
-  filterBy,
-  gt,
-  mapBy,
-  or,
-  readOnly,
-} from "@ember/object/computed";
+import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -137,7 +129,8 @@ let userOptionFields = [
   "seen_popups",
   "default_calendar",
   "bookmark_auto_delete_preference",
-  "sidebar_list_destination",
+  "sidebar_link_to_filtered_list",
+  "sidebar_show_count_of_new_items",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -410,7 +403,6 @@ const User = RestModel.extend({
   sidebarSections: alias("sidebar_sections"),
 
   sidebarTagNames: mapBy("sidebarTags", "name"),
-  sidebarListDestination: readOnly("sidebar_list_destination"),
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
@@ -423,6 +415,12 @@ const User = RestModel.extend({
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "POST",
       data: { email },
+    }).then(() => {
+      if (!this.unconfirmed_emails) {
+        this.set("unconfirmed_emails", []);
+      }
+
+      this.unconfirmed_emails.pushObject(email);
     });
   },
 
@@ -430,6 +428,12 @@ const User = RestModel.extend({
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "PUT",
       data: { email },
+    }).then(() => {
+      if (!this.unconfirmed_emails) {
+        this.set("unconfirmed_emails", []);
+      }
+
+      this.unconfirmed_emails.pushObject(email);
     });
   },
 
@@ -905,6 +909,16 @@ const User = RestModel.extend({
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
     return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
+  },
+
+  @dependentKeyCompat
+  get sidebarLinkToFilteredList() {
+    return this.get("user_option.sidebar_link_to_filtered_list");
+  },
+
+  @dependentKeyCompat
+  get sidebarShowCountOfNewItems() {
+    return this.get("user_option.sidebar_show_count_of_new_items");
   },
 
   delete() {
@@ -1434,6 +1448,10 @@ User.reopen(Evented, {
     }
 
     this._subscribersCount--;
+  },
+
+  isTrackingStatus() {
+    return this._subscribersCount > 0;
   },
 
   _statusChanged(sender, key) {

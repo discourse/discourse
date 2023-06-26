@@ -15,7 +15,7 @@
       .select-kit-body {
         border: 1px solid var(--primary-low);
         background-clip: padding-box;
-        box-shadow: shadow("dropdown");
+        box-shadow: var(--shadow-dropdown);
       }
 
       .select-kit-row {

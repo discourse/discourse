@@ -1347,18 +1347,19 @@ RSpec.describe TagsController do
   end
 
   describe "#destroy_synonym" do
+    subject(:destroy_synonym) { delete("/tag/#{tag.name}/synonyms/#{synonym.name}.json") }
+
     fab!(:tag) { Fabricate(:tag) }
     fab!(:synonym) { Fabricate(:tag, target_tag: tag, name: "synonym") }
-    subject { delete("/tag/#{tag.name}/synonyms/#{synonym.name}.json") }
 
     it "fails if not logged in" do
-      subject
+      destroy_synonym
       expect(response.status).to eq(403)
     end
 
     it "fails if not staff user" do
       sign_in(user)
-      subject
+      destroy_synonym
       expect(response.status).to eq(403)
     end
 
@@ -1367,7 +1368,7 @@ RSpec.describe TagsController do
 
       it "can remove a synonym from a tag" do
         synonym2 = Fabricate(:tag, target_tag: tag, name: "synonym2")
-        expect { subject }.to_not change { Tag.count }
+        expect { destroy_synonym }.to_not change { Tag.count }
         expect_same_tag_names(tag.reload.synonyms, [synonym2])
         expect(synonym.reload).to_not be_synonym
       end

@@ -25,6 +25,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     tracked_tags: ["tag1"],
     watched_tags: ["tag2"],
     watching_first_post_tags: ["tag3"],
+    admin: false,
   });
 
   needs.settings({
@@ -178,9 +179,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("clicking on everything link - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+  test("clicking on everything link - sidebar_link_to_filtered_list set to true and no unread or new topics", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
 
     await visit("/t/280");
@@ -209,7 +212,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("clicking on everything link - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+  test("clicking on everything link - sidebar_link_to_filtered_list set to true with new topics", async function (assert) {
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
     );
@@ -221,7 +224,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
     await visit("/t/280");
     await click(
@@ -250,7 +255,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
-  test("clicking on everything link - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+  test("clicking on everything link - sidebar_link_to_filtered_list set to true with new and unread topics", async function (assert) {
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
     );
@@ -270,7 +275,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
     await visit("/t/280");
     await click(
@@ -665,7 +672,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("my posts changes its text when drafts are present and new new view experiment is enabled", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_show_count_of_new_items: true,
+      },
       new_new_view_enabled: true,
     });
     await visit("/");
@@ -757,7 +766,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("show suffix indicator for unread and new content on everything link", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "default",
+      user_option: {
+        sidebar_show_count_of_new_items: false,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -845,7 +856,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
   test("new and unread count for everything link", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_show_count_of_new_items: true,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -998,9 +1011,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       reviewable_count: 0,
     });
 
-    await visit("/reivew");
+    await visit("/review");
 
-    assert.notOk(
+    assert.ok(
       exists(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'].active"
       ),
@@ -1027,7 +1040,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "review link is displayed in the more drawer"
     );
 
-    await publishToMessageBus("/reviewable_counts", {
+    await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       reviewable_count: 34,
     });
 
@@ -1065,6 +1078,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         route: "discovery.unread",
         text: "unread topics",
         title: "List of unread topics",
+        icon: "wrench",
       });
     });
 
@@ -1086,6 +1100,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(".sidebar-section-link[data-link-name='unread']").title,
       "List of unread topics",
       "displays the right title for the link"
+    );
+
+    assert.ok(
+      exists(
+        ".sidebar-section-link[data-link-name='unread'] .sidebar-section-link-prefix.icon .d-icon-wrench"
+      ),
+      "displays the wrench icon for the link"
     );
 
     await click(".sidebar-section-link[data-link-name='unread']");
@@ -1154,6 +1175,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "displays the right title for the link"
     );
 
+    assert.ok(
+      exists(
+        ".sidebar-section-link[data-link-name='user-summary'] .sidebar-section-link-prefix.icon .d-icon-link"
+      ),
+      "displays the link icon for the link"
+    );
+
     await click(".btn-sidebar-toggle");
 
     assert.ok(teardownCalled, "section link teardown callback was called");
@@ -1171,7 +1199,12 @@ acceptance(
       navigation_menu: "sidebar",
     });
 
-    test("count shown next to the everything link", async function (assert) {
+    test("count is shown next to the everything link when sidebar_show_count_of_new_items is true", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_show_count_of_new_items: true,
+        },
+      });
       this.container.lookup("service:topic-tracking-state").loadStates([
         {
           topic_id: 1,
@@ -1209,14 +1242,19 @@ acceptance(
 
       assert.strictEqual(
         query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
+          ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
         ).textContent.trim(),
         "2",
         "count is 2 because there's 1 unread topic and 1 new topic"
       );
     });
 
-    test("everything link href", async function (assert) {
+    test("dot is shown next to the everything link when sidebar_show_count_of_new_items is false", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_show_count_of_new_items: false,
+        },
+      });
       this.container.lookup("service:topic-tracking-state").loadStates([
         {
           topic_id: 1,
@@ -1242,28 +1280,30 @@ acceptance(
 
       await visit("/");
 
-      assert.true(
-        query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/new"),
-        "links to /new because there are 1 new and 1 unread topics"
-      );
+      assert
+        .dom(
+          ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix.icon.unread"
+        )
+        .exists(
+          "everything link has a dot because there are unread or new topics"
+        );
 
       await publishToMessageBus("/unread", {
         topic_id: 1,
         message_type: "read",
         payload: {
-          last_read_post_number: 3,
-          highest_post_number: 3,
+          last_read_post_number: 1,
+          highest_post_number: 1,
         },
       });
 
-      assert.true(
-        query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/new"),
-        "links to /new because there is 1 unread topic"
-      );
+      assert
+        .dom(
+          ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix.icon.unread"
+        )
+        .exists(
+          "everything link has a dot because there are unread or new topics"
+        );
 
       await publishToMessageBus("/unread", {
         topic_id: 2,
@@ -1274,12 +1314,88 @@ acceptance(
         },
       });
 
-      assert.true(
-        query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/latest"),
-        "links to /latest because there are no unread or new topics"
-      );
+      assert
+        .dom(
+          ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix.icon.unread"
+        )
+        .doesNotExist(
+          "everything link no longer has a dot because there are no more unread or new topics"
+        );
+    });
+
+    test("everything link's href is the new topics list when sidebar_link_to_filtered_list is true", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_link_to_filtered_list: true,
+        },
+      });
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/new",
+
+          "links to /new because there are 1 new and 1 unread topics"
+        );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 1,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 3,
+          highest_post_number: 3,
+        },
+      });
+
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/new",
+          "links to /new because there is 1 unread topic"
+        );
+
+      await publishToMessageBus("/unread", {
+        topic_id: 2,
+        message_type: "read",
+        payload: {
+          last_read_post_number: 12,
+          highest_post_number: 12,
+        },
+      });
+
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/latest",
+          "links to /latest because there are no unread or new topics"
+        );
 
       await publishToMessageBus("/unread", {
         topic_id: 1,
@@ -1290,12 +1406,39 @@ acceptance(
         },
       });
 
-      assert.true(
-        query(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything']"
-        ).href.endsWith("/new"),
-        "links to /new because there is 1 new topic"
-      );
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute(
+          "href",
+          "/new",
+          "links to /new because there is 1 new topic"
+        );
+    });
+
+    test("everything link's href is always the latest topics list when sidebar_link_to_filtered_list is false", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_link_to_filtered_list: false,
+        },
+      });
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert
+        .dom(".sidebar-section-link[data-link-name='everything']")
+        .hasAttribute("href", "/latest", "everything link href is /latest");
     });
   }
 );

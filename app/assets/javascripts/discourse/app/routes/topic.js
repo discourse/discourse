@@ -325,7 +325,7 @@ const TopicRoute = DiscourseRoute.extend({
   deactivate() {
     this._super(...arguments);
 
-    this.searchService.set("searchContext", null);
+    this.searchService.searchContext = null;
 
     const topicController = this.controllerFor("topic");
     const postStream = topicController.get("model.postStream");
@@ -351,7 +351,7 @@ const TopicRoute = DiscourseRoute.extend({
       firstPostExpanded: false,
     });
 
-    this.searchService.set("searchContext", model.get("searchContext"));
+    this.searchService.searchContext = model.get("searchContext");
 
     // close the multi select when switching topics
     controller.set("multiSelect", false);

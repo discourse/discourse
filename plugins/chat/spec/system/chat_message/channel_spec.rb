@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat message - channel", type: :system, js: true do
+RSpec.describe "Chat message - channel", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
@@ -22,7 +22,7 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
       channel.hover_message(message_1)
 
       expect(page).to have_css(
-        ".chat-channel[data-id='#{channel_1.id}'] [data-id='#{message_1.id}'] .chat-message.is-active",
+        ".chat-channel[data-id='#{channel_1.id}'] .chat-message-container[data-id='#{message_1.id}'].-active",
       )
     end
   end

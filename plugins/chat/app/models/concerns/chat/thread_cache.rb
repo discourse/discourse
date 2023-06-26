@@ -76,7 +76,6 @@ module Chat
 
     def thread_reply_count_cache_changed
       Jobs.enqueue_in(5.seconds, Jobs::Chat::UpdateThreadReplyCount, thread_id: self.id)
-      ::Chat::Publisher.publish_thread_original_message_metadata!(self)
     end
   end
 end

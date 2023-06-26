@@ -1030,11 +1030,8 @@ ja:
         enable: "サイドバーを有効にする"
         options: "オプション"
         categories_section: "カテゴリセクション"
-        categories_section_instruction: "選択されたカテゴリは、サイドバーのカテゴリセクションに表示されます。"
         tags_section: "タグセクション"
-        tags_section_instruction: "選択されたタグは、サイドバーのタグセクションに表示されます。"
         navigation_section: "ナビゲーション"
-        list_destination_instruction: "サイドバーに新しいコンテンツがある場合..."
         list_destination_default: "デフォルトのリンクを使用して新しい項目のバッジを表示する"
         list_destination_unread_new: "未読/新規にリンクし、新しい項目の件数を表示する"
       change: "変更"
@@ -1188,7 +1185,6 @@ ja:
         tags: "タグ"
         interface: "表示設定"
         apps: "アプリ連携"
-        sidebar: "サイドバー"
       change_password:
         success: "(メール送信済み)"
         in_progress: "(メール送信中)"
@@ -1681,28 +1677,6 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }と{ currentPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }があります。訪問者が読んで返信するトピックと投稿がもっと必要です。少なくとも { requiredTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }と { requiredPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }があります。訪問者が読んで返信できるトピックがもっと必要です。少なくとも { requiredTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }があります。訪問者が読んで返信できる投稿がもっと必要です。少なくとも { requiredPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
@@ -1737,7 +1711,6 @@ ja:
         other: "<b>%{count}</b> 件の返信があります。"
       description_time_MF: |
         {replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。
-      enable: "このトピックを要約する"
       disable: "すべての投稿を表示"
       short_label: "要約"
       short_title: "このトピックの要約を表示: コミュニティーが最も面白いと判断した投稿"
@@ -2466,7 +2439,7 @@ ja:
         top: "人気のトピックはありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。デフォルトでは、2 日以内に作成されたトピックは新しいトピックとみなされ、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> が表示されます。</p><p>この設定はユーザー<a href="%{userPrefsUrl}">設定</a>で変更できます。</p>'
-          unread: "<p>新しいトピックがここに表示されます。</p><p>デフォルトでは次の場合にトピックは未読とされ未読数 <span class=\"badge unread-posts badge-notification\">1</span> が表示されます。</p><ul><li>トピックを作成した場合</li><li>トピックに返信した場合</li><li>トピックを 4 分以上閲覧した場合</li></ul><p>または各トピックの \U0001F514 を通じて明示的にトピックを「追跡」または「ウォッチ中」に設定した場合</p><p>これを変更するには、<a href=\"%{userPrefsUrl}\">設定</a>にアクセスしてください。</p>"
+          unread: "<p>新しいトピックがここに表示されます。</p><p>デフォルトでは次の場合にトピックは未読とされ未読数 <span class=\"badge unread-posts badge-notification\">1</span> が表示されます。</p><ul><li>トピックを作成した場合</li><li>トピックに返信した場合</li><li>トピックを 5 分以上閲覧した場合</li></ul><p>または各トピックの \U0001F514 を通じて明示的にトピックを「追跡」または「ウォッチ中」に設定した場合</p><p>これを変更するには、<a href=\"%{userPrefsUrl}\">設定</a>にアクセスしてください。</p>"
       bottom:
         latest: "最新のトピックは以上です。"
         posted: "投稿のあるトピックは以上です。"
@@ -3548,7 +3521,6 @@ ja:
       earned_n_times:
         other: "このバッジを %{count} 回獲得しました"
       granted_on: "%{date} にゲット！"
-      others_count: "このバッジを獲得した他のユーザー (%{count})"
       title: バッジ
       allow_title: "このバッジをタグラインとして使用できます"
       multiple_grant: "これは何度でも獲得できます"
@@ -3770,11 +3742,14 @@ ja:
       more: "もっと"
       all_categories: "すべてのカテゴリ"
       all_tags: "すべてのタグ"
+      categories_form_modal:
+        save: "保存"
       sections:
         custom:
           save: "保存"
           delete: "削除"
           links:
+            reset: "デフォルトにリセット"
             icon:
               label: "アイコン"
             name:
@@ -3795,20 +3770,12 @@ ja:
             unread_with_count: "未読 (%{count})"
             archive: "アーカイブ"
         tags:
-          links:
-            add_tags:
-              content: "タグを追加"
-              title: "タグをまだ追加していません。クリックして始めましょう。"
           none: "追加したタグはまだありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "タグ"
           header_action_title: "サイドバーのタグを編集"
           configure_defaults: "デフォルトの構成"
         categories:
-          links:
-            add_categories:
-              content: "カテゴリを追加"
-              title: "カテゴリをまだ追加していません。クリックして始めましょう。"
           none: "追加したカテゴリはありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "カテゴリ"
@@ -3816,7 +3783,7 @@ ja:
           configure_defaults: "デフォルトの構成"
         community:
           header_link_text: "コミュニティー"
-          header_action_title: "トピックの作成"
+          header_action_create_topic_title: "トピックの作成"
           links:
             about:
               content: "サイト情報"
@@ -3827,8 +3794,8 @@ ja:
             badges:
               content: "バッジ"
               title: "獲得可能なすべてのバッジ"
-            everything:
-              content: "すべて"
+            topics:
+              content: "トピック"
               title: "すべてのトピック"
             faq:
               content: "FAQ"
@@ -4879,6 +4846,8 @@ ja:
               key: "最小"
             maximum:
               key: "最大"
+            type:
+              key: "タイプ"
       impersonate:
         title: "代理操作"
         help: "このツールを使用して、デバッグ目的でユーザーアカウントを代理操作します。作業を終了したら、ログアウトしてください。"
@@ -5224,7 +5193,6 @@ ja:
             label: "絵文字を追加"
         title: "設定"
         no_results: "何も見つかりませんでした。"
-        more_than_30_results: "結果が 30 件以上あります。検索を絞り込むかカテゴリを選択してください。"
         clear_filter: "クリア"
         add_url: "URL を追加"
         add_host: "ホストを追加"

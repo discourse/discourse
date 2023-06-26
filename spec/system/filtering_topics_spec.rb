@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Filtering topics", type: :system, js: true do
+describe "Filtering topics", type: :system do
   fab!(:user) { Fabricate(:user) }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_query_filter) { PageObjects::Components::TopicQueryFilter.new }

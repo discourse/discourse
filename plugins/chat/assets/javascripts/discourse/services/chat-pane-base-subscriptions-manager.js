@@ -1,6 +1,6 @@
 import Service, { inject as service } from "@ember/service";
-import EmberObject from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -27,7 +27,7 @@ export function handleStagedMessage(channel, messagesManager, data) {
 /**
  * Handles subscriptions for MessageBus messages sent from Chat::Publisher
  * to the channel and thread panes. There are individual services for
- * each (ChatChannelPaneSubscriptionsManager and ChatChannelThreadPaneSubscriptionsManager)
+ * each (ChatChannelPaneSubscriptionsManager and ChatThreadPaneSubscriptionsManager)
  * that implement their own logic where necessary. Functions which will
  * always be different between the two raise a "not implemented" error in
  * the base class, and the child class must define the associated function,
@@ -182,6 +182,8 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     } else {
       this.messagesManager.removeMessage(targetMsg);
     }
+
+    this._afterDeleteMessage(targetMsg, data);
   }
 
   handleRestoreMessage(data) {
@@ -198,7 +200,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   handleMentionWarning(data) {
     const message = this.messagesManager.findMessage(data.chat_message_id);
     if (message) {
-      message.mentionWarning = EmberObject.create(data);
+      message.mentionWarning = ChatMessageMentionWarning.create(message, data);
     }
   }
 
@@ -228,7 +230,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
           stagedThread.staged = false;
           stagedThread.id = data.thread_id;
           stagedThread.originalMessage.thread = stagedThread;
-          stagedThread.originalMessage.threadReplyCount ??= 1;
+          stagedThread.originalMessage.thread.preview.replyCount ??= 1;
         } else if (data.thread_id) {
           this.model.threadsManager
             .find(this.model.id, data.thread_id, { fetchIfNotFound: true })
@@ -247,6 +249,10 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   }
 
   handleThreadOriginalMessageUpdate() {
+    throw "not implemented";
+  }
+
+  _afterDeleteMessage() {
     throw "not implemented";
   }
 }

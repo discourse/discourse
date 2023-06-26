@@ -1,8 +1,10 @@
 @use "sass:math";
 
-$card_width: 580px;
-$avatar_width: 120px;
-$avatar_margin: -50px; // negative margin makes avatars extend above cards
+.user-card {
+  --card-width: 39em;
+  --avatar-width: 8em;
+  --avatar-margin: -3.3em; // extends the avatar above the card
+}
 
 .animated-placeholder {
   height: 20px;
@@ -10,8 +12,8 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
 }
 
 .card-avatar-placeholder {
-  width: $avatar_width;
-  height: $avatar_width;
+  width: var(--avatar-width);
+  height: var(--avatar-width);
   border-radius: 100%;
   position: relative;
   overflow: hidden;
@@ -26,16 +28,16 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
       var(--primary-low) 18%,
       var(--primary-very-low) 33%
     );
-    height: $avatar_width;
-    width: $card_width;
+    height: var(--avatar-width);
+    width: var(--card-width);
   }
 }
 
 // shared styles for user and group cards
 .user-card,
 .group-card {
-  width: $card_width;
-  box-shadow: shadow("card");
+  width: var(--card-width);
+  box-shadow: var(--shadow-card);
   color: var(--primary);
   background: var(--secondary) center center;
   background-size: cover;
@@ -140,12 +142,16 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   .first-row {
     display: flex;
     .avatar-placeholder {
-      width: $avatar_width;
-      height: $avatar_width;
+      width: var(--avatar-width);
+      height: var(--avatar-width);
     }
     .user-card-avatar {
-      margin-top: $avatar_margin;
-      max-height: $avatar_width;
+      margin-top: var(--avatar-margin);
+      max-height: var(--avatar-width);
+    }
+    .avatar {
+      width: var(--avatar-width);
+      height: var(--avatar-width);
     }
     .new-user a {
       color: var(--primary-low-mid);
@@ -257,18 +263,18 @@ $avatar_margin: -50px; // negative margin makes avatars extend above cards
   .first-row {
     display: flex;
     .group-card-avatar {
-      margin-top: $avatar_margin;
+      margin-top: var(--avatar-margin);
     }
     .avatar-flair {
       display: flex;
       background-size: contain;
       background-repeat: no-repeat;
-      width: $avatar_width;
-      height: $avatar_width;
+      width: var(--avatar-width);
+      height: var(--avatar-width);
       color: var(--primary);
       .d-icon {
         margin: auto;
-        font-size: math.div($avatar_width, 1.5);
+        font-size: calc(var(--avatar-width) / 1.5);
       }
       &.rounded {
         border-radius: 50%;

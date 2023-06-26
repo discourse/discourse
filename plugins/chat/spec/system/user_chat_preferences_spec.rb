@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User chat preferences", type: :system, js: true do
+RSpec.describe "User chat preferences", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }

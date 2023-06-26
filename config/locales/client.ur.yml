@@ -1631,7 +1631,6 @@ ur:
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
       description_time_MF: |
         وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
-      enable: "اس ڑاپک کا خلاصہ کریں"
       disable: "تمام پوسٹیں دکھائیں"
       short_label: "خلاصہ"
       short_title: "اس موضوع کا خلاصہ دکھائیں: سب سے دلچسپ پوسٹس جیسا کہ کمیونٹی کے ذریعہ طے کیا گیا ہے۔"
@@ -2302,7 +2301,6 @@ ur:
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
         educate:
           new: '<p>آپ کے نئے عنوانات یہاں ظاہر ہوں گے۔ پہلے سے طے شدہ طور پر، عنوانات کو نئے تصور کیا جاتا ہے اور اگر وہ پچھلے 2 دنوں میں بنائے گئے تھے تو وہ <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> دکھائے گا۔</p><p>اسے تبدیل کرنے کے لیے اپنی <a href="%{userPrefsUrl}">ترجیحات</a> دیکھیں۔</p>'
-          unread: "<p>آپ کے بغیر پڑھے ہوئے موضوعات یہاں ظاہر ہوتے ہیں۔</p><p>پہلے سے طے شدہ طور پر، عنوانات کو بغیر پڑھے ہوئے سمجھا جاتا ہے اور یہ بغیر پڑھے ہوئے شماروں کو دکھائے گا اگر آپ: <span class=\"badge unread-posts badge-notification\"></p></span> موضوع بنایا<li><ul>موضوع کا جواب دیا<li></li>موضوع</li><p><li></li></ul>نے واضح طور پر ہر عنوان میں \U0001F514 کے ذریعے موضوع کو ٹریک یا دیکھا گیا پر سیٹ کریں۔</p><p>اسے تبدیل کرنے کے لیے اپنی <a href=\"%{userPrefsUrl}\">ترجیحات</a> دیکھیں۔</p>"
       bottom:
         latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
         posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"
@@ -3369,7 +3367,6 @@ ur:
         one: "یہ بَیج %{count} دفعہ حاصل کیا"
         other: "یہ بَیج %{count} مرتبہ حاصل کیا"
       granted_on: "عطا کیا گیا %{date}"
-      others_count: "دوسرے جن کے پاس یہ بَیج ہے (%{count})"
       title: بَیج
       allow_title: "آپ اِس بَیج کو عنوان کے طور پر استعمال کر سکتے ہیں"
       multiple_grant: "آپ اِس کو ایک سے زیادہ مرتبہ حاصل کر سکتے ہیں"
@@ -3589,11 +3586,14 @@ ur:
         other: "%{count} نئے"
       more: "مزید"
       all_categories: "تمام زُمرَہ جات"
+      categories_form_modal:
+        save: "محفوظ کریں"
       sections:
         custom:
           save: "محفوظ کریں"
           delete: "مٹائیں"
           links:
+            reset: "دوبارہ پہلے جیسا کر دیں"
             icon:
               label: "آئیکن"
             name:
@@ -3625,8 +3625,8 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
-            everything:
-              content: "تمام"
+            topics:
+              content: "ٹاپکس"
             faq:
               content: "عمومی سوالات"
             groups:
@@ -4641,6 +4641,8 @@ ur:
               key: "کم از کم"
             maximum:
               key: "زیادہ سے زیادہ"
+            type:
+              key: "قِسم"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -4972,7 +4974,6 @@ ur:
             label: "ایموجی شامل کریں"
         title: "سیٹِنگ"
         no_results: "کوئی نتائج نہیں پائے گئے۔"
-        more_than_30_results: "30 سے زائد نتائج ہیں۔ برائے مہربانی اپنی تلاش کو تنگ کریں یا ایک زمرہ منتخب کریں۔"
         clear_filter: "صاف کریں"
         add_url: "URL شامل کریں"
         add_host: "ہَوسٹ شامل کریں"

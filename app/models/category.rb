@@ -869,7 +869,7 @@ class Category < ActiveRecord::Base
 
   def seeded?
     [
-      SiteSetting.lounge_category_id,
+      SiteSetting.general_category_id,
       SiteSetting.meta_category_id,
       SiteSetting.staff_category_id,
       SiteSetting.uncategorized_category_id,

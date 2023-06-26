@@ -10,7 +10,7 @@ export const ButtonClass = {
   buildClasses(attrs) {
     let className = this.attrs.className || "";
 
-    let hasText = attrs.label || attrs.contents;
+    let hasText = attrs.translatedLabel || attrs.label || attrs.contents;
 
     if (!hasText) {
       className += " no-text";

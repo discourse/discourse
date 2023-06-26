@@ -115,6 +115,8 @@ uk:
       heading: "Чат"
       join: "Приєднатися"
       last_visit: "останнє відвідування"
+      summarization:
+        summarize: "Підсумок"
       mention_warning:
         dismiss: "відкласти"
         cannot_see: "%{username} не має доступу до цього каналу і не отримав сповіщення."
@@ -206,6 +208,12 @@ uk:
       save: "Зберегти"
       select: "Вибрати"
       return_to_list: "Повернутися до списку каналів"
+      return_to_threads_list: "Повернутися до поточних дискусій"
+      unread_threads_count:
+        one: "У вас %{count} непрочитане обговорення"
+        few: "У вас %{count} непрочитаних обговорень"
+        many: "У вас %{count} непрочитані обговорення"
+        other: "У вас %{count} непрочитані обговорення"
       scroll_to_bottom: "Прокрутити вниз"
       scroll_to_new_messages: "Переглянути нові повідомлення"
       sound:
@@ -431,7 +439,9 @@ uk:
         search_placeholder: "Пошук за назвою та псевдонімом emoji..."
         no_results: "Немає результатів"
       thread:
+        title: "Назва"
         view_thread: Відкрити діалог
+        default_title: "Нитка"
         replies:
           one: "%{count} відповідь"
           few: "%{count} відповіді"
@@ -439,9 +449,24 @@ uk:
           other: "%{count} відповідь"
         label: Нитка
         close: "Закрити тему"
+        original_message:
+          started_by: "Розпочато"
+        settings: "Налаштування"
+        last_reply: "остання відповідь"
+        notifications:
+          regular:
+            title: "Нормальний"
+          tracking:
+            title: "Стежити"
+        participants_other_count:
+          one: "+%{count} інший"
+          few: "+%{count} інших"
+          many: "+%{count} інших"
+          other: "+%{count} інших"
       threads:
-        started_by: "Розпочато"
         open: "Відкрийте тему"
+        list: "Поточні обговорення"
+        none: "Ви не берете участі в жодній темі на цьому каналі."
       draft_channel_screen:
         header: "Нове повідомлення"
         cancel: "Скасувати"
@@ -513,3 +538,7 @@ uk:
           few: "Повідомлення чату – %{count} непрочитані повідомлення"
           many: "Повідомлення чату – %{count} непрочитаних повідомлень"
           other: "Повідомлення чату – %{count} непрочитаних повідомлень"
+    styleguide:
+      sections:
+        chat:
+          title: Чат

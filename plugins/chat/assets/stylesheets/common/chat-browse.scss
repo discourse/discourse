@@ -1,7 +1,7 @@
 .chat-browse-view {
   position: relative;
   box-sizing: border-box;
-  padding: 1rem;
+  padding: 1rem 1rem env(safe-area-inset-bottom) 1rem;
 
   &__header {
     display: flex;

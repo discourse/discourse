@@ -5,13 +5,15 @@ RSpec.describe Group do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group) }
 
+  it_behaves_like "it has custom fields"
+
   describe "Validations" do
     it { is_expected.to allow_value("#{"a" * 996}.com").for(:automatic_membership_email_domains) }
     it do
       is_expected.not_to allow_value("#{"a" * 997}.com").for(:automatic_membership_email_domains)
     end
     it { is_expected.to validate_length_of(:bio_raw).is_at_most(3000) }
-    it { is_expected.to validate_length_of(:membership_request_template).is_at_most(500) }
+    it { is_expected.to validate_length_of(:membership_request_template).is_at_most(5000) }
     it { is_expected.to validate_length_of(:full_name).is_at_most(100) }
 
     describe "#grant_trust_level" do
@@ -500,13 +502,13 @@ RSpec.describe Group do
   end
 
   describe "new" do
-    subject { Fabricate.build(:group) }
+    subject(:group) { Fabricate.build(:group) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.first
+      event = DiscourseEvent.track_events { group.save! }.first
 
       expect(event[:event_name]).to eq(:group_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(group)
     end
   end
 
@@ -581,34 +583,40 @@ RSpec.describe Group do
 
   it "allows you to lookup a group by integer id" do
     group = Fabricate(:group)
-    expect(group.id).to eq Group.lookup_groups(group_ids: group.id).first.id
+    expect(Group.lookup_groups(group_ids: group.id)).to contain_exactly(group)
   end
 
   it "allows you to lookup groups by comma separated string" do
     group1 = Fabricate(:group)
     group2 = Fabricate(:group)
-    expect([group1, group2]).to eq Group.lookup_groups(group_ids: "#{group1.id},#{group2.id}")
+    expect(Group.lookup_groups(group_ids: "#{group1.id},#{group2.id}")).to contain_exactly(
+      group1,
+      group2,
+    )
   end
 
   it "allows you to lookup groups by array" do
     group1 = Fabricate(:group)
     group2 = Fabricate(:group)
-    expect([group1, group2]).to eq Group.lookup_groups(group_ids: [group1.id, group2.id])
+    expect(Group.lookup_groups(group_ids: [group1.id, group2.id])).to contain_exactly(
+      group1,
+      group2,
+    )
   end
 
   it "can find desired groups correctly" do
-    expect(Group.desired_trust_level_groups(2).sort).to eq [10, 11, 12]
+    expect(Group.desired_trust_level_groups(2)).to contain_exactly(10, 11, 12)
   end
 
   it "correctly handles trust level changes" do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
 
-    expect(user.groups.map(&:name).sort).to eq %w[trust_level_0 trust_level_1 trust_level_2]
+    expect(user.groups.map(&:name)).to match_array %w[trust_level_0 trust_level_1 trust_level_2]
 
     Group.user_trust_level_change!(user.id, 0)
     user.reload
-    expect(user.groups.map(&:name).sort).to eq ["trust_level_0"]
+    expect(user.groups.map(&:name)).to contain_exactly("trust_level_0")
   end
 
   it "generates an event when applying group from trust level change" do
@@ -758,6 +766,11 @@ RSpec.describe Group do
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
 
+      group.add_owner(moderator)
+
+      expect(can_view?(moderator, group)).to eq(true)
+
+      GroupUser.delete_by(group: group, user: moderator)
       group.update_columns(visibility_level: Group.visibility_levels[:staff])
 
       expect(can_view?(admin, group)).to eq(true)
@@ -821,6 +834,11 @@ RSpec.describe Group do
       expect(can_view?(logged_on_user, group)).to eq(false)
       expect(can_view?(nil, group)).to eq(false)
 
+      group.add_owner(moderator)
+
+      expect(can_view?(moderator, group)).to eq(true)
+
+      GroupUser.delete_by(group: group, user: moderator)
       group.update_columns(members_visibility_level: Group.visibility_levels[:staff])
 
       expect(can_view?(admin, group)).to eq(true)

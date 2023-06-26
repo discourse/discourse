@@ -1,7 +1,7 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
 import {
@@ -87,7 +87,7 @@ module(
     });
 
     test("displays indicator when 2 or 3 users are replying", async function (assert) {
-      this.channel = fabricators.chatChannel();
+      this.channel = fabricators.channel();
 
       await render(
         hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
@@ -102,7 +102,7 @@ module(
     });
 
     test("displays indicator when 3 users are replying", async function (assert) {
-      this.channel = fabricators.chatChannel();
+      this.channel = fabricators.channel();
 
       await render(
         hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
@@ -118,7 +118,7 @@ module(
     });
 
     test("displays indicator when more than 3 users are replying", async function (assert) {
-      this.channel = fabricators.chatChannel();
+      this.channel = fabricators.channel();
 
       await render(
         hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`
@@ -135,7 +135,7 @@ module(
     });
 
     test("filters current user from list of repliers", async function (assert) {
-      this.channel = fabricators.chatChannel();
+      this.channel = fabricators.channel();
 
       await render(
         hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`

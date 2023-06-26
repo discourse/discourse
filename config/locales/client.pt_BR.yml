@@ -1112,11 +1112,8 @@ pt_BR:
         enable: "Habilitar barra lateral"
         options: "Opções"
         categories_section: "Seção de Categorias"
-        categories_section_instruction: "As categorias selecionadas serão exibidas na seção de categorias do painel lateral."
         tags_section: "Seção de Etiquetas"
-        tags_section_instruction: "As etiquetas selecionadas serão exibidas na seção de etiquetas da barra lateral."
         navigation_section: "Navegação"
-        list_destination_instruction: "Quando houver conteúdo novo na barra lateral..."
         list_destination_default: "usar o link padrão e mostrar um emblema para novos itens"
         list_destination_unread_new: "link para novos/não lidos e mostrar contagem de itens novos"
       change: "alterar"
@@ -1280,7 +1277,6 @@ pt_BR:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicativos"
-        sidebar: "Barra Lateral"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -1785,36 +1781,6 @@ pt_BR:
       logout_disabled: "Não é possível sair enquanto o site estiver em modo somente leitura. Esse recurso está desativado."
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
-    too_few_topics_and_posts_notice_MF: |
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">iniciar a discussão!</a> Há { currentTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      } e { currentPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Os visitantes precisam de mais para ler e responder. Recomendamos pelo menos { requiredTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      } e { requiredPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Somente a equipe pode ver esta mensagem.
-    too_few_topics_notice_MF: |
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">iniciar a discussão!</a> Há { currentTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      }. Os visitantes precisam de mais para ler e responder. Recomendamos pelo menos { requiredTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      }. Somente a equipe pode ver esta mensagem.
-    too_few_posts_notice_MF: |
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">iniciar a discussão!</a> Há { currentPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Os visitantes precisam de mais para ler e responder. Recomendamos pelo menos { requiredPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Somente a equipe pode ver esta mensagem.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
@@ -1851,7 +1817,6 @@ pt_BR:
         other: "Existem <b>%{count}</b> respostas."
       description_time_MF: |
         Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
-      enable: "Resumir este tópico"
       disable: "Exibir todas as postagens"
       short_label: "Resumir"
       short_title: "Exibir um resumo deste tópico: as postagens mais interessantes segundo a comunidade"
@@ -2623,7 +2588,7 @@ pt_BR:
         filter: "Não existem tópicos."
         educate:
           new: '<p>Seus novos tópicos serão exibidos aqui. Por padrão, os tópicos serão considerados novos e exibirão um <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador se tiverem tido criados nos últimos dois dias.</p><p>Acesse suas <a href="%{userPrefsUrl}">preferências</a> para alterar essa configuração.</p>'
-          unread: "<p>Seus tópicos não lidos são exibidos aqui.</p><p>Por padrão, os tópicos são considerados como não lidos e exibirão contadores <span class=\"badge unread-posts badge-notification\">1</span> se você tiver:</p><ul><li>criado o tópico</li><li>respondido ao tópico</li><li>lido o tópico por mais de 4 minutos</li></ul><p>ou marcado o tópico como Monitorado ou Acompanhado pelo \U0001F514 em cada tópico.</p><p>Acesse suas <a href=\"%{userPrefsUrl}\">preferências</a> para alterar essa configuração.</p>"
+          unread: "<p>Seus tópicos não lidos são exibidos aqui.</p><p>Por padrão, os tópicos são considerados como não lidos e exibirão contadores <span class=\"badge unread-posts badge-notification\">1</span> se você tiver:</p><ul><li>criado o tópico</li><li>respondido ao tópico</li><li>lido o tópico por mais de 5 minutos</li></ul><p>ou marcado o tópico como Monitorado ou Acompanhado pelo \U0001F514 em cada tópico.</p><p>Acesse suas <a href=\"%{userPrefsUrl}\">preferências</a> para alterar essa configuração.</p>"
       bottom:
         latest: "Não há mais últimos tópicos."
         posted: "Não há mais tópicos postados."
@@ -3771,7 +3736,6 @@ pt_BR:
         one: "Emblema obtido %{count} vez"
         other: "Emblema obtido %{count} vezes"
       granted_on: "Concedido em %{date}"
-      others_count: "Outros(as) com este emblema (%{count})"
       title: Emblemas
       allow_title: "Você pode usar este emblema como um título"
       multiple_grant: "Você pode ganhar isto várias vezes"
@@ -4007,6 +3971,8 @@ pt_BR:
       more: "Mais"
       all_categories: "Todas as categorias"
       all_tags: "Todas as etiquetas"
+      categories_form_modal:
+        save: "Salvar"
       sections:
         custom:
           save: "Salvar"
@@ -4014,6 +3980,7 @@ pt_BR:
           links:
             add: "Adicionar outro link"
             delete: "Excluir link"
+            reset: "Redefinir para padrão"
             icon:
               label: "Ícone"
               validation:
@@ -4036,20 +4003,12 @@ pt_BR:
             unread_with_count: "Não lido(s) (%{count})"
             archive: "Arquivo"
         tags:
-          links:
-            add_tags:
-              content: "Adicionar etiquetas"
-              title: "Você não adicionou nenhuma etiqueta. Clique para começar."
           none: "Você não adicionou nenhuma etiqueta."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Etiquetas"
           header_action_title: "Editar suas etiquetas da barra lateral"
           configure_defaults: "Configurar padrões"
         categories:
-          links:
-            add_categories:
-              content: "Adicionar categorias"
-              title: "Você não adicionou nenhuma categoria. Clique para começar."
           none: "Você não adicionou nenhuma categoria."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Categorias"
@@ -4057,7 +4016,7 @@ pt_BR:
           configure_defaults: "Configurar padrões"
         community:
           header_link_text: "Comunidade"
-          header_action_title: "Criar um tópico"
+          header_action_create_topic_title: "Criar um tópico"
           links:
             about:
               content: "Sobre"
@@ -4068,8 +4027,8 @@ pt_BR:
             badges:
               content: "Emblemas"
               title: "Todos os emblemas disponíveis para ganhar"
-            everything:
-              content: "Tudo"
+            topics:
+              content: "Tópicos"
               title: "Todos os Tópicos"
             faq:
               content: "FAQ"
@@ -5128,6 +5087,8 @@ pt_BR:
               key: "mínimo"
             maximum:
               key: "máximo"
+            type:
+              key: "tipo"
       impersonate:
         title: "Representar"
         help: "Use esta ferramenta para representar uma conta de usuário(a) para efeitos de depuração. Você terá que sair dela assim que terminar."
@@ -5478,7 +5439,6 @@ pt_BR:
             label: "Adicionar emoji"
         title: "Configurações"
         no_results: "Nenhum resultado encontrado."
-        more_than_30_results: "Existem mais de 30 resultados. Refine sua pesquisa ou selecione uma categoria."
         clear_filter: "Limpar"
         add_url: "adicionar URL"
         add_host: "adicionar host"

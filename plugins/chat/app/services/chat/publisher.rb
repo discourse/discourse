@@ -47,13 +47,11 @@ module Chat
         ),
       )
 
-      # NOTE: This means that the read count is only updated in the client
-      # for new messages in the main channel stream, maybe in future we want to
-      # do this for thread messages as well?
       if !chat_message.thread_reply? || !allow_publish_to_thread?(chat_channel)
         MessageBus.publish(
           self.new_messages_message_bus_channel(chat_channel.id),
           {
+            type: "channel",
             channel_id: chat_channel.id,
             message_id: chat_message.id,
             user_id: chat_message.user.id,
@@ -63,16 +61,38 @@ module Chat
           permissions(chat_channel),
         )
       end
+
+      if chat_message.thread_reply? && allow_publish_to_thread?(chat_channel)
+        MessageBus.publish(
+          self.new_messages_message_bus_channel(chat_channel.id),
+          {
+            type: "thread",
+            channel_id: chat_channel.id,
+            message_id: chat_message.id,
+            user_id: chat_message.user.id,
+            username: chat_message.user.username,
+            thread_id: chat_message.thread_id,
+          },
+          permissions(chat_channel),
+        )
+
+        publish_thread_original_message_metadata!(chat_message.thread)
+      end
     end
 
     def self.publish_thread_original_message_metadata!(thread)
+      preview =
+        ::Chat::ThreadPreviewSerializer.new(
+          thread,
+          participants: ::Chat::ThreadParticipantQuery.call(thread_ids: [thread.id])[thread.id],
+          root: false,
+        ).as_json
       publish_to_channel!(
         thread.channel,
         {
           type: :update_thread_original_message,
           original_message_id: thread.original_message_id,
-          replies_count: thread.replies_count_cache,
-          title: thread.title,
+          preview: preview.as_json,
         },
       )
     end
@@ -137,10 +157,22 @@ module Chat
 
     def self.publish_delete!(chat_channel, chat_message)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
+      latest_not_deleted_message_id =
+        if chat_message.thread_reply? && chat_channel.threading_enabled &&
+             SiteSetting.enable_experimental_chat_threaded_discussions
+          chat_message.thread.latest_not_deleted_message_id(anchor_message_id: chat_message.id)
+        else
+          chat_channel.latest_not_deleted_message_id(anchor_message_id: chat_message.id)
+        end
       publish_to_targets!(
         message_bus_targets,
         chat_channel,
-        { type: "delete", deleted_id: chat_message.id, deleted_at: chat_message.deleted_at },
+        {
+          type: "delete",
+          deleted_id: chat_message.id,
+          deleted_at: chat_message.deleted_at,
+          latest_not_deleted_message_id: latest_not_deleted_message_id,
+        },
       )
     end
 
@@ -241,23 +273,47 @@ module Chat
       "/chat/user-tracking-state/#{user_id}"
     end
 
-    def self.publish_user_tracking_state(user, chat_channel_id, chat_message_id)
-      tracking_data =
-        Chat::TrackingState.call(
-          guardian: Guardian.new(user),
-          channel_ids: [chat_channel_id],
+    def self.publish_user_tracking_state!(user, channel, message)
+      data = {
+        channel_id: channel.id,
+        last_read_message_id: message.id,
+        thread_id: message.thread_id,
+      }
+
+      channel_tracking_data =
+        Chat::TrackingStateReportQuery.call(
+          guardian: user.guardian,
+          channel_ids: [channel.id],
           include_missing_memberships: true,
-        )
-      if tracking_data.failure?
-        raise StandardError,
-              "Tracking service failed when trying to publish user tracking state:\n\n#{tracking_data.inspect_steps}"
+        ).find_channel(channel.id)
+
+      data.merge!(channel_tracking_data)
+
+      # Need the thread unread overview if channel has threading enabled
+      # and a message is sent in the thread. We also need to pass the actual
+      # thread tracking state.
+      if channel.threading_enabled && message.thread_reply?
+        data[:unread_thread_ids] = ::Chat::TrackingStateReportQuery
+          .call(
+            guardian: user.guardian,
+            channel_ids: [channel.id],
+            include_threads: true,
+            include_read: false,
+          )
+          .find_channel_threads(channel.id)
+          .keys
+
+        data[:thread_tracking] = ::Chat::TrackingStateReportQuery.call(
+          guardian: user.guardian,
+          thread_ids: [message.thread_id],
+          include_threads: true,
+          include_missing_memberships: true,
+        ).find_thread(message.thread_id)
       end
 
       MessageBus.publish(
         self.user_tracking_state_message_bus_channel(user.id),
-        { channel_id: chat_channel_id, last_read_message_id: chat_message_id }.merge(
-          tracking_data.report.find_channel(chat_channel_id),
-        ).as_json,
+        data.as_json,
         user_ids: [user.id],
       )
     end
@@ -266,7 +322,7 @@ module Chat
       "/chat/bulk-user-tracking-state/#{user_id}"
     end
 
-    def self.publish_bulk_user_tracking_state(user, channel_last_read_map)
+    def self.publish_bulk_user_tracking_state!(user, channel_last_read_map)
       tracking_data =
         Chat::TrackingState.call(
           guardian: Guardian.new(user),

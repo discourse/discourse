@@ -105,6 +105,8 @@ hu:
       heading: "Csevegés"
       join: "Belépés"
       last_visit: "utolsó látogatás"
+      summarization:
+        summarize: "Összefoglalás"
       mention_warning:
         dismiss: "elvetés"
         invitations_sent:
@@ -347,11 +349,20 @@ hu:
         symbols: "Szimbólumok"
         no_results: "Nincs találat"
       thread:
+        title: "Cím"
         view_thread: Téma megtekintése
+        default_title: "Szál"
         replies:
           one: "%{count} válasz"
           other: "%{count} válasz"
         label: Szál
+        settings: "Beállítások"
+        last_reply: "utolsó válasz"
+        notifications:
+          regular:
+            title: "Normális"
+          tracking:
+            title: "Követés"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"

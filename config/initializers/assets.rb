@@ -51,6 +51,7 @@ Rails.application.config.assets.precompile += %w[
   embed-application.js
   scripts/discourse-test-listen-boot
   scripts/discourse-boot
+  workbox-*/*
 ]
 
 Rails.application.config.assets.precompile += EmberCli.assets.map { |name| name.sub(".js", ".map") }
@@ -80,7 +81,8 @@ start_path = ::Rails.root.join("app/assets").to_s
 exclude = [".es6", ".hbs", ".hbr", ".js", ".css", ".lock", ".json", ".log", ".html", ""]
 Rails.application.config.assets.precompile << lambda do |logical_path, filename|
   filename.start_with?(start_path) && !filename.include?("/node_modules/") &&
-    !filename.include?("/dist/") && !exclude.include?(File.extname(logical_path))
+    !filename.include?("/dist/") && !filename.include?("/patches/") &&
+    !exclude.include?(File.extname(logical_path))
 end
 
 Discourse

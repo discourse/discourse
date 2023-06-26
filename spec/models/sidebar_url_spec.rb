@@ -9,6 +9,13 @@ RSpec.describe SidebarUrl do
         value: "https://www.test.com/discourse-test",
       ).valid?,
     ).to eq(true)
+    expect(
+      SidebarUrl.new(
+        icon: "link",
+        name: "categories",
+        value: "http://#{Discourse.current_hostname}/pub/test",
+      ).valid?,
+    ).to eq(true)
   end
 
   it "sets external flag" do

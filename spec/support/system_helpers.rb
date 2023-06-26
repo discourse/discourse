@@ -27,9 +27,10 @@ module SystemHelpers
     SiteSetting.external_system_avatars_enabled = false
     SiteSetting.disable_avatar_education_message = true
     SiteSetting.enable_user_tips = false
+    SiteSetting.splash_screen = false
   end
 
-  def try_until_success(timeout: 2, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
     start ||= Time.zone.now
     backoff ||= frequency
     yield
@@ -101,7 +102,10 @@ module SystemHelpers
 
     ENV["TZ"] = timezone
 
-    using_session(timezone) { freeze_time(&example) }
+    using_session(timezone) do |session|
+      freeze_time(&example)
+      session.quit
+    end
 
     ENV["TZ"] = previous_browser_timezone
   end

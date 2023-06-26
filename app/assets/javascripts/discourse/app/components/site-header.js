@@ -8,7 +8,7 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { isTesting } from "discourse-common/config/environment";
 import { DEBUG } from "@glimmer/env";
@@ -35,7 +35,7 @@ const SiteHeaderComponent = MountWidget.extend(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
       "currentUser.all_unread_notifications_count",
-      "currentUser.reviewable_count", // TODO: remove this when redesigned_user_menu_enabled is removed
+      "currentUser.reviewable_count",
       "currentUser.unseen_reviewable_count",
       "session.defaultColorSchemeIsDark",
       "session.darkModeAvailable"
@@ -250,9 +250,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
 
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        this.appEvents.on("user-menu:rendered", this, "_animateMenu");
-      }
+      this.appEvents.on("user-menu:rendered", this, "_animateMenu");
 
       if (this._dropDownHeaderEnabled()) {
         this.appEvents.on(
@@ -274,53 +272,35 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const header = document.querySelector("header.d-header");
       this._itsatrap = new ItsATrap(header);
-      const dirs = this.currentUser?.redesigned_user_menu_enabled
-        ? ["up", "down"]
-        : ["right", "left"];
+      const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
     },
 
     _handleArrowKeysNav(event) {
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        const activeTab = document.querySelector(
-          ".menu-tabs-container .btn.active"
+      const activeTab = document.querySelector(
+        ".menu-tabs-container .btn.active"
+      );
+      if (activeTab) {
+        let activeTabNumber = Number(
+          document.activeElement.dataset.tabNumber ||
+            activeTab.dataset.tabNumber
         );
-        if (activeTab) {
-          let activeTabNumber = Number(
-            document.activeElement.dataset.tabNumber ||
-              activeTab.dataset.tabNumber
-          );
-          const maxTabNumber =
-            document.querySelectorAll(".menu-tabs-container .btn").length - 1;
-          const isNext = event.key === "ArrowDown";
-          let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
-          if (isNext && nextTab > maxTabNumber) {
-            nextTab = 0;
-          }
-          if (!isNext && nextTab < 0) {
-            nextTab = maxTabNumber;
-          }
-          event.preventDefault();
-          document
-            .querySelector(
-              `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
-            )
-            .focus();
+        const maxTabNumber =
+          document.querySelectorAll(".menu-tabs-container .btn").length - 1;
+        const isNext = event.key === "ArrowDown";
+        let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
+        if (isNext && nextTab > maxTabNumber) {
+          nextTab = 0;
         }
-      } else {
-        const activeTab = document.querySelector(".glyphs .menu-link.active");
-
-        if (activeTab) {
-          let focusedTab = document.activeElement;
-          if (!focusedTab.dataset.tabNumber) {
-            focusedTab = activeTab;
-          }
-
-          this.appEvents.trigger("user-menu:navigation", {
-            key: event.key,
-            tabNumber: Number(focusedTab.dataset.tabNumber),
-          });
+        if (!isNext && nextTab < 0) {
+          nextTab = maxTabNumber;
         }
+        event.preventDefault();
+        document
+          .querySelector(
+            `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
+          )
+          .focus();
       }
     },
 
@@ -339,9 +319,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("header:show-topic", this, "setTopic");
       this.appEvents.off("header:hide-topic", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        this.appEvents.off("user-menu:rendered", this, "_animateMenu");
-      }
+      this.appEvents.off("user-menu:rendered", this, "_animateMenu");
 
       if (this._dropDownHeaderEnabled()) {
         this.appEvents.off(
@@ -447,8 +425,38 @@ export default SiteHeaderComponent.extend({
 
   init() {
     this._super(...arguments);
-
     this._resizeObserver = null;
+  },
+
+  @bind
+  updateHeaderOffset() {
+    let headerWrapTop = this.headerWrap.getBoundingClientRect().top;
+
+    if (headerWrapTop !== 0) {
+      headerWrapTop -= Math.max(0, document.body.getBoundingClientRect().top);
+    }
+
+    if (DEBUG && isTesting()) {
+      headerWrapTop -= document
+        .getElementById("ember-testing-container")
+        .getBoundingClientRect().top;
+
+      headerWrapTop -= 1; // For 1px border on testing container
+    }
+
+    const documentStyle = document.documentElement.style;
+
+    const currentValue = documentStyle.getPropertyValue("--header-offset");
+    const newValue = `${this.headerWrap.offsetHeight + headerWrapTop}px`;
+
+    if (currentValue !== newValue) {
+      documentStyle.setProperty("--header-offset", newValue);
+    }
+  },
+
+  @bind
+  onScroll() {
+    schedule("afterRender", this.updateHeaderOffset);
   },
 
   didInsertElement() {
@@ -457,19 +465,20 @@ export default SiteHeaderComponent.extend({
     this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
     this.headerWrap = document.querySelector(".d-header-wrap");
+
     if (this.headerWrap) {
       schedule("afterRender", () => {
         this.header = this.headerWrap.querySelector("header.d-header");
-        const headerOffset = this.headerWrap.offsetHeight;
+        this.updateHeaderOffset();
         const headerTop = this.header.offsetTop;
-        document.documentElement.style.setProperty(
-          "--header-offset",
-          `${headerOffset}px`
-        );
         document.documentElement.style.setProperty(
           "--header-top",
           `${headerTop}px`
         );
+      });
+
+      window.addEventListener("scroll", this.onScroll, {
+        passive: true,
       });
     }
 
@@ -477,16 +486,12 @@ export default SiteHeaderComponent.extend({
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
-            const headerOffset = entry.contentRect.height;
             const headerTop = this.header.offsetTop;
-            document.documentElement.style.setProperty(
-              "--header-offset",
-              `${headerOffset}px`
-            );
             document.documentElement.style.setProperty(
               "--header-top",
               `${headerTop}px`
             );
+            this.updateHeaderOffset();
           }
         }
       });
@@ -497,7 +502,7 @@ export default SiteHeaderComponent.extend({
 
   willDestroyElement() {
     this._super(...arguments);
-
+    window.removeEventListener("scroll", this.onScroll);
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },

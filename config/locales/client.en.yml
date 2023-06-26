@@ -453,6 +453,8 @@ en:
         placeholder: "type the message title, url or id here"
 
     review:
+      show_more: "Show more"
+      show_less: "Show less"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -630,6 +632,8 @@ en:
           title: "User"
         reviewable_post:
           title: "Post"
+        reviewable_chat_message:
+          title: "Flagged chat message"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -1203,13 +1207,13 @@ en:
         enable: "Enable sidebar"
         options: "Options"
         categories_section: "Categories Section"
-        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
+        categories_section_instruction: "Selected categories will be displayed under Navigation Menu's categories section. If no categories are selected, the site's top categories will be displayed."
         tags_section: "Tags Section"
-        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
+        tags_section_instruction: "Selected tags will be displayed under Navigation Menu's tags section. If no tags are selected, the site's top tags will be displayed."
         navigation_section: "Navigation"
-        list_destination_instruction: "When there's new content in the sidebar..."
-        list_destination_default: "use the default link and show a badge for new items"
-        list_destination_unread_new: "link to unread/new and show a count of new items"
+        navigation_section_instruction: "When a topic list in the navigation menu has new or unread items…"
+        link_to_filtered_list_checkbox_description: "Link to the filtered list"
+        show_count_new_items_checkbox_description: "Show a count of the new items"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1404,7 +1408,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        sidebar: "Sidebar"
+        navigation_menu: "Navigation Menu"
 
       change_password:
         success: "(email sent)"
@@ -1931,10 +1935,6 @@ en:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
 
-      welcome_topic:
-        title: "Edit the welcome topic"
-        content: "Help new members feel at home by customizing this topic to suit your community's needs."
-
     loading: "Loading..."
     errors:
       prev_page: "while trying to load"
@@ -1969,42 +1969,6 @@ en:
       logout_disabled: "Logout is disabled while the site is in read only mode."
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
-
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_and_posts_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {are <strong>#</strong> topics}
-      } and { currentPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      } and { requiredPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Only staff can see this message.
-
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {are <strong>#</strong> topics}
-      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      }. Only staff can see this message.
-
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_posts_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentPosts, plural,
-          one {is <strong>#</strong> post}
-        other {are <strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least { requiredPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Only staff can see this message.
 
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
@@ -2070,6 +2034,10 @@ en:
       intro: "Hello! Looks like you’re enjoying the discussion, but you haven’t signed up for an account yet."
       value_prop: "Tired of scrolling through the same posts? When you create an account you’ll always come back to where you left off. With an account you can also be notified of new replies, save bookmarks, and use likes to thank others. We can all work together to make this community great. :heart:"
 
+    offline_indicator:
+      no_internet: "No internet connection."
+      refresh_page: "Refresh page"
+
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
       description:
@@ -2086,10 +2054,13 @@ en:
           other {# minutes}
         }</b>.
 
-      enable: "Summarize This Topic"
+      enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Summarize"
       short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      strategy:
+        button_title: "Summarize this topic"
+        title: "Topic summary"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -2521,6 +2492,7 @@ en:
         aria_label: Alt text for image
 
       delete_image_button: Delete Image
+      toggle_image_grid: Toggle image grid
 
     notifications:
       tooltip:
@@ -2862,6 +2834,11 @@ en:
         dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
         also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
         dismiss_new: "Dismiss New"
+        dismiss_new_modal:
+          title: "Dismiss new"
+          topics: "Dismiss new topics"
+          posts: "Dismiss new posts"
+          untrack: "Stop tracking these topics so they stop appearing in my new list"
         dismiss_new_with_selected:
           one: "Dismiss New (%{count})"
           other: "Dismiss New (%{count})"
@@ -2903,7 +2880,8 @@ en:
         filter: "There are no topics."
         educate:
           new: '<p>Your new topics will appear here. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
-          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge unread-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 5 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
+          new_new: '<p>Your new topics will appear here, and your unread topics will also be displayed. By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicator if they were created in the last 2 days. Unread topics will show unread counts <span class="badge unread-posts badge-notification">1</span> if you: created the topic, replied to the topic, read the topic for more than 5 minutes, or if you have explicitly set the topic to Tracked or Watched via the 🔔 in each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "There are no more latest topics."
         posted: "There are no more posted topics."
@@ -2970,6 +2948,7 @@ en:
       read_more_in_category: "Want to read more? Browse other topics in %{categoryLink} or <a href='%{latestLink}'>view latest topics</a>."
       read_more: "Want to read more? <a href='%{categoryLink}'>Browse all categories</a> or <a href='%{latestLink}'>view latest topics</a>."
       unread_indicator: "No member has read the last post of this topic yet."
+      participant_groups: "Participant groups"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       #
@@ -3309,6 +3288,7 @@ en:
         instructions:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>%{count}</b> posts to."
+        chronological_order: "preserve chronological order after merging"
 
       move_to_new_message:
         title: "Move to New Message"
@@ -4409,6 +4389,26 @@ en:
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
+      categories_form_modal:
+        title: "Edit categories navigation"
+        subtitle:
+          text: "and we'll automatically show this site's most popular categories"
+        filter_placeholder: "Filter categories"
+        no_categories: "There are no categories matching the given term."
+      tags_form_modal:
+        title: "Edit tags navigation"
+        filter_placeholder: "Filter tags"
+        no_tags: "There are no tags matching the given term."
+        subtitle:
+          text: "and we'll automatically show this site's top tags"
+      edit_navigation_modal_form:
+        deselect_button_text: "Deselect all"
+        reset_to_defaults: "Reset to defaults"
+        filter_dropdown:
+          all: "All"
+          selected: "Selected"
+          unselected: "Unselected"
+
       sections:
         custom:
           add: "Add custom section"
@@ -4416,10 +4416,13 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
+          reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Make this section public and visible to everyone"
+          more_menu: "More menu"
           links:
             add: "Add another link"
             delete: "Delete link"
+            reset: "Reset to default"
             icon:
               label: "Icon"
               validation:
@@ -4455,20 +4458,12 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
-          links:
-            add_tags:
-              content: "Add tags"
-              title: "You have not added any tags. Click to get started."
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "Edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
-          links:
-            add_categories:
-              content: "Add categories"
-              title: "You have not added any categories. Click to get started."
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
@@ -4476,7 +4471,8 @@ en:
           configure_defaults: "Configure defaults"
         community:
           header_link_text: "Community"
-          header_action_title: "Create a topic"
+          header_action_create_topic_title: "Create a topic"
+          header_action_edit_section_title: "Edit Community section"
           links:
             about:
               content: "About"
@@ -4487,8 +4483,8 @@ en:
             badges:
               content: "Badges"
               title: "All the badges available to earn"
-            everything:
-              content: "Everything"
+            topics:
+              content: "Topics"
               title: "All topics"
             faq:
               content: "FAQ"
@@ -4511,6 +4507,7 @@ en:
               content: "Review"
               title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
+        global_section: "Global section, visible to everyone"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -4521,6 +4518,33 @@ en:
 
     char_counter:
       exceeded: "The maximum number of characters allowed has been exceeded."
+
+    form_template_chooser:
+      select_template: "Select form templates"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Please fill out this field."
+          text: "Please fill out this field."
+          select-one: "Please select an item in the list."
+          select-multiple: "Please select at least one item in the list."
+          checkbox: "Please check this box if you want to proceed."
+        typeMismatch:
+          default: "Please enter a valid value."
+          color: "Please enter a color."
+          date: "Please enter a date."
+          email: "Please enter a valid email address."
+          number: "Please enter a number."
+          password: "Please enter a valid password."
+          tel: "Please enter a valid telephone number."
+          text: "Please enter a text value."
+          url: "Please enter a valid URL."
+        tooShort: "The input must be %{minLength} characters or longer."
+        tooLong: "The input must be less than %{maxLength} characters."
+        rangeOverflow: "The input must be less than %{max}."
+        rangeUnderflow: "The input must be more than %{min}."
+        patternMismatch: "Please match the requested format."
+        badInput: "Please enter a valid input."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4769,6 +4793,7 @@ en:
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
+              list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
             categories:
@@ -5438,6 +5463,7 @@ en:
             revoke_moderation: "revoke moderation"
             backup_create: "create backup"
             deleted_tag: "deleted tag"
+            update_directory_columns: "update directory columns"
             deleted_unused_tags: "deleted unused tags"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
@@ -5648,15 +5674,19 @@ en:
             minimum:
               key: "minimum"
               type: "integer"
-              description: "In text fields, specifies the minimum number of characters allowed."
+              description: "For text fields, specifies the minimum number of characters allowed."
             maximum:
               key: "maximum"
               type: "integer"
-              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+              description: "For text fields, specifies the maximum number of characters allowed."
             pattern:
               key: "pattern"
               type: "regex string"
-              description: "In text fields, a regular expression specifying the allowed input."
+              description: "For text fields, a regular expression specifying the allowed input."
+            type:
+              key: "type"
+              type: "string"
+              description: "For input fields, you can specify the type of input that should be expected (text|email|date|number|url|tel|color)"
         preview_modal:
           title: "Preview Template"
         field_placeholders:

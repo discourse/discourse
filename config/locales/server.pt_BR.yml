@@ -194,9 +194,6 @@ pt_BR:
       load_from_remote: "Ocorreu um erro ao carregar esta postagem."
     site_settings:
       invalid_category_id: "Você especificou uma categoria que não existe"
-      invalid_choice:
-        one: "Você especificou a escolha inválida %{name}"
-        other: "Você especificou as escolhas inválidas %{name}"
       default_categories_already_selected: "Você não pode selecionar uma categoria usada em outra lista."
       default_tags_already_selected: "Você não pode selecionar uma etiqueta usada em outra lista."
       s3_upload_bucket_is_required: "Você não pode ativar envios para o S3, a não ser que tenha informado o \"s3_upload_bucket\"."
@@ -204,7 +201,6 @@ pt_BR:
       page_publishing_requirements: "A publicação da página não pode ser ativada se houver mídias seguras ativadas."
       s3_backup_requires_s3_settings: "Você não pode usar o S3 como local de backup, a não ser que você tenha informado o \"%{setting_name}\"."
       s3_bucket_reused: "Você não pode usar o mesmo bucket para \"s3_upload_bucket\" e \"s3_backup_bucke\"'. Escolha um bucket diferente ou use um caminho diferente para cada bucket."
-      secure_uploads_requirements: "Envios S3 devem ser ativados antes dos envios seguros."
       share_quote_facebook_requirements: "É preciso definir uma id do app Facebook para permitir o compartilhamento de citação para Facebook."
       second_factor_cannot_enforce_with_socials: "Você não pode aplicar 2FA com entrada com contas de redes sociais ativada. Primeiro você deve desativar a entrada com conta via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Você não pode impor a 2FA se a autenticação local estiver desativada."
@@ -598,8 +594,8 @@ pt_BR:
           attributes:
             value:
               invalid_interpolation_keys:
-                one: 'A seguinte chave de interpolação é inválida: %{keys}'
-                other: 'As seguintes chaves de interpolação são inválidas: %{keys}'
+                one: "A seguinte chave de interpolação é inválida: %{keys}"
+                other: "As seguintes chaves de interpolação são inválidas: %{keys}"
         watched_word:
           attributes:
             word:
@@ -619,22 +615,6 @@ pt_BR:
   meta_category_description: "Discussão sobre este site, sua organização, funcionamento e maneiras de melhorá-lo."
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para discussões da equipe. Tópicos só são visíveis para administradores(as) e moderadores(as)."
-  discourse_welcome_topic:
-    title: "Boas-vindas à nossa comunidade!"
-    body: |2
-
-      O primeiro parágrafo deste tópico fixado será visto como uma mensagem de boas-vindas a todos(as) os(as) novos(as) visitantes em sua página inicial. É muito importante!
-
-      **Edite isso** em uma breve descrição da sua comunidade:
-
-      - Para quem é?
-      - O que será encontrado aqui?
-      - Por que as pessoas devem participar?
-      - Onde é possível saber mais a respeito dela (links, fontes, etc)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Talvez você queira fechar este tópico pelo(a) administrador(a) :wrench: (na parte superior à direita e na parte inferior), para que as respostas não se acumulem em um anúncio.
   admin_quick_start_title: "LEIA-ME PRIMEIRO: Guia de início rápido do(a) administrador(a)"
   category:
     topic_prefix: "Sobre a categoria %{category} "
@@ -1907,7 +1887,6 @@ pt_BR:
     pop3_polling_password: "A senha da conta POP3 para sondar por e-mail."
     pop3_polling_delete_from_server: "Apagar e-mails do servidor. OBSERVAÇÃO: Se você desativar isso, será preciso limpar manualmente sua caixa de entrada"
     log_mail_processing_failures: "Registrar todas as falhas de processamento de e-mail em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Permita que os(as) usuários(as) postem novos tópicos por e-mail (requer sondagem manual ou POP3). Configure os endereços na aba "Configurações" de cada categoria.'
     email_in_min_trust: "O nível de confiança mínimo que um(a) usuário(a) precisa ter para ter permissão para postar novos tópicos via e-mail."
     email_in_authserv_id: "O identificador do serviço realizando verificações de autenticação em e-mails recebidos. Confira <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instruções de como configurar isso."
     email_in_spam_header: "O cabeçalho do e-mail para detectar spam."
@@ -1993,7 +1972,6 @@ pt_BR:
     auto_handle_queued_age: "Trate automaticamente os registros que estão aguardando revisão há vários dias. Sinalizadores serão ignorados. Postagens na fila e usuários serão rejeitados. Defina como 0 para desativar esse recurso."
     penalty_step_hours: "Penalidades padrão por silenciar ou suspender usuários(as). A primeira ofensa é padronizada para o primeiro valor, a segunda ofensa para o segundo valor, etc."
     svg_icon_subset: "Adicione mais ícones FontAwesome 5 que você gostaria de incluir em seus ativos. Use o prefixo \"fa-\" para ícones consolidados, \"far-\" para ícones regulares e \"fab-\" para ícones de marca."
-    max_prints_per_hour_per_user: "Quantidade máxima de impressões de páginas (defina como 0 para desativar)"
     full_name_required: "O nome completo é um campo obrigatório do perfil do(a) usuário(a)."
     enable_names: "Mostrar o nome completo do(a) usuário(a) em seu perfil, cartão de usuário(a) e e-mails. Desative para ocultar o nome completo em todos os lugares."
     display_name_on_posts: "Exibir o nome completo do(a) usuário(a) em suas postagens, além de seu(sua) @username."
@@ -2014,7 +1992,6 @@ pt_BR:
     allowed_href_schemes: "Esquemas permitidos em links, além de http e https."
     embed_post_limit: "Quantidade máxima de postagens para incorporar."
     embed_username_required: "O nome do(a) usuário(a) para criação do tópico é obrigatório."
-    show_create_topics_notice: "Se o site tiver menos de cinco tópicos públicos, mostre um aviso pedindo que os(as) administradores(as) criem alguns tópicos."
     delete_drafts_older_than_n_days: "Exclua rascunhos anteriores a (n) dias."
     delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para nunca excluir tópicos de stub."
     prevent_anons_from_downloading_files: "Impeça que usuários(as) anônimos(as) baixem anexos."
@@ -2133,8 +2110,6 @@ pt_BR:
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
     splash_screen: "Exibe uma tela de carregamento temporária enquanto os ativos do site são carregados"
     navigation_menu: "Determine qual menu de navegação usar. A barra lateral e a navegação no cabeçalho podem ser personalizadas pelos usuários. A opção legada está disponível para compatibilidade com versões anteriores."
-    default_sidebar_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Painel Lateral por padrão."
-    default_sidebar_tags: "As etiquetas selecionadas serão exibidas na seção de Etiquetas da barra lateral por padrão."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use o novo sistema de complementação automática #hashtag para categorias e etiquetas que renderiza o item selecionado de maneira diferente e que tem melhorado a busca"
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."

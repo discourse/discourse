@@ -1029,7 +1029,6 @@ sw:
       hide_forever: "hapana asante"
     summary:
       enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
-      enable: "Tengeneza Muhtasari wa Hii Mada."
       disable: "Onyesha Machapisho Yote"
     deleted_filter:
       enabled_description: "Mada hii ina machapisho yaliyofutwa, ambayo yamefichwa."
@@ -2142,7 +2141,6 @@ sw:
         print: "%{shortcut} Chapisha mada:"
     badges:
       granted_on: "Imetolewa %{date}"
-      others_count: "Wengine wenye hii beji (%{count})"
       title: Beji
       allow_title: "Unaweza kutumia beji hii kama cheo"
       multiple_grant: "Unaweza kuipata mara nyingi"
@@ -2245,6 +2243,8 @@ sw:
         other: "Mada mpya %{count} "
       more: "Zaidi"
       all_categories: "Kategoria Zote"
+      categories_form_modal:
+        save: "Hifadhi"
       sections:
         custom:
           save: "Hifadhi"
@@ -2278,6 +2278,8 @@ sw:
               content: "Msimamizi"
             badges:
               content: "Beji"
+            topics:
+              content: "Mada"
             faq:
               content: "FAQ"
             groups:
@@ -2912,6 +2914,8 @@ sw:
           validations:
             required:
               key: "muhimu"
+            type:
+              key: "aina"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."

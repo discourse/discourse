@@ -165,9 +165,6 @@ ca:
       load_from_remote: "Hi ha hagut un error en carregar aquesta publicació."
     site_settings:
       invalid_category_id: "Heu especificat una categoria que no existeix"
-      invalid_choice:
-        one: "Heu fet la tria no vàlida %{name}"
-        other: "Heu fet tries no vàlides %{name}"
       default_categories_already_selected: "No podeu triar una categoria emprada en una altra llista."
       s3_upload_bucket_is_required: "No podeu activar càrregues a S3 si no heu proporcionat el 's3_upload_bucket'."
       enable_s3_uploads_is_required: "No podeu habilitar l'inventari a S3 si no heu habilitat la càrrega a S3."
@@ -445,21 +442,6 @@ ca:
   meta_category_description: "Discussió sobre aquest lloc web, la seva organització, com funciona i com podem millorar-lo."
   staff_category_name: "Equip responsable"
   staff_category_description: "Categoria privada per a converses de l'equip responsable. Els temes només seran visibles per a discussions entre moderadors i administradors."
-  discourse_welcome_topic:
-    body: |2
-
-      El primer paràgraf d'aquest tema afixat serà visible com a missatge de benvinguda per a totes les noves visites a la vostra pàgina principal. És important!
-
-      **Editeu-lo** i convertiu-lo en una breu descripció de la vostra comunitat:
-
-      - Per a qui és?
-      - Què hi poden trobar?
-      - Per què haurien de venir aquí?
-      - On poden llegir-ne més (enllaços, recursos, etc.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Potser voleu tancar el tema amb l'eina d'administració :wrench: (dalt a la dreta i a baix), perquè les respostes no s'amunteguin sobre una comunicació.
   admin_quick_start_title: "LLEGIU-ME PRIMER DE TOT: Guia ràpida d'inici per a administradors"
   category:
     topic_prefix: "Quant a la categoria %{category} "
@@ -1505,7 +1487,6 @@ ca:
     pop3_polling_password: "Contrasenya del compte POP3 per a la consulta de correu."
     pop3_polling_delete_from_server: "Suprimeix els correus electrònics del servidor. NOTA: Si ho desactiveu, haureu de buidar manualment la vostra bústia de correu."
     log_mail_processing_failures: "Registra tots els errors de processament de correu electrònic en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Permet als usuaris publicar temes nous per correu (requereix consulta manual o POP3). Configureu les adreces en la pestanya "Configuració" de cada categoria.'
     email_in_min_trust: "El nivell de confiança mínim que un usuari necessita per a tenir permís per a publicar temes nous des del correu."
     email_in_spam_header: "La capçalera del correu electrònic per a detectar correu brossa."
     email_prefix: "L'[etiqueta] utilitzada en l'assumpte dels correus. Per defecte serà 'títol'."
@@ -1570,7 +1551,6 @@ ca:
     share_anonymized_statistics: "Comparteix estadístiques d'ús anonimitzades."
     auto_handle_queued_age: "Tracta automàticament els registres que esperen ser revisats després d'aquest nombre de dies. Les banderes s'ignoraran. Les publicacions en cua i els usuaris seran rebutjats. Poseu-ho a 0 per a desactivar la funció."
     svg_icon_subset: "Afegiu 5 icones FontAwesome addicionals que voleu incloure en els vostres actius. Utilitzeu el prefix \"fa-\" per a icones sòlides, \"far-\" per a les icones habituals i \"fab-\" per a les icones de marca."
-    max_prints_per_hour_per_user: "Nombre màxim d'impressions de pàgina /print (deixeu-ho 0 per inhabilitar)"
     full_name_required: "El nom complet és un camp obligatori del perfil d'usuari."
     enable_names: "Mostra el nom complet de l'usuari en el seu perfil, la seva targeta d'usuari i els seus correus. Desactiveu-ho per a amagar el nom complet a tot arreu."
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."
@@ -1587,7 +1567,6 @@ ca:
     allowed_href_schemes: "Esquemes permesos en enllaços a més de http i https."
     embed_post_limit: "Nombre màxim de publicacions que s'incrusten."
     embed_username_required: "Cal un nom d'usuari per a crear un tema."
-    show_create_topics_notice: "Si el lloc web té menys de 5 temes públics, mostra un avís demanant als administradors que en creï uns quants. "
     delete_drafts_older_than_n_days: "Suprimeix esborranys amb més de (n) dies."
     slug_generation_method: "Trieu un mètode de generació de slugs (adreces amigables). 'encoded' generarà una cadena amb codificacions %. 'none' anul·larà totalment l'adreça amigable."
     enable_emoji: "Activa emojis"

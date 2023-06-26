@@ -104,6 +104,8 @@ fr:
       heading: "Discussion"
       join: "Rejoindre"
       last_visit: "dernière visite"
+      summarization:
+        summarize: "Résumer"
       mention_warning:
         dismiss: "rejeter"
         invitations_sent:
@@ -364,9 +366,20 @@ fr:
         search_placeholder: "Recherche par nom d'émoji et alias…"
         no_results: "Aucun résultat"
       thread:
+        title: "Titre"
         replies:
           one: "%{count} réponse"
           other: "%{count} réponses"
+        settings: "Paramètres"
+        last_reply: "dernière réponse"
+        notifications:
+          regular:
+            title: "Normale"
+          tracking:
+            title: "Suivre"
+        participants_other_count:
+          one: "+%{count} autre"
+          other: "+%{count} autres"
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"
@@ -443,3 +456,7 @@ fr:
         chat_notifications_with_unread:
           one: "Notifications de discussion - %{count} notification non lue"
           other: "Notifications de discussion - %{count} notifications non lues"
+    styleguide:
+      sections:
+        chat:
+          title: Discussion

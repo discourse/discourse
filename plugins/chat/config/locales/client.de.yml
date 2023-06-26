@@ -116,6 +116,13 @@ de:
       heading: "Chat"
       join: "Beitreten"
       last_visit: "letzter Besuch"
+      summarization:
+        title: "Nachrichten zusammenfassen"
+        description: "Wähle unten eine Option aus, um die im gewünschten Zeitraum gesendeten Konversationen zusammenzufassen."
+        summarize: "Zusammenfassen"
+        since:
+          one: "Letzte Stunde"
+          other: "Letzte %{count} Stunden"
       mention_warning:
         dismiss: "verwerfen"
         cannot_see: "%{username} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
@@ -250,6 +257,10 @@ de:
       save: "Speichern"
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
+      return_to_threads_list: "Zurück zu den laufenden Diskussionen"
+      unread_threads_count:
+        one: "Du hast %{count} ungelesene Diskussion"
+        other: "Du hast %{count} ungelesene Diskussionen"
       scroll_to_bottom: "Nach unten scrollen"
       scroll_to_new_messages: "Neue Nachrichten anzeigen"
       sound:
@@ -382,7 +393,7 @@ de:
           one: "Du, %{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
           other: "Du, %{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
         single_user: "%{username} haben reagiert mit :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} und %{username} reagierten mit:%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} und %{username} reagierten mit :%{emoji}:"
         multiple_users_and_more:
           one: "%{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
           other: "%{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
@@ -514,15 +525,32 @@ de:
         search_placeholder: "Nach Emoji-Namen und -Alias suchen …"
         no_results: "Keine Ergebnisse"
       thread:
+        title: "Titel"
         view_thread: Thread ansehen
+        default_title: "Thread"
         replies:
           one: "%{count} Antwort"
           other: "%{count} Antworten"
         label: Thread
         close: "Thread schließen"
+        original_message:
+          started_by: "Gestartet von"
+        settings: "Einstellungen"
+        last_reply: "letzte Antw."
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thread erwähnt."
+          tracking:
+            title: "Verfolgen"
+            description: "Die Anzahl der neuen Antworten auf diesen Thread wird in der Thread-Liste und im Kanal angezeigt. Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thema erwähnt."
+        participants_other_count:
+          one: "+%{count} anderer"
+          other: "+%{count} andere"
       threads:
-        started_by: "Gestartet von"
         open: "Thread öffnen"
+        list: "Laufende Diskussionen"
+        none: "Du nimmst an keinem Thread in diesem Kanal teil."
       draft_channel_screen:
         header: "Neue Nachricht"
         cancel: "Abbrechen"
@@ -600,3 +628,7 @@ de:
         chat_notifications_with_unread:
           one: "Chat-Benachrichtigungen – %{count} ungelesene Benachrichtigung"
           other: "Chat-Benachrichtigungen – %{count} ungelesene Benachrichtigungen"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

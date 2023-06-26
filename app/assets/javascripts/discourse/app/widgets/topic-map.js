@@ -263,7 +263,7 @@ createWidget("topic-map-summary", {
       })
     );
 
-    return [nav, h("ul.clearfix", contents)];
+    return [nav, h("ul", contents)];
   },
 });
 
@@ -311,7 +311,7 @@ createWidget("topic-map-expanded", {
     let avatars;
 
     if (attrs.participants && attrs.participants.length > 0) {
-      avatars = h("section.avatars.clearfix", [
+      avatars = h("section.avatars", [
         h("h3", I18n.t("topic_map.participants_title")),
         renderParticipants.call(this, attrs.userFilters, attrs.participants),
       ]);
@@ -376,7 +376,7 @@ export default createWidget("topic-map", {
   buildKey: (attrs) => `topic-map-${attrs.id}`,
 
   defaultState(attrs) {
-    return { collapsed: !attrs.hasTopicSummary };
+    return { collapsed: !attrs.hasTopRepliesSummary };
   },
 
   html(attrs, state) {
@@ -386,7 +386,8 @@ export default createWidget("topic-map", {
       contents.push(this.attach("topic-map-expanded", attrs));
     }
 
-    if (attrs.hasTopicSummary) {
+    if (attrs.hasTopRepliesSummary || this._includesSummary()) {
+      attrs.includeSummary = this._includesSummary();
       contents.push(this.attach("toggle-topic-summary", attrs));
     }
 
@@ -398,5 +399,20 @@ export default createWidget("topic-map", {
 
   toggleMap() {
     this.state.collapsed = !this.state.collapsed;
+  },
+
+  _includesSummary() {
+    const customSummaryAllowedGroups =
+      this.siteSettings.custom_summarization_allowed_groups
+        .split("|")
+        .map(parseInt);
+
+    return (
+      this.siteSettings.summarization_strategy &&
+      this.currentUser &&
+      this.currentUser.groups.some((g) =>
+        customSummaryAllowedGroups.includes(g.id)
+      )
+    );
   },
 });

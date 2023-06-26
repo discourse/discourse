@@ -7,6 +7,8 @@ RSpec.describe Post do
 
   before { Oneboxer.stubs :onebox }
 
+  it_behaves_like "it has custom fields"
+
   it { is_expected.to have_many(:reviewables).dependent(:destroy) }
 
   describe "#hidden_reasons" do
@@ -1577,6 +1579,18 @@ RSpec.describe Post do
       post.link_post_uploads
 
       post.topic.reload
+      expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
+
+    it "uses the newest thumbnail" do
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      image_upload_2.original_filename = "#{video_upload.sha1}.png"
+      image_upload_2.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(1)
       expect(post.topic.image_upload_id).to eq(image_upload_2.id)
     end
 

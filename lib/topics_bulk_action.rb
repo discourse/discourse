@@ -98,7 +98,7 @@ class TopicsBulkAction
   end
 
   def dismiss_topics
-    rows =
+    ids =
       Topic
         .where(id: @topic_ids)
         .joins(
@@ -108,9 +108,15 @@ class TopicsBulkAction
         .where("topic_users.last_read_post_number IS NULL")
         .order("topics.created_at DESC")
         .limit(SiteSetting.max_new_topics)
-        .map { |topic| { topic_id: topic.id, user_id: @user.id, created_at: Time.zone.now } }
-    DismissedTopicUser.insert_all(rows) if rows.present?
-    @changed_ids = rows.map { |row| row[:topic_id] }
+        .filter { |t| guardian.can_see?(t) }
+        .map(&:id)
+
+    if ids.present?
+      now = Time.zone.now
+      rows = ids.map { |id| { topic_id: id, user_id: @user.id, created_at: now } }
+      DismissedTopicUser.insert_all(rows)
+    end
+    @changed_ids = ids
   end
 
   def destroy_post_timing

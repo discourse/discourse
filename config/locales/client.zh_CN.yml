@@ -1068,11 +1068,8 @@ zh_CN:
         enable: "启用边栏"
         options: "选项"
         categories_section: "类别版块"
-        categories_section_instruction: "所选类别将显示在边栏的类别版块下。"
         tags_section: "标签版块"
-        tags_section_instruction: "所选标签将显示在边栏的标签版块下。"
         navigation_section: "导航"
-        list_destination_instruction: "当边栏中有新内容时…"
         list_destination_default: "使用默认链接并为新条目显示徽章"
         list_destination_unread_new: "链接到未读/新条目并显示新条目的数量"
       change: "更改"
@@ -1239,7 +1236,6 @@ zh_CN:
         tags: "标签"
         interface: "界面"
         apps: "应用"
-        sidebar: "边栏"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -1736,28 +1732,6 @@ zh_CN:
       logout_disabled: "当站点处于只读模式时，退出被禁用。"
     staff_writes_only_mode:
       enabled: "此站点处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
-    too_few_topics_and_posts_notice_MF: |
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">开始讨论</a>吧！现在有 { currentTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }和 { currentPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。访客需要阅读和回复更多 – 我们建议至少有 { requiredTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }和 { requiredPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。只有管理人员可以看到此消息。
-    too_few_topics_notice_MF: |
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">开始讨论</a>吧！/a>现在有 { currentTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }。访客需要阅读和回复更多 - 我们建议至少有 { requiredTopics, plural,
-          other {<strong>#</strong> 个话题}
-      }。只有管理人员可以看到此消息。
-    too_few_posts_notice_MF: |
-      让我们<a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">开始讨论</a>吧！现在有{ currentPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。访客需要阅读和回复更多 - 我们建议至少有 { requiredPosts, plural,
-          other {<strong>#</strong> 篇帖子}
-      }。只有管理人员可以看到此消息。
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# 个错误/小时} other {# 个错误/小时}}</a>达到了站点设置中 {limit, plural, one {# 个错误/小时} other {# 个错误/小时}}的限制。
@@ -1792,7 +1766,6 @@ zh_CN:
         other: "有 <b>%{count}</b> 个回复。"
       description_time_MF: |
         有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。
-      enable: "总结此话题"
       disable: "显示所有帖子"
       short_label: "摘要"
       short_title: "显示此话题的摘要：由社区决定的最有趣的帖子"
@@ -2181,6 +2154,7 @@ zh_CN:
       image_alt_text:
         aria_label: 图片的替换文字
       delete_image_button: 删除图片
+      toggle_image_grid: 切换图像网格
     notifications:
       tooltip:
         regular:
@@ -2522,7 +2496,8 @@ zh_CN:
         filter: "没有话题。"
         educate:
           new: '<p>您的新话题将显示在这里。默认情况下，如果是在过去 2 天内创建的，话题会被视为新话题，还会显示 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> 指示器。</p><p>访问您的<a href="%{userPrefsUrl}">偏好设置</a>可以更改此设置。</p>'
-          unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 4 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
+          unread: "<p>您的未读话题显示在这里。</p><p>默认情况下，如果符合以下条件，话题会被视为未读并且还将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span>：</p><ul><li>您创建了该话题</li><li>您回复了该话题</li><li>您阅读该话题超过 5 分钟</li></ul><p>或者如果您在每个话题中通过 \U0001F514 将话题显式设为“已跟踪”或“已关注”。</p><p>访问您的<a href=\"%{userPrefsUrl}\">偏好设置</a>可以更改此设置。</p>"
+          new_new: "<p>你的新话题会出现在这里，你的未读话题也会显示出来。默认情况下，如果它们是在最近 2 天内创建的，话题会被视为新话题，并且会显示 <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> 指示符。未读主题将显示未读计数 <span class=\"badge unread-posts badge-notification\">1</span> 如果你：创建主题、回复主题、阅读主题超过 5 分钟，或者通过每个话题中的\U0001F514 明确将话题设置为已跟踪或已读。</p><p>访问你的 <a href=\"%{userPrefsUrl}\">选项</a> 以更改此设置。</p>"
       bottom:
         latest: "没有更多最新话题了。"
         posted: "没有更多已发布话题了。"
@@ -2877,6 +2852,7 @@ zh_CN:
         radio_label: "现有话题"
         instructions:
           other: "请选择您要将这 <b>%{count}</b> 个帖子移至的话题。"
+        chronological_order: "合并后保留时间顺序"
       move_to_new_message:
         title: "移至新消息"
         action: "移至新消息"
@@ -3620,7 +3596,8 @@ zh_CN:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
       granted_on: "%{date}授予"
-      others_count: "其他拥有此徽章的人 (%{count})"
+      others_count:
+        other: "授予他人 %{count} 次"
       title: 徽章
       allow_title: "您可以将此徽章用作头衔"
       multiple_grant: "您可以多次获得"
@@ -3843,6 +3820,15 @@ zh_CN:
       more: "更多"
       all_categories: "所有类别"
       all_tags: "所有标签"
+      categories_form_modal:
+        save: "保存"
+        title: "编辑类别导航"
+        subtitle:
+          button_text: "取消全选"
+          text: "我们将自动显示本网站最受欢迎的类别"
+        filter_placeholder: "筛选类别"
+        no_categories: "没有匹配到指定条件的类别。"
+        reset_to_defaults: "重置为默认值"
       sections:
         custom:
           add: "添加自定义部分"
@@ -3850,10 +3836,13 @@ zh_CN:
           save: "保存"
           delete: "删除"
           delete_confirm: "确定要删除此板块吗？"
+          reset_confirm: "你确定要把这部分重置为默认值吗？"
           public: "将此板块公开并对所有人可见"
+          more_menu: "更多菜单"
           links:
             add: "添加另一个链接"
             delete: "删除链接"
+            reset: "重置为默认值"
             icon:
               label: "图标"
               validation:
@@ -3889,20 +3878,12 @@ zh_CN:
             unread_with_count: "未读 (%{count})"
             archive: "归档"
         tags:
-          links:
-            add_tags:
-              content: "添加标签"
-              title: "您尚未添加任何标签。点击以开始。"
           none: "您还没有添加任何标签。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "标签"
           header_action_title: "编辑边栏标签"
           configure_defaults: "配置默认值"
         categories:
-          links:
-            add_categories:
-              content: "添加类别"
-              title: "您尚未添加任何类别。点击以开始。"
           none: "您还没有添加任何类别。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "类别"
@@ -3910,7 +3891,8 @@ zh_CN:
           configure_defaults: "配置默认值"
         community:
           header_link_text: "社区"
-          header_action_title: "创建话题"
+          header_action_create_topic_title: "创建话题"
+          header_action_edit_section_title: "编辑社区部分"
           links:
             about:
               content: "关于"
@@ -3921,8 +3903,8 @@ zh_CN:
             badges:
               content: "徽章"
               title: "所有可获得的徽章"
-            everything:
-              content: "一切"
+            topics:
+              content: "话题"
               title: "所有话题"
             faq:
               content: "常见问题解答"
@@ -3944,6 +3926,7 @@ zh_CN:
               content: "审核"
               title: "被举报的帖子和其他排队的条目"
               pending_count: "%{count} 待处理"
+        global_section: "全球部分，所有人可见"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -3951,6 +3934,8 @@ zh_CN:
     until: "直到："
     char_counter:
       exceeded: "已超过允许的最大字符数。"
+    form_template_chooser:
+      select_template: "选择表单模板"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4185,6 +4170,7 @@ zh_CN:
             posts:
               edit: 编辑任意帖子或特定帖子。
               delete: 删除帖子。
+              list: 列出最新的帖子和私人帖子。也支持 RSS。
             tags:
               list: 列出标签。
             categories:
@@ -5042,14 +5028,13 @@ zh_CN:
             minimum:
               key: "最小值"
               type: "整数"
-              description: "在文本字段中，指定允许的最小字符数。"
             maximum:
               key: "最大值"
               type: "整数"
-              description: "在文本字段中，指定允许的最大字符数。在多选下拉列表中，指定可以选择的最大选项数。"
             pattern:
               type: "正则表达式"
-              description: "在文本字段中，指定允许输入的正则表达式。"
+            type:
+              key: "类型"
         preview_modal:
           title: "预览模板"
         field_placeholders:
@@ -5411,7 +5396,8 @@ zh_CN:
             label: "添加表情符号"
         title: "设置"
         no_results: "找不到结果。"
-        more_than_30_results: "结果超过 30 个。请优化您的搜索或选择一个类别。"
+        more_site_setting_results:
+          other: "结果超过 %{count} 个。请优化你的搜索或选择一个类别。"
         clear_filter: "清除"
         add_url: "添加 URL"
         add_host: "添加主机"

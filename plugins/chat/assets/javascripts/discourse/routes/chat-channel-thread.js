@@ -7,7 +7,7 @@ export default class ChatChannelThread extends DiscourseRoute {
   @service chatStateManager;
   @service chat;
   @service chatStagedThreadMapping;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
 
   model(params, transition) {
     const channel = this.modelFor("chat.channel");
@@ -16,18 +16,22 @@ export default class ChatChannelThread extends DiscourseRoute {
       .find(channel.id, params.threadId)
       .catch(() => {
         transition.abort();
+        this.chatStateManager.closeSidePanel();
         this.router.transitionTo("chat.channel", ...channel.routeModels);
         return;
       });
   }
 
   afterModel(model) {
-    this.chatChannelThreadPane.open(model);
+    this.chat.activeChannel.activeThread = model;
+    this.chatThreadPane.open(model);
   }
 
   @action
-  willTransition() {
-    this.chatChannelThreadPane.close();
+  willTransition(transition) {
+    if (transition.targetName === "chat.channel.index") {
+      this.chatStateManager.closeSidePanel();
+    }
   }
 
   beforeModel(transition) {
@@ -51,12 +55,10 @@ export default class ChatChannelThread extends DiscourseRoute {
 
       if (mapping[threadId]) {
         transition.abort();
-
-        this.router.transitionTo(
+        return this.router.transitionTo(
           "chat.channel.thread",
           ...[...channel.routeModels, mapping[threadId]]
         );
-        return;
       }
     }
 

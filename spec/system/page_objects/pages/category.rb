@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def toggle_setting(setting, text = "")
-        find(".edit-category-tab .#{setting} label.checkbox-label", text: text).click
+        find(".edit-category-tab .#{setting} label.checkbox-label", text: text, visible: :all).click
         self
       end
 
