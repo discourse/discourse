@@ -49,8 +49,14 @@ RSpec.describe Chat::LookupChannelThreads do
           expect(result).to be_a_success
         end
 
-        it "returns the threads ordered by the last thread the current user posted in" do
+        it "returns the threads ordered by the last reply created_at date and time for the thread" do
           expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
+        end
+
+        it "orders threads with unread messages at the top even if their last reply created_at date and time is older" do
+          unread_message = Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
+          unread_message.update!(created_at: 2.days.ago)
+          expect(result.threads.map(&:id)).to eq([thread_2.id, thread_3.id, thread_1.id])
         end
 
         it "does not return threads where the original message is trashed" do
