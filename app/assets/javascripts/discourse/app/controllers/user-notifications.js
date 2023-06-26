@@ -51,10 +51,9 @@ export default Controller.extend({
     );
   },
 
-  markRead() {
-    return ajax("/notifications/mark-read", { type: "PUT" }).then(() => {
-      this.model.forEach((n) => n.set("read", true));
-    });
+  async markRead() {
+    await ajax("/notifications/mark-read", { type: "PUT" });
+    this.model.forEach((n) => n.set("read", true));
   },
 
   actions: {

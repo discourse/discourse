@@ -7,6 +7,7 @@ import {
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
@@ -139,7 +140,39 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return content;
   }
 
-  dismissWarningModal() {
+  @bind
+  async modalCallback() {
+    const opts = { type: "PUT" };
+    const dismissTypes = this.dismissTypes;
+    if (dismissTypes?.length > 0) {
+      opts.data = { dismiss_types: dismissTypes.join(",") };
+    }
+    await ajax("/notifications/mark-read", opts);
+    if (dismissTypes) {
+      const unreadNotificationCountsHash = {
+        ...this.currentUser.grouped_unread_notifications,
+      };
+      dismissTypes.forEach((type) => {
+        const typeId = this.site.notification_types[type];
+        if (typeId) {
+          delete unreadNotificationCountsHash[typeId];
+        }
+      });
+      this.currentUser.set(
+        "grouped_unread_notifications",
+        unreadNotificationCountsHash
+      );
+    } else {
+      this.currentUser.set("all_unread_notifications_count", 0);
+      this.currentUser.set("unread_high_priority_notifications", 0);
+      this.currentUser.set("grouped_unread_notifications", {});
+    }
+    this.refreshList();
+    postRNWebviewMessage("markRead", "1");
+  }
+
+  @action
+  dismissButtonClick() {
     if (this.currentUser.unread_high_priority_notifications > 0) {
       this.modal.show(DismissNotificationConfirmationModal, {
         model: {
@@ -149,48 +182,11 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
               count: this.currentUser.unread_high_priority_notifications,
             }
           ),
+          dismissNotifications: () => this.modalCallback(),
         },
       });
-    }
-  }
-
-  @action
-  dismissButtonClick() {
-    const opts = { type: "PUT" };
-    const dismissTypes = this.dismissTypes;
-    if (dismissTypes?.length > 0) {
-      opts.data = { dismiss_types: dismissTypes.join(",") };
-    }
-    const modalController = this.dismissWarningModal();
-    const modalCallback = () => {
-      ajax("/notifications/mark-read", opts).then(() => {
-        if (dismissTypes) {
-          const unreadNotificationCountsHash = {
-            ...this.currentUser.grouped_unread_notifications,
-          };
-          dismissTypes.forEach((type) => {
-            const typeId = this.site.notification_types[type];
-            if (typeId) {
-              delete unreadNotificationCountsHash[typeId];
-            }
-          });
-          this.currentUser.set(
-            "grouped_unread_notifications",
-            unreadNotificationCountsHash
-          );
-        } else {
-          this.currentUser.set("all_unread_notifications_count", 0);
-          this.currentUser.set("unread_high_priority_notifications", 0);
-          this.currentUser.set("grouped_unread_notifications", {});
-        }
-        this.refreshList();
-        postRNWebviewMessage("markRead", "1");
-      });
-    };
-    if (modalController) {
-      modalController.set("dismissNotifications", modalCallback);
     } else {
-      modalCallback();
+      this.modalCallback();
     }
   }
 }
