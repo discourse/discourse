@@ -5,8 +5,8 @@ export default class UserMenuRepliesNotificationsList extends UserMenuNotificati
     return this.filterByTypes;
   }
 
-  dismissWarningModal() {
-    return null;
+  displayDismissWarning() {
+    return false;
   }
 
   get emptyStateComponent() {

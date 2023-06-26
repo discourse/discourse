@@ -169,6 +169,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     postRNWebviewMessage("markRead", "1");
   }
 
+  displayDismissWarning() {
+    return true;
+  }
+
   dismissModalConfirmation() {
     return I18n.t("notifications.dismiss_confirmation.body.default", {
       count: this.currentUser.unread_high_priority_notifications,
@@ -177,15 +181,13 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   dismissWarningModal() {
     if (this.currentUser.unread_high_priority_notifications > 0) {
-      return this.modal.show(DismissNotificationConfirmationModal, {
+      this.modal.show(DismissNotificationConfirmationModal, {
         model: {
           confirmationMessage: this.dismissModalConfirmation(),
           dismissNotifications: () => this.modalCallback(),
         },
       });
     }
-
-    return false;
   }
 
   @action
@@ -193,6 +195,8 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     // by default we display a warning modal when dismissing a notification
     // however we bypass the warning modal for specific notification types when
     // they are a 'low priority' type of notification (eg. likes)
-    this.dismissWarningModal() || this.modalCallback();
+    this.displayDismissWarning()
+      ? this.dismissWarningModal()
+      : this.modalCallback();
   }
 }

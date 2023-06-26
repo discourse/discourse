@@ -38,8 +38,8 @@ export default class UserMenuItemsList extends Component {
     await this.#load();
   }
 
-  dismissWarningModal() {
-    return null;
+  displayDismissWarning() {
+    return false;
   }
 
   async #load() {
