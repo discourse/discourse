@@ -25,7 +25,7 @@
     "ember-auto-import": "^2.6.3",
     "ember-cli-babel": "^7.26.11",
     "ember-cli-htmlbars": "^6.2.0",
-    "ember-resolver": "^10.0.0",
+    "ember-resolver": "^10.1.1",
     "handlebars": "^4.7.0",
     "truth-helpers": "1.0.0"
   },
