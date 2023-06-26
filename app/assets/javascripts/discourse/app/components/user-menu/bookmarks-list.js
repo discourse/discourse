@@ -5,12 +5,8 @@ import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
 import Bookmark from "discourse/models/bookmark";
-import { inject as service } from "@ember/service";
-import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
-  @service modal;
-
   get dismissTypes() {
     return ["bookmark_reminder"];
   }
@@ -78,16 +74,9 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return content;
   }
 
-  dismissWarningModal() {
-    this.modal.show(DismissNotificationConfirmationModal, {
-      model: {
-        confirmationMessage: I18n.t(
-          "notifications.dismiss_confirmation.body.bookmarks",
-          {
-            count: this.#unreadBookmarkRemindersCount,
-          }
-        ),
-      },
+  dismissModalConfirmation() {
+    return I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
+      count: this.#unreadBookmarkRemindersCount,
     });
   }
 }

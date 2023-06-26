@@ -99,16 +99,9 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return content;
   }
 
-  dismissWarningModal() {
-    this.modal.show(DismissNotificationConfirmationModal, {
-      model: {
-        confirmationMessage: I18n.t(
-          "notifications.dismiss_confirmation.body.messages",
-          {
-            count: this.#unreadMessagesNotifications,
-          }
-        ),
-      },
+  dismissModalConfirmation() {
+    return I18n.t("notifications.dismiss_confirmation.body.messages", {
+      count: this.#unreadMessagesNotifications,
     });
   }
 }
