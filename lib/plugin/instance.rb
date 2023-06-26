@@ -647,6 +647,11 @@ class Plugin::Instance
     end
   end
 
+  def register_email_poller(poller)
+    plugin = self
+    DiscoursePluginRegistry.register_mail_poller(poller) if plugin.enabled?
+  end
+
   def register_asset(file, opts = nil)
     raise <<~ERROR if file.end_with?(".hbs", ".handlebars")
         [#{name}] Handlebars templates can no longer be included via `register_asset`.

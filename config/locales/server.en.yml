@@ -2457,7 +2457,7 @@ en:
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."
       pop3_polling_authentication_failed: "POP3 authentication failed. Please verify your pop3 credentials."
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
-      email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
+      email_polling_disabled: "You must enable either manual, POP3 polling or have a custom mail poller enabled before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
       personal_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send PMs, choose the staff group."
       invalid_regex: "Regex is invalid or not allowed."
