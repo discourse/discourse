@@ -93,7 +93,7 @@ export default Component.extend({
       // while diff with minimumTime is less than one hour
       // use 15 minutes steps and then 30 minutes
       const minutes = this.minimumTime ? (i <= 4 ? 15 : 30) : 15;
-      const option = start + ((minutes === 15) ? (i * minutes) : ((i-2) * minutes));
+      const option = start + (minutes === 15 ? i * minutes : (i - 2) * minutes);
 
       // when start is higher than 0 we will reach 1440 minutes
       // before the 96 iterations

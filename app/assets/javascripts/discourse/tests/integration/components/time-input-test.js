@@ -54,7 +54,7 @@ module("Integration | Component | time-input", function (hooks) {
     this.setProperties({
       hours: "22",
       minutes: "19",
-      relativeDate: moment("2032-01-01 20:40")
+      relativeDate: moment("2032-01-01 20:40"),
     });
     this.set("onChange", setTime);
 
@@ -66,9 +66,9 @@ module("Integration | Component | time-input", function (hooks) {
     const rows = this.subject.rows();
     assert.deepEqual(
       Array.from(rows).map((r) => {
-        return parseInt(r.dataset.value);
+        return parseInt(r.dataset.value, 10);
       }),
-      [1240,1255,1270,1285,1300,1330,1339,1360,1390,1420]
+      [1240, 1255, 1270, 1285, 1300, 1330, 1339, 1360, 1390, 1420]
     );
   });
 });
