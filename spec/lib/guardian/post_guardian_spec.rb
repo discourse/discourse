@@ -9,7 +9,6 @@ RSpec.describe PostGuardian do
   fab!(:group) { Fabricate(:group) }
   fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
   fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:hidden_post) { Fabricate(:post, topic: topic, hidden: true) }
 
@@ -60,7 +59,6 @@ RSpec.describe PostGuardian do
 
   describe "#is_in_edit_post_groups?" do
     it "returns true if the user is in edit_all_post_groups" do
-      group.add(user)
       SiteSetting.edit_all_post_groups = group.id.to_s
 
       expect(Guardian.new(user).is_in_edit_post_groups?).to eq(true)
@@ -69,7 +67,7 @@ RSpec.describe PostGuardian do
     it "returns false if the user is not in edit_all_post_groups" do
       SiteSetting.edit_all_post_groups = Group::AUTO_GROUPS[:trust_level_4]
 
-      expect(Guardian.new(tl3_user).is_in_edit_post_groups?).to eq(false)
+      expect(Guardian.new(Fabricate(:trust_level_3)).is_in_edit_post_groups?).to eq(false)
     end
 
     it "returns false if the edit_all_post_groups is empty" do
