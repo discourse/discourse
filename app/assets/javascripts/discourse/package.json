@@ -31,6 +31,7 @@
     "@popperjs/core": "^2.11.8",
     "a11y-dialog": "7.5.2",
     "admin": "1.0.0",
+    "babel-loader": "8",
     "bootstrap": "3.4.1",
     "bootstrap-json": "1.0.0",
     "deepmerge": "^4.3.1",
