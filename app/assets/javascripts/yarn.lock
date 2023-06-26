@@ -5798,10 +5798,10 @@ html-encoding-sniffer@^3.0.0:
   dependencies:
     whatwg-encoding "^2.0.0"
 
-html-entities@^2.3.6:
-  version "2.3.6"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.3.6.tgz#966391d58e5737c77bca4025e31721b496ab7454"
-  integrity sha512-9o0+dcpIw2/HxkNuYKxSJUF/MMRZQECK4GnF+oQOmJ83yCVHTWgCH5aOXxK5bozNRmM8wtgryjHD3uloPBDEGw==
+html-entities@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.4.0.tgz#edd0cee70402584c8c76cc2c0556db09d1f45061"
+  integrity sha512-igBTJcNNNhvZFRtm8uA6xMY6xYleeDwn3PeBCkDz7tHttv4F2hsDI2aPgNERWzvRcNYHNT3ymRaQzllmXj4YsQ==
 
 http-errors@2.0.0:
   version "2.0.0"

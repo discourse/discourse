@@ -1,59 +1,31 @@
 .chat-message-thread-indicator {
-  max-width: 600px;
+  grid-template-areas:
+    "avatar info replies participants"
+    "avatar excerpt excerpt excerpt";
 
-  .chat-drawer & {
-    align-items: stretch;
-    flex-wrap: wrap;
-    width: auto;
-    max-width: 100%;
-    min-width: auto;
-    gap: 0.25rem;
+  &__replies-count {
+    display: flex;
+    align-self: center;
   }
+}
 
-  &__last-reply-avatar {
-    .chat-drawer & {
-      display: inline-block;
+@container (max-width: 400px) {
+  .chat-message-thread-indicator {
+    grid-template-areas:
+      "avatar info info participants"
+      "excerpt excerpt excerpt replies";
+    &__replies-count {
+      align-self: flex-start;
+      grid-area: replies;
+      justify-content: flex-end;
     }
-  }
-
-  &__last-reply-user {
-    margin-right: 0.25rem;
-
-    .chat-drawer & {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-right: auto;
-    }
-  }
-
-  &__last-reply-metadata {
-    .chat-drawer & {
-      flex-wrap: wrap;
-    }
-  }
-
-  &__last-reply-excerpt {
-    .chat-drawer & {
+    &__last-reply-excerpt {
       white-space: wrap;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
-      margin-left: calc(26px + 0.5rem);
-    }
-  }
-
-  &__body {
-    .chat-drawer & {
-      flex-grow: 1;
-    }
-  }
-  &__participants {
-    margin-left: auto;
-
-    .chat-drawer & {
-      align-self: flex-end;
-      flex-basis: 100%;
+      margin-top: 0.5rem;
+      margin-right: 0.25rem;
     }
   }
 }
