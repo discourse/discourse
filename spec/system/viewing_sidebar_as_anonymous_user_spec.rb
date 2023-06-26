@@ -1,12 +1,29 @@
 # frozen_string_literal: true
 
 describe "Viewing sidebar as anonymous user", type: :system do
-  fab!(:tag1) { Fabricate(:tag).tap { |tag| Fabricate.times(1, :topic, tags: [tag]) } }
-  fab!(:tag2) { Fabricate(:tag).tap { |tag| Fabricate.times(2, :topic, tags: [tag]) } }
-  fab!(:tag3) { Fabricate(:tag).tap { |tag| Fabricate.times(3, :topic, tags: [tag]) } }
-  fab!(:tag4) { Fabricate(:tag).tap { |tag| Fabricate.times(2, :topic, tags: [tag]) } }
-  fab!(:tag5) { Fabricate(:tag).tap { |tag| Fabricate.times(2, :topic, tags: [tag]) } }
-  fab!(:tag6) { Fabricate(:tag).tap { |tag| Fabricate.times(1, :topic, tags: [tag]) } }
+  fab!(:tag1) do
+    Fabricate(:tag, name: "tag 1").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+  end
+
+  fab!(:tag2) do
+    Fabricate(:tag, name: "tag 2").tap { |tag| Fabricate.times(2, :topic, tags: [tag]) }
+  end
+
+  fab!(:tag3) do
+    Fabricate(:tag, name: "tag 3").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) }
+  end
+
+  fab!(:tag4) do
+    Fabricate(:tag, name: "tag 4").tap { |tag| Fabricate.times(2, :topic, tags: [tag]) }
+  end
+
+  fab!(:tag5) do
+    Fabricate(:tag, name: "tag 5").tap { |tag| Fabricate.times(2, :topic, tags: [tag]) }
+  end
+
+  fab!(:tag6) do
+    Fabricate(:tag, name: "tag 6").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+  end
 
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
