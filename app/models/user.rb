@@ -808,20 +808,8 @@ class User < ActiveRecord::Base
     MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])
   end
 
-  TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
-
   def read_first_notification?
-    if (
-         trust_level > TrustLevel[1] ||
-           (
-             first_seen_at.present? &&
-               first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago
-           ) || user_option.skip_new_user_tips
-       )
-      return true
-    end
-
-    self.seen_notification_id == 0 ? false : true
+    self.seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
   def publish_notifications_state

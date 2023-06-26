@@ -2208,22 +2208,6 @@ RSpec.describe User do
       end
     end
 
-    describe "when user is trust level 2" do
-      it "should return the right value" do
-        user.update!(trust_level: TrustLevel[2])
-
-        expect(user.read_first_notification?).to eq(true)
-      end
-    end
-
-    describe "when user is an old user" do
-      it "should return the right value" do
-        user.update!(first_seen_at: 1.year.ago)
-
-        expect(user.read_first_notification?).to eq(true)
-      end
-    end
-
     describe "when user skipped new user tips" do
       it "should return the right value" do
         user.user_option.update!(skip_new_user_tips: true)
