@@ -10,26 +10,21 @@ export default class ChatThreadHeader extends Component {
   @service chatHistory;
   @service site;
 
-  get backLinkRoute() {
+  get backLink() {
     if (
       this.chatHistory.previousRoute?.name === "chat.channel.index" &&
       this.site.mobileView
     ) {
-      return "chat.channel.index";
+      return {
+        route: "chat.channel.index",
+        models: this.args.channel.routeModels,
+      };
+    } else {
+      return {
+        route: "chat.channel.threads",
+        models: [],
+      };
     }
-
-    return "chat.channel.threads";
-  }
-
-  get backLinkModels() {
-    if (
-      this.chatHistory.previousRoute?.name === "chat.channel.index" &&
-      this.site.mobileView
-    ) {
-      return this.args.channel.routeModels;
-    }
-
-    return [];
   }
 
   get label() {
