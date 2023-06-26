@@ -2094,7 +2094,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "precedence of categories and tag setting" do
-    fab!(:watched_category) do 
+    fab!(:watched_category) do
       Fabricate(:category).tap do |category|
         CategoryUser.create!(
           user: user,
@@ -2103,51 +2103,53 @@ RSpec.describe TopicQuery do
         )
       end
     end
-    fab!(:muted_category) { Fabricate(:category) }
-    fab!(:watched_tag) { Fabricate(:tag) }
-    fab!(:muted_tag) { Fabricate(:tag) }
-
+    fab!(:muted_category) do
+      Fabricate(:category).tap do |category|
+        CategoryUser.create!(
+          user: user,
+          category: category,
+          notification_level: CategoryUser.notification_levels[:muted],
+        )
+      end
+    end
+    fab!(:watched_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+      end
+    end
+    fab!(:muted_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:muted],
+        )
+      end
+    end
     fab!(:topic) { Fabricate(:topic) }
-    fab!(:topic_in_watched_category_and_muted_tag) { Fabricate(:topic, category: watched_category) }
-    fab!(:topic_in_muted_category_and_watched_tag) { Fabricate(:topic, category: muted_category) }
-    fab!(:topic_in_watched_and_muted_tag) { Fabricate(:topic) }
+    fab!(:topic_in_watched_category_and_muted_tag) do
+      Fabricate(:topic, category: watched_category).tap do |topic|
+        Fabricate(:topic_tag, topic: topic, tag: muted_tag)
+      end
+    end
+    fab!(:topic_in_muted_category_and_watched_tag) do
+      Fabricate(:topic, category: muted_category).tap do |topic|
+        Fabricate(:topic_tag, topic: topic, tag: watched_tag)
+      end
+    end
+    fab!(:topic_in_watched_and_muted_tag) do
+      Fabricate(:topic).tap do |topic|
+        Fabricate(:topic_tag, topic: topic, tag: watched_tag)
+        Fabricate(:topic_tag, topic: topic, tag: muted_tag)
+      end
+    end
     fab!(:topic_in_muted_category) { Fabricate(:topic, category: muted_category) }
-    fab!(:topic_in_muted_tag) { Fabricate(:topic) }
-    fab!(:topic_tag_1) do
-      Fabricate(:topic_tag, topic: topic_in_watched_category_and_muted_tag, tag: muted_tag)
-    end
-    fab!(:topic_tag_2) do
-      Fabricate(:topic_tag, topic: topic_in_muted_category_and_watched_tag, tag: watched_tag)
-    end
-    fab!(:topic_tag_3) do
-      Fabricate(:topic_tag, topic: topic_in_watched_and_muted_tag, tag: watched_tag)
-    end
-    fab!(:topic_tag_4) do
-      Fabricate(:topic_tag, topic: topic_in_watched_and_muted_tag, tag: muted_tag)
-    end
-    fab!(:topic_tag_5) { Fabricate(:topic_tag, topic: topic_in_muted_tag, tag: muted_tag) }
-
-    before do
-      CategoryUser.create!(
-        user: user,
-        category: watched_category,
-        notification_level: CategoryUser.notification_levels[:watching],
-      )
-      CategoryUser.create!(
-        user: user,
-        category: muted_category,
-        notification_level: CategoryUser.notification_levels[:muted],
-      )
-      TagUser.create!(
-        user: user,
-        tag: watched_tag,
-        notification_level: TagUser.notification_levels[:watching],
-      )
-      TagUser.create!(
-        user: user,
-        tag: muted_tag,
-        notification_level: TagUser.notification_levels[:muted],
-      )
+    fab!(:topic_in_muted_tag) do
+      Fabricate(:topic).tap { |topic| Fabricate(:topic_tag, topic: topic, tag: muted_tag) }
     end
 
     context "when enabled" do
