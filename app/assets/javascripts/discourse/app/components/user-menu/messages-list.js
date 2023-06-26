@@ -7,11 +7,9 @@ import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
 import Topic from "discourse/models/topic";
 import { mergeSortedLists } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
-import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   @service store;
-  @service modal;
 
   get dismissTypes() {
     return this.filterByTypes;
