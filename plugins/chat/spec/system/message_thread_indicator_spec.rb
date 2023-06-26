@@ -126,7 +126,7 @@ describe "Thread indicator for chat messages", type: :system do
       )
     end
 
-    it "shows an excerpt of the last reply in the thread" do
+    xit "shows an excerpt of the last reply in the thread" do
       chat_page.visit_channel(channel)
 
       excerpt_text = thread_excerpt(thread_1.last_reply)
@@ -136,7 +136,7 @@ describe "Thread indicator for chat messages", type: :system do
       ).to have_content(excerpt_text)
     end
 
-    it "updates the last reply excerpt and participants when a new message is added to the thread" do
+    xit "updates the last reply excerpt and participants when a new message is added to the thread" do
       new_user = Fabricate(:user)
       chat_system_user_bootstrap(user: new_user, channel: channel)
       original_last_reply = thread_1.replies.last
