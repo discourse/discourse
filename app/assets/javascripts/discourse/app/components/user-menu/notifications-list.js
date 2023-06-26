@@ -6,12 +6,12 @@ import {
   mergeSortedLists,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
+import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;
@@ -19,6 +19,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service siteSettings;
   @service site;
   @service store;
+  @service modal;
 
   get filterByTypes() {
     return this.args.filterByTypes;
@@ -140,14 +141,16 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   dismissWarningModal() {
     if (this.currentUser.unread_high_priority_notifications > 0) {
-      const modalController = showModal("dismiss-notification-confirmation");
-      modalController.set(
-        "confirmationMessage",
-        I18n.t("notifications.dismiss_confirmation.body.default", {
-          count: this.currentUser.unread_high_priority_notifications,
-        })
-      );
-      return modalController;
+      this.modal.show(DismissNotificationConfirmationModal, {
+        model: {
+          confirmationMessage: I18n.t(
+            "notifications.dismiss_confirmation.body.default",
+            {
+              count: this.currentUser.unread_high_priority_notifications,
+            }
+          ),
+        },
+      });
     }
   }
 

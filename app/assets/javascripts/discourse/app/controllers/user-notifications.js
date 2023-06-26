@@ -3,11 +3,13 @@ import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
+import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
 export default Controller.extend({
+  modal: service(),
   application: controller(),
   queryParams: ["filter"],
   filter: "all",
@@ -62,14 +64,16 @@ export default Controller.extend({
       );
 
       if (unreadHighPriorityNotifications > 0) {
-        showModal("dismiss-notification-confirmation").setProperties({
-          confirmationMessage: I18n.t(
-            "notifications.dismiss_confirmation.body.default",
-            {
-              count: unreadHighPriorityNotifications,
-            }
-          ),
-          dismissNotifications: () => this.markRead(),
+        this.modal.show(DismissNotificationConfirmationModal, {
+          model: {
+            confirmationMessage: I18n.t(
+              "notifications.dismiss_confirmation.body.default",
+              {
+                count: unreadHighPriorityNotifications,
+              }
+            ),
+            dismissNotifications: () => this.markRead(),
+          },
         });
       } else {
         this.markRead();

@@ -1,16 +1,17 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
-import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
 import Topic from "discourse/models/topic";
 import { mergeSortedLists } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
+import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   @service store;
+  @service modal;
 
   get dismissTypes() {
     return this.filterByTypes;
@@ -99,13 +100,15 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   dismissWarningModal() {
-    const modalController = showModal("dismiss-notification-confirmation");
-    modalController.set(
-      "confirmationMessage",
-      I18n.t("notifications.dismiss_confirmation.body.messages", {
-        count: this.#unreadMessagesNotifications,
-      })
-    );
-    return modalController;
+    this.modal.show(DismissNotificationConfirmationModal, {
+      model: {
+        confirmationMessage: I18n.t(
+          "notifications.dismiss_confirmation.body.messages",
+          {
+            count: this.#unreadMessagesNotifications,
+          }
+        ),
+      },
+    });
   }
 }
