@@ -7,9 +7,8 @@ export default class DismissNotificationConfirmation extends Component {
 
   @action
   dismiss() {
-    debugger;
+    this.args.model.dismissNotifications &&
+      this.args.model?.dismissNotifications();
     this.modal.close();
-    this.args.model?.dismissNotifications &&
-      this.args.model.dismissNotifications();
   }
 }

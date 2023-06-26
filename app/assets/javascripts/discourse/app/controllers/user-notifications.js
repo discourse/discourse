@@ -58,17 +58,13 @@ export default Controller.extend({
 
   actions: {
     async resetNew() {
-      const unreadHighPriorityNotifications = this.currentUser.get(
-        "unread_high_priority_notifications"
-      );
-
-      if (unreadHighPriorityNotifications > 0) {
+      if (this.currentUser.unread_high_priority_notifications > 0) {
         this.modal.show(DismissNotificationConfirmationModal, {
           model: {
             confirmationMessage: I18n.t(
               "notifications.dismiss_confirmation.body.default",
               {
-                count: unreadHighPriorityNotifications,
+                count: this.currentUser.unread_high_priority_notifications,
               }
             ),
             dismissNotifications: () => this.markRead(),

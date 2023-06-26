@@ -7,7 +7,6 @@ import {
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
@@ -140,7 +139,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return content;
   }
 
-  @bind
   async modalCallback() {
     const opts = { type: "PUT" };
     const dismissTypes = this.dismissTypes;
@@ -171,8 +169,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     postRNWebviewMessage("markRead", "1");
   }
 
-  @action
-  dismissButtonClick() {
+  dismissWarningModal() {
     if (this.currentUser.unread_high_priority_notifications > 0) {
       this.modal.show(DismissNotificationConfirmationModal, {
         model: {
@@ -185,6 +182,13 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
           dismissNotifications: () => this.modalCallback(),
         },
       });
+    }
+  }
+
+  @action
+  dismissButtonClick() {
+    if (this.dismissWarningModal) {
+      this.dismissWarningModal();
     } else {
       this.modalCallback();
     }
