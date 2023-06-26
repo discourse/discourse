@@ -290,6 +290,17 @@ export default class ChatMessage extends Component {
   onLongPressCancel() {
     cancel(this._makeMessageActiveHandler);
     this.isActive = false;
+
+    // this a tricky bit of code which is needed to prevent the long press
+    // from triggering a click on the message actions panel when releasing finger press
+    // we can't prevent default as we need to keep the event passive for performance reasons
+    // this class will prevent any click from being triggered until removed
+    // this number has been chosen from testing but might need to be increased
+    this._disableMessageActionsHandler = discourseLater(() => {
+      document.documentElement.classList.remove(
+        "disable-message-actions-touch"
+      );
+    }, 200);
   }
 
   @action
