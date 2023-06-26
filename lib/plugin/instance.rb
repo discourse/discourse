@@ -516,6 +516,19 @@ class Plugin::Instance
     initializers << block
   end
 
+  def commit_hash
+    git_repo.latest_local_commit
+  end
+
+  def commit_url
+    return if commit_hash.blank?
+    "#{git_repo.url}/commit/#{commit_hash}"
+  end
+
+  def git_repo
+    @git_repo ||= GitRepo.new(directory, name)
+  end
+
   def before_auth(&block)
     if @before_auth_complete
       raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!"

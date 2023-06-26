@@ -1141,6 +1141,7 @@ module Discourse
         Discourse.git_version
         Discourse.git_branch
         Discourse.full_version
+        Discourse.plugins.each { |p| p.commit_url }
       end,
       Thread.new do
         require "actionview_precompiler"
