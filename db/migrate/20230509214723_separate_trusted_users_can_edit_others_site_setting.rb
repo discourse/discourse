@@ -2,7 +2,9 @@
 
 class SeparateTrustedUsersCanEditOthersSiteSetting < ActiveRecord::Migration[7.0]
   def up
-    if select_value("SELECT 1 FROM site_settings WHERE name = 'trusted_users_can_edit_others'")
+    if select_value(
+         "SELECT 1 FROM site_settings WHERE name = 'trusted_users_can_edit_others' AND value = 'f'",
+       )
       execute <<~SQL
         DELETE FROM site_settings WHERE name = 'trusted_users_can_edit_others';
         INSERT INTO site_settings (name, data_type, value, created_at, updated_at) VALUES ('edit_all_topic_groups', 20, '', now(), now());

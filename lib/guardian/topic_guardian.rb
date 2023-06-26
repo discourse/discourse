@@ -141,7 +141,7 @@ module TopicGuardian
 
   def is_in_edit_topic_groups?
     SiteSetting.edit_all_topic_groups.present? &&
-      user.in_any_groups?(SiteSetting.edit_all_topic_groups.split("|").map(&:to_i))
+      user.in_any_groups?(SiteSetting.edit_all_topic_groups.to_s.split("|").map(&:to_i))
   end
 
   def can_recover_topic?(topic)

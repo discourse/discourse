@@ -8,6 +8,7 @@ RSpec.describe PostGuardian do
   fab!(:tl4_user) { Fabricate(:trust_level_4) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:category) { Fabricate(:category) }
+  fab!(:group) { Fabricate(:group) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:hidden_post) { Fabricate(:post, topic: topic, hidden: true) }
 
@@ -27,6 +28,27 @@ RSpec.describe PostGuardian do
     it "returns true for staff users" do
       expect(Guardian.new(moderator).can_see_hidden_post?(hidden_post)).to eq(true)
       expect(Guardian.new(admin).can_see_hidden_post?(hidden_post)).to eq(true)
+    end
+  end
+
+  describe "#is_in_edit_post_groups?" do
+    it "returns true if the user is in edit_all_post_groups" do
+      group.add(user)
+      SiteSetting.edit_all_post_groups = group.id.to_s
+
+      expect(Guardian.new(user).is_in_edit_post_groups?).to eq(true)
+    end
+
+    it "returns false if the user is not in edit_all_post_groups" do
+      SiteSetting.edit_all_post_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      expect(Guardian.new(tl3_user).is_in_edit_post_groups?).to eq(false)
+    end
+
+    it "returns false if the edit_all_post_groups is empty" do
+      SiteSetting.edit_all_post_groups = nil
+
+      expect(Guardian.new(user).is_in_edit_post_groups?).to eq(false)
     end
   end
 end

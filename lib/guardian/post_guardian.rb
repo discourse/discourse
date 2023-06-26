@@ -171,7 +171,7 @@ module PostGuardian
 
   def is_in_edit_post_groups?
     SiteSetting.edit_all_post_groups.present? &&
-      user.in_any_groups?(SiteSetting.edit_all_post_groups.split("|").map(&:to_i))
+      user.in_any_groups?(SiteSetting.edit_all_post_groups.to_s.split("|").map(&:to_i))
   end
 
   def can_edit_hidden_post?(post)
