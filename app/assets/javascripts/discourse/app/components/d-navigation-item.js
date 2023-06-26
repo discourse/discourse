@@ -1,41 +1,29 @@
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 
-export default Component.extend({
-  tagName: "li",
+export default class DNavigationItem extends Component {
+  @service router;
 
-  route: null,
-
-  router: service(),
-
-  attributeBindings: ["ariaCurrent:aria-current", "title"],
-
-  ariaCurrent: computed(
-    "router.currentRouteName",
-    "router.currentRoute.parent.name",
-    "route",
-    "ariaCurrentContext",
-    function () {
-      let ariaCurrentValue = "page";
-
-      // when there are multiple levels of navigation
-      // we want the active parent to get `aria-current="page"`
-      // and the active child to get `aria-current="location"`
-      if (this.ariaCurrentContext === "subNav") {
-        ariaCurrentValue = "location";
-      } else if (this.ariaCurrentContext === "parentNav") {
-        if (
-          this.router.currentRouteName !== this.route && // not the current route
-          this.router.currentRoute.parent.name.includes(this.route) // but is the current parent route
-        ) {
-          return "page";
-        }
-      }
-
-      return this.router.currentRouteName === this.route
-        ? ariaCurrentValue
-        : null;
+  get ariaCurrent() {
+    // when there are multiple levels of navigation
+    // we want the active parent to get `aria-current="page"`
+    // and the active child to get `aria-current="location"`
+    if (
+      this.args.ariaCurrentContext === "parentNav" &&
+      this.router.currentRouteName !== this.args.route && // not the current route
+      this.router.currentRoute.parent.name.includes(this.args.route) // but is the current parent route
+    ) {
+      return "page";
     }
-  ),
-});
+
+    if (this.router.currentRouteName !== this.args.route) {
+      return null;
+    }
+
+    if (this.args.ariaCurrentContext === "subNav") {
+      return "location";
+    } else {
+      return "page";
+    }
+  }
+}

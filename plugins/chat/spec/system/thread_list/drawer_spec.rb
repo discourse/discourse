@@ -9,7 +9,7 @@ describe "Thread list in side panel | drawer", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let(:thread_list_page) { PageObjects::Pages::ChatThreadList.new }
+  let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do

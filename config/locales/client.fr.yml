@@ -1094,11 +1094,8 @@ fr:
         enable: "Activer la barre latérale"
         options: "Options"
         categories_section: "Section Catégories"
-        categories_section_instruction: "Les catégories sélectionnées seront affichées dans la section Catégories de la barre latérale."
         tags_section: "Section Étiquettes"
-        tags_section_instruction: "Les étiquettes sélectionnées seront affichées dans la section Étiquettes de la barre latérale."
         navigation_section: "Navigation"
-        list_destination_instruction: "Quand il y a du nouveau contenu dans la barre latérale…"
         list_destination_default: "utiliser le lien par défaut et afficher un badge pour les nouveaux éléments"
         list_destination_unread_new: "lien vers les éléments non lus ou nouveaux et afficher le nombre de nouveaux éléments"
       change: "modifier"
@@ -1262,7 +1259,6 @@ fr:
         tags: "Étiquettes"
         interface: "Interface"
         apps: "Applications"
-        sidebar: "Barre latérale"
       change_password:
         success: "(e-mail envoyé)"
         in_progress: "(e-mail en cours d'envoi)"
@@ -1803,7 +1799,6 @@ fr:
         other: "Il y a <b>%{count}</b> réponses."
       description_time_MF: |
         Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>.
-      enable: "Résumer ce sujet"
       disable: "Afficher tous les messages"
       short_label: "Résumer"
       short_title: "Afficher un résumé de ce sujet : les publications les plus intéressantes telles que déterminées par la communauté"
@@ -3949,7 +3944,7 @@ fr:
       more: "Plus"
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
-      categories_form:
+      categories_form_modal:
         save: "Enregistrer"
       sections:
         custom:
@@ -3977,20 +3972,12 @@ fr:
             unread_with_count: "Non lus (%{count})"
             archive: "Archivés"
         tags:
-          links:
-            add_tags:
-              content: "Ajouter des étiquettes"
-              title: "Vous n'avez ajouté aucune étiquette. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Étiquettes"
           header_action_title: "Modifier les étiquettes de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         categories:
-          links:
-            add_categories:
-              content: "Ajouter des catégories"
-              title: "Vous n'avez ajouté aucune catégorie. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Catégories"
@@ -4009,6 +3996,9 @@ fr:
             badges:
               content: "Badges"
               title: "Tous les badges disponibles à gagner"
+            topics:
+              content: "Sujets"
+              title: "Tous les sujets"
             faq:
               content: "FAQ"
               title: "Lignes directrices pour l'utilisation de ce site"

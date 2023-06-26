@@ -8,6 +8,11 @@ module Chat
   # Only channels with threading_enabled set to true will have thread
   # tracking queried.
   #
+  # The unread counts are based on the user's last_read_message_id for
+  # each membership, as well as the notification_level (in the case of
+  # thread memberships) and the following/muted settings (in the case of
+  # channel memberships).
+  #
   # @param guardian [Guardian] The current user's guardian
   # @param channel_ids [Array<Integer>] The channel IDs to query. Must be provided
   #   if thread_ids are not.

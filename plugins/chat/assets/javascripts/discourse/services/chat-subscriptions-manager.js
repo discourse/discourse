@@ -242,7 +242,8 @@ export default class ChatSubscriptionsManager extends Service {
               if (
                 thread.currentUserMembership &&
                 busData.message_id >
-                  (thread.currentUserMembership.lastReadMessageId || 0)
+                  (thread.currentUserMembership.lastReadMessageId || 0) &&
+                !thread.currentUserMembership.isQuiet
               ) {
                 channel.unreadThreadIds.add(busData.thread_id);
                 thread.tracking.unreadCount++;
@@ -301,9 +302,7 @@ export default class ChatSubscriptionsManager extends Service {
   @bind
   _updateChannelTrackingData(channelId, busData) {
     this.chatChannelsManager.find(channelId).then((channel) => {
-      if (busData.thread_id) {
-        // TODO (martin) Update thread membership last read message ID on client.
-      } else {
+      if (!busData.thread_id) {
         channel.currentUserMembership.lastReadMessageId =
           busData.last_read_message_id;
       }
@@ -319,9 +318,17 @@ export default class ChatSubscriptionsManager extends Service {
         channel.threadsManager
           .find(channelId, busData.thread_id)
           .then((thread) => {
-            thread.tracking.unreadCount = busData.thread_tracking.unread_count;
-            thread.tracking.mentionCount =
-              busData.thread_tracking.mention_count;
+            if (
+              thread.currentUserMembership &&
+              !thread.currentUserMembership.isQuiet
+            ) {
+              thread.currentUserMembership.lastReadMessageId =
+                busData.last_read_message_id;
+              thread.tracking.unreadCount =
+                busData.thread_tracking.unread_count;
+              thread.tracking.mentionCount =
+                busData.thread_tracking.mention_count;
+            }
           });
       }
     });

@@ -120,6 +120,15 @@ pl_PL:
       heading: "Czat"
       join: "Dołącz"
       last_visit: "ostatnia wizyta"
+      summarization:
+        title: "Podsumuj wiadomości"
+        description: "Wybierz opcję poniżej, aby podsumować rozmowę wysłaną w żądanym przedziale czasowym."
+        summarize: "Podsumuj"
+        since:
+          one: "Ostatnia godzina"
+          few: "Ostatnie %{count} godziny"
+          many: "Ostatnie %{count} godzin"
+          other: "Ostatnie %{count} godzin"
       mention_warning:
         dismiss: "odrzuć"
         cannot_see: "%{username} nie ma dostępu do tego kanału i nie został powiadomiony."
@@ -158,6 +167,21 @@ pl_PL:
             all: "Nikt nie zostanie powiadomiony"
           unreachable_1: "@%{group} nie zezwala na wzmianki."
           unreachable_2: "@%{group1} i @%{group2} nie zezwalają na wzmianki."
+          unreachable_multiple:
+            one: "@%{group} i %{count} inna grupa nie zezwala na wzmianki."
+            few: "@%{group} i %{count} inne grupy nie zezwalają na wzmianki."
+            many: "@%{group} i %{count} innych grup nie zezwala na wzmianki."
+            other: "@%{group} i %{count} innych grup nie zezwala na wzmianki."
+        too_many_mentions:
+          one: "Ta wiadomość przekracza limit powiadomień wynoszący %{count} wzmiankę."
+          few: "Ta wiadomość przekracza limit powiadomień wynoszący %{count} wzmianki."
+          many: "Ta wiadomość przekracza limit powiadomień wynoszący %{count} wzmianek."
+          other: "Ta wiadomość przekracza limit powiadomień wynoszący %{count} wzmianek."
+        too_many_mentions_admin:
+          one: 'Ta wiadomość przekracza limit <a href="%{siteSettingUrl}" target="_blank">powiadomień</a> z %{count} wzmianki.'
+          few: 'Ta wiadomość przekracza limit <a href="%{siteSettingUrl}" target="_blank">powiadomień</a> z %{count} wzmianek.'
+          many: 'Ta wiadomość przekracza limit <a href="%{siteSettingUrl}" target="_blank">powiadomień</a> z %{count} wzmianek.'
+          other: 'Ta wiadomość przekracza limit <a href="%{siteSettingUrl}" target="_blank">powiadomień</a> z %{count} wzmianek.'
       aria_roles:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
@@ -308,6 +332,13 @@ pl_PL:
           label: "Wybierz kategorię"
           none: "wybierz jeden..."
           default_hint: Zarządzaj dostępem, odwiedzając <a href=%{link} target="_blank">ustawienia bezpieczeństwa %{category} </a>
+          hint_1_group: 'Użytkownicy w %{group} będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
+          hint_2_groups: 'Użytkownicy w %{group1} i %{group2} będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
+          hint_multiple_groups:
+            one: 'Użytkownicy w %{group} i %{count} innej grupie będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
+            few: 'Użytkownicy w %{group} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
+            many: 'Użytkownicy w %{group} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
+            other: 'Użytkownicy w %{group} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
         create: "Utwórz kanał"
         description: "Opis (opcjonalnie)"
         name: "Nazwa kanału"
@@ -417,8 +448,18 @@ pl_PL:
           instructions_channel_archive: "Zamierzasz utworzyć nowy temat i zarchiwizować w nim wiadomości z kanału."
         existing_topic:
           title: "Przenieś do Istniejącego Tematu"
+          instructions:
+            one: "Wybierz temat, do którego chcesz przenieść tę wiadomość czatu."
+            few: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
+            many: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
+            other: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
         new_message:
           title: "Przejdź do nowej wiadomości"
+          instructions:
+            one: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybraną wiadomością czatu."
+            few: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybranymi <b>%{count}</b> wiadomościami czatu."
+            many: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybranymi <b>%{count}</b> wiadomościami czatu."
+            other: "Zamierzasz utworzyć nową wiadomość i wypełnić ją wybranymi <b>%{count}</b> wiadomościami czatu."
       replying_indicator:
         single_user: "%{username} pisze"
         multiple_users: "%{commaSeparatedUsernames} i %{lastUsername} piszą"
@@ -476,6 +517,18 @@ pl_PL:
           started_by: "Rozpoczęty przez"
         settings: "Ustawienia"
         last_reply: "ostatnia odpowiedź"
+        notifications:
+          regular:
+            title: "Normalny"
+            description: "Otrzymasz powiadomienie, jeśli ktoś wspomni Twoją @nazwę w tym wątku."
+          tracking:
+            title: "Śledzona"
+            description: "Liczba nowych odpowiedzi w tym wątku zostanie wyświetlona na liście wątków i na kanale. Otrzymasz powiadomienie, jeśli ktoś wspomni Twoją @nazwę w tym wątku."
+        participants_other_count:
+          one: "+%{count} inny"
+          few: "+%{count} inni"
+          many: "+%{count} inni"
+          other: "+%{count} inni"
       threads:
         open: "Otwórz wątek"
         list: "Trwające dyskusje"
@@ -532,6 +585,10 @@ pl_PL:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
+          open_insert_link_modal: "%{shortcut} Wstaw hiperłącze (tylko kompozytor)"
+          composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
+          composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
+          composer_code: "%{shortcut} Kod (tylko kompozytor)"
           drawer_open: "%{shortcut} Otwórz szufladę czatu"
           drawer_close: "%{shortcut} Zamknij szufladę czatu"
           mark_all_channels_read: "%{shortcut} Zaznacz wszystkie kanały jako przeczytane"

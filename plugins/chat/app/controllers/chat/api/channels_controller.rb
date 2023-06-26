@@ -68,14 +68,14 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
-    if params[:target_message_id].present? || params[:include_messages].present? ||
-         params[:fetch_from_last_read].present?
+    if should_build_channel_view?
       with_service(
         Chat::ChannelViewBuilder,
         **params.permit(
           :channel_id,
           :target_message_id,
           :thread_id,
+          :target_date,
           :page_size,
           :direction,
           :fetch_from_last_read,
@@ -83,6 +83,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
           :channel_id,
           :target_message_id,
           :thread_id,
+          :target_date,
           :page_size,
           :direction,
           :fetch_from_last_read,
@@ -159,5 +160,10 @@ class Chat::Api::ChannelsController < Chat::ApiController
     permitted_params = CHANNEL_EDITABLE_PARAMS
     permitted_params += CATEGORY_CHANNEL_EDITABLE_PARAMS if channel.category_channel?
     params.require(:channel).permit(*permitted_params)
+  end
+
+  def should_build_channel_view?
+    params[:target_message_id].present? || params[:target_date].present? ||
+      params[:include_messages].present? || params[:fetch_from_last_read].present?
   end
 end

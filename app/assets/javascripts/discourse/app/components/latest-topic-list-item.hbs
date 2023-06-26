@@ -26,6 +26,11 @@
   </div>
 </div>
 <div class="topic-stats">
+  <PluginOutlet
+    @name="above-latest-topic-list-item-post-count"
+    @connectorTagName="div"
+    @outletArgs={{hash topic=this.topic}}
+  />
   {{raw "list/posts-count-column" topic=this.topic tagName="div"}}
   <div class="topic-last-activity">
     <a

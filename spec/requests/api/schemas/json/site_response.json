@@ -712,7 +712,7 @@
             },
             "form_template_ids": {
               "type": "array",
-              "items": []
+              "items": {}
             }
           },
           "required": [

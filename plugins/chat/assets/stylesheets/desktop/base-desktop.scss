@@ -21,21 +21,15 @@
 
   .chat-channel {
     .chat-messages-container {
-      .chat-message {
-        &.is-reply {
-          grid-template-columns: var(--message-left-width) 1fr;
-        }
+      &.has-reply {
+        grid-template-columns: var(--message-left-width) 1fr;
+      }
 
-        .chat-user {
-          width: var(--message-left-width);
-        }
+      .chat-user {
+        width: var(--message-left-width);
       }
     }
   }
-}
-
-.chat-message:not(.user-info-hidden) {
-  padding: 0.65rem 1rem 0.15rem;
 }
 
 .chat-message-text {
@@ -51,8 +45,16 @@
   }
 }
 
-.chat-message.user-info-hidden {
-  padding: 0.15rem 1rem;
+.chat-message-container:not(.-user-info-hidden) {
+  .chat-message {
+    padding: 0.65rem 1rem 0.15rem;
+  }
+}
+
+.chat-message-container.-user-info-hidden {
+  .chat-message {
+    padding: 0.15rem 1rem;
+  }
 
   .chat-time {
     color: var(--secondary-medium);

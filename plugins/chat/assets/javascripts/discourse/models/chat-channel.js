@@ -157,6 +157,10 @@ export default class ChatChannel {
     return this.messagesManager.findMessage(id);
   }
 
+  findFirstMessageOfDay(date) {
+    return this.messagesManager.findFirstMessageOfDay(date);
+  }
+
   addMessages(messages) {
     this.messagesManager.addMessages(messages);
   }

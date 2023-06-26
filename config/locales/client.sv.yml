@@ -1129,11 +1129,8 @@ sv:
         enable: "Aktivera sidofältet"
         options: "Alternativ"
         categories_section: "Sektion Kategorier"
-        categories_section_instruction: "Valda kategorier kommer att visas under sidofältets kategorisektion."
         tags_section: "Sektion Taggar"
-        tags_section_instruction: "Valda taggar kommer att visas under sidofältets tagg-sektion."
         navigation_section: "Navigering"
-        list_destination_instruction: "När det finns nytt innehåll i sidofältet..."
         list_destination_default: "använd standardlänken och visa en utmärkelse för nya objekt"
         list_destination_unread_new: "länka till oläst/nytt och visa ett antal nya objekt"
       change: "ändra"
@@ -1315,7 +1312,6 @@ sv:
         tags: "Taggar"
         interface: "Gränssnitt"
         apps: "Appar"
-        sidebar: "Sidofält"
       change_password:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
@@ -1864,7 +1860,6 @@ sv:
         other: "Det finns <b>%{count}</b> svar."
       description_time_MF: |
         Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>.
-      enable: "Sammanfatta detta ämne"
       disable: "Visa alla inlägg"
       short_label: "Sammanfatta"
       short_title: "Visa en sammanfattning av detta ämne: de mest intressanta inläggen enligt forumet"
@@ -4041,7 +4036,7 @@ sv:
       more: "Mer"
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
-      categories_form:
+      categories_form_modal:
         save: "Spara"
         title: "Redigera kategorinavigering"
         filter_placeholder: "Filterkategorier"
@@ -4095,20 +4090,12 @@ sv:
             unread_with_count: "Oläst (%{count})"
             archive: "Arkiv"
         tags:
-          links:
-            add_tags:
-              content: "Lägg till taggar"
-              title: "Du har inte lagt till några taggar. Klicka för att komma igång."
           none: "Du har inte lagt till några taggar."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Taggar"
           header_action_title: "Redigera ditt sidofälts taggar"
           configure_defaults: "Konfigurera standardvärden"
         categories:
-          links:
-            add_categories:
-              content: "Lägg till kategorier"
-              title: "Du har inte lagt till några kategorier. Klicka för att komma igång."
           none: "Du har inte lagt till några kategorier."
           click_to_get_started: "Klicka här för att komma igång."
           header_link_text: "Kategorier"
@@ -4128,6 +4115,9 @@ sv:
             badges:
               content: "Utmärkelser"
               title: "Alla utmärkelser som kan förtjänas"
+            topics:
+              content: "Ämnen"
+              title: "Alla ämnen"
             faq:
               content: "Vanliga frågor och svar"
               title: "Riktlinjer för att använda denna webbplats"

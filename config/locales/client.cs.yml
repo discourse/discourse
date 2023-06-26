@@ -1024,11 +1024,8 @@ cs:
         enable: "Povolit postranní panel"
         options: "Možnosti"
         categories_section: "Sekce kategorií"
-        categories_section_instruction: "Vybrané kategorie se zobrazí v sekci Kategorie na postranním panelu."
         tags_section: "Sekce štítků"
-        tags_section_instruction: "Vybrané štítky budou zobrazeny v sekci štítků postranního panelu."
         navigation_section: "Navigace"
-        list_destination_instruction: "Když je na postranním panelu nový obsah..."
       change: "změnit"
       featured_topic: "Doporučené téma"
       moderator: "%{user} je moderátor"
@@ -1128,7 +1125,6 @@ cs:
         tags: "Štítky"
         interface: "Rozhraní"
         apps: "Aplikace"
-        sidebar: "Postranní panel"
       change_password:
         success: "(email odeslán)"
         in_progress: "(odesílám)"
@@ -1531,7 +1527,6 @@ cs:
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
     summary:
       enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
-      enable: "Přepnout na \"nejlepší příspěvky\""
       disable: "Přepnout na normální zobrazení"
     deleted_filter:
       enabled_description: "Toto téma obsahuje schované smazané příspěvky."
@@ -3090,7 +3085,7 @@ cs:
       more: "Více"
       all_categories: "Všechny kategorie"
       all_tags: "Všechny štítky"
-      categories_form:
+      categories_form_modal:
         save: "Uložit"
       sections:
         custom:
@@ -3126,6 +3121,8 @@ cs:
               content: "Administrace"
             badges:
               content: "Odznaky"
+            topics:
+              content: "Témata"
             faq:
               content: "FAQ"
             groups:

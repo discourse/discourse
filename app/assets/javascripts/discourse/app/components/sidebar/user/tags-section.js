@@ -1,12 +1,14 @@
 import { cached } from "@glimmer/tracking";
-import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
+import SidebarCommonTagsSection from "discourse/components/sidebar/common/tags-section";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
+import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
+import showModal from "discourse/lib/show-modal";
 
-export default class SidebarUserTagsSection extends Component {
+export default class SidebarUserTagsSection extends SidebarCommonTagsSection {
   @service router;
   @service topicTrackingState;
   @service pmTopicTrackingState;
@@ -33,7 +35,20 @@ export default class SidebarUserTagsSection extends Component {
   get sectionLinks() {
     const links = [];
 
-    for (const tag of this.currentUser.sidebarTags) {
+    let tags;
+
+    if (this.currentUser.sidebarTags.length > 0) {
+      tags = this.currentUser.sidebarTags;
+    } else {
+      tags = this.topSiteTags.map((tagName) => {
+        return {
+          name: tagName,
+          pm_only: false,
+        };
+      });
+    }
+
+    for (const tag of tags) {
       if (tag.pm_only) {
         links.push(
           new PMTagSectionLink({
@@ -55,30 +70,22 @@ export default class SidebarUserTagsSection extends Component {
     return links;
   }
 
-  /**
-   * If a site has no default sidebar tags configured, show tags section if the user has personal sidebar tags configured.
-   * Otherwise, hide the tags section from the sidebar for the user.
-   *
-   * If a site has default sidebar tags configured, always display the tags section.
-   */
-  get shouldDisplay() {
-    if (this.hasDefaultSidebarTags) {
-      return true;
-    } else {
-      return this.currentUser.sidebarTags.length > 0;
-    }
-  }
-
   get shouldDisplayDefaultConfig() {
     return this.currentUser.admin && !this.hasDefaultSidebarTags;
   }
 
   get hasDefaultSidebarTags() {
-    return this.siteSettings.default_navigation_menu_tags.length > 0;
+    return hasDefaultSidebarTags(this.siteSettings);
   }
 
   @action
   editTracked() {
-    this.router.transitionTo("preferences.navigation-menu", this.currentUser);
+    if (
+      this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
+    ) {
+      showModal("sidebar-tags-form");
+    } else {
+      this.router.transitionTo("preferences.navigation-menu", this.currentUser);
+    }
   }
 }

@@ -1297,7 +1297,6 @@ hy:
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
     summary:
       enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
-      enable: "Ամփոփել Այս Թեման"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
       enabled_description: "Այս թեման պարունակում է հեռացված գրառումներ, որոնք թաքցվել են:"
@@ -2850,7 +2849,7 @@ hy:
         other: "%{count} նոր"
       more: "Ավելին"
       all_categories: "Բոլոր կատեգորիաները"
-      categories_form:
+      categories_form_modal:
         save: "Պահպանել"
       sections:
         custom:
@@ -2887,6 +2886,8 @@ hy:
               content: "Ադմին"
             badges:
               content: "Կրծքանշաններ"
+            topics:
+              content: "Թեմա"
             faq:
               content: "ՀՏՀ"
             groups:

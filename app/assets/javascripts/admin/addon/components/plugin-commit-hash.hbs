@@ -1,0 +1,7 @@
+{{#if this.commitHash}}
+  <a
+    href={{this.plugin.commit_url}}
+    class="current commit-hash"
+    title={{this.commitHash}}
+  >{{this.shortCommitHash}}</a>
+{{/if}}

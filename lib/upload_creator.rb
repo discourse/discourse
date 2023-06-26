@@ -31,9 +31,6 @@ class UploadCreator
     use
   ].each(&:freeze)
 
-  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
-  deprecate_constant "WHITELISTED_SVG_ELEMENTS", "UploadCreator::ALLOWED_SVG_ELEMENTS"
-
   # Available options
   #  - type (string)
   #  - origin (string)

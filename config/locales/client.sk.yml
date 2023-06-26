@@ -1148,7 +1148,6 @@ sk:
       hide_forever: "nie, ďakujem"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -2291,7 +2290,7 @@ sk:
         other: "%{count} nových"
       more: "Viac"
       all_categories: "Všetky kategórie"
-      categories_form:
+      categories_form_modal:
         save: "Uložiť"
       sections:
         custom:
@@ -2327,6 +2326,8 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
+            topics:
+              content: "Témy"
             faq:
               content: "Časté otázky"
             groups:

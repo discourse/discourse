@@ -291,6 +291,11 @@ fa_IR:
           started_by: "شروع شده توسط"
         settings: "تنظیمات"
         last_reply: "آخرین پاسخ"
+        notifications:
+          regular:
+            title: "معمولی"
+          tracking:
+            title: "پیگیری"
       threads:
         list: "گفتگوهای در حال انجام"
       draft_channel_screen:

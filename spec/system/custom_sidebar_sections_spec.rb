@@ -99,7 +99,7 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("Edited section")
-    expect(sidebar).to have_section_link("Edited Tag")
+    expect(sidebar).to have_section_link("Edited Tags")
 
     expect(sidebar).to have_no_section_link("Sidebar Categories")
   end

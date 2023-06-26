@@ -44,6 +44,8 @@
       {{/if}}
     </div>
 
+    <PluginOutlet @name="before-main-outlet" />
+
     <div id="main-outlet">
       <PluginOutlet @name="above-main-container" @connectorTagName="div" />
       <div class="container" id="main-container">
@@ -63,7 +65,14 @@
       {{outlet}}
 
       <CardContainer />
+      <PluginOutlet
+        @name="main-outlet-bottom"
+        @outletArgs={{hash showFooter=this.showFooter}}
+      />
     </div>
+
+    <PluginOutlet @name="after-main-outlet" />
+
   </div>
 
   <PluginOutlet

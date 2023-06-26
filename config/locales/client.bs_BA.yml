@@ -1439,7 +1439,6 @@ bs_BA:
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
     summary:
       enabled_description: "Trenutno gledate sažetak ove teme: objave koje drugi članovi smatraju kao najinteresantnije."
-      enable: "Napravi sažetak ove teme"
       disable: "Prikaži sve objave"
     deleted_filter:
       enabled_description: "Ova tema sadrži obrisane objave, vidljive za administratore dok su za ostale korisnike skrivene."
@@ -3038,7 +3037,7 @@ bs_BA:
         other: "%{count} novih"
       more: "Još"
       all_categories: "Sve kategorije"
-      categories_form:
+      categories_form_modal:
         save: "Save"
       sections:
         custom:
@@ -3076,6 +3075,8 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
+            topics:
+              content: "Topics"
             faq:
               content: "Česta pitanja"
             groups:

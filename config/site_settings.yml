@@ -2112,15 +2112,18 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  experimental_post_image_grid:
-    client: true
-    default: false
   new_edit_sidebar_categories_tags_interface_groups:
     type: group_list
     list_type: compact
     default: ""
     allow_any: false
     hidden: true
+  experimental_search_menu_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
 
 navigation:
   navigation_menu:
@@ -2136,13 +2139,6 @@ navigation:
     type: tag_list
     default: ""
     client: true
-  default_sidebar_list_destination:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "unread_new"
 
 embedding:
   embed_by_username:

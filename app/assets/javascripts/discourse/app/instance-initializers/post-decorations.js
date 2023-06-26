@@ -33,24 +33,22 @@ export default {
         { id: "discourse-lightbox" }
       );
 
-      if (siteSettings.experimental_post_image_grid) {
-        api.decorateCookedElement(
-          (elem) => {
-            const grids = elem.querySelectorAll(".d-image-grid");
+      api.decorateCookedElement(
+        (elem) => {
+          const grids = elem.querySelectorAll(".d-image-grid");
 
-            if (!grids.length) {
-              return;
-            }
+          if (!grids.length) {
+            return;
+          }
 
-            grids.forEach((grid) => {
-              return new Columns(grid, {
-                columns: site.mobileView ? 2 : 3,
-              });
+          grids.forEach((grid) => {
+            return new Columns(grid, {
+              columns: site.mobileView ? 2 : 3,
             });
-          },
-          { id: "discourse-image-grid" }
-        );
-      }
+          });
+        },
+        { id: "discourse-image-grid" }
+      );
 
       if (siteSettings.support_mixed_text_direction) {
         api.decorateCookedElement(setTextDirections, {

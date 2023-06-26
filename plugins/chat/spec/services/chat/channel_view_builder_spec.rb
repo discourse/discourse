@@ -21,6 +21,7 @@ RSpec.describe Chat::ChannelViewBuilder do
     let(:direction) { nil }
     let(:thread_id) { nil }
     let(:fetch_from_last_read) { nil }
+    let(:target_date) { nil }
     let(:params) do
       {
         guardian: guardian,
@@ -30,6 +31,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         page_size: page_size,
         direction: direction,
         thread_id: thread_id,
+        target_date: target_date,
       }
     end
 
@@ -54,6 +56,7 @@ RSpec.describe Chat::ChannelViewBuilder do
           include_thread_messages: true,
           page_size: page_size,
           direction: direction,
+          target_date: target_date,
         )
         .returns({ messages: [] })
       subject
@@ -335,6 +338,25 @@ RSpec.describe Chat::ChannelViewBuilder do
 
           it { is_expected.not_to fail_a_policy(:target_message_exists) }
         end
+      end
+    end
+
+    context "when target_date provided" do
+      fab!(:past_message) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: 3.days.ago)
+        msg
+      end
+      fab!(:future_message) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: 1.days.ago)
+        msg
+      end
+
+      let(:target_date) { 2.days.ago }
+
+      it "includes past and future messages" do
+        expect(subject.view.chat_messages).to eq([past_message, future_message])
       end
     end
   end

@@ -46,6 +46,10 @@ export default class ChatApi extends Service {
       if (data.threadId) {
         args.thread_id = data.threadId;
       }
+
+      if (data.targetDate) {
+        args.target_date = data.targetDate;
+      }
     }
 
     return this.#getRequest(`/channels/${channelId}`, args).then((result) => {
@@ -295,6 +299,22 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Update notifications settings of current user for a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} threadId - The ID of the thread.
+   * @param {object} data - The settings to modify.
+   * @param {boolean} [data.notification_level] - The new notification level, c.f. Chat::NotificationLevels. Threads only support
+   *  "regular" and "tracking" for now.
+   * @returns {Promise}
+   */
+  updateCurrentUserThreadNotificationsSettings(channelId, threadId, data) {
+    return this.#putRequest(
+      `/channels/${channelId}/threads/${threadId}/notifications-settings/me`,
+      { notification_level: data.notificationLevel }
+    );
+  }
+
+  /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
@@ -441,6 +461,20 @@ export default class ChatApi extends Service {
     return ajax(`/chat/${channelId}/quote`, {
       type: "POST",
       data: { message_ids: messageIds },
+    });
+  }
+
+  /**
+   * Invite users to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {Array<number>} userIds - The IDs of the users to invite.
+   * @param {Array<number>} [messageId] - The ID of a message to highlight when opening the notification.
+   */
+  invite(channelId, userIds, options = {}) {
+    return ajax(`/chat/${channelId}/invite`, {
+      type: "put",
+      data: { user_ids: userIds, chat_message_id: options.messageId },
     });
   }
 

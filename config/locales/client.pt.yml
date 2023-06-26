@@ -1153,7 +1153,6 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
-        sidebar: "Barra Lateral"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -1646,7 +1645,6 @@ pt:
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
-      enable: "Resumir Este Tópico"
       disable: "Mostrar Todas As Publicações"
       short_label: "Resumir"
       short_title: "Mostrar um resumo deste tópico: as discussões mais interessantes conforme determinado pela comunidade"
@@ -3462,7 +3460,7 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
-      categories_form:
+      categories_form_modal:
         save: "Guardar"
       sections:
         custom:
@@ -3499,6 +3497,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
+            topics:
+              content: "Tópicos"
             faq:
               content: "FAQ"
             groups:

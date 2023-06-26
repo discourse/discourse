@@ -1004,7 +1004,6 @@ sr:
       sign_up: "Registrujte se"
     summary:
       enabled_description: "Gledate pregled ove teme: najzanimljivije poruke su odabrane od strane zajednice."
-      enable: "Sumirajte Ovu Temu"
       disable: "Prikaži Sve Poruke"
     deleted_filter:
       enabled_description: "Ova tema sadrži brisane poruke, koji su skriveni."
@@ -1808,7 +1807,7 @@ sr:
         few: "%{count} novih"
         other: "%{count} nova"
       more: "Više"
-      categories_form:
+      categories_form_modal:
         save: "Sačuvaj"
       sections:
         custom:
@@ -1842,6 +1841,8 @@ sr:
               content: "Admin"
             badges:
               content: "Značke"
+            topics:
+              content: "Teme"
             faq:
               content: "FAQ (često postavljana pitanja)"
             groups:

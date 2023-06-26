@@ -49,6 +49,15 @@
     .sidebar-section-link-suffix {
       margin-left: 1em;
       font-size: var(--font-down-4);
+      &.icon {
+        &.urgent svg {
+          color: var(--success);
+        }
+
+        &.unread svg {
+          color: var(--tertiary-med-or-tertiary);
+        }
+      }
     }
 
     .sidebar-section-link-content-text {
