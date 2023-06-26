@@ -181,13 +181,15 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   dismissWarningModal() {
     if (this.currentUser.unread_high_priority_notifications > 0) {
-      this.modal.show(DismissNotificationConfirmationModal, {
+      return this.modal.show(DismissNotificationConfirmationModal, {
         model: {
           confirmationMessage: this.dismissModalConfirmation(),
           dismissNotifications: () => this.modalCallback(),
         },
       });
     }
+
+    this.modalCallback();
   }
 
   @action
