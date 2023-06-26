@@ -15,6 +15,8 @@ export default class ChatThreadHeader extends Component {
   @service chatHistory;
   @service site;
 
+  @tracked persistedNotificationLevel = true;
+
   get backLink() {
     if (
       this.chatHistory.previousRoute?.name === "chat.channel.index" &&
@@ -31,8 +33,6 @@ export default class ChatThreadHeader extends Component {
       };
     }
   }
-
-  @tracked persistedNotificationLevel = true;
 
   get label() {
     return this.args.thread.escapedTitle;
