@@ -180,6 +180,7 @@ class User < ActiveRecord::Base
                if: Proc.new { self.human? && self.saved_change_to_uploaded_avatar_id? }
 
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
+  after_update :change_display_name, if: :saved_change_to_name?
 
   before_save :update_usernames
   before_save :ensure_password_is_hashed
@@ -2145,6 +2146,10 @@ class User < ActiveRecord::Base
   def update_previous_visit(timestamp)
     update_visit_record!(timestamp.to_date)
     update_column(:previous_visit_at, last_seen_at) if previous_visit_at_update_required?(timestamp)
+  end
+
+  def change_display_name
+    Jobs.enqueue(:change_display_name, user_id: id, old_name: name_before_last_save, new_name: name)
   end
 
   def trigger_user_created_event
