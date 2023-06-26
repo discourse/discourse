@@ -909,25 +909,30 @@ class TopicQuery
 
       # OR watched_topic_tags.id IS NOT NULL",
       list =
-        list
-          .references("cu")
-          .joins(
-            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}
-             LEFT JOIN topic_tags watched_topic_tags ON topic_tags.topic_id = topics.id AND #{DB.sql_fragment("topic_tags.tag_id IN (?)", watched_tag_ids)}",
+        list.references("cu").joins(
+          "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}",
+        )
+      if watched_tag_ids.present?
+        list =
+          list.joins(
+            "LEFT JOIN topic_tags watched_topic_tags ON topic_tags.topic_id = topics.id AND #{DB.sql_fragment("topic_tags.tag_id IN (?)", watched_tag_ids)}",
           )
-          .where(
-            "topics.category_id = :category_id
+      end
+
+      list =
+        list.where(
+          "topics.category_id = :category_id
                 OR
                 (COALESCE(category_users.notification_level, :default) <> :muted AND (topics.category_id IS NULL OR topics.category_id NOT IN(:indirectly_muted_category_ids)))
-                OR watched_topic_tags.id IS NOT NULL
+                #{watched_tag_ids.present? ? "OR watched_topic_tags.id IS NOT NULL" : ""}
                 OR tu.notification_level > :regular",
-            category_id: category_id || -1,
-            default: CategoryUser.default_notification_level,
-            indirectly_muted_category_ids:
-              CategoryUser.indirectly_muted_category_ids(user).presence || [-1],
-            muted: CategoryUser.notification_levels[:muted],
-            regular: TopicUser.notification_levels[:regular],
-          )
+          category_id: category_id || -1,
+          default: CategoryUser.default_notification_level,
+          indirectly_muted_category_ids:
+            CategoryUser.indirectly_muted_category_ids(user).presence || [-1],
+          muted: CategoryUser.notification_levels[:muted],
+          regular: TopicUser.notification_levels[:regular],
+        )
     elsif SiteSetting.mute_all_categories_by_default
       category_ids = [
         SiteSetting.default_categories_watching.split("|"),
