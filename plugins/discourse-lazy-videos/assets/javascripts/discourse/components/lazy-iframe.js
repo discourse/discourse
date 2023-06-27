@@ -5,7 +5,7 @@ export default class LazyVideo extends Component {
     switch (this.args.providerName) {
       case "youtube":
         let url = `https://www.youtube.com/embed/${this.args.videoId}?autoplay=1`;
-        if (this.args.startTime > 0) {
+        if (this.args.startTime) {
           url += `&start=${this.args.startTime}`;
         }
         return url;
