@@ -237,10 +237,6 @@ export default class ComposerController extends Controller {
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
-    if (creatingPrivateMessage && this.site.mobileView) {
-      return false;
-    }
-
     const isPrivateMessage =
       creatingPrivateMessage || this.get("model.topic.isPrivateMessage");
 
