@@ -15,11 +15,24 @@ describe DeleteDuplicatePollVotes do
   fab!(:poll_multiple_optionA) { Fabricate(:poll_option, poll: poll_multiple, html: "Option A") }
   fab!(:poll_multiple_optionB) { Fabricate(:poll_option, poll: poll_multiple, html: "Option B") }
 
-  it "deletes a duplicate poll vote for regular polls" do
-    Fabricate(:poll_vote, poll: poll_regular, user: user, poll_option: poll_regular_option1)
-    Fabricate(:poll_vote, poll: poll_regular, user: user, poll_option: poll_regular_option2)
+  it "deletes the older duplicate poll vote for regular polls" do
+    Fabricate(
+      :poll_vote,
+      poll: poll_regular,
+      user: user,
+      poll_option: poll_regular_option1,
+      created_at: 2.years.ago,
+    )
+    Fabricate(
+      :poll_vote,
+      poll: poll_regular,
+      user: user,
+      poll_option: poll_regular_option2,
+      created_at: 1.year.ago,
+    )
 
     expect { up }.to change { PollVote.count }.from(2).to(1)
+    expect(PollVote.first.poll_option).to eq(poll_regular_option2)
   end
 
   it "keeps non-duplicates" do
