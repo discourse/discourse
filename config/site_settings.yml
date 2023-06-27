@@ -2820,6 +2820,10 @@ tags:
     type: enum
     default: always
     enum: RemoveMutedTagsFromLatestSiteSetting
+  watched_precedence_over_muted:
+    client: true
+    default: false
+
   force_lowercase_tags:
     default: true
     client: true

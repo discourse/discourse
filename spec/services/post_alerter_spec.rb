@@ -1871,6 +1871,77 @@ RSpec.describe PostAlerter do
       end
     end
 
+    context "with category and tags" do
+      fab!(:muted_category) do
+        Fabricate(:category).tap do |category|
+          CategoryUser.set_notification_level_for_category(
+            user,
+            CategoryUser.notification_levels[:muted],
+            category.id,
+          )
+        end
+      end
+      fab!(:muted_tag) do
+        Fabricate(:tag).tap do |tag|
+          TagUser.create!(
+            user: user,
+            tag: tag,
+            notification_level: TagUser.notification_levels[:muted],
+          )
+        end
+      end
+      fab!(:watched_tag) do
+        Fabricate(:tag).tap do |tag|
+          TagUser.create!(
+            user: user,
+            tag: tag,
+            notification_level: TagUser.notification_levels[:watching],
+          )
+        end
+      end
+      fab!(:topic_with_muted_tag_and_watched_category) do
+        Fabricate(:topic, category: category, tags: [muted_tag])
+      end
+      fab!(:topic_with_muted_category_and_watched_tag) do
+        Fabricate(:topic, category: muted_category, tags: [watched_tag])
+      end
+      fab!(:topic_with_watched_category) { Fabricate(:topic, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic_with_muted_tag_and_watched_category) }
+      fab!(:post_2) { Fabricate(:post, topic: topic_with_muted_category_and_watched_tag) }
+      fab!(:post_3) { Fabricate(:post, topic: topic_with_watched_category) }
+
+      before do
+        CategoryUser.set_notification_level_for_category(
+          user,
+          CategoryUser.notification_levels[:watching],
+          category.id,
+        )
+      end
+
+      it "adds notification when watched_precedence_over_mute setting is true" do
+        SiteSetting.watched_precedence_over_muted = true
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.to change { Notification.count }.by(1)
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.to change { Notification.count }.by(1)
+      end
+
+      it "does not add notification when watched_precedence_over_mute setting is false" do
+        SiteSetting.watched_precedence_over_muted = false
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.not_to change { Notification.count }
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.not_to change { Notification.count }
+        expect { PostAlerter.post_created(topic_with_watched_category.posts.first) }.to change {
+          Notification.count
+        }.by(1)
+      end
+    end
+
     context "with on change" do
       fab!(:user) { Fabricate(:user) }
       fab!(:other_tag) { Fabricate(:tag) }
