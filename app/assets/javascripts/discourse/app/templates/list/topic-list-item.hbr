@@ -86,3 +86,5 @@
 </td>
 
 {{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="td"}}
+
+{{~raw-plugin-outlet name="topic-list-after-columns"}}
