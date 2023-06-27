@@ -311,15 +311,6 @@ export default {
               return I18n.t("chat.direct_messages.leave");
             }
 
-            _userStatusHtml(status) {
-              const emoji = escapeExpression(`:${status.emoji}:`);
-              const title = this._userStatusTitle(status);
-              return `<span class="user-">${emojiUnescape(emoji, {
-                title,
-                status,
-              })}</span>`;
-            }
-
             _userStatusTitle(status) {
               let title = `${escapeExpression(status.description)}`;
 
