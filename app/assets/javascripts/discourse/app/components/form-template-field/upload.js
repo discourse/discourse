@@ -9,7 +9,9 @@ export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
 ) {
   @tracked uploadValue;
-  @tracked fileUploadElementId = `${dasherize(this.attributes.label)}-uploader`;
+  @tracked fileUploadElementId = this.attributes?.label
+    ? `${dasherize(this.attributes.label)}-uploader`
+    : `${this.elementId}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
   @tracked id = this.fileUploadElementId;
   @tracked uploadComplete = false;
