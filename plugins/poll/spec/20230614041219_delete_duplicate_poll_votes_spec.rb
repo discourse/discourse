@@ -3,20 +3,21 @@
 require Rails.root.join("plugins/poll/db/migrate/20230614041219_delete_duplicate_poll_votes.rb")
 
 describe DeleteDuplicatePollVotes do
-  subject(:up) { described_class.new }
+  subject(:up) { described_class.new.up }
 
   fab!(:user) { Fabricate(:user, username: "galahad", email: "galahad@knights.com") }
 
-  fab!(:poll_regular) { Fabricate(:poll) }
+  fab!(:poll_regular) { Fabricate(:poll_regular) }
   fab!(:poll_regular_option1) { Fabricate(:poll_option, poll: poll_regular, html: "Option 1") }
+  fab!(:poll_regular_option2) { Fabricate(:poll_option, poll: poll_regular, html: "Option 2") }
 
-  fab!(:poll_multiple) { Fabricate(:poll) }
+  fab!(:poll_multiple) { Fabricate(:poll_multiple) }
   fab!(:poll_multiple_optionA) { Fabricate(:poll_option, poll: poll_multiple, html: "Option A") }
   fab!(:poll_multiple_optionB) { Fabricate(:poll_option, poll: poll_multiple, html: "Option B") }
 
-  it "deletes a duplicate poll vote" do
+  it "deletes a duplicate poll vote for regular polls" do
     Fabricate(:poll_vote, poll: poll_regular, user: user, poll_option: poll_regular_option1)
-    Fabricate(:poll_vote, poll: poll_regular, user: user, poll_option: poll_regular_option1)
+    Fabricate(:poll_vote, poll: poll_regular, user: user, poll_option: poll_regular_option2)
 
     expect { up }.to change { PollVote.count }.from(2).to(1)
   end
