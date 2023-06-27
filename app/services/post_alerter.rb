@@ -286,7 +286,7 @@ class PostAlerter
       .joins(
         "LEFT JOIN tag_users ON users.id = tag_users.user_id AND #{
           DB.sql_fragment(
-            "tag_users.tag_id IN (tag_users.tag_id) AND tag_users.notification_level = :muted",
+            "tag_users.tag_id IN (topic_tags.tag_id) AND tag_users.notification_level = :muted",
             muted: TagUser.notification_levels[:muted],
           )
         }",
