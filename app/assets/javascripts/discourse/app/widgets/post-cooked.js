@@ -36,7 +36,7 @@ function createDetachedElement(nodeName) {
 
 export default class PostCooked {
   originalQuoteContents = null;
-  tippyInstances = [];
+  userStatusInstances = [];
 
   constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
@@ -77,7 +77,7 @@ export default class PostCooked {
 
   destroy() {
     this._stopTrackingMentionedUsersStatus();
-    this._destroyTippyInstances();
+    this._destroyUserStatusInstances();
   }
 
   _decorateAndAdopt(cooked) {
@@ -382,14 +382,14 @@ export default class PostCooked {
     }
   }
 
-  _destroyTippyInstances() {
-    this.tippyInstances.forEach((instance) => {
+  _destroyUserStatusInstances() {
+    this.userStatusInstances.forEach((instance) => {
       instance.destroy();
     });
   }
 
   _rerenderUserStatusOnMentions() {
-    this._destroyTippyInstances();
+    this._destroyUserStatusInstances();
     this._post()?.mentioned_users?.forEach((user) =>
       this._rerenderUserStatusOnMention(this.cookedDiv, user)
     );
@@ -400,7 +400,7 @@ export default class PostCooked {
     const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
 
     mentions.forEach((mention) => {
-      updateUserStatusOnMention(mention, user.status, this.tippyInstances);
+      updateUserStatusOnMention(mention, user.status, this.userStatusInstances);
     });
   }
 

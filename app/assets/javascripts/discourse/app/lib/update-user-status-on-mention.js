@@ -1,10 +1,14 @@
 import createUserStatusMessage from "discourse/lib/user-status-message";
 
-export function updateUserStatusOnMention(mention, status, tippyInstances) {
+export function updateUserStatusOnMention(
+  mention,
+  status,
+  userStatusInstances
+) {
   removeStatus(mention);
   if (status) {
     const statusHtml = createUserStatusMessage(status, { showTooltip: true });
-    tippyInstances.push(statusHtml._tippy);
+    userStatusInstances.push(statusHtml._tippy);
     mention.appendChild(statusHtml);
   }
 }

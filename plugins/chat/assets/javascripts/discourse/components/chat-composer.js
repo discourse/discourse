@@ -39,7 +39,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
-  @tracked tippyInstances = [];
+  @tracked userStatusInstances = [];
 
   get shouldRenderReplyingIndicator() {
     return !this.args.channel?.isDraft;
@@ -387,7 +387,7 @@ export default class ChatComposer extends Component {
     });
   }
 
-  #destroyTippyInstances(instances) {
+  #destroyUserStatusInstances(instances) {
     instances.forEach((instance) => {
       instance.destroy();
     });
@@ -418,7 +418,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
-        this.#destroyTippyInstances(this.tippyInstances);
+        this.#destroyUserStatusInstances(this.userStatusInstances);
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -433,7 +433,7 @@ export default class ChatComposer extends Component {
                   showTooltip: true,
                   showDescription: true,
                 });
-                this.tippyInstances.push(user.statusHtml._tippy);
+                this.userStatusInstances.push(user.statusHtml._tippy);
               }
             });
           }
@@ -458,7 +458,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
-      onClose: () => this.#destroyTippyInstances(this.tippyInstances),
+      onClose: () => this.#destroyUserStatusInstances(this.userStatusInstances),
     });
   }
 

@@ -128,7 +128,7 @@ export default Component.extend(
       this._super(...arguments);
       this.warnedCannotSeeMentions = [];
       this.warnedGroupMentions = [];
-      this.tippyInstances = [];
+      this.userStatusInstances = [];
     },
 
     @discourseComputed("composer.requiredCategoryMissing")
@@ -215,7 +215,7 @@ export default Component.extend(
       });
     },
 
-    _destroyTippyInstances(instances) {
+    _destroyUserStatusInstances(instances) {
       instances.forEach((instance) => {
         instance.destroy();
       });
@@ -230,7 +230,7 @@ export default Component.extend(
         $input.autocomplete({
           template: findRawTemplate("user-selector-autocomplete"),
           dataSource: (term) => {
-            this._destroyTippyInstances(this.tippyInstances);
+            this._destroyUserStatusInstances(this.userStatusInstances);
             return userSearch({
               term,
               topicId: this.topic?.id,
@@ -244,7 +244,7 @@ export default Component.extend(
                     showTooltip: true,
                     showDescription: true,
                   });
-                  this.tippyInstances.push(user.statusHtml._tippy);
+                  this.userStatusInstances.push(user.statusHtml._tippy);
                 }
               });
               return result;
@@ -267,7 +267,8 @@ export default Component.extend(
           afterComplete: this._afterMentionComplete,
           triggerRule: (textarea) =>
             !inCodeBlock(textarea.value, caretPosition(textarea)),
-          onClose: () => this._destroyTippyInstances(this.tippyInstances),
+          onClose: () =>
+            this._destroyUserStatusInstances(this.userStatusInstances),
         });
       }
 
