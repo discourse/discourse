@@ -5,6 +5,10 @@ Fabricator(:poll) do
   name { sequence(:name) { |i| "Poll #{i}" } }
 end
 
+Fabricator(:poll_regular, from: :poll) { type "regular" }
+
+Fabricator(:poll_multiple, from: :poll) { type "multiple" }
+
 Fabricator(:poll_option) do
   poll
   html { sequence(:html) { |i| "Poll Option #{i}" } }

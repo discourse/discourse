@@ -2092,4 +2092,73 @@ RSpec.describe TopicQuery do
       expect(original_topic_query.list_latest.topics.map(&:id)).to eq([topic2, topic1].map(&:id))
     end
   end
+
+  describe "precedence of categories and tag setting" do
+    fab!(:watched_category) do
+      Fabricate(:category).tap do |category|
+        CategoryUser.create!(
+          user: user,
+          category: category,
+          notification_level: CategoryUser.notification_levels[:watching],
+        )
+      end
+    end
+    fab!(:muted_category) do
+      Fabricate(:category).tap do |category|
+        CategoryUser.create!(
+          user: user,
+          category: category,
+          notification_level: CategoryUser.notification_levels[:muted],
+        )
+      end
+    end
+    fab!(:watched_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+      end
+    end
+    fab!(:muted_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:muted],
+        )
+      end
+    end
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic_in_watched_category_and_muted_tag) do
+      Fabricate(:topic, category: watched_category, tags: [muted_tag])
+    end
+    fab!(:topic_in_muted_category_and_watched_tag) do
+      Fabricate(:topic, category: muted_category, tags: [watched_tag])
+    end
+    fab!(:topic_in_watched_and_muted_tag) { Fabricate(:topic, tags: [watched_tag, muted_tag]) }
+    fab!(:topic_in_muted_category) { Fabricate(:topic, category: muted_category) }
+    fab!(:topic_in_muted_tag) { Fabricate(:topic, tags: [muted_tag]) }
+
+    context "when enabled" do
+      it "returns topics even if category or tag is muted but another tag or category is watched" do
+        SiteSetting.watched_precedence_over_muted = true
+        query = TopicQuery.new(user).list_latest
+        expect(query.topics.map(&:id)).to contain_exactly(
+          topic.id,
+          topic_in_watched_category_and_muted_tag.id,
+          topic_in_muted_category_and_watched_tag.id,
+        )
+      end
+    end
+
+    context "when disabled" do
+      it "returns topics without muted category or tag" do
+        SiteSetting.watched_precedence_over_muted = false
+        query = TopicQuery.new(user).list_latest
+        expect(query.topics.map(&:id)).to contain_exactly(topic.id)
+      end
+    end
+  end
 end

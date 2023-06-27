@@ -1297,7 +1297,7 @@ export default class ComposerController extends Controller {
           }
         }
 
-        await this.cancelComposer();
+        await this.cancelComposer(opts);
         await this.open(opts);
         return;
       }
@@ -1492,7 +1492,7 @@ export default class ComposerController extends Controller {
     });
   }
 
-  cancelComposer() {
+  cancelComposer(opts = {}) {
     this.skipAutoSave = true;
 
     if (this._saveDraftDebounce) {
@@ -1505,7 +1505,13 @@ export default class ComposerController extends Controller {
           model: this.model,
           modalClass: "discard-draft-modal",
         });
+        const overridesDraft =
+          this.model.composeState === Composer.OPEN &&
+          this.model.draftKey === opts.draftKey &&
+          [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
+        const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
         modal.setProperties({
+          showSaveDraftButton,
           onDestroyDraft: () => {
             return this.destroyDraft()
               .then(() => {

@@ -1,4 +1,5 @@
 .chat-message-thread-indicator {
+  max-width: 600px;
   grid-template-areas:
     "avatar info replies participants"
     "avatar excerpt excerpt excerpt";
