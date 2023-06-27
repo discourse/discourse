@@ -3515,8 +3515,9 @@ ko:
       more: "더 보기"
       all_categories: "모든 카테고리"
       all_tags: "모든 태그"
-      categories_form_modal:
-        save: "저장"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "전체"
       sections:
         custom:
           save: "저장"
@@ -3578,6 +3579,10 @@ ko:
       title: "환영 글 만들기"
       button_title: "편집 시작"
     until: "까지:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "유효한 값을 입력하십시오."
   admin_js:
     type_to_filter: "필터링하려면 입력..."
     admin:

@@ -996,7 +996,9 @@ id:
         tags_section: "Bagian Tag"
         tags_section_instruction: "Tag yang dipilih akan ditampilkan di bawah bagian tag Menu Navigasi. Jika tidak ada tag yang dipilih, tag teratas situs akan ditampilkan."
         navigation_section: "Navigasi"
-        list_destination_instruction: "Apabila ada konten baru dalam menu navigasi..."
+        navigation_section_instruction: "Saat daftar topik di menu navigasi memiliki item baru atau belum dibaca…"
+        link_to_filtered_list_checkbox_description: "Tautkan ke daftar yang difilter"
+        show_count_new_items_checkbox_description: "Menampilkan jumlah item baru"
       change: "ubah"
       featured_topic: "Topik Unggulan"
       moderator: "%{user} adalah moderator"
@@ -1932,14 +1934,24 @@ id:
       more: "Selengkapnya"
       all_categories: "Semua kategori"
       categories_form_modal:
-        save: "Simpan"
         title: "Edit navigasi kategori"
         subtitle:
-          button_text: "Batalkan pilihan semua"
           text: "dan kami akan menampilkan kategori paling populer dari situs ini secara otomatis"
         filter_placeholder: "Kategori filter"
         no_categories: "Tidak ada kategori yang cocok dengan istilah yang diberikan."
+      tags_form_modal:
+        title: "Edit navigasi tag"
+        filter_placeholder: "Filter tag"
+        no_tags: "Tidak ada tag yang cocok dengan istilah yang diberikan."
+        subtitle:
+          text: "dan kami akan menampilkan tag teratas situs ini secara otomatis"
+      edit_navigation_modal_form:
+        deselect_button_text: "Batalkan pilihan semua"
         reset_to_defaults: "Setel ulang ke bawaan"
+        filter_dropdown:
+          all: "Semua"
+          selected: "Dipilih"
+          unselected: "Tidak dipilih"
       sections:
         custom:
           save: "Simpan"
@@ -1988,6 +2000,30 @@ id:
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Harap isi kolom ini."
+          text: "Harap isi kolom ini."
+          select-one: "Harap pilih item dalam daftar."
+          select-multiple: "Pilih setidaknya satu item dalam daftar."
+          checkbox: "Harap centang kotak ini jika Anda ingin melanjutkan."
+        typeMismatch:
+          default: "Harap masukkan nilai yang valid."
+          color: "Harap masukkan warna."
+          date: "Harap masukkan tanggal."
+          email: "Harap masukkan alamat email yang valid."
+          number: "Harap masukkan nomor."
+          password: "Harap masukkan sandi dengan benar."
+          tel: "Harap masukkan nomor telepon yang valid."
+          text: "Harap masukkan nilai teks."
+          url: "Harap masukkan URL yang valid."
+        tooShort: "Input harus %{minLength} karakter atau lebih."
+        tooLong: "Input harus kurang dari %{maxLength} karakter."
+        rangeOverflow: "Masukan harus kurang dari %{max}."
+        rangeUnderflow: "Masukan harus lebih dari %{min}."
+        patternMismatch: "Harap sesuaikan dengan format yang diminta."
+        badInput: "Harap masukkan masukan yang valid."
   admin_js:
     type_to_filter: "ketik untuk memfilter..."
     admin:

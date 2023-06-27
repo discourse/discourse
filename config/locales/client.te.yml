@@ -1340,8 +1340,9 @@ te:
         one: "%{count} కొత్త"
         other: "%{count} కొత్త"
       more: "ఇంకా"
-      categories_form_modal:
-        save: "భద్రపరుచు"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "అన్ని"
       sections:
         custom:
           save: "భద్రపరుచు"
@@ -1383,6 +1384,10 @@ te:
               content: "సభ్యులు"
             my_posts:
               content: "నా టపాలు"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "దయచేసి చెల్లే విలువ రాయండి"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:

@@ -1313,8 +1313,6 @@ ar:
         categories_section: "قسم الفئات"
         tags_section: "قسم الوسوم"
         navigation_section: "التنقل"
-        list_destination_default: "استخدام الرابط الافتراضي وعرض شارة للعناصر الجديدة"
-        list_destination_unread_new: "رابط إلى غير المقروءة/الجديدة وعرض عدد العناصر الجديدة"
       change: "تغيير"
       featured_topic: "الموضوع المميز"
       moderator: "‏%{user} مشرف في الموقع"
@@ -4701,8 +4699,9 @@ ar:
       more: "المزيد"
       all_categories: "كل الفئات"
       all_tags: "كل الوسوم"
-      categories_form_modal:
-        save: "حفظ"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "الكل"
       sections:
         custom:
           save: "حفظ"
@@ -4785,6 +4784,11 @@ ar:
       description: "إن موضوعك الترحيبي هو أول ما يقرأه الأعضاء الجُدد. انظر إليه على أنه \"عرض ترويجي\" أو \"بيان مهمة\". دَع الجميع يعرفون الجمهور المستهدف بهذا المجتمع، وما يتوقعون العثور عليه هنا، وما تريد منهم أن يفعلوه أولًا."
       button_title: "بدء التعديل"
     until: "حتى:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "يُرجى إدخال قيمة صالحة."
+          email: "يُرجى إدخال عنوان بريد إلكتروني صالح."
   admin_js:
     type_to_filter: "اكتب للتصفية..."
     admin:

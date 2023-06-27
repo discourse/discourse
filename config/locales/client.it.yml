@@ -1089,8 +1089,6 @@ it:
         categories_section: "Sezione Categorie"
         tags_section: "Sezione etichette"
         navigation_section: "Navigazione"
-        list_destination_default: "usa il link predefinito e mostra un distintivo per i nuovi elementi"
-        list_destination_unread_new: "collega a elementi non letti/nuovi e mostra un contatore dei nuovi elementi"
       change: "cambia"
       featured_topic: "Argomento in primo piano"
       moderator: "%{user} è un moderatore"
@@ -3938,7 +3936,18 @@ it:
       all_categories: "Tutte le categorie"
       all_tags: "Tutte le etichette"
       categories_form_modal:
-        save: "Salva"
+        title: "Modifica la navigazione delle categorie"
+        subtitle:
+          text: "e mostreremo automaticamente le categorie più popolari di questo sito"
+        filter_placeholder: "Filtra le categorie"
+        no_categories: "Non ci sono categorie corrispondenti al termine specificato."
+      edit_navigation_modal_form:
+        deselect_button_text: "Deseleziona tutto"
+        reset_to_defaults: "Ripristina le impostazioni predefinite"
+        filter_dropdown:
+          all: "Tutte"
+          selected: "Selezionato"
+          unselected: "Deselezionato"
       sections:
         custom:
           save: "Salva"
@@ -4017,6 +4026,30 @@ it:
       description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."
       button_title: "Inizia a modificare"
     until: "Fino a:"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Per favore compila questo campo."
+          text: "Per favore compila questo campo."
+          select-one: "Per favore seleziona un elemento nella lista."
+          select-multiple: "Per favore selezione almeno un elemento nella lista."
+          checkbox: "Per favore seleziona questa casella se vuoi procedere."
+        typeMismatch:
+          default: "Per favore inserisci un valore valido."
+          color: "Inserisci un colore."
+          date: "Per favore inserisci una data."
+          email: "Inserisci un indirizzo email valido."
+          number: "Per favore inserisci un numero."
+          password: "Per favore inserisci una password valida."
+          tel: "Per favore inserisci un numero di telefono valido."
+          text: "Per favore inserisci un valore testuale."
+          url: "Per favore, inserisci un URL valido."
+        tooShort: "L'input deve contenere almeno %{minLength} caratteri."
+        tooLong: "L'input deve contenere meno di %{maxLength} caratteri."
+        rangeOverflow: "L'input deve essere minore di %{max}."
+        rangeUnderflow: "L'input deve essere maggiore di %{min}."
+        patternMismatch: "Per favore, rispetta il formato richiesto."
+        badInput: "Per favore, inserisci un input valido."
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

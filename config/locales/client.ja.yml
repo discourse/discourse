@@ -1032,8 +1032,6 @@ ja:
         categories_section: "カテゴリセクション"
         tags_section: "タグセクション"
         navigation_section: "ナビゲーション"
-        list_destination_default: "デフォルトのリンクを使用して新しい項目のバッジを表示する"
-        list_destination_unread_new: "未読/新規にリンクし、新しい項目の件数を表示する"
       change: "変更"
       featured_topic: "注目のトピック"
       moderator: "%{user} はモデレーターです"
@@ -3742,8 +3740,9 @@ ja:
       more: "もっと"
       all_categories: "すべてのカテゴリ"
       all_tags: "すべてのタグ"
-      categories_form_modal:
-        save: "保存"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "すべて"
       sections:
         custom:
           save: "保存"
@@ -3821,6 +3820,11 @@ ja:
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
       button_title: "編集を開始"
     until: "終了日:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "有効な値を入力してください。"
+          email: "正しいメールアドレスを入力してください."
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:

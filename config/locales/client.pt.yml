@@ -3460,8 +3460,9 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
-      categories_form_modal:
-        save: "Guardar"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tudo"
       sections:
         custom:
           save: "Guardar"
@@ -3510,6 +3511,11 @@ pt:
             review:
               content: "Revisão"
     until: "Até:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Por favor introduza um valor válido."
+          email: "Por favor introduza um endereço de email válido."
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:

@@ -1011,8 +1011,6 @@ vi:
         categories_section: "Phần danh mục"
         tags_section: "Phần thẻ"
         navigation_section: "Điều hướng"
-        list_destination_default: "sử dụng liên kết mặc định và hiển thị huy hiệu cho các mục mới"
-        list_destination_unread_new: "liên kết đến chưa đọc/mới và hiển thị số lượng mục mới"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -3535,8 +3533,9 @@ vi:
       more: "Thêm"
       all_categories: "Tất cả danh mục"
       all_tags: "Tất cả các thẻ"
-      categories_form_modal:
-        save: "Lưu lại"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "All"
       sections:
         custom:
           save: "Lưu lại"
@@ -3594,6 +3593,11 @@ vi:
             review:
               content: "Review"
     until: "Cho đến khi:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Hãy nhập giá trị hợp lệ."
+          email: "Vùi lòng nhập một thư điện tử hợp lệ."
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:

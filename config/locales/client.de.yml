@@ -1133,9 +1133,9 @@ de:
         tags_section: "Abschnitt „Schlagwörter“"
         tags_section_instruction: "Ausgewählte Schlagworte werden im Abschnitt \"Tags\" des Navigationsmenüs angezeigt. Wenn keine Tags ausgewählt sind, werden die Top-Tags der Website angezeigt."
         navigation_section: "Navigation"
-        list_destination_instruction: "Wenn es neue Inhalte im Navigationsmenü gibt..."
-        list_destination_default: "den Standardlink verwenden und ein Symbol für neue Elemente anzeigen"
-        list_destination_unread_new: "auf ungelesen/neu verlinken und die Anzahl der neuen Elemente anzeigen"
+        navigation_section_instruction: "Wenn eine Themenliste im Navigationsmenü neue oder ungelesene Einträge enthält…"
+        link_to_filtered_list_checkbox_description: "Link zur gefilterten Liste"
+        show_count_new_items_checkbox_description: "Zählung der neuen Artikel anzeigen"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -4045,10 +4045,24 @@ de:
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
       categories_form_modal:
-        save: "Speichern"
         title: "Kategorien-Navigation bearbeiten"
+        subtitle:
+          text: "und wir zeigen automatisch die beliebtesten Kategorien dieser Seite an"
         filter_placeholder: "Kategorien filtern"
         no_categories: "Es gibt keine Kategorien, die dem angegebenen Begriff entsprechen."
+      tags_form_modal:
+        title: "Schlagwörter-Navigation bearbeiten"
+        filter_placeholder: "Schlagwörter filtern"
+        no_tags: "Es gibt keine Schlagwörter, die auf den angegebenen Begriff passen."
+        subtitle:
+          text: "und wir werden automatisch die Top-Schlagwörter dieser Seite anzeigen"
+      edit_navigation_modal_form:
+        deselect_button_text: "Alle abwählen"
+        reset_to_defaults: "Auf Standards zurücksetzen"
+        filter_dropdown:
+          all: "Gesamt"
+          selected: "Ausgewählt"
+          unselected: "Nicht ausgewählt"
       sections:
         custom:
           add: "Benutzerdefinierten Abschnitt hinzufügen"
@@ -4157,6 +4171,30 @@ de:
       exceeded: "Die maximal zulässige Anzahl von Zeichen wurde überschritten."
     form_template_chooser:
       select_template: "Formularvorlagen auswählen"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Bitte fülle dieses Feld aus."
+          text: "Bitte fülle dieses Feld aus."
+          select-one: "Bitte wähle ein Element aus der Liste aus."
+          select-multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
+          checkbox: "Bitte markiere dieses Feld, wenn du fortfahren möchtest."
+        typeMismatch:
+          default: "Bitte gib einen gültigen Wert ein."
+          color: "Bitte gib eine Farbe ein."
+          date: "Bitte gib ein Datum ein."
+          email: "Bitte gib eine gültige E-Mail-Adresse ein."
+          number: "Bitte gib eine Zahl ein."
+          password: "Bitte gib ein gültiges Passwort ein."
+          tel: "Bitte gib eine gültige Telefonnummer ein."
+          text: "Bitte gib einen Textwert ein."
+          url: "Bitte gib eine gültige URL ein."
+        tooShort: "Die Eingabe muss %{minLength} Zeichen oder länger sein."
+        tooLong: "Die Eingabe muss weniger als %{maxLength} Zeichen umfassen."
+        rangeOverflow: "Der Eingang muss kleiner als %{max} sein."
+        rangeUnderflow: "Die Eingabe muss mehr als %{min} betragen."
+        patternMismatch: "Bitte beachte das gewünschte Format."
+        badInput: "Bitte gib eine gültige Eingabe ein."
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:

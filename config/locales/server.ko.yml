@@ -1959,7 +1959,6 @@ ko:
       pop3_polling_password_is_empty: "POP3 폴링을 활성화하기 전에 'pop3 폴링 비밀번호'를 설정해야 합니다."
       pop3_polling_authentication_failed: "POP3 인증에 실패했습니다. POP3 크리덴셜을 확인하세요."
       reply_by_email_address_is_empty: "이메일로 회신을 활성화하기 전에 '이메일 주소로 회신'을 설정해야 합니다."
-      email_polling_disabled: "이메일로 회신을 활성화하기 전에 수동 또는 POP3 폴링을 활성화해야 합니다."
       user_locale_not_enabled: "이 설정을 활성화하기 전에 먼저 '사용자 로캘 허용'을 활성화해야 합니다."
       invalid_regex: "허용되지 않거나 유효하지 않은 정규식입니다."
       email_editable_enabled: "이 설정을 활성화하기 전에 '이메일 편집 가능'을 비활성화해야 합니다."
