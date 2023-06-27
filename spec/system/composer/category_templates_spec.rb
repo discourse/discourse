@@ -24,6 +24,14 @@ describe "Composer Form Templates", type: :system do
   fab!(:form_template_4) do
     Fabricate(:form_template, name: "Biography", template: "- type: textarea")
   end
+  fab!(:form_template_5) do
+    Fabricate(
+      :form_template,
+      name: "Medication",
+      template:
+        "- type: input\n  attributes:\n    label: \"What is your name?\"\n    placeholder: \"John Smith\"\n  validations:\n    required: false\n- type: upload\n  attributes:\n    file_types: \".jpg, .png\"\n    allow_multiple: true\n    label: \"Upload your prescription\"\n  validations:\n    required: true\n- type: upload\n  attributes:\n    file_types: \".jpg, .png\"\n    allow_multiple: false\n    label: \"Any additional docs\"\n  validations:\n    required: false",
+    )
+  end
   fab!(:category_with_template_1) do
     Fabricate(
       :category,
@@ -60,6 +68,15 @@ describe "Composer Form Templates", type: :system do
       form_template_ids: [form_template_3.id, form_template_4.id],
     )
   end
+  fab!(:category_with_upload_template) do
+    Fabricate(
+      :category,
+      name: "Medical",
+      slug: "medical",
+      topic_count: 2,
+      form_template_ids: [form_template_5.id],
+    )
+  end
   fab!(:category_no_template) do
     Fabricate(:category, name: "Staff", slug: "staff", topic_count: 2, form_template_ids: [])
   end
@@ -73,6 +90,7 @@ describe "Composer Form Templates", type: :system do
       topic_template: "Testing",
     )
   end
+
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:form_template_chooser) { PageObjects::Components::SelectKit.new(".form-template-chooser") }
@@ -193,6 +211,26 @@ describe "Composer Form Templates", type: :system do
     expect(topic_page).to have_topic_title(topic_title)
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked p")).to have_content(
       "Bruce Wayne",
+    )
+  end
+
+  it "creates a post with an upload field" do
+    topic_title = "Bruce Wayne's Medication"
+
+    category_page.visit(category_with_upload_template)
+    category_page.new_topic_button.click
+    attach_file "upload-your-prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/logo.png",
+                make_visible: true
+    composer.fill_title(topic_title)
+    composer.fill_form_template_field("input", "Bruce Wayne")
+    composer.create
+    topic = Topic.where(user: user, title: topic_title)
+    topic_id = Topic.where(user: user, title: topic_title).pluck(:id)
+    post = Post.where(topic_id: topic_id).first
+
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
+      "img[alt='logo.png']",
     )
   end
 end

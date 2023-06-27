@@ -57,8 +57,12 @@ module PageObjects
         find(".form-templates__validations-modal-button").click
       end
 
+      def click_preview_button
+        find(".form-templates__preview-button:enabled").click
+      end
+
       def has_input_field?(type)
-        find(".form-template-field__#{type}").present?
+        find(".form-template-field__#{type}", visible: :all).present?
       end
 
       def has_preview_modal?
