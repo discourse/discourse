@@ -24,11 +24,11 @@ module Chat
     policy :can_create_direct_message
     contract
     model :target_users
-    policy :does_not_exceed_max_direct_message_users,
+    policy :satisfies_dms_max_users_limit,
            class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
     model :user_comm_screener
-    policy :acting_user_not_disallowing_all_messages
-    policy :acting_user_can_communicate_with_all_parties,
+    policy :actor_allows_dms
+    policy :targets_allow_dms_from_user,
            class_name: Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
@@ -37,19 +37,7 @@ module Chat
 
     # @!visibility private
     class Contract
-      attribute :target_usernames
-
-      before_validation do
-        self.target_usernames =
-          (
-            if target_usernames.is_a?(String)
-              target_usernames.split(",")
-            else
-              target_usernames
-            end
-          )
-      end
-
+      attribute :target_usernames, :array
       validates :target_usernames, presence: true, length: { minimum: 1 }
     end
 
@@ -67,7 +55,7 @@ module Chat
       UserCommScreener.new(acting_user: guardian.user, target_user_ids: target_users.map(&:id))
     end
 
-    def acting_user_not_disallowing_all_messages(user_comm_screener:, **)
+    def actor_allows_dms(user_comm_screener:, **)
       !user_comm_screener.actor_disallowing_all_pms?
     end
 
@@ -82,12 +70,6 @@ module Chat
 
     def update_memberships(guardian:, channel:, target_users:, **)
       always_level = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
-      # sql_params = {
-      #   acting_user_id: guardian.user.id,
-      #   user_ids: target_users.map(&:id) + [guardian.user.id],
-      #   chat_channel_id: channel.id,
-      #   always_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-      # }
 
       memberships =
         target_users.map do |user|

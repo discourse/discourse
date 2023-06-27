@@ -14,15 +14,13 @@ class Chat::Api::DirectMessagesController < Chat::ApiController
         )
       end
       on_model_not_found(:target_users) { raise ActiveRecord::RecordNotFound }
-      on_failed_policy(:does_not_exceed_max_direct_message_users) do |policy|
+      on_failed_policy(:satisfies_dms_max_users_limit) do |policy|
         raise Discourse::InvalidParameters.new(:target_usernames, policy.reason)
       end
-      on_failed_policy(:acting_user_not_disallowing_all_messages) do
+      on_failed_policy(:actor_allows_dms) do
         render_json_error(I18n.t("chat.errors.actor_disallowed_dms"))
       end
-      on_failed_policy(:acting_user_can_communicate_with_all_parties) do |policy|
-        render_json_error(policy.reason)
-      end
+      on_failed_policy(:targets_allow_dms_from_user) { |policy| render_json_error(policy.reason) }
       on_model_errors(:direct_message) do |model|
         render_json_error(model, type: :record_invalid, status: 422)
       end
