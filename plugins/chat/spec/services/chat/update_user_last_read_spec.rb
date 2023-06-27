@@ -109,6 +109,11 @@ RSpec.describe Chat::UpdateUserLastRead do
         it "publishes new last read to clients" do
           expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
         end
+
+        it "updates the channel membership last_viewed_at datetime" do
+          membership.update!(last_viewed_at: 1.day.ago)
+          expect { result }.to change { membership.reload.last_viewed_at }
+        end
       end
     end
   end

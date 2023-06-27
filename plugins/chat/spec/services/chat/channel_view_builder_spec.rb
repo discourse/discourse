@@ -37,6 +37,8 @@ RSpec.describe Chat::ChannelViewBuilder do
       }
     end
 
+    before { channel.add(current_user) }
+
     it "threads_enabled is false by default" do
       expect(result.threads_enabled).to eq(false)
     end
@@ -74,6 +76,11 @@ RSpec.describe Chat::ChannelViewBuilder do
       expect(result.view.chat_messages).to eq(
         [message_1, message_2, message_3.thread.original_message, message_3],
       )
+    end
+
+    it "updates the channel membership last_viewed_at" do
+      channel.membership_for(current_user).update!(last_viewed_at: 1.day.ago)
+      expect { result }.to change { channel.membership_for(current_user).last_viewed_at }
     end
 
     it "does not query thread tracking overview or state by default" do

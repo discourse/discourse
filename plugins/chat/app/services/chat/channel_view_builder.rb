@@ -39,6 +39,7 @@ module Chat
     step :fetch_tracking
     step :fetch_thread_memberships
     step :fetch_thread_participants
+    step :update_channel_last_viewed_at
     step :build_view
 
     class Contract
@@ -224,6 +225,10 @@ module Chat
     def fetch_thread_participants(threads:, **)
       context.thread_participants =
         ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
+    end
+
+    def update_channel_last_viewed_at(channel:, guardian:, **)
+      channel.membership_for(guardian.user)&.update!(last_viewed_at: Time.zone.now)
     end
 
     def build_view(
