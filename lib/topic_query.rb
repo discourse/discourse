@@ -915,7 +915,8 @@ class TopicQuery
       if watched_tag_ids.present?
         list =
           list.joins(
-            "LEFT JOIN topic_tags watched_topic_tags ON topic_tags.topic_id = topics.id AND #{DB.sql_fragment("topic_tags.tag_id IN (?)", watched_tag_ids)}",
+            "LEFT JOIN topic_tags watched_topic_tags ON topic_tags.topic_id = topics.id"
+          ).where("topic_tags.tag_id IN (?)", watched_tag_ids)
           )
       end
 
