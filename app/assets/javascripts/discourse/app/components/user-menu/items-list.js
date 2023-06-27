@@ -38,7 +38,7 @@ export default class UserMenuItemsList extends Component {
     await this.#load();
   }
 
-  displayDismissWarning() {
+  renderDismissConfirmation() {
     return false;
   }
 

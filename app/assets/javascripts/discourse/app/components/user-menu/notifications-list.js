@@ -13,6 +13,11 @@ import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
+let alwaysDisplayDismissWarning;
+export function displayDismissNotificationConfirmation() {
+  alwaysDisplayDismissWarning = true;
+}
+
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;
   @service currentUser;
@@ -169,27 +174,23 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     postRNWebviewMessage("markRead", "1");
   }
 
-  displayDismissWarning() {
+  renderDismissConfirmation() {
     return true;
   }
 
-  dismissModalConfirmation() {
+  dismissConfirmationText() {
     return I18n.t("notifications.dismiss_confirmation.body.default", {
       count: this.currentUser.unread_high_priority_notifications,
     });
   }
 
   dismissWarningModal() {
-    if (this.currentUser.unread_high_priority_notifications > 0) {
-      return this.modal.show(DismissNotificationConfirmationModal, {
-        model: {
-          confirmationMessage: this.dismissModalConfirmation(),
-          dismissNotifications: () => this.modalCallback(),
-        },
-      });
-    }
-
-    this.modalCallback();
+    this.modal.show(DismissNotificationConfirmationModal, {
+      model: {
+        confirmationMessage: this.dismissConfirmationText(),
+        dismissNotifications: () => this.modalCallback(),
+      },
+    });
   }
 
   @action
@@ -197,8 +198,13 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     // by default we display a warning modal when dismissing a notification
     // however we bypass the warning modal for specific notification types when
     // they are a 'low priority' type of notification (eg. likes)
-    this.displayDismissWarning()
-      ? this.dismissWarningModal()
-      : this.modalCallback();
+    if (this.renderDismissConfirmation()) {
+      this.currentUser.unread_high_priority_notifications > 0 ||
+      alwaysDisplayDismissWarning
+        ? this.dismissWarningModal()
+        : this.modalCallback();
+    } else {
+      this.modalCallback();
+    }
   }
 }

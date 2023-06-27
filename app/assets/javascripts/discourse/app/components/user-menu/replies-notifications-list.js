@@ -5,7 +5,7 @@ export default class UserMenuRepliesNotificationsList extends UserMenuNotificati
     return this.filterByTypes;
   }
 
-  displayDismissWarning() {
+  renderDismissConfirmation() {
     return false;
   }
 

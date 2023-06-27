@@ -120,6 +120,7 @@ import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
+import { displayDismissNotificationConfirmation } from "discourse/components/user-menu/notifications-list";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -2288,6 +2289,17 @@ class PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Always render the `DismissNotificationConfirmation` modal when dismissing a notification.
+   *
+   * This can be useful when you have registered a custom notification type that does not classify
+   * as a `high priority` notification, so the `DismissNotificationConfirmation` modal will never be
+   * displayed when dismissing notifications even if you desire it to be.
+   */
+  displayDismissNotificationConfirmation() {
+    displayDismissNotificationConfirmation();
   }
 }
 

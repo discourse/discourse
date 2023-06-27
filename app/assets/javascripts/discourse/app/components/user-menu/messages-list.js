@@ -97,7 +97,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return content;
   }
 
-  dismissModalConfirmation() {
+  dismissConfirmationText() {
     return I18n.t("notifications.dismiss_confirmation.body.messages", {
       count: this.#unreadMessagesNotifications,
     });

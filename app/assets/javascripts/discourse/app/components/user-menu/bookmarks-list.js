@@ -74,7 +74,7 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return content;
   }
 
-  dismissModalConfirmation() {
+  dismissConfirmationText() {
     return I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
       count: this.#unreadBookmarkRemindersCount,
     });
