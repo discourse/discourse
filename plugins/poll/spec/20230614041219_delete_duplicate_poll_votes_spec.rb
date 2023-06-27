@@ -9,7 +9,6 @@ describe DeleteDuplicatePollVotes do
 
   fab!(:poll_regular) { Fabricate(:poll) }
   fab!(:poll_regular_option1) { Fabricate(:poll_option, poll: poll_regular, html: "Option 1") }
-  fab!(:poll_regular_option2) { Fabricate(:poll_option, poll: poll_regular, html: "Option 2") }
 
   fab!(:poll_multiple) { Fabricate(:poll) }
   fab!(:poll_multiple_optionA) { Fabricate(:poll_option, poll: poll_multiple, html: "Option A") }
