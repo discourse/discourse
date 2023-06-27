@@ -250,4 +250,17 @@ describe "Composer Form Templates", type: :system do
       "img[alt='logo.png']",
     )
   end
+
+  it "doesn't allow uploading an invalid file type" do
+    topic_title = "Bruce Wayne's Medication"
+
+    category_page.visit(category_with_upload_template)
+    category_page.new_topic_button.click
+    attach_file "upload-your-prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/animated.gif",
+                make_visible: true
+    expect(find("#dialog-holder .dialog-body p", visible: :all)).to have_content(
+      I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
+    )
+  end
 end
