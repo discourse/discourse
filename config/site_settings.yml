@@ -2822,7 +2822,7 @@ tags:
     enum: RemoveMutedTagsFromLatestSiteSetting
   watched_precedence_over_muted:
     client: true
-    default: true
+    default: false
 
   force_lowercase_tags:
     default: true

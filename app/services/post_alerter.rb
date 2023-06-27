@@ -201,7 +201,7 @@ class PostAlerter
     DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
     if !SiteSetting.watched_precedence_over_muted
-      notified = notified + (category_muters(post.topic) | tag_muters(post.topic))
+      notified = notified + category_or_tag_muters(post.topic)
     end
 
     if new_record
@@ -269,20 +269,29 @@ class PostAlerter
       .pluck(:user_id)
   end
 
-  def tag_muters(topic)
-    topic
-      .tag_users
-      .includes(:user)
-      .notification_level_visible([TagUser.notification_levels[:muted]])
-      .map(&:user)
-  end
-
-  def category_muters(topic)
-    topic
-      .category_users
-      .includes(:user)
-      .where(notification_level: CategoryUser.notification_levels[:muted])
-      .map(&:user)
+  def category_or_tag_muters(topic)
+    User
+      .joins(
+        "LEFT JOIN category_users ON users.id = category_users.user_id AND #{
+          DB.sql_fragment(
+            "category_users.category_id = :category_id AND category_users.notification_level = :muted",
+            category_id: topic.category_id,
+            muted: CategoryUser.notification_levels[:muted],
+          )
+        }",
+      )
+      .joins(
+        "#{DB.sql_fragment("LEFT JOIN topic_tags ON topic_tags.topic_id = :topic_id", topic_id: topic.id)}",
+      )
+      .joins(
+        "LEFT JOIN tag_users ON users.id = tag_users.user_id AND #{
+          DB.sql_fragment(
+            "tag_users.tag_id IN (tag_users.tag_id) AND tag_users.notification_level = :muted",
+            muted: TagUser.notification_levels[:muted],
+          )
+        }",
+      )
+      .where("category_users.id IS NOT NULL OR tag_users.id IS NOT NULL")
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)
