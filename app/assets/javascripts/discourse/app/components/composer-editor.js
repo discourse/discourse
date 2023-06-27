@@ -215,11 +215,11 @@ export default Component.extend(
       });
     },
 
-    _destroyTippyInstances() {
-      this.tippyInstances.forEach((instance) => {
+    _destroyTippyInstances(instances) {
+      instances.forEach((instance) => {
         instance.destroy();
       });
-      this.tippyInstances = [];
+      instances = [];
     },
 
     @on("didInsertElement")
@@ -230,7 +230,7 @@ export default Component.extend(
         $input.autocomplete({
           template: findRawTemplate("user-selector-autocomplete"),
           dataSource: (term) => {
-            this._destroyTippyInstances();
+            this._destroyTippyInstances(this.tippyInstances);
             return userSearch({
               term,
               topicId: this.topic?.id,
@@ -267,6 +267,7 @@ export default Component.extend(
           afterComplete: this._afterMentionComplete,
           triggerRule: (textarea) =>
             !inCodeBlock(textarea.value, caretPosition(textarea)),
+          onClose: () => this._destroyTippyInstances(this.tippyInstances),
         });
       }
 
@@ -852,9 +853,6 @@ export default Component.extend(
         "keypress",
         this._handleAltTextInputKeypress
       );
-      if (this.siteSettings.enable_mentions) {
-        this._destroyTippyInstances();
-      }
     },
 
     onExpandPopupMenuOptions(toolbarEvent) {

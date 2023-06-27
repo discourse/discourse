@@ -155,10 +155,6 @@ export default class ChatComposer extends Component {
       "openInsertLinkModal"
     );
     this.pane.sending = false;
-
-    if (this.siteSettings.enable_mentions) {
-      this.#destroyTippyInstances();
-    }
   }
 
   @action
@@ -391,11 +387,11 @@ export default class ChatComposer extends Component {
     });
   }
 
-  #destroyTippyInstances() {
-    this.tippyInstances.forEach((instance) => {
+  #destroyTippyInstances(instances) {
+    instances.forEach((instance) => {
       instance.destroy();
     });
-    this.tippyInstances = [];
+    instances = [];
   }
 
   #addMentionedUser(userData) {
@@ -422,7 +418,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
-        this.#destroyTippyInstances();
+        this.#destroyTippyInstances(this.tippyInstances);
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -462,6 +458,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
+      onClose: () => this.#destroyTippyInstances(this.tippyInstances),
     });
   }
 
