@@ -490,6 +490,9 @@ class TopicsFilter
     "posters" => {
       column: "topics.participant_count",
     },
+    "title" => {
+      column: "LOWER(topics.title)",
+    },
     "views" => {
       column: "topics.views",
     },
@@ -508,7 +511,7 @@ class TopicsFilter
           @scope = instance_exec(&scope)
         end
 
-        @scope = @scope.order(column_name => match_data[:asc] ? :asc : :desc)
+        @scope = @scope.order("#{column_name} #{match_data[:asc] ? "ASC" : "DESC"}")
       end
     end
   end
