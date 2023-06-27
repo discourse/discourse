@@ -106,14 +106,14 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
   test("clicking on section header button", async function (assert) {
     await visit("/");
+
     await click(
       ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
     );
 
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/navigation-menu",
-      "it should transition to user preferences navigation menu page"
+    assert.true(
+      exists(".sidebar-tags-form-modal"),
+      "it shows the tags form modal"
     );
   });
 

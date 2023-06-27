@@ -116,6 +116,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/t/280");
+
     await click(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-header"
     );
@@ -132,14 +133,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     setupUserSidebarCategories();
 
     await visit("/");
+
     await click(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-header-button"
     );
 
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/navigation-menu",
-      "it should transition to user preferences navigation menu page"
+    assert.true(
+      exists(".sidebar-categories-form-modal"),
+      "it shows the categories form modal"
     );
   });
 

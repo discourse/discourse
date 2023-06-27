@@ -2,7 +2,6 @@
 
 RSpec.describe "Editing sidebar tags navigation", type: :system do
   fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
   fab!(:tag1) { Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) } }
 
   fab!(:tag2) do
@@ -18,10 +17,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
 
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
-  before do
-    SiteSetting.new_edit_sidebar_categories_tags_interface_groups = group.name
-    sign_in(user)
-  end
+  before { sign_in(user) }
 
   it "allows a user to edit the sidebar categories navigation" do
     visit "/latest"
