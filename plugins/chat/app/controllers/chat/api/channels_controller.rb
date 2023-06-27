@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 CHANNEL_EDITABLE_PARAMS = %i[name description slug]
-CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
+CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions threading_enabled]
 
 class Chat::Api::ChannelsController < Chat::ApiController
   def index
@@ -36,7 +36,14 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   def create
     channel_params =
-      params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
+      params.require(:channel).permit(
+        :chatable_id,
+        :name,
+        :slug,
+        :description,
+        :auto_join_users,
+        :threading_enabled,
+      )
 
     # NOTE: We don't allow creating channels for anything but category chatable types
     # at the moment. This may change in future, at which point we will need to pass in

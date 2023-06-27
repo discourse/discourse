@@ -3,8 +3,8 @@
 module Chat
   # Service responsible for updating a chat channel's name, slug, and description.
   #
-  # For a CategoryChannel, the settings for auto_join_users and allow_channel_wide_mentions
-  # are also editable.
+  # For a CategoryChannel, the settings for auto_join_users, allow_channel_wide_mentions
+  # and threading_enabled are also editable.
   #
   # @example
   #  Service::Chat::UpdateChannel.call(
@@ -13,6 +13,7 @@ module Chat
   #   name: "SuperChannel",
   #   description: "This is the best channel",
   #   slug: "super-channel",
+  #   threading_enaled: true,
   #  )
   #
   class UpdateChannel
@@ -43,6 +44,7 @@ module Chat
       attribute :name, :string
       attribute :description, :string
       attribute :slug, :string
+      attribute :threading_enabled, :boolean, default: false
       attribute :auto_join_users, :boolean, default: false
       attribute :allow_channel_wide_mentions, :boolean, default: true
 

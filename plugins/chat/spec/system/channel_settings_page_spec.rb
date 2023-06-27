@@ -56,7 +56,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
     context "as a member" do
       before { channel_1.add(current_user) }
 
-      context "when visitng the settings of a recently joined channel" do
+      context "when visiting the settings of a recently joined channel" do
         fab!(:channel_2) { Fabricate(:category_channel) }
 
         it "is correctly populated" do
@@ -158,6 +158,16 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
             find("#chat-channel-toggle-btn").click
             expect(page).to have_content(I18n.t("js.chat.channel_status.closed_header"))
           }.to change { channel_1.reload.status }.from("open").to("closed")
+        end
+
+        it "can enable threading" do
+          chat_page.visit_channel_settings(channel_1)
+
+          expect {
+            find(".channel-settings-view__channel-wide-mentions-selector").click
+            find(".channel-settings-view__channel-wide-mentions-selector [data-name='No']").click
+            expect(page).to have_content(I18n.t("js.chat.settings.saved"))
+          }.to change { channel_1.reload.allow_channel_wide_mentions }.from(true).to(false)
         end
 
         it "can delete channel" do
