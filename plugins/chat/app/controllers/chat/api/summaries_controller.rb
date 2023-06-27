@@ -27,7 +27,7 @@ class Chat::Api::SummariesController < Chat::ApiController
           .map { "#{_1}: #{_2}" }
           .join("\n")
 
-      render json: { summary: strategy.summarize(content) }
+      render json: { summary: strategy.summarize(content).dig(:summary) }
     end
   end
 end
