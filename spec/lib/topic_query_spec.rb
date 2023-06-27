@@ -2132,25 +2132,14 @@ RSpec.describe TopicQuery do
     end
     fab!(:topic) { Fabricate(:topic) }
     fab!(:topic_in_watched_category_and_muted_tag) do
-      Fabricate(:topic, category: watched_category).tap do |topic|
-        Fabricate(:topic_tag, topic: topic, tag: muted_tag)
-      end
+      Fabricate(:topic, category: watched_category, tags: [muted_tag])
     end
     fab!(:topic_in_muted_category_and_watched_tag) do
-      Fabricate(:topic, category: muted_category).tap do |topic|
-        Fabricate(:topic_tag, topic: topic, tag: watched_tag)
-      end
+      Fabricate(:topic, category: muted_category, tags: [watched_tag])
     end
-    fab!(:topic_in_watched_and_muted_tag) do
-      Fabricate(:topic).tap do |topic|
-        Fabricate(:topic_tag, topic: topic, tag: watched_tag)
-        Fabricate(:topic_tag, topic: topic, tag: muted_tag)
-      end
-    end
+    fab!(:topic_in_watched_and_muted_tag) { Fabricate(:topic, tags: [watched_tag, muted_tag]) }
     fab!(:topic_in_muted_category) { Fabricate(:topic, category: muted_category) }
-    fab!(:topic_in_muted_tag) do
-      Fabricate(:topic).tap { |topic| Fabricate(:topic_tag, topic: topic, tag: muted_tag) }
-    end
+    fab!(:topic_in_muted_tag) { Fabricate(:topic, tags: [muted_tag]) }
 
     context "when enabled" do
       it "returns topics even if category or tag is muted but another tag or category is watched" do
