@@ -29,7 +29,27 @@ describe "Composer Form Templates", type: :system do
       :form_template,
       name: "Medication",
       template:
-        "- type: input\n  attributes:\n    label: \"What is your name?\"\n    placeholder: \"John Smith\"\n  validations:\n    required: false\n- type: upload\n  attributes:\n    file_types: \".jpg, .png\"\n    allow_multiple: true\n    label: \"Upload your prescription\"\n  validations:\n    required: true\n- type: upload\n  attributes:\n    file_types: \".jpg, .png\"\n    allow_multiple: false\n    label: \"Any additional docs\"\n  validations:\n    required: false",
+        %Q(
+        - type: input\n
+          attributes:\n
+            label: \"What is your name?\"\n
+            placeholder: \"John Smith\"\n
+          validations:\n
+            required: false\n
+        - type: upload\n
+          attributes:\n
+            file_types: \".jpg, .png\"\n
+            allow_multiple: true\n
+            label: \"Upload your prescription\"\n
+            validations:\n
+            required: true\n
+        - type: upload\n
+          attributes:\n
+            file_types: \".jpg, .png\"\n
+            allow_multiple: false\n
+            label: \"Any additional docs\"\n
+            validations:\n
+            required: false"),
     )
   end
   fab!(:category_with_template_1) do
@@ -225,9 +245,6 @@ describe "Composer Form Templates", type: :system do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
     composer.create
-    topic = Topic.where(user: user, title: topic_title)
-    topic_id = Topic.where(user: user, title: topic_title).pluck(:id)
-    post = Post.where(topic_id: topic_id).first
 
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
       "img[alt='logo.png']",
