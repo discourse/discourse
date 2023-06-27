@@ -45,6 +45,10 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id/summarize" => "summaries#get_summary"
   end
 
+  namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
+    post "export/messages" => "export#export_messages"
+  end
+
   # direct_messages_controller routes
   get "/direct_messages" => "direct_messages#index"
   post "/direct_messages/create" => "direct_messages#create"
@@ -72,7 +76,6 @@ Chat::Engine.routes.draw do
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
   post "/:chat_channel_id/:message_id/flag" => "chat#flag"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
-  put "/:chat_channel_id/read/:message_id" => "chat#update_user_last_read"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   put "/:chat_channel_id/invite" => "chat#invite_users"
   post "/drafts" => "chat#set_draft"

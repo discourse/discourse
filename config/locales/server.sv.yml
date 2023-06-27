@@ -2162,8 +2162,6 @@ sv:
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
-    default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
-    default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
     enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"

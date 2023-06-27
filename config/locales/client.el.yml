@@ -1527,7 +1527,6 @@ el:
       description:
         one: "Υπάρχει <b>%{count}</b> απάντηση."
         other: "Υπάρχουν <b>%{count}</b> απαντήσεις."
-      enable: "Σύνοψη Αυτού του Θέματος"
       disable: "Εμφάνιση όλων των αναρτήσεων"
     deleted_filter:
       enabled_description: "Αυτό το νήμα περιέχει σβησμένες αναρτήσεις, οι οποίες αποκρύπτονται."
@@ -3295,7 +3294,7 @@ el:
       more: "Περισσότερα"
       all_categories: "Όλες οι κατηγορίες"
       all_tags: "Όλες οι ετικέτες"
-      categories_form:
+      categories_form_modal:
         save: "Αποθήκευση"
       sections:
         custom:
@@ -3323,19 +3322,12 @@ el:
             unread_with_count: "Μη αναγνωσμένα (%{count})"
             archive: "Αρχείο"
         tags:
-          links:
-            add_tags:
-              content: "Προσθήκη ετικετών"
-              title: "Δεν έχετε προσθέσει καμία ετικέτα. Κάντε κλικ για να ξεκινήσετε."
           none: "Δεν έχετε προσθέσει ετικέτες."
           click_to_get_started: "Κάντε κλικ εδώ για να ξεκινήσετε."
           header_link_text: "Ετικέτες"
           header_action_title: "Επεξεργασία των ετικετών πλαϊνής γραμμής"
           configure_defaults: "Ρύθμιση προεπιλογών"
         categories:
-          links:
-            add_categories:
-              content: "Προσθέστε κατηγορίες"
           none: "Δεν έχετε προσθέσει καμία κατηγορία."
           click_to_get_started: "Κάντε κλικ εδώ για να ξεκινήσετε."
           header_link_text: "Κατηγορίες"
@@ -3350,6 +3342,9 @@ el:
               content: "Διαχείριση"
             badges:
               content: "Παράσημα"
+            topics:
+              content: "Θέματα"
+              title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
             groups:

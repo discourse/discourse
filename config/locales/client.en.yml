@@ -1211,9 +1211,9 @@ en:
         tags_section: "Tags Section"
         tags_section_instruction: "Selected tags will be displayed under Navigation Menu's tags section. If no tags are selected, the site's top tags will be displayed."
         navigation_section: "Navigation"
-        list_destination_instruction: "When there's new content in the navigation menu..."
-        list_destination_default: "use the default link and show a badge for new items"
-        list_destination_unread_new: "link to unread/new and show a count of new items"
+        navigation_section_instruction: "When a topic list in the navigation menu has new or unread items…"
+        link_to_filtered_list_checkbox_description: "Link to the filtered list"
+        show_count_new_items_checkbox_description: "Show a count of the new items"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -4390,14 +4390,24 @@ en:
       all_categories: "All categories"
       all_tags: "All tags"
       categories_form_modal:
-        save: "Save"
         title: "Edit categories navigation"
         subtitle:
-          button_text: "Deselect all"
           text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+      tags_form_modal:
+        title: "Edit tags navigation"
+        filter_placeholder: "Filter tags"
+        no_tags: "There are no tags matching the given term."
+        subtitle:
+          text: "and we'll automatically show this site's top tags"
+      edit_navigation_modal_form:
+        deselect_button_text: "Deselect all"
         reset_to_defaults: "Reset to defaults"
+        filter_dropdown:
+          all: "All"
+          selected: "Selected"
+          unselected: "Unselected"
 
       sections:
         custom:
@@ -4511,6 +4521,30 @@ en:
 
     form_template_chooser:
       select_template: "Select form templates"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Please fill out this field."
+          text: "Please fill out this field."
+          select-one: "Please select an item in the list."
+          select-multiple: "Please select at least one item in the list."
+          checkbox: "Please check this box if you want to proceed."
+        typeMismatch:
+          default: "Please enter a valid value."
+          color: "Please enter a color."
+          date: "Please enter a date."
+          email: "Please enter a valid email address."
+          number: "Please enter a number."
+          password: "Please enter a valid password."
+          tel: "Please enter a valid telephone number."
+          text: "Please enter a text value."
+          url: "Please enter a valid URL."
+        tooShort: "The input must be %{minLength} characters or longer."
+        tooLong: "The input must be less than %{maxLength} characters."
+        rangeOverflow: "The input must be less than %{max}."
+        rangeUnderflow: "The input must be more than %{min}."
+        patternMismatch: "Please match the requested format."
+        badInput: "Please enter a valid input."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:

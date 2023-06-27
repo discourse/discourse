@@ -24,12 +24,13 @@ RSpec.describe Permalink do
   end
 
   describe "target_url" do
+    subject(:target_url) { permalink.target_url }
+
     let(:permalink) { Fabricate.build(:permalink) }
     let(:topic) { Fabricate(:topic) }
     let(:post) { Fabricate(:post, topic: topic) }
     let(:category) { Fabricate(:category) }
     let(:tag) { Fabricate(:tag) }
-    subject(:target_url) { permalink.target_url }
 
     it "returns a topic url when topic_id is set" do
       permalink.topic_id = topic.id

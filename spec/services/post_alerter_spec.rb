@@ -1150,6 +1150,20 @@ RSpec.describe PostAlerter do
         params: [user, type, post, { revision_number: 1 }],
       )
     end
+
+    it "applies modifiers to notification_data" do
+      Plugin::Instance
+        .new
+        .register_modifier(:notification_data) do |notification_data|
+          notification_data[:silly_key] = "silly value"
+          notification_data
+        end
+
+      notification = PostAlerter.new.create_notification(user, type, post)
+      expect(notification.data_hash[:silly_key]).to eq("silly value")
+
+      DiscoursePluginRegistry.clear_modifiers!
+    end
   end
 
   describe ".push_notification" do

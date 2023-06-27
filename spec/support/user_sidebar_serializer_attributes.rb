@@ -7,24 +7,6 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
   before { SiteSetting.navigation_menu = "sidebar" }
 
-  describe "#sidebar_list_destination" do
-    it "is not included when navigation menu is legacy" do
-      SiteSetting.navigation_menu = "legacy"
-
-      expect(serializer.as_json[:sidebar_list_destination]).to eq(nil)
-    end
-
-    it "returns choosen value or default" do
-      expect(serializer.as_json[:sidebar_list_destination]).to eq(
-        SiteSetting.default_sidebar_list_destination,
-      )
-
-      user.user_option.update!(sidebar_list_destination: "unread_new")
-
-      expect(serializer.as_json[:sidebar_list_destination]).to eq("unread_new")
-    end
-  end
-
   describe "#sidebar_category_ids" do
     fab!(:group) { Fabricate(:group) }
     fab!(:category) { Fabricate(:category) }

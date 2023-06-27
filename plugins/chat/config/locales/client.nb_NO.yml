@@ -114,6 +114,11 @@ nb_NO:
           other: "%{count} svar"
         settings: "Instillinger"
         last_reply: "siste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Overvåkning"
       draft_channel_screen:
         header: "Ny Melding"
         cancel: "Avbryt"

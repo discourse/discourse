@@ -527,6 +527,16 @@ class Theme < ActiveRecord::Base
     end
   end
 
+  def child_theme_ids=(theme_ids)
+    super(theme_ids)
+    DB.after_commit { Theme.clear_cache! }
+  end
+
+  def parent_theme_ids=(theme_ids)
+    super(theme_ids)
+    DB.after_commit { Theme.clear_cache! }
+  end
+
   def add_relative_theme!(kind, theme)
     new_relation =
       if kind == :child

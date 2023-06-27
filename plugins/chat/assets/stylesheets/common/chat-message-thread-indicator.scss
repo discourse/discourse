@@ -1,14 +1,16 @@
+.chat-message {
+  container-type: inline-size;
+}
+
 .chat-message-thread-indicator {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
   cursor: pointer;
   grid-area: threadindicator;
-  max-width: 1000px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
   background-color: var(--primary-very-low);
   margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
-  padding-block: 0.5rem;
-  padding-inline: 0.5rem;
+  padding: 0.5rem;
   border-radius: 8px;
   color: var(--primary);
 
@@ -19,6 +21,12 @@
   &:visited,
   &:hover {
     color: var(--primary);
+  }
+
+  &:hover {
+    .chat-message-thread-indicator__replies-count {
+      text-decoration: underline;
+    }
   }
 
   .touch & {
@@ -33,70 +41,52 @@
     }
   }
 
-  &__participants {
-    flex-shrink: 0;
-    align-self: flex-start;
-  }
-
   &__last-reply-avatar {
-    align-self: flex-start;
+    grid-area: avatar;
+    margin-right: 0.5rem;
+
     .chat-user-avatar {
       width: auto !important;
     }
   }
 
-  &__last-reply-metadata {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.25rem;
-    color: var(--primary-medium);
-
-    .separator {
-      font-size: var(--font-down-1);
-    }
-  }
-
-  &__last-reply-container {
-    display: inline-flex;
-    align-items: flex-end;
-    font-size: var(--font-down-1);
-    min-width: 0;
-
-    .relative-date {
-      @include ellipsis;
-    }
-  }
-
-  &__last-reply-user {
-    font-weight: bold;
-    color: var(--secondary-low);
-  }
-
   &__last-reply-username {
+    @include ellipsis;
     font-weight: bold;
-    color: var(--secondary-low);
+    color: var(--primary-very-high);
+    margin-right: 0.25rem;
+  }
+
+  &__last-reply-info {
+    grid-area: info;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &__last-reply-timestamp {
+    color: var(--primary-high);
+    font-size: var(--font-down-2);
   }
 
   &__last-reply-excerpt {
     @include ellipsis;
-    line-height: 1.8rem;
+    grid-area: excerpt;
   }
 
-  &__body {
-    overflow: hidden;
-    white-space: nowrap;
-    flex-shrink: 1;
-  }
-
-  &:hover {
-    .chat-message-thread-indicator__replies-count {
-      text-decoration: underline;
-    }
+  .chat-thread-participants {
+    grid-area: participants;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
   }
 
   &__replies-count {
     @include ellipsis;
     color: var(--tertiary);
     font-size: var(--font-down-1);
+    text-align: right;
   }
 }

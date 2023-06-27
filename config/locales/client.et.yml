@@ -1194,7 +1194,6 @@ et:
       hide_forever: "tänan, ei"
     summary:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
-      enable: "Võta see teema kokku"
       disable: "Näita kõiki postitusi"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
@@ -2513,7 +2512,7 @@ et:
         other: "%{count} uut"
       more: "Veel"
       all_categories: "Kõik foorumid"
-      categories_form:
+      categories_form_modal:
         save: "Salvesta"
       sections:
         custom:
@@ -2549,6 +2548,8 @@ et:
               content: "Admin"
             badges:
               content: "Märgised"
+            topics:
+              content: "Teemasid"
             faq:
               content: "KKK"
             groups:

@@ -93,7 +93,8 @@ export default class AssistantItem extends Component {
     const inTopicContext = this.search.searchContext?.type === "topic";
     this.args.searchTermChanged(updatedValue, {
       searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,
-      ...(inTopicContext && { setTopicContext: true }),
+      ...(inTopicContext &&
+        !this.args.searchAllTopics && { setTopicContext: true }),
     });
     focusSearchInput();
   }

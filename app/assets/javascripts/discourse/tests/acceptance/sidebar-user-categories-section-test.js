@@ -480,9 +480,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("clicking section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+  test("clicking section links - sidebar_link_to_filtered_list set to true and no unread or new topics", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
     const { category1 } = setupUserSidebarCategories();
 
@@ -514,7 +516,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("clicking section links - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+  test("clicking section links - sidebar_link_to_filtered_list set to true with new topics", async function (assert) {
     const { category1 } = setupUserSidebarCategories();
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
@@ -527,7 +529,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
 
     await visit("/");
@@ -558,7 +562,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("clicking section links - sidebar_list_destination set to unread/new with new and unread topics", async function (assert) {
+  test("clicking section links - sidebar_link_to_filtered_list set to true with new and unread topics", async function (assert) {
     const { category1 } = setupUserSidebarCategories();
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
@@ -579,7 +583,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       created_in_new_period: true,
     });
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
 
     await visit("/");
@@ -754,7 +760,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     const { category1 } = setupUserSidebarCategories();
 
     updateCurrentUser({
-      sidebar_list_destination: "default",
+      user_option: {
+        sidebar_show_count_of_new_items: false,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -826,7 +834,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     const { category1, category2 } = setupUserSidebarCategories();
 
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_show_count_of_new_items: true,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -995,7 +1005,7 @@ acceptance(
 
     needs.user({ new_new_view_enabled: true });
 
-    test("count shown next to category link", async function (assert) {
+    test("count shown next to category link when sidebar_show_count_of_new_items is true", async function (assert) {
       const categories = Site.current().categories;
       const category1 = categories[0];
       const category2 = categories[1];
@@ -1003,6 +1013,9 @@ acceptance(
 
       updateCurrentUser({
         sidebar_category_ids: [category1.id, category2.id, category3.id],
+        user_option: {
+          sidebar_show_count_of_new_items: true,
+        },
       });
 
       this.container.lookup("service:topic-tracking-state").loadStates([
@@ -1085,7 +1098,7 @@ acceptance(
       );
     });
 
-    test("category link href", async function (assert) {
+    test("dot shown next to category link when sidebar_show_count_of_new_items is false", async function (assert) {
       const categories = Site.current().categories;
       const category1 = categories[0];
       const category2 = categories[1];
@@ -1093,6 +1106,66 @@ acceptance(
 
       updateCurrentUser({
         sidebar_category_ids: [category1.id, category2.id, category3.id],
+        user_option: {
+          sidebar_show_count_of_new_items: false,
+        },
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category1.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category2.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert
+        .dom(
+          `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-suffix.icon.unread`
+        )
+        .exists("category1 has a dot because it has a new topic");
+      assert
+        .dom(
+          `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-suffix.icon.unread`
+        )
+        .exists("category2 has a dot because it has an unread topic");
+      assert
+        .dom(
+          `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] .sidebar-section-link-suffix.icon.unread`
+        )
+        .doesNotExist(
+          "category3 doesn't have a dot because it has no new or unread topics"
+        );
+    });
+
+    test("category link href is the new topics list of the category when sidebar_link_to_filtered_list is true and there are unread/new topics in the category", async function (assert) {
+      const categories = Site.current().categories;
+      const category1 = categories[0];
+      const category2 = categories[1];
+      const category3 = categories[2];
+
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, category2.id, category3.id],
+        user_option: {
+          sidebar_link_to_filtered_list: true,
+        },
       });
 
       this.container.lookup("service:topic-tracking-state").loadStates([
@@ -1150,6 +1223,75 @@ acceptance(
         ).href.endsWith("/c/feature/spec/26"),
         "links to the latest topics list for the category because there are no unread or new topics"
       );
+    });
+
+    test("category link href is always the latest topics list when sidebar_link_to_filtered_list is false", async function (assert) {
+      const categories = Site.current().categories;
+      const category1 = categories[0];
+      const category2 = categories[1];
+      const category3 = categories[2];
+
+      updateCurrentUser({
+        sidebar_category_ids: [category1.id, category2.id, category3.id],
+        user_option: {
+          sidebar_link_to_filtered_list: false,
+        },
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: category1.id,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: category2.id,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+        },
+      ]);
+
+      await visit("/");
+
+      assert
+        .dom(
+          `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
+        )
+        .hasAttribute(
+          "href",
+          "/c/meta/3",
+          "category1 links to the latest topics list for the category"
+        );
+
+      assert
+        .dom(
+          `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] a`
+        )
+        .hasAttribute(
+          "href",
+          "/c/howto/10",
+          "category2 links to the latest topics list for the category"
+        );
+
+      assert
+        .dom(
+          `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] a`
+        )
+        .hasAttribute(
+          "href",
+          "/c/feature/spec/26",
+          "category3 links to the latest topics list for the category"
+        );
     });
   }
 );

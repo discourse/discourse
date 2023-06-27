@@ -2,13 +2,10 @@ import I18n from "I18n";
 
 import { tracked } from "@glimmer/tracking";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/navigation-menu";
 
 export default class EverythingSectionLink extends BaseSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
-  @tracked hideCount =
-    this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
 
   constructor() {
     super(...arguments);
@@ -26,9 +23,13 @@ export default class EverythingSectionLink extends BaseSectionLink {
 
     this.totalUnread = this.topicTrackingState.countUnread();
 
-    if (this.totalUnread === 0 || this.#linkToNew) {
+    if (this.totalUnread === 0 || this.#newNewViewEnabled) {
       this.totalNew = this.topicTrackingState.countNew();
     }
+  }
+
+  get showCount() {
+    return this.currentUser?.sidebarShowCountOfNewItems;
   }
 
   get name() {
@@ -55,16 +56,13 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get badgeText() {
-    if (this.#linkToNew) {
-      if (this.#unreadAndNewCount > 0) {
-        return this.#unreadAndNewCount.toString();
-      }
+    if (!this.showCount) {
       return;
     }
-    if (this.hideCount) {
-      return;
-    }
-    if (this.totalUnread > 0) {
+
+    if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
+      return this.#unreadAndNewCount.toString();
+    } else if (this.totalUnread > 0) {
       return I18n.t("sidebar.unread_count", {
         count: this.totalUnread,
       });
@@ -76,19 +74,12 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get route() {
-    if (this.#linkToNew) {
-      if (this.#unreadAndNewCount > 0) {
+    if (this.currentUser?.sidebarLinkToFilteredList) {
+      if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
         return "discovery.new";
-      } else {
-        return "discovery.latest";
-      }
-    } else if (
-      this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION
-    ) {
-      if (this.totalUnread > 0) {
+      } else if (this.totalUnread > 0) {
         return "discovery.unread";
-      }
-      if (this.totalNew > 0) {
+      } else if (this.totalNew > 0) {
         return "discovery.new";
       }
     }
@@ -108,11 +99,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
   }
 
   get suffixValue() {
-    if (
-      this.hideCount &&
-      (this.totalUnread || this.totalNew) &&
-      !this.#linkToNew
-    ) {
+    if (!this.showCount && (this.totalUnread || this.totalNew)) {
       return "circle";
     }
   }
@@ -121,7 +108,7 @@ export default class EverythingSectionLink extends BaseSectionLink {
     return this.totalUnread + this.totalNew;
   }
 
-  get #linkToNew() {
+  get #newNewViewEnabled() {
     return !!this.currentUser?.new_new_view_enabled;
   }
 }

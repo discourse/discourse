@@ -385,7 +385,7 @@ end
 
 task "uploads:stop_migration" => :environment do
   SiteSetting.migrate_to_new_scheme = false
-  puts "Migration stoped!"
+  puts "Migration stopped!"
 end
 
 task "uploads:analyze", %i[cache_path limit] => :environment do |_, args|

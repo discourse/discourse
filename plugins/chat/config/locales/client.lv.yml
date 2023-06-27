@@ -111,6 +111,11 @@ lv:
           other: "%{count} atbildes"
         settings: "Iestatījumi"
         last_reply: "pēdējā atbilde"
+        notifications:
+          regular:
+            title: "Normāls"
+          tracking:
+            title: "Sekot"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

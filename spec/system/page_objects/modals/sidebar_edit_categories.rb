@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+require_relative "sidebar_edit_navigation_modal"
+
 module PageObjects
   module Modals
-    class SidebarEditCategories < PageObjects::Modals::Base
+    class SidebarEditCategories < SidebarEditNavigationModal
       def closed?
         has_no_css?(".sidebar-categories-form-modal")
       end
@@ -45,6 +47,12 @@ module PageObjects
           end
       end
 
+      def has_checkbox?(category, disabled: false)
+        has_selector?(
+          ".sidebar-categories-form-modal .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input#{disabled ? "[disabled]" : ""}",
+        )
+      end
+
       def toggle_category_checkbox(category)
         find(
           ".sidebar-categories-form-modal .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input",
@@ -53,31 +61,10 @@ module PageObjects
         self
       end
 
-      def save
-        find(".sidebar-categories-form-modal .sidebar-categories-form__save-button").click
-        self
-      end
-
-      def filter(text)
-        find(".sidebar-categories-form-modal .sidebar-categories-form__filter-input-field").fill_in(
-          with: text,
+      def has_checkbox?(category, disabled: false)
+        has_selector?(
+          ".sidebar-categories-form-modal .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input#{disabled ? "[disabled]" : ""}",
         )
-
-        self
-      end
-
-      def deselect_all
-        click_button(I18n.t("js.sidebar.categories_form_modal.subtitle.button_text"))
-        self
-      end
-
-      def click_reset_to_defaults_button
-        click_button(I18n.t("js.sidebar.categories_form_modal.reset_to_defaults"))
-        self
-      end
-
-      def has_no_reset_to_defaults_button?
-        has_no_button?(I18n.t("js.sidebar.categories_form_modal.reset_to_defaults"))
       end
     end
   end

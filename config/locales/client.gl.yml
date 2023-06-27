@@ -1540,7 +1540,6 @@ gl:
         other: "Hai <b>%{count}</b> respostas."
       description_time_MF: |
         Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
-      enable: "Resumir este tema"
       disable: "Amosar todas as publicacións"
     deleted_filter:
       enabled_description: "Este tema contén publicacións eliminadas, que se ocultaron."
@@ -3313,7 +3312,7 @@ gl:
         other: "%{count} novos"
       more: "Máis"
       all_categories: "Todas as categorías"
-      categories_form:
+      categories_form_modal:
         save: "Gardar"
       sections:
         custom:
@@ -3352,6 +3351,8 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            topics:
+              content: "Temas"
             faq:
               content: "PMF"
             groups:

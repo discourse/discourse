@@ -104,6 +104,8 @@ nl:
       heading: "Chat"
       join: "Deelnemen"
       last_visit: "laatste bezoek"
+      summarization:
+        summarize: "Samenvatten"
       mention_warning:
         dismiss: "negeren"
         invitations_sent:
@@ -368,6 +370,14 @@ nl:
           other: "%{count} antwoorden"
         settings: "Instellingen"
         last_reply: "laatste antwoord"
+        notifications:
+          regular:
+            title: "Normaal"
+          tracking:
+            title: "Tracking"
+        participants_other_count:
+          one: "+%{count} ander"
+          other: "+%{count} anderen"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"

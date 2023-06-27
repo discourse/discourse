@@ -1630,6 +1630,33 @@ RSpec.describe UsersController do
         expect(created_user.email).to eq("staged@account.com")
         expect(response.status).to eq(403)
       end
+
+      it "works with custom fields" do
+        tennis_field = Fabricate(:user_field, show_on_profile: true, name: "Favorite tennis player")
+
+        post "/u.json",
+             params:
+               honeypot_magic(
+                 email: staged.email,
+                 username: "dude",
+                 password: "P4ssw0rd$$",
+                 user_fields: {
+                   [tennis_field.id] => "Nadal",
+                 },
+               )
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result["success"]).to eq(true)
+
+        created_user = User.find_by_email(staged.email)
+        expect(created_user.staged).to eq(false)
+        expect(created_user.active).to eq(false)
+        expect(created_user.registration_ip_address).to be_present
+        expect(!!created_user.custom_fields["from_staged"]).to eq(true)
+
+        expect(created_user.custom_fields["user_field_#{tennis_field.id}"]).to eq("Nadal")
+      end
     end
   end
 

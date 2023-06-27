@@ -1311,11 +1311,8 @@ ar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"
         categories_section: "قسم الفئات"
-        categories_section_instruction: "سيتم عرض الفئات المحدَّدة ضمن قسم فئات الشريط الجانبي."
         tags_section: "قسم الوسوم"
-        tags_section_instruction: "سيتم عرض الوسوم المحدَّدة ضمن قسم وسوم الشريط الجانبي."
         navigation_section: "التنقل"
-        list_destination_instruction: "عند وجود محتوى جديد في الشريط الجانبي..."
         list_destination_default: "استخدام الرابط الافتراضي وعرض شارة للعناصر الجديدة"
         list_destination_unread_new: "رابط إلى غير المقروءة/الجديدة وعرض عدد العناصر الجديدة"
       change: "تغيير"
@@ -1511,7 +1508,6 @@ ar:
         tags: "الوسوم"
         interface: "الواجهة"
         apps: "التطبيقات"
-        sidebar: "الشريط الجانبي"
       change_password:
         success: "(تم إرسال رسالة البريد الإلكتروني)"
         in_progress: "(جارٍ إرسال رسالة البريد الإلكتروني)"
@@ -2108,7 +2104,6 @@ ar:
         other: "هناك <b>%{count}</b> من الردود."
       description_time_MF: |
         هناك {replyCount, plural, zero {<strong>#</strong> رد} one {رد واحد (<strong>#</strong>)} two {ردَّان (<strong>#</strong>)} few {<strong>#</strong> ردود} many {<strong>#</strong> ردًا} other {<strong>#</strong> رد}} والوقت المقدَّر للقراءة هو <b>{readingTime, plural, zero {<strong>#</strong> دقيقة} one {دقيقة واحدة (<strong>#</strong>)} two {دقيقتان (<strong>#</strong>)} few {<strong>#</strong> دقائق} many {<strong>#</strong> دقيقة} other {<strong>#</strong> دقيقة}}</b>
-      enable: "تلخيص هذا الموضوع"
       disable: "عرض كل المنشورات"
       short_label: "تلخيص"
       short_title: "إظهار ملخص لهذا الموضوع: المشاركات الأكثر إثارة للاهتمام كما يحددها المجتمع"
@@ -4706,7 +4701,7 @@ ar:
       more: "المزيد"
       all_categories: "كل الفئات"
       all_tags: "كل الوسوم"
-      categories_form:
+      categories_form_modal:
         save: "حفظ"
       sections:
         custom:
@@ -4734,20 +4729,12 @@ ar:
             unread_with_count: "غير المقروءة (%{count})"
             archive: "الأرشيف"
         tags:
-          links:
-            add_tags:
-              content: "إضافة وسوم"
-              title: "لم تُضف أي وسوم. انقر للبدء."
           none: "لم تضف أي وسوم."
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الوسوم"
           header_action_title: "تعديل وسوم الشريط الجانبي"
           configure_defaults: "تكوين الإعدادات الافتراضية"
         categories:
-          links:
-            add_categories:
-              content: "إضافة فئات"
-              title: "لم تُضف أي فئات. انقر للبدء."
           none: "لم تضف أي فئات."
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
@@ -4766,6 +4753,9 @@ ar:
             badges:
               content: "الشارات"
               title: "كل الشارات الممكن منحها لك"
+            topics:
+              content: "الموضوعات"
+              title: "كل الموضوعات"
             faq:
               content: "الأسئلة الشائعة"
               title: "إرشادات لاستخدام هذا الموقع"

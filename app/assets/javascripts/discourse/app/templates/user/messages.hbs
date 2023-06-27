@@ -1,5 +1,10 @@
 <DSection @pageClass="user-messages" />
 
+<PluginOutlet
+  @name="user-messages-above-navigation"
+  @outletArgs={{hash model=this.model}}
+/>
+
 <div class="user-navigation user-navigation-secondary">
   <ol class="category-breadcrumb">
     <li>

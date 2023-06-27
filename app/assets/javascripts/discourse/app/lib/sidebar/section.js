@@ -14,6 +14,8 @@ export default class Section {
   @tracked dragCss;
   @tracked links;
 
+  reorderable = true;
+
   constructor({ section, owner }) {
     setOwner(this, owner);
 

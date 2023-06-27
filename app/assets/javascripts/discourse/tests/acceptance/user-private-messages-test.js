@@ -963,10 +963,10 @@ acceptance(
       can_tag_topics: true,
     });
 
-    test("tags are not present on private messages - Mobile mode", async function (assert) {
+    test("tags are present on private messages - Mobile mode", async function (assert) {
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
-      assert.ok(!exists("#reply-control .mini-tag-chooser"));
+      assert.ok(exists("#reply-control .mini-tag-chooser"));
     });
   }
 );

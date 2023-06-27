@@ -1,3 +1,5 @@
+import I18n from "I18n";
+
 export default function prepareFormTemplateData(form) {
   const formData = new FormData(form);
 
@@ -61,7 +63,7 @@ function _validateFormTemplateData(form) {
         field.insertAdjacentElement("afterend", errorBox);
       }
 
-      errorBox.textContent = field.validationMessage;
+      _showErrorMessage(field, errorBox);
     });
 
     // Mark the field as valid as changed:
@@ -79,4 +81,63 @@ function _validateFormTemplateData(form) {
       field.checkValidity();
     });
   });
+}
+
+function _showErrorMessage(field, element) {
+  if (field.validity.valueMissing) {
+    const prefix = "form_templates.errors.valueMissing";
+    const types = [
+      "select-one",
+      "select-multiple",
+      "checkbox",
+      "text",
+      "number",
+    ];
+    _showErrorByType(element, field, prefix, types);
+  } else if (field.validity.typeMismatch) {
+    const prefix = "form_templates.errors.typeMismatch";
+    const types = [
+      "color",
+      "date",
+      "email",
+      "number",
+      "password",
+      "tel",
+      "text",
+      "url",
+    ];
+    _showErrorByType(element, field, prefix, types);
+  } else if (field.validity.tooShort) {
+    element.textContent = I18n.t("form_templates.errors.tooShort", {
+      minLength: field.minLength,
+    });
+  } else if (field.validity.tooLong) {
+    element.textContent = I18n.t("form_templates.errors.tooLong", {
+      maxLength: field.maxLength,
+    });
+  } else if (field.validity.rangeOverflow) {
+    element.textContent = I18n.t("form_templates.errors.rangeOverflow", {
+      max: field.max,
+    });
+  } else if (field.validity.rangeUnderflow) {
+    element.textContent = I18n.t("form_templates.errors.rangeUnderflow", {
+      min: field.min,
+    });
+  } else if (field.validity.patternMismatch) {
+    element.textContent = I18n.t("form_templates.errors.patternMismatch");
+  } else if (field.validity.badInput) {
+    element.textContent = I18n.t("form_templates.errors.badInput");
+  }
+}
+
+function _showErrorByType(element, field, prefix, types) {
+  if (!types.includes(field.type)) {
+    element.textContent = I18n.t(`${prefix}.default`);
+  } else {
+    types.forEach((type) => {
+      if (field.type === type) {
+        element.textContent = I18n.t(`${prefix}.${type}`);
+      }
+    });
+  }
 }

@@ -112,6 +112,11 @@ bs_BA:
           other: "%{count} odgovora"
         settings: "Postavke"
         last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Normalno"
+          tracking:
+            title: "Praćenje"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"

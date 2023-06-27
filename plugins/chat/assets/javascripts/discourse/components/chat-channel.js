@@ -183,6 +183,8 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       findArgs.targetMessageId = this.requestedTargetMessageId;
       scrollToMessageId = this.requestedTargetMessageId;
+    } else if (this.requestedTargetDate) {
+      findArgs.targetDate = this.requestedTargetDate;
     } else if (fetchingFromLastRead) {
       findArgs.fetchFromLastRead = true;
       scrollToMessageId =
@@ -230,6 +232,15 @@ export default class ChatLivePane extends Component {
             highlight: true,
           });
           return;
+        } else if (this.requestedTargetDate) {
+          const message = this.args.channel?.findFirstMessageOfDay(
+            this.requestedTargetDate
+          );
+
+          this.scrollToMessage(message.id, {
+            highlight: true,
+          });
+          return;
         }
 
         if (
@@ -240,7 +251,6 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(scrollToMessageId);
           return;
         }
-
         this.scrollToBottom();
       })
       .catch(this._handleErrors)
@@ -251,6 +261,7 @@ export default class ChatLivePane extends Component {
 
         this.loadedOnce = true;
         this.requestedTargetMessageId = null;
+        this.requestedTargetDate = null;
         this.loadingMorePast = false;
         this.debounceFillPaneAttempt();
         this.updateLastReadMessage();
@@ -364,6 +375,16 @@ export default class ChatLivePane extends Component {
   }
 
   @bind
+  fetchMessagesByDate(date) {
+    const message = this.args.channel?.findFirstMessageOfDay(date);
+    if (message.firstOfResults && this.args.channel?.canLoadMorePast) {
+      this.requestedTargetDate = date;
+      this.debounceFetchMessages();
+    } else {
+      this.highlightOrFetchMessage(message.id);
+    }
+  }
+
   fillPaneAttempt() {
     if (this._selfDeleted) {
       return;
@@ -392,9 +413,7 @@ export default class ChatLivePane extends Component {
     let foundFirstNew = false;
 
     result.chat_messages.forEach((messageData, index) => {
-      if (index === 0) {
-        messageData.firstOfResults = true;
-      }
+      messageData.firstOfResults = index === 0;
 
       if (this.currentUser.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring

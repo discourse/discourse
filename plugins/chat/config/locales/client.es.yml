@@ -104,6 +104,8 @@ es:
       heading: "Chat"
       join: "Unirse"
       last_visit: "última visita"
+      summarization:
+        summarize: "Resumir"
       mention_warning:
         dismiss: "descartar"
         invitations_sent:
@@ -377,6 +379,14 @@ es:
           started_by: "Iniciado por"
         settings: "Ajustes"
         last_reply: "última respuesta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguir"
+        participants_other_count:
+          one: "+%{count} otro"
+          other: "+%{count} otros"
       threads:
         list: "Debates en curso"
         none: "No participas en ningún hilo de este canal."

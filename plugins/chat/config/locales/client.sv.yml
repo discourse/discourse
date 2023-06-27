@@ -116,6 +116,8 @@ sv:
       heading: "Chatt"
       join: "Gå med"
       last_visit: "senaste besök"
+      summarization:
+        summarize: "Sammanfatta"
       mention_warning:
         dismiss: "avfärda"
         cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
@@ -530,6 +532,14 @@ sv:
           started_by: "Startad av"
         settings: "Webbplatsinställningar"
         last_reply: "senaste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Följer"
+        participants_other_count:
+          one: "+%{count} annan"
+          other: "+%{count} andra"
       threads:
         open: "Öppna tråd"
         list: "Pågående diskussioner"

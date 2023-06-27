@@ -106,6 +106,8 @@ pt_BR:
       heading: "Chat"
       join: "Participar"
       last_visit: "último acesso"
+      summarization:
+        summarize: "Resumir"
       mention_warning:
         dismiss: "ignorar"
         invitations_sent:
@@ -376,6 +378,14 @@ pt_BR:
           started_by: "Iniciado por"
         settings: "Definições"
         last_reply: "última resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Monitorando"
+        participants_other_count:
+          one: "+mais %{count}"
+          other: "+mais %{count}"
       threads:
         open: "Tópico Aberto"
       draft_channel_screen:

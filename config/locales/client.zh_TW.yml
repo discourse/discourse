@@ -934,11 +934,8 @@ zh_TW:
         enable: "啟用側選單"
         options: "選項"
         categories_section: "選擇分類"
-        categories_section_instruction: "選定的分類將顯示在側選單的分類段落中。"
         tags_section: "選擇標籤"
-        tags_section_instruction: "選定的標籤將顯示在側選單的標籤段落中。"
         navigation_section: "導覽"
-        list_destination_instruction: "當側邊欄中有新內容時..."
         list_destination_default: "使用預設連結並顯示新項目的徽章"
         list_destination_unread_new: "連結至未讀/新的並顯示新項目的數量"
       change: "修改"
@@ -1035,7 +1032,6 @@ zh_TW:
         tags: "標籤"
         interface: "界面"
         apps: "應用"
-        sidebar: "側選單"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -1412,7 +1408,6 @@ zh_TW:
       enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
       description:
         other: "有 <b>%{count}</b> 個回覆。"
-      enable: "以摘要檢視此話題"
       disable: "顯示所有貼文"
     deleted_filter:
       enabled_description: "這個話題含有被刪除的回覆，這些回覆已被隱藏。"
@@ -2866,7 +2861,7 @@ zh_TW:
       more: "更多"
       all_categories: "所有分類"
       all_tags: "所有標籤"
-      categories_form:
+      categories_form_modal:
         save: "保存"
       sections:
         custom:
@@ -2909,6 +2904,9 @@ zh_TW:
               content: "管理員"
             badges:
               content: "徽章"
+            topics:
+              content: "討論話題"
+              title: "所有話題"
             faq:
               content: "常見問答"
             groups:
