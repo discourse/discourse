@@ -68,6 +68,8 @@ he:
         title: החלפת מתנות
       suspend_user_by_email:
         title: השהיית משתמש לפי דוא״ל
+      user_global_notice_with_first_accepted_solution:
+        doc: כאשר מוקפץ עקב הפתרון הראשון שהתקבל, הפותר יקבל התראה כללית.
       topic_required_words:
         title: מילים שנחוצות לנושא
         errors:
