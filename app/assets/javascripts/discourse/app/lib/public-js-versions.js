@@ -3,7 +3,7 @@
 
 export const PUBLIC_JS_VERSIONS = {
   "ace/ace.js": "ace.js/1.4.13/ace.js",
-  "jsoneditor.js": "@json-editor/json-editor/2.6.1/jsoneditor.js",
+  "jsoneditor.js": "@json-editor/json-editor/2.10.0/jsoneditor.js",
   "chart.min.js": "chart.js/3.5.1/chart.min.js",
   "chartjs-plugin-datalabels.min.js":
     "chartjs-plugin-datalabels/2.0.0/chartjs-plugin-datalabels.min.js",
