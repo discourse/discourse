@@ -1881,10 +1881,6 @@ RSpec.describe PostAlerter do
           )
         end
       end
-      fab!(:topic_with_muted_tag_and_watched_category) { Fabricate(:topic, category: category) }
-      fab!(:topic_with_muted_category_and_watched_tag) do
-        Fabricate(:topic, category: muted_category)
-      end
       fab!(:muted_tag) do
         Fabricate(:tag).tap do |tag|
           TagUser.create!(
@@ -1892,7 +1888,6 @@ RSpec.describe PostAlerter do
             tag: tag,
             notification_level: TagUser.notification_levels[:muted],
           )
-          Fabricate(:topic_tag, topic: topic_with_muted_tag_and_watched_category, tag: tag)
         end
       end
       fab!(:watched_tag) do
@@ -1902,11 +1897,18 @@ RSpec.describe PostAlerter do
             tag: tag,
             notification_level: TagUser.notification_levels[:watching],
           )
-          Fabricate(:topic_tag, topic: topic_with_muted_category_and_watched_tag, tag: tag)
         end
       end
+      fab!(:topic_with_muted_tag_and_watched_category) do
+        Fabricate(:topic, category: category, tags: [muted_tag])
+      end
+      fab!(:topic_with_muted_category_and_watched_tag) do
+        Fabricate(:topic, category: muted_category, tags: [watched_tag])
+      end
+      fab!(:topic_with_watched_category) { Fabricate(:topic, category: category) }
       fab!(:post) { Fabricate(:post, topic: topic_with_muted_tag_and_watched_category) }
       fab!(:post_2) { Fabricate(:post, topic: topic_with_muted_category_and_watched_tag) }
+      fab!(:post_3) { Fabricate(:post, topic: topic_with_watched_category) }
 
       before do
         CategoryUser.set_notification_level_for_category(
@@ -1934,6 +1936,9 @@ RSpec.describe PostAlerter do
         expect {
           PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
         }.not_to change { Notification.count }
+        expect { PostAlerter.post_created(topic_with_watched_category.posts.first) }.to change {
+          Notification.count
+        }.by(1)
       end
     end
 

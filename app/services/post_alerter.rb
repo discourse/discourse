@@ -276,7 +276,7 @@ class PostAlerter
       )
       .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = #{topic.id.to_i}")
       .joins(
-        "LEFT JOIN tag_users ON users.id = tag_users.user_id AND tag_users.tag_id IN (tag_users.tag_id) AND tag_users.notification_level = #{TagUser.notification_levels[:muted].to_i}",
+        "LEFT JOIN tag_users ON users.id = tag_users.user_id AND tag_users.tag_id = topic_tags.tag_id AND tag_users.notification_level = #{TagUser.notification_levels[:muted].to_i}",
       )
       .where("category_users.id IS NOT NULL OR tag_users.id IS NOT NULL")
   end
