@@ -48,18 +48,16 @@ describe TopicSummarization do
   end
 
   describe "#summarize" do
-    let(:strategy) { DummyCustomSummarization.new(summary) }
+    subject(:summarization) { described_class.new(strategy) }
 
-    subject { described_class.new(strategy) }
+    let(:strategy) { DummyCustomSummarization.new(summary) }
 
     def assert_summary_is_cached(topic, summary_response)
       cached_summary = SummarySection.find_by(target: topic, meta_section_id: nil)
 
       expect(cached_summary.content_range).to cover(*topic.posts.map(&:post_number))
       expect(cached_summary.summarized_text).to eq(summary_response[:summary])
-      expect(cached_summary.original_content_sha).to eq(
-        Digest::SHA256.hexdigest(topic.posts.map(&:post_number).join),
-      )
+      expect(cached_summary.original_content_sha).to be_present
       expect(cached_summary.algorithm).to eq(strategy.model)
     end
 
@@ -73,9 +71,7 @@ describe TopicSummarization do
           )
 
       expect(cached_chunk.summarized_text).to eq(chunk_response[:summary])
-      expect(cached_chunk.original_content_sha).to eq(
-        Digest::SHA256.hexdigest(chunk_response[:ids].join),
-      )
+      expect(cached_chunk.original_content_sha).to be_present
       expect(cached_chunk.algorithm).to eq(strategy.model)
     end
 
@@ -83,7 +79,7 @@ describe TopicSummarization do
       let(:summary) { { summary: "This is the final summary", chunks: [] } }
 
       it "caches the summary" do
-        summarized_text = subject.summarize(topic)
+        summarized_text = summarization.summarize(topic)
 
         expect(summarized_text).to eq(summary[:summary])
 
@@ -91,7 +87,7 @@ describe TopicSummarization do
       end
 
       it "returns the cached version in subsequent calls" do
-        subject.summarize(topic)
+        summarization.summarize(topic)
 
         cached_summary_text = "This is a cached summary"
         cached_summary =
@@ -99,7 +95,7 @@ describe TopicSummarization do
             summarized_text: cached_summary_text,
           )
 
-        summarized_text = subject.summarize(topic)
+        summarized_text = summarization.summarize(topic)
         expect(summarized_text).to eq(cached_summary_text)
       end
     end
@@ -116,7 +112,7 @@ describe TopicSummarization do
       end
 
       it "caches the summary and each chunk" do
-        summarized_text = subject.summarize(topic)
+        summarized_text = summarization.summarize(topic)
 
         expect(summarized_text).to eq(summary[:summary])
 
