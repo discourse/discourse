@@ -2,8 +2,9 @@
   <div class="chat-thread-header__left-buttons">
     {{#if @thread}}
       <LinkTo
-        class="chat-thread__back-to-list btn-flat btn btn-icon no-text"
-        @route="chat.channel.threads"
+        class="chat-thread__back-to-previous-route btn-flat btn btn-icon no-text"
+        @route={{this.backLink.route}}
+        @models={{this.backLink.models}}
         title={{i18n "chat.return_to_threads_list"}}
       >
         <Chat::Thread::HeaderUnreadIndicator @channel={{@thread.channel}} />

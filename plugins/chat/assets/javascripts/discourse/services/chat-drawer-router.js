@@ -49,30 +49,16 @@ const ROUTES = {
 
 export default class ChatDrawerRouter extends Service {
   @service router;
+  @service chatHistory;
+
   @tracked component = null;
   @tracked drawerRoute = null;
   @tracked params = null;
-  @tracked history = [];
-
-  get previousRoute() {
-    if (this.history.length > 1) {
-      return this.history[this.history.length - 2];
-    }
-  }
-
-  get currentRoute() {
-    if (this.history.length > 0) {
-      return this.history[this.history.length - 1];
-    }
-  }
 
   stateFor(route) {
-    this.drawerRoute?.deactivate?.(this.currentRoute);
+    this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
 
-    this.history.push(route);
-    if (this.history.length > 10) {
-      this.history.shift();
-    }
+    this.chatHistory.visit(route);
 
     this.drawerRoute = ROUTES[route.name];
     this.params = this.drawerRoute?.extractParams?.(route) || route.params;

@@ -58,17 +58,17 @@ module PageObjects
         header.find(".chat-thread__close").click
       end
 
-      def back_to_list
-        header.find(".chat-thread__back-to-list").click
+      def back_to_previous_route
+        header.find(".chat-thread__back-to-previous-route").click
       end
 
       def has_no_unread_list_indicator?
-        has_no_css?(".chat-thread__back-to-list .chat-thread-header-unread-indicator")
+        has_no_css?(".chat-thread__back-to-previous-route .chat-thread-header-unread-indicator")
       end
 
       def has_unread_list_indicator?(count:)
         has_css?(
-          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
+          ".chat-thread__back-to-previous-route .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
           text: count.to_s,
         )
       end
