@@ -459,6 +459,8 @@ id:
       - Kritik konstruktif diperbolehkan, tetapi kritik *ide*, bukan orang.
 
       Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
+    dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
+    get_a_room: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
   activerecord:
     attributes:
       category:
@@ -572,6 +574,7 @@ id:
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
       description_incomplete: "Post deskripsi kategori harus memiliki setidaknya satu paragraf."
+      disallowed_topic_tags: "Topik ini memiliki tag yang tidak diizinkan oleh kategori ini: '%{tags}'"
       disallowed_tags_generic: "Topik ini memiliki tag yang tidak diizinkan."
       slug_contains_non_ascii_chars: "berisi karakter non-ascii"
       is_already_in_use: "sedang digunakan"
