@@ -3037,8 +3037,9 @@ bs_BA:
         other: "%{count} novih"
       more: "Još"
       all_categories: "Sve kategorije"
-      categories_form_modal:
-        save: "Save"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "All"
       sections:
         custom:
           save: "Save"
@@ -3088,6 +3089,10 @@ bs_BA:
             review:
               content: "Pregled"
     until: "Sve do:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Molim unesite ispravnu vrijednost."
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:

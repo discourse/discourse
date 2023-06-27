@@ -1923,8 +1923,9 @@ sq:
         other: "%{count} të reja"
       more: "Më shumë"
       all_categories: "Të gjitha kategoritë"
-      categories_form_modal:
-        save: "Ruaj"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Të Gjithë"
       sections:
         custom:
           save: "Ruaj"
@@ -1969,6 +1970,11 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Ju lutem shkruani një vlerë të vlefshme."
+          email: "Ju lutemi të vendosni një email të vlefshëm."
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:

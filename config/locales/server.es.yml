@@ -2150,7 +2150,7 @@ es:
       pop3_polling_password_is_empty: "Debes establecer una contraseña de «pop3 polling» antes de activar el polling POP3."
       pop3_polling_authentication_failed: "La autenticación POP3 falló. Comprueba tus credenciales pop3."
       reply_by_email_address_is_empty: "Debes establecer el campo «dirección para responder por correo electrónico» antes de activar respuesta por correo electrónico."
-      email_polling_disabled: "Debes activar el polling sea manual o POP3 antes de activar la respuesta por correo electrónico."
+      email_polling_disabled: "Debes activar el sondeo manual, POP3 o tener activado un sondeador de correo personalizado antes de activar la respuesta por correo electrónico."
       user_locale_not_enabled: "Debes activar primero «permitir usuario local» antes de activar esta opción."
       personal_message_enabled_groups_invalid: "Debes especificar al menos un grupo para esta configuración. Si no quieres que nadie, excepto el personal, envíe MP, elige el grupo del personal."
       invalid_regex: "La expresión regular no es válida o no está permitida."

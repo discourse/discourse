@@ -1516,7 +1516,6 @@ hy:
       pop3_polling_password_is_empty: "Դուք պետք է սահմանեք 'pop3 polling գաղտնաբառ' ՝ մինչ POP3 polling-ը միացնելը:"
       pop3_polling_authentication_failed: "POP3 նույնականացումը ձախողվեց: Խնդրում ենք հաստատել Ձեր pop3 տվյալները:"
       reply_by_email_address_is_empty: "Դուք պետք է սահմանեք 'պատասխան ըստ էլ. հասցի' ՝ մինչ ըստ էլ. հասցեի պատասխանը միացնելը:"
-      email_polling_disabled: "Դուք պետք է միացնեք ձեռքով կամ POP3 polling -ը՝ մինչ ըստ էլ.նամակի պատասխանը միացնելը:"
       user_locale_not_enabled: "Դուք պետք է սկզբում միացնեք 'allow user locale' ՝ մինչև այս կարգավորումը միացնելը"
       invalid_regex: "Կարգավորումը անվավեր է կամ անթույլատրելի:"
       email_editable_enabled: "Դուք պետք է անջատեք 'email editable'մինչև այս կարգավորումը միացնելը:"

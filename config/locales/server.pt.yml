@@ -1301,7 +1301,6 @@ pt:
       pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
       pop3_polling_authentication_failed: "Autenticação POP3 falhada. Por favor verifique as suas credenciais pop3."
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
-      email_polling_disabled: "Tem de ligar a consulta manual ou automática de emails via POP3 antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."

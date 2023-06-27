@@ -3635,8 +3635,9 @@ hu:
       more: "Több"
       all_categories: "Minden kategória"
       all_tags: "Összes címke"
-      categories_form_modal:
-        save: "Mentés"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Összes"
       sections:
         custom:
           save: "Mentés"
@@ -3730,6 +3731,11 @@ hu:
       exceeded: "Túllépte a megengedett maximális karakterszámot."
     form_template_chooser:
       select_template: "Űrlapsablonok kiválasztása"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Adjon meg egy érvényes dátumot."
+          email: "Adjon meg egy érvényes e-mail-címet."
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:

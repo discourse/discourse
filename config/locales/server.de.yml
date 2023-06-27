@@ -2202,7 +2202,6 @@ de:
       pop3_polling_password_is_empty: "Du musst „pop3 polling password“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_authentication_failed: "POP3-Authentifizierung ist fehlgeschlagen. Bitte überprüfe die POP3-Anmeldedaten."
       reply_by_email_address_is_empty: "Du musst „reply by email address“ definieren, bevor Antworten per E-Mail aktiviert wird."
-      email_polling_disabled: "Du musst entweder manuelle oder POP3-Abfragen aktivieren, bevor Antworten per E-Mail aktiviert wird."
       user_locale_not_enabled: "Du musst erst „allow user locale“ aktivieren, bevor du diese Einstellung aktivierst."
       personal_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass jemand außer den Team-Mitgliedern private Nachrichten verschickt, wähle die Team-Gruppe aus."
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."

@@ -3085,8 +3085,9 @@ cs:
       more: "Více"
       all_categories: "Všechny kategorie"
       all_tags: "Všechny štítky"
-      categories_form_modal:
-        save: "Uložit"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Celkem"
       sections:
         custom:
           save: "Uložit"
@@ -3132,6 +3133,11 @@ cs:
             my_posts:
               content: "Mé příspěvky"
     until: "dokud:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Prosím zadejte platnou hodnotu."
+          email: "Zadejte prosím správnou emailovou adresu."
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:

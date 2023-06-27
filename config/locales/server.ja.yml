@@ -2067,7 +2067,6 @@ ja:
       pop3_polling_password_is_empty: "POP3 ポーリングを有効にする前に、'pop3 polling password' を設定する必要があります。"
       pop3_polling_authentication_failed: "POP3 認証に失敗しました。pop3 の資格情報を確認してください。"
       reply_by_email_address_is_empty: "メールによる返信を有効にする前に、'reply by email address' を設定する必要があります。"
-      email_polling_disabled: "メールによる返信を有効にする前に、手動または POP3 ポーリングのいずれかを有効にする必要があります。"
       user_locale_not_enabled: "この設定を有効にする前に 'allow user locale' を有効にする必要があります。"
       personal_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外の人が PM を送信できないようにするには、スタッフグループを選択してください。"
       invalid_regex: "正規表現が無効であるか、許可されていません。"

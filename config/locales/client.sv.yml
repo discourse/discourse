@@ -1131,8 +1131,6 @@ sv:
         categories_section: "Sektion Kategorier"
         tags_section: "Sektion Taggar"
         navigation_section: "Navigering"
-        list_destination_default: "använd standardlänken och visa en utmärkelse för nya objekt"
-        list_destination_unread_new: "länka till oläst/nytt och visa ett antal nya objekt"
       change: "ändra"
       featured_topic: "Utvalt ämne"
       moderator: "%{user} är en moderator"
@@ -4037,10 +4035,12 @@ sv:
       all_categories: "Alla kategorier"
       all_tags: "Alla taggar"
       categories_form_modal:
-        save: "Spara"
         title: "Redigera kategorinavigering"
         filter_placeholder: "Filterkategorier"
         no_categories: "Det finns inga kategorier som matchar den angivna termen."
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alla"
       sections:
         custom:
           add: "Lägg till ett anpassat avsnitt"
@@ -4149,6 +4149,11 @@ sv:
       exceeded: "Det maximala antalet tillåtna tecken har överskridits."
     form_template_chooser:
       select_template: "Välj formulärmallar"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Ange ett giltigt värde."
+          email: "Vi ber dig ange en giltig e-postadress."
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:

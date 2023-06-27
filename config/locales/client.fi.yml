@@ -1099,8 +1099,9 @@ fi:
         categories_section: "Alueet-osio"
         tags_section: "Tunnisteet-osio"
         navigation_section: "Navigointi"
-        list_destination_default: "käytä oletuslinkkiä ja näytä merkki uusissa kohteissa"
-        list_destination_unread_new: "linkki lukemattomiin/uusiin ja näytä uusien kohteiden määrä"
+        navigation_section_instruction: "Kun navigointivalikon aihelistalla on uusia tai lukemattomia kohteita…"
+        link_to_filtered_list_checkbox_description: "Linkki suodatettuun listaan"
+        show_count_new_items_checkbox_description: "Näytä uusien kohteiden lukumäärä"
       change: "vaihda"
       featured_topic: "Valikoitu ketju"
       moderator: "%{user} on valvoja"
@@ -3971,8 +3972,9 @@ fi:
       more: "Lisää"
       all_categories: "Kaikki alueet"
       all_tags: "Kaikki tunnisteet"
-      categories_form_modal:
-        save: "Tallenna"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Kaikki"
       sections:
         custom:
           save: "Tallenna"
@@ -4056,6 +4058,11 @@ fi:
     until: "Asti:"
     form_template_chooser:
       select_template: "Valitse malleista"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Anna kelvollinen arvo."
+          email: "Anna kelvollinen sähköpostiosoite."
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:

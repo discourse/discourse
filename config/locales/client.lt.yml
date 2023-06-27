@@ -3530,8 +3530,9 @@ lt:
         other: "%{count} nauja"
       more: "Daugiau"
       all_categories: "Visos kategorijos"
-      categories_form_modal:
-        save: "Išsaugoti"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Visos"
       sections:
         custom:
           save: "Išsaugoti"
@@ -3583,6 +3584,11 @@ lt:
             review:
               content: "Peržiūra"
     until: "Iki:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Prašome įrašyti tinkamą reikšmę."
+          email: "Prašom įrašyti teisingą elektroninį adresą."
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:

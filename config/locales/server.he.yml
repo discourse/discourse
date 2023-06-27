@@ -2308,7 +2308,6 @@ he:
       pop3_polling_password_is_empty: "עליכם לקבוע 'סיסמת תשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_authentication_failed: "אימות POP3 נכשל. נא לאמת את פרטי הגישה שלך ל־pop3."
       reply_by_email_address_is_empty: "חובה להגדיר ‚מענה לפי כתובת דוא״ל’ בטרם הפעלת תגובה בדוא״ל."
-      email_polling_disabled: "יש לאפשר תשאול ידני או דרך POP3 בטרם הפעלת תגובה דרך דוא״ל."
       user_locale_not_enabled: "לפני שתוכלו להפעיל אפשרות זאת, יש לאפשר \"הגדרות מקומיות מותאמות משתמש/ת\""
       personal_message_enabled_groups_invalid: "עליך לציין לפחות קבוצה אחת להגדרה זו. כדי למנוע מכולם לשלוח הודעות פרטיות למעט הסגל יש לבחור בקבוצת הסגל."
       invalid_regex: "ביטוי רגולרי לא תקין או לא מותר."

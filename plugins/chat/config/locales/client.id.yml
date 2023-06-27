@@ -105,6 +105,12 @@ id:
         saved: "Tersimpan"
         unfollow: "Keluar"
         admin_title: "Admin"
+      admin:
+        export_messages:
+          title: "Ekspor pesan obrolan"
+          description: "Ekspor saat ini dibatasi hingga 10.000 pesan terbaru dalam 6 bulan terakhir."
+          create_export: "Buat ekspor"
+          export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       incoming_webhooks:
         delete: "Hapus"
         name: "Name"

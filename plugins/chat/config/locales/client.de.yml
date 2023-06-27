@@ -432,6 +432,11 @@ de:
         admin_title: "Administrator"
       admin:
         title: "Chat"
+        export_messages:
+          title: "Chat-Nachrichten exportieren"
+          description: "Der Export ist derzeit auf die letzten 10000 Nachrichten der letzten 6 Monate beschränkt."
+          create_export: "Export erstellen"
+          export_has_started: "Der Export hat begonnen. Du bekommst eine PM, wenn er fertig ist."
       direct_messages:
         title: "Persönlicher Chat"
         new: "Persönlichen Chat erstellen"

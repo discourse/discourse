@@ -470,6 +470,11 @@ he:
         admin_title: "הנהלה"
       admin:
         title: "צ׳אט"
+        export_messages:
+          title: "ייצוא הודעות צ׳אט"
+          description: "הייצוא מוגבל כרגע ל־10000 ההודעות העדכניות ביותר ב־6 החודשים האחרונים."
+          create_export: "יצירת ייצוא"
+          export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       direct_messages:
         title: "צ׳אט אישי"
         new: "יצירת צ׳אט אישי"

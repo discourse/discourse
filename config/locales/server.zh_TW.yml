@@ -1548,7 +1548,6 @@ zh_TW:
       pop3_polling_password_is_empty: "在啟用 POP3 輪詢前，你必須設置 'pop3 polling password'。"
       pop3_polling_authentication_failed: "POP3 驗證失敗。請驗證你的 pop3 帳號信息。"
       reply_by_email_address_is_empty: "在啟用郵件回覆之前，你必須設置“reply by email address”。"
-      email_polling_disabled: "在啟用郵件回覆功能前，你必須啟用手動或者 POP3 輪詢。"
       user_locale_not_enabled: "你必須先設置 'allow user locale' 再啟用該設置。"
       invalid_regex: "正則表達式非法或者不允許。"
       email_editable_enabled: "在啟用此設定之前，您必須禁用「電子郵件可編輯」選項"
