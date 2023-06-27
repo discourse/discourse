@@ -283,7 +283,7 @@ export default class ChatMessage extends Component {
     // capture the touch event instead of a scroll
     this._makeMessageActiveHandler = discourseLater(() => {
       this.isActive = true;
-    }, 50);
+    }, 125);
   }
 
   @action

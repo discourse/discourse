@@ -3,6 +3,8 @@
 require "rails_helper"
 
 describe Chat::MessageBookmarkable do
+  subject(:registered_bookmarkable) { RegisteredBookmarkable.new(described_class) }
+
   fab!(:user) { Fabricate(:user) }
   fab!(:guardian) { Guardian.new(user) }
   fab!(:other_category) { Fabricate(:private_category, group: Fabricate(:group)) }
@@ -25,23 +27,21 @@ describe Chat::MessageBookmarkable do
   let!(:bookmark2) { Fabricate(:bookmark, user: user, bookmarkable: message2) }
   let!(:bookmark3) { Fabricate(:bookmark) }
 
-  subject { RegisteredBookmarkable.new(described_class) }
-
   describe "#perform_list_query" do
     it "returns all the user's bookmarks" do
-      expect(subject.perform_list_query(user, guardian).map(&:id)).to match_array(
+      expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(
         [bookmark1.id, bookmark2.id],
       )
     end
 
     it "does not return bookmarks for messages inside category chat channels the user cannot access" do
       channel.update(chatable: other_category)
-      expect(subject.perform_list_query(user, guardian)).to eq(nil)
+      expect(registered_bookmarkable.perform_list_query(user, guardian)).to eq(nil)
       other_category.groups.last.add(user)
       bookmark1.reload
       user.reload
       guardian = Guardian.new(user)
-      expect(subject.perform_list_query(user, guardian).map(&:id)).to match_array(
+      expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(
         [bookmark1.id, bookmark2.id],
       )
     end
@@ -49,12 +49,12 @@ describe Chat::MessageBookmarkable do
     it "does not return bookmarks for messages inside direct message chat channels the user cannot access" do
       direct_message = Fabricate(:direct_message)
       channel.update(chatable: direct_message)
-      expect(subject.perform_list_query(user, guardian)).to eq(nil)
+      expect(registered_bookmarkable.perform_list_query(user, guardian)).to eq(nil)
       Chat::DirectMessageUser.create(user: user, direct_message: direct_message)
       bookmark1.reload
       user.reload
       guardian = Guardian.new(user)
-      expect(subject.perform_list_query(user, guardian).map(&:id)).to match_array(
+      expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(
         [bookmark1.id, bookmark2.id],
       )
     end
@@ -62,7 +62,9 @@ describe Chat::MessageBookmarkable do
     it "does not return bookmarks for deleted messages" do
       message1.trash!
       guardian = Guardian.new(user)
-      expect(subject.perform_list_query(user, guardian).map(&:id)).to match_array([bookmark2.id])
+      expect(registered_bookmarkable.perform_list_query(user, guardian).map(&:id)).to match_array(
+        [bookmark2.id],
+      )
     end
   end
 
@@ -72,8 +74,8 @@ describe Chat::MessageBookmarkable do
     it "returns bookmarks that match by name" do
       ts_query = Search.ts_query(term: "gotta", ts_config: "simple")
       expect(
-        subject.perform_search_query(
-          subject.perform_list_query(user, guardian),
+        registered_bookmarkable.perform_search_query(
+          registered_bookmarkable.perform_list_query(user, guardian),
           "%gotta%",
           ts_query,
         ).map(&:id),
@@ -85,8 +87,8 @@ describe Chat::MessageBookmarkable do
 
       ts_query = Search.ts_query(term: "good soup", ts_config: "simple")
       expect(
-        subject.perform_search_query(
-          subject.perform_list_query(user, guardian),
+        registered_bookmarkable.perform_search_query(
+          registered_bookmarkable.perform_list_query(user, guardian),
           "%good soup%",
           ts_query,
         ).map(&:id),
@@ -94,8 +96,8 @@ describe Chat::MessageBookmarkable do
 
       ts_query = Search.ts_query(term: "blah", ts_config: "simple")
       expect(
-        subject.perform_search_query(
-          subject.perform_list_query(user, guardian),
+        registered_bookmarkable.perform_search_query(
+          registered_bookmarkable.perform_list_query(user, guardian),
           "%blah%",
           ts_query,
         ).map(&:id),
@@ -105,23 +107,23 @@ describe Chat::MessageBookmarkable do
 
   describe "#can_send_reminder?" do
     it "cannot send the reminder if the message or channel is deleted" do
-      expect(subject.can_send_reminder?(bookmark1)).to eq(true)
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(true)
       bookmark1.bookmarkable.trash!
       bookmark1.reload
-      expect(subject.can_send_reminder?(bookmark1)).to eq(false)
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
       Chat::Message.with_deleted.find_by(id: bookmark1.bookmarkable_id).recover!
       bookmark1.reload
       bookmark1.bookmarkable.chat_channel.trash!
       bookmark1.reload
-      expect(subject.can_send_reminder?(bookmark1)).to eq(false)
+      expect(registered_bookmarkable.can_send_reminder?(bookmark1)).to eq(false)
     end
   end
 
   describe "#reminder_handler" do
     it "creates a notification for the user with the correct details" do
-      expect { subject.send_reminder_notification(bookmark1) }.to change { Notification.count }.by(
-        1,
-      )
+      expect { registered_bookmarkable.send_reminder_notification(bookmark1) }.to change {
+        Notification.count
+      }.by(1)
       notification = user.notifications.last
       expect(notification.notification_type).to eq(Notification.types[:bookmark_reminder])
       expect(notification.data).to eq(
@@ -142,38 +144,44 @@ describe Chat::MessageBookmarkable do
 
   describe "#can_see?" do
     it "returns false if the chat message is in a channel the user cannot see" do
-      expect(subject.can_see?(guardian, bookmark1)).to eq(true)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark1)).to eq(true)
       bookmark1.bookmarkable.chat_channel.update!(chatable: private_category)
-      expect(subject.can_see?(guardian, bookmark1)).to eq(false)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark1)).to eq(false)
       private_category.groups.last.add(user)
       bookmark1.reload
       user.reload
       guardian = Guardian.new(user)
-      expect(subject.can_see?(guardian, bookmark1)).to eq(true)
+      expect(registered_bookmarkable.can_see?(guardian, bookmark1)).to eq(true)
     end
   end
 
   describe "#validate_before_create" do
     it "raises InvalidAccess if the user cannot see the chat channel" do
-      expect { subject.validate_before_create(guardian, bookmark1.bookmarkable) }.not_to raise_error
+      expect {
+        registered_bookmarkable.validate_before_create(guardian, bookmark1.bookmarkable)
+      }.not_to raise_error
       bookmark1.bookmarkable.chat_channel.update!(chatable: private_category)
-      expect { subject.validate_before_create(guardian, bookmark1.bookmarkable) }.to raise_error(
-        Discourse::InvalidAccess,
-      )
+      expect {
+        registered_bookmarkable.validate_before_create(guardian, bookmark1.bookmarkable)
+      }.to raise_error(Discourse::InvalidAccess)
       private_category.groups.last.add(user)
       bookmark1.reload
       user.reload
       guardian = Guardian.new(user)
-      expect { subject.validate_before_create(guardian, bookmark1.bookmarkable) }.not_to raise_error
+      expect {
+        registered_bookmarkable.validate_before_create(guardian, bookmark1.bookmarkable)
+      }.not_to raise_error
     end
 
     it "raises InvalidAccess if the chat message is deleted" do
-      expect { subject.validate_before_create(guardian, bookmark1.bookmarkable) }.not_to raise_error
+      expect {
+        registered_bookmarkable.validate_before_create(guardian, bookmark1.bookmarkable)
+      }.not_to raise_error
       bookmark1.bookmarkable.trash!
       bookmark1.reload
-      expect { subject.validate_before_create(guardian, bookmark1.bookmarkable) }.to raise_error(
-        Discourse::InvalidAccess,
-      )
+      expect {
+        registered_bookmarkable.validate_before_create(guardian, bookmark1.bookmarkable)
+      }.to raise_error(Discourse::InvalidAccess)
     end
   end
 
@@ -182,7 +190,7 @@ describe Chat::MessageBookmarkable do
       bookmark_post = Fabricate(:bookmark, bookmarkable: Fabricate(:post))
       bookmark1.bookmarkable.trash!
       bookmark1.bookmarkable.update!(deleted_at: 4.days.ago)
-      subject.cleanup_deleted
+      registered_bookmarkable.cleanup_deleted
       expect(Bookmark.exists?(id: bookmark1.id)).to eq(false)
       expect(Bookmark.exists?(id: bookmark2.id)).to eq(true)
       expect(Bookmark.exists?(id: bookmark_post.id)).to eq(true)

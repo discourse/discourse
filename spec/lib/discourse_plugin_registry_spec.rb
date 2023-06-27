@@ -98,6 +98,13 @@ RSpec.describe DiscoursePluginRegistry do
     end
   end
 
+  describe "#mail_pollers" do
+    it "defaults to an empty Set" do
+      registry.reset!
+      expect(registry.mail_pollers).to eq(Set.new)
+    end
+  end
+
   describe ".register_html_builder" do
     it "can register and build html" do
       DiscoursePluginRegistry.register_html_builder(:my_html) { "<b>my html</b>" }

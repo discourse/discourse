@@ -42,7 +42,8 @@
           </td>
           <td class="version">
             <div class="label">{{i18n "admin.plugins.version"}}</div>
-            {{plugin.version}}
+            {{plugin.version}}<br />
+            <PluginCommitHash @plugin={{plugin}} />
           </td>
           <td class="col-enabled">
             <div class="label">{{i18n "admin.plugins.enabled"}}</div>

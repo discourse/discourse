@@ -3,6 +3,8 @@
 require "rails_helper"
 
 describe Jobs::Chat::NotifyMentioned do
+  subject(:job) { described_class.new }
+
   fab!(:user_1) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:public_channel) { Fabricate(:category_channel) }
@@ -47,7 +49,7 @@ describe Jobs::Chat::NotifyMentioned do
   )
     MessageBus
       .track_publish("/chat/notification-alert/#{user.id}") do
-        subject.execute(
+        job.execute(
           chat_message_id: message.id,
           timestamp: message.created_at,
           to_notify_ids_map: to_notify_ids_map,
@@ -58,7 +60,7 @@ describe Jobs::Chat::NotifyMentioned do
   end
 
   def track_core_notification(user: user_2, message:, to_notify_ids_map:)
-    subject.execute(
+    job.execute(
       chat_message_id: message.id,
       timestamp: message.created_at,
       to_notify_ids_map: to_notify_ids_map,
@@ -175,7 +177,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       PostAlerter.expects(:push_notification).never
 
-      subject.execute(
+      job.execute(
         chat_message_id: message.id,
         timestamp: message.created_at,
         to_notify_ids_map: to_notify_ids_map,
@@ -204,7 +206,7 @@ describe Jobs::Chat::NotifyMentioned do
 
       PostAlerter.expects(:push_notification).never
 
-      subject.execute(
+      job.execute(
         chat_message_id: message.id,
         timestamp: message.created_at,
         to_notify_ids_map: to_notify_ids_map,
@@ -248,7 +250,7 @@ describe Jobs::Chat::NotifyMentioned do
         },
       )
 
-      subject.execute(
+      job.execute(
         chat_message_id: message.id,
         timestamp: message.created_at,
         to_notify_ids_map: to_notify_ids_map,

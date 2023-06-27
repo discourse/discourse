@@ -115,7 +115,8 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.email_polling_enabled?
-    SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled?
+    SiteSetting.manual_polling_enabled? || SiteSetting.pop3_polling_enabled? ||
+      DiscoursePluginRegistry.mail_pollers.any?(&:enabled?)
   end
 
   def self.blocked_attachment_content_types_regex

@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Plugin::Instance do
+  subject(:plugin_instance) { described_class.new }
+
   after { DiscoursePluginRegistry.reset! }
 
   describe "find_all" do
@@ -11,6 +13,13 @@ RSpec.describe Plugin::Instance do
 
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
+
+      git_repo = plugin.git_repo
+      plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+      plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
+
+      expect(plugin.commit_hash).to eq("123456")
+      expect(plugin.commit_url).to eq("http://github.com/discourse/discourse-plugin/commit/123456")
     end
 
     it "does not blow up on missing directory" do
@@ -594,7 +603,7 @@ RSpec.describe Plugin::Instance do
       highest_flag_id = ReviewableScore.types.values.max
       flag_name = :new_flag
 
-      subject.replace_flags(settings: original_flags) do |settings, next_flag_id|
+      plugin_instance.replace_flags(settings: original_flags) do |settings, next_flag_id|
         settings.add(next_flag_id, flag_name)
       end
 
@@ -606,7 +615,7 @@ RSpec.describe Plugin::Instance do
       highest_flag_id = ReviewableScore.types.values.max
       new_score_type = :new_score_type
 
-      subject.replace_flags(
+      plugin_instance.replace_flags(
         settings: original_flags,
         score_type_names: [new_score_type],
       ) { |settings, next_flag_id| settings.add(next_flag_id, :new_flag) }
@@ -622,7 +631,7 @@ RSpec.describe Plugin::Instance do
 
     it "adds a custom api key scope" do
       actions = %w[admin/groups#create]
-      subject.add_api_key_scope(:groups, create: { actions: actions })
+      plugin_instance.add_api_key_scope(:groups, create: { actions: actions })
 
       expect(ApiKeyScope.scope_mappings.dig(:groups, :create, :actions)).to contain_exactly(
         *actions,

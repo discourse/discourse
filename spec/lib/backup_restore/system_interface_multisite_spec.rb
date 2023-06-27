@@ -3,9 +3,9 @@
 require_relative "shared_context_for_backup_restore"
 
 RSpec.describe BackupRestore::SystemInterface, type: :multisite do
-  include_context "with shared stuff"
+  subject(:system_interface) { BackupRestore::SystemInterface.new(logger) }
 
-  subject { BackupRestore::SystemInterface.new(logger) }
+  include_context "with shared stuff"
 
   describe "#flush_redis" do
     it "removes only keys from the current site in a multisite" do
@@ -24,7 +24,7 @@ RSpec.describe BackupRestore::SystemInterface, type: :multisite do
         expect(Discourse.redis.get("foo")).to eq("second-foo")
         expect(Discourse.redis.get("bar")).to eq("second-bar")
 
-        subject.flush_redis
+        system_interface.flush_redis
 
         expect(Discourse.redis.get("foo")).to be_nil
         expect(Discourse.redis.get("bar")).to be_nil
@@ -43,7 +43,7 @@ RSpec.describe BackupRestore::SystemInterface, type: :multisite do
         BackupRestore.mark_as_running!
 
         expect do
-          thread = subject.listen_for_shutdown_signal
+          thread = system_interface.listen_for_shutdown_signal
           BackupRestore.set_shutdown_signal!
           thread.join
         end.to raise_error(SystemExit)
