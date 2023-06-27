@@ -281,7 +281,7 @@ class PostAlerter
         }",
       )
       .joins(
-        "#{DB.sql_fragment("LEFT JOIN topic_tags ON topic_tags.topic_id = :topic_id", topic_id: topic.id)}",
+        "LEFT JOIN topic_tags ON topic_tags.topic_id = #{topic.id.to_i}"
       )
       .joins(
         "LEFT JOIN tag_users ON users.id = tag_users.user_id AND #{
