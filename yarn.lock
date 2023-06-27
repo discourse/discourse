@@ -462,10 +462,10 @@
   dependencies:
     lodash "^4.17.21"
 
-"@json-editor/json-editor@^2.6.1":
-  version "2.9.1"
-  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.9.1.tgz#14de9cabea09773fa233cf75fb8ab2ec986074d4"
-  integrity sha512-PSpi/zp3PEiC7078px1L9hY4kL+FLxGI+by0a09TvltRYfhetsNIkoU/NcqJPt7Qxg5Kp4Qfg0bgo+X3TxowEA==
+"@json-editor/json-editor@^2.10.0":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.10.0.tgz#95002ed971e8b39d8d8834df885f002275a1e5ce"
+  integrity sha512-RGkzTccb4UDtmcQ1PYDWDJ3SXoGIRmesTUTJCyZ9kyVGjHs/HgqIXlpQPmg9fHFi9D45/8RTdGqlvkZMGw2zlA==
   dependencies:
     core-js "^3.27.2"
 
