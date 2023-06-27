@@ -211,6 +211,7 @@ class ImportScripts::Zendesk < ImportScripts::Base
   end
 
   def normalize_raw(raw)
+    return '' if raw.nil?
     raw = raw.gsub('\n', "")
     raw = ReverseMarkdown.convert(raw)
     raw
