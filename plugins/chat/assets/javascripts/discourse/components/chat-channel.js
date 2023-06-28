@@ -560,7 +560,21 @@ export default class ChatLivePane extends Component {
         }
       }
 
-      this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
+      if (!this.args.channel.isFollowing || !lastUnreadVisibleMessage.id) {
+        return;
+      }
+
+      if (
+        this.args.channel.currentUserMembership.lastReadMessageId >=
+        lastUnreadVisibleMessage.id
+      ) {
+        return;
+      }
+
+      return this.chatApi.markChannelAsRead(
+        this.args.channel.id,
+        lastUnreadVisibleMessage.id
+      );
     });
   }
 

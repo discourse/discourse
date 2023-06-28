@@ -1,6 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -323,22 +322,6 @@ export default class ChatChannel {
     this.currentUserMembership.mobileNotificationLevel =
       membership.mobile_notification_level;
     this.currentUserMembership.muted = membership.muted;
-  }
-
-  updateLastReadMessage(messageId) {
-    if (!this.isFollowing || !messageId) {
-      return;
-    }
-
-    if (this.currentUserMembership.lastReadMessageId >= messageId) {
-      return;
-    }
-
-    // TODO (martin) Change this to use chatApi service markChannelAsRead once we change this
-    // class not to use RestModel.
-    return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
-      method: "PUT",
-    });
   }
 
   clearSelectedMessages() {
