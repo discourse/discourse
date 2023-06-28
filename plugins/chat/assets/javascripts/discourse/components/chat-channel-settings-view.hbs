@@ -111,13 +111,13 @@
           />
         </label>
         <ComboBox
-          @content={{@channelWideMentionsOptions}}
+          @content={{this.channelWideMentionsOptions}}
           @value={{@channel.allowChannelWideMentions}}
           @valueProperty="value"
           @class="channel-settings-view__selector"
           @onChange={{this.onToggleChannelWideMentions}}
         />
-        <p class="chat-form__description -channel-wide-mentions">
+        <p class="chat-form__description">
           {{i18n
             "chat.settings.channel_wide_mentions_description"
             channel=@channel.title

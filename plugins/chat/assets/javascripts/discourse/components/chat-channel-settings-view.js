@@ -53,7 +53,7 @@ export default class ChatChannelSettingsView extends Component {
   savedMuted = false;
 
   get togglingChannelWideMentionsAvailable() {
-    return this.args.isCategoryChannel;
+    return this.args.channel.isCategoryChannel;
   }
 
   get togglingThreadingAvailable() {

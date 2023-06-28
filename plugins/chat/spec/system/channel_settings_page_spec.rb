@@ -82,8 +82,11 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         membership = channel_1.membership_for(current_user)
 
         expect {
-          find(".channel-settings-view__muted-selector").click
-          find(".channel-settings-view__muted-selector [data-name='On']").click
+          select_kit =
+            PageObjects::Components::SelectKit.new(".-mute .channel-settings-view__selector")
+          select_kit.expand
+          select_kit.select_row_by_name("On")
+
           expect(page).to have_content(I18n.t("js.chat.settings.saved"))
         }.to change { membership.reload.muted }.from(false).to(true)
       end
@@ -93,10 +96,13 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         membership = channel_1.membership_for(current_user)
 
         expect {
-          find(".channel-settings-view__desktop-notification-level-selector").click
-          find(
-            ".channel-settings-view__desktop-notification-level-selector [data-name='Never']",
-          ).click
+          select_kit =
+            PageObjects::Components::SelectKit.new(
+              ".-desktop-notification-level .channel-settings-view__selector",
+            )
+          select_kit.expand
+          select_kit.select_row_by_name("Never")
+
           expect(page).to have_content(I18n.t("js.chat.settings.saved"))
         }.to change { membership.reload.desktop_notification_level }.from("mention").to("never")
       end
@@ -106,10 +112,13 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         membership = channel_1.membership_for(current_user)
 
         expect {
-          find(".channel-settings-view__mobile-notification-level-selector").click
-          find(
-            ".channel-settings-view__mobile-notification-level-selector [data-name='Never']",
-          ).click
+          select_kit =
+            PageObjects::Components::SelectKit.new(
+              ".-mobile-notification-level .channel-settings-view__selector",
+            )
+          select_kit.expand
+          select_kit.select_row_by_name("Never")
+
           expect(page).to have_content(I18n.t("js.chat.settings.saved"))
         }.to change { membership.reload.mobile_notification_level }.from("mention").to("never")
       end
@@ -133,9 +142,12 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
           chat_page.visit_channel_settings(channel_1)
 
           expect {
-            find(".channel-settings-view__auto-join-selector").click
-            find(".channel-settings-view__auto-join-selector [data-name='Yes']").click
+            select_kit =
+              PageObjects::Components::SelectKit.new(".-autojoin .channel-settings-view__selector")
+            select_kit.expand
+            select_kit.select_row_by_name("Yes")
             find("#dialog-holder .btn-primary").click
+
             expect(page).to have_content(I18n.t("js.chat.settings.saved"))
           }.to change { channel_1.reload.auto_join_users }.from(false).to(true)
         end
@@ -144,8 +156,13 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
           chat_page.visit_channel_settings(channel_1)
 
           expect {
-            find(".channel-settings-view__channel-wide-mentions-selector").click
-            find(".channel-settings-view__channel-wide-mentions-selector [data-name='No']").click
+            select_kit =
+              PageObjects::Components::SelectKit.new(
+                ".-channel-wide-mentions .channel-settings-view__selector",
+              )
+            select_kit.expand
+            select_kit.select_row_by_name("No")
+
             expect(page).to have_content(I18n.t("js.chat.settings.saved"))
           }.to change { channel_1.reload.allow_channel_wide_mentions }.from(true).to(false)
         end
@@ -161,13 +178,16 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         end
 
         it "can enable threading" do
+          SiteSetting.enable_experimental_chat_threaded_discussions = true
           chat_page.visit_channel_settings(channel_1)
 
           expect {
-            find(".channel-settings-view__channel-wide-mentions-selector").click
-            find(".channel-settings-view__channel-wide-mentions-selector [data-name='No']").click
+            select_kit =
+              PageObjects::Components::SelectKit.new(".-threading .channel-settings-view__selector")
+            select_kit.expand
+            select_kit.select_row_by_name("Enabled")
             expect(page).to have_content(I18n.t("js.chat.settings.saved"))
-          }.to change { channel_1.reload.allow_channel_wide_mentions }.from(true).to(false)
+          }.to change { channel_1.reload.threading_enabled }.from(false).to(true)
         end
 
         it "can delete channel" do
