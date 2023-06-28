@@ -91,8 +91,6 @@ export default class CreateChannelController extends Controller.extend(
       threading_enabled: this.threadingEnabled,
     };
 
-    console.log(data);
-
     return this.chatApi
       .createChannel(data)
       .then((channel) => {
