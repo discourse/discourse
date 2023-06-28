@@ -30,25 +30,25 @@ describe "Composer Form Templates", type: :system do
       name: "Medication",
       template:
         %Q(
-        - type: input\n
-          attributes:\n
-            label: \"What is your name?\"\n
-            placeholder: \"John Smith\"\n
-          validations:\n
-            required: false\n
-        - type: upload\n
-          attributes:\n
-            file_types: \".jpg, .png\"\n
-            allow_multiple: false\n
-            label: \"Upload your prescription\"\n
-            validations:\n
-            required: true\n
-        - type: upload\n
-          attributes:\n
-            file_types: \".jpg, .png, .pdf, .mp3, .mp4 \"\n
-            allow_multiple: true\n
-            label: \"Any additional docs\"\n
-            validations:\n
+        - type: input
+          attributes:
+            label: "What is your name?"
+            placeholder: "John Smith"
+          validations:
+            required: false
+        - type: upload
+          attributes:
+            file_types: ".jpg, .png"
+            allow_multiple: false
+            label: "Upload your prescription"
+            validations:
+            required: true
+        - type: upload
+          attributes:
+            file_types: ".jpg, .png, .pdf, .mp3, .mp4"
+            allow_multiple: true
+            label: "Any additional docs"
+            validations:
             required: false"),
     )
   end
