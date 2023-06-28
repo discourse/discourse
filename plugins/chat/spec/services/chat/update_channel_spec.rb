@@ -114,17 +114,21 @@ RSpec.describe Chat::UpdateChannel do
       describe "threading_enabled" do
         context "when true" do
           it "changes the value to true" do
-            channel.update!(threading_enabled: false)
-            params[:threading_enabled] = true
-            expect(result.channel.threading_enabled).to eq(true)
+            expect {
+              params[:threading_enabled] = true
+              result
+            }.to change { channel.reload.threading_enabled }.from(false).to(true)
           end
         end
 
         context "when false" do
           it "changes the value to true" do
             channel.update!(threading_enabled: true)
-            params[:threading_enabled] = false
-            expect(result.channel.threading_enabled).to eq(false)
+
+            expect {
+              params[:threading_enabled] = false
+              result
+            }.to change { channel.reload.threading_enabled }.from(true).to(false)
           end
         end
       end
