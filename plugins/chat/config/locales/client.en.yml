@@ -354,6 +354,8 @@ en:
           other: "%{count} members"
 
       create_channel:
+        threading:
+          label: "Enable threading"
         auto_join_users:
           public_category_warning: "%{category} is a public category. Automatically add all recently active users to this channel?"
           warning_1_group:
