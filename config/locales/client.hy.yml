@@ -2849,8 +2849,9 @@ hy:
         other: "%{count} նոր"
       more: "Ավելին"
       all_categories: "Բոլոր կատեգորիաները"
-      categories_form_modal:
-        save: "Պահպանել"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Բոլորը"
       sections:
         custom:
           save: "Պահպանել"
@@ -2898,6 +2899,11 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
+          email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:

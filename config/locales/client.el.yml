@@ -3294,8 +3294,9 @@ el:
       more: "Περισσότερα"
       all_categories: "Όλες οι κατηγορίες"
       all_tags: "Όλες οι ετικέτες"
-      categories_form_modal:
-        save: "Αποθήκευση"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Όλα"
       sections:
         custom:
           save: "Αποθήκευση"
@@ -3360,6 +3361,11 @@ el:
       title: "Δημιουργήστε το θέμα καλωσορίσματος"
       button_title: "Έναρξη Επεξεργασίας"
     until: "Μέχρι:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Παρακαλώ εισάγετε μια έγκυρη αξία."
+          email: "Παρακαλώ δώσε μία έγκυρη διεύθυνση email."
   admin_js:
     type_to_filter: "γράψε εδώ για φιλτράρισμα..."
     admin:

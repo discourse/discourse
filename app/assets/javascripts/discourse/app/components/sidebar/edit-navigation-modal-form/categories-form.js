@@ -6,6 +6,7 @@ import { tracked } from "@glimmer/tracking";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
 
 export default class extends Component {
   @service currentUser;
@@ -26,7 +27,13 @@ export default class extends Component {
   constructor() {
     super(...arguments);
 
-    this.site.sortedCategories.reduce(
+    let categories = [...this.site.categories];
+
+    if (!this.siteSettings.fixed_category_positions) {
+      categories.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    Category.sortCategories(categories).reduce(
       (categoryGrouping, category, index, arr) => {
         if (category.isUncategorizedCategory) {
           return categoryGrouping;
@@ -35,6 +42,7 @@ export default class extends Component {
         categoryGrouping.push(category);
 
         const nextCategory = arr[index + 1];
+
         if (!nextCategory || nextCategory.level === 0) {
           this.categoryGroupings.push(categoryGrouping);
           return [];

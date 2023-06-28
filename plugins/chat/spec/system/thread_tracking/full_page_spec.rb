@@ -40,7 +40,7 @@ describe "Thread tracking state | full page", type: :system do
       channel_page.open_thread_list
       thread_list_page.item_by_id(thread.id).click
       expect(thread_page).to have_no_unread_list_indicator
-      thread_page.back_to_list
+      thread_page.back_to_previous_route
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end
 

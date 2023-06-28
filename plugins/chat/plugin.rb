@@ -496,6 +496,8 @@ after_initialize do
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)
+
+  ActiveModel::Type.register(:array, Chat::Types::Array)
 end
 
 if Rails.env == "test"

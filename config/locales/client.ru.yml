@@ -1201,8 +1201,6 @@ ru:
         categories_section: "Раздел категорий"
         tags_section: "Раздел тегов"
         navigation_section: "Навигация"
-        list_destination_default: "использовать ссылку по умолчанию и показать значок для нового"
-        list_destination_unread_new: "использовать ссылку на непрочитанные (новые) и показать количество нового"
       change: "изменить"
       featured_topic: "Избранная тема"
       moderator: "%{user} — модератор"
@@ -4325,8 +4323,9 @@ ru:
       more: "Ещё"
       all_categories: "Все категории"
       all_tags: "Все теги"
-      categories_form_modal:
-        save: "Сохранить"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Все настройки"
       sections:
         custom:
           save: "Сохранить"
@@ -4407,6 +4406,11 @@ ru:
       description: "Ваша приветственная тема — это первое, что прочитают новички. Постарайтесь максимально коротко и ярко выразить в ней наиболее важную информацию, которую вы хотите донести до новых пользователей форума."
       button_title: "Начать редактирование"
     until: "До:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Введите корректное значение."
+          email: "Введите действующий адрес электронной почты."
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     admin:

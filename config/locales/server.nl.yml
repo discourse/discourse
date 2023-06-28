@@ -2118,7 +2118,6 @@ nl:
       pop3_polling_password_is_empty: "Je moet een 'pop3 polling password' instellen voordat je POP3-polling inschakelt."
       pop3_polling_authentication_failed: "POP3-verificatie mislukt. Verifieer je POP3-referenties."
       reply_by_email_address_is_empty: "Je moet een 'reply by email address' instellen voordat je antwoorden via e-mail inschakelt."
-      email_polling_disabled: "Je moet handmatige of POP3-polling inschakelen voordat je antwoorden via e-mail inschakelt."
       user_locale_not_enabled: "Je moet 'allow user locale' inschakelen voordat je deze instelling inschakelt."
       personal_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers PB's stuurt, kies dan de medewerkersgroep."
       invalid_regex: "Regex is ongeldig of niet toegestaan."

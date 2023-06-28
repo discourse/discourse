@@ -66,12 +66,6 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
 
   @action
   editTracked() {
-    if (
-      this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
-    ) {
-      showModal("sidebar-categories-form");
-    } else {
-      this.router.transitionTo("preferences.navigation-menu", this.currentUser);
-    }
+    showModal("sidebar-categories-form");
   }
 }

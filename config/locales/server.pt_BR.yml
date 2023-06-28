@@ -2136,7 +2136,6 @@ pt_BR:
       pop3_polling_password_is_empty: "Você deve definir uma \"senha de sondagem POP3\" antes de ativar a sondagem POP3."
       pop3_polling_authentication_failed: "A autenticação POP3 falhou. Verifique suas credenciais POP3."
       reply_by_email_address_is_empty: "Você deve definir uma \"resposta por endereço de e-mail\" antes de ativar a resposta por e-mail."
-      email_polling_disabled: "Você deve ativar a pesquisa manual ou POP3 antes de ativar a resposta por e-mail."
       user_locale_not_enabled: "Você deve primeiro ativar \"permitir localidade do(a) usuário(a)\" antes de ativar esta configuração."
       personal_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não quiser que ninguém, exceto a equipe, envie PMs, escolha o grupo da equipe."
       invalid_regex: "Regex não é inválida ou permitida."

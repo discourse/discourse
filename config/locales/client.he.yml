@@ -1245,9 +1245,9 @@ he:
         tags_section: "סעיף תגיות"
         tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט. אם לא נבחרו תגיות, תופענה התגיות המובילות של האתר."
         navigation_section: "ניווט"
-        list_destination_instruction: "כשיש תוכן חדש בתפריט הניווט…"
-        list_destination_default: "להשתמש בקישור ברירת המחדל ולהציג עיטור לפריטים חדשים"
-        list_destination_unread_new: "קישור לכאלו שלא נקראו/חדשים ולהציג את מניין הפריטים החדשים"
+        navigation_section_instruction: "כאשר לנושא בתפריט הניווט יש פריטים חדשים או שלא נקראו…"
+        link_to_filtered_list_checkbox_description: "קישור לרשימה המסוננת"
+        show_count_new_items_checkbox_description: "הצגת מניין הפריטים החדשים"
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -4451,10 +4451,24 @@ he:
       all_categories: "כל הקטגוריות"
       all_tags: "כל התגיות"
       categories_form_modal:
-        save: "שמירה"
         title: "עריכת ניווט בקטגוריות"
+        subtitle:
+          text: "ואנו נציג לך את הקטגוריות הנפוצות ביותר באתר אוטומטית"
         filter_placeholder: "סינון קטגוריות"
         no_categories: "אין קטגוריות שעונות למונח שצוין."
+      tags_form_modal:
+        title: "עריכת ניווט בתגיות"
+        filter_placeholder: "סינון תגיות"
+        no_tags: "אין תגיות שתואמות לביטוי שסופק."
+        subtitle:
+          text: "ואנו נציג לך את התגיות המובילות באתר אוטומטית"
+      edit_navigation_modal_form:
+        deselect_button_text: "ביטול בחירה בהכול"
+        reset_to_defaults: "איפוס לברירות מחדל"
+        filter_dropdown:
+          all: "הכול"
+          selected: "נבחרים"
+          unselected: "לא נבחרו"
       sections:
         custom:
           add: "הוספת מקטע משלך"
@@ -4565,6 +4579,30 @@ he:
       exceeded: "חרגת ממספר התווים המרבי המותר."
     form_template_chooser:
       select_template: "בחירת תבניות טופס"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "נא למלא את השדה הזה."
+          text: "נא למלא את השדה הזה."
+          select-one: "נא לבחור פריט מהרשימה."
+          select-multiple: "נא לבחור לפחות פריט אחד מהרשימה."
+          checkbox: "נא לסמן תיבה זו כדי להמשיך."
+        typeMismatch:
+          default: "נא למלא ערך תקין."
+          color: "נא לבחור צבע."
+          date: "נא למלא תאריך."
+          email: "נא למלא כתובת דוא״ל תקינה."
+          number: "נא למלא מספר."
+          password: "נא למלא סיסמה תקינה."
+          tel: "נא למלא מספר טלפון תקני."
+          text: "נא למלא ערך טקסט."
+          url: "נא למלא כתובת תקינה."
+        tooShort: "הקלט חייב להיות באורך של %{minLength} תווים ומעלה."
+        tooLong: "הקלט חייב להיות פחות מ־%{maxLength} תווים."
+        rangeOverflow: "הקלט חייב להיות פחות מ־%{max}."
+        rangeUnderflow: "הקלט חייב להיות יותר מ־%{min}."
+        patternMismatch: "נא לתאם מול התבנית המבוקשת."
+        badInput: "נא למלא קלט תקין."
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

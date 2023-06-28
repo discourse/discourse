@@ -3354,8 +3354,9 @@ sl:
         other: "%{count} novih"
       more: "Več"
       all_categories: "Vse kategorije"
-      categories_form_modal:
-        save: "Shrani"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Vse"
       sections:
         custom:
           save: "Shrani"
@@ -3405,6 +3406,10 @@ sl:
             review:
               content: "Pregled"
     until: "Do:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Vnesite veljavno vsebino"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:

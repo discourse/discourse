@@ -64,11 +64,11 @@ hr:
         about_x_hours:
           one: "%{count} sat"
           few: "%{count} sata"
-          other: "%{count}sati"
+          other: "%{count} sati"
         x_days:
           one: "%{count} dan"
           few: "%{count} dana"
-          other: "%{count}dana"
+          other: "%{count} dana"
         x_months:
           one: "%{count} mjesec"
           few: "%{count} mjeseci"
@@ -538,7 +538,7 @@ hr:
           title: "Tip"
           all: "(svi tipovi)"
         minimum_score: "Minimalna ocjena"
-        refresh: "Osviježi."
+        refresh: "Osvježi"
         status: "Status"
         category: "Kategorija"
         orders:
@@ -1145,8 +1145,6 @@ hr:
         categories_section: "Odjeljak s kategorijama"
         tags_section: "Odjeljak s oznakama"
         navigation_section: "Navigacija"
-        list_destination_default: "koristite zadanu vezu i prikažite značku za nove stavke"
-        list_destination_unread_new: "poveži na nepročitano/novo i prikaži broj novih stavki"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
       moderator: "%{user} je moderator"
@@ -1826,7 +1824,7 @@ hr:
     close: "Zatvori"
     assets_changed_confirm: "Ova je web lokacija upravo dobila nadogradnju softvera. Nabavite najnoviju verziju sada?"
     logout: "Odjavljeni ste."
-    refresh: "Osviježi."
+    refresh: "Osvježi"
     home: "Naslovnica"
     read_only_mode:
       enabled: "Ova stranica je u načinu rada samo za čitanje. Nastavite pregledavati, ali odgovaranje, sviđanja i druge radnje su za sada onemogućene."
@@ -2898,9 +2896,9 @@ hr:
           "3_6": "Primati će te obavijesti jer promatrate ovu kategoriju."
           "3_6_stale": "Dobit ćete obavijesti jer ste ovu kategoriju gledali u prošlosti."
           "3_5": "Primat će te obavijesti jer ste automatski počeli promatrati temu."
-          "3_2": "Primat će te obavijest jer promatrate temu."
+          "3_2": "Primat ćete obavijest jer promatrate temu."
           "3_1": "Primat će te obavijesti jer ste vi otvorili temu."
-          "3": "Primat će te obavijesti jer promatrate temu."
+          "3": "Primat ćete obavijesti jer promatrate temu."
           "2_8": "Vidjet ćete broj novih odgovora jer pratite ovu kategoriju."
           "2_8_stale": "Vidjet ćete broj novih odgovora jer ste u prošlosti pratili ovu kategoriju."
           "2_4": "Vidjet ćete broj novih odgovora jer ste objavili odgovor na ovu temu."
@@ -3964,8 +3962,8 @@ hr:
       add_synonyms: "Dodaj"
       add_synonyms_explanation:
         one: "Bilo koje mjesto koje trenutno koristi ovu oznaku bit će promijenjeno tako da umjesto toga <b>%{tag_name}</b> Jeste li sigurni da želite napraviti ovu promjenu?"
-        few: "Bilo koje mjesto koje trenutno koristi ove oznake bit će promijenjene tako da umjesto toga koriste <b>%{tag_name}</b> Jeste li sigurni da želite napraviti ove promjene?"
-        other: "Bilo koje mjesto koje trenutno koristi ovu oznaku bit će promijenjeno tako da umjesto toga <b>%{tag_name}</b> Jeste li sigurni da želite napraviti ove promjene?"
+        few: "Svako mjesto koje trenutno koristi ove oznake bit će promijenjeno tako da umjesto toga koristi <b>%{tag_name}</b> . Jeste li sigurni da želite napraviti ovu promjenu?"
+        other: "Svako mjesto koje trenutno koristi ove oznake bit će promijenjeno tako da umjesto toga koristi <b>%{tag_name}</b> . Jeste li sigurni da želite napraviti ovu promjenu?"
       add_synonyms_failed: "Sljedeće oznake nisu se mogle dodati kao sinonimi: <b>%{tag_names}</b>. Osigurajte da nemaju sinonime i da nisu sinonimi druge oznake."
       remove_synonym: "Ukloni sinonim"
       delete_synonym_confirm: 'Jeste li sigurni da želite izbrisati sinonim "%{tag_name}"?'
@@ -4134,7 +4132,16 @@ hr:
       all_categories: "Sve kategorije"
       all_tags: "Sve oznake"
       categories_form_modal:
-        save: "Spremi"
+        title: "Uređivanje navigacije kategorijama"
+        subtitle:
+          text: "i automatski ćemo prikazati najpopularnije kategorije ove stranice"
+        filter_placeholder: "Filtrirajte kategorije"
+        no_categories: "Nema kategorija koje odgovaraju danom pojmu."
+      edit_navigation_modal_form:
+        deselect_button_text: "Odznači sve"
+        reset_to_defaults: "Vrati na zadane postavke"
+        filter_dropdown:
+          all: "Sve"
       sections:
         custom:
           save: "Spremi"
@@ -4214,6 +4221,30 @@ hr:
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."
       button_title: "Započnite s uređivanjem"
     until: "Do:"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Molimo ispunite ovo polje."
+          text: "Molimo ispunite ovo polje."
+          select-one: "Odaberite stavku na popisu."
+          select-multiple: "Odaberite barem jednu stavku na popisu."
+          checkbox: "Označite ovaj okvir ako želite nastaviti."
+        typeMismatch:
+          default: "Molimo unesite valjanu vrijednost."
+          color: "Unesite boju."
+          date: "Unesite datum."
+          email: "Molimo unesite valjanu e-mail adresu."
+          number: "Unesite broj."
+          password: "Unesite valjanu lozinku."
+          tel: "Unesite valjani telefonski broj."
+          text: "Unesite tekstualnu vrijednost."
+          url: "Unesite valjanu URL adresu."
+        tooShort: "Unos mora imati %{minLength} znakova ili više."
+        tooLong: "Unos mora imati manje od %{maxLength} znakova."
+        rangeOverflow: "Unos mora biti manji od %{max}."
+        rangeUnderflow: "Unos mora biti veći od %{min}."
+        patternMismatch: "Molimo uskladite s traženim formatom."
+        badInput: "Unesite valjani unos."
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:
@@ -4246,7 +4277,7 @@ hr:
           dismiss: "Skloni"
           learn_more: "Saznajte više"
         last_checked: "Zadnje provjereno"
-        refresh_problems: "Osviježi"
+        refresh_problems: "Osvježi"
         no_problems: "Nisu pronađeni problemi."
         moderators: "Moderatori:"
         admins: "Admini:"
@@ -4297,7 +4328,7 @@ hr:
           all: "Sve"
           view_table: "tablica"
           view_graph: "grafikon"
-          refresh_report: "Osviježi prijave"
+          refresh_report: "Osvježi izvješće"
           daily: Dnevno
           monthly: Mjesečno
           weekly: Tjedno
@@ -4370,7 +4401,7 @@ hr:
         no_primary: "(nema primarne grupe)"
         title: "Grupe"
         edit: "Izmijeni grupe"
-        refresh: "Osviježi"
+        refresh: "Osvježi"
         about: "Ovdje izmijenite svoje članstvo u grupama i imena grupa"
         group_members: "Članovi grupe"
         delete: "Obriši"
@@ -4957,7 +4988,7 @@ hr:
         sent_test: "poslano!"
         delivery_method: "Metoda dostave"
         preview_digest_desc: "Pregledajte sadržaj sažetih poruka e -pošte poslanih neaktivnim korisnicima."
-        refresh: "Osviježi"
+        refresh: "Osvježi"
         send_digest_label: "Pošaljite ovaj rezultat na:"
         send_digest: "Pošalji"
         sending_email: "Email se šalje..."

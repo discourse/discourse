@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class DummyCustomSummarization < Summarization::Base
-  RESPONSE = "This is a summary of the content you gave me"
+  def initialize(summarization_result)
+    @summarization_result = summarization_result
+  end
 
   def display_name
     "dummy"
@@ -15,7 +17,11 @@ class DummyCustomSummarization < Summarization::Base
     "hint"
   end
 
+  def model
+    "dummy"
+  end
+
   def summarize(_content)
-    RESPONSE
+    @summarization_result
   end
 end

@@ -10,25 +10,25 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (7.0.4.3)
-      actionpack (= 7.0.4.3)
-      actionview (= 7.0.4.3)
-      activejob (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
+    actionmailer (7.0.5.1)
+      actionpack (= 7.0.5.1)
+      actionview (= 7.0.5.1)
+      activejob (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
       mail (~> 2.5, >= 2.5.4)
       net-imap
       net-pop
       net-smtp
       rails-dom-testing (~> 2.0)
-    actionpack (7.0.4.3)
-      actionview (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
-      rack (~> 2.0, >= 2.2.0)
+    actionpack (7.0.5.1)
+      actionview (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
+      rack (~> 2.0, >= 2.2.4)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (7.0.4.3)
-      activesupport (= 7.0.4.3)
+    actionview (7.0.5.1)
+      activesupport (= 7.0.5.1)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
@@ -37,15 +37,15 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (7.0.4.3)
-      activesupport (= 7.0.4.3)
+    activejob (7.0.5.1)
+      activesupport (= 7.0.5.1)
       globalid (>= 0.3.6)
-    activemodel (7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activerecord (7.0.4.3)
-      activemodel (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activesupport (7.0.4.3)
+    activemodel (7.0.5.1)
+      activesupport (= 7.0.5.1)
+    activerecord (7.0.5.1)
+      activemodel (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
+    activesupport (7.0.5.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -345,9 +345,9 @@ GEM
     rails_multisite (5.0.0)
       activerecord (>= 6.0)
       railties (>= 6.0)
-    railties (7.0.4.3)
-      actionpack (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
+    railties (7.0.5.1)
+      actionpack (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
       method_source
       rake (>= 12.2)
       thor (~> 1.0)
@@ -535,14 +535,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 7.0.4.3)
-  actionpack (= 7.0.4.3)
-  actionview (= 7.0.4.3)
+  actionmailer (= 7.0.5.1)
+  actionpack (= 7.0.5.1)
+  actionview (= 7.0.5.1)
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 7.0.4.3)
-  activerecord (= 7.0.4.3)
-  activesupport (= 7.0.4.3)
+  activemodel (= 7.0.5.1)
+  activerecord (= 7.0.5.1)
+  activesupport (= 7.0.5.1)
   addressable
   annotate
   aws-sdk-s3
@@ -629,7 +629,7 @@ DEPENDENCIES
   rails-dom-testing
   rails_failover
   rails_multisite
-  railties (= 7.0.4.3)
+  railties (= 7.0.5.1)
   rake
   rb-fsevent
   rbtrace

@@ -1243,8 +1243,6 @@ uk:
         categories_section: "Розділи"
         tags_section: "Теґи"
         navigation_section: "Навігація"
-        list_destination_default: "використовувати типове посилання і показати значок для нових елементів"
-        list_destination_unread_new: "посилання на непрочитане/нове і показати кількість нових елементів"
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -4441,10 +4439,12 @@ uk:
       all_categories: "Всі розділи"
       all_tags: "Всі теґи"
       categories_form_modal:
-        save: "Зберегти"
         title: "Редагувати навігацію по категоріях"
         filter_placeholder: "Фільтр категорій"
         no_categories: "Немає категорій, що відповідають даним умовам."
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Все"
       sections:
         custom:
           add: "Додати власний розділ"
@@ -4555,6 +4555,11 @@ uk:
       exceeded: "Перевищено максимальну кількість символів."
     form_template_chooser:
       select_template: "Виберіть шаблони форм"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Будь ласка, введіть коректне значення."
+          email: "Будь ласка, введіть вірну адресу електронної пошти."
   admin_js:
     type_to_filter: "введіть, щоб фільтрувати…"
     admin:

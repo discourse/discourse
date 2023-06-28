@@ -471,6 +471,8 @@ id:
       - Kritik konstruktif diperbolehkan, tetapi kritik *ide*, bukan orang.
 
       Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
+    dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
+    get_a_room: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
     dont_feed_the_trolls: Posting ini telah ditandai untuk mendapat perhatian moderator. Apakah Anda yakin ingin membalasnya? Balasan ke konten negatif cenderung mendorong lebih banyak perilaku negatif.
   activerecord:
     attributes:
@@ -600,6 +602,7 @@ id:
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
       description_incomplete: "Post deskripsi kategori harus memiliki setidaknya satu paragraf."
+      disallowed_topic_tags: "Topik ini memiliki tag yang tidak diizinkan oleh kategori ini: '%{tags}'"
       disallowed_tags_generic: "Topik ini memiliki tag yang tidak diizinkan."
       slug_contains_non_ascii_chars: "berisi karakter non-ascii"
       is_already_in_use: "sedang digunakan"
@@ -1233,6 +1236,7 @@ id:
     experimental_search_menu_groups: "EKSPERIMENTAL: Mengaktifkan menu pencarian baru yang telah ditingkatkan untuk menggunakan glimmer"
     errors:
       invalid_email: "Alamat email tidak valid."
+      email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."
       min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'

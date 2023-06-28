@@ -2112,12 +2112,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  new_edit_sidebar_categories_tags_interface_groups:
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact
@@ -2820,6 +2814,10 @@ tags:
     type: enum
     default: always
     enum: RemoveMutedTagsFromLatestSiteSetting
+  watched_precedence_over_muted:
+    client: true
+    default: false
+
   force_lowercase_tags:
     default: true
     client: true

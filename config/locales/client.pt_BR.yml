@@ -1114,8 +1114,6 @@ pt_BR:
         categories_section: "Seção de Categorias"
         tags_section: "Seção de Etiquetas"
         navigation_section: "Navegação"
-        list_destination_default: "usar o link padrão e mostrar um emblema para novos itens"
-        list_destination_unread_new: "link para novos/não lidos e mostrar contagem de itens novos"
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"
@@ -3971,8 +3969,9 @@ pt_BR:
       more: "Mais"
       all_categories: "Todas as categorias"
       all_tags: "Todas as etiquetas"
-      categories_form_modal:
-        save: "Salvar"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tudo"
       sections:
         custom:
           save: "Salvar"
@@ -4055,6 +4054,11 @@ pt_BR:
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
       button_title: "Começar a Editar"
     until: "Até:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Digite um valor válido."
+          email: "Insira um endereço de e-mail válido."
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:

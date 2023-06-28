@@ -3373,8 +3373,9 @@ nb_NO:
         other: "%{count} nye"
       more: "Mer"
       all_categories: "Alle kategorier"
-      categories_form_modal:
-        save: "Lagre"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alle"
       sections:
         custom:
           save: "Lagre"
@@ -3423,6 +3424,11 @@ nb_NO:
             review:
               content: "Gjennomgang"
     until: "Inntil:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Skriv inn en gyldig verdi."
+          email: "Oppgi en gyldig e-postadresse."
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

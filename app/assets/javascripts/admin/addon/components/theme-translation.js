@@ -17,7 +17,7 @@ export default class ThemeTranslation extends SiteSettingComponent {
 
     return ajax(this.updateUrl, {
       type: "PUT",
-      data: { theme: translations },
+      data: { theme: { translations } },
     });
   }
 }
