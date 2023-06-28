@@ -1070,8 +1070,9 @@ zh_CN:
         categories_section: "类别版块"
         tags_section: "标签版块"
         navigation_section: "导航"
-        list_destination_default: "使用默认链接并为新条目显示徽章"
-        list_destination_unread_new: "链接到未读/新条目并显示新条目的数量"
+        navigation_section_instruction: "当导航菜单中的话题列表有新的或未读的项目时…"
+        link_to_filtered_list_checkbox_description: "链接到过滤后的列表"
+        show_count_new_items_checkbox_description: "显示新项目的数量"
       change: "更改"
       featured_topic: "精选话题"
       moderator: "%{user} 是版主"
@@ -3821,14 +3822,18 @@ zh_CN:
       all_categories: "所有类别"
       all_tags: "所有标签"
       categories_form_modal:
-        save: "保存"
         title: "编辑类别导航"
         subtitle:
-          button_text: "取消全选"
           text: "我们将自动显示本网站最受欢迎的类别"
         filter_placeholder: "筛选类别"
         no_categories: "没有匹配到指定条件的类别。"
+      edit_navigation_modal_form:
+        deselect_button_text: "取消全选"
         reset_to_defaults: "重置为默认值"
+        filter_dropdown:
+          all: "所有"
+          selected: "已选择"
+          unselected: "未选择"
       sections:
         custom:
           add: "添加自定义部分"
@@ -3936,6 +3941,30 @@ zh_CN:
       exceeded: "已超过允许的最大字符数。"
     form_template_chooser:
       select_template: "选择表单模板"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "请填写此字段。"
+          text: "请填写此字段。"
+          select-one: "请在列表中选择一个项目。"
+          select-multiple: "请在列表中至少选择一个项目。"
+          checkbox: "如果你想继续，请勾选此框。"
+        typeMismatch:
+          default: "请输入一个有效值。"
+          color: "请输入一种颜色。"
+          date: "请输入日期。"
+          email: "请输入有效的电子邮件地址."
+          number: "请输入一个数字。"
+          password: "请输入一个有效的密码。"
+          tel: "请输入一个有效的电话号码。"
+          text: "请输入一个文本值。"
+          url: "请输入一个有效的 URL。"
+        tooShort: "输入的内容必须有 %{minLength} 或更长的字符。"
+        tooLong: "输入的内容必须少于 %{maxLength} 字符。"
+        rangeOverflow: "输入必须小于 %{max}。"
+        rangeUnderflow: "输入必须大于 %{min}。"
+        patternMismatch: "请匹配要求的格式。"
+        badInput: "请输入有效的输入。"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:

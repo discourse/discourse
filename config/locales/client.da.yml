@@ -3570,8 +3570,9 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
-      categories_form_modal:
-        save: "Gem"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alle"
       sections:
         custom:
           save: "Gem"
@@ -3627,6 +3628,11 @@ da:
             review:
               content: "Anmeldelse"
     until: "Indtil:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Indtast venligst en gyldig værdi."
+          email: "Indtast venligst en gyldig email adresse."
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:

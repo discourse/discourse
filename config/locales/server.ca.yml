@@ -1663,7 +1663,6 @@ ca:
       pop3_polling_password_is_empty: "Cal configurar 'pop3 polling password' abans d'activar la consulta POP3."
       pop3_polling_authentication_failed: "L'autenticació POP3 ha fallat. Verifiqueu les credencials POP3."
       reply_by_email_address_is_empty: "Cal definir 'reply by email address' abans de respondre per correu."
-      email_polling_disabled: "Cal activar la consulta manual o POP3 o manuals abans d'activar la resposta per correu."
       user_locale_not_enabled: "Cal configurar 'allow user locale' abans d'activar aquest paràmetre."
       invalid_regex: "L'expressió regular no és vàlida o no és permesa."
       email_editable_enabled: "Cal desactivar \"editable per correu\" abans d'activar aquest paràmetre."

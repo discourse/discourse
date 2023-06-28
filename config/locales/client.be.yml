@@ -1364,8 +1364,9 @@ be:
     sidebar:
       more: "Больш"
       all_categories: "Усе катэгорыі"
-      categories_form_modal:
-        save: "захаваць"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Усё"
       sections:
         custom:
           save: "захаваць"
@@ -1423,6 +1424,11 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Калі ласка, увядзіце карэктнае значэнне."
+          email: "Калі ласка, увядзіце верны email."
   admin_js:
     admin:
       moderator: "Мадэратар"

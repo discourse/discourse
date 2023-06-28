@@ -286,6 +286,11 @@ es:
         admin_title: "Administrador"
       admin:
         title: "Chat"
+        export_messages:
+          title: "Exportar mensajes de chat"
+          description: "Actualmente, la exportación está limitada a los 10000 mensajes más recientes de los últimos 6 meses."
+          create_export: "Crear exportación"
+          export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
       direct_messages:
         title: "Chat personal"
         new: "Crear un chat personal"

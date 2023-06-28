@@ -1243,9 +1243,9 @@ pl_PL:
         tags_section: "Sekcja tagów"
         tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów menu nawigacji. Jeśli żadne tagi nie zostaną wybrane, wyświetlone zostaną najważniejsze tagi witryny."
         navigation_section: "Nawigacja"
-        list_destination_instruction: "Gdy w menu nawigacyjnym pojawi się nowa zawartość..."
-        list_destination_default: "użyj linku domyślnego i pokaż odznakę dla nowych elementów"
-        list_destination_unread_new: "linkuj do nieprzeczytanych/nowych i pokaż liczbę nowych pozycji"
+        navigation_section_instruction: "Gdy lista tematów w menu nawigacyjnym zawiera nowe lub nieprzeczytane elementy…"
+        link_to_filtered_list_checkbox_description: "Link do przefiltrowanej listy"
+        show_count_new_items_checkbox_description: "Pokaż liczbę nowych elementów"
       change: "zmień"
       featured_topic: "Wyróżniony temat"
       moderator: "%{user} jest moderatorem"
@@ -4445,14 +4445,18 @@ pl_PL:
       all_categories: "Wszystkie kategorie"
       all_tags: "Wszystkie tagi"
       categories_form_modal:
-        save: "Zapisz"
         title: "Edytuj nawigację kategorii"
         subtitle:
-          button_text: "Odznacz wszystkie"
           text: "i automatycznie pokażemy najpopularniejsze kategorie tej witryny"
         filter_placeholder: "Filtruj kategorie"
         no_categories: "Brak kategorii pasujących do podanego terminu."
+      edit_navigation_modal_form:
+        deselect_button_text: "Odznacz wszystkie"
         reset_to_defaults: "Przywróć domyślne"
+        filter_dropdown:
+          all: "Wszystkie"
+          selected: "Wybrany"
+          unselected: "Niewybrany"
       sections:
         custom:
           add: "Dodaj niestandardową sekcję"
@@ -4562,6 +4566,16 @@ pl_PL:
       exceeded: "Przekroczono maksymalną dozwoloną liczbę znaków."
     form_template_chooser:
       select_template: "Wybierz szablony formularzy"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Proszę wypełnić to pole."
+          text: "Proszę wypełnić to pole."
+        typeMismatch:
+          default: "Wprowadź poprawną wartość."
+          color: "Proszę wprowadzić kolor."
+          date: "Proszę wprowadzić kolor."
+          email: "Podaj poprawny adres email."
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:

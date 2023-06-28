@@ -1118,8 +1118,6 @@ bg:
         categories_section: "Раздел Категории"
         tags_section: "Раздел за етикети"
         navigation_section: "Навигация"
-        list_destination_default: "използвайте връзката по подразбиране и покажете значка за нови елементи"
-        list_destination_unread_new: "връзка към непрочетени/нови и показване на броя нови елементи"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"
@@ -3360,8 +3358,9 @@ bg:
         other: "%{count} нови"
       more: "Повече"
       all_categories: "Всички категории"
-      categories_form_modal:
-        save: "Запази "
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Всички"
       sections:
         custom:
           add: "Добавяне на персонализиран раздел"
@@ -3423,6 +3422,11 @@ bg:
               content: "Преглед"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Моля, въведете валидна стойност."
+          email: "Моля, въведете валиден имейл адрес."
   admin_js:
     type_to_filter: "филтрирай..."
     admin:

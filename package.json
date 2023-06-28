@@ -9,7 +9,7 @@
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "5.15.4",
     "@highlightjs/cdn-assets": "^11.6.0",
-    "@json-editor/json-editor": "^2.6.1",
+    "@json-editor/json-editor": "^2.10.0",
     "ace-builds": "1.4.13",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "^2.0.0",

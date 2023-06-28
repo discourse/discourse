@@ -5,7 +5,7 @@
   &-new {
     display: flex;
     justify-content: center;
-    padding: 20px 0 20px 1em;
+    padding: 20px 0 20px var(--scrollbarWidth);
     position: relative;
 
     .chat-message-separator__text-container {
@@ -44,7 +44,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-left: 1rem;
+    padding-left: var(--scrollbarWidth);
     pointer-events: none;
 
     &.with-last-visit {
@@ -125,7 +125,7 @@
     }
 
     & + .chat-message-separator__line-container {
-      padding: 20px 0;
+      padding: 20px 0 20px var(--scrollbarWidth);
       box-sizing: border-box;
 
       .chat-message-separator__line {

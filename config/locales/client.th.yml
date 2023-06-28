@@ -2418,8 +2418,9 @@ th:
         other: "%{count} ใหม่"
       more: "อื่น"
       all_categories: "หมวดหมู่ทั้งหมด"
-      categories_form_modal:
-        save: "บันทึก"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "ทั้งหมด"
       sections:
         custom:
           save: "บันทึก"
@@ -2471,6 +2472,11 @@ th:
             review:
               content: "รีวิว"
     until: "จนถึง:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "กรอกค่าที่ถูกต้อง"
+          email: "กรุณาใส่อีเมลที่ถูกต้อง."
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:
