@@ -111,7 +111,7 @@
     "sinon": "^15.2.0",
     "source-map": "^0.7.4",
     "terser": "^5.18.2",
-    "webpack": "^5.88.0",
+    "webpack": "^5.88.1",
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",
     "workbox-expiration": "^7.0.0",
