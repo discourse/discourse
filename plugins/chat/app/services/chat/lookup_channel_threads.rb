@@ -132,8 +132,10 @@ module Chat
           original_message_user: :user_status,
           original_message: [
             :chat_webhook_event,
-            :chat_mentions,
             :chat_channel,
+            chat_mentions: {
+              user: :user_status,
+            },
             user: :user_status,
           ],
         )
