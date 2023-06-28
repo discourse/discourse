@@ -472,6 +472,33 @@ module Chat
       )
     end
 
+    def self.publish_notice(
+      user_id:,
+      chat_message:,
+      title: nil,
+      description: nil,
+      translated_title: nil,
+      translated_description: nil
+    )
+      payload = {
+        type: "notice",
+        chat_message_id: chat_message.id,
+        chat_channel_id: chat_message.chat_channel_id,
+      }
+
+      if title || description
+        payload[:title] = title
+        payload[:description] = description
+      elsif translated_title || translated_description
+        payload[:translated_title] = translated_title
+        payload[:translated_description] = translated_description
+      else
+        return # No title or description...
+      end
+
+      MessageBus.publish("/chat/#{chat_message.chat_channel_id}", payload, user_ids: [user_id])
+    end
+
     private
 
     def self.permissions(chat_channel)
