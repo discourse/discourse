@@ -8,6 +8,8 @@ export default class ChatNotice {
 
   @tracked chatMessageId;
   @tracked chatChannelId;
+  @tracked title;
+  @tracked description;
 
   constructor(args = {}) {
     this.chatMessageId = args.chat_message_id;
