@@ -6,7 +6,7 @@ export default class LazyVideo extends Component {
       case "youtube":
         let url = `https://www.youtube.com/embed/${this.args.videoId}?autoplay=1`;
         if (this.args.startTime) {
-          url += `&start=${this.args.startTime}`;
+          url += `&start=${this.convertToSeconds(this.args.startTime)}`;
         }
         return url;
       case "vimeo":
@@ -16,5 +16,19 @@ export default class LazyVideo extends Component {
       case "tiktok":
         return `https://www.tiktok.com/embed/v2/${this.args.videoId}`;
     }
+  }
+
+  convertToSeconds(startTime) {
+    const match = startTime.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/).slice(1);
+    const [hours, minutes, seconds] = match;
+
+    if (hours || minutes || seconds) {
+      const h = parseInt(hours, 10) || 0;
+      const m = parseInt(minutes, 10) || 0;
+      const s = parseInt(seconds, 10) || 0;
+
+      return h * 3600 + m * 60 + s;
+    }
+    return startTime;
   }
 }
