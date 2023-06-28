@@ -13,7 +13,11 @@ RSpec.describe "Chat exports", type: :system do
 
   it "exports chat messages" do
     Jobs.run_immediately!
-    visit("/admin/plugins/chat")
+    visit "/admin/plugins/chat"
+    click_button "Create export"
+    click_button "OK"
+    visit "/u/#{current_user.username}/messages"
+    click_link "[Chat Message] Data export complete"
     expect(page).to have_current_path("/latest")
   end
 
