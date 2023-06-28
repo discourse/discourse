@@ -42,7 +42,10 @@ import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
-import createUserStatusMessage from "discourse/lib/user-status-message";
+import {
+  initUserStatusHtml,
+  renderUserStatusHtml,
+} from "discourse/lib/user-status-on-autocomplete";
 
 // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
 // group 1 `image|foo=bar`
@@ -237,30 +240,12 @@ export default Component.extend(
               categoryId: this.topic?.category_id || this.composer?.categoryId,
               includeGroups: true,
             }).then((result) => {
-              (result.users || []).forEach((user, index) => {
-                if (user.status) {
-                  user.index = index;
-                  user.statusHtml = createUserStatusMessage(user.status, {
-                    showTooltip: true,
-                    showDescription: true,
-                  });
-                  this.userStatusInstances.push(user.statusHtml._tippy);
-                }
-              });
+              this.userStatusInstances = initUserStatusHtml(result.users);
               return result;
             });
           },
           onRender: (options) => {
-            const users = document.querySelectorAll(".autocomplete.ac-user li");
-            users.forEach((user) => {
-              const index = user.dataset.index;
-              const statusHtml = options.find(function (el) {
-                return el.index === parseInt(index, 10);
-              })?.statusHtml;
-              if (statusHtml) {
-                user.querySelector(".user-status").replaceWith(statusHtml);
-              }
-            });
+            renderUserStatusHtml(options);
           },
           key: "@",
           transformComplete: (v) => v.username || v.name,
