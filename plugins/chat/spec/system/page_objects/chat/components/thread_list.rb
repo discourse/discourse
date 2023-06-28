@@ -15,6 +15,10 @@ module PageObjects
           component.has_no_css?(".spinner")
         end
 
+        def open_thread(thread)
+          item_by_id(thread.id).click
+        end
+
         def has_thread?(thread)
           item_by_id(thread.id)
         end

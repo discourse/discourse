@@ -1106,8 +1106,6 @@ es:
         categories_section: "Sección de categorías"
         tags_section: "Sección de etiquetas"
         navigation_section: "Navegación"
-        list_destination_default: "usar el enlace por defecto y mostrar una insignia para nuevos elementos"
-        list_destination_unread_new: "vincular a no leído/nuevo y mostrar un recuento de elementos nuevos"
       change: "cambio"
       featured_topic: "Tema destacado"
       moderator: "%{user} es un moderador"
@@ -3972,10 +3970,22 @@ es:
       all_categories: "Todas las categorías"
       all_tags: "Todas las etiquetas"
       categories_form_modal:
-        save: "Guardar"
         title: "Editar navegación de las categorías"
         filter_placeholder: "Filtrar categorías"
         no_categories: "No hay categorías que coincidan con el término proporcionado."
+      tags_form_modal:
+        title: "Editar etiquetas navegación"
+        filter_placeholder: "Filtrar etiquetas"
+        no_tags: "No hay etiquetas que coincidan con el término dado."
+        subtitle:
+          text: "y mostraremos automáticamente las etiquetas principales de este sitio"
+      edit_navigation_modal_form:
+        deselect_button_text: "Deseleccionar todo"
+        reset_to_defaults: "Restablecer valores por defecto"
+        filter_dropdown:
+          all: "Todos"
+          selected: "Seleccionado"
+          unselected: "No seleccionado"
       sections:
         custom:
           save: "Guardar"
@@ -4074,6 +4084,30 @@ es:
     until: "Hasta:"
     form_template_chooser:
       select_template: "Seleccionar plantillas de formulario"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Rellena este campo."
+          text: "Rellena este campo."
+          select-one: "Selecciona un elemento de la lista."
+          select-multiple: "Selecciona al menos un elemento de la lista."
+          checkbox: "Marca esta casilla si quieres continuar."
+        typeMismatch:
+          default: "Por favor, introduce un valor válido."
+          color: "Por favor, introduce un color."
+          date: "Por favor, introduce una fecha."
+          email: "Introduce una dirección de correo electrónico válida."
+          number: "Introduce un número."
+          password: "Introduce una contraseña válida."
+          tel: "Introduce un número de teléfono válido."
+          text: "Introduce un valor de texto."
+          url: "Por favor, introduce una URL válida."
+        tooShort: "La entrada debe tener %{minLength} caracteres o más."
+        tooLong: "La entrada debe tener menos de %{maxLength} caracteres."
+        rangeOverflow: "La entrada debe ser inferior a %{max}."
+        rangeUnderflow: "La entrada debe ser superior a %{min}."
+        patternMismatch: "Utiliza el formato solicitado."
+        badInput: "Por favor, introduce una entrada válida."
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:

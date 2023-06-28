@@ -11,39 +11,39 @@
   </p>
 {{/in-element}}
 
+<div class="sidebar__edit-navigation-modal-form__filter">
+  <div class="sidebar__edit-navigation-modal-form__filter-input">
+    {{d-icon
+      "search"
+      class="sidebar__edit-navigation-modal-form__filter-input-icon"
+    }}
+
+    <Input
+      class="sidebar__edit-navigation-modal-form__filter-input-field"
+      placeholder={{@inputFilterPlaceholder}}
+      @type="text"
+      @value={{this.filter}}
+      {{on "input" (action @onFilterInput value="target.value")}}
+      autofocus="true"
+    />
+  </div>
+
+  <div class="sidebar__edit-navigation-modal-form__filter-dropdown-wrapper">
+    <DropdownSelectBox
+      @class="sidebar__edit-navigation-modal-form__filter-dropdown"
+      @value={{this.filterDropdownValue}}
+      @content={{this.filterDropdownContent}}
+      @onChange={{this.onFilterDropdownChange}}
+      @options={{hash showCaret=true}}
+    />
+  </div>
+</div>
+
 <div class="sidebar__edit-navigation-modal-form">
   <DModalBody
     @title={{@title}}
     @class="sidebar__edit-navigation-modal-form__body"
   >
-    <div class="sidebar__edit-navigation-modal-form__filter">
-      <div class="sidebar__edit-navigation-modal-form__filter-input">
-        {{d-icon
-          "search"
-          class="sidebar__edit-navigation-modal-form__filter-input-icon"
-        }}
-
-        <Input
-          class="sidebar__edit-navigation-modal-form__filter-input-field"
-          placeholder={{@inputFilterPlaceholder}}
-          @type="text"
-          @value={{this.filter}}
-          {{on "input" (action @onFilterInput value="target.value")}}
-          autofocus="true"
-        />
-      </div>
-
-      <div class="sidebar__edit-navigation-modal-form__filter-dropdown-wrapper">
-        <DropdownSelectBox
-          @class="sidebar__edit-navigation-modal-form__filter-dropdown"
-          @value={{this.filterDropdownValue}}
-          @content={{this.filterDropdownContent}}
-          @onChange={{this.onFilterDropdownChange}}
-          @options={{hash showCaret=true}}
-        />
-      </div>
-    </div>
-
     {{yield}}
   </DModalBody>
 </div>

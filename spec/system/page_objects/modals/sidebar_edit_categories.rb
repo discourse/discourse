@@ -36,15 +36,15 @@ module PageObjects
       end
 
       def has_categories?(categories)
-        category_ids = categories.map(&:id)
+        category_names = categories.map(&:name)
 
-        has_css?(
-          ".sidebar-categories-form-modal .sidebar-categories-form__category-row",
-          count: category_ids.length,
-        ) &&
-          all(".sidebar-categories-form-modal .sidebar-categories-form__category-row").all? do |row|
-            category_ids.include?(row["data-category-id"].to_i)
-          end
+        categories =
+          all(
+            ".sidebar-categories-form-modal .sidebar-categories-form__category-row",
+            count: category_names.length,
+          )
+
+        expect(categories.map(&:text)).to eq(category_names)
       end
 
       def has_checkbox?(category, disabled: false)

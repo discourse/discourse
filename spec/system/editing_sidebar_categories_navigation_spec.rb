@@ -2,15 +2,6 @@
 
 RSpec.describe "Editing sidebar categories navigation", type: :system do
   fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
-  fab!(:category) { Fabricate(:category, name: "category") }
-  fab!(:category_subcategory) do
-    Fabricate(:category, parent_category_id: category.id, name: "category subcategory")
-  end
-
-  fab!(:category_subcategory2) do
-    Fabricate(:category, parent_category_id: category.id, name: "category subcategory 2")
-  end
 
   fab!(:category2) { Fabricate(:category, name: "category2") }
 
@@ -18,12 +9,19 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     Fabricate(:category, parent_category_id: category2.id, name: "category2 subcategory")
   end
 
+  fab!(:category) { Fabricate(:category, name: "category") }
+
+  fab!(:category_subcategory2) do
+    Fabricate(:category, parent_category_id: category.id, name: "category subcategory 2")
+  end
+
+  fab!(:category_subcategory) do
+    Fabricate(:category, parent_category_id: category.id, name: "category subcategory")
+  end
+
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
-  before do
-    SiteSetting.new_edit_sidebar_categories_tags_interface_groups = group.name
-    sign_in(user)
-  end
+  before { sign_in(user) }
 
   it "allows a user to edit the sidebar categories navigation" do
     visit "/latest"
@@ -70,6 +68,18 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     expect(sidebar).to have_section_link(category.name)
     expect(sidebar).to have_no_section_link(category_subcategory2.name)
     expect(sidebar).to have_no_section_link(category2.name)
+  end
+
+  it "displays the categories in the modal based on the fixed position of the category when `fixed_category_positions` site setting is enabled" do
+    SiteSetting.fixed_category_positions = true
+
+    visit "/latest"
+
+    modal = sidebar.click_edit_categories_button
+
+    expect(modal).to have_categories(
+      [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
+    )
   end
 
   it "allows a user to deselect all categories in the modal" do

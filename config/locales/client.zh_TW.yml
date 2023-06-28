@@ -936,8 +936,6 @@ zh_TW:
         categories_section: "選擇分類"
         tags_section: "選擇標籤"
         navigation_section: "導覽"
-        list_destination_default: "使用預設連結並顯示新項目的徽章"
-        list_destination_unread_new: "連結至未讀/新的並顯示新項目的數量"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"
@@ -2861,8 +2859,9 @@ zh_TW:
       more: "更多"
       all_categories: "所有分類"
       all_tags: "所有標籤"
-      categories_form_modal:
-        save: "保存"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "全部"
       sections:
         custom:
           save: "保存"
@@ -2922,6 +2921,10 @@ zh_TW:
               pending_count: "剩餘 %{count}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "請輸入一個有效的值。"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:

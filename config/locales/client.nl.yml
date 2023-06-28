@@ -1089,8 +1089,6 @@ nl:
         categories_section: "Categorieënsectie"
         tags_section: "Tagssectie"
         navigation_section: "Navigatie"
-        list_destination_default: "standaardlink gebruiken en een badge weergeven voor nieuwe items"
-        list_destination_unread_new: "linken naar ongelezen/nieuw en het aantal nieuwe items weergeven"
       change: "wijzigen"
       featured_topic: "Uitgelicht topic"
       moderator: "%{user} is een moderator"
@@ -3937,8 +3935,9 @@ nl:
       more: "Meer"
       all_categories: "Alle categorieën"
       all_tags: "Alle tags"
-      categories_form_modal:
-        save: "Opslaan"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alles"
       sections:
         custom:
           save: "Opslaan"
@@ -4017,6 +4016,11 @@ nl:
       description: "Je welkomsttopic is het eerste dat nieuwe leden lezen. Zie het als je \"elevator pitch\" of \"missiestatement\". Laat iedereen eerst weten voor wie deze community is, wat ze hier kunnen verwachten en wat je wilt dat ze doen."
       button_title: "Beginnen met bewerken"
     until: "Tot:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Voer een geldige waarde in."
+          email: "Voer een geldig e-mailadres in."
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:

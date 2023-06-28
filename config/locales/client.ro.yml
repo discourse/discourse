@@ -2919,8 +2919,9 @@ ro:
         other: "%{count} nou"
       more: "Mai multe"
       all_categories: "Toate categoriile"
-      categories_form_modal:
-        save: "Salvare"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Toate"
       sections:
         custom:
           save: "Salvare"
@@ -2969,6 +2970,10 @@ ro:
             review:
               content: "Revizuire"
     until: "Pana cand:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Introduceţi o valoare validă."
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:

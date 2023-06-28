@@ -1907,7 +1907,6 @@ gl:
       pop3_polling_password_is_empty: "Debe estabelecer un «contrasinal de usuario de recollida pop3» antes de activar a recollida POP3."
       pop3_polling_authentication_failed: "Erro na autenticación POP3. Verifique as súas credenciais POP3."
       reply_by_email_address_is_empty: "Debe habilitar «responder vía correo electrónico» antes de activar resposta por correo electrónico."
-      email_polling_disabled: "Debe activar ou a recollida manual ou POP3 antes de activar a resposta por correo electrónico."
       user_locale_not_enabled: "Debe activar primeiro «permitir usuario local» antes de activar esta opción."
       invalid_regex: "A expresión regular non é válida ou non está permitida."
       email_editable_enabled: "Debe desactivar «correo electrónico editable» antes de activar esta opción."

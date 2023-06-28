@@ -1178,18 +1178,7 @@ class TopicsController < ApplicationController
 
     RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
 
-    hijack do
-      summary_opts = {
-        filter: "summary",
-        exclude_deleted_users: true,
-        exclude_hidden: true,
-        show_deleted: false,
-      }
-
-      content = TopicView.new(topic, current_user, summary_opts).posts.pluck(:raw).join("\n")
-
-      render json: { summary: strategy.summarize(content) }
-    end
+    hijack { render json: { summary: TopicSummarization.new(strategy).summarize(topic) } }
   end
 
   private

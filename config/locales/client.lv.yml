@@ -2777,8 +2777,9 @@ lv:
         other: "%{count} jauna"
       more: "Vairāk"
       all_categories: "Visas sadaļas"
-      categories_form_modal:
-        save: "Saglabāt"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Viss"
       sections:
         custom:
           save: "Saglabāt"
@@ -2826,6 +2827,11 @@ lv:
               content: "Mani ieraksti"
             review:
               content: "Pārskats"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Lūdzu ievadiet derīgu vērtību "
+          email: "Lūdzu ievadiet derīgu e-pasta adresi."
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:

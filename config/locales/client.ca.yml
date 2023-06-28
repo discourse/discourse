@@ -2874,8 +2874,9 @@ ca:
         other: "%{count} nous"
       more: "Més"
       all_categories: "Totes les categories"
-      categories_form_modal:
-        save: "Desa"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tot"
       sections:
         custom:
           save: "Desa"
@@ -2924,6 +2925,11 @@ ca:
             review:
               content: "Revisa"
     until: "Fins a:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Introduïu un valor vàlid."
+          email: "Introduïu una adreça vàlida de correu electrònic."
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:

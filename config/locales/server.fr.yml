@@ -2125,7 +2125,6 @@ fr:
       pop3_polling_password_is_empty: "Vous devez définir « pop3 polling password » avant d'activer le relevé via POP3."
       pop3_polling_authentication_failed: "Échec de l'authentification POP3. Veuillez vérifier vos identifiants POP3."
       reply_by_email_address_is_empty: "Vous devez configurer le paramètre « reply by email address » avant d'activer les réponses par e-mail."
-      email_polling_disabled: "Vous devez activer le relevé manuel ou via POP3 avant d'activer les réponses par e-mail."
       user_locale_not_enabled: "Vous devez d'abord activer « allow user locale » avant d'activer ce paramètre."
       personal_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quelqu'un d'autre que les responsables envoie des messages directs, choisissez le groupe des responsables."
       invalid_regex: "L'expression régulière est invalide ou non autorisée."

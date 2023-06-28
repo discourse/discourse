@@ -1029,8 +1029,6 @@ fa_IR:
         categories_section: "بخش دسته‌بندی‌ها"
         tags_section: "بخش برچسب‌ها"
         navigation_section: "ناوبری"
-        list_destination_default: "از پیوند پیش‌فرض استفاده کنید و یک نشان برای موارد جدید نشان دهید"
-        list_destination_unread_new: "پیوند به خوانده نشده/جدید و نمایش تعداد موارد جدید"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
       moderator: "%{user} یک مدیر است"
@@ -3355,8 +3353,9 @@ fa_IR:
       more: "بیشتر"
       all_categories: "همه‌ی دسته‌بندی‌ها"
       all_tags: "همه برچسب‌ها"
-      categories_form_modal:
-        save: "ذخیره"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "همه"
       sections:
         custom:
           add: "افزودن بخش سفارشی"
@@ -3431,6 +3430,11 @@ fa_IR:
               content: "بازنگری"
               pending_count: "%{count} در انتظار"
     until: "تا وقتی که:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "یک مقدار معتبر وارد کنید."
+          email: "لطفا یک آدرس ایمیل معتبر وارد کنید."
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

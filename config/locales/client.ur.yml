@@ -3586,8 +3586,9 @@ ur:
         other: "%{count} نئے"
       more: "مزید"
       all_categories: "تمام زُمرَہ جات"
-      categories_form_modal:
-        save: "محفوظ کریں"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "تمام"
       sections:
         custom:
           save: "محفوظ کریں"
@@ -3638,6 +3639,11 @@ ur:
             review:
               content: "جائزہ لیں"
     until: "جب تک:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
+          email: "براہ کرم، ایک قابلِ قبول ایِ میل ایڈریس درج کریں."
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
