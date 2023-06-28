@@ -233,7 +233,8 @@ module Chat
       return if resolved_thread.blank?
 
       resolved_thread.increment_replies_count_cache
-      resolved_thread.add(@user)
+      current_user_thread_membership = resolved_thread.add(@user)
+      current_user_thread_membership.update!(last_read_message_id: @chat_message.id)
 
       if resolved_thread.original_message_user != @user
         resolved_thread.add(resolved_thread.original_message_user)

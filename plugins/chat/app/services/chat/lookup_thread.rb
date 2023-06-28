@@ -44,7 +44,6 @@ module Chat
     def fetch_thread(contract:, **)
       Chat::Thread.includes(
         :channel,
-        last_reply: :user,
         original_message_user: :user_status,
         original_message: :chat_webhook_event,
       ).find_by(id: contract.thread_id, channel_id: contract.channel_id)

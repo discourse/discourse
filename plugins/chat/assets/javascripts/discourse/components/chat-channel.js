@@ -213,6 +213,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -323,6 +329,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -1097,5 +1109,16 @@ export default class ChatLivePane extends Component {
     cancel(this._onScrollEndedHandler);
     cancel(this._laterComputeHandler);
     cancel(this._debounceFetchMessagesHandler);
+  }
+
+  #preloadThreadTrackingState(storedThread, threadTracking) {
+    if (!threadTracking[storedThread.id]) {
+      return;
+    }
+
+    storedThread.tracking.unreadCount =
+      threadTracking[storedThread.id].unread_count;
+    storedThread.tracking.mentionCount =
+      threadTracking[storedThread.id].mention_count;
   }
 }
