@@ -779,6 +779,26 @@ describe Chat::MessageCreator do
           }.not_to change { Chat::UserChatThreadMembership.count }
         end
 
+        it "sets the last_read_message_id of the existing UserChatThreadMembership for the user to the new message id" do
+          message = Fabricate(:chat_message, thread: existing_thread)
+          membership =
+            Fabricate(
+              :user_chat_thread_membership,
+              user: user1,
+              thread: existing_thread,
+              last_read_message_id: message.id,
+            )
+          new_message =
+            described_class.create(
+              chat_channel: public_chat_channel,
+              user: user1,
+              content: "this is a message",
+              thread_id: existing_thread.id,
+            ).chat_message
+
+          expect(membership.reload.last_read_message_id).to eq(new_message.id)
+        end
+
         it "errors when the thread ID is for a different channel" do
           other_channel_thread = Fabricate(:chat_thread, channel: Fabricate(:chat_channel))
           result =

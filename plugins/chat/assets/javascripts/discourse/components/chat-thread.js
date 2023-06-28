@@ -63,8 +63,6 @@ export default class ChatThreadPanel extends Component {
     this.chatThreadPaneSubscriptionsManager.unsubscribe();
   }
 
-  // TODO (martin) This needs to have the extended scroll/message visibility/
-  // mark read behaviour the same as the channel.
   @action
   computeScrollState() {
     cancel(this.onScrollEndedHandler);
@@ -115,7 +113,7 @@ export default class ChatThreadPanel extends Component {
         return;
       }
 
-      // TODO (martin) HACK: We don't have proper scroll visibility over
+      // HACK: We don't have proper scroll visibility over
       // what message we are looking at, don't have the lastReadMessageId
       // for the thread, and this updateLastReadMessage function is only
       // called when scrolling all the way to the bottom.

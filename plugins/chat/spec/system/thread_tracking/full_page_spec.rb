@@ -19,10 +19,10 @@ describe "Thread tracking state | full page", type: :system do
   end
 
   context "when the user has unread messages for a thread" do
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
-    fab!(:message_2) do
+    fab!(:message_1) do
       Fabricate(:chat_message, chat_channel: channel, thread: thread, user: current_user)
     end
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
 
     it "shows the count of threads with unread messages on the thread list button" do
       chat_page.visit_channel(channel)
@@ -40,12 +40,12 @@ describe "Thread tracking state | full page", type: :system do
       channel_page.open_thread_list
       thread_list_page.item_by_id(thread.id).click
       expect(thread_page).to have_no_unread_list_indicator
-      thread_page.back_to_list
+      thread_page.back_to_previous_route
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end
 
     it "shows unread indicators for the header of the list when a new unread arrives" do
-      message_1.trash!
+      thread.membership_for(current_user).update!(last_read_message_id: message_2.id)
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(thread_list_page).to have_no_unread_item(thread.id)
