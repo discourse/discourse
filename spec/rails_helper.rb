@@ -286,6 +286,7 @@ RSpec.configure do |config|
         .tap do |options|
           apply_base_chrome_options(options)
           options.add_argument("--window-size=1400,1400")
+          options.add_preference("download.default_directory", Rails.root.join("tmp/downloads"))
         end
 
     Capybara.register_driver :selenium_chrome do |app|
