@@ -105,6 +105,10 @@ class TranslationOverride < ActiveRecord::Base
     true
   end
 
+  # We use English as the source of truth when extracting interpolation keys,
+  # but some languages, like Arabic, have plural forms (zero, two, few, many)
+  # which don't exist in English (one, other), so we map that here in order to
+  # find the correct, English translation key in which to look.
   def self.transform_pluralized_key(key)
     match = key.match(/(.*)\.(zero|two|few|many)\z/)
     match ? match.to_a.second + ".other" : key
