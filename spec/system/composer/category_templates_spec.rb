@@ -39,14 +39,14 @@ describe "Composer Form Templates", type: :system do
         - type: upload\n
           attributes:\n
             file_types: \".jpg, .png\"\n
-            allow_multiple: true\n
+            allow_multiple: false\n
             label: \"Upload your prescription\"\n
             validations:\n
             required: true\n
         - type: upload\n
           attributes:\n
-            file_types: \".jpg, .png\"\n
-            allow_multiple: false\n
+            file_types: \".jpg, .png, .pdf, .mp3, .mp4 \"\n
+            allow_multiple: true\n
             label: \"Any additional docs\"\n
             validations:\n
             required: false"),
@@ -118,6 +118,7 @@ describe "Composer Form Templates", type: :system do
 
   before do
     SiteSetting.experimental_form_templates = true
+    SiteSetting.authorized_extensions = "*"
     sign_in user
   end
 
@@ -262,5 +263,32 @@ describe "Composer Form Templates", type: :system do
     expect(find("#dialog-holder .dialog-body p", visible: :all)).to have_content(
       I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
     )
+  end
+
+  it "creates a post with multiple uploads" do
+    topic_title = "Peter Parker's Medication"
+
+    category_page.visit(category_with_upload_template)
+    category_page.new_topic_button.click
+    attach_file "upload-your-prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/logo.png",
+                make_visible: true
+    attach_file "any-additional-docs-uploader",
+                [
+                  "#{Rails.root}/spec/fixtures/media/small.mp3",
+                  "#{Rails.root}/spec/fixtures/media/small.mp4",
+                  "#{Rails.root}/spec/fixtures/pdf/small.pdf",
+                ],
+                make_visible: true
+    composer.fill_title(topic_title)
+    composer.fill_form_template_field("input", "Peter Parker}")
+    composer.create
+
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
+      "img[alt='logo.png']",
+    )
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("a.attachment")
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("audio")
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("video")
   end
 end
