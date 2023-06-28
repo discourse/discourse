@@ -19,7 +19,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     Fabricate(:category, parent_category_id: category.id, name: "category subcategory")
   end
 
-  let(:sidebar) { PageObjects::Components::Sidebar.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { sign_in(user) }
 
