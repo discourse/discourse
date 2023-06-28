@@ -1,4 +1,10 @@
 .form-template-field {
+  input,
+  textarea,
+  select {
+    width: 100%;
+  }
+
   // TODO(@keegan): Remove after updating dropdown/multi-select to use select-kit
   &__dropdown {
     border: 1px solid var(--primary-medium);
@@ -50,5 +56,9 @@
       color: var(--tertiary);
       margin-right: 0.5rem;
     }
+  }
+
+  &__textarea {
+    min-height: 100px;
   }
 }
