@@ -9,14 +9,14 @@ export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
 ) {
   @tracked uploadValue;
-  @tracked fileUploadElementId = this.attributes?.label
-    ? `${dasherize(this.attributes.label)}-uploader`
-    : `${this.elementId}-uploader`;
-  @tracked fileInputSelector = `#${this.fileUploadElementId}`;
-  @tracked id = this.fileUploadElementId;
   @tracked uploadComplete = false;
   @tracked uploadedFiles = [];
   @tracked disabled = this.uploading;
+  fileUploadElementId = this.attributes?.label
+    ? `${dasherize(this.attributes.label)}-uploader`
+    : `${this.elementId}-uploader`;
+  fileInputSelector = `#${this.fileUploadElementId}`;
+  id = this.fileUploadElementId;
 
   @computed("uploading", "uploadValue")
   get uploadStatus() {
