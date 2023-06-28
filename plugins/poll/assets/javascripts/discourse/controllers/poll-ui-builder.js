@@ -2,7 +2,8 @@ import { gt, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
+import { observes } from "@ember-decorators/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 
