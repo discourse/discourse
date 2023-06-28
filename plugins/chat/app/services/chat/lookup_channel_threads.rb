@@ -91,18 +91,16 @@ module Chat
             (
               SELECT thread_id, MAX(created_at) AS latest_created_at, MAX(id) AS latest_message_id
               FROM chat_messages
-              WHERE thread_id IN (#{threads.pluck(:id).join(",")})
+              WHERE thread_id IN (#{threads.map(&:id).join(",")})
               GROUP BY thread_id
             ) AS last_replies_subquery
           SQL
           .joins(
             "INNER JOIN chat_messages ON chat_messages.id = last_replies_subquery.latest_message_id",
           )
-          .to_a
+          .index_by(&:thread_id)
 
-      threads.each do |thread|
-        thread.last_reply = last_replies.find { |lr| lr.thread_id == thread.id }
-      end
+      threads.each { |thread| thread.last_reply = last_replies[thread.id] }
 
       threads
     end
