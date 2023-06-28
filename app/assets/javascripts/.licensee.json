@@ -17,7 +17,7 @@
     "glob": "3.1.21",
     "indexof": "0.0.1",
     "inherits": "1.0.2",
-    "jsonify": "0.0.0",
+    "jsonify": "0.0.1",
     "line-stream": "0.0.0",
     "messageformat": "0.1.5",
     "regenerator-transform": "0.10.1",
