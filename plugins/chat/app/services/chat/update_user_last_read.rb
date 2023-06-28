@@ -22,9 +22,8 @@ module Chat
     model :message
     policy :ensure_message_id_recency
     transaction do
-      step :update_last_read_message_id
+      step :update_membership_state
       step :mark_associated_mentions_as_read
-      step :update_channel_last_viewed_at
     end
     step :publish_new_last_read_to_clients
 
@@ -59,8 +58,8 @@ module Chat
         message.id >= active_membership.last_read_message_id
     end
 
-    def update_last_read_message_id(message:, active_membership:, **)
-      active_membership.update!(last_read_message_id: message.id)
+    def update_membership_state(message:, active_membership:, **)
+      active_membership.update!(last_read_message_id: message.id, last_viewed_at: Time.zone.now)
     end
 
     def mark_associated_mentions_as_read(active_membership:, message:, **)
@@ -69,10 +68,6 @@ module Chat
         channel_ids: [active_membership.chat_channel.id],
         message_id: message.id,
       )
-    end
-
-    def update_channel_last_viewed_at(active_membership:, **)
-      active_membership.update!(last_viewed_at: Time.zone.now)
     end
 
     def publish_new_last_read_to_clients(guardian:, channel:, message:, **)

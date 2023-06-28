@@ -79,8 +79,11 @@ RSpec.describe Chat::ChannelViewBuilder do
     end
 
     it "updates the channel membership last_viewed_at" do
-      channel.membership_for(current_user).update!(last_viewed_at: 1.day.ago)
-      expect { result }.to change { channel.membership_for(current_user).last_viewed_at }
+      membership = channel.membership_for(current_user)
+      membership.update!(last_viewed_at: 1.day.ago)
+      old_last_viewed_at = membership.last_viewed_at
+      result
+      expect(membership.reload.last_viewed_at).not_to eq_time(old_last_viewed_at)
     end
 
     it "does not query thread tracking overview or state by default" do

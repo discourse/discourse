@@ -112,7 +112,9 @@ RSpec.describe Chat::UpdateUserLastRead do
 
         it "updates the channel membership last_viewed_at datetime" do
           membership.update!(last_viewed_at: 1.day.ago)
-          expect { result }.to change { membership.reload.last_viewed_at }
+          old_last_viewed_at = membership.last_viewed_at
+          result
+          expect(membership.reload.last_viewed_at).not_to eq_time(old_last_viewed_at)
         end
       end
     end
