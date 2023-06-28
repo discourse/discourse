@@ -1234,7 +1234,7 @@ class UsersController < ApplicationController
         groups = block.call(groups, current_user) if params[param_name.to_s]
       end
 
-      # the plugin registery callbacks registered above are only evaluted when a param
+      # the plugin registry callbacks above are only evaluated when a param
       # is present matching the name of the callback. Any modifier registered using
       # register_modifier(:groups_for_users_search) will be evaluated without needing the
       # param.
