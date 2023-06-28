@@ -15,6 +15,8 @@ module Chat
   class LookupChannelThreads
     include Service::Base
 
+    MAX_THREADS = 50
+
     # @!method call(channel_id:, guardian:)
     #   @param [Integer] channel_id
     #   @param [Guardian] guardian
@@ -54,34 +56,33 @@ module Chat
     end
 
     def fetch_threads(guardian:, channel:, **)
-      threads =
-        Chat::Thread
-          .strict_loading
-          .includes(
-            :channel,
-            :user_chat_thread_memberships,
-            original_message_user: :user_status,
-            original_message: [
-              :chat_webhook_event,
-              :chat_mentions,
-              :chat_channel,
-              user: :user_status,
-            ],
-          )
-          .joins(
-            "JOIN (#{tracked_threads_subquery(guardian, channel)}) tracked_threads_subquery
-              ON tracked_threads_subquery.thread_id = chat_threads.id",
-          )
-          .joins(:user_chat_thread_memberships)
-          .where(user_chat_thread_memberships_chat_threads: { user_id: guardian.user.id })
-          .order(<<~SQL)
-            CASE WHEN user_chat_thread_memberships_chat_threads.last_read_message_id IS NULL
-              OR tracked_threads_subquery.latest_message_id >
-                user_chat_thread_memberships_chat_threads.last_read_message_id THEN 0 ELSE 1 END,
-              tracked_threads_subquery.latest_message_created_at DESC
+      read_threads = []
+
+      unread_threads =
+        threads_query(guardian, channel)
+          .where(<<~SQL)
+            user_chat_thread_memberships_chat_threads.last_read_message_id IS NULL
+              OR tracked_threads_subquery.latest_message_id > user_chat_thread_memberships_chat_threads.last_read_message_id
           SQL
-          .limit(50)
+          .order("tracked_threads_subquery.latest_message_created_at DESC")
+          .limit(MAX_THREADS)
           .to_a
+
+      # We do this to avoid having to query additional threads if the user
+      # already has a lot of unread threads.
+      if unread_threads.length < MAX_THREADS
+        final_limit = MAX_THREADS - unread_threads.length
+        read_threads =
+          threads_query(guardian, channel)
+            .where(<<~SQL)
+              tracked_threads_subquery.latest_message_id <= user_chat_thread_memberships_chat_threads.last_read_message_id
+            SQL
+            .order("tracked_threads_subquery.latest_message_created_at DESC")
+            .limit(final_limit)
+            .to_a
+      end
+
+      threads = unread_threads + read_threads
 
       last_replies =
         Chat::Message
@@ -120,6 +121,28 @@ module Chat
           thread_id: threads.map(&:id),
           user_id: guardian.user.id,
         )
+    end
+
+    def threads_query(guardian, channel)
+      Chat::Thread
+        .strict_loading
+        .includes(
+          :channel,
+          :user_chat_thread_memberships,
+          original_message_user: :user_status,
+          original_message: [
+            :chat_webhook_event,
+            :chat_mentions,
+            :chat_channel,
+            user: :user_status,
+          ],
+        )
+        .joins(
+          "JOIN (#{tracked_threads_subquery(guardian, channel)}) tracked_threads_subquery
+              ON tracked_threads_subquery.thread_id = chat_threads.id",
+        )
+        .joins(:user_chat_thread_memberships)
+        .where(user_chat_thread_memberships_chat_threads: { user_id: guardian.user.id })
     end
 
     def tracked_threads_subquery(guardian, channel)
