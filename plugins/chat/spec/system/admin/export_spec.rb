@@ -16,9 +16,21 @@ RSpec.describe "Chat exports", type: :system do
     visit "/admin/plugins/chat"
     click_button "Create export"
     click_button "OK"
+
     visit "/u/#{current_user.username}/messages"
     click_link "[Chat Message] Data export complete"
-    expect(page).to have_current_path("/latest")
+    click_link "chat-message-"
+
+    sleep 1
+    DOWNLOAD_PATH = Rails.root.join("tmp/downloads").to_s
+    full_path = DOWNLOAD_PATH + "/partners-#{Date.today}.csv"
+    assert File.exist?(full_path)
+    headers = CSV.open(full_path, "r") { |csv| csv.first.to_s }
+    assert_equal(
+      headers,
+      "[\"id\", \"name\", \"partner_type_id\", \"parent_id\", \"phone\", \"website\"]",
+      "Header does not match",
+    )
   end
 
   it "exports user list" do
