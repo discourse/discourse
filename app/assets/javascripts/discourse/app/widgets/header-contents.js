@@ -25,6 +25,8 @@ createWidget("header-contents", {
       {{/if}}
     {{/if}}
 
+    {{before-header-panel-outlet attrs=attrs}}
+
     <div class="panel clearfix" role="navigation">{{yield}}</div>
   `,
 });
