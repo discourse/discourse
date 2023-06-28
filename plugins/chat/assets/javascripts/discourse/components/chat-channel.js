@@ -674,8 +674,6 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  // TODO (martin) Maybe change this to public, since its referred to by
-  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }

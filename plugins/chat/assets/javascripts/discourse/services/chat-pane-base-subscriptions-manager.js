@@ -4,8 +4,6 @@ import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/c
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 
-// TODO (martin) This export can be removed once we move the handleSentMessage
-// code completely out of ChatLivePane
 export function handleStagedMessage(channel, messagesManager, data) {
   const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
 
@@ -72,8 +70,6 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     this.model = null;
   }
 
-  // TODO (martin) This can be removed once we move the handleSentMessage
-  // code completely out of ChatLivePane
   handleStagedMessageInternal(channel, data) {
     return handleStagedMessage(channel, this.messagesManager, data);
   }
