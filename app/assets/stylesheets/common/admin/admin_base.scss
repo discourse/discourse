@@ -269,8 +269,13 @@ $mobile-breakpoint: 700px;
   }
   .edit-site-text {
     textarea {
+      display: block;
       width: 100%;
       max-width: 800px;
+      margin: 0;
+    }
+    .save-button {
+      margin-top: 1em;
     }
     .save-button,
     .title {
@@ -283,6 +288,12 @@ $mobile-breakpoint: 700px;
     }
     .go-back {
       margin-top: 1em;
+    }
+    .desc {
+      padding-top: 3px;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-large);
+      color: var(--primary-medium);
     }
   }
   p.warning {

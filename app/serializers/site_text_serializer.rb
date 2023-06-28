@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SiteTextSerializer < ApplicationSerializer
-  attributes :id, :value, :overridden?, :can_revert?
+  attributes :id, :value, :interpolation_keys, :has_interpolation_keys?, :overridden?, :can_revert?
 
   def id
     object[:id]
@@ -9,6 +9,14 @@ class SiteTextSerializer < ApplicationSerializer
 
   def value
     object[:value]
+  end
+
+  def interpolation_keys
+    object[:interpolation_keys]
+  end
+
+  def has_interpolation_keys?
+    object[:interpolation_keys].present?
   end
 
   def overridden?
