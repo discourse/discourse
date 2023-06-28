@@ -5,9 +5,6 @@
     width: 100%;
   }
 
-  textarea {
-    min-height: 100px;
-  }
   // TODO(@keegan): Remove after updating dropdown/multi-select to use select-kit
   &__dropdown {
     border: 1px solid var(--primary-medium);
