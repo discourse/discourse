@@ -15,15 +15,15 @@ describe Jobs::Chat::NotifyMentioned do
     user_2.reload
 
     @chat_group = Fabricate(:group, users: [user_1, user_2])
-    @personal_chat_channel =
-      with_service(
-        Chat::CreateDirectMessageChannel,
+    result =
+      Chat::CreateDirectMessageChannel.call(
         guardian: user_1.guardian,
         target_usernames: [user_1.username, user_2.username],
-      ) do
-        on_failure { service_failed!(result) }
-        on_success { result.channel }
-      end
+      )
+
+    service_failed!(result) if result.failure?
+
+    @personal_chat_channel = result.channel
 
     [user_1, user_2].each do |u|
       Fabricate(:user_chat_channel_membership, chat_channel: public_channel, user: u)

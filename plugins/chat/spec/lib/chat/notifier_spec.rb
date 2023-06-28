@@ -408,14 +408,13 @@ describe Chat::Notifier do
       context "when in a personal message" do
         let(:personal_chat_channel) do
           Group.refresh_automatic_groups!
-          with_service(
-            Chat::CreateDirectMessageChannel,
-            guardian: user_1.guardian,
-            target_usernames: [user_1.username, user_2.username],
-          ) do
-            on_failure { service_failed!(result) }
-            on_success { result.channel }
-          end
+          result =
+            Chat::CreateDirectMessageChannel.call(
+              guardian: user_1.guardian,
+              target_usernames: [user_1.username, user_2.username],
+            )
+          service_failed!(result) if result.failure?
+          result.channel
         end
 
         before { @chat_group.add(user_3) }

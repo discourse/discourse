@@ -7,8 +7,7 @@ module Chat
 
     # @param service [Class] A class including {Chat::Service::Base}
     # @param dependencies [kwargs] Any additional params to load into the service context,
-    #   in addition to controller @params. If using outside of a controller, then the params
-    #   needed for .call must all be passed here, including guardian.
+    #   in addition to controller @params.
     def with_service(service, default_actions: true, **dependencies, &block)
       object = self
       merged_block =
@@ -20,19 +19,11 @@ module Chat
     end
 
     def run_service(service, dependencies)
-      @_result =
-        service.call(
-          params_if_present.merge(guardian: dependencies[:guardian] || guardian, **dependencies),
-        )
+      @_result = service.call(params.to_unsafe_h.merge(guardian: guardian, **dependencies))
     end
 
     def default_actions_for_service
       proc {}
-    end
-
-    def params_if_present
-      return {} if !defined?(params)
-      params.to_unsafe_h
     end
   end
 end

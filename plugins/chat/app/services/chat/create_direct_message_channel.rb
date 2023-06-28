@@ -38,7 +38,7 @@ module Chat
     # @!visibility private
     class Contract
       attribute :target_usernames, :array
-      validates :target_usernames, presence: true, length: { minimum: 1 }
+      validates :target_usernames, presence: true
     end
 
     private

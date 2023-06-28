@@ -615,13 +615,12 @@ describe UserNotifications do
   end
 
   def create_dm_channel(sender, target_users)
-    with_service(
-      Chat::CreateDirectMessageChannel,
-      guardian: sender.guardian,
-      target_usernames: target_users.map(&:username),
-    ) do
-      on_failure { service_failed!(result) }
-      on_success { result.channel }
-    end
+    result =
+      Chat::CreateDirectMessageChannel.call(
+        guardian: sender.guardian,
+        target_usernames: target_users.map(&:username),
+      )
+    service_failed!(result) if result.failure?
+    result.channel
   end
 end

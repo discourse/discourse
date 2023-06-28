@@ -32,14 +32,13 @@ describe Chat::MessageCreator do
     )
   end
   let(:direct_message_channel) do
-    with_service(
-      Chat::CreateDirectMessageChannel,
-      guardian: user1.guardian,
-      target_usernames: [user1.username, user2.username],
-    ) do
-      on_failure { service_failed!(result) }
-      on_success { result.channel }
-    end
+    result =
+      Chat::CreateDirectMessageChannel.call(
+        guardian: user1.guardian,
+        target_usernames: [user1.username, user2.username],
+      )
+    service_failed!(result) if result.failure?
+    result.channel
   end
 
   before do
