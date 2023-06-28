@@ -13,6 +13,7 @@ module PageObjects
         else
           has_css?(".chat-side-panel .chat-thread")
         end
+        PageObjects::Pages::ChatThread.new.has_no_loading_skeleton?
       end
 
       def has_no_open_thread?

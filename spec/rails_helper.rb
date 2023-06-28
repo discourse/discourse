@@ -433,7 +433,18 @@ RSpec.configure do |config|
           if logs.empty?
             lines << "(no logs)"
           else
-            logs.each { |log| lines << log.message }
+            logs.each do |log|
+              # System specs are full of image load errors that are just noise, no need
+              # to log this.
+              if (
+                   log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
+                     (log.message.include?("uploads") || log.message.include?("images"))
+                 ) || log.message.include?("favicon.ico")
+                next
+              end
+
+              lines << log.message
+            end
           end
           lines << "~~~~~ END JS LOGS ~~~~~"
         end
