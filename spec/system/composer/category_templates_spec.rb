@@ -24,6 +24,34 @@ describe "Composer Form Templates", type: :system do
   fab!(:form_template_4) do
     Fabricate(:form_template, name: "Biography", template: "- type: textarea")
   end
+  fab!(:form_template_5) do
+    Fabricate(
+      :form_template,
+      name: "Medication",
+      template:
+        %Q(
+        - type: input
+          attributes:
+            label: "What is your name?"
+            placeholder: "John Smith"
+          validations:
+            required: false
+        - type: upload
+          attributes:
+            file_types: ".jpg, .png"
+            allow_multiple: false
+            label: "Upload your prescription"
+            validations:
+            required: true
+        - type: upload
+          attributes:
+            file_types: ".jpg, .png, .pdf, .mp3, .mp4"
+            allow_multiple: true
+            label: "Any additional docs"
+            validations:
+            required: false"),
+    )
+  end
   fab!(:category_with_template_1) do
     Fabricate(
       :category,
@@ -60,6 +88,15 @@ describe "Composer Form Templates", type: :system do
       form_template_ids: [form_template_3.id, form_template_4.id],
     )
   end
+  fab!(:category_with_upload_template) do
+    Fabricate(
+      :category,
+      name: "Medical",
+      slug: "medical",
+      topic_count: 2,
+      form_template_ids: [form_template_5.id],
+    )
+  end
   fab!(:category_no_template) do
     Fabricate(:category, name: "Staff", slug: "staff", topic_count: 2, form_template_ids: [])
   end
@@ -73,6 +110,7 @@ describe "Composer Form Templates", type: :system do
       topic_template: "Testing",
     )
   end
+
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:form_template_chooser) { PageObjects::Components::SelectKit.new(".form-template-chooser") }
@@ -80,6 +118,7 @@ describe "Composer Form Templates", type: :system do
 
   before do
     SiteSetting.experimental_form_templates = true
+    SiteSetting.authorized_extensions = "*"
     sign_in user
   end
 
@@ -194,5 +233,62 @@ describe "Composer Form Templates", type: :system do
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked p")).to have_content(
       "Bruce Wayne",
     )
+  end
+
+  it "creates a post with an upload field" do
+    topic_title = "Bruce Wayne's Medication"
+
+    category_page.visit(category_with_upload_template)
+    category_page.new_topic_button.click
+    attach_file "upload-your-prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/logo.png",
+                make_visible: true
+    composer.fill_title(topic_title)
+    composer.fill_form_template_field("input", "Bruce Wayne")
+    composer.create
+
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
+      "img[alt='logo.png']",
+    )
+  end
+
+  it "doesn't allow uploading an invalid file type" do
+    topic_title = "Bruce Wayne's Medication"
+
+    category_page.visit(category_with_upload_template)
+    category_page.new_topic_button.click
+    attach_file "upload-your-prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/animated.gif",
+                make_visible: true
+    expect(find("#dialog-holder .dialog-body p", visible: :all)).to have_content(
+      I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
+    )
+  end
+
+  it "creates a post with multiple uploads" do
+    topic_title = "Peter Parker's Medication"
+
+    category_page.visit(category_with_upload_template)
+    category_page.new_topic_button.click
+    attach_file "upload-your-prescription-uploader",
+                "#{Rails.root}/spec/fixtures/images/logo.png",
+                make_visible: true
+    attach_file "any-additional-docs-uploader",
+                [
+                  "#{Rails.root}/spec/fixtures/media/small.mp3",
+                  "#{Rails.root}/spec/fixtures/media/small.mp4",
+                  "#{Rails.root}/spec/fixtures/pdf/small.pdf",
+                ],
+                make_visible: true
+    composer.fill_title(topic_title)
+    composer.fill_form_template_field("input", "Peter Parker}")
+    composer.create
+
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
+      "img[alt='logo.png']",
+    )
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("a.attachment")
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("audio")
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("video")
   end
 end
