@@ -21,7 +21,7 @@ RSpec.describe "Chat exports", type: :system do
     click_link "[Chat Message] Data export complete"
     click_link "chat-message-"
 
-    sleep 1
+    sleep 3 # fixme try to get rid of sleep
     DOWNLOAD_PATH = Rails.root.join("tmp/downloads").to_s
     full_path = DOWNLOAD_PATH + "/partners-#{Date.today}.csv"
     assert File.exist?(full_path)
