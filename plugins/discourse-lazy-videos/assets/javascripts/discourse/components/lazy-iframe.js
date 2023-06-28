@@ -18,9 +18,9 @@ export default class LazyVideo extends Component {
     }
   }
 
-  convertToSeconds(startTime) {
-    const match = startTime.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/).slice(1);
-    const [hours, minutes, seconds] = match;
+  convertToSeconds(time) {
+    const match = time.toString().match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
+    const [hours, minutes, seconds] = match.slice(1);
 
     if (hours || minutes || seconds) {
       const h = parseInt(hours, 10) || 0;
@@ -29,6 +29,6 @@ export default class LazyVideo extends Component {
 
       return h * 3600 + m * 60 + s;
     }
-    return startTime;
+    return time;
   }
 }
