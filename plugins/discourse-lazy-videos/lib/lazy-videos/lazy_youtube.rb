@@ -22,7 +22,7 @@ class Onebox::Engine::YoutubeOnebox
 
       escaped_title = ERB::Util.html_escape(video_title)
       escaped_start_time = ERB::Util.html_escape(params["t"])
-      t_param = escaped_start_time.present? ? "&t=#{escaped_start_time}" : nil
+      t_param = "&t=#{escaped_start_time}" if escaped_start_time.present?
 
       <<~HTML
         <div class="youtube-onebox lazy-video-container"
