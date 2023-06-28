@@ -4423,10 +4423,10 @@ escape-string-regexp@^5.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-5.0.0.tgz#4683126b500b61762f2dbebace1806e8be31b1c8"
   integrity sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==
 
-eslint-plugin-qunit@^7.3.4:
-  version "7.3.4"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-qunit/-/eslint-plugin-qunit-7.3.4.tgz#2465b6f29ff56fbe9b741bde2740dec109ee9bec"
-  integrity sha512-EbDM0zJerH9zVdUswMJpcFF7wrrpvsGuYfNexUpa5hZkkdFhaFcX+yD+RSK4Nrauw4psMGlcqeWUMhaVo+Manw==
+eslint-plugin-qunit@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-qunit/-/eslint-plugin-qunit-8.0.0.tgz#92df9b8cc144a67edaf961e9c4db75d98065ce85"
+  integrity sha512-ly2x/pmJPcS0ztGAPap6qLC13GjOFwhBbvun0K1dAjaxaC6KB3TYjeBo+5pGvXqL3WdicmYxEKhTGwmhvoxMBQ==
   dependencies:
     eslint-utils "^3.0.0"
     requireindex "^1.2.0"
