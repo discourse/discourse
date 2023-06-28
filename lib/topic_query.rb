@@ -898,7 +898,7 @@ class TopicQuery
 
     if user
       watched_tag_ids =
-        if SiteSetting.watched_precedence_over_muted
+        if user.watched_precedence_over_muted
           TagUser
             .where(user: user)
             .where("notification_level >= ?", TopicUser.notification_levels[:watching])
@@ -995,7 +995,7 @@ class TopicQuery
           regular: CategoryUser.notification_levels[:regular],
           watching_or_infinite:
             (
-              if SiteSetting.watched_precedence_over_muted
+              if user&.watched_precedence_over_muted || SiteSetting.watched_precedence_over_muted
                 CategoryUser.notification_levels[:watching]
               else
                 99
@@ -1017,7 +1017,7 @@ class TopicQuery
           regular: CategoryUser.notification_levels[:regular],
           watching_or_infinite:
             (
-              if SiteSetting.watched_precedence_over_muted
+              if user.watched_precedence_over_muted
                 CategoryUser.notification_levels[:watching]
               else
                 99

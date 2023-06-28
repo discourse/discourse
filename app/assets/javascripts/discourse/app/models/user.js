@@ -131,6 +131,7 @@ let userOptionFields = [
   "bookmark_auto_delete_preference",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
+  "watched_precedence_over_muted",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
