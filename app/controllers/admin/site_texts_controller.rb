@@ -156,10 +156,11 @@ class Admin::SiteTextsController < Admin::AdminController
   end
 
   def record_for(key:, value: nil, locale:)
+    en_key = TranslationOverride.transform_pluralized_key(key)
     value ||= I18n.with_locale(locale) { I18n.t(key) }
     interpolation_keys =
-      I18nInterpolationKeysFinder.find(I18n.overrides_disabled { I18n.t(key, locale: :en) })
-    custom_keys = TranslationOverride.custom_interpolation_keys(key)
+      I18nInterpolationKeysFinder.find(I18n.overrides_disabled { I18n.t(en_key, locale: :en) })
+    custom_keys = TranslationOverride.custom_interpolation_keys(en_key)
     { id: key, value: value, locale: locale, interpolation_keys: interpolation_keys + custom_keys }
   end
 

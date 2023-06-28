@@ -114,15 +114,10 @@ class TranslationOverride < ActiveRecord::Base
     match ? match.to_a.second + ".other" : key
   end
 
-  def self.custom_interpolation_keys(key)
-    transformed_key = transform_pluralized_key(key)
-
-    custom_keys =
-      ALLOWED_CUSTOM_INTERPOLATION_KEYS.find do |keys, value|
-        break value if keys.any? { |key| transformed_key.start_with?(key) }
-      end
-
-    custom_keys || []
+  def self.custom_interpolation_keys(translation_key)
+    ALLOWED_CUSTOM_INTERPOLATION_KEYS.find do |keys, value|
+      break value if keys.any? { |k| translation_key.start_with?(k) }
+    end || []
   end
 
   private_class_method :reload_locale!
