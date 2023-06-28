@@ -5,6 +5,7 @@ module Chat
     LIMIT = 10_000
 
     def chat_message_export
+      Rails.logger.warn "Start messages export"
       Chat::Message
         .unscoped
         .where(created_at: 6.months.ago..Time.current)
