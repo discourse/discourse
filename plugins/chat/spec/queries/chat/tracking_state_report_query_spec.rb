@@ -116,11 +116,13 @@ RSpec.describe Chat::TrackingStateReportQuery do
         expect(query.thread_tracking).to eq(
           {
             thread_1.id => {
+              last_reply_created_at: thread_1.last_reply.created_at,
               unread_count: 1,
               mention_count: 0,
               channel_id: channel_1.id,
             },
             thread_2.id => {
+              last_reply_created_at: thread_2.last_reply.created_at,
               unread_count: 1,
               mention_count: 0,
               channel_id: channel_2.id,

@@ -200,7 +200,7 @@ export default class Chat extends Service {
         );
       }
 
-      if (channelsView.unread_thread_overview[storedChannel.id]) {
+      if (channelsView.unread_thread_overview?.[storedChannel.id]) {
         storedChannel.unreadThreadOverview =
           channelsView.unread_thread_overview[storedChannel.id];
       }

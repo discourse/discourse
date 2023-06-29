@@ -71,11 +71,13 @@ RSpec.describe ::Chat::TrackingState do
             expect(result.report.thread_tracking).to eq(
               thread_1.id => {
                 channel_id: channel_1.id,
+                last_reply_created_at: thread_1.last_reply.created_at,
                 unread_count: 1,
                 mention_count: 0,
               },
               thread_2.id => {
                 channel_id: channel_1.id,
+                last_reply_created_at: thread_2.last_reply.created_at,
                 unread_count: 2,
                 mention_count: 0,
               },
@@ -118,6 +120,7 @@ RSpec.describe ::Chat::TrackingState do
             expect(result.report.thread_tracking).to eq(
               thread_2.id => {
                 channel_id: channel_1.id,
+                last_reply_created_at: thread_2.last_reply.created_at,
                 unread_count: 2,
                 mention_count: 0,
               },
@@ -150,21 +153,25 @@ RSpec.describe ::Chat::TrackingState do
           expect(result.report.thread_tracking).to eq(
             thread_1.id => {
               channel_id: channel_1.id,
+              last_reply_created_at: thread_1.last_reply.created_at,
               unread_count: 1,
               mention_count: 0,
             },
             thread_2.id => {
               channel_id: channel_1.id,
+              last_reply_created_at: thread_2.last_reply.created_at,
               unread_count: 2,
               mention_count: 0,
             },
             thread_3.id => {
               channel_id: channel_2.id,
+              last_reply_created_at: thread_3.last_reply.created_at,
               unread_count: 0,
               mention_count: 0,
             },
             thread_4.id => {
               channel_id: channel_2.id,
+              last_reply_created_at: thread_4.last_reply.created_at,
               unread_count: 0,
               mention_count: 0,
             },

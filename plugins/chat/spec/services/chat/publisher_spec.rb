@@ -106,17 +106,29 @@ describe Chat::Publisher do
         it "publishes the tracking state with correct counts" do
           expect(data["thread_id"]).to eq(thread.id)
           expect(data["unread_thread_overview"]).to eq(
-            { thread.id => thread.last_reply.created_at },
+            { thread.id.to_s => thread.last_reply.created_at.iso8601(3) },
           )
-          expect(data["thread_tracking"]).to eq({ "unread_count" => 1, "mention_count" => 0 })
+          expect(data["thread_tracking"]).to eq(
+            {
+              "last_reply_created_at" => thread.last_reply.created_at.iso8601(3),
+              "unread_count" => 1,
+              "mention_count" => 0,
+            },
+          )
         end
       end
 
       context "when the user has no thread membership" do
         it "publishes the tracking state with zeroed out counts" do
           expect(data["thread_id"]).to eq(thread.id)
-          expect(data["unread_thread_overview"]).to eq([])
-          expect(data["thread_tracking"]).to eq({ "unread_count" => 0, "mention_count" => 0 })
+          expect(data["unread_thread_overview"]).to eq({})
+          expect(data["thread_tracking"]).to eq(
+            {
+              "last_reply_created_at" => thread.last_reply.created_at.iso8601(3),
+              "unread_count" => 0,
+              "mention_count" => 0,
+            },
+          )
         end
       end
     end
@@ -283,6 +295,7 @@ describe Chat::Publisher do
           {
             type: "channel",
             channel_id: channel.id,
+            created_at: message_1.created_at,
             message_id: message_1.id,
             user_id: message_1.user_id,
             username: message_1.user.username,
@@ -342,6 +355,7 @@ describe Chat::Publisher do
               {
                 type: "thread",
                 channel_id: channel.id,
+                created_at: message_1.created_at,
                 message_id: message_1.id,
                 user_id: message_1.user_id,
                 username: message_1.user.username,
