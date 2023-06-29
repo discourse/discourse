@@ -1,5 +1,5 @@
-import Component from "@ember/component";
-import { action, computed } from "@ember/object";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
@@ -8,9 +8,17 @@ import I18n from "I18n";
 export default class ThemeSettingsEditor extends Component {
   @service dialog;
 
-  @tracked editedContent;
+  @tracked editedContent = JSON.stringify(
+    this.condensedThemeSettings,
+    null,
+    "\t"
+  );
   @tracked errors = [];
   @tracked saving = false;
+
+  // we need to store the controller being passed in so that when we
+  // call `save` we have not lost context of the argument
+  customizeThemeShowController = this.args.model?.controller;
 
   get saveButtonDisabled() {
     return !this.documentChanged || this.saving;
@@ -24,35 +32,30 @@ export default class ThemeSettingsEditor extends Component {
       const editedContentString = JSON.stringify(
         JSON.parse(this.editedContent)
       );
-      const themeSettingsString = JSON.stringify(this.condensedThemeSettings());
-      return editedContentString.localeCompare(themeSettingsString) !== 0;
+      const themeSettingsString = JSON.stringify(this.condensedThemeSettings);
+      if (editedContentString.localeCompare(themeSettingsString) !== 0) {
+        this.errors = [];
+        return true;
+      } else {
+        return false;
+      }
     } catch {
       return true;
     }
   }
 
-  _theme() {
-    return this.model?.model;
+  get theme() {
+    return this.args.model?.model;
   }
 
-  condensedThemeSettings() {
-    if (!this._theme()) {
+  get condensedThemeSettings() {
+    if (!this.theme) {
       return null;
     }
-    return this._theme().settings.map((setting) => ({
+    return this.theme.settings.map((setting) => ({
       setting: setting.setting,
       value: setting.value,
     }));
-  }
-
-  @computed("theme")
-  get editorContents() {
-    return JSON.stringify(this.condensedThemeSettings(), null, "\t");
-  }
-
-  set editorContents(value) {
-    this.errors = [];
-    this.editedContent = value;
   }
 
   // validates the following:
@@ -112,8 +115,8 @@ export default class ThemeSettingsEditor extends Component {
       return;
     }
 
-    const originalNames = this._theme()
-      ? this._theme().settings.map((setting) => setting.setting)
+    const originalNames = this.theme
+      ? this.theme.settings.map((setting) => setting.setting)
       : [];
     const newNames = newSettings.map((setting) => setting.setting);
     const deletedNames = originalNames.filter(
@@ -148,14 +151,14 @@ export default class ThemeSettingsEditor extends Component {
     }
 
     const changedSettings = newSettings.filter((newSetting) => {
-      const originalSetting = this._theme().settings.find(
+      const originalSetting = this.theme.settings.find(
         (_originalSetting) => _originalSetting.setting === newSetting.setting
       );
       return originalSetting.value !== newSetting.value;
     });
     for (let setting of changedSettings) {
       try {
-        await this.saveSetting(this._theme().id, setting);
+        await this.saveSetting(this.theme.id, setting);
       } catch (err) {
         const errorObjects = JSON.parse(err.jqXHR.responseText).errors.map(
           (error) => ({
@@ -171,7 +174,7 @@ export default class ThemeSettingsEditor extends Component {
     }
     this.saving = false;
     this.dialog.cancel();
-    this.model.controller.send("routeRefreshModel");
+    this.customizeThemeShowController.send("routeRefreshModel");
   }
 
   async saveSetting(themeId, setting) {

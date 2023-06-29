@@ -1,6 +1,6 @@
 <div class="settings-editor">
   <div>
-    <AceEditor @mode="html" @content={{this.editorContents}} />
+    <AceEditor @mode="html" @content={{this.editedContent}} />
 
     {{#each this.errors as |error|}}
       <div class="validation-error">
