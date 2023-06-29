@@ -33,6 +33,16 @@ module PageObjects
         find(".sidebar-section-link[href='/chat/c/#{channel.slug}/#{channel.id}']")
         self
       end
+
+      def has_unread_channel?(channel)
+        has_css?(".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread")
+      end
+
+      def has_no_unread_channel?(channel)
+        has_no_css?(
+          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread",
+        )
+      end
     end
   end
 end

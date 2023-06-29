@@ -10,6 +10,7 @@ describe "Thread tracking state | full page", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
   before do
     SiteSetting.enable_experimental_chat_threaded_discussions = true
@@ -78,6 +79,39 @@ describe "Thread tracking state | full page", type: :system do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(thread_list_page).to have_thread(new_thread)
+    end
+
+    describe "sidebar unread indicators" do
+      fab!(:other_channel) { Fabricate(:chat_channel) }
+
+      before do
+        other_channel.add(current_user)
+        SiteSetting.navigation_menu = "sidebar"
+      end
+
+      it "shows an unread indicator for the channel with unread threads in the sidebar" do
+        chat_page.visit_channel(other_channel)
+        expect(sidebar_page).to have_unread_channel(channel)
+      end
+
+      it "does not show an unread indicator for the channel if the user has visited the channel since the unread thread message arrived" do
+        channel.membership_for(current_user).update!(last_viewed_at: Time.zone.now)
+        chat_page.visit_channel(other_channel)
+        expect(sidebar_page).to have_no_unread_channel(channel)
+      end
+
+      it "clears the sidebar unread indicator for the channel when opening it but keeps the thread list unread indicator" do
+        chat_page.visit_channel(channel)
+        expect(sidebar_page).to have_no_unread_channel(channel)
+        expect(channel_page).to have_unread_thread_indicator(count: 1)
+      end
+
+      it "does not show an unread indicator for the channel sidebar if a new thread message arrives while the user is looking at the channel" do
+        chat_page.visit_channel(channel)
+        expect(sidebar_page).to have_no_unread_channel(channel)
+        Fabricate(:chat_message, thread: thread)
+        expect(sidebar_page).to have_no_unread_channel(channel)
+      end
     end
 
     context "when the user's notification level for the thread is set to normal" do
