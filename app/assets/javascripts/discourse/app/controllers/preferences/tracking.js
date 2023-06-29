@@ -109,10 +109,10 @@ export default class extends Controller {
   )
   get showMutePrecedenceSetting() {
     return (
-      (this.model.watchedCategories.length > 0 &&
-        this.model.muted_tags.length > 0) ||
-      (this.model.watched_tags.length > 0 &&
-        this.model.mutedCategories.length > 0)
+      (this.model.watchedCategories?.length > 0 &&
+        this.model.muted_tags?.length > 0) ||
+      (this.model.watched_tags?.length > 0 &&
+        this.model.mutedCategories?.length > 0)
     );
   }
 
