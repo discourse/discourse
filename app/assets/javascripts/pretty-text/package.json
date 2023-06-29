@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "ember-cli-babel": "^7.26.11",
-    "ember-cli-htmlbars": "^6.2.0"
+    "ember-cli-htmlbars": "^6.2.0",
+    "xss": "^1.0.14"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -35,8 +36,7 @@
     "ember-source": "~3.28.12",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.88.1",
-    "xss": "^1.0.14"
+    "webpack": "^5.88.1"
   },
   "engines": {
     "node": "16.* || >= 18",
