@@ -17,6 +17,8 @@ export default Component.extend(UppyUploadMixin, {
   uploads: null,
   useMultipartUploadsIfAvailable: true,
   uploadDropZone: null,
+  holdingShift: false,
+  uploadingStartedWithShift: false,
 
   init() {
     this._super(...arguments);
@@ -40,6 +42,11 @@ export default Component.extend(UppyUploadMixin, {
   didInsertElement() {
     this._super(...arguments);
 
+    this.composerInputEl?.addEventListener(
+      "keydown",
+      this._keydownEventListener
+    );
+    this.composerInputEl?.addEventListener("keyup", this._keyupEventListener);
     this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
   },
 
@@ -79,6 +86,11 @@ export default Component.extend(UppyUploadMixin, {
   _uploadDropTargetOptions() {
     return {
       target: this.uploadDropZone || document.body,
+      onDrop: () => {
+        if (this.holdingShift) {
+          this.uploadingStartedWithShift = true;
+        }
+      },
     };
   },
 
@@ -105,6 +117,20 @@ export default Component.extend(UppyUploadMixin, {
   },
 
   @bind
+  _keydownEventListener(event) {
+    if (event.shiftKey) {
+      this.holdingShift = true;
+    }
+  },
+
+  @bind
+  _keyupEventListener() {
+    if (!event.shiftKey) {
+      this.holdingShift = false;
+    }
+  },
+
+  @bind
   _pasteEventListener(event) {
     if (document.activeElement !== this.composerInputEl) {
       return;
@@ -120,7 +146,9 @@ export default Component.extend(UppyUploadMixin, {
     }
 
     if (event && event.clipboardData && event.clipboardData.files) {
-      this._addFiles([...event.clipboardData.files], { pasted: true });
+      this._addFiles([...event.clipboardData.files], {
+        pasted: true,
+      });
     }
   },
 
@@ -134,5 +162,12 @@ export default Component.extend(UppyUploadMixin, {
     this.onUploadChanged?.(this.uploads, {
       inProgressUploadsCount: this.inProgressUploads?.length,
     });
+  },
+
+  _onAllUploadsComplete() {
+    this.onAllUploadsComplete({
+      holdingShift: this.uploadingStartedWithShift,
+    });
+    this.uploadingStartedWithShift = false;
   },
 });

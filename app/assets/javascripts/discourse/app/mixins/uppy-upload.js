@@ -494,6 +494,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     }
 
     this.appEvents.trigger(`upload-mixin:${this.id}:all-uploads-complete`);
+
+    this._onAllUploadsComplete?.();
+
     this._reset();
   },
 });

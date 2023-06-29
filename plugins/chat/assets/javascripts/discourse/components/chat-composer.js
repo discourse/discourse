@@ -385,6 +385,13 @@ export default class ChatComposer extends Component {
     });
   }
 
+  @action
+  onAllUploadsComplete(opts) {
+    if (opts.holdingShift) {
+      this.onSend();
+    }
+  }
+
   #addMentionedUser(userData) {
     const user = User.create(userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
