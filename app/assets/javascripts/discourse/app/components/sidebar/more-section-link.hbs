@@ -1,4 +1,4 @@
-{{#if (or @sectionLink.external @sectionLink.fullReload)}}
+{{#if @sectionLink.externalOrFullReload}}
   <Sidebar::SectionLink
     @shouldDisplay={{@sectionLink.shouldDisplay}}
     @linkName={{@sectionLink.name}}

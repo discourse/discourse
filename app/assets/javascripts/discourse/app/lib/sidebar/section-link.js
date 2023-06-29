@@ -23,7 +23,7 @@ export default class SectionLink {
     this.value = value;
     this.section = section;
 
-    if (!this.external && !this.fullReload) {
+    if (!this.externalOrFullReload) {
       const routeInfoHelper = new RouteInfoHelper(router, value);
       this.route = routeInfoHelper.route;
       this.models = routeInfoHelper.models;
@@ -33,6 +33,10 @@ export default class SectionLink {
 
   get shouldDisplay() {
     return true;
+  }
+
+  get externalOrFullReload() {
+    return this.external || this.fullReload;
   }
 
   @bind
