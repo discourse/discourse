@@ -7,12 +7,15 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "start": "ember serve"
+  },
+  "dependencies": {
+    "ember-cli-babel": "^7.26.11",
+    "ember-cli-htmlbars": "^6.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -29,8 +32,6 @@
     "broccoli-asset-rev": "^3.0.0",
     "ember-auto-import": "^2.6.3",
     "ember-cli": "~5.0.0",
-    "ember-cli-babel": "^7.26.11",
-    "ember-cli-htmlbars": "^6.2.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",

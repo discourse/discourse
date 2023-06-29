@@ -7,14 +7,15 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "dependencies": {
+    "ember-cli-babel": "^7.26.11",
+    "ember-cli-htmlbars": "^6.2.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.22.5",
     "discourse-widget-hbs": "1.0.0",
     "ember-auto-import": "^2.6.3",
     "ember-cli": "~5.0.0",
-    "ember-cli-babel": "^7.26.11",
-    "ember-cli-htmlbars": "^6.2.0",
     "webpack": "^5.88.1"
   },
   "engines": {

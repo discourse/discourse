@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "description": "A platform for community discussion. Free, open, simple.",
-  "repository": "",
   "license": "GPL-2.0-only",
   "author": "Discourse",
   "directories": {
