@@ -278,11 +278,6 @@ export default Controller.extend(CanCheckEmails, {
           onError: (e) => this.handleError(e),
         },
       });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
     },
 
     editSecurityKey(security_key) {
