@@ -15,21 +15,10 @@ export default class SecondFactorAddSecurityKey extends Component {
 
   @tracked loading = false;
   @tracked errorMessage = null;
+  @tracked securityKeyName;
 
   get webauthnUnsupported() {
     return !isWebauthnSupported();
-  }
-
-  get securityKeyName() {
-    let key;
-    if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
-      key = "user.second_factor.security_key.iphone_default_name";
-    } else if (this.capabilities.isAndroid) {
-      key = "user.second_factor.security_key.android_default_name";
-    } else {
-      key = "user.second_factor.security_key.default_name";
-    }
-    return I18n.t(key);
   }
 
   @action
@@ -40,6 +29,16 @@ export default class SecondFactorAddSecurityKey extends Component {
 
   @action
   securityKeyRequested() {
+    let key;
+    if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+      key = "user.second_factor.security_key.iphone_default_name";
+    } else if (this.capabilities.isAndroid) {
+      key = "user.second_factor.security_key.android_default_name";
+    } else {
+      key = "user.second_factor.security_key.default_name";
+    }
+    this.securityKeyName = key;
+
     this.loading = true;
     this.args.model.secondFactor
       .requestSecurityKeyChallenge()
