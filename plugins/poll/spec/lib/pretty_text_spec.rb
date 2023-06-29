@@ -93,17 +93,17 @@ RSpec.describe PrettyText do
 
     expected = <<~HTML
       <div class="poll" data-poll-status="open" data-poll-type="multiple" data-poll-name="poll">
-      <div>
       <div class="poll-container"><ol>
       <li data-poll-option-id="b6475cbf6acb8676b20c60582cfc487a">test 1 <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"> <b>test</b></li>
       <li data-poll-option-id="7158af352698eb1443d709818df097d4">test 2</li>
       </ol>
       </div>
       <div class="poll-info">
-      <p>
+      <div class="poll-info_counts">
+      <div class="poll-info_counts-count">
       <span class="info-number">0</span>
       <span class="info-label">voters</span>
-      </p>
+      </div>
       </div>
       </div>
       </div>
