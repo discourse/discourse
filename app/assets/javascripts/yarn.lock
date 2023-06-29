@@ -1765,14 +1765,7 @@
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-3.0.3.tgz#37d0e95c8fd360b3283bca7fdf94cce7400008e7"
   integrity sha512-/zlvQNj4HjkthI+7dNdj/8mOlTg1Zb1gJ/ZsOxof0g3xXD+OAwm7asRnOwpfj2dos+lExdW/zMn8XsRGsuvb6Q==
 
-"@uppy/utils@5.2.0":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.2.0.tgz#1436cda37c2bad5643837eeb1de897a7803511a3"
-  integrity sha512-5NSX0rDTBZSDSaP0T5IUmrPp7eRYGwcALQz+UBVSZaJTaMKPcfQwNJYNk0YwRfOAOhyvyrUfIxWMbjapDCp4RA==
-  dependencies:
-    lodash.throttle "^4.1.1"
-
-"@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0", "@uppy/utils@^5.4.0":
+"@uppy/utils@5.4.0", "@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0", "@uppy/utils@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.4.0.tgz#1f0816334ef8cfe3eaaf7c6a1d3dc28ac9bbced8"
   integrity sha512-X9f43OvTcymhoiDEzA2CqH7W5pADTVv2bhQ/9NUaVwYRLUadDjZc27ZgnNraKSYgnOhKFJlC63nyCwcd0yaQIQ==
