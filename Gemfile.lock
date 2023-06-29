@@ -503,7 +503,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.16.0)
-    uri (0.12.1)
+    uri (0.12.2)
     version_gem (1.1.3)
     web-push (3.0.0)
       hkdf (~> 1.0)
