@@ -1,4 +1,4 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action, computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
@@ -8,7 +8,7 @@ import I18n from "I18n";
 export default class ThemeSettingsEditor extends Component {
   @service dialog;
 
-  @tracked editedContent = null;
+  @tracked editedContent;
   @tracked errors = [];
   @tracked saving = false;
 
