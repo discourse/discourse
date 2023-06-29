@@ -68,7 +68,7 @@ module Chat
     end
 
     def excerpt
-      original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
+      original_message.excerpt(max_length: EXCERPT_LENGTH)
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)

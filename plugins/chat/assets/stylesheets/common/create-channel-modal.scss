@@ -9,9 +9,7 @@
   }
 
   .select-kit.combo-box,
-  .create-channel-name-input,
-  .create-channel-slug-input,
-  .create-channel-description-input,
+  .create-channel__input,
   #choose-topic-title {
     width: 100%;
     margin-bottom: 0;
@@ -24,23 +22,21 @@
     }
   }
 
-  .create-channel-hint {
+  .create-channel__hint {
     font-size: var(--font-down-1);
     padding-top: 0.25rem;
     color: var(--secondary-low);
   }
 
-  .create-channel-control,
+  .create-channel__control,
   .edit-channel-control {
     margin-bottom: 1rem;
   }
 
-  .auto-join-channel {
-    &__description {
-      margin: 0;
-      padding-top: 0.25rem;
-      color: var(--secondary-low);
-      font-size: var(--font-down-1) !important;
-    }
+  .create-channel__label-description {
+    margin: 0;
+    padding-top: 0.25rem;
+    color: var(--secondary-low);
+    font-size: var(--font-down-1) !important;
   }
 }

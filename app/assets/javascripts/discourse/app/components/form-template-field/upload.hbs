@@ -7,10 +7,35 @@
       {{/if}}
     </label>
   {{/if}}
-  <input
-    type="file"
-    accept={{@attributes.file_types}}
-    class="form-template-field__upload"
-    multiple={{@attributes.allow_multiple}}
+
+  <input type="hidden" name={{@attributes.label}} value={{this.uploadValue}} />
+
+  <PickFilesButton
+    @fileInputClass="form-template-field__upload"
+    @fileInputId={{this.fileUploadElementId}}
+    @allowMultiple={{@attributes.allow_multiple}}
+    @showButton={{true}}
+    @onFilesPicked={{true}}
+    @icon="upload"
+    @label={{this.uploadStatus}}
+    @fileInputDisabled={{this.disabled}}
+    @acceptedFormatsOverride={{@attributes.file_types}}
+    @acceptedFileTypesString={{@attributes.file_types}}
   />
+
+  {{#if this.uploadedFiles}}
+    <ul class="form-template-field__uploaded-files">
+      {{#each this.uploadedFiles as |file|}}
+        <li>
+          {{d-icon "file"}}
+          <a
+            href={{file.url}}
+            target="_blank"
+            rel="noopener noreferrer"
+          >{{file.file_name}}</a>
+          <span>{{file.human_filesize}}</span>
+        </li>
+      {{/each}}
+    </ul>
+  {{/if}}
 </div>
