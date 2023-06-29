@@ -16,6 +16,22 @@ export default class SecondFactorAddSecurityKey extends Component {
   @tracked loading = false;
   @tracked errorMessage = null;
 
+  get webauthnUnsupported() {
+    return !isWebauthnSupported();
+  }
+
+  get securityKeyName() {
+    let key;
+    if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+      key = "user.second_factor.security_key.iphone_default_name";
+    } else if (this.capabilities.isAndroid) {
+      key = "user.second_factor.security_key.android_default_name";
+    } else {
+      key = "user.second_factor.security_key.default_name";
+    }
+    return I18n.t(key);
+  }
+
   @action
   onClose() {
     this.args.model.onClose();
@@ -52,22 +68,6 @@ export default class SecondFactorAddSecurityKey extends Component {
         this.args.model.onError(error);
       })
       .finally(() => (this.loading = false));
-  }
-
-  get webauthnUnsupported() {
-    return !isWebauthnSupported();
-  }
-
-  get securityKeyName() {
-    let key;
-    if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
-      key = "user.second_factor.security_key.iphone_default_name";
-    } else if (this.capabilities.isAndroid) {
-      key = "user.second_factor.security_key.android_default_name";
-    } else {
-      key = "user.second_factor.security_key.default_name";
-    }
-    return I18n.t(key);
   }
 
   @action
