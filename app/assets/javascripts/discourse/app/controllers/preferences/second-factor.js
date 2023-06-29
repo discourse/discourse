@@ -14,6 +14,7 @@ import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/seco
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
+  modal: service(),
   loading: false,
   dirty: false,
   resetPasswordLoading: false,
@@ -269,9 +270,13 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     createSecurityKey() {
-      const controller = showModal("second-factor-add-security-key", {
-        model: this.model,
-        title: "user.second_factor.security_key.add",
+      this.modal.show(SecondFactorAddSecurityKey, {
+        model: {
+          secondFactor: this.model,
+          onClose: () => this.loadSecondFactors(),
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
       controller.setProperties({
         onClose: () => this.loadSecondFactors(),
