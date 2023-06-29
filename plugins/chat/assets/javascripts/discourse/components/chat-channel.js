@@ -205,6 +205,9 @@ export default class ChatLivePane extends Component {
 
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
+
+        // We update this value server-side when we load the Channel
+        // here, so this reflects reality for sidebar unread logic.
         this.args.channel.currentUserMembership.lastViewedAt = new Date();
 
         if (result.threads) {

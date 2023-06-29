@@ -164,7 +164,7 @@ module Chat
     # across the entire channel.
     def fetch_unread_thread_overview(guardian:, channel:, threads_enabled:, **)
       if !threads_enabled
-        context.unread_thread_overview = []
+        context.unread_thread_overview = {}
       else
         context.unread_thread_overview =
           ::Chat::TrackingStateReportQuery.call(
