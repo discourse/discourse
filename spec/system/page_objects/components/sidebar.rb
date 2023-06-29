@@ -57,8 +57,8 @@ module PageObjects
         has_css?(".#{SIDEBAR_SECTION_LINK_SELECTOR}--active", count: 1)
       end
 
-      def has_section_link?(name, href: nil, active: false)
-        section_link_present?(name, href: href, active: active, present: true)
+      def has_section_link?(name, href: nil, active: false, target: nil)
+        section_link_present?(name, href: href, active: active, target: target, present: true)
       end
 
       def has_no_section_link?(name, href: nil, active: false)
@@ -119,11 +119,12 @@ module PageObjects
 
       private
 
-      def section_link_present?(name, href: nil, active: false, present:)
+      def section_link_present?(name, href: nil, active: false, target: nil, present:)
         attributes = { exact_text: name }
         attributes[:href] = href if href
         attributes[:class] = SIDEBAR_SECTION_LINK_SELECTOR
         attributes[:class] += "--active" if active
+        attributes[:target] = target if target
         page.public_send(present ? :has_link? : :has_no_link?, **attributes)
       end
 
