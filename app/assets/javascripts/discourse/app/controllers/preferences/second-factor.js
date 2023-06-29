@@ -11,6 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
+import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
