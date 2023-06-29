@@ -1691,7 +1691,7 @@ class PluginApi {
   /**
    * Add a function to be called when there is a keyDown even on the search-menu widget.
    * This function runs before the default logic, and if one callback returns a falsey value
-   * the logic chain will stop, to prevent the core behavior from occuring.
+   * the logic chain will stop, to prevent the core behavior from occurring.
    *
    * Example usage:
    * ```
@@ -2279,7 +2279,7 @@ class PluginApi {
   }
 
   /**
-   * Registers a hastag type and its corresponding class.
+   * Registers a hashtag type and its corresponding class.
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
    * @param {string} type - The type of the hashtag.
