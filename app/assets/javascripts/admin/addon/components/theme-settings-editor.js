@@ -12,12 +12,10 @@ export default class ThemeSettingsEditor extends Component {
   @tracked errors = [];
   @tracked saving = false;
 
-  @computed("editedContent", "saving")
   get saveButtonDisabled() {
     return !this.documentChanged || this.saving;
   }
 
-  @computed("editedContent")
   get documentChanged() {
     try {
       if (!this.editedContent) {
