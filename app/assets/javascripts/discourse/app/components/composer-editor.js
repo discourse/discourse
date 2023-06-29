@@ -43,6 +43,7 @@ import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
 import {
+  destroyTippyInstances,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
@@ -131,7 +132,6 @@ export default Component.extend(
       this._super(...arguments);
       this.warnedCannotSeeMentions = [];
       this.warnedGroupMentions = [];
-      this.tippyInstances = [];
     },
 
     @discourseComputed("composer.requiredCategoryMissing")
@@ -218,13 +218,6 @@ export default Component.extend(
       });
     },
 
-    _destroyUserStatusInstances(instances) {
-      instances.forEach((instance) => {
-        instance.destroy();
-      });
-      instances = [];
-    },
-
     @on("didInsertElement")
     _composerEditorInit() {
       const $input = $(this.element.querySelector(".d-editor-input"));
@@ -233,14 +226,14 @@ export default Component.extend(
         $input.autocomplete({
           template: findRawTemplate("user-selector-autocomplete"),
           dataSource: (term) => {
-            this._destroyUserStatusInstances(this.tippyInstances);
+            destroyTippyInstances();
             return userSearch({
               term,
               topicId: this.topic?.id,
               categoryId: this.topic?.category_id || this.composer?.categoryId,
               includeGroups: true,
             }).then((result) => {
-              this.tippyInstances = initUserStatusHtml(result.users);
+              initUserStatusHtml(result.users);
               return result;
             });
           },
@@ -252,7 +245,7 @@ export default Component.extend(
           afterComplete: this._afterMentionComplete,
           triggerRule: (textarea) =>
             !inCodeBlock(textarea.value, caretPosition(textarea)),
-          onClose: () => this._destroyUserStatusInstances(this.tippyInstances),
+          onClose: destroyTippyInstances,
         });
       }
 

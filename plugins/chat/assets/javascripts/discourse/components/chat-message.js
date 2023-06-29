@@ -14,7 +14,7 @@ import { bind } from "discourse-common/utils/decorators";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 
 let _chatMessageDecorators = [];
-let _userStatusInstances = [];
+let _tippyInstances = [];
 
 export function addChatMessageDecorator(decorator) {
   _chatMessageDecorators.push(decorator);
@@ -131,10 +131,10 @@ export default class ChatMessage extends Component {
   }
 
   #destroyTippyInstances() {
-    _userStatusInstances.forEach((instance) => {
+    _tippyInstances.forEach((instance) => {
       instance.destroy();
     });
-    _userStatusInstances = [];
+    _tippyInstances = [];
   }
 
   @action
@@ -151,7 +151,7 @@ export default class ChatMessage extends Component {
         );
 
         mentions.forEach((mention) => {
-          updateUserStatusOnMention(mention, user.status, _userStatusInstances);
+          updateUserStatusOnMention(mention, user.status, _tippyInstances);
         });
       });
     });

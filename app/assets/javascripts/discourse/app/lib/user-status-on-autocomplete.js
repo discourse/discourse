@@ -1,7 +1,8 @@
 import createUserStatusMessage from "discourse/lib/user-status-message";
 
+let tippyInstances = [];
+
 export function initUserStatusHtml(users) {
-  let instances = [];
   (users || []).forEach((user, index) => {
     if (user.status) {
       user.index = index;
@@ -9,10 +10,9 @@ export function initUserStatusHtml(users) {
         showTooltip: true,
         showDescription: true,
       });
-      instances.push(user.statusHtml._tippy);
+      tippyInstances.push(user.statusHtml._tippy);
     }
   });
-  return instances;
 }
 
 export function renderUserStatusHtml(options) {
@@ -26,4 +26,11 @@ export function renderUserStatusHtml(options) {
       user.querySelector(".user-status").replaceWith(statusHtml);
     }
   });
+}
+
+export function destroyTippyInstances() {
+  tippyInstances.forEach((instance) => {
+    instance.destroy();
+  });
+  tippyInstances = [];
 }

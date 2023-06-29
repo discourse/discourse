@@ -77,7 +77,7 @@ export default class PostCooked {
 
   destroy() {
     this._stopTrackingMentionedUsersStatus();
-    this._destroyUserStatusInstances();
+    this._destroyTippyInstances();
   }
 
   _decorateAndAdopt(cooked) {
@@ -382,14 +382,14 @@ export default class PostCooked {
     }
   }
 
-  _destroyUserStatusInstances() {
+  _destroyTippyInstances() {
     this.tippyInstances.forEach((instance) => {
       instance.destroy();
     });
   }
 
   _rerenderUserStatusOnMentions() {
-    this._destroyUserStatusInstances();
+    this._destroyTippyInstances();
     this._post()?.mentioned_users?.forEach((user) =>
       this._rerenderUserStatusOnMention(this.cookedDiv, user)
     );
