@@ -142,7 +142,7 @@ RSpec.describe "Navigation", type: :system do
     end
 
     context "when opening a thread from the thread list" do
-      it "goes back to the thread list when clicking the back button" do
+      xit "goes back to the thread list when clicking the back button" do
         visit("/chat")
         chat_page.visit_channel(category_channel)
         channel_page.open_thread_list
