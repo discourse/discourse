@@ -399,7 +399,7 @@
   resolved "https://registry.yarnpkg.com/@handlebars/parser/-/parser-2.0.0.tgz#5e8b7298f31ff8f7b260e6b7363c7e9ceed7d9c5"
   integrity sha512-EP9uEDZv/L5Qh9IWuMUGJRfwhXJ4h1dqKTT4/3+tY0eu7sPis7xh23j61SYUnNF4vqCQvvUXpDo9Bh/+q1zASA==
 
-"@highlightjs/cdn-assets@^11.6.0":
+"@highlightjs/cdn-assets@11.8.0":
   version "11.8.0"
   resolved "https://registry.yarnpkg.com/@highlightjs/cdn-assets/-/cdn-assets-11.8.0.tgz#e3aa9f20bf742b50bd7b1d60a24c8e7d124a602f"
   integrity sha512-gkfCH4xGBGY9xPaW+t26WpgnfpDhNhB5RtVUDLx3MHkC7ZrmKeIxXsfjzOiuOnEgRk+vydlY6XeOeglh+eVhyg==
@@ -467,7 +467,7 @@
   dependencies:
     lodash "^4.17.21"
 
-"@json-editor/json-editor@^2.10.0":
+"@json-editor/json-editor@2.10.0":
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/@json-editor/json-editor/-/json-editor-2.10.0.tgz#95002ed971e8b39d8d8834df885f002275a1e5ce"
   integrity sha512-RGkzTccb4UDtmcQ1PYDWDJ3SXoGIRmesTUTJCyZ9kyVGjHs/HgqIXlpQPmg9fHFi9D45/8RTdGqlvkZMGw2zlA==
@@ -971,7 +971,7 @@ chart.js@3.5.1:
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-3.5.1.tgz#73e24d23a4134a70ccdb5e79a917f156b6f3644a"
   integrity sha512-m5kzt72I1WQ9LILwQC4syla/LD/N413RYv2Dx2nnTkRS9iv/ey1xLTt0DnPc/eWV4zI+BgEgDYBIzbQhZHc/PQ==
 
-chartjs-plugin-datalabels@^2.0.0:
+chartjs-plugin-datalabels@2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.2.0.tgz#369578e131d743c2e34b5fbe2d3f9335f6639b8f"
   integrity sha512-14ZU30lH7n89oq+A4bWaJPnAG8a7ZTk7dKf48YAzMvJjQtjrgg5Dpk9f+LbjCF6bpx3RAGTeL13IXpKQYyRvlw==
@@ -1206,10 +1206,10 @@ devtools-protocol@0.0.981744:
   resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.981744.tgz#9960da0370284577d46c28979a0b32651022bacf"
   integrity sha512-0cuGS8+jhR67Fy7qG3i3Pc7Aw494sb9yG9QgpG97SFVWwolgYjlhJg7n+UaHxOQT30d1TYu/EYe9k01ivLErIg==
 
-diffhtml@^1.0.0-beta.20:
-  version "1.0.0-beta.29"
-  resolved "https://registry.yarnpkg.com/diffhtml/-/diffhtml-1.0.0-beta.29.tgz#ded1549d6cce161223ed333abef4b731bccf618d"
-  integrity sha512-X3ZBa5FOBIBBgMo/MHqQFZTQhOgbJmET6JS5CRrJBKVkmdWF7AemldX2lzF2+c6arFykQ6SOI1SDlY6r2+2z5g==
+diffhtml@1.0.0-beta.20:
+  version "1.0.0-beta.20"
+  resolved "https://registry.yarnpkg.com/diffhtml/-/diffhtml-1.0.0-beta.20.tgz#129b403fa152276c9b876188980ca0f9b2540351"
+  integrity sha512-xSSwGb2dkQsTc7Bl910iySH65PkzsCtowfVGMfrmc2fEwvYrhJUpIEIx+3mpZ1wMWVt+t/0ltVwrjQkMJotxLg==
 
 dir-glob@^3.0.1:
   version "3.0.1"
@@ -1249,9 +1249,9 @@ editions@^1.1.1:
   integrity sha512-gzao+mxnYDzIysXKMQi/+M1mjy/rjestjg6OPoYTtI+3Izp23oiGZitsl9lPDPiTGXbcSIk1iJWhliSaglxnUg==
 
 electron-to-chromium@^1.4.431:
-  version "1.4.442"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.442.tgz#455f4c5bd6ae73afb634dcffee6f356c26c8e294"
-  integrity sha512-RkrZF//Ya+0aJq2NM3OdisNh5ZodZq1rdXOS96G8DdDgpDKqKE81yTbbQ3F/4CKm1JBPsGu1Lp/akkna2xO06Q==
+  version "1.4.445"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.445.tgz#058d2c5f3a2981ab1a37440f5a5e42d15672aa6d"
+  integrity sha512-++DB+9VK8SBJwC+X1zlMfJ1tMA3F0ipi39GdEp+x3cV2TyBihqAgad8cNMWtLDEkbH39nlDQP7PfGrDr3Dr7HA==
 
 ember-cli-babel-plugin-helpers@^1.1.1:
   version "1.1.1"
@@ -2245,7 +2245,7 @@ is-callable@^1.1.3, is-callable@^1.1.4, is-callable@^1.2.7:
   resolved "https://registry.yarnpkg.com/is-callable/-/is-callable-1.2.7.tgz#3bc2a85ea742d9e36205dcacdd72ca1fdc51b055"
   integrity sha512-1BC0BVFhS/p0qtw6enp8e+8OD0UrK0oFLztSjNzhcKA3WDuJxxAPXzPuPtKkjEY9UUoEWlX/8fgKeu2S8i9JTA==
 
-is-core-module@^2.12.0:
+is-core-module@^2.11.0, is-core-module@^2.12.0:
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.12.1.tgz#0c0b6885b6f80011c71541ce15c8d66cf5a4f9fd"
   integrity sha512-Q4ZuBAe2FUsKtyQJoQHlvP8OvBERxO3jEmy1I7hcRXcJBGGHFh/aJBswbXuS9sgrDH2QUO8ilkwNPHvHMd8clg==
@@ -3313,7 +3313,16 @@ resolve-package-path@^3.1.0:
     path-root "^0.1.1"
     resolve "^1.17.0"
 
-resolve@^1.10.0, resolve@^1.10.1, resolve@^1.11.1, resolve@^1.17.0, resolve@^1.22.3:
+resolve@^1.10.0, resolve@^1.10.1, resolve@^1.11.1, resolve@^1.17.0:
+  version "1.22.2"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.2.tgz#0ed0943d4e301867955766c9f3e1ae6d01c6845f"
+  integrity sha512-Sb+mjNHOULsBv818T40qSPeRiuWLyaGMa5ewydRLFimneixmVy2zdivRl+AF6jaYPC8ERxGDmFSiqui6SfPd+g==
+  dependencies:
+    is-core-module "^2.11.0"
+    path-parse "^1.0.7"
+    supports-preserve-symlinks-flag "^1.0.0"
+
+resolve@^1.22.3:
   version "1.22.3"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.22.3.tgz#4b4055349ffb962600972da1fdc33c46a4eb3283"
   integrity sha512-P8ur/gp/AmbEzjr729bZnLjXK5Z+4P0zhIJgBgzqRih7hL7BOukHGtSTA3ACMY467GRFz3duQsi0bDZdR7DKdw==
