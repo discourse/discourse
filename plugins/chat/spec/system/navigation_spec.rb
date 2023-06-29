@@ -137,7 +137,7 @@ RSpec.describe "Navigation", type: :system do
     before do
       SiteSetting.enable_experimental_chat_threaded_discussions = true
       category_channel.update!(threading_enabled: true)
-      Fabricate(:chat_message, thread: thread)
+      Fabricate(:chat_message, thread: thread, chat_channel: thread.channel)
       thread.add(current_user)
     end
 

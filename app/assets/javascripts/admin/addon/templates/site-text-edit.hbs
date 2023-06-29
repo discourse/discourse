@@ -13,6 +13,12 @@
     @class="site-text-value"
   />
 
+  {{#if this.siteText.has_interpolation_keys}}
+    <div class="desc">{{i18n "admin.site_text.interpolation_keys"}}
+      {{this.interpolationKeys}}
+    </div>
+  {{/if}}
+
   <SaveControls
     @model={{this.siteText}}
     @action={{action "saveChanges"}}

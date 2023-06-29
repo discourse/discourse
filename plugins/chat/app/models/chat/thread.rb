@@ -24,14 +24,24 @@ module Chat
              class_name: "Chat::Message"
     has_many :user_chat_thread_memberships
 
-    # Since the `replies` for the thread can all be deleted, to avoid errors
-    # in lists and previews of the thread, we can consider the original message
-    # as the last "reply" in this case, so we don't exclude that here.
-    has_one :last_reply, -> { order("created_at DESC, id DESC") }, class_name: "Chat::Message"
-
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
 
     validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
+
+    # Since the `replies` for the thread can all be deleted, to avoid errors
+    # in lists and previews of the thread, we can consider the original message
+    # as the last "reply" in this case, so we don't exclude that here.
+    #
+    # This is a manual getter/setter so we can avoid N1 queries. This used to be
+    # a has_one relationship on the model, but that has some awkward behaviour
+    # and still caused N1s, and ordering was not applied in complex AR queries.
+    def last_reply
+      @last_reply ||= self.chat_messages.reorder("created_at DESC, id DESC").first
+    end
+
+    def last_reply=(message)
+      @last_reply = message
+    end
 
     def add(user)
       Chat::UserChatThreadMembership.find_or_create_by!(user: user, thread: self)
@@ -58,7 +68,7 @@ module Chat
     end
 
     def excerpt
-      original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
+      original_message.excerpt(max_length: EXCERPT_LENGTH)
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)

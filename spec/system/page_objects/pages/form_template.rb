@@ -62,7 +62,7 @@ module PageObjects
       end
 
       def has_input_field?(type)
-        find(".form-template-field__#{type}").present?
+        find(".form-template-field__#{type}", visible: :all).present?
       end
 
       def has_preview_modal?

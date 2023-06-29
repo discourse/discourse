@@ -6069,6 +6069,7 @@ en:
         show_overriden: "Only show overridden"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
+        interpolation_keys: "Available interpolation keys:"
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"

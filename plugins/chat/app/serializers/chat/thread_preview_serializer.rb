@@ -28,7 +28,7 @@ module Chat
     end
 
     def last_reply_excerpt
-      object.last_reply.censored_excerpt(rich: true, max_length: Chat::Thread::EXCERPT_LENGTH)
+      object.last_reply.excerpt(max_length: Chat::Thread::EXCERPT_LENGTH)
     end
 
     def last_reply_user

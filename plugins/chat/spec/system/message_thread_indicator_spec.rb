@@ -127,10 +127,9 @@ describe "Thread indicator for chat messages", type: :system do
     end
 
     it "shows an excerpt of the last reply in the thread" do
-      thread_1.last_reply.update!(
-        message: "some message to excerpt" + "a" * Chat::Thread::EXCERPT_LENGTH,
-      )
+      thread_1.last_reply.update!(message: "test for excerpt")
       thread_1.last_reply.rebake!
+
       chat_page.visit_channel(channel)
       expect(
         channel_page.message_thread_indicator(thread_1.original_message).excerpt,
@@ -141,9 +140,7 @@ describe "Thread indicator for chat messages", type: :system do
       new_user = Fabricate(:user)
       chat_system_user_bootstrap(user: new_user, channel: channel)
       original_last_reply = thread_1.replies.last
-      original_last_reply.update!(
-        message: "some message to excerpt" + "a" * Chat::Thread::EXCERPT_LENGTH,
-      )
+      original_last_reply.update!(message: "test for excerpt")
       original_last_reply.rebake!
 
       chat_page.visit_channel(channel)
@@ -168,7 +165,8 @@ describe "Thread indicator for chat messages", type: :system do
         new_user,
       )
 
-      excerpt_text = thread_excerpt(thread_1.replies.where(user: new_user).first)
+      new_user_reply = thread_1.replies.where(user: new_user).first
+      excerpt_text = thread_excerpt(new_user_reply)
 
       expect(
         channel_page.message_thread_indicator(thread_1.original_message).excerpt,

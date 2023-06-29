@@ -32,6 +32,7 @@ end
 #  updated_at                          :datetime         not null
 #  last_unread_mention_when_emailed_id :integer
 #  join_mode                           :integer          default("manual"), not null
+#  last_viewed_at                      :datetime         not null
 #
 # Indexes
 #
