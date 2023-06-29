@@ -36,7 +36,7 @@ function createDetachedElement(nodeName) {
 
 export default class PostCooked {
   originalQuoteContents = null;
-  userStatusInstances = [];
+  tippyInstances = [];
 
   constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
@@ -383,7 +383,7 @@ export default class PostCooked {
   }
 
   _destroyUserStatusInstances() {
-    this.userStatusInstances.forEach((instance) => {
+    this.tippyInstances.forEach((instance) => {
       instance.destroy();
     });
   }
@@ -400,7 +400,7 @@ export default class PostCooked {
     const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
 
     mentions.forEach((mention) => {
-      updateUserStatusOnMention(mention, user.status, this.userStatusInstances);
+      updateUserStatusOnMention(mention, user.status, this.tippyInstances);
     });
   }
 

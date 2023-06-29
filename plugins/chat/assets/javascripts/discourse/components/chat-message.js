@@ -130,7 +130,7 @@ export default class ChatMessage extends Component {
     this.#teardownMentionedUsers();
   }
 
-  #destroyUserStatusInstances() {
+  #destroyTippyInstances() {
     _userStatusInstances.forEach((instance) => {
       instance.destroy();
     });
@@ -449,6 +449,6 @@ export default class ChatMessage extends Component {
       user.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
-    this.#destroyUserStatusInstances();
+    this.#destroyTippyInstances();
   }
 }

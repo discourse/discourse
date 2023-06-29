@@ -42,7 +42,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
-  @tracked userStatusInstances = [];
+  @tracked tippyInstances = [];
 
   get shouldRenderReplyingIndicator() {
     return !this.args.channel?.isDraft;
@@ -390,7 +390,7 @@ export default class ChatComposer extends Component {
     });
   }
 
-  #destroyUserStatusInstances(instances) {
+  #destroyTippyInstances(instances) {
     instances.forEach((instance) => {
       instance.destroy();
     });
@@ -421,7 +421,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
-        this.#destroyUserStatusInstances(this.userStatusInstances);
+        this.#destroyTippyInstances(this.tippyInstances);
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -431,7 +431,7 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
-            this.userStatusInstances = initUserStatusHtml(result.users);
+            this.tippyInstances = initUserStatusHtml(result.users);
           }
           return result;
         });
@@ -445,7 +445,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
-      onClose: () => this.#destroyUserStatusInstances(this.userStatusInstances),
+      onClose: () => this.#destroyTippyInstances(this.tippyInstances),
     });
   }
 

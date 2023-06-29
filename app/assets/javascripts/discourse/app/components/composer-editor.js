@@ -131,7 +131,7 @@ export default Component.extend(
       this._super(...arguments);
       this.warnedCannotSeeMentions = [];
       this.warnedGroupMentions = [];
-      this.userStatusInstances = [];
+      this.tippyInstances = [];
     },
 
     @discourseComputed("composer.requiredCategoryMissing")
@@ -233,14 +233,14 @@ export default Component.extend(
         $input.autocomplete({
           template: findRawTemplate("user-selector-autocomplete"),
           dataSource: (term) => {
-            this._destroyUserStatusInstances(this.userStatusInstances);
+            this._destroyUserStatusInstances(this.tippyInstances);
             return userSearch({
               term,
               topicId: this.topic?.id,
               categoryId: this.topic?.category_id || this.composer?.categoryId,
               includeGroups: true,
             }).then((result) => {
-              this.userStatusInstances = initUserStatusHtml(result.users);
+              this.tippyInstances = initUserStatusHtml(result.users);
               return result;
             });
           },
@@ -252,8 +252,7 @@ export default Component.extend(
           afterComplete: this._afterMentionComplete,
           triggerRule: (textarea) =>
             !inCodeBlock(textarea.value, caretPosition(textarea)),
-          onClose: () =>
-            this._destroyUserStatusInstances(this.userStatusInstances),
+          onClose: () => this._destroyUserStatusInstances(this.tippyInstances),
         });
       }
 
