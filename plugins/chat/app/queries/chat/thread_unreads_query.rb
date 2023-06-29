@@ -56,9 +56,11 @@ module Chat
         ) AS unread_count,
         0 AS mention_count,
         chat_threads.channel_id,
-        memberships.thread_id
+        memberships.thread_id,
+        MAX(chat_messages.created_at) AS last_reply_created_at
         FROM user_chat_thread_memberships AS memberships
         INNER JOIN chat_threads ON chat_threads.id = memberships.thread_id
+        LEFT JOIN chat_messages ON chat_messages.thread_id = memberships.thread_id AND chat_messages.deleted_at IS NULL
         WHERE memberships.user_id = :user_id
         #{channel_ids.present? ? "AND chat_threads.channel_id IN (:channel_ids)" : ""}
         #{thread_ids.present? ? "AND chat_threads.id IN (:thread_ids)" : ""}
@@ -75,11 +77,13 @@ module Chat
 
       sql += <<~SQL if include_missing_memberships && include_read
         UNION ALL
-        SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
+        SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id,
+          MAX(chat_messages.created_at) AS last_reply_created_at
         FROM chat_channels
         INNER JOIN chat_threads ON chat_threads.channel_id = chat_channels.id
         LEFT JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
           AND user_chat_thread_memberships.user_id = :user_id
+        LEFT JOIN chat_messages ON chat_messages.thread_id = chat_threads.id AND chat_messages.deleted_at IS NULL
         WHERE user_chat_thread_memberships.id IS NULL
         #{channel_ids.present? ? "AND chat_threads.channel_id IN (:channel_ids)" : ""}
         #{thread_ids.present? ? "AND chat_threads.id IN (:thread_ids)" : ""}

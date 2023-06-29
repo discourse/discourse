@@ -8,11 +8,12 @@ module Chat
     attr_accessor :channel_tracking, :thread_tracking
 
     class TrackingStateInfo
-      attr_accessor :unread_count, :mention_count
+      attr_accessor :unread_count, :mention_count, :last_reply_created_at
 
       def initialize(info)
         @unread_count = info.present? ? info[:unread_count] : 0
         @mention_count = info.present? ? info[:mention_count] : 0
+        @last_reply_created_at = info.present? ? info[:last_reply_created_at] : nil
       end
 
       def to_hash
@@ -20,7 +21,11 @@ module Chat
       end
 
       def to_h
-        { unread_count: unread_count, mention_count: mention_count }
+        {
+          unread_count: unread_count,
+          mention_count: mention_count,
+          last_reply_created_at: last_reply_created_at,
+        }
       end
     end
 
@@ -42,6 +47,24 @@ module Chat
         .select { |_, thread| thread[:channel_id] == channel_id }
         .map { |thread_id, thread| [thread_id, TrackingStateInfo.new(thread)] }
         .to_h
+    end
+
+    def find_channel_thread_overviews(channel_id)
+      thread_tracking
+        .select { |_, thread| thread[:channel_id] == channel_id }
+        .map { |thread_id, thread| [thread_id, thread[:last_reply_created_at]] }
+        .to_h
+    end
+
+    def thread_unread_overview_by_channel
+      thread_tracking.reduce({}) do |acc, tt|
+        thread_id = tt.first
+        data = tt.second
+
+        acc[data[:channel_id]] = {} if !acc[data[:channel_id]]
+        acc[data[:channel_id]][thread_id] = data[:last_reply_created_at]
+        acc
+      end
     end
   end
 end

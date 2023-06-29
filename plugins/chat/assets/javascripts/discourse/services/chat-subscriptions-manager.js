@@ -207,7 +207,17 @@ export default class ChatSubscriptionsManager extends Service {
               .find(busData.channel_id, busData.thread_id)
               .then((thread) => {
                 if (thread.currentUserMembership) {
-                  channel.unreadThreadIds.add(busData.thread_id);
+                  channel.markThreadUnread(
+                    busData.thread_id,
+                    busData.created_at
+                  );
+
+                  // We have to do this since it means the user is currently looking
+                  // at the channel and we don't want the unread indicator to show in
+                  // the sidebar (since that is based on the lastViewedAt).
+                  if (channel.id === this.chat.activeChannel?.id) {
+                    channel.currentUserMembership.lastViewedAt = new Date();
+                  }
                 }
               });
           }
@@ -226,7 +236,9 @@ export default class ChatSubscriptionsManager extends Service {
           if (busData.user_id === this.currentUser.id) {
             // Thread should no longer be considered unread.
             if (thread.currentUserMembership) {
-              channel.unreadThreadIds.delete(busData.thread_id);
+              channel.unreadThreadOverview.delete(
+                parseInt(busData.thread_id, 10)
+              );
               thread.currentUserMembership.lastReadMessageId =
                 busData.message_id;
             }
@@ -245,8 +257,15 @@ export default class ChatSubscriptionsManager extends Service {
                   (thread.currentUserMembership.lastReadMessageId || 0) &&
                 !thread.currentUserMembership.isQuiet
               ) {
-                channel.unreadThreadIds.add(busData.thread_id);
+                channel.markThreadUnread(busData.thread_id, busData.created_at);
                 thread.tracking.unreadCount++;
+
+                // We have to do this since it means the user is currently looking
+                // at the channel and we don't want the unread indicator to show in
+                // the sidebar (since that is based on the lastViewedAt).
+                if (channel.id === this.chat.activeChannel?.id) {
+                  channel.currentUserMembership.lastViewedAt = new Date();
+                }
               }
             }
           }
@@ -310,8 +329,8 @@ export default class ChatSubscriptionsManager extends Service {
       channel.tracking.unreadCount = busData.unread_count;
       channel.tracking.mentionCount = busData.mention_count;
 
-      if (busData.hasOwnProperty("unread_thread_ids")) {
-        channel.unreadThreadIds = busData.unread_thread_ids;
+      if (busData.hasOwnProperty("unread_thread_overview")) {
+        channel.unreadThreadOverview = busData.unread_thread_overview;
       }
 
       if (busData.thread_id && busData.hasOwnProperty("thread_tracking")) {

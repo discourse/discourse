@@ -105,7 +105,9 @@ describe Chat::Publisher do
 
         it "publishes the tracking state with correct counts" do
           expect(data["thread_id"]).to eq(thread.id)
-          expect(data["unread_thread_ids"]).to eq([thread.id])
+          expect(data["unread_thread_overview"]).to eq(
+            { thread.id => thread.last_reply.created_at },
+          )
           expect(data["thread_tracking"]).to eq({ "unread_count" => 1, "mention_count" => 0 })
         end
       end
@@ -113,7 +115,7 @@ describe Chat::Publisher do
       context "when the user has no thread membership" do
         it "publishes the tracking state with zeroed out counts" do
           expect(data["thread_id"]).to eq(thread.id)
-          expect(data["unread_thread_ids"]).to eq([])
+          expect(data["unread_thread_overview"]).to eq([])
           expect(data["thread_tracking"]).to eq({ "unread_count" => 0, "mention_count" => 0 })
         end
       end

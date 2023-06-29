@@ -205,6 +205,7 @@ export default class ChatLivePane extends Component {
 
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
+        this.args.channel.currentUserMembership.lastViewedAt = new Date();
 
         if (result.threads) {
           result.threads.forEach((thread) => {
@@ -229,8 +230,9 @@ export default class ChatLivePane extends Component {
           });
         }
 
-        if (result.unread_thread_ids) {
-          this.args.channel.unreadThreadIds = result.unread_thread_ids;
+        if (result.unread_thread_overview) {
+          this.args.channel.unreadThreadOverview =
+            result.unread_thread_overview;
         }
 
         if (this.requestedTargetMessageId) {
@@ -345,12 +347,9 @@ export default class ChatLivePane extends Component {
           });
         }
 
-        if (result.thread_tracking_overview) {
-          result.thread_tracking_overview.forEach((threadId) => {
-            if (!this.args.channel.threadTrackingOverview.includes(threadId)) {
-              this.args.channel.threadTrackingOverview.push(threadId);
-            }
-          });
+        if (result.unread_thread_overview) {
+          this.args.channel.unreadThreadOverview =
+            result.unread_thread_overview;
         }
 
         this.args.channel.details = meta;

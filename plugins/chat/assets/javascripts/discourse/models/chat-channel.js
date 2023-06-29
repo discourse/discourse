@@ -1,5 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -93,7 +93,7 @@ export default class ChatChannel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  @tracked _unreadThreadIds = new TrackedSet();
+  @tracked _unreadThreadOverview = new TrackedMap();
 
   constructor(args = {}) {
     this.id = args.id;
@@ -133,15 +133,35 @@ export default class ChatChannel {
   }
 
   get unreadThreadCount() {
-    return this.unreadThreadIds.size;
+    return this.unreadThreadOverview.size;
   }
 
-  get unreadThreadIds() {
-    return this._unreadThreadIds;
+  get unreadThreadOverview() {
+    return this._unreadThreadOverview;
   }
 
-  set unreadThreadIds(unreadThreadIds) {
-    this._unreadThreadIds = new TrackedSet(unreadThreadIds);
+  set unreadThreadOverview(unreadThreadOverview) {
+    this._unreadThreadOverview = new TrackedMap();
+
+    for (const [threadId, lastReplyCreatedAt] of Object.entries(
+      unreadThreadOverview
+    )) {
+      this.markThreadUnread(threadId, lastReplyCreatedAt);
+    }
+  }
+
+  markThreadUnread(threadId, lastReplyCreatedAt) {
+    this.unreadThreadOverview.set(
+      parseInt(threadId, 10),
+      new Date(lastReplyCreatedAt)
+    );
+  }
+
+  get unreadThreadsSinceLastViewedCount() {
+    return Array.from(this.unreadThreadOverview.values()).filter(
+      (lastReplyCreatedAt) =>
+        lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
+    ).length;
   }
 
   findIndexOfMessage(id) {

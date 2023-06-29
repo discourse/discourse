@@ -88,7 +88,13 @@ export default {
             }
 
             get suffixValue() {
-              return this.channel.tracking.unreadCount > 0 ? "circle" : "";
+              return this.channel.tracking.unreadCount > 0 ||
+                // We want to do this so we don't show a blue dot if the user is inside
+                // the channel and a new unread thread comes in.
+                (this.chatService.activeChannel?.id !== this.channel.id &&
+                  this.channel.unreadThreadsSinceLastViewedCount > 0)
+                ? "circle"
+                : "";
             }
 
             get suffixCSSClass() {

@@ -75,6 +75,7 @@ module Chat
                   channel_id: tt.channel_id,
                   mention_count: tt.mention_count,
                   unread_count: tt.unread_count,
+                  last_reply_created_at: tt.last_reply_created_at,
                 },
               ]
             end

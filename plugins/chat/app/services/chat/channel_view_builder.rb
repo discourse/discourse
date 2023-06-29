@@ -34,7 +34,7 @@ module Chat
     step :determine_threads_enabled
     step :determine_include_thread_messages
     step :fetch_messages
-    step :fetch_unread_thread_ids
+    step :fetch_unread_thread_overview
     step :fetch_threads_for_messages
     step :fetch_tracking
     step :fetch_thread_memberships
@@ -155,24 +155,24 @@ module Chat
       end
     end
 
-    # The thread tracking overview is a simple array of thread IDs
-    # that have unread messages, only threads with unread messages
-    # will be included in this array. This is a low-cost way to know
-    # how many threads the user has unread across the entire channel.
-    def fetch_unread_thread_ids(guardian:, channel:, threads_enabled:, **)
+    # The thread tracking overview is a simple array of hashes consisting
+    # of thread IDs that have unread messages as well as the datetime of the
+    # last reply in the thread.
+    #
+    # Only threads with unread messages will be included in this array.
+    # This is a low-cost way to know how many threads the user has unread
+    # across the entire channel.
+    def fetch_unread_thread_overview(guardian:, channel:, threads_enabled:, **)
       if !threads_enabled
-        context.unread_thread_ids = []
+        context.unread_thread_overview = []
       else
-        context.unread_thread_ids =
-          ::Chat::TrackingStateReportQuery
-            .call(
-              guardian: guardian,
-              channel_ids: [channel.id],
-              include_threads: true,
-              include_read: false,
-            )
-            .find_channel_threads(channel.id)
-            .keys
+        context.unread_thread_overview =
+          ::Chat::TrackingStateReportQuery.call(
+            guardian: guardian,
+            channel_ids: [channel.id],
+            include_threads: true,
+            include_read: false,
+          ).find_channel_thread_overviews(channel.id)
       end
     end
 
@@ -237,7 +237,7 @@ module Chat
       messages:,
       threads:,
       tracking:,
-      unread_thread_ids:,
+      unread_thread_overview:,
       can_load_more_past:,
       can_load_more_future:,
       thread_memberships:,
@@ -251,7 +251,7 @@ module Chat
           user: guardian.user,
           can_load_more_past: can_load_more_past,
           can_load_more_future: can_load_more_future,
-          unread_thread_ids: unread_thread_ids,
+          unread_thread_overview: unread_thread_overview,
           threads: threads,
           tracking: tracking,
           thread_memberships: thread_memberships,
