@@ -2144,7 +2144,6 @@ fi:
       pop3_polling_password_is_empty: "Sinun täytyy asettaa 'pop3 polling password' ennen POP3-pollauksen käyttöönottoa."
       pop3_polling_authentication_failed: "POP3-todennus epäonnistui. Tarkista pop3-tunnistetiedot."
       reply_by_email_address_is_empty: "'Reply by email address' täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
-      email_polling_disabled: "Sinun täytyy ottaa käyttöön joko manuaalinen tai POP3-pollaus ennen sähköpostivastausten käyttöönottoa."
       user_locale_not_enabled: "'Allow user locale' täytyy olla asetettuna ennen tämän asetuksen ottamista käyttöön."
       personal_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
       invalid_regex: "Säännöllinen lauseke ei kelpaa tai ei ole sallittu."

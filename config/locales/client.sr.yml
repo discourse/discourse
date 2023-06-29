@@ -1807,8 +1807,9 @@ sr:
         few: "%{count} novih"
         other: "%{count} nova"
       more: "Više"
-      categories_form_modal:
-        save: "Sačuvaj"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "sve"
       sections:
         custom:
           save: "Sačuvaj"
@@ -1851,6 +1852,11 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Molimo unesite validnu vrednost"
+          email: "Molimo unesite validnu e-mail adresu."
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:

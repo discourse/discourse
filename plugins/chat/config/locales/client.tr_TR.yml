@@ -350,6 +350,11 @@ tr_TR:
         admin_title: "Yönetici"
       admin:
         title: "Sohbet"
+        export_messages:
+          title: "Sohbet mesajlarını dışa aktar"
+          description: "Dışa aktarma şu anda son 6 aydaki en son 10.000 mesajla sınırlıdır."
+          create_export: "Dışa aktarma oluştur"
+          export_has_started: "Dışa aktarım başladı. Hazır olduğunda bir PM alacaksınız."
       direct_messages:
         title: "Kişisel sohbet"
         new: "Kişisel sohbet oluşturun"

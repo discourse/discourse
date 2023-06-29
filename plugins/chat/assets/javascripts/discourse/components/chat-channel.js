@@ -213,6 +213,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -323,6 +329,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -548,7 +560,21 @@ export default class ChatLivePane extends Component {
         }
       }
 
-      this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
+      if (!this.args.channel.isFollowing || !lastUnreadVisibleMessage.id) {
+        return;
+      }
+
+      if (
+        this.args.channel.currentUserMembership.lastReadMessageId >=
+        lastUnreadVisibleMessage.id
+      ) {
+        return;
+      }
+
+      return this.chatApi.markChannelAsRead(
+        this.args.channel.id,
+        lastUnreadVisibleMessage.id
+      );
     });
   }
 
@@ -662,8 +688,6 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  // TODO (martin) Maybe change this to public, since its referred to by
-  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }
@@ -1097,5 +1121,16 @@ export default class ChatLivePane extends Component {
     cancel(this._onScrollEndedHandler);
     cancel(this._laterComputeHandler);
     cancel(this._debounceFetchMessagesHandler);
+  }
+
+  #preloadThreadTrackingState(storedThread, threadTracking) {
+    if (!threadTracking[storedThread.id]) {
+      return;
+    }
+
+    storedThread.tracking.unreadCount =
+      threadTracking[storedThread.id].unread_count;
+    storedThread.tracking.mentionCount =
+      threadTracking[storedThread.id].mention_count;
   }
 }

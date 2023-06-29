@@ -2121,7 +2121,7 @@ it:
       pop3_polling_password_is_empty: "È necessario impostare 'pop3 polling password' prima di attivare il polling POP3."
       pop3_polling_authentication_failed: "Autenticazione POP3 fallita. Verifica le tue credenziali POP3:"
       reply_by_email_address_is_empty: "Devi impostare 'reply by email address' prima di attivare la risposta via email."
-      email_polling_disabled: "È necessario attivare il polling manuale o POP3 prima di attivare la risposta via email."
+      email_polling_disabled: "È necessario abilitare il polling manuale POP3 o avere abilitato un poller di posta personalizzato prima di abilitare la risposta via email."
       user_locale_not_enabled: "Prima di attivare questa impostazione, devi abilitare 'allow user locale'."
       personal_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se vuoi che nessuno al di fuori dello staff invii MP, scegli il gruppo dello staff."
       invalid_regex: "Regex non è valido o non è consentito."

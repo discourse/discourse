@@ -1111,9 +1111,9 @@ tr_TR:
         categories_section: "Kategoriler Bölümü"
         tags_section: "Etiketler Bölümü"
         navigation_section: "Gezinti"
-        list_destination_instruction: "Navigasyon menüsünde yeni içerik olduğunda..."
-        list_destination_default: "varsayılan bağlantıyı kullan ve yeni ögeler için bir rozet göster"
-        list_destination_unread_new: "okunmamış/yeniye bağla ve yeni ögelerin sayısını göster"
+        navigation_section_instruction: "Gezinme menüsündeki bir konu listesinde yeni veya okunmamış öğeler olduğunda…"
+        link_to_filtered_list_checkbox_description: "Filtrelenmiş liste bağlantısı"
+        show_count_new_items_checkbox_description: "Yeni öğelerin sayısını göster"
       change: "değiştir"
       featured_topic: "Öne Çıkan Konu"
       moderator: "%{user} bir moderatör"
@@ -3981,14 +3981,21 @@ tr_TR:
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
       categories_form_modal:
-        save: "Kaydet"
         title: "Kategorilerde gezinmeyi düzenle"
         subtitle:
-          button_text: "Hiçbirini seçme"
           text: "ve bu sitenin en popüler kategorilerini otomatik olarak göstereceğiz"
         filter_placeholder: "Kategorileri filtrele"
         no_categories: "Bu terimle eşleşen kategori yok."
+      tags_form_modal:
+        subtitle:
+          text: "ve bu sitenin en popüler etiketlerini otomatik olarak göstereceğiz"
+      edit_navigation_modal_form:
+        deselect_button_text: "Hiçbirini seçme"
         reset_to_defaults: "Varsayılanlara dön"
+        filter_dropdown:
+          all: "Hepsi"
+          selected: "Seçili"
+          unselected: "Seçilmemiş"
       sections:
         custom:
           save: "Kaydet"
@@ -4091,6 +4098,11 @@ tr_TR:
       exceeded: "İzin verilen maksimum karakter sayısı aşıldı."
     form_template_chooser:
       select_template: "Form şablonlarını seçin"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Lütfen geçerli bir değer girin."
+          email: "Lütfen geçerli bir e-posta adresi girin."
   admin_js:
     type_to_filter: "filtrelemek için yazın..."
     admin:

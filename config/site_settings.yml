@@ -1108,6 +1108,13 @@ posting:
   max_draft_length:
     default: 400_000
     hidden: true
+  max_form_template_title_length:
+    default: 100
+    min: 5
+    max: 255
+  max_form_template_content_length:
+    default: 2000
+    max: 150000
 
 email:
   email_time_window_mins:
@@ -2112,12 +2119,6 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  new_edit_sidebar_categories_tags_interface_groups:
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact

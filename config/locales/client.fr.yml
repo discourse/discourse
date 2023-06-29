@@ -1096,8 +1096,6 @@ fr:
         categories_section: "Section Catégories"
         tags_section: "Section Étiquettes"
         navigation_section: "Navigation"
-        list_destination_default: "utiliser le lien par défaut et afficher un badge pour les nouveaux éléments"
-        list_destination_unread_new: "lien vers les éléments non lus ou nouveaux et afficher le nombre de nouveaux éléments"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -3944,8 +3942,9 @@ fr:
       more: "Plus"
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
-      categories_form_modal:
-        save: "Enregistrer"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tout"
       sections:
         custom:
           save: "Enregistrer"
@@ -4024,6 +4023,11 @@ fr:
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
       button_title: "Commencer l'édition"
     until: "Jusqu'à :"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Veuillez saisir une valeur valide."
+          email: "Veuillez saisir une adresse e-mail valide."
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:

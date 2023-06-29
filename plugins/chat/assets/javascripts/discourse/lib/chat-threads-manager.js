@@ -38,21 +38,21 @@ export default class ChatThreadsManager {
   }
 
   async index(channelId) {
-    return this.#loadIndex(channelId).then((result) => {
-      const threads = result.threads.map((thread) => {
-        return this.chat.activeChannel.threadsManager.store(
-          this.chat.activeChannel,
-          thread,
-          { replace: true }
+    return this.chatChannelsManager.find(channelId).then((channel) => {
+      return this.#loadIndex(channelId).then((result) => {
+        const threads = result.threads.map((thread) => {
+          return channel.threadsManager.store(channel, thread, {
+            replace: true,
+          });
+        });
+
+        this.chatTrackingStateManager.setupChannelThreadState(
+          channel,
+          result.tracking
         );
+
+        return { threads, meta: result.meta };
       });
-
-      this.chatTrackingStateManager.setupChannelThreadState(
-        this.chat.activeChannel,
-        result.tracking
-      );
-
-      return { threads, meta: result.meta };
     });
   }
 

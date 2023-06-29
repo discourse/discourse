@@ -2243,8 +2243,9 @@ sw:
         other: "Mada mpya %{count} "
       more: "Zaidi"
       all_categories: "Kategoria Zote"
-      categories_form_modal:
-        save: "Hifadhi"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Vyote"
       sections:
         custom:
           save: "Hifadhi"
@@ -2288,6 +2289,11 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Tafadhali andika thamani sahihi."
+          email: "Andika barua pepe iliyo sahihi."
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:

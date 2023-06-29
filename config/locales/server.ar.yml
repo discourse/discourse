@@ -2334,7 +2334,6 @@ ar:
       pop3_polling_password_is_empty: "يجب عليك تعيين `pop3 polling password` قبل تفعيل استقصاء POP3."
       pop3_polling_authentication_failed: "فشلت مصادقة POP3. يُرجى التحقُّق من بيانات اعتماد pop3 لديك."
       reply_by_email_address_is_empty: "يجب عليك تعيين `reply by email address` قبل تفعيل الرد عن طريق البريد الإلكتروني."
-      email_polling_disabled: "يجب عليك تعيين الاستقصاء اليدوي أو من خلال POP3 قبل تفعيل الرد عن طريق البريد الإلكتروني."
       user_locale_not_enabled: "يجب عليك تفعيل `allow user locale` أولًا قبل تفعيل هذا الإعداد."
       personal_message_enabled_groups_invalid: "يجب عليك تحديد مجموعة واحدة على الأقل لهذا الإعداد. إذا كنت لا تريد أن يقوم أي شخص باستثناء فريق العمل بإرسال الرسائل الشخصية، فاختر مجموعة فريق العمل."
       invalid_regex: "التعبير العادي غير صالح أو غير مسموح به."

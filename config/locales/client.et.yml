@@ -2512,8 +2512,9 @@ et:
         other: "%{count} uut"
       more: "Veel"
       all_categories: "Kõik foorumid"
-      categories_form_modal:
-        save: "Salvesta"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Kõik"
       sections:
         custom:
           save: "Salvesta"
@@ -2560,6 +2561,11 @@ et:
               content: "Minu"
             review:
               content: "Vaata üle"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Palun sisesta korrektne väärtus."
+          email: "Sisesta palun korrektne meiliaadress."
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:

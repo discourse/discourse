@@ -105,6 +105,21 @@ class TranslationOverride < ActiveRecord::Base
     true
   end
 
+  # We use English as the source of truth when extracting interpolation keys,
+  # but some languages, like Arabic, have plural forms (zero, two, few, many)
+  # which don't exist in English (one, other), so we map that here in order to
+  # find the correct, English translation key in which to look.
+  def self.transform_pluralized_key(key)
+    match = key.match(/(.*)\.(zero|two|few|many)\z/)
+    match ? match.to_a.second + ".other" : key
+  end
+
+  def self.custom_interpolation_keys(translation_key)
+    ALLOWED_CUSTOM_INTERPOLATION_KEYS.find do |keys, value|
+      break value if keys.any? { |k| translation_key.start_with?(k) }
+    end || []
+  end
+
   private_class_method :reload_locale!
   private_class_method :clear_cached_keys!
   private_class_method :i18n_changed
@@ -113,7 +128,7 @@ class TranslationOverride < ActiveRecord::Base
   private
 
   def check_interpolation_keys
-    transformed_key = transform_pluralized_key(translation_key)
+    transformed_key = self.class.transform_pluralized_key(translation_key)
 
     original_text = I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
 
@@ -143,11 +158,6 @@ class TranslationOverride < ActiveRecord::Base
         false
       end
     end
-  end
-
-  def transform_pluralized_key(key)
-    match = key.match(/(.*)\.(zero|two|few|many)\z/)
-    match ? match.to_a.second + ".other" : key
   end
 end
 
