@@ -32,6 +32,16 @@ RSpec.describe "Create channel", type: :system do
         expect(channel_modal).to have_create_hint(Group[:everyone].name)
       end
 
+      it "shows threading toggle" do
+        SiteSetting.enable_experimental_chat_threaded_discussions = true
+
+        chat_page.visit_browse
+        chat_page.new_channel_button.click
+        channel_modal.select_category(category_1)
+
+        expect(channel_modal).to have_threading_toggle
+      end
+
       it "does not override channel name if that was already specified" do
         chat_page.visit_browse
         chat_page.new_channel_button.click
@@ -138,7 +148,7 @@ RSpec.describe "Create channel", type: :system do
         context "for a public category" do
           before do
             channel_modal.select_category(category_1)
-            find(".auto-join-channel__label").click
+            find(".-auto-join .create-channel__label").click
             channel_modal.click_primary_button
           end
 
@@ -175,7 +185,7 @@ RSpec.describe "Create channel", type: :system do
           before do
             group_1.add(user_1)
             channel_modal.select_category(private_category)
-            find(".auto-join-channel__label").click
+            find(".-auto-join .create-channel__label").click
             channel_modal.click_primary_button
           end
 
