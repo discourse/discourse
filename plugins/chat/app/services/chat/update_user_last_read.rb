@@ -21,8 +21,10 @@ module Chat
     policy :invalid_access
     model :message
     policy :ensure_message_id_recency
-    step :update_last_read_message_id
-    step :mark_associated_mentions_as_read
+    transaction do
+      step :update_membership_state
+      step :mark_associated_mentions_as_read
+    end
     step :publish_new_last_read_to_clients
 
     # @!visibility private
@@ -56,8 +58,8 @@ module Chat
         message.id >= active_membership.last_read_message_id
     end
 
-    def update_last_read_message_id(message:, active_membership:, **)
-      active_membership.update!(last_read_message_id: message.id)
+    def update_membership_state(message:, active_membership:, **)
+      active_membership.update!(last_read_message_id: message.id, last_viewed_at: Time.zone.now)
     end
 
     def mark_associated_mentions_as_read(active_membership:, message:, **)

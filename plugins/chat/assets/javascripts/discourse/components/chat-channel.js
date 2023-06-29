@@ -560,7 +560,21 @@ export default class ChatLivePane extends Component {
         }
       }
 
-      this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
+      if (!this.args.channel.isFollowing || !lastUnreadVisibleMessage.id) {
+        return;
+      }
+
+      if (
+        this.args.channel.currentUserMembership.lastReadMessageId >=
+        lastUnreadVisibleMessage.id
+      ) {
+        return;
+      }
+
+      return this.chatApi.markChannelAsRead(
+        this.args.channel.id,
+        lastUnreadVisibleMessage.id
+      );
     });
   }
 
@@ -674,8 +688,6 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  // TODO (martin) Maybe change this to public, since its referred to by
-  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }

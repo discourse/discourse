@@ -1556,6 +1556,8 @@ en:
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
     exclude_rel_nofollow_domains: "A list of domains where nofollow should not be added to links. example.com will automatically allow sub.example.com as well. As a minimum, you should add the domain of this site to help web crawlers find all content. If other parts of your website are at other domains, add those too."
+    max_form_template_title_length: "Maximum allowed length for form template titles."
+    max_form_template_content_length: "Maximum allowed length for form template content."
 
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     topic_excerpt_maxlength: "Maximum length of a topic excerpt / summary, generated from the first post in a topic."
