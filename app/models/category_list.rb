@@ -90,12 +90,12 @@ class CategoryList
           .joins(
             "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
           )
+          .joins(
+            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{@guardian.user.id}",
+          )
           .where(
             "COALESCE(tu.notification_level,1) > :muted",
             muted: TopicUser.notification_levels[:muted],
-          )
-          .joins(
-            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{@guardian.user.id}",
           )
     end
 
