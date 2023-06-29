@@ -1,4 +1,5 @@
 import "./global-compat";
+import "./loader-shim";
 
 import require from "require";
 import Application from "@ember/application";

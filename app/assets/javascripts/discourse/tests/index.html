@@ -17,10 +17,11 @@
 
     {{content-for "head"}} {{content-for "test-head"}}
 
+    <link rel="stylesheet" href="{{rootURL}}assets/discourse.css" data-embroider-ignore />
     <link rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
     <link rel="stylesheet" href="{{rootURL}}assets/test-support.css" />
-    <link rel="stylesheet" href="{{rootURL}}assets/qunit.css" />
-    <link rel="stylesheet" href="{{rootURL}}assets/qunit-custom.css" />
+    <link rel="stylesheet" href="{{rootURL}}assets/qunit.css" data-embroider-ignore />
+    <link rel="stylesheet" href="{{rootURL}}assets/qunit-custom.css" data-embroider-ignore />
 
     {{content-for "head-footer"}} {{content-for "test-head-footer"}}
 
@@ -52,9 +53,9 @@
     <script src="{{rootURL}}assets/test-support.js"></script>
     <ember-auto-import-scripts entrypoint="tests"></ember-auto-import-scripts>
     <script src="{{rootURL}}assets/discourse.js"></script>
-    <script src="{{rootURL}}assets/markdown-it-bundle.js"></script>
-    <script src="{{rootURL}}assets/admin.js"></script>
-    <script src="{{rootURL}}assets/wizard.js"></script>
+    <script src="{{rootURL}}assets/markdown-it-bundle.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}assets/admin.js" data-embroider-ignore></script>
+    <script src="{{rootURL}}assets/wizard.js" data-embroider-ignore></script>
 
     <template id="dynamic-test-js">
       {{content-for "test-plugin-css"}}

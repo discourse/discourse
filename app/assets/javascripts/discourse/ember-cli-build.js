@@ -1,7 +1,8 @@
 "use strict";
 
+const path = require("path");
+const { Webpack } = require("@embroider/webpack");
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
-const resolve = require("path").resolve;
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
 const { createI18nTree } = require("./lib/translation-plugin");
@@ -13,7 +14,7 @@ const DeprecationSilencer = require("deprecation-silencer");
 const generateWorkboxTree = require("./lib/workbox-tree-builder");
 
 module.exports = function (defaults) {
-  const discourseRoot = resolve("../../../..");
+  const discourseRoot = path.resolve("../../../..");
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
@@ -191,10 +192,9 @@ module.exports = function (defaults) {
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
-  return mergeTrees([
+  let extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
-    app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     funnel(`${vendorJs}/highlightjs`, {
       files: ["highlight-test-bundle.min.js"],
@@ -221,5 +221,50 @@ module.exports = function (defaults) {
     ),
     generateScriptsTree(app),
     applyTerser(discoursePluginsTree),
-  ]);
+  ];
+
+  if (isTest) {
+    extraPublicTrees.push(
+      discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+      discourseScss(
+        `${discourseRoot}/app/assets/stylesheets`,
+        "qunit-custom.scss"
+      )
+    );
+  }
+
+  return require("@embroider/compat").compatBuild(app, Webpack, {
+    extraPublicTrees,
+    packagerOptions: {
+      webpackConfig: {
+        externals: [
+          function ({ request }, callback) {
+            if (
+              request.startsWith("admin/") ||
+              request.startsWith("wizard/") ||
+              (request.startsWith("pretty-text/engines/") &&
+                request !== "pretty-text/engines/discourse-markdown-it") ||
+              request.startsWith("discourse/plugins/") ||
+              request.startsWith("discourse/theme-")
+            ) {
+              callback(null, request, "commonjs");
+            } else {
+              callback();
+            }
+          },
+        ],
+        resolve: {
+          alias: {
+            // https://github.com/handlebars-lang/handlebars.js/pull/1862
+            // The `browser` field in handlebar's package.json is currently messed up; the PR has
+            // been merged but has not been released
+            handlebars: path.resolve(
+              __dirname,
+              "../node_modules/handlebars/dist/cjs/handlebars.js"
+            ),
+          },
+        },
+      },
+    },
+  });
 };

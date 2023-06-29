@@ -1,3 +1,7 @@
+define("xss", ["exports"], function (exports) {
+  exports.default = window.filterXSS;
+});
+
 define("I18n", ["exports", "discourse-common/lib/deprecated"], function (
   exports,
   deprecated
