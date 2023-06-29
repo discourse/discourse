@@ -496,16 +496,16 @@
           />
         {{/if}}
       {{/if}}
-    {{#if this.hasSettings}}
+      {{#if this.hasSettings}}
 
-      <DButton
-        @action={{this.showThemeSettingsEditor}}
-        @label="admin.customize.theme.settings_editor"
-        @icon="pen"
-        @class="btn-default btn-normal"
-        @title="admin.customize.theme.settings_editor"
-      />
-    {{/if}}
+        <DButton
+          @action={{this.showThemeSettingsEditor}}
+          @label="admin.customize.theme.settings_editor"
+          @icon="pen"
+          @class="btn-default btn-normal"
+          @title="admin.customize.theme.settings_editor"
+        />
+      {{/if}}
       <DButton
         @action={{action "destroyTheme"}}
         @label="admin.customize.delete"

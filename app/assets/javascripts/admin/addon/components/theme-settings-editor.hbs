@@ -1,14 +1,12 @@
 <div class="settings-editor">
   <div>
-    <AceEditor
-      @mode="html"
-      @content={{this.editorContents}}
-    />
+    <AceEditor @mode="html" @content={{this.editorContents}} />
 
     {{#each this.errors as |error|}}
       <div class="validation-error">
         {{d-icon "times"}}
-        <b>{{error.setting}}</b>: {{error.errorMessage}}
+        <b>{{error.setting}}</b>:
+        {{error.errorMessage}}
       </div>
     {{/each}}
   </div>
@@ -20,7 +18,6 @@
       class="btn-primary save"
       @disabled={{this.saveButtonDisabled}}
       @translatedLabel={{i18n "admin.customize.theme.save"}}
-
     />
   </div>
 </div>
