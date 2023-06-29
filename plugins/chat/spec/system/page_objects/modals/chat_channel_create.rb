@@ -9,15 +9,19 @@ module PageObjects
       end
 
       def create_channel_hint
-        find(".create-channel-hint")
+        find(".create-channel__hint")
       end
 
       def slug_input
-        find(".create-channel-slug-input")
+        find(".-slug .create-channel__input")
       end
 
       def has_create_hint?(content)
         create_channel_hint.has_content?(content)
+      end
+
+      def has_threading_toggle?
+        has_selector?(".create-channel__control.-threading-toggle")
       end
 
       def fill_name(name)
