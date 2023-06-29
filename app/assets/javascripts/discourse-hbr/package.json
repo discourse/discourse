@@ -14,8 +14,10 @@
     "start": "ember serve"
   },
   "dependencies": {
+    "ember-auto-import": "^2.6.3",
     "ember-cli-babel": "^7.26.11",
-    "ember-cli-htmlbars": "^6.2.0"
+    "ember-cli-htmlbars": "^6.2.0",
+    "handlebars": "^4.7.6"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -24,7 +26,6 @@
     "@embroider/test-setup": "^3.0.1",
     "@glimmer/component": "^1.1.2",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-auto-import": "^2.6.3",
     "ember-cli": "~5.0.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
@@ -34,7 +35,6 @@
     "ember-resolver": "^10.1.1",
     "ember-source": "~3.28.12",
     "ember-source-channel-url": "^3.0.0",
-    "handlebars": "^4.7.6",
     "loader.js": "^4.7.0",
     "webpack": "^5.88.1"
   },
