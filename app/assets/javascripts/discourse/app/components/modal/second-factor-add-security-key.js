@@ -41,7 +41,7 @@ export default class SecondFactorAddSecurityKey extends Component {
   @action
   securityKeyRequested() {
     this.loading = true;
-    this.args.model
+    this.args.model.secondFactor
       .requestSecurityKeyChallenge()
       .then((response) => {
         if (response.error) {
@@ -125,7 +125,7 @@ export default class SecondFactorAddSecurityKey extends Component {
             name: this.securityKeyName,
           };
 
-          this.model
+          this.args.model.secondFactor
             .registerSecurityKey(serverData)
             .then((response) => {
               if (response.error) {
