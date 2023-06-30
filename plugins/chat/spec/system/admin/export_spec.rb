@@ -35,13 +35,10 @@ RSpec.describe "Chat exports", type: :system do
 
     csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
 
-    # headers = CSV.open(csv_path, "r") { |csv| csv.first }
-    # csv = CSV.open(csv_path, "r")
-    data = CSV.read(csv_path)
-    # headers = csv.read
+    data = CSV.read(csv_path, headers: true)
 
     assert_equal(
-      data[0],
+      data.headers,
       %w[
         id
         chat_channel_id
