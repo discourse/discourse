@@ -177,13 +177,6 @@ class Admin::EmailController < Admin::AdminController
     end
   end
 
-  def raw_email
-    params.require(:id)
-    incoming_email = IncomingEmail.find(params[:id].to_i)
-    text, html = Email.extract_parts(incoming_email.raw)
-    render json: { raw_email: incoming_email.raw, text_part: text, html_part: html }
-  end
-
   def incoming
     params.require(:id)
     incoming_email = IncomingEmail.find(params[:id].to_i)
