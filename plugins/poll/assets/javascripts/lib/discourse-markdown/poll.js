@@ -256,7 +256,6 @@ const rule = {
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
-    state.push("poll_close", "div", -1);
   },
 };
 
