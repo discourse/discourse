@@ -556,13 +556,13 @@ RSpec.describe Category do
   end
 
   describe "new" do
-    subject { Fabricate.build(:category, user: Fabricate(:user)) }
+    subject(:category) { Fabricate.build(:category, user: Fabricate(:user)) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.last
+      event = DiscourseEvent.track_events { category.save! }.last
 
       expect(event[:event_name]).to eq(:category_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(category)
     end
   end
 

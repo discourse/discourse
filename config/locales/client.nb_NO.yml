@@ -1578,7 +1578,6 @@ nb_NO:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
       description_time_MF: |
         Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>.
-      enable: "Oppsummer dette emnet"
       disable: "Vis alle innlegg"
     deleted_filter:
       enabled_description: "Dette emnet inneholder slettede innlegg, som er blitt skjult."
@@ -3374,8 +3373,9 @@ nb_NO:
         other: "%{count} nye"
       more: "Mer"
       all_categories: "Alle kategorier"
-      categories_form:
-        save: "Lagre"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alle"
       sections:
         custom:
           save: "Lagre"
@@ -3411,6 +3411,8 @@ nb_NO:
               content: "Administrator"
             badges:
               content: "Merker"
+            topics:
+              content: "Emner"
             faq:
               content: "O-S-S"
             groups:
@@ -3422,6 +3424,11 @@ nb_NO:
             review:
               content: "Gjennomgang"
     until: "Inntil:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Skriv inn en gyldig verdi."
+          email: "Oppgi en gyldig e-postadresse."
   admin_js:
     type_to_filter: "skriv for å filtrere…"
     admin:

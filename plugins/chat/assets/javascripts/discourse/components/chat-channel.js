@@ -183,6 +183,8 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       findArgs.targetMessageId = this.requestedTargetMessageId;
       scrollToMessageId = this.requestedTargetMessageId;
+    } else if (this.requestedTargetDate) {
+      findArgs.targetDate = this.requestedTargetDate;
     } else if (fetchingFromLastRead) {
       findArgs.fetchFromLastRead = true;
       scrollToMessageId =
@@ -211,6 +213,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -230,6 +238,15 @@ export default class ChatLivePane extends Component {
             highlight: true,
           });
           return;
+        } else if (this.requestedTargetDate) {
+          const message = this.args.channel?.findFirstMessageOfDay(
+            this.requestedTargetDate
+          );
+
+          this.scrollToMessage(message.id, {
+            highlight: true,
+          });
+          return;
         }
 
         if (
@@ -240,7 +257,6 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(scrollToMessageId);
           return;
         }
-
         this.scrollToBottom();
       })
       .catch(this._handleErrors)
@@ -251,6 +267,7 @@ export default class ChatLivePane extends Component {
 
         this.loadedOnce = true;
         this.requestedTargetMessageId = null;
+        this.requestedTargetDate = null;
         this.loadingMorePast = false;
         this.debounceFillPaneAttempt();
         this.updateLastReadMessage();
@@ -312,6 +329,12 @@ export default class ChatLivePane extends Component {
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -364,6 +387,16 @@ export default class ChatLivePane extends Component {
   }
 
   @bind
+  fetchMessagesByDate(date) {
+    const message = this.args.channel?.findFirstMessageOfDay(date);
+    if (message.firstOfResults && this.args.channel?.canLoadMorePast) {
+      this.requestedTargetDate = date;
+      this.debounceFetchMessages();
+    } else {
+      this.highlightOrFetchMessage(message.id);
+    }
+  }
+
   fillPaneAttempt() {
     if (this._selfDeleted) {
       return;
@@ -392,9 +425,7 @@ export default class ChatLivePane extends Component {
     let foundFirstNew = false;
 
     result.chat_messages.forEach((messageData, index) => {
-      if (index === 0) {
-        messageData.firstOfResults = true;
-      }
+      messageData.firstOfResults = index === 0;
 
       if (this.currentUser.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
@@ -529,7 +560,21 @@ export default class ChatLivePane extends Component {
         }
       }
 
-      this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
+      if (!this.args.channel.isFollowing || !lastUnreadVisibleMessage.id) {
+        return;
+      }
+
+      if (
+        this.args.channel.currentUserMembership.lastReadMessageId >=
+        lastUnreadVisibleMessage.id
+      ) {
+        return;
+      }
+
+      return this.chatApi.markChannelAsRead(
+        this.args.channel.id,
+        lastUnreadVisibleMessage.id
+      );
     });
   }
 
@@ -643,8 +688,6 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  // TODO (martin) Maybe change this to public, since its referred to by
-  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }
@@ -1078,5 +1121,16 @@ export default class ChatLivePane extends Component {
     cancel(this._onScrollEndedHandler);
     cancel(this._laterComputeHandler);
     cancel(this._debounceFetchMessagesHandler);
+  }
+
+  #preloadThreadTrackingState(storedThread, threadTracking) {
+    if (!threadTracking[storedThread.id]) {
+      return;
+    }
+
+    storedThread.tracking.unreadCount =
+      threadTracking[storedThread.id].unread_count;
+    storedThread.tracking.mentionCount =
+      threadTracking[storedThread.id].mention_count;
   }
 }

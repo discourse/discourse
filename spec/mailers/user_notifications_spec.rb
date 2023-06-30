@@ -58,24 +58,24 @@ RSpec.describe UserNotifications do
   end
 
   describe ".signup" do
-    subject { UserNotifications.signup(user) }
+    subject(:email) { UserNotifications.signup(user) }
 
     it "works" do
-      expect(subject.to).to eq([user.email])
-      expect(subject.subject).to be_present
-      expect(subject.from).to eq([SiteSetting.notification_email])
-      expect(subject.body).to be_present
+      expect(email.to).to eq([user.email])
+      expect(email.subject).to be_present
+      expect(email.from).to eq([SiteSetting.notification_email])
+      expect(email.body).to be_present
     end
   end
 
   describe ".forgot_password" do
-    subject { UserNotifications.forgot_password(user) }
+    subject(:email) { UserNotifications.forgot_password(user) }
 
     it "works" do
-      expect(subject.to).to eq([user.email])
-      expect(subject.subject).to be_present
-      expect(subject.from).to eq([SiteSetting.notification_email])
-      expect(subject.body).to be_present
+      expect(email.to).to eq([user.email])
+      expect(email.subject).to be_present
+      expect(email.from).to eq([SiteSetting.notification_email])
+      expect(email.body).to be_present
     end
   end
 
@@ -119,20 +119,21 @@ RSpec.describe UserNotifications do
   end
 
   describe ".email_login" do
+    subject(:email) { UserNotifications.email_login(user, email_token: email_token) }
+
     let(:email_token) do
       Fabricate(:email_token, user: user, scope: EmailToken.scopes[:email_login]).token
     end
-    subject { UserNotifications.email_login(user, email_token: email_token) }
 
     it "generates the right email" do
-      expect(subject.to).to eq([user.email])
-      expect(subject.from).to eq([SiteSetting.notification_email])
+      expect(email.to).to eq([user.email])
+      expect(email.from).to eq([SiteSetting.notification_email])
 
-      expect(subject.subject).to eq(
+      expect(email.subject).to eq(
         I18n.t("user_notifications.email_login.subject_template", email_prefix: SiteSetting.title),
       )
 
-      expect(subject.body.to_s).to match(
+      expect(email.body.to_s).to match(
         I18n.t(
           "user_notifications.email_login.text_body_template",
           site_name: SiteSetting.title,
@@ -144,13 +145,13 @@ RSpec.describe UserNotifications do
   end
 
   describe ".digest" do
-    subject { UserNotifications.digest(user) }
+    subject(:email) { UserNotifications.digest(user) }
 
     after { Discourse.redis.keys("summary-new-users:*").each { |key| Discourse.redis.del(key) } }
 
     context "without new topics" do
       it "doesn't send the email" do
-        expect(subject.to).to be_blank
+        expect(email.to).to be_blank
       end
     end
 
@@ -172,8 +173,8 @@ RSpec.describe UserNotifications do
       end
 
       it "returns topics from new users if they're more than 24 hours old" do
-        expect(subject.to).to eq([user.email])
-        html = subject.html_part.body.to_s
+        expect(email.to).to eq([user.email])
+        html = email.html_part.body.to_s
         expect(html).to include(new_yesterday.title)
         expect(html).to_not include(new_today.title)
       end
@@ -185,18 +186,18 @@ RSpec.describe UserNotifications do
       end
 
       it "works" do
-        expect(subject.to).to eq([user.email])
-        expect(subject.subject).to be_present
-        expect(subject.from).to eq([SiteSetting.notification_email])
-        expect(subject.html_part.body.to_s).to be_present
-        expect(subject.text_part.body.to_s).to be_present
-        expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
-        expect(subject.html_part.body.to_s).to include("New Users")
+        expect(email.to).to eq([user.email])
+        expect(email.subject).to be_present
+        expect(email.from).to eq([SiteSetting.notification_email])
+        expect(email.html_part.body.to_s).to be_present
+        expect(email.text_part.body.to_s).to be_present
+        expect(email.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
+        expect(email.html_part.body.to_s).to include("New Users")
       end
 
       it "doesn't include new user count if digest_after_minutes is low" do
         user.user_option.digest_after_minutes = 60
-        expect(subject.html_part.body.to_s).to_not include("New Users")
+        expect(email.html_part.body.to_s).to_not include("New Users")
       end
 
       it "works with min_date string" do
@@ -210,8 +211,8 @@ RSpec.describe UserNotifications do
         SiteSetting.email_prefix = "Try Discourse"
         SiteSetting.title = "Discourse Meta"
 
-        expect(subject.subject).to match(/Try Discourse/)
-        expect(subject.subject).not_to match(/Discourse Meta/)
+        expect(email.subject).to match(/Try Discourse/)
+        expect(email.subject).not_to match(/Discourse Meta/)
       end
 
       it "includes unread likes received count within the since date" do
@@ -257,7 +258,7 @@ RSpec.describe UserNotifications do
             created_at: 1.hour.ago,
           )
         deleted.trash!
-        html = subject.html_part.body.to_s
+        html = email.html_part.body.to_s
         expect(html).to_not include deleted.title
         expect(html).to_not include post.raw
       end
@@ -276,7 +277,7 @@ RSpec.describe UserNotifications do
             raw: "secret draft content",
             created_at: 1.hour.ago,
           )
-        html = subject.html_part.body.to_s
+        html = email.html_part.body.to_s
         expect(html).to_not include topic.title
         expect(html).to_not include post.raw
       end
@@ -319,7 +320,7 @@ RSpec.describe UserNotifications do
             post_type: Post.types[:small_action],
             created_at: 1.hour.ago,
           )
-        html = subject.html_part.body.to_s
+        html = email.html_part.body.to_s
         expect(html).to_not include whisper.raw
         expect(html).to_not include mod_action.raw
         expect(html).to_not include small_action.raw
@@ -365,7 +366,7 @@ RSpec.describe UserNotifications do
             user_deleted: true,
             created_at: 1.hour.ago,
           )
-        html = subject.html_part.body.to_s
+        html = email.html_part.body.to_s
         expect(html).to_not include deleted.raw
         expect(html).to_not include hidden.raw
         expect(html).to_not include user_deleted.raw
@@ -389,7 +390,7 @@ RSpec.describe UserNotifications do
             post_number: 1,
             created_at: 1.minute.ago,
           )
-        html = subject.html_part.body.to_s
+        html = email.html_part.body.to_s
         expect(html).to_not include too_new.title
       end
 
@@ -408,20 +409,20 @@ RSpec.describe UserNotifications do
 
         theme.set_default!
 
-        html = subject.html_part.body.to_s
+        html = email.html_part.body.to_s
         expect(html).to include "F0F0F0"
         expect(html).to include "1E1E1E"
       end
 
       it "supports subfolder" do
         set_subfolder "/forum"
-        html = subject.html_part.body.to_s
-        text = subject.text_part.body.to_s
+        html = email.html_part.body.to_s
+        text = email.text_part.body.to_s
         expect(html).to be_present
         expect(text).to be_present
         expect(html).to_not include("/forum/forum")
         expect(text).to_not include("/forum/forum")
-        expect(subject.header["List-Unsubscribe"].to_s).to match(
+        expect(email.header["List-Unsubscribe"].to_s).to match(
           /http:\/\/test.localhost\/forum\/email\/unsubscribe\/\h{64}/,
         )
 
@@ -432,7 +433,7 @@ RSpec.describe UserNotifications do
 
       it "applies lang/xml:lang html attributes" do
         SiteSetting.default_locale = "pl_PL"
-        html = subject.html_part.to_s
+        html = email.html_part.to_s
 
         expect(html).to match(' lang="pl-PL"')
         expect(html).to match(' xml:lang="pl-PL"')

@@ -1087,13 +1087,8 @@ it:
         enable: "Abilita barra laterale"
         options: "Opzioni"
         categories_section: "Sezione Categorie"
-        categories_section_instruction: "Le categorie selezionate saranno visualizzate nella sezione Categorie della barra laterale."
         tags_section: "Sezione etichette"
-        tags_section_instruction: "Le etichette selezionate appariranno nella sezione Etichette della barra laterale."
         navigation_section: "Navigazione"
-        list_destination_instruction: "Quando ci sono nuovi contenuti nella barra laterale..."
-        list_destination_default: "usa il link predefinito e mostra un distintivo per i nuovi elementi"
-        list_destination_unread_new: "collega a elementi non letti/nuovi e mostra un contatore dei nuovi elementi"
       change: "cambia"
       featured_topic: "Argomento in primo piano"
       moderator: "%{user} è un moderatore"
@@ -1255,7 +1250,6 @@ it:
         tags: "Etichette"
         interface: "Interfaccia"
         apps: "App"
-        sidebar: "Barra laterale"
       change_password:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
@@ -1796,7 +1790,6 @@ it:
         other: "Ci sono <b>%{count}</b> risposte."
       description_time_MF: |
         {replyCount, plural, one {C'è <b>#</b> risposta} other {Ci sono <b>#</b> risposte}} con un tempo di lettura stimato di <b>{readingTime, plural, one {# minuto} other {# minuti}}</b>.
-      enable: "Riassumi Questo Argomento"
       disable: "Mostra Tutti i Messaggi"
       short_label: "Riassumi"
       short_title: "Mostra un riassunto di questo argomento: i messaggi più interessanti secondo la community"
@@ -3942,8 +3935,19 @@ it:
       more: "Altro"
       all_categories: "Tutte le categorie"
       all_tags: "Tutte le etichette"
-      categories_form:
-        save: "Salva"
+      categories_form_modal:
+        title: "Modifica la navigazione delle categorie"
+        subtitle:
+          text: "e mostreremo automaticamente le categorie più popolari di questo sito"
+        filter_placeholder: "Filtra le categorie"
+        no_categories: "Non ci sono categorie corrispondenti al termine specificato."
+      edit_navigation_modal_form:
+        deselect_button_text: "Deseleziona tutto"
+        reset_to_defaults: "Ripristina le impostazioni predefinite"
+        filter_dropdown:
+          all: "Tutte"
+          selected: "Selezionato"
+          unselected: "Deselezionato"
       sections:
         custom:
           save: "Salva"
@@ -3970,20 +3974,12 @@ it:
             unread_with_count: "Non letti (%{count})"
             archive: "Archiviati"
         tags:
-          links:
-            add_tags:
-              content: "Aggiungi etichette"
-              title: "Non hai aggiunto alcuna etichetta. Fai clic per iniziare."
           none: "Non hai aggiunto nessuna etichetta."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Etichette"
           header_action_title: "Modifica le etichette nella barra laterale"
           configure_defaults: "Configura impostazioni predefinite"
         categories:
-          links:
-            add_categories:
-              content: "Aggiungi categorie"
-              title: "Non hai aggiunto alcuna categoria. Fai clic per iniziare."
           none: "Non hai aggiunto nessuna categoria."
           click_to_get_started: "Clicca qui per iniziare."
           header_link_text: "Categorie"
@@ -4002,6 +3998,9 @@ it:
             badges:
               content: "Distintivi"
               title: "Tutti i distintivi disponibili"
+            topics:
+              content: "Argomenti"
+              title: "Tutti gli argomenti"
             faq:
               content: "FAQ"
               title: "Linee guida per l'utilizzo di questo sito"
@@ -4027,6 +4026,30 @@ it:
       description: "Il tuo argomento di benvenuto è la prima cosa che leggeranno i nuovi membri. Consideralo come un \"discorso fatto in ascensore\" o una \"dichiarazione di intenti\". Fai sapere a tutti a chi si rivolge questa community, cosa possono aspettarsi di trovare qui e cosa vorresti che facessero prima."
       button_title: "Inizia a modificare"
     until: "Fino a:"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Per favore compila questo campo."
+          text: "Per favore compila questo campo."
+          select-one: "Per favore seleziona un elemento nella lista."
+          select-multiple: "Per favore selezione almeno un elemento nella lista."
+          checkbox: "Per favore seleziona questa casella se vuoi procedere."
+        typeMismatch:
+          default: "Per favore inserisci un valore valido."
+          color: "Inserisci un colore."
+          date: "Per favore inserisci una data."
+          email: "Inserisci un indirizzo email valido."
+          number: "Per favore inserisci un numero."
+          password: "Per favore inserisci una password valida."
+          tel: "Per favore inserisci un numero di telefono valido."
+          text: "Per favore inserisci un valore testuale."
+          url: "Per favore, inserisci un URL valido."
+        tooShort: "L'input deve contenere almeno %{minLength} caratteri."
+        tooLong: "L'input deve contenere meno di %{maxLength} caratteri."
+        rangeOverflow: "L'input deve essere minore di %{max}."
+        rangeUnderflow: "L'input deve essere maggiore di %{min}."
+        patternMismatch: "Per favore, rispetta il formato richiesto."
+        badInput: "Per favore, inserisci un input valido."
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

@@ -251,12 +251,14 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def anonymous_default_navigation_menu_tags
-    SiteSetting.default_navigation_menu_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
+    @anonymous_default_navigation_menu_tags ||=
+      SiteSetting.default_navigation_menu_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
 
   def include_anonymous_default_navigation_menu_tags?
     scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled &&
-      SiteSetting.default_navigation_menu_tags.present?
+      SiteSetting.default_navigation_menu_tags.present? &&
+      anonymous_default_navigation_menu_tags.present?
   end
 
   def anonymous_sidebar_sections

@@ -26,6 +26,8 @@ lt:
       flag: "Pranešti"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
+      summarization:
+        summarize: "Apibendrinti"
       mention_warning:
         dismiss: "praleisti"
       reply: "Atsakyti"
@@ -114,6 +116,11 @@ lt:
           other: "%{count} atsakymai"
         settings: "Nustatymai"
         last_reply: "Paskutinis atsakymas"
+        notifications:
+          regular:
+            title: "Įprastas"
+          tracking:
+            title: "Seku"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"

@@ -68,6 +68,8 @@ ko:
       heading: "채팅"
       join: "가입"
       last_visit: "마지막 방문"
+      summarization:
+        summarize: "요약하기"
       mention_warning:
         dismiss: "무시"
       aria_roles:
@@ -244,6 +246,11 @@ ko:
           other: "%{count} 댓글"
         settings: "사이트 설정"
         last_reply: "마지막 댓글"
+        notifications:
+          regular:
+            title: "일반"
+          tracking:
+            title: "알림"
       draft_channel_screen:
         header: "새로운 메시지"
         cancel: "취소"

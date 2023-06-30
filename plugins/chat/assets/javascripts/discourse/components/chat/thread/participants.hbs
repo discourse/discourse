@@ -1,4 +1,7 @@
 {{#if (gt @thread.preview.participantUsers.length 1)}}
+  <div class="chat-message-thread-indicator__replies-count">
+    {{i18n "chat.thread.replies" count=@thread.preview.replyCount}}
+  </div>
   <div class="chat-thread-participants">
     <div class="chat-thread-participants__avatar-group">
       {{#each @thread.preview.participantUsers as |user|}}
@@ -8,14 +11,11 @@
           @showPresence={{false}}
         />
       {{/each}}
+      {{#if @thread.preview.otherParticipantCount}}
+        <div class="chat-thread-participants__other-count">
+          +{{@thread.preview.otherParticipantCount}}
+        </div>
+      {{/if}}
     </div>
-    {{#if @thread.preview.otherParticipantCount}}
-      <div class="chat-thread-participants__other-count">
-        {{i18n
-          "chat.thread.participants_other_count"
-          count=@thread.preview.otherParticipantCount
-        }}
-      </div>
-    {{/if}}
   </div>
 {{/if}}

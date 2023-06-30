@@ -437,7 +437,7 @@ class Post < ActiveRecord::Base
     # percent rank has tons of ties
     where(topic_id: topic_id).where(
       [
-        "id = ANY(
+        "posts.id = ANY(
           (
             SELECT posts.id
             FROM posts

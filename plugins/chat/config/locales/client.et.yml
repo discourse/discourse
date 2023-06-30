@@ -108,6 +108,11 @@ et:
           other: "%{count} vastust"
         settings: "Sätted"
         last_reply: "viimane vastus"
+        notifications:
+          regular:
+            title: "Normaalne"
+          tracking:
+            title: "Jälgimine"
       draft_channel_screen:
         header: "Uus sõnum"
         cancel: "Tühista"

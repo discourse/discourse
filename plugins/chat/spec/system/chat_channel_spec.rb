@@ -240,7 +240,9 @@ RSpec.describe "Chat channel", type: :system do
     it "renders text in the reply-to" do
       chat.visit_channel(channel_1)
 
-      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("not marked")
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "&amp;lt;mark&amp;gt;not marked&amp;lt;/mark&amp;gt;",
+      )
     end
   end
 

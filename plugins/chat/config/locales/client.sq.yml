@@ -96,6 +96,11 @@ sq:
           other: "%{count} përgjigje"
         settings: "Rregullimet"
         last_reply: "përgjigja e fundit"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Në gjurmim"
       draft_channel_screen:
         header: "Mesazh i ri"
         cancel: "Anulo"

@@ -1241,13 +1241,13 @@ he:
         enable: "הפעלת סרגל צד"
         options: "אפשרויות"
         categories_section: "סעיף קטגוריות"
-        categories_section_instruction: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד."
+        categories_section_instruction: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט. אם לא נבחרו קטגוריות, תופענה הקטגוריות המובילות של האתר."
         tags_section: "סעיף תגיות"
-        tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד."
+        tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט. אם לא נבחרו תגיות, תופענה התגיות המובילות של האתר."
         navigation_section: "ניווט"
-        list_destination_instruction: "כשיש תוכן חדש בסרגל הצד…"
-        list_destination_default: "להשתמש בקישור ברירת המחדל ולהציג עיטור לפריטים חדשים"
-        list_destination_unread_new: "קישור לכאלו שלא נקראו/חדשים ולהציג את מניין הפריטים החדשים"
+        navigation_section_instruction: "כאשר לנושא בתפריט הניווט יש פריטים חדשים או שלא נקראו…"
+        link_to_filtered_list_checkbox_description: "קישור לרשימה המסוננת"
+        show_count_new_items_checkbox_description: "הצגת מניין הפריטים החדשים"
       change: "שנה"
       featured_topic: "נושא מומלץ"
       moderator: "ל־%{user} יש תפקיד פיקוח"
@@ -1460,7 +1460,7 @@ he:
         tags: "תגיות"
         interface: "מנשק"
         apps: "יישומים"
-        sidebar: "סרגל צד"
+        navigation_menu: "תפריט ניווט"
       change_password:
         success: "(דוא״ל נשלח)"
         in_progress: "(דוא״ל בשליחה)"
@@ -2038,10 +2038,13 @@ he:
         other: "יש <b>%{count}</b> תגובות."
       description_time_MF: |
         יש {replyCount, plural, one {תגובה <b>אחת</b>} other {<b>#</b> תגובות}} עם זמן קריאה משוערך של <b>{readingTime, plural, one {דקה} other {# דקות}}</b>.
-      enable: "סכם נושא זה"
+      enable: "הצגת תגובות מובילות"
       disable: "הצג את כל הפוסטים"
       short_label: "סיכום"
       short_title: "הצגת סיכום לנושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה"
+      strategy:
+        button_title: "סיכום נושא זה"
+        title: "סיכום הנושא"
     deleted_filter:
       enabled_description: "נושא זה מכיל פוסטים שנמחקו ולכן אינם מוצגים."
       disabled_description: "פוסטים שנמחקו בנושא זה מוצגים כעת."
@@ -4447,11 +4450,25 @@ he:
       more: "עוד"
       all_categories: "כל הקטגוריות"
       all_tags: "כל התגיות"
-      categories_form:
-        save: "שמירה"
+      categories_form_modal:
         title: "עריכת ניווט בקטגוריות"
+        subtitle:
+          text: "ואנו נציג לך את הקטגוריות הנפוצות ביותר באתר אוטומטית"
         filter_placeholder: "סינון קטגוריות"
         no_categories: "אין קטגוריות שעונות למונח שצוין."
+      tags_form_modal:
+        title: "עריכת ניווט בתגיות"
+        filter_placeholder: "סינון תגיות"
+        no_tags: "אין תגיות שתואמות לביטוי שסופק."
+        subtitle:
+          text: "ואנו נציג לך את התגיות המובילות באתר אוטומטית"
+      edit_navigation_modal_form:
+        deselect_button_text: "ביטול בחירה בהכול"
+        reset_to_defaults: "איפוס לברירות מחדל"
+        filter_dropdown:
+          all: "הכול"
+          selected: "נבחרים"
+          unselected: "לא נבחרו"
       sections:
         custom:
           add: "הוספת מקטע משלך"
@@ -4501,20 +4518,12 @@ he:
             unread_with_count: "לא נקראה (%{count})"
             archive: "ארכיון"
         tags:
-          links:
-            add_tags:
-              content: "הוספת תגיות"
-              title: "לא הוספת תגיות כלל. יש ללחוץ כדי להתחיל."
           none: "עדיין לא הוספת תגיות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "תגיות"
           header_action_title: "לערוך את תגיות סרגל הצד שלך"
           configure_defaults: "הגדרת ברירות מחדל"
         categories:
-          links:
-            add_categories:
-              content: "הוספת קטגוריות"
-              title: "לא הוספת קטגוריות כלל. יש ללחוץ כדי להתחיל."
           none: "עדיין לא הוספת קטגוריות."
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "קטגוריות"
@@ -4534,6 +4543,9 @@ he:
             badges:
               content: "עיטורים"
               title: "כל העיטורים שאפשר לקבל"
+            topics:
+              content: "נושאים"
+              title: "כל הנושאים"
             faq:
               content: "שאלות נפוצות"
               title: "הנחיות לשימוש באתר הזה"
@@ -4567,6 +4579,30 @@ he:
       exceeded: "חרגת ממספר התווים המרבי המותר."
     form_template_chooser:
       select_template: "בחירת תבניות טופס"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "נא למלא את השדה הזה."
+          text: "נא למלא את השדה הזה."
+          select-one: "נא לבחור פריט מהרשימה."
+          select-multiple: "נא לבחור לפחות פריט אחד מהרשימה."
+          checkbox: "נא לסמן תיבה זו כדי להמשיך."
+        typeMismatch:
+          default: "נא למלא ערך תקין."
+          color: "נא לבחור צבע."
+          date: "נא למלא תאריך."
+          email: "נא למלא כתובת דוא״ל תקינה."
+          number: "נא למלא מספר."
+          password: "נא למלא סיסמה תקינה."
+          tel: "נא למלא מספר טלפון תקני."
+          text: "נא למלא ערך טקסט."
+          url: "נא למלא כתובת תקינה."
+        tooShort: "הקלט חייב להיות באורך של %{minLength} תווים ומעלה."
+        tooLong: "הקלט חייב להיות פחות מ־%{maxLength} תווים."
+        rangeOverflow: "הקלט חייב להיות פחות מ־%{max}."
+        rangeUnderflow: "הקלט חייב להיות יותר מ־%{min}."
+        patternMismatch: "נא לתאם מול התבנית המבוקשת."
+        badInput: "נא למלא קלט תקין."
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:

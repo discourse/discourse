@@ -34,10 +34,6 @@ export default class ChatTrackingStateManager extends Service {
 
   setupChannelThreadState(channel, threadTracking) {
     channel.threadsManager.threads.forEach((thread) => {
-      // TODO (martin) Since we didn't backfill data for thread membership,
-      // there are cases where we are getting threads the user "participated"
-      // in but don't have tracking state for them. We need a migration to
-      // backfill this data.
       if (threadTracking[thread.id.toString()]) {
         this.#setState(thread, threadTracking[thread.id.toString()]);
       }

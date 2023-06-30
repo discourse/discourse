@@ -629,6 +629,7 @@ RSpec.describe Chat::Api::ChannelsController do
           chatable_id: category.id,
           name: "channel name",
           description: "My new channel",
+          threading_enabled: false,
         },
       }
     end
@@ -689,6 +690,25 @@ RSpec.describe Chat::Api::ChannelsController do
       new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
 
       expect(new_channel.auto_join_users).to eq(true)
+    end
+
+    it "creates a channel sets threading_enabled to false by default" do
+      post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
+
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
+
+      expect(new_channel.threading_enabled).to eq(false)
+    end
+
+    it "creates a channel with threading_enabled set to true" do
+      params[:channel][:threading_enabled] = true
+      post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
+
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
+
+      expect(new_channel.threading_enabled).to eq(true)
     end
 
     describe "triggers the auto-join process" do
@@ -882,6 +902,18 @@ RSpec.describe Chat::Api::ChannelsController do
         put "/chat/api/channels/#{channel.id}", params: { channel: { name: "A new cat is born" } }
 
         expect(response.parsed_body["channel"]).to match_response_schema("category_chat_channel")
+      end
+
+      describe "when updating threading_enabled" do
+        before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
+
+        it "sets the new value" do
+          expect {
+            put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
+          }.to change { channel.reload.threading_enabled }.from(false).to(true)
+
+          expect(response.parsed_body["channel"]["threading_enabled"]).to eq(true)
+        end
       end
 
       describe "when updating allow_channel_wide_mentions" do

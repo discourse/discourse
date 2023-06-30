@@ -8,20 +8,25 @@
   @class={{this.section.dragCss}}
 >
   {{#each this.section.links as |link|}}
-    {{#if link.external}}
+    {{#if link.externalOrFullReload}}
       <Sidebar::SectionLink
         @shouldDisplay={{link.shouldDisplay}}
         @linkName={{link.name}}
         @content={{replace-emoji link.text}}
         @prefixType="icon"
         @prefixValue={{link.prefixValue}}
+        @fullReload={{link.fullReload}}
         @href={{link.value}}
         @class={{link.linkDragCss}}
-        {{draggable
-          didStartDrag=link.didStartDrag
-          didEndDrag=link.didEndDrag
-          dragMove=link.dragMove
-        }}
+        {{(if
+          this.section.reorderable
+          (modifier
+            "draggable"
+            didStartDrag=link.didStartDrag
+            didEndDrag=link.didEndDrag
+            dragMove=link.dragMove
+          )
+        )}}
       />
     {{else}}
       <Sidebar::SectionLink
@@ -43,7 +48,7 @@
         @currentWhen={{link.currentWhen}}
         @class={{link.linkDragCss}}
         {{(if
-          link.didStartDrag
+          this.section.reorderable
           (modifier
             "draggable"
             didStartDrag=link.didStartDrag

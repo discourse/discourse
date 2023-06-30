@@ -1,14 +1,14 @@
 <div class="d-toggle-switch">
   <label class="d-toggle-switch--label">
-    {{! template-lint-disable no-unnecessary-concat }}
+    {{! template-lint-disable no-redundant-role }}
     <button
       class="d-toggle-switch__checkbox"
       type="button"
       role="switch"
-      aria-checked="{{@state}}"
+      aria-checked={{this.checked}}
       ...attributes
     ></button>
-    {{! template-lint-enable no-unnecessary-concat }}
+    {{! template-lint-enable no-redundant-role }}
 
     <span class="d-toggle-switch__checkbox-slider">
       {{#if @state}}

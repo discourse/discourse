@@ -120,6 +120,15 @@ he:
       heading: "צ׳אט"
       join: "הצטרף"
       last_visit: "ביקור אחרון"
+      summarization:
+        title: "סיכום הודעות"
+        description: "נא לבחור אפשרות להלן כדי לסכם את הדיון שנשלח בפרק הזמן המבוקש."
+        summarize: "סיכום"
+        since:
+          one: "שעה אחרונה"
+          two: "השעתיים האחרונות"
+          many: "%{count} השעות האחרונות"
+          other: "%{count} השעות האחרונות"
       mention_warning:
         dismiss: "התעלמות"
         cannot_see: "ל־%{username} אין גישה לערוץ הזה ולא נשלחה התראה."
@@ -461,6 +470,11 @@ he:
         admin_title: "הנהלה"
       admin:
         title: "צ׳אט"
+        export_messages:
+          title: "ייצוא הודעות צ׳אט"
+          description: "הייצוא מוגבל כרגע ל־10000 ההודעות העדכניות ביותר ב־6 החודשים האחרונים."
+          create_export: "יצירת ייצוא"
+          export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       direct_messages:
         title: "צ׳אט אישי"
         new: "יצירת צ׳אט אישי"
@@ -580,6 +594,18 @@ he:
           started_by: "נפתח ע״י"
         settings: "הגדרות"
         last_reply: "תגובה אחרונה"
+        notifications:
+          regular:
+            title: "רגיל"
+            description: "תישלח אליך התראה אם @שמך מוזכר בשרשור הזה."
+          tracking:
+            title: "מעקב"
+            description: "מספר התגובות החדשות בשרשור הזה יופיע ברשימת השרשורים ובערוץ. תישלח אליך התראה אם הזכירו את @שמך בשרשור הזה."
+        participants_other_count:
+          one: "+%{count} נוסף"
+          two: "+%{count} נוספים"
+          many: "+%{count} נוספים"
+          other: "+%{count} נוספים"
       threads:
         open: "פתיחת שרשור"
         list: "דיונים שמתקיימים כרגע"

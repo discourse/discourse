@@ -19,8 +19,8 @@ createWidget("hamburger-category", {
       this.attach("category-link", { category: c, allowUncategorized: true }),
     ];
 
-    const unreadTotal =
-      parseInt(c.get("unreadTopics"), 10) + parseInt(c.get("newTopics"), 10);
+    const unreadTotal = c.unreadTopicsCount + c.newTopicsCount;
+
     if (unreadTotal) {
       results.push(
         h(

@@ -1027,13 +1027,8 @@ fa_IR:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
         categories_section: "بخش دسته‌بندی‌ها"
-        categories_section_instruction: "دسته‌بندی‌های انتخاب شده در بخش دسته‌بندی نوار کناری نمایش داده می‌شود."
         tags_section: "بخش برچسب‌ها"
-        tags_section_instruction: "برچسب‌های انتخاب شده در بخش برچسب‌ها نوار کناری نمایش داده می‌شود."
         navigation_section: "ناوبری"
-        list_destination_instruction: "وقتی محتوای جدیدی در نوار کناری وجود دارد..."
-        list_destination_default: "از پیوند پیش‌فرض استفاده کنید و یک نشان برای موارد جدید نشان دهید"
-        list_destination_unread_new: "پیوند به خوانده نشده/جدید و نمایش تعداد موارد جدید"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
       moderator: "%{user} یک مدیر است"
@@ -1131,7 +1126,6 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
-        sidebar: "نوار کناری"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -1625,7 +1619,6 @@ fa_IR:
       description:
         one: "<b>%{count}</b> پاسخ داده شده."
         other: "<b>%{count}</b> پاسخ داده شده."
-      enable: "خلاصه‌ی این موضوع"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
       enabled_description: "این موضوع شامل نوشته‌های حذف شده‌ای است، که مخفی شده‌اند."
@@ -3360,8 +3353,9 @@ fa_IR:
       more: "بیشتر"
       all_categories: "همه‌ی دسته‌بندی‌ها"
       all_tags: "همه برچسب‌ها"
-      categories_form:
-        save: "ذخیره"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "همه"
       sections:
         custom:
           add: "افزودن بخش سفارشی"
@@ -3415,6 +3409,9 @@ fa_IR:
               title: "تنظیمات و گزارش‌های سایت"
             badges:
               content: "نشان‌ها"
+            topics:
+              content: "موضوعات"
+              title: "همه موضوعات"
             faq:
               content: "پرسش‌های متداول"
               title: "راهنمای استفاده از این سایت"
@@ -3433,6 +3430,11 @@ fa_IR:
               content: "بازنگری"
               pending_count: "%{count} در انتظار"
     until: "تا وقتی که:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "یک مقدار معتبر وارد کنید."
+          email: "لطفا یک آدرس ایمیل معتبر وارد کنید."
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:

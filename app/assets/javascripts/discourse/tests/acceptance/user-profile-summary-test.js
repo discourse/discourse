@@ -13,12 +13,6 @@ let deleteAndBlock = null;
 
 acceptance("User Profile - Summary", function (needs) {
   needs.user();
-  needs.pretender((server, helper) => {
-    server.get("/u/eviltrout.json", () => {
-      const response = cloneJSON(userFixtures["/u/eviltrout.json"]);
-      return helper.response(response);
-    });
-  });
 
   test("Viewing Summary", async function (assert) {
     await visit("/u/eviltrout/summary");

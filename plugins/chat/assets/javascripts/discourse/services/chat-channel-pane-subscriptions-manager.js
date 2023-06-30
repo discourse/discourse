@@ -14,9 +14,6 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
     return this.model.channelMessageBusLastId;
   }
 
-  // TODO (martin) Implement this for the channel, since it involves a bunch
-  // of scrolling and pane-specific logic. Will leave the existing sub inside
-  // ChatLivePane for now.
   handleSentMessage() {
     return;
   }
