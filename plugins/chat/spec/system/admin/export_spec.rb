@@ -29,8 +29,6 @@ RSpec.describe "Chat exports", type: :system do
 
     file_name = find("a.attachment").text
 
-    # DOWNLOAD_PATH = Rails.root.join("tmp/downloads").to_s
-    # full_path = DOWNLOAD_PATH + "/partners-#{Date.today}.csv"
     assert File.exist?("tmp/downloads/#{file_name}")
 
     csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
