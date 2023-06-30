@@ -33,12 +33,27 @@ RSpec.describe "Chat exports", type: :system do
     # full_path = DOWNLOAD_PATH + "/partners-#{Date.today}.csv"
     assert File.exist?("tmp/downloads/#{file_name}")
 
-    extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
+    csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
 
-    headers = CSV.open(file, "r") { |csv| csv.first.to_s }
+    headers = CSV.open(csv_path, "r") { |csv| csv.first }
+
     assert_equal(
       headers,
-      "[\"id\", \"name\", \"partner_type_id\", \"parent_id\", \"phone\", \"website\"]",
+      %w[
+        id
+        chat_channel_id
+        chat_channel_name
+        user_id
+        username
+        message
+        cooked
+        created_at
+        updated_at
+        deleted_at
+        in_reply_to_id
+        last_editor_id
+        last_editor_username
+      ],
       "Header does not match",
     )
   end
