@@ -3,9 +3,6 @@
 RSpec.describe "Chat exports", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
 
-  let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:browse_page) { PageObjects::Pages::ChatBrowse.new }
-
   before do
     Jobs.run_immediately!
     sign_in(current_user)
