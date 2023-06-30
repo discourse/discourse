@@ -596,7 +596,7 @@ DEPENDENCIES
   mail
   maxminddb
   memory_profiler
-  message_bus (= 4.3.2)
+  message_bus
   mini_mime
   mini_racer
   mini_scheduler
