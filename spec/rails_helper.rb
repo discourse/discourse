@@ -77,6 +77,7 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
+Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
@@ -286,7 +287,7 @@ RSpec.configure do |config|
         .tap do |options|
           apply_base_chrome_options(options)
           options.add_argument("--window-size=1400,1400")
-          options.add_preference("download.default_directory", Rails.root.join("tmp/downloads"))
+          options.add_preference("download.default_directory", Rails.root.join(Downloads::FOLDER))
         end
 
     Capybara.register_driver :selenium_chrome do |app|

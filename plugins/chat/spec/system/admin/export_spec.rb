@@ -9,9 +9,7 @@ RSpec.describe "Chat exports", type: :system do
     chat_system_bootstrap
   end
 
-  after do
-    # fixme clean the downloads folder
-  end
+  after { Downloads.clear }
 
   it "exports chat messages" do
     message = Fabricate(:chat_message)
@@ -28,9 +26,9 @@ RSpec.describe "Chat exports", type: :system do
 
     file_name = find("a.attachment").text
 
-    expect(File.exist?("tmp/downloads/#{file_name}")).to be_truthy
+    expect(File.exist?("#{Downloads::FOLDER}/#{file_name}")).to be_truthy
 
-    csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
+    csv_path = extract_zip("#{Downloads::FOLDER}/#{file_name}", "#{Downloads::FOLDER}")
     data = CSV.read(csv_path)
 
     expect(data[0]).to eq(
