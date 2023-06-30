@@ -452,19 +452,22 @@ createWidget("discourse-poll-info", {
       if (closeDate.isValid()) {
         const title = closeDate.format("LLL");
         let label;
+        let icon;
 
         if (attrs.isAutomaticallyClosed) {
           const age = relativeAge(closeDate.toDate(), { addAgo: true });
           label = I18n.t("poll.automatic_close.age", { age });
+          icon = "lock";
         } else {
           const timeLeft = moment().to(closeDate, true);
           label = I18n.t("poll.automatic_close.closes_in", { timeLeft });
+          icon = "far-clock";
         }
 
         instructions.push(
           new RawHtml({
             html: `<li title="${title}">
-                    ${iconHTML("far-clock")}
+                    ${iconHTML(icon)}
                     <span>${label}</span>
                    </li>`,
           })
