@@ -101,6 +101,7 @@ export default class ThemeSettingsEditor extends Component {
           errorMessage: e.message,
         },
       ];
+      this.saving = false;
       return;
     }
     if (!this.validateSettingsKeys(newSettings)) {
