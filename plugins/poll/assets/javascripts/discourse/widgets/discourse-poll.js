@@ -438,7 +438,7 @@ createWidget("discourse-poll-info", {
           instructions.push(
             new RawHtml({
               html: `<li>
-                      ${iconHTML("stream")}
+                      ${iconHTML("list-ul")}
                       <span>${help}</span>
                      </li>`,
             })
