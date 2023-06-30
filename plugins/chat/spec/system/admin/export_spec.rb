@@ -54,10 +54,7 @@ RSpec.describe "Chat exports", type: :system do
       ],
     )
 
-    assert_exported_message(data[1], message)
-  end
-
-  def assert_exported_message(data_row, message)
+    data_row = data[1]
     expect(data_row[0]).to eq(message.id.to_s)
     expect(data_row[1]).to eq(message.chat_channel.id.to_s)
     expect(data_row[2]).to eq(message.chat_channel.name)
