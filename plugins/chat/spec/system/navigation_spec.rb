@@ -142,13 +142,14 @@ RSpec.describe "Navigation", type: :system do
     end
 
     context "when opening a thread from the thread list" do
-      xit "goes back to the thread list when clicking the back button" do
+      it "goes back to the thread list when clicking the back button" do
         visit("/chat")
         chat_page.visit_channel(category_channel)
         channel_page.open_thread_list
         expect(thread_list_page).to have_loaded
         thread_list_page.open_thread(thread)
         expect(side_panel_page).to have_open_thread(thread)
+        expect(thread_page).to have_back_link_to_thread_list(category_channel)
         thread_page.back_to_previous_route
         expect(thread_list_page).to have_loaded
       end
@@ -161,6 +162,7 @@ RSpec.describe "Navigation", type: :system do
           expect(thread_list_page).to have_loaded
           thread_list_page.open_thread(thread)
           expect(side_panel_page).to have_open_thread(thread)
+          expect(thread_page).to have_back_link_to_thread_list(category_channel)
           thread_page.back_to_previous_route
           expect(thread_list_page).to have_loaded
         end
@@ -173,6 +175,7 @@ RSpec.describe "Navigation", type: :system do
         chat_page.visit_channel(category_channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel_page).to have_open_thread(thread)
+        expect(thread_page).to have_back_link_to_thread_list(category_channel)
         thread_page.back_to_previous_route
         expect(thread_list_page).to have_loaded
       end
@@ -184,6 +187,7 @@ RSpec.describe "Navigation", type: :system do
           chat_page.visit_channel(category_channel)
           channel_page.message_thread_indicator(thread.original_message).click
           expect(side_panel_page).to have_open_thread(thread)
+          expect(thread_page).to have_back_link_to_channel(category_channel)
           thread_page.back_to_previous_route
           expect(side_panel_page).not_to be_open
         end
