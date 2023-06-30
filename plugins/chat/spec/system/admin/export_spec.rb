@@ -31,7 +31,7 @@ RSpec.describe "Chat exports", type: :system do
 
     file_name = find("a.attachment").text
 
-    assert File.exist?("tmp/downloads/#{file_name}") # use expect
+    expect(File.exist?("tmp/downloads/#{file_name}")).to be_truthy
 
     csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
     data = CSV.read(csv_path)
