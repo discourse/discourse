@@ -64,8 +64,8 @@ RSpec.describe "Chat exports", type: :system do
     expect(data_row[6]).to eq(message.cooked)
     # expect(Time.parse(data_row[7])).to eq_time(message.created_at)
     # expect(Time.parse(data_row[8])).to eq_time(message.updated_at)
-    # expect(Time.parse(data_row[9])).to eq_time(message.deleted_at)
-    # expect(data_row[10]).to eq(message.in_reply_to_id.to_s)
+    expect(data_row[9]).to be_nil
+    expect(data_row[10]).to be_nil
     expect(data_row[11]).to eq(message.last_editor.id.to_s)
     expect(data_row[12]).to eq(message.last_editor.username)
   end
