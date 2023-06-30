@@ -5,7 +5,7 @@ div.poll {
   margin: 1em 0;
   border: 1px solid var(--primary-low);
   display: grid;
-  grid-template-areas: "poll" "buttons" "info";
+  grid-template-areas: "poll" "info" "buttons";
   @include breakpoint("mobile-extra-large", min-width) {
     grid-template-columns: 1fr 10em;
     grid-template-areas: "poll info" "buttons buttons";
@@ -41,10 +41,10 @@ div.poll {
     grid-area: info;
     display: flex;
     line-height: var(--line-height-medium);
+    color: var(--primary-medium);
 
     @include breakpoint("mobile-extra-large") {
       border-top: 1px solid var(--primary-low);
-      background: var(--primary-very-low);
       flex-direction: row-reverse;
       &_counts,
       &_instructions {
@@ -56,7 +56,6 @@ div.poll {
       gap: 0 1em;
       padding: 1em;
       border-left: 1px solid var(--primary-low);
-      color: var(--primary-medium);
       flex-direction: column;
       justify-content: center;
       align-items: center;
@@ -201,6 +200,7 @@ div.poll {
     grid-area: poll;
     padding: 0.5em 1em;
     width: 100%;
+    align-self: center;
 
     li {
       cursor: pointer;
@@ -221,7 +221,6 @@ div.poll {
   .poll-buttons {
     grid-area: buttons;
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.5em;
     width: 100%;
@@ -231,18 +230,36 @@ div.poll {
     &_primary,
     &_secondary {
       display: flex;
-      flex-wrap: wrap;
       gap: 0.5em;
     }
 
+    &_primary {
+      flex-wrap: wrap;
+    }
+
+    &_secondary {
+      justify-content: flex-end;
+      align-items: flex-start;
+      align-self: flex-start;
+    }
+
     @include breakpoint("mobile-extra-large") {
-      // more space for admin buttons on mobile
       &_secondary {
-        .d-icon {
-          margin: 0;
-        }
-        .d-button-label {
-          display: none;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+    }
+
+    @include breakpoint("mobile-medium") {
+      &_secondary {
+        // create more space for admin buttons on mobile
+        button {
+          .d-button-label {
+            display: none;
+          }
+          .d-icon {
+            margin-right: 0;
+          }
         }
       }
     }
