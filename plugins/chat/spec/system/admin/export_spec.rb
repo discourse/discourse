@@ -54,7 +54,7 @@ RSpec.describe "Chat exports", type: :system do
         last_editor_id
         last_editor_username
       ],
-      "Header does not match",
+      "Headers does not match",
     )
   end
 
