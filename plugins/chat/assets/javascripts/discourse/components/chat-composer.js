@@ -43,7 +43,6 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
-  @tracked tippyInstances = [];
 
   get shouldRenderReplyingIndicator() {
     return !this.args.channel?.isDraft;
@@ -425,7 +424,7 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
-            this.tippyInstances = initUserStatusHtml(result.users);
+            initUserStatusHtml(result.users);
           }
           return result;
         });
