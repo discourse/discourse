@@ -29,6 +29,7 @@
     "keyboardHelper": "off",
     "keyEvent": "off",
     "moduleFor": "off",
+    "moduleForComponent": "off",
     "pauseTest": "off",
     "Pretender": "off",
     "query": "off",
