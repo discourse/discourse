@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat exports", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     Jobs.run_immediately!
-    sign_in(current_user)
+    sign_in(admin)
     chat_system_bootstrap
   end
 
@@ -20,7 +20,7 @@ RSpec.describe "Chat exports", type: :system do
     click_button "Create export"
     click_button "OK" # fixme maybe remove this
 
-    visit "/u/#{current_user.username}/messages"
+    visit "/u/#{admin.username}/messages"
     click_link "[Chat Message] Data export complete"
     click_link "chat-message-"
 
