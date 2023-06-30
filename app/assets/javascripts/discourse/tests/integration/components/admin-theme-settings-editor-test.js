@@ -2,7 +2,6 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-
 /*
 example valid content for ace editor:
 [
@@ -25,10 +24,23 @@ example valid content for ace editor:
 ]
  */
 
+function glimmerComponent(owner, componentName, args = {}) {
+  const { class: componentClass } = owner.factoryFor(
+    `component:${componentName}`
+  );
+  let componentManager = owner.lookup("component-manager:glimmer");
+  let component = componentManager.createComponent(componentClass, {
+    named: args,
+  });
+  return component;
+}
+
 module(
   "Integration | Component | admin-theme-settings-editor",
   function (hooks) {
     setupRenderingTest(hooks);
+
+    let model;
 
     test("renders passed json model object into string in the ace editor", async function (assert) {
       await render(hbs`<ThemeSettingsEditor @model={{hash
@@ -48,50 +60,46 @@ module(
     });
 
     test("input is valid json", async function (assert) {
-      const component = this.owner
-        .factoryFor("component:ThemeSettingsEditor")
-        .create();
-
-      component.editorContents = "foo";
+      const component = glimmerComponent(this.owner, "theme-settings-editor", {
+        model: [],
+      });
+      component.editedContent = "foo";
       component.save();
       assert.strictEqual(component.errors[0].setting, "Syntax Error");
     });
 
     test("'setting' key is present for each setting", async function (assert) {
-      const component = this.owner
-        .factoryFor("component:ThemeSettingsEditor")
-        .create();
+      const component = glimmerComponent(this.owner, "theme-settings-editor", {
+        model: [],
+      });
 
-      component.editorContents = JSON.stringify([{ value: "value1" }]);
+      component.editedContent = JSON.stringify([{ value: "value1" }]);
       component.save();
       assert.strictEqual(component.errors[0].setting, "Syntax Error");
     });
 
     test("'value' key is present for each setting", async function (assert) {
-      const component = this.owner
-        .factoryFor("component:ThemeSettingsEditor")
-        .create();
+      const component = glimmerComponent(this.owner, "theme-settings-editor", {
+        model: [],
+      });
 
-      component.editorContents = JSON.stringify([{ setting: "setting1" }]);
+      component.editedContent = JSON.stringify([{ setting: "setting1" }]);
       component.save();
       assert.strictEqual(component.errors[0].setting, "Syntax Error");
     });
 
     test("only 'setting' and 'value' keys are present, no others", async function (assert) {
-      const component = this.owner
-        .factoryFor("component:ThemeSettingsEditor")
-        .create();
+      const component = glimmerComponent(this.owner, "theme-settings-editor", {
+        model: [],
+      });
 
-      component.editorContents = JSON.stringify([{ otherkey: "otherkey1" }]);
+      component.editedContent = JSON.stringify([{ otherkey: "otherkey1" }]);
       component.save();
       assert.strictEqual(component.errors[0].setting, "Syntax Error");
     });
 
     test("no settings are deleted", async function (assert) {
-      const component = this.owner
-        .factoryFor("component:ThemeSettingsEditor")
-        .create();
-      component.model = {
+      model = {
         model: {
           settings: [
             { setting: "foo", value: "foo" },
@@ -99,23 +107,30 @@ module(
           ],
         },
       };
-      component.editorContents = JSON.stringify([
+      const component = glimmerComponent(this.owner, "theme-settings-editor", {
+        model,
+      });
+
+      component.editedContent = JSON.stringify([
         { setting: "bar", value: "bar" },
       ]);
       component.save();
+
       assert.strictEqual(component.errors[0].setting, "foo");
     });
 
     test("no settings are added", async function (assert) {
-      const component = this.owner
-        .factoryFor("component:ThemeSettingsEditor")
-        .create();
-      component.model = {
+      model = {
         model: {
           settings: [{ setting: "bar", value: "bar" }],
         },
       };
-      component.editorContents = JSON.stringify([
+
+      const component = glimmerComponent(this.owner, "theme-settings-editor", {
+        model,
+      });
+
+      component.editedContent = JSON.stringify([
         { setting: "foo", value: "foo" },
         { setting: "bar", value: "bar" },
       ]);
