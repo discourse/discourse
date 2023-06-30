@@ -448,7 +448,7 @@ createWidget("discourse-poll-info", {
     }
 
     if (poll.close) {
-      const closeDate = moment(poll.close);
+      const closeDate = moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z");
       if (closeDate.isValid()) {
         const title = closeDate.format("LLL");
         let label;
@@ -878,7 +878,9 @@ export default createWidget("discourse-poll", {
 
   isAutomaticallyClosed() {
     const { poll } = this.attrs;
-    return poll.close && moment.utc(poll.close) <= moment();
+    return (
+      poll.close && moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
+    );
   },
 
   isClosed() {
