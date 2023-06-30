@@ -1,4 +1,8 @@
-<DModal @closeModal={{@closeModal}} {{did-insert this.totpRequested}}>
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "user.second_factor.totp.add"}}
+  {{did-insert this.totpRequested}}
+>
   <:body>
     <ConditionalLoadingSpinner @condition={{this.loading}}>
       {{#if this.errorMessage}}
