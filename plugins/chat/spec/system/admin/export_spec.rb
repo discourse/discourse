@@ -17,6 +17,8 @@ RSpec.describe "Chat exports", type: :system do
   end
 
   it "exports chat messages" do
+    message = Fabricate(:chat_message)
+
     visit "/admin/plugins/chat"
     click_button "Create export"
     click_button "OK"
@@ -29,14 +31,12 @@ RSpec.describe "Chat exports", type: :system do
 
     file_name = find("a.attachment").text
 
-    assert File.exist?("tmp/downloads/#{file_name}")
+    assert File.exist?("tmp/downloads/#{file_name}") # use expect
 
     csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
+    data = CSV.read(csv_path)
 
-    data = CSV.read(csv_path, headers: true)
-
-    assert_equal(
-      data.headers,
+    expect(data[0]).to match_array(
       %w[
         id
         chat_channel_id
@@ -52,8 +52,25 @@ RSpec.describe "Chat exports", type: :system do
         last_editor_id
         last_editor_username
       ],
-      "Headers does not match",
     )
+
+    assert_exported_message(data[1], message)
+  end
+
+  def assert_exported_message(data_row, message)
+    expect(data_row[0]).to eq(message.id.to_s)
+    expect(data_row[1]).to eq(message.chat_channel.id.to_s)
+    expect(data_row[2]).to eq(message.chat_channel.name)
+    expect(data_row[3]).to eq(message.user.id.to_s)
+    expect(data_row[4]).to eq(message.user.username)
+    expect(data_row[5]).to eq(message.message)
+    expect(data_row[6]).to eq(message.cooked)
+    # expect(Time.parse(data_row[7])).to eq_time(message.created_at)
+    # expect(Time.parse(data_row[8])).to eq_time(message.updated_at)
+    # expect(Time.parse(data_row[9])).to eq_time(message.deleted_at)
+    # expect(data_row[10]).to eq(message.in_reply_to_id.to_s)
+    expect(data_row[11]).to eq(message.last_editor.id.to_s)
+    expect(data_row[12]).to eq(message.last_editor.username)
   end
 
   it "exports user list" do
