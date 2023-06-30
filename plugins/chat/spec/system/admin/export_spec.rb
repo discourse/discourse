@@ -36,7 +36,7 @@ RSpec.describe "Chat exports", type: :system do
     csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
     data = CSV.read(csv_path)
 
-    expect(data[0]).to match_array(
+    expect(data[0]).to eq(
       %w[
         id
         chat_channel_id
@@ -93,7 +93,7 @@ RSpec.describe "Chat exports", type: :system do
     csv_path = extract_zip("tmp/downloads/#{file_name}", "tmp/downloads/")
     data = CSV.read(csv_path)
 
-    expect(data[0]).to match_array(
+    expect(data[0]).to eq(
       %w[
         id
         name
@@ -122,10 +122,10 @@ RSpec.describe "Chat exports", type: :system do
         post_count
         likes_given
         likes_received
-        group_names
         location
         website
         views
+        group_names
       ],
     )
 
