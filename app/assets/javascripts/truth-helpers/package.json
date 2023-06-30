@@ -7,7 +7,6 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
