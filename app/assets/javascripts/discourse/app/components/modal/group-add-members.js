@@ -5,7 +5,6 @@ import { tracked } from "@glimmer/tracking";
 import { emailValid } from "discourse/lib/utilities";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
-import DiscourseURL from "discourse/lib/url";
 
 export default class GroupAddMembers extends Component {
   @service currentUser;
