@@ -1076,7 +1076,7 @@ class ApplicationController < ActionController::Base
         if font[:variants]
           font_map_hash[font[:key]] = font[:variants].map do |v|
             {
-              url: Discourse.base_url + "/fonts/" + v[:filename] + "?v=#{DiscourseFonts::VERSION}",
+              url: "#{Discourse.base_url}/fonts/#{v[:filename]}?v=#{DiscourseFonts::VERSION}",
               weight: v[:weight],
             }
           end
