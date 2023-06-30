@@ -639,6 +639,19 @@ class ApplicationController < ActionController::Base
     store_preloaded("isReadOnly", @readonly_mode.to_s)
     store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
     store_preloaded("activatedThemes", activated_themes_json)
+
+    font_map =
+      DiscourseFonts
+        .fonts
+        .reduce({}) do |hash, font|
+          if font[:variants]
+            hash[font[:key]] = font[:variants].map do |v|
+              Discourse.base_url + "/fonts/" + v[:filename]
+            end
+          end
+          hash
+        end
+    store_preloaded("fontMap", MultiJson.dump(font_map))
   end
 
   def preload_current_user_data

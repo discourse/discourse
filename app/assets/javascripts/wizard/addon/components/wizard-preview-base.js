@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
@@ -54,17 +55,52 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
+    this.fontMap = PreloadStore.get("fontMap");
     const c = this.element.querySelector("canvas");
     this.ctx = c.getContext("2d");
     this.ctx.scale(scale, scale);
     this.reload();
   },
 
-  @observes(
-    "step.fieldsById.{color_scheme,body_font,heading_font,homepage_style}.value"
-  )
+  @observes("step.fieldsById.{color_scheme,homepage_style}.value")
   themeChanged() {
     this.triggerRepaint();
+  },
+
+  @observes("step.fieldsById.{body_font}.value")
+  themeBodyFontChanged() {
+    const selectedFont = this.step.fieldsById.body_font.value;
+    const fonts = this.fontMap[selectedFont];
+
+    // System font does not need to load from a remote source.
+    if (fonts) {
+      const fontFaces = fonts.map(
+        (fontUrl, index) =>
+          new FontFace(`${selectedFont}-${index}`, `url(${fontUrl})`)
+      );
+
+      Promise.all(fontFaces.map((fontFace) => fontFace.load())).then(() => {
+        this.triggerRepaint();
+      });
+    }
+  },
+
+  @observes("step.fieldsById.{heading_font}.value")
+  themeHeadingFontChanged() {
+    const selectedFont = this.step.fieldsById.heading_font.value;
+    const fonts = this.fontMap[selectedFont];
+
+    // System font does not need to load from a remote source.
+    if (fonts) {
+      const fontFaces = fonts.map(
+        (fontUrl, index) =>
+          new FontFace(`${selectedFont}-${index}`, `url(${fontUrl})`)
+      );
+
+      Promise.all(fontFaces.map((fontFace) => fontFace.load())).then(() => {
+        this.triggerRepaint();
+      });
+    }
   },
 
   images() {},
