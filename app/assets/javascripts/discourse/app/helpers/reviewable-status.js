@@ -6,7 +6,6 @@ import {
   REJECTED,
 } from "discourse/models/reviewable";
 import I18n from "I18n";
-import { htmlHelper } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 function dataFor(status, type) {
@@ -81,6 +80,4 @@ export function htmlStatus(status, type) {
   `;
 }
 
-export default htmlHelper((status, type) => {
-  return htmlStatus(status, type);
-});
+export default htmlStatus;
