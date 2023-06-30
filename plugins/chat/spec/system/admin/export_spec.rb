@@ -51,11 +51,13 @@ RSpec.describe "Chat exports", type: :system do
   def extract_zip(file, destination)
     FileUtils.mkdir_p(destination)
 
-    Zip::File.open(file) do |zip_file|
-      zip_file.each do |f|
-        path = File.join(destination, f.name)
-        zip_file.extract(f, path) unless File.exist?(path)
-      end
+    path = ""
+    Zip::File.open(file) do |zip_files|
+      csv_file = zip_files.first
+      path = File.join(destination, csv_file.name)
+      zip_files.extract(csv_file, path) unless File.exist?(path)
     end
+
+    path
   end
 end
