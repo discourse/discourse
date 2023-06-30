@@ -15,6 +15,7 @@ import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor
 import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
 import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
 import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
+import SecondFactorBackupEdit from "discourse/components/modal/second-factor-backup-edit";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -311,14 +312,13 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     editSecondFactorBackup() {
-      const controller = showModal("second-factor-backup-edit", {
-        model: this.model,
-        title: "user.second_factor_backup.title",
-      });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
+      this.modal.show(SecondFactorBackupEdit, {
+        model: {
+          secondFactor: this.model,
+          onClose: () => this.loadSecondFactors(),
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
     },
   },
