@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Exports", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:admin) { Fabricate(:admin) }
 
   before do
     Jobs.run_immediately!
-    sign_in(current_user)
+    sign_in(admin)
   end
 
   after do
@@ -17,7 +17,7 @@ RSpec.describe "Exports", type: :system do
     click_button "Export"
     click_button "OK" # fixme maybe remove this
 
-    visit "/u/#{current_user.username}/messages"
+    visit "/u/#{admin.username}/messages"
     click_link "[User List] Data export complete"
     click_link "user-list-"
 
