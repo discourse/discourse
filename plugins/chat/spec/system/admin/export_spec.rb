@@ -129,6 +129,8 @@ RSpec.describe "Chat exports", type: :system do
       ],
     )
 
+    expect(data.length).to be(5)
+
     data_row = data[1]
     time_format = "%Y-%m-%d %k:%M:%S UTC"
     # fixme implement
