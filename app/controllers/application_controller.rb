@@ -639,19 +639,6 @@ class ApplicationController < ActionController::Base
     store_preloaded("isReadOnly", @readonly_mode.to_s)
     store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
     store_preloaded("activatedThemes", activated_themes_json)
-
-    font_map =
-      DiscourseFonts
-        .fonts
-        .reduce({}) do |hash, font|
-          if font[:variants]
-            hash[font[:key]] = font[:variants].map do |v|
-              Discourse.base_url + "/fonts/" + v[:filename]
-            end
-          end
-          hash
-        end
-    store_preloaded("fontMap", MultiJson.dump(font_map))
   end
 
   def preload_current_user_data
@@ -674,6 +661,9 @@ class ApplicationController < ActionController::Base
 
     store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
     store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
+
+    # This is used in the wizard so we can preload fonts using the FontMap JS API.
+    store_preloaded("fontMap", MultiJson.dump(load_font_map)) if current_user.admin?
   end
 
   def custom_html_json
@@ -1077,5 +1067,21 @@ class ApplicationController < ActionController::Base
 
   def spa_boot_request?
     request.get? && !(request.format && request.format.json?) && !request.xhr?
+  end
+
+  def load_font_map
+    DiscourseFonts
+      .fonts
+      .reduce({}) do |font_map_hash, font|
+        if font[:variants]
+          font_map_hash[font[:key]] = font[:variants].map do |v|
+            {
+              url: Discourse.base_url + "/fonts/" + v[:filename] + "?v=#{DiscourseFonts::VERSION}",
+              weight: v[:weight],
+            }
+          end
+        end
+        font_map_hash
+      end
   end
 end

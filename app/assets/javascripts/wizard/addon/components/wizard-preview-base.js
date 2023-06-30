@@ -56,6 +56,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     this.fontMap = PreloadStore.get("fontMap");
+    this.loadedFonts = new Set();
     const c = this.element.querySelector("canvas");
     this.ctx = c.getContext("2d");
     this.ctx.scale(scale, scale);
@@ -69,42 +70,59 @@ export default Component.extend({
 
   @observes("step.fieldsById.{body_font}.value")
   themeBodyFontChanged() {
-    const selectedFont = this.step.fieldsById.body_font.value;
-    const fonts = this.fontMap[selectedFont];
-
-    // System font does not need to load from a remote source.
-    if (fonts) {
-      const fontFaces = fonts.map(
-        (fontUrl, index) =>
-          new FontFace(`${selectedFont}-${index}`, `url(${fontUrl})`)
-      );
-
-      Promise.all(fontFaces.map((fontFace) => fontFace.load())).then(() => {
-        this.triggerRepaint();
-      });
+    if (!this.loadingFontVariants) {
+      this.loadFontVariants(this.wizard.font);
     }
   },
 
   @observes("step.fieldsById.{heading_font}.value")
   themeHeadingFontChanged() {
-    const selectedFont = this.step.fieldsById.heading_font.value;
-    const fonts = this.fontMap[selectedFont];
+    if (!this.loadingFontVariants) {
+      this.loadFontVariants(this.wizard.headingFont);
+    }
+  },
 
-    // System font does not need to load from a remote source.
-    if (fonts) {
-      const fontFaces = fonts.map(
-        (fontUrl, index) =>
-          new FontFace(`${selectedFont}-${index}`, `url(${fontUrl})`)
-      );
+  loadFontVariants(font) {
+    const fontVariantData = this.fontMap[font.id];
 
-      Promise.all(fontFaces.map((fontFace) => fontFace.load())).then(() => {
-        this.triggerRepaint();
+    // System font for example does not need to load from a remote source.
+    if (fontVariantData && !this.loadedFonts.has(font.id)) {
+      this.loadingFontVariants = true;
+      const fontFaces = fontVariantData.map((fontVariant) => {
+        return new FontFace(`${font.label}`, `url(${fontVariant.url})`, {
+          style: "normal",
+          weight: fontVariant.weight,
+        });
       });
+
+      Promise.all(
+        fontFaces.map((fontFace) =>
+          fontFace.load().then((loadedFont) => {
+            document.fonts.add(loadedFont);
+
+            // We use our own Set because, though document.fonts.check is available,
+            // it does not seem very reliable, returning false for fonts that have
+            // definitely been loaded.
+            this.loadedFonts.add(font.id);
+          })
+        )
+      )
+        .then(() => {
+          this.triggerRepaint();
+        })
+        .finally(() => {
+          this.loadingFontVariants = false;
+        });
+    } else if (this.loadedFonts.has(font.id)) {
+      this.triggerRepaint();
     }
   },
 
   images() {},
 
+  // NOTE: This works for fonts included in a style that is actually using the
+  // @font-faces on load, but for fonts that we aren't using yet we need to
+  // make sure they are loaded before rendering the canvas via loadFontVariants.
   loadFonts() {
     return document.fonts.ready;
   },
@@ -161,8 +179,8 @@ export default Component.extend({
     const options = {
       ctx,
       colors,
-      font,
-      headingFont,
+      font: font?.label,
+      headingFont: headingFont?.label,
       width: this.width,
       height: this.height,
     };
