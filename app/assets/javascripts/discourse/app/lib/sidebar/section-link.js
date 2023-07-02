@@ -9,8 +9,13 @@ const MOUSE_DELAY = 250;
 export default class SectionLink {
   @tracked linkDragCss;
 
-  constructor({ external, icon, id, name, value }, section, router) {
+  constructor(
+    { external, full_reload, icon, id, name, value },
+    section,
+    router
+  ) {
     this.external = external;
+    this.fullReload = full_reload;
     this.prefixValue = icon;
     this.id = id;
     this.name = name;
@@ -18,7 +23,7 @@ export default class SectionLink {
     this.value = value;
     this.section = section;
 
-    if (!this.external) {
+    if (!this.externalOrFullReload) {
       const routeInfoHelper = new RouteInfoHelper(router, value);
       this.route = routeInfoHelper.route;
       this.models = routeInfoHelper.models;
@@ -28,6 +33,10 @@ export default class SectionLink {
 
   get shouldDisplay() {
     return true;
+  }
+
+  get externalOrFullReload() {
+    return this.external || this.fullReload;
   }
 
   @bind

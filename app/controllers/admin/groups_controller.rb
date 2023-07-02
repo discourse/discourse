@@ -37,7 +37,7 @@ class Admin::GroupsController < Admin::StaffController
     if group.automatic
       can_not_modify_automatic
     else
-      StaffActionLogger.new(current_user).log_group_deletetion(group)
+      StaffActionLogger.new(current_user).log_group_deletion(group)
 
       group.destroy!
       render json: success_json

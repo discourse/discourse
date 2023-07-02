@@ -65,7 +65,7 @@ gem "http_accept_language", require: false
 
 gem "discourse-fonts", require: "discourse_fonts"
 
-gem "message_bus", "4.3.2"
+gem "message_bus"
 
 gem "rails_multisite"
 
@@ -96,8 +96,7 @@ gem "omniauth-oauth2", require: false
 
 gem "omniauth-google-oauth2"
 
-# pending: https://github.com/ohler55/oj/issues/789
-gem "oj", "3.13.14"
+gem "oj"
 
 gem "pg"
 gem "mini_sql"
