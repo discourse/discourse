@@ -17,6 +17,8 @@ import {
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { bind } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});
@@ -873,5 +875,69 @@ acceptance("Sidebar - Plugin API", function (needs) {
     } finally {
       resetCustomTagSectionLinkPrefixIcons();
     }
+  });
+
+  test("Add button to sidebar", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarButton("bottom", (BaseCustomSidebarButton) => {
+        const ToggleButton = class extends BaseCustomSidebarButton {
+          @tracked currentMode;
+
+          constructor() {
+            super(...arguments);
+
+            if (this.router.currentURL.startsWith("/chat/")) {
+              this.currentMode = "chat";
+            } else {
+              this.currentMode = "forum";
+            }
+          }
+
+          get label() {
+            if (this.currentMode === "chat") {
+              return "Forum";
+            } else {
+              return "Chat";
+            }
+          }
+
+          get icon() {
+            if (this.currentMode === "chat") {
+              return "random";
+            } else {
+              return "d-chat";
+            }
+          }
+
+          @action
+          action() {
+            if (this.currentMode === "chat") {
+              this.currentMode = "forum";
+              this.router.transitionTo("discovery.latest");
+            } else if (this.currentMode === "forum") {
+              this.currentMode = "chat";
+              this.router.transitionTo("chat");
+            }
+          }
+        };
+        return ToggleButton;
+      });
+    });
+
+    await visit("/");
+
+    assert.strictEqual(
+      query(".sidebar__api-button").textContent.trim(),
+      "Chat",
+      "displays button with correct text"
+    );
+
+    await click(".sidebar__api-button");
+
+    assert.strictEqual(
+      query(".sidebar__api-button").textContent.trim(),
+      "Forum",
+      "displays button with correct text"
+    );
   });
 });

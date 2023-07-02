@@ -1,10 +1,16 @@
 import Component from "@glimmer/component";
 import { bind } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
+import {
+  bottomSidebarButtons,
+  topSidebarButtons,
+} from "discourse/lib/sidebar/custom-buttons";
+import { getOwner, setOwner } from "@ember/application";
 
 export default class Sidebar extends Component {
   @service appEvents;
   @service site;
+  @service router;
   @service currentUser;
 
   constructor() {
@@ -13,6 +19,18 @@ export default class Sidebar extends Component {
     if (this.site.mobileView) {
       document.addEventListener("click", this.collapseSidebar);
     }
+
+    this.topSidebarButtons = topSidebarButtons.map((customButton) => {
+      const button = new customButton({ sidebar: this, router: this.router });
+      setOwner(button, getOwner(this));
+      return button;
+    });
+
+    this.bottomSidebarButtons = bottomSidebarButtons.map((customButton) => {
+      const button = new customButton({ sidebar: this, router: this.router });
+      setOwner(button, getOwner(this));
+      return button;
+    });
   }
 
   @bind

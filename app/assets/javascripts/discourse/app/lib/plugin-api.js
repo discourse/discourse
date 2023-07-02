@@ -106,6 +106,7 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { addSidebarButton } from "discourse/lib/sidebar/custom-buttons";
 import {
   registerCustomCategoryLockIcon,
   registerCustomCategorySectionLinkPrefix,
@@ -125,7 +126,7 @@ import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.6.1";
+export const PLUGIN_API_VERSION = "1.7.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2156,6 +2157,63 @@ class PluginApi {
    */
   addSidebarSection(func) {
     addSidebarSection(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding a Sidebar button by returning a class which extends from the BaseCustomSidebarButton
+   * class interface. See `lib/sidebar/base-custom-sidebar-button.js` for documentation on the BaseCustomSidebarButton class
+   * interface.
+   *
+   * ```
+   * api.addSidebarButton("bottom", (BaseCustomSidebarButton) => {
+   *   const ToggleButton = class extends BaseCustomSidebarButton {
+   *     @service chatStateManager;
+   *     @tracked currentMode;
+   *
+   *     constructor() {
+   *       super(...arguments);
+   *
+   *       if (this.router.currentURL.startsWith("/chat/")) {
+   *         this.currentMode = "chat";
+   *       } else {
+   *         this.currentMode = "forum";
+   *       }
+   *     }
+   *
+   *     get label() {
+   *       if (this.currentMode === "chat") {
+   *         return "Forum";
+   *       } else {
+   *         return "Chat";
+   *       }
+   *     }
+   *
+   *     get icon() {
+   *       if (this.currentMode === "chat") {
+   *         return "random";
+   *       } else {
+   *         return "d-chat";
+   *       }
+   *     }
+   *
+   *     @action
+   *     action() {
+   *       if (this.currentMode === "chat") {
+   *         this.currentMode = "forum";
+   *         this.router.transitionTo(this.chatStateManager.lastKnownAppURL);
+   *       } else if (this.currentMode === "forum") {
+   *         this.currentMode = "chat";
+   *         this.router.transitionTo(this.chatStateManager.lastKnownChatURL);
+   *       }
+   *     }
+   *   };
+   *   return ToggleButton;
+   * });
+   * ```
+   */
+  addSidebarButton(position, func) {
+    addSidebarButton(position, func);
   }
 
   /**

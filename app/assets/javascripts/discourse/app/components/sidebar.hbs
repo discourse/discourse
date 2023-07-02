@@ -4,9 +4,29 @@
   @class="sidebar-container"
   @scrollTop={{false}}
 >
+
+  {{#each this.topSidebarButtons as |button|}}
+    <DButton
+      @action={{action button.action}}
+      @class="sidebar__api-button"
+      @translatedLabel={{button.label}}
+      @icon={{button.icon}}
+    />
+  {{/each}}
+
   <Sidebar::Sections
     @currentUser={{this.currentUser}}
     @collapsableSections={{true}}
   />
+
+  {{#each this.bottomSidebarButtons as |button|}}
+    <DButton
+      @action={{action button.action}}
+      @class="sidebar__api-button"
+      @translatedLabel={{button.label}}
+      @icon={{button.icon}}
+    />
+  {{/each}}
+
   <Sidebar::Footer />
 </DSection>
