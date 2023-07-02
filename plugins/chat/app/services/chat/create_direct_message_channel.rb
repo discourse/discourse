@@ -89,10 +89,6 @@ module Chat
         memberships,
         unique_by: %i[user_id chat_channel_id],
       )
-      Chat::UserChatChannelMembership.find_by(
-        user_id: guardian.user.id,
-        chat_channel_id: channel.id,
-      ).update!(following: true)
     end
 
     def publish_channel(channel:, target_users:, **)
