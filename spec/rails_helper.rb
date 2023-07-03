@@ -244,7 +244,10 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    WebMock.disable_net_connect!(allow_localhost: true, allow: [Webdrivers::Chromedriver.base_url])
+    WebMock.disable_net_connect!(
+      allow_localhost: true,
+      allow: [Webdrivers::Chromedriver.base_url, "http://127.0.0.1:9000"],
+    )
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
       Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i

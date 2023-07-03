@@ -114,7 +114,7 @@ class FinalDestination
       "User-Agent" => @user_agent,
       "Accept" => "*/*",
       "Accept-Language" => "*",
-      "Host" => @uri.hostname,
+      # "Host" => @uri.hostname,
     }
 
     result["Cookie"] = @cookie if @cookie
@@ -451,9 +451,10 @@ class FinalDestination
     headers_subset = Struct.new(:location, :set_cookie).new
 
     safe_session(uri) do |http|
-      headers = request_headers.merge("Accept-Encoding" => "gzip", "Host" => uri.host)
+      # headers = request_headers.merge("Accept-Encoding" => "gzip", "Host" => uri.host)
+      headers = request_headers.merge("Accept-Encoding" => "gzip")
 
-      req = FinalDestination::HTTP::Get.new(uri.request_uri, headers)
+      req = FinalDestination::HTTP::Get.new(@uri.request_uri, headers)
 
       http.request(req) do |resp|
         headers_subset.set_cookie = resp["Set-Cookie"]
@@ -506,7 +507,7 @@ class FinalDestination
   rescue OpenSSL::SSL::SSLError => exception
     log(:warn, "An error with SSL occurred: #{@uri} #{exception.message}")
     nil
-  rescue StandardError
+  rescue StandardError => err
     unsafe_close ? [:ok, headers_subset] : raise
   end
 

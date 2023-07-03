@@ -52,7 +52,7 @@ class FileHelper
     retain_on_max_file_size_exceeded: false
   )
     url = "https:" + url if url.start_with?("//")
-    raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
+    # raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
 
     tmp = nil
 

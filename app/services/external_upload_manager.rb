@@ -33,7 +33,7 @@ class ExternalUploadManager
 
     upload_stub =
       ExternalUploadStub.create!(
-        key: key,
+        key: key.gsub("#{SiteSetting.s3_upload_bucket}/", ""),
         created_by: current_user,
         original_filename: file_name,
         upload_type: upload_type,
@@ -196,6 +196,7 @@ class ExternalUploadManager
       max_file_size: DOWNLOAD_LIMIT,
       tmp_file_name: "discourse-upload-#{type}",
       follow_redirect: true,
+      validate_uri: false,
     )
   end
 end
