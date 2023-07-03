@@ -1072,16 +1072,14 @@ class ApplicationController < ActionController::Base
   def load_font_map
     DiscourseFonts
       .fonts
-      .reduce({}) do |font_map_hash, font|
-        if font[:variants]
-          font_map_hash[font[:key]] = font[:variants].map do |v|
-            {
-              url: "#{Discourse.base_url}/fonts/#{v[:filename]}?v=#{DiscourseFonts::VERSION}",
-              weight: v[:weight],
-            }
-          end
+      .each_with_object({}) do |font, font_map|
+        next if !font[:variants]
+        font_map[font[:key]] = font[:variants].map do |v|
+          {
+            url: "#{Discourse.base_url}/fonts/#{v[:filename]}?v=#{DiscourseFonts::VERSION}",
+            weight: v[:weight],
+          }
         end
-        font_map_hash
       end
   end
 end

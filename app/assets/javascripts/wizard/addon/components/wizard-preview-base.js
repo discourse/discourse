@@ -52,6 +52,7 @@ export default Component.extend({
 
   ctx: null,
   loaded: false,
+  loadingFontVariants: false,
 
   didInsertElement() {
     this._super(...arguments);
@@ -89,7 +90,7 @@ export default Component.extend({
     if (fontVariantData && !this.loadedFonts.has(font.id)) {
       this.loadingFontVariants = true;
       const fontFaces = fontVariantData.map((fontVariant) => {
-        return new FontFace(`${font.label}`, `url(${fontVariant.url})`, {
+        return new FontFace(font.label, `url(${fontVariant.url})`, {
           style: "normal",
           weight: fontVariant.weight,
         });
