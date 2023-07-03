@@ -14,6 +14,7 @@ import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-m
 import { tracked } from "@glimmer/tracking";
 
 let _chatMessageDecorators = [];
+let _tippyInstances = [];
 
 export function addChatMessageDecorator(decorator) {
   _chatMessageDecorators.push(decorator);
@@ -136,6 +137,13 @@ export default class ChatMessage extends Component {
     this.#teardownMentionedUsers();
   }
 
+  #destroyTippyInstances() {
+    _tippyInstances.forEach((instance) => {
+      instance.destroy();
+    });
+    _tippyInstances = [];
+  }
+
   @action
   refreshStatusOnMentions() {
     schedule("afterRender", () => {
@@ -146,7 +154,7 @@ export default class ChatMessage extends Component {
         );
 
         mentions.forEach((mention) => {
-          updateUserStatusOnMention(mention, user.status, this.currentUser);
+          updateUserStatusOnMention(mention, user.status, _tippyInstances);
         });
       });
     });
@@ -402,5 +410,6 @@ export default class ChatMessage extends Component {
       user.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
+    this.#destroyTippyInstances();
   }
 }
