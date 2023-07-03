@@ -5,8 +5,19 @@ import { hbs } from "ember-cli-htmlbars";
 import { getOwner } from "@ember/application";
 import Component from "@glimmer/component";
 import { setComponentTemplate } from "@glimmer/manager";
+import {
+  CLOSE_INITIATED_BY_BUTTON,
+  CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+  CLOSE_INITIATED_BY_ESC,
+} from "discourse/components/d-modal";
+import { action } from "@ember/object";
 
-class MyModalClass extends Component {}
+class MyModalClass extends Component {
+  @action
+  closeWithCustomData() {
+    this.args.closeModal({ hello: "world" });
+  }
+}
 setComponentTemplate(
   hbs`
     <DModal
@@ -14,6 +25,7 @@ setComponentTemplate(
       @title="Hello World"
     >
       Modal content is {{@model.text}}
+      <button class='custom-data' {{on "click" this.closeWithCustomData}}></button>
     </DModal>
   `,
   MyModalClass
@@ -27,7 +39,9 @@ acceptance("Modal service: component-based API", function () {
 
     const modalService = getOwner(this).lookup("service:modal");
 
-    modalService.show(MyModalClass, { model: { text: "working" } });
+    let promise = modalService.show(MyModalClass, {
+      model: { text: "working" },
+    });
     await settled();
     assert.dom(".d-modal").exists("modal should appear");
 
@@ -36,20 +50,47 @@ acceptance("Modal service: component-based API", function () {
 
     await click(".modal-outer-container");
     assert.dom(".d-modal").doesNotExist("disappears on click outside");
+    assert.deepEqual(
+      await promise,
+      { initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE },
+      "promise resolves with correct initiator"
+    );
 
-    modalService.show(MyModalClass, { model: { text: "working" } });
+    promise = modalService.show(MyModalClass, { model: { text: "working" } });
     await settled();
     assert.dom(".d-modal").exists("modal reappears");
 
     await triggerKeyEvent("#main-outlet", "keydown", "Escape");
     assert.dom(".d-modal").doesNotExist("disappears on escape");
+    assert.deepEqual(
+      await promise,
+      { initiatedBy: CLOSE_INITIATED_BY_ESC },
+      "promise resolves with correct initiator"
+    );
 
-    modalService.show(MyModalClass, { model: { text: "working" } });
+    promise = modalService.show(MyModalClass, { model: { text: "working" } });
     await settled();
     assert.dom(".d-modal").exists("modal reappears");
 
     await click(".d-modal .modal-close");
     assert.dom(".d-modal").doesNotExist("disappears when close button clicked");
+    assert.deepEqual(
+      await promise,
+      { initiatedBy: CLOSE_INITIATED_BY_BUTTON },
+      "promise resolves with correct initiator"
+    );
+
+    promise = modalService.show(MyModalClass, { model: { text: "working" } });
+    await settled();
+    assert.dom(".d-modal").exists("modal reappears");
+
+    await click(".d-modal .modal-close");
+    assert.dom(".d-modal").doesNotExist("disappears when close button clicked");
+    assert.deepEqual(
+      await promise,
+      { initiatedBy: CLOSE_INITIATED_BY_BUTTON },
+      "promise resolves with correct initiator"
+    );
   });
 
   // (See also, `tests/integration/component/d-modal-test.js`)

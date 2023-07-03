@@ -70,7 +70,9 @@ export default class DModal extends Component {
       e.target.classList.contains("modal-middle-container") ||
       e.target.classList.contains("modal-outer-container")
     ) {
-      return this.args.closeModal?.(CLOSE_INITIATED_BY_CLICK_OUTSIDE);
+      return this.args.closeModal?.({
+        initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+      });
     }
   }
 
@@ -81,7 +83,7 @@ export default class DModal extends Component {
     }
 
     if (event.key === "Escape" && this.dismissable) {
-      next(() => this.args.closeModal(CLOSE_INITIATED_BY_ESC));
+      next(() => this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC }));
     }
 
     if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
@@ -153,5 +155,10 @@ export default class DModal extends Component {
         event.preventDefault();
       }
     }
+  }
+
+  @action
+  handleCloseButton() {
+    this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_BUTTON });
   }
 }

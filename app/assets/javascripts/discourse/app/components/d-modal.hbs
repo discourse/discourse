@@ -37,7 +37,7 @@
               {{#if this.dismissable}}
                 <DButton
                   @icon="times"
-                  @action={{fn @closeModal "initiatedByCloseButton"}}
+                  @action={{this.handleCloseButton}}
                   @class="btn-flat modal-close close"
                   @title="modal.close"
                 />

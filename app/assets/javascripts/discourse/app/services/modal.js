@@ -21,6 +21,7 @@ class ModalService extends Service {
   @tracked modalBodyComponent;
   @tracked opts = {};
   @tracked containerElement;
+  #resolveShowPromise;
 
   @action
   setContainerElement(element) {
@@ -28,6 +29,12 @@ class ModalService extends Service {
   }
 
   show(modal, opts) {
+    this.close();
+
+    const promise = new Promise((resolve) => {
+      this.#resolveShowPromise = resolve;
+    });
+
     this.opts = opts || {};
     this.modalBodyComponent = modal;
 
@@ -41,10 +48,13 @@ class ModalService extends Service {
         )} are not supported in the component-based modal API. See https://meta.discourse.org/t/268057`
       );
     }
+
+    return promise;
   }
 
-  close() {
-    this.modalBodyComponent = null;
+  close(data) {
+    this.#resolveShowPromise?.(data);
+    this.#resolveShowPromise = this.modalBodyComponent = null;
     this.opts = {};
   }
 }
@@ -148,6 +158,10 @@ export default class ModalServiceWithLegacySupport extends ModalService {
   }
 
   close(initiatedBy) {
+    if (!this.isLegacy) {
+      super.close(...arguments);
+    }
+
     const controllerName = this.name;
     const controller = controllerName
       ? getOwner(this).lookup(`controller:${controllerName}`)
