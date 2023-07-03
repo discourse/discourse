@@ -5,26 +5,20 @@ import {
 } from "discourse/lib/webauthn";
 import Component from "@glimmer/component";
 import I18n from "I18n";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
 export default class SecondFactorAddSecurityKey extends Component {
   @service capabilities;
-  @service modal;
 
   @tracked loading = false;
   @tracked errorMessage = null;
   @tracked securityKeyName;
 
+  onClose = this.args.model.onClose;
+
   get webauthnUnsupported() {
     return !isWebauthnSupported();
-  }
-
-  @action
-  onClose() {
-    this.args.model.onClose();
-    this.modal.close();
   }
 
   @action
@@ -63,7 +57,7 @@ export default class SecondFactorAddSecurityKey extends Component {
           response.existing_active_credential_ids;
       })
       .catch((error) => {
-        this.modal.close();
+        this.args.closeModal();
         this.args.model.onError(error);
       })
       .finally(() => (this.loading = false));
@@ -133,7 +127,7 @@ export default class SecondFactorAddSecurityKey extends Component {
               }
               this.args.model.markDirty();
               this.errorMessage = null;
-              this.modal.close();
+              this.args.closeModal();
             })
             .catch((error) => this.args.model.onError(error))
             .finally(() => (this.loading = false));
@@ -154,5 +148,9 @@ export default class SecondFactorAddSecurityKey extends Component {
           this.errorMessage = err.message;
         }
       );
+  }
+
+  willDestroy() {
+    this.onClose();
   }
 }
