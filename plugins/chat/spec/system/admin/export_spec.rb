@@ -16,7 +16,6 @@ RSpec.describe "Chat exports", type: :system do
 
     visit "/admin/plugins/chat"
     click_button "Create export"
-    click_button "OK" # fixme maybe remove this
 
     visit "/u/#{admin.username}/messages"
     click_link "[Chat Message] Data export complete"
