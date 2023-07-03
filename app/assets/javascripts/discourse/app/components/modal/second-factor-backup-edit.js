@@ -16,6 +16,8 @@ export default class SecondFactorBackupEdit extends Component {
   @tracked backupCodes;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
 
+  onClose = this.args.model.onClose;
+
   @action
   copyBackupCode(successful) {
     if (successful) {
@@ -61,6 +63,6 @@ export default class SecondFactorBackupEdit extends Component {
   }
 
   willDestroy() {
-    this.args.model.onClose();
+    this.onClose();
   }
 }
