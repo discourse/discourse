@@ -9,15 +9,33 @@ RSpec.describe "Exports", type: :system do
       last_seen_at: Time.now,
       last_posted_at: Time.now,
       last_emailed_at: Time.now,
+      approved: true,
       suspended_at: Time.now,
       suspended_till: Time.now,
       silenced_till: Time.now,
+      admin: true,
+      moderator: true,
+      staged: true,
     )
   end
+  let(:second_email) { "second_email@discourse.org" }
+  let(:third_email) { "third_email@discourse.org" }
 
   before do
     Jobs.run_immediately!
     sign_in(admin)
+
+    user.user_emails.create!(email: second_email)
+    user.user_emails.create!(email: third_email)
+
+    user.user_stat.topics_entered = 111
+    user.user_stat.posts_read_count = 111
+    user.user_stat.time_read = 111
+    user.user_stat.topic_count = 111
+    user.user_stat.post_count = 111
+    user.user_stat.likes_given = 111
+    user.user_stat.likes_received = 111
+    user.user_stat.save!
   end
 
   after { Downloads.clear }
@@ -98,8 +116,26 @@ RSpec.describe "Exports", type: :system do
         user.suspended_at.strftime(time_format),
         user.suspended_till.strftime(time_format),
         user.silenced_till.strftime(time_format),
+        user.active,
+        user.admin,
+        user.moderator,
+        user.ip_address.to_s,
+        user.staged,
+        "#{second_email};#{third_email}",
+        user.user_stat.topics_entered,
+        user.user_stat.posts_read_count,
+        user.user_stat.time_read,
+        user.user_stat.topic_count,
+        user.user_stat.post_count,
+        user.user_stat.likes_given,
+        user.user_stat.likes_received,
       ],
     )
+
+    # nil, nil, "0", nil
+    #         escape_comma(user.user_profile.location),
+    #         user.user_profile.website,
+    #         user.user_profile.views,
   end
 
   def extract_zip(file, destination)
