@@ -1,0 +1,95 @@
+{{! Remove when legacy modals are dropped (deprecation: discourse.modal-controllers) }}
+
+{{! template-lint-disable no-pointer-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
+
+<div
+  class={{concat-class
+    this.modalClass
+    this.modalStyle
+    (if this.hasPanels "has-panels")
+    (if @hidden "hidden")
+    "d-modal-legacy"
+  }}
+  id={{if (not-eq this.modalStyle "inline-modal") "discourse-modal"}}
+  data-keyboard="false"
+  aria-modal="true"
+  role="dialog"
+  aria-labelledby={{this.ariaLabelledby}}
+  ...attributes
+  {{did-insert this.setupListeners}}
+  {{will-destroy this.cleanupListeners}}
+  {{on "mousedown" this.handleMouseDown}}
+>
+  <div class="modal-outer-container">
+    <div class="modal-middle-container">
+      <div class="modal-inner-container">
+        <PluginOutlet @name="above-modal-header" @connectorTagName="div" />
+        <div class="modal-header {{this.headerClass}}">
+          {{#if this.dismissable}}
+            <DButton
+              @icon="times"
+              @action={{route-action "closeModal" "initiatedByCloseButton"}}
+              @class="btn-flat modal-close close"
+              @title="modal.close"
+            />
+          {{/if}}
+
+          <div class="modal-title-wrapper">
+            {{#if this.title}}
+              <div class="title">
+                <h3 id="discourse-modal-title">{{this.title}}</h3>
+
+                {{#if this.subtitle}}
+                  <p class="subtitle">{{this.subtitle}}</p>
+                {{/if}}
+              </div>
+            {{/if}}
+
+            <span id="modal-header-after-title"></span>
+          </div>
+
+          {{#if this.panels}}
+            <ul class="modal-tabs">
+              {{#each this.panels as |panel|}}
+                <ModalTab
+                  @panel={{panel}}
+                  @panelsLength={{this.panels.length}}
+                  @selectedPanel={{@selectedPanel}}
+                  @onSelectPanel={{@onSelectPanel}}
+                />
+              {{/each}}
+            </ul>
+          {{/if}}
+        </div>
+
+        <div
+          id="modal-alert"
+          role="alert"
+          class={{if
+            this.flash
+            (concat-class
+              "alert" (concat "alert-" (or this.flash.messageClass "success"))
+            )
+          }}
+        >
+          {{~this.flash.text~}}
+        </div>
+
+        {{yield}}
+
+        {{#each this.errors as |error|}}
+          <div class="alert alert-error">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="alert"
+              aria-label={{i18n "modal.dismiss_error"}}
+            >×</button>
+            {{error}}
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,5 +8,6 @@ globalThis.deprecationWorkflow.config = {
     { handler: "silence", matchId: "route-disconnect-outlet" },
     { handler: "silence", matchId: "this-property-fallback" },
     { handler: "silence", matchId: "discourse.select-kit" },
+    { handler: "silence", matchId: "discourse.modal-controllers" },
   ],
 };
