@@ -45,6 +45,8 @@ class TranslationOverride < ActiveRecord::Base
 
   validate :check_interpolation_keys
 
+  enum :status, %i[up_to_date outdated invalid_interpolation_keys]
+
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
 
@@ -165,13 +167,15 @@ end
 #
 # Table name: translation_overrides
 #
-#  id              :integer          not null, primary key
-#  locale          :string           not null
-#  translation_key :string           not null
-#  value           :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  compiled_js     :text
+#  id                   :integer          not null, primary key
+#  locale               :string           not null
+#  translation_key      :string           not null
+#  value                :string           not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  compiled_js          :text
+#  original_translation :text
+#  status               :integer          default("up_to_date"), not null
 #
 # Indexes
 #
