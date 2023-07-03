@@ -36,12 +36,12 @@ async function mouseenter() {
   await triggerEvent(query(".user-status-message"), "mouseenter");
 }
 
-async function mouseleave() {
-  await triggerEvent(query(".user-status-message"), "mouseleave");
-}
-
 acceptance("Post inline mentions", function (needs) {
   needs.user();
+  needs.hooks.afterEach(() => {
+    const tippy = document.querySelector("[data-tippy-root]");
+    tippy && document.querySelector("body").removeChild(tippy);
+  });
 
   const topicId = 130;
   const mentionedUserId = 1;
@@ -81,8 +81,6 @@ acceptance("Post inline mentions", function (needs) {
       status.description,
       "status description is correct"
     );
-    // Needed to remove the tooltip in between tests
-    await mouseleave();
   });
 
   skip("inserts user status on message bus message", async function (assert) {
@@ -125,9 +123,6 @@ acceptance("Post inline mentions", function (needs) {
       status.description,
       "status description is correct"
     );
-
-    // Needed to remove the tooltip in between tests
-    await mouseleave();
   });
 
   test("updates user status on message bus message", async function (assert) {
@@ -175,9 +170,6 @@ acceptance("Post inline mentions", function (needs) {
       newStatus.description,
       "updated status description is correct"
     );
-
-    // Needed to remove the tooltip in between tests
-    await mouseleave();
   });
 
   test("removes user status on message bus message", async function (assert) {
