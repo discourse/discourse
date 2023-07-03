@@ -141,6 +141,12 @@ module Onebox
         end
       end
 
+      def is_reply
+        if twitter_api_credentials_present?
+          raw.dig(:data, :referenced_tweets)&.any? { |tweet| tweet.dig(:type) == "replied_to" }
+        end
+      end
+
       def quoted_full_name
         if twitter_api_credentials_present? && quoted_tweet_author.present?
           quoted_tweet_author[:name]
@@ -216,6 +222,7 @@ module Onebox
           avatar: avatar,
           likes: likes,
           retweets: retweets,
+          is_reply: is_reply,
           quoted_text: quoted_text,
           quoted_full_name: quoted_full_name,
           quoted_screen_name: quoted_screen_name,

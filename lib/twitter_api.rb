@@ -15,15 +15,17 @@ class TwitterApi
       text = tweet[:data][:text].dup.to_s
       if (entities = tweet[:data][:entities]) && (urls = entities[:urls])
         urls.each do |url|
-          text.gsub!(
-            url[:url],
-            "<a target='_blank' href='#{url[:expanded_url]}'>#{url[:display_url]}</a>",
-          )
+          if !url[:display_url].start_with?("pic.twitter.com")
+            text.gsub!(
+              url[:url],
+              "<a target='_blank' href='#{url[:expanded_url]}'>#{url[:display_url]}</a>",
+            )
+          else
+            text.gsub!(url[:url], "")
+          end
         end
       end
-
       text = link_hashtags_in link_handles_in text
-
       result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
 
       if tweet[:includes] && media = tweet[:includes][:media]
