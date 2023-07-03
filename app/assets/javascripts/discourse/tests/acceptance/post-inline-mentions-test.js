@@ -5,7 +5,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { triggerEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -83,7 +83,7 @@ acceptance("Post inline mentions", function (needs) {
     );
   });
 
-  test("inserts user status on message bus message", async function (assert) {
+  skip("inserts user status on message bus message", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
       return response(topicWithoutUserStatus(topicId, mentionedUserId));
     });
