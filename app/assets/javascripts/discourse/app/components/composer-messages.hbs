@@ -2,7 +2,7 @@
   <ComposerMessage
     @message={{message}}
     @closeMessage={{action "closeMessage"}}
-    @shareModal={{fn (mut this.showShareModal true)}}
+    @shareModal={{fn (mut this.showShareModal) true}}
     @switchPM={{action "switchPM"}}
   />
   {{#if this.showShareModal}}
