@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { next } from "@ember/runloop";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
@@ -84,7 +83,7 @@ export default class DModal extends Component {
     }
 
     if (event.key === "Escape" && this.dismissable) {
-      next(() => this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC }));
+      this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC });
     }
 
     if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
