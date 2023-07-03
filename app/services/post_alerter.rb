@@ -270,14 +270,12 @@ class PostAlerter
   end
 
   def category_or_tag_muters(topic)
-    user_ids = DB.query(<<~SQL).map(&:user_id)
-      SELECT user_id FROM category_users WHERE category_users.category_id = #{topic.category_id.to_i} AND category_users.notification_level = #{CategoryUser.notification_levels[:muted]}
-        UNION
-      SELECT user_id FROM tag_users
-      INNER JOIN topic_tags ON topic_tags.tag_id = tag_users.tag_id AND topic_tags.topic_id = #{topic.id.to_i}
-        WHERE tag_users.notification_level = #{TagUser.notification_levels[:muted]}
-    SQL
-    User.where(id: user_ids)
+    user_ids_sql = <<~SQL
+    SELECT user_id FROM category_users WHERE category_id = #{topic.category_id.to_i} AND notification_level = #{CategoryUser.notification_levels[:muted]}
+      UNION
+    SELECT user_id FROM tag_users tu JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id} AND tu.notification_level = #{TagUser.notification_levels[:muted]}
+      SQL
+    User.where("id IN (#{user_ids_sql})")
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)
