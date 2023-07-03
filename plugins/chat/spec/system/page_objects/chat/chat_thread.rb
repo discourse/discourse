@@ -58,6 +58,16 @@ module PageObjects
         header.find(".chat-thread__close").click
       end
 
+      def has_back_link_to_thread_list?(channel)
+        header.has_css?(
+          ".chat-thread__back-to-previous-route[href='#{channel.relative_url + "/t"}']",
+        )
+      end
+
+      def has_back_link_to_channel?(channel)
+        header.has_css?(".chat-thread__back-to-previous-route[href='#{channel.relative_url}']")
+      end
+
       def back_to_previous_route
         header.find(".chat-thread__back-to-previous-route").click
       end

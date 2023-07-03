@@ -8,13 +8,14 @@
   @class={{this.section.dragCss}}
 >
   {{#each this.section.links as |link|}}
-    {{#if link.external}}
+    {{#if link.externalOrFullReload}}
       <Sidebar::SectionLink
         @shouldDisplay={{link.shouldDisplay}}
         @linkName={{link.name}}
         @content={{replace-emoji link.text}}
         @prefixType="icon"
         @prefixValue={{link.prefixValue}}
+        @fullReload={{link.fullReload}}
         @href={{link.value}}
         @class={{link.linkDragCss}}
         {{(if

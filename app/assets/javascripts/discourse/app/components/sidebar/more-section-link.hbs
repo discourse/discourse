@@ -1,10 +1,11 @@
-{{#if @sectionLink.external}}
+{{#if @sectionLink.externalOrFullReload}}
   <Sidebar::SectionLink
     @shouldDisplay={{@sectionLink.shouldDisplay}}
     @linkName={{@sectionLink.name}}
     @content={{replace-emoji @sectionLink.text}}
     @prefixType="icon"
     @prefixValue={{@sectionLink.prefixValue}}
+    @fullReload={{@sectionLink.fullReload}}
     @href={{@sectionLink.value}}
   />
 {{else}}
