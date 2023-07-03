@@ -141,7 +141,7 @@ export default class ChatChannel {
   }
 
   set unreadThreadOverview(unreadThreadOverview) {
-    this._unreadThreadOverview = new TrackedMap();
+    this._unreadThreadOverview.clear();
 
     for (const [threadId, lastReplyCreatedAt] of Object.entries(
       unreadThreadOverview
