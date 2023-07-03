@@ -29,8 +29,20 @@ export default class extends Component {
     // `/tags` route as well so we have decided to kick this can of worms down the road for now.
     await this.store
       .findAll("tag")
-      .then((tags) => {
-        this.tags = tags.content.sort((a, b) => {
+      .then((result) => {
+        const tags = [...result.content];
+
+        if (result.extras) {
+          if (result.extras.tag_groups) {
+            result.extras.tag_groups.forEach((tagGroup) => {
+              tagGroup.tags.forEach((tag) => {
+                tags.push(tag);
+              });
+            });
+          }
+        }
+
+        this.tags = tags.sort((a, b) => {
           return a.name.localeCompare(b.name);
         });
 
