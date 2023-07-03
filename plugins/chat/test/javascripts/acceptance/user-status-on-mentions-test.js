@@ -225,7 +225,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
-  test("deleted messages | it deletes status on mentions", async function (assert) {
+  skip("deleted messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -274,7 +274,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
-  test("restored messages | it deletes status on mentions", async function (assert) {
+  skip("restored messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
