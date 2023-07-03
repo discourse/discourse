@@ -6,6 +6,7 @@ import { dasherize } from "@ember/string";
 import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import deprecated from "discourse-common/lib/deprecated";
 
 const LEGACY_OPTS = new Set([
   "admin",
@@ -108,6 +109,16 @@ export default class ModalServiceWithLegacySupport extends ModalService {
     if (typeof modal !== "string") {
       return super.show(modal, opts);
     }
+
+    deprecated(
+      "Defining modals using a controller is deprecated. Use the component-based API instead.",
+      {
+        id: "discourse.modal-controllers",
+        since: "3.1",
+        dropFrom: "3.2",
+        url: "https://meta.discourse.org/t/268057",
+      }
+    );
 
     const name = modal;
     const container = getOwner(this);
