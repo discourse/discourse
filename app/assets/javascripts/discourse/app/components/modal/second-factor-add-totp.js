@@ -1,18 +1,17 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 import I18n from "I18n";
 
 export default class SecondFactorAddTotp extends Component {
-  @service modal;
-
   @tracked loading = false;
   @tracked secondFactorImage;
   @tracked secondFactorKey;
   @tracked showSecondFactorKey = false;
   @tracked errorMessage;
   @tracked secondFactorToken;
+
+  onClose = this.args.model.onClose;
 
   @action
   totpRequested() {
@@ -29,7 +28,7 @@ export default class SecondFactorAddTotp extends Component {
         this.secondFactorImage = response.qr;
       })
       .catch((error) => {
-        this.modal.close();
+        this.args.closeModal();
         this.args.model.onError(error);
       })
       .finally(() => (this.loading = false));
@@ -58,9 +57,13 @@ export default class SecondFactorAddTotp extends Component {
         }
         this.args.model.markDirty();
         this.errorMessage = null;
-        this.modal.close();
+        this.args.closeModal();
       })
       .catch((error) => this.args.model.onError(error))
       .finally(() => (this.loading = false));
+  }
+
+  willDestroy() {
+    this.onClose();
   }
 }
