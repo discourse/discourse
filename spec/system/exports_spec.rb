@@ -1,7 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe "Exports", type: :system do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin) do
+    Fabricate(
+      :admin,
+      title: "dr",
+      last_seen_at: Time.now,
+      last_posted_at: Time.now,
+      last_emailed_at: Time.now,
+      suspended_at: Time.now,
+      suspended_till: Time.now,
+      silenced_till: Time.now,
+    )
+  end
 
   before do
     Jobs.run_immediately!
@@ -66,26 +77,28 @@ RSpec.describe "Exports", type: :system do
 
     expect(data.length).to be(4)
 
-    data_row = data[1]
+    exported_admin = data[3]
     time_format = "%Y-%m-%d %k:%M:%S UTC"
-    # fixme implement
-    # expect(data_row).to eq(
-    #   [
-    #     message.id.to_s,
-    #     message.chat_channel.id.to_s,
-    #     message.chat_channel.name,
-    #     message.user.id.to_s,
-    #     message.user.username,
-    #     message.message,
-    #     message.cooked,
-    #     message.created_at.strftime(time_format),
-    #     message.updated_at.strftime(time_format),
-    #     nil,
-    #     nil,
-    #     message.last_editor.id.to_s,
-    #     message.last_editor.username,
-    #   ],
-    # )
+    expect(exported_admin).to eq(
+      [
+        admin.id.to_s,
+        admin.name,
+        admin.username,
+        admin.email,
+        admin.title,
+        admin.created_at.strftime(time_format),
+        admin.updated_at.strftime(time_format),
+        admin.created_at.strftime(time_format),
+        admin.last_seen_at.strftime(time_format),
+        admin.last_posted_at.strftime(time_format),
+        admin.last_emailed_at.strftime(time_format),
+        admin.trust_level,
+        admin.approved,
+        admin.suspended_at.strftime(time_format),
+        admin.suspended_till.strftime(time_format),
+        admin.silenced_till.strftime(time_format),
+      ],
+    )
   end
 
   def extract_zip(file, destination)
