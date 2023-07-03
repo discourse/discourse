@@ -1,11 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 
 export default class SecondFactorEditSecurityKey extends Component {
-  @service modal;
-
   @tracked loading = false;
 
   @action
@@ -28,7 +25,7 @@ export default class SecondFactorEditSecurityKey extends Component {
       })
       .finally(() => {
         this.loading = false;
-        this.modal.close();
+        this.args.closeModal();
       });
   }
 }

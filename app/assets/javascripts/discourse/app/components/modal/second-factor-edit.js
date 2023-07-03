@@ -1,11 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 
 export default class SecondFactorEdit extends Component {
-  @service modal;
-
   @tracked loading = false;
 
   @action
@@ -25,12 +22,12 @@ export default class SecondFactorEdit extends Component {
         this.args.model.markDirty();
       })
       .catch((error) => {
-        this.modal.close();
+        this.args.closeModal();
         this.args.model.onError(error);
       })
       .finally(() => {
         this.loading = false;
-        this.modal.close();
+        this.args.closeModal();
       });
   }
 }
