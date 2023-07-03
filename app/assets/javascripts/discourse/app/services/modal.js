@@ -30,6 +30,15 @@ class ModalService extends Service {
     this.containerElement = element;
   }
 
+  /**
+   * Render a modal
+   *
+   * @param {Component} modal - a reference to the component class for the modal
+   * @param {Object} [options] - options
+   * @param {string} [options.model] - An object which will be passed as the `@model` argument on the component
+   *
+   * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
+   */
   show(modal, opts) {
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
