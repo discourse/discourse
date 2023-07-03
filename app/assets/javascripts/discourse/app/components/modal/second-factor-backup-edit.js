@@ -2,13 +2,10 @@ import Component from "@glimmer/component";
 import I18n from "I18n";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { debounce } from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 
 export default class SecondFactorBackupEdit extends Component {
-  @service modal;
-
   @tracked loading = false;
   @tracked errorMessage;
   @tracked successMessage;
@@ -51,7 +48,7 @@ export default class SecondFactorBackupEdit extends Component {
         this.remainingCodes = response.backup_codes.length;
       })
       .catch((error) => {
-        this.modal.close();
+        this.args.closeModal();
         this.args.model.onError(error);
       })
       .finally(() => (this.loading = false));
@@ -61,5 +58,9 @@ export default class SecondFactorBackupEdit extends Component {
   _hideCopyMessage() {
     this.successMessage = null;
     this.errorMessage = null;
+  }
+
+  willDestroy() {
+    this.args.model.onClose();
   }
 }
