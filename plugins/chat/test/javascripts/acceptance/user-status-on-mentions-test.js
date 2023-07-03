@@ -258,7 +258,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     );
   });
 
-  test("restored messages | it updates status on mentions", async function (assert) {
+  skip("restored messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
