@@ -1,3 +1,5 @@
+import { htmlSafe } from "@ember/template";
+
 export default function categoryColorVariable(color) {
-  return `--category-color: #${color};`;
+  return htmlSafe(`--category-color: #${color};`);
 }
