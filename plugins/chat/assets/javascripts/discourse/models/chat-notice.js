@@ -5,11 +5,11 @@ export default class ChatNotice {
     return new ChatNotice(args);
   }
 
-  @tracked chatChannelId;
+  @tracked channelId;
   @tracked textContent;
 
   constructor(args = {}) {
-    this.chatChannelId = args.chat_channel_id;
+    this.channelId = args.chat_channel_id;
     this.textContent = args.text_content;
   }
 }
