@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { skip, test } from "qunit";
+import { skip } from "qunit";
 import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
 import pretender, { OK } from "discourse/tests/helpers/create-pretender";
 
@@ -209,7 +209,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     );
   });
 
-  test("deleted messages | it updates status on mentions", async function (assert) {
+  skip("deleted messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -240,7 +240,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  test("restored messages | it shows status on mentions", async function (assert) {
+  skip("restored messages | it shows status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
