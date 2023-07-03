@@ -147,6 +147,52 @@ RSpec.describe "Exports", type: :system do
     end
   end
 
+  context "with stuff actions log" do
+    fab!(:user_history) do
+      Fabricate(
+        :user_history,
+        acting_user: admin,
+        action: UserHistory.actions[:change_site_setting],
+        subject: "default_trust_level",
+        details: "details",
+        context: "context",
+      )
+    end
+
+    it "exports data" do
+      visit "admin/logs/staff_action_logs"
+      click_button "Export"
+
+      visit "/u/#{admin.username}/messages"
+      click_link "[Staff Action] Data export complete"
+      click_link "staff-action-"
+
+      sleep 3 # fixme try to get rid of sleep
+
+      file_name = find("a.attachment").text
+
+      expect(File.exist?("#{Downloads::FOLDER}/#{file_name}")).to be_truthy
+
+      csv_path = extract_zip("#{Downloads::FOLDER}/#{file_name}", Downloads::FOLDER)
+      data = CSV.read(csv_path)
+
+      expect(data[0]).to eq(%w[staff_user action subject created_at details context])
+
+      exported_action = data.last
+      time_format = "%Y-%m-%d %k:%M:%S UTC"
+      expect(exported_action).to eq(
+        [
+          user_history.acting_user.username,
+          "change_site_setting",
+          user_history.subject,
+          user_history.created_at.strftime(time_format),
+          user_history.details,
+          user_history.context,
+        ],
+      )
+    end
+  end
+
   def extract_zip(file, destination)
     FileUtils.mkdir_p(destination)
 
