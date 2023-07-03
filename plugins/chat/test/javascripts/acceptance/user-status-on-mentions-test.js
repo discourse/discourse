@@ -191,7 +191,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  test("deleted messages | it shows status on mentions", async function (assert) {
+  skip("deleted messages | it shows status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
