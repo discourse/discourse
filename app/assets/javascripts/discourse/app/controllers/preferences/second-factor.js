@@ -291,6 +291,7 @@ export default Controller.extend(CanCheckEmails, {
         model: {
           securityKey: security_key,
           user: this.model,
+          onClose: () => this.loadSecondFactors(),
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
         },
@@ -302,6 +303,7 @@ export default Controller.extend(CanCheckEmails, {
         model: {
           secondFactor: second_factor,
           user: this.model,
+          onClose: () => this.loadSecondFactors(),
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
         },

@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 
 export default class SecondFactorEditSecurityKey extends Component {
   @tracked loading = false;
+  onClose = this.args.model.onClose;
 
   @action
   editSecurityKey() {
@@ -27,5 +28,9 @@ export default class SecondFactorEditSecurityKey extends Component {
         this.loading = false;
         this.args.closeModal();
       });
+  }
+
+  willDestroy() {
+    this.onClose();
   }
 }

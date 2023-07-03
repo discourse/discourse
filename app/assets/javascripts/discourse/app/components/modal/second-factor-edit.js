@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 
 export default class SecondFactorEdit extends Component {
   @tracked loading = false;
+  onClose = this.args.model.onClose;
 
   @action
   editSecondFactor() {
@@ -29,5 +30,9 @@ export default class SecondFactorEdit extends Component {
         this.loading = false;
         this.args.closeModal();
       });
+  }
+
+  willDestroy() {
+    this.onClose();
   }
 }
