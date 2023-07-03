@@ -1772,16 +1772,7 @@
   dependencies:
     lodash "^4.17.21"
 
-"@uppy/xhr-upload@3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.1.1.tgz#7d6b3585e7ae298fb3340a6e327c73f60d25beca"
-  integrity sha512-VoTi17L3Ta9pFLxrHAD1L+PE3rR498Bitml8X8FtVijp+MFz9X4KqXxF1+y8DSn6M+sevuDAnf32cZqou/e/gw==
-  dependencies:
-    "@uppy/companion-client" "^3.1.2"
-    "@uppy/utils" "^5.2.0"
-    nanoid "^4.0.0"
-
-"@uppy/xhr-upload@^3.1.1":
+"@uppy/xhr-upload@3.3.0", "@uppy/xhr-upload@^3.1.1":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@uppy/xhr-upload/-/xhr-upload-3.3.0.tgz#37b5f16467e32f39da4323113411b0ea159d4732"
   integrity sha512-tgCVlNSBMj94iazCSQoOXfWYPAv6pZSzXK9ljkchKb2fjN6zmbkOJiQIaDUG+LxM/GX0qDi6sNNxUlhvz5cpbg==
