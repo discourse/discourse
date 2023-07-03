@@ -36,14 +36,14 @@ acceptance("Meta Tag Updater", function (needs) {
         .querySelector("meta[name='twitter:title']")
         .getAttribute("content"),
       document.title,
-      "it should update OG title"
+      "it should update Twitter title"
     );
     assert.ok(
       document
         .querySelector("meta[name='twitter:url']")
         .getAttribute("content")
         .endsWith("/about"),
-      "it should update OG URL"
+      "it should update Twitter URL"
     );
     assert.ok(
       document

@@ -14,12 +14,14 @@ export default {
 
     const appEvents = owner.lookup("service:app-events");
     appEvents.on("page:changed", ({ title, url }) => {
-      ogTitle?.setAttribute("content", title);
-      ogUrl?.setAttribute("content", getAbsoluteURL(url));
-      twitterTitle?.setAttribute("content", title);
-      twitterUrl?.setAttribute("content", getAbsoluteURL(url));
+      const absoluteUrl = getAbsoluteURL(url);
 
-      canonicalUrl?.setAttribute("href", getAbsoluteURL(url));
+      ogTitle?.setAttribute("content", title);
+      ogUrl?.setAttribute("content", absoluteUrl);
+      twitterTitle?.setAttribute("content", title);
+      twitterUrl?.setAttribute("content", absoluteUrl);
+
+      canonicalUrl?.setAttribute("href", absoluteUrl);
     });
   },
 };
