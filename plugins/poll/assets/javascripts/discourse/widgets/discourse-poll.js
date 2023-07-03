@@ -28,8 +28,7 @@ const buttonOptionsMap = {
   },
   showBreakdown: {
     className: "btn-default show-breakdown",
-    label: "poll.show-breakdown.label",
-    title: "poll.show-breakdown.title",
+    label: "poll.breakdown.breakdown",
     icon: "chart-pie",
     action: "showBreakdown",
   },
@@ -738,6 +737,12 @@ createWidget("discourse-poll-buttons-dropdown", {
     const closed = attrs.isClosed;
     const isStaff = this.currentUser && this.currentUser.staff;
     const topicArchived = post.get("topic.archived");
+
+    if (attrs.groupableUserFields.length && poll.voters > 0) {
+      const option = { ...buttonOptionsMap.showBreakdown };
+      option.id = option.action;
+      contents.push(option);
+    }
 
     if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
       const option = { ...buttonOptionsMap.exportResults };

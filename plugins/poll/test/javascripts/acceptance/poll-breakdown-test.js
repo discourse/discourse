@@ -66,7 +66,6 @@ acceptance("Poll breakdown", function (needs) {
 
   test("Displaying the poll breakdown modal", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
-
     await click(".widget-dropdown-header");
 
     assert.ok(
