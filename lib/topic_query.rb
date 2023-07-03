@@ -982,8 +982,10 @@ class TopicQuery
     end
 
     query_params = { tag_ids: muted_tag_ids }
+
     if user && !opts[:skip_categories]
       query_params[:regular] = CategoryUser.notification_levels[:regular]
+
       query_params[:watching_or_infinite] = if user.watched_precedence_over_muted ||
            SiteSetting.watched_precedence_over_muted
         CategoryUser.notification_levels[:watching]
@@ -991,6 +993,7 @@ class TopicQuery
         99
       end
     end
+
     if SiteSetting.remove_muted_tags_from_latest == "always"
       list =
         list.where(
