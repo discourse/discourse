@@ -7,6 +7,7 @@ import { inject as service } from "@ember/service";
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
 export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
+export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 
 export default class DModal extends Component {
   @service modal;

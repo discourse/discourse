@@ -5,6 +5,7 @@ import I18n from "I18n";
 import { dasherize } from "@ember/string";
 import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 
 const LEGACY_OPTS = new Set([
   "admin",
@@ -29,7 +30,7 @@ class ModalService extends Service {
   }
 
   show(modal, opts) {
-    this.close();
+    this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
     const promise = new Promise((resolve) => {
       this.#resolveShowPromise = resolve;

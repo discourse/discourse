@@ -9,6 +9,7 @@ import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_CLICK_OUTSIDE,
   CLOSE_INITIATED_BY_ESC,
+  CLOSE_INITIATED_BY_MODAL_SHOW,
 } from "discourse/components/d-modal";
 import { action } from "@ember/object";
 
@@ -90,6 +91,21 @@ acceptance("Modal service: component-based API", function () {
       await promise,
       { initiatedBy: CLOSE_INITIATED_BY_BUTTON },
       "promise resolves with correct initiator"
+    );
+
+    promise = modalService.show(MyModalClass, { model: { text: "first" } });
+    await settled();
+    assert.dom(".d-modal").exists("modal reappears");
+
+    modalService.show(MyModalClass, { model: { text: "second" } });
+    await settled();
+    assert
+      .dom(".d-modal .modal-body")
+      .hasText("Modal content is second", "new modal replaces old");
+    assert.deepEqual(
+      await promise,
+      { initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW },
+      "first modal promise resolves with correct initiator"
     );
   });
 
