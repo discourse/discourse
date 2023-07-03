@@ -8,17 +8,17 @@ const TITLE_SUBS = {
   daily: "today",
 };
 
-export default function periodTitle(period, options) {
+export default function periodTitle(period, { showDateRange, fullDay }) {
   const title = I18n.t("filters.top." + (TITLE_SUBS[period] || "this_week"));
 
-  if (!options.hash.showDateRange) {
+  if (!showDateRange) {
     return title;
   }
 
   let dateString = "";
   let finish;
 
-  if (options.hash.fullDay) {
+  if (fullDay) {
     finish = moment().utc().subtract(1, "days");
   } else {
     finish = moment();
@@ -45,7 +45,7 @@ export default function periodTitle(period, options) {
       break;
     case "weekly":
       let start;
-      if (options.hash.fullDay) {
+      if (fullDay) {
         start = finish.clone().subtract(1, "week");
       } else {
         start = finish.clone().subtract(6, "days");
