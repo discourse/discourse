@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe "Exports", type: :system do
-  fab!(:admin) do
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) do
     Fabricate(
-      :admin,
+      :user,
       title: "dr",
       last_seen_at: Time.now,
       last_posted_at: Time.now,
@@ -75,28 +76,28 @@ RSpec.describe "Exports", type: :system do
       ],
     )
 
-    expect(data.length).to be(4)
+    expect(data.length).to be(5)
 
-    exported_admin = data[3]
+    exported_admin = data[4]
     time_format = "%Y-%m-%d %k:%M:%S UTC"
     expect(exported_admin).to eq(
       [
-        admin.id.to_s,
-        admin.name,
-        admin.username,
-        admin.email,
-        admin.title,
-        admin.created_at.strftime(time_format),
-        admin.updated_at.strftime(time_format),
-        admin.created_at.strftime(time_format),
-        admin.last_seen_at.strftime(time_format),
-        admin.last_posted_at.strftime(time_format),
-        admin.last_emailed_at.strftime(time_format),
-        admin.trust_level,
-        admin.approved,
-        admin.suspended_at.strftime(time_format),
-        admin.suspended_till.strftime(time_format),
-        admin.silenced_till.strftime(time_format),
+        user.id.to_s,
+        user.name,
+        user.username,
+        user.email,
+        user.title,
+        user.created_at.strftime(time_format),
+        user.updated_at.strftime(time_format),
+        user.created_at.strftime(time_format),
+        user.last_seen_at.strftime(time_format),
+        user.last_posted_at.strftime(time_format),
+        user.last_emailed_at.strftime(time_format),
+        user.trust_level,
+        user.approved,
+        user.suspended_at.strftime(time_format),
+        user.suspended_till.strftime(time_format),
+        user.silenced_till.strftime(time_format),
       ],
     )
   end
