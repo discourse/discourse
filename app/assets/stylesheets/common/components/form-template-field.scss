@@ -1,4 +1,10 @@
 .form-template-field {
+  input,
+  textarea,
+  select {
+    width: 100%;
+  }
+
   // TODO(@keegan): Remove after updating dropdown/multi-select to use select-kit
   &__dropdown {
     border: 1px solid var(--primary-medium);
@@ -19,5 +25,40 @@
     color: var(--danger);
     margin-left: 0.5em;
     font-size: var(--font-down-4);
+  }
+
+  &__uploaded-files {
+    list-style: none;
+    margin-left: 0;
+
+    li {
+      padding: 0.5rem;
+      margin-block: 0.25rem;
+      border: 1px solid var(--primary-low-mid);
+      background: var(--primary-low);
+      border-radius: var(--d-border-radius);
+      display: flex;
+      align-items: center;
+
+      a {
+        @include ellipsis;
+        width: 70%;
+      }
+
+      span {
+        color: var(--primary-high);
+        margin-left: auto;
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .d-icon {
+      color: var(--tertiary);
+      margin-right: 0.5rem;
+    }
+  }
+
+  &__textarea {
+    min-height: 100px;
   }
 }

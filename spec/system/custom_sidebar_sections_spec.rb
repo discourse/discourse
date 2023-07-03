@@ -6,6 +6,8 @@ describe "Custom sidebar sections", type: :system do
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
   let(:sidebar) { PageObjects::Components::Sidebar.new }
 
+  before { user.user_option.update!(external_links_in_new_tab: true) }
+
   it "allows the user to create custom section" do
     visit("/latest")
 
@@ -40,7 +42,7 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("My preferences")
+    expect(sidebar).to have_section_link("My preferences", target: "_self")
   end
 
   it "allows the user to create custom section with /pub link" do
@@ -53,7 +55,7 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Published Page")
+    expect(sidebar).to have_section_link("Published Page", target: "_self")
   end
 
   it "allows the user to create custom section with external link" do
@@ -76,7 +78,11 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Discourse Homepage", href: "https://discourse.org")
+    expect(sidebar).to have_section_link(
+      "Discourse Homepage",
+      href: "https://discourse.org",
+      target: "_blank",
+    )
   end
 
   it "allows the user to edit custom section" do

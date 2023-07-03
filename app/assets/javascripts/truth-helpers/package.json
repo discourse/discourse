@@ -7,7 +7,6 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
@@ -36,7 +35,7 @@
     "ember-source": "~3.28.12",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.88.0"
+    "webpack": "^5.88.1"
   },
   "engines": {
     "node": "16.* || >= 18",

@@ -4,7 +4,7 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
@@ -32,6 +32,14 @@ function topicWithUserStatus(topicId, mentionedUserId, status) {
   return topic;
 }
 
+async function mouseenter() {
+  await triggerEvent(query(".user-status-message"), "mouseenter");
+}
+
+async function mouseleave() {
+  await triggerEvent(query(".user-status-message"), "mouseleave");
+}
+
 acceptance("Post inline mentions", function (needs) {
   needs.user();
 
@@ -51,18 +59,27 @@ acceptance("Post inline mentions", function (needs) {
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
-    const statusElement = query(".topic-post .cooked .mention .user-status");
-    assert.equal(
-      statusElement.title,
-      status.description,
-      "status description is correct"
+
+    const statusElement = query(
+      ".topic-post .cooked .mention .user-status-message img"
     );
     assert.ok(
       statusElement.src.includes(status.emoji),
       "status emoji is correct"
+    );
+
+    await mouseenter();
+    const statusTooltipDescription = document.querySelector(
+      ".user-status-message-tooltip .user-status-tooltip-description"
+    );
+
+    assert.equal(
+      statusTooltipDescription.innerText,
+      status.description,
+      "status description is correct"
     );
   });
 
@@ -73,7 +90,7 @@ acceptance("Post inline mentions", function (needs) {
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.notOk(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status isn't shown"
     );
 
@@ -85,19 +102,30 @@ acceptance("Post inline mentions", function (needs) {
     });
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
-    const statusElement = query(".topic-post .cooked .mention .user-status");
-    assert.equal(
-      statusElement.title,
-      status.description,
-      "status description is correct"
+
+    const statusElement = query(
+      ".topic-post .cooked .mention .user-status-message img"
     );
     assert.ok(
       statusElement.src.includes(status.emoji),
       "status emoji is correct"
     );
+
+    await mouseenter();
+    const statusTooltipDescription = document.querySelector(
+      ".user-status-message-tooltip .user-status-tooltip-description"
+    );
+    assert.equal(
+      statusTooltipDescription.innerText,
+      status.description,
+      "status description is correct"
+    );
+
+    // Needed to remove the tooltip in between tests
+    await mouseleave();
   });
 
   test("updates user status on message bus message", async function (assert) {
@@ -107,7 +135,7 @@ acceptance("Post inline mentions", function (needs) {
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "initial user status is shown"
     );
 
@@ -122,20 +150,32 @@ acceptance("Post inline mentions", function (needs) {
       },
     });
 
+    await mouseenter();
+
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "updated user status is shown"
     );
-    const statusElement = query(".topic-post .cooked .mention .user-status");
-    assert.equal(
-      statusElement.title,
-      newStatus.description,
-      "updated status description is correct"
+
+    const statusElement = query(
+      ".topic-post .cooked .mention .user-status-message img"
     );
     assert.ok(
       statusElement.src.includes(newStatus.emoji),
       "updated status emoji is correct"
     );
+
+    const statusTooltipDescription = document.querySelector(
+      ".user-status-message-tooltip .user-status-tooltip-description"
+    );
+    assert.equal(
+      statusTooltipDescription.innerText,
+      newStatus.description,
+      "updated status description is correct"
+    );
+
+    // Needed to remove the tooltip in between tests
+    await mouseleave();
   });
 
   test("removes user status on message bus message", async function (assert) {
@@ -145,7 +185,7 @@ acceptance("Post inline mentions", function (needs) {
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "initial user status is shown"
     );
 
@@ -154,7 +194,7 @@ acceptance("Post inline mentions", function (needs) {
     });
 
     assert.notOk(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "updated user has disappeared"
     );
   });
@@ -177,7 +217,7 @@ acceptance("Post inline mentions as an anonymous user", function () {
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
   });
@@ -197,7 +237,7 @@ acceptance("Post inline mentions as an anonymous user", function () {
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
   });

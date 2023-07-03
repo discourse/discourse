@@ -1,6 +1,7 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
+import { cloneJSON } from "discourse-common/lib/object";
 
 export function parsePostData(query) {
   const result = {};
@@ -81,17 +82,18 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/latest.json", () => {
-    const json = fixturesByUrl["/latest.json"];
+    const json = cloneJSON(fixturesByUrl["/latest.json"]);
 
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
     }
+
     return response(json);
   });
 
   pretender.get("/c/bug/1/l/latest.json", () => {
-    const json = fixturesByUrl["/c/bug/1/l/latest.json"];
+    const json = cloneJSON(fixturesByUrl["/c/bug/1/l/latest.json"]);
 
     if (loggedIn()) {
       // Stuff to let us post
@@ -104,8 +106,20 @@ export function applyDefaultHandlers(pretender) {
     return response({
       tags: [
         { id: "eviltrout", count: 1 },
-        { id: "planned", text: "planned", count: 7, pm_only: false },
-        { id: "private", text: "private", count: 0, pm_only: true },
+        {
+          id: "planned",
+          name: "planned",
+          text: "planned",
+          count: 7,
+          pm_only: false,
+        },
+        {
+          id: "private",
+          name: "private",
+          text: "private",
+          count: 0,
+          pm_only: true,
+        },
       ],
       extras: {
         tag_groups: [
@@ -113,24 +127,60 @@ export function applyDefaultHandlers(pretender) {
             id: 2,
             name: "Ford Cars",
             tags: [
-              { id: "Escort", text: "Escort", count: 1, pm_only: false },
-              { id: "focus", text: "focus", count: 3, pm_only: false },
+              {
+                id: "Escort",
+                name: "Escort",
+                text: "Escort",
+                count: 1,
+                pm_only: false,
+              },
+              {
+                id: "focus",
+                name: "focus",
+                text: "focus",
+                count: 3,
+                pm_only: false,
+              },
             ],
           },
           {
             id: 1,
             name: "Honda Cars",
             tags: [
-              { id: "civic", text: "civic", count: 4, pm_only: false },
-              { id: "accord", text: "accord", count: 2, pm_only: false },
+              {
+                id: "civic",
+                name: "civic",
+                text: "civic",
+                count: 4,
+                pm_only: false,
+              },
+              {
+                id: "accord",
+                name: "accord",
+                text: "accord",
+                count: 2,
+                pm_only: false,
+              },
             ],
           },
           {
             id: 1,
             name: "Makes",
             tags: [
-              { id: "ford", text: "ford", count: 5, pm_only: false },
-              { id: "honda", text: "honda", count: 6, pm_only: false },
+              {
+                id: "ford",
+                name: "ford",
+                text: "ford",
+                count: 5,
+                pm_only: false,
+              },
+              {
+                id: "honda",
+                name: "honda",
+                text: "honda",
+                count: 6,
+                pm_only: false,
+              },
             ],
           },
         ],
@@ -188,7 +238,7 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/u/eviltrout.json", () => {
-    const json = fixturesByUrl["/u/eviltrout.json"];
+    const json = cloneJSON(fixturesByUrl["/u/eviltrout.json"]);
     json.user.can_edit = loggedIn();
     return response(json);
   });

@@ -48,4 +48,8 @@ export default Controller.extend(bufferedProperty("siteText"), {
       },
     });
   },
+
+  get interpolationKeys() {
+    return this.siteText.interpolation_keys.join(", ");
+  },
 });

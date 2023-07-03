@@ -1,16 +1,80 @@
 import Service, { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import I18n from "I18n";
 import { dasherize } from "@ember/string";
+import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { tracked } from "@glimmer/tracking";
+import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import deprecated from "discourse-common/lib/deprecated";
+
+const LEGACY_OPTS = new Set([
+  "admin",
+  "templateName",
+  "title",
+  "titleTranslated",
+  "modalClass",
+  "titleAriaElementId",
+  "panels",
+]);
 
 @disableImplicitInjections
-export default class ModalService extends Service {
+class ModalService extends Service {
+  @tracked modalBodyComponent;
+  @tracked opts = {};
+  @tracked containerElement;
+  #resolveShowPromise;
+
+  @action
+  setContainerElement(element) {
+    this.containerElement = element;
+  }
+
+  /**
+   * Render a modal
+   *
+   * @param {Component} modal - a reference to the component class for the modal
+   * @param {Object} [options] - options
+   * @param {string} [options.model] - An object which will be passed as the `@model` argument on the component
+   *
+   * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
+   */
+  show(modal, opts) {
+    this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
+
+    const promise = new Promise((resolve) => {
+      this.#resolveShowPromise = resolve;
+    });
+
+    this.opts = opts || {};
+    this.modalBodyComponent = modal;
+
+    const unsupportedOpts = Object.keys(opts).filter((key) =>
+      LEGACY_OPTS.has(key)
+    );
+    if (unsupportedOpts.length > 0) {
+      throw new Error(
+        `${unsupportedOpts.join(
+          ", "
+        )} are not supported in the component-based modal API. See https://meta.discourse.org/t/268057`
+      );
+    }
+
+    return promise;
+  }
+
+  close(data) {
+    this.#resolveShowPromise?.(data);
+    this.#resolveShowPromise = this.modalBodyComponent = null;
+    this.opts = {};
+  }
+}
+
+// Remove all logic below when legacy modals are dropped (deprecation: discourse.modal-controllers)
+export default class ModalServiceWithLegacySupport extends ModalService {
   @service appEvents;
 
   @tracked name;
-  @tracked opts = {};
   @tracked selectedPanel;
   @tracked hidden = true;
 
@@ -35,7 +99,7 @@ export default class ModalService extends Service {
   }
 
   get modalClass() {
-    if (!this.#isRendered) {
+    if (!this.isLegacy) {
       return null;
     }
 
@@ -50,7 +114,22 @@ export default class ModalService extends Service {
     this.modalClassOverride = value;
   }
 
-  show(name, opts = {}) {
+  show(modal, opts = {}) {
+    if (typeof modal !== "string") {
+      return super.show(modal, opts);
+    }
+
+    deprecated(
+      "Defining modals using a controller is deprecated. Use the component-based API instead.",
+      {
+        id: "discourse.modal-controllers",
+        since: "3.1",
+        dropFrom: "3.2",
+        url: "https://meta.discourse.org/t/268057",
+      }
+    );
+
+    const name = modal;
     const container = getOwner(this);
     const route = container.lookup("route:application");
 
@@ -96,10 +175,14 @@ export default class ModalService extends Service {
     }
     controller.set("flashMessage", null);
 
-    return controller;
+    return (this.activeController = controller);
   }
 
   close(initiatedBy) {
+    if (!this.isLegacy) {
+      super.close(...arguments);
+    }
+
     const controllerName = this.name;
     const controller = controllerName
       ? getOwner(this).lookup(`controller:${controllerName}`)
@@ -137,18 +220,26 @@ export default class ModalService extends Service {
       this.onSelectPanel =
         null;
 
-    this.opts = {};
+    super.close();
   }
 
   hide() {
-    $(".d-modal.fixed-modal").modal("hide");
+    if (this.isLegacy) {
+      $(".d-modal.fixed-modal").modal("hide");
+    } else {
+      throw "hide/reopen are not supported for component-based modals";
+    }
   }
 
   reopen() {
-    $(".d-modal.fixed-modal").modal("show");
+    if (this.isLegacy) {
+      $(".d-modal.fixed-modal").modal("show");
+    } else {
+      throw "hide/reopen are not supported for component-based modals";
+    }
   }
 
-  get #isRendered() {
-    return !!this.name;
+  get isLegacy() {
+    return this.name && !this.modalBodyComponent;
   }
 }

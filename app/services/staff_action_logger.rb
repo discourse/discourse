@@ -957,7 +957,7 @@ class StaffActionLogger
     )
   end
 
-  def log_group_deletetion(group)
+  def log_group_deletion(group)
     raise Discourse::InvalidParameters.new(:group) if group.nil?
 
     details = ["name: #{group.name}", "id: #{group.id}"]

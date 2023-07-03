@@ -181,9 +181,9 @@ export default Component.extend({
 
   @action
   fetchOrCreateChannelForUser(user) {
-    return ajax("/chat/direct_messages/create.json", {
+    return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
-      data: { usernames: [user.username] },
+      data: { target_usernames: [user.username] },
     }).catch(popupAjaxError);
   },
 

@@ -354,6 +354,8 @@ en:
           other: "%{count} members"
 
       create_channel:
+        threading:
+          label: "Enable threading"
         auto_join_users:
           public_category_warning: "%{category} is a public category. Automatically add all recently active users to this channel?"
           warning_1_group:
@@ -431,6 +433,8 @@ en:
       settings:
         channel_wide_mentions_label: "Allow @all and @here mentions"
         channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
+        channel_threading_label: "Threading"
+        channel_threading_description: "When threading is enabled, replies to a chat message will create a separate conversation, which will exist alongside the main channel."
         auto_join_users_label: "Automatically add users"
         auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
         auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
@@ -440,6 +444,8 @@ en:
         followed: "Joined"
         mobile_notification_level: "Mobile push notifications"
         mute: "Mute channel"
+        threading_enabled: "Enabled"
+        threading_disabled: "Disabled"
         muted_on: "On"
         muted_off: "Off"
         notifications: "Notifications"

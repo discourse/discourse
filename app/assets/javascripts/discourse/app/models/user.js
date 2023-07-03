@@ -437,10 +437,6 @@ const User = RestModel.extend({
     });
   },
 
-  copy() {
-    return User.create(this.getProperties(Object.keys(this)));
-  },
-
   save(fields) {
     const data = this.getProperties(
       userFields.filter((uf) => !fields || fields.includes(uf))
@@ -682,11 +678,6 @@ const User = RestModel.extend({
     return groups.length === 0 ? null : groups;
   },
 
-  @discourseComputed("filteredGroups", "numGroupsToDisplay")
-  showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
-    return filteredGroups.length > numGroupsToDisplay;
-  },
-
   // NOTE: This only includes groups *visible* to the user via the serializer,
   // so be wary when using this.
   isInAnyGroups(groupIds) {
@@ -837,17 +828,6 @@ const User = RestModel.extend({
     return ajax("/invites", {
       type: "POST",
       data: { email, skip_email: true, group_ids, topic_id },
-    });
-  },
-
-  generateMultipleUseInviteLink(
-    group_ids,
-    max_redemptions_allowed,
-    expires_at
-  ) {
-    return ajax("/invites", {
-      type: "POST",
-      data: { group_ids, max_redemptions_allowed, expires_at },
     });
   },
 
@@ -1380,9 +1360,7 @@ User.reopenClass(Singleton, {
       data: { timezone: user.user_option.timezone },
     });
   },
-});
 
-User.reopenClass({
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);

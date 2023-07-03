@@ -80,12 +80,6 @@ export default class SidebarUserTagsSection extends SidebarCommonTagsSection {
 
   @action
   editTracked() {
-    if (
-      this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
-    ) {
-      showModal("sidebar-tags-form");
-    } else {
-      this.router.transitionTo("preferences.navigation-menu", this.currentUser);
-    }
+    showModal("sidebar-tags-form");
   }
 }

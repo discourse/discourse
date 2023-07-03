@@ -1206,10 +1206,6 @@ en:
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
-        categories_section: "Categories Section"
-        categories_section_instruction: "Selected categories will be displayed under Navigation Menu's categories section. If no categories are selected, the site's top categories will be displayed."
-        tags_section: "Tags Section"
-        tags_section_instruction: "Selected tags will be displayed under Navigation Menu's tags section. If no tags are selected, the site's top tags will be displayed."
         navigation_section: "Navigation"
         navigation_section_instruction: "When a topic list in the navigation menu has new or unread items…"
         link_to_filtered_list_checkbox_description: "Link to the filtered list"
@@ -6073,6 +6069,7 @@ en:
         show_overriden: "Only show overridden"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
+        interpolation_keys: "Available interpolation keys:"
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"

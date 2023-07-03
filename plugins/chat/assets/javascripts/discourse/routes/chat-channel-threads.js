@@ -25,8 +25,4 @@ export default class ChatChannelThreads extends DiscourseRoute {
       this.chatStateManager.closeSidePanel();
     }
   }
-
-  activate() {
-    this.chatThreadListPane.open();
-  }
 }

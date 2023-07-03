@@ -4977,6 +4977,26 @@ RSpec.describe UsersController do
           DiscoursePluginRegistry.reset!
         end
 
+        it "allows plugins to use apply modifiers to the groups filter" do
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+
+          expect(response.status).to eq(200)
+          initial_groups = response.parsed_body["groups"]
+          expect(initial_groups.count).to eq(6)
+
+          Plugin::Instance
+            .new
+            .register_modifier(:groups_for_users_search) do |groups|
+              groups.where(name: initial_groups.first["name"])
+            end
+
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["groups"].count).to eq(1)
+
+          DiscoursePluginRegistry.reset!
+        end
+
         it "doesn't search for groups" do
           get "/u/search/users.json",
               params: {
