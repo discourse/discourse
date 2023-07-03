@@ -51,7 +51,6 @@ RSpec.describe "Exports", type: :system do
   it "exports user list" do
     visit "admin/users/list/active"
     click_button "Export"
-    click_button "OK" # fixme maybe remove this
 
     visit "/u/#{admin.username}/messages"
     click_link "[User List] Data export complete"
