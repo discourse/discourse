@@ -1,4 +1,5 @@
 <Sidebar::EditNavigationMenu::Modal
+  @class="sidebar__edit-navigation-menu__tags-modal"
   @title="sidebar.tags_form_modal.title"
   @saving={{this.saving}}
   @save={{this.save}}
@@ -19,9 +20,13 @@
     {{#if this.tagsLoading}}
       <div class="spinner"></div>
     {{else}}
-      {{#if (gt this.filteredTags.length 0)}}
-        {{#each this.filteredTags as |tag|}}
-          <div class="sidebar-tags-form__tag" data-tag-name={{tag.name}}>
+      {{#if (gt this.tags.length 0)}}
+        {{#each this.tags as |tag|}}
+          <div
+            class="sidebar-tags-form__tag"
+            data-tag-name={{tag.name}}
+            {{did-insert this.didInsertTag}}
+          >
             <Input
               id={{concat "sidebar-tags-form__input--" tag.name}}
               class="sidebar-tags-form__input"
@@ -40,7 +45,7 @@
                 </span>
 
                 <span class="sidebar-tags-form__tag-label-count">
-                  ({{tag.count}})
+                  ({{tag.topic_count}})
                 </span>
               </p>
             </label>
@@ -53,4 +58,6 @@
       {{/if}}
     {{/if}}
   </form>
+
+  <ConditionalLoadingSpinner @condition={{this.tags.loadingMore}} />
 </Sidebar::EditNavigationMenu::Modal>
