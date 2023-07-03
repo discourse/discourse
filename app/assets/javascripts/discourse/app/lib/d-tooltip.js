@@ -5,7 +5,7 @@ function stopPropagation(instance, event) {
   event.stopPropagation();
 }
 function hasTouchCapabilities() {
-  return navigator.maxTouchPoints > 0;
+  return navigator.maxTouchPoints > 1 || "ontouchstart" in window;
 }
 
 export default function createDTooltip(target, content) {
