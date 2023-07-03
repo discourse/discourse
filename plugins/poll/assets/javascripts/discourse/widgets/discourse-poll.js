@@ -14,8 +14,40 @@ import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
 import showModal from "discourse/lib/show-modal";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import hbs from "discourse/widgets/hbs-compiler";
 
 const FETCH_VOTERS_COUNT = 25;
+
+const buttonOptionsMap = {
+  exportResults: {
+    className: "btn-default export-results",
+    label: "poll.export-results.label",
+    title: "poll.export-results.title",
+    icon: "download",
+    action: "exportResults",
+  },
+  showBreakdown: {
+    className: "btn-default show-breakdown",
+    label: "poll.show-breakdown.label",
+    title: "poll.show-breakdown.title",
+    icon: "chart-pie",
+    action: "showBreakdown",
+  },
+  openPoll: {
+    className: "btn-default toggle-status",
+    label: "poll.open.label",
+    title: "poll.open.title",
+    icon: "unlock-alt",
+    action: "toggleStatus",
+  },
+  closePoll: {
+    className: "btn-default toggle-status",
+    label: "poll.close.label",
+    title: "poll.close.title",
+    icon: "lock",
+    action: "toggleStatus",
+  },
+};
 
 function optionHtml(option, siteSettings = {}) {
   const el = document.createElement("span");
@@ -665,26 +697,94 @@ function stripHtml(html) {
   return doc.body.textContent || "";
 }
 
+createWidget("discourse-poll-buttons-dropdown", {
+  tagName: "div.poll-buttons-dropdown",
+
+  buildId(attrs) {
+    return `poll-buttons-dropdown-${attrs.id}`;
+  },
+
+  transform(attrs) {
+    return {
+      content: this._buildContent(attrs),
+      onChange: (item) => this.sendWidgetAction(item.id, item.param),
+    };
+  },
+
+  template: hbs`
+  {{attach
+    widget="widget-dropdown"
+    attrs=(hash
+      id=this.attrs.id
+      icon="cog"
+      label="poll.options.label"
+      content=this.transformed.content
+      onChange=this.transformed.onChange
+      options=this.transformed.options
+    )
+  }}
+`,
+
+  optionsCount(attrs) {
+    return this._buildContent(attrs).length;
+  },
+
+  _buildContent(attrs) {
+    const contents = [];
+    const isAdmin = this.currentUser && this.currentUser.admin;
+    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
+    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
+    const { poll, post } = attrs;
+    const closed = attrs.isClosed;
+    const isStaff = this.currentUser && this.currentUser.staff;
+    const topicArchived = post.get("topic.archived");
+
+    if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
+      const option = { ...buttonOptionsMap.exportResults };
+      option.id = option.action;
+      contents.push(option);
+    }
+
+    if (
+      this.currentUser &&
+      (this.currentUser.id === post.user_id || isStaff) &&
+      !topicArchived
+    ) {
+      if (closed) {
+        if (!attrs.isAutomaticallyClosed) {
+          const option = { ...buttonOptionsMap.openPoll };
+          option.id = option.action;
+          contents.push(option);
+        }
+      } else {
+        const option = { ...buttonOptionsMap.closePoll };
+        option.id = option.action;
+        contents.push(option);
+      }
+    }
+
+    return contents;
+  },
+});
+
 createWidget("discourse-poll-buttons", {
   tagName: "div.poll-buttons",
 
   html(attrs) {
-    const primaryButtons = [];
-    const secondaryButtons = [];
+    const contents = [];
     const { poll, post } = attrs;
     const topicArchived = post.get("topic.archived");
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
-    const isAdmin = this.currentUser && this.currentUser.admin;
     const isMe = this.currentUser && post.user_id === this.currentUser.id;
-    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
-    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
+    const dropdown = this.attach("discourse-poll-buttons-dropdown", attrs);
+    const dropdownOptionsCount = dropdown.optionsCount(attrs);
 
-    if (attrs.isMultiple && !hideResultsDisabled) {
+    if (attrs.isMultiple && !hideResultsDisabled && !attrs.showResults) {
       const castVotesDisabled = !attrs.canCastVotes;
-      primaryButtons.push(
+      contents.push(
         this.attach("button", {
           className: `cast-votes ${
             castVotesDisabled ? "btn-default" : "btn-primary"
@@ -698,111 +798,68 @@ createWidget("discourse-poll-buttons", {
       );
     }
 
-    if (attrs.showResults || hideResultsDisabled) {
-      primaryButtons.push(
+    if (attrs.showResults && !hideResultsDisabled) {
+      contents.push(
         this.attach("button", {
           className: "btn-default toggle-results",
           label: "poll.hide-results.label",
           title: "poll.hide-results.title",
-          icon: "far-eye-slash",
-          disabled: hideResultsDisabled,
+          icon: "chevron-left",
           action: "toggleResults",
         })
       );
-    } else {
+    }
+
+    if (!attrs.showResults && !hideResultsDisabled) {
       let showResultsButton;
 
       if (
         !(poll.results === "on_vote" && !attrs.hasVoted && !isMe) &&
         !(poll.results === "on_close" && !closed) &&
-        !(poll.results === "staff_only" && !isStaff)
+        !(poll.results === "staff_only" && !isStaff) &&
+        poll.voters > 0
       ) {
         showResultsButton = this.attach("button", {
           className: "btn-default toggle-results",
           label: "poll.show-results.label",
           title: "poll.show-results.title",
-          icon: "far-eye",
-          disabled: poll.voters === 0,
+          icon: "chart-bar",
           action: "toggleResults",
         });
       }
 
       if (attrs.hasSavedVote) {
-        primaryButtons.push(
+        contents.push(
           this.attach("button", {
             className: "btn-default remove-vote",
             label: "poll.remove-vote.label",
             title: "poll.remove-vote.title",
-            icon: "trash-alt",
+            icon: "undo",
             action: "removeVote",
           })
         );
       }
 
       if (showResultsButton) {
-        primaryButtons.push(showResultsButton);
+        contents.push(showResultsButton);
       }
     }
 
-    if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
-      secondaryButtons.push(
-        this.attach("button", {
-          className: "btn btn-default export-results",
-          label: "poll.export-results.label",
-          title: "poll.export-results.title",
-          icon: "download",
-          disabled: poll.voters === 0,
-          action: "exportResults",
-        })
-      );
-    }
-
-    if (attrs.groupableUserFields.length && poll.voters > 0) {
-      const button = this.attach("button", {
-        className: "btn-default poll-show-breakdown",
-        label: "poll.group-results.label",
-        title: "poll.group-results.title",
-        icon: "chart-pie",
-        action: "showBreakdown",
-      });
-
-      secondaryButtons.push(button);
-    }
-
-    if (
-      this.currentUser &&
-      (this.currentUser.id === post.user_id || isStaff) &&
-      !topicArchived
-    ) {
-      if (closed) {
-        if (!attrs.isAutomaticallyClosed) {
-          secondaryButtons.push(
-            this.attach("button", {
-              className: "btn-default toggle-status",
-              label: "poll.open.label",
-              title: "poll.open.title",
-              icon: "unlock-alt",
-              action: "toggleStatus",
-            })
-          );
-        }
-      } else {
-        secondaryButtons.push(
-          this.attach("button", {
-            className: "toggle-status btn-danger",
-            label: "poll.close.label",
-            title: "poll.close.title",
-            icon: "lock",
-            action: "toggleStatus",
-          })
-        );
+    // only show the dropdown if there's more than 1 button
+    // otherwise just show the button
+    if (dropdownOptionsCount > 1) {
+      contents.push(dropdown);
+    } else if (dropdownOptionsCount === 1) {
+      const singleOptionId = dropdown._buildContent(attrs)[0].id;
+      let singleOption = buttonOptionsMap[singleOptionId];
+      if (singleOptionId === "toggleStatus") {
+        singleOption = closed
+          ? buttonOptionsMap.openPoll
+          : buttonOptionsMap.closePoll;
       }
+      contents.push(this.attach("button", singleOption));
     }
-
-    return [
-      h("div.poll-buttons_primary", primaryButtons),
-      h("div.poll-buttons_secondary", secondaryButtons),
-    ];
+    return [contents];
   },
 });
 

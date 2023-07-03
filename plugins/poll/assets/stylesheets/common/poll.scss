@@ -198,8 +198,9 @@ div.poll {
 
   .poll-container {
     grid-area: poll;
-    padding: 0.5em 1em;
+    padding: 1em;
     width: 100%;
+    overflow: hidden;
     align-self: center;
 
     li {
@@ -215,53 +216,50 @@ div.poll {
   .poll-title {
     border-bottom: 1px solid var(--primary-low);
     margin-bottom: 0.5em;
-    padding: 0.5em 0;
+    padding-bottom: 0.5em;
   }
 
   .poll-buttons {
     grid-area: buttons;
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     gap: 0.5em;
     width: 100%;
     padding: 1em;
     border-top: 1px solid var(--primary-low);
 
-    &_primary,
-    &_secondary {
-      display: flex;
-      gap: 0.5em;
-    }
-
-    &_primary {
-      flex-wrap: wrap;
-    }
-
-    &_secondary {
-      justify-content: flex-end;
-      align-items: flex-start;
-      align-self: flex-start;
-    }
-
-    @include breakpoint("mobile-extra-large") {
-      &_secondary {
-        justify-content: flex-end;
-        flex-wrap: wrap;
+    button {
+      white-space: nowrap;
+      align-self: start;
+      .d-button-label {
+        @include ellipsis;
       }
-    }
 
-    @include breakpoint("mobile-medium") {
-      &_secondary {
-        // create more space for admin buttons on mobile
-        button {
-          .d-button-label {
-            display: none;
-          }
-          .d-icon {
-            margin-right: 0;
-          }
+      @include breakpoint("tablet") {
+        flex: 1 1 0;
+        &:first-child:last-child {
+          // if there's only one button,
+          // don't expand the width
+          flex: 0 1 auto;
+        }
+        &.toggle-results:first-child {
+          // don't expand the back button
+          flex: 0 1 auto;
+          margin-right: auto;
         }
       }
+
+      @include breakpoint("mobile-large") {
+        &:first-child:last-child,
+        &.cast-votes {
+          // ok to expand button width on smaller screens
+          flex: 1 1 100%;
+        }
+      }
+    }
+
+    &:empty {
+      display: none;
     }
   }
 
@@ -281,6 +279,33 @@ div.poll {
     .spinner {
       margin-top: 0.25em;
     }
+  }
+
+  .poll-buttons-dropdown {
+    align-self: stretch;
+
+    .label {
+      display: none;
+    }
+    .widget-dropdown {
+      height: 100%;
+
+      &-header {
+        height: 100%;
+        .d-icon {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .poll-buttons-dropdown,
+  .export-results,
+  .toggle-status,
+  .show-breakdown {
+    // we want these controls to be separated
+    // from voting controls
+    margin-left: auto;
   }
 
   .results {
