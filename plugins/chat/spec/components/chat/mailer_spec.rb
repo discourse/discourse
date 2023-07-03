@@ -18,7 +18,13 @@ describe Chat::Mailer do
   end
   fab!(:private_chat_channel) do
     Group.refresh_automatic_groups!
-    Chat::DirectMessageChannelCreator.create!(acting_user: sender, target_users: [sender, user_1])
+    result =
+      Chat::CreateDirectMessageChannel.call(
+        guardian: sender.guardian,
+        target_usernames: [sender.username, user_1.username],
+      )
+    service_failed!(result) if result.failure?
+    result.channel
   end
 
   before do

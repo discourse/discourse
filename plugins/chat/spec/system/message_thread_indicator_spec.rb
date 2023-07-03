@@ -131,12 +131,9 @@ describe "Thread indicator for chat messages", type: :system do
       thread_1.last_reply.rebake!
 
       chat_page.visit_channel(channel)
-
-      excerpt_text = thread_excerpt(thread_1.last_reply)
-
       expect(
         channel_page.message_thread_indicator(thread_1.original_message).excerpt,
-      ).to have_content(excerpt_text)
+      ).to have_content(thread_excerpt(thread_1.last_reply))
     end
 
     it "updates the last reply excerpt and participants when a new message is added to the thread" do
