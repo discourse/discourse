@@ -85,11 +85,4 @@ export default class PollBreakdownModal extends Component {
   onSelectPanel(panel) {
     this.set("displayMode", panel.id);
   }
-
-  panels = [
-    [
-      { id: "percentage", title: "poll.breakdown.percentage" },
-      { id: "count", title: "poll.breakdown.count" },
-    ],
-  ];
 }
