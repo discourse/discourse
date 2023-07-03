@@ -155,7 +155,7 @@ RSpec.describe "discourse-presence" do
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain(Group::AUTO_GROUPS[:trust_level_1])
+      expect(c.config.allowed_group_ids).to include(Group::AUTO_GROUPS[:trust_level_1])
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
