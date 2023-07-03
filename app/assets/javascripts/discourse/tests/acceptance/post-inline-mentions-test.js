@@ -5,7 +5,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { triggerEvent, visit } from "@ember/test-helpers";
-import { test, skip } from "qunit";
+import { skip, test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
