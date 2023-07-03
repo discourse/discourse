@@ -9,7 +9,7 @@ RSpec.describe "Chat exports", type: :system do
     chat_system_bootstrap
   end
 
-  after { Downloads.clear }
+  after { Downloads.clear } # fixme make sure system specs can't interfere with each other
 
   it "exports chat messages" do
     message = Fabricate(:chat_message)
