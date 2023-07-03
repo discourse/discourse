@@ -11,11 +11,11 @@
           @showPresence={{false}}
         />
       {{/each}}
-      {{#if @thread.preview.otherParticipantCount}}
-        <div class="chat-thread-participants__other-count">
-          +{{@thread.preview.otherParticipantCount}}
-        </div>
-      {{/if}}
     </div>
+    {{#if @thread.preview.otherParticipantCount}}
+      <div class="chat-thread-participants__other-count">
+        +{{@thread.preview.otherParticipantCount}}
+      </div>
+    {{/if}}
   </div>
 {{/if}}
