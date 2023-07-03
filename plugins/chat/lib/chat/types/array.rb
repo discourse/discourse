@@ -18,3 +18,5 @@ module Chat
     end
   end
 end
+
+ActiveSupport.on_load(:active_record) { ActiveModel::Type.register(:array, Chat::Types::Array) }

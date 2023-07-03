@@ -12,7 +12,7 @@ import showModal from "discourse/lib/show-modal";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-acceptance("Modal", function (needs) {
+acceptance("Legacy Modal", function (needs) {
   let _translations;
   needs.hooks.beforeEach(() => {
     _translations = I18n.translations;

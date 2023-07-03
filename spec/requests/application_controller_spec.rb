@@ -1133,4 +1133,96 @@ RSpec.describe ApplicationController do
       end
     end
   end
+
+  describe "preloading data" do
+    def preloaded_json
+      JSON.parse(
+        Nokogiri::HTML5.fragment(response.body).css("div#data-preloaded").first["data-preloaded"],
+      )
+    end
+
+    context "when user is anon" do
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+          ],
+        )
+      end
+    end
+
+    context "when user is regular user" do
+      fab!(:user) { Fabricate(:user) }
+
+      before { sign_in(user) }
+
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "currentUser",
+            "topicTrackingStates",
+            "topicTrackingStateMeta",
+          ],
+        )
+      end
+    end
+
+    context "when user is admin" do
+      fab!(:user) { Fabricate(:admin) }
+
+      before { sign_in(user) }
+
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "currentUser",
+            "topicTrackingStates",
+            "topicTrackingStateMeta",
+            "fontMap",
+          ],
+        )
+      end
+
+      it "generates a fontMap" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        font_map = JSON.parse(preloaded_json["fontMap"])
+        expect(font_map.keys).to match_array(
+          DiscourseFonts.fonts.filter { |f| f[:variants].present? }.map { |f| f[:key] },
+        )
+      end
+    end
+  end
 end
