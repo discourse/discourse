@@ -8,7 +8,7 @@ const TITLE_SUBS = {
   daily: "today",
 };
 
-export default function periodTitle(period, { showDateRange, fullDay }) {
+export default function periodTitle(period, { showDateRange, fullDay } = {}) {
   const title = I18n.t("filters.top." + (TITLE_SUBS[period] || "this_week"));
 
   if (!showDateRange) {
