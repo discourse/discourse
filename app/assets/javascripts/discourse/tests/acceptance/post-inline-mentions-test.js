@@ -81,6 +81,8 @@ acceptance("Post inline mentions", function (needs) {
       status.description,
       "status description is correct"
     );
+    // Needed to remove the tooltip in between tests
+    await mouseleave();
   });
 
   skip("inserts user status on message bus message", async function (assert) {
