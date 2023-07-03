@@ -29,6 +29,7 @@ module Oneboxer
       "http://store.steampowered.com",
       "http://vimeo.com",
       "https://www.youtube.com",
+      "https://twitter.com",
       Discourse.base_url,
     ]
   end

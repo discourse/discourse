@@ -61,8 +61,18 @@ module ChatSystemHelpers
   end
 end
 
+module ChatSpecHelpers
+  def service_failed!(result)
+    raise RSpec::Expectations::ExpectationNotMetError.new(
+            "Service failed, see below for step details:\n\n" + result.inspect_steps.inspect,
+          )
+  end
+end
+
 RSpec.configure do |config|
   config.include ChatSystemHelpers, type: :system
+  config.include ChatSpecHelpers
+  config.include Chat::WithServiceHelper
   config.include Chat::ServiceMatchers
 
   config.expect_with :rspec do |c|
