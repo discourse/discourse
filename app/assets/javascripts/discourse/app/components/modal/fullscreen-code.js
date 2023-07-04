@@ -5,14 +5,13 @@ import highlightSyntax from "discourse/lib/highlight-syntax";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
 
 export default class FullscreenCode extends Component {
-  @service modal;
   @service siteSettings;
   @service session;
 
   @action
   closeModal() {
     this.codeBlockButtons.cleanup();
-    this.modal.close();
+    this.args.closeModal();
   }
 
   @action
