@@ -11,9 +11,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
+import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
+  modal: service(),
   loading: false,
   dirty: false,
   resetPasswordLoading: false,
@@ -42,6 +44,7 @@ export default Controller.extend(CanCheckEmails, {
     return user && user.enforcedSecondFactor;
   },
 
+  @action
   handleError(error) {
     if (error.jqXHR) {
       error = error.jqXHR;
@@ -57,6 +60,7 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @action
   loadSecondFactors() {
     if (this.dirty === false) {
       return;
@@ -89,6 +93,7 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("loading", false));
   },
 
+  @action
   markDirty() {
     this.set("dirty", true);
   },
@@ -268,16 +273,15 @@ export default Controller.extend(CanCheckEmails, {
       });
     },
 
-    createSecurityKey() {
-      const controller = showModal("second-factor-add-security-key", {
-        model: this.model,
-        title: "user.second_factor.security_key.add",
+    async createSecurityKey() {
+      await this.modal.show(SecondFactorAddSecurityKey, {
+        model: {
+          secondFactor: this.model,
+          markDirty: this.markDirty,
+          onError: this.handleError,
+        },
       });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
     editSecurityKey(security_key) {
