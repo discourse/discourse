@@ -4,6 +4,8 @@ RSpec.describe "Exports", type: :system do
   fab!(:admin) { Fabricate(:admin) }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
 
+  time_format = "%Y-%m-%d %k:%M:%S UTC"
+
   before do
     Jobs.run_immediately!
     sign_in(admin)
@@ -100,7 +102,6 @@ RSpec.describe "Exports", type: :system do
       expect(exported_data.length).to be(5)
 
       exported_admin = exported_data[4]
-      time_format = "%Y-%m-%d %k:%M:%S UTC"
       expect(exported_admin).to eq(
         [
           user.id.to_s,
@@ -162,7 +163,6 @@ RSpec.describe "Exports", type: :system do
       expect(exported_data[0]).to eq(%w[staff_user action subject created_at details context])
 
       exported_action = exported_data.last
-      time_format = "%Y-%m-%d %k:%M:%S UTC"
       expect(exported_action).to eq(
         [
           user_history.acting_user.username,
@@ -180,12 +180,14 @@ RSpec.describe "Exports", type: :system do
   end
 
   context "with screened emails" do
-    fab!(:screened_email) { Fabricate(
-      :screened_email,
-      last_match_at: Time.now,
-      created_at: Time.now,
-      ip_address: IPAddr.new("94.99.101.228")
-    ) }
+    fab!(:screened_email) do
+      Fabricate(
+        :screened_email,
+        last_match_at: Time.now,
+        created_at: Time.now,
+        ip_address: IPAddr.new("94.99.101.228"),
+      )
+    end
 
     it "exports data" do
       visit "admin/logs/screened_emails"
@@ -201,7 +203,6 @@ RSpec.describe "Exports", type: :system do
       )
 
       exported_screened_email = exported_data.second
-      time_format = "%Y-%m-%d %k:%M:%S UTC"
       expect(exported_screened_email).to eq(
         [
           screened_email.email,
