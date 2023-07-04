@@ -1,10 +1,12 @@
-import { cached, tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
 import SidebarCommonTagsSection from "discourse/components/sidebar/common/tags-section";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
 import PMTagSectionLink from "discourse/lib/sidebar/user/tags-section/pm-tag-section-link";
 import { hasDefaultSidebarTags } from "discourse/lib/sidebar/helpers";
+import SidebarEditNavigationMenuTagsModal from "discourse/components/sidebar/edit-navigation-menu/tags-modal";
 
 export default class SidebarUserTagsSection extends SidebarCommonTagsSection {
   @service currentUser;
@@ -13,8 +15,6 @@ export default class SidebarUserTagsSection extends SidebarCommonTagsSection {
   @service router;
   @service siteSettings;
   @service topicTrackingState;
-
-  @tracked isModalVisible = false;
 
   constructor() {
     super(...arguments);
@@ -77,5 +77,10 @@ export default class SidebarUserTagsSection extends SidebarCommonTagsSection {
 
   get hasDefaultSidebarTags() {
     return hasDefaultSidebarTags(this.siteSettings);
+  }
+
+  @action
+  showModal() {
+    this.modal.show(SidebarEditNavigationMenuTagsModal);
   }
 }
