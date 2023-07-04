@@ -200,9 +200,7 @@ class PostAlerter
 
     DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
-    if !SiteSetting.watched_precedence_over_muted
-      notified = notified + category_or_tag_muters(post.topic)
-    end
+    notified = notified + category_or_tag_muters(post.topic)
 
     if new_record
       if post.topic.private_message?
@@ -275,7 +273,12 @@ class PostAlerter
       UNION
       SELECT user_id FROM tag_users tu JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id} AND tu.notification_level = #{TagUser.notification_levels[:muted]}
     SQL
-    User.where("id IN (#{user_ids_sql})")
+    User
+      .where("id IN (#{user_ids_sql})")
+      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+      .where(
+        "user_options.watched_precedence_over_muted IS false OR (user_options.watched_precedence_over_muted IS NULL AND #{!SiteSetting.watched_precedence_over_muted})",
+      )
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)
