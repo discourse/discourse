@@ -8,7 +8,6 @@ import { inject as service } from "@ember/service";
 
 export default class GroupAddMembers extends Component {
   @service currentUser;
-  @service modal;
   @service router;
 
   @tracked loading = false;
@@ -62,7 +61,7 @@ export default class GroupAddMembers extends Component {
         this.router.transitionTo("group.members", this.args.model.name, {
           queryParams: { ...(this.usernames && { filter: this.usernames }) },
         });
-        this.modal.close();
+        this.args.closeModal();
       })
       .catch((e) => (this.flash = e))
       .finally(() => (this.loading = false));
