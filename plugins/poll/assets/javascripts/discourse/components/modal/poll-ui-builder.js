@@ -1,10 +1,9 @@
 import { gt, or } from "@ember/object/computed";
-import Controller from "@ember/controller";
+import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import discourseComputed from "discourse-common/utils/decorators";
 import { observes } from "@ember-decorators/object";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 
 export const BAR_CHART_TYPE = "bar";
@@ -19,46 +18,26 @@ const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
-export default class PollUiBuilderController extends Controller.extend(
-  ModalFunctionality
-) {
+export default class PollUiBuilderModal extends Component {
   showAdvanced = false;
   pollType = REGULAR_POLL_TYPE;
-  pollTitle = "";
-  pollOptions = null;
-  pollOptionsText = null;
+  pollTitle;
+  pollOptions = [EmberObject.create({ value: "" })];
+  pollOptionsText = "";
   pollMin = 1;
   pollMax = 2;
   pollStep = 1;
-  pollGroups = null;
-  pollAutoClose = null;
+  pollGroups;
+  pollAutoClose;
   pollResult = ALWAYS_POLL_RESULT;
   chartType = BAR_CHART_TYPE;
-  publicPoll = null;
+  publicPoll = false;
 
   @or("showAdvanced", "isNumber") showNumber;
   @gt("pollOptions.length", 1) canRemoveOption;
 
-  onShow() {
-    this.setProperties({
-      showAdvanced: false,
-      pollType: REGULAR_POLL_TYPE,
-      pollTitle: null,
-      pollOptions: [EmberObject.create({ value: "" })],
-      pollOptionsText: "",
-      pollMin: 1,
-      pollMax: 2,
-      pollStep: 1,
-      pollGroups: null,
-      pollAutoClose: null,
-      pollResult: ALWAYS_POLL_RESULT,
-      chartType: BAR_CHART_TYPE,
-      publicPoll: false,
-    });
-  }
-
-  @discourseComputed
-  pollResults() {
+  @discourseComputed("currentUser.staff")
+  pollResults(staff) {
     const options = [
       {
         name: I18n.t("poll.ui_builder.poll_result.always"),
@@ -74,7 +53,7 @@ export default class PollUiBuilderController extends Controller.extend(
       },
     ];
 
-    if (this.get("currentUser.staff")) {
+    if (staff) {
       options.push({
         name: I18n.t("poll.ui_builder.poll_result.staff"),
         value: STAFF_POLL_RESULT,
@@ -168,7 +147,7 @@ export default class PollUiBuilderController extends Controller.extend(
     let pollHeader = "[poll";
     let output = "";
 
-    const match = this.toolbarEvent
+    const match = this.model.toolbarEvent
       .getText()
       .match(/\[poll(\s+name=[^\s\]]+)*.*\]/gim);
 
@@ -354,8 +333,8 @@ export default class PollUiBuilderController extends Controller.extend(
 
   @action
   insertPoll() {
-    this.toolbarEvent.addText(this.pollOutput);
-    this.send("closeModal");
+    this.model.toolbarEvent.addText(this.pollOutput);
+    this.closeModal();
   }
 
   @action
