@@ -1,5 +1,4 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -93,8 +92,6 @@ export default class ChatChannel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  @tracked _unreadThreadOverview = new TrackedMap();
-
   constructor(args = {}) {
     this.id = args.id;
     this.chatableId = args.chatable_id;
@@ -132,33 +129,8 @@ export default class ChatChannel {
     this.tracking = new ChatTrackingState(getOwner(this));
   }
 
-  get unreadThreadCount() {
-    return this.unreadThreadOverview.size;
-  }
-
-  get unreadThreadOverview() {
-    return this._unreadThreadOverview;
-  }
-
-  set unreadThreadOverview(unreadThreadOverview) {
-    this._unreadThreadOverview.clear();
-
-    for (const [threadId, lastReplyCreatedAt] of Object.entries(
-      unreadThreadOverview
-    )) {
-      this.markThreadUnread(threadId, lastReplyCreatedAt);
-    }
-  }
-
-  markThreadUnread(threadId, lastReplyCreatedAt) {
-    this.unreadThreadOverview.set(
-      parseInt(threadId, 10),
-      new Date(lastReplyCreatedAt)
-    );
-  }
-
   get unreadThreadsSinceLastViewedCount() {
-    return Array.from(this.unreadThreadOverview.values()).filter(
+    return Array.from(this.threadsManager.unreadThreadOverview.values()).filter(
       (lastReplyCreatedAt) =>
         lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
     ).length;

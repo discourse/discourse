@@ -201,7 +201,7 @@ export default class Chat extends Service {
       }
 
       if (channelsView.unread_thread_overview?.[storedChannel.id]) {
-        storedChannel.unreadThreadOverview =
+        storedChannel.threadsManager.unreadThreadOverview =
           channelsView.unread_thread_overview[storedChannel.id];
       }
 

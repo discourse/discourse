@@ -207,7 +207,7 @@ export default class ChatSubscriptionsManager extends Service {
               .find(busData.channel_id, busData.thread_id)
               .then((thread) => {
                 if (thread.currentUserMembership) {
-                  channel.markThreadUnread(
+                  channel.threadsManager.markThreadUnread(
                     busData.thread_id,
                     busData.created_at
                   );
@@ -236,7 +236,7 @@ export default class ChatSubscriptionsManager extends Service {
           if (busData.user_id === this.currentUser.id) {
             // Thread should no longer be considered unread.
             if (thread.currentUserMembership) {
-              channel.unreadThreadOverview.delete(
+              channel.threadsManager.unreadThreadOverview.delete(
                 parseInt(busData.thread_id, 10)
               );
               thread.currentUserMembership.lastReadMessageId =
@@ -257,7 +257,10 @@ export default class ChatSubscriptionsManager extends Service {
                   (thread.currentUserMembership.lastReadMessageId || 0) &&
                 !thread.currentUserMembership.isQuiet
               ) {
-                channel.markThreadUnread(busData.thread_id, busData.created_at);
+                channel.threadsManager.markThreadUnread(
+                  busData.thread_id,
+                  busData.created_at
+                );
                 thread.tracking.unreadCount++;
 
                 // We have to do this since it means the user is currently looking
@@ -330,7 +333,8 @@ export default class ChatSubscriptionsManager extends Service {
       channel.tracking.mentionCount = busData.mention_count;
 
       if (busData.hasOwnProperty("unread_thread_overview")) {
-        channel.unreadThreadOverview = busData.unread_thread_overview;
+        channel.threadsManager.unreadThreadOverview =
+          busData.unread_thread_overview;
       }
 
       if (busData.thread_id && busData.hasOwnProperty("thread_tracking")) {

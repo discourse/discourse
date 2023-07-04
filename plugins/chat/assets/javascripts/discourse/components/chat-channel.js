@@ -234,7 +234,7 @@ export default class ChatLivePane extends Component {
         }
 
         if (result.unread_thread_overview) {
-          this.args.channel.unreadThreadOverview =
+          this.args.channel.threadsManager.unreadThreadOverview =
             result.unread_thread_overview;
         }
 
@@ -351,7 +351,7 @@ export default class ChatLivePane extends Component {
         }
 
         if (result.unread_thread_overview) {
-          this.args.channel.unreadThreadOverview =
+          this.args.channel.threadsManager.unreadThreadOverview =
             result.unread_thread_overview;
         }
 
