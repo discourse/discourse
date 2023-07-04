@@ -26,10 +26,6 @@ export default class extends Component {
     },
   ];
 
-  get modalHeaderAfterTitleElement() {
-    return document.getElementById("modal-header-after-title");
-  }
-
   @action
   onFilterInput(value) {
     this.args.onFilterInput(value);
