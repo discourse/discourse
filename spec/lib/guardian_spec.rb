@@ -813,7 +813,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_see_deleted_post?(post)).to be_falsey
     end
 
-    it "returns false if not ther person who deleted it" do
+    it "returns false if not the person who deleted it" do
       post.update!(deleted_by: another_user)
       expect(Guardian.new(user).can_see_deleted_post?(post)).to be_falsey
     end
@@ -2777,8 +2777,14 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).can_anonymize_user?(user)).to be_falsey
     end
 
-    it "it false for an anonymized user" do
+    it "is false for an anonymized user" do
       expect(Guardian.new(user).can_anonymize_user?(anonymous_user)).to be_falsey
+    end
+
+    it "is true for a user with no email" do
+      bad_state_user = Fabricate.build(:user, email: nil)
+      bad_state_user.skip_email_validation = true
+      expect(Guardian.new(moderator).can_anonymize_user?(bad_state_user)).to eq(true)
     end
 
     it "is true for admin anonymizing a regular user" do
@@ -4189,7 +4195,7 @@ RSpec.describe Guardian do
       expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
       expect(guardian.is_category_group_moderator?(plain_category)).to eq(false)
 
-      # edge case ... site setting disabled while guardian instansiated (can help with test cases)
+      # edge case ... site setting disabled while guardian instantiated (can help with test cases)
       SiteSetting.enable_category_group_moderation = false
       expect(guardian.is_category_group_moderator?(category)).to eq(false)
     end

@@ -1,7 +1,5 @@
 import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { htmlSafe } from "@ember/template";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
@@ -16,6 +14,8 @@ export default class Section {
   @tracked dragCss;
   @tracked links;
 
+  reorderable = true;
+
   constructor({ section, owner }) {
     setOwner(this, owner);
 
@@ -28,9 +28,11 @@ export default class Section {
   }
 
   get decoratedTitle() {
-    return this.section.public && this.currentUser?.staff
-      ? htmlSafe(`${iconHTML("globe")} ${this.section.title}`)
-      : this.section.title;
+    return this.section.title;
+  }
+
+  get indicatePublic() {
+    return this.section.public && this.currentUser?.staff;
   }
 
   get headerActions() {

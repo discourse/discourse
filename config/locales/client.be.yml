@@ -735,7 +735,6 @@ be:
       sign_up: "рэгістрацыя"
       hide_forever: "няма дзякуй"
     summary:
-      enable: "Падсумаваць гэтую тэму"
       disable: "Усе паведамленні"
     deleted_filter:
       enabled_description: "Гэтая тэма ўтрымлівае выдаленыя паведамленні, якія былі схаваныя."
@@ -1365,6 +1364,9 @@ be:
     sidebar:
       more: "Больш"
       all_categories: "Усе катэгорыі"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Усё"
       sections:
         custom:
           save: "захаваць"
@@ -1409,6 +1411,8 @@ be:
               content: "адміністратар"
             badges:
               content: "значкі"
+            topics:
+              content: "тэмы"
             faq:
               content: "Пытанні і адказы"
             groups:
@@ -1420,6 +1424,11 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Калі ласка, увядзіце карэктнае значэнне."
+          email: "Калі ласка, увядзіце верны email."
   admin_js:
     admin:
       moderator: "Мадэратар"
@@ -1834,6 +1843,8 @@ be:
           validations:
             required:
               key: "абавязкова"
+            type:
+              key: "тып"
         field_placeholders:
           choices:
             first: "Варыянт 1"

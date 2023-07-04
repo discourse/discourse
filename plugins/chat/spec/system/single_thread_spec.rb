@@ -112,7 +112,7 @@ describe "Single thread in side panel", type: :system do
         expect(side_panel).to have_open_thread(thread)
         thread_page.send_message("new thread message")
         expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
-        thread_message = thread.replies.last
+        thread_message = thread.last_reply
         expect(thread_message.chat_channel_id).to eq(channel.id)
         expect(thread_message.thread.channel_id).to eq(channel.id)
       end

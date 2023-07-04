@@ -20,21 +20,65 @@ module PageObjects
         @header ||= PageObjects::Components::Chat::ThreadHeader.new(".chat-thread")
       end
 
+      def notifications_button
+        @notifications_button ||=
+          PageObjects::Components::SelectKit.new(".thread-notifications-button")
+      end
+
+      def notification_level=(level)
+        notifications_button.expand
+        notifications_button.select_row_by_value(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+        notifications_button.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
+      def has_notification_level?(level)
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            ".chat-thread-header__buttons.-persisted .thread-notifications-button",
+          )
+        select_kit.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
+      def selection_management
+        @selection_management ||=
+          PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
+      end
+
+      def has_selected_messages?(*messages)
+        self.messages.has_selected_messages?(*messages)
+      end
+
       def close
         header.find(".chat-thread__close").click
       end
 
-      def back_to_list
-        header.find(".chat-thread__back-to-list").click
+      def has_back_link_to_thread_list?(channel)
+        header.has_css?(
+          ".chat-thread__back-to-previous-route[href='#{channel.relative_url + "/t"}']",
+        )
+      end
+
+      def has_back_link_to_channel?(channel)
+        header.has_css?(".chat-thread__back-to-previous-route[href='#{channel.relative_url}']")
+      end
+
+      def back_to_previous_route
+        header.find(".chat-thread__back-to-previous-route").click
       end
 
       def has_no_unread_list_indicator?
-        has_no_css?(".chat-thread__back-to-list .chat-thread-header-unread-indicator")
+        has_no_css?(".chat-thread__back-to-previous-route .chat-thread-header-unread-indicator")
       end
 
       def has_unread_list_indicator?(count:)
         has_css?(
-          ".chat-thread__back-to-list .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
+          ".chat-thread__back-to-previous-route .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
           text: count.to_s,
         )
       end
@@ -108,19 +152,6 @@ module PageObjects
 
       def message_by_id_selector(id)
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
-      end
-
-      def select_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='select']").click
-      end
-
-      def has_deleted_message?(message, count: 1)
-        has_css?(
-          ".chat-thread .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
-          text: I18n.t("js.chat.deleted", count: count),
-        )
       end
 
       def open_edit_message(message)

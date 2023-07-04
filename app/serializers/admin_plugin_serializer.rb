@@ -10,7 +10,9 @@ class AdminPluginSerializer < ApplicationSerializer
              :enabled,
              :enabled_setting,
              :has_settings,
-             :is_official
+             :is_official,
+             :commit_hash,
+             :commit_url
 
   def id
     object.directory_name
@@ -67,5 +69,13 @@ class AdminPluginSerializer < ApplicationSerializer
 
   def is_official
     Plugin::Metadata::OFFICIAL_PLUGINS.include?(object.name)
+  end
+
+  def commit_hash
+    object.commit_hash
+  end
+
+  def commit_url
+    object.commit_url
   end
 end

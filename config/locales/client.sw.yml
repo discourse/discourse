@@ -1029,7 +1029,6 @@ sw:
       hide_forever: "hapana asante"
     summary:
       enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
-      enable: "Tengeneza Muhtasari wa Hii Mada."
       disable: "Onyesha Machapisho Yote"
     deleted_filter:
       enabled_description: "Mada hii ina machapisho yaliyofutwa, ambayo yamefichwa."
@@ -2244,6 +2243,9 @@ sw:
         other: "Mada mpya %{count} "
       more: "Zaidi"
       all_categories: "Kategoria Zote"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Vyote"
       sections:
         custom:
           save: "Hifadhi"
@@ -2277,6 +2279,8 @@ sw:
               content: "Msimamizi"
             badges:
               content: "Beji"
+            topics:
+              content: "Mada"
             faq:
               content: "FAQ"
             groups:
@@ -2285,6 +2289,11 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Tafadhali andika thamani sahihi."
+          email: "Andika barua pepe iliyo sahihi."
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:
@@ -2911,6 +2920,8 @@ sw:
           validations:
             required:
               key: "muhimu"
+            type:
+              key: "aina"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."

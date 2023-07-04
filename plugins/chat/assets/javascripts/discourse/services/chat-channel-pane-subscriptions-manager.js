@@ -1,5 +1,6 @@
 import { inject as service } from "@ember/service";
 import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-manager";
+import ChatThreadPreview from "../models/chat-thread-preview";
 
 export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
   @service chat;
@@ -13,9 +14,6 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
     return this.model.channelMessageBusLastId;
   }
 
-  // TODO (martin) Implement this for the channel, since it involves a bunch
-  // of scrolling and pane-specific logic. Will leave the existing sub inside
-  // ChatLivePane for now.
   handleSentMessage() {
     return;
   }
@@ -23,10 +21,7 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
   handleThreadOriginalMessageUpdate(data) {
     const message = this.messagesManager.findMessage(data.original_message_id);
     if (message) {
-      if (data.replies_count) {
-        message.threadReplyCount = data.replies_count;
-      }
-      message.threadTitle = data.title;
+      message.thread.preview = ChatThreadPreview.create(data.preview);
     }
   }
 

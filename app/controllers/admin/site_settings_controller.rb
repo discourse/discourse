@@ -229,7 +229,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   private
 
   def is_sidebar_default_setting?(setting_name)
-    %w[default_sidebar_categories default_sidebar_tags].include?(setting_name.to_s)
+    %w[default_navigation_menu_categories default_navigation_menu_tags].include?(setting_name.to_s)
   end
 
   def user_options

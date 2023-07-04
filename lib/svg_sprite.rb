@@ -82,6 +82,7 @@ module SvgSprite
         exclamation-circle
         exclamation-triangle
         external-link-alt
+        eye
         fab-android
         fab-apple
         fab-chrome

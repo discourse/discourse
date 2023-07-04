@@ -89,10 +89,17 @@
   }
 
   .sidebar-section-header-text {
-    display: flex;
     line-height: normal;
     margin-right: 0.25em;
     @include ellipsis;
+  }
+
+  .sidebar-section-header-global-indicator {
+    margin: 0 0.75em 0 0.25em;
+    font-size: var(--font-down-2);
+    .d-icon {
+      margin-top: -0.125em; // optical alignment
+    }
   }
 
   .sidebar-section-header-caret {

@@ -213,11 +213,21 @@ RSpec.describe Admin::SiteTextsController do
               expected_translations.map do |key, value|
                 overridden =
                   defined?(expected_overridden) ? expected_overridden[key] || false : false
+                interpolation_keys =
+                  (
+                    if defined?(expected_interpolation_keys)
+                      expected_interpolation_keys[key] || []
+                    else
+                      []
+                    end
+                  )
                 {
                   id: "colour.#{key}",
                   value: value,
                   can_revert: overridden,
                   overridden: overridden,
+                  interpolation_keys: interpolation_keys,
+                  has_interpolation_keys: interpolation_keys.present?,
                 }
               end
 
@@ -228,6 +238,7 @@ RSpec.describe Admin::SiteTextsController do
         context "with English" do
           let(:locale) { :en }
           let(:expected_translations) { { one: "%{count} colour", other: "%{count} colours" } }
+          let(:expected_interpolation_keys) { { one: ["count"], other: ["count"] } }
 
           include_examples "finds correct plural keys"
         end
@@ -241,6 +252,9 @@ RSpec.describe Admin::SiteTextsController do
               many: "%{count} colours",
               other: "%{count} colours",
             }
+          end
+          let(:expected_interpolation_keys) do
+            { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
           end
 
           include_examples "finds correct plural keys"
@@ -266,6 +280,9 @@ RSpec.describe Admin::SiteTextsController do
               other: "%{count} colours",
             }
           end
+          let(:expected_interpolation_keys) do
+            { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
+          end
 
           include_examples "finds correct plural keys"
         end
@@ -286,6 +303,9 @@ RSpec.describe Admin::SiteTextsController do
           let(:locale) { :ru }
           let(:expected_translations) do
             { one: "ONE", few: "FEW", many: "%{count} цветов", other: "%{count} colours" }
+          end
+          let(:expected_interpolation_keys) do
+            { one: ["count"], few: ["count"], many: ["count"], other: ["count"] }
           end
           let(:expected_overridden) { { one: true, few: true } }
 
@@ -423,6 +443,27 @@ RSpec.describe Admin::SiteTextsController do
 
         expect(site_text["id"]).to eq("education.new-topic")
         expect(site_text["value"]).to eq("education.new-topic override")
+      end
+
+      it "includes custom interpolation keys" do
+        TranslationOverride.upsert!(
+          :en,
+          "system_messages.welcome_user.title",
+          "system_messages.welcome_user.title override",
+        )
+
+        get "/admin/customize/site_texts/system_messages.welcome_user.title.json",
+            params: {
+              locale: "en_GB",
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["site_text"]["interpolation_keys"]).to include(
+          "username",
+          "name",
+          "name_or_username",
+        )
       end
 
       context "with plural keys" do

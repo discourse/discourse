@@ -15,6 +15,7 @@
 @import "date-time-input-range";
 @import "date-time-input";
 @import "footer-nav";
+@import "form-template-field";
 @import "group-member-dropdown";
 @import "groups-form-membership-fields";
 @import "hashtag";
@@ -28,7 +29,9 @@
 @import "relative-time-picker";
 @import "share-and-invite-modal";
 @import "download-calendar";
-@import "sidebar-categories-form";
+@import "sidebar/edit-navigation-menu/categories-modal";
+@import "sidebar/edit-navigation-menu/modal";
+@import "sidebar/edit-navigation-menu/tags-modal";
 @import "svg";
 @import "tap-tile";
 @import "time-input";

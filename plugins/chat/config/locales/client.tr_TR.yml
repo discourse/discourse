@@ -116,6 +116,12 @@ tr_TR:
       heading: "Sohbet"
       join: "Katıl"
       last_visit: "son ziyaret"
+      summarization:
+        title: "Mesajları özetle"
+        summarize: "Özetle"
+        since:
+          one: "Son bir saat"
+          other: "Son %{count} saat"
       mention_warning:
         dismiss: "kapat"
         cannot_see: "%{username} bu kanala erişemiyor ve bilgilendirilmedi."
@@ -344,6 +350,11 @@ tr_TR:
         admin_title: "Yönetici"
       admin:
         title: "Sohbet"
+        export_messages:
+          title: "Sohbet mesajlarını dışa aktar"
+          description: "Dışa aktarma şu anda son 6 aydaki en son 10.000 mesajla sınırlıdır."
+          create_export: "Dışa aktarma oluştur"
+          export_has_started: "Dışa aktarım başladı. Hazır olduğunda bir PM alacaksınız."
       direct_messages:
         title: "Kişisel sohbet"
         new: "Kişisel sohbet oluşturun"
@@ -433,7 +444,7 @@ tr_TR:
       thread:
         title: "Başlık"
         view_thread: Konuyu görüntüle
-        default_title: "Konu #%{thread_id}"
+        default_title: "Konu"
         replies:
           one: "%{count} yanıt"
           other: "%{count} yanıt"
@@ -442,6 +453,16 @@ tr_TR:
           started_by: "Başlatan"
         settings: "Ayarlar"
         last_reply: "son yanıt"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Birisi bu başlıkta sizden bahsederse bilgilendirileceksiniz."
+          tracking:
+            title: "Takip Ediliyor"
+            description: "Bu konudaki yeni yanıtların sayısı konu listesinde ve kanalda gösterilecektir. Birisi bu ileti dizisinde sizden bahsederse bilgilendirileceksiniz."
+        participants_other_count:
+          one: "+%{count} tane daha"
+          other: "+%{count} tane daha"
       threads:
         open: "Konu Aç"
         list: "Devam eden tartışmalar"

@@ -104,6 +104,8 @@ ar:
       heading: "الدردشة"
       join: "الانضمام"
       last_visit: "آخر زيارة"
+      summarization:
+        summarize: "تلخيص"
       mention_warning:
         dismiss: "تجاهل"
         invitations_sent:
@@ -393,6 +395,18 @@ ar:
           other: "%{count} ردًا"
         settings: "الإعدادات"
         last_reply: "آخر رد"
+        notifications:
+          regular:
+            title: "عادية"
+          tracking:
+            title: "التتبُّع"
+        participants_other_count:
+          zero: "+%{count} آخرين"
+          one: "+%{count} آخر"
+          two: "+%{count} آخران"
+          few: "+%{count} آخرين"
+          many: "+%{count} آخرين"
+          other: "+%{count} آخرين"
       draft_channel_screen:
         header: "رسالة جديدة"
         cancel: "إلغاء"

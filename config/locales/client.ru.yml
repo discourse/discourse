@@ -1199,13 +1199,8 @@ ru:
         enable: "Включить боковую панель"
         options: "Параметры"
         categories_section: "Раздел категорий"
-        categories_section_instruction: "Выбранные категории будут отображаться в соответствующем разделе боковой панели."
         tags_section: "Раздел тегов"
-        tags_section_instruction: "Выбранные теги будут отображаться в соответствующем разделе боковой панели."
         navigation_section: "Навигация"
-        list_destination_instruction: "Когда на боковой панели появляется новый контент…"
-        list_destination_default: "использовать ссылку по умолчанию и показать значок для нового"
-        list_destination_unread_new: "использовать ссылку на непрочитанные (новые) и показать количество нового"
       change: "изменить"
       featured_topic: "Избранная тема"
       moderator: "%{user} — модератор"
@@ -1387,7 +1382,6 @@ ru:
         tags: "Теги"
         interface: "Интерфейс"
         apps: "Приложения"
-        sidebar: "Боковая панель"
       change_password:
         success: "(письмо отправлено)"
         in_progress: "(отправка письма)"
@@ -1916,52 +1910,6 @@ ru:
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
     staff_writes_only_mode:
       enabled: "Сайт находится в режиме «только для персонала». Продолжайте просмотр, но отвечать, ставить лайки и выполнять другие действия, влияющие на контент, могут только сотрудники."
-    too_few_topics_and_posts_notice_MF: |
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentTopics, plural,
-          one {<strong>#</strong> тема}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      } и { currentPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredTopics, plural,
-          one {<strong>#</strong> тему}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      } и { requiredPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Только персонал может видеть это сообщение.
-    too_few_topics_notice_MF: |
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentTopics, plural,
-          one {<strong>#</strong> тема}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredTopics, plural,
-          one {<strong>#</strong> тему}
-          few {<strong>#</strong> темы}
-          many {<strong>#</strong> тем}
-        other {<strong>#</strong> темы}
-      }. Только персонал может видеть это сообщение.
-    too_few_posts_notice_MF: |
-      Давайте <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">приступим к обсуждению!</a> Есть { currentPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Пользователи должны больше читать и отвечать — мы рекомендуем по крайней мере {requiredPosts, plural,
-          one {<strong>#</strong> сообщение}
-          few {<strong>#</strong> сообщения}
-          many {<strong>#</strong> сообщений}
-        other {<strong>#</strong> сообщения}
-      }. Только персонал может видеть это сообщение.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}</a>: достигнут предел для настроек сайта — {limit, plural, one {# ошибка в час} few {# ошибки в час} many {# ошибок в час} other {# ошибки в час}}.
@@ -2002,7 +1950,6 @@ ru:
         other: "Есть <b>%{count}</b> ответа."
       description_time_MF: |
         Есть {replyCount, plural, one { <b>#</b> ответ} few { <b>#</b> ответа} many { <b>#</b> ответов} other { <b>#</b> ответа}} с расчётным временем чтения <b>{readingTime, plural, one {# минута} few {# минуты} many {# минут} other {# минуты}}</b>.
-      enable: "Сводка по теме"
       disable: "Показать все сообщения"
       short_label: "Сводка"
       short_title: "Просмотр сводки по этой теме: отображаются самые интересные сообщения по мнению сообщества."
@@ -4376,6 +4323,9 @@ ru:
       more: "Ещё"
       all_categories: "Все категории"
       all_tags: "Все теги"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Все настройки"
       sections:
         custom:
           save: "Сохранить"
@@ -4402,20 +4352,12 @@ ru:
             unread_with_count: "Непрочитанные (%{count})"
             archive: "Архив"
         tags:
-          links:
-            add_tags:
-              content: "Добавить теги"
-              title: "Вы не добавили ни одного тега. Чтобы добавить их, нажмите сюда."
           none: "Вы не добавили ни одного тега."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Теги"
           header_action_title: "Редактировать теги боковой панели"
           configure_defaults: "Настроить значения по умолчанию"
         categories:
-          links:
-            add_categories:
-              content: "Добавить категории"
-              title: "Вы не добавили ни одной категории. Чтобы добавить их, нажмите сюда."
           none: "Вы не добавили ни одной категории."
           click_to_get_started: "Нажмите здесь, чтобы начать."
           header_link_text: "Категории"
@@ -4434,8 +4376,8 @@ ru:
             badges:
               content: "Награды"
               title: "Все награды, которые можно получить"
-            everything:
-              content: "Все"
+            topics:
+              content: "Новые темы"
               title: "Все темы"
             faq:
               content: "Правила"
@@ -4464,6 +4406,11 @@ ru:
       description: "Ваша приветственная тема — это первое, что прочитают новички. Постарайтесь максимально коротко и ярко выразить в ней наиболее важную информацию, которую вы хотите донести до новых пользователей форума."
       button_title: "Начать редактирование"
     until: "До:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Введите корректное значение."
+          email: "Введите действующий адрес электронной почты."
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     admin:
@@ -5504,6 +5451,8 @@ ru:
               key: "минимум"
             maximum:
               key: "максимум"
+            type:
+              key: "тип опроса"
       impersonate:
         title: "Войти от имени пользователя"
         help: "Позволяет войти от имени пользователя в целях отладки. По окончании отладки необходимо выйти из системы и зайти снова под своим аккаунтом."

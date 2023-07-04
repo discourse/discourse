@@ -5,7 +5,6 @@ import { test } from "qunit";
 acceptance("Composer - Image Grid", function (needs) {
   needs.user();
   needs.settings({
-    experimental_post_image_grid: true,
     allow_uncategorized_topics: true,
   });
 

@@ -1112,13 +1112,8 @@ pt_BR:
         enable: "Habilitar barra lateral"
         options: "Opções"
         categories_section: "Seção de Categorias"
-        categories_section_instruction: "As categorias selecionadas serão exibidas na seção de categorias do painel lateral."
         tags_section: "Seção de Etiquetas"
-        tags_section_instruction: "As etiquetas selecionadas serão exibidas na seção de etiquetas da barra lateral."
         navigation_section: "Navegação"
-        list_destination_instruction: "Quando houver conteúdo novo na barra lateral..."
-        list_destination_default: "usar o link padrão e mostrar um emblema para novos itens"
-        list_destination_unread_new: "link para novos/não lidos e mostrar contagem de itens novos"
       change: "alterar"
       featured_topic: "Tópico em destaque"
       moderator: "%{user} é moderador(a)"
@@ -1280,7 +1275,6 @@ pt_BR:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicativos"
-        sidebar: "Barra Lateral"
       change_password:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
@@ -1785,36 +1779,6 @@ pt_BR:
       logout_disabled: "Não é possível sair enquanto o site estiver em modo somente leitura. Esse recurso está desativado."
     staff_writes_only_mode:
       enabled: "Este site está no modo apenas para funcionários. Continue navegando, mas as respostas, curtidas e outras ações são limitadas apenas aos membros da equipe."
-    too_few_topics_and_posts_notice_MF: |
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">iniciar a discussão!</a> Há { currentTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      } e { currentPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Os visitantes precisam de mais para ler e responder. Recomendamos pelo menos { requiredTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      } e { requiredPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Somente a equipe pode ver esta mensagem.
-    too_few_topics_notice_MF: |
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">iniciar a discussão!</a> Há { currentTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      }. Os visitantes precisam de mais para ler e responder. Recomendamos pelo menos { requiredTopics, plural,
-          one {<strong>#</strong> tópico}
-        other {<strong>#</strong> tópicos}
-      }. Somente a equipe pode ver esta mensagem.
-    too_few_posts_notice_MF: |
-      Vamos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">iniciar a discussão!</a> Há { currentPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Os visitantes precisam de mais para ler e responder. Recomendamos pelo menos { requiredPosts, plural,
-          one {<strong>#</strong> postagem}
-        other {<strong>#</strong> postagens}
-      }. Somente a equipe pode ver esta mensagem.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>a quantidade de {rate, plural, one {# erro/hora} other {# erros/hora}}</a> alcançou o limite de configuração do site de {limit, plural, one {# erro/hora} other {# erros/hora}}.
@@ -1851,7 +1815,6 @@ pt_BR:
         other: "Existem <b>%{count}</b> respostas."
       description_time_MF: |
         Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
-      enable: "Resumir este tópico"
       disable: "Exibir todas as postagens"
       short_label: "Resumir"
       short_title: "Exibir um resumo deste tópico: as postagens mais interessantes segundo a comunidade"
@@ -4006,6 +3969,9 @@ pt_BR:
       more: "Mais"
       all_categories: "Todas as categorias"
       all_tags: "Todas as etiquetas"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tudo"
       sections:
         custom:
           save: "Salvar"
@@ -4036,20 +4002,12 @@ pt_BR:
             unread_with_count: "Não lido(s) (%{count})"
             archive: "Arquivo"
         tags:
-          links:
-            add_tags:
-              content: "Adicionar etiquetas"
-              title: "Você não adicionou nenhuma etiqueta. Clique para começar."
           none: "Você não adicionou nenhuma etiqueta."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Etiquetas"
           header_action_title: "Editar suas etiquetas da barra lateral"
           configure_defaults: "Configurar padrões"
         categories:
-          links:
-            add_categories:
-              content: "Adicionar categorias"
-              title: "Você não adicionou nenhuma categoria. Clique para começar."
           none: "Você não adicionou nenhuma categoria."
           click_to_get_started: "Clique aqui para começar."
           header_link_text: "Categorias"
@@ -4068,8 +4026,8 @@ pt_BR:
             badges:
               content: "Emblemas"
               title: "Todos os emblemas disponíveis para ganhar"
-            everything:
-              content: "Tudo"
+            topics:
+              content: "Tópicos"
               title: "Todos os Tópicos"
             faq:
               content: "FAQ"
@@ -4096,6 +4054,11 @@ pt_BR:
       description: "Seu tópico de boas-vindas é a primeira coisa que os novos membros vão ler. Pense nisso como seu “argumento de elevador” ou “declaração de missão”. Informe a todos sobre quem é o público desta comunidade, o que eles podem esperar encontrar aqui e o que você gostaria que eles fizessem primeiro."
       button_title: "Começar a Editar"
     until: "Até:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Digite um valor válido."
+          email: "Insira um endereço de e-mail válido."
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -5128,6 +5091,8 @@ pt_BR:
               key: "mínimo"
             maximum:
               key: "máximo"
+            type:
+              key: "tipo"
       impersonate:
         title: "Representar"
         help: "Use esta ferramenta para representar uma conta de usuário(a) para efeitos de depuração. Você terá que sair dela assim que terminar."

@@ -72,6 +72,7 @@ class DiscoursePluginRegistry
   define_register :seedfu_filter, Set
   define_register :demon_processes, Set
   define_register :groups_callback_for_users_search_controller_action, Hash
+  define_register :mail_pollers, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -113,8 +114,14 @@ class DiscoursePluginRegistry
 
   define_filtered_register :list_suggested_for_providers
 
+  define_filtered_register :summarization_strategies
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
+  end
+
+  def self.register_mail_poller(mail_poller)
+    self.mail_pollers << mail_poller
   end
 
   def register_js(filename, options = {})

@@ -934,13 +934,8 @@ zh_TW:
         enable: "啟用側選單"
         options: "選項"
         categories_section: "選擇分類"
-        categories_section_instruction: "選定的分類將顯示在側選單的分類段落中。"
         tags_section: "選擇標籤"
-        tags_section_instruction: "選定的標籤將顯示在側選單的標籤段落中。"
         navigation_section: "導覽"
-        list_destination_instruction: "當側邊欄中有新內容時..."
-        list_destination_default: "使用預設連結並顯示新項目的徽章"
-        list_destination_unread_new: "連結至未讀/新的並顯示新項目的數量"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"
@@ -1035,7 +1030,6 @@ zh_TW:
         tags: "標籤"
         interface: "界面"
         apps: "應用"
-        sidebar: "側選單"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -1412,7 +1406,6 @@ zh_TW:
       enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
       description:
         other: "有 <b>%{count}</b> 個回覆。"
-      enable: "以摘要檢視此話題"
       disable: "顯示所有貼文"
     deleted_filter:
       enabled_description: "這個話題含有被刪除的回覆，這些回覆已被隱藏。"
@@ -2866,6 +2859,9 @@ zh_TW:
       more: "更多"
       all_categories: "所有分類"
       all_tags: "所有標籤"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "全部"
       sections:
         custom:
           save: "保存"
@@ -2907,8 +2903,8 @@ zh_TW:
               content: "管理員"
             badges:
               content: "徽章"
-            everything:
-              content: "所有"
+            topics:
+              content: "討論話題"
               title: "所有話題"
             faq:
               content: "常見問答"
@@ -2925,6 +2921,10 @@ zh_TW:
               pending_count: "剩餘 %{count}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "請輸入一個有效的值。"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:
@@ -3710,6 +3710,8 @@ zh_TW:
           validations:
             required:
               key: "必填"
+            type:
+              key: "類型"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"

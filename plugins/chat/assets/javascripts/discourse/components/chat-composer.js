@@ -20,6 +20,11 @@ import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import {
+  destroyTippyInstances,
+  initUserStatusHtml,
+  renderUserStatusHtml,
+} from "discourse/lib/user-status-on-autocomplete";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -378,6 +383,13 @@ export default class ChatComposer extends Component {
     }
   }
 
+  @action
+  showChannelSummaryModal() {
+    showModal("channel-summary").setProperties({
+      channelId: this.args.channel.id,
+    });
+  }
+
   #addMentionedUser(userData) {
     const user = User.create(userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
@@ -402,6 +414,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
+        destroyTippyInstances();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -411,9 +424,13 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
+            initUserStatusHtml(result.users);
           }
           return result;
         });
+      },
+      onRender: (options) => {
+        renderUserStatusHtml(options);
       },
       afterComplete: (text, event) => {
         event.preventDefault();
@@ -421,6 +438,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
+      onClose: destroyTippyInstances,
     });
   }
 

@@ -175,11 +175,10 @@ export default function () {
         this.route("tags");
         this.route("interface");
         this.route("apps");
-        this.route("sidebar");
+        this.route("navigation-menu");
 
         this.route("email");
         this.route("second-factor");
-        this.route("second-factor-backup");
       });
 
       this.route(

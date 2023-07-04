@@ -1153,7 +1153,6 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
-        sidebar: "Barra Lateral"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -1646,7 +1645,6 @@ pt:
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
-      enable: "Resumir Este Tópico"
       disable: "Mostrar Todas As Publicações"
       short_label: "Resumir"
       short_title: "Mostrar um resumo deste tópico: as discussões mais interessantes conforme determinado pela comunidade"
@@ -3462,6 +3460,9 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tudo"
       sections:
         custom:
           save: "Guardar"
@@ -3497,8 +3498,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
-            everything:
-              content: "Tudo"
+            topics:
+              content: "Tópicos"
             faq:
               content: "FAQ"
             groups:
@@ -3510,6 +3511,11 @@ pt:
             review:
               content: "Revisão"
     until: "Até:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Por favor introduza um valor válido."
+          email: "Por favor introduza um endereço de email válido."
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -4316,6 +4322,8 @@ pt:
               key: "mínimo"
             maximum:
               key: "máximo"
+            type:
+              key: "tipo"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."

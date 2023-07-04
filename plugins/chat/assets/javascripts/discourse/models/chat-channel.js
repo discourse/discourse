@@ -1,6 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -157,6 +156,10 @@ export default class ChatChannel {
     return this.messagesManager.findMessage(id);
   }
 
+  findFirstMessageOfDay(date) {
+    return this.messagesManager.findFirstMessageOfDay(date);
+  }
+
   addMessages(messages) {
     this.messagesManager.addMessages(messages);
   }
@@ -292,7 +295,6 @@ export default class ChatChannel {
     message.draft = false;
     message.createdAt ??= moment.utc().format();
     message.channel = this;
-    await message.cook();
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
@@ -322,19 +324,7 @@ export default class ChatChannel {
     this.currentUserMembership.muted = membership.muted;
   }
 
-  updateLastReadMessage(messageId) {
-    if (!this.isFollowing || !messageId) {
-      return;
-    }
-
-    if (this.currentUserMembership.lastReadMessageId >= messageId) {
-      return;
-    }
-
-    // TODO (martin) Change this to use chatApi service markChannelAsRead once we change this
-    // class not to use RestModel.
-    return ajax(`/chat/api/channels/${this.id}/read/${messageId}`, {
-      method: "PUT",
-    });
+  clearSelectedMessages() {
+    this.selectedMessages.forEach((message) => (message.selected = false));
   }
 }

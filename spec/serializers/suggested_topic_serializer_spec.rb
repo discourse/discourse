@@ -5,6 +5,10 @@ RSpec.describe SuggestedTopicSerializer do
   let(:admin) { Fabricate(:admin) }
 
   describe "#featured_link and #featured_link_root_domain" do
+    subject(:json) do
+      SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+    end
+
     let(:featured_link) { "http://meta.discourse.org" }
     let(:topic) do
       Fabricate(
@@ -12,9 +16,6 @@ RSpec.describe SuggestedTopicSerializer do
         featured_link: featured_link,
         category: Fabricate(:category, topic_featured_link_allowed: true),
       )
-    end
-    subject(:json) do
-      SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
     end
 
     context "when topic featured link is disable" do

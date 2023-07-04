@@ -24,39 +24,39 @@ RSpec.describe Chat::LookupChannelThreads do
     end
 
     context "when enable_experimental_chat_threaded_discussions is enabled" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
+      before do
+        SiteSetting.enable_experimental_chat_threaded_discussions = true
+        [thread_1, thread_2, thread_3].each do |t|
+          t.original_message.update!(created_at: 1.week.ago)
+          t.add(current_user)
+        end
+      end
 
       context "when all steps pass" do
         before do
-          Fabricate(
-            :chat_message,
-            user: current_user,
-            chat_channel: channel,
-            thread: thread_1,
-            created_at: 10.minutes.ago,
-          )
-          Fabricate(
-            :chat_message,
-            user: current_user,
-            chat_channel: channel,
-            thread: thread_2,
-            created_at: 1.day.ago,
-          )
-          Fabricate(
-            :chat_message,
-            user: current_user,
-            chat_channel: channel,
-            thread: thread_3,
-            created_at: 2.seconds.ago,
-          )
+          msg_1 =
+            Fabricate(:chat_message, user: current_user, chat_channel: channel, thread: thread_1)
+          msg_1.update!(created_at: 10.minutes.ago)
+          msg_2 =
+            Fabricate(:chat_message, user: current_user, chat_channel: channel, thread: thread_2)
+          msg_2.update!(created_at: 1.day.ago)
+          msg_3 =
+            Fabricate(:chat_message, user: current_user, chat_channel: channel, thread: thread_3)
+          msg_3.update!(created_at: 2.seconds.ago)
         end
 
         it "sets the service result as successful" do
           expect(result).to be_a_success
         end
 
-        it "returns the threads ordered by the last thread the current user posted in" do
+        it "returns the threads ordered by the last reply created_at date and time for the thread" do
           expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
+        end
+
+        it "orders threads with unread messages at the top even if their last reply created_at date and time is older" do
+          unread_message = Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
+          unread_message.update!(created_at: 2.days.ago)
+          expect(result.threads.map(&:id)).to eq([thread_2.id, thread_3.id, thread_1.id])
         end
 
         it "does not return threads where the original message is trashed" do
@@ -70,12 +70,18 @@ RSpec.describe Chat::LookupChannelThreads do
         end
 
         it "does not count deleted messages for sort order" do
-          Chat::Message.find_by(user: current_user, thread: thread_3).trash!
+          Chat::Message.where(thread: thread_3).each(&:trash!)
           expect(result.threads.map(&:id)).to eq([thread_1.id, thread_2.id])
         end
 
-        it "does not return threads from the channel where the user has not sent a message" do
-          Fabricate(:chat_thread, channel: channel)
+        it "only returns threads where the user has their thread notification level as tracking or regular" do
+          new_thread_1 = Fabricate(:chat_thread, channel: channel)
+          new_thread_2 = Fabricate(:chat_thread, channel: channel)
+          new_thread_1.add(current_user)
+          new_thread_1.membership_for(current_user).update!(
+            notification_level: Chat::UserChatThreadMembership.notification_levels[:muted],
+          )
+
           expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
         end
 

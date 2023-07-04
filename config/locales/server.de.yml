@@ -227,6 +227,10 @@ de:
         other: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da die folgenden oEmbed-/OpenGraph-Tags nicht gefunden werden konnten: %{missing_attributes}"
   word_connector:
     comma: ", "
+  custom_fields:
+    validations:
+      max_items: "Die maximale Anzahl der benutzerdefinierten Felder für diese Entität wurde erreicht (%{max_items_number})"
+      max_value_length: "Die maximale Länge für einen benutzerdefinierten Feldwert wurde erreicht (%{max_value_length})"
   invite:
     expired: "Dein Einladungstoken ist abgelaufen. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found: "Dein Einladungstoken ist ungültig. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
@@ -625,22 +629,19 @@ de:
   discourse_welcome_topic:
     title: "Willkommen bei %{site_title}! :wave:"
     body: |
-      Willkommen an Bord. Wir freuen uns.
+      Wir freuen uns sehr, dass du dabei bist.
 
-      > ## %{site_title}
-      >
-      > %{site_description}
-
+      %{site_info_quote}
 
       Hier sind einige Dinge, die du tun kannst, um loszulegen:
 
-      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einträgst. Worüber würdest du gerne gefragt werden?
+      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einstellst. Worüber würdest du gerne befragt werden?
 
-      :open_book: **Lerne die Gemeinschaft kennen**, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze ein :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
+      :open_book: **Lerne die Gemeinschaft** kennen, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze die :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
 
-      :handshake: **Trage bei**, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
+      :handshake: **Beitrage** bei, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
 
-      > Schreibe Vorschläge oder Fragen unter [#feedback](%{base_path}/c/site-feedback) oder [an die Betreiber](%{base_path}/about).
+      > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) oder [contact the admins](%{base_path}/about) fragen.
   admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -1510,6 +1511,8 @@ de:
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
     summary_timeline_button: "Schaltfläche „Zusammenfassen“ in der Zeitleiste anzeigen"
+    summarization_strategy: "Zusätzliche Möglichkeiten, von Plugins registrierte Inhalte zusammenzufassen"
+    custom_summarization_allowed_groups: "Gruppen, die Inhalte mit der `Summarization_strategy` zusammenfassen können."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
     personal_message_enabled_groups: "Benutzern innerhalb dieser Gruppen erlauben, Nachrichten zu erstellen und auf Nachrichten zu antworten. Vertrauensstufengruppen umfassen alle Vertrauensstufen über dieser Nummer, zum Beispiel erlaubt die Wahl von trust_level_1 auch Benutzern mit trust_level_2, 3, 4 private Nachrichten zu senden. Team-Mitglieder können immer Nachrichten senden."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
@@ -2017,7 +2020,7 @@ de:
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignoriert. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     penalty_step_hours: "Standardstrafen für das Stummschalten oder Sperren von Benutzern in Stunden. Beim ersten Verstoß wird standardmäßig der erste Wert verwendet, beim zweiten Verstoß standardmäßig der zweite Wert usw."
     svg_icon_subset: "Füge zusätzliche „FontAwesome 5“-Symbole hinzu, die du in deine Assets einbinden möchtest. Verwende das Präfix „fa-“ für einfarbige Symbole, „far-“ für normale Symbole und „fab-“ für Markensymbole."
-    max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der /print-Seite (zum Deaktivieren auf 0 setzen)"
+    max_prints_per_hour_per_user: "Maximale Anzahl von /print Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
     full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
@@ -2039,7 +2042,6 @@ de:
     embed_post_limit: "Maximale Anzahl der Beiträge, die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig."
     notify_about_reviewable_item_after: "Wenn es überprüfbare Beiträge gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, schicke eine persönliche Nachricht an die Moderatoren. Zum Deaktivieren auf 0 setzen."
-    show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die älter als (n) Tage sind."
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
     bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Bootstrap-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
@@ -2123,6 +2125,8 @@ de:
     tagging_enabled: "Schlagwörter für Themen aktivieren?"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
+    enable_max_tags_per_email_subject: "Verwende max_tags_per_email_subject beim Erstellen des Betreffs einer E-Mail"
+    max_tags_per_email_subject: "Die maximale Anzahl von Tags, die im Betreff einer E-Mail enthalten sein können"
     max_tag_length: "Die maximale Anzahl von Zeichen, die in einem Schlagwort verwendet werden kann."
     max_tag_search_results: "Maximale Ergebnisanzahl bei der Suche nach Schlagwörtern."
     max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in der Filter-Drop-down-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
@@ -2166,12 +2170,13 @@ de:
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
-    default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
-    default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
+    default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt \"Kategorien\" des Navigationsmenüs angezeigt."
+    default_navigation_menu_tags: "Ausgewählte Tags werden standardmäßig unter dem Abschnitt Tags im Navigationsmenü angezeigt."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
     experimental_new_new_view_groups: 'EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf.'
     enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
     experimental_topics_filter: "EXPERIMENTELL: Aktiviert die Filterroute für experimentelle Themen unter /filter"
+    experimental_search_menu_groups: "EXPERIMENTELL: Aktiviert das neue Suchmenü, das für die Verwendung von Glimmer aktualisiert wurde"
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2197,7 +2202,6 @@ de:
       pop3_polling_password_is_empty: "Du musst „pop3 polling password“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_authentication_failed: "POP3-Authentifizierung ist fehlgeschlagen. Bitte überprüfe die POP3-Anmeldedaten."
       reply_by_email_address_is_empty: "Du musst „reply by email address“ definieren, bevor Antworten per E-Mail aktiviert wird."
-      email_polling_disabled: "Du musst entweder manuelle oder POP3-Abfragen aktivieren, bevor Antworten per E-Mail aktiviert wird."
       user_locale_not_enabled: "Du musst erst „allow user locale“ aktivieren, bevor du diese Einstellung aktivierst."
       personal_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass jemand außer den Team-Mitgliedern private Nachrichten verschickt, wähle die Team-Gruppe aus."
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."

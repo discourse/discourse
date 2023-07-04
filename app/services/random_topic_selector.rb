@@ -91,8 +91,4 @@ class RandomTopicSelector
   def self.cache_key(category = nil)
     "random_topic_cache_#{category&.id}"
   end
-
-  def self.clear_cache!
-    Discourse.redis.delete_prefixed(cache_key)
-  end
 end

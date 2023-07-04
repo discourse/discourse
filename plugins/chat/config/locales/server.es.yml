@@ -53,6 +53,7 @@ es:
       message_too_long:
         one: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} caracteres."
         other: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} caracteres."
+      draft_too_long: "El borrador es demasiado largo."
       max_reactions_limit_reached: "No se permiten nuevas reacciones en este mensaje."
       message_move_invalid_channel: "El canal de origen y el de destino deben ser canales públicos."
       message_move_no_messages_found: "No se ha encontrado ningún mensaje con los identificadores de mensaje proporcionados."
@@ -107,6 +108,7 @@ es:
         other: "@%{acting_username} movió %{count} mensajes al canal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} y %{count} más"
           other: "%{comma_separated_usernames} y %{count} otros"

@@ -1668,15 +1668,23 @@ RSpec.describe CookedPostProcessor do
               audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
-              <p>This post has a video upload.</p>
-              <div class="onebox video-onebox">
+              <p>This post has a video upload.</p><div class="onebox video-onebox">
                 <video width="100%" height="100%" controls="">
                   <source src="#{secure_video_url}">
-                  <a href="#{secure_video_url}">#{secure_video_url}</a>
+                  <a href="#{secure_video_url}">
+                    #{secure_video_url}
+                  </a>
                 </video>
               </div>
+
               <p>This post has an audio upload.<br>
-              <audio controls=""><source src="#{secure_audio_url}"><a href="#{secure_audio_url}">#{secure_audio_url}</a></audio></p>
+              <audio controls="">
+                <source src="#{secure_audio_url}">
+                <a href="#{secure_audio_url}">
+                  #{secure_audio_url}
+                </a>
+              </audio>
+              </p>
               <p>And an image upload.<br>
               <img src="#{image_upload.url}" alt="#{image_upload.original_filename}" data-base62-sha1="#{image_upload.base62_sha1}"></p>
             HTML
@@ -2136,10 +2144,10 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "#html" do
-    it "escapes attributes" do
-      post = Fabricate(:post, raw: '<img alt="<something>">')
-      expect(post.cook(post.raw)).to eq('<p><img alt="&lt;something&gt;"></p>')
-      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&lt;something&gt;"></p>')
+    it "escapes html entities in attributes per html5" do
+      post = Fabricate(:post, raw: '<img alt="&<something>">')
+      expect(post.cook(post.raw)).to eq('<p><img alt="&amp;<something>"></p>')
+      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&amp;<something>"></p>')
     end
   end
 end

@@ -181,10 +181,10 @@ RSpec.describe "Chat channel", type: :system do
       chat.visit_channel(channel_1)
 
       expect(page).to have_selector(
-        ".mention .user-status[title='#{current_user.user_status.description}']",
+        ".mention .user-status-message img[alt='#{current_user.user_status.emoji}']",
       )
       expect(page).to have_selector(
-        ".mention .user-status[title='#{other_user.user_status.description}']",
+        ".mention .user-status-message img[alt='#{other_user.user_status.emoji}']",
       )
     end
   end
@@ -240,7 +240,9 @@ RSpec.describe "Chat channel", type: :system do
     it "renders text in the reply-to" do
       chat.visit_channel(channel_1)
 
-      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("not marked")
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "&amp;lt;mark&amp;gt;not marked&amp;lt;/mark&amp;gt;",
+      )
     end
   end
 

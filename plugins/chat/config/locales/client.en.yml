@@ -114,6 +114,14 @@ en:
       heading: "Chat"
       join: "Join"
       last_visit: "last visit"
+
+      summarization:
+        title: "Summarize messages"
+        description: "Select an option below to summarize the conversation sent during the desired timeframe."
+        summarize: "Summarize"
+        since:
+          one: "Last hour"
+          other: "Last %{count} hours"
       mention_warning:
         dismiss: "dismiss"
         cannot_see: "%{username} can't access this channel and was not notified."
@@ -346,6 +354,8 @@ en:
           other: "%{count} members"
 
       create_channel:
+        threading:
+          label: "Enable threading"
         auto_join_users:
           public_category_warning: "%{category} is a public category. Automatically add all recently active users to this channel?"
           warning_1_group:
@@ -423,6 +433,8 @@ en:
       settings:
         channel_wide_mentions_label: "Allow @all and @here mentions"
         channel_wide_mentions_description: "Allow users to notify all members of #%{channel} with @all or only those who are active in the moment with @here"
+        channel_threading_label: "Threading"
+        channel_threading_description: "When threading is enabled, replies to a chat message will create a separate conversation, which will exist alongside the main channel."
         auto_join_users_label: "Automatically add users"
         auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
         auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
@@ -432,6 +444,8 @@ en:
         followed: "Joined"
         mobile_notification_level: "Mobile push notifications"
         mute: "Mute channel"
+        threading_enabled: "Enabled"
+        threading_disabled: "Disabled"
         muted_on: "On"
         muted_off: "Off"
         notifications: "Notifications"
@@ -443,6 +457,11 @@ en:
 
       admin:
         title: "Chat"
+        export_messages:
+          title: "Export chat messages"
+          description: "Export is currently limited to 10000 most recent messages in the last 6 months."
+          create_export: "Create export"
+          export_has_started: "The export has started. You'll receive a PM when it's ready."
 
       direct_messages:
         title: "Personal chat"
@@ -557,6 +576,16 @@ en:
           started_by: "Started by"
         settings: "Settings"
         last_reply: "last reply"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "You will be notified if someone mentions your @name in this thread."
+          tracking:
+            title: "Tracking"
+            description: "A count of new replies for this thread will be shown in the thread list and the channel. You will be notified if someone mentions your @name in this thread."
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Open Thread"
         list: "Ongoing discussions"

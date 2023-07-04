@@ -5,6 +5,7 @@ import {
 } from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
+import { removeChatComposerSecondaryActions } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 /**
  * Class exposing the javascript API available to plugins and themes.
@@ -111,6 +112,18 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * );
  */
 
+/**
+ * Removes secondary actions from the chat composer
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function removeChatComposerSecondaryActions
+ * @param {...string} [1] - List of secondary action ids to remove, eg: `"copyLink", "select"
+ * @example
+ *
+ * api.removeChatComposerSecondaryActions("copyLink", "select");
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -155,6 +168,18 @@ export default {
               });
           },
         });
+      }
+
+      if (!apiPrototype.hasOwnProperty("removeChatComposerSecondaryActions")) {
+        Object.defineProperty(
+          apiPrototype,
+          "removeChatComposerSecondaryActions",
+          {
+            value(...actionIds) {
+              removeChatComposerSecondaryActions(actionIds);
+            },
+          }
+        );
       }
     });
   },

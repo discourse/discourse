@@ -1109,11 +1109,8 @@ hu:
         enable: "Oldalsáv engedélyezése"
         options: "Beállítások"
         categories_section: "Kategóriák szakasz"
-        categories_section_instruction: "A kiválasztott kategóriák az oldalsáv kategóriák szakaszában jelennek meg."
         tags_section: "Címkék szakasz"
-        tags_section_instruction: "A kiválasztott címkék az oldalsáv címkék szakaszában jelennek meg."
         navigation_section: "Navigáció"
-        list_destination_instruction: "Amikor új tartalom van az oldalsávon..."
       change: "módosítás"
       featured_topic: "Kiemelt téma"
       moderator: "%{user} egy moderátor"
@@ -1239,7 +1236,6 @@ hu:
         tags: "Címkék"
         interface: "Felület"
         apps: "Alkalmazások"
-        sidebar: "Oldalsáv"
       change_password:
         success: "(az e-mail elküldve)"
         in_progress: "(az e-mail küldése folyamatban)"
@@ -1740,8 +1736,6 @@ hu:
       logout_disabled: "A kilépés le van tiltva, amíg az oldal írásvédett módban van."
     staff_writes_only_mode:
       enabled: "Ez az oldal csak a munkatársaknak van fenntartva. Továbbra is böngészheted, de a válaszadás és egyéb műveletek csak a munkatársak számára elérhetők."
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Kezdjük el a beszélgetést!</a> Jelenleg {currentPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} található. A látogatóknak több olvasnivalóra van szükségük – azt javasoljuk, hogy legalább {requiredPosts, plural, one {<strong>#</strong> bejegyzés} other {<strong>#</strong> bejegyzés}} legyen. Csak a stáb láthatja ezt az üzenetet.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# hiba/óra} other {# hiba/óra}}</a>, elérte az oldal beállításiban megadott {limit, plural, one {# hiba/órás} other {# hiba/órás}} korlátot.
@@ -1778,7 +1772,6 @@ hu:
         other: "<b>%{count}</b> válasz van."
       description_time_MF: |
         {replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>.
-      enable: "Téma összefoglalása"
       disable: "Összes bejegyzés megjelenítése"
       short_label: "Összefoglalás"
       short_title: "A téma összefoglalásának megjelenítése: a legérdekesebb bejegyzéseket a közösség határozta meg"
@@ -3642,6 +3635,9 @@ hu:
       more: "Több"
       all_categories: "Minden kategória"
       all_tags: "Összes címke"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Összes"
       sections:
         custom:
           save: "Mentés"
@@ -3684,19 +3680,11 @@ hu:
             unread_with_count: "Olvasatlan (%{count})"
             archive: "Archívum"
         tags:
-          links:
-            add_tags:
-              content: "Címkék hozzáadása"
-              title: "Még nem adott hozzá címkéket. Kattintson a kezdéshez."
           none: "Még nem adott hozzá címkéket."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Címkék"
           configure_defaults: "Alapértelmezések beállítása"
         categories:
-          links:
-            add_categories:
-              content: "Kategóriák hozzáadása"
-              title: "Még nem adott hozzá kategóriákat. Kattintson a kezdéshez."
           none: "Még nem adott hozzá kategóriákat."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Kategóriák"
@@ -3714,8 +3702,8 @@ hu:
             badges:
               content: "Jelvények"
               title: "Az összes megszerezhető jelvény"
-            everything:
-              content: "Összes"
+            topics:
+              content: "Témák"
               title: "Minden téma"
             faq:
               content: "GYIK"
@@ -3743,6 +3731,11 @@ hu:
       exceeded: "Túllépte a megengedett maximális karakterszámot."
     form_template_chooser:
       select_template: "Űrlapsablonok kiválasztása"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Adjon meg egy érvényes dátumot."
+          email: "Adjon meg egy érvényes e-mail-címet."
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:
@@ -4610,13 +4603,13 @@ hu:
             minimum:
               key: "legalább"
               type: "egész szám"
-              description: "Szöveges mezőkben megadja a minimálisan megengedett karakterek számát."
             maximum:
               key: "legfeljebb"
-              description: "Szöveges mezőkben megadja a megengedett maximális karakterek számát. A többszörös kiválasztású legördülő menüpontokban megadja a kiválasztható lehetőségek maximális számát."
             pattern:
               key: "minta"
               type: "regex karakterlánc"
+            type:
+              key: "típus"
         edit_category:
           toggle_freeform: "űrlap sablon letiltva"
           toggle_form_template: "űrlap sablon engedélyezve"

@@ -93,6 +93,29 @@ RSpec.describe Chat::CreateCategoryChannel do
             result
           end
         end
+
+        describe "threading_enabled" do
+          context "when true" do
+            it "sets threading_enabled to true" do
+              params[:threading_enabled] = true
+              expect(result.channel.threading_enabled).to eq(true)
+            end
+          end
+
+          context "when blank" do
+            it "sets threading_enabled to false" do
+              params[:threading_enabled] = nil
+              expect(result.channel.threading_enabled).to eq(false)
+            end
+          end
+
+          context "when false" do
+            it "sets threading_enabled to false" do
+              params[:threading_enabled] = false
+              expect(result.channel.threading_enabled).to eq(false)
+            end
+          end
+        end
       end
     end
   end

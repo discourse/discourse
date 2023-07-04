@@ -131,7 +131,7 @@ RSpec.describe SiteSerializer do
     expect(serialized[:shared_drafts_category_id]).to eq(nil)
   end
 
-  describe "#anonymous_default_sidebar_tags" do
+  describe "#anonymous_default_navigation_menu_tags" do
     fab!(:user) { Fabricate(:user) }
     fab!(:tag) { Fabricate(:tag, name: "dev") }
     fab!(:tag2) { Fabricate(:tag, name: "random") }
@@ -143,7 +143,7 @@ RSpec.describe SiteSerializer do
     before do
       SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = true
-      SiteSetting.default_sidebar_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
+      SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
     end
 
     it "is not included in the serialised object when tagging is not enabled" do
@@ -151,33 +151,33 @@ RSpec.describe SiteSerializer do
       guardian = Guardian.new(user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialised object when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialised object when user is not anonymous" do
       guardian = Guardian.new(user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialisd object when default sidebar tags have not been configured" do
-      SiteSetting.default_sidebar_tags = ""
+      SiteSetting.default_navigation_menu_tags = ""
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "includes only tags user can see in the serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(%w[dev random])
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(%w[dev random])
     end
   end
 

@@ -988,9 +988,6 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
-  experimental_post_image_grid:
-    client: true
-    default: false
   highlighted_languages:
     default: "bash|c|cpp|csharp|css|diff|go|graphql|ini|java|javascript|json|kotlin|lua|makefile|markdown|objectivec|perl|php|php-template|plaintext|python|python-repl|r|ruby|rust|scss|shell|sql|swift|typescript|xml|yaml|wasm"
     choices: "HighlightJs.languages"
@@ -1111,6 +1108,13 @@ posting:
   max_draft_length:
     default: 400_000
     hidden: true
+  max_form_template_title_length:
+    default: 100
+    min: 5
+    max: 255
+  max_form_template_content_length:
+    default: 2000
+    max: 150000
 
 email:
   email_time_window_mins:
@@ -2118,12 +2122,12 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
-  new_edit_sidebar_categories_tags_interface_groups:
+  experimental_search_menu_groups:
     type: group_list
     list_type: compact
     default: ""
     allow_any: false
-    hidden: true
+    refresh: true
 
 navigation:
   navigation_menu:
@@ -2131,21 +2135,14 @@ navigation:
     default: "sidebar"
     type: enum
     enum: "NavigationMenuSiteSetting"
-  default_sidebar_categories:
+  default_navigation_menu_categories:
     type: category_list
     default: ""
     client: true
-  default_sidebar_tags:
+  default_navigation_menu_tags:
     type: tag_list
     default: ""
     client: true
-  default_sidebar_list_destination:
-    hidden: true
-    default: "default"
-    type: "list"
-    choices:
-      - "default"
-      - "unread_new"
 
 embedding:
   embed_by_username:
@@ -2354,6 +2351,17 @@ uncategorized:
     client: true
     default: false
 
+  summarization_strategy:
+    client: true
+    default: ""
+    enum: "SummarizationStrategy"
+    validator: "SummarizationValidator"
+  custom_summarization_allowed_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: "3|14" # 3: @staff, 14: @trust_level_4
+
   automatic_topic_heat_values: true
 
   # View heat thresholds
@@ -2448,10 +2456,6 @@ uncategorized:
   notify_about_reviewable_item_after:
     type: float
     default: 48
-
-  show_create_topics_notice:
-    client: true
-    default: true
 
   enable_system_avatars:
     hidden: true
@@ -2772,6 +2776,13 @@ tags:
   max_tags_per_topic:
     default: 5
     client: true
+  enable_max_tags_per_email_subject:
+    default: false
+    client: true
+  max_tags_per_email_subject:
+    default: 5
+    client: true
+    min: 0
   max_tag_length:
     default: 20
     client: true
@@ -2813,6 +2824,10 @@ tags:
     type: enum
     default: always
     enum: RemoveMutedTagsFromLatestSiteSetting
+  watched_precedence_over_muted:
+    client: true
+    default: false
+
   force_lowercase_tags:
     default: true
     client: true

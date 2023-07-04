@@ -1206,14 +1206,10 @@ en:
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
-        categories_section: "Categories Section"
-        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
-        tags_section: "Tags Section"
-        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
         navigation_section: "Navigation"
-        list_destination_instruction: "When there's new content in the sidebar..."
-        list_destination_default: "use the default link and show a badge for new items"
-        list_destination_unread_new: "link to unread/new and show a count of new items"
+        navigation_section_instruction: "When a topic list in the navigation menu has new or unread items…"
+        link_to_filtered_list_checkbox_description: "Link to the filtered list"
+        show_count_new_items_checkbox_description: "Show a count of the new items"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1252,6 +1248,7 @@ en:
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
       watched_first_post_tags: "Watching First Post"
       watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+      watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
@@ -1408,7 +1405,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        sidebar: "Sidebar"
+        navigation_menu: "Navigation Menu"
 
       change_password:
         success: "(email sent)"
@@ -1970,42 +1967,6 @@ en:
     staff_writes_only_mode:
       enabled: "This site is in staff only mode. Please continue to browse, but replying, likes, and other actions are limited to staff members only."
 
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_and_posts_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {are <strong>#</strong> topics}
-      } and { currentPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      } and { requiredPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Only staff can see this message.
-
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_topics_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {are <strong>#</strong> topics}
-      }. Visitors need more to read and reply to – we recommend at least { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      }. Only staff can see this message.
-
-    # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
-    too_few_posts_notice_MF: |
-      Let's <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">start the discussion!</a> There { currentPosts, plural,
-          one {is <strong>#</strong> post}
-        other {are <strong>#</strong> posts}
-      }. Visitors need more to read and reply to – we recommend at least { requiredPosts, plural,
-          one {<strong>#</strong> post}
-        other {<strong>#</strong> posts}
-      }. Only staff can see this message.
-
     logs_error_rate_notice:
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       reached_hour_MF: |
@@ -2090,10 +2051,13 @@ en:
           other {# minutes}
         }</b>.
 
-      enable: "Summarize This Topic"
+      enable: "Show top replies"
       disable: "Show All Posts"
       short_label: "Summarize"
       short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      strategy:
+        button_title: "Summarize this topic"
+        title: "Topic summary"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -4437,11 +4401,25 @@ en:
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
-      categories_form:
-        save: "Save"
+      categories_form_modal:
         title: "Edit categories navigation"
-        filter_input:
-          placeholder: "Filter categories"
+        subtitle:
+          text: "and we'll automatically show this site's most popular categories"
+        filter_placeholder: "Filter categories"
+        no_categories: "There are no categories matching the given term."
+      tags_form_modal:
+        title: "Edit tags navigation"
+        filter_placeholder: "Filter tags"
+        no_tags: "There are no tags matching the given term."
+        subtitle:
+          text: "and we'll automatically show this site's top tags"
+      edit_navigation_modal_form:
+        deselect_button_text: "Deselect all"
+        reset_to_defaults: "Reset to defaults"
+        filter_dropdown:
+          all: "All"
+          selected: "Selected"
+          unselected: "Unselected"
 
       sections:
         custom:
@@ -4492,20 +4470,12 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
-          links:
-            add_tags:
-              content: "Add tags"
-              title: "You have not added any tags. Click to get started."
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "Edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
-          links:
-            add_categories:
-              content: "Add categories"
-              title: "You have not added any categories. Click to get started."
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
@@ -4525,8 +4495,8 @@ en:
             badges:
               content: "Badges"
               title: "All the badges available to earn"
-            everything:
-              content: "Everything"
+            topics:
+              content: "Topics"
               title: "All topics"
             faq:
               content: "FAQ"
@@ -4549,6 +4519,7 @@ en:
               content: "Review"
               title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
+        global_section: "Global section, visible to everyone"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -4562,6 +4533,30 @@ en:
 
     form_template_chooser:
       select_template: "Select form templates"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Please fill out this field."
+          text: "Please fill out this field."
+          select-one: "Please select an item in the list."
+          select-multiple: "Please select at least one item in the list."
+          checkbox: "Please check this box if you want to proceed."
+        typeMismatch:
+          default: "Please enter a valid value."
+          color: "Please enter a color."
+          date: "Please enter a date."
+          email: "Please enter a valid email address."
+          number: "Please enter a number."
+          password: "Please enter a valid password."
+          tel: "Please enter a valid telephone number."
+          text: "Please enter a text value."
+          url: "Please enter a valid URL."
+        tooShort: "The input must be %{minLength} characters or longer."
+        tooLong: "The input must be less than %{maxLength} characters."
+        rangeOverflow: "The input must be less than %{max}."
+        rangeUnderflow: "The input must be more than %{min}."
+        patternMismatch: "Please match the requested format."
+        badInput: "Please enter a valid input."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -5691,15 +5686,19 @@ en:
             minimum:
               key: "minimum"
               type: "integer"
-              description: "In text fields, specifies the minimum number of characters allowed."
+              description: "For text fields, specifies the minimum number of characters allowed."
             maximum:
               key: "maximum"
               type: "integer"
-              description: "In text fields, specifies the maximum number of characters allowed. In multi select dropdowns, specifies the maximum number of options that can be selected."
+              description: "For text fields, specifies the maximum number of characters allowed."
             pattern:
               key: "pattern"
               type: "regex string"
-              description: "In text fields, a regular expression specifying the allowed input."
+              description: "For text fields, a regular expression specifying the allowed input."
+            type:
+              key: "type"
+              type: "string"
+              description: "For input fields, you can specify the type of input that should be expected (text|email|date|number|url|tel|color)"
         preview_modal:
           title: "Preview Template"
         field_placeholders:
@@ -6086,6 +6085,7 @@ en:
         show_overriden: "Only show overridden"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
+        interpolation_keys: "Available interpolation keys:"
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"

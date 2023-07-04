@@ -18,12 +18,13 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
   describe "reply to message" do
     it "renders text in the details" do
       message_1.update!(message: "<mark>not marked</mark>")
+      message_1.rebake!
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(message_1)
 
       expect(channel_page.composer.message_details).to have_message(
         id: message_1.id,
-        exact_text: "not marked",
+        exact_text: "&lt;mark&gt;not marked&lt;/mark&gt;",
       )
     end
 

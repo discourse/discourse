@@ -17,7 +17,7 @@ export default createWidget("chat-header-icon", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<ChatHeaderIcon />`
+        hbs`<Chat::Header::Icon />`
       ),
     ];
   },

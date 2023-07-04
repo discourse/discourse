@@ -1004,7 +1004,6 @@ sr:
       sign_up: "Registrujte se"
     summary:
       enabled_description: "Gledate pregled ove teme: najzanimljivije poruke su odabrane od strane zajednice."
-      enable: "Sumirajte Ovu Temu"
       disable: "Prikaži Sve Poruke"
     deleted_filter:
       enabled_description: "Ova tema sadrži brisane poruke, koji su skriveni."
@@ -1808,6 +1807,9 @@ sr:
         few: "%{count} novih"
         other: "%{count} nova"
       more: "Više"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "sve"
       sections:
         custom:
           save: "Sačuvaj"
@@ -1840,6 +1842,8 @@ sr:
               content: "Admin"
             badges:
               content: "Značke"
+            topics:
+              content: "Teme"
             faq:
               content: "FAQ (često postavljana pitanja)"
             groups:
@@ -1848,6 +1852,11 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Molimo unesite validnu vrednost"
+          email: "Molimo unesite validnu e-mail adresu."
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:
@@ -2227,6 +2236,8 @@ sr:
           validations:
             required:
               key: "potrebno"
+            type:
+              key: "tip"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."

@@ -616,22 +616,6 @@ tr_TR:
   staff_category_description: "Personel tartışmaları için özel kategori. Konular sadece yöneticiler ve moderatörler tarafından görülebilir."
   discourse_welcome_topic:
     title: "Burası %{site_title}, hoş geldiniz! :wave:"
-    body: |
-      Bize katıldığınız için çok mutluyuz.
-
-      > ## %{site_title}
-      >
-      > %{site_description}
-
-      Başlamak için yapabileceğiniz bazı şeyler:
-
-      :speaking_head: Resminizi, kendiniz ve ilgi alanlarınız hakkındaki bilgileri [profilinize](%{base_path}/my/preferences/account) ekleyerek **kendinizi tanıtın**. Size sorulmasını istediğiniz tek bir soru olsa bu ne olurdu?
-
-      :open_book: Zaten başlamış olan [tartışmalara göz atarak](%{base_path}/top) **topluluğu tanıyın**. Bir gönderiyi ilginç, bilgilendirici veya eğlenceli bulduğunuzda, takdirinizi veya desteğinizi göstermek için :heart: kullanın!
-
-      :handshake: Tartışmalara yorum yaparak, kendi bakış açınızı paylaşarak, sorular sorarak veya geri bildirimde bulunarak **katkıda bulunun**. Yanıt vermeden veya yeni konulara başlamadan önce lütfen [Topluluk Kuralları](%{base_path}/sss)nı inceleyin.
-
-      > Yardıma ihtiyacınız olursa veya bir öneriniz varsa, [#feedback](%{base_path}/c/site-feedback) bölümünde veya [yöneticilerle ile iletişime geçerek](%{base_path}/about) sorabilirsiniz.
   admin_quick_start_title: "ÖNCE BURAYI OKUYUN: Yönetici Hızlı Başlangıç Kılavuzu"
   category:
     topic_prefix: "%{category} kategorisi hakkında"
@@ -1499,6 +1483,8 @@ tr_TR:
     summary_percent_filter: "Bir kullanıcı \"Bu Konuyu Özetleyin\" seçeneğine tıkladığında, gönderilerin en popüler %'sini gösterin"
     summary_max_results: "\"Bu Konuyu Özetle\" ile döndürülen maksimum gönderi sayısı"
     summary_timeline_button: "Zaman çizelgesinde bir \"Özetle\" düğmesi gösterin"
+    summarization_strategy: "Eklentiler tarafından kaydedilen içeriği özetlemenin diğer yolları"
+    custom_summarization_allowed_groups: "`summarization_strategy` kullanarak içerikleri özetlemesine izin verilen gruplar."
     enable_personal_messages: "KALDIRILDI, bunun yerine \"kişisel mesaj etkin gruplar\" ayarını kullanın. Güven seviyesi 1 (mesaj göndermek için minimum güven ile yapılandırılabilir) kullanıcıların mesaj oluşturmasına ve mesajlara yanıt vermesine izin verin. Personelin ne olursa olsun her zaman mesaj gönderebileceğini unutmayın."
     personal_message_enabled_groups: "Bu gruplardaki kullanıcıların mesaj oluşturmasına ve mesajlara yanıt vermesine izin verin. Güven seviyesi grupları, bu sayının üzerindeki tüm güven seviyelerini içerir, örneğin trust_level_1'i seçmek, trust_level_2, 3, 4 kullanıcılarının kişisel mesaj göndermesine de izin verir. Personelin ne olursa olsun her zaman mesaj gönderebileceğini unutmayın."
     enable_system_message_replies: "Kişisel mesajlar devre dışı bırakılmış olsa bile kullanıcıların sistem mesajlarını yanıtlayabilmesine izin verir"
@@ -1992,7 +1978,7 @@ tr_TR:
     auto_handle_queued_age: "Şu kadar gün sonra incelenmeyi bekleyen kayıtları otomatik olarak işleyin. Bayraklar göz ardı edilir. Sıraya alınan gönderiler ve kullanıcılar reddedilir. Bu özelliği devre dışı bırakmak için 0 olarak ayarlayın."
     penalty_step_hours: "Kullanıcıları saat cinsinden susturmak veya askıya almak için varsayılan cezalar. İlk suç varsayılan olarak ilk değere, ikinci suç varsayılan olarak ikinci değere vb."
     svg_icon_subset: "Varlıklarınıza dahil etmek istediğiniz ek FontAwesome 5 simgelerini ekleyin. Katı simgeler için \"fa-\", normal simgeler için \"far-\" ve marka simgeleri için \"fab-\" ön ekini kullanın."
-    max_prints_per_hour_per_user: "Maksimum /print sayfa gösterim sayısı (devre dışı bırakmak için 0 olarak ayarlayın)"
+    max_prints_per_hour_per_user: "Maksimum /print sayfa gösterim sayısı (yazdırmayı devre dışı bırakmak için 0 olarak ayarlayın)"
     full_name_required: "Tam ad, kullanıcı profilinin gerekli bir alanıdır."
     enable_names: "Kullanıcının tam adını profilinde, kullanıcı kartında ve e-postalarında gösterin. Tam adı her yerde gizlemek için devre dışı bırakın."
     display_name_on_posts: "Bir kullanıcının @kullanıcı adına ek olarak gönderilerinde tam adını gösterin."
@@ -2014,7 +2000,6 @@ tr_TR:
     embed_post_limit: "Yerleştirilecek maksimum gönderi sayısı."
     embed_username_required: "Konu oluşturmak için kullanıcı adı gereklidir."
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hala incelenmemiş öğe varsa moderatörlere mesaj ilet. Devre dışı bırakmak için 0 olarak ayarlayın."
-    show_create_topics_notice: "Sitede 5'ten az genel konu varsa yöneticilerden birkaç konu oluşturmalarını isteyen bir bildirim gösterin."
     delete_drafts_older_than_n_days: "(n) günden daha eski taslakları silin."
     delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş saplama konularını otomatik olarak silmeden önce beklenecek gün sayısı. Saplama konularını asla silmemek için 0 olarak ayarlayın."
     bootstrap_mode_min_users: "Bootstrap modunu devre dışı bırakmak için gereken minimum kullanıcı sayısı (devre dışı bırakmak için 0'a ayarlayın, devreye girmesi 24 saate kadar sürebilir)"
@@ -2105,6 +2090,7 @@ tr_TR:
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
     create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluştur"
+    watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendir"
     company_name: "Şirket Adı"
     governing_law: "Geçerli Kanun"
     city_for_disputes: "Anlaşmazlıklar için şehir"
@@ -2136,8 +2122,8 @@ tr_TR:
     suggest_weekends_in_date_pickers: "Tarih seçici önerilerine hafta sonlarını (cumartesi ve pazar) dahil edin (Discourse'u yalnızca hafta içi, pazartesiden cumaya kadar kullanıyorsanız bunu devre dışı bırakın)."
     splash_screen: "Site varlıkları yüklenirken geçici bir yükleme ekranı gösterir"
     navigation_menu: "Hangi gezinme menüsünün kullanılacağını belirleyin. Kenar çubuğu ve başlık gezinmesi, kullanıcılar tarafından özelleştirilebilir. Geriye dönük uyumluluk için eski seçenek mevcuttur."
-    default_sidebar_categories: "Seçilen kategoriler varsayılan olarak Kenar Çubuğunun Kategoriler bölümünde gösterilir."
-    default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğunun Etiketler bölümünde gösterilir."
+    default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde görüntülenecektir."
+    default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde görüntülenecektir."
     enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     experimental_new_new_view_groups: 'DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştir"
@@ -2167,7 +2153,6 @@ tr_TR:
       pop3_polling_password_is_empty: "POP3 yoklamasını etkinleştirmeden önce bir \"pop3 yoklama şifresi\" ayarlamanız gerekiyor."
       pop3_polling_authentication_failed: "POP3 kimlik doğrulaması başarısız oldu. Lütfen pop3 giriş bilgilerinizi doğrulayın."
       reply_by_email_address_is_empty: "E-posta ile yanıtlamayı etkinleştirmeden önce bir \"yanıtlama e-postası\" ayarlamanız gerekiyor."
-      email_polling_disabled: "E-posta ile yanıtlamayı etkinleştirmeden önce manuel veya POP3 yoklamasını etkinleştirmeniz gerekiyor."
       user_locale_not_enabled: "Bu ayarı etkinleştirmeden önce \"kullanıcı yerel ayarına izin ver\" seçeneğini etkinleştirmeniz gerekiyor."
       personal_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin kişisel mesaj göndermesini istemiyorsanız personel grubunu seçin."
       invalid_regex: "Regex geçersiz veya izin verilmiyor."

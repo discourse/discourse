@@ -47,7 +47,6 @@ RSpec.describe Chat::UpdateThread do
               .first
 
           expect(message.data["type"]).to eq("update_thread_original_message")
-          expect(message.data["title"]).to eq(title)
         end
       end
 

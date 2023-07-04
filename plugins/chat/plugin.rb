@@ -32,6 +32,7 @@ module ::Chat
 end
 
 require_relative "lib/chat/engine"
+require_relative "lib/chat/types/array"
 
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
@@ -63,6 +64,7 @@ after_initialize do
     User.prepend Chat::UserExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
+    Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
   end
 
   if Oneboxer.respond_to?(:register_local_handler)

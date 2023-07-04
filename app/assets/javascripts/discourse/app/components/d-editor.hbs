@@ -1,7 +1,10 @@
-<div class="d-editor-container">
+<div
+  class="d-editor-container
+    {{if this.showFormTemplateForm 'has-form-template'}}"
+>
   <div class="d-editor-textarea-column">
     {{yield}}
-    {{#if @formTemplateIds}}
+    {{#if this.showFormTemplateForm}}
       {{#if (gt @formTemplateIds.length 1)}}
         <FormTemplateChooser
           @class="composer-select-form-template"
@@ -11,7 +14,9 @@
           @options={{hash maximum=1}}
         />
       {{/if}}
-      <FormTemplateField::Wrapper @id={{this.selectedFormTemplateId}} />
+      <form id="form-template-form">
+        <FormTemplateField::Wrapper @id={{this.selectedFormTemplateId}} />
+      </form>
     {{else}}
       <div
         class="d-editor-textarea-wrapper

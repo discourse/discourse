@@ -25,6 +25,7 @@ export default class ChatThreadPanel extends Component {
   @service chatThreadPaneSubscriptionsManager;
   @service appEvents;
   @service capabilities;
+  @service chatHistory;
 
   @tracked loading;
   @tracked uploadDropZone;
@@ -63,8 +64,6 @@ export default class ChatThreadPanel extends Component {
     this.chatThreadPaneSubscriptionsManager.unsubscribe();
   }
 
-  // TODO (martin) This needs to have the extended scroll/message visibility/
-  // mark read behaviour the same as the channel.
   @action
   computeScrollState() {
     cancel(this.onScrollEndedHandler);
@@ -115,7 +114,7 @@ export default class ChatThreadPanel extends Component {
         return;
       }
 
-      // TODO (martin) HACK: We don't have proper scroll visibility over
+      // HACK: We don't have proper scroll visibility over
       // what message we are looking at, don't have the lastReadMessageId
       // for the thread, and this updateLastReadMessage function is only
       // called when scrolling all the way to the bottom.
@@ -170,7 +169,15 @@ export default class ChatThreadPanel extends Component {
           this._selfDeleted ||
           this.args.thread.channel.id !== result.meta.channel_id
         ) {
-          this.router.transitionTo("chat.channel", "-", result.meta.channel_id);
+          if (this.chatHistory.previousRoute?.name === "chat.channel.index") {
+            this.router.transitionTo(
+              "chat.channel",
+              "-",
+              result.meta.channel_id
+            );
+          } else {
+            this.router.transitionTo("chat.channel.threads");
+          }
         }
 
         const [messages, meta] = this.afterFetchCallback(
@@ -228,6 +235,7 @@ export default class ChatThreadPanel extends Component {
   async onSendMessage(message) {
     resetIdle();
 
+    await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);
     } else {
@@ -281,7 +289,6 @@ export default class ChatThreadPanel extends Component {
   }
 
   async #sendEditMessage(message) {
-    await message.cook();
     this.chatThreadPane.sending = true;
 
     const data = {
@@ -327,45 +334,26 @@ export default class ChatThreadPanel extends Component {
   // we now use this hack to disable it
   @bind
   forceRendering(callback) {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
+    if (this.capabilities.isIOS) {
+      this.scrollable.style.overflow = "hidden";
+    }
 
-      if (!this.scrollable) {
-        return;
-      }
+    callback?.();
 
-      if (this.capabilities.isIOS) {
-        this.scrollable.style.overflow = "hidden";
-      }
-
-      callback?.();
-
-      if (this.capabilities.isIOS) {
-        discourseLater(() => {
-          if (!this.scrollable) {
+    if (this.capabilities.isIOS) {
+      next(() => {
+        schedule("afterRender", () => {
+          if (this._selfDeleted || !this.scrollable) {
             return;
           }
-
           this.scrollable.style.overflow = "auto";
-        }, 50);
-      }
-    });
+        });
+      });
+    }
   }
 
   @action
   resendStagedMessage() {}
-
-  @action
-  messageDidEnterViewport(message) {
-    message.visible = true;
-  }
-
-  @action
-  messageDidLeaveViewport(message) {
-    message.visible = false;
-  }
 
   #handleErrors(error) {
     switch (error?.jqXHR?.status) {

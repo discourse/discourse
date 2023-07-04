@@ -3,16 +3,16 @@
 require "rails_helper"
 
 describe Chat::ReviewQueue do
+  subject(:queue) { described_class.new }
+
   fab!(:message_poster) { Fabricate(:user) }
   fab!(:flagger) { Fabricate(:user) }
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
-
   fab!(:admin) { Fabricate(:admin) }
+
   let(:guardian) { Guardian.new(flagger) }
   let(:admin_guardian) { Guardian.new(admin) }
-
-  subject(:queue) { described_class.new }
 
   before do
     chat_channel.add(message_poster)

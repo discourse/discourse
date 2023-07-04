@@ -1,3 +1,30 @@
+.tippy-box[data-theme="user-tips"] {
+  background-color: var(--tertiary);
+  color: var(--secondary);
+  border-color: var(--tertiary);
+
+  .btn-flat {
+    color: var(--secondary);
+
+    &:hover {
+      color: var(--d-hover);
+    }
+  }
+
+  .btn-primary {
+    background: var(--secondary);
+    color: var(--tertiary);
+
+    &:hover {
+      color: var(--tertiary-hover);
+    }
+  }
+
+  > .tippy-svg-arrow {
+    color: var(--tertiary);
+  }
+}
+
 .user-tip {
   z-index: z("composer", "content") - 1;
 }
@@ -25,19 +52,19 @@
 .tippy-box[data-theme~="user-tips"][data-placement^="left"]
   > .tippy-svg-arrow
   > svg {
-  left: 11px;
+  left: 12px;
 }
 
 .tippy-box[data-theme~="user-tips"][data-placement^="top"]
   > .tippy-svg-arrow
   > svg {
-  top: 11px;
+  top: 12px;
 }
 
 .tippy-box[data-theme~="user-tips"][data-placement^="bottom"]
   > .tippy-svg-arrow
   > svg {
-  top: -13px;
+  top: -14px;
   left: -1px;
 }
 

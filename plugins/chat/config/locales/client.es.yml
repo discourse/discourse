@@ -104,6 +104,8 @@ es:
       heading: "Chat"
       join: "Unirse"
       last_visit: "última visita"
+      summarization:
+        summarize: "Resumir"
       mention_warning:
         dismiss: "descartar"
         invitations_sent:
@@ -210,6 +212,8 @@ es:
           members: Miembros
           settings: Ajustes
       channel_edit_name_slug_modal:
+        title: Editar canal
+        input_placeholder: Añade un nombre
         name: Nombre del canal
       channel_edit_description_modal:
         title: Editar descripción
@@ -282,6 +286,11 @@ es:
         admin_title: "Administrador"
       admin:
         title: "Chat"
+        export_messages:
+          title: "Exportar mensajes de chat"
+          description: "Actualmente, la exportación está limitada a los 10000 mensajes más recientes de los últimos 6 meses."
+          create_export: "Crear exportación"
+          export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
       direct_messages:
         title: "Chat personal"
         new: "Crear un chat personal"
@@ -367,7 +376,7 @@ es:
         no_results: "No hay resultados"
       thread:
         title: "Título"
-        default_title: "Tema #%{thread_id}"
+        default_title: "Hilo"
         replies:
           one: "%{count} respuesta"
           other: "%{count} respuestas"
@@ -375,6 +384,14 @@ es:
           started_by: "Iniciado por"
         settings: "Ajustes"
         last_reply: "última respuesta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguir"
+        participants_other_count:
+          one: "+%{count} otro"
+          other: "+%{count} otros"
       threads:
         list: "Debates en curso"
         none: "No participas en ningún hilo de este canal."

@@ -33,6 +33,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import prepareFormTemplateData from "discourse/lib/form-template-validation";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -236,10 +237,6 @@ export default class ComposerController extends Controller {
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
-    if (creatingPrivateMessage && this.site.mobileView) {
-      return false;
-    }
-
     const isPrivateMessage =
       creatingPrivateMessage || this.get("model.topic.isPrivateMessage");
 
@@ -929,6 +926,22 @@ export default class ComposerController extends Controller {
       this.set("showPreview", false);
     }
 
+    if (this.siteSettings.experimental_form_templates) {
+      if (
+        this.formTemplateIds?.length > 0 &&
+        !this.get("model.replyingToTopic")
+      ) {
+        const formTemplateData = prepareFormTemplateData(
+          document.querySelector("#form-template-form")
+        );
+        if (formTemplateData) {
+          this.model.set("reply", formTemplateData);
+        } else {
+          return;
+        }
+      }
+    }
+
     const composer = this.model;
 
     if (composer?.cantSubmitPost) {
@@ -1246,6 +1259,7 @@ export default class ComposerController extends Controller {
         "id",
         opts.prioritizedCategoryId
       );
+
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
@@ -1283,7 +1297,7 @@ export default class ComposerController extends Controller {
           }
         }
 
-        await this.cancelComposer();
+        await this.cancelComposer(opts);
         await this.open(opts);
         return;
       }
@@ -1478,7 +1492,7 @@ export default class ComposerController extends Controller {
     });
   }
 
-  cancelComposer() {
+  cancelComposer(opts = {}) {
     this.skipAutoSave = true;
 
     if (this._saveDraftDebounce) {
@@ -1491,7 +1505,13 @@ export default class ComposerController extends Controller {
           model: this.model,
           modalClass: "discard-draft-modal",
         });
+        const overridesDraft =
+          this.model.composeState === Composer.OPEN &&
+          this.model.draftKey === opts.draftKey &&
+          [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
+        const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
         modal.setProperties({
+          showSaveDraftButton,
           onDestroyDraft: () => {
             return this.destroyDraft()
               .then(() => {

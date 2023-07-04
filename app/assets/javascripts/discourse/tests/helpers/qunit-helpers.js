@@ -594,6 +594,7 @@ export async function emulateAutocomplete(inputSelector, text) {
   await triggerKeyEvent(inputSelector, "keydown", "Backspace");
   await fillIn(inputSelector, text);
   await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+  await settled();
 }
 
 // The order of attributes can vary in different browsers. When comparing

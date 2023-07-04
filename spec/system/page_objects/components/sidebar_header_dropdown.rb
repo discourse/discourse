@@ -30,7 +30,7 @@ module PageObjects
         )
       end
 
-      def click_everything_link
+      def click_topics_link
         find(".sidebar-section-link[data-link-name='everything']").click
       end
 

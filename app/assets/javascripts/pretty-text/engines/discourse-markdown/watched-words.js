@@ -16,22 +16,26 @@ function isLinkClose(str) {
 function findAllMatches(text, matchers) {
   const matches = [];
 
-  let count = 0;
-
-  matchers.forEach((matcher) => {
-    let match;
-    while (
-      (match = matcher.pattern.exec(text)) !== null &&
-      count++ < MAX_MATCHES
-    ) {
-      matches.push({
-        index: match.index + match[0].indexOf(match[1]),
-        text: match[1],
-        replacement: matcher.replacement,
-        link: matcher.link,
-      });
+  for (const { word, pattern, replacement, link } of matchers) {
+    if (matches.length >= MAX_MATCHES) {
+      break;
     }
-  });
+
+    if (word.test(text)) {
+      for (const match of text.matchAll(pattern)) {
+        matches.push({
+          index: match.index + match[0].indexOf(match[1]),
+          text: match[1],
+          replacement,
+          link,
+        });
+
+        if (matches.length >= MAX_MATCHES) {
+          break;
+        }
+      }
+    }
+  }
 
   return matches.sort((a, b) => a.index - b.index);
 }
@@ -52,11 +56,12 @@ export function setup(helper) {
     const matchers = [];
 
     if (md.options.discourse.watchedWordsReplace) {
-      Object.entries(md.options.discourse.watchedWordsReplace).map(
+      Object.entries(md.options.discourse.watchedWordsReplace).forEach(
         ([regexpString, options]) => {
           const word = toWatchedWord({ [regexpString]: options });
 
           matchers.push({
+            word: new RegExp(options.word, options.case_sensitive ? "" : "i"),
             pattern: createWatchedWordRegExp(word),
             replacement: options.replacement,
             link: false,
@@ -66,11 +71,12 @@ export function setup(helper) {
     }
 
     if (md.options.discourse.watchedWordsLink) {
-      Object.entries(md.options.discourse.watchedWordsLink).map(
+      Object.entries(md.options.discourse.watchedWordsLink).forEach(
         ([regexpString, options]) => {
           const word = toWatchedWord({ [regexpString]: options });
 
           matchers.push({
+            word: new RegExp(options.word, options.case_sensitive ? "" : "i"),
             pattern: createWatchedWordRegExp(word),
             replacement: options.replacement,
             link: true,

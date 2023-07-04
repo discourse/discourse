@@ -92,6 +92,12 @@ export default {
     };
 
     const closeChat = (event) => {
+      // TODO (joffrey): removes this when we move from magnific popup
+      // there's no proper way to prevent propagation in mfp
+      if (event.srcElement?.classList?.value?.includes("mfp-wrap")) {
+        return;
+      }
+
       if (chatStateManager.isDrawerActive) {
         event.preventDefault();
         event.stopPropagation();

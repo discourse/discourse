@@ -16,6 +16,8 @@ RSpec.describe Topic do
     Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite)
   end
 
+  it_behaves_like "it has custom fields"
+
   describe "Validations" do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -787,7 +789,7 @@ RSpec.describe Topic do
         Group.refresh_automatic_groups!
       end
 
-      after { RateLimiter.clear_all! }
+      use_redis_snapshotting
 
       context "when per day" do
         before { SiteSetting.max_topic_invitations_per_day = 1 }
@@ -2627,8 +2629,9 @@ RSpec.describe Topic do
       SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
       RateLimiter.stubs(:rate_limit_create_topic).returns(100)
       RateLimiter.enable
-      RateLimiter.clear_all!
     end
+
+    use_redis_snapshotting
 
     it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
       start = Time.now.tomorrow.beginning_of_day
@@ -2681,7 +2684,7 @@ RSpec.describe Topic do
       RateLimiter.enable
     end
 
-    after { RateLimiter.clear_all! }
+    use_redis_snapshotting
 
     it "limits according to max_personal_messages_per_day" do
       Group.refresh_automatic_groups!
@@ -3095,7 +3098,7 @@ RSpec.describe Topic do
     end
 
     describe "removing oneself" do
-      it "should remove onself" do
+      it "should remove oneself" do
         topic.allowed_users << user1
 
         expect(topic.remove_allowed_user(user1, user1)).to eq(true)

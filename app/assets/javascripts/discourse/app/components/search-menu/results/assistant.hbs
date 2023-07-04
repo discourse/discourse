@@ -1,0 +1,81 @@
+<ul class="search-menu-assistant">
+  {{! suggestion type keywords are mapped to SUGGESTION_KEYWORD_MAP }}
+  {{#if (eq this.suggestionType "tagIntersection")}}
+    {{#each @results as |result|}}
+      <SearchMenu::Results::AssistantItem
+        @tag={{result.tagName}}
+        @additionalTags={{result.additionalTags}}
+        @category={{result.category}}
+        @slug={{@slug}}
+        @withInLabel={{@withInLabel}}
+        @isIntersection={{true}}
+        @closeSearchMenu={{@closeSearchMenu}}
+        @searchTermChanged={{@searchTermChanged}}
+        @suggestionKeyword={{@suggestionKeyword}}
+      />
+    {{/each}}
+  {{else if (eq this.suggestionType "categoryOrTag")}}
+    {{#each @results as |result|}}
+      {{#if result.model}}
+        <SearchMenu::Results::AssistantItem
+          @category={{result.model}}
+          @slug={{get this.fullSlugForCategoryMap result.model.id}}
+          @withInLabel={{@withInLabel}}
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+          @suggestionKeyword={{@suggestionKeyword}}
+        />
+      {{else}}
+        <SearchMenu::Results::AssistantItem
+          @tag={{result.name}}
+          @slug={{concat this.prefix "#" result.name}}
+          @withInLabel={{@withInLabel}}
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+          @suggestionKeyword={{@suggestionKeyword}}
+        />
+      {{/if}}
+    {{/each}}
+  {{else if (eq this.suggestionType "user")}}
+    {{#if this.userMatchesInTopic}}
+      <SearchMenu::Results::AssistantItem
+        @extraHint={{true}}
+        @user={{this.user}}
+        @slug={{concat this.prefix "@" this.user.username}}
+        @suffix={{i18n "search.in_topics_posts"}}
+        @closeSearchMenu={{@closeSearchMenu}}
+        @searchTermChanged={{@searchTermChanged}}
+        @suggestionKeyword={{@suggestionKeyword}}
+      />
+
+      <SearchMenu::Results::AssistantItem
+        @user={{this.user}}
+        @slug={{concat this.prefix "@" this.user.username}}
+        @suffix={{i18n "search.in_this_topic"}}
+        @closeSearchMenu={{@closeSearchMenu}}
+        @searchTermChanged={{@searchTermChanged}}
+        @suggestionKeyword={{@suggestionKeyword}}
+      />
+    {{else}}
+      {{#each @results as |result|}}
+        <SearchMenu::Results::AssistantItem
+          @user={{result}}
+          @slug={{concat this.prefix "@" result.username}}
+          @closeSearchMenu={{@closeSearchMenu}}
+          @searchTermChanged={{@searchTermChanged}}
+          @suggestionKeyword={{@suggestionKeyword}}
+        />
+      {{/each}}
+    {{/if}}
+  {{else}}
+    {{#each this.suggestionShortcuts as |item|}}
+      <SearchMenu::Results::AssistantItem
+        @slug={{concat this.prefix item}}
+        @label={{item}}
+        @closeSearchMenu={{@closeSearchMenu}}
+        @searchTermChanged={{@searchTermChanged}}
+        @suggestionKeyword={{@suggestionKeyword}}
+      />
+    {{/each}}
+  {{/if}}
+</ul>

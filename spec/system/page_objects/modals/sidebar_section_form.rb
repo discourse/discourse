@@ -52,8 +52,8 @@ module PageObjects
         find_button("Save", disabled: false)
       end
 
-      def everything_link
-        find(".draggable[data-link-name='Everything']")
+      def topics_link
+        find(".draggable[data-link-name='Topics']")
       end
 
       def review_link

@@ -10,25 +10,25 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (7.0.4.3)
-      actionpack (= 7.0.4.3)
-      actionview (= 7.0.4.3)
-      activejob (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
+    actionmailer (7.0.5.1)
+      actionpack (= 7.0.5.1)
+      actionview (= 7.0.5.1)
+      activejob (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
       mail (~> 2.5, >= 2.5.4)
       net-imap
       net-pop
       net-smtp
       rails-dom-testing (~> 2.0)
-    actionpack (7.0.4.3)
-      actionview (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
-      rack (~> 2.0, >= 2.2.0)
+    actionpack (7.0.5.1)
+      actionview (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
+      rack (~> 2.0, >= 2.2.4)
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.2.0)
-    actionview (7.0.4.3)
-      activesupport (= 7.0.4.3)
+    actionview (7.0.5.1)
+      activesupport (= 7.0.5.1)
       builder (~> 3.1)
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
@@ -37,15 +37,15 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (7.0.4.3)
-      activesupport (= 7.0.4.3)
+    activejob (7.0.5.1)
+      activesupport (= 7.0.5.1)
       globalid (>= 0.3.6)
-    activemodel (7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activerecord (7.0.4.3)
-      activemodel (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activesupport (7.0.4.3)
+    activemodel (7.0.5.1)
+      activesupport (= 7.0.5.1)
+    activerecord (7.0.5.1)
+      activemodel (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
+    activesupport (7.0.5.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -75,7 +75,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.5.0)
       aws-eventstream (~> 1, >= 1.0.2)
-    better_errors (2.10.0)
+    better_errors (2.10.1)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
@@ -88,7 +88,7 @@ GEM
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     byebug (11.1.3)
-    capybara (3.39.1)
+    capybara (3.39.2)
       addressable
       matrix
       mini_mime (>= 0.1.3)
@@ -135,8 +135,6 @@ GEM
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
-    ecma-re-validator (0.4.0)
-      regexp_parser (~> 2.2)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
     excon (0.100.0)
@@ -146,7 +144,7 @@ GEM
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
     fakeweb (1.3.0)
-    faraday (2.7.6)
+    faraday (2.7.9)
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
@@ -160,11 +158,11 @@ GEM
     gc_tracer (1.5.1)
     globalid (1.1.0)
       activesupport (>= 5.0)
-    google-protobuf (3.23.2)
-    google-protobuf (3.23.2-aarch64-linux)
-    google-protobuf (3.23.2-arm64-darwin)
-    google-protobuf (3.23.2-x86_64-darwin)
-    google-protobuf (3.23.2-x86_64-linux)
+    google-protobuf (3.23.3)
+    google-protobuf (3.23.3-aarch64-linux)
+    google-protobuf (3.23.3-arm64-darwin)
+    google-protobuf (3.23.3-x86_64-darwin)
+    google-protobuf (3.23.3-x86_64-linux)
     guess_html_encoding (0.0.11)
     hana (1.3.7)
     hashdiff (1.0.1)
@@ -187,13 +185,13 @@ GEM
     json (2.6.3)
     json-schema (3.0.0)
       addressable (>= 2.8)
-    json_schemer (0.2.23)
-      ecma-re-validator (~> 0.3)
+    json_schemer (1.0.3)
       hana (~> 1.3)
       regexp_parser (~> 2.0)
-      uri_template (~> 0.7)
-    jwt (2.7.0)
+      simpleidn (~> 0.2)
+    jwt (2.7.1)
     kgio (2.11.4)
+    language_server-protocol (3.17.0.3)
     libv8-node (18.16.0.0)
     libv8-node (18.16.0.0-aarch64-linux)
     libv8-node (18.16.0.0-arm64-darwin)
@@ -225,7 +223,7 @@ GEM
     matrix (0.4.2)
     maxminddb (0.1.22)
     memory_profiler (1.0.1)
-    message_bus (4.3.2)
+    message_bus (4.3.7)
       rack (>= 1.1.3)
     method_source (1.0.0)
     mini_mime (1.1.2)
@@ -237,8 +235,8 @@ GEM
     mini_sql (1.4.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
-    minitest (5.18.0)
-    mocha (2.0.2)
+    minitest (5.18.1)
+    mocha (2.0.4)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.1)
     multi_json (1.15.0)
@@ -246,7 +244,7 @@ GEM
     mustache (1.1.1)
     net-http (0.3.2)
       uri
-    net-imap (0.3.4)
+    net-imap (0.3.6)
       date
       net-protocol
     net-pop (0.1.2)
@@ -279,7 +277,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 4)
-    oj (3.13.14)
+    oj (3.15.0)
     omniauth (1.9.2)
       hashie (>= 3.4.6)
       rack (>= 1.6.2, < 3)
@@ -309,8 +307,9 @@ GEM
     parallel (1.23.0)
     parallel_tests (4.2.1)
       parallel
-    parser (3.2.2.1)
+    parser (3.2.2.3)
       ast (~> 2.4.1)
+      racc
     pg (1.4.6)
     prettier_print (1.2.1)
     progress (3.6.0)
@@ -325,7 +324,7 @@ GEM
     public_suffix (5.0.1)
     puma (6.3.0)
       nio4r (~> 2.0)
-    racc (1.6.2)
+    racc (1.7.1)
     rack (2.2.7)
     rack-mini-profiler (3.1.0)
       rack (>= 1.2.0)
@@ -333,8 +332,9 @@ GEM
       rack
     rack-test (2.1.0)
       rack (>= 1.3)
-    rails-dom-testing (2.0.3)
-      activesupport (>= 4.2.0)
+    rails-dom-testing (2.1.1)
+      activesupport (>= 5.0.0)
+      minitest
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.6.0)
       loofah (~> 2.21)
@@ -346,9 +346,9 @@ GEM
     rails_multisite (5.0.0)
       activerecord (>= 6.0)
       railties (>= 6.0)
-    railties (7.0.4.3)
-      actionpack (= 7.0.4.3)
-      activesupport (= 7.0.4.3)
+    railties (7.0.5.1)
+      actionpack (= 7.0.5.1)
+      activesupport (= 7.0.5.1)
       method_source
       rake (>= 12.2)
       thor (~> 1.0)
@@ -365,9 +365,9 @@ GEM
       optimist (>= 3.0.0)
     rchardet (1.8.0)
     redis (4.8.1)
-    redis-namespace (1.10.0)
+    redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.8.0)
+    regexp_parser (2.8.1)
     request_store (1.5.1)
       rack (>= 1.4)
     rexml (3.2.5)
@@ -401,7 +401,7 @@ GEM
       rspec-expectations (~> 3.12)
       rspec-mocks (~> 3.12)
       rspec-support (~> 3.12)
-    rspec-support (3.12.0)
+    rspec-support (3.12.1)
     rss (0.2.9)
       rexml
     rswag-specs (2.9.0)
@@ -411,10 +411,11 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.52.0)
+    rubocop (1.54.0)
       json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.0.0)
+      parser (>= 3.2.2.3)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
@@ -425,7 +426,7 @@ GEM
       parser (>= 3.2.1.0)
     rubocop-capybara (2.18.0)
       rubocop (~> 1.41)
-    rubocop-discourse (3.2.0)
+    rubocop-discourse (3.3.0)
       rubocop (>= 1.1.0)
       rubocop-rspec (>= 2.0.0)
     rubocop-factory_bot (2.23.1)
@@ -444,18 +445,18 @@ GEM
     sanitize (6.0.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass-embedded (1.62.1)
-      google-protobuf (~> 3.21)
-      rake (>= 10.0.0)
-    sass-embedded (1.62.1-aarch64-linux-gnu)
-      google-protobuf (~> 3.21)
-    sass-embedded (1.62.1-arm64-darwin)
-      google-protobuf (~> 3.21)
-    sass-embedded (1.62.1-x86_64-darwin)
-      google-protobuf (~> 3.21)
-    sass-embedded (1.62.1-x86_64-linux-gnu)
-      google-protobuf (~> 3.21)
-    selenium-webdriver (4.9.0)
+    sass-embedded (1.63.6)
+      google-protobuf (~> 3.23)
+      rake (>= 13.0.0)
+    sass-embedded (1.63.6-aarch64-linux-gnu)
+      google-protobuf (~> 3.23)
+    sass-embedded (1.63.6-arm64-darwin)
+      google-protobuf (~> 3.23)
+    sass-embedded (1.63.6-x86_64-darwin)
+      google-protobuf (~> 3.23)
+    sass-embedded (1.63.6-x86_64-linux-gnu)
+      google-protobuf (~> 3.23)
+    selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -471,6 +472,8 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    simpleidn (0.2.1)
+      unf (~> 0.1.4)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -483,10 +486,10 @@ GEM
     syntax_tree (6.1.1)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
-    test-prof (1.2.1)
+    test-prof (1.2.2)
     thor (1.2.2)
     tilt (2.2.0)
-    timeout (0.3.2)
+    timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2023.3)
@@ -501,8 +504,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.16.0)
-    uri (0.12.1)
-    uri_template (0.7.0)
+    uri (0.12.2)
     version_gem (1.1.3)
     web-push (3.0.0)
       hkdf (~> 1.0)
@@ -534,14 +536,14 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  actionmailer (= 7.0.4.3)
-  actionpack (= 7.0.4.3)
-  actionview (= 7.0.4.3)
+  actionmailer (= 7.0.5.1)
+  actionpack (= 7.0.5.1)
+  actionview (= 7.0.5.1)
   actionview_precompiler
   active_model_serializers (~> 0.8.3)
-  activemodel (= 7.0.4.3)
-  activerecord (= 7.0.4.3)
-  activesupport (= 7.0.4.3)
+  activemodel (= 7.0.5.1)
+  activerecord (= 7.0.5.1)
+  activesupport (= 7.0.5.1)
   addressable
   annotate
   aws-sdk-s3
@@ -610,7 +612,7 @@ DEPENDENCIES
   net-pop
   net-smtp
   nokogiri
-  oj (= 3.13.14)
+  oj
   omniauth
   omniauth-facebook
   omniauth-github
@@ -625,9 +627,10 @@ DEPENDENCIES
   rack
   rack-mini-profiler
   rack-protection
+  rails-dom-testing
   rails_failover
   rails_multisite
-  railties (= 7.0.4.3)
+  railties (= 7.0.5.1)
   rake
   rb-fsevent
   rbtrace
@@ -672,4 +675,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.4.4
+   2.4.13

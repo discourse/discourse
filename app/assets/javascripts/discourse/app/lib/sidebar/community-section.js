@@ -24,7 +24,6 @@ import showModal from "discourse/lib/show-modal";
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
-  "/new": EverythingSectionLink,
   "/about": AboutSectionLink,
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
@@ -44,6 +43,8 @@ export default class CommunitySection {
 
   @tracked links;
   @tracked moreLinks;
+
+  reorderable = false;
 
   constructor({ section, owner }) {
     setOwner(this, owner);

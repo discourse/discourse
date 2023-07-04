@@ -1,6 +1,5 @@
 import { capitalize } from "@ember/string";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import Component from "@glimmer/component";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
@@ -184,6 +183,8 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       findArgs.targetMessageId = this.requestedTargetMessageId;
       scrollToMessageId = this.requestedTargetMessageId;
+    } else if (this.requestedTargetDate) {
+      findArgs.targetDate = this.requestedTargetDate;
     } else if (fetchingFromLastRead) {
       findArgs.fetchFromLastRead = true;
       scrollToMessageId =
@@ -207,7 +208,24 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
+            const storedThread = this.args.channel.threadsManager.store(
+              this.args.channel,
+              thread,
+              { replace: true }
+            );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
+            const originalMessage = messages.findBy(
+              "id",
+              storedThread.originalMessage.id
+            );
+            if (originalMessage) {
+              originalMessage.thread = storedThread;
+            }
           });
         }
 
@@ -217,6 +235,15 @@ export default class ChatLivePane extends Component {
 
         if (this.requestedTargetMessageId) {
           this.scrollToMessage(scrollToMessageId, {
+            highlight: true,
+          });
+          return;
+        } else if (this.requestedTargetDate) {
+          const message = this.args.channel?.findFirstMessageOfDay(
+            this.requestedTargetDate
+          );
+
+          this.scrollToMessage(message.id, {
             highlight: true,
           });
           return;
@@ -230,7 +257,6 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(scrollToMessageId);
           return;
         }
-
         this.scrollToBottom();
       })
       .catch(this._handleErrors)
@@ -241,6 +267,7 @@ export default class ChatLivePane extends Component {
 
         this.loadedOnce = true;
         this.requestedTargetMessageId = null;
+        this.requestedTargetDate = null;
         this.loadingMorePast = false;
         this.debounceFillPaneAttempt();
         this.updateLastReadMessage();
@@ -297,7 +324,24 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            this.args.channel.threadsManager.store(this.args.channel, thread);
+            const storedThread = this.args.channel.threadsManager.store(
+              this.args.channel,
+              thread,
+              { replace: true }
+            );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
+            const originalMessage = messages.findBy(
+              "id",
+              storedThread.originalMessage.id
+            );
+            if (originalMessage) {
+              originalMessage.thread = storedThread;
+            }
           });
         }
 
@@ -343,6 +387,16 @@ export default class ChatLivePane extends Component {
   }
 
   @bind
+  fetchMessagesByDate(date) {
+    const message = this.args.channel?.findFirstMessageOfDay(date);
+    if (message.firstOfResults && this.args.channel?.canLoadMorePast) {
+      this.requestedTargetDate = date;
+      this.debounceFetchMessages();
+    } else {
+      this.highlightOrFetchMessage(message.id);
+    }
+  }
+
   fillPaneAttempt() {
     if (this._selfDeleted) {
       return;
@@ -371,9 +425,7 @@ export default class ChatLivePane extends Component {
     let foundFirstNew = false;
 
     result.chat_messages.forEach((messageData, index) => {
-      if (index === 0) {
-        messageData.firstOfResults = true;
-      }
+      messageData.firstOfResults = index === 0;
 
       if (this.currentUser.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
@@ -403,13 +455,6 @@ export default class ChatLivePane extends Component {
       }
 
       const message = ChatMessage.create(channel, messageData);
-
-      if (messageData.thread_id) {
-        message.thread = ChatThread.create(channel, {
-          id: messageData.thread_id,
-        });
-      }
-
       messages.push(message);
     });
 
@@ -477,16 +522,6 @@ export default class ChatLivePane extends Component {
     });
   }
 
-  @action
-  messageDidEnterViewport(message) {
-    message.visible = true;
-  }
-
-  @action
-  messageDidLeaveViewport(message) {
-    message.visible = false;
-  }
-
   @debounce(READ_INTERVAL_MS)
   updateLastReadMessage() {
     schedule("afterRender", () => {
@@ -525,7 +560,21 @@ export default class ChatLivePane extends Component {
         }
       }
 
-      this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
+      if (!this.args.channel.isFollowing || !lastUnreadVisibleMessage.id) {
+        return;
+      }
+
+      if (
+        this.args.channel.currentUserMembership.lastReadMessageId >=
+        lastUnreadVisibleMessage.id
+      ) {
+        return;
+      }
+
+      return this.chatApi.markChannelAsRead(
+        this.args.channel.id,
+        lastUnreadVisibleMessage.id
+      );
     });
   }
 
@@ -639,14 +688,13 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  // TODO (martin) Maybe change this to public, since its referred to by
-  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }
 
   @action
   async onSendMessage(message) {
+    await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);
     } else {
@@ -660,7 +708,6 @@ export default class ChatLivePane extends Component {
   }
 
   async #sendEditMessage(message) {
-    await message.cook();
     this.pane.sending = true;
 
     const data = {
@@ -966,31 +1013,22 @@ export default class ChatLivePane extends Component {
   // we now use this hack to disable it
   @bind
   forceRendering(callback) {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
+    if (this.capabilities.isIOS) {
+      this.scrollable.style.overflow = "hidden";
+    }
 
-      if (!this.scrollable) {
-        return;
-      }
+    callback?.();
 
-      if (this.capabilities.isIOS) {
-        this.scrollable.style.overflow = "hidden";
-      }
-
-      callback?.();
-
-      if (this.capabilities.isIOS) {
-        discourseLater(() => {
-          if (!this.scrollable) {
+    if (this.capabilities.isIOS) {
+      next(() => {
+        schedule("afterRender", () => {
+          if (this._selfDeleted || !this.scrollable) {
             return;
           }
-
           this.scrollable.style.overflow = "auto";
-        }, 50);
-      }
-    });
+        });
+      });
+    }
   }
 
   _computeDatesSeparators() {
@@ -1083,5 +1121,16 @@ export default class ChatLivePane extends Component {
     cancel(this._onScrollEndedHandler);
     cancel(this._laterComputeHandler);
     cancel(this._debounceFetchMessagesHandler);
+  }
+
+  #preloadThreadTrackingState(storedThread, threadTracking) {
+    if (!threadTracking[storedThread.id]) {
+      return;
+    }
+
+    storedThread.tracking.unreadCount =
+      threadTracking[storedThread.id].unread_count;
+    storedThread.tracking.mentionCount =
+      threadTracking[storedThread.id].mention_count;
   }
 }

@@ -207,6 +207,11 @@ da:
           other: "%{count} svar"
         settings: "Indstillinger"
         last_reply: "seneste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Følger"
       draft_channel_screen:
         header: "Ny Besked"
         cancel: "Annuller"

@@ -1129,13 +1129,13 @@ de:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
         categories_section: "Abschnitt „Kategorien“"
-        categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
+        categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt \"Kategorien\" des Navigationsmenüs angezeigt. Wenn keine Kategorien ausgewählt sind, werden die Top-Kategorien der Website angezeigt."
         tags_section: "Abschnitt „Schlagwörter“"
-        tags_section_instruction: "Ausgewählte Schlagwörter werden im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
+        tags_section_instruction: "Ausgewählte Schlagworte werden im Abschnitt \"Tags\" des Navigationsmenüs angezeigt. Wenn keine Tags ausgewählt sind, werden die Top-Tags der Website angezeigt."
         navigation_section: "Navigation"
-        list_destination_instruction: "Wenn es neue Inhalte in der Seitenleiste gibt …"
-        list_destination_default: "den Standardlink verwenden und ein Symbol für neue Elemente anzeigen"
-        list_destination_unread_new: "auf ungelesen/neu verlinken und die Anzahl der neuen Elemente anzeigen"
+        navigation_section_instruction: "Wenn eine Themenliste im Navigationsmenü neue oder ungelesene Einträge enthält…"
+        link_to_filtered_list_checkbox_description: "Link zur gefilterten Liste"
+        show_count_new_items_checkbox_description: "Zählung der neuen Artikel anzeigen"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1316,7 +1316,7 @@ de:
         tags: "Schlagwörter"
         interface: "Oberfläche"
         apps: "Apps"
-        sidebar: "Seitenleiste"
+        navigation_menu: "Navigationsmenü"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -1825,36 +1825,6 @@ de:
       logout_disabled: "Die Abmeldung ist deaktiviert, während sich die Website im Nur-Lesen-Modus befindet."
     staff_writes_only_mode:
       enabled: "Diese Website befindet sich im Nur-Team-Modus. Du kannst weiterhin Inhalte lesen, aber das Antworten, Vergeben von „Gefällt mir“ und Durchführen einiger weiterer Aktionen ist derzeit nur für Team-Mitglieder möglich."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
-          one {gibt <strong>#</strong> Thema}
-        other {gibt <strong>#</strong> Themen}
-      } und { currentPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
-          one {<strong>#</strong> Thema}
-        other {<strong>#</strong> Themen}
-      } und { requiredPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Nur das Team kann diese Nachricht sehen.
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentTopics, plural,
-          one {gibt <strong>#</strong> Thema}
-        other {gibt <strong>#</strong> Themen}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredTopics, plural,
-          one {<strong>#</strong> Thema}
-        other {<strong>#</strong> Themen}
-      }. Nur das Team kann diese Nachricht sehen.
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Beginnen wir die Diskussion!</a> Es { currentPosts, plural,
-          one {gibt <strong>#</strong> Beitrag}
-        other {gibt <strong>#</strong> Beiträge}
-      }. Besucher brauchen mehr zum Lesen und Beantworten – wir empfehlen mindestens { requiredPosts, plural,
-          one {<strong>#</strong> Beitrag}
-        other {<strong>#</strong> Beiträge}
-      }. Nur das Team kann diese Nachricht sehen.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# Fehler/Stunde} other {# Fehler/Stunde}}</a> hat die Grenze der Website-Einstellung von {limit, plural, one {# Fehler/Stunde} other {# Fehlern/Stunde}} erreicht.
@@ -1894,10 +1864,13 @@ de:
         other: "Es gibt <b>%{count}</b> Antworten."
       description_time_MF: |
         Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>.
-      enable: "Dieses Thema zusammenfassen"
+      enable: "Top-Antworten anzeigen"
       disable: "Alle Beiträge anzeigen"
       short_label: "Zusammenfassen"
       short_title: "Eine Zusammenfassung dieses Themas anzeigen: die laut der Community interessantesten Beiträge"
+      strategy:
+        button_title: "Dieses Thema zusammenfassen"
+        title: "Zusammenfassung des Themas"
     deleted_filter:
       enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit versteckt sind."
       disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt."
@@ -2297,6 +2270,7 @@ de:
       image_alt_text:
         aria_label: Alternativ-Text für Bild
       delete_image_button: Bild löschen
+      toggle_image_grid: Bildraster umschalten
     notifications:
       tooltip:
         regular:
@@ -2626,6 +2600,11 @@ de:
         dismiss_tooltip: "Nur die neuen Beiträge ignorieren oder Themen nicht mehr verfolgen"
         also_dismiss_topics: "Diese Themen nicht mehr verfolgen, sodass mir diese nicht mehr als ungelesen angezeigt werden"
         dismiss_new: "Neue Themen ignorieren"
+        dismiss_new_modal:
+          title: "Neu verwerfen"
+          topics: "Neue Themen verwerfen"
+          posts: "Neue Beiträge verwerfen"
+          untrack: "Hör auf, diese Themen zu verfolgen, damit sie nicht mehr in deiner \"neuen\" Liste auftauchen"
         dismiss_new_with_selected:
           one: "Neues Thema ignorieren (%{count})"
           other: "Neue Themen ignorieren (%{count})"
@@ -4065,6 +4044,25 @@ de:
       more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
+      categories_form_modal:
+        title: "Kategorien-Navigation bearbeiten"
+        subtitle:
+          text: "und wir zeigen automatisch die beliebtesten Kategorien dieser Seite an"
+        filter_placeholder: "Kategorien filtern"
+        no_categories: "Es gibt keine Kategorien, die dem angegebenen Begriff entsprechen."
+      tags_form_modal:
+        title: "Schlagwörter-Navigation bearbeiten"
+        filter_placeholder: "Schlagwörter filtern"
+        no_tags: "Es gibt keine Schlagwörter, die auf den angegebenen Begriff passen."
+        subtitle:
+          text: "und wir werden automatisch die Top-Schlagwörter dieser Seite anzeigen"
+      edit_navigation_modal_form:
+        deselect_button_text: "Alle abwählen"
+        reset_to_defaults: "Auf Standards zurücksetzen"
+        filter_dropdown:
+          all: "Gesamt"
+          selected: "Ausgewählt"
+          unselected: "Nicht ausgewählt"
       sections:
         custom:
           add: "Benutzerdefinierten Abschnitt hinzufügen"
@@ -4114,20 +4112,12 @@ de:
             unread_with_count: "Ungelesen (%{count})"
             archive: "Archiv"
         tags:
-          links:
-            add_tags:
-              content: "Schlagwörter hinzufügen"
-              title: "Du hast noch keine Schlagwörter hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Schlagwörter"
           header_action_title: "Bearbeite die Schlagwörter in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         categories:
-          links:
-            add_categories:
-              content: "Kategorien hinzufügen"
-              title: "Du hast noch keine Kategorien hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
@@ -4147,8 +4137,8 @@ de:
             badges:
               content: "Abzeichen"
               title: "Alle Abzeichen, die es zu verdienen gibt"
-            everything:
-              content: "Alles"
+            topics:
+              content: "Themen"
               title: "Alle Themen"
             faq:
               content: "FAQ"
@@ -4171,6 +4161,7 @@ de:
               content: "Überprüfen"
               title: "Gemeldete Beiträge und andere Elemente in der Warteschlange"
               pending_count: "%{count} ausstehend"
+        global_section: "Globaler Bereich, für alle sichtbar"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -4180,6 +4171,30 @@ de:
       exceeded: "Die maximal zulässige Anzahl von Zeichen wurde überschritten."
     form_template_chooser:
       select_template: "Formularvorlagen auswählen"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Bitte fülle dieses Feld aus."
+          text: "Bitte fülle dieses Feld aus."
+          select-one: "Bitte wähle ein Element aus der Liste aus."
+          select-multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
+          checkbox: "Bitte markiere dieses Feld, wenn du fortfahren möchtest."
+        typeMismatch:
+          default: "Bitte gib einen gültigen Wert ein."
+          color: "Bitte gib eine Farbe ein."
+          date: "Bitte gib ein Datum ein."
+          email: "Bitte gib eine gültige E-Mail-Adresse ein."
+          number: "Bitte gib eine Zahl ein."
+          password: "Bitte gib ein gültiges Passwort ein."
+          tel: "Bitte gib eine gültige Telefonnummer ein."
+          text: "Bitte gib einen Textwert ein."
+          url: "Bitte gib eine gültige URL ein."
+        tooShort: "Die Eingabe muss %{minLength} Zeichen oder länger sein."
+        tooLong: "Die Eingabe muss weniger als %{maxLength} Zeichen umfassen."
+        rangeOverflow: "Der Eingang muss kleiner als %{max} sein."
+        rangeUnderflow: "Die Eingabe muss mehr als %{min} betragen."
+        patternMismatch: "Bitte beachte das gewünschte Format."
+        badInput: "Bitte gib eine gültige Eingabe ein."
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -5073,6 +5088,7 @@ de:
             revoke_moderation: "Moderationsrechte entziehen"
             backup_create: "Backup erstellen"
             deleted_tag: "Schlagwort gelöscht"
+            update_directory_columns: "Verzeichnisspalten aktualisieren"
             deleted_unused_tags: "nicht verwendete Schlagwörter gelöscht"
             renamed_tag: "Schlagwort umbenannt"
             revoke_email: "E-Mail widerrufen"
@@ -5281,15 +5297,19 @@ de:
             minimum:
               key: "Minimum"
               type: "Ganzzahl"
-              description: "Legt in Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
+              description: "Legt für Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
             maximum:
               key: "Maximum"
               type: "Ganzzahl"
-              description: "Legt in Textfeldern die maximale Anzahl der zulässigen Zeichen fest. Legt in Dropdown-Listen mit Mehrfachauswahl die maximale Anzahl der Optionen fest, die ausgewählt werden können."
+              description: "Legt für Textfelder die maximal zulässige Anzahl von Zeichen fest."
             pattern:
               key: "Muster"
               type: "Regex-Zeichenfolge"
-              description: "In Textfeldern ein regulärer Ausdruck, der die zulässige Eingabe angibt."
+              description: "Für Textfelder ein regulärer Ausdruck, der die zulässige Eingabe angibt."
+            type:
+              key: "art"
+              type: "Zeichenfolge"
+              description: "Für Eingabefelder kannst du die Art der Eingabe angeben, die erwartet wird (Text|E-Mail|Datum|Nummer|Url|Tel|Farbe)"
         preview_modal:
           title: "Vorschau Vorlage"
         field_placeholders:
