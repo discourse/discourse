@@ -72,6 +72,15 @@
     />
   </div>
 </div>
+{{#if this.showMutePrecedenceSetting}}
+  <div class="control-group user-preferences__watched-precedence-over-muted">
+    <PreferenceCheckbox
+      data-setting-name="watched-precedence-over-muted"
+      @labelKey="user.watched_precedence_over_muted"
+      @checked={{this.model.user_option.watched_precedence_over_muted}}
+    />
+  </div>
+{{/if}}
 
 {{#if this.canSave}}
   <SaveControls

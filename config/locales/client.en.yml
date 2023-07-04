@@ -1248,6 +1248,7 @@ en:
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
       watched_first_post_tags: "Watching First Post"
       watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+      watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
