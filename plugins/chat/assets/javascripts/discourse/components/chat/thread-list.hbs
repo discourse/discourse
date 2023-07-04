@@ -1,8 +1,10 @@
 {{#if this.shouldRender}}
   <div
     class="chat-thread-list"
+    {{did-insert this.subscribe}}
     {{did-insert this.loadThreads}}
     {{did-update this.loadThreads @channel}}
+    {{did-update this.subscribe @channel}}
     {{will-destroy this.teardown}}
   >
     {{#if @includeHeader}}
@@ -14,7 +16,9 @@
         {{loading-spinner size="medium"}}
       {{else}}
         {{#each this.sortedThreads as |thread|}}
-          <Chat::ThreadList::Item @thread={{thread}} />
+          {{#if (not thread.originalMessage.deletedAt)}}
+            <Chat::ThreadList::Item @thread={{thread}} />
+          {{/if}}
         {{else}}
           <div class="chat-thread-list__no-threads">
             {{i18n "chat.threads.none"}}
