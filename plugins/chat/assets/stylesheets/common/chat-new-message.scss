@@ -1,0 +1,15 @@
+.chat-new-message {
+  &.has-no-channel {
+    .chat-composer {
+      padding-bottom: 1rem;
+    }
+
+    .chat-messages-scroll {
+      overflow-y: hidden;
+    }
+  }
+
+  .chat-skeleton {
+    display: none;
+  }
+}

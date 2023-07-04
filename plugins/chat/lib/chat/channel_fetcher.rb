@@ -8,8 +8,7 @@ module Chat
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
       public_channels =
         secured_public_channels(guardian, memberships, status: :open, following: true)
-      direct_message_channels =
-        secured_direct_message_channels(guardian.user.id, memberships, guardian)
+      direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
       {
         public_channels: public_channels,
         direct_message_channels: direct_message_channels,
@@ -174,16 +173,46 @@ module Chat
       )
     end
 
-    def self.secured_direct_message_channels(user_id, memberships, guardian)
-      query = Chat::Channel.includes(chatable: [{ direct_message_users: :user }, :users])
+    def self.secured_direct_message_channels(user_id, guardian)
+      secured_direct_message_channels_search(user_id, guardian, following: true)
+    end
+
+    def self.secured_direct_message_channels_search(user_id, guardian, options = {})
+      query =
+        Chat::Channel.strict_loading.includes(
+          chatable: [{ direct_message_users: [user: :user_option] }, :users],
+        )
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
+
+      scoped_channels =
+        Chat::Channel
+          .joins(
+            "INNER JOIN direct_message_channels ON direct_message_channels.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'DirectMessage'",
+          )
+          .joins(
+            "INNER JOIN direct_message_users ON direct_message_users.direct_message_channel_id = direct_message_channels.id",
+          )
+          .where("direct_message_users.user_id = :user_id", user_id: user_id)
+
+      if options[:user_ids]
+        scoped_channels =
+          scoped_channels.where(
+            "EXISTS (
+              SELECT 1
+              FROM direct_message_channels AS dmc
+              INNER JOIN direct_message_users AS dmu ON dmu.direct_message_channel_id = dmc.id
+              WHERE dmc.id = chat_channels.chatable_id AND dmu.user_id IN (:user_ids)
+            )",
+            user_ids: options[:user_ids],
+          )
+      end
 
       channels =
         query
           .joins(:user_chat_channel_memberships)
           .where(user_chat_channel_memberships: { user_id: user_id, following: true })
           .where(chatable_type: Chat::Channel.direct_channel_chatable_types)
-          .where("chat_channels.id IN (#{generate_allowed_channel_ids_sql(guardian)})")
+          .where(chat_channels: { id: scoped_channels })
           .order(last_message_sent_at: :desc)
           .to_a
 

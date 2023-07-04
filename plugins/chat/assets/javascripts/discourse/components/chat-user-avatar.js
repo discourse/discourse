@@ -1,23 +1,19 @@
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 
 export default class ChatUserAvatar extends Component {
   @service chat;
-  tagName = "";
 
-  user = null;
+  get avatarSize() {
+    return this.args.avatarSize || "tiny";
+  }
 
-  avatarSize = "tiny";
-  showPresence = true;
-
-  @computed("chat.presenceChannel.users.[]", "user.{id,username}")
   get isOnline() {
     const users = this.chat.presenceChannel?.users;
 
     return (
-      !!users?.findBy("id", this.user?.id) ||
-      !!users?.findBy("username", this.user?.username)
+      !!users?.findBy("id", this.args.user?.id) ||
+      !!users?.findBy("username", this.args.user?.username)
     );
   }
 }

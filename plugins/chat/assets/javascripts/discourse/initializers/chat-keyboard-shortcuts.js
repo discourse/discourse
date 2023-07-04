@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import showModal from "discourse/lib/show-modal";
+import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
 
 const APPLE =
   navigator.platform.startsWith("Mac") || navigator.platform === "iPhone";
@@ -16,6 +16,7 @@ export default {
 
     const router = container.lookup("service:router");
     const appEvents = container.lookup("service:app-events");
+    const modal = container.lookup("service:modal");
     const chatStateManager = container.lookup("service:chat-state-manager");
     const chatThreadPane = container.lookup("service:chat-thread-pane");
     const chatThreadListPane = container.lookup(
@@ -27,11 +28,7 @@ export default {
     const openChannelSelector = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (document.getElementById("chat-channel-selector-modal-inner")) {
-        appEvents.trigger("chat-channel-selector-modal:close");
-      } else {
-        showModal("chat-channel-selector-modal");
-      }
+      modal.show(ChatNewMessageModal);
     };
 
     const handleMoveUpShortcut = (e) => {

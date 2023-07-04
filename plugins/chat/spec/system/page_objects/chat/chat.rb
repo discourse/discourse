@@ -3,6 +3,12 @@
 module PageObjects
   module Pages
     class Chat < PageObjects::Pages::Base
+      MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+
+      def message_creator
+        @message_creator ||= PageObjects::Components::Chat::MessageCreator.new
+      end
+
       def prefers_full_page
         page.execute_script(
           "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
@@ -15,6 +21,10 @@ module PageObjects
 
       def open
         visit("/chat")
+      end
+
+      def open_new_message
+        send_keys([MODIFIER, "k"])
       end
 
       def has_drawer?(channel_id: nil, expanded: true)

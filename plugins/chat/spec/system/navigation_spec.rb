@@ -223,37 +223,15 @@ RSpec.describe "Navigation", type: :system do
       end
     end
 
-    context "when starting draft from sidebar with drawer preferred" do
-      it "opens draft in drawer" do
-        visit("/")
-        sidebar_page.open_draft_channel
-
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
-      end
-    end
-
-    context "when starting draft from drawer with drawer preferred" do
-      it "opens draft in drawer" do
-        visit("/")
-        chat_page.open_from_header
-        chat_drawer_page.open_draft_channel
-
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
-      end
-    end
-
     context "when starting draft from sidebar with full page preferred" do
       it "opens draft in full page" do
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.maximize
         visit("/")
-        sidebar_page.open_draft_channel
+        chat_page.open_new_message
 
-        expect(page).to have_current_path("/chat/draft-channel")
-        expect(page).not_to have_css(".chat-drawer.is-expanded")
+        expect(chat_page.message_creator).to be_opened
       end
     end
 

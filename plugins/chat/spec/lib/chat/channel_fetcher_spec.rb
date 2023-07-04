@@ -369,9 +369,9 @@ describe Chat::ChannelFetcher do
       direct_message_channel1.update!(last_message_sent_at: 1.day.ago)
       direct_message_channel2.update!(last_message_sent_at: 1.hour.ago)
 
-      expect(
-        described_class.secured_direct_message_channels(user1.id, memberships, guardian).map(&:id),
-      ).to eq([direct_message_channel2.id, direct_message_channel1.id])
+      expect(described_class.secured_direct_message_channels(user1.id, guardian).map(&:id)).to eq(
+        [direct_message_channel2.id, direct_message_channel1.id],
+      )
     end
 
     it "does not include direct message channels where the user is a member but not a direct_message_user" do
@@ -384,7 +384,7 @@ describe Chat::ChannelFetcher do
       Chat::DirectMessageUser.create!(direct_message: dm_channel1, user: user2)
 
       expect(
-        described_class.secured_direct_message_channels(user1.id, memberships, guardian).map(&:id),
+        described_class.secured_direct_message_channels(user1.id, guardian).map(&:id),
       ).not_to include(direct_message_channel1.id)
     end
 

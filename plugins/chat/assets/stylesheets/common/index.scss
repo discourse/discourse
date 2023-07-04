@@ -1,5 +1,6 @@
 @import "chat-unread-indicator";
 @import "chat-height-mixin";
+@import "chat-thread-header-buttons";
 @import "base-common";
 @import "sidebar-extensions";
 @import "chat-browse";
@@ -7,7 +8,6 @@
 @import "chat-channel-card";
 @import "chat-channel-info";
 @import "chat-channel-preview-card";
-@import "chat-channel-selector-modal";
 @import "chat-channel-settings-saved-indicator";
 @import "chat-channel-title";
 @import "chat-composer-dropdown";
@@ -15,7 +15,6 @@
 @import "chat-composer-uploads";
 @import "chat-composer";
 @import "chat-composer-button";
-@import "chat-draft-channel";
 @import "chat-drawer";
 @import "chat-emoji-picker";
 @import "chat-form";
@@ -45,14 +44,12 @@
 @import "create-channel-modal";
 @import "d-progress-bar";
 @import "dc-filter-input";
-@import "direct-message-creator";
 @import "full-page-chat-header";
 @import "incoming-chat-webhooks";
 @import "reviewable-chat-message";
 @import "chat-thread-list-item";
 @import "chat-threads-list";
 @import "chat-composer-separator";
-@import "chat-thread-header-buttons";
 @import "chat-thread-header";
 @import "chat-thread-list-header";
 @import "chat-thread-unread-indicator";
@@ -60,3 +57,5 @@
 @import "channel-summary-modal";
 @import "chat-message-mention-warning";
 @import "chat-message-error";
+@import "chat-new-message-modal";
+@import "chat-message-creator";

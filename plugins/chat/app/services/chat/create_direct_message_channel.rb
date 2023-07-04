@@ -33,7 +33,6 @@ module Chat
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
     step :update_memberships
-    step :publish_channel
 
     # @!visibility private
     class Contract
@@ -89,10 +88,6 @@ module Chat
         memberships,
         unique_by: %i[user_id chat_channel_id],
       )
-    end
-
-    def publish_channel(channel:, target_users:, **)
-      Chat::Publisher.publish_new_channel(channel, target_users)
     end
   end
 end

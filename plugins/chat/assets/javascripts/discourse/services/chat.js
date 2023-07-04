@@ -1,6 +1,5 @@
 import deprecated from "discourse-common/lib/deprecated";
 import { tracked } from "@glimmer/tracking";
-import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
@@ -280,11 +279,6 @@ export default class Chat extends Service {
         ...nextChannel.routeModels
       );
     }
-  }
-
-  searchPossibleDirectMessageUsers(options) {
-    // TODO: implement a chat specific user search function
-    return userSearch(options);
   }
 
   getIdealFirstChannelId() {

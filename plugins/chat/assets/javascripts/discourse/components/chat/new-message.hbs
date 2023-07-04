@@ -1,0 +1,15 @@
+<div
+  class={{concat-class
+    "chat-new-message"
+    (if (not this.channel) "has-no-channel")
+  }}
+>
+  <Chat::MessageCreator @onLoadChannel={{fn (mut this.channel)}} />
+
+  <ChatChannel
+    @channel={{this.channel}}
+    @includeHeader={{false}}
+    @draftMessage={{true}}
+    @autofocus={{false}}
+  />
+</div>

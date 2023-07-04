@@ -8,10 +8,6 @@ module PageObjects
         find("#{VISIBLE_DRAWER} .open-browse-page-btn").click
       end
 
-      def open_draft_channel
-        find("#{VISIBLE_DRAWER} .open-draft-channel-page-btn").click
-      end
-
       def close
         find("#{VISIBLE_DRAWER} .chat-drawer-header__close-btn").click
       end

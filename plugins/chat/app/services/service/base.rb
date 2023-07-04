@@ -18,6 +18,8 @@ module Service
 
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context < OpenStruct
+      include ActiveModel::Serialization
+
       # @return [Boolean] returns +true+ if the context is set as successful (default)
       def success?
         !failure?

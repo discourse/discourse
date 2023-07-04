@@ -1,12 +1,11 @@
 <div
-  class="chat-user-avatar
-    {{if (and this.isOnline this.showPresence) 'is-online'}}"
+  class="chat-user-avatar {{if (and this.isOnline @showPresence) 'is-online'}}"
 >
   <div
     role="button"
     class="chat-user-avatar-container clickable"
-    data-user-card={{this.user.username}}
+    data-user-card={{@user.username}}
   >
-    {{avatar this.user imageSize=this.avatarSize}}
+    {{avatar @user imageSize=this.avatarSize}}
   </div>
 </div>

@@ -1,0 +1,13 @@
+<ChatChannelTitle @channel={{@content.model}} />
+
+{{#if (gt @content.tracking.unreadCount 0)}}
+  <div class="unread-indicator"></div>
+{{/if}}
+
+{{#if @content.hasUnread}}
+  <div class="unread-indicator"></div>
+{{/if}}
+
+{{#if this.site.desktopView}}
+  <span class="action-indicator">{{this.openChannelLabel}}</span>
+{{/if}}
