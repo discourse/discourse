@@ -886,23 +886,23 @@ acceptance("Sidebar - Plugin API", function (needs) {
           constructor() {
             super(...arguments);
 
-            if (this.router.currentURL.startsWith("/chat/")) {
-              this.currentMode = "chat";
+            if (this.router.currentURL.startsWith("/latest")) {
+              this.currentMode = "latest";
             } else {
-              this.currentMode = "forum";
+              this.currentMode = "categories";
             }
           }
 
           get label() {
-            if (this.currentMode === "chat") {
-              return "Forum";
+            if (this.currentMode === "categories") {
+              return "Latest";
             } else {
-              return "Chat";
+              return "Categories";
             }
           }
 
           get icon() {
-            if (this.currentMode === "chat") {
+            if (this.currentMode === "categories") {
               return "random";
             } else {
               return "d-chat";
@@ -911,12 +911,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
           @action
           action() {
-            if (this.currentMode === "chat") {
-              this.currentMode = "forum";
+            if (this.currentMode === "latest") {
+              this.currentMode = "categories";
+              this.router.transitionTo("discovery.categories");
+            } else if (this.currentMode === "new") {
+              this.currentMode = "latest";
               this.router.transitionTo("discovery.latest");
-            } else if (this.currentMode === "forum") {
-              this.currentMode = "chat";
-              this.router.transitionTo("chat");
             }
           }
         };
@@ -924,11 +924,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
       });
     });
 
-    await visit("/");
+    await visit("/latest");
 
     assert.strictEqual(
       query(".sidebar__api-button").textContent.trim(),
-      "Chat",
+      "Categories",
       "displays button with correct text"
     );
 
@@ -936,7 +936,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     assert.strictEqual(
       query(".sidebar__api-button").textContent.trim(),
-      "Forum",
+      "Latest",
       "displays button with correct text"
     );
   });
