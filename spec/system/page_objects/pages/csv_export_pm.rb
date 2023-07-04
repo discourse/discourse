@@ -5,7 +5,8 @@ module PageObjects
     class CSVExportPM < PageObjects::Pages::Base
       def download_and_extract
         click_link ".zip"
-        sleep 3 # fixme try to get rid of sleep
+        Downloads.wait_for_download
+
         zip_name = find("a.attachment").text
         zip_path = File.join(Downloads::FOLDER, zip_name)
         csv_path = unzip(zip_path).first
