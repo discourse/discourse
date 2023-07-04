@@ -2,6 +2,7 @@
 
 RSpec.describe "Chat exports", type: :system do
   fab!(:admin) { Fabricate(:admin) }
+  let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
 
   before do
     Jobs.run_immediately!
@@ -19,18 +20,9 @@ RSpec.describe "Chat exports", type: :system do
 
     visit "/u/#{admin.username}/messages"
     click_link "[Chat Message] Data export complete"
-    click_link "chat-message-"
+    exported_data = csv_export_pm_page.download_and_extract("chat-message")
 
-    sleep 3 # fixme try to get rid of sleep
-
-    file_name = find("a.attachment").text
-
-    expect(File.exist?("#{Downloads::FOLDER}/#{file_name}")).to be_truthy
-
-    csv_path = extract_zip("#{Downloads::FOLDER}/#{file_name}", "#{Downloads::FOLDER}")
-    data = CSV.read(csv_path)
-
-    expect(data[0]).to eq(
+    expect(exported_data[0]).to eq(
       %w[
         id
         chat_channel_id
@@ -48,7 +40,7 @@ RSpec.describe "Chat exports", type: :system do
       ],
     )
 
-    data_row = data[1]
+    data_row = exported_data[1]
     time_format = "%Y-%m-%d %k:%M:%S UTC"
     expect(data_row).to eq(
       [
@@ -67,18 +59,5 @@ RSpec.describe "Chat exports", type: :system do
         message.last_editor.username,
       ],
     )
-  end
-
-  def extract_zip(file, destination)
-    FileUtils.mkdir_p(destination)
-
-    path = ""
-    Zip::File.open(file) do |zip_files|
-      csv_file = zip_files.first
-      path = File.join(destination, csv_file.name)
-      zip_files.extract(csv_file, path) unless File.exist?(path)
-    end
-
-    path
   end
 end

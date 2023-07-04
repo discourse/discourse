@@ -2,6 +2,7 @@
 
 RSpec.describe "Exports", type: :system do
   fab!(:admin) { Fabricate(:admin) }
+  let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
 
   before do
     Jobs.run_immediately!
@@ -55,21 +56,12 @@ RSpec.describe "Exports", type: :system do
     it "exports data" do
       visit "admin/users/list/active"
       click_button "Export"
-
       visit "/u/#{admin.username}/messages"
       click_link "[User List] Data export complete"
-      click_link "user-list-"
 
-      sleep 3 # fixme try to get rid of sleep
+      exported_data = csv_export_pm_page.download_and_extract("user-list")
 
-      file_name = find("a.attachment").text
-
-      expect(File.exist?("#{Downloads::FOLDER}/#{file_name}")).to be_truthy
-
-      csv_path = extract_zip("#{Downloads::FOLDER}/#{file_name}", Downloads::FOLDER)
-      data = CSV.read(csv_path)
-
-      expect(data[0]).to eq(
+      expect(exported_data[0]).to eq(
         %w[
           id
           name
@@ -105,9 +97,9 @@ RSpec.describe "Exports", type: :system do
         ],
       )
 
-      expect(data.length).to be(5)
+      expect(exported_data.length).to be(5)
 
-      exported_admin = data[4]
+      exported_admin = exported_data[4]
       time_format = "%Y-%m-%d %k:%M:%S UTC"
       expect(exported_admin).to eq(
         [
@@ -165,20 +157,11 @@ RSpec.describe "Exports", type: :system do
 
       visit "/u/#{admin.username}/messages"
       click_link "[Staff Action] Data export complete"
-      click_link "staff-action-"
+      exported_data = csv_export_pm_page.download_and_extract("staff-action")
 
-      sleep 3 # fixme try to get rid of sleep
+      expect(exported_data[0]).to eq(%w[staff_user action subject created_at details context])
 
-      file_name = find("a.attachment").text
-
-      expect(File.exist?("#{Downloads::FOLDER}/#{file_name}")).to be_truthy
-
-      csv_path = extract_zip("#{Downloads::FOLDER}/#{file_name}", Downloads::FOLDER)
-      data = CSV.read(csv_path)
-
-      expect(data[0]).to eq(%w[staff_user action subject created_at details context])
-
-      exported_action = data.last
+      exported_action = exported_data.last
       time_format = "%Y-%m-%d %k:%M:%S UTC"
       expect(exported_action).to eq(
         [
@@ -193,16 +176,15 @@ RSpec.describe "Exports", type: :system do
     end
   end
 
-  def extract_zip(file, destination)
-    FileUtils.mkdir_p(destination)
+  context "with reports" do
+  end
 
-    path = ""
-    Zip::File.open(file) do |zip_files|
-      csv_file = zip_files.first
-      path = File.join(destination, csv_file.name)
-      zip_files.extract(csv_file, path) unless File.exist?(path)
-    end
+  context "with screened emails" do
+  end
 
-    path
+  context "with screened ips" do
+  end
+
+  context "with screened urls" do
   end
 end
