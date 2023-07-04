@@ -166,10 +166,7 @@ export default class DModal extends Component {
 
   @action
   validateFlashType(type) {
-    if (!type) {
-      return;
-    }
-    if (!FLASH_TYPES.includes(type)) {
+    if (type && !FLASH_TYPES.includes(type)) {
       throw `@flashType must be one of ${FLASH_TYPES.join(", ")}`;
     }
   }
