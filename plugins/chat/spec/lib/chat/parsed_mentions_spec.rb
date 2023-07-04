@@ -131,7 +131,7 @@ RSpec.describe Chat::ParsedMentions do
 
   describe "#group_mentions" do
     fab!(:group1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
-    fab!(:group_member_1) { Fabricate(:user, X) }
+    fab!(:group_member_1) { Fabricate(:user, group_ids: [group1.id]) }
     fab!(:group_member_2) { Fabricate(:user, group_ids: [group1.id]) }
     fab!(:group_member_3) { Fabricate(:user, group_ids: [group1.id]) }
 
