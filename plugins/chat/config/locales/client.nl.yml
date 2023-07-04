@@ -270,6 +270,8 @@ nl:
         followed: "Lid sinds"
         mobile_notification_level: "Mobiele pushmeldingen"
         mute: "Kanaal dempen"
+        threading_enabled: "Ingeschakeld"
+        threading_disabled: "Uitgeschakeld"
         muted_on: "Aan"
         muted_off: "Uit"
         notifications: "Meldingen"
@@ -376,8 +378,8 @@ nl:
           tracking:
             title: "Tracking"
         participants_other_count:
-          one: "+%{count} ander"
-          other: "+%{count} anderen"
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"

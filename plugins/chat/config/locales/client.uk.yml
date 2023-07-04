@@ -354,6 +354,8 @@ uk:
         auto_join_users_info_no_category: "Погодинно перевіряйте, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до обраної категорії."
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
+        threading_enabled: "Включено"
+        threading_disabled: "Вимкнено"
         notifications: "Сповіщення"
         preview: "Попередній перегляд"
         save: "Зберегти"
@@ -459,10 +461,10 @@ uk:
           tracking:
             title: "Стежити"
         participants_other_count:
-          one: "+%{count} інший"
-          few: "+%{count} інших"
-          many: "+%{count} інших"
-          other: "+%{count} інших"
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Відкрийте тему"
         list: "Поточні обговорення"

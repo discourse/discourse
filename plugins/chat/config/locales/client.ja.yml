@@ -269,6 +269,7 @@ ja:
         followed: "参加中"
         mobile_notification_level: "モバイルプッシュ通知"
         mute: "チャンネルをミュート"
+        threading_disabled: "無効"
         muted_on: "オン"
         muted_off: "オフ"
         notifications: "通知"
@@ -375,7 +376,7 @@ ja:
           tracking:
             title: "追跡中"
         participants_other_count:
-          other: "+他 %{count} 件"
+          other: "+%{count} 件"
       draft_channel_screen:
         header: "新しいメッセージ"
         cancel: "キャンセル"

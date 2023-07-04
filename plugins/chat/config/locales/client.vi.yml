@@ -80,6 +80,7 @@ vi:
       settings:
         follow: "Tham gia"
         followed: "Đã tham gia"
+        threading_disabled: "Vô hiệu hóa"
         notifications: "Thông báo"
         preview: "Xem trước"
         save: "Lưu lại"
@@ -125,7 +126,7 @@ vi:
           tracking:
             title: "Đang theo dõi"
         participants_other_count:
-          other: "+%{count} khác"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Tin nhắn mới"
         cancel: "Huỷ"

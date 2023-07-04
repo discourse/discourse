@@ -1128,8 +1128,6 @@ sv:
       experimental_sidebar:
         enable: "Aktivera sidofältet"
         options: "Alternativ"
-        categories_section: "Sektion Kategorier"
-        tags_section: "Sektion Taggar"
         navigation_section: "Navigering"
       change: "ändra"
       featured_topic: "Utvalt ämne"

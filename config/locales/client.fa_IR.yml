@@ -1026,8 +1026,6 @@ fa_IR:
       experimental_sidebar:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
-        categories_section: "بخش دسته‌بندی‌ها"
-        tags_section: "بخش برچسب‌ها"
         navigation_section: "ناوبری"
       change: "تغییر"
       featured_topic: "مبحث برجسته"

@@ -228,6 +228,8 @@ it:
           one: "%{count} membro"
           other: "%{count} membri"
       create_channel:
+        threading:
+          label: "Abilita il threading"
         auto_join_users:
           public_category_warning: "%{category} è una categoria pubblica. Aggiungere automaticamente tutti gli utenti attivi di recente a questo canale?"
         choose_category:
@@ -263,6 +265,8 @@ it:
       settings:
         channel_wide_mentions_label: "Consenti le menzioni @all e @here"
         channel_wide_mentions_description: "Consenti agli utenti di avvisare tutti i membri di #%{channel} con @all o solo quelli che sono attivi al momento con @here"
+        channel_threading_label: "Threading"
+        channel_threading_description: "Quando il threading è abilitato, le risposte a un messaggio di chat creeranno una conversazione separata, che esisterà accanto al canale principale."
         auto_join_users_label: "Aggiunta automatica utenti"
         auto_join_users_warning: "Tutti gli utenti che non sono membri di questo canale e hanno accesso alla categoria %{category} parteciperanno. Vuoi procedere?"
         desktop_notification_level: "Notifiche sul desktop"
@@ -270,6 +274,8 @@ it:
         followed: "Partecipante"
         mobile_notification_level: "Notifiche push su dispositivi mobili"
         mute: "Silenzia canale"
+        threading_enabled: "Abilitato"
+        threading_disabled: "Disabilitato"
         muted_on: "On"
         muted_off: "Off"
         notifications: "Notifiche"
@@ -376,8 +382,8 @@ it:
           tracking:
             title: "Contenuto seguito"
         participants_other_count:
-          one: "+%{count} altro"
-          other: "+%{count} altri"
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nuovo messaggio"
         cancel: "Annulla"
