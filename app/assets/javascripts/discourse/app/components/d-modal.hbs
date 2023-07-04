@@ -76,7 +76,7 @@
             </div>
           {{/if}}
 
-          <div class="modal-body" tabindex="-1">
+          <div class={{concat-class "modal-body" @bodyClass}} tabindex="-1">
             {{#if (has-block "body")}}
               {{yield to="body"}}
             {{else}}

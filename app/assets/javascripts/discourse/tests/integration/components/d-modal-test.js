@@ -72,4 +72,13 @@ module("Integration | Component | d-modal", function (hooks) {
 
     closeModalCalled = false;
   });
+
+  test("header and body classes", async function (assert) {
+    await render(
+      hbs`<DModal @inline={{true}} @bodyClass="my-body-class" @headerClass="my-header-class" @title="Hello world" />`
+    );
+
+    assert.dom(".d-modal .modal-header").hasClass("my-header-class");
+    assert.dom(".d-modal .modal-body").hasClass("my-body-class");
+  });
 });
