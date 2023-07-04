@@ -25,6 +25,7 @@ export default class ChatThreadPanel extends Component {
   @service chatThreadPaneSubscriptionsManager;
   @service appEvents;
   @service capabilities;
+  @service chatHistory;
 
   @tracked loading;
   @tracked uploadDropZone;
@@ -168,7 +169,15 @@ export default class ChatThreadPanel extends Component {
           this._selfDeleted ||
           this.args.thread.channel.id !== result.meta.channel_id
         ) {
-          this.router.transitionTo("chat.channel", "-", result.meta.channel_id);
+          if (this.chatHistory.previousRoute?.name === "chat.channel.index") {
+            this.router.transitionTo(
+              "chat.channel",
+              "-",
+              result.meta.channel_id
+            );
+          } else {
+            this.router.transitionTo("chat.channel.threads");
+          }
         }
 
         const [messages, meta] = this.afterFetchCallback(
