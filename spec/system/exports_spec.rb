@@ -177,6 +177,20 @@ RSpec.describe "Exports", type: :system do
   end
 
   context "with reports" do
+    fab!(:bookmarks) { Fabricate(:bookmark) }
+
+    it "exports the Bookmarks report" do
+      visit "admin/reports/bookmarks"
+      click_button "Export"
+
+      visit "/u/#{admin.username}/messages"
+      click_link "[Bookmarks] Data export complete"
+      exported_data = csv_export_pm_page.download_and_extract
+
+      expect(exported_data.length).to be(2)
+      expect(exported_data.first).to eq(%w[Day Count])
+      expect(exported_data.second).to eq(["do nothing"])
+    end
   end
 
   context "with screened emails" do
