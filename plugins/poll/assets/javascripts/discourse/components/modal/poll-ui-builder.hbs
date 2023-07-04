@@ -78,7 +78,7 @@
 
           <div class="poll-option-controls">
             <DButton
-              @class="btn-default poll-option-add"
+              class="btn-default poll-option-add"
               @icon="plus"
               @label="poll.ui_builder.poll_options.add"
               @action={{action "addOption" this.pollOptions.lastObject}}
@@ -229,7 +229,7 @@
     <DButton
       @action={{action "insertPoll"}}
       @icon="chart-bar"
-      @class="btn-primary insert-poll"
+      class="btn-primary insert-poll"
       @label="poll.ui_builder.insert"
       @disabled={{this.disableInsert}}
     />
@@ -238,7 +238,7 @@
 
     <DButton
       @action={{action "toggleAdvanced"}}
-      @class="btn-default show-advanced"
+      class="btn-default show-advanced"
       @icon="cog"
       @title={{if
         this.showAdvanced
