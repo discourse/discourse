@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Exports", type: :system do
+RSpec.describe "CSV Exports", type: :system do
   fab!(:admin) { Fabricate(:admin) }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
 

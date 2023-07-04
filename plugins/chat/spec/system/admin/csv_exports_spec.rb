@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat exports", type: :system do
+RSpec.describe "Chat CSV exports", type: :system do
   fab!(:admin) { Fabricate(:admin) }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
 
