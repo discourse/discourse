@@ -14,7 +14,10 @@
     </div>
     {{#if @thread.preview.otherParticipantCount}}
       <div class="chat-thread-participants__other-count">
-        +{{@thread.preview.otherParticipantCount}}
+        {{i18n
+          "chat.thread.participants_other_count"
+          count=@thread.preview.otherParticipantCount
+        }}
       </div>
     {{/if}}
   </div>
