@@ -7,13 +7,14 @@ module PageObjects
         click_link "#{export_name}-"
         sleep 3 # fixme try to get rid of sleep
         file_name = find("a.attachment").text
-        csv_file_path = extract_zip("#{Downloads::FOLDER}/#{file_name}", Downloads::FOLDER)
+        csv_file_path = unzip("#{Downloads::FOLDER}/#{file_name}")
         CSV.read(csv_file_path)
       end
 
       private
 
-      def extract_zip(file, destination)
+      def unzip(file)
+        destination = Downloads::FOLDER
         FileUtils.mkdir_p(destination)
 
         path = ""
