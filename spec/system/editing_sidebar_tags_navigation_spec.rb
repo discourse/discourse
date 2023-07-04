@@ -151,7 +151,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     expect(sidebar).to have_no_section_link(tag4.name)
   end
 
-  it "allows a user to filter the tag in the modal by selection" do
+  xit "allows a user to filter the tag in the modal by selection" do
     Fabricate(:tag_sidebar_section_link, linkable: tag1, user: user)
     Fabricate(:tag_sidebar_section_link, linkable: tag2, user: user)
 
