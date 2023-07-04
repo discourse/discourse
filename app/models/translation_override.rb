@@ -127,7 +127,13 @@ class TranslationOverride < ActiveRecord::Base
   private_class_method :i18n_changed
   private_class_method :expire_cache
 
-  private
+  def check_outdated
+    return false if original_translation.blank?
+
+    transformed_key = self.class.transform_pluralized_key(translation_key)
+
+    original_translation != I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
+  end
 
   def check_interpolation_keys
     transformed_key = self.class.transform_pluralized_key(translation_key)

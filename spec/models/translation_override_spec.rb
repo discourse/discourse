@@ -283,4 +283,28 @@ RSpec.describe TranslationOverride do
       end
     end
   end
+
+  describe "#check_outdated" do
+    context "when the translation is up to date" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }
+
+      it { expect(translation.check_outdated).to eq(false) }
+    end
+
+    context "when the translation is outdated" do
+      fab!(:translation) do
+        Fabricate(:translation_override, translation_key: "title", original_translation: "outdated")
+      end
+
+      it { expect(translation.check_outdated).to eq(true) }
+    end
+
+    context "when we can't tell because the translation is too old" do
+      fab!(:translation) do
+        Fabricate(:translation_override, translation_key: "title", original_translation: nil)
+      end
+
+      it { expect(translation.check_outdated).to eq(false) }
+    end
+  end
 end
