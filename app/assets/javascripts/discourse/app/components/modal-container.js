@@ -6,7 +6,7 @@ export default class ModalContainer extends Component {
   @service modal;
 
   @action
-  closeModal(initiatedBy) {
-    this.modal.close(initiatedBy);
+  closeModal(data) {
+    this.modal.close(data);
   }
 }

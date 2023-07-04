@@ -475,10 +475,17 @@ html.composer-open {
           color: var(--primary-high);
         }
 
-        .status-description {
-          @include ellipsis;
-          font-size: var(--font-down-2);
-          color: var(--primary-high);
+        .user-status-message {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+
+          .user-status-message-description {
+            @include ellipsis;
+            font-size: var(--font-down-2);
+            color: var(--primary-high);
+            margin: 0;
+          }
         }
 
         .relative-date {

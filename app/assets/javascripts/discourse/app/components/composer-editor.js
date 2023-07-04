@@ -42,6 +42,11 @@ import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
+import {
+  destroyTippyInstances,
+  initUserStatusHtml,
+  renderUserStatusHtml,
+} from "discourse/lib/user-status-on-autocomplete";
 
 // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
 // group 1 `image|foo=bar`
@@ -220,18 +225,27 @@ export default Component.extend(
       if (this.siteSettings.enable_mentions) {
         $input.autocomplete({
           template: findRawTemplate("user-selector-autocomplete"),
-          dataSource: (term) =>
-            userSearch({
+          dataSource: (term) => {
+            destroyTippyInstances();
+            return userSearch({
               term,
               topicId: this.topic?.id,
               categoryId: this.topic?.category_id || this.composer?.categoryId,
               includeGroups: true,
-            }),
+            }).then((result) => {
+              initUserStatusHtml(result.users);
+              return result;
+            });
+          },
+          onRender: (options) => {
+            renderUserStatusHtml(options);
+          },
           key: "@",
           transformComplete: (v) => v.username || v.name,
           afterComplete: this._afterMentionComplete,
           triggerRule: (textarea) =>
             !inCodeBlock(textarea.value, caretPosition(textarea)),
+          onClose: destroyTippyInstances,
         });
       }
 

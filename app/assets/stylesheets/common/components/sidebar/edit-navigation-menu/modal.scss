@@ -1,15 +1,15 @@
-.sidebar__edit-navigation-modal-form {
+.sidebar__edit-navigation-menu__modal {
   .modal-body {
     min-height: 50vh;
   }
 }
 
-.sidebar__edit-navigation-modal-form__filter {
+.sidebar__edit-navigation-menu__filter {
   display: flex;
   flex-direction: row;
   padding: 1em 1em 0 1em;
 
-  .sidebar__edit-navigation-modal-form__filter-dropdown {
+  .sidebar__edit-navigation-menu__filter-dropdown {
     margin-left: 0.5em;
 
     .select-kit-header {
@@ -30,7 +30,7 @@
     }
   }
 
-  .sidebar__edit-navigation-modal-form__filter-input {
+  .sidebar__edit-navigation-menu__filter-input {
     display: flex;
     flex-direction: row;
     margin-right: auto;
@@ -38,14 +38,14 @@
     position: relative;
   }
 
-  .sidebar__edit-navigation-modal-form__filter-input-icon {
+  .sidebar__edit-navigation-menu__filter-input-icon {
     position: absolute;
     left: 0.5em;
     top: 0.65em;
     color: var(--primary-low-mid);
   }
 
-  .sidebar__edit-navigation-modal-form__filter-input-field {
+  .sidebar__edit-navigation-menu__filter-input-field {
     border-color: var(--primary-low-mid);
     padding-left: 1.75em;
     width: 100%;
@@ -59,8 +59,11 @@
   }
 }
 
-.sidebar__edit-navigation-modal-form__footer {
-  .btn.sidebar__edit-navigation-modal-form__reset-defaults-button {
+.sidebar__edit-navigation-menu__footer {
+  display: flex;
+  width: 100%;
+
+  .btn.sidebar__edit-navigation-menu__reset-defaults-button {
     margin-left: auto;
     margin-right: 0em;
 
@@ -76,10 +79,10 @@
   }
 }
 
-.sidebar__edit-navigation-modal-form__deselect-wrapper {
+.sidebar__edit-navigation-menu__deselect-wrapper {
   margin: 0;
 
-  .btn-flat.sidebar__edit-navigation-modal-form__deselect-button {
+  .btn-flat.sidebar__edit-navigation-menu__deselect-button {
     margin-left: auto;
     padding: 0;
 

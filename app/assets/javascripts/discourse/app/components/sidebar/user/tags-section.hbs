@@ -3,7 +3,7 @@
   @headerLinkText={{i18n "sidebar.sections.tags.header_link_text"}}
   @headerActions={{array
     (hash
-      action=this.editTracked
+      action=(fn (mut this.isModalVisible) true)
       title=(i18n "sidebar.sections.tags.header_action_title")
     )
   }}
@@ -45,3 +45,9 @@
     />
   {{/if}}
 </Sidebar::Section>
+
+{{#if this.isModalVisible}}
+  <Sidebar::EditNavigationMenu::TagsModal
+    @closeModal={{fn (mut this.isModalVisible) false}}
+  />
+{{/if}}

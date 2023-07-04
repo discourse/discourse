@@ -2,7 +2,7 @@
   <ul>
     {{#each options as |item|}}
       {{#if item.isUser}}
-        <li>
+        <li data-index={{item.index}}>
           <a href title="{{item.name}}" class="{{item.cssClasses}}">
             {{avatar item imageSize="tiny"}}
             <span class='username'>{{format-username item.username}}</span>
@@ -10,13 +10,7 @@
               <span class='name'>{{item.name}}</span>
             {{/if}}
             {{#if item.status}}
-              {{emoji item.status.emoji}}
-              <span class='status-description' title='{{item.status.description}}'>
-                {{item.status.description}}
-              </span>
-              {{#if item.status.ends_at}}
-                {{format-age item.status.ends_at}}
-              {{/if}}
+              <span class='user-status'></span>
             {{/if}}
           </a>
         </li>

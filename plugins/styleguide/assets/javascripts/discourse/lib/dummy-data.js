@@ -262,6 +262,8 @@ export function createData(store) {
     }),
 
     lorem: cooked,
+    shortLorem:
+      "Lorem ipsum dolor sit amet, et nec quis viderer prompta, ex omnium ponderum insolens eos, sed discere invenire principes in. Fuisset constituto per ad. Est no scripta propriae facilisis, viderer impedit deserunt in mel. Quot debet facilisis ne vix, nam in detracto tacimates. At quidam petentium vulputate pro. Alia iudico repudiandae ad vel, erat omnis epicuri eos id. Et illum dolor graeci vel, quo feugiat consulatu ei.",
 
     topicTimerUpdateDate: "2017-10-18 18:00",
 
