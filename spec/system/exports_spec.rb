@@ -180,6 +180,39 @@ RSpec.describe "Exports", type: :system do
   end
 
   context "with screened emails" do
+    fab!(:screened_email) { Fabricate(
+      :screened_email,
+      last_match_at: Time.now,
+      created_at: Time.now,
+      ip_address: IPAddr.new("94.99.101.228")
+    ) }
+
+    it "exports data" do
+      visit "admin/logs/screened_emails"
+      click_button "Export"
+
+      visit "/u/#{admin.username}/messages"
+      click_link "[Screened Email] Data export complete"
+      exported_data = csv_export_pm_page.download_and_extract
+
+      expect(exported_data.length).to be(2)
+      expect(exported_data.first).to eq(
+        %w[email action match_count last_match_at created_at ip_address],
+      )
+
+      exported_screened_email = exported_data.second
+      time_format = "%Y-%m-%d %k:%M:%S UTC"
+      expect(exported_screened_email).to eq(
+        [
+          screened_email.email,
+          "block",
+          screened_email.match_count.to_s,
+          screened_email.last_match_at.strftime(time_format),
+          screened_email.created_at.strftime(time_format),
+          screened_email.ip_address.to_s,
+        ],
+      )
+    end
   end
 
   context "with screened ips" do
