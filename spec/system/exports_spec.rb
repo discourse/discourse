@@ -59,7 +59,7 @@ RSpec.describe "Exports", type: :system do
       visit "/u/#{admin.username}/messages"
       click_link "[User List] Data export complete"
 
-      exported_data = csv_export_pm_page.download_and_extract("user-list")
+      exported_data = csv_export_pm_page.download_and_extract
 
       expect(exported_data[0]).to eq(
         %w[
@@ -157,7 +157,7 @@ RSpec.describe "Exports", type: :system do
 
       visit "/u/#{admin.username}/messages"
       click_link "[Staff Action] Data export complete"
-      exported_data = csv_export_pm_page.download_and_extract("staff-action")
+      exported_data = csv_export_pm_page.download_and_extract
 
       expect(exported_data[0]).to eq(%w[staff_user action subject created_at details context])
 

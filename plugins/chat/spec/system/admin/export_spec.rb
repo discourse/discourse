@@ -20,7 +20,7 @@ RSpec.describe "Chat exports", type: :system do
 
     visit "/u/#{admin.username}/messages"
     click_link "[Chat Message] Data export complete"
-    exported_data = csv_export_pm_page.download_and_extract("chat-message")
+    exported_data = csv_export_pm_page.download_and_extract
 
     expect(exported_data[0]).to eq(
       %w[

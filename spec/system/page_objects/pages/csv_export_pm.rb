@@ -3,8 +3,8 @@
 module PageObjects
   module Pages
     class CSVExportPM < PageObjects::Pages::Base
-      def download_and_extract(export_name)
-        click_link "#{export_name}-"
+      def download_and_extract
+        click_link ".zip"
         sleep 3 # fixme try to get rid of sleep
         zip_name = find("a.attachment").text
         zip_path = File.join(Downloads::FOLDER, zip_name)
