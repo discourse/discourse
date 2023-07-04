@@ -9,7 +9,7 @@ import { setTextDirections } from "discourse/lib/text-direction";
 import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { create } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
+import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
 
 export default {
   initialize(owner) {
@@ -17,6 +17,7 @@ export default {
       const siteSettings = owner.lookup("service:site-settings");
       const session = owner.lookup("service:session");
       const site = owner.lookup("service:site");
+      const modal = owner.lookup("service:modal");
       api.decorateCookedElement(
         (elem) => {
           return highlightSyntax(elem, siteSettings, session);
@@ -177,8 +178,7 @@ export default {
       function generateModal(event) {
         const table = event.currentTarget.parentElement.nextElementSibling;
         const tempTable = table.cloneNode(true);
-
-        showModal("fullscreen-table").set("tableHtml", tempTable);
+        modal.show(FullscreenTableModal, { model: { tableHtml: tempTable } });
       }
 
       function generatePopups(tables) {
