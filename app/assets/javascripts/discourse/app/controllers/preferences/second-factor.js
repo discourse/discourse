@@ -44,6 +44,7 @@ export default Controller.extend(CanCheckEmails, {
     return user && user.enforcedSecondFactor;
   },
 
+  @action
   handleError(error) {
     if (error.jqXHR) {
       error = error.jqXHR;
@@ -59,6 +60,7 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @action
   loadSecondFactors() {
     if (this.dirty === false) {
       return;
@@ -91,6 +93,7 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("loading", false));
   },
 
+  @action
   markDirty() {
     this.set("dirty", true);
   },
@@ -270,15 +273,15 @@ export default Controller.extend(CanCheckEmails, {
       });
     },
 
-    createSecurityKey() {
-      this.modal.show(SecondFactorAddSecurityKey, {
+    async createSecurityKey() {
+      await this.modal.show(SecondFactorAddSecurityKey, {
         model: {
           secondFactor: this.model,
-          onClose: () => this.loadSecondFactors(),
-          markDirty: () => this.markDirty(),
-          onError: (e) => this.handleError(e),
+          markDirty: this.markDirty,
+          onError: this.handleError,
         },
       });
+      this.loadSecondFactors();
     },
 
     editSecurityKey(security_key) {

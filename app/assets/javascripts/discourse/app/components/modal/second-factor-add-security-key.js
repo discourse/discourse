@@ -5,6 +5,7 @@ import {
 } from "discourse/lib/webauthn";
 import Component from "@glimmer/component";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
@@ -14,8 +15,6 @@ export default class SecondFactorAddSecurityKey extends Component {
   @tracked loading = false;
   @tracked errorMessage = null;
   @tracked securityKeyName;
-
-  onClose = this.args.model.onClose;
 
   get webauthnUnsupported() {
     return !isWebauthnSupported();
@@ -148,9 +147,5 @@ export default class SecondFactorAddSecurityKey extends Component {
           this.errorMessage = err.message;
         }
       );
-  }
-
-  willDestroy() {
-    this.onClose();
   }
 }
