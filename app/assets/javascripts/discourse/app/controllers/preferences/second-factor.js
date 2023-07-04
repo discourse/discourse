@@ -65,6 +65,11 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   @action
+  setBackupEnabled(value) {
+    this.set("backupEnabled", value);
+  },
+
+  @action
   loadSecondFactors() {
     if (this.dirty === false) {
       return;
@@ -311,13 +316,13 @@ export default Controller.extend(CanCheckEmails, {
       this.loadSecondFactors();
     },
 
-    editSecondFactorBackup() {
-      this.modal.show(SecondFactorBackupEdit, {
+    async editSecondFactorBackup() {
+      await this.modal.show(SecondFactorBackupEdit, {
         model: {
           secondFactor: this.model,
-          onClose: () => this.loadSecondFactors(),
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
+          setBackupEnabled: (e) => this.setBackupEnabled(e),
         },
       });
     },
