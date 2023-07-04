@@ -286,28 +286,28 @@ export default Controller.extend(CanCheckEmails, {
       this.loadSecondFactors();
     },
 
-    editSecurityKey(security_key) {
-      this.modal.show(SecondFactorEditSecurityKey, {
+    async editSecurityKey(security_key) {
+      await this.modal.show(SecondFactorEditSecurityKey, {
         model: {
           securityKey: security_key,
           user: this.model,
-          onClose: () => this.loadSecondFactors(),
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
         },
       });
+      this.loadSecondFactors();
     },
 
-    editSecondFactor(second_factor) {
-      this.modal.show(SecondFactorEdit, {
+    async editSecondFactor(second_factor) {
+      await this.modal.show(SecondFactorEdit, {
         model: {
           secondFactor: second_factor,
           user: this.model,
-          onClose: () => this.loadSecondFactors(),
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
         },
       });
+      this.loadSecondFactors();
     },
 
     editSecondFactorBackup() {
