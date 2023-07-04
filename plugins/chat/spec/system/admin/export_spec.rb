@@ -22,7 +22,7 @@ RSpec.describe "Chat exports", type: :system do
     click_link "[Chat Message] Data export complete"
     exported_data = csv_export_pm_page.download_and_extract
 
-    expect(exported_data[0]).to eq(
+    expect(exported_data.first).to eq(
       %w[
         id
         chat_channel_id
@@ -40,9 +40,8 @@ RSpec.describe "Chat exports", type: :system do
       ],
     )
 
-    data_row = exported_data[1]
     time_format = "%Y-%m-%d %k:%M:%S UTC"
-    expect(data_row).to eq(
+    expect(exported_data.second).to eq(
       [
         message.id.to_s,
         message.chat_channel.id.to_s,

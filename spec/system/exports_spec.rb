@@ -63,7 +63,8 @@ RSpec.describe "Exports", type: :system do
 
       exported_data = csv_export_pm_page.download_and_extract
 
-      expect(exported_data[0]).to eq(
+      expect(exported_data.length).to be(5)
+      expect(exported_data.first).to eq(
         %w[
           id
           name
@@ -98,11 +99,7 @@ RSpec.describe "Exports", type: :system do
           group_names
         ],
       )
-
-      expect(exported_data.length).to be(5)
-
-      exported_admin = exported_data[4]
-      expect(exported_admin).to eq(
+      expect(exported_data.last).to eq(
         [
           user.id.to_s,
           user.name,
@@ -160,10 +157,9 @@ RSpec.describe "Exports", type: :system do
       click_link "[Staff Action] Data export complete"
       exported_data = csv_export_pm_page.download_and_extract
 
-      expect(exported_data[0]).to eq(%w[staff_user action subject created_at details context])
+      expect(exported_data.first).to eq(%w[staff_user action subject created_at details context])
 
-      exported_action = exported_data.last
-      expect(exported_action).to eq(
+      expect(exported_data.last).to eq(
         [
           user_history.acting_user.username,
           "change_site_setting",
@@ -220,9 +216,7 @@ RSpec.describe "Exports", type: :system do
       expect(exported_data.first).to eq(
         %w[email action match_count last_match_at created_at ip_address],
       )
-
-      exported_screened_email = exported_data.second
-      expect(exported_screened_email).to eq(
+      expect(exported_data.second).to eq(
         [
           screened_email.email,
           "do_nothing",
@@ -256,9 +250,7 @@ RSpec.describe "Exports", type: :system do
       exported_data = csv_export_pm_page.download_and_extract
 
       expect(exported_data.first).to eq(%w[ip_address action match_count last_match_at created_at])
-
-      exported_screened_ip = exported_data.second
-      expect(exported_screened_ip).to eq(
+      expect(exported_data.second).to eq(
         [
           screened_ip.ip_address.to_s,
           "do_nothing",
@@ -290,11 +282,9 @@ RSpec.describe "Exports", type: :system do
       click_link "[Screened Url] Data export complete"
       exported_data = csv_export_pm_page.download_and_extract
 
-      expect(exported_data.first).to eq(%w[domain action match_count last_match_at created_at])
       expect(exported_data.length).to be(2)
-
-      exported_screened_url = exported_data.second
-      expect(exported_screened_url).to eq(
+      expect(exported_data.first).to eq(%w[domain action match_count last_match_at created_at])
+      expect(exported_data.second).to eq(
         [
           screened_url.domain,
           "do nothing",
