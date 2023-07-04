@@ -1,3 +1,9 @@
+import deprecated from "discourse-common/lib/deprecated";
+
 export default function capitalizeString(str) {
+  deprecated("capitalize-string helper is deprecated", {
+    id: "discourse.capitalize-string",
+    since: "3.1.0.beta.6",
+  });
   return str[0].toUpperCase() + str.slice(1);
 }

@@ -1,4 +1,5 @@
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 const TITLE_SUBS = {
   all: "all_time",
@@ -12,7 +13,7 @@ export default function periodTitle(period, { showDateRange, fullDay } = {}) {
   const title = I18n.t("filters.top." + (TITLE_SUBS[period] || "this_week"));
 
   if (!showDateRange) {
-    return title;
+    return htmlSafe(title);
   }
 
   let dateString = "";
@@ -70,5 +71,7 @@ export default function periodTitle(period, { showDateRange, fullDay } = {}) {
       break;
   }
 
-  return `<span class="date-section">${title}</span><span class='top-date-string'>${dateString}</span>`;
+  return htmlSafe(
+    `<span class="date-section">${title}</span><span class='top-date-string'>${dateString}</span>`
+  );
 }

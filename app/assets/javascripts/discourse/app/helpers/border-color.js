@@ -1,3 +1,5 @@
+import { htmlSafe } from "@ember/template";
+
 const validDirections = ["top", "right", "bottom", "left"];
 
 export default function borderColor(color, direction) {
@@ -6,5 +8,5 @@ export default function borderColor(color, direction) {
       ? `border-${direction}-color`
       : "border-color";
 
-  return `${borderProperty}: #${color} `;
+  return htmlSafe(`${borderProperty}: #${color} `);
 }

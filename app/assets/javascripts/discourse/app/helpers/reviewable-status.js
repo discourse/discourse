@@ -7,6 +7,7 @@ import {
 } from "discourse/models/reviewable";
 import I18n from "I18n";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 function dataFor(status, type) {
   switch (status) {
@@ -73,11 +74,13 @@ export function htmlStatus(status, type) {
   let icon = data.icon ? iconHTML(data.icon) : "";
 
   return `
-      <span class="${data.cssClass || data.name}">
-        ${icon}
-        ${I18n.t("review.statuses." + data.name + ".title")}
-      </span>
+    <span class="${data.cssClass || data.name}">
+      ${icon}
+      ${I18n.t("review.statuses." + data.name + ".title")}
+    </span>
   `;
 }
 
-export default htmlStatus;
+export default function (status, type) {
+  return htmlSafe(htmlStatus(status, type));
+}
