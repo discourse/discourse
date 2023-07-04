@@ -9,7 +9,6 @@ import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
 
 export default {

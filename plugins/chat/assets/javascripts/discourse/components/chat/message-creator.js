@@ -2,10 +2,8 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import User from "discourse/models/user";
-import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
-import { next, schedule } from "@ember/runloop";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { schedule } from "@ember/runloop";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { getOwner, setOwner } from "@ember/application";
 import { INPUT_DELAY } from "discourse-common/config/environment";
@@ -180,19 +178,19 @@ export default class ChatMessageCreator extends Component {
     return this.selection.some((s) => s.type === USER_TYPE);
   }
 
+  get activeContent() {
+    return this.content.value.findBy(
+      "identifier",
+      this._activeContentIdentifier
+    );
+  }
+
   set activeContent(content) {
     if (!content?.enabled) {
       return;
     }
 
     this._activeContentIdentifier = content?.identifier;
-  }
-
-  get activeContent() {
-    return this.content.value.findBy(
-      "identifier",
-      this._activeContentIdentifier
-    );
   }
 
   get selectionIdentifiers() {
