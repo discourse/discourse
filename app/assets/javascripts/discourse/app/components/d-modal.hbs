@@ -70,7 +70,7 @@
               role="alert"
               class={{concat-class
                 "alert"
-                (concat "alert-" (or @flashType "success"))
+                (if @flashType (concat "alert-" @flashType))
               }}
             >
               {{~@flash~}}
