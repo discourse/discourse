@@ -235,6 +235,13 @@ export default class ChatComposer extends Component {
     }
 
     if (this.site.mobileView) {
+      // forces the virtual keyboard to refresh in iOS
+      // it makes auto capitalization work as expected
+      // when resetting the input value
+      const helperInput = document.createElement("input");
+      document.body.appendChild(helperInput);
+      helperInput.focus();
+      document.body.removeChild(helperInput);
       // prevents to hide the keyboard after sending a message
       // we use direct DOM manipulation here because textareaInteractor.focus()
       // is using the runloop which is too late
