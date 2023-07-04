@@ -777,6 +777,9 @@
             "sidebar_show_count_of_new_items": {
               "type": "boolean"
             },
+            "watched_precedence_over_muted": {
+              "type": ["boolean", "null"]
+            },
             "seen_popups": {
               "type": ["array", "null"]
             }

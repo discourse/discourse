@@ -25,74 +25,80 @@ export default class extends Component {
   }
 
   async #loadTags() {
-    // This is loading all tags upfront and there is no pagination for it. However, this is what we are doing for the
-    // `/tags` route as well so we have decided to kick this can of worms down the road for now.
+    this.tagsLoading = true;
+
+    const findArgs = {};
+
+    if (this.filter !== "") {
+      findArgs.filter = this.filter;
+    }
+
+    if (this.onlySelected) {
+      findArgs.only_tags = this.selectedTags.join(",");
+    }
+
+    if (this.onlyUnselected) {
+      findArgs.exclude_tags = this.selectedTags.join(",");
+    }
+
     await this.store
-      .findAll("tag")
-      .then((result) => {
-        const tags = [...result.content];
-
-        if (result.extras) {
-          if (result.extras.tag_groups) {
-            result.extras.tag_groups.forEach((tagGroup) => {
-              tagGroup.tags.forEach((tag) => {
-                tags.push(tag);
-              });
-            });
-          }
-        }
-
-        this.tags = tags.sort((a, b) => {
-          return a.name.localeCompare(b.name);
-        });
-
+      .findAll("listTag", findArgs)
+      .then((tags) => {
         this.tagsLoading = false;
+        this.tags = tags;
       })
       .catch((error) => {
         popupAjaxError(error);
       });
   }
 
-  get filteredTags() {
-    return this.tags.reduce((acc, tag) => {
-      if (this.onlySelected) {
-        if (this.selectedTags.includes(tag.name) && this.#matchesFilter(tag)) {
-          acc.push(tag);
-        }
-      } else if (this.onlyUnselected) {
-        if (!this.selectedTags.includes(tag.name) && this.#matchesFilter(tag)) {
-          acc.push(tag);
-        }
-      } else if (this.#matchesFilter(tag)) {
-        acc.push(tag);
+  @action
+  didInsertTag(element) {
+    const tagName = element.dataset.tagName;
+    const lastTagName = this.tags.content[this.tags.content.length - 1].name;
+
+    if (tagName === lastTagName) {
+      if (this.observer) {
+        this.observer.disconnect();
+      } else {
+        this.observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                this.tags.loadMore();
+              }
+            });
+          },
+          {
+            root: document.querySelector(".modal-body"),
+            threshold: 1.0,
+          }
+        );
       }
 
-      return acc;
-    }, []);
-  }
-
-  #matchesFilter(tag) {
-    return (
-      this.filter.length === 0 || tag.name.toLowerCase().includes(this.filter)
-    );
+      this.observer.observe(element);
+    }
   }
 
   @action
   resetFilter() {
     this.onlySelected = false;
     this.onlyUnselected = false;
+    this.#loadTags();
   }
 
   @action
   filterSelected() {
     this.onlySelected = true;
     this.onlyUnselected = false;
+    this.#loadTags();
   }
 
   @action
   filterUnselected() {
     this.onlySelected = false;
     this.onlyUnselected = true;
+    this.#loadTags();
   }
 
   @action
@@ -102,6 +108,7 @@ export default class extends Component {
 
   #performFiltering(filter) {
     this.filter = filter.toLowerCase();
+    this.#loadTags();
   }
 
   @action
