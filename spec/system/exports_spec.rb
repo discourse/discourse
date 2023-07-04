@@ -177,7 +177,10 @@ RSpec.describe "Exports", type: :system do
   end
 
   context "with reports" do
-    fab!(:bookmarks) { Fabricate(:bookmark) }
+    before do
+      freeze_time # otherwise, the test can fail when ran in midnight
+      Fabricate(:bookmark)
+    end
 
     it "exports the Bookmarks report" do
       visit "admin/reports/bookmarks"
@@ -189,7 +192,7 @@ RSpec.describe "Exports", type: :system do
 
       expect(exported_data.length).to be(2)
       expect(exported_data.first).to eq(%w[Day Count])
-      expect(exported_data.second).to eq(["do nothing"])
+      expect(exported_data.second).to eq([Time.now.strftime("%Y-%m-%d"), "1"])
     end
   end
 
