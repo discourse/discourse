@@ -45,6 +45,13 @@ module("Integration | Component | d-modal", function (hooks) {
     assert.dom(".d-modal .alert.alert-error").hasText("Some message");
   });
 
+  test("flash types", async function (assert) {
+    await render(
+      hbs`<DModal @inline={{true}} @flash="Some message" @flashType={{@flashTypes.error}}/> `
+    );
+    assert.dom(".d-modal .alert.alert-danger").hasText("Some message");
+  });
+
   test("dismissable", async function (assert) {
     let closeModalCalled = false;
     this.closeModal = () => (closeModalCalled = true);

@@ -6,6 +6,7 @@
     {{! #each ensures that the activeModal component/model are updated atomically }}
     <activeModal.component
       @model={{activeModal.opts.model}}
+      @flashTypes={{this.flashTypes}}
       @closeModal={{this.closeModal}}
     />
   {{/each}}
