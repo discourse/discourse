@@ -3,6 +3,11 @@
 <div class="twitter-screen-name"><a href="{{link}}" target="_blank" rel="noopener">@{{screen_name}}</a></div>
 
 <div class="tweet">
+  {{#is_reply}}
+    <span class="is-reply">
+      <svg class="fa d-icon d-icon-reply svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#reply"></use></svg>
+    </span>
+  {{/is_reply}}
   <span class="tweet-description">{{{tweet}}}</span>
   {{#quoted_text}}
     <div class="quoted">

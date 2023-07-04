@@ -24,6 +24,7 @@ import { get } from "@ember/object";
 import { h } from "virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
 import { consolePrefix } from "discourse/lib/source-identifier";
+import { getOwner, setOwner } from "@ember/application";
 
 const _registry = {};
 
@@ -146,6 +147,7 @@ export default class Widget {
     this.dirtyKeys = opts.dirtyKeys;
 
     register.deprecateContainer(this);
+    setOwner(this, getOwner(register));
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
     this.site = register.lookup("service:site");
