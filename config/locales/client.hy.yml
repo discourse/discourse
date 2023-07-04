@@ -1297,7 +1297,6 @@ hy:
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
     summary:
       enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
-      enable: "Ամփոփել Այս Թեման"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
       enabled_description: "Այս թեման պարունակում է հեռացված գրառումներ, որոնք թաքցվել են:"
@@ -2850,8 +2849,9 @@ hy:
         other: "%{count} նոր"
       more: "Ավելին"
       all_categories: "Բոլոր կատեգորիաները"
-      categories_form:
-        save: "Պահպանել"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Բոլորը"
       sections:
         custom:
           save: "Պահպանել"
@@ -2887,6 +2887,8 @@ hy:
               content: "Ադմին"
             badges:
               content: "Կրծքանշաններ"
+            topics:
+              content: "Թեմա"
             faq:
               content: "ՀՏՀ"
             groups:
@@ -2897,6 +2899,11 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
+          email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:

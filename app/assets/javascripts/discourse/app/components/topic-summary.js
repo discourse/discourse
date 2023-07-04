@@ -4,6 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { cookAsync } from "discourse/lib/text";
 
 export default class TopicSummary extends Component {
   @tracked loading = false;
@@ -16,7 +17,9 @@ export default class TopicSummary extends Component {
 
       ajax(`/t/${this.args.topicId}/strategy-summary`)
         .then((data) => {
-          this.summary = data.summary;
+          cookAsync(data.summary).then((cooked) => {
+            this.summary = cooked;
+          });
         })
         .catch(popupAjaxError)
         .finally(() => (this.loading = false));

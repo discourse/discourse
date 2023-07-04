@@ -1067,14 +1067,10 @@ zh_CN:
       experimental_sidebar:
         enable: "启用边栏"
         options: "选项"
-        categories_section: "类别版块"
-        categories_section_instruction: "所选类别将显示在边栏的类别版块下。"
-        tags_section: "标签版块"
-        tags_section_instruction: "所选标签将显示在边栏的标签版块下。"
         navigation_section: "导航"
-        list_destination_instruction: "当边栏中有新内容时…"
-        list_destination_default: "使用默认链接并为新条目显示徽章"
-        list_destination_unread_new: "链接到未读/新条目并显示新条目的数量"
+        navigation_section_instruction: "当导航菜单中的话题列表有新的或未读的项目时…"
+        link_to_filtered_list_checkbox_description: "链接到过滤后的列表"
+        show_count_new_items_checkbox_description: "显示新项目的数量"
       change: "更改"
       featured_topic: "精选话题"
       moderator: "%{user} 是版主"
@@ -1113,6 +1109,7 @@ zh_CN:
       watched_first_post_categories_instructions: "您将收到这些类别中每个新话题的第一个帖子的通知。"
       watched_first_post_tags: "关注第一个帖子"
       watched_first_post_tags_instructions: "您将收到带有这些标签的每个新话题的第一个帖子的通知。"
+      watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已静音的主题，请通知我。"
       muted_categories: "已设为免打扰"
       muted_categories_instructions: "您不会收到有关这些类别中新话题的任何通知，它们也不会出现在类别或最新话题页面上。"
       muted_categories_instructions_dont_hide: "您不会收到有关这些类别中新话题的任何通知。"
@@ -1239,7 +1236,6 @@ zh_CN:
         tags: "标签"
         interface: "界面"
         apps: "应用"
-        sidebar: "边栏"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -1770,7 +1766,6 @@ zh_CN:
         other: "有 <b>%{count}</b> 个回复。"
       description_time_MF: |
         有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。
-      enable: "总结此话题"
       disable: "显示所有帖子"
       short_label: "摘要"
       short_title: "显示此话题的摘要：由社区决定的最有趣的帖子"
@@ -3825,8 +3820,19 @@ zh_CN:
       more: "更多"
       all_categories: "所有类别"
       all_tags: "所有标签"
-      categories_form:
-        save: "保存"
+      categories_form_modal:
+        title: "编辑类别导航"
+        subtitle:
+          text: "我们将自动显示本网站最受欢迎的类别"
+        filter_placeholder: "筛选类别"
+        no_categories: "没有匹配到指定条件的类别。"
+      edit_navigation_modal_form:
+        deselect_button_text: "取消全选"
+        reset_to_defaults: "重置为默认值"
+        filter_dropdown:
+          all: "所有"
+          selected: "已选择"
+          unselected: "未选择"
       sections:
         custom:
           add: "添加自定义部分"
@@ -3876,20 +3882,12 @@ zh_CN:
             unread_with_count: "未读 (%{count})"
             archive: "归档"
         tags:
-          links:
-            add_tags:
-              content: "添加标签"
-              title: "您尚未添加任何标签。点击以开始。"
           none: "您还没有添加任何标签。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "标签"
           header_action_title: "编辑边栏标签"
           configure_defaults: "配置默认值"
         categories:
-          links:
-            add_categories:
-              content: "添加类别"
-              title: "您尚未添加任何类别。点击以开始。"
           none: "您还没有添加任何类别。"
           click_to_get_started: "点击此处开始。"
           header_link_text: "类别"
@@ -3909,6 +3907,9 @@ zh_CN:
             badges:
               content: "徽章"
               title: "所有可获得的徽章"
+            topics:
+              content: "话题"
+              title: "所有话题"
             faq:
               content: "常见问题解答"
               title: "使用此站点的准则"
@@ -3939,6 +3940,30 @@ zh_CN:
       exceeded: "已超过允许的最大字符数。"
     form_template_chooser:
       select_template: "选择表单模板"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "请填写此字段。"
+          text: "请填写此字段。"
+          select-one: "请在列表中选择一个项目。"
+          select-multiple: "请在列表中至少选择一个项目。"
+          checkbox: "如果你想继续，请勾选此框。"
+        typeMismatch:
+          default: "请输入一个有效值。"
+          color: "请输入一种颜色。"
+          date: "请输入日期。"
+          email: "请输入有效的电子邮件地址."
+          number: "请输入一个数字。"
+          password: "请输入一个有效的密码。"
+          tel: "请输入一个有效的电话号码。"
+          text: "请输入一个文本值。"
+          url: "请输入一个有效的 URL。"
+        tooShort: "输入的内容必须有 %{minLength} 或更长的字符。"
+        tooLong: "输入的内容必须少于 %{maxLength} 字符。"
+        rangeOverflow: "输入必须小于 %{max}。"
+        rangeUnderflow: "输入必须大于 %{min}。"
+        patternMismatch: "请匹配要求的格式。"
+        badInput: "请输入有效的输入。"
   admin_js:
     type_to_filter: "输入以筛选…"
     admin:
@@ -4173,6 +4198,7 @@ zh_CN:
             posts:
               edit: 编辑任意帖子或特定帖子。
               delete: 删除帖子。
+              list: 列出最新的帖子和私人帖子。也支持 RSS。
             tags:
               list: 列出标签。
             categories:

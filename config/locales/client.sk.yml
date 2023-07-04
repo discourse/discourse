@@ -1148,7 +1148,6 @@ sk:
       hide_forever: "nie, ďakujem"
     summary:
       enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -2291,8 +2290,9 @@ sk:
         other: "%{count} nových"
       more: "Viac"
       all_categories: "Všetky kategórie"
-      categories_form:
-        save: "Uložiť"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Všetky"
       sections:
         custom:
           save: "Uložiť"
@@ -2327,6 +2327,8 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
+            topics:
+              content: "Témy"
             faq:
               content: "Časté otázky"
             groups:
@@ -2335,6 +2337,11 @@ sk:
               content: "Používatelia"
             my_posts:
               content: "Moje príspevky"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Prosím zadajte platnú hodnotu."
+          email: "Zadajte prosím platný email."
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:

@@ -13,7 +13,7 @@
       {{#if this.loading}}
         {{loading-spinner size="medium"}}
       {{else}}
-        {{#each this.threads as |thread|}}
+        {{#each this.sortedThreads as |thread|}}
           <Chat::ThreadList::Item @thread={{thread}} />
         {{else}}
           <div class="chat-thread-list__no-threads">

@@ -11,17 +11,9 @@ const gridRule = {
 };
 
 export function setup(helper) {
-  helper.registerOptions((opts, siteSettings) => {
-    opts.enableGrid = !!siteSettings.experimental_post_image_grid;
-  });
-
   helper.allowList(["div.d-image-grid"]);
 
   helper.registerPlugin((md) => {
-    if (!md.options.discourse.enableGrid) {
-      return;
-    }
-
     md.block.bbcode.ruler.push("grid", gridRule);
   });
 }

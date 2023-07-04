@@ -1,2 +1,2 @@
 chat:
-- plugins/chat/**/*
+  - plugins/chat/**/*

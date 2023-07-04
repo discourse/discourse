@@ -38,10 +38,10 @@ export default class SidebarCommonCategoriesSection extends Component {
       return this.categories;
     }
 
-    let categories = this.site.categories;
+    let categories = [...this.site.categories];
 
     if (!this.siteSettings.fixed_category_positions) {
-      categories = categories.sort((a, b) => a.name.localeCompare(b.name));
+      categories.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     const categoryIds = this.categories.map((category) => category.id);

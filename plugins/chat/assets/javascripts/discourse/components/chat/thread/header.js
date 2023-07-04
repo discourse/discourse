@@ -11,8 +11,29 @@ export default class ChatThreadHeader extends Component {
   @service currentUser;
   @service chatApi;
   @service router;
+  @service chatStateManager;
+  @service chatHistory;
+  @service site;
 
   @tracked persistedNotificationLevel = true;
+
+  get backLink() {
+    let route;
+
+    if (
+      this.chatHistory.previousRoute?.name === "chat.channel.index" &&
+      this.site.mobileView
+    ) {
+      route = "chat.channel.index";
+    } else {
+      route = "chat.channel.threads";
+    }
+
+    return {
+      route,
+      models: this.args.channel.routeModels,
+    };
+  }
 
   get label() {
     return this.args.thread.escapedTitle;

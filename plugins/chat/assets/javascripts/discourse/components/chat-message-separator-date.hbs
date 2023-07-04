@@ -1,8 +1,14 @@
-{{#if @message.firstMessageOfTheDayAt}}
+{{#if @message.formattedFirstMessageDate}}
   <div
     class={{concat-class
       "chat-message-separator-date"
       (if @message.newest "with-last-visit")
+    }}
+    role="button"
+    {{on
+      "click"
+      (fn @fetchMessagesByDate @message.firstMessageOfTheDayAt)
+      passive=true
     }}
   >
     <div
@@ -10,7 +16,7 @@
       {{chat/track-message-separator-date}}
     >
       <span class="chat-message-separator__text">
-        <span>{{@message.firstMessageOfTheDayAt}}</span>
+        {{@message.formattedFirstMessageDate}}
 
         {{#if @message.newest}}
           <span class="chat-message-separator__last-visit">

@@ -63,45 +63,73 @@ RSpec.describe Chat::UpdateChannel do
         )
       end
 
-      context "when the name is blank" do
-        before { params[:name] = "" }
+      describe "name" do
+        context "when blank" do
+          before { params[:name] = "" }
 
-        it "nils out the name" do
-          result
-          expect(channel.reload.name).to be_nil
+          it "nils out the name" do
+            result
+            expect(channel.reload.name).to be_nil
+          end
         end
       end
 
-      context "when the description is blank" do
-        before do
-          channel.update!(description: "something")
-          params[:description] = ""
-        end
+      describe "description" do
+        context "when blank" do
+          before do
+            channel.update!(description: "something")
+            params[:description] = ""
+          end
 
-        it "nils out the description" do
-          result
-          expect(channel.reload.description).to be_nil
+          it "nils out the description" do
+            result
+            expect(channel.reload.description).to be_nil
+          end
         end
       end
 
-      context "when auto_join_users is set to 'true'" do
-        before do
-          channel.update!(auto_join_users: false)
-          params[:auto_join_users] = true
+      describe "#auto_join_users" do
+        context "when set to 'true'" do
+          before do
+            channel.update!(auto_join_users: false)
+            params[:auto_join_users] = true
+          end
+
+          it "updates the model accordingly" do
+            result
+            expect(channel.reload).to have_attributes(auto_join_users: true)
+          end
+
+          it "auto joins users" do
+            expect_enqueued_with(
+              job: Jobs::Chat::AutoJoinChannelMemberships,
+              args: {
+                chat_channel_id: channel.id,
+              },
+            ) { result }
+          end
+        end
+      end
+
+      describe "threading_enabled" do
+        context "when true" do
+          it "changes the value to true" do
+            expect {
+              params[:threading_enabled] = true
+              result
+            }.to change { channel.reload.threading_enabled }.from(false).to(true)
+          end
         end
 
-        it "updates the model accordingly" do
-          result
-          expect(channel.reload).to have_attributes(auto_join_users: true)
-        end
+        context "when false" do
+          it "changes the value to true" do
+            channel.update!(threading_enabled: true)
 
-        it "auto joins users" do
-          expect_enqueued_with(
-            job: Jobs::Chat::AutoJoinChannelMemberships,
-            args: {
-              chat_channel_id: channel.id,
-            },
-          ) { result }
+            expect {
+              params[:threading_enabled] = false
+              result
+            }.to change { channel.reload.threading_enabled }.from(true).to(false)
+          end
         end
       end
     end

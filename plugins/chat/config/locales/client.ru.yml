@@ -104,6 +104,8 @@ ru:
       heading: "Чат"
       join: "Подписаться"
       last_visit: "последнее посещение"
+      summarization:
+        summarize: "Сводка"
       mention_warning:
         dismiss: "Отклонить"
         invitations_sent:
@@ -270,6 +272,8 @@ ru:
         followed: "Подписан"
         mobile_notification_level: "Мобильные push-уведомления"
         mute: "Отключить канал"
+        threading_enabled: "Включён"
+        threading_disabled: "Отключен"
         muted_on: "Включено"
         muted_off: "Выключено"
         notifications: "Уведомления"
@@ -380,6 +384,16 @@ ru:
           other: "%{count} ответ"
         settings: "Настройки"
         last_reply: "последний ответ"
+        notifications:
+          regular:
+            title: "Обычный"
+          tracking:
+            title: "В отслеживаемых"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"

@@ -2,15 +2,7 @@ import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { camelize } from "@ember/string";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import {
-  alias,
-  equal,
-  filterBy,
-  gt,
-  mapBy,
-  or,
-  readOnly,
-} from "@ember/object/computed";
+import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -137,7 +129,9 @@ let userOptionFields = [
   "seen_popups",
   "default_calendar",
   "bookmark_auto_delete_preference",
-  "sidebar_list_destination",
+  "sidebar_link_to_filtered_list",
+  "sidebar_show_count_of_new_items",
+  "watched_precedence_over_muted",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -410,7 +404,6 @@ const User = RestModel.extend({
   sidebarSections: alias("sidebar_sections"),
 
   sidebarTagNames: mapBy("sidebarTags", "name"),
-  sidebarListDestination: readOnly("sidebar_list_destination"),
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
@@ -443,10 +436,6 @@ const User = RestModel.extend({
 
       this.unconfirmed_emails.pushObject(email);
     });
-  },
-
-  copy() {
-    return User.create(this.getProperties(Object.keys(this)));
   },
 
   save(fields) {
@@ -690,11 +679,6 @@ const User = RestModel.extend({
     return groups.length === 0 ? null : groups;
   },
 
-  @discourseComputed("filteredGroups", "numGroupsToDisplay")
-  showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
-    return filteredGroups.length > numGroupsToDisplay;
-  },
-
   // NOTE: This only includes groups *visible* to the user via the serializer,
   // so be wary when using this.
   isInAnyGroups(groupIds) {
@@ -848,17 +832,6 @@ const User = RestModel.extend({
     });
   },
 
-  generateMultipleUseInviteLink(
-    group_ids,
-    max_redemptions_allowed,
-    expires_at
-  ) {
-    return ajax("/invites", {
-      type: "POST",
-      data: { group_ids, max_redemptions_allowed, expires_at },
-    });
-  },
-
   @dependentKeyCompat
   get mutedCategories() {
     return Category.findByIds(this.get("muted_category_ids"));
@@ -917,6 +890,16 @@ const User = RestModel.extend({
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
     return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
+  },
+
+  @dependentKeyCompat
+  get sidebarLinkToFilteredList() {
+    return this.get("user_option.sidebar_link_to_filtered_list");
+  },
+
+  @dependentKeyCompat
+  get sidebarShowCountOfNewItems() {
+    return this.get("user_option.sidebar_show_count_of_new_items");
   },
 
   delete() {
@@ -1378,9 +1361,7 @@ User.reopenClass(Singleton, {
       data: { timezone: user.user_option.timezone },
     });
   },
-});
 
-User.reopenClass({
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);

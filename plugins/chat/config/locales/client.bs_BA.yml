@@ -73,6 +73,8 @@ bs_BA:
       settings:
         follow: "Učlani se"
         followed: "Pridružio se"
+        threading_enabled: "Omogućen"
+        threading_disabled: "Neomogućen"
         notifications: "Obavijest"
         preview: "Pregled"
         save: "Save"
@@ -112,6 +114,11 @@ bs_BA:
           other: "%{count} odgovora"
         settings: "Postavke"
         last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Normalno"
+          tracking:
+            title: "Praćenje"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"

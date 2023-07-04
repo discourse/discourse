@@ -234,14 +234,41 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     );
   });
 
+  test("initial options - topic search scope - 'in all topics' searches in all topics", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+    await click("#search-button");
+    await fillIn("#search-term", "foo");
+    // select 'in all topics and posts'
+    await click(
+      ".search-menu .results .search-menu-initial-options .search-menu-assistant-item:first-child"
+    );
+    assert.ok(
+      exists(".search-result-topic"),
+      "search result is a list of topics"
+    );
+  });
+
+  test("initial options - topic search scope - 'in this topic' searches posts within topic", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+    await click("#search-button");
+    await fillIn("#search-term", "foo");
+    // select 'in this topic'
+    await click(
+      ".search-menu .results .search-menu-initial-options .search-menu-assistant-item:nth-child(2)"
+    );
+    assert.ok(
+      exists(".search-result-post"),
+      "search result is a list of posts"
+    );
+  });
+
   test("initial options - topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
     await visit("/t/internationalization-localization/280/1");
     await click("#search-button");
     await fillIn("#search-term", "proper");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
-
     await click(".show-advanced-search");
 
     assert.strictEqual(
@@ -322,7 +349,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "a proper");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(
@@ -357,7 +384,7 @@ acceptance("Search - Glimmer - Anonymous", function (needs) {
     await fillIn("#search-term", "dev");
     await query("#search-term").focus();
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
-    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+    await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
 
     assert.ok(

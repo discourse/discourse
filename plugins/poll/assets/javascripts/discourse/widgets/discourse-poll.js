@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 import RawHtml from "discourse/widgets/raw-html";
 import { ajax } from "discourse/lib/ajax";
 import { avatarFor } from "discourse/widgets/post";
@@ -12,8 +12,9 @@ import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
-import showModal from "discourse/lib/show-modal";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import PollBreakdownModal from "../components/modal/poll-breakdown";
+import { getOwner } from "@ember/application";
 
 const FETCH_VOTERS_COUNT = 25;
 
@@ -1070,12 +1071,8 @@ export default createWidget("discourse-poll", {
   },
 
   showBreakdown() {
-    showModal("poll-breakdown", {
+    getOwner(this).lookup("service:modal").show(PollBreakdownModal, {
       model: this.attrs,
-      panels: [
-        { id: "percentage", title: "poll.breakdown.percentage" },
-        { id: "count", title: "poll.breakdown.count" },
-      ],
     });
   },
 });

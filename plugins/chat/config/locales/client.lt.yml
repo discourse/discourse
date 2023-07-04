@@ -26,6 +26,8 @@ lt:
       flag: "Pranešti"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
+      summarization:
+        summarize: "Apibendrinti"
       mention_warning:
         dismiss: "praleisti"
       reply: "Atsakyti"
@@ -74,6 +76,8 @@ lt:
       settings:
         follow: "Prisijungti"
         followed: "Prisijungė"
+        threading_enabled: "Galimas"
+        threading_disabled: "Uždrausta"
         notifications: "Pranešimai"
         preview: "Peržiūrėti"
         save: "Išsaugoti"
@@ -114,6 +118,16 @@ lt:
           other: "%{count} atsakymai"
         settings: "Nustatymai"
         last_reply: "Paskutinis atsakymas"
+        notifications:
+          regular:
+            title: "Įprastas"
+          tracking:
+            title: "Seku"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"

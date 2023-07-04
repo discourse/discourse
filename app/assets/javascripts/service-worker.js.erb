@@ -19,7 +19,7 @@ workbox.setConfig({
   debug: false
 });
 
-var authUrls = ["auth", "session/sso_login", "session/sso"].map(path => `<%= Discourse.base_path %>/${path}`);
+var authUrls = ["auth", "session/sso_login", "session/sso", "srv/status"].map(path => `<%= Discourse.base_path %>/${path}`);
 var chatRegex = /\/chat\/channel\/(\d+)\//;
 var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
 

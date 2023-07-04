@@ -200,6 +200,8 @@ class PostAlerter
 
     DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
+    notified = notified + category_or_tag_muters(post.topic)
+
     if new_record
       if post.topic.private_message?
         # private messages
@@ -263,6 +265,20 @@ class PostAlerter
       .category_users
       .where(notification_level: CategoryUser.notification_levels[:watching_first_post])
       .pluck(:user_id)
+  end
+
+  def category_or_tag_muters(topic)
+    user_ids_sql = <<~SQL
+      SELECT user_id FROM category_users WHERE category_id = #{topic.category_id.to_i} AND notification_level = #{CategoryUser.notification_levels[:muted]}
+      UNION
+      SELECT user_id FROM tag_users tu JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id} AND tu.notification_level = #{TagUser.notification_levels[:muted]}
+    SQL
+    User
+      .where("id IN (#{user_ids_sql})")
+      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
+      .where(
+        "user_options.watched_precedence_over_muted IS false OR (user_options.watched_precedence_over_muted IS NULL AND #{!SiteSetting.watched_precedence_over_muted})",
+      )
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)
@@ -588,6 +604,9 @@ class PostAlerter
     end
 
     # Create the notification
+    notification_data =
+      DiscoursePluginRegistry.apply_modifier(:notification_data, notification_data)
+
     created =
       user.notifications.consolidate_or_create!(
         notification_type: type,

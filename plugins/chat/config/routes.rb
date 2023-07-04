@@ -35,10 +35,18 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/threads/:thread_id/notifications-settings/me" =>
           "channel_threads_current_user_notifications_settings#update"
 
+    # TODO (martin) Remove this when we refactor the DM channel creation to happen
+    # via message creation in a different API controller.
+    post "/direct-message-channels" => "direct_messages#create"
+
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
 
     get "/channels/:channel_id/summarize" => "summaries#get_summary"
+  end
+
+  namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
+    post "export/messages" => "export#export_messages"
   end
 
   # direct_messages_controller routes
@@ -68,7 +76,6 @@ Chat::Engine.routes.draw do
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
   post "/:chat_channel_id/:message_id/flag" => "chat#flag"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
-  put "/:chat_channel_id/read/:message_id" => "chat#update_user_last_read"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   put "/:chat_channel_id/invite" => "chat#invite_users"
   post "/drafts" => "chat#set_draft"

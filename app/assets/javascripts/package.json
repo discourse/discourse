@@ -21,9 +21,9 @@
   ],
   "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1",
-    "**/babel-plugin-ember-template-compilation": "2.0.0"
+    "**/babel-plugin-ember-template-compilation": "2.0.0",
+    "**/unset-value": "2.0.1"
   },
-  "dependencies": {},
   "devDependencies": {
     "patch-package": "^7.0.0",
     "postinstall-postinstall": "^2.1.0"

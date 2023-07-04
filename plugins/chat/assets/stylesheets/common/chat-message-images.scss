@@ -10,7 +10,8 @@ $max_image_height: 150px;
   .chat-message-collapser .chat-uploads img,
   .chat-message-collapser p img,
   aside.onebox .onebox-body .aspect-image-full-size,
-  aside.onebox .onebox-body .aspect-image-full-size img {
+  aside.onebox .onebox-body .aspect-image-full-size img,
+  .chat-message-text p img:not(.emoji) {
     object-fit: contain;
     max-height: $max_image_height;
     max-width: 100%;

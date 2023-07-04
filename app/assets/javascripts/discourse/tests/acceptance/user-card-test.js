@@ -37,7 +37,7 @@ acceptance(
       server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
     });
 
-    test("it displays the person's username followed by ther fullname", async function (assert) {
+    test("it displays the person's username followed by their fullname", async function (assert) {
       await visit("/t/this-is-a-test-topic/9");
       await click('a[data-user-card="eviltrout"]');
 

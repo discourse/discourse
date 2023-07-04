@@ -1,0 +1,15 @@
+.sidebar__edit-navigation-menu {
+  .modal-inner-container {
+    width: 35em;
+  }
+}
+
+.sidebar__edit-navigation-menu__filter {
+  flex-direction: column;
+  padding: 0.667em;
+
+  .sidebar__edit-navigation-menu__filter-dropdown {
+    margin-left: 0;
+    width: 100%;
+  }
+}

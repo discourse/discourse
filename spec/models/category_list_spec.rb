@@ -43,6 +43,13 @@ RSpec.describe CategoryList do
       SiteSetting.default_tags_muted = muted_tag.name
       Fabricate(:topic, category: public_cat, tags: [muted_tag])
 
+      muted_tag_2 = Fabricate(:tag)
+      TagUser.create!(
+        tag: muted_tag_2,
+        user: user,
+        notification_level: TagUser.notification_levels[:muted],
+      )
+
       CategoryFeaturedTopic.feature_topics
 
       expect(

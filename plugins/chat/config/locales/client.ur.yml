@@ -26,6 +26,8 @@ ur:
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
       last_visit: "آخری وزٹ"
+      summarization:
+        summarize: "خلاصہ"
       mention_warning:
         dismiss: "بر خاست کریں"
       reply: "جواب"
@@ -74,6 +76,7 @@ ur:
       settings:
         follow: "شمولیت اختیار کریں"
         followed: "شمولیت اختیار کی"
+        threading_disabled: "غیر فعال"
         notifications: "اطلاعات"
         preview: "پیشگی دیکھیں"
         save: "محفوظ کریں"
@@ -112,6 +115,14 @@ ur:
           other: "%{count} جوابات"
         settings: "ترتیبات"
         last_reply: "آخری جواب"
+        notifications:
+          regular:
+            title: "عمومی"
+          tracking:
+            title: "ٹریک کیا جا رہا"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "نیا پیغام"
         cancel: "منسوخ"

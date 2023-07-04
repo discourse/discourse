@@ -3,10 +3,10 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default class OfflineIndicator extends Component {
-  @service messageBusConnectivity;
+  @service networkConnectivity;
 
   get showing() {
-    return !this.messageBusConnectivity.connected;
+    return !this.networkConnectivity.connected;
   }
 
   @action

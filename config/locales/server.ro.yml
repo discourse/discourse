@@ -1146,7 +1146,6 @@ ro:
       pop3_polling_password_is_empty: "Trebuie să setezi „parola pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
       pop3_polling_authentication_failed: "Autentificarea POP3 a eșuat. Te rugăm să verifici detaliile din setările POP3."
       reply_by_email_address_is_empty: "Trebuie să setezi o adresă pentru „răspunde prin email” înainte să poți activa răspunsul prin email."
-      email_polling_disabled: "Trebuie să setezi fie retragerea manuala fie cea prin POP3 înainte să activezi răspunsul prin email."
       user_locale_not_enabled: "Trebuie să activezi întâi „permite locale utilizator” înainte de activa această setare."
       invalid_regex: "Regex invalid sau nepermis."
       min_username_length_range: "Nu poți seta minimum cu o valoare mai mare decât a maximului."

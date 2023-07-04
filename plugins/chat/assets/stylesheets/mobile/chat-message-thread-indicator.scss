@@ -1,39 +1,24 @@
 .chat-message-thread-indicator {
-  &__participants,
-  &__last-reply-avatar:not(.-mobile) {
-    display: none;
-  }
+  grid-template-areas:
+    "avatar info info participants"
+    "excerpt excerpt excerpt replies";
 
-  &__last-reply-metadata {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    margin-bottom: 0.25rem;
-  }
-
-  &__last-reply-user {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-right: auto;
-  }
-
-  &__last-reply-avatar {
-    align-self: center;
+  .chat-thread-participants {
     .avatar {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
     }
-  }
-
-  &__last-reply-username {
-    margin-right: auto;
   }
 
   &__last-reply-excerpt {
     white-space: wrap;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    margin-top: 0.5rem;
+    margin-right: 0.25rem;
+  }
+  &__replies-count {
+    grid-area: replies;
   }
 }

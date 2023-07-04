@@ -105,6 +105,8 @@ hu:
       heading: "Csevegés"
       join: "Belépés"
       last_visit: "utolsó látogatás"
+      summarization:
+        summarize: "Összefoglalás"
       mention_warning:
         dismiss: "elvetés"
         invitations_sent:
@@ -260,6 +262,8 @@ hu:
         followed: "Csatlakozott"
         mobile_notification_level: "Mobilos leküldéses értesítések"
         mute: "Csatorna némítása"
+        threading_enabled: "Engedélyezed"
+        threading_disabled: "Kikapcsolt"
         muted_on: "Be"
         muted_off: "Ki"
         notifications: "Értesítések"
@@ -356,6 +360,14 @@ hu:
         label: Szál
         settings: "Beállítások"
         last_reply: "utolsó válasz"
+        notifications:
+          regular:
+            title: "Normális"
+          tracking:
+            title: "Követés"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"

@@ -24,7 +24,6 @@ export default class ChatChannelThread extends DiscourseRoute {
 
   afterModel(model) {
     this.chat.activeChannel.activeThread = model;
-    this.chatThreadPane.open(model);
   }
 
   @action

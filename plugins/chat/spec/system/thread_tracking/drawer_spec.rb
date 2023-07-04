@@ -20,10 +20,10 @@ describe "Thread tracking state | drawer", type: :system do
   end
 
   context "when the user has unread messages for a thread" do
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
-    fab!(:message_2) do
+    fab!(:message_1) do
       Fabricate(:chat_message, chat_channel: channel, thread: thread, user: current_user)
     end
+    fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
 
     it "shows the count of threads with unread messages on the thread list button" do
       visit("/")
@@ -53,7 +53,7 @@ describe "Thread tracking state | drawer", type: :system do
     end
 
     it "shows unread indicators for the header icon and the list when a new unread arrives" do
-      message_1.trash!
+      thread.membership_for(current_user).update!(last_read_message_id: message_2.id)
       visit("/")
       chat_page.open_from_header
       drawer_page.open_channel(channel)

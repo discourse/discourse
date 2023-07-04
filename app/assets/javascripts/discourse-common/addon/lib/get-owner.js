@@ -42,5 +42,7 @@ export function getRegister(obj) {
     },
   };
 
+  setOwner(register, owner);
+
   return register;
 }

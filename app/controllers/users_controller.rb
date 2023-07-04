@@ -1234,6 +1234,11 @@ class UsersController < ApplicationController
         groups = block.call(groups, current_user) if params[param_name.to_s]
       end
 
+      # the plugin registry callbacks above are only evaluated when a param
+      # is present matching the name of the callback. Any modifier registered using
+      # register_modifier(:groups_for_users_search) will be evaluated without needing the
+      # param.
+      groups = DiscoursePluginRegistry.apply_modifier(:groups_for_users_search, groups)
       groups = Group.search_groups(term, groups: groups, sort: :auto)
 
       to_render[:groups] = groups.map { |m| { name: m.name, full_name: m.full_name } }
