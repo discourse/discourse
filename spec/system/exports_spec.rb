@@ -183,9 +183,10 @@ RSpec.describe "Exports", type: :system do
     fab!(:screened_email) do
       Fabricate(
         :screened_email,
+        match_count: 5,
         last_match_at: Time.now,
         created_at: Time.now,
-        ip_address: IPAddr.new("94.99.101.228"),
+        ip_address: "94.99.101.228",
       )
     end
 
@@ -217,6 +218,37 @@ RSpec.describe "Exports", type: :system do
   end
 
   context "with screened ips" do
+    fab!(:screened_ip) { Fabricate(
+      :screened_ip_address,
+      match_count: 5,
+      ip_address: "99.232.23.124",
+      last_match_at: Time.now,
+      created_at: Time.now,
+    ) }
+
+    it "exports data" do
+      visit "admin/logs/screened_ip_addresses"
+      click_button "Export"
+
+      visit "/u/#{admin.username}/messages"
+      click_link "[Screened Ip] Data export complete"
+      exported_data = csv_export_pm_page.download_and_extract
+
+      expect(exported_data.first).to eq(
+        %w[ip_address action match_count last_match_at created_at],
+      )
+
+      exported_screened_ip = exported_data.second
+      expect(exported_screened_ip).to eq(
+        [
+          screened_ip.ip_address.to_s,
+          "block",
+          screened_ip.match_count.to_s,
+          screened_ip.last_match_at.strftime(time_format),
+          screened_ip.created_at.strftime(time_format),
+        ]
+      )
+    end
   end
 
   context "with screened urls" do
