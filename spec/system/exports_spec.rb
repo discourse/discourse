@@ -183,6 +183,7 @@ RSpec.describe "Exports", type: :system do
     fab!(:screened_email) do
       Fabricate(
         :screened_email,
+        action_type: ScreenedEmail.actions[:do_nothing],
         match_count: 5,
         last_match_at: Time.now,
         created_at: Time.now,
@@ -207,7 +208,7 @@ RSpec.describe "Exports", type: :system do
       expect(exported_screened_email).to eq(
         [
           screened_email.email,
-          "block",
+          "do_nothing",
           screened_email.match_count.to_s,
           screened_email.last_match_at.strftime(time_format),
           screened_email.created_at.strftime(time_format),
@@ -218,13 +219,16 @@ RSpec.describe "Exports", type: :system do
   end
 
   context "with screened ips" do
-    fab!(:screened_ip) { Fabricate(
-      :screened_ip_address,
-      match_count: 5,
-      ip_address: "99.232.23.124",
-      last_match_at: Time.now,
-      created_at: Time.now,
-    ) }
+    fab!(:screened_ip) do
+      Fabricate(
+        :screened_ip_address,
+        action_type: ScreenedIpAddress.actions[:do_nothing],
+        match_count: 5,
+        ip_address: "99.232.23.124",
+        last_match_at: Time.now,
+        created_at: Time.now,
+      )
+    end
 
     it "exports data" do
       visit "admin/logs/screened_ip_addresses"
@@ -234,23 +238,54 @@ RSpec.describe "Exports", type: :system do
       click_link "[Screened Ip] Data export complete"
       exported_data = csv_export_pm_page.download_and_extract
 
-      expect(exported_data.first).to eq(
-        %w[ip_address action match_count last_match_at created_at],
-      )
+      expect(exported_data.first).to eq(%w[ip_address action match_count last_match_at created_at])
 
       exported_screened_ip = exported_data.second
       expect(exported_screened_ip).to eq(
         [
           screened_ip.ip_address.to_s,
-          "block",
+          "do_nothing",
           screened_ip.match_count.to_s,
           screened_ip.last_match_at.strftime(time_format),
           screened_ip.created_at.strftime(time_format),
-        ]
+        ],
       )
     end
   end
 
   context "with screened urls" do
+    fab!(:screened_url) do
+      Fabricate(
+        :screened_url,
+        action_type: ScreenedUrl.actions[:do_nothing],
+        match_count: 5,
+        domain: "https://discourse.org",
+        last_match_at: Time.now,
+        created_at: Time.now,
+      )
+    end
+
+    it "exports data" do
+      visit "admin/logs/screened_urls"
+      click_button "Export"
+
+      visit "/u/#{admin.username}/messages"
+      click_link "[Screened Url] Data export complete"
+      exported_data = csv_export_pm_page.download_and_extract
+
+      expect(exported_data.first).to eq(%w[domain action match_count last_match_at created_at])
+      expect(exported_data.length).to be(2)
+
+      exported_screened_url = exported_data.second
+      expect(exported_screened_url).to eq(
+        [
+          screened_url.domain,
+          "do nothing",
+          screened_url.match_count.to_s,
+          screened_url.last_match_at.strftime(time_format),
+          screened_url.created_at.strftime(time_format),
+        ],
+      )
+    end
   end
 end
