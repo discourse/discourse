@@ -18,17 +18,17 @@ const VOTE_POLL_RESULT = "on_vote";
 const CLOSED_POLL_RESULT = "on_close";
 const STAFF_POLL_RESULT = "staff_only";
 
-export default class PollUiBuilderController extends Component {
+export default class PollUiBuilderModal extends Component {
   showAdvanced = false;
   pollType = REGULAR_POLL_TYPE;
-  pollTitle = null;
+  pollTitle;
   pollOptions = [EmberObject.create({ value: "" })];
   pollOptionsText = "";
   pollMin = 1;
   pollMax = 2;
   pollStep = 1;
-  pollGroups = null;
-  pollAutoClose = null;
+  pollGroups;
+  pollAutoClose;
   pollResult = ALWAYS_POLL_RESULT;
   chartType = BAR_CHART_TYPE;
   publicPoll = false;
