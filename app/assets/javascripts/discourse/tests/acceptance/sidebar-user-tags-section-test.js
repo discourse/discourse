@@ -104,16 +104,6 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("clicking on section header button", async function (assert) {
-    await visit("/");
-
-    await click(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
-    );
-
-    assert.true(exists(".sidebar-tags-form"), "it shows the tags form modal");
-  });
-
   test("tags section is displayed with site's top tags when user has not added any tags and there are no default tags configured", async function (assert) {
     updateCurrentUser({
       sidebar_tags: [],

@@ -88,16 +88,6 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     include_examples "a user can edit the sidebar tags navigation", true
   end
 
-  it "displays the all tags in the modal when `tags_listed_by_group` site setting is true" do
-    SiteSetting.tags_listed_by_group = true
-
-    visit "/latest"
-
-    modal = sidebar.click_edit_tags_button
-
-    expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
-  end
-
   it "allows a user to filter the tags in the modal by the tag's name" do
     visit "/latest"
 
@@ -185,5 +175,17 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     modal.filter_by_all
 
     expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+  end
+
+  it "loads more tags when the user scrolls views the last tag in the modal and there is more tags to load" do
+    stub_const(TagsController, "LIST_LIMIT", 2) do
+      visit "/latest"
+
+      expect(sidebar).to have_tags_section
+
+      modal = sidebar.click_edit_tags_button
+
+      expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+    end
   end
 end
