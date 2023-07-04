@@ -63,6 +63,7 @@
 
           {{yield to="belowHeader"}}
 
+          {{this.validateFlashType @flashType}}
           {{#if @flash}}
             <div
               id="modal-alert"
