@@ -454,4 +454,9 @@ $mobile-avatar-height: 1.532em;
   font-size: var(--font-down-1);
   margin-left: 0.5em;
   padding: 0.25em 0.5em;
+
+  &:focus {
+    background-color: var(--primary-medium);
+    color: var(--secondary);
+  }
 }

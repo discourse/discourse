@@ -1,9 +1,42 @@
-<a class="btn btn-default bootstrap-mode" href={{this.href}}>
-  {{i18n "bootstrap_mode"}}
-  <DTooltip @theme="user-tips" @arrow={{true}}>
-    <div class="user-tip-container">
-      <div class="user-tip-title">{{i18n "bootstrap_mode_title"}}</div>
-      <div class="user-tip-content">{{i18n "bootstrap_mode_description"}}</div>
+<DButton
+  class="btn btn-default bootstrap-mode"
+  @label="bootstrap_mode"
+  @action={{this.goToAdminGuide}}
+  {{did-insert this.setupTrigger}}
+>
+  {{#unless this.isExpanded}}
+    <DTooltip @theme="user-tip" @arrow={{true}}>
+      <div class="user-tip__container">
+        <div class="user-tip__title">{{i18n "bootstrap_mode_title"}}</div>
+        <div class="user-tip__content">
+          {{i18n "bootstrap_mode_description"}}
+        </div>
+      </div>
+    </DTooltip>
+  {{/unless}}
+</DButton>
+
+{{#if this.isExpanded}}
+  <div
+    class="bootstrap-mode__content"
+    {{did-insert this.createPanel}}
+    {{will-destroy this.destroyPanel}}
+  >
+    <div class="user-tip__container">
+      <div class="user-tip__title">{{i18n "bootstrap_mode_title"}}</div>
+      <div class="user-tip__content">{{i18n "bootstrap_mode_description"}}</div>
+      <div class="user-tip__buttons">
+        <DButton
+          class="btn btn-primary btn-dismiss"
+          @label="bootstrap_mode_go"
+          @action={{this.goToAdminGuide}}
+        />
+        <DButton
+          class="btn btn-flat btn-text btn-dismiss-all"
+          @label="user_tips.secondary"
+          @action={{this.dismissUserTip}}
+        />
+      </div>
     </div>
-  </DTooltip>
-</a>
+  </div>
+{{/if}}

@@ -14,7 +14,7 @@ acceptance("User Tips - first_notification", function (needs) {
   test("Shows first notification user tip", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.equal(
-      query(".user-tip-title").textContent.trim(),
+      query(".user-tip__title").textContent.trim(),
       I18n.t("user_tips.first_notification.title")
     );
   });
@@ -32,7 +32,7 @@ acceptance("User Tips - topic_timeline", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     assert.equal(
-      query(".user-tip-title").textContent.trim(),
+      query(".user-tip__title").textContent.trim(),
       I18n.t("user_tips.topic_timeline.title")
     );
   });
@@ -50,7 +50,7 @@ acceptance("User Tips - post_menu", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     assert.equal(
-      query(".user-tip-title").textContent.trim(),
+      query(".user-tip__title").textContent.trim(),
       I18n.t("user_tips.post_menu.title")
     );
   });
@@ -69,7 +69,7 @@ acceptance("User Tips - topic_notification_levels", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.equal(
-      query(".user-tip-title").textContent.trim(),
+      query(".user-tip__title").textContent.trim(),
       I18n.t("user_tips.topic_notification_levels.title")
     );
   });
@@ -87,7 +87,7 @@ acceptance("User Tips - suggested_topics", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     assert.equal(
-      query(".user-tip-title").textContent.trim(),
+      query(".user-tip__title").textContent.trim(),
       I18n.t("user_tips.suggested_topics.title")
     );
   });
