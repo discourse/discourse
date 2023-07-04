@@ -1142,8 +1142,6 @@ hr:
       experimental_sidebar:
         enable: "Omogući bočnu traku"
         options: "Mogućnosti"
-        categories_section: "Odjeljak s kategorijama"
-        tags_section: "Odjeljak s oznakama"
         navigation_section: "Navigacija"
       change: "promijeni"
       featured_topic: "Istaknuta tema"

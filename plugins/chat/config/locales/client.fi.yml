@@ -284,6 +284,8 @@ fi:
         followed: "Liittyi"
         mobile_notification_level: "Mobiili-push-ilmoitukset"
         mute: "Vaimenna kanava"
+        threading_enabled: "Otettu käyttöön"
+        threading_disabled: "Pois käytöstä"
         muted_on: "Käytössä"
         muted_off: "Pois käytöstä"
         notifications: "Ilmoitukset"
@@ -394,8 +396,8 @@ fi:
           tracking:
             title: "Seuranta"
         participants_other_count:
-          one: "+%{count} muu"
-          other: "+%{count} muuta"
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Avaa ketju"
         list: "Käynnissä olevat keskustelut"

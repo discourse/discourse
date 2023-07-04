@@ -1108,8 +1108,6 @@ hu:
       experimental_sidebar:
         enable: "Oldalsáv engedélyezése"
         options: "Beállítások"
-        categories_section: "Kategóriák szakasz"
-        tags_section: "Címkék szakasz"
         navigation_section: "Navigáció"
       change: "módosítás"
       featured_topic: "Kiemelt téma"

@@ -262,6 +262,8 @@ hu:
         followed: "Csatlakozott"
         mobile_notification_level: "Mobilos leküldéses értesítések"
         mute: "Csatorna némítása"
+        threading_enabled: "Engedélyezed"
+        threading_disabled: "Kikapcsolt"
         muted_on: "Be"
         muted_off: "Ki"
         notifications: "Értesítések"
@@ -363,6 +365,9 @@ hu:
             title: "Normális"
           tracking:
             title: "Követés"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"

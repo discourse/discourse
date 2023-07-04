@@ -62,6 +62,7 @@ be:
         never: "ніколі"
       settings:
         followed: "рэгістрацыя"
+        threading_disabled: "Адключана"
         notifications: "Натыфікацыі"
         preview: "папярэдні прагляд"
         save: "захаваць"

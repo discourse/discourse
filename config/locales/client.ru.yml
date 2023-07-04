@@ -1198,8 +1198,6 @@ ru:
       experimental_sidebar:
         enable: "Включить боковую панель"
         options: "Параметры"
-        categories_section: "Раздел категорий"
-        tags_section: "Раздел тегов"
         navigation_section: "Навигация"
       change: "изменить"
       featured_topic: "Избранная тема"

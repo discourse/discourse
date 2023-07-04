@@ -1310,8 +1310,6 @@ ar:
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"
-        categories_section: "قسم الفئات"
-        tags_section: "قسم الوسوم"
         navigation_section: "التنقل"
       change: "تغيير"
       featured_topic: "الموضوع المميز"

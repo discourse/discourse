@@ -276,6 +276,7 @@ es:
         followed: "Se unió"
         mobile_notification_level: "Notificaciones móviles"
         mute: "Silenciar canal"
+        threading_disabled: "Desactivado"
         muted_on: "Activado"
         muted_off: "Desactivado"
         notifications: "Notificaciones"
@@ -390,8 +391,8 @@ es:
           tracking:
             title: "Seguir"
         participants_other_count:
-          one: "+%{count} otro"
-          other: "+%{count} otros"
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         list: "Debates en curso"
         none: "No participas en ningún hilo de este canal."

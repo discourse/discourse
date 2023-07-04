@@ -933,8 +933,6 @@ zh_TW:
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
-        categories_section: "選擇分類"
-        tags_section: "選擇標籤"
         navigation_section: "導覽"
       change: "修改"
       featured_topic: "特色主題"

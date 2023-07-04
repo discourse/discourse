@@ -991,10 +991,6 @@ id:
       experimental_sidebar:
         enable: "Aktifkan bilah sisi"
         options: "Pilihan"
-        categories_section: "Bagian Kategori"
-        categories_section_instruction: "Kategori yang dipilih akan ditampilkan di bagian kategori Menu Navigasi. Jika tidak ada kategori yang dipilih, kategori teratas situs akan ditampilkan."
-        tags_section: "Bagian Tag"
-        tags_section_instruction: "Tag yang dipilih akan ditampilkan di bawah bagian tag Menu Navigasi. Jika tidak ada tag yang dipilih, tag teratas situs akan ditampilkan."
         navigation_section: "Navigasi"
         navigation_section_instruction: "Saat daftar topik di menu navigasi memiliki item baru atau belum dibaca…"
         link_to_filtered_list_checkbox_description: "Tautkan ke daftar yang difilter"
@@ -2318,6 +2314,7 @@ id:
         options: "Pilihan"
       site_text:
         edit: "ubah"
+        interpolation_keys: "Kunci interpolasi yang tersedia:"
       settings:
         reset: "reset"
         none: "Tak ada"

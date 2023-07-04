@@ -73,6 +73,8 @@ cs:
       settings:
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
+        threading_enabled: "Zapnutý"
+        threading_disabled: "Vypnuto"
         notifications: "Upozornění"
         preview: "Náhled"
         save: "Uložit"

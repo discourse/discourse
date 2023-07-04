@@ -1086,8 +1086,6 @@ nl:
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
         options: "Opties"
-        categories_section: "Categorieënsectie"
-        tags_section: "Tagssectie"
         navigation_section: "Navigatie"
       change: "wijzigen"
       featured_topic: "Uitgelicht topic"

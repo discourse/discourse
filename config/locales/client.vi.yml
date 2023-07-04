@@ -1008,8 +1008,6 @@ vi:
       experimental_sidebar:
         enable: "Bật thanh bên"
         options: "Tùy chọn"
-        categories_section: "Phần danh mục"
-        tags_section: "Phần thẻ"
         navigation_section: "Điều hướng"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
