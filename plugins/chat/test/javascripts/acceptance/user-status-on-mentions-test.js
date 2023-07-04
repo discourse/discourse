@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { skip } from "qunit";
+import { skip, test } from "qunit";
 import {
   click,
   fillIn,
