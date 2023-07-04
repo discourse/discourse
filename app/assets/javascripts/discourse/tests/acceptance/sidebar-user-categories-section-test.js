@@ -139,7 +139,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
 
     assert.true(
-      exists(".sidebar-categories-form-modal"),
+      exists(".sidebar-categories-form"),
       "it shows the categories form modal"
     );
   });
