@@ -49,6 +49,7 @@ module Chat
     end
 
     def fetch_users(guardian:, **)
+      return unless guardian.can_create_direct_message?
       return if context.mode == :channel
       context.users = search_users(context.term, guardian)
     end

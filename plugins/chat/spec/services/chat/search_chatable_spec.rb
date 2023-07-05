@@ -17,8 +17,10 @@ RSpec.describe Chat::SearchChatable do
     let(:term) { "" }
 
     before do
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
       # simpler user search without having to worry about user search data
       SiteSetting.enable_names = false
+      return unless guardian.can_create_direct_message?
       channel_1.add(current_user)
     end
 
@@ -121,6 +123,16 @@ RSpec.describe Chat::SearchChatable do
         expect(result.users).to be_blank
         expect(result.category_channels).to contain_exactly(channel_1)
         expect(result.direct_message_channels).to contain_exactly(channel_2, channel_3)
+      end
+    end
+
+    context "when current user can't created direct messages" do
+      let(:term) { "@bob" }
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
+
+      it "doesn’t return users" do
+        expect(result.users).to be_blank
       end
     end
   end

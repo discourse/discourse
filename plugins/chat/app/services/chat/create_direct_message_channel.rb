@@ -67,7 +67,7 @@ module Chat
       Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
     end
 
-    def update_memberships(guardian:, channel:, target_users:, **)
+    def update_memberships(channel:, target_users:, **)
       always_level = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -76,7 +76,7 @@ module Chat
             user_id: user.id,
             chat_channel_id: channel.id,
             muted: false,
-            following: true,
+            following: false,
             desktop_notification_level: always_level,
             mobile_notification_level: always_level,
             created_at: Time.zone.now,
