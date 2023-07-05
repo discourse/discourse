@@ -1,8 +1,6 @@
 export default {
-  name: "document-scrollbar-width",
-
-  async initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+  async initialize(owner) {
+    const siteSettings = owner.lookup("service:site-settings");
 
     if (siteSettings.enable_experimental_lightbox) {
       const viewportWidth = window.innerWidth;
