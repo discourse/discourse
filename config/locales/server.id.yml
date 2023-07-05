@@ -1188,6 +1188,8 @@ id:
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
     topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
+    max_form_template_title_length: "Panjang maksimum yang diperbolehkan untuk judul templat formulir."
+    max_form_template_content_length: "Panjang maksimum yang diperbolehkan untuk konten templat formulir."
     default_subcategory_on_read_only_category: "Mengaktifkan tombol 'Topik Baru' dan memilih subkategori bawaan untuk membuat post pada kategori di mana pengguna tidak diizinkan untuk membuat topik baru."
     apple_touch_icon: "Ikon yang digunakan untuk perangkat sentuh Apple. Backround transparan tidak disarankan. Akan secara otomatis diubah ukurannya menjadi 180x180. Jika dibiarkan kosong, large_icon akan digunakan."
     summarization_strategy: "Cara tambahan untuk meringkas konten yang didaftarkan oleh plugin"

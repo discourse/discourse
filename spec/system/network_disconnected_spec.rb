@@ -2,9 +2,12 @@
 
 RSpec.describe "Network Disconnected", type: :system do
   def with_network_disconnected
-    page.driver.browser.network_conditions = { offline: true }
-    yield
-    page.driver.browser.network_conditions = { offline: false }
+    begin
+      page.driver.browser.network_conditions = { offline: true }
+      yield
+    ensure
+      page.driver.browser.network_conditions = { offline: false }
+    end
   end
 
   it "NetworkConnectivity service adds class to DOM and displays offline indicator" do

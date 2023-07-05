@@ -158,6 +158,8 @@ zh_TW:
       settings:
         follow: "加入"
         followed: "建立日期"
+        threading_enabled: "啟用"
+        threading_disabled: "停用"
         notifications: "通知"
         preview: "預覽"
         save: "保存"

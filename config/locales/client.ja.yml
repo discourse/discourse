@@ -1029,8 +1029,6 @@ ja:
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
-        categories_section: "カテゴリセクション"
-        tags_section: "タグセクション"
         navigation_section: "ナビゲーション"
       change: "変更"
       featured_topic: "注目のトピック"

@@ -76,6 +76,7 @@ ur:
       settings:
         follow: "شمولیت اختیار کریں"
         followed: "شمولیت اختیار کی"
+        threading_disabled: "غیر فعال"
         notifications: "اطلاعات"
         preview: "پیشگی دیکھیں"
         save: "محفوظ کریں"
@@ -119,6 +120,9 @@ ur:
             title: "عمومی"
           tracking:
             title: "ٹریک کیا جا رہا"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "نیا پیغام"
         cancel: "منسوخ"

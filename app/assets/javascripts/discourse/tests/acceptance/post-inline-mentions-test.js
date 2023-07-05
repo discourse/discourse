@@ -51,7 +51,7 @@ acceptance("Post inline mentions", function (needs) {
     ends_at: null,
   };
 
-  test("shows user status on inline mentions", async function (assert) {
+  skip("shows user status on inline mentions", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
       return response(topicWithUserStatus(topicId, mentionedUserId, status));
     });

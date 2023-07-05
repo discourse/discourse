@@ -1093,8 +1093,6 @@ fr:
       experimental_sidebar:
         enable: "Activer la barre latérale"
         options: "Options"
-        categories_section: "Section Catégories"
-        tags_section: "Section Étiquettes"
         navigation_section: "Navigation"
       change: "modifier"
       featured_topic: "Sujet vedette"

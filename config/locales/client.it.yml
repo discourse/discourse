@@ -1086,8 +1086,6 @@ it:
       experimental_sidebar:
         enable: "Abilita barra laterale"
         options: "Opzioni"
-        categories_section: "Sezione Categorie"
-        tags_section: "Sezione etichette"
         navigation_section: "Navigazione"
       change: "cambia"
       featured_topic: "Argomento in primo piano"

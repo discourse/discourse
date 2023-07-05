@@ -3,6 +3,10 @@
 module PageObjects
   module Components
     class Sidebar < PageObjects::Components::Base
+      def open_on_mobile
+        click_button("toggle-hamburger-menu")
+      end
+
       def visible?
         page.has_css?("#d-sidebar")
       end
@@ -69,10 +73,12 @@ module PageObjects
         find("#discourse-modal-title")
       end
 
-      SIDEBAR_WRAPPER_SELECTOR = ".sidebar-wrapper"
-
       def has_section?(name)
-        find(SIDEBAR_WRAPPER_SELECTOR).has_button?(name)
+        has_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
+      end
+
+      def has_no_section?(name)
+        has_no_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
       end
 
       def has_categories_section?
@@ -101,10 +107,6 @@ module PageObjects
           )
 
         expect(tag_section_links.map(&:text)).to eq(tag_names)
-      end
-
-      def has_no_section?(name)
-        find(SIDEBAR_WRAPPER_SELECTOR).has_no_button?(name)
       end
 
       def primary_section_links(slug)

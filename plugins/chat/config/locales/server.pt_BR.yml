@@ -57,11 +57,11 @@ pt_BR:
       channel_new_message_disallowed:
         archived: "O canal está arquivado, nenhuma mensagem nova pode ser enviada"
         closed: "O canal está fechado, nenhuma nova mensagem pode ser enviada"
-        read_only: "O canal é somente leitura, nenhuma nova mensagem pode ser enviada"
+        read_only: "O canal é somente para leitura, nenhuma nova mensagem pode ser enviada"
       channel_modify_message_disallowed:
         archived: "O canal está arquivado, nenhuma mensagem pode ser editada ou excluída"
         closed: "O canal está fechado, nenhuma mensagem pode ser editada ou excluída"
-        read_only: "O canal é somente leitura, nenhuma mensagem pode ser editada ou excluída"
+        read_only: "O canal é somente para leitura, nenhuma mensagem pode ser editada ou excluída"
       user_cannot_send_message: "Você não pode enviar mensagens neste momento."
       rate_limit_exceeded: "Excedeu o limite de mensagens de chat que podem ser enviadas em 30 segundos"
       auto_silence_from_flags: "Mensagem de chat sinalizada com pontuação alta o suficiente para silenciar o(a) usuário(a)."
@@ -83,6 +83,9 @@ pt_BR:
       actor_preventing_target_user_from_dm: "Você optou por impedir que %{username} envie mensagens privadas e diretas, portanto, você não pode criar novas mensagens diretas para ele(a)."
       user_cannot_send_direct_messages: "Desculpe, você não pode enviar mensagens diretas."
       over_chat_max_direct_message_users_allow_self: "Você poderá criar uma mensagem direta apenas consigo mesmo(a)."
+      over_chat_max_direct_message_users:
+        one: "Você não poderá criar uma mensagem direta com mais de %{count} outro(a) usuário(a)."
+        other: "Você não poderá criar uma mensagem direta com mais de %{count} outros(as) usuários(as)."
       original_message_not_found: "A mensagem que você está respondendo não pode ser encontrada ou foi excluída."
     reviewables:
       message_already_handled: "Obrigado, mas já analisamos esta mensagem e determinamos que ela não precisa ser sinalizada novamente."

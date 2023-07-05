@@ -71,6 +71,8 @@ sk:
       settings:
         follow: "Pridať sa"
         followed: "Vytvorený"
+        threading_enabled: "Povolené"
+        threading_disabled: "Vypnuté"
         notifications: "Upozornenia"
         preview: "Ukážka"
         save: "Uložiť"
