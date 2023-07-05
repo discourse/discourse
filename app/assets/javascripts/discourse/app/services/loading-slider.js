@@ -63,6 +63,7 @@ class Timer {
 export default class LoadingSlider extends Service.extend(Evented) {
   @service siteSettings;
   @tracked loading = false;
+  @tracked stillLoading = false;
 
   rollingAverage = new RollingAverage(
     STORE_LOADING_TIMES,
@@ -89,7 +90,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
     this.scheduleManager.cancelAll();
 
     this.scheduleManager.later(
-      this.stillLoading,
+      this.setStillLoading,
       STILL_LOADING_DURATION * 1000
     );
   }
@@ -103,6 +104,7 @@ export default class LoadingSlider extends Service.extend(Evented) {
     this.rollingAverage.record(duration);
 
     this.loading = false;
+    this.stillLoading = false;
     this.trigger("stateChanged", false);
 
     this.scheduleManager.cancelAll();
@@ -110,7 +112,8 @@ export default class LoadingSlider extends Service.extend(Evented) {
   }
 
   @bind
-  stillLoading() {
+  setStillLoading() {
+    this.stillLoading = true;
     this.scheduleManager.schedule("afterRender", this.addStillLoadingClass);
   }
 
