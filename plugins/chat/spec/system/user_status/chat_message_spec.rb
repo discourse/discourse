@@ -28,10 +28,10 @@ RSpec.describe "User status | chat message", type: :system do
       find(".chat-composer.is-send-enabled .chat-composer-button.-send").click
 
       expect(page).to have_selector(
-        ".mention .user-status[title='#{current_user.user_status.description}']",
+        ".mention .user-status-message .emoji[alt='#{current_user.user_status.emoji}']",
       )
       expect(page).to have_selector(
-        ".mention .user-status[title='#{another_user.user_status.description}']",
+        ".mention .user-status-message .emoji[alt='#{another_user.user_status.emoji}']",
       )
     end
   end
