@@ -45,6 +45,7 @@ export default class ChatThreadPanel extends Component {
   @action
   didUpdateThread() {
     this.subscribeToUpdates();
+    this.chatThreadComposer.focus();
     this.loadMessages();
     this.resetComposerMessage();
   }

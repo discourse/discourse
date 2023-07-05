@@ -44,10 +44,6 @@ export default class ChatComposer extends Component {
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
 
-  get shouldRenderReplyingIndicator() {
-    return this.args.channel;
-  }
-
   get shouldRenderMessageDetails() {
     return (
       this.currentMessage?.editing ||

@@ -132,6 +132,8 @@ export default class ChatLivePane extends Component {
       this.resetComposerMessage();
     }
 
+    this.composer.focus();
+
     this.loadMessages();
   }
 
