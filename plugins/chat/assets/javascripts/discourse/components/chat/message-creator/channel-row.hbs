@@ -1,11 +1,18 @@
 <ChatChannelTitle @channel={{@content.model}} />
 
 {{#if (gt @content.tracking.unreadCount 0)}}
-  <div class="unread-indicator"></div>
-{{/if}}
-
-{{#if @content.hasUnread}}
-  <div class="unread-indicator"></div>
+  <div
+    class={{concat-class
+      "unread-indicator"
+      (if
+        (or
+          @content.model.isDirectMessageChannel
+          (gt @content.model.tracking.mentionCount 0)
+        )
+        "-urgent"
+      )
+    }}
+  ></div>
 {{/if}}
 
 {{#if this.site.desktopView}}
