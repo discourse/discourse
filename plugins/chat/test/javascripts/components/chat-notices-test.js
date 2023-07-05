@@ -13,9 +13,9 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     this.manager = this.container.lookup(
       "service:chatChannelPaneSubscriptionsManager"
     );
-    this.manager.handleNotice({ chat_channel_id: 12, text_content: "hello" });
-    this.manager.handleNotice({ chat_channel_id: 12, text_content: "goodbye" });
-    this.manager.handleNotice({ chat_channel_id: 13, text_content: "N/A" });
+    this.manager.handleNotice({ channel_id: 12, text_content: "hello" });
+    this.manager.handleNotice({ channel_id: 12, text_content: "goodbye" });
+    this.manager.handleNotice({ channel_id: 13, text_content: "N/A" });
 
     await render(hbs`<ChatNotices @channel={{this.channel}} />`);
 
@@ -32,7 +32,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     this.manager = this.container.lookup(
       "service:chatChannelPaneSubscriptionsManager"
     );
-    this.manager.handleNotice({ chat_channel_id: 12, text_content: "hello" });
+    this.manager.handleNotice({ channel_id: 12, text_content: "hello" });
 
     await render(hbs`<ChatNotices @channel={{this.channel}} />`);
 

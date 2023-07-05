@@ -472,10 +472,10 @@ module Chat
       )
     end
 
-    def self.publish_notice(user_id:, chat_channel_id:, text_content:)
-      payload = { type: "notice", text_content: text_content, chat_channel_id: chat_channel_id }
+    def self.publish_notice(user_id:, channel_id:, text_content:)
+      payload = { type: "notice", text_content: text_content, channel_id: channel_id }
 
-      MessageBus.publish("/chat/#{chat_channel_id}", payload, user_ids: [user_id])
+      MessageBus.publish("/chat/#{channel_id}", payload, user_ids: [user_id])
     end
 
     private

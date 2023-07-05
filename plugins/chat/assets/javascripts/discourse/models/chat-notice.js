@@ -9,7 +9,7 @@ export default class ChatNotice {
   @tracked textContent;
 
   constructor(args = {}) {
-    this.channelId = args.chat_channel_id;
+    this.channelId = args.channel_id;
     this.textContent = args.text_content;
   }
 }
