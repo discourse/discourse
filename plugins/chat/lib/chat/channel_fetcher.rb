@@ -6,8 +6,7 @@ module Chat
 
     def self.structured(guardian, include_threads: false)
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
-      public_channels =
-        secured_public_channels(guardian, memberships, status: :open, following: true)
+      public_channels = secured_public_channels(guardian, status: :open, following: true)
       direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
       {
         public_channels: public_channels,
@@ -151,7 +150,7 @@ module Chat
       channels.limit(options[:limit]).offset(options[:offset])
     end
 
-    def self.secured_public_channels(guardian, memberships, options = { following: true })
+    def self.secured_public_channels(guardian, options = { following: true })
       channels =
         secured_public_channel_search(
           guardian,

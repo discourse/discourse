@@ -36,11 +36,9 @@ module Chat
       term = contract.term&.downcase&.gsub(/^#+/, "").strip
       return if term&.start_with?("@")
 
-      memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
       context.category_channels =
         Chat::ChannelFetcher.secured_public_channels(
           guardian,
-          memberships,
           filter: term,
           status: :open,
           limit: 10,
