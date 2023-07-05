@@ -1,13 +1,13 @@
 import {
   currentRouteName,
-  visit,
   getSettledState,
   settled,
+  visit,
   waitUntil,
 } from "@ember/test-helpers";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import pretender from "discourse/tests/helpers/create-pretender";
 import AboutFixtures from "discourse/tests/fixtures/about";
 
 // Like settled(), but ignores timers, transitions and network requests
