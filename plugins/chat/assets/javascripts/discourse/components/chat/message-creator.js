@@ -92,7 +92,7 @@ class Search {
           (channel) => channel.id === chatable.model.id
         )?.tracking;
         break;
-      case "user":
+      case USER_TYPE:
         return this.chatChannelsManager.directMessageChannels.find(
           (channel) =>
             channel.chatable.users.length === 1 &&
