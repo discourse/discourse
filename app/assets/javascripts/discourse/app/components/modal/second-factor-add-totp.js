@@ -11,8 +11,6 @@ export default class SecondFactorAddTotp extends Component {
   @tracked errorMessage;
   @tracked secondFactorToken;
 
-  onClose = this.args.model.onClose;
-
   @action
   totpRequested() {
     this.args.model.secondFactor
@@ -61,9 +59,5 @@ export default class SecondFactorAddTotp extends Component {
       })
       .catch((error) => this.args.model.onError(error))
       .finally(() => (this.loading = false));
-  }
-
-  willDestroy() {
-    this.onClose();
   }
 }
