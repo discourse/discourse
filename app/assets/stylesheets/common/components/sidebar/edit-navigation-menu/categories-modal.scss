@@ -5,20 +5,7 @@
     border: 1px solid var(--primary-low);
     border-left: 4px solid;
     margin-bottom: 1em;
-    padding: 0.75em;
-  }
-
-  .sidebar-categories-form__input {
-    margin-left: auto;
-    margin-right: 0;
-    align-self: baseline;
-  }
-
-  .sidebar-categories-form__category-row {
-    display: flex;
-    flex-direction: row;
-    margin-right: 1em;
-    padding: 0.5em 0;
+    padding: 0;
   }
 
   .sidebar-categories-form__category-row[data-category-level="0"]:not(
@@ -44,12 +31,24 @@
 
   .sidebar-categories-form__category-label {
     display: flex;
-    flex-direction: column;
-    margin-right: 0.5em;
+    justify-content: space-between;
+    padding: 0.75em 1em;
+    margin: 0;
     flex-grow: 1;
+    input[type="checkbox"] {
+      margin-right: 0;
+    }
+  }
+
+  .sidebar-categories-form__category-wrapper {
+    min-width: 0;
   }
 
   .sidebar-categories-form__category-badge {
+    .badge-wrapper {
+      width: 100%;
+    }
+
     .badge-category {
       white-space: normal;
       word-wrap: break-word;
@@ -58,11 +57,15 @@
     .category-name {
       color: var(--primary);
       font-size: var(--font-up-1);
+      @include ellipsis;
     }
   }
 
   .sidebar-categories-form__category-description {
     color: var(--primary-high);
     font-size: var(--font-down-1);
+    margin: 0.25em 0;
+    // avoids long words (like urls) from breaking the layou
+    word-break: break-word;
   }
 }

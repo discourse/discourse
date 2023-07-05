@@ -1,17 +1,29 @@
-.sidebar__edit-navigation-menu__modal {
+.modal.sidebar__edit-navigation-menu__modal {
+  @include breakpoint("tablet", min-width) {
+    .modal-inner-container {
+      width: 100%;
+    }
+  }
+  .modal-header {
+    border: none;
+  }
   .modal-body {
-    min-height: 25vh;
+    border-top: 1px solid var(--primary-low);
+    margin-top: 1em;
+    min-height: 25dvh;
+    max-height: 50dvh;
   }
 }
 
 .sidebar__edit-navigation-menu__filter {
   display: flex;
-  flex-direction: row;
-  padding: 1em 1em 0 1em;
+  gap: 0.5em;
+  padding: 0 0.66em 0;
+  @include breakpoint("tablet", min-width) {
+    padding: 0 1em 0;
+  }
 
   .sidebar__edit-navigation-menu__filter-dropdown {
-    margin-left: 0.5em;
-
     .select-kit-header {
       background: var(--secondary);
       color: var(--primary);
@@ -36,6 +48,22 @@
     margin-right: auto;
     width: 100%;
     position: relative;
+    flex: 1 1 70%;
+    input {
+      margin: 0;
+    }
+  }
+
+  .sidebar__edit-navigation-menu__filter-dropdown-wrapper {
+    flex: 1 1 30%;
+    display: flex;
+
+    .select-kit {
+      width: 100%;
+      summary {
+        height: 100%;
+      }
+    }
   }
 
   .sidebar__edit-navigation-menu__filter-input-icon {
@@ -62,10 +90,11 @@
 .sidebar__edit-navigation-menu__footer {
   display: flex;
   width: 100%;
+  margin-top: 0.25em;
 
   .btn.sidebar__edit-navigation-menu__reset-defaults-button {
     margin-left: auto;
-    margin-right: 0em;
+    margin-right: 0;
 
     .d-icon {
       font-size: var(--font-down-1);
@@ -80,7 +109,8 @@
 }
 
 .sidebar__edit-navigation-menu__deselect-wrapper {
-  margin: 0;
+  margin: 0 1em 0 0;
+  line-height: var(--line-height-medium);
 
   .btn-flat.sidebar__edit-navigation-menu__deselect-button {
     margin-left: auto;
