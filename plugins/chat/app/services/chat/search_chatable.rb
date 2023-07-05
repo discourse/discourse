@@ -60,13 +60,25 @@ module Chat
         (context.users.nil? ? search_users(contract.term, guardian) : context.users).map(&:id)
       return if user_ids.blank?
 
-      context.direct_message_channels =
+      channels =
         Chat::ChannelFetcher.secured_direct_message_channels_search(
           guardian.user.id,
           guardian,
           limit: 10,
           user_ids: user_ids,
-        )
+        ) || []
+
+      if exclude_1_to_1_channels
+        channels =
+          channels.reject do |channel|
+            channel_user_ids = channel.allowed_user_ids - [guardian.user.id]
+            channel.allowed_user_ids.length == 1 &&
+              user_ids.include?(channel.allowed_user_ids.first) ||
+              channel_user_ids.length == 1 && user_ids.include?(channel_user_ids.first)
+          end
+      end
+
+      context.direct_message_channels = channels
     end
 
     def search_users(term, guardian)

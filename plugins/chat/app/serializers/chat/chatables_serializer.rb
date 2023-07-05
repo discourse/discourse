@@ -19,16 +19,7 @@ module Chat
     end
 
     def direct_message_channels
-      user_ids = (object.users || []).map(&:id)
-      channels =
-        (object.direct_message_channels || []).reject do |channel|
-          channel_user_ids = channel.allowed_user_ids - [scope.user.id]
-          channel.allowed_user_ids.length == 1 &&
-            user_ids.include?(channel.allowed_user_ids.first) ||
-            channel_user_ids.length == 1 && user_ids.include?(channel_user_ids.first)
-        end
-
-      channels
+      (object.direct_message_channels || [])
         .map do |channel|
           {
             identifier: "c-#{channel.id}",
