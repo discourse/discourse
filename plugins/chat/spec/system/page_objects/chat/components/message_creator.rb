@@ -125,14 +125,8 @@ module PageObjects
             selector += ".-channel"
             selector += "[data-id='c-#{chatable.id}']"
           elsif chatable.try(:direct_message_channel?)
-            if args[:current_user] && (chatable.chatable.users - [args[:current_user]]).length == 1
-              remaining_user = chatable.chatable.users - [args[:current_user]]
-              selector += ".-user"
-              selector += "[data-id='u-#{remaining_user[0].id}']"
-            else
-              selector += ".-channel"
-              selector += "[data-id='c-#{chatable.id}']"
-            end
+            selector += ".-channel"
+            selector += "[data-id='c-#{chatable.id}']"
           else
             selector += ".-user"
             selector += "[data-id='u-#{chatable.id}']"

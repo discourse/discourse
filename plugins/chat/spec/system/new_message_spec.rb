@@ -37,16 +37,8 @@ RSpec.describe "New message", type: :system do
       chat_page.open_new_message
 
       expect(chat_page.message_creator).to be_listing(channel_1)
-      # it lists user_1 instead of this channel as it's a 1:1 channel
       expect(chat_page.message_creator).to be_not_listing(channel_2)
-      expect(chat_page.message_creator).to be_not_listing(
-        direct_message_channel_1,
-        current_user: current_user,
-      )
-      expect(chat_page.message_creator).to be_not_listing(
-        direct_message_channel_2,
-        current_user: current_user,
-      )
+      expect(chat_page.message_creator).to be_not_listing(direct_message_channel_2)
       expect(chat_page.message_creator).to be_listing(user_1)
       expect(chat_page.message_creator).to be_not_listing(user_2)
     end
@@ -70,11 +62,7 @@ RSpec.describe "New message", type: :system do
         chat_page.open_new_message
 
         expect(chat_page.message_creator).to have_unread_row(channel_1, urgent: false)
-        expect(chat_page.message_creator).to have_unread_row(
-          channel_2,
-          current_user: current_user,
-          urgent: true,
-        )
+        expect(chat_page.message_creator).to have_unread_row(user_1, urgent: true)
       end
     end
 
