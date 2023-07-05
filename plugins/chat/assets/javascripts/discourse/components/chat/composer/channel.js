@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
@@ -22,8 +21,6 @@ export default class ChatComposerChannel extends ChatComposer {
 
   get disabled() {
     return (
-      (this.args.channel.isDraft &&
-        isEmpty(this.args.channel?.chatable?.users)) ||
       !this.chat.userCanInteractWithChat ||
       !this.args.channel.canModifyMessages(this.currentUser)
     );
@@ -36,10 +33,6 @@ export default class ChatComposerChannel extends ChatComposer {
 
   @action
   persistDraft() {
-    if (this.args.channel?.isDraft) {
-      return;
-    }
-
     this.chatDraftsManager.add(this.currentMessage);
 
     this._persistHandler = discourseDebounce(
@@ -73,18 +66,6 @@ export default class ChatComposerChannel extends ChatComposer {
       return I18n.t(
         `chat.placeholder_new_message_disallowed.${this.args.channel.status}`
       );
-    }
-
-    if (this.args.channel.isDraft) {
-      if (this.args.channel?.chatable?.users?.length) {
-        return I18n.t("chat.placeholder_start_conversation_users", {
-          commaSeparatedUsernames: this.args.channel.chatable.users
-            .mapBy("username")
-            .join(I18n.t("word_connector.comma")),
-        });
-      } else {
-        return I18n.t("chat.placeholder_start_conversation");
-      }
     }
 
     if (!this.chat.userCanInteractWithChat) {

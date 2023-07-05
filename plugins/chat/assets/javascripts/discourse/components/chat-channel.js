@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 // TODO (martin) Remove this when the handleSentMessage logic inside chatChannelPaneSubscriptionsManager
 // is moved over from this file completely.
 import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cancel, later, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
@@ -736,33 +735,6 @@ export default class ChatLivePane extends Component {
 
     resetIdle();
 
-    // TODO: all send message logic is due for massive refactoring
-    // This is all the possible case Im currently aware of
-    // - messaging to a public channel where you are not a member yet (preview = true)
-    // - messaging to an existing direct channel you were not tracking yet through dm creator (channel draft)
-    // - messaging to a new direct channel through DM creator (channel draft)
-    // - message to a direct channel you were tracking (preview = false, not draft)
-    // - message to a public channel you were tracking (preview = false, not draft)
-    // - message to a channel when we haven't loaded all future messages yet.
-    if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
-      const data = {
-        message: message.message,
-        upload_ids: message.uploads.map((upload) => upload.id),
-      };
-
-      this.resetComposerMessage();
-
-      return this._upsertChannelWithMessage(this.args.channel, data).finally(
-        () => {
-          if (this._selfDeleted) {
-            return;
-          }
-          this.pane.sending = false;
-          this.scrollToLatestMessage();
-        }
-      );
-    }
-
     await this.args.channel.stageMessage(message);
     this.resetComposerMessage();
 
@@ -788,26 +760,6 @@ export default class ChatLivePane extends Component {
         this.pane.sending = false;
       }
     }
-  }
-
-  async _upsertChannelWithMessage(channel, data) {
-    let promise = Promise.resolve(channel);
-
-    if (channel.isDirectMessageChannel || channel.isDraft) {
-      promise = this.chat.upsertDmChannelForUsernames(
-        channel.chatable.users.mapBy("username")
-      );
-    }
-
-    return promise.then((c) =>
-      ajax(`/chat/${c.id}.json`, {
-        type: "POST",
-        data,
-      }).then(() => {
-        this.pane.sending = false;
-        this.router.transitionTo("chat.channel", "-", c.id);
-      })
-    );
   }
 
   _onSendError(id, error) {
@@ -977,14 +929,9 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    if (!this.args.channel.isDraft) {
-      event.preventDefault();
-      this.composer.focus({ addText: event.key });
-      return;
-    }
-
     event.preventDefault();
-    event.stopPropagation();
+    this.composer.focus({ addText: event.key });
+    return;
   }
 
   @action

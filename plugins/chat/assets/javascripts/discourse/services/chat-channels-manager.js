@@ -101,6 +101,16 @@ export default class ChatChannelsManager extends Service {
     delete this._cached[model.id];
   }
 
+  get allChannels() {
+    return [...this.publicMessageChannels, ...this.directMessageChannels].sort(
+      (a, b) => {
+        return b?.currentUserMembership?.lastViewedAt?.localeCompare?.(
+          a?.currentUserMembership?.lastViewedAt
+        );
+      }
+    );
+  }
+
   get publicMessageChannels() {
     return this.channels
       .filter(

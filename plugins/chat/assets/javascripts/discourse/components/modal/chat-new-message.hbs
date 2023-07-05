@@ -1,0 +1,7 @@
+<DModal
+  @closeModal={{@closeModal}}
+  class="chat-new-message-modal"
+  @title="chat.new_message_modal.title"
+>
+  <Chat::MessageCreator @onClose={{route-action "closeModal"}} />
+</DModal>

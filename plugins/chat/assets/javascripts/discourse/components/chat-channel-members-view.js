@@ -19,7 +19,7 @@ export default class ChatChannelMembersView extends Component {
   didInsertElement() {
     this._super(...arguments);
 
-    if (!this.channel || this.channel.isDraft) {
+    if (!this.channel) {
       return;
     }
 

@@ -21,7 +21,6 @@ export default function () {
       }
     );
 
-    this.route("draft-channel", { path: "/draft-channel" });
     this.route("browse", { path: "/browse" }, function () {
       this.route("all", { path: "/all" });
       this.route("closed", { path: "/closed" });

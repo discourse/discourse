@@ -18,6 +18,10 @@ module PageObjects
           input.value.blank?
         end
 
+        def enabled?
+          component.has_css?(".chat-composer.is-enabled")
+        end
+
         def has_saved_draft?
           component.has_css?(".chat-composer.is-draft-saved")
         end

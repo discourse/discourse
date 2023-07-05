@@ -83,10 +83,7 @@ module Chat
       Chat::MessageRateLimiter.run!(current_user)
 
       @user_chat_channel_membership =
-        Chat::ChannelMembershipManager.new(@chat_channel).find_for_user(
-          current_user,
-          following: true,
-        )
+        Chat::ChannelMembershipManager.new(@chat_channel).find_for_user(current_user)
       raise Discourse::InvalidAccess unless @user_chat_channel_membership
 
       reply_to_msg_id = params[:in_reply_to_id]

@@ -5,6 +5,7 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseDebounce from "discourse-common/lib/debounce";
 import showModal from "discourse/lib/show-modal";
+import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
 
 const TABS = ["all", "open", "closed", "archived"];
 
@@ -36,6 +37,11 @@ export default class ChatBrowseView extends Component {
 
   get chatProgressBarContainer() {
     return document.querySelector("#chat-progress-bar-container");
+  }
+
+  @action
+  showChatNewMessageModal() {
+    this.modal.show(ChatNewMessageModal);
   }
 
   @action
