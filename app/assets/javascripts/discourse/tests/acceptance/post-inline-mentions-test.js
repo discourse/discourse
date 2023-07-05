@@ -178,12 +178,16 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
     );
 
     await mouseEnter(".user-status-message");
-    const statusTooltipDescription = document.querySelector(
-      ".user-status-message-tooltip .user-status-tooltip-description"
+    const statusTooltip = document.querySelector(
+      ".user-status-message-tooltip"
     );
-
+    assert.ok(statusTooltip, "status tooltip is shown");
+    assert.ok(
+      statusTooltip.querySelector("img").src.includes(status.emoji),
+      "emoji is correct"
+    );
     assert.equal(
-      statusTooltipDescription.innerText,
+      statusTooltip.querySelector(".user-status-tooltip-description").innerText,
       status.description,
       "status description is correct"
     );
