@@ -66,7 +66,7 @@ module Chat
         )
     end
 
-    def fetch_direct_message_channels(contract:, guardian:, **args)
+    def fetch_direct_message_channels(guardian:, **args)
       return if context.mode == :user
 
       user_ids = nil
@@ -83,7 +83,7 @@ module Chat
           user_ids: user_ids,
         ) || []
 
-      if user_ids.present?
+      if user_ids.present? && context.mode == :all
         channels =
           channels.reject do |channel|
             channel_user_ids = channel.allowed_user_ids - [guardian.user.id]

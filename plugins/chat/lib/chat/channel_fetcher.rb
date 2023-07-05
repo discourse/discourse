@@ -182,6 +182,7 @@ module Chat
           chatable: [{ direct_message_users: [user: :user_option] }, :users],
         )
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
+      query = query.joins(:user_chat_channel_memberships)
 
       scoped_channels =
         Chat::Channel
@@ -206,15 +207,25 @@ module Chat
           )
       end
 
-      channels =
+      if options.key?(:following)
+        query =
+          query.where(
+            user_chat_channel_memberships: {
+              user_id: user_id,
+              following: options[:following],
+            },
+          )
+      else
+        query = query.where(user_chat_channel_memberships: { user_id: user_id })
+      end
+
+      query =
         query
-          .joins(:user_chat_channel_memberships)
-          .where(user_chat_channel_memberships: { user_id: user_id, following: true })
           .where(chatable_type: Chat::Channel.direct_channel_chatable_types)
           .where(chat_channels: { id: scoped_channels })
           .order(last_message_sent_at: :desc)
-          .to_a
 
+      channels = query.to_a
       preload_fields =
         User.allowed_user_custom_fields(guardian) +
           UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
