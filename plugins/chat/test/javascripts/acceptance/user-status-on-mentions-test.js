@@ -63,7 +63,6 @@ acceptance("Chat | User status on mentions", function (needs) {
     chatable_type: "Category",
     meta: { message_bus_last_ids: {} },
     current_user_membership: { following: true },
-    chatable: { id: 1 },
   };
 
   needs.settings({ chat_enabled: true });
@@ -89,13 +88,13 @@ acceptance("Chat | User status on mentions", function (needs) {
       OK()
     );
 
-    pretender.get(`/chat/api/channels/1`, () =>
-      OK({
+    pretender.get(`/chat/api/channels/1`, () => {
+      return OK({
         channel,
         chat_messages: [message],
         meta: { can_delete_self: true },
-      })
-    );
+      });
+    });
 
     setupAutocompleteResponses([mentionedUser2, mentionedUser3]);
   });
@@ -221,7 +220,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await deleteMessage(".chat-message-content");
     await click(".chat-message-expand");
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
+    loggedInUser().appEvents.triggedr("user-status:changed", {
       [mentionedUser1.id]: newStatus,
     });
 
