@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
