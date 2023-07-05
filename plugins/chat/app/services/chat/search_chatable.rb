@@ -4,7 +4,7 @@ module Chat
   # Returns a list of chatables (users, category channels, direct message channels) that can be chatted with.
   #
   # @example
-  #  Chat::SearchChatables.call(term: "@bob", guardian: guardian)
+  #  Chat::SearchChatable.call(term: "@bob", guardian: guardian)
   #
   class SearchChatable
     include Service::Base
@@ -15,6 +15,8 @@ module Chat
     #   @return [Service::Base::Context]
 
     contract
+    step :set_mode
+    step :clean_term
     step :fetch_memberships
     step :fetch_users
     step :fetch_category_channels
@@ -27,38 +29,50 @@ module Chat
 
     private
 
+    def set_mode
+      context.mode =
+        if context.contract.term&.start_with?("#")
+          :channel
+        elsif context.contract.term&.start_with?("@")
+          :user
+        else
+          :all
+        end
+    end
+
+    def clean_term(contract:, **)
+      context.term = contract.term.downcase&.gsub(/^#+/, "")&.gsub(/^@+/, "")&.strip
+    end
+
     def fetch_memberships(guardian:, **)
       context.memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
     end
 
-    def fetch_users(contract:, guardian:, **)
-      return if contract.term&.start_with?("#")
-
-      context.users = search_users(contract.term, guardian)
+    def fetch_users(guardian:, **)
+      return if context.mode == :channel
+      context.users = search_users(context.term, guardian)
     end
 
-    def fetch_category_channels(contract:, guardian:, **)
-      term = contract.term&.downcase&.gsub(/^#+/, "").strip
-      return if term&.start_with?("@")
+    def fetch_category_channels(guardian:, **)
+      return if context.mode == :user
 
       context.category_channels =
         Chat::ChannelFetcher.secured_public_channels(
           guardian,
-          filter: term,
+          filter: context.term,
           status: :open,
           limit: 10,
         )
     end
 
     def fetch_direct_message_channels(contract:, guardian:, **args)
-      return if contract.term == "#"
-      return if contract.term&.start_with?("@")
+      return if context.mode == :user
 
-      exclude_1_to_1_channels = !contract.term&.start_with?("#")
-
-      user_ids =
-        (context.users.nil? ? search_users(contract.term, guardian) : context.users).map(&:id)
-      return if user_ids.blank?
+      user_ids = nil
+      if context.term.length > 0
+        user_ids =
+          (context.users.nil? ? search_users(context.term, guardian) : context.users).map(&:id)
+      end
 
       channels =
         Chat::ChannelFetcher.secured_direct_message_channels_search(
@@ -68,7 +82,7 @@ module Chat
           user_ids: user_ids,
         ) || []
 
-      if exclude_1_to_1_channels
+      if user_ids.present?
         channels =
           channels.reject do |channel|
             channel_user_ids = channel.allowed_user_ids - [guardian.user.id]
@@ -82,8 +96,13 @@ module Chat
     end
 
     def search_users(term, guardian)
-      term = term.downcase.gsub(/^#+/, "").gsub(/^@+/, "").strip
-      UserSearch.new(term, limit: 10).search.includes(:user_option)
+      user_search = UserSearch.new(term, limit: 10)
+
+      if term.blank?
+        user_search.scoped_users.includes(:user_option)
+      else
+        user_search.search.includes(:user_option)
+      end
     end
   end
 end
