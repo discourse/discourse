@@ -370,6 +370,8 @@ he:
           many: "%{count} חברים"
           other: "%{count} חברים"
       create_channel:
+        threading:
+          label: "הפעלת שרשור"
         auto_join_users:
           public_category_warning: "%{category} היא קטגוריה ציבורית. להוסיף את כל המשתמשים שהיו פעילים לאחרונה לערוץ הזה?"
           warning_1_group:
@@ -451,6 +453,8 @@ he:
       settings:
         channel_wide_mentions_label: "לאפשר אזכורים של ‎@all (כולם) ו־‎@here (כאן)"
         channel_wide_mentions_description: "לאפשר למשתמשים להודיע לכל החברים שב־‎#%{channel} באמצעות ‎@all (כולם) או רק לאלו שפעילים כרגע עם ‎@here (כאן)"
+        channel_threading_label: "שרשור"
+        channel_threading_description: "כאשר שרשור פעיל, תגובות להודעות בצ׳אט תיצורנה דיון נפרד, שיתקיים לצד הערוץ הראשי."
         auto_join_users_label: "להוסיף משתמשים אוטומטית"
         auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה %{category}."
         auto_join_users_info_no_category: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה הנבחרת."
@@ -460,6 +464,8 @@ he:
         followed: "הצטרפו"
         mobile_notification_level: "התראות בדחיפה לנייד"
         mute: "השתקת ערוץ"
+        threading_enabled: "פעיל"
+        threading_disabled: "כבוי"
         muted_on: "פעילה"
         muted_off: "כבויה"
         notifications: "התראות"
@@ -602,10 +608,10 @@ he:
             title: "מעקב"
             description: "מספר התגובות החדשות בשרשור הזה יופיע ברשימת השרשורים ובערוץ. תישלח אליך התראה אם הזכירו את @שמך בשרשור הזה."
         participants_other_count:
-          one: "+%{count} נוסף"
-          two: "+%{count} נוספים"
-          many: "+%{count} נוספים"
-          other: "+%{count} נוספים"
+          one: "+%{count}"
+          two: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "פתיחת שרשור"
         list: "דיונים שמתקיימים כרגע"

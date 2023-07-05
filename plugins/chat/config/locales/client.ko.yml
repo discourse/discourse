@@ -183,6 +183,8 @@ ko:
         desktop_notification_level: "데스크톱 알림"
         follow: "가입"
         followed: "가입"
+        threading_enabled: "활성화"
+        threading_disabled: "비활성"
         muted_on: "켜기"
         muted_off: "끄기"
         notifications: "알림"
@@ -251,6 +253,8 @@ ko:
             title: "일반"
           tracking:
             title: "알림"
+        participants_other_count:
+          other: "+%{count}"
       draft_channel_screen:
         header: "새로운 메시지"
         cancel: "취소"

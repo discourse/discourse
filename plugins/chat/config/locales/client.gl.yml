@@ -73,6 +73,8 @@ gl:
       settings:
         follow: "Participar"
         followed: "Uniuse"
+        threading_enabled: "Activado"
+        threading_disabled: "Desactivado"
         notifications: "Notificacións"
         preview: "Visualizar"
         save: "Gardar"
@@ -116,6 +118,9 @@ gl:
             title: "Normal"
           tracking:
             title: "Seguimento"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nova mensaxe"
         cancel: "Cancelar"

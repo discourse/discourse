@@ -272,6 +272,8 @@ ru:
         followed: "Подписан"
         mobile_notification_level: "Мобильные push-уведомления"
         mute: "Отключить канал"
+        threading_enabled: "Включён"
+        threading_disabled: "Отключен"
         muted_on: "Включено"
         muted_off: "Выключено"
         notifications: "Уведомления"
@@ -388,10 +390,10 @@ ru:
           tracking:
             title: "В отслеживаемых"
         participants_other_count:
-          one: "+еще %{count}"
-          few: "+еще %{count}"
-          many: "+еще %{count}"
-          other: "+еще %{count}"
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"

@@ -121,6 +121,8 @@ bg:
       settings:
         follow: "Влизане"
         followed: "Присъединен"
+        threading_enabled: "Да е включен"
+        threading_disabled: "Деактивирани"
         notifications: "Известия"
         save: "Запази "
         saved: "Запазено"
@@ -161,6 +163,9 @@ bg:
             title: "Нормален"
           tracking:
             title: "Следене"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"
