@@ -1444,6 +1444,8 @@ tr_TR:
     fixed_category_positions_on_create: "İşaretlenirse kategori sıralaması konu oluşturma iletişim kutusunda korunur (fixed_category_positions gerektirir)."
     add_rel_nofollow_to_user_content: 'Dahili bağlantılar hariç (ana alan adları dahil) gönderilen tüm kullanıcı içeriğine rel nofollow ekleyin. Bunu değiştirirseniz tüm gönderileri şu şekilde yeniden oluşturmanız gerekir: "rake posts:rebake"'
     exclude_rel_nofollow_domains: "Bağlantılara nofollow eklenmemesi gereken alan adlarının bir listesi. example.com otomatik olarak sub.example.com'a da izin verir. Web tarayıcılarının tüm içeriği bulmasına yardımcı olmak için minimum olarak bu sitenin alan adını eklemelisiniz. Web sitenizin diğer bölümleri başka alan adlarındaysa bunları da ekleyin."
+    max_form_template_title_length: "Form şablonu başlıkları için izin verilen maksimum uzunluk."
+    max_form_template_content_length: "Form şablonu içeriği için izin verilen maksimum uzunluk."
     post_excerpt_maxlength: "Bir gönderi alıntısının / özetinin maksimum uzunluğu."
     topic_excerpt_maxlength: "Bir konudaki ilk gönderiden oluşturulan bir konu alıntısının / özetinin maksimum uzunluğu."
     show_pinned_excerpt_mobile: "Mobil görünümde sabitlenmiş konularda alıntıyı gösterin."

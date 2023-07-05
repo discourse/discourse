@@ -37,7 +37,8 @@ module TurboTests
     private
 
     def output_example(example)
-      output = +"[#{example.process_id}] #{example.full_description}"
+      output =
+        +"[#{example.process_id}] (##{example.metadata[:process_pid]}) #{example.full_description}"
 
       if run_duration_ms = example.metadata[:run_duration_ms]
         output << " (#{run_duration_ms}ms)"

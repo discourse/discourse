@@ -72,6 +72,8 @@ sw:
       settings:
         follow: "Jiunge"
         followed: "Alijiunga"
+        threading_enabled: "Imeruhusiwa"
+        threading_disabled: "Imezuiwa"
         notifications: "Taarifa"
         preview: "Kihakiki"
         save: "Hifadhi"

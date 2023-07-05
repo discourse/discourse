@@ -28,55 +28,64 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
 
   before { sign_in(user) }
 
-  it "allows a user to edit the sidebar tags navigation" do
-    visit "/latest"
+  shared_examples "a user can edit the sidebar tags navigation" do |mobile|
+    it "allows a user to edit the sidebar tags navigation", mobile: mobile do
+      visit "/latest"
 
-    expect(sidebar).to have_tags_section
-    expect(sidebar).to have_section_link(tag1.name)
-    expect(sidebar).to have_section_link(tag2.name)
-    expect(sidebar).to have_section_link(tag3.name)
-    expect(sidebar).to have_section_link(tag4.name)
+      sidebar.open_on_mobile if mobile
 
-    modal = sidebar.click_edit_tags_button
+      expect(sidebar).to have_tags_section
+      expect(sidebar).to have_section_link(tag1.name)
+      expect(sidebar).to have_section_link(tag2.name)
+      expect(sidebar).to have_section_link(tag3.name)
+      expect(sidebar).to have_section_link(tag4.name)
 
-    expect(modal).to have_right_title(I18n.t("js.sidebar.tags_form_modal.title"))
-    try_until_success { expect(modal).to have_focus_on_filter_input }
-    expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+      modal = sidebar.click_edit_tags_button
 
-    modal.toggle_tag_checkbox(tag1).toggle_tag_checkbox(tag2).save
+      expect(modal).to have_right_title(I18n.t("js.sidebar.tags_form_modal.title"))
+      try_until_success { expect(modal).to have_focus_on_filter_input }
+      expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
 
-    expect(modal).to be_closed
-    expect(sidebar).to have_section_link(tag1.name)
-    expect(sidebar).to have_section_link(tag2.name)
-    expect(sidebar).to have_no_section_link(tag3.name)
-    expect(sidebar).to have_no_section_link(tag4.name)
+      modal.toggle_tag_checkbox(tag1).toggle_tag_checkbox(tag2).save
 
-    visit "/latest"
+      expect(modal).to be_closed
 
-    expect(sidebar).to have_section_link(tag1.name)
-    expect(sidebar).to have_section_link(tag2.name)
-    expect(sidebar).to have_no_section_link(tag3.name)
-    expect(sidebar).to have_no_section_link(tag4.name)
+      sidebar.open_on_mobile if mobile
 
-    modal = sidebar.click_edit_tags_button
-    modal.toggle_tag_checkbox(tag2).save
+      expect(sidebar).to have_section_link(tag1.name)
+      expect(sidebar).to have_section_link(tag2.name)
+      expect(sidebar).to have_no_section_link(tag3.name)
+      expect(sidebar).to have_no_section_link(tag4.name)
 
-    expect(modal).to be_closed
+      visit "/latest"
 
-    expect(sidebar).to have_section_link(tag1.name)
-    expect(sidebar).to have_no_section_link(tag2.name)
-    expect(sidebar).to have_no_section_link(tag3.name)
-    expect(sidebar).to have_no_section_link(tag4.name)
+      sidebar.open_on_mobile if mobile
+
+      expect(sidebar).to have_section_link(tag1.name)
+      expect(sidebar).to have_section_link(tag2.name)
+      expect(sidebar).to have_no_section_link(tag3.name)
+      expect(sidebar).to have_no_section_link(tag4.name)
+
+      modal = sidebar.click_edit_tags_button
+      modal.toggle_tag_checkbox(tag2).save
+
+      expect(modal).to be_closed
+
+      sidebar.open_on_mobile if mobile
+
+      expect(sidebar).to have_section_link(tag1.name)
+      expect(sidebar).to have_no_section_link(tag2.name)
+      expect(sidebar).to have_no_section_link(tag3.name)
+      expect(sidebar).to have_no_section_link(tag4.name)
+    end
   end
 
-  it "displays the all tags in the modal when `tags_listed_by_group` site setting is true" do
-    SiteSetting.tags_listed_by_group = true
+  describe "when on desktop" do
+    include_examples "a user can edit the sidebar tags navigation", false
+  end
 
-    visit "/latest"
-
-    modal = sidebar.click_edit_tags_button
-
-    expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+  describe "when on mobile" do
+    include_examples "a user can edit the sidebar tags navigation", true
   end
 
   it "allows a user to filter the tags in the modal by the tag's name" do
@@ -166,5 +175,17 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     modal.filter_by_all
 
     expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+  end
+
+  it "loads more tags when the user scrolls views the last tag in the modal and there is more tags to load" do
+    stub_const(TagsController, "LIST_LIMIT", 2) do
+      visit "/latest"
+
+      expect(sidebar).to have_tags_section
+
+      modal = sidebar.click_edit_tags_button
+
+      expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
+    end
   end
 end

@@ -15,7 +15,12 @@ export default class ChatSelectionManager extends Component {
   @service site;
   @service("chat-api") api;
 
+  // NOTE: showCopySuccess is used to display the message which animates
+  // after a delay. The on-animation-end helper is not really usable in
+  // system specs because it fires straight away, so we use lastCopySuccessful
+  // with a data attr instead so it's not instantly mutated.
   @tracked showCopySuccess = false;
+  @tracked lastCopySuccessful = false;
 
   get enableMove() {
     return this.args.enableMove ?? false;
@@ -88,6 +93,7 @@ export default class ChatSelectionManager extends Component {
   @action
   async copyMessages() {
     try {
+      this.lastCopySuccessful = false;
       this.showCopySuccess = false;
 
       if (!isTesting()) {
@@ -96,6 +102,7 @@ export default class ChatSelectionManager extends Component {
       }
 
       this.showCopySuccess = true;
+      this.lastCopySuccessful = true;
     } catch (error) {
       popupAjaxError(error);
     }

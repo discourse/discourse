@@ -23,51 +23,70 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   before { sign_in(user) }
 
-  it "allows a user to edit the sidebar categories navigation" do
-    visit "/latest"
+  shared_examples "a user can edit the sidebar categories navigation" do |mobile|
+    it "allows a user to edit the sidebar categories navigation", mobile: mobile do
+      visit "/latest"
 
-    expect(sidebar).to have_categories_section
+      sidebar.open_on_mobile if mobile
 
-    modal = sidebar.click_edit_categories_button
+      expect(sidebar).to have_categories_section
 
-    expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form_modal.title"))
-    try_until_success { expect(modal).to have_focus_on_filter_input }
-    expect(modal).to have_parent_category_color(category)
-    expect(modal).to have_category_description_excerpt(category)
-    expect(modal).to have_parent_category_color(category2)
-    expect(modal).to have_category_description_excerpt(category2)
-    expect(modal).to have_no_reset_to_defaults_button
+      modal = sidebar.click_edit_categories_button
 
-    expect(modal).to have_categories(
-      [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
-    )
+      expect(modal).to have_right_title(I18n.t("js.sidebar.categories_form_modal.title"))
+      try_until_success { expect(modal).to have_focus_on_filter_input }
+      expect(modal).to have_parent_category_color(category)
+      expect(modal).to have_category_description_excerpt(category)
+      expect(modal).to have_parent_category_color(category2)
+      expect(modal).to have_category_description_excerpt(category2)
+      expect(modal).to have_no_reset_to_defaults_button
 
-    modal
-      .toggle_category_checkbox(category)
-      .toggle_category_checkbox(category_subcategory2)
-      .toggle_category_checkbox(category2)
-      .save
+      expect(modal).to have_categories(
+        [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
+      )
 
-    expect(modal).to be_closed
-    expect(sidebar).to have_section_link(category.name)
-    expect(sidebar).to have_section_link(category_subcategory2.name)
-    expect(sidebar).to have_section_link(category2.name)
+      modal
+        .toggle_category_checkbox(category)
+        .toggle_category_checkbox(category_subcategory2)
+        .toggle_category_checkbox(category2)
+        .save
 
-    visit "/latest"
+      expect(modal).to be_closed
 
-    expect(sidebar).to have_categories_section
-    expect(sidebar).to have_section_link(category.name)
-    expect(sidebar).to have_section_link(category_subcategory2.name)
-    expect(sidebar).to have_section_link(category2.name)
+      sidebar.open_on_mobile if mobile
 
-    modal = sidebar.click_edit_categories_button
-    modal.toggle_category_checkbox(category_subcategory2).toggle_category_checkbox(category2).save
+      expect(sidebar).to have_section_link(category.name)
+      expect(sidebar).to have_section_link(category_subcategory2.name)
+      expect(sidebar).to have_section_link(category2.name)
 
-    expect(modal).to be_closed
+      visit "/latest"
 
-    expect(sidebar).to have_section_link(category.name)
-    expect(sidebar).to have_no_section_link(category_subcategory2.name)
-    expect(sidebar).to have_no_section_link(category2.name)
+      sidebar.open_on_mobile if mobile
+
+      expect(sidebar).to have_categories_section
+      expect(sidebar).to have_section_link(category.name)
+      expect(sidebar).to have_section_link(category_subcategory2.name)
+      expect(sidebar).to have_section_link(category2.name)
+
+      modal = sidebar.click_edit_categories_button
+      modal.toggle_category_checkbox(category_subcategory2).toggle_category_checkbox(category2).save
+
+      expect(modal).to be_closed
+
+      sidebar.open_on_mobile if mobile
+
+      expect(sidebar).to have_section_link(category.name)
+      expect(sidebar).to have_no_section_link(category_subcategory2.name)
+      expect(sidebar).to have_no_section_link(category2.name)
+    end
+  end
+
+  describe "when on desktop" do
+    include_examples "a user can edit the sidebar categories navigation", false
+  end
+
+  describe "when on mobile" do
+    include_examples "a user can edit the sidebar categories navigation", true
   end
 
   it "displays the categories in the modal based on the fixed position of the category when `fixed_category_positions` site setting is enabled" do

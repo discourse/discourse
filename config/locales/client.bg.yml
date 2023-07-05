@@ -1115,8 +1115,6 @@ bg:
       experimental_sidebar:
         enable: "Активиране на страничната лента"
         options: "Опции"
-        categories_section: "Раздел Категории"
-        tags_section: "Раздел за етикети"
         navigation_section: "Навигация"
       change: "промени"
       featured_topic: "Представена тема"

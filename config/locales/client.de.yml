@@ -1128,10 +1128,6 @@ de:
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
-        categories_section: "Abschnitt „Kategorien“"
-        categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt \"Kategorien\" des Navigationsmenüs angezeigt. Wenn keine Kategorien ausgewählt sind, werden die Top-Kategorien der Website angezeigt."
-        tags_section: "Abschnitt „Schlagwörter“"
-        tags_section_instruction: "Ausgewählte Schlagworte werden im Abschnitt \"Tags\" des Navigationsmenüs angezeigt. Wenn keine Tags ausgewählt sind, werden die Top-Tags der Website angezeigt."
         navigation_section: "Navigation"
         navigation_section_instruction: "Wenn eine Themenliste im Navigationsmenü neue oder ungelesene Einträge enthält…"
         link_to_filtered_list_checkbox_description: "Link zur gefilterten Liste"
@@ -1174,6 +1170,7 @@ de:
       watched_first_post_categories_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
       watched_first_post_tags: "Ersten Beitrag beobachten"
       watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
+      watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       muted_categories_instructions_dont_hide: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien."
@@ -5664,6 +5661,7 @@ de:
         show_overriden: "Nur geänderte Texte anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
+        interpolation_keys: "Verfügbare Interpolationsschlüssel:"
       settings:
         show_overriden: "Nur geänderte Texte anzeigen"
         history: "Änderungsverlauf ansehen"

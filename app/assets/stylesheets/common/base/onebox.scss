@@ -679,6 +679,11 @@ aside.onebox.twitterstatus .onebox-body {
       margin-right: 0.25em;
     }
   }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
 }
 
 // Onebox - Imgur/Flickr - Album

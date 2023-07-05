@@ -109,5 +109,44 @@ acceptance("Modal service: component-based API", function () {
     );
   });
 
+  test("lifecycle hooks and arguments", async function (assert) {
+    await visit("/");
+
+    const events = [];
+
+    class ModalWithLifecycleHooks extends MyModalClass {
+      constructor() {
+        super(...arguments);
+        events.push(`constructor: ${this.args.model?.data}`);
+      }
+
+      willDestroy() {
+        events.push(`willDestroy: ${this.args.model?.data}`);
+      }
+    }
+
+    const modalService = getOwner(this).lookup("service:modal");
+
+    modalService.show(ModalWithLifecycleHooks, {
+      model: { data: "argumentValue" },
+    });
+    await settled();
+
+    assert.deepEqual(
+      events,
+      ["constructor: argumentValue"],
+      "constructor called with args available"
+    );
+
+    modalService.close();
+    await settled();
+
+    assert.deepEqual(
+      events,
+      ["constructor: argumentValue", "willDestroy: argumentValue"],
+      "constructor called with args available"
+    );
+  });
+
   // (See also, `tests/integration/component/d-modal-test.js`)
 });

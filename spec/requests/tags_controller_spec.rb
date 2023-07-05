@@ -1441,4 +1441,148 @@ RSpec.describe TagsController do
       expect(tag_user.notification_level).to eq(NotificationLevels.all[:muted])
     end
   end
+
+  describe "#list" do
+    fab!(:tag3) do
+      Fabricate(:tag, name: "tag3").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+    end
+
+    fab!(:tag2) do
+      Fabricate(:tag, name: "tag2").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+    end
+
+    fab!(:tag1) do
+      Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+    end
+
+    fab!(:tag_not_used_in_topics) { Fabricate(:tag, name: "tag4") }
+
+    it "should return 403 for an anonymous user" do
+      get "/tags/list.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "should return 404 when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      sign_in(user)
+
+      get "/tags/list.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "should only return tags used in topics for non admin users" do
+      stub_const(TagsController, "LIST_LIMIT", 2) do
+        sign_in(user)
+
+        get "/tags/list.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+          [tag1.name, tag2.name],
+        )
+
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(3)
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=1",
+        )
+
+        get response.parsed_body["meta"]["load_more_list_tags"]
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq([tag3.name])
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(3)
+
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=2",
+        )
+      end
+    end
+
+    it "should return all tags for admin users" do
+      stub_const(TagsController, "LIST_LIMIT", 2) do
+        sign_in(admin)
+
+        get "/tags/list.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+          [tag1.name, tag2.name],
+        )
+
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(4)
+
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=1",
+        )
+
+        get response.parsed_body["meta"]["load_more_list_tags"]
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+          [tag3.name, tag_not_used_in_topics.name],
+        )
+
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(4)
+
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=2",
+        )
+      end
+    end
+
+    it "accepts a `filter` param and filters the tags by tag name" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { filter: "3" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq([tag3.name])
+      expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(1)
+
+      expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+        "/tags/list.json?offset=1&filter=3",
+      )
+    end
+
+    it "accepts a `only_tags` param and filters the tags by the given tags" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { only_tags: "#{tag1.name},#{tag3.name}" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+        [tag1.name, tag3.name],
+      )
+
+      expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(2)
+
+      expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+        "/tags/list.json?offset=1&only_tags=#{tag1.name}%2C#{tag3.name}",
+      )
+    end
+
+    it "accepts a `exclude_tags` params and filters tags excluding the given tags" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { exclude_tags: "#{tag1.name},#{tag3.name}" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq([tag2.name])
+
+      expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(1)
+
+      expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+        "/tags/list.json?offset=1&exclude_tags=#{tag1.name}%2C#{tag3.name}",
+      )
+    end
+  end
 end
