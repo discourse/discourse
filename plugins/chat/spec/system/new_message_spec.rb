@@ -235,6 +235,22 @@ RSpec.describe "New message", type: :system do
 
     before { channel_1.add(current_user) }
 
+    context "when query is the name of the category" do
+      fab!(:category) { Fabricate(:category, name: "dev") }
+      fab!(:channel_1) { Fabricate(:category_channel, chatable: category, name: "something dev") }
+      fab!(:channel_2) { Fabricate(:category_channel, chatable: category, name: "something else") }
+
+      it "favors the channel name" do
+        visit("/")
+        chat_page.open_new_message
+
+        chat_page.message_creator.filter("dev")
+
+        expect(chat_page.message_creator).to be_listing(channel_1)
+        expect(chat_page.message_creator).to be_not_listing(channel_2)
+      end
+    end
+
     context "with no prefix" do
       it "lists all matching content" do
         visit("/")

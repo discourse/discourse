@@ -45,7 +45,7 @@ module Chat
     end
 
     def fetch_memberships(guardian:, **)
-      context.memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
+      context.memberships = ::Chat::ChannelMembershipManager.all_for_user(guardian.user)
     end
 
     def fetch_users(guardian:, **)
@@ -58,8 +58,10 @@ module Chat
       return if context.mode == :user
 
       context.category_channels =
-        Chat::ChannelFetcher.secured_public_channels(
+        ::Chat::ChannelFetcher.secured_public_channel_search(
           guardian,
+          filter_on_category_name: false,
+          match_filter_on_starts_with: false,
           filter: context.term,
           status: :open,
           limit: 10,
@@ -76,7 +78,7 @@ module Chat
       end
 
       channels =
-        Chat::ChannelFetcher.secured_direct_message_channels_search(
+        ::Chat::ChannelFetcher.secured_direct_message_channels_search(
           guardian.user.id,
           guardian,
           limit: 10,
@@ -97,7 +99,7 @@ module Chat
     end
 
     def search_users(term, guardian)
-      user_search = UserSearch.new(term, limit: 10)
+      user_search = ::UserSearch.new(term, limit: 10)
 
       if term.blank?
         user_search.scoped_users.includes(:user_option)
