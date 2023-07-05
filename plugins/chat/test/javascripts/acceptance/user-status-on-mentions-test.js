@@ -93,27 +93,19 @@ acceptance("Chat | User status on mentions", function (needs) {
       })
     );
 
-    pretender.get("/u/search/users", () => {
-      return [
-        200,
-        {},
-        {
-          users: [mentionedUser2, mentionedUser3],
-        },
-      ];
-    });
+    pretender.get("/u/search/users", () =>
+      response({
+        users: [mentionedUser2, mentionedUser3],
+      })
+    );
 
-    pretender.get("/chat/api/mentions/groups.json", () => {
-      return [
-        200,
-        {},
-        {
-          unreachable: [],
-          over_members_limit: [],
-          invalid: ["and"],
-        },
-      ];
-    });
+    pretender.get("/chat/api/mentions/groups.json", () =>
+      response({
+        unreachable: [],
+        over_members_limit: [],
+        invalid: ["and"],
+      })
+    );
   });
 
   skip("just posted messages | it shows status on mentions ", async function (assert) {
