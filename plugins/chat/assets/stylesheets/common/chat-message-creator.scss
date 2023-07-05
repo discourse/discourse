@@ -161,7 +161,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     display: flex;
-    background: var(--header_background);
+    background: var(--secondary-very-high);
     border-radius: 5px;
     padding: 3px;
     position: relative;
@@ -268,7 +268,7 @@
       width: 100%;
       padding: 1rem;
       box-sizing: border-box;
-      background: var(--primary-low);
+      border-top: 1px solid var(--primary-low);
     }
   }
 

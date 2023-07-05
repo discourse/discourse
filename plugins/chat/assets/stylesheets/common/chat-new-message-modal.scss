@@ -16,6 +16,7 @@
     width: var(--modal-max-width);
     border-radius: 5px;
     box-shadow: var(--shadow-dropdown);
+    overflow: hidden;
   }
 
   .mobile-device & {
