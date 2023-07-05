@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 // TODO (martin) Remove this when the handleSentMessage logic inside chatChannelPaneSubscriptionsManager
 // is moved over from this file completely.
 import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cancel, later, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
