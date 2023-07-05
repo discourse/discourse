@@ -364,30 +364,26 @@ module Chat
     NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
 
     def self.publish_new_channel(chat_channel, users)
-      memberships =
-        Chat::UserChatChannelMembership.where(chat_channel: chat_channel, user: users).to_a
+      Chat::UserChatChannelMembership
+        .includes(:user)
+        .where(chat_channel: chat_channel, user: users, following: false)
+        .find_in_batches(batch_size: 1) do |memberships|
+          memberships.each do |membership|
+            serialized_channel =
+              Chat::ChannelSerializer.new(
+                chat_channel,
+                scope: Guardian.new(membership.user), # We need a guardian here for direct messages
+                root: :channel,
+                membership: membership,
+              ).as_json
 
-      users.in_groups_of(200, false) do |users_part|
-        users_part.each do |user|
-          # TODO: this event is problematic as some code will update the membership before calling it
-          # and other code will update it after calling it
-          # it means frontend must handle logic for both cases
-          serialized_channel =
-            Chat::ChannelSerializer.new(
-              chat_channel,
-              scope: Guardian.new(user), # We need a guardian here for direct messages
-              root: :channel,
-              membership:
-                memberships.find { |membership| membership.chat_channel_id == chat_channel.id },
-            ).as_json
-
-          MessageBus.publish(
-            NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
-            serialized_channel,
-            user_ids: [user.id],
-          )
+            MessageBus.publish(
+              NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
+              serialized_channel,
+              user_ids: [membership.user.id],
+            )
+          end
         end
-      end
     end
 
     def self.publish_inaccessible_mentions(
