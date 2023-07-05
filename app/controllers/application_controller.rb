@@ -348,6 +348,8 @@ class ApplicationController < ActionController::Base
     before_action do
       if plugin = Discourse.plugins_by_name[plugin_name]
         raise PluginDisabled.new if !plugin.enabled?
+      elsif Rails.env.test?
+        raise "Required plugin '#{plugin_name}' not found"
       else
         Rails.logger.warn("Required plugin '#{plugin_name}' not found")
       end
