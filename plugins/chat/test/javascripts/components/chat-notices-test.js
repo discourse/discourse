@@ -1,6 +1,6 @@
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { module, test } from "qunit";
 import { click, render } from "@ember/test-helpers";
@@ -9,13 +9,22 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays all notices for a channel", async function (assert) {
-    this.channel = ChatChannel.create({ id: 12, chatable_type: "Category" });
+    this.channel = fabricators.channel();
     this.manager = this.container.lookup(
       "service:chatChannelPaneSubscriptionsManager"
     );
-    this.manager.handleNotice({ channel_id: 12, text_content: "hello" });
-    this.manager.handleNotice({ channel_id: 12, text_content: "goodbye" });
-    this.manager.handleNotice({ channel_id: 13, text_content: "N/A" });
+    this.manager.handleNotice({
+      channel_id: this.channel.id,
+      text_content: "hello",
+    });
+    this.manager.handleNotice({
+      channel_id: this.channel.id,
+      text_content: "goodbye",
+    });
+    this.manager.handleNotice({
+      channel_id: this.channel.id + 1,
+      text_content: "N/A",
+    });
 
     await render(hbs`<ChatNotices @channel={{this.channel}} />`);
 
@@ -28,11 +37,14 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
   });
 
   test("Notices can be cleared", async function (assert) {
-    this.channel = ChatChannel.create({ id: 12, chatable_type: "Category" });
+    this.channel = fabricators.channel();
     this.manager = this.container.lookup(
       "service:chatChannelPaneSubscriptionsManager"
     );
-    this.manager.handleNotice({ channel_id: 12, text_content: "hello" });
+    this.manager.handleNotice({
+      channel_id: this.channel.id,
+      text_content: "hello",
+    });
 
     await render(hbs`<ChatNotices @channel={{this.channel}} />`);
 
