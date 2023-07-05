@@ -35,7 +35,7 @@ acceptance("Page Loading Indicator", function (needs) {
     );
 
     pretender.get(
-      "about.json",
+      "/about.json",
       (request) => {
         resolvePendingRequest(request);
         return helper.response(AboutFixtures["about.json"]);
