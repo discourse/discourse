@@ -6,7 +6,6 @@ import { escape } from "pretty-text/sanitizer";
 import { helperContext } from "discourse-common/lib/helpers";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
-import { htmlSafe } from "@ember/template";
 
 let _defaultHomepage;
 
@@ -116,9 +115,7 @@ export function avatarImg(options, customGetURL) {
     title = ` title='${escaped}' aria-label='${escaped}'`;
   }
 
-  return htmlSafe(
-    `<img loading='lazy' alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`
-  );
+  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
 }
 
 export function tinyAvatar(avatarTemplate, options) {

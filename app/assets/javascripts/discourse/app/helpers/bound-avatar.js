@@ -8,7 +8,9 @@ export default function boundAvatar(user, size) {
     return htmlSafe("<div class='avatar-placeholder'></div>");
   }
 
-  return avatarImg(
-    addExtraUserClasses(user, { size, avatarTemplate: user.avatar_template })
+  return htmlSafe(
+    avatarImg(
+      addExtraUserClasses(user, { size, avatarTemplate: user.avatar_template })
+    )
   );
 }
