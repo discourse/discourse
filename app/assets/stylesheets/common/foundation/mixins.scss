@@ -19,7 +19,13 @@ $breakpoints: (
 );
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
-  @media #{$type} and (#{$rule}: map-get($breakpoints, $bp)) {
+  $bp-value: map-get($breakpoints, $bp);
+
+  @if $rule == min-width {
+    $bp-value: calc(#{$bp-value} + 1px);
+  }
+
+  @media #{$type} and (#{$rule}: #{$bp-value}) {
     @content;
   }
 
