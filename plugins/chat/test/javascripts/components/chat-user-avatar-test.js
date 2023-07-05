@@ -37,7 +37,7 @@ module("Discourse Chat | Component | chat-user-avatar", function (hooks) {
     });
 
     await render(
-      hbs`<ChatUserAvatar @chat={{this.chat}} @user={{this.user}} />`
+      hbs`<ChatUserAvatar @showPresence={{true}} @chat={{this.chat}} @user={{this.user}} />`
     );
 
     assert.true(

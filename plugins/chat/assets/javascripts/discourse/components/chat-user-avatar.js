@@ -9,7 +9,7 @@ export default class ChatUserAvatar extends Component {
   }
 
   get isOnline() {
-    const users = this.chat.presenceChannel?.users;
+    const users = (this.args.chat || this.chat).presenceChannel?.users;
 
     return (
       !!users?.findBy("id", this.args.user?.id) ||
