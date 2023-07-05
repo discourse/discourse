@@ -366,7 +366,7 @@ module Chat
     def self.publish_new_channel(chat_channel, users)
       Chat::UserChatChannelMembership
         .includes(:user)
-        .where(chat_channel: chat_channel, user: users, following: false)
+        .where(chat_channel: chat_channel, user: users)
         .find_in_batches do |memberships|
           memberships.each do |membership|
             serialized_channel =
