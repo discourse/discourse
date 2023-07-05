@@ -129,7 +129,7 @@ class TranslationOverride < ActiveRecord::Base
   private_class_method :i18n_changed
   private_class_method :expire_cache
 
-  def check_outdated
+  def original_translation_updated?
     return false if original_translation.blank?
 
     transformed_key = self.class.transform_pluralized_key(translation_key)
@@ -137,37 +137,40 @@ class TranslationOverride < ActiveRecord::Base
     original_translation != I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
   end
 
-  def check_interpolation_keys
+  def invalid_interpolation_keys
     transformed_key = self.class.transform_pluralized_key(translation_key)
 
     original_text = I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
 
-    if original_text
-      original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
-      new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
-      custom_interpolation_keys = []
+    return [] if original_text.blank?
 
-      ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
-        custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
-      end
+    original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
+    new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
+    custom_interpolation_keys = []
 
-      invalid_keys =
-        (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
-          custom_interpolation_keys
-
-      if invalid_keys.present?
-        self.errors.add(
-          :base,
-          I18n.t(
-            "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-            keys: invalid_keys.join(I18n.t("word_connector.comma")),
-            count: invalid_keys.size,
-          ),
-        )
-
-        false
-      end
+    ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
+      custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
     end
+
+    (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
+      custom_interpolation_keys
+  end
+
+  private
+
+  def check_interpolation_keys
+    invalid_keys = invalid_interpolation_keys
+
+    return if invalid_keys.blank?
+
+    self.errors.add(
+      :base,
+      I18n.t(
+        "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+        keys: invalid_keys.join(I18n.t("word_connector.comma")),
+        count: invalid_keys.size,
+      ),
+    )
   end
 end
 

@@ -284,11 +284,11 @@ RSpec.describe TranslationOverride do
     end
   end
 
-  describe "#check_outdated" do
+  describe "#original_translation_updated?" do
     context "when the translation is up to date" do
       fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }
 
-      it { expect(translation.check_outdated).to eq(false) }
+      it { expect(translation.original_translation_updated?).to eq(false) }
     end
 
     context "when the translation is outdated" do
@@ -296,7 +296,7 @@ RSpec.describe TranslationOverride do
         Fabricate(:translation_override, translation_key: "title", original_translation: "outdated")
       end
 
-      it { expect(translation.check_outdated).to eq(true) }
+      it { expect(translation.original_translation_updated?).to eq(true) }
     end
 
     context "when we can't tell because the translation is too old" do
@@ -304,7 +304,22 @@ RSpec.describe TranslationOverride do
         Fabricate(:translation_override, translation_key: "title", original_translation: nil)
       end
 
-      it { expect(translation.check_outdated).to eq(false) }
+      it { expect(translation.original_translation_updated?).to eq(false) }
+    end
+  end
+
+  describe "invalid_interpolation_keys" do
+    fab!(:translation) do
+      Fabricate(
+        :translation_override,
+        translation_key: "system_messages.welcome_user.subject_template",
+      )
+    end
+
+    it "picks out invalid keys and ignores known and custom keys" do
+      translation.update_attribute("value", "Hello, %{name}! Welcome to %{site_name}. %{foo}")
+
+      expect(translation.invalid_interpolation_keys).to contain_exactly("foo")
     end
   end
 end

@@ -9,11 +9,9 @@ module Jobs
       outdated_ids = []
 
       TranslationOverride.find_each do |override|
-        override.check_interpolation_keys
-
-        if override.invalid?
+        if override.invalid_interpolation_keys.present?
           invalid_ids << override.id
-        elsif override.check_outdated
+        elsif override.original_translation_updated?
           outdated_ids << override.id
         end
       end
