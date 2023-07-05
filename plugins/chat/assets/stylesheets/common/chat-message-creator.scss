@@ -69,6 +69,8 @@
       margin-left: auto;
       font-size: var(--font-down-1);
       color: var(--secondary-medium);
+      display: flex;
+      align-items: center;
 
       kbd {
         margin-left: 0.25rem;
