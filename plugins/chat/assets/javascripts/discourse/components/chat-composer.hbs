@@ -65,7 +65,6 @@
             {{on "focusin" (fn this.computeIsFocused true)}}
             {{on "focusout" (fn this.computeIsFocused false)}}
             {{did-insert this.setupAutocomplete}}
-            {{did-insert this.composer.focus}}
             data-chat-composer-context={{this.context}}
           />
         </div>
