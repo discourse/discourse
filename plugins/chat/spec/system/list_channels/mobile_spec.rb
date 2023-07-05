@@ -123,6 +123,6 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
     visit("/chat")
     find(".open-new-message-btn").click
 
-    expec(chat.message_creator).to be_opened
+    expect(chat.message_creator).to be_opened
   end
 end

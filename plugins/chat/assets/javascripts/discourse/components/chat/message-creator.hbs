@@ -86,7 +86,7 @@
                 data-id={{content.identifier}}
                 tabindex="-1"
                 role="option"
-                {{on "click" (fn this.toggleSelection content.identifier)}}
+                {{on "click" (fn this.handleRowClick content.identifier)}}
                 {{on "mousemove" (fn (mut this.activeContent) content)}}
                 {{on "keydown" this.handleKeydown}}
                 aria-selected={{if

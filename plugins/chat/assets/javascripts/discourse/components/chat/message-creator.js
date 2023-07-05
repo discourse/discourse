@@ -299,7 +299,7 @@ export default class ChatMessageCreator extends Component {
 
     const digit = this.#getDigit(event.code);
     if (event.ctrlKey && digit) {
-      this._activeContentIdentifier = this.content.value.objectAt(
+      this._activeContentIdentifier = this.content.objectAt(
         digit - 1
       )?.identifier;
       event.preventDefault();
@@ -325,7 +325,7 @@ export default class ChatMessageCreator extends Component {
       }
     }
 
-    if (event.key === "ArrowLeft") {
+    if (event.key === "ArrowLeft" && !event.shiftKey) {
       this._activeContentIdentifier = null;
       this.activeSelectionIdentifiers = [
         this.#getPreviousSelection()?.identifier,
@@ -334,7 +334,7 @@ export default class ChatMessageCreator extends Component {
       return;
     }
 
-    if (event.key === "ArrowRight") {
+    if (event.key === "ArrowRight" && !event.shiftKey) {
       this._activeContentIdentifier = null;
       this.activeSelectionIdentifiers = [
         this.#getNextSelection()?.identifier,
@@ -364,6 +364,14 @@ export default class ChatMessageCreator extends Component {
     }
 
     this.focusInput();
+  }
+
+  @action
+  handleRowClick(identifier, event) {
+    this.toggleSelection(identifier, {
+      altSelection: event.shiftKey || event.ctrlKey,
+    });
+    event.preventDefault();
   }
 
   @action
