@@ -364,22 +364,29 @@ module Chat
     NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
 
     def self.publish_new_channel(chat_channel, users)
-      users.each do |user|
-        # FIXME: This could generate a lot of queries depending on the amount of users
-        membership = chat_channel.membership_for(user)
+      memberships =
+        Chat::UserChatChannelMembership.where(chat_channel: chat_channel, user: users).to_a
 
-        # TODO: this event is problematic as some code will update the membership before calling it
-        # and other code will update it after calling it
-        # it means frontend must handle logic for both cases
-        serialized_channel =
-          Chat::ChannelSerializer.new(
-            chat_channel,
-            scope: Guardian.new(user), # We need a guardian here for direct messages
-            root: :channel,
-            membership: membership,
-          ).as_json
+      users.in_groups_of(200, false) do |users_part|
+        users_part.each do |user|
+          # TODO: this event is problematic as some code will update the membership before calling it
+          # and other code will update it after calling it
+          # it means frontend must handle logic for both cases
+          serialized_channel =
+            Chat::ChannelSerializer.new(
+              chat_channel,
+              scope: Guardian.new(user), # We need a guardian here for direct messages
+              root: :channel,
+              membership:
+                memberships.find { |membership| membership.chat_channel_id == chat_channel.id },
+            ).as_json
 
-        MessageBus.publish(NEW_CHANNEL_MESSAGE_BUS_CHANNEL, serialized_channel, user_ids: [user.id])
+          MessageBus.publish(
+            NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
+            serialized_channel,
+            user_ids: [user.id],
+          )
+        end
       end
     end
 
