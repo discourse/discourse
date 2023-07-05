@@ -393,6 +393,13 @@ basic:
     client: true
     default: true
     refresh: true
+  page_loading_indicator:
+    client: true
+    type: enum
+    default: "spinner"
+    choices:
+      - spinner
+      - slider
 
 login:
   invite_only:
