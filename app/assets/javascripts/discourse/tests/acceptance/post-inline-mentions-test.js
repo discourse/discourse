@@ -32,10 +32,6 @@ function topicWithUserStatus(topicId, mentionedUserId, status) {
   return topic;
 }
 
-async function mouseenter() {
-  await triggerEvent(query(".user-status-message"), "mouseenter");
-}
-
 acceptance("Post inline mentions", function (needs) {
   needs.user();
 
@@ -166,6 +162,10 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
     ends_at: null,
   };
 
+  async function mouseEnter(selector) {
+    await triggerEvent(query(selector), "mouseenter");
+  }
+
   test("shows user status tooltip", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
       return response(topicWithUserStatus(topicId, mentionedUserId, status));
@@ -177,7 +177,7 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
       "user status is shown"
     );
 
-    await mouseenter();
+    await mouseEnter(".user-status-message");
     const statusTooltipDescription = document.querySelector(
       ".user-status-message-tooltip .user-status-tooltip-description"
     );
