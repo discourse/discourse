@@ -22,7 +22,6 @@ export default class ChatComposerChannel extends ChatComposer {
 
   get disabled() {
     return (
-      isEmpty(this.args.channel?.chatable?.users) ||
       !this.chat.userCanInteractWithChat ||
       !this.args.channel.canModifyMessages(this.currentUser)
     );
