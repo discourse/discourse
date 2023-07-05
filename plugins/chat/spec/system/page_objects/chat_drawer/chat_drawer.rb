@@ -70,10 +70,10 @@ module PageObjects
       private
 
       def mouseout
-        # Ensures that the mouse is not hovering over the drawer
-        # and the message actions menu is closed
-        # This is necessary because the message actions menu could be slightly
-        # hover the header and causing buttons to not be accessible
+        # Ensure that the mouse is not hovering over the drawer
+        # and that the message actions menu is closed.
+        # This check is essential because the message actions menu might partially
+        # overlap with the header, making certain buttons inaccessible.
         find("#site-logo").hover
       end
     end
