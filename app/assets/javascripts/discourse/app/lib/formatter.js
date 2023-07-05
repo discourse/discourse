@@ -2,6 +2,7 @@ import { helperContext, makeArray } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import I18n from "I18n";
 import jQuery from "jquery";
+import { htmlSafe } from "@ember/template";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
@@ -107,17 +108,17 @@ export function autoUpdatingRelativeAge(date, options) {
     prefix = options.prefix + " ";
   }
 
-  return (
+  return htmlSafe(
     "<span class='relative-date" +
-    append +
-    "' data-time='" +
-    date.getTime() +
-    "' data-format='" +
-    format +
-    "'>" +
-    prefix +
-    relAge +
-    "</span>"
+      append +
+      "' data-time='" +
+      date.getTime() +
+      "' data-format='" +
+      format +
+      "'>" +
+      prefix +
+      relAge +
+      "</span>"
   );
 }
 
