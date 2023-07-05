@@ -4,31 +4,13 @@ import I18n from "I18n";
 import { escape } from "pretty-text/sanitizer";
 import tippy from "tippy.js";
 
-const TIPPY_DELAY = 500;
+const TIPPY_DELAY = isTesting() ? 0 : 500;
 
-const instances = {};
-const queue = [];
-
-function addToQueue(options) {
-  for (let i = 0; i < queue.size; ++i) {
-    if (queue[i].id === options.id) {
-      queue[i] = options;
-      return;
-    }
-  }
-
-  queue.push(options);
-}
-
-function removeFromQueue(userTipId) {
-  const index = queue.findIndex((userTip) => userTip.id === userTipId);
-  if (index !== -1) {
-    queue.splice(index, 1);
-  }
-}
+const instancesMap = {};
+window.instancesMap = instancesMap;
 
 export function showUserTip(options) {
-  let instance = instances[options.id];
+  let instance = instancesMap[options.id];
   if (instance) {
     if (instance.reference === options.reference) {
       if (instance.destroyTimeout) {
@@ -38,31 +20,19 @@ export function showUserTip(options) {
     }
 
     instance.destroy();
-    delete instances[options.id];
+    delete instancesMap[options.id];
   }
 
   if (!options.reference) {
     return;
   }
 
-  if (options.content) {
-    // Remove element from DOM to hide it
-    options.content.remove();
-  }
-
-  if (Object.keys(instances).length > 0) {
-    return addToQueue(options);
-  } else {
-    removeFromQueue(options.id);
-  }
-
-  instances[options.id] = tippy(options.reference, {
-    showOnCreate: true,
+  instancesMap[options.id] = tippy(options.reference, {
     hideOnClick: false,
     trigger: "manual",
     theme: "user-tip",
     zIndex: "", // reset z-index
-    delay: isTesting() ? 0 : TIPPY_DELAY,
+    duration: TIPPY_DELAY,
 
     arrow: iconHTML("tippy-rounded-arrow"),
     placement: options.placement,
@@ -105,37 +75,39 @@ export function showUserTip(options) {
         });
     },
   });
+  showNextUserTip();
 }
 
-export function hideUserTip(userTipId, now = false) {
-  removeFromQueue(userTipId);
-
-  const instance = instances[userTipId];
+export function hideUserTip(userTipId, force = false) {
+  const instance = instancesMap[userTipId];
   if (!instance) {
     return;
   }
 
-  if (now) {
+  if (force) {
     instance.destroy();
-    delete instances[userTipId];
+    delete instancesMap[userTipId];
+    showNextUserTip();
   } else if (!instance.destroyTimeout) {
-    instance.destroyTimeout = setTimeout(() => {
-      const tippyInstance = instances[userTipId];
-      if (tippyInstance) {
-        tippyInstance.destroy();
-        delete instances[userTipId];
-      }
-    }, TIPPY_DELAY);
+    instance.destroyTimeout = setTimeout(
+      () => hideUserTip(userTipId, true),
+      TIPPY_DELAY
+    );
   }
 }
 
 export function hideAllUserTips() {
-  Object.keys(instances).forEach((userTipId) => hideUserTip(userTipId, true));
+  Object.keys(instancesMap).forEach((userTipId) => {
+    instancesMap[userTipId].destroy();
+    delete instancesMap[userTipId];
+  });
 }
 
 export function showNextUserTip() {
-  let index = queue.findIndex((options) => {
-    const position = options.reference.getBoundingClientRect();
+  const instances = Object.values(instancesMap);
+
+  let index = instances.findIndex((instance) => {
+    const position = instance.reference.getBoundingClientRect();
     const width = window.innerWidth || document.documentElement.clientWidth;
     const height = window.innerHeight || document.documentElement.clientHeight;
     return (
@@ -146,12 +118,20 @@ export function showNextUserTip() {
     );
   });
 
-  if (index === -1) {
-    index = 0;
+  const newInstance = instances[index === -1 ? 0 : index];
+  if (!newInstance) {
+    return;
   }
 
-  if (queue.length > index) {
-    const options = queue.splice(index, 1)[0];
-    showUserTip(options);
-  }
+  instances.forEach((instance) => {
+    if (instance === newInstance) {
+      instance.showTimeout = setTimeout(() => {
+        if (!instance.state.isDestroyed) {
+          instance.show();
+        }
+      }, TIPPY_DELAY);
+    } else {
+      instance.hide();
+    }
+  });
 }
