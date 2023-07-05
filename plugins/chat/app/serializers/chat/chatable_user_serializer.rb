@@ -9,7 +9,7 @@ module Chat
     end
 
     def has_chat_enabled
-      can_chat && object.user_option.chat_enabled
+      can_chat && object.user_option&.chat_enabled
     end
   end
 end
