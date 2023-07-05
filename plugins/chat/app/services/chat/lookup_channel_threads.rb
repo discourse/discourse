@@ -146,6 +146,10 @@ module Chat
               ON tracked_threads_subquery.thread_id = chat_threads.id",
         )
         .joins(:user_chat_thread_memberships)
+        .joins(
+          "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
+        )
+        .where("original_messages.deleted_at IS NULL")
         .where(user_chat_thread_memberships_chat_threads: { user_id: guardian.user.id })
     end
 

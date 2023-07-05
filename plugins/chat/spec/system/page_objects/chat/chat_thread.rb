@@ -132,10 +132,29 @@ module PageObjects
         end
       end
 
+      def expand_deleted_message(message)
+        message_by_id(message.id).find(".chat-message-expand").click
+      end
+
       def copy_link(message)
+        expand_message_actions(message)
+        find("[data-value='copyLink']").click
+      end
+
+      def delete_message(message)
+        expand_message_actions(message)
+        find("[data-value='delete']").click
+      end
+
+      def restore_message(message)
+        expand_deleted_message(message)
+        expand_message_actions(message)
+        find("[data-value='restore']").click
+      end
+
+      def expand_message_actions(message)
         hover_message(message)
         click_more_button
-        find("[data-value='copyLink']").click
       end
 
       def click_more_button
