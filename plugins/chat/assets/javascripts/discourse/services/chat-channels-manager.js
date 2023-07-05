@@ -103,10 +103,11 @@ export default class ChatChannelsManager extends Service {
 
   get allChannels() {
     return [...this.publicMessageChannels, ...this.directMessageChannels].sort(
-      (a, b) =>
-        a?.currentUserMembership?.lastViewedAt?.localeCompare?.(
-          b?.currentUserMembership?.lastViewedAt
-        )
+      (a, b) => {
+        return b?.currentUserMembership?.lastViewedAt?.localeCompare?.(
+          a?.currentUserMembership?.lastViewedAt
+        );
+      }
     );
   }
 
