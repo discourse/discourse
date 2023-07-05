@@ -9,4 +9,12 @@ export default class ChatMessageCreatorChannelRow extends Component {
   get openChannelLabel() {
     return htmlSafe(I18n.t("chat.new_message_modal.open_channel"));
   }
+
+  get isUrgent() {
+    return (
+      this.args.content.model.isDirectMessageChannel ||
+      (this.args.content.model.isCategoryChannel &&
+        this.args.content.model.tracking.mentionCount > 0)
+    );
+  }
 }

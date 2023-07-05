@@ -74,11 +74,14 @@ class Search {
   #loadExistingChannels() {
     return this.chatChannelsManager.allChannels
       .map((channel) => {
+        let chatable;
         if (channel.chatable?.users?.length === 1) {
-          return ChatChatable.createUser(channel.chatable.users[0]);
+          chatable = ChatChatable.createUser(channel.chatable.users[0]);
+          chatable.tracking = this.#injectTracking(chatable);
+        } else {
+          chatable = ChatChatable.createChannel(channel);
+          chatable.tracking = channel.tracking;
         }
-        const chatable = ChatChatable.createChannel(channel);
-        chatable.tracking = channel.tracking;
         return chatable;
       })
       .filter(Boolean)

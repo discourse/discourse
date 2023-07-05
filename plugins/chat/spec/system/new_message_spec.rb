@@ -37,22 +37,35 @@ RSpec.describe "New message", type: :system do
       chat_page.open_new_message
 
       expect(chat_page.message_creator).to be_listing(channel_1)
-      # it lists user_1 instead of this channel as it's a 1:1 channel
       expect(chat_page.message_creator).to be_not_listing(channel_2)
-      expect(chat_page.message_creator).to be_not_listing(
-        direct_message_channel_1,
-        current_user: current_user,
-      )
-      expect(chat_page.message_creator).to be_not_listing(
-        direct_message_channel_2,
-        current_user: current_user,
-      )
+      expect(chat_page.message_creator).to be_not_listing(direct_message_channel_2)
       expect(chat_page.message_creator).to be_listing(user_1)
       expect(chat_page.message_creator).to be_not_listing(user_2)
     end
   end
 
   context "with no selection" do
+    context "with unread state" do
+      fab!(:user_1) { Fabricate(:user) }
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+      fab!(:channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
+
+      before do
+        channel_1.add(user_1)
+        channel_1.add(current_user)
+        Fabricate(:chat_message, chat_channel: channel_1, user: user_1)
+        Fabricate(:chat_message, chat_channel: channel_2, user: user_1)
+      end
+
+      it "shows the correct state" do
+        visit("/")
+        chat_page.open_new_message
+
+        expect(chat_page.message_creator).to have_unread_row(channel_1, urgent: false)
+        expect(chat_page.message_creator).to have_unread_row(user_1, urgent: true)
+      end
+    end
+
     context "when clicking a row" do
       context "when the row is a channel" do
         fab!(:channel_1) { Fabricate(:chat_channel) }
