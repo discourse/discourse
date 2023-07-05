@@ -17,6 +17,13 @@ html.composer-open {
   max-width: $reply-area-max-width;
   width: 100%;
 
+  .has-sidebar-page & {
+    @media screen and (min-width: $reply-area-max-width) {
+      max-width: calc(100vw - var(--d-sidebar-width) - 1rem);
+      margin-right: 1rem;
+    }
+  }
+
   &.hide-preview {
     max-width: 740px;
   }

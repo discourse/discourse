@@ -73,6 +73,10 @@
     overflow-x: hidden;
     // allows sidebar to scroll to the bottom when the composer is open
     height: calc(100% - var(--composer-height, 0px));
+
+    @media screen and (min-width: $reply-area-max-width) {
+      height: auto;
+    }
   }
 
   .sidebar-sections {
