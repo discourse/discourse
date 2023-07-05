@@ -326,7 +326,7 @@ en:
 
       new_message_modal:
         title: Send message
-        add_user_long: <kbd>shift + click</kbd><kbd>shift + enter</kbd><span>Add @%{username}</span>
+        add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Add @%{username}</span>
         add_user_short: <span>Add user</span><kbd>enter</kbd>
         open_channel: <span>Open channel</span><kbd>enter</kbd>
         default_search_placeholder: "#a-channel, @somebody or anything"
