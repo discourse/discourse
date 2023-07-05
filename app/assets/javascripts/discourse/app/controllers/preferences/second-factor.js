@@ -14,6 +14,7 @@ import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/seco
 import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
 import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
 import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
+import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -263,16 +264,15 @@ export default Controller.extend(CanCheckEmails, {
       });
     },
 
-    createTotp() {
-      const controller = showModal("second-factor-add-totp", {
-        model: this.model,
-        title: "user.second_factor.totp.add",
+    async createTotp() {
+      await this.modal.show(SecondFactorAddTotp, {
+        model: {
+          secondFactor: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
     async createSecurityKey() {
