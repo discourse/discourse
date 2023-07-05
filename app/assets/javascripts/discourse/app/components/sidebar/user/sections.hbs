@@ -47,6 +47,10 @@
           @didInsert={{link.didInsert}}
           @willDestroy={{link.willDestroy}}
           @content={{link.text}}
+          @contentComponent={{component
+            link.contentComponent
+            status=link.contentComponentArgs
+          }}
         />
       {{/each}}
     </Sidebar::Section>

@@ -1108,8 +1108,6 @@ tr_TR:
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
-        categories_section: "Kategoriler Bölümü"
-        tags_section: "Etiketler Bölümü"
         navigation_section: "Gezinti"
         navigation_section_instruction: "Gezinme menüsündeki bir konu listesinde yeni veya okunmamış öğeler olduğunda…"
         link_to_filtered_list_checkbox_description: "Filtrelenmiş liste bağlantısı"
@@ -1152,6 +1150,7 @@ tr_TR:
       watched_first_post_categories_instructions: "Bu kategorilerdeki tüm yeni konuların ilk gönderileri için bildirim alacaksınız."
       watched_first_post_tags: "İlk Gönderi izleniyor"
       watched_first_post_tags_instructions: "Bu etiketlere sahip olan her yeni konunun ilk gönderisi için bildirim alacaksınız."
+      watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendir"
       muted_categories: "Sessize alındı"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız ve kategorilerde ya da en son sayfalarda görünmeyecekler."
       muted_categories_instructions_dont_hide: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız."

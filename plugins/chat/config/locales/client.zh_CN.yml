@@ -330,6 +330,7 @@ zh_CN:
         followed: "已加入"
         mobile_notification_level: "移动推送通知"
         mute: "将频道设为免打扰"
+        threading_disabled: "已禁用"
         muted_on: "开"
         muted_off: "关"
         notifications: "通知"
@@ -444,7 +445,7 @@ zh_CN:
           tracking:
             title: "跟踪"
         participants_other_count:
-          other: "+其他 %{count} 个"
+          other: "+%{count}"
       threads:
         open: "打开主题"
         list: "正在进行的讨论"

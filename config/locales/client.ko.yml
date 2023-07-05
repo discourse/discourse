@@ -1013,8 +1013,6 @@ ko:
       experimental_sidebar:
         enable: "사이드바 활성화"
         options: "옵션"
-        categories_section: "카테고리 섹션"
-        tags_section: "태그 섹션"
         navigation_section: "내비게이션"
       change: "변경"
       featured_topic: "추천 주제"

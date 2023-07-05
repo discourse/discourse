@@ -18,20 +18,21 @@ export default class ChatThreadHeader extends Component {
   @tracked persistedNotificationLevel = true;
 
   get backLink() {
+    let route;
+
     if (
       this.chatHistory.previousRoute?.name === "chat.channel.index" &&
       this.site.mobileView
     ) {
-      return {
-        route: "chat.channel.index",
-        models: this.args.channel.routeModels,
-      };
+      route = "chat.channel.index";
     } else {
-      return {
-        route: "chat.channel.threads",
-        models: [],
-      };
+      route = "chat.channel.threads";
     }
+
+    return {
+      route,
+      models: this.args.channel.routeModels,
+    };
   }
 
   get label() {

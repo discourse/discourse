@@ -19,6 +19,7 @@ export default class DiscourseTooltip extends Component {
   }
 
   stopPropagation(instance, event) {
+    event.preventDefault();
     event.stopPropagation();
   }
 

@@ -417,6 +417,8 @@ sv:
         followed: "Gick med"
         mobile_notification_level: "Mobila push-meddelanden"
         mute: "Tysta kanal"
+        threading_enabled: "Aktiverad"
+        threading_disabled: "Inaktiverad"
         muted_on: "På"
         muted_off: "Av"
         notifications: "Aviseringar"
@@ -538,8 +540,8 @@ sv:
           tracking:
             title: "Följer"
         participants_other_count:
-          one: "+%{count} annan"
-          other: "+%{count} andra"
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Öppna tråd"
         list: "Pågående diskussioner"

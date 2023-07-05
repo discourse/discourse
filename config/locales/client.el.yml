@@ -981,8 +981,6 @@ el:
       experimental_sidebar:
         enable: "Ενεργοποίηση πλαϊνής γραμμής"
         options: "Επιλογές"
-        categories_section: "Ενότητα Κατηγοριών"
-        tags_section: "Ενότητα Ετικετών"
         navigation_section: "Πλοήγηση"
       change: "αλλαγή"
       featured_topic: "Επιλεγμένο θέμα"

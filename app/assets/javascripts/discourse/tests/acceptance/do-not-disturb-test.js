@@ -38,7 +38,7 @@ acceptance("Do not disturb", function (needs) {
 
     await click(tiles[0]);
 
-    assert.ok(query(".d-modal.hidden"), "modal is hidden");
+    assert.dom(".d-modal").doesNotExist("modal is hidden");
 
     assert.ok(
       exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),
@@ -68,10 +68,9 @@ acceptance("Do not disturb", function (needs) {
       "Enter"
     );
 
-    assert.ok(
-      query(".d-modal.hidden"),
-      "DND modal is hidden after making a choice"
-    );
+    assert
+      .dom(".d-modal")
+      .doesNotExist("DND modal is hidden after making a choice");
 
     assert.ok(
       exists(".header-dropdown-toggle .do-not-disturb-background .d-icon-moon"),

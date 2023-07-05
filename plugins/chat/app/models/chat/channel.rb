@@ -104,27 +104,53 @@ module Chat
     end
 
     def self.ensure_consistency!
-      update_counts
+      update_message_counts
+      update_user_counts
     end
 
-    # TODO (martin) Move Jobs::Chat::UpdateUserCountsForChannels into here
-    def self.update_counts
+    def self.update_message_counts
       # NOTE: Chat::Channel#messages_count is not updated every time
       # a message is created or deleted in a channel, so it should not
       # be displayed in the UI. It is updated eventually via Jobs::Chat::PeriodicalUpdates
       DB.exec <<~SQL
-      UPDATE chat_channels channels
-      SET messages_count = subquery.messages_count
-      FROM (
-        SELECT COUNT(*) AS messages_count, chat_channel_id
-        FROM chat_messages
-        WHERE chat_messages.deleted_at IS NULL
-        GROUP BY chat_channel_id
-      ) subquery
-      WHERE channels.id = subquery.chat_channel_id
-      AND channels.deleted_at IS NULL
-      AND subquery.messages_count != channels.messages_count
-    SQL
+        UPDATE chat_channels channels
+        SET messages_count = subquery.messages_count
+        FROM (
+          SELECT COUNT(*) AS messages_count, chat_channel_id
+          FROM chat_messages
+          WHERE chat_messages.deleted_at IS NULL
+          GROUP BY chat_channel_id
+        ) subquery
+        WHERE channels.id = subquery.chat_channel_id
+        AND channels.deleted_at IS NULL
+        AND subquery.messages_count != channels.messages_count
+      SQL
+    end
+
+    def self.update_user_counts
+      updated_channel_ids = DB.query_single(<<~SQL, statuses: [statuses[:open], statuses[:closed]])
+        UPDATE chat_channels channels
+        SET user_count = subquery.user_count, user_count_stale = false
+        FROM (
+          SELECT COUNT(DISTINCT user_chat_channel_memberships.id) AS user_count, user_chat_channel_memberships.chat_channel_id
+          FROM user_chat_channel_memberships
+          INNER JOIN users ON users.id = user_chat_channel_memberships.user_id
+          WHERE users.active
+            AND (users.suspended_till IS NULL OR users.suspended_till <= CURRENT_TIMESTAMP)
+            AND NOT users.staged
+            AND user_chat_channel_memberships.following
+          GROUP BY user_chat_channel_memberships.chat_channel_id
+        ) subquery
+        WHERE channels.id = subquery.chat_channel_id
+        AND channels.deleted_at IS NULL
+        AND subquery.user_count != channels.user_count
+        AND channels.status IN (:statuses)
+        RETURNING channels.id;
+      SQL
+
+      Chat::Channel
+        .where(id: updated_channel_ids)
+        .find_each { |channel| ::Chat::Publisher.publish_chat_channel_metadata(channel) }
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)

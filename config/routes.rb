@@ -1480,6 +1480,7 @@ Discourse::Application.routes.draw do
       get "/" => "tags#index"
       get "/filter/list" => "tags#index"
       get "/filter/search" => "tags#search"
+      get "/list" => "tags#list"
       get "/personal_messages/:username" => "tags#personal_messages",
           :constraints => {
             username: RouteFormat.username,

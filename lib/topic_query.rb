@@ -898,7 +898,7 @@ class TopicQuery
 
     if user
       watched_tag_ids =
-        if SiteSetting.watched_precedence_over_muted
+        if user.watched_precedence_over_muted
           TagUser
             .where(user: user)
             .where("notification_level >= ?", TopicUser.notification_levels[:watching])
@@ -981,6 +981,19 @@ class TopicQuery
       end
     end
 
+    query_params = { tag_ids: muted_tag_ids }
+
+    if user && !opts[:skip_categories]
+      query_params[:regular] = CategoryUser.notification_levels[:regular]
+
+      query_params[:watching_or_infinite] = if user.watched_precedence_over_muted ||
+           SiteSetting.watched_precedence_over_muted
+        CategoryUser.notification_levels[:watching]
+      else
+        99
+      end
+    end
+
     if SiteSetting.remove_muted_tags_from_latest == "always"
       list =
         list.where(
@@ -991,16 +1004,7 @@ class TopicQuery
            WHERE tt.tag_id IN (:tag_ids)
              AND tt.topic_id = topics.id
              #{user && !opts[:skip_categories] ? "AND COALESCE(category_users.notification_level, :regular) < :watching_or_infinite" : ""})",
-          tag_ids: muted_tag_ids,
-          regular: CategoryUser.notification_levels[:regular],
-          watching_or_infinite:
-            (
-              if SiteSetting.watched_precedence_over_muted
-                CategoryUser.notification_levels[:watching]
-              else
-                99
-              end
-            ),
+          query_params,
         )
     else
       list =
@@ -1013,16 +1017,7 @@ class TopicQuery
              AND tt.topic_id = topics.id)
              #{user && !opts[:skip_categories] ? "OR COALESCE(category_users.notification_level, :regular) >= :watching_or_infinite" : ""}
         ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)",
-          tag_ids: muted_tag_ids,
-          regular: CategoryUser.notification_levels[:regular],
-          watching_or_infinite:
-            (
-              if SiteSetting.watched_precedence_over_muted
-                CategoryUser.notification_levels[:watching]
-              else
-                99
-              end
-            ),
+          query_params,
         )
     end
   end
