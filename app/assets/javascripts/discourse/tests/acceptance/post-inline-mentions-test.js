@@ -36,10 +36,6 @@ async function mouseenter() {
   await triggerEvent(query(".user-status-message"), "mouseenter");
 }
 
-async function mouseleave() {
-  await triggerEvent(query(".user-status-message"), "mouseleave");
-}
-
 acceptance("Post inline mentions", function (needs) {
   needs.user();
 
@@ -62,24 +58,12 @@ acceptance("Post inline mentions", function (needs) {
       exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
-
     const statusElement = query(
       ".topic-post .cooked .mention .user-status-message img"
     );
     assert.ok(
       statusElement.src.includes(status.emoji),
       "status emoji is correct"
-    );
-
-    await mouseenter();
-    const statusTooltipDescription = document.querySelector(
-      ".user-status-message-tooltip .user-status-tooltip-description"
-    );
-
-    assert.equal(
-      statusTooltipDescription.innerText,
-      status.description,
-      "status description is correct"
     );
   });
 
@@ -105,7 +89,6 @@ acceptance("Post inline mentions", function (needs) {
       exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
-
     const statusElement = query(
       ".topic-post .cooked .mention .user-status-message img"
     );
@@ -113,19 +96,6 @@ acceptance("Post inline mentions", function (needs) {
       statusElement.src.includes(status.emoji),
       "status emoji is correct"
     );
-
-    await mouseenter();
-    const statusTooltipDescription = document.querySelector(
-      ".user-status-message-tooltip .user-status-tooltip-description"
-    );
-    assert.equal(
-      statusTooltipDescription.innerText,
-      status.description,
-      "status description is correct"
-    );
-
-    // Needed to remove the tooltip in between tests
-    await mouseleave();
   });
 
   test("updates user status on message bus message", async function (assert) {
@@ -150,13 +120,10 @@ acceptance("Post inline mentions", function (needs) {
       },
     });
 
-    await mouseenter();
-
     assert.ok(
       exists(".topic-post .cooked .mention .user-status-message"),
       "updated user status is shown"
     );
-
     const statusElement = query(
       ".topic-post .cooked .mention .user-status-message img"
     );
@@ -164,18 +131,6 @@ acceptance("Post inline mentions", function (needs) {
       statusElement.src.includes(newStatus.emoji),
       "updated status emoji is correct"
     );
-
-    const statusTooltipDescription = document.querySelector(
-      ".user-status-message-tooltip .user-status-tooltip-description"
-    );
-    assert.equal(
-      statusTooltipDescription.innerText,
-      newStatus.description,
-      "updated status description is correct"
-    );
-
-    // Needed to remove the tooltip in between tests
-    await mouseleave();
   });
 
   test("removes user status on message bus message", async function (assert) {
@@ -196,6 +151,41 @@ acceptance("Post inline mentions", function (needs) {
     assert.notOk(
       exists(".topic-post .cooked .mention .user-status-message"),
       "updated user has disappeared"
+    );
+  });
+});
+
+acceptance("Post inline mentions – user status tooltip", function (needs) {
+  needs.user();
+
+  const topicId = 130;
+  const mentionedUserId = 1;
+  const status = {
+    description: "Surfing",
+    emoji: "surfing_man",
+    ends_at: null,
+  };
+
+  test("shows user status tooltip", async function (assert) {
+    pretender.get(`/t/${topicId}.json`, () => {
+      return response(topicWithUserStatus(topicId, mentionedUserId, status));
+    });
+
+    await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
+    assert.ok(
+      exists(".topic-post .cooked .mention .user-status-message"),
+      "user status is shown"
+    );
+
+    await mouseenter();
+    const statusTooltipDescription = document.querySelector(
+      ".user-status-message-tooltip .user-status-tooltip-description"
+    );
+
+    assert.equal(
+      statusTooltipDescription.innerText,
+      status.description,
+      "status description is correct"
     );
   });
 });
