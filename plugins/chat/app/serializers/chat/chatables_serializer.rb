@@ -38,7 +38,7 @@ module Chat
                 channel,
                 scope: scope,
                 root: false,
-                membership: channel.membership_for(scope.user),
+                membership: channel_membership(channel.id),
               ),
           }
         end
@@ -56,11 +56,17 @@ module Chat
                 channel,
                 scope: scope,
                 root: false,
-                membership: channel.membership_for(scope.user),
+                membership: channel_membership(channel.id),
               ),
           }
         end
         .as_json
+    end
+
+    private
+
+    def channel_membership(channel_id)
+      object.memberships.find { |membership| membership.chat_channel_id == channel_id }
     end
   end
 end

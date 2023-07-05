@@ -15,6 +15,7 @@ module Chat
     #   @return [Service::Base::Context]
 
     contract
+    step :fetch_memberships
     step :fetch_users
     step :fetch_category_channels
     step :fetch_direct_message_channels
@@ -25,6 +26,10 @@ module Chat
     end
 
     private
+
+    def fetch_memberships(guardian:, **)
+      context.memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
+    end
 
     def fetch_users(contract:, guardian:, **)
       return if contract.term&.start_with?("#")
@@ -48,6 +53,8 @@ module Chat
     def fetch_direct_message_channels(contract:, guardian:, **args)
       return if contract.term == "#"
       return if contract.term&.start_with?("@")
+
+      exclude_1_to_1_channels = !contract.term&.start_with?("#")
 
       user_ids =
         (context.users.nil? ? search_users(contract.term, guardian) : context.users).map(&:id)
