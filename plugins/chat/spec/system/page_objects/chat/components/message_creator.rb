@@ -57,19 +57,19 @@ module PageObjects
         end
 
         def listing?(chatable, **args)
-          component.send(:has_selector?, build_row_selector(chatable, **args))
+          component.has_css?(build_row_selector(chatable, **args))
         end
 
         def not_listing?(chatable, **args)
-          component.send(:has_no_selector?, build_row_selector(chatable, **args))
+          component.has_no_css?(build_row_selector(chatable, **args))
         end
 
         def selecting?(chatable, **args)
-          component.send(:has_selector?, build_item_selector(chatable, **args))
+          component.has_css?(build_item_selector(chatable, **args))
         end
 
         def not_selecting?(chatable, **args)
-          component.send(:has_no_selector?, build_item_selector(chatable, **args))
+          component.has_no_css?(build_item_selector(chatable, **args))
         end
 
         def click_item(chatable, **args)
