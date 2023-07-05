@@ -246,7 +246,11 @@ RSpec.configure do |config|
 
     WebMock.disable_net_connect!(
       allow_localhost: true,
-      allow: [Webdrivers::Chromedriver.base_url, "http://127.0.0.1:9000"],
+      allow: [
+        Webdrivers::Chromedriver.base_url,
+        "http://discoursetest.minio.local:9000",
+        "http://minio.local:9000",
+      ],
     )
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?

@@ -262,7 +262,7 @@ class S3Helper
 
     if SiteSetting.s3_endpoint.present?
       opts[:endpoint] = SiteSetting.s3_endpoint
-      opts[:force_path_style] = true
+      # opts[:force_path_style] = true
     end
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
 

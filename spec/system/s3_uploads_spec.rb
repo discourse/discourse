@@ -6,12 +6,12 @@ describe "Uploading files to S3", type: :system do
   before do
     SiteSetting.enable_s3_uploads = true
 
-    SiteSetting.s3_upload_bucket = "discoursetestbucket"
+    SiteSetting.s3_upload_bucket = "discoursetest"
     SiteSetting.enable_upload_debug_mode = true
 
     SiteSetting.s3_access_key_id = "minioadmin"
     SiteSetting.s3_secret_access_key = "minioadmin"
-    SiteSetting.s3_endpoint = "http://127.0.0.1:9000"
+    SiteSetting.s3_endpoint = "http://minio.local:9000"
 
     sign_in(current_user)
   end
@@ -19,12 +19,12 @@ describe "Uploading files to S3", type: :system do
   describe "direct S3 uploads (non-multipart)" do
     before { SiteSetting.enable_direct_s3_uploads = true }
 
-    xit "uploads custom avatars to S3" do
+    it "uploads custom avatars to S3" do
       visit "/my/preferences/account"
 
       find("#edit-avatar").click
       find("#uploaded-avatar").click
-      attach_file(File.absolute_path(file_from_fixtures("logo.png"))) do
+      attach_file(File.absolute_path(file_from_fixtures("logo.jpg"))) do
         find("#avatar-uploader").click
       end
       expect(current_user.reload.uploaded_avatar_id).to be_present
