@@ -131,7 +131,7 @@
 .touch .chat-message-container {
   &.-active {
     background: var(--d-hover);
-    border-radius: 5px;
+    border-radius: var(--d-border-radius);
 
     &.-bookmarked {
       background: var(--highlight-low);
