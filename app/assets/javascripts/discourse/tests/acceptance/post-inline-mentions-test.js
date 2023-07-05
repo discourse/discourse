@@ -5,7 +5,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { triggerEvent, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -51,7 +51,7 @@ acceptance("Post inline mentions", function (needs) {
     ends_at: null,
   };
 
-  skip("shows user status on inline mentions", async function (assert) {
+  test("shows user status on inline mentions", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
       return response(topicWithUserStatus(topicId, mentionedUserId, status));
     });
@@ -83,7 +83,7 @@ acceptance("Post inline mentions", function (needs) {
     );
   });
 
-  skip("inserts user status on message bus message", async function (assert) {
+  test("inserts user status on message bus message", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
       return response(topicWithoutUserStatus(topicId, mentionedUserId));
     });
