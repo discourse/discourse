@@ -273,7 +273,7 @@ export default class ChatMessageCreator extends Component {
         return;
       } else if (this.activeContentIdentifier) {
         this.toggleSelection(this.activeContentIdentifier, {
-          shiftKey: event.shiftKey,
+          altSelection: event.shiftKey || event.ctrlKey,
         });
         event.preventDefault();
         return;
@@ -298,8 +298,8 @@ export default class ChatMessageCreator extends Component {
     }
 
     const digit = this.#getDigit(event.code);
-    if (event.shiftKey && digit) {
-      this._activeContentIdentifier = this.content.objectAt(
+    if (event.ctrlKey && digit) {
+      this._activeContentIdentifier = this.content.value.objectAt(
         digit - 1
       )?.identifier;
       event.preventDefault();
@@ -388,7 +388,11 @@ export default class ChatMessageCreator extends Component {
       return;
     }
 
-    if (!this.hasSelectedUsers && !options.shiftKey && !this.site.mobileView) {
+    if (
+      !this.hasSelectedUsers &&
+      !options.altSelection &&
+      !this.site.mobileView
+    ) {
       this.openChannel([selection]);
       return;
     }

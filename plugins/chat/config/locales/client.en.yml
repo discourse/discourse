@@ -327,8 +327,8 @@ en:
       new_message_modal:
         title: Send message
         add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Add @%{username}</span>
-        add_user_short: <span>Add user</span><kbd>enter</kbd>
-        open_channel: <span>Open channel</span><kbd>enter</kbd>
+        add_user_short: <span>Add user</span>
+        open_channel: <span>Open channel</span>
         default_search_placeholder: "#a-channel, @somebody or anything"
         user_search_placeholder: "...add more users"
         disabled_user: "has disabled chat"
