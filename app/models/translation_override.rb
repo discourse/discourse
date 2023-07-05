@@ -53,8 +53,10 @@ class TranslationOverride < ActiveRecord::Base
     translation_override = find_or_initialize_by(params)
     sanitized_value =
       translation_override.sanitize_field(value, additional_attributes: ["data-auto-route"])
+    original_translation =
+      I18n.overrides_disabled { I18n.t(transform_pluralized_key(key), locale: :en) }
 
-    data = { value: sanitized_value }
+    data = { value: sanitized_value, original_translation: original_translation }
     if key.end_with?("_MF")
       _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
       data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, sanitized_value)
