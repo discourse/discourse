@@ -39,10 +39,15 @@ module("Integration | Component | d-modal", function (hooks) {
   });
 
   test("flash", async function (assert) {
+    await render(hbs`<DModal @inline={{true}} @flash="Some message"/>`);
+    assert.dom(".d-modal .alert").hasText("Some message");
+  });
+
+  test("flash type", async function (assert) {
     await render(
-      hbs`<DModal @inline={{true}} @flash="Some message" @flashType="error"/> `
+      hbs`<DModal @inline={{true}} @flash="Some message" @flashType="success"/>`
     );
-    assert.dom(".d-modal .alert.alert-error").hasText("Some message");
+    assert.dom(".d-modal .alert").hasClass("alert-success");
   });
 
   test("dismissable", async function (assert) {

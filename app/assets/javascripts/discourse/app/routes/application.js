@@ -13,6 +13,7 @@ import mobile from "discourse/lib/mobile";
 import { inject as service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -146,9 +147,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     showKeyboardShortcutsHelp() {
-      showModal("keyboard-shortcuts-help", {
-        title: "keyboard_shortcuts_help.title",
-      });
+      this.modal.show(KeyboardShortcutsHelp);
     },
 
     // Close the current modal, and destroy its state.

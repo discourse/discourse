@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
-acceptance("Opengraph Tag Updater", function (needs) {
+acceptance("Meta Tag Updater", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/about", () => {
       return helper.response({});
@@ -33,17 +33,24 @@ acceptance("Opengraph Tag Updater", function (needs) {
     );
     assert.strictEqual(
       document
-        .querySelector("meta[property='twitter:title']")
+        .querySelector("meta[name='twitter:title']")
         .getAttribute("content"),
       document.title,
-      "it should update OG title"
+      "it should update Twitter title"
     );
     assert.ok(
       document
-        .querySelector("meta[property='twitter:url']")
+        .querySelector("meta[name='twitter:url']")
         .getAttribute("content")
         .endsWith("/about"),
-      "it should update OG URL"
+      "it should update Twitter URL"
+    );
+    assert.ok(
+      document
+        .querySelector("link[rel='canonical']")
+        .getAttribute("href")
+        .endsWith("/about"),
+      "it should update the canonical URL"
     );
   });
 });
