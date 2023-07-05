@@ -16,9 +16,7 @@
         {{loading-spinner size="medium"}}
       {{else}}
         {{#each this.sortedThreads as |thread|}}
-          {{#if (not thread.originalMessage.deletedAt)}}
-            <Chat::ThreadList::Item @thread={{thread}} />
-          {{/if}}
+          <Chat::ThreadList::Item @thread={{thread}} />
         {{else}}
           <div class="chat-thread-list__no-threads">
             {{i18n "chat.threads.none"}}

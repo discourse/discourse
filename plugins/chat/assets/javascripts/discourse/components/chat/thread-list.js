@@ -18,9 +18,30 @@ export default class ChatThreadList extends Component {
       return [];
     }
 
-    return this.args.channel.threadsManager.threads.sort((threadA, threadB) => {
-      // If both are unread we just want to sort by last reply date + time descending.
-      if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
+    return this.args.channel.threadsManager.threads
+      .sort((threadA, threadB) => {
+        // If both are unread we just want to sort by last reply date + time descending.
+        if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
+          if (
+            threadA.preview.lastReplyCreatedAt >
+            threadB.preview.lastReplyCreatedAt
+          ) {
+            return -1;
+          } else {
+            return 1;
+          }
+        }
+
+        // If one is unread and the other is not, we want to sort the unread one first.
+        if (threadA.tracking.unreadCount) {
+          return -1;
+        }
+
+        if (threadB.tracking.unreadCount) {
+          return 1;
+        }
+
+        // If both are read, we want to sort by last reply date + time descending.
         if (
           threadA.preview.lastReplyCreatedAt >
           threadB.preview.lastReplyCreatedAt
@@ -29,26 +50,8 @@ export default class ChatThreadList extends Component {
         } else {
           return 1;
         }
-      }
-
-      // If one is unread and the other is not, we want to sort the unread one first.
-      if (threadA.tracking.unreadCount) {
-        return -1;
-      }
-
-      if (threadB.tracking.unreadCount) {
-        return 1;
-      }
-
-      // If both are read, we want to sort by last reply date + time descending.
-      if (
-        threadA.preview.lastReplyCreatedAt > threadB.preview.lastReplyCreatedAt
-      ) {
-        return -1;
-      } else {
-        return 1;
-      }
-    });
+      })
+      .filter((thread) => !thread.originalMessage.deletedAt);
   }
 
   get shouldRender() {
