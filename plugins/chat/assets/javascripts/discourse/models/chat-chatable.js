@@ -62,6 +62,10 @@ export default class ChatChatable {
     }
   }
 
+  get isUser() {
+    return this.type === "user";
+  }
+
   get isSingleUserChannel() {
     return this.type === "channel" && this.model?.chatable?.users?.length === 1;
   }

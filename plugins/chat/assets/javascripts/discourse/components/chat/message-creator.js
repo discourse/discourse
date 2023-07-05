@@ -118,7 +118,7 @@ export default class ChatMessageCreator extends Component {
   @tracked loading = false;
   @tracked activeSelectionIdentifiers = new TrackedArray();
   @tracked selectedIdentifiers = [];
-  @tracked _activeContentIdentifier = null;
+  @tracked _activeResultIdentifier = null;
 
   get placeholder() {
     if (this.hasSelectedUsers) {
@@ -132,7 +132,7 @@ export default class ChatMessageCreator extends Component {
     return this.showShortcut || this.hasSelectedUsers;
   }
 
-  get showContent() {
+  get showResults() {
     if (this.hasSelectedUsers && !this.query.length) {
       return false;
     }
@@ -143,10 +143,10 @@ export default class ChatMessageCreator extends Component {
   get shortcutLabel() {
     let username;
 
-    if (this.activeContent?.type === USER_TYPE) {
-      username = this.activeContent.model.username;
+    if (this.activeResult?.isUser) {
+      username = this.activeResult.model.username;
     } else {
-      username = this.activeContent.model.chatable.users[0].username;
+      username = this.activeResult.model.chatable.users[0].username;
     }
 
     return htmlSafe(
@@ -159,37 +159,36 @@ export default class ChatMessageCreator extends Component {
   get showShortcut() {
     return (
       !this.hasSelectedUsers &&
-      this.content?.value?.length &&
+      this.searchRequest?.value?.length &&
       this.site.desktopView &&
-      (this.activeContent?.type === USER_TYPE ||
-        this.activeContent?.isSingleUserChannel)
+      (this.activeResult?.isUser || this.activeResult?.isSingleUserChannel)
     );
   }
 
-  get activeContentIdentifier() {
+  get activeResultIdentifier() {
     return (
-      this._activeContentIdentifier ||
-      this.content.value.find((content) => content.enabled)?.identifier
+      this._activeResultIdentifier ||
+      this.searchRequest.value.find((result) => result.enabled)?.identifier
     );
   }
 
   get hasSelectedUsers() {
-    return this.selection.some((s) => s.type === USER_TYPE);
+    return this.selection.some((s) => s.isUser);
   }
 
-  get activeContent() {
-    return this.content.value.findBy(
+  get activeResult() {
+    return this.searchRequest.value.findBy(
       "identifier",
-      this.activeContentIdentifier
+      this.activeResultIdentifier
     );
   }
 
-  set activeContent(content) {
-    if (!content?.enabled) {
+  set activeResult(result) {
+    if (!result?.enabled) {
       return;
     }
 
-    this._activeContentIdentifier = content?.identifier;
+    this._activeResultIdentifier = result?.identifier;
   }
 
   get selectionIdentifiers() {
@@ -207,7 +206,7 @@ export default class ChatMessageCreator extends Component {
   }
 
   @cached
-  get content() {
+  get searchRequest() {
     let term = this.query;
 
     if (term?.length) {
@@ -230,7 +229,7 @@ export default class ChatMessageCreator extends Component {
 
   @action
   onFilter(term) {
-    this._activeContentIdentifier = null;
+    this._activeResultIdentifier = null;
     this.activeSelectionIdentifiers = [];
     this.query = term;
   }
@@ -271,8 +270,8 @@ export default class ChatMessageCreator extends Component {
         this.activeSelectionIdentifiers = [];
         event.preventDefault();
         return;
-      } else if (this.activeContentIdentifier) {
-        this.toggleSelection(this.activeContentIdentifier, {
+      } else if (this.activeResultIdentifier) {
+        this.toggleSelection(this.activeResultIdentifier, {
           altSelection: event.shiftKey || event.ctrlKey,
         });
         event.preventDefault();
@@ -283,23 +282,23 @@ export default class ChatMessageCreator extends Component {
       }
     }
 
-    if (event.key === "ArrowDown" && this.content.value.length > 0) {
+    if (event.key === "ArrowDown" && this.searchRequest.value.length > 0) {
       this.activeSelectionIdentifiers = [];
-      this._activeContentIdentifier = this.#getNextContent()?.identifier;
+      this._activeResultIdentifier = this.#getNextResult()?.identifier;
       event.preventDefault();
       return;
     }
 
-    if (event.key === "ArrowUp" && this.content.value.length > 0) {
+    if (event.key === "ArrowUp" && this.searchRequest.value.length > 0) {
       this.activeSelectionIdentifiers = [];
-      this._activeContentIdentifier = this.#getPreviousContent()?.identifier;
+      this._activeResultIdentifier = this.#getPreviousResult()?.identifier;
       event.preventDefault();
       return;
     }
 
     const digit = this.#getDigit(event.code);
     if (event.ctrlKey && digit) {
-      this._activeContentIdentifier = this.content.objectAt(
+      this._activeResultIdentifier = this.searchRequest.objectAt(
         digit - 1
       )?.identifier;
       event.preventDefault();
@@ -326,7 +325,7 @@ export default class ChatMessageCreator extends Component {
     }
 
     if (event.key === "ArrowLeft" && !event.shiftKey) {
-      this._activeContentIdentifier = null;
+      this._activeResultIdentifier = null;
       this.activeSelectionIdentifiers = [
         this.#getPreviousSelection()?.identifier,
       ].filter(Boolean);
@@ -335,7 +334,7 @@ export default class ChatMessageCreator extends Component {
     }
 
     if (event.key === "ArrowRight" && !event.shiftKey) {
-      this._activeContentIdentifier = null;
+      this._activeResultIdentifier = null;
       this.activeSelectionIdentifiers = [
         this.#getNextSelection()?.identifier,
       ].filter(Boolean);
@@ -385,7 +384,7 @@ export default class ChatMessageCreator extends Component {
 
   @action
   addSelection(identifier, options = {}) {
-    let selection = this.content.value.findBy("identifier", identifier);
+    let selection = this.searchRequest.value.findBy("identifier", identifier);
 
     if (!selection || !selection.enabled) {
       return;
@@ -442,7 +441,7 @@ export default class ChatMessageCreator extends Component {
   #handleSelectionChange() {
     this.query = "";
     this.activeSelectionIdentifiers = [];
-    this._activeContentIdentifier = null;
+    this._activeResultIdentifier = null;
   }
 
   #getPreviousSelection() {
@@ -460,12 +459,15 @@ export default class ChatMessageCreator extends Component {
     return this.selection[this.selection.length - 1];
   }
 
-  #getPreviousContent() {
-    return this.#getPrevious(this.content.value, this.activeContentIdentifier);
+  #getPreviousResult() {
+    return this.#getPrevious(
+      this.searchRequest.value,
+      this.activeResultIdentifier
+    );
   }
 
-  #getNextContent() {
-    return this.#getNext(this.content.value, this.activeContentIdentifier);
+  #getNextResult() {
+    return this.#getNext(this.searchRequest.value, this.activeResultIdentifier);
   }
 
   #getNext(list, currentIdentifier = null) {

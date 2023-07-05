@@ -55,7 +55,7 @@
       />
     </div>
 
-    {{#if this.showContent}}
+    {{#if this.showResults}}
       <div class="chat-message-creator__content-container" role="presentation">
         <div
           class="chat-message-creator__content"
@@ -63,45 +63,44 @@
           aria-multiselectable="true"
           tabindex="-1"
         >
-          {{#if this.content.loading}}
+          {{#if this.searchRequest.loading}}
             <div class="chat-message-creator__loader-container">
               <div class="chat-message-creator__loader spinner small"></div>
             </div>
           {{else}}
-            {{#each this.content.value as |content|}}
+            {{#each this.searchRequest.value as |result|}}
               <div
                 class={{concat-class
                   "chat-message-creator__row"
-                  (concat "-" content.type)
-                  (unless content.enabled "-disabled")
+                  (concat "-" result.type)
+                  (unless result.enabled "-disabled")
                   (if
-                    (eq this.activeContentIdentifier content.identifier)
-                    "-active"
+                    (eq this.activeResultIdentifier result.identifier) "-active"
                   )
                   (if
-                    (includes this.selectionIdentifiers content.identifier)
+                    (includes this.selectionIdentifiers result.identifier)
                     "-selected"
                   )
                 }}
-                data-id={{content.identifier}}
+                data-id={{result.identifier}}
                 tabindex="-1"
                 role="option"
-                {{on "click" (fn this.handleRowClick content.identifier)}}
-                {{on "mousemove" (fn (mut this.activeContent) content)}}
+                {{on "click" (fn this.handleRowClick result.identifier)}}
+                {{on "mousemove" (fn (mut this.activeResult) result)}}
                 {{on "keydown" this.handleKeydown}}
                 aria-selected={{if
-                  (includes this.selectionIdentifiers content.identifier)
+                  (includes this.selectionIdentifiers result.identifier)
                   "true"
                   "false"
                 }}
               >
                 {{component
-                  (concat "chat/message-creator/" content.type "-row")
-                  content=content
+                  (concat "chat/message-creator/" result.type "-row")
+                  content=result
                   selected=(includes
-                    this.selectionIdentifiers content.identifier
+                    this.selectionIdentifiers result.identifier
                   )
-                  active=(eq this.activeContentIdentifier content.identifier)
+                  active=(eq this.activeResultIdentifier result.identifier)
                   hasSelectedUsers=this.hasSelectedUsers
                 }}
               </div>
