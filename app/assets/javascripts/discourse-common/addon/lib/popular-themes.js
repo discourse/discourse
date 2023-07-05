@@ -1,4 +1,3 @@
-// TODO: It's not a helper
 export const POPULAR_THEMES = [
   {
     name: "Graceful",
