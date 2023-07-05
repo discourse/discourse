@@ -367,7 +367,7 @@ module Chat
       Chat::UserChatChannelMembership
         .includes(:user)
         .where(chat_channel: chat_channel, user: users, following: false)
-        .find_in_batches(batch_size: 1) do |memberships|
+        .find_in_batches do |memberships|
           memberships.each do |membership|
             serialized_channel =
               Chat::ChannelSerializer.new(
