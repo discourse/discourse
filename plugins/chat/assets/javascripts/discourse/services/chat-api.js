@@ -411,7 +411,7 @@ export default class ChatApi extends Service {
   /**
    * Lists all possible chatables.
    *
-   * @param {term} string - The term to search for.
+   * @param {term} string - The term to search for. # prefix will scope to channels, @ to users.
    *
    * @returns {Promise}
    */
