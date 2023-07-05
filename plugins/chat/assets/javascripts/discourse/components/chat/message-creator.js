@@ -162,8 +162,7 @@ export default class ChatMessageCreator extends Component {
       this.content?.value?.length &&
       this.site.desktopView &&
       (this.activeContent?.type === USER_TYPE ||
-        (this.activeContent?.type === CHANNEL_TYPE &&
-          this.activeContent?.model?.chatable?.users?.length === 1))
+        this.activeContent?.isSingleUserChannel)
     );
   }
 
@@ -181,7 +180,7 @@ export default class ChatMessageCreator extends Component {
   get activeContent() {
     return this.content.value.findBy(
       "identifier",
-      this._activeContentIdentifier
+      this.activeContentIdentifier
     );
   }
 
@@ -384,10 +383,7 @@ export default class ChatMessageCreator extends Component {
       return;
     }
 
-    if (
-      selection.type === CHANNEL_TYPE &&
-      selection.model.chatable?.users?.length !== 1
-    ) {
+    if (selection.type === CHANNEL_TYPE && !selection.isSingleUserChannel) {
       this.openChannel([selection]);
       return;
     }
@@ -397,10 +393,7 @@ export default class ChatMessageCreator extends Component {
       return;
     }
 
-    if (
-      selection.type === CHANNEL_TYPE &&
-      selection.model.chatable?.users?.length === 1
-    ) {
+    if (selection.isSingleUserChannel) {
       const user = selection.model.chatable.users[0];
       selection = new ChatChatable({
         identifier: `u-${user.id}`,

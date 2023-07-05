@@ -61,4 +61,8 @@ export default class ChatChatable {
         break;
     }
   }
+
+  get isSingleUserChannel() {
+    return this.type === "channel" && this.model?.chatable?.users?.length === 1;
+  }
 }
