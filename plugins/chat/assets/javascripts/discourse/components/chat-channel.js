@@ -763,26 +763,6 @@ export default class ChatLivePane extends Component {
     }
   }
 
-  async _upsertChannelWithMessage(channel, data) {
-    let promise = Promise.resolve(channel);
-
-    if (channel.isDirectMessageChannel) {
-      promise = this.chat.upsertDmChannelForUsernames(
-        channel.chatable.users.mapBy("username")
-      );
-    }
-
-    return promise.then((c) =>
-      ajax(`/chat/${c.id}.json`, {
-        type: "POST",
-        data,
-      }).then(() => {
-        this.pane.sending = false;
-        this.router.transitionTo("chat.channel", "-", c.id);
-      })
-    );
-  }
-
   _onSendError(id, error) {
     const stagedMessage = this.args.channel.findStagedMessage(id);
     if (stagedMessage) {
