@@ -56,21 +56,7 @@ export default class ChatChannel {
     return new ChatChannel(args);
   }
 
-  static createDirectMessageChannelDraft(args = {}) {
-    const channel = ChatChannel.create({
-      id: "staged",
-      title: args.title,
-      chatable_type: CHATABLE_TYPES.directMessageChannel,
-      chatable: { users: args.users || [] },
-      meta: { can_join_chat_channel: true },
-      status: CHANNEL_STATUSES.open,
-    });
-    channel.isDraft = true;
-    return channel;
-  }
-
   @tracked currentUserMembership = null;
-  @tracked isDraft = false;
   @tracked title;
   @tracked slug;
   @tracked description;

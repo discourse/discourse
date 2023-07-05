@@ -45,7 +45,7 @@ export default class ChatComposer extends Component {
   @tracked presenceChannelName;
 
   get shouldRenderReplyingIndicator() {
-    return this.args.channel && !this.args.channel.isDraft;
+    return this.args.channel;
   }
 
   get shouldRenderMessageDetails() {
@@ -247,10 +247,6 @@ export default class ChatComposer extends Component {
 
   reportReplyingPresence() {
     if (!this.args.channel || !this.currentMessage) {
-      return;
-    }
-
-    if (this.args.channel.isDraft) {
       return;
     }
 

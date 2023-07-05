@@ -298,7 +298,7 @@ export default class ChatMessageCreator extends Component {
 
     const digit = this.#getDigit(event.code);
     if (event.ctrlKey && digit) {
-      this._activeResultIdentifier = this.searchRequest.objectAt(
+      this._activeResultIdentifier = this.searchRequest.value.objectAt(
         digit - 1
       )?.identifier;
       event.preventDefault();
