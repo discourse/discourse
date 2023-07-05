@@ -1,8 +1,8 @@
-import Controller from "@ember/controller";
+import Component from "@glimmer/component";
 import I18n from "I18n";
 import { translateModKey } from "discourse/lib/utilities";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
+import { inject as service } from "@ember/service";
 
 const KEY = "keyboard_shortcuts_help";
 const SHIFT = I18n.t("shortcut_modifier_key.shift");
@@ -59,17 +59,10 @@ function buildShortcut(
   return I18n.t(`${KEY}.${key}`, context);
 }
 
-export default Controller.extend(ModalFunctionality, {
-  onShow() {
-    this.set("modal.modalClass", "keyboard-shortcuts-modal");
-    this._defineShortcuts();
-  },
+export default class KeyboardShortcutsHelp extends Component {
+  @service currentUser;
 
-  onClose() {
-    this.set("shortcuts", null);
-  },
-
-  _defineShortcuts() {
+  get shortcuts() {
     let shortcuts = {
       jump_to: { shortcuts: this._buildJumpToSection() },
       application: {
@@ -248,8 +241,8 @@ export default Controller.extend(ModalFunctionality, {
     };
     this._buildExtraShortcuts(shortcuts);
     this._addCountsToShortcutCategories(shortcuts);
-    this.set("shortcuts", shortcuts);
-  },
+    return shortcuts;
+  }
 
   _buildExtraShortcuts(shortcuts) {
     for (const [category, helps] of Object.entries(
@@ -270,7 +263,7 @@ export default Controller.extend(ModalFunctionality, {
         );
       });
     }
-  },
+  }
 
   _addCountsToShortcutCategories(shortcuts) {
     for (const [category, shortcutCategory] of Object.entries(shortcuts)) {
@@ -278,7 +271,7 @@ export default Controller.extend(ModalFunctionality, {
         shortcutCategory.shortcuts
       ).length;
     }
-  },
+  }
 
   _transformExtraDefinition(definition) {
     if (definition.keys1) {
@@ -300,7 +293,7 @@ export default Controller.extend(ModalFunctionality, {
       );
     }
     return definition;
-  },
+  }
 
   _translateKeys(string) {
     for (const [matcher, replacement] of Object.entries(
@@ -309,7 +302,7 @@ export default Controller.extend(ModalFunctionality, {
       string = string.replace(matcher, replacement);
     }
     return string;
-  },
+  }
 
   _buildJumpToSection() {
     const shortcuts = {
@@ -333,5 +326,5 @@ export default Controller.extend(ModalFunctionality, {
       previous: buildShortcut("jump_to.previous", { keys1: ["g", "k"] }),
     });
     return shortcuts;
-  },
-});
+  }
+}
