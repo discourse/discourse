@@ -53,6 +53,31 @@ RSpec.describe "New message", type: :system do
   end
 
   context "with no selection" do
+    context "with unread state" do
+      fab!(:user_1) { Fabricate(:user) }
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+      fab!(:channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
+
+      before do
+        channel_1.add(user_1)
+        channel_1.add(current_user)
+        Fabricate(:chat_message, chat_channel: channel_1, user: user_1)
+        Fabricate(:chat_message, chat_channel: channel_2, user: user_1)
+      end
+
+      it "shows it" do
+        visit("/")
+        chat_page.open_new_message
+
+        expect(chat_page.message_creator).to have_unread_row(channel_1, urgent: false)
+        expect(chat_page.message_creator).to have_unread_row(
+          channel_2,
+          current_user: current_user,
+          urgent: true,
+        )
+      end
+    end
+
     context "when clicking a row" do
       context "when the row is a channel" do
         fab!(:channel_1) { Fabricate(:chat_channel) }

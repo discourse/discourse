@@ -84,6 +84,14 @@ module PageObjects
           component.find(build_row_selector(chatable, **args)).click(:shift)
         end
 
+        def has_unread_row?(chatable, **args)
+          unread_selector = build_row_selector(chatable, **args)
+          unread_selector += " .unread-indicator"
+          unread_selector += ".-urgent" if args[:urgent]
+          unread_selector += ":not(.-urgent)" unless args[:urgent]
+          component.has_css?(unread_selector)
+        end
+
         def build_item_selector(chatable, **args)
           selector = ".chat-message-creator__selection-item"
           selector += content_selector(**args)
@@ -94,7 +102,7 @@ module PageObjects
         def build_row_selector(chatable, **args)
           selector = ".chat-message-creator__row"
           selector += content_selector(**args)
-          selector += chatable_selector(chatable)
+          selector += chatable_selector(chatable, **args)
           selector
         end
 
@@ -111,14 +119,20 @@ module PageObjects
           selector
         end
 
-        def chatable_selector(chatable)
+        def chatable_selector(chatable, **args)
           selector = ""
           if chatable.try(:category_channel?)
             selector += ".-channel"
             selector += "[data-id='c-#{chatable.id}']"
           elsif chatable.try(:direct_message_channel?)
-            selector += ".-channel"
-            selector += "[data-id='c-#{chatable.id}']"
+            if args[:current_user] && (chatable.chatable.users - [args[:current_user]]).length == 1
+              remaining_user = chatable.chatable.users - [args[:current_user]]
+              selector += ".-user"
+              selector += "[data-id='u-#{remaining_user[0].id}']"
+            else
+              selector += ".-channel"
+              selector += "[data-id='c-#{chatable.id}']"
+            end
           else
             selector += ".-user"
             selector += "[data-id='u-#{chatable.id}']"

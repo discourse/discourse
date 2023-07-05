@@ -2,7 +2,7 @@
 <ChatUserDisplayName @user={{@content.model}} />
 
 {{#if (gt @content.tracking.unreadCount 0)}}
-  <div class="unread-indicator"></div>
+  <div class="unread-indicator -urgent"></div>
 {{/if}}
 
 {{user-status @content.model currentUser=this.currentUser}}
