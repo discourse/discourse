@@ -65,7 +65,7 @@ RSpec.describe "New message", type: :system do
         Fabricate(:chat_message, chat_channel: channel_2, user: user_1)
       end
 
-      it "shows it" do
+      it "shows the correct state" do
         visit("/")
         chat_page.open_new_message
 
