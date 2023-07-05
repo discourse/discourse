@@ -78,19 +78,6 @@ export default {
         {
           id: "experimental-chat-lightbox",
         }
-        // TODO: Does chat have a hook to clean up?
-        // the current lightbox implementation (Magnific) adds listeners to each image
-        // but it doesn't look like they were cleaned up. This implementation adds a single
-        // listener to the parent element (chat message in this case)
-        //
-        // Topics have a cleanupStream method that is called when the topic is removed
-        // api.cleanupStream(cleanUpLightboxes);
-        //
-        // The implmentation would look something like this
-        // api.cleanupChatStream(lightboxService.cleanupLightboxes);
-        //
-        // that said, the new lightbox event listners are cleaned up in dom:clean which
-        // fires on route transition anyway.
       );
     } else {
       api.decorateChatMessage(

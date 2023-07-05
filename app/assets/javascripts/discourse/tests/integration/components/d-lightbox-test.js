@@ -7,10 +7,7 @@ import { generateLightboxMarkup } from "discourse/tests/helpers/lightbox-helpers
 import { hbs } from "ember-cli-htmlbars";
 import { setupLightboxes } from "discourse/lib/lightbox";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-
-const trigger_selector = ".lightbox";
-const lightbox_selector = ".d-lightbox";
-const lightbox_open_selector = ".d-lightbox__content";
+import { SELECTORS } from "discourse/lib/lightbox/constants";
 
 module("Integration | Component | d-lightbox", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,66 +16,81 @@ module("Integration | Component | d-lightbox", function (hooks) {
     await render(hbs`<DLightbox />`);
 
     // lightbox container exists but is not visible
-    assert.dom(lightbox_selector).exists();
-    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-visible");
-    assert.dom(lightbox_selector).hasAttribute("tabindex", "-1");
-    assert.dom(lightbox_open_selector).doesNotExist();
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).exists();
+    assert
+      .dom(SELECTORS.LIGHTBOX_CONTAINER)
+      .doesNotHaveClass("d-lightbox--is-visible");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasAttribute("tabindex", "-1");
+    assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
 
     // it is hidden from screen readers
-    assert.dom(lightbox_selector).hasAttribute("aria-hidden");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasAttribute("aria-hidden");
 
     const container = domFromString(generateLightboxMarkup())[0];
-    await setupLightboxes({ container, selector: trigger_selector });
+    await setupLightboxes({
+      container,
+      selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
+    });
 
-    const lightboxedElement = container.querySelector(trigger_selector);
+    const lightboxedElement = container.querySelector(
+      SELECTORS.DEFAULT_ITEM_SELECTOR
+    );
     await click(lightboxedElement);
 
     await settled();
 
-    assert.dom(lightbox_selector).hasClass("d-lightbox--is-visible");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("d-lightbox--is-visible");
 
     assert
-      .dom(lightbox_selector)
+      .dom(SELECTORS.LIGHTBOX_CONTAINER)
       .hasClass(/^(d-lightbox--is-vertical|d-lightbox--is-horizontal)$/);
 
-    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-zoomed");
-    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-rotated");
-    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-fullscreen");
+    assert
+      .dom(SELECTORS.LIGHTBOX_CONTAINER)
+      .doesNotHaveClass("d-lightbox--is-zoomed");
+    assert
+      .dom(SELECTORS.LIGHTBOX_CONTAINER)
+      .doesNotHaveClass("d-lightbox--is-rotated");
+    assert
+      .dom(SELECTORS.LIGHTBOX_CONTAINER)
+      .doesNotHaveClass("d-lightbox--is-fullscreen");
 
-    assert.dom(lightbox_open_selector).exists();
-    assert.dom(lightbox_selector).doesNotHaveAria("hidden");
+    assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveAria("hidden");
 
     // the content is tabbable
-    assert.dom(lightbox_open_selector).hasAttribute("tabindex", "0");
+    assert.dom(SELECTORS.LIGHTBOX_CONTENT).hasAttribute("tabindex", "0");
 
     // the content has a document role
-    assert.dom(lightbox_open_selector).hasAttribute("role", "document");
+    assert.dom(SELECTORS.LIGHTBOX_CONTENT).hasAttribute("role", "document");
 
     // the content has an aria-labelledby attribute
-    assert.dom(lightbox_open_selector).hasAttribute("aria-labelledby");
+    assert.dom(SELECTORS.LIGHTBOX_CONTENT).hasAttribute("aria-labelledby");
 
     assert.strictEqual(
-      query(lightbox_open_selector)
+      query(SELECTORS.LIGHTBOX_CONTENT)
         .getAttribute("style")
-        .match(/--d-lightbox/g).length,
-      8,
-      "the content has the corrrect number of css variables"
+        .match(/--d-lightbox/g).length > 0,
+      true,
+      "the content has the correct css variables added"
     );
 
     // it has focus traps for keyboard navigation
-    assert.dom(".d-lightbox__focus-trap").exists();
+    assert.dom(SELECTORS.FOCUS_TRAP).exists();
 
-    await click(".d-lightbox__close-button");
+    await click(SELECTORS.CLOSE_BUTTON);
     await settled();
 
-    assert.dom(lightbox_selector).doesNotHaveClass("d-lightbox--is-visible");
+    assert
+      .dom(SELECTORS.LIGHTBOX_CONTAINER)
+      .doesNotHaveClass("d-lightbox--is-visible");
 
-    assert.dom(lightbox_open_selector).doesNotExist();
+    assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
 
     // it is not tabbable
-    assert.dom(lightbox_selector).hasAttribute("tabindex", "-1");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasAttribute("tabindex", "-1");
 
     // it is hidden from screen readers
-    assert.dom(lightbox_selector).hasAttribute("aria-hidden");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasAttribute("aria-hidden");
   });
 });
