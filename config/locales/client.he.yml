@@ -1240,10 +1240,6 @@ he:
       experimental_sidebar:
         enable: "הפעלת סרגל צד"
         options: "אפשרויות"
-        categories_section: "סעיף קטגוריות"
-        categories_section_instruction: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט. אם לא נבחרו קטגוריות, תופענה הקטגוריות המובילות של האתר."
-        tags_section: "סעיף תגיות"
-        tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט. אם לא נבחרו תגיות, תופענה התגיות המובילות של האתר."
         navigation_section: "ניווט"
         navigation_section_instruction: "כאשר לנושא בתפריט הניווט יש פריטים חדשים או שלא נקראו…"
         link_to_filtered_list_checkbox_description: "קישור לרשימה המסוננת"
@@ -1286,6 +1282,7 @@ he:
       watched_first_post_categories_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בקטגוריות אלו."
       watched_first_post_tags: "צפייה בפוסט ראשון"
       watched_first_post_tags_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בתגיות אלו."
+      watched_precedence_over_muted: "להודיע לי על נושאים בקטגוריות או תגיות שאני עוקב אחריהם שגם שייכים לזה שהשתקתי"
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
       muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר שנוגע לנושאים בקטגוריות האלו."
@@ -6098,6 +6095,7 @@ he:
         show_overriden: "להציג רק את אלו שנדרסו"
         locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
+        interpolation_keys: "מפתחות השילוב הזמינים:"
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"
         history: "הצגת היסטוריית שינויים"

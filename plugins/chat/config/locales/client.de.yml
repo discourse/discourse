@@ -342,6 +342,8 @@ de:
           one: "%{count} Mitglied"
           other: "%{count} Mitglieder"
       create_channel:
+        threading:
+          label: "Threading aktivieren"
         auto_join_users:
           public_category_warning: "%{category} ist eine öffentliche Kategorie. Alle kürzlich aktiven Benutzer automatisch zu diesem Kanal hinzufügen?"
           warning_1_group:
@@ -413,6 +415,8 @@ de:
       settings:
         channel_wide_mentions_label: "@all- und @here-Erwähnungen zulassen"
         channel_wide_mentions_description: "Erlaube Benutzern, alle Mitglieder von #%{channel} mit @all zu benachrichtigen oder nur diejenigen, die gerade aktiv sind, mit @here"
+        channel_threading_label: "Threading"
+        channel_threading_description: "Wenn Threading aktiviert ist, wird durch Antworten auf eine Chat-Nachricht eine separate Konversation erstellt, die neben dem Hauptkanal existiert."
         auto_join_users_label: "Benutzer automatisch hinzufügen"
         auto_join_users_info: "Prüfe stündlich, welche Nutzer in den letzten 3 Monaten aktiv waren. Füge sie zu diesem Kanal hinzu, wenn sie Zugang zur Kategorie %{category} haben."
         auto_join_users_info_no_category: "Prüfe stündlich, welche Nutzer in den letzten 3 Monaten aktiv waren. Füge sie zu diesem Kanal hinzu, wenn sie Zugriff auf die ausgewählte Kategorie haben."
@@ -422,6 +426,8 @@ de:
         followed: "Beigetreten"
         mobile_notification_level: "Mobile Push-Benachrichtigungen"
         mute: "Kanal stummschalten"
+        threading_enabled: "Aktiviert"
+        threading_disabled: "Deaktiviert"
         muted_on: "An"
         muted_off: "Aus"
         notifications: "Benachrichtigungen"
@@ -550,8 +556,8 @@ de:
             title: "Verfolgen"
             description: "Die Anzahl der neuen Antworten auf diesen Thread wird in der Thread-Liste und im Kanal angezeigt. Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thema erwähnt."
         participants_other_count:
-          one: "+%{count} anderer"
-          other: "+%{count} andere"
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Thread öffnen"
         list: "Laufende Diskussionen"

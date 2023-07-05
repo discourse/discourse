@@ -1111,8 +1111,6 @@ pt_BR:
       experimental_sidebar:
         enable: "Habilitar barra lateral"
         options: "Opções"
-        categories_section: "Seção de Categorias"
-        tags_section: "Seção de Etiquetas"
         navigation_section: "Navegação"
       change: "alterar"
       featured_topic: "Tópico em destaque"

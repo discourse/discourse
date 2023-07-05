@@ -74,6 +74,8 @@ ca:
       settings:
         follow: "Registre"
         followed: "Registrat"
+        threading_enabled: "Activat"
+        threading_disabled: "Desactivat"
         notifications: "Notificacions"
         preview: "Previsualitza"
         save: "Desa"

@@ -1096,8 +1096,6 @@ fi:
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"
         options: "Asetukset"
-        categories_section: "Alueet-osio"
-        tags_section: "Tunnisteet-osio"
         navigation_section: "Navigointi"
         navigation_section_instruction: "Kun navigointivalikon aihelistalla on uusia tai lukemattomia kohteita…"
         link_to_filtered_list_checkbox_description: "Linkki suodatettuun listaan"

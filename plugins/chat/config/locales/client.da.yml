@@ -162,6 +162,8 @@ da:
       settings:
         follow: "Tilslut"
         followed: "Tilmeldt"
+        threading_enabled: "Aktiveret"
+        threading_disabled: "Deaktiveret"
         notifications: "Notifikationer"
         preview: "Forhåndsvisning"
         save: "Gem"
@@ -212,6 +214,9 @@ da:
             title: "Normal"
           tracking:
             title: "Følger"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ny Besked"
         cancel: "Annuller"

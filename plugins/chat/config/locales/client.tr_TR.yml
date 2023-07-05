@@ -340,6 +340,8 @@ tr_TR:
         followed: "Katıldı"
         mobile_notification_level: "Mobil anlık bildirimleri"
         mute: "Kanalı sessize al"
+        threading_enabled: "Etkin mi"
+        threading_disabled: "Devre Dışı"
         muted_on: "Açık"
         muted_off: "Kapalı"
         notifications: "Bildirimler"
@@ -461,8 +463,8 @@ tr_TR:
             title: "Takip Ediliyor"
             description: "Bu konudaki yeni yanıtların sayısı konu listesinde ve kanalda gösterilecektir. Birisi bu ileti dizisinde sizden bahsederse bilgilendirileceksiniz."
         participants_other_count:
-          one: "+%{count} tane daha"
-          other: "+%{count} tane daha"
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Konu Aç"
         list: "Devam eden tartışmalar"

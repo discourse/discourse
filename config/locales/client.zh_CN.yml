@@ -1067,8 +1067,6 @@ zh_CN:
       experimental_sidebar:
         enable: "启用边栏"
         options: "选项"
-        categories_section: "类别版块"
-        tags_section: "标签版块"
         navigation_section: "导航"
         navigation_section_instruction: "当导航菜单中的话题列表有新的或未读的项目时…"
         link_to_filtered_list_checkbox_description: "链接到过滤后的列表"
@@ -1111,6 +1109,7 @@ zh_CN:
       watched_first_post_categories_instructions: "您将收到这些类别中每个新话题的第一个帖子的通知。"
       watched_first_post_tags: "关注第一个帖子"
       watched_first_post_tags_instructions: "您将收到带有这些标签的每个新话题的第一个帖子的通知。"
+      watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已静音的主题，请通知我。"
       muted_categories: "已设为免打扰"
       muted_categories_instructions: "您不会收到有关这些类别中新话题的任何通知，它们也不会出现在类别或最新话题页面上。"
       muted_categories_instructions_dont_hide: "您不会收到有关这些类别中新话题的任何通知。"

@@ -1240,8 +1240,6 @@ uk:
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
-        categories_section: "Розділи"
-        tags_section: "Теґи"
         navigation_section: "Навігація"
       change: "змінити"
       featured_topic: "Закріплені теми"

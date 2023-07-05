@@ -8,6 +8,8 @@ export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
 export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
 export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 
+const FLASH_TYPES = ["success", "error", "warning", "info"];
+
 export default class DModal extends Component {
   @service modal;
   @tracked wrapperElement;
@@ -160,5 +162,12 @@ export default class DModal extends Component {
   @action
   handleCloseButton() {
     this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_BUTTON });
+  }
+
+  @action
+  validateFlashType(type) {
+    if (type && !FLASH_TYPES.includes(type)) {
+      throw `@flashType must be one of ${FLASH_TYPES.join(", ")}`;
+    }
   }
 }

@@ -254,6 +254,8 @@ hr:
         auto_join_users_info_no_category: "Provjeri svaki sat koji su korisnici bili aktivni u posljednja 3 mjeseca. Dodaj ih na ovaj kanal ako imaju pristup odabranoj kategoriji."
         follow: "Pridružite se"
         followed: "Prijavljen"
+        threading_enabled: "Omogućeno"
+        threading_disabled: "Onemogućeno"
         notifications: "Obavijest"
         preview: "Pregled"
         save: "Spremi"
@@ -325,9 +327,9 @@ hr:
             title: "Praćenje"
             description: "Broj novih odgovora za ovu nit bit će prikazan na popisu niti i kanalu. Bit ćete obaviješteni ako netko spominje Vaš @name u ovoj niti."
         participants_other_count:
-          one: "+%{count} drugi"
-          few: "+%{count} druga"
-          other: "+%{count} drugih"
+          one: "+%{count}"
+          few: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Otvori nit"
         list: "Tekuće rasprave"

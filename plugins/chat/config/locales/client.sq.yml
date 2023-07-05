@@ -64,6 +64,7 @@ sq:
         never: "Asnjëherë"
       settings:
         followed: "Anëtarësuar"
+        threading_enabled: "Aktivizuar"
         notifications: "Njoftimet"
         preview: "Parashikimi"
         save: "Ruaj"

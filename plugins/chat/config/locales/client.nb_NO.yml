@@ -76,6 +76,8 @@ nb_NO:
         channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
         follow: "Bli medlem"
         followed: "Medlem fra"
+        threading_enabled: "Aktivert"
+        threading_disabled: "Deaktivert"
         notifications: "Varsler"
         preview: "Forhåndsvis"
         save: "Lagre"
@@ -119,6 +121,9 @@ nb_NO:
             title: "Normal"
           tracking:
             title: "Overvåkning"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ny Melding"
         cancel: "Avbryt"

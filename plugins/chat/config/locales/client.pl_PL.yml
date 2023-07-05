@@ -391,6 +391,8 @@ pl_PL:
         followed: "Dołączył"
         mobile_notification_level: "Mobilne powiadomienia push"
         mute: "Wycisz kanał"
+        threading_enabled: "Włączona"
+        threading_disabled: "Wyłączone"
         muted_on: "Wł"
         muted_off: "Wył"
         notifications: "Powiadomienia"
@@ -525,10 +527,10 @@ pl_PL:
             title: "Śledzona"
             description: "Liczba nowych odpowiedzi w tym wątku zostanie wyświetlona na liście wątków i na kanale. Otrzymasz powiadomienie, jeśli ktoś wspomni Twoją @nazwę w tym wątku."
         participants_other_count:
-          one: "+%{count} inny"
-          few: "+%{count} inni"
-          many: "+%{count} inni"
-          other: "+%{count} inni"
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Otwórz wątek"
         list: "Trwające dyskusje"
