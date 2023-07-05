@@ -26,7 +26,7 @@ module Chat
 
     private
 
-    def fetch_users(contract:, guardian:, **args)
+    def fetch_users(contract:, guardian:, **)
       return if contract.term&.start_with?("#")
 
       context.users = search_user(contract.term, guardian)
