@@ -193,7 +193,7 @@ RSpec.describe "Navigation", type: :system do
           expect(thread_page).to have_back_link_to_channel(category_channel)
           thread_page.back_to_previous_route
           expect(page).to have_current_path("#{category_channel.relative_url}")
-          expect(side_panel_page).not_to be_open
+          expect(side_panel_page).to be_closed
         end
       end
     end
