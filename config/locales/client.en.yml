@@ -212,9 +212,6 @@ en:
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
-    bootstrap_mode_title: "Welcome to your new site!"
-    bootstrap_mode_description: "Read the admin guide to continue building your site and community."
-    bootstrap_mode_go: "Let's go!"
 
     themes:
       default_description: "Default"
@@ -1934,6 +1931,11 @@ en:
       suggested_topics:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
+
+      admin_guide:
+        title: "Welcome to your new site!"
+        content: "Read the admin guide to continue building your site and community."
+        primary: "Let's go!"
 
     loading: "Loading..."
     errors:

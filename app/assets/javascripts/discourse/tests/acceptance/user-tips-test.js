@@ -12,6 +12,8 @@ acceptance("User Tips - first_notification", function (needs) {
   needs.hooks.afterEach(() => hideAllUserTips());
 
   test("Shows first notification user tip", async function (assert) {
+    this.siteSettings.enable_user_tips = true;
+
     await visit("/t/internationalization-localization/280");
     assert.equal(
       query(".user-tip__title").textContent.trim(),
@@ -63,7 +65,7 @@ acceptance("User Tips - topic_notification_levels", function (needs) {
   needs.hooks.beforeEach(() => hideAllUserTips());
   needs.hooks.afterEach(() => hideAllUserTips());
 
-  test("Shows post menu user tip", async function (assert) {
+  test("Shows topic notification levels user tip", async function (assert) {
     this.siteSettings.enable_user_tips = true;
 
     await visit("/t/internationalization-localization/280");
@@ -82,7 +84,7 @@ acceptance("User Tips - suggested_topics", function (needs) {
   needs.hooks.beforeEach(() => hideAllUserTips());
   needs.hooks.afterEach(() => hideAllUserTips());
 
-  test("Shows post menu user tip", async function (assert) {
+  test("Shows suggested topics user tip", async function (assert) {
     this.siteSettings.enable_user_tips = true;
 
     await visit("/t/internationalization-localization/280");

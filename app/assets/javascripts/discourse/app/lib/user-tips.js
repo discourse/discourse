@@ -3,24 +3,64 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
 import { escape } from "pretty-text/sanitizer";
 import tippy from "tippy.js";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 
-const TIPPY_DELAY = isTesting() ? 0 : 500;
+const TIPPY_DELAY = 500;
 
 const instancesMap = {};
 window.instancesMap = instancesMap;
 
+function destroyInstance(instance) {
+  if (instance.showTimeout) {
+    clearTimeout(instance.showTimeout);
+    instance.showTimeout = null;
+  }
+
+  if (instance.destroyTimeout) {
+    clearTimeout(instance.destroyTimeout);
+    instance.destroyTimeout = null;
+  }
+
+  instance.destroy();
+}
+
+function cancelDestroyInstance(instance) {
+  if (instance.destroyTimeout) {
+    clearTimeout(instance.destroyTimeout);
+    instance.destroyTimeout = null;
+  }
+}
+
+function showInstance(instance) {
+  if (isTesting()) {
+    instance.show();
+  } else if (!instance.showTimeout) {
+    instance.showTimeout = setTimeout(() => {
+      instance.showTimeout = undefined;
+      if (!instance.state.isDestroyed) {
+        instance.show();
+      }
+    }, TIPPY_DELAY);
+  }
+}
+
+function hideInstance(instance) {
+  clearTimeout(instance.showTimeout);
+  instance.showTimeout = null;
+  instance.hide();
+}
+
 export function showUserTip(options) {
+  // Find if a similar instance has been scheduled for destroying recently
+  // and cancel that
   let instance = instancesMap[options.id];
   if (instance) {
     if (instance.reference === options.reference) {
-      if (instance.destroyTimeout) {
-        clearTimeout(instance.destroyTimeout);
-      }
-      return;
+      return cancelDestroyInstance(instance);
+    } else {
+      destroyInstance(instance);
+      delete instancesMap[options.id];
     }
-
-    instance.destroy();
-    delete instancesMap[options.id];
   }
 
   if (!options.reference) {
@@ -48,7 +88,7 @@ export function showUserTip(options) {
         <div class='user-tip__content'>${escape(options.contentText)}</div>
         <div class='user-tip__buttons'>
           <button class="btn btn-primary btn-dismiss">${escape(
-            options.primaryBtnText || I18n.t("user_tips.primary")
+            options.primaryText || I18n.t("user_tips.primary")
           )}</button>
           <button class="btn btn-flat btn-text btn-dismiss-all">${escape(
             options.secondaryBtnText || I18n.t("user_tips.secondary")
@@ -63,42 +103,48 @@ export function showUserTip(options) {
       tippyInstance.popper
         .querySelector(".btn-dismiss")
         .addEventListener("click", (event) => {
-          options.onDismiss();
+          options.onDismiss?.();
           event.preventDefault();
         });
 
       tippyInstance.popper
         .querySelector(".btn-dismiss-all")
         .addEventListener("click", (event) => {
-          options.onDismissAll();
+          options.onDismissAll?.();
           event.preventDefault();
         });
     },
   });
+
   showNextUserTip();
 }
 
 export function hideUserTip(userTipId, force = false) {
+  // Tippy instances are not destroyed immediately because sometimes there
+  // user tip is recreated immediately. This happens when Ember components
+  // are re-rendered because a parent component has changed
+
   const instance = instancesMap[userTipId];
   if (!instance) {
     return;
   }
 
   if (force) {
-    instance.destroy();
+    destroyInstance(instance);
     delete instancesMap[userTipId];
     showNextUserTip();
   } else if (!instance.destroyTimeout) {
-    instance.destroyTimeout = setTimeout(
-      () => hideUserTip(userTipId, true),
-      TIPPY_DELAY
-    );
+    instance.destroyTimeout = setTimeout(() => {
+      destroyInstance(instancesMap[userTipId]);
+      delete instancesMap[userTipId];
+      showNextUserTip();
+    }, TIPPY_DELAY);
   }
 }
 
 export function hideAllUserTips() {
   Object.keys(instancesMap).forEach((userTipId) => {
-    instancesMap[userTipId].destroy();
+    destroyInstance(instancesMap[userTipId]);
     delete instancesMap[userTipId];
   });
 }
@@ -106,32 +152,30 @@ export function hideAllUserTips() {
 export function showNextUserTip() {
   const instances = Object.values(instancesMap);
 
-  let index = instances.findIndex((instance) => {
-    const position = instance.reference.getBoundingClientRect();
-    const width = window.innerWidth || document.documentElement.clientWidth;
-    const height = window.innerHeight || document.documentElement.clientHeight;
-    return (
-      position.top >= 0 &&
-      position.left >= 0 &&
-      position.bottom <= height &&
-      position.right <= width
-    );
-  });
-
-  const newInstance = instances[index === -1 ? 0 : index];
-  if (!newInstance) {
+  // Return early if a user tip is already visible and it is in viewport
+  if (
+    instances.find(
+      (instance) =>
+        instance.state.isVisible && isElementInViewport(instance.reference)
+    )
+  ) {
     return;
   }
 
+  // Otherwise, try to find a user tip in the viewport
+  const idx = instances.findIndex((instance) =>
+    isElementInViewport(instance.reference)
+  );
+
+  // If no instance was found, select first user tip
+  const newInstance = instances[idx === -1 ? 0 : idx];
+
+  // Show only selected instance and hide all the other ones
   instances.forEach((instance) => {
     if (instance === newInstance) {
-      instance.showTimeout = setTimeout(() => {
-        if (!instance.state.isDestroyed) {
-          instance.show();
-        }
-      }, TIPPY_DELAY);
+      showInstance(instance);
     } else {
-      instance.hide();
+      hideInstance(instance);
     }
   });
 }

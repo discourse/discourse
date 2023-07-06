@@ -1198,8 +1198,14 @@ const User = RestModel.extend({
     if (this.canSeeUserTip(options.id)) {
       showUserTip({
         ...options,
-        onDismiss: () => this.hideUserTipForever(options.id),
-        onDismissAll: () => this.hideUserTipForever(),
+        onDismiss: () => {
+          options.onDismiss?.();
+          this.hideUserTipForever(options.id);
+        },
+        onDismissAll: () => {
+          options.onDismissAll?.();
+          this.hideUserTipForever();
+        },
       });
     }
   },
