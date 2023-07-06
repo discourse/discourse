@@ -1,5 +1,4 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
 
@@ -126,7 +125,7 @@ export default {
 
     withPluginApi("0.12.1", (api) => {
       api.addKeyboardShortcut(
-        translateModKey(`${PLATFORM_KEY_MODIFIER}+k`),
+        `${PLATFORM_KEY_MODIFIER}+k`,
         openChannelSelector,
         {
           global: true,
@@ -158,7 +157,7 @@ export default {
         global: true,
       });
       api.addKeyboardShortcut(
-        translateModKey(`${PLATFORM_KEY_MODIFIER}+b`),
+        `${PLATFORM_KEY_MODIFIER}+b`,
         (event) => modifyComposerSelection(event, "bold"),
         {
           global: true,
@@ -173,7 +172,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        translateModKey(`${PLATFORM_KEY_MODIFIER}+i`),
+        `${PLATFORM_KEY_MODIFIER}+i`,
         (event) => modifyComposerSelection(event, "italic"),
         {
           global: true,
@@ -188,7 +187,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        translateModKey(`${PLATFORM_KEY_MODIFIER}+e`),
+        `${PLATFORM_KEY_MODIFIER}+e`,
         (event) => modifyComposerSelection(event, "code"),
         {
           global: true,
@@ -203,7 +202,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        translateModKey(`${PLATFORM_KEY_MODIFIER}+l`),
+        `${PLATFORM_KEY_MODIFIER}+l`,
         (event) => openInsertLinkModal(event),
         {
           global: true,
