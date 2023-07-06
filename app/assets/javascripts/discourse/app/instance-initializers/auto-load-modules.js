@@ -7,8 +7,15 @@ import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
 import { setOwner } from "@ember/application";
 
+const SKIP_EAGER_LOAD = new Set([
+  "discourse/widgets/default-notification-item",
+]);
+
 export function autoLoadModules(owner, registry) {
   Object.keys(requirejs.entries).forEach((entry) => {
+    if (SKIP_EAGER_LOAD.has(entry)) {
+      return;
+    }
     if (/\/helpers\//.test(entry) && !/-test/.test(entry)) {
       requirejs(entry, null, null, true);
     }
