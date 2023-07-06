@@ -31,20 +31,16 @@ RSpec.describe Jobs::Chat::MarkAllChannelThreadsRead do
       thread_2.add(user_2)
     end
 
+    def unread_count(user)
+      Chat::ThreadUnreadsQuery.call(channel_ids: [channel.id], user_id: user.id).first.unread_count
+    end
+
     it "marks all threads as read across all users in the channel" do
+      expect(unread_count(user_1)).to eq(3)
+      expect(unread_count(user_2)).to eq(2)
       described_class.new.execute(channel_id: channel.id)
-      expect(
-        Chat::ThreadUnreadsQuery
-          .call(channel_ids: [channel.id], user_id: user_1.id)
-          .first
-          .unread_count,
-      ).to eq(0)
-      expect(
-        Chat::ThreadUnreadsQuery
-          .call(channel_ids: [channel.id], user_id: user_2.id)
-          .first
-          .unread_count,
-      ).to eq(0)
+      expect(unread_count(user_1)).to eq(0)
+      expect(unread_count(user_2)).to eq(0)
     end
   end
 end
