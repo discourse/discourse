@@ -272,6 +272,8 @@ class PostAlerter
       SELECT user_id FROM category_users WHERE category_id = #{topic.category_id.to_i} AND notification_level = #{CategoryUser.notification_levels[:muted]}
       UNION
       SELECT user_id FROM tag_users tu JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id} AND tu.notification_level = #{TagUser.notification_levels[:muted]}
+      EXCEPT
+      SELECT user_id FROM topic_users tus WHERE tus.topic_id = #{topic.id} AND tus.notification_level = #{TopicUser.notification_levels[:watching]}
     SQL
     User
       .where("id IN (#{user_ids_sql})")
