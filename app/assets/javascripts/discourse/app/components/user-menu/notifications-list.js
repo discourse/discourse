@@ -13,11 +13,6 @@ import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
-let alwaysDisplayDismissWarning;
-export function displayDismissNotificationConfirmation() {
-  alwaysDisplayDismissWarning = true;
-}
-
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;
   @service currentUser;
@@ -69,6 +64,20 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     } else {
       return super.emptyStateComponent;
     }
+  }
+
+  get renderDismissConfirmation() {
+    return true;
+  }
+
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.default", {
+      count: this.currentUser.unread_high_priority_notifications,
+    });
+  }
+
+  get alwaysDisplayDismissWarning() {
+    return false;
   }
 
   async fetchItems() {
@@ -144,7 +153,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return content;
   }
 
-  async modalCallback() {
+  async performDismiss() {
     const opts = { type: "PUT" };
     const dismissTypes = this.dismissTypes;
     if (dismissTypes?.length > 0) {
@@ -174,21 +183,11 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     postRNWebviewMessage("markRead", "1");
   }
 
-  get renderDismissConfirmation() {
-    return true;
-  }
-
-  get dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.default", {
-      count: this.currentUser.unread_high_priority_notifications,
-    });
-  }
-
   dismissWarningModal() {
     this.modal.show(DismissNotificationConfirmationModal, {
       model: {
         confirmationMessage: this.dismissConfirmationText,
-        dismissNotifications: () => this.modalCallback(),
+        dismissNotifications: () => this.performDismiss(),
       },
     });
   }
@@ -200,11 +199,11 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     // they are a 'low priority' type of notification (eg. likes)
     if (this.renderDismissConfirmation) {
       this.currentUser.unread_high_priority_notifications > 0 ||
-      alwaysDisplayDismissWarning
+      this.alwaysDisplayDismissWarning
         ? this.dismissWarningModal()
-        : this.modalCallback();
+        : this.performDismiss();
     } else {
-      this.modalCallback();
+      this.performDismiss();
     }
   }
 }
