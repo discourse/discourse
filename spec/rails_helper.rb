@@ -149,7 +149,12 @@ module TestSetup
   end
 end
 
-TestProf::BeforeAll.configure { |config| config.before(:begin) { TestSetup.test_setup } }
+TestProf::BeforeAll.configure do |config|
+  config.after(:begin) do
+    TestSetup.test_setup
+    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+  end
+end
 
 if ENV["PREFABRICATION"] == "0"
   module Prefabrication
