@@ -63,6 +63,9 @@ export default Component.extend({
         htmlSafe(template(this, RUNTIME_OPTIONS))
       );
       schedule("afterRender", () => {
+        if (this.isDestroyed || this.isDestroying) {
+          return;
+        }
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }
