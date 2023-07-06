@@ -166,10 +166,11 @@ export default class ChatThreadPanel extends Component {
     return this.chatApi
       .channel(this.args.thread.channel.id, findArgs)
       .then((result) => {
-        if (
-          this._selfDeleted ||
-          this.args.thread.channel.id !== result.meta.channel_id
-        ) {
+        if (this._selfDeleted) {
+          return;
+        }
+
+        if (this.args.thread.channel.id !== result.meta.channel_id) {
           if (this.chatHistory.previousRoute?.name === "chat.channel.index") {
             this.router.transitionTo(
               "chat.channel",
