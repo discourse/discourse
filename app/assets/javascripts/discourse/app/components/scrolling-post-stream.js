@@ -372,7 +372,7 @@ export default MountWidget.extend({
   },
 
   didUpdateAttrs() {
-    this._refresh();
+    this._refresh({ force: true });
   },
 
   _handleWidgetButtonHoverState(event) {
