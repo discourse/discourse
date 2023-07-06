@@ -1,4 +1,4 @@
-<DModal @closeModal={{@closeModal}}>
+<DModal @closeModal={{@closeModal}} @title={{i18n "log_in"}}>
   <:body>
     {{html-safe (i18n "login.not_activated" sentTo=@model.sentTo)}}
   </:body>
