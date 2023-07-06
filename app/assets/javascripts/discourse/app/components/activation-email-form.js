@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 
 export default class ActivationEmailForm extends Component {
   @action
-  newEmailChanged() {
-    this.args.updateNewEmail?.();
+  newEmailChanged(value) {
+    this.args.updateNewEmail?.(value);
   }
 }
