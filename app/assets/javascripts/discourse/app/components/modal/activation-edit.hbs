@@ -1,4 +1,8 @@
-<DModal @closeModal={{@closeModal}} @title={{i18n "login.change_email"}}>
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "login.change_email"}}
+  @flash={{this.flash}}
+>
   <:body>
     <ActivationEmailForm
       @email={{@model.newEmail}}

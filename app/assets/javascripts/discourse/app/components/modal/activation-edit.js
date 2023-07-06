@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { changeEmail } from "discourse/lib/user-activation";
-import { flashAjaxError } from "discourse/lib/ajax-error";
 import ActivationResent from "./activation-resent";
 
 export default class ActivationEdit extends Component {
@@ -11,6 +10,7 @@ export default class ActivationEdit extends Component {
   @service modal;
 
   @tracked newEmail = this.args.model.newEmail;
+  @tracked flash;
 
   get submitDisabled() {
     return this.newEmail === this.args.model.currentEmail;
@@ -28,7 +28,7 @@ export default class ActivationEdit extends Component {
           model: { currentEmail: this.args.model.newEmail },
         });
       })
-      .catch(flashAjaxError(this));
+      .catch((e) => (this.flash = e));
   }
 
   @action
