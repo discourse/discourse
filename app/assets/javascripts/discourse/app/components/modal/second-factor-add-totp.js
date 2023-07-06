@@ -33,7 +33,9 @@ export default class SecondFactorAddTotp extends Component {
   }
 
   @action
-  enableShowSecondFactorKey() {
+  enableShowSecondFactorKey(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
     this.showSecondFactorKey = true;
   }
 
