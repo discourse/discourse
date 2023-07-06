@@ -31,23 +31,13 @@ export default Component.extend({
     return `dismiss-new-${position}`;
   },
 
-  @discourseComputed(
-    "position",
-    "isOtherDismissUnreadButtonVisible",
-    "isOtherDismissNewButtonVisible"
-  )
-  showBasedOnPosition(
-    position,
-    isOtherDismissUnreadButtonVisible,
-    isOtherDismissNewButtonVisible
-  ) {
+  @discourseComputed("position", "model.topics.length")
+  showBasedOnPosition(position, topicCount) {
     if (position !== "top") {
       return true;
     }
 
-    return !(
-      isOtherDismissUnreadButtonVisible || isOtherDismissNewButtonVisible
-    );
+    return topicCount > 5;
   },
 
   @discourseComputed("selectedTopics.length")
@@ -69,28 +59,6 @@ export default Component.extend({
     }
     return I18n.t("topics.bulk.dismiss_new_with_selected", {
       count: selectedTopicCount,
-    });
-  },
-
-  // we want to only render the Dismiss... button at the top of the
-  // page if the user cannot see the bottom Dismiss... button based on their
-  // viewport, or if too many topics fill the page
-  @on("didInsertElement")
-  _determineOtherDismissVisibility() {
-    discourseLater(() => {
-      if (this.position === "top") {
-        this.set(
-          "isOtherDismissUnreadButtonVisible",
-          isElementInViewport(document.getElementById("dismiss-topics-bottom"))
-        );
-        this.set(
-          "isOtherDismissNewButtonVisible",
-          isElementInViewport(document.getElementById("dismiss-new-bottom"))
-        );
-      } else {
-        this.set("isOtherDismissUnreadButtonVisible", true);
-        this.set("isOtherDismissNewButtonVisible", true);
-      }
     });
   },
 
