@@ -3,8 +3,6 @@
 module PageObjects
   module Pages
     class Chat < PageObjects::Pages::Base
-      MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
-
       def message_creator
         @message_creator ||= PageObjects::Components::Chat::MessageCreator.new
       end
@@ -24,7 +22,7 @@ module PageObjects
       end
 
       def open_new_message
-        send_keys([MODIFIER, "k"])
+        send_keys([PLATFORM_KEY_MODIFIER, "k"])
         find(".chat-new-message-modal")
       end
 

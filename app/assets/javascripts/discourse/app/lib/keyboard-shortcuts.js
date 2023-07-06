@@ -33,6 +33,12 @@ export function clearExtraKeyboardShortcutHelp() {
 
 export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
+export const PLATFORM_KEY_MODIFIER = /Mac|iPod|iPhone|iPad/.test(
+  navigator.platform
+)
+  ? "meta"
+  : "ctrl";
+
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
