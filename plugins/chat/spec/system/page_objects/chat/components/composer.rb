@@ -8,8 +8,6 @@ module PageObjects
 
         SELECTOR = ".chat-composer__wrapper"
 
-        MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
-
         def initialize(context)
           @context = context
         end
@@ -59,7 +57,7 @@ module PageObjects
         end
 
         def emphasized_text_shortcut
-          input.send_keys([MODIFIER, "i"])
+          input.send_keys([PLATFORM_KEY_MODIFIER, "i"])
         end
 
         def cancel_shortcut
@@ -67,11 +65,11 @@ module PageObjects
         end
 
         def indented_text_shortcut
-          input.send_keys([MODIFIER, "e"])
+          input.send_keys([PLATFORM_KEY_MODIFIER, "e"])
         end
 
         def bold_text_shortcut
-          input.send_keys([MODIFIER, "b"])
+          input.send_keys([PLATFORM_KEY_MODIFIER, "b"])
         end
 
         def open_emoji_picker

@@ -1,9 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { translateModKey } from "discourse/lib/utilities";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
-
-const APPLE =
-  navigator.platform.startsWith("Mac") || navigator.platform === "iPhone";
-export const KEY_MODIFIER = APPLE ? "meta" : "ctrl";
 
 export default {
   name: "chat-keyboard-shortcuts",
@@ -127,17 +125,21 @@ export default {
     };
 
     withPluginApi("0.12.1", (api) => {
-      api.addKeyboardShortcut(`${KEY_MODIFIER}+k`, openChannelSelector, {
-        global: true,
-        help: {
-          category: "chat",
-          name: "chat.keyboard_shortcuts.open_quick_channel_selector",
-          definition: {
-            keys1: ["meta", "k"],
-            keysDelimiter: "plus",
+      api.addKeyboardShortcut(
+        translateModKey(`${PLATFORM_KEY_MODIFIER}+k`),
+        openChannelSelector,
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.open_quick_channel_selector",
+            definition: {
+              keys1: ["meta", "k"],
+              keysDelimiter: "plus",
+            },
           },
-        },
-      });
+        }
+      );
       api.addKeyboardShortcut("alt+up", handleMoveUpShortcut, {
         global: true,
         help: {
@@ -156,7 +158,7 @@ export default {
         global: true,
       });
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+b`,
+        translateModKey(`${PLATFORM_KEY_MODIFIER}+b`),
         (event) => modifyComposerSelection(event, "bold"),
         {
           global: true,
@@ -171,7 +173,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+i`,
+        translateModKey(`${PLATFORM_KEY_MODIFIER}+i`),
         (event) => modifyComposerSelection(event, "italic"),
         {
           global: true,
@@ -186,7 +188,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+e`,
+        translateModKey(`${PLATFORM_KEY_MODIFIER}+e`),
         (event) => modifyComposerSelection(event, "code"),
         {
           global: true,
@@ -201,7 +203,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+l`,
+        translateModKey(`${PLATFORM_KEY_MODIFIER}+l`),
         (event) => openInsertLinkModal(event),
         {
           global: true,
