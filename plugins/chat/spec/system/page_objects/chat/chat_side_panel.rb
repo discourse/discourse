@@ -7,6 +7,10 @@ module PageObjects
         has_css?(".chat-side-panel")
       end
 
+      def closed?
+        has_no_css?(".chat-side-panel")
+      end
+
       def has_open_thread?(thread = nil)
         if thread
           has_css?(".chat-side-panel .chat-thread[data-id='#{thread.id}']")
