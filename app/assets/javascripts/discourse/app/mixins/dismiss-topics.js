@@ -1,30 +1,29 @@
 import Mixin from "@ember/object/mixin";
 import User from "discourse/models/user";
-import showModal from "discourse/lib/show-modal";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import DismissNewModal from "discourse/components/modal/dismiss-new";
 
 export default Mixin.create({
-  actions: {
-    resetNew() {
-      const user = User.current();
-      if (!user.new_new_view_enabled) {
-        return this.callResetNew();
-      }
-      const controller = showModal("dismiss-new", {
-        model: {
-          dismissTopics: true,
-          dismissPosts: true,
-        },
-        titleTranslated: I18n.t("topics.bulk.dismiss_new_modal.title"),
-      });
+  modal: service(),
 
-      controller.set("dismissCallback", () => {
-        this.callResetNew(
-          controller.model.dismissPosts,
-          controller.model.dismissTopics,
-          controller.model.untrack
-        );
-      });
-    },
+  @action
+  resetNew() {
+    const user = User.current();
+    if (!user.new_new_view_enabled) {
+      return this.callResetNew();
+    }
+    this.modal.show(DismissNewModal, {
+      model: {
+        dismissTopics: true,
+        dismissPosts: true,
+        dismissCallback: () =>
+          this.callResetNew(
+            this.model.dismissPosts,
+            this.model.dismissTopics,
+            this.model.untrack
+          ),
+      },
+    });
   },
 });

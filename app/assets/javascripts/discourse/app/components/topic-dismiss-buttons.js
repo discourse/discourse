@@ -1,15 +1,17 @@
 import { action } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
+import DismissReadModal from "discourse/components/modal/dismiss-read";
 
 export default Component.extend({
   tagName: "",
   classNames: ["topic-dismiss-buttons"],
 
   currentUser: service(),
+  modal: service(),
+
   position: null,
   selectedTopics: null,
   model: null,
@@ -63,13 +65,14 @@ export default Component.extend({
   @action
   dismissReadPosts() {
     let dismissTitle = "topics.bulk.dismiss_read";
-    if (this.selectedTopics.length > 0) {
+    if (this.selectedTopics.length) {
       dismissTitle = "topics.bulk.dismiss_read_with_selected";
     }
-    showModal("dismiss-read", {
-      titleTranslated: I18n.t(dismissTitle, {
+    this.modal.show(DismissReadModal, {
+      model: {
+        title: dismissTitle,
         count: this.selectedTopics.length,
-      }),
+      },
     });
   },
 });
