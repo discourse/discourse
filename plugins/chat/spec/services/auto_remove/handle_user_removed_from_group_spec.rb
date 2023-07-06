@@ -86,7 +86,7 @@ RSpec.describe Chat::AutoRemove::HandleUserRemovedFromGroup do
           ).to eq(true)
         end
 
-        it "logs a staff action" do
+        it "logs staff actions" do
           result
 
           expect(
