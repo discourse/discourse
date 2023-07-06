@@ -205,7 +205,7 @@ acceptance("User Preferences - Tracking", function (needs) {
       ".tracking-controls__muted-tags .tag-chooser"
     );
 
-    assert.notOk(exists(".user-preferences__watched-precedence-over-muted"));
+    assert.dom(".user-preferences__watched-precedence-over-muted").doesNotExist;
     await mutedTagsSelector.expand();
     await mutedTagsSelector.selectRowByValue("dog");
 
