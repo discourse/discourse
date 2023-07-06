@@ -76,7 +76,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     });
   }
 
-  get alwaysDisplayDismissWarning() {
+  get alwaysRenderDismissConfirmation() {
     return false;
   }
 
@@ -197,11 +197,18 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     // by default we display a warning modal when dismissing a notification
     // however we bypass the warning modal for specific notification types when
     // they are a 'low priority' type of notification (eg. likes)
-    if (this.renderDismissConfirmation) {
-      this.currentUser.unread_high_priority_notifications > 0 ||
-      this.alwaysDisplayDismissWarning
-        ? this.dismissWarningModal()
-        : this.performDismiss();
+    if (
+      this.renderDismissConfirmation ||
+      this.alwaysRenderDismissConfirmation
+    ) {
+      if (
+        this.currentUser.unread_high_priority_notifications > 0 ||
+        this.alwaysRenderDismissConfirmation
+      ) {
+        this.dismissWarningModal();
+      } else {
+        this.performDismiss();
+      }
     } else {
       this.performDismiss();
     }
