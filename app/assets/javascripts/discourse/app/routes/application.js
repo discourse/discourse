@@ -212,7 +212,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     createNewMessageViaParams({
-      recipients = [],
+      recipients = "",
       topicTitle = "",
       topicBody = "",
       hasGroups = false,
