@@ -77,7 +77,10 @@ module PageObjects
       end
 
       def hover_message(message)
-        message_by_id(message.id).hover
+        message = message_by_id(message.id)
+        # Scroll to top of message so that the actions are not hidden
+        page.scroll_to(message, align: :top)
+        message.hover
       end
 
       def bookmark_message(message)
