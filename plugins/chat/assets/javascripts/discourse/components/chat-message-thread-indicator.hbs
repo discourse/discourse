@@ -24,6 +24,9 @@
       {{format-date @message.thread.preview.lastReplyCreatedAt leaveAgo="true"}}
     </span>
   </div>
+  <div class="chat-message-thread-indicator__replies-count">
+    {{i18n "chat.thread.replies" count=@message.thread.preview.replyCount}}
+  </div>
   <Chat::Thread::Participants @thread={{@message.thread}} />
   <div class="chat-message-thread-indicator__last-reply-excerpt">
     {{replace-emoji (html-safe @message.thread.preview.lastReplyExcerpt)}}
