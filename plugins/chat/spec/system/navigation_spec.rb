@@ -120,7 +120,7 @@ RSpec.describe "Navigation", type: :system do
   end
 
   context "when collapsing full page with previous state" do
-    xit "redirects to previous state" do
+    it "redirects to previous state" do
       visit("/t/-/#{topic.id}")
       chat_page.open_from_header
       chat_drawer_page.maximize
