@@ -37,6 +37,10 @@ module PageObjects
           )
         end
 
+        def has_no_participants?
+          find(@context).has_no_css?(".chat-thread-participants")
+        end
+
         def excerpt
           find(@context).find("#{SELECTOR}__last-reply-excerpt")
         end
