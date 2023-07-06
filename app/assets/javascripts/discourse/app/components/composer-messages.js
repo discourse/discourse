@@ -4,14 +4,18 @@ import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import LinkLookup from "discourse/lib/link-lookup";
 import { not } from "@ember/object/computed";
-import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 
 let _messagesCache = {};
 let _recipient_names = [];
 
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
+  @service modal;
+  @tracked showShareModal;
+
   checkedMessages = false;
   messages = null;
   messagesByTemplate = null;
@@ -309,19 +313,17 @@ export default class ComposerMessages extends Component {
     }
   }
 
-  @action
-  shareModal() {
+  get shareModalData() {
     const { topic } = this.composer;
-    const controller = showModal("share-topic", { model: topic.category });
-
-    controller.setProperties({
+    return {
+      topic,
+      category: topic.category,
       allowInvites:
         topic.details.can_invite_to &&
         !topic.archived &&
         !topic.closed &&
         !topic.deleted,
-      topic,
-    });
+    };
   }
 
   @action
