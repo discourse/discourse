@@ -1,15 +1,15 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { isEmpty } from "@ember/utils";
 import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import { sanitize } from "discourse/lib/text";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { bind } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 const FULL_RELOAD_LINKS_REGEX = [
   /^\/my\/[a-z_\-\/]+$/,
@@ -232,24 +232,17 @@ class SectionLink {
   }
 }
 
-export default Controller.extend(ModalFunctionality, {
-  dialog: service(),
-  router: service(),
+export default class SidebarSectionForm extends Component {
+  @service dialog;
+  @service router;
 
-  onShow() {
-    this.setProperties({
-      flashText: null,
-      flashClass: null,
-    });
-    this.nextObjectId = 0;
-    this.model = this.initModel();
-  },
+  @tracked flash;
+  @tracked flashType;
 
-  onClose() {
-    this.model = null;
-  },
+  nextObjectId = 0;
 
-  initModel() {
+  @cached
+  get transformedModel() {
     if (this.model) {
       return new Section({
         title: this.model.title,
@@ -282,7 +275,7 @@ export default Controller.extend(ModalFunctionality, {
         ]),
       });
     }
-  },
+  }
 
   initLink(link) {
     return new SectionLink({
@@ -294,7 +287,7 @@ export default Controller.extend(ModalFunctionality, {
       objectId: this.nextObjectId,
       segment: link.segment,
     });
-  },
+  }
 
   create() {
     return ajax(`/sidebar_sections`, {
@@ -302,9 +295,9 @@ export default Controller.extend(ModalFunctionality, {
       contentType: "application/json",
       dataType: "json",
       data: JSON.stringify({
-        title: this.model.title,
-        public: this.model.public,
-        links: this.model.links.map((link) => {
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        links: this.transformedModel.links.map((link) => {
           return {
             icon: link.icon,
             name: link.name,
@@ -318,26 +311,24 @@ export default Controller.extend(ModalFunctionality, {
           "sidebar_sections",
           this.currentUser.sidebar_sections.concat(data.sidebar_section)
         );
-        this.send("closeModal");
+        this.closeModal();
       })
-      .catch((e) =>
-        this.setProperties({
-          flashText: sanitize(extractError(e)),
-          flashClass: "error",
-        })
-      );
-  },
+      .catch((e) => {
+        this.flash = sanitize(extractError(e));
+        this.flashType = "error";
+      });
+  }
 
   update() {
-    return ajax(`/sidebar_sections/${this.model.id}`, {
+    return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
       type: "PUT",
       contentType: "application/json",
       dataType: "json",
       data: JSON.stringify({
-        title: this.model.title,
-        public: this.model.public,
-        links: this.model.links
-          .concat(this.model?.secondaryLinks || [])
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        links: this.transformedModel.links
+          .concat(this.transformedModel?.secondaryLinks || [])
           .map((link) => {
             return {
               id: link.id,
@@ -360,67 +351,70 @@ export default Controller.extend(ModalFunctionality, {
           }
         );
         this.currentUser.set("sidebar_sections", newSidebarSections);
-        this.send("closeModal");
+        this.closeModal();
       })
-      .catch((e) =>
-        this.setProperties({
-          flashText: sanitize(extractError(e)),
-          flashClass: "error",
-        })
-      );
-  },
+      .catch((e) => {
+        this.flash = sanitize(extractError(e));
+        this.flashType = "error";
+      });
+  }
 
   get activeLinks() {
-    return this.model.links.filter((link) => !link._destroy);
-  },
+    return this.transformedModel.links.filter((link) => !link._destroy);
+  }
 
   get activeSecondaryLinks() {
-    return this.model.secondaryLinks?.filter((link) => !link._destroy);
-  },
+    return this.transformedModel.secondaryLinks?.filter(
+      (link) => !link._destroy
+    );
+  }
 
   get header() {
-    return this.model.id
+    return this.transformedModel.id
       ? "sidebar.sections.custom.edit"
       : "sidebar.sections.custom.add";
-  },
+  }
 
   @bind
   reorder(linkFromId, linkTo, above) {
     if (linkFromId === linkTo.objectId) {
       return;
     }
-    let linkFrom = this.model.links.find(
+    let linkFrom = this.transformedModel.links.find(
       (link) => link.objectId === linkFromId
     );
     if (!linkFrom) {
-      linkFrom = this.model.secondaryLinks.find(
+      linkFrom = this.transformedModel.secondaryLinks.find(
         (link) => link.objectId === linkFromId
       );
     }
 
     if (linkFrom.isPrimary) {
-      this.model.links.removeObject(linkFrom);
+      this.transformedModel.links.removeObject(linkFrom);
     } else {
-      this.model.secondaryLinks?.removeObject(linkFrom);
+      this.transformedModel.secondaryLinks?.removeObject(linkFrom);
     }
 
     if (linkTo.isPrimary) {
-      const toPosition = this.model.links.indexOf(linkTo);
+      const toPosition = this.transformedModel.links.indexOf(linkTo);
       linkFrom.segment = "primary";
-      this.model.links.insertAt(above ? toPosition : toPosition + 1, linkFrom);
+      this.transformedModel.links.insertAt(
+        above ? toPosition : toPosition + 1,
+        linkFrom
+      );
     } else {
       linkFrom.segment = "secondary";
-      const toPosition = this.model.secondaryLinks.indexOf(linkTo);
-      this.model.secondaryLinks.insertAt(
+      const toPosition = this.transformedModel.secondaryLinks.indexOf(linkTo);
+      this.transformedModel.secondaryLinks.insertAt(
         above ? toPosition : toPosition + 1,
         linkFrom
       );
     }
-  },
+  }
 
   get canDelete() {
-    return this.model.id && !this.model.sectionType;
-  },
+    return this.transformedModel.id && !this.transformedModel.sectionType;
+  }
 
   @bind
   deleteLink(link) {
@@ -428,88 +422,88 @@ export default Controller.extend(ModalFunctionality, {
       link._destroy = "1";
     } else {
       if (link.isPrimary) {
-        this.model.links.removeObject(link);
+        this.transformedModel.links.removeObject(link);
       } else {
-        this.model.secondaryLinks.removeObject(link);
+        this.transformedModel.secondaryLinks.removeObject(link);
       }
     }
-  },
+  }
 
-  actions: {
-    addLink() {
-      this.nextObjectId = this.nextObjectId + 1;
-      this.model.links.pushObject(
-        new SectionLink({
-          router: this.router,
-          objectId: this.nextObjectId,
-          segment: "primary",
+  @action
+  addLink() {
+    this.nextObjectId = this.nextObjectId + 1;
+    this.transformedModel.links.pushObject(
+      new SectionLink({
+        router: this.router,
+        objectId: this.nextObjectId,
+        segment: "primary",
+      })
+    );
+  }
+
+  @action
+  addSecondaryLink() {
+    this.nextObjectId = this.nextObjectId + 1;
+    this.transformedModel.secondaryLinks.pushObject(
+      new SectionLink({
+        router: this.router,
+        objectId: this.nextObjectId,
+        segment: "secondary",
+      })
+    );
+  }
+
+  @action
+  resetToDefault() {
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("sidebar.sections.custom.reset_confirm"),
+      didConfirm: () => {
+        return ajax(`/sidebar_sections/reset/${this.transformedModel.id}`, {
+          type: "PUT",
         })
-      );
-    },
+          .then((data) => {
+            this.currentUser.sidebar_sections.shiftObject();
+            this.currentUser.sidebar_sections.unshiftObject(
+              data["sidebar_section"]
+            );
+            this.closeModal();
+          })
+          .catch((e) => {
+            this.flash = sanitize(extractError(e));
+            this.flashType = "error";
+          });
+      },
+    });
+  }
 
-    addSecondaryLink() {
-      this.nextObjectId = this.nextObjectId + 1;
-      this.model.secondaryLinks.pushObject(
-        new SectionLink({
-          router: this.router,
-          objectId: this.nextObjectId,
-          segment: "secondary",
+  @action
+  save() {
+    this.transformedModel.id ? this.update() : this.create();
+  }
+
+  @action
+  delete() {
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("sidebar.sections.custom.delete_confirm"),
+      didConfirm: () => {
+        return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
+          type: "DELETE",
         })
-      );
-    },
-
-    resetToDefault() {
-      return this.dialog.yesNoConfirm({
-        message: I18n.t("sidebar.sections.custom.reset_confirm"),
-        didConfirm: () => {
-          return ajax(`/sidebar_sections/reset/${this.model.id}`, {
-            type: "PUT",
-          })
-            .then((data) => {
-              this.currentUser.sidebar_sections.shiftObject();
-              this.currentUser.sidebar_sections.unshiftObject(
-                data["sidebar_section"]
-              );
-              this.send("closeModal");
-            })
-            .catch((e) =>
-              this.setProperties({
-                flashText: sanitize(extractError(e)),
-                flashClass: "error",
-              })
+          .then(() => {
+            const newSidebarSections = this.currentUser.sidebar_sections.filter(
+              (section) => {
+                return section.id !== this.transformedModel.id;
+              }
             );
-        },
-      });
-    },
 
-    save() {
-      this.model.id ? this.update() : this.create();
-    },
-
-    delete() {
-      return this.dialog.yesNoConfirm({
-        message: I18n.t("sidebar.sections.custom.delete_confirm"),
-        didConfirm: () => {
-          return ajax(`/sidebar_sections/${this.model.id}`, {
-            type: "DELETE",
+            this.currentUser.set("sidebar_sections", newSidebarSections);
+            this.closeModal();
           })
-            .then(() => {
-              const newSidebarSections =
-                this.currentUser.sidebar_sections.filter((section) => {
-                  return section.id !== this.model.id;
-                });
-
-              this.currentUser.set("sidebar_sections", newSidebarSections);
-              this.send("closeModal");
-            })
-            .catch((e) =>
-              this.setProperties({
-                flashText: sanitize(extractError(e)),
-                flashClass: "error",
-              })
-            );
-        },
-      });
-    },
-  },
-});
+          .catch((e) => {
+            this.flash = sanitize(extractError(e));
+            this.flashType = "error";
+          });
+      },
+    });
+  }
+}
