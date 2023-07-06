@@ -1,8 +1,6 @@
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
-import discourseLater from "discourse-common/lib/later";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
