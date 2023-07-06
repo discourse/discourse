@@ -51,7 +51,7 @@ module PageObjects
       end
 
       def has_selected_template?(template_name)
-        find(".select-category-template .select-kit-header")["data-name"] == template_name
+        has_css?(".select-category-template .select-kit-header[data-name='#{template_name}']")
       end
 
       def toggle_form_templates
