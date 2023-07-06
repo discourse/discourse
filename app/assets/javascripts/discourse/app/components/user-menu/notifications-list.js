@@ -187,7 +187,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   dismissWarningModal() {
     this.modal.show(DismissNotificationConfirmationModal, {
       model: {
-        confirmationMessage: this.dismissConfirmationText(),
+        confirmationMessage: this.dismissConfirmationText,
         dismissNotifications: () => this.modalCallback(),
       },
     });
