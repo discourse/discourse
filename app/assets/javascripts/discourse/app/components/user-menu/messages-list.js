@@ -48,6 +48,12 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.messages", {
+      count: this.#unreadMessagesNotifications,
+    });
+  }
+
   async fetchItems() {
     const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
@@ -95,11 +101,5 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     });
 
     return content;
-  }
-
-  dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.messages", {
-      count: this.#unreadMessagesNotifications,
-    });
   }
 }

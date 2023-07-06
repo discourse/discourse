@@ -44,6 +44,12 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
+      count: this.#unreadBookmarkRemindersCount,
+    });
+  }
+
   async fetchItems() {
     const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-bookmarks`
@@ -72,11 +78,5 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     );
 
     return content;
-  }
-
-  dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
-      count: this.#unreadBookmarkRemindersCount,
-    });
   }
 }
