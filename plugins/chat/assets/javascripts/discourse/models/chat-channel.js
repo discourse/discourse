@@ -56,7 +56,6 @@ export default class ChatChannel {
     return new ChatChannel(args);
   }
 
-  @tracked currentUserMembership = null;
   @tracked title;
   @tracked slug;
   @tracked description;
@@ -82,6 +81,7 @@ export default class ChatChannel {
   messagesManager = new ChatMessagesManager(getOwner(this));
 
   @tracked _unreadThreadIds = new TrackedSet();
+  @tracked _currentUserMembership;
 
   constructor(args = {}) {
     this.id = args.id;
@@ -109,9 +109,7 @@ export default class ChatChannel {
           users: args.chatable?.users,
         })
       : Category.create(args.chatable);
-    this.currentUserMembership = UserChatChannelMembership.create(
-      args.current_user_membership
-    );
+    this.currentUserMembership = args.current_user_membership;
 
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
@@ -301,15 +299,17 @@ export default class ChatChannel {
     return !READONLY_STATUSES.includes(this.status);
   }
 
-  updateMembership(membership) {
-    this.currentUserMembership.following = membership.following;
-    this.currentUserMembership.lastReadMessage_id =
-      membership.last_read_message_id;
-    this.currentUserMembership.desktopNotificationLevel =
-      membership.desktop_notification_level;
-    this.currentUserMembership.mobileNotificationLevel =
-      membership.mobile_notification_level;
-    this.currentUserMembership.muted = membership.muted;
+  get currentUserMembership() {
+    return this._currentUserMembership;
+  }
+
+  set currentUserMembership(membership) {
+    if (membership instanceof UserChatChannelMembership) {
+      this._currentUserMembership = membership;
+    } else {
+      this._currentUserMembership =
+        UserChatChannelMembership.create(membership);
+    }
   }
 
   clearSelectedMessages() {

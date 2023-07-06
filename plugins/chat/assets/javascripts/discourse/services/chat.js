@@ -143,7 +143,7 @@ export default class Chat extends Service {
               channel.tracking.unreadCount = state.unread_count;
               channel.tracking.mentionCount = state.mention_count;
 
-              channel.updateMembership(channelObject.current_user_membership);
+              channel.updateMembership = channelObject.current_user_membership;
 
               this.chatSubscriptionsManager.startChannelSubscription(channel);
             });

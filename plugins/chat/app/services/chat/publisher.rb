@@ -372,7 +372,7 @@ module Chat
             serialized_channel =
               Chat::ChannelSerializer.new(
                 chat_channel,
-                scope: Guardian.new(membership.user), # We need a guardian here for direct messages
+                scope: membership.user.guardian, # We need a guardian here for direct messages
                 root: :channel,
                 membership: membership,
               ).as_json

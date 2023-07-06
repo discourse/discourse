@@ -113,6 +113,13 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    if (
+      this.args.channel.isDirectMessageChannel &&
+      !this.args.channel.isFollowing
+    ) {
+      this.chatChannelsManager.follow(this.args.channel);
+    }
+
     // Technically we could keep messages to avoid re-fetching them, but
     // it's not worth the complexity for now
     this.args.channel.clearMessages();
