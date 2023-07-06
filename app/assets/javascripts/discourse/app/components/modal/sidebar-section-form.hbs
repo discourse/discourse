@@ -14,13 +14,16 @@
         <Input
           name="section-name"
           @type="text"
-          @value={{this.model.title}}
-          class={{this.model.titleCssClass}}
-          {{on "input" (action (mut this.model.title) value="target.value")}}
+          @value={{this.transformedModel.title}}
+          class={{this.transformedModel.titleCssClass}}
+          {{on
+            "input"
+            (action (mut this.transformedModel.title) value="target.value")
+          }}
         />
-        {{#if this.model.invalidTitleMessage}}
+        {{#if this.transformedModel.invalidTitleMessage}}
           <div class="title warning">
-            {{this.model.invalidTitleMessage}}
+            {{this.transformedModel.invalidTitleMessage}}
           </div>
         {{/if}}
       </div>
@@ -50,7 +53,7 @@
         @label="sidebar.sections.custom.links.add"
         @ariaLabel="sidebar.sections.custom.links.add"
       />
-      {{#if this.model.sectionType}}
+      {{#if this.transformedModel.sectionType}}
         <hr />
         <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
         {{#each this.activeSecondaryLinks as |link|}}
@@ -70,12 +73,14 @@
         />
 
       {{/if}}
-      {{#if (and this.currentUser.staff (not this.model.sectionType))}}
+      {{#if
+        (and this.currentUser.staff (not this.transformedModel.sectionType))
+      }}
         <div class="row-wrapper mark-public-wrapper">
           <label class="checkbox-label">
             <Input
               @type="checkbox"
-              @checked={{this.model.public}}
+              @checked={{this.transformedModel.public}}
               class="mark-public"
             />
             {{i18n "sidebar.sections.custom.public"}}
@@ -91,7 +96,7 @@
       @class="btn-primary"
       @label="sidebar.sections.custom.save"
       @ariaLabel="sidebar.sections.custom.save"
-      @disabled={{not this.model.valid}}
+      @disabled={{not this.transformedModel.valid}}
     />
     {{#if this.canDelete}}
       <DButton
@@ -103,7 +108,7 @@
         @ariaLabel="sidebar.sections.custom.delete"
       />
     {{/if}}
-    {{#if this.model.sectionType}}
+    {{#if this.transformedModel.sectionType}}
       <DButton
         @action={{action "resetToDefault"}}
         @class="btn-flat btn-text reset-link"

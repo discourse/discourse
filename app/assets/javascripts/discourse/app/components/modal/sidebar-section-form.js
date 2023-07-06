@@ -5,7 +5,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import { sanitize } from "discourse/lib/text";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { bind } from "discourse-common/utils/decorators";
@@ -239,17 +239,10 @@ export default class SidebarSectionForm extends Component {
   @tracked flash;
   @tracked flashType;
 
-  init() {
-    this.nextObjectId = 0;
-    this.model = this.initModel();
-    super.init(...arguments);
-  }
+  nextObjectId = 0;
 
-  willDestroy() {
-    this.model = null;
-  }
-
-  initModel() {
+  @cached
+  get transformedModel() {
     if (this.model) {
       return new Section({
         title: this.model.title,
@@ -302,9 +295,9 @@ export default class SidebarSectionForm extends Component {
       contentType: "application/json",
       dataType: "json",
       data: JSON.stringify({
-        title: this.model.title,
-        public: this.model.public,
-        links: this.model.links.map((link) => {
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        links: this.transformedModel.links.map((link) => {
           return {
             icon: link.icon,
             name: link.name,
@@ -327,15 +320,15 @@ export default class SidebarSectionForm extends Component {
   }
 
   update() {
-    return ajax(`/sidebar_sections/${this.model.id}`, {
+    return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
       type: "PUT",
       contentType: "application/json",
       dataType: "json",
       data: JSON.stringify({
-        title: this.model.title,
-        public: this.model.public,
-        links: this.model.links
-          .concat(this.model?.secondaryLinks || [])
+        title: this.transformedModel.title,
+        public: this.transformedModel.public,
+        links: this.transformedModel.links
+          .concat(this.transformedModel?.secondaryLinks || [])
           .map((link) => {
             return {
               id: link.id,
@@ -367,15 +360,17 @@ export default class SidebarSectionForm extends Component {
   }
 
   get activeLinks() {
-    return this.model.links.filter((link) => !link._destroy);
+    return this.transformedModel.links.filter((link) => !link._destroy);
   }
 
   get activeSecondaryLinks() {
-    return this.model.secondaryLinks?.filter((link) => !link._destroy);
+    return this.transformedModel.secondaryLinks?.filter(
+      (link) => !link._destroy
+    );
   }
 
   get header() {
-    return this.model.id
+    return this.transformedModel.id
       ? "sidebar.sections.custom.edit"
       : "sidebar.sections.custom.add";
   }
@@ -385,29 +380,32 @@ export default class SidebarSectionForm extends Component {
     if (linkFromId === linkTo.objectId) {
       return;
     }
-    let linkFrom = this.model.links.find(
+    let linkFrom = this.transformedModel.links.find(
       (link) => link.objectId === linkFromId
     );
     if (!linkFrom) {
-      linkFrom = this.model.secondaryLinks.find(
+      linkFrom = this.transformedModel.secondaryLinks.find(
         (link) => link.objectId === linkFromId
       );
     }
 
     if (linkFrom.isPrimary) {
-      this.model.links.removeObject(linkFrom);
+      this.transformedModel.links.removeObject(linkFrom);
     } else {
-      this.model.secondaryLinks?.removeObject(linkFrom);
+      this.transformedModel.secondaryLinks?.removeObject(linkFrom);
     }
 
     if (linkTo.isPrimary) {
-      const toPosition = this.model.links.indexOf(linkTo);
+      const toPosition = this.transformedModel.links.indexOf(linkTo);
       linkFrom.segment = "primary";
-      this.model.links.insertAt(above ? toPosition : toPosition + 1, linkFrom);
+      this.transformedModel.links.insertAt(
+        above ? toPosition : toPosition + 1,
+        linkFrom
+      );
     } else {
       linkFrom.segment = "secondary";
-      const toPosition = this.model.secondaryLinks.indexOf(linkTo);
-      this.model.secondaryLinks.insertAt(
+      const toPosition = this.transformedModel.secondaryLinks.indexOf(linkTo);
+      this.transformedModel.secondaryLinks.insertAt(
         above ? toPosition : toPosition + 1,
         linkFrom
       );
@@ -415,7 +413,7 @@ export default class SidebarSectionForm extends Component {
   }
 
   get canDelete() {
-    return this.model.id && !this.model.sectionType;
+    return this.transformedModel.id && !this.transformedModel.sectionType;
   }
 
   @bind
@@ -424,9 +422,9 @@ export default class SidebarSectionForm extends Component {
       link._destroy = "1";
     } else {
       if (link.isPrimary) {
-        this.model.links.removeObject(link);
+        this.transformedModel.links.removeObject(link);
       } else {
-        this.model.secondaryLinks.removeObject(link);
+        this.transformedModel.secondaryLinks.removeObject(link);
       }
     }
   }
@@ -434,7 +432,7 @@ export default class SidebarSectionForm extends Component {
   @action
   addLink() {
     this.nextObjectId = this.nextObjectId + 1;
-    this.model.links.pushObject(
+    this.transformedModel.links.pushObject(
       new SectionLink({
         router: this.router,
         objectId: this.nextObjectId,
@@ -446,7 +444,7 @@ export default class SidebarSectionForm extends Component {
   @action
   addSecondaryLink() {
     this.nextObjectId = this.nextObjectId + 1;
-    this.model.secondaryLinks.pushObject(
+    this.transformedModel.secondaryLinks.pushObject(
       new SectionLink({
         router: this.router,
         objectId: this.nextObjectId,
@@ -460,7 +458,7 @@ export default class SidebarSectionForm extends Component {
     return this.dialog.yesNoConfirm({
       message: I18n.t("sidebar.sections.custom.reset_confirm"),
       didConfirm: () => {
-        return ajax(`/sidebar_sections/reset/${this.model.id}`, {
+        return ajax(`/sidebar_sections/reset/${this.transformedModel.id}`, {
           type: "PUT",
         })
           .then((data) => {
@@ -480,7 +478,7 @@ export default class SidebarSectionForm extends Component {
 
   @action
   save() {
-    this.model.id ? this.update() : this.create();
+    this.transformedModel.id ? this.update() : this.create();
   }
 
   @action
@@ -488,13 +486,13 @@ export default class SidebarSectionForm extends Component {
     return this.dialog.yesNoConfirm({
       message: I18n.t("sidebar.sections.custom.delete_confirm"),
       didConfirm: () => {
-        return ajax(`/sidebar_sections/${this.model.id}`, {
+        return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
           type: "DELETE",
         })
           .then(() => {
             const newSidebarSections = this.currentUser.sidebar_sections.filter(
               (section) => {
-                return section.id !== this.model.id;
+                return section.id !== this.transformedModel.id;
               }
             );
 
