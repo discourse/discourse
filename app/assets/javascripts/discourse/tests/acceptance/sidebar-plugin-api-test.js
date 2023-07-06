@@ -914,9 +914,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
             if (this.currentMode === "latest") {
               this.currentMode = "categories";
               this.router.transitionTo("discovery.categories");
+              this.sidebar.toggleCssClass("red");
             } else if (this.currentMode === "new") {
               this.currentMode = "latest";
               this.router.transitionTo("discovery.latest");
+              this.sidebar.toggleCssClass("red");
             }
           }
         };
@@ -931,6 +933,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "Categories",
       "displays button with correct text"
     );
+    assert.dom(".sidebar-container").hasNoClass("red");
 
     await click(".sidebar__api-button");
 
@@ -939,5 +942,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "Latest",
       "displays button with correct text"
     );
+    assert.dom(".sidebar-container").hasClass("red");
   });
 });

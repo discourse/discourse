@@ -6,12 +6,15 @@ import {
   topSidebarButtons,
 } from "discourse/lib/sidebar/custom-buttons";
 import { getOwner, setOwner } from "@ember/application";
+import { tracked } from "@glimmer/tracking";
 
 export default class Sidebar extends Component {
   @service appEvents;
   @service site;
   @service router;
   @service currentUser;
+
+  @tracked customCssClasses = [];
 
   constructor() {
     super(...arguments);
@@ -31,6 +34,19 @@ export default class Sidebar extends Component {
       setOwner(button, getOwner(this));
       return button;
     });
+  }
+
+  get joinedCustomCssClasses() {
+    return this.customCssClasses.join(" ");
+  }
+
+  @bind
+  toggleCssClass(className) {
+    if (this.customCssClasses.includes(className)) {
+      this.customCssClasses.removeObject(className);
+    } else {
+      this.customCssClasses.pushObject(className);
+    }
   }
 
   @bind
