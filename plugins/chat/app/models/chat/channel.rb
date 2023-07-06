@@ -164,6 +164,31 @@ module Chat
       SQL
     end
 
+    def mark_all_threads_as_read(user: nil)
+      if !(self.threading_enabled || SiteSetting.enable_experimental_chat_threaded_discussions)
+        return
+      end
+
+      DB.exec(<<~SQL, channel_id: self.id)
+        UPDATE user_chat_thread_memberships
+        SET last_read_message_id = subquery.last_message_id
+        FROM (
+          SELECT chat_threads.id AS thread_id, MAX(chat_messages.id) AS last_message_id
+          FROM chat_threads
+          INNER JOIN chat_messages ON chat_messages.thread_id = chat_threads.id
+          WHERE chat_threads.channel_id = :channel_id
+          AND chat_messages.deleted_at IS NULL
+          GROUP BY chat_threads.id
+        ) subquery
+        WHERE user_chat_thread_memberships.thread_id = subquery.thread_id
+        #{user ? "AND user_chat_thread_memberships.user_id = #{user.id}" : ""}
+        AND (
+          user_chat_thread_memberships.last_read_message_id < subquery.last_message_id OR
+          user_chat_thread_memberships.last_read_message_id IS NULL
+        )
+      SQL
+    end
+
     private
 
     def change_status(acting_user, target_status)

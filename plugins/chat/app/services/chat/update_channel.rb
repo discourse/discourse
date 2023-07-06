@@ -13,7 +13,7 @@ module Chat
   #   name: "SuperChannel",
   #   description: "This is the best channel",
   #   slug: "super-channel",
-  #   threading_enaled: true,
+  #   threading_enabled: true,
   #  )
   #
   class UpdateChannel
@@ -36,6 +36,7 @@ module Chat
     policy :check_channel_permission
     contract default_values_from: :channel
     step :update_channel
+    step :mark_all_threads_as_read_if_needed
     step :publish_channel_update
     step :auto_join_users_if_needed
 
@@ -70,7 +71,14 @@ module Chat
     end
 
     def update_channel(channel:, contract:, **)
-      channel.update!(contract.attributes)
+      channel.assign_attributes(contract.attributes)
+      context.threading_enabled_changed = channel.threading_enabled_changed?
+      channel.save!
+    end
+
+    def mark_all_threads_as_read_if_needed(channel:, **)
+      return if !(context.threading_enabled_changed && channel.threading_enabled)
+      Jobs.enqueue(Jobs::Chat::MarkAllChannelThreadsRead, channel_id: channel.id)
     end
 
     def publish_channel_update(channel:, guardian:, **)
