@@ -22,13 +22,12 @@
       }
 
       p {
-        display: flex;
         overflow: hidden;
         margin: 0;
       }
-
       &-name {
-        @include ellipsis;
+        // avoid long tags breaking the layou
+        word-break: break-all;
       }
     }
 
