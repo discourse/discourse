@@ -148,7 +148,7 @@ module Chat
         )
 
       Chat::Publisher.publish_user_tracking_state!(current_user, @chat_channel, message)
-      render json: success_json
+      render json: success_json.merge(message_id: message.id)
     end
 
     def edit_message
