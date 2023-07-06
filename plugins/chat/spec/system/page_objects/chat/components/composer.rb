@@ -49,26 +49,32 @@ module PageObjects
         end
 
         def reply_to_last_message_shortcut
+          input.click
           input.send_keys(%i[shift arrow_up])
         end
 
         def edit_last_message_shortcut
+          input.click
           input.send_keys(%i[arrow_up])
         end
 
         def emphasized_text_shortcut
+          input.click
           input.send_keys([PLATFORM_KEY_MODIFIER, "i"])
         end
 
         def cancel_shortcut
+          input.click
           input.send_keys(:escape)
         end
 
         def indented_text_shortcut
+          input.click
           input.send_keys([PLATFORM_KEY_MODIFIER, "e"])
         end
 
         def bold_text_shortcut
+          input.click
           input.send_keys([PLATFORM_KEY_MODIFIER, "b"])
         end
 
