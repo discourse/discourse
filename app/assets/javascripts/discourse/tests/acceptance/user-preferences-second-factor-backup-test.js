@@ -1,5 +1,5 @@
 import { test } from "qunit";
-import { click, settled, visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
