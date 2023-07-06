@@ -66,8 +66,13 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".new-totp");
     assert.ok(exists(".qr-code img"), "shows qr code image");
 
-    await click(".add-totp");
+    await click(".controls a");
+    assert.ok(
+      exists(".controls p.second-factor-key"),
+      "displays second factor key"
+    );
 
+    await click(".add-totp");
     assert.ok(
       query(".alert-error").innerHTML.includes("provide a name and the code"),
       "shows name/token missing error message"

@@ -26,7 +26,9 @@
           </div>
           <p>
             {{#if this.showSecondFactorKey}}
-              {{this.secondFactorKey}}
+              <div class="second-factor-key">
+                {{this.secondFactorKey}}
+              </div>
             {{else}}
               <a href {{on "click" this.enableShowSecondFactorKey}}>{{i18n
                   "user.second_factor.show_key_description"
