@@ -165,6 +165,10 @@ module Chat
     end
 
     def mark_all_threads_as_read(user: nil)
+      if !(self.threading_enabled || SiteSetting.enable_experimental_chat_threaded_discussions)
+        return
+      end
+
       DB.exec(<<~SQL, channel_id: self.id)
         UPDATE user_chat_thread_memberships
         SET last_read_message_id = subquery.last_message_id
