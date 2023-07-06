@@ -354,7 +354,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.chatChannelsManager.find(data.channel.id).then((channel) => {
       // we need to refresh here to have correct last message ids
       channel.meta = data.channel.meta;
-      channel.updateMembership(data.channel.current_user_membership);
+      channel.currentUserMembership = data.channel.current_user_membership;
 
       if (
         channel.isDirectMessageChannel &&
