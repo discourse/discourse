@@ -209,7 +209,7 @@ acceptance("User Preferences - Tracking", function (needs) {
     await mutedTagsSelector.expand();
     await mutedTagsSelector.selectRowByValue("dog");
 
-    assert.ok(exists(".user-preferences__watched-precedence-over-muted"));
+    assert.dom(".user-preferences__watched-precedence-over-muted").exists();
   });
 
   test("tracking category which is set to regular notification level for user when mute_all_categories_by_default site setting is disabled", async function (assert) {
