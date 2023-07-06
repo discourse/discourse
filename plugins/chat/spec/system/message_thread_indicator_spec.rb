@@ -74,6 +74,20 @@ describe "Thread indicator for chat messages", type: :system do
       )
     end
 
+    it "it shows the reply count but no participant avatars when there is only one participant" do
+      single_user_thread =
+        Fabricate(:chat_thread, channel: channel, original_message_user: current_user)
+      Fabricate(:chat_message, thread: single_user_thread, user: current_user)
+      Fabricate(:chat_message, thread: single_user_thread, user: current_user)
+      chat_page.visit_channel(channel)
+      expect(
+        channel_page.message_thread_indicator(single_user_thread.original_message),
+      ).to have_reply_count(2)
+      expect(
+        channel_page.message_thread_indicator(single_user_thread.original_message),
+      ).to have_no_participants
+    end
+
     it "clicking a thread indicator opens the thread panel" do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread_1.original_message).click
@@ -116,7 +130,7 @@ describe "Thread indicator for chat messages", type: :system do
       )
     end
 
-    it "shows participants of the thread" do
+    it "shows avatars for the participants of the thread" do
       chat_page.visit_channel(channel)
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
         current_user,
