@@ -396,7 +396,7 @@ basic:
   page_loading_indicator:
     client: true
     type: enum
-    default: "spinner"
+    default: "slider"
     choices:
       - spinner
       - slider
