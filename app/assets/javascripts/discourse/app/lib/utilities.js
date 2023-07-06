@@ -520,16 +520,18 @@ export function translateModKey(string) {
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
     string = string
-      .replace("Shift", "\u21E7")
-      .replace("Meta", "\u2318")
-      .replace("Alt", "\u2325")
+      .toLowerCase()
+      .replace("shift", "\u21E7")
+      .replace("meta", "\u2318")
+      .replace("alt", "\u2325")
       .replace(/\+/g, "");
   } else {
     string = string
-      .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
-      .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("Meta", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
+      .toLowerCase()
+      .replace("shift", I18n.t("shortcut_modifier_key.shift"))
+      .replace("ctrl", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("meta", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("alt", I18n.t("shortcut_modifier_key.alt"));
   }
 
   return string;
