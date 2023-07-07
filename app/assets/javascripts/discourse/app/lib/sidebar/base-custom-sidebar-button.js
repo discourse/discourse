@@ -11,24 +11,24 @@ export default class BaseCustomSidebarSectionButton {
    * @returns {string} The label of the section button
    */
   get label() {
-    this._notImplemented();
+    this.#notImplemented();
   }
 
   /**
    * @returns {string} The icon of the section button
    */
   get icon() {
-    this._notImplemented();
+    this.#notImplemented();
   }
 
   /**
    * @returns {Function} Action for button
    */
   get action() {
-    this._notImplemented();
+    this.#notImplemented();
   }
 
-  _notImplemented() {
+  #notImplemented() {
     throw "not implemented";
   }
 }

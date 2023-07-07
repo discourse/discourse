@@ -19,6 +19,7 @@ import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user
 import { bind } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { resetCustomButtons } from "discourse/lib/sidebar/custom-buttons";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});
@@ -878,70 +879,74 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Add button to sidebar", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
-      api.addSidebarButton("bottom", (BaseCustomSidebarButton) => {
-        const ToggleButton = class extends BaseCustomSidebarButton {
-          @tracked currentMode;
+    try {
+      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+        api.addSidebarButton("bottom", (BaseCustomSidebarButton) => {
+          const ToggleButton = class extends BaseCustomSidebarButton {
+            @tracked currentMode;
 
-          constructor() {
-            super(...arguments);
+            constructor() {
+              super(...arguments);
 
-            if (this.router.currentURL.startsWith("/latest")) {
-              this.currentMode = "latest";
-            } else {
-              this.currentMode = "categories";
+              if (this.router.currentURL.startsWith("/latest")) {
+                this.currentMode = "latest";
+              } else {
+                this.currentMode = "categories";
+              }
             }
-          }
 
-          get label() {
-            if (this.currentMode === "categories") {
-              return "Latest";
-            } else {
-              return "Categories";
+            get label() {
+              if (this.currentMode === "categories") {
+                return "Latest";
+              } else {
+                return "Categories";
+              }
             }
-          }
 
-          get icon() {
-            if (this.currentMode === "categories") {
-              return "random";
-            } else {
-              return "d-chat";
+            get icon() {
+              if (this.currentMode === "categories") {
+                return "random";
+              } else {
+                return "d-chat";
+              }
             }
-          }
 
-          @action
-          action() {
-            if (this.currentMode === "latest") {
-              this.currentMode = "categories";
-              this.router.transitionTo("discovery.categories");
-              this.sidebar.toggleCssClass("red");
-            } else if (this.currentMode === "new") {
-              this.currentMode = "latest";
-              this.router.transitionTo("discovery.latest");
-              this.sidebar.toggleCssClass("red");
+            @action
+            action() {
+              if (this.currentMode === "latest") {
+                this.currentMode = "categories";
+                this.router.transitionTo("discovery.categories");
+                this.sidebar.toggleCssClass("red");
+              } else if (this.currentMode === "new") {
+                this.currentMode = "latest";
+                this.router.transitionTo("discovery.latest");
+                this.sidebar.toggleCssClass("red");
+              }
             }
-          }
-        };
-        return ToggleButton;
+          };
+          return ToggleButton;
+        });
+
+        await visit("/latest");
+
+        assert.strictEqual(
+          query(".sidebar__api-button").textContent.trim(),
+          "Categories",
+          "displays button with correct text"
+        );
+        assert.dom(".sidebar-container").hasNoClass("red");
+
+        await click(".sidebar__api-button");
+
+        assert.strictEqual(
+          query(".sidebar__api-button").textContent.trim(),
+          "Latest",
+          "displays button with correct text"
+        );
+        assert.dom(".sidebar-container").hasClass("red");
       });
-    });
-
-    await visit("/latest");
-
-    assert.strictEqual(
-      query(".sidebar__api-button").textContent.trim(),
-      "Categories",
-      "displays button with correct text"
-    );
-    assert.dom(".sidebar-container").hasNoClass("red");
-
-    await click(".sidebar__api-button");
-
-    assert.strictEqual(
-      query(".sidebar__api-button").textContent.trim(),
-      "Latest",
-      "displays button with correct text"
-    );
-    assert.dom(".sidebar-container").hasClass("red");
+    } finally {
+      resetCustomButtons();
+    }
   });
 });

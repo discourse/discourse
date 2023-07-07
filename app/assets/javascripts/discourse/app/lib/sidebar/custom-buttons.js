@@ -10,3 +10,8 @@ export function addSidebarButton(position, func) {
     bottomSidebarButtons.push(func.call(this, BaseCustomSidebarButton));
   }
 }
+
+export function resetCustomButtons() {
+  topSidebarButtons.length = 0;
+  bottomSidebarButtons.length = 0;
+}
