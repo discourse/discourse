@@ -1626,11 +1626,6 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it "returns false as a TL4 user if trusted_users_can_edit_others is false" do
-        SiteSetting.trusted_users_can_edit_others = false
-        expect(Guardian.new(trust_level_4).can_edit?(post)).to eq(false)
-      end
-
       it "returns false when trying to edit a topic with no trust" do
         SiteSetting.min_trust_to_edit_post = 2
         post.user.trust_level = 1
@@ -1876,11 +1871,6 @@ RSpec.describe Guardian do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
         end
 
-        it "is false at TL3, if `trusted_users_can_edit_others` is false" do
-          SiteSetting.trusted_users_can_edit_others = false
-          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
-        end
-
         it "returns false when the category is read only" do
           topic.category.set_permissions(everyone: :readonly)
           topic.category.save
@@ -1930,9 +1920,14 @@ RSpec.describe Guardian do
           expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to be_truthy
         end
 
-        it "is false at TL4, if `trusted_users_can_edit_others` is false" do
-          SiteSetting.trusted_users_can_edit_others = false
-          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(false)
+        it "returns true if the user is in edit_all_post_groups" do
+          SiteSetting.edit_all_post_groups = "14"
+          expect(Guardian.new(trust_level_4).can_edit?(archived_topic)).to eq(true)
+        end
+
+        it "returns false if the user is not in edit_all_post_groups" do
+          SiteSetting.edit_all_post_groups = "14"
+          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to eq(false)
         end
 
         it "returns false at trust level 3" do
