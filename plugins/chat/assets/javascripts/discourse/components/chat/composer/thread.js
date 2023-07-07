@@ -38,9 +38,10 @@ export default class ChatComposerThread extends ChatComposer {
     return I18n.t("chat.placeholder_thread");
   }
 
-  get lastMessage() {
-    return this.args.thread.lastMessage;
-  }
+  // TODO (martin) Check if this breaks anything.
+  // get lastMessage() {
+  //   return this.args.thread.lastMessage;
+  // }
 
   lastUserMessage(user) {
     return this.args.thread.lastUserMessage(user);

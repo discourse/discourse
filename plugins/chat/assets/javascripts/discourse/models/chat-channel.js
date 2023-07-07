@@ -1,4 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -61,7 +62,7 @@ export default class ChatChannel {
   @tracked description;
   @tracked status;
   @tracked activeThread = null;
-  @tracked lastMessageSentAt;
+  @tracked lastMessage;
   @tracked canDeleteOthers;
   @tracked canDeleteSelf;
   @tracked canFlag;
@@ -99,7 +100,6 @@ export default class ChatChannel {
     this.userSilenced = args.user_silenced;
     this.canModerate = args.can_moderate;
     this.description = args.description;
-    this.lastMessageSentAt = args.last_message_sent_at;
     this.threadingEnabled = args.threading_enabled;
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
@@ -116,6 +116,7 @@ export default class ChatChannel {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
+    this.lastMessage = ChatMessage.create(this, args.last_message || {});
   }
 
   get unreadThreadCount() {
@@ -158,9 +159,10 @@ export default class ChatChannel {
     this.messagesManager.removeMessage(message);
   }
 
-  get lastMessage() {
-    return this.messagesManager.findLastMessage();
-  }
+  // TODO (martin) Check if this breaks anything....
+  // get lastMessage() {
+  //   return this.messagesManager.findLastMessage();
+  // }
 
   lastUserMessage(user) {
     return this.messagesManager.findLastUserMessage(user);

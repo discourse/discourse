@@ -77,7 +77,7 @@ module Chat
     private
 
     def fetch_channel(contract:, **)
-      Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+      Chat::Channel.includes(:chatable, :last_message).find_by(id: contract.channel_id)
     end
 
     def can_view_channel(guardian:, channel:, **)

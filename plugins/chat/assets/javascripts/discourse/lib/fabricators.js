@@ -62,7 +62,7 @@ function channelFabricator(args = {}) {
           args.chatable?.type ||
           args.chatable_type ||
           CHATABLE_TYPES.categoryChannel,
-        last_message_sent_at: args.last_message_sent_at,
+        last_message: messageFabricator({ chat_channel_id: id }),
         chatable_id: args.chatable?.id || args.chatable_id,
         title: args.title || "General",
         description: args.description,

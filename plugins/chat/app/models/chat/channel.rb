@@ -5,6 +5,8 @@ module Chat
     include Trashable
     include TypeMappable
 
+    # TODO (martin) Remove once we are using last_message instead.
+    self.ignored_columns = %w[last_message_sent_at]
     self.table_name = "chat_channels"
 
     belongs_to :chatable, polymorphic: true
@@ -158,10 +160,15 @@ module Chat
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)
+      # TODO (martin) Write a spec for this to make sure it's not getting thread messages.
       DB.query_single(<<~SQL, channel_id: self.id, anchor_message_id: anchor_message_id).first
-        SELECT id FROM chat_messages
+        SELECT id
+        FROM chat_messages
+        LEFT JOIN chat_threads ON chat_threads.original_message_id = chat_messages.id
         WHERE chat_channel_id = :channel_id
         AND deleted_at IS NULL
+        -- this is so only the original message of a thread is counted not all thread messages
+        AND chat_messages.thread_id IS NULL OR chat_threads.id IS NOT NULL
         #{anchor_message_id ? "AND id < :anchor_message_id" : ""}
         ORDER BY created_at DESC, id DESC
         LIMIT 1

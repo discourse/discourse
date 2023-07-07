@@ -213,8 +213,6 @@ export default class ChatSubscriptionsManager extends Service {
           }
         }
       }
-
-      channel.lastMessageSentAt = new Date();
     });
   }
 
