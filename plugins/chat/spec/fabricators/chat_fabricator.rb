@@ -66,7 +66,7 @@ Fabricator(:chat_message, class_name: "Chat::MessageCreator") do
     resolved_class.create(
       chat_channel: channel,
       user: user,
-      content: transients[:message] || Faker::Lorem.paragraph,
+      content: transients[:message] || Faker::Lorem.paragraph_by_chars(number: 500),
       thread_id: transients[:thread]&.id,
       in_reply_to_id: transients[:in_reply_to]&.id,
       upload_ids: transients[:upload_ids],
@@ -157,6 +157,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.channel = original_message.chat_channel
   end
 
+  transient :with_replies
   transient :channel
   transient :original_message_user
 
@@ -168,9 +169,13 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     )
   end
 
-  after_create do |thread|
+  after_create do |thread, transients|
     thread.original_message.update!(thread_id: thread.id)
     thread.add(thread.original_message_user)
+
+    if transients[:with_replies]
+      Fabricate.times(transients[:with_replies], :chat_message, thread: thread)
+    end
   end
 end
 

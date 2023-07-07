@@ -44,10 +44,6 @@ export default class ChatComposer extends Component {
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
 
-  get shouldRenderReplyingIndicator() {
-    return !this.args.channel?.isDraft;
-  }
-
   get shouldRenderMessageDetails() {
     return (
       this.currentMessage?.editing ||
@@ -89,7 +85,7 @@ export default class ChatComposer extends Component {
   setupTextareaInteractor(textarea) {
     this.composer.textarea = new TextareaInteractor(getOwner(this), textarea);
 
-    if (this.site.desktopView) {
+    if (this.site.desktopView && this.args.autofocus) {
       this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
     }
   }
@@ -247,10 +243,6 @@ export default class ChatComposer extends Component {
 
   reportReplyingPresence() {
     if (!this.args.channel || !this.currentMessage) {
-      return;
-    }
-
-    if (this.args.channel.isDraft) {
       return;
     }
 

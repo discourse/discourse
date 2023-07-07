@@ -1010,3 +1010,81 @@ aside.onebox.preview-error .site-icon {
   height: 16px;
   margin-right: 0.5em;
 }
+
+.onebox.threadsstatus .onebox-body {
+  .thumbnail,
+  .thumbnail.onebox-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+  .threads-screen-name {
+    font-size: var(--font-down-1);
+  }
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .thread-contents .thread-description {
+    white-space: pre-line;
+  }
+
+  p,
+  .thread-contents {
+    clear: left;
+    padding: 1em 0;
+
+    .quoted {
+      border: 1px solid var(--primary-low);
+      padding: 0.5em 1em;
+      margin-top: 1em;
+      white-space: normal;
+
+      .quoted-link {
+        color: inherit;
+      }
+
+      .quoted-title {
+        font-weight: bold;
+        margin: 0.5em 0;
+        padding: 0;
+
+        span {
+          font-weight: lighter;
+          color: var(--primary-medium);
+        }
+      }
+
+      div {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  .date {
+    display: flex;
+    line-height: var(--line-height-small);
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .replies {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+
+    svg {
+      fill: currentColor;
+      margin-right: 0.25em;
+    }
+  }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
+}

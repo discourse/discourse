@@ -409,6 +409,17 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Lists all possible chatables.
+   *
+   * @param {term} string - The term to search for. # prefix will scope to channels, @ to users.
+   *
+   * @returns {Promise}
+   */
+  chatables(args = {}) {
+    return this.#getRequest("/chatables", args);
+  }
+
+  /**
    * Marks messages for a single user chat channel membership as read. If no
    * message ID is provided, then the latest message for the channel is fetched
    * on the server and used for the last read message.

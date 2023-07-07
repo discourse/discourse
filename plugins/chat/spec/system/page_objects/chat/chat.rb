@@ -3,6 +3,14 @@
 module PageObjects
   module Pages
     class Chat < PageObjects::Pages::Base
+      def message_creator
+        @message_creator ||= PageObjects::Components::Chat::MessageCreator.new
+      end
+
+      def sidebar
+        @sidebar ||= PageObjects::Components::Chat::Sidebar.new
+      end
+
       def prefers_full_page
         page.execute_script(
           "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
@@ -15,6 +23,11 @@ module PageObjects
 
       def open
         visit("/chat")
+      end
+
+      def open_new_message
+        send_keys([PLATFORM_KEY_MODIFIER, "k"])
+        find(".chat-new-message-modal")
       end
 
       def has_drawer?(channel_id: nil, expanded: true)

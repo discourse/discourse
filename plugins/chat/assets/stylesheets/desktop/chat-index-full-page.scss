@@ -1,7 +1,7 @@
 .has-full-page-chat:not(.discourse-sidebar) {
   .full-page-chat {
     .channels-list {
-      height: 100%;
+      height: calc(100vh - var(--header-offset));
       border-right: 1px solid var(--primary-low);
       background: var(--primary-very-low);
 

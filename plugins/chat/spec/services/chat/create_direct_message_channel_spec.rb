@@ -49,18 +49,12 @@ RSpec.describe Chat::CreateDirectMessageChannel do
         )
         result.channel.user_chat_channel_memberships.each do |membership|
           expect(membership).to have_attributes(
-            following: true,
+            following: false,
             muted: false,
             desktop_notification_level: "always",
             mobile_notification_level: "always",
           )
         end
-      end
-
-      it "publishes the new channel" do
-        messages =
-          MessageBus.track_publish(Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL) { result }
-        expect(messages.first.data[:channel][:title]).to eq("@elaine, @lechuck")
       end
 
       context "when there is an existing direct message channel for the target users" do

@@ -9,6 +9,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
+import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
 
 export default {
   name: "chat-sidebar",
@@ -329,6 +330,7 @@ export default {
 
           const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
             @service site;
+            @service modal;
             @service router;
             @tracked userCanDirectMessage =
               this.chatService.userCanDirectMessage;
@@ -377,7 +379,7 @@ export default {
                   id: "startDm",
                   title: I18n.t("chat.direct_messages.new"),
                   action: () => {
-                    this.router.transitionTo("chat.draft-channel");
+                    this.modal.show(ChatNewMessageModal);
                   },
                 },
               ];

@@ -127,6 +127,16 @@ describe "Single thread in side panel", type: :system do
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
 
+      it "changes the tracking bell to be Tracking level in the thread panel" do
+        new_thread = Fabricate(:chat_thread, channel: channel, with_replies: 1)
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(new_thread.original_message).click
+        expect(side_panel).to have_open_thread(new_thread)
+        expect(thread_page).to have_notification_level("normal")
+        thread_page.send_message("new thread message")
+        expect(thread_page).to have_notification_level("tracking")
+      end
+
       it "handles updates from multiple users sending messages in the thread" do
         using_session(:tab_1) do
           sign_in(current_user)
