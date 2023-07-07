@@ -6,17 +6,17 @@
     <p>
       <PreferenceCheckbox
         @labelKey="topics.bulk.dismiss_new_modal.topics"
-        @checked={{@model.dismissTopics}}
+        @checked={{this.dismissTopics}}
         @class="dismiss-topics"
       />
       <PreferenceCheckbox
         @labelKey="topics.bulk.dismiss_new_modal.posts"
-        @checked={{@model.dismissPosts}}
+        @checked={{this.dismissPosts}}
         @class="dismiss-posts"
       />
       <PreferenceCheckbox
         @labelKey="topics.bulk.dismiss_new_modal.untrack"
-        @checked={{@model.untrack}}
+        @checked={{this.untrack}}
         @class="untrack"
       />
     </p>
