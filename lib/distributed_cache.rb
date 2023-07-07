@@ -19,12 +19,4 @@ class DistributedCache < MessageBus::DistributedCache
     self.defer_set(k, value)
     value
   end
-
-  def clear(after_commit: true)
-    if after_commit
-      DB.after_commit { super() }
-    else
-      super()
-    end
-  end
 end

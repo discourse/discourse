@@ -151,8 +151,8 @@ end
 
 TestProf::BeforeAll.configure do |config|
   config.after(:begin) do
-    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
     TestSetup.test_setup
+    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
   end
 end
 
@@ -350,6 +350,8 @@ RSpec.configure do |config|
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
   end
 
+  config.before :each, &TestSetup.method(:test_setup)
+
   config.around :each do |example|
     before_event_count = DiscourseEvent.events.values.sum(&:count)
     example.run
@@ -384,7 +386,6 @@ RSpec.configure do |config|
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
-    TestSetup.test_setup
   end
 
   # Match the request hostname to the value in `database.yml`
