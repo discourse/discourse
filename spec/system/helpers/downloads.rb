@@ -16,7 +16,7 @@ class Downloads
 
   # fixme andrei use it instead of reading the name of the file from the page
   def self.downloads
-    Dir[Rails.root.join(FOLDER).join("*")]
+    Dir[Pathname.new(FOLDER).join("*")]
   end
 
   def self.downloaded?
