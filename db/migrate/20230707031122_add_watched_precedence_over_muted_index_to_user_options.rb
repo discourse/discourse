@@ -2,6 +2,6 @@
 
 class AddWatchedPrecedenceOverMutedIndexToUserOptions < ActiveRecord::Migration[7.0]
   def change
-    add_index :user_options, %i[user_id watched_precedence_over_muted]
+    add_index :user_options, :watched_precedence_over_muted
   end
 end
