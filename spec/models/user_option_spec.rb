@@ -51,19 +51,19 @@ RSpec.describe UserOption do
       expect(user.user_option.sidebar_link_to_filtered_list).to eq(true)
     end
 
-    it "should correctly set sidebar_link_to_filtered_list when disabled" do
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is disabled" do
       SiteSetting.default_sidebar_link_to_filtered_list = false
       user = Fabricate(:user)
       expect(user.user_option.sidebar_link_to_filtered_list).to eq(false)
     end
 
-    it "should correctly set sidebar_show_count_of_new_items when enabled" do
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is enabled" do
       SiteSetting.default_sidebar_show_count_of_new_items = true
       user = Fabricate(:user)
       expect(user.user_option.sidebar_show_count_of_new_items).to eq(true)
     end
 
-    it "should correctly set sidebar_show_count_of_new_items when disabled" do
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is disabled" do
       SiteSetting.default_sidebar_show_count_of_new_items = false
       user = Fabricate(:user)
       expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
