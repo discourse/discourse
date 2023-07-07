@@ -10,12 +10,7 @@ function containerSelector(user, options = {}) {
     onlineSelector = ".is-online";
   }
 
-  let sizeSelector = `.-tiny`;
-  if (options.size) {
-    sizeSelector = `.-${options.size}`;
-  }
-
-  return `.chat-user-avatar${onlineSelector} .chat-user-avatar__container[data-user-card=${user.username}] .avatar[title=${user.username}]${sizeSelector}`;
+  return `.chat-user-avatar${onlineSelector} .chat-user-avatar__container[data-user-card=${user.username}] .avatar[title=${user.username}]`;
 }
 
 module("Discourse Chat | Component | <Chat::UserAvatar />", function (hooks) {
