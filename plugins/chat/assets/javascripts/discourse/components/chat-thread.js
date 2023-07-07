@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 import { Promise } from "rsvp";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -271,6 +273,13 @@ export default class ChatThreadPanel extends Component {
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.staged ? null : message.thread.id,
           staged_thread_id: message.thread.staged ? message.thread.id : null,
+        })
+        .then((response) => {
+          this.args.thread.currentUserMembership ??=
+            UserChatThreadMembership.create({
+              notification_level: NotificationLevels.TRACKING,
+              last_read_message_id: response.message_id,
+            });
         })
         .catch((error) => {
           this.#onSendError(message.id, error);
