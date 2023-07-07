@@ -45,7 +45,7 @@ RSpec.describe UserOption do
       expect(user.user_option.digest_after_minutes).to eq(0)
     end
 
-    it "should correctly set sidebar_link_to_filtered_list when enabled" do
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is enabled" do
       SiteSetting.default_sidebar_link_to_filtered_list = true
       user = Fabricate(:user)
       expect(user.user_option.sidebar_link_to_filtered_list).to eq(true)
