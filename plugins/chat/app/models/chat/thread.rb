@@ -23,6 +23,10 @@ module Chat
              primary_key: :id,
              class_name: "Chat::Message"
     has_many :user_chat_thread_memberships
+    belongs_to :last_message,
+               class_name: "Chat::Message",
+               foreign_key: :last_message_id,
+               optional: true
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
 
@@ -30,17 +34,9 @@ module Chat
 
     # Since the `replies` for the thread can all be deleted, to avoid errors
     # in lists and previews of the thread, we can consider the original message
-    # as the last "reply" in this case, so we don't exclude that here.
-    #
-    # This is a manual getter/setter so we can avoid N1 queries. This used to be
-    # a has_one relationship on the model, but that has some awkward behaviour
-    # and still caused N1s, and ordering was not applied in complex AR queries.
-    def last_reply
-      @last_reply ||= self.chat_messages.reorder("created_at DESC, id DESC").first
-    end
-
-    def last_reply=(message)
-      @last_reply = message
+    # as the last message in this case as a fallback.
+    def last_message
+      self.last_message || self.original_message
     end
 
     def add(user)
@@ -148,11 +144,13 @@ end
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  replies_count            :integer          default(0), not null
+#  last_message_id          :bigint
 #
 # Indexes
 #
 #  index_chat_threads_on_channel_id                (channel_id)
 #  index_chat_threads_on_channel_id_and_status     (channel_id,status)
+#  index_chat_threads_on_last_message_id           (last_message_id)
 #  index_chat_threads_on_original_message_id       (original_message_id)
 #  index_chat_threads_on_original_message_user_id  (original_message_user_id)
 #  index_chat_threads_on_replies_count             (replies_count)

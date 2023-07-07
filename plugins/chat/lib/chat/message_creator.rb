@@ -71,7 +71,7 @@ module Chat
         )
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
-        @chat_channel.touch(:last_message_sent_at)
+        @chat_channel.update!(last_message: @chat_message)
         DiscourseEvent.trigger(:chat_message_created, @chat_message, @chat_channel, @user)
       rescue => error
         @error = error
@@ -232,6 +232,7 @@ module Chat
     def post_process_resolved_thread
       return if resolved_thread.blank?
 
+      resolved_thread.update!(last_message: @chat_message)
       resolved_thread.increment_replies_count_cache
       current_user_thread_membership = resolved_thread.add(@user)
       current_user_thread_membership.update!(last_read_message_id: @chat_message.id)

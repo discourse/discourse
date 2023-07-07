@@ -115,10 +115,23 @@ RSpec.describe Chat::TrashMessage do
           expect(membership_2.reload.last_read_message_id).to be_nil
         end
 
+        it "updates the channel last_message_id to the previous message in the channel" do
+          next_message =
+            Fabricate(:chat_message, chat_channel: message.chat_channel, user: current_user)
+          params[:message_id] = next_message.id
+          expect(message.chat_channel.reload.last_message).to eq(next_message)
+          result
+          expect(message.chat_channel.reload.last_message).to eq(message)
+        end
+
         context "when the message has a thread" do
           fab!(:thread) { Fabricate(:chat_thread, channel: message.chat_channel) }
 
-          before { message.update!(thread: thread) }
+          before do
+            message.update!(thread: thread)
+            thread.update!(last_message: message)
+            thread.original_message.update!(created_at: message.created_at - 2.hours)
+          end
 
           it "decrements the thread reply count" do
             thread.set_replies_count_cache(5)
@@ -153,6 +166,22 @@ RSpec.describe Chat::TrashMessage do
             result
             expect(membership_1.reload.last_read_message_id).to be_nil
             expect(membership_2.reload.last_read_message_id).to be_nil
+          end
+
+          it "updates the thread last_message_id to the previous message in the thread" do
+            next_message = Fabricate(:chat_message, thread: thread, user: current_user)
+            params[:message_id] = next_message.id
+            expect(thread.reload.last_message).to eq(next_message)
+            result
+            expect(thread.reload.last_message).to eq(message)
+          end
+
+          context "when there are no other messages left in the thread except the original message" do
+            it "updates the thread last_message_id to the original message" do
+              expect(thread.last_message).to eq(message)
+              result
+              expect(thread.reload.last_message).to eq(thread.original_message)
+            end
           end
         end
 

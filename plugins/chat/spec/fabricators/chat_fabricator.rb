@@ -169,6 +169,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   end
 
   after_create do |thread|
+    thread.update!(last_message: thread.original_message)
     thread.original_message.update!(thread_id: thread.id)
     thread.add(thread.original_message_user)
   end

@@ -20,6 +20,10 @@ module Chat
              foreign_key: :chat_channel_id
     has_many :threads, class_name: "Chat::Thread", foreign_key: :channel_id
     has_one :chat_channel_archive, class_name: "Chat::ChannelArchive", foreign_key: :chat_channel_id
+    belongs_to :last_message,
+               class_name: "Chat::Message",
+               foreign_key: :last_message_id,
+               optional: true
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
 
@@ -249,11 +253,13 @@ end
 #  allow_channel_wide_mentions :boolean          default(TRUE), not null
 #  messages_count              :integer          default(0), not null
 #  threading_enabled           :boolean          default(FALSE), not null
+#  last_message_id             :bigint
 #
 # Indexes
 #
 #  index_chat_channels_on_chatable_id                    (chatable_id)
 #  index_chat_channels_on_chatable_id_and_chatable_type  (chatable_id,chatable_type)
+#  index_chat_channels_on_last_message_id                (last_message_id)
 #  index_chat_channels_on_messages_count                 (messages_count)
 #  index_chat_channels_on_slug                           (slug) UNIQUE
 #  index_chat_channels_on_status                         (status)
