@@ -35,9 +35,7 @@ module Chat
     # Since the `replies` for the thread can all be deleted, to avoid errors
     # in lists and previews of the thread, we can consider the original message
     # as the last message in this case as a fallback.
-    def last_message
-      self.last_message || self.original_message
-    end
+    before_create { self.last_message_id = self.original_message_id }
 
     def add(user)
       Chat::UserChatThreadMembership.find_or_create_by!(user: user, thread: self)

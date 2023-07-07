@@ -157,6 +157,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.channel = original_message.chat_channel
   end
 
+  transient :with_replies
   transient :channel
   transient :original_message_user
 
@@ -168,10 +169,13 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     )
   end
 
-  after_create do |thread|
-    thread.update!(last_message: thread.original_message)
+  after_create do |thread, transients|
     thread.original_message.update!(thread_id: thread.id)
     thread.add(thread.original_message_user)
+
+    if transients[:with_replies]
+      Fabricate.times(transients[:with_replies], :chat_message, thread: thread)
+    end
   end
 end
 
