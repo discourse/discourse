@@ -2,7 +2,7 @@
   <div class="chat-thread-participants">
     <div class="chat-thread-participants__avatar-group">
       {{#each @thread.preview.participantUsers as |user|}}
-        <ChatUserAvatar
+        <Chat::UserAvatar
           @user={{user}}
           @avatarSize="tiny"
           @showPresence={{false}}

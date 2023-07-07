@@ -8,12 +8,19 @@ export default class ChatUserAvatar extends Component {
     return this.args.avatarSize || "tiny";
   }
 
+  get showPresence() {
+    return this.args.showPresence ?? true;
+  }
+
   get isOnline() {
     const users = (this.args.chat || this.chat).presenceChannel?.users;
 
     return (
-      !!users?.findBy("id", this.args.user?.id) ||
-      !!users?.findBy("username", this.args.user?.username)
+      this.showPresence &&
+      !!users?.find(
+        ({ id, username }) =>
+          this.args.user?.id === id || this.args.user?.username === username
+      )
     );
   }
 }
