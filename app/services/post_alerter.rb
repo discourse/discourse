@@ -275,12 +275,17 @@ class PostAlerter
       EXCEPT
       SELECT user_id FROM topic_users tus WHERE tus.topic_id = #{topic.id} AND tus.notification_level = #{TopicUser.notification_levels[:watching]}
     SQL
-    User
-      .where("id IN (#{user_ids_sql})")
-      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
-      .where(
-        "user_options.watched_precedence_over_muted IS false OR (user_options.watched_precedence_over_muted IS NULL AND #{!SiteSetting.watched_precedence_over_muted})",
+    user_scope = User.where("id IN (#{user_ids_sql})")
+
+    if SiteSetting.watched_precedence_over_muted
+      user_scope.joins(
+        "JOIN user_options ON user_options.user_id = users.id AND user_options.watched_precedence_over_muted IS false",
       )
+    else
+      user_scope.joins(
+        "JOIN user_options ON user_options.user_id = users.id AND (user_options.watched_precedence_over_muted IS false OR user_options.watched_precedence_over_muted IS NULL)",
+      )
+    end
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)
