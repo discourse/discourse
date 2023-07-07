@@ -275,13 +275,11 @@ export default class ChatThreadPanel extends Component {
           staged_thread_id: message.thread.staged ? message.thread.id : null,
         })
         .then((response) => {
-          if (!this.args.thread.currentUserMembership) {
-            this.args.thread.currentUserMembership =
-              UserChatThreadMembership.create({
-                notification_level: NotificationLevels.TRACKING,
-                last_read_message_id: response.message_id,
-              });
-          }
+          this.args.thread.currentUserMembership ??=
+            UserChatThreadMembership.create({
+              notification_level: NotificationLevels.TRACKING,
+              last_read_message_id: response.message_id,
+            });
         })
         .catch((error) => {
           this.#onSendError(message.id, error);
