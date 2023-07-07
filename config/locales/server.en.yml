@@ -2351,7 +2351,7 @@ en:
 
     default_title_count_mode: "Default mode for the page title counter"
     enable_offline_indicator: "Display a message to users when it is detected that they have no network connection"
-    default_sidebar_link_to_filtered_list: "Make sidebar items link to filtered list by default."
+    default_sidebar_link_to_filtered_list: "Make navigation menu link link to filtered list by default."
     default_sidebar_show_count_of_new_items: "Make sidebar items show count of new items instead of badges by default."
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
