@@ -2727,6 +2727,9 @@ user_preferences:
   enable_offline_indicator:
     default: false
     client: true
+  default_sidebar_link_to_filtered_list: false
+  default_sidebar_show_count_of_new_items: false
+
 api:
   retain_web_hook_events_period_days:
     default: 30
