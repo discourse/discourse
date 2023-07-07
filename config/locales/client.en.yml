@@ -4415,6 +4415,7 @@ en:
           delete_confirm: "Are you sure you want to delete this section?"
           reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Make this section public and visible to everyone"
+          always_public: "Content in this section is always public"
           more_menu: "More menu"
           links:
             add: "Add another link"

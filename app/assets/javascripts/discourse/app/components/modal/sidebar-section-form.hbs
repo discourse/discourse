@@ -73,15 +73,22 @@
         />
 
       {{/if}}
-      {{#if
-        (and this.currentUser.staff (not this.transformedModel.sectionType))
-      }}
-        <div class="row-wrapper mark-public-wrapper">
+      {{#if (and this.currentUser.staff)}}
+        <div
+          class="row-wrapper mark-public-wrapper
+            {{if this.transformedModel.sectionType '-disabled'}}"
+        >
           <label class="checkbox-label">
+            {{#if this.transformedModel.sectionType}}
+              <DTooltip @placement="top-start">
+                {{i18n "sidebar.sections.custom.always_public"}}
+              </DTooltip>
+            {{/if}}
             <Input
               @type="checkbox"
               @checked={{this.transformedModel.public}}
               class="mark-public"
+              disabled={{this.transformedModel.sectionType}}
             />
             {{i18n "sidebar.sections.custom.public"}}
           </label>
