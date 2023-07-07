@@ -117,7 +117,7 @@ class Theme < ActiveRecord::Base
     update_javascript_cache!
 
     remove_from_cache!
-    ColorScheme.hex_cache.clear
+    DB.after_commit { ColorScheme.hex_cache.clear }
     notify_theme_change(with_scheme: notify_with_scheme)
 
     if theme_setting_requests_refresh
@@ -358,7 +358,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    @cache.clear
+    DB.after_commit { @cache.clear }
   end
 
   def self.targets
@@ -529,12 +529,12 @@ class Theme < ActiveRecord::Base
 
   def child_theme_ids=(theme_ids)
     super(theme_ids)
-    Theme.clear_cache!
+    DB.after_commit { Theme.clear_cache! }
   end
 
   def parent_theme_ids=(theme_ids)
     super(theme_ids)
-    Theme.clear_cache!
+    DB.after_commit { Theme.clear_cache! }
   end
 
   def add_relative_theme!(kind, theme)
