@@ -9,6 +9,11 @@
     <span>{{i18n "categories.latest"}}</span>
   </DNavigationItem>
 
+  <PluginOutlet
+    @name="user-group-messages-after-latest"
+    @outletArgs={{hash group=this.group}}
+  />
+
   {{#if this.viewingSelf}}
     <DNavigationItem
       @route="userPrivateMessages.group.new"
