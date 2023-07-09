@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { bind, observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
-import { cancel, throttle } from "@ember/runloop";
+import { cancel, next, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -192,7 +192,9 @@ export default Component.extend({
     this.chatStateManager.prefersFullPage();
     this.chat.activeChannel = null;
 
-    return DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
+    next(() => {
+      DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
+    });
   },
 
   @action
