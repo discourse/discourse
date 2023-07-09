@@ -5,7 +5,15 @@ class Downloads
   TIMEOUT = 10
 
   def self.wait_for_download
-    Timeout.timeout(TIMEOUT) { sleep 0.1 until downloaded? }
+    Timeout.timeout(TIMEOUT) do
+      until downloaded?
+        sleep 0.1
+        puts "1234 DOWNLOADS 1 #{Dir[Pathname.new(FOLDER).join("*")]}"
+        puts "1234 DOWNLOADS 2 #{Dir[Rails.root.join(FOLDER).join("*")]}"
+        puts "1234 Rails.root #{Rails.root}"
+        puts "1234 Downloads folder #{Rails.root.join(FOLDER)}"
+      end
+    end
   end
 
   def self.clear

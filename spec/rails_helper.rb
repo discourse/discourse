@@ -281,6 +281,8 @@ RSpec.configure do |config|
     # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
     browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
 
+    puts "1234 SETTING UP chrome_browser_options"
+
     chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
