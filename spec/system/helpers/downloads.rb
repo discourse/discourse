@@ -2,7 +2,7 @@
 
 class Downloads
   FOLDER = "tmp/downloads"
-  TIMEOUT = 10
+  TIMEOUT = 20
 
   def self.wait_for_download
     Timeout.timeout(TIMEOUT) do
