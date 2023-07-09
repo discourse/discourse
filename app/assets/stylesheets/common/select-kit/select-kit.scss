@@ -244,6 +244,11 @@
     max-height: 250px;
     width: 100%;
 
+    &__bottom-tracker {
+      margin-top: -1px;
+      width: 100%;
+    }
+
     &:hover .select-kit-row.is-highlighted:hover {
       background: var(--d-hover);
     }

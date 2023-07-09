@@ -2,7 +2,7 @@ import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
 import { bind } from "discourse-common/utils/decorators";
 
-export default class ChatTrackMessage extends Modifier {
+export default class TrackNodeVisibilityModifier extends Modifier {
   didEnterViewport = null;
   didLeaveViewport = null;
 
@@ -17,10 +17,7 @@ export default class ChatTrackMessage extends Modifier {
 
     this.intersectionObserver = new IntersectionObserver(
       this._intersectionObserverCallback,
-      {
-        root: document,
-        threshold: 0,
-      }
+      { root: document, threshold: 0 }
     );
 
     this.intersectionObserver.observe(element);

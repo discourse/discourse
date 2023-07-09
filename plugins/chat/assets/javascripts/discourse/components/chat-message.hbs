@@ -39,7 +39,7 @@
       this.onLongPressEnd
       this.onLongPressCancel
     }}
-    {{chat/track-message
+    {{track-node-visibility
       (fn (mut @message.visible) true)
       (fn (mut @message.visible) false)
     }}

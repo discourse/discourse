@@ -1,6 +1,6 @@
-{{#if this.collection.content.length}}
+{{#if this.renderedContent.length}}
   <ul class="select-kit-collection" aria-live="polite" role="menu">
-    {{#each this.collection.content as |item index|}}
+    {{#each this.renderedContent as |item index|}}
       {{component
         (component-for-row this.collection.identifier item this.selectKit)
         index=index
@@ -8,6 +8,13 @@
         value=this.value
         selectKit=this.selectKit
       }}
+
+      {{#if (eq item this.renderedContent.lastObject)}}
+        <div
+          class="select-kit-collection__bottom-tracker"
+          {{track-node-visibility this.bottomReached}}
+        ></div>
+      {{/if}}
     {{/each}}
   </ul>
 {{/if}}
