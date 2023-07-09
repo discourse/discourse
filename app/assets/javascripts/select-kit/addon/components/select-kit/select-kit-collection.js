@@ -21,7 +21,6 @@ export default Component.extend({
 
   @action
   bottomReached() {
-    console.log("bottom reached");
     this.set("limit", this.limit + STEP);
   },
 });
