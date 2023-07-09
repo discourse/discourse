@@ -23,6 +23,7 @@ module PageObjects
 
       def clear_downloads
         @downloaded_files.each { |file| puts "Deleting file #{file}" }
+        @downloaded_files = []
       end
 
       private
