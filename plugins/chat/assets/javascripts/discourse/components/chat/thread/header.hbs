@@ -4,7 +4,7 @@
       <LinkTo
         class="chat-thread__back-to-previous-route btn-flat btn btn-icon no-text"
         @route={{this.backLinkRoute}}
-        @models={{@channel.routeModels}}
+        @models={{@thread.channel.routeModels}}
         title={{i18n "chat.return_to_threads_list"}}
       >
         <Chat::Thread::HeaderUnreadIndicator @channel={{@thread.channel}} />
