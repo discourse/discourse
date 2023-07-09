@@ -40,7 +40,7 @@ RSpec.describe "Chat CSV exports", type: :system do
       ],
     )
 
-    time_format = "%Y-%m-%d %k:%M:%S UTC"
+    time_format = "%Y-%m-%d %H:%M:%S UTC"
     expect(exported_data.second).to eq(
       [
         message.id.to_s,

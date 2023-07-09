@@ -4,7 +4,7 @@ RSpec.describe "CSV Exports", type: :system do
   fab!(:admin) { Fabricate(:admin) }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
 
-  time_format = "%Y-%m-%d %k:%M:%S UTC"
+  time_format = "%Y-%m-%d %H:%M:%S UTC"
 
   before do
     Jobs.run_immediately!
