@@ -3,8 +3,8 @@
     {{#if @thread}}
       <LinkTo
         class="chat-thread__back-to-previous-route btn-flat btn btn-icon no-text"
-        @route={{this.backLink.route}}
-        @models={{this.backLink.models}}
+        @route={{this.backLinkRoute}}
+        @models={{@channel.routeModels}}
         title={{i18n "chat.return_to_threads_list"}}
       >
         <Chat::Thread::HeaderUnreadIndicator @channel={{@thread.channel}} />

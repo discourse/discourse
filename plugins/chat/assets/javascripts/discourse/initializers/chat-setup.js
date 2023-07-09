@@ -34,7 +34,7 @@ export default {
     withPluginApi("0.12.1", (api) => {
       api.onPageChange((path) => {
         const route = this.router.recognize(path);
-        if (route.name.startsWith("chat.")) {
+        if (route.name.startsWith("chat")) {
           this.chatHistory.visit(route);
         }
       });
