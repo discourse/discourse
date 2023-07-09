@@ -3,14 +3,26 @@
 module PageObjects
   module Pages
     class CSVExportPM < PageObjects::Pages::Base
+      def initialize
+        @downloaded_files = []
+      end
+
       def download_and_extract
         click_link ".zip"
         Downloads.wait_for_download
 
         zip_name = find("a.attachment").text
         zip_path = File.join(Downloads::FOLDER, zip_name)
+        @downloaded_files << zip_path
+
         csv_path = unzip(zip_path).first
+        @downloaded_files << csv_path
+
         CSV.read(csv_path)
+      end
+
+      def clear_downloads
+        @downloaded_files.each { |file| puts "Deleting file #{file}" }
       end
 
       private

@@ -11,8 +11,6 @@ RSpec.describe "CSV Exports", type: :system do
     sign_in(admin)
   end
 
-  after { Downloads.clear }
-
   context "with user list" do
     fab!(:group1) { Fabricate(:group) }
     fab!(:group2) { Fabricate(:group) }
@@ -134,6 +132,8 @@ RSpec.describe "CSV Exports", type: :system do
           "#{group1.name};#{group2.name}",
         ],
       )
+    ensure
+      csv_export_pm_page.clear_downloads
     end
   end
 
@@ -169,6 +169,8 @@ RSpec.describe "CSV Exports", type: :system do
           user_history.context,
         ],
       )
+    ensure
+      csv_export_pm_page.clear_downloads
     end
   end
 
@@ -189,6 +191,8 @@ RSpec.describe "CSV Exports", type: :system do
       expect(exported_data.length).to be(2)
       expect(exported_data.first).to eq(%w[Day Count])
       expect(exported_data.second).to eq([Time.now.strftime("%Y-%m-%d"), "1"])
+    ensure
+      csv_export_pm_page.clear_downloads
     end
   end
 
@@ -226,6 +230,8 @@ RSpec.describe "CSV Exports", type: :system do
           screened_email.ip_address.to_s,
         ],
       )
+    ensure
+      csv_export_pm_page.clear_downloads
     end
   end
 
@@ -259,6 +265,8 @@ RSpec.describe "CSV Exports", type: :system do
           screened_ip.created_at.strftime(time_format),
         ],
       )
+    ensure
+      csv_export_pm_page.clear_downloads
     end
   end
 
@@ -293,6 +301,8 @@ RSpec.describe "CSV Exports", type: :system do
           screened_url.created_at.strftime(time_format),
         ],
       )
+    ensure
+      csv_export_pm_page.clear_downloads
     end
   end
 end
