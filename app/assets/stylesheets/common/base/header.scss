@@ -124,13 +124,10 @@
 }
 
 .d-header-icons {
-  text-align: center;
+  display: flex;
   margin: 0 0 0 0.5em;
   list-style: none;
 
-  > li {
-    float: left;
-  }
   .icon {
     box-sizing: content-box;
     appearance: none;

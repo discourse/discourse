@@ -464,7 +464,7 @@ createWidget("glimmer-search-menu-wrapper", {
 });
 
 export default createWidget("header", {
-  tagName: "header.d-header.clearfix",
+  tagName: "header.d-header",
   buildKey: () => `header`,
   services: ["router", "search"],
 
