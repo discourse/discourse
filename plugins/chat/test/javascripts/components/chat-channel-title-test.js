@@ -71,7 +71,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
     const user = this.channel.chatable.users[0];
 
     assert.true(
-      exists(`.chat-user-avatar-container .avatar[title="${user.username}"]`)
+      exists(`.chat-user-avatar__container .avatar[title="${user.username}"]`)
     );
 
     assert.strictEqual(
