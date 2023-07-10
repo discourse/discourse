@@ -211,7 +211,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode: "Bootstrap mode"
+    bootstrap_mode: "Getting started"
 
     themes:
       default_description: "Default"
@@ -1931,6 +1931,11 @@ en:
       suggested_topics:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
+
+      admin_guide:
+        title: "Welcome to your new site!"
+        content: "Read the admin guide to continue building your site and community."
+        primary: "Let's go!"
 
     loading: "Loading..."
     errors:

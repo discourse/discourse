@@ -1,4 +1,4 @@
-.tippy-box[data-theme="user-tips"] {
+.tippy-box[data-theme="user-tip"] {
   background-color: var(--tertiary);
   color: var(--secondary);
   border-color: var(--tertiary);
@@ -27,24 +27,24 @@
 
 .user-tip {
   z-index: z("composer", "content") - 1;
-}
 
-.user-tip-container {
-  font-weight: normal;
-  min-width: 300px;
-  padding: 0.5em;
-  text-align: left;
+  &__container {
+    font-weight: normal;
+    min-width: 300px;
+    padding: 0.5em;
+    text-align: left;
+  }
 
-  .user-tip-title {
-    font-size: $font-up-2;
+  &__title {
+    font-size: var(--font-up-2);
     font-weight: bold;
   }
 
-  .user-tip-content {
+  &__content {
     margin-top: 0.25em;
   }
 
-  .user-tip-buttons {
+  &__buttons {
     margin-top: 1em;
   }
 }
