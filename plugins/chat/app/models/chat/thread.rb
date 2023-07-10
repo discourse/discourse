@@ -65,6 +65,10 @@ module Chat
       original_message.excerpt(max_length: EXCERPT_LENGTH)
     end
 
+    def update_last_message_id!
+      self.update!(last_message_id: self.latest_not_deleted_message_id)
+    end
+
     def latest_not_deleted_message_id(anchor_message_id: nil)
       DB.query_single(
         <<~SQL,

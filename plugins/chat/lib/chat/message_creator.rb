@@ -63,6 +63,7 @@ module Chat
         @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
         post_process_resolved_thread
+        update_channel_last_message
         Chat::Publisher.publish_new!(
           @chat_channel,
           @chat_message,
@@ -71,7 +72,6 @@ module Chat
         )
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
-        @chat_channel.update!(last_message: @chat_message)
         DiscourseEvent.trigger(:chat_message_created, @chat_message, @chat_channel, @user)
       rescue => error
         @error = error
@@ -240,6 +240,11 @@ module Chat
       if resolved_thread.original_message_user != @user
         resolved_thread.add(resolved_thread.original_message_user)
       end
+    end
+
+    def update_channel_last_message
+      return if @chat_message.thread_reply?
+      @chat_channel.update!(last_message: @chat_message)
     end
   end
 end

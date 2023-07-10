@@ -80,7 +80,7 @@ RSpec.describe Chat::RestoreMessage do
 
           before do
             message.update!(thread: thread)
-            thread.update!(last_message_id: thread.latest_not_deleted_message_id)
+            thread.update_last_message_id!
             thread.original_message.update!(created_at: message.created_at - 2.hours)
           end
 

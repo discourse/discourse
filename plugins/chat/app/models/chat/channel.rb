@@ -109,6 +109,10 @@ module Chat
       "#{Discourse.base_path}/chat/c/#{self.slug || "-"}/#{self.id}"
     end
 
+    def update_last_message_id!
+      self.update!(last_message_id: self.latest_not_deleted_message_id)
+    end
+
     def self.ensure_consistency!
       update_message_counts
       update_user_counts
@@ -162,7 +166,7 @@ module Chat
     def latest_not_deleted_message_id(anchor_message_id: nil)
       # TODO (martin) Write a spec for this to make sure it's not getting thread messages.
       DB.query_single(<<~SQL, channel_id: self.id, anchor_message_id: anchor_message_id).first
-        SELECT id
+        SELECT chat_messages.id
         FROM chat_messages
         LEFT JOIN chat_threads ON chat_threads.original_message_id = chat_messages.id
         WHERE chat_channel_id = :channel_id
@@ -170,7 +174,7 @@ module Chat
         -- this is so only the original message of a thread is counted not all thread messages
         AND chat_messages.thread_id IS NULL OR chat_threads.id IS NOT NULL
         #{anchor_message_id ? "AND id < :anchor_message_id" : ""}
-        ORDER BY created_at DESC, id DESC
+        ORDER BY chat_messages.created_at DESC, chat_messages.id DESC
         LIMIT 1
       SQL
     end
@@ -182,19 +186,12 @@ module Chat
 
       DB.exec(<<~SQL, channel_id: self.id)
         UPDATE user_chat_thread_memberships
-        SET last_read_message_id = subquery.last_message_id
-        FROM (
-          SELECT chat_threads.id AS thread_id, MAX(chat_messages.id) AS last_message_id
-          FROM chat_threads
-          INNER JOIN chat_messages ON chat_messages.thread_id = chat_threads.id
-          WHERE chat_threads.channel_id = :channel_id
-          AND chat_messages.deleted_at IS NULL
-          GROUP BY chat_threads.id
-        ) subquery
-        WHERE user_chat_thread_memberships.thread_id = subquery.thread_id
+        SET last_read_message_id = chat_threads.last_message_id
+        FROM chat_threads
+        WHERE user_chat_thread_memberships.thread_id = chat_threads.id
         #{user ? "AND user_chat_thread_memberships.user_id = #{user.id}" : ""}
         AND (
-          user_chat_thread_memberships.last_read_message_id < subquery.last_message_id OR
+          user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id OR
           user_chat_thread_memberships.last_read_message_id IS NULL
         )
       SQL

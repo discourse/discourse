@@ -641,6 +641,17 @@ describe Chat::MessageCreator do
         expect(message.thread.last_message).to eq(message)
       end
 
+      it "does not change the last_message of the channel for a thread reply" do
+        original_last_message = public_chat_channel.last_message
+        described_class.create(
+          chat_channel: public_chat_channel,
+          user: user1,
+          content: "this is a message",
+          in_reply_to_id: reply_message.id,
+        )
+        expect(public_chat_channel.reload.last_message).to eq(original_last_message)
+      end
+
       it "creates a user thread membership" do
         message = nil
         expect {
