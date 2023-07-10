@@ -13,7 +13,7 @@ class BackfillChatChannelAndThreadLastMessageIds < ActiveRecord::Migration[7.0]
           AND (cm.thread_id IS NULL OR chat_threads.id IS NOT NULL)
         ORDER BY cm.created_at DESC, cm.id DESC
         LIMIT 1
-      );
+      )
       WHERE chat_channels.last_message_id IS NULL;
     SQL
 
@@ -26,7 +26,7 @@ class BackfillChatChannelAndThreadLastMessageIds < ActiveRecord::Migration[7.0]
           AND cm.deleted_at IS NULL
         ORDER BY cm.created_at DESC, cm.id DESC
         LIMIT 1
-      );
+      )
       WHERE chat_threads.last_message_id IS NULL;
     SQL
   end
