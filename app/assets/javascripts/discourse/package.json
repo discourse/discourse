@@ -21,7 +21,6 @@
     "discourse-widget-hbs": "1.0.0",
     "ember-source": "~3.28.12",
     "handlebars": "^4.7.7",
-    "markdown-it": "^13.0.1",
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
