@@ -232,7 +232,7 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     );
   });
 
-  test("Do not shows warning in the composer if the message is sent to other users", async function (assert) {
+  test("Does not show a warning in the composer if the message is sent to other users", async function (assert) {
     await visit("/new-message");
 
     const privateMessageUsers = selectKit("#private-message-users");
