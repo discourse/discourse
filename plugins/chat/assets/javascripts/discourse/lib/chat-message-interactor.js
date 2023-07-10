@@ -42,6 +42,7 @@ export default class ChatMessageInteractor {
   @service currentUser;
   @service site;
   @service router;
+  @service capabilities;
 
   @tracked message = null;
   @tracked context = null;
@@ -54,10 +55,6 @@ export default class ChatMessageInteractor {
     this.message = message;
     this.context = context;
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
   }
 
   get pane() {

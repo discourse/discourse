@@ -2,10 +2,10 @@ import getURL from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
 import I18n from "I18n";
 import { escape } from "pretty-text/sanitizer";
-import { helperContext } from "discourse-common/lib/helpers";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
 import * as AvatarUtils from "discourse-common/lib/avatar-utils";
+import { capabilities } from "discourse/services/capabilities";
 
 let _defaultHomepage;
 
@@ -268,7 +268,7 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  let caps = helperContext().capabilities;
+  let caps = capabilities;
   return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
 }
 
@@ -451,7 +451,7 @@ export function modKeysPressed(event) {
 }
 
 export function translateModKey(string) {
-  const { isApple } = helperContext().capabilities;
+  const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
     string = string
