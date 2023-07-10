@@ -1478,6 +1478,7 @@ en:
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
+    outdated_translations_warning: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
@@ -1923,7 +1924,8 @@ en:
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
     tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
-    trusted_users_can_edit_others: "Allow users with high trust levels to edit content from other users"
+    edit_all_topic_groups: "Allow users in this group to edit other users' topic titles, tags, and categories"
+    edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."

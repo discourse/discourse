@@ -119,18 +119,16 @@ module TopicGuardian
       return true
     end
 
-    # TL4 users can edit archived topics, but can not edit private messages
     if (
-         SiteSetting.trusted_users_can_edit_others? && topic.archived && !topic.private_message? &&
-           user.has_trust_level?(TrustLevel[4]) && can_create_post?(topic)
+         is_in_edit_post_groups? && topic.archived && !topic.private_message? &&
+           can_create_post?(topic)
        )
       return true
     end
 
-    # TL3 users can not edit archived topics and private messages
     if (
-         SiteSetting.trusted_users_can_edit_others? && !topic.archived && !topic.private_message? &&
-           user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic)
+         is_in_edit_topic_groups? && !topic.archived && !topic.private_message? &&
+           can_create_post?(topic)
        )
       return true
     end
@@ -139,6 +137,11 @@ module TopicGuardian
 
     is_my_own?(topic) && !topic.edit_time_limit_expired?(user) && !first_post&.locked? &&
       (!first_post&.hidden? || can_edit_hidden_post?(first_post))
+  end
+
+  def is_in_edit_topic_groups?
+    SiteSetting.edit_all_topic_groups.present? &&
+      user.in_any_groups?(SiteSetting.edit_all_topic_groups.to_s.split("|").map(&:to_i))
   end
 
   def can_recover_topic?(topic)
