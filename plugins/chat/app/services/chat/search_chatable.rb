@@ -69,7 +69,7 @@ module Chat
 
       context.category_channels =
         DiscoursePluginRegistry.apply_modifier(
-          :search_chatable_category_channels,
+          :chat__search_chatable_category_channels,
           category_channels,
         )
     end

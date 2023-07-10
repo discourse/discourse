@@ -135,5 +135,22 @@ RSpec.describe Chat::SearchChatable do
         expect(result.users).to be_blank
       end
     end
+
+    context "with chat__search_chatable_category_channels modifier present" do
+      let(:term) { "" }
+
+      it "applies the modifier to category channels" do
+        modifier = ->(channels) { [] }
+        plugin = Plugin::Instance.new
+        plugin.register_modifier(:chat__search_chatable_category_channels, &modifier)
+
+        expect(result.category_channels).to be_empty
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin,
+          :chat__search_chatable_category_channels,
+          &modifier
+        )
+      end
+    end
   end
 end
