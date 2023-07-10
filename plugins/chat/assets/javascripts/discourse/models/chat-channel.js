@@ -159,11 +159,6 @@ export default class ChatChannel {
     this.messagesManager.removeMessage(message);
   }
 
-  // TODO (martin) Check if this breaks anything....
-  // get lastMessage() {
-  //   return this.messagesManager.findLastMessage();
-  // }
-
   lastUserMessage(user) {
     return this.messagesManager.findLastUserMessage(user);
   }
