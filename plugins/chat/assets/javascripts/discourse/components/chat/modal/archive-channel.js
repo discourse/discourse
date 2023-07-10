@@ -90,7 +90,7 @@ export default class ChatModalArchiveChannel extends Component {
         this.channel.status = CHANNEL_STATUSES.archived;
 
         discourseLater(() => {
-          this.ærgs.closeModal();
+          this.args.closeModal();
         }, 3000);
       })
       .catch(popupAjaxError)
