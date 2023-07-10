@@ -6,7 +6,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 
 module(
-  "Discourse Chat | Component | <Modal::Chat::DeleteChannel />",
+  "Discourse Chat | Component | <Chat::Modal::ArchiveChannel>",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -16,11 +16,11 @@ module(
       });
 
       await render(
-        hbs`<Modal::Chat::DeleteChannel @inline={{true}} @model={{hash channel=this.channel}} />`
+        hbs`<Chat::Modal::ArchiveChannel @inline={{true}} @model={{hash channel=this.channel}} />`
       );
 
       assert.true(
-        query(".chat-modal-delete-channel__instructions").innerHTML.includes(
+        query(".chat-modal-archive-channel").innerHTML.includes(
           "&lt;script&gt;someeviltitle&lt;/script&gt;"
         )
       );

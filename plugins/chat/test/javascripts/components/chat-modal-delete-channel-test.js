@@ -6,25 +6,21 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 
 module(
-  "Discourse Chat | Component | <Modal::Chat::MoveMessageToChannel />",
+  "Discourse Chat | Component | <Chat::Modal::DeleteChannel />",
   function (hooks) {
     setupRenderingTest(hooks);
 
     test("channel title is escaped in instructions correctly", async function (assert) {
       this.channel = fabricators.channel({
-        title: "<script>someeviltitle</script>",
+        title: `<script>someeviltitle</script>`,
       });
-      this.selectedMessageIds = [this.channel.id];
 
-      await render(hbs`
-        <Modal::Chat::MoveMessageToChannel
-          @inline={{true}}
-          @model={{hash sourceChannel=this.channel selectedMessageIds=this.selectedMessageIds}}
-        />
-      `);
+      await render(
+        hbs`<Chat::Modal::DeleteChannel @inline={{true}} @model={{hash channel=this.channel}} />`
+      );
 
       assert.true(
-        query(".chat-modal-move-message-to-channel").innerHTML.includes(
+        query(".chat-modal-delete-channel__instructions").innerHTML.includes(
           "&lt;script&gt;someeviltitle&lt;/script&gt;"
         )
       );
