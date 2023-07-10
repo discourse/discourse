@@ -815,6 +815,70 @@ RSpec.describe Admin::SiteTextsController do
     end
   end
 
+  describe "#dismiss_outdated" do
+    before { sign_in(admin) }
+
+    context "when using a key which isn't overridden" do
+      it "returns a not found error" do
+        put "/admin/customize/site_texts/title/dismiss_outdated.json",
+            params: {
+              locale: default_locale,
+            }
+
+        expect(response.status).to eq(404)
+
+        json = response.parsed_body
+        expect(json["error_type"]).to eq("not_found")
+      end
+    end
+
+    context "when the override isn't outdated" do
+      before do
+        Fabricate(
+          :translation_override,
+          locale: default_locale,
+          translation_key: "title",
+          value: "My Forum",
+        )
+      end
+
+      it "returns an unprocessable entity error" do
+        put "/admin/customize/site_texts/title/dismiss_outdated.json",
+            params: {
+              locale: default_locale,
+            }
+
+        expect(response.status).to eq(422)
+
+        json = response.parsed_body
+        expect(json["failed"]).to eq("FAILED")
+        expect(json["message"]).to eq("Can only dismiss outdated translations")
+      end
+    end
+
+    context "when the override is outdated" do
+      before do
+        Fabricate(
+          :translation_override,
+          locale: default_locale,
+          translation_key: "title",
+          value: "My Forum",
+          status: "outdated",
+        )
+      end
+
+      it "returns success" do
+        put "/admin/customize/site_texts/title/dismiss_outdated.json",
+            params: {
+              locale: default_locale,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+      end
+    end
+  end
+
   context "when reseeding" do
     before do
       staff_category = Fabricate(:category, name: "Staff EN", user: Discourse.system_user)
