@@ -68,6 +68,7 @@ function channelFabricator(args = {}) {
         description: args.description,
         chatable: args.chatable || categoryFabricator(),
         status: CHANNEL_STATUSES.open,
+        slug: args.chatable?.slug || "general",
       },
       args
     )

@@ -281,6 +281,7 @@ export default class ChatMessageCreator extends Component {
         return;
       } else if (this.query?.length === 0) {
         this.openChannel(this.selection);
+        event.preventDefault();
         return;
       }
     }
