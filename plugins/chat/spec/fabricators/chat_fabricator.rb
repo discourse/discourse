@@ -170,7 +170,9 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   end
 
   after_create do |thread, transients|
-    thread.original_message.update!(thread_id: thread.id)
+    # We make this older via created_at so any messages fabricated for this thread
+    # afterwards are not created earlier in time than the OM.
+    thread.original_message.update!(thread_id: thread.id, created_at: 1.week.ago)
     thread.add(thread.original_message_user)
 
     if transients[:with_replies]

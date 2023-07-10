@@ -186,4 +186,43 @@ RSpec.describe Chat::Channel do
       )
     end
   end
+
+  describe "#latest_not_deleted_message_id" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:old_message) { Fabricate(:chat_message, chat_channel: channel) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
+
+    before { old_message.update!(created_at: 1.day.ago) }
+
+    it "accepts an anchor message to only get messages of a lower id" do
+      expect(channel.latest_not_deleted_message_id(anchor_message_id: message_1.id)).to eq(
+        old_message.id,
+      )
+    end
+
+    it "gets the latest message by created_at" do
+      expect(channel.latest_not_deleted_message_id).to eq(message_1.id)
+    end
+
+    it "does not get other channel messages" do
+      Fabricate(:chat_message)
+      expect(channel.latest_not_deleted_message_id).to eq(message_1.id)
+    end
+
+    it "does not get thread replies" do
+      thread = Fabricate(:chat_thread, channel: channel)
+      message_1.update!(thread: thread)
+      expect(channel.latest_not_deleted_message_id).to eq(old_message.id)
+    end
+
+    it "does get thread original message" do
+      thread = Fabricate(:chat_thread, channel: channel)
+      expect(channel.latest_not_deleted_message_id).to eq(thread.original_message_id)
+    end
+
+    it "does not get deleted messages" do
+      message_1.trash!
+      expect(channel.latest_not_deleted_message_id).to eq(old_message.id)
+    end
+  end
 end
