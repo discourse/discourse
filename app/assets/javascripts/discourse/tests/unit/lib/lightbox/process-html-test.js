@@ -12,7 +12,7 @@ import { processHTML } from "discourse/lib/lightbox/process-html";
 module("Unit | lib | Experimental lightbox | processHTML()", function () {
   const wrap = domFromString(generateLightboxMarkup())[0];
   const imageUploaderWrap = domFromString(generateImageUploaderMarkup())[0];
-  const selector = ".lightbox";
+  const selector = SELECTORS.DEFAULT_ITEM_SELECTOR;
 
   test("returns the correct object from the proccessed element", async function (assert) {
     const container = wrap.cloneNode(true);
