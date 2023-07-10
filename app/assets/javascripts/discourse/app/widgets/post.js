@@ -1,9 +1,6 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import {
-  avatarUrl,
-  formatUsername,
-  translateSize,
-} from "discourse/lib/utilities";
+import { formatUsername } from "discourse/lib/utilities";
+import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import DiscourseURL from "discourse/lib/url";
