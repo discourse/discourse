@@ -86,4 +86,29 @@ module("Integration | Component | d-modal", function (hooks) {
     assert.dom(".d-modal .modal-header").hasClass("my-header-class");
     assert.dom(".d-modal .modal-body").hasClass("my-body-class");
   });
+
+  test("as a form", async function (assert) {
+    let submittedFormData;
+    this.handleSubmit = (event) => {
+      event.preventDefault();
+      submittedFormData = new FormData(event.currentTarget);
+    };
+
+    await render(
+      hbs`
+        <DModal @inline={{true}} @tagName="form" {{on "submit" this.handleSubmit}}>
+          <:body>
+            <input type="text" name="name" value="John Doe" />
+          </:body>
+          <:footer>
+            <button type="submit">Submit</button>
+          </:footer>
+        </DModal>
+        `
+    );
+
+    assert.dom("form.d-modal").exists();
+    await click(".d-modal button[type=submit]");
+    assert.deepEqual(submittedFormData.get("name"), "John Doe");
+  });
 });

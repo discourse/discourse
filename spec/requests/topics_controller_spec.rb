@@ -1819,8 +1819,9 @@ RSpec.describe TopicsController do
         end
 
         describe "when first post is locked" do
-          it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
-            SiteSetting.trusted_users_can_edit_others = true
+          it "blocks user from editing even if they are in 'edit_all_topic_groups' and 'edit_all_post_groups'" do
+            SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_3]
+            SiteSetting.edit_all_post_groups = Group::AUTO_GROUPS[:trust_level_4]
             user.update!(trust_level: 3)
             topic.first_post.update!(locked_by_id: admin.id)
 

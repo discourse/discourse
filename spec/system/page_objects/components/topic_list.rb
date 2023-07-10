@@ -14,6 +14,10 @@ module PageObjects
         page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
       end
 
+      def has_no_topics?
+        page.has_no_css?(TOPIC_LIST_ITEM_SELECTOR)
+      end
+
       def has_topic?(topic)
         page.has_css?(topic_list_item_class(topic))
       end

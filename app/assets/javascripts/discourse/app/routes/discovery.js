@@ -98,4 +98,9 @@ export default DiscourseRoute.extend(OpenComposer, {
       includeSubcategories: !controller.noSubcategories,
     });
   },
+
+  @action
+  triggerRefresh() {
+    this.refresh();
+  },
 });

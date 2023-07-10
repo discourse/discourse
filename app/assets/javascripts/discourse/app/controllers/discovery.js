@@ -60,6 +60,13 @@ export default Controller.extend({
     return `${url}?${urlSearchParams.toString()}`;
   },
 
+  get showLoadingSpinner() {
+    return (
+      this.get("loading") &&
+      this.siteSettings.page_loading_indicator === "spinner"
+    );
+  },
+
   actions: {
     changePeriod(p) {
       DiscourseURL.routeTo(this.showMoreUrl(p));

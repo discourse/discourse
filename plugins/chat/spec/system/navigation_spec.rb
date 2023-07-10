@@ -151,6 +151,7 @@ RSpec.describe "Navigation", type: :system do
         expect(side_panel_page).to have_open_thread(thread)
         expect(thread_page).to have_back_link_to_thread_list(category_channel)
         thread_page.back_to_previous_route
+        expect(page).to have_current_path("#{category_channel.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
 
@@ -164,6 +165,7 @@ RSpec.describe "Navigation", type: :system do
           expect(side_panel_page).to have_open_thread(thread)
           expect(thread_page).to have_back_link_to_thread_list(category_channel)
           thread_page.back_to_previous_route
+          expect(page).to have_current_path("#{category_channel.relative_url}/t")
           expect(thread_list_page).to have_loaded
         end
       end
@@ -177,6 +179,7 @@ RSpec.describe "Navigation", type: :system do
         expect(side_panel_page).to have_open_thread(thread)
         expect(thread_page).to have_back_link_to_thread_list(category_channel)
         thread_page.back_to_previous_route
+        expect(page).to have_current_path("#{category_channel.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
 
@@ -189,7 +192,8 @@ RSpec.describe "Navigation", type: :system do
           expect(side_panel_page).to have_open_thread(thread)
           expect(thread_page).to have_back_link_to_channel(category_channel)
           thread_page.back_to_previous_route
-          expect(side_panel_page).not_to be_open
+          expect(page).to have_current_path("#{category_channel.relative_url}")
+          expect(side_panel_page).to be_closed
         end
       end
     end
@@ -223,37 +227,15 @@ RSpec.describe "Navigation", type: :system do
       end
     end
 
-    context "when starting draft from sidebar with drawer preferred" do
-      it "opens draft in drawer" do
-        visit("/")
-        sidebar_page.open_draft_channel
-
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
-      end
-    end
-
-    context "when starting draft from drawer with drawer preferred" do
-      it "opens draft in drawer" do
-        visit("/")
-        chat_page.open_from_header
-        chat_drawer_page.open_draft_channel
-
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
-      end
-    end
-
     context "when starting draft from sidebar with full page preferred" do
       it "opens draft in full page" do
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.maximize
         visit("/")
-        sidebar_page.open_draft_channel
+        chat_page.open_new_message
 
-        expect(page).to have_current_path("/chat/draft-channel")
-        expect(page).not_to have_css(".chat-drawer.is-expanded")
+        expect(chat_page.message_creator).to be_opened
       end
     end
 

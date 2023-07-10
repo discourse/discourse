@@ -1,10 +1,15 @@
 import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-manager";
 import ChatThreadPreview from "../models/chat-thread-preview";
+import ChatNotice from "../models/chat-notice";
 
 export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
   @service chat;
   @service currentUser;
+
+  @tracked notices = new TrackedArray();
 
   get messageBusChannel() {
     return `/chat/${this.model.id}`;
@@ -16,6 +21,17 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
 
   handleSentMessage() {
     return;
+  }
+
+  handleNotice(data) {
+    this.notices.push(ChatNotice.create(data));
+  }
+
+  clearNotice(notice) {
+    const index = this.notices.indexOf(notice);
+    if (index > -1) {
+      this.notices.splice(index, 1);
+    }
   }
 
   handleThreadOriginalMessageUpdate(data) {

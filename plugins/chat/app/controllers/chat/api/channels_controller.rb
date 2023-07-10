@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-CHANNEL_EDITABLE_PARAMS = %i[name description slug]
-CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions threading_enabled]
+CHANNEL_EDITABLE_PARAMS ||= %i[name description slug]
+CATEGORY_CHANNEL_EDITABLE_PARAMS ||= %i[
+  auto_join_users
+  allow_channel_wide_mentions
+  threading_enabled
+]
 
 class Chat::Api::ChannelsController < Chat::ApiController
   def index
@@ -12,7 +16,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
 
     memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
-    channels = Chat::ChannelFetcher.secured_public_channels(guardian, memberships, options)
+    channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
     serialized_channels =
       channels.map do |channel|
         Chat::ChannelSerializer.new(

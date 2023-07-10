@@ -13,7 +13,9 @@ import mobile from "discourse/lib/mobile";
 import { inject as service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
+import NotActivatedModal from "../components/modal/not-activated";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -42,6 +44,20 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   dialog: service(),
   composer: service(),
   modal: service(),
+  loadingSlider: service(),
+
+  @action
+  loading(transition) {
+    if (this.loadingSlider.enabled) {
+      this.loadingSlider.transitionStarted();
+      transition.promise.finally(() => {
+        this.loadingSlider.transitionEnded();
+      });
+      return false;
+    } else {
+      return true; // Use native ember loading implementation
+    }
+  },
 
   actions: {
     toggleAnonymous() {
@@ -139,7 +155,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     showNotActivated(props) {
-      showModal("not-activated", { title: "log_in" }).setProperties(props);
+      this.modal.show(NotActivatedModal, { model: props });
     },
 
     showUploadSelector() {

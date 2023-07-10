@@ -25,6 +25,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import ChatModalChannelSummary from "discourse/plugins/chat/discourse/components/chat/modal/channel-summary";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -39,14 +40,11 @@ export default class ChatComposer extends Component {
   @service currentUser;
   @service chatApi;
   @service chatDraftsManager;
+  @service modal;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
-
-  get shouldRenderReplyingIndicator() {
-    return !this.args.channel?.isDraft;
-  }
 
   get shouldRenderMessageDetails() {
     return (
@@ -89,7 +87,7 @@ export default class ChatComposer extends Component {
   setupTextareaInteractor(textarea) {
     this.composer.textarea = new TextareaInteractor(getOwner(this), textarea);
 
-    if (this.site.desktopView) {
+    if (this.site.desktopView && this.args.autofocus) {
       this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
     }
   }
@@ -250,10 +248,6 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    if (this.args.channel.isDraft) {
-      return;
-    }
-
     this.chatComposerPresenceManager.notifyState(
       this.presenceChannelName,
       !this.currentMessage.editing && this.hasContent
@@ -385,8 +379,8 @@ export default class ChatComposer extends Component {
 
   @action
   showChannelSummaryModal() {
-    showModal("channel-summary").setProperties({
-      channelId: this.args.channel.id,
+    this.modal.show(ChatModalChannelSummary, {
+      model: { channelId: this.args.channel.id },
     });
   }
 

@@ -116,6 +116,9 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       case "update_thread_original_message":
         this.handleThreadOriginalMessageUpdate(busData);
         break;
+      case "notice":
+        this.handleNotice(busData);
+        break;
     }
   }
 
@@ -245,6 +248,10 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   }
 
   handleThreadOriginalMessageUpdate() {
+    throw "not implemented";
+  }
+
+  handleNotice() {
     throw "not implemented";
   }
 

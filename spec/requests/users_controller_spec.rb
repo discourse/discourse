@@ -906,7 +906,7 @@ RSpec.describe UsersController do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
-          #Sidekiq::Client.expects(:enqueue).never
+          # Sidekiq::Client.expects(:enqueue).never
           post "/u.json",
                params: post_user_params.merge(approved: true, active: true),
                headers: {
@@ -4997,6 +4997,31 @@ RSpec.describe UsersController do
           DiscoursePluginRegistry.reset!
         end
 
+        it "works when the modifier to the groups filter introduces a join with a conflicting name fields like `id` for example" do
+          %i[
+            include_groups
+            include_mentionable_groups
+            include_messageable_groups
+          ].each do |param_name|
+            get "/u/search/users.json", params: { param_name => "true", :term => "a" }
+
+            expect(response.status).to eq(200)
+
+            Plugin::Instance
+              .new
+              .register_modifier(:groups_for_users_search) do |groups|
+                # a join with a conflicting name field (id) is introduced here
+                # we expect the query to work correctly
+                groups.left_joins(:users).where(users: { admin: true })
+              end
+
+            get "/u/search/users.json", params: { param_name => "true", :term => "a" }
+            expect(response.status).to eq(200) # the conflict would cause a 500 error
+
+            DiscoursePluginRegistry.reset!
+          end
+        end
+
         it "doesn't search for groups" do
           get "/u/search/users.json",
               params: {
@@ -5795,6 +5820,7 @@ RSpec.describe UsersController do
           Class
             .new(Auth::Authenticator) do
               attr_accessor :can_revoke
+
               def name
                 "testprovider"
               end

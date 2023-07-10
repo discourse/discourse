@@ -87,6 +87,10 @@ export default Component.extend({
     const fontVariantData = this.fontMap[font.id];
 
     // System font for example does not need to load from a remote source.
+    if (!fontVariantData) {
+      this.loadedFonts.add(font.id);
+    }
+
     if (fontVariantData && !this.loadedFonts.has(font.id)) {
       this.loadingFontVariants = true;
       const fontFaces = fontVariantData.map((fontVariant) => {
