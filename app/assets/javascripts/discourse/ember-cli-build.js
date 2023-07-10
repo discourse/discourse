@@ -182,6 +182,10 @@ module.exports = function (defaults) {
     .findAddonByName("discourse-plugins")
     .generatePluginsTree();
 
+  const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
+
+  const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
+
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
@@ -196,13 +200,13 @@ module.exports = function (defaults) {
     }),
     generateWorkboxTree(),
     applyTerser(
-      concat(mergeTrees([app.options.adminTree]), {
+      concat(adminTree, {
         inputFiles: ["**/*.js"],
         outputFile: `assets/admin.js`,
       })
     ),
     applyTerser(
-      concat(mergeTrees([app.options.wizardTree]), {
+      concat(wizardTree, {
         inputFiles: ["**/*.js"],
         outputFile: `assets/wizard.js`,
       })
