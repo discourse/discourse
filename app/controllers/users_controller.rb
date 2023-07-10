@@ -30,6 +30,7 @@ class UsersController < ApplicationController
                    invited
                    check_sso_email
                    check_sso_payload
+                   lookup
                    recent_searches
                    reset_recent_searches
                    user_menu_bookmarks

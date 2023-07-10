@@ -5230,6 +5230,8 @@ RSpec.describe UsersController do
     fab!(:user_2) { Fabricate(:user) }
     fab!(:user_3) { Fabricate(:user) }
 
+    before { sign_in(user) }
+
     it "lookups users by username" do
       get "/u/lookup/users.json",
           params: {
