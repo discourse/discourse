@@ -1,5 +1,5 @@
 define("I18n", ["exports"], function (exports) {
-  return I18n;
+  exports.default = I18n;
 });
 
 define("htmlbars-inline-precompile", ["exports"], function (exports) {
