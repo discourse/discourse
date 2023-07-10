@@ -36,7 +36,7 @@ function showInstance(instance) {
     instance.show();
   } else if (!instance.showTimeout) {
     instance.showTimeout = setTimeout(() => {
-      instance.showTimeout = undefined;
+      instance.showTimeout = null;
       if (!instance.state.isDestroyed) {
         instance.show();
       }
@@ -71,7 +71,7 @@ export function showUserTip(options) {
     hideOnClick: false,
     trigger: "manual",
     theme: "user-tip",
-    zIndex: "", // reset z-index
+    zIndex: "", // reset z-index to use inherited value from the parent
     duration: TIPPY_DELAY,
 
     arrow: iconHTML("tippy-rounded-arrow"),
