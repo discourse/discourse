@@ -57,10 +57,8 @@ module Chat
     end
 
     def update_last_message_ids(message:, **)
-      message.thread&.update!(last_message_id: message.thread&.latest_not_deleted_message_id)
-      message.chat_channel.update!(
-        last_message_id: message.chat_channel.latest_not_deleted_message_id,
-      )
+      message.thread&.update_last_message_id!
+      message.chat_channel.update_last_message_id!
     end
 
     def publish_events(guardian:, message:, **)
