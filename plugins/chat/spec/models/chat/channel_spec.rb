@@ -210,7 +210,7 @@ RSpec.describe Chat::Channel do
     end
 
     it "does not get thread replies" do
-      thread = Fabricate(:chat_thread, channel: channel)
+      thread = Fabricate(:chat_thread, channel: channel, old_om: true)
       message_1.update!(thread: thread)
       expect(channel.latest_not_deleted_message_id).to eq(old_message.id)
     end

@@ -186,7 +186,7 @@ module Chat
       query = query.joins(:user_chat_channel_memberships)
       query =
         query.joins(
-          "INNER JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
+          "LEFT JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
         )
 
       scoped_channels =
@@ -228,7 +228,7 @@ module Chat
         query
           .where(chatable_type: Chat::Channel.direct_channel_chatable_types)
           .where(chat_channels: { id: scoped_channels })
-          .order("last_message.created_at DESC")
+          .order("last_message.created_at DESC NULLS LAST")
 
       channels = query.to_a
       preload_fields =

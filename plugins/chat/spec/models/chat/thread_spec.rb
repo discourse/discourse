@@ -216,7 +216,7 @@ RSpec.describe Chat::Thread do
 
   describe "#latest_not_deleted_message_id" do
     fab!(:channel) { Fabricate(:category_channel) }
-    fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel, old_om: true) }
     fab!(:old_message) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
 
