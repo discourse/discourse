@@ -171,7 +171,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   end
 
   after_create do |thread, transients|
-    attrs = { thread_id: thread.id }
+    attrs = { thread_id: thread.id, last_message_id: thread.original_message_id }
 
     # Sometimes we  make this older via created_at so any messages fabricated for this thread
     # afterwards are not created earlier in time than the OM.
