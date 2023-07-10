@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import ClassicComponent from "@ember/component";
 import { action } from "@ember/object";
-import { tracked, cached } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
