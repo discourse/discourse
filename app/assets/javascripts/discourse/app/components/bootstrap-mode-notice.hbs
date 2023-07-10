@@ -7,7 +7,8 @@
   {{#if this.showUserTip}}
     <UserTip
       @id="admin_guide"
-      @primaryLabel="user_tips.admin_guide.primary"
+      @buttonLabel="user_tips.admin_guide.button"
+      @buttonIcon="link"
       @onDismiss={{this.routeToAdminGuide}}
     />
   {{else}}

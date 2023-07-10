@@ -67,6 +67,11 @@ export function showUserTip(options) {
     return;
   }
 
+  let buttonText = escape(I18n.t(options.buttonLabel || "user_tips.button"));
+  if (options.buttonIcon) {
+    buttonText = `${iconHTML(options.buttonIcon)} ${buttonText}`;
+  }
+
   instancesMap[options.id] = tippy(options.reference, {
     hideOnClick: false,
     trigger: "manual",
@@ -87,12 +92,7 @@ export function showUserTip(options) {
         <div class='user-tip__title'>${escape(options.titleText)}</div>
         <div class='user-tip__content'>${escape(options.contentText)}</div>
         <div class='user-tip__buttons'>
-          <button class="btn btn-primary btn-dismiss">${escape(
-            options.primaryText || I18n.t("user_tips.primary")
-          )}</button>
-          <button class="btn btn-flat btn-text btn-dismiss-all">${escape(
-            options.secondaryBtnText || I18n.t("user_tips.secondary")
-          )}</button>
+          <button class="btn btn-primary">${buttonText}</button>
         </div>
       </div>`,
 
@@ -101,16 +101,9 @@ export function showUserTip(options) {
       tippyInstance.popper.classList.add("user-tip");
 
       tippyInstance.popper
-        .querySelector(".btn-dismiss")
+        .querySelector(".btn")
         .addEventListener("click", (event) => {
           options.onDismiss?.();
-          event.preventDefault();
-        });
-
-      tippyInstance.popper
-        .querySelector(".btn-dismiss-all")
-        .addEventListener("click", (event) => {
-          options.onDismissAll?.();
           event.preventDefault();
         });
     },
