@@ -11,7 +11,7 @@
   background-color: var(--primary-very-low);
   margin: 4px 0 -2px calc(var(--message-left-width) - 0.25rem);
   padding: 0.5rem;
-  border-radius: 8px;
+  border-radius: var(--d-border-radius-large);
   color: var(--primary);
 
   > * {
