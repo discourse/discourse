@@ -57,7 +57,7 @@ module Chat
     def fetch_category_channels(guardian:, **)
       return if context.mode == :user
 
-      context.category_channels =
+      category_channels =
         ::Chat::ChannelFetcher.secured_public_channel_search(
           guardian,
           filter_on_category_name: false,
@@ -65,6 +65,12 @@ module Chat
           filter: context.term,
           status: :open,
           limit: 10,
+        )
+
+      context.category_channels =
+        DiscoursePluginRegistry.apply_modifier(
+          :search_chatable_category_channels,
+          category_channels,
         )
     end
 
