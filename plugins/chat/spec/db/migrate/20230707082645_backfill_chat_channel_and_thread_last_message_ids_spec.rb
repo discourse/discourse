@@ -22,7 +22,7 @@ RSpec.describe BackfillChatChannelAndThreadLastMessageIds do
     end
 
     it "does not set the last message id to a thread reply" do
-      thread = Fabricate(:chat_thread, channel: channel)
+      thread = Fabricate(:chat_thread, channel: channel, old_om: true)
       message_2.update!(thread: thread)
       run_migration
       expect(channel.reload.last_message_id).to eq(message_1.id)
