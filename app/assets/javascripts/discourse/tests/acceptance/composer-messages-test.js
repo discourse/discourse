@@ -11,6 +11,7 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 import pretender, { response } from "../helpers/create-pretender";
 
@@ -158,5 +159,120 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
     assert
       .dom(".composer-popup.duplicate-link-message")
       .exists("shows composer warning message");
+  });
+});
+
+acceptance("Composer - Messages - Private Messages", function (needs) {
+  needs.user({
+    id: 32,
+    username: "codinghorror",
+  });
+
+  needs.pretender((server, helper) => {
+    server.get("/composer_messages/user_not_seen_in_a_while", () => {
+      return helper.response({});
+    });
+
+    server.get("/u/search/users", () =>
+      response({
+        users: [
+          {
+            username: "codinghorror",
+          },
+          {
+            username: "sam",
+          },
+        ],
+      })
+    );
+  });
+
+  test("Shows warning in the composer if the user is sending a message only to himself", async function (assert) {
+    await visit("/new-message");
+
+    const privateMessageUsers = selectKit("#private-message-users");
+
+    assert.strictEqual(
+      privateMessageUsers.header().value(),
+      null,
+      "target recipients are empty"
+    );
+
+    // Since we are activating the composer via the route /new-message, it was initialized with
+    // default values. Filling the input before assigning the target recipient of the message
+    // also ensures that the popup test is executed correctly when targetRecipients is empty.
+    await fillIn("#reply-title", "Private message test title");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+
+    assert.false(
+      exists(".composer-popup"),
+      "composer warning is not shown if the target recipients are empty"
+    );
+
+    // filling the input with the username of the current user
+    await privateMessageUsers.expand();
+    await privateMessageUsers.fillInFilter("codinghorror");
+    await privateMessageUsers.selectRowByValue("codinghorror");
+    await privateMessageUsers.collapse();
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+
+    assert.true(exists(".composer-popup"), "shows composer warning message");
+    assert.true(
+      query(".composer-popup").innerHTML.includes(
+        I18n.t("composer.yourself_confirm.title")
+      ),
+      "warning message has correct title"
+    );
+    assert.true(
+      query(".composer-popup").innerHTML.includes(
+        I18n.t("composer.yourself_confirm.body")
+      ),
+      "warning message has correct body"
+    );
+  });
+
+  test("Does not show a warning in the composer if the message is sent to other users", async function (assert) {
+    await visit("/new-message");
+
+    const privateMessageUsers = selectKit("#private-message-users");
+
+    assert.strictEqual(
+      privateMessageUsers.header().value(),
+      null,
+      "target recipients are empty"
+    );
+
+    // Since we are activating the composer via the route /new-message, it was initialized with
+    // default values. Filling the input before assigning the target recipient of the message
+    // also ensures that the popup test is executed correctly when targetRecipients is empty.
+    await fillIn("#reply-title", "Private message test title");
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+
+    assert.false(
+      exists(".composer-popup"),
+      "composer warning is not shown if the target recipients are empty"
+    );
+
+    // filling the input with the username of another user
+    await privateMessageUsers.expand();
+    await privateMessageUsers.fillInFilter("sam");
+    await privateMessageUsers.selectRowByValue("sam");
+    await privateMessageUsers.collapse();
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+    assert.false(exists(".composer-popup"), "do not show it for other user");
+
+    // filling the input with the username of the current user
+    await privateMessageUsers.expand();
+    await privateMessageUsers.fillInFilter("codinghorror");
+    await privateMessageUsers.selectRowByValue("codinghorror");
+    await privateMessageUsers.collapse();
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+    assert.false(
+      exists(".composer-popup"),
+      "do not show it when the current user is just one of the target recipients"
+    );
   });
 });
