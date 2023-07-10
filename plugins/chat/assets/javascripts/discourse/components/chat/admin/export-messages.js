@@ -1,10 +1,10 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "I18n";
 
-export default class ExportMessages extends Component {
+export default class ChatAdminExportMessages extends Component {
   @service chatAdminApi;
   @service dialog;
 

@@ -33,8 +33,6 @@ RSpec.describe Chat::AutoRemove::HandleUserRemovedFromGroup do
       end
 
       context "when the user is no longer in any of the chat_allowed_groups" do
-        let(:action) { UserHistory.where(custom_type: "chat_auto_remove_membership").last }
-
         before do
           SiteSetting.chat_allowed_groups = Fabricate(:group).id
           public_channel_1.add(removed_user)
@@ -88,13 +86,20 @@ RSpec.describe Chat::AutoRemove::HandleUserRemovedFromGroup do
           ).to eq(true)
         end
 
-        it "logs a staff action" do
+        it "logs staff actions" do
           result
-          expect(action).to have_attributes(
-            details:
-              "users_removed: 1\nchannel_id: #{public_channel_2.id}\nevent: user_removed_from_group",
-            acting_user_id: Discourse.system_user.id,
-            custom_type: "chat_auto_remove_membership",
+
+          expect(
+            UserHistory
+              .where(
+                acting_user_id: Discourse.system_user.id,
+                custom_type: "chat_auto_remove_membership",
+              )
+              .last(2)
+              .map(&:details),
+          ).to contain_exactly(
+            "users_removed: 1\nchannel_id: #{public_channel_1.id}\nevent: user_removed_from_group",
+            "users_removed: 1\nchannel_id: #{public_channel_2.id}\nevent: user_removed_from_group",
           )
         end
 

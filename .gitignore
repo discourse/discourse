@@ -52,6 +52,7 @@
 
 # We provide a .sample but people can use newer versions if they want to
 .ruby-version
+.ruby-gemset
 
 # Front-end
 dist

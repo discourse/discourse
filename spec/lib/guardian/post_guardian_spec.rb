@@ -56,4 +56,24 @@ RSpec.describe PostGuardian do
       end
     end
   end
+
+  describe "#is_in_edit_post_groups?" do
+    it "returns true if the user is in edit_all_post_groups" do
+      SiteSetting.edit_all_post_groups = group.id.to_s
+
+      expect(Guardian.new(user).is_in_edit_post_groups?).to eq(true)
+    end
+
+    it "returns false if the user is not in edit_all_post_groups" do
+      SiteSetting.edit_all_post_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      expect(Guardian.new(Fabricate(:trust_level_3)).is_in_edit_post_groups?).to eq(false)
+    end
+
+    it "returns false if the edit_all_post_groups is empty" do
+      SiteSetting.edit_all_post_groups = nil
+
+      expect(Guardian.new(user).is_in_edit_post_groups?).to eq(false)
+    end
+  end
 end

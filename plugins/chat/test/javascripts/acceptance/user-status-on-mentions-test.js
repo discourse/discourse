@@ -7,7 +7,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { skip } from "qunit";
 import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
-import pretender, { OK } from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
   const channelId = 1;
@@ -74,24 +74,38 @@ acceptance("Chat | User status on mentions", function (needs) {
   });
 
   needs.hooks.beforeEach(function () {
-    pretender.post(`/chat/1`, () => OK());
-    pretender.put(`/chat/1/edit/${messageId}`, () => OK());
-    pretender.post(`/chat/drafts`, () => OK());
-    pretender.put(`/chat/api/channels/1/read/1`, () => OK());
-    pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () => OK());
+    pretender.post(`/chat/1`, () => response({}));
+    pretender.put(`/chat/1/edit/${messageId}`, () => response({}));
+    pretender.post(`/chat/drafts`, () => response({}));
+    pretender.put(`/chat/api/channels/1/read/1`, () => response({}));
+    pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () =>
+      response({})
+    );
     pretender.put(`/chat/api/channels/1/messages/${messageId}/restore`, () =>
-      OK()
+      response({})
     );
 
     pretender.get(`/chat/api/channels/1`, () =>
-      OK({
+      response({
         channel,
         chat_messages: [message],
         meta: { can_delete_self: true },
       })
     );
 
-    setupAutocompleteResponses([mentionedUser2, mentionedUser3]);
+    pretender.get("/u/search/users", () =>
+      response({
+        users: [mentionedUser2, mentionedUser3],
+      })
+    );
+
+    pretender.get("/chat/api/mentions/groups.json", () =>
+      response({
+        unreachable: [],
+        over_members_limit: [],
+        invalid: ["and"],
+      })
+    );
   });
 
   skip("just posted messages | it shows status on mentions ", async function (assert) {
@@ -353,30 +367,6 @@ acceptance("Chat | User status on mentions", function (needs) {
     await emulateAutocomplete(".chat-composer__input", text);
     await click(".autocomplete.ac-user .selected");
     await click(".chat-composer-button.-send");
-  }
-
-  function setupAutocompleteResponses(results) {
-    pretender.get("/u/search/users", () => {
-      return [
-        200,
-        {},
-        {
-          users: results,
-        },
-      ];
-    });
-
-    pretender.get("/chat/api/mentions/groups.json", () => {
-      return [
-        200,
-        {},
-        {
-          unreachable: [],
-          over_members_limit: [],
-          invalid: ["and"],
-        },
-      ];
-    });
   }
 
   function statusSelector(username) {

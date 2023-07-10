@@ -15,7 +15,7 @@ export default class ChatChannelComposer extends Service {
 
   @action
   focus(options = {}) {
-    this.textarea.focus(options);
+    this.textarea?.focus(options);
   }
 
   @action

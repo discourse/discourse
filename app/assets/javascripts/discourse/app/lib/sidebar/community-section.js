@@ -20,7 +20,7 @@ import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
-import showModal from "discourse/lib/show-modal";
+import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
@@ -37,9 +37,10 @@ const SPECIAL_LINKS_MAP = {
 export default class CommunitySection {
   @service appEvents;
   @service currentUser;
+  @service modal;
   @service router;
-  @service topicTrackingState;
   @service siteSettings;
+  @service topicTrackingState;
 
   @tracked links;
   @tracked moreLinks;
@@ -173,7 +174,9 @@ export default class CommunitySection {
 
   @action
   editSection() {
-    showModal("sidebar-section-form", { model: this.section });
+    return this.modal.show(SidebarSectionForm, {
+      model: this.section,
+    });
   }
 
   @action
