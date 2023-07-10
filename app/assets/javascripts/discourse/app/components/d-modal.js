@@ -176,11 +176,10 @@ export default class DModal extends Component {
   // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
   @cached
   get dynamicElement() {
-    if (this.args.tagName && !["div", "form"].includes(this.args.tagName)) {
+    const tagName = this.args.tagName || "div";
+    if (!["div", "form"].includes(tagName)) {
       throw `@tagName must be form or div`;
     }
-
-    const tagName = this.args.tagName || "div";
 
     return class WrapperComponent extends ClassicComponent {
       tagName = tagName;
