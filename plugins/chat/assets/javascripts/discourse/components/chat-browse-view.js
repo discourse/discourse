@@ -4,13 +4,15 @@ import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseDebounce from "discourse-common/lib/debounce";
-import showModal from "discourse/lib/show-modal";
-import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import ChatModalCreateChannel from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
 
 const TABS = ["all", "open", "closed", "archived"];
 
 export default class ChatBrowseView extends Component {
   @service chatApi;
+  @service modal;
+
   tagName = "";
 
   didReceiveAttrs() {
@@ -41,7 +43,7 @@ export default class ChatBrowseView extends Component {
 
   @action
   showChatNewMessageModal() {
-    this.modal.show(ChatNewMessageModal);
+    this.modal.show(ChatModalNewMessage);
   }
 
   @action
@@ -66,7 +68,7 @@ export default class ChatBrowseView extends Component {
 
   @action
   createChannel() {
-    showModal("create-channel");
+    this.modal.show(ChatModalCreateChannel);
   }
 
   @action

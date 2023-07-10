@@ -6,7 +6,7 @@ module PageObjects
       class MessageCreator < PageObjects::Components::Base
         attr_reader :context
 
-        SELECTOR = ".chat-new-message-modal"
+        SELECTOR = ".modal-chat-new-message"
 
         def component
           find(SELECTOR)

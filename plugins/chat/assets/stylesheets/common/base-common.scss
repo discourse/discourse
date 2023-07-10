@@ -16,19 +16,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
-.chat-message-move-to-channel-modal-modal {
-  .modal-inner-container {
-    .chat-move-message-channel-chooser {
-      width: 100%;
-      .category-chat-badge {
-        .d-icon {
-          color: inherit;
-        }
-      }
-    }
-  }
-}
-
 .uppy-is-drag-over .chat-composer .drop-a-file {
   display: flex;
   position: absolute;
@@ -312,38 +299,6 @@ body.has-full-page-chat {
   .chat-channel-retry-archive {
     display: flex;
     margin-top: 1em;
-  }
-}
-
-.chat-channel-archive-modal-inner {
-  .chat-to-topic-selector {
-    width: 500px;
-    height: 300px;
-  }
-
-  .radios {
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: row;
-
-    .radio-label {
-      margin-right: 10px;
-    }
-  }
-
-  details {
-    margin-bottom: 9px;
-  }
-
-  input[type="text"],
-  .select-kit.combo-box.category-chooser {
-    width: 100%;
-  }
-}
-
-.chat-channel-archive-modal-inner {
-  .chat-to-topic-selector {
-    width: auto;
   }
 }
 

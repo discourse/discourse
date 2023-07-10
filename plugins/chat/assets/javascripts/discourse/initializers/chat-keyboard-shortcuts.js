@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
-import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
   name: "chat-keyboard-shortcuts",
@@ -22,10 +22,10 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
-    const openChannelSelector = (e) => {
+    const openQuickChannelSelector = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      modal.show(ChatNewMessageModal);
+      modal.show(ChatModalNewMessage);
     };
 
     const handleMoveUpShortcut = (e) => {
@@ -126,7 +126,7 @@ export default {
     withPluginApi("0.12.1", (api) => {
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+k`,
-        openChannelSelector,
+        openQuickChannelSelector,
         {
           global: true,
           help: {

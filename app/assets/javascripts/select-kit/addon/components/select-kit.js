@@ -311,6 +311,7 @@ export default Component.extend(
       hiddenValues: null,
       disabled: false,
       expandedOnInsert: false,
+      formName: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {

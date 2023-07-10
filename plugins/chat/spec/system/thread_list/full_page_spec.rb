@@ -150,7 +150,7 @@ describe "Thread list in side panel | full page", type: :system do
         open_thread_list
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
-        find(".thread-title-input").fill_in(with: new_title)
+        find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
         expect(thread_page.header).to have_title_content(new_title)
       end
@@ -161,7 +161,7 @@ describe "Thread list in side panel | full page", type: :system do
         open_thread_list
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
-        find(".thread-title-input").fill_in(with: new_title)
+        find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
         expect(thread_page.header).to have_title_content(new_title)
       end

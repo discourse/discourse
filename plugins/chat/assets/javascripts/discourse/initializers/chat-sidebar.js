@@ -9,7 +9,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
-import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
   name: "chat-sidebar",
@@ -379,7 +379,7 @@ export default {
                   id: "startDm",
                   title: I18n.t("chat.direct_messages.new"),
                   action: () => {
-                    this.modal.show(ChatNewMessageModal);
+                    this.modal.show(ChatModalNewMessage);
                   },
                 },
               ];
