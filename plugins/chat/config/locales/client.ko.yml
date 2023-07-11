@@ -139,6 +139,8 @@ ko:
           about: 소개
           members: 회원
           settings: 설정
+      new_message_modal:
+        no_items: "항목이 없습니다"
       channel_edit_name_slug_modal:
         name: 채널명
       channel_edit_description_modal:
@@ -148,9 +150,6 @@ ko:
         title: 새로운 메시지
         prefix: "받는사람:"
         no_results: 결과 없음
-      channel_selector:
-        title: "채널로 이동"
-        no_channels: "검색과 일치하는 채널이 없습니다."
       channel:
         no_memberships: 이 채널에는 회원이 없습니다.
         no_memberships_found: 회원을 찾을 수 없음

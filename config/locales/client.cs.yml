@@ -3112,7 +3112,8 @@ cs:
         categories:
           header_link_text: "Kategorie"
         community:
-          header_link_text: "Komunita"
+          edit_section:
+            header_dropdown: "Přizpůsobení"
           links:
             about:
               content: "O fóru"

@@ -121,6 +121,8 @@ pt:
           about: Sobre
           members: Membros
           settings: Configurações
+      new_message_modal:
+        no_items: "Sem itens"
       channel_edit_name_slug_modal:
         input_placeholder: Adicionar um nome
         slug: Slug do canal (opcional)

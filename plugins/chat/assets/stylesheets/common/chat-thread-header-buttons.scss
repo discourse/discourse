@@ -13,7 +13,7 @@
   &:hover {
     color: var(--primary-medium);
     background: var(--primary-very-low);
-    border-radius: 5px;
+    border-radius: var(--d-border-radius);
 
     &:hover {
       .d-icon {

@@ -67,6 +67,7 @@ function channelFabricator(args = {}) {
         description: args.description,
         chatable: args.chatable || categoryFabricator(),
         status: CHANNEL_STATUSES.open,
+        slug: args.chatable?.slug || "general",
       },
       args
     )
@@ -116,6 +117,7 @@ function userFabricator(args = {}) {
     username: args.username || "hawk",
     name: args.name,
     avatar_template: "/letter_avatar_proxy/v3/letter/t/41988e/{size}.png",
+    suspended_till: args.suspended_till,
   });
 }
 

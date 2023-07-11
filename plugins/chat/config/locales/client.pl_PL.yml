@@ -289,6 +289,15 @@ pl_PL:
           about: O stronie
           members: Członkowie
           settings: Ustawienia
+      new_message_modal:
+        title: Wyślij wiadomość
+        add_user_long: <kbd>shift + click</kbd> lub <kbd>shift + enter</kbd><span>Dodaj @%{username}</span>
+        add_user_short: <span>Dodaj użytkownika</span>
+        open_channel: <span>Otwórz kanał</span>
+        default_search_placeholder: "#kanał, @ktoś lub cokolwiek"
+        user_search_placeholder: "...dodaj więcej użytkowników"
+        disabled_user: "wyłączył czat"
+        no_items: "Brak elementu"
       channel_edit_name_slug_modal:
         title: Edytuj kanał
         input_placeholder: Dodaj nazwę
@@ -304,9 +313,6 @@ pl_PL:
         prefix: "Do:"
         no_results: Brak wyników
         selected_user_title: "Odznacz %{username}"
-      channel_selector:
-        title: "Przejdź do kanału"
-        no_channels: "Żadne kanały nie pasują do Twojego wyszukiwania"
       channel:
         no_memberships: Ten kanał nie ma członków
         no_memberships_found: Nie znaleziono członków
@@ -316,6 +322,8 @@ pl_PL:
           many: "%{count} członków"
           other: "%{count} członków"
       create_channel:
+        threading:
+          label: "Włącz wątki"
         auto_join_users:
           public_category_warning: "%{category} to kategoria publiczna. Automatycznie dodać wszystkich ostatnio aktywnych użytkowników do tego kanału?"
           warning_1_group:
@@ -382,6 +390,8 @@ pl_PL:
       settings:
         channel_wide_mentions_label: "Zezwalaj na wzmianki @all i @here"
         channel_wide_mentions_description: "Zezwalaj użytkownikom na powiadamianie wszystkich członków #%{channel} za pomocą @all lub tylko tych, którzy są aktywni w danym momencie za pomocą @here"
+        channel_threading_label: "Wątki"
+        channel_threading_description: "Gdy wątki są włączone, odpowiedzi na wiadomości czatu utworzą osobną rozmowę, która będzie istnieć obok głównego kanału."
         auto_join_users_label: "Automatycznie dodawaj użytkowników"
         auto_join_users_info: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do kategorii %{category}."
         auto_join_users_info_no_category: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do wybranej kategorii."
@@ -403,6 +413,11 @@ pl_PL:
         admin_title: "Administratorzy"
       admin:
         title: "Czat"
+        export_messages:
+          title: "Eksportuj wiadomości czatu"
+          description: "Eksport jest obecnie ograniczony do 10 000 najnowszych wiadomości z ostatnich 6 miesięcy."
+          create_export: "Utwórz eksport"
+          export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
       direct_messages:
         title: "Czat osobisty"
         new: "Utwórz osobisty czat"
@@ -433,6 +448,7 @@ pl_PL:
         url_instructions: "Ten adres URL zawiera tajną wartość — zachowaj go w bezpiecznym miejscu."
         username: "Nazwa użytkownika"
         username_instructions: "Nazwa użytkownika bota, który publikuje na kanale. Domyślnie \"system\" gdy pozostanie puste."
+        instructions: "Przychodzące webhooki mogą być używane przez systemy zewnętrzne do publikowania wiadomości na wyznaczonym kanale czatu jako użytkownik bota za pośrednictwem punktu końcowego <code>/hooks/:key</code>. Ładunek składa się z pojedynczego parametru <code>text</code>, który jest ograniczony do 2000 znaków.<br><br>Obsługujemy również ograniczone parametry <code>tekstu</code> w formacie Slack, wyodrębnianie linków i wzmianek na podstawie formatu <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, ale w tym celu należy użyć punktu końcowego <code>/hooks/:key/slack</code>."
       selection:
         cancel: "Anuluj"
         quote_selection: "Cytat w temacie"
@@ -455,6 +471,7 @@ pl_PL:
             few: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
             many: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
             other: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
+          instructions_channel_archive: "Wybierz temat, w którym chcesz zarchiwizować wiadomości z kanału."
         new_message:
           title: "Przejdź do nowej wiadomości"
           instructions:

@@ -25,30 +25,16 @@ nl:
           title: "Resultaten worden weergegeven zodra <strong>gesloten</strong>."
         staff:
           title: "Resultaten worden alleen aan <strong>medewerkers</strong> weergegeven."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Kies minstens <strong>%{count}</strong> optie."
-            other: "Kies minstens <strong>%{count}</strong> opties."
-          up_to_max_options:
-            one: "Kies maximaal <strong>%{count}</strong> optie."
-            other: "Kies maximaal <strong>%{count}</strong> opties."
-          x_options:
-            one: "Kies <strong>%{count}</strong> optie."
-            other: "Kies <strong>%{count}</strong> opties."
-          between_min_and_max_options: "Kies <strong>%{min}</strong> tot <strong>%{max}</strong> opties."
       cast-votes:
         title: "Je stemmen uitbrengen"
         label: "Stem nu!"
       show-results:
         title: "De pollresultaten weergeven"
-        label: "Resultaten weergeven"
+        label: "Resultaten"
       remove-vote:
         title: "Verwijder je stem"
-        label: "Stem verwijderen"
       hide-results:
         title: "Terug naar je stemmen"
-        label: "Stem weergeven"
       group-results:
         title: "Stemmen groeperen op gebruikersveld"
         label: "Verdeling weergeven"
@@ -72,6 +58,8 @@ nl:
         breakdown: "Verdeling"
         percentage: "Percentage"
         count: "Aantal"
+      options:
+        label: "Opties"
       error_while_toggling_status: "Sorry, er is een fout opgetreden bij het omschakelen van de status van deze poll."
       error_while_casting_votes: "Sorry, er is een fout opgetreden bij het uitbrengen van je stemmen."
       error_while_fetching_voters: "Sorry, er is een fout opgetreden bij het weergeven van de stemmers."

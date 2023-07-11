@@ -5,11 +5,7 @@
       (if @message.newest "with-last-visit")
     }}
     role="button"
-    {{on
-      "click"
-      (fn @fetchMessagesByDate @message.firstMessageOfTheDayAt)
-      passive=true
-    }}
+    {{on "click" this.onDateClick passive=true}}
   >
     <div
       class="chat-message-separator__text-container"

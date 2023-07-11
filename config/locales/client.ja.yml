@@ -3779,8 +3779,8 @@ ja:
           header_action_title: "サイドバーのカテゴリを編集"
           configure_defaults: "デフォルトの構成"
         community:
-          header_link_text: "コミュニティー"
-          header_action_create_topic_title: "トピックの作成"
+          edit_section:
+            header_dropdown: "カスタマイズ"
           links:
             about:
               content: "サイト情報"

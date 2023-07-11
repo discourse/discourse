@@ -345,4 +345,26 @@ RSpec.describe AdminDashboardData do
       expect(dashboard_data.out_of_date_themes).to eq(nil)
     end
   end
+
+  describe "#translation_overrides_check" do
+    subject(:dashboard_data) { described_class.new }
+
+    context "when there are outdated translations" do
+      before { Fabricate(:translation_override, translation_key: "foo.bar", status: "outdated") }
+
+      it "outputs the correct message" do
+        expect(dashboard_data.translation_overrides_check).to eq(
+          I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path),
+        )
+      end
+    end
+
+    context "when there are no outdated translations" do
+      before { Fabricate(:translation_override, status: "up_to_date") }
+
+      it "outputs nothing" do
+        expect(dashboard_data.translation_overrides_check).to eq(nil)
+      end
+    end
+  end
 end

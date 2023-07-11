@@ -59,6 +59,8 @@ ur:
           about: بارے میں
           members: ممبران
           settings: ترتیبات
+      new_message_modal:
+        no_items: "کوئی اشیاء نہیں"
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"

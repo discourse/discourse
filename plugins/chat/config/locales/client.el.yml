@@ -56,6 +56,8 @@ el:
           about: Σχετικά
           members: Μέλη
           settings: Ρυθμίσεις
+      new_message_modal:
+        no_items: "Δεν υπάρχουν στοιχεία"
       direct_message_creator:
         title: Νέο Μήνυμα
         prefix: "Προς:"

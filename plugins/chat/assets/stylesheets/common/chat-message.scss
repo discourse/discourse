@@ -121,7 +121,7 @@
     }
   }
 
-  .chat-message-avatar .chat-user-avatar .chat-user-avatar-container .avatar,
+  .chat-message-avatar .chat-user-avatar .chat-user-avatar__container .avatar,
   .chat-emoji-avatar .chat-emoji-avatar-container {
     width: 28px;
     height: 28px;
@@ -131,7 +131,7 @@
 .touch .chat-message-container {
   &.-active {
     background: var(--d-hover);
-    border-radius: 5px;
+    border-radius: var(--d-border-radius);
 
     &.-bookmarked {
       background: var(--highlight-low);

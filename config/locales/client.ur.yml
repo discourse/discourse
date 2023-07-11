@@ -3618,7 +3618,8 @@ ur:
         categories:
           header_link_text: "زُمرَہ جات"
         community:
-          header_link_text: "کمیونٹی"
+          edit_section:
+            header_dropdown: "مرضی کے مطابق بنائیں"
           links:
             about:
               content: "بارے میں"

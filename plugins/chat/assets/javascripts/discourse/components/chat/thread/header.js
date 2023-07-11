@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 import { tracked } from "@glimmer/tracking";
+import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 
 export default class ChatThreadHeader extends Component {
   @service currentUser;
@@ -14,6 +14,7 @@ export default class ChatThreadHeader extends Component {
   @service chatStateManager;
   @service chatHistory;
   @service site;
+  @service modal;
 
   @tracked persistedNotificationLevel = true;
 
@@ -60,8 +61,7 @@ export default class ChatThreadHeader extends Component {
 
   @action
   openThreadSettings() {
-    const controller = showModal("chat-thread-settings-modal");
-    controller.set("thread", this.args.thread);
+    this.modal.show(ChatModalThreadSettings, { model: this.args.thread });
   }
 
   @action
