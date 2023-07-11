@@ -1,7 +1,8 @@
 import Component from "@ember/component";
+import { BookmarkFormData } from "discourse/lib/bookmark";
+import BookmarkModal from "discourse/components/modal/bookmark";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { ajax } from "discourse/lib/ajax";
 import {
   openLinkInNewTab,
@@ -14,6 +15,7 @@ import { inject as service } from "@ember/service";
 
 export default Component.extend(Scrolling, {
   dialog: service(),
+  modal: service(),
   classNames: ["bookmark-list-wrapper"],
 
   didInsertElement() {
@@ -84,17 +86,20 @@ export default Component.extend(Scrolling, {
 
   @action
   editBookmark(bookmark) {
-    openBookmarkModal(bookmark, {
-      onAfterSave: (savedData) => {
-        this.appEvents.trigger(
-          "bookmarks:changed",
-          savedData,
-          bookmark.attachedTo()
-        );
-        this.reload();
-      },
-      onAfterDelete: () => {
-        this.reload();
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(bookmark),
+        afterSave: (savedData) => {
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+          this.reload();
+        },
+        afterDelete: () => {
+          this.reload();
+        },
       },
     });
   },
