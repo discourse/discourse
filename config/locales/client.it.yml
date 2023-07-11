@@ -3984,8 +3984,8 @@ it:
           header_action_title: "Modifica le categorie nella barra laterale"
           configure_defaults: "Configura impostazioni predefinite"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Crea un argomento"
+          edit_section:
+            header_dropdown: "Personalizza"
           links:
             about:
               content: "Informazioni"
@@ -5417,6 +5417,7 @@ it:
         go_back: "Torna alla Ricerca"
         recommended: "Consigliamo di personalizzare il seguente testo per adattarlo alle tue necessità:"
         show_overriden: "Mostra solo le opzioni sovrascritte"
+        show_outdated: "Mostra solo obsoleti/non validi"
         locale: "Lingua:"
         more_than_50_results: "Ci sono più di 50 risultati. Restringi i criteri di ricerca."
       settings:

@@ -84,3 +84,6 @@ ro:
         rich_tooltip:
           description: "Descriere"
           header: "Antet"
+        char_counter:
+          title: "Contor de caractere"
+          placeholder: "Introdu textul tău aici..."

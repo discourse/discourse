@@ -25,30 +25,16 @@ pt:
           title: "Os resultados serão mostrados após o <strong>fecho</strong>."
         staff:
           title: "Os resultados serão apenas mostrados aos membros do <strong>pessoal</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Escolha pelo menos <strong>%{count}</strong> opção."
-            other: "Escolha pelo menos <strong>%{count}</strong> opções."
-          up_to_max_options:
-            one: "Escolha até <strong>%{count}</strong> opção."
-            other: "Escolha até <strong>%{count}</strong> opções."
-          x_options:
-            one: "Escolha <strong>%{count}</strong> opção"
-            other: "Escolha <strong>%{count}</strong> opções"
-          between_min_and_max_options: "Escolha entre as opções <strong>%{min}</strong> e <strong>%{max}</strong>."
       cast-votes:
         title: "Vote"
         label: "Vote agora!"
       show-results:
         title: "Exibir os resultados da sondagem"
-        label: "Mostrar resultados"
+        label: "Resultados"
       remove-vote:
         title: "Remova o seu voto"
-        label: "Remover voto"
       hide-results:
         title: "Voltar para os seus votos"
-        label: "Mostrar voto"
       group-results:
         title: "Agrupar votos por campo de utilizador"
         label: "Mostrar detalhes"
@@ -72,6 +58,8 @@ pt:
         breakdown: "Detalhe"
         percentage: "Percentagem"
         count: "Soma"
+      options:
+        label: "Opções"
       error_while_toggling_status: "Lamentamos, mas ocorreu um erro ao alternar o estado desta sondagem."
       error_while_casting_votes: "Lamentamos, mas ocorreu um erro ao submeter os seus votos."
       error_while_fetching_voters: "Lamentamos, mas ocorreu um erro ao exibir os votantes."

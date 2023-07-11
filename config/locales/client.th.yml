@@ -2449,7 +2449,8 @@ th:
         categories:
           header_link_text: "หมวดหมู่"
         community:
-          header_link_text: "ชุมชน"
+          edit_section:
+            header_dropdown: "การปรับแต่ง"
           links:
             about:
               content: "เกี่ยวกับ"

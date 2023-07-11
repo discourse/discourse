@@ -219,6 +219,8 @@ fi:
           about: Tietoja
           members: Jäsenet
           settings: Asetukset
+      new_message_modal:
+        no_items: "Ei kohteita"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
@@ -232,9 +234,6 @@ fi:
         prefix: "Vastaanottaja:"
         no_results: Ei tuloksia
         selected_user_title: "Poista käyttäjän %{username} valinta"
-      channel_selector:
-        title: "Siirry kanavalle"
-        no_channels: "Hakuasi vastaavia kanavia ei ole"
       channel:
         no_memberships: Tällä kanavalla ei ole jäseniä
         no_memberships_found: Jäseniä ei löytynyt

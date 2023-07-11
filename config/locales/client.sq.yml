@@ -1952,7 +1952,8 @@ sq:
         categories:
           header_link_text: "Categories"
         community:
-          header_link_text: "Komuniteti"
+          edit_section:
+            header_dropdown: "Personalizo"
           links:
             about:
               content: "Rreth"

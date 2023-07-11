@@ -4362,8 +4362,8 @@ ru:
           header_action_title: "Редактировать категории боковой панели"
           configure_defaults: "Настроить значения по умолчанию"
         community:
-          header_link_text: "Сообщество"
-          header_action_create_topic_title: "Создать тему"
+          edit_section:
+            header_dropdown: "Оформление"
           links:
             about:
               content: "О форуме"

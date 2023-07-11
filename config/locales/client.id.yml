@@ -161,7 +161,6 @@ id:
     software_update_prompt:
       message: "Kami telah memperbarui situs ini, <span>silakan refresh</span>, atau Anda mungkin mengalami perilaku yang tidak terduga."
       dismiss: "Bubar"
-    bootstrap_mode: "Mode bootstrap"
     themes:
       default_description: "Asal"
       broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
@@ -1974,8 +1973,6 @@ id:
         categories:
           header_link_text: "Kategori"
         community:
-          header_action_create_topic_title: "Buat topik"
-          header_action_edit_section_title: "Edit bagian Komunitas"
           links:
             about:
               content: "Tentang"
