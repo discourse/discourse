@@ -132,19 +132,13 @@ class TranslationOverride < ActiveRecord::Base
   def original_translation_updated?
     return false if original_translation.blank?
 
-    transformed_key = self.class.transform_pluralized_key(translation_key)
-
-    original_translation != I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
+    original_translation != current_default
   end
 
   def invalid_interpolation_keys
-    transformed_key = self.class.transform_pluralized_key(translation_key)
+    return [] if current_default.blank?
 
-    original_text = I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
-
-    return [] if original_text.blank?
-
-    original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
+    original_interpolation_keys = I18nInterpolationKeysFinder.find(current_default)
     new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
     custom_interpolation_keys = []
 
@@ -156,7 +150,15 @@ class TranslationOverride < ActiveRecord::Base
       custom_interpolation_keys
   end
 
+  def current_default
+    I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
+  end
+
   private
+
+  def transformed_key
+    @transformed_key ||= self.class.transform_pluralized_key(translation_key)
+  end
 
   def check_interpolation_keys
     invalid_keys = invalid_interpolation_keys

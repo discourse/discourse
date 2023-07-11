@@ -224,6 +224,9 @@ RSpec.describe Admin::SiteTextsController do
                 {
                   id: "colour.#{key}",
                   value: value,
+                  status: "up_to_date",
+                  old_default: nil,
+                  new_default: nil,
                   can_revert: overridden,
                   overridden: overridden,
                   interpolation_keys: interpolation_keys,
