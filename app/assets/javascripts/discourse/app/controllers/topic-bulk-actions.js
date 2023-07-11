@@ -10,31 +10,10 @@ import ChangeCategory from "../components/bulk-actions/change-category";
 import NotificationLevel from "../components/bulk-actions/notification-level";
 import ChangeTags from "../components/bulk-actions/change-tags";
 import AppendTags from "../components/bulk-actions/append-tags";
-import deprecated from "discourse-common/lib/deprecated";
 
 const _customButtons = [];
 
-export function addBulkButton() {
-  deprecated(
-    "`addBulkButton` import has been replaced with `addBulkActionButton` plugin api.",
-    {
-      id: "add-bulk-button",
-      since: "3.1.0.beta5",
-      dropFrom: "3.1.0.beta6",
-    }
-  );
-
-  // TODO
-  // _customButtons.push({
-  //   label: `topics.bulk.${opts.label}`,
-  //   icon: opts.icon,
-  //   class: opts.class,
-  //   enabledSetting: opts.enabledSetting,
-  //   visible: opts.visible || (() => true),
-  //   action: opts.action,
-  // });
-}
-
+// TODO: clean
 export function _addBulkButton(opts) {
   _customButtons.push({
     label: opts.label,
