@@ -7692,10 +7692,10 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==
 
-patch-package@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-7.0.0.tgz#5c646b6b4b4bf37e5184a6950777b21dea6bb66e"
-  integrity sha512-eYunHbnnB2ghjTNc5iL1Uo7TsGMuXk0vibX3RFcE/CdVdXzmdbMsG/4K4IgoSuIkLTI5oHrMQk4+NkFqSed0BQ==
+patch-package@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-7.0.1.tgz#ab6a20489f9d0253726fc692f60d3d4a2d3fc9cf"
+  integrity sha512-f2GYU+6fz67znVfroq0gRuE08IWbGaRGMCFVwaz+qgG6k0K7rEKG8rXL7vDBtAMBjk8z/AhaiDuWs1aGjr15Hg==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     chalk "^4.1.2"
@@ -7707,7 +7707,7 @@ patch-package@^7.0.0:
     minimist "^1.2.6"
     open "^7.4.2"
     rimraf "^2.6.3"
-    semver "^5.6.0"
+    semver "^7.0.0"
     slash "^2.0.0"
     tmp "^0.0.33"
     yaml "^2.2.2"
