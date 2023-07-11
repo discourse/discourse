@@ -1909,8 +1909,7 @@ en:
       remove_status: "Remove status"
 
     user_tips:
-      primary: "Got it!"
-      secondary: "don't show me these tips"
+      button: "Got it!"
 
       first_notification:
         title: "Your first notification!"
@@ -1935,7 +1934,7 @@ en:
       admin_guide:
         title: "Welcome to your new site!"
         content: "Read the admin guide to continue building your site and community."
-        primary: "Let's go!"
+        button: "Let's go!"
 
     loading: "Loading..."
     errors:

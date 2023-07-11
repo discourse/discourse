@@ -18,6 +18,10 @@
     &:hover {
       color: var(--tertiary-hover);
     }
+
+    .d-icon {
+      color: var(--tertiary);
+    }
   }
 
   > .tippy-svg-arrow {
