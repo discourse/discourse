@@ -7,13 +7,10 @@ import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { debounce } from "discourse-common/utils/decorators";
 
 let _messagesCache = {};
-let _recipientNames = [];
-
-const clearRecipientNamesCache = function () {
-  _recipientNames.clear();
-};
 
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
@@ -26,6 +23,7 @@ export default class ComposerMessages extends Component {
   queuedForTyping = null;
   similarTopics = null;
   usersNotSeen = null;
+  recipientNames = [];
 
   @not("composer.viewOpenOrFullscreen") hidden;
 
@@ -51,8 +49,6 @@ export default class ComposerMessages extends Component {
     this.appEvents.off("composer:find-similar", this, this._findSimilar);
     this.appEvents.off("composer-messages:close", this, this._closeTop);
     this.appEvents.off("composer-messages:create", this, this._create);
-
-    clearRecipientNamesCache();
   }
 
   _closeTop() {
@@ -92,6 +88,7 @@ export default class ComposerMessages extends Component {
 
   // Called after the user has typed a reply.
   // Some messages only get shown after being typed.
+  @debounce(INPUT_DELAY)
   async _typedReply() {
     if (this.isDestroying || this.isDestroyed) {
       return;
@@ -128,10 +125,10 @@ export default class ComposerMessages extends Component {
 
       if (
         recipient_names.length > 0 &&
-        recipient_names.length !== _recipientNames.length &&
-        !recipient_names.every((v, i) => v === _recipientNames[i])
+        recipient_names.length !== this.recipientNames.length &&
+        !recipient_names.every((v, i) => v === this.recipientNames[i])
       ) {
-        _recipientNames = recipient_names;
+        this.recipientNames = recipient_names;
 
         const response = await ajax(
           `/composer_messages/user_not_seen_in_a_while`,
