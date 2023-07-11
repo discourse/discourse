@@ -4473,9 +4473,9 @@ en:
           header_action_title: "Edit your sidebar categories"
           configure_defaults: "Configure defaults"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Create a topic"
-          header_action_edit_section_title: "Edit Community section"
+          edit_section:
+            sidebar: "Customize this section"
+            header_dropdown: "Customize"
           links:
             about:
               content: "About"

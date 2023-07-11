@@ -2,7 +2,7 @@
 
 RSpec.describe "Sidebar navigation menu", type: :system do
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
-  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   fab!(:current_user) { Fabricate(:user) }
 
