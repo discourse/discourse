@@ -181,9 +181,10 @@ module Chat
         context.threads = []
       else
         context.threads =
-          ::Chat::Thread.includes(original_message_user: :user_status).where(
-            id: messages.map(&:thread_id).compact.uniq,
-          )
+          ::Chat::Thread
+            .strict_loading
+            .includes(last_message: [:user], original_message_user: :user_status)
+            .where(id: messages.map(&:thread_id).compact.uniq)
 
         # Saves us having to load the same message we already have.
         context.threads.each do |thread|
