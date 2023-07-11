@@ -31,7 +31,6 @@
   @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}}
   @bulkSelectEnabled={{this.bulkSelectEnabled}}
   @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}}
-  as |discoveryTopicList|
 >
   {{#if this.top}}
     <div class="top-lists">
@@ -90,8 +89,6 @@
       @category={{this.category}}
       @topics={{this.model.topics}}
       @discoveryList={{true}}
-      @scrollOnLoad={{true}}
-      @onScroll={{discoveryTopicList.saveScrollPosition}}
       @focusLastVisitedTopic={{true}}
     />
   {{/if}}

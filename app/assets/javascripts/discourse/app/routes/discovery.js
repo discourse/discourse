@@ -5,7 +5,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import OpenComposer from "discourse/mixins/open-composer";
 import User from "discourse/models/user";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { action } from "@ember/object";
 
@@ -56,9 +55,6 @@ export default DiscourseRoute.extend(OpenComposer, {
   @action
   loadingComplete() {
     this.controllerFor("discovery").loadingComplete();
-    if (!this.session.get("topicListScrollPosition")) {
-      scrollTop();
-    }
   },
 
   @action

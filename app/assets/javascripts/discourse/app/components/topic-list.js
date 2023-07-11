@@ -3,7 +3,6 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
-import { next, schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
 export default Component.extend(LoadMore, {
@@ -65,26 +64,6 @@ export default Component.extend(LoadMore, {
     }
 
     onScroll.call(this);
-  },
-
-  scrollToLastPosition() {
-    if (!this.scrollOnLoad) {
-      return;
-    }
-
-    const scrollTo = this.session.topicListScrollPosition;
-    if (scrollTo >= 0) {
-      schedule("afterRender", () => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo));
-        }
-      });
-    }
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-    this.scrollToLastPosition();
   },
 
   _updateLastVisitedTopic(topics, order, ascending, top) {

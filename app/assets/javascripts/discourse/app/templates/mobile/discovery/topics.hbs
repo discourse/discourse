@@ -11,7 +11,6 @@
   @model={{this.model}}
   @refresh={{action "refresh"}}
   @incomingCount={{this.topicTrackingState.incomingCount}}
-  as |discoveryTopicList|
 >
   {{#if this.top}}
     <div class="top-lists">
@@ -56,8 +55,6 @@
       @expandAllPinned={{this.expandAllPinned}}
       @category={{this.category}}
       @topics={{this.model.topics}}
-      @scrollOnLoad={{true}}
-      @onScroll={{discoveryTopicList.saveScrollPosition}}
     />
   {{/if}}
 </DiscoveryTopicsList>
