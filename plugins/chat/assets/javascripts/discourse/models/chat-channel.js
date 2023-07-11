@@ -62,7 +62,6 @@ export default class ChatChannel {
   @tracked description;
   @tracked status;
   @tracked activeThread = null;
-  @tracked lastMessage;
   @tracked canDeleteOthers;
   @tracked canDeleteSelf;
   @tracked canFlag;
@@ -83,6 +82,7 @@ export default class ChatChannel {
 
   @tracked _unreadThreadIds = new TrackedSet();
   @tracked _currentUserMembership;
+  @tracked _lastMessage;
 
   constructor(args = {}) {
     this.id = args.id;
@@ -116,7 +116,7 @@ export default class ChatChannel {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
-    this.lastMessage = ChatMessage.create(this, args.last_message || {});
+    this.lastMessage = args.last_message;
   }
 
   get unreadThreadCount() {
@@ -306,6 +306,23 @@ export default class ChatChannel {
     } else {
       this._currentUserMembership =
         UserChatChannelMembership.create(membership);
+    }
+  }
+
+  get lastMessage() {
+    return this._lastMessage;
+  }
+
+  set lastMessage(message) {
+    if (!message) {
+      this._lastMessage = null;
+      return;
+    }
+
+    if (message instanceof ChatMessage) {
+      this._lastMessage = message;
+    } else {
+      this._lastMessage = ChatMessage.create(this, message);
     }
   }
 

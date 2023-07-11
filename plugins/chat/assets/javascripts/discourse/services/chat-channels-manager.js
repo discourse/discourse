@@ -151,6 +151,14 @@ export default class ChatChannelsManager extends Service {
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
+      if (!a.lastMessage) {
+        return 1;
+      }
+
+      if (!b.lastMessage) {
+        return -1;
+      }
+
       if (a.tracking.unreadCount === b.tracking.unreadCount) {
         return new Date(a.lastMessage.createdAt) >
           new Date(b.lastMessage.createdAt)

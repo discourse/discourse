@@ -186,12 +186,14 @@ export default class ChatSubscriptionsManager extends Service {
 
   _onNewChannelMessage(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
-      if (busData.user_id === this.currentUser.id) {
+      channel.lastMessage = busData.message;
+      const user = busData.message.user;
+      if (user.id === this.currentUser.id) {
         // User sent message, update tracking state to no unread
         channel.currentUserMembership.lastReadMessageId = busData.message_id;
       } else {
         // Ignored user sent message, update tracking state to no unread
-        if (this.currentUser.ignored_users.includes(busData.username)) {
+        if (this.currentUser.ignored_users.includes(user.username)) {
           channel.currentUserMembership.lastReadMessageId = busData.message_id;
         } else {
           if (
@@ -218,10 +220,13 @@ export default class ChatSubscriptionsManager extends Service {
 
   _onNewThreadMessage(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
+      channel.lastMessage = busData.message;
+      const user = busData.message.user;
+
       channel.threadsManager
         .find(busData.channel_id, busData.thread_id)
         .then((thread) => {
-          if (busData.user_id === this.currentUser.id) {
+          if (user.id === this.currentUser.id) {
             // Thread should no longer be considered unread.
             if (thread.currentUserMembership) {
               channel.unreadThreadIds.delete(busData.thread_id);
@@ -230,7 +235,7 @@ export default class ChatSubscriptionsManager extends Service {
             }
           } else {
             // Ignored user sent message, update tracking state to no unread
-            if (this.currentUser.ignored_users.includes(busData.username)) {
+            if (this.currentUser.ignored_users.includes(user.username)) {
               if (thread.currentUserMembership) {
                 thread.currentUserMembership.lastReadMessageId =
                   busData.message_id;

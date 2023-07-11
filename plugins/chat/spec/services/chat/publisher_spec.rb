@@ -281,10 +281,9 @@ describe Chat::Publisher do
           {
             type: "channel",
             channel_id: channel.id,
-            message_id: message_1.id,
-            user_id: message_1.user_id,
-            username: message_1.user.username,
             thread_id: nil,
+            message:
+              Chat::MessageSerializer.new(user, { scope: Guardian.new(nil), root: false }).as_json,
           },
         )
       end
@@ -340,10 +339,8 @@ describe Chat::Publisher do
               {
                 type: "thread",
                 channel_id: channel.id,
-                message_id: message_1.id,
-                user_id: message_1.user_id,
-                username: message_1.user.username,
                 thread_id: thread.id,
+                Chat::MessageSerializer.new(user, { scope: Guardian.new(nil), root: false }).as_json,
               },
             )
           end

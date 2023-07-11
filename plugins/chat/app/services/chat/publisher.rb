@@ -53,12 +53,13 @@ module Chat
           {
             type: "channel",
             channel_id: chat_channel.id,
-            message_id: chat_message.id,
-            user_id: chat_message.user.id,
-            username: chat_message.user.username,
             thread_id: chat_message.thread_id,
+            message:
+              Chat::MessageSerializer.new(
+                chat_message,
+                { scope: anonymous_guardian, root: false },
+              ).as_json,
           },
-          permissions(chat_channel),
         )
       end
 
@@ -68,10 +69,12 @@ module Chat
           {
             type: "thread",
             channel_id: chat_channel.id,
-            message_id: chat_message.id,
-            user_id: chat_message.user.id,
-            username: chat_message.user.username,
             thread_id: chat_message.thread_id,
+            message:
+              Chat::MessageSerializer.new(
+                chat_message,
+                { scope: anonymous_guardian, root: false },
+              ).as_json,
           },
           permissions(chat_channel),
         )
