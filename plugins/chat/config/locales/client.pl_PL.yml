@@ -387,6 +387,7 @@ pl_PL:
         url_instructions: "Ten adres URL zawiera tajną wartość — zachowaj go w bezpiecznym miejscu."
         username: "Nazwa użytkownika"
         username_instructions: "Nazwa użytkownika bota, który publikuje na kanale. Domyślnie \"system\" gdy pozostanie puste."
+        instructions: "Przychodzące webhooki mogą być używane przez systemy zewnętrzne do publikowania wiadomości na wyznaczonym kanale czatu jako użytkownik bota za pośrednictwem punktu końcowego <code>/hooks/:key</code>. Ładunek składa się z pojedynczego parametru <code>text</code>, który jest ograniczony do 2000 znaków.<br><br>Obsługujemy również ograniczone parametry <code>tekstu</code> w formacie Slack, wyodrębnianie linków i wzmianek na podstawie formatu <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, ale w tym celu należy użyć punktu końcowego <code>/hooks/:key/slack</code>."
       selection:
         cancel: "Anuluj"
         quote_selection: "Cytat w temacie"
@@ -409,6 +410,7 @@ pl_PL:
             few: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
             many: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
             other: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
+          instructions_channel_archive: "Wybierz temat, w którym chcesz zarchiwizować wiadomości z kanału."
         new_message:
           title: "Przejdź do nowej wiadomości"
           instructions:

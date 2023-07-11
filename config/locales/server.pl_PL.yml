@@ -1662,6 +1662,8 @@ pl_PL:
     content_security_policy_frame_ancestors: "Określ, kto może osadzić tę witrynę w ramkach iframe za pośrednictwem CSP. Kontroluj dozwolone hosty w <a href='%{base_path}/admin/customize/embedding'>ustawieniach osadzania</a>"
     content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>ograniczanie ataków XSS za pomocą zasad zabezpieczeń zawartości (CSP).</a>"
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
+    include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
+    display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
     top_menu: "Określ które elementy nawigacyjne serwisu powinny być widoczne i w jakiej kolejności. Przykład aktualne|nowe|nieodczytane|kategorie|top|przeczytane|wysłane|zakładki"
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Elementy w menu, które w menu wpisu będą ukryte, chyba że kliknięty zostanie przycisk rozwijania."
@@ -1690,6 +1692,8 @@ pl_PL:
     max_favorite_badges: "Maksymalna liczba odznak, które użytkownik może wybrać"
     whispers_allowed_groups: "Zezwalaj na prywatną komunikację w ramach tematów członkom określonych grup."
     allow_index_in_robots_txt: "W pliku robots.txt określ, że ta witryna może być indeksowana przez wyszukiwarki internetowe. W wyjątkowych przypadkach możesz trwale <a href='%{base_path}/admin/customize/robots'>zastąpić plik robots.txt</a>."
+    blocked_email_domains: "Rozdzielona pionową kreską lista domen poczty e-mail, z których użytkownicy nie mogą rejestrować kont. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. Przykład: mailinator.com|trashmail.net"
+    allowed_email_domains: "Rozdzielona pionową kreską lista domen e-mail, z których użytkownicy MUSZĄ zarejestrować konta. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. OSTRZEŻENIE: Użytkownicy z domenami e-mail innymi niż wymienione nie będą mogli się zarejestrować!"
     normalize_emails: "Sprawdź, czy znormalizowany e-mail jest unikalny. Znormalizowany e-mail usuwa wszystkie kropki z nazwy użytkownika i wszystko między symbolami + i @."
     auto_approve_email_domains: "Użytkownicy z adresami e-mail z tej listy domen zostaną automatycznie zatwierdzeni. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane."
     hide_email_address_taken: "Nie informuj użytkowników, że istnieje konto z podanym adresem e-mail podczas rejestracji lub podczas procesu przypominania hasła. Wymagaj podania pełnego adresu email przy prośbach o 'przypomnienie hasła'."
@@ -4762,6 +4766,10 @@ pl_PL:
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at powinno być większe niż set_at"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "Nie można użyć adresu URL ładunku, ponieważ jest on adresowany do zablokowanego lub wewnętrznego adresu IP"
+      unsafe: "Nie można użyć adresu URL ładunku, ponieważ jest niebezpieczny"
   activemodel:
     errors:
       <<: *errors
