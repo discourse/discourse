@@ -10,7 +10,7 @@ export default class SidebarUserSections extends Component {
 
   @cached
   get customSections() {
-    return this.args.panel.sections.map((customSection) => {
+    return this.args.panel?.sections?.map((customSection) => {
       const section = new customSection({ sidebar: this });
       setOwner(section, getOwner(this));
       return section;

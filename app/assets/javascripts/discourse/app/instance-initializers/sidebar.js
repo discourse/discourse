@@ -24,27 +24,6 @@ export default {
 
         return MainSidebarPanel;
       });
-
-      api.addSidebarPanel((BaseCustomSidebarPanel) => {
-        const AdminSidebarPanel = class extends BaseCustomSidebarPanel {
-          get key() {
-            return "admin";
-          }
-          get switchButtonLabel() {
-            return I18n.t("sidebar.panels.admin.label");
-          }
-
-          get switchButtonIcon() {
-            return "times";
-          }
-
-          get switchButtonDefaultUrl() {
-            return "/admin";
-          }
-        };
-
-        return AdminSidebarPanel;
-      });
     });
   },
 };

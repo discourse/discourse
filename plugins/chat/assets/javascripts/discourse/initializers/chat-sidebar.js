@@ -198,8 +198,7 @@ export default {
             };
 
             return SidebarChatChannelsSection;
-          },
-          "main"
+          }
         );
       }
 
