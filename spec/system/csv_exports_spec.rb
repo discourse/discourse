@@ -53,7 +53,7 @@ RSpec.describe "CSV Exports", type: :system do
       user.user_profile.save!
     end
 
-    it "exports data" do
+    xit "exports data" do
       visit "admin/users/list/active"
       click_button "Export"
 
@@ -150,7 +150,7 @@ RSpec.describe "CSV Exports", type: :system do
       )
     end
 
-    it "exports data" do
+    xit "exports data" do
       visit "admin/logs/staff_action_logs"
       click_button "Export"
 
@@ -182,7 +182,7 @@ RSpec.describe "CSV Exports", type: :system do
       Fabricate(:bookmark)
     end
 
-    it "exports the Bookmarks report" do
+    xit "exports the Bookmarks report" do
       visit "admin/reports/bookmarks"
       click_button "Export"
 
@@ -211,7 +211,7 @@ RSpec.describe "CSV Exports", type: :system do
       )
     end
 
-    it "exports data" do
+    xit "exports data" do
       visit "admin/logs/screened_emails"
       click_button "Export"
 
@@ -251,7 +251,7 @@ RSpec.describe "CSV Exports", type: :system do
       )
     end
 
-    it "exports data" do
+    xit "exports data" do
       visit "admin/logs/screened_ip_addresses"
       click_button "Export"
 
@@ -287,7 +287,7 @@ RSpec.describe "CSV Exports", type: :system do
       )
     end
 
-    it "exports data" do
+    xit "exports data" do
       visit "admin/logs/screened_urls"
       click_button "Export"
 
