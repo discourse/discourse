@@ -1023,8 +1023,6 @@ cs:
       experimental_sidebar:
         enable: "Povolit postranní panel"
         options: "Možnosti"
-        categories_section: "Sekce kategorií"
-        tags_section: "Sekce štítků"
         navigation_section: "Navigace"
       change: "změnit"
       featured_topic: "Doporučené téma"

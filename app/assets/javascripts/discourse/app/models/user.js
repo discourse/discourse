@@ -131,6 +131,7 @@ let userOptionFields = [
   "bookmark_auto_delete_preference",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
+  "watched_precedence_over_muted",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -1171,33 +1172,42 @@ const User = RestModel.extend({
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   },
 
-  showUserTip(options) {
+  canSeeUserTip(id) {
     const userTips = Site.currentProp("user_tips");
     if (!userTips || this.user_option?.skip_new_user_tips) {
-      return;
+      return false;
     }
 
-    if (!userTips[options.id]) {
+    if (!userTips[id]) {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
-        console.warn("Cannot show user tip with type =", options.id);
+        console.warn("Cannot show user tip with type =", id);
       }
-      return;
+      return false;
     }
 
     const seenUserTips = this.user_option?.seen_popups || [];
-    if (
-      seenUserTips.includes(-1) ||
-      seenUserTips.includes(userTips[options.id])
-    ) {
-      return;
+    if (seenUserTips.includes(-1) || seenUserTips.includes(userTips[id])) {
+      return false;
     }
 
-    showUserTip({
-      ...options,
-      onDismiss: () => this.hideUserTipForever(options.id),
-      onDismissAll: () => this.hideUserTipForever(),
-    });
+    return true;
+  },
+
+  showUserTip(options) {
+    if (this.canSeeUserTip(options.id)) {
+      showUserTip({
+        ...options,
+        onDismiss: () => {
+          options.onDismiss?.();
+          this.hideUserTipForever(options.id);
+        },
+        onDismissAll: () => {
+          options.onDismissAll?.();
+          this.hideUserTipForever();
+        },
+      });
+    }
   },
 
   hideUserTipForever(userTipId) {
@@ -1215,7 +1225,7 @@ const User = RestModel.extend({
 
     // Hide user tips and maybe show the next one.
     if (userTipId) {
-      hideUserTip(userTipId);
+      hideUserTip(userTipId, true);
       showNextUserTip();
     } else {
       hideAllUserTips();

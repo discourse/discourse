@@ -34,7 +34,11 @@ export function showEntrance(e) {
 }
 
 export function navigateToTopic(topic, href) {
-  this.appEvents.trigger("header:update-topic", topic);
+  if (this.siteSettings.page_loading_indicator !== "slider") {
+    // With the slider, it feels nicer for the header to update once the rest of the topic content loads,
+    // so skip setting it early.
+    this.appEvents.trigger("header:update-topic", topic);
+  }
   DiscourseURL.routeTo(href || topic.get("url"));
   return false;
 }
@@ -59,6 +63,9 @@ export default Component.extend({
         htmlSafe(template(this, RUNTIME_OPTIONS))
       );
       schedule("afterRender", () => {
+        if (this.isDestroyed || this.isDestroying) {
+          return;
+        }
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }

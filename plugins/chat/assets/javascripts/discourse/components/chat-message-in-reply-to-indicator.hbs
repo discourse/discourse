@@ -9,7 +9,7 @@
     {{#if @message.inReplyTo.chatWebhookEvent.emoji}}
       <ChatEmojiAvatar @emoji={{@message.inReplyTo.chatWebhookEvent.emoji}} />
     {{else}}
-      <ChatUserAvatar @user={{@message.inReplyTo.user}} />
+      <Chat::UserAvatar @user={{@message.inReplyTo.user}} />
     {{/if}}
 
     <span class="chat-reply__excerpt">

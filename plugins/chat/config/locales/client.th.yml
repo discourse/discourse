@@ -73,6 +73,7 @@ th:
       settings:
         follow: "เข้าร่วม"
         followed: "สมัครสมาชิกเมื่อ"
+        threading_disabled: "ปิดใช้งานแล้ว"
         notifications: "การแจ้งเตือน"
         preview: "แสดงตัวอย่าง"
         save: "บันทึก"

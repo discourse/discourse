@@ -74,6 +74,8 @@ lv:
       settings:
         follow: "Pievienojieties"
         followed: "Pievienojās"
+        threading_enabled: "Ieslēgts"
+        threading_disabled: "Atslēgt"
         notifications: "Paziņojumi"
         preview: "Priekšskatījums"
         save: "Saglabāt"

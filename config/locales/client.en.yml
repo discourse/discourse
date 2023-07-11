@@ -211,7 +211,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode: "Bootstrap mode"
+    bootstrap_mode: "Getting started"
 
     themes:
       default_description: "Default"
@@ -1248,6 +1248,7 @@ en:
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
       watched_first_post_tags: "Watching First Post"
       watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+      watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
@@ -1930,6 +1931,11 @@ en:
       suggested_topics:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
+
+      admin_guide:
+        title: "Welcome to your new site!"
+        content: "Read the admin guide to continue building your site and community."
+        primary: "Let's go!"
 
     loading: "Loading..."
     errors:
@@ -4414,6 +4420,7 @@ en:
           delete_confirm: "Are you sure you want to delete this section?"
           reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Make this section public and visible to everyone"
+          always_public: "Content in this section is always public"
           more_menu: "More menu"
           links:
             add: "Add another link"
@@ -4466,9 +4473,9 @@ en:
           header_action_title: "Edit your sidebar categories"
           configure_defaults: "Configure defaults"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Create a topic"
-          header_action_edit_section_title: "Edit Community section"
+          edit_section:
+            sidebar: "Customize this section"
+            header_dropdown: "Customize"
           links:
             about:
               content: "About"
@@ -6067,6 +6074,7 @@ en:
         go_back: "Back to Search"
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
+        show_outdated: "Only show outdated/invalid"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         interpolation_keys: "Available interpolation keys:"

@@ -1,0 +1,25 @@
+.chat-modal-archive-channel {
+  .chat-to-topic-selector {
+    width: auto;
+    height: 300px;
+  }
+
+  .radios {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+
+    .radio-label {
+      margin-right: 10px;
+    }
+  }
+
+  details {
+    margin-bottom: 9px;
+  }
+
+  input[type="text"],
+  .select-kit.combo-box.category-chooser {
+    width: 100%;
+  }
+}

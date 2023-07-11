@@ -73,6 +73,7 @@ hy:
       settings:
         follow: "Միանալ"
         followed: "Միացել է"
+        threading_disabled: "Անջատված"
         notifications: "Ծանուցումներ"
         preview: "Նախադիտում"
         save: "Պահպանել"

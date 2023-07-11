@@ -3,13 +3,21 @@
 module PageObjects
   module Modals
     class SidebarEditNavigationModal < PageObjects::Modals::Base
+      def closed?
+        has_no_css?(".sidebar__edit-navigation-menu__modal")
+      end
+
+      def has_right_title?(title)
+        has_css?(".sidebar__edit-navigation-menu__modal .title", text: title)
+      end
+
       def has_focus_on_filter_input?
         evaluate_script("document.activeElement").native ==
-          find(".sidebar__edit-navigation-modal-form__filter-input-field").native
+          find(".sidebar__edit-navigation-menu__filter-input-field").native
       end
 
       def filter(text)
-        find(".sidebar__edit-navigation-modal-form__filter-input-field").fill_in(with: text)
+        find(".sidebar__edit-navigation-menu__filter-input-field").fill_in(with: text)
         self
       end
 
@@ -23,7 +31,7 @@ module PageObjects
       end
 
       def save
-        find(".sidebar__edit-navigation-modal-form__save-button").click
+        find(".sidebar__edit-navigation-menu__save-button").click
         self
       end
 
@@ -59,9 +67,7 @@ module PageObjects
       private
 
       def dropdown_filter
-        PageObjects::Components::SelectKit.new(
-          ".sidebar__edit-navigation-modal-form__filter-dropdown",
-        )
+        PageObjects::Components::SelectKit.new(".sidebar__edit-navigation-menu__filter-dropdown")
       end
     end
   end

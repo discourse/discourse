@@ -16,19 +16,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   padding-bottom: 0.2rem;
 }
 
-.chat-message-move-to-channel-modal-modal {
-  .modal-inner-container {
-    .chat-move-message-channel-chooser {
-      width: 100%;
-      .category-chat-badge {
-        .d-icon {
-          color: inherit;
-        }
-      }
-    }
-  }
-}
-
 .uppy-is-drag-over .chat-composer .drop-a-file {
   display: flex;
   position: absolute;
@@ -186,60 +173,6 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   }
 }
 
-.chat-user-avatar {
-  @include unselectable;
-  display: flex;
-  align-items: center;
-
-  .chat-message-container:not(.has-reply) & {
-    width: var(--message-left-width);
-    flex-shrink: 0;
-  }
-
-  &.is-online {
-    .chat-user-avatar-container .avatar {
-      box-shadow: 0px 0px 0px 1px var(--success);
-      border: 1px solid var(--secondary);
-      padding: 0;
-    }
-  }
-
-  .chat-user-avatar-container {
-    position: relative;
-    padding: 1px; // for is-online box-shadow effect, preventing cutoff
-
-    .avatar {
-      padding: 1px; // for is-online box-shadow effect, preventing shift
-    }
-
-    .chat-user-presence-flair {
-      box-sizing: border-box;
-      position: absolute;
-      background-color: var(--success);
-      border: 1px solid var(--secondary);
-      border-radius: 50%;
-
-      .chat-message & {
-        width: 10px;
-        height: 10px;
-        right: 0px;
-        bottom: 0px;
-      }
-
-      .chat-channel-title & {
-        width: 8px;
-        height: 8px;
-        right: -1px;
-        bottom: -1px;
-      }
-    }
-  }
-
-  .chat-channel-title & {
-    width: auto;
-  }
-}
-
 .topic-title-chat-icon {
   display: inline-block;
   * {
@@ -366,38 +299,6 @@ body.has-full-page-chat {
   .chat-channel-retry-archive {
     display: flex;
     margin-top: 1em;
-  }
-}
-
-.chat-channel-archive-modal-inner {
-  .chat-to-topic-selector {
-    width: 500px;
-    height: 300px;
-  }
-
-  .radios {
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: row;
-
-    .radio-label {
-      margin-right: 10px;
-    }
-  }
-
-  details {
-    margin-bottom: 9px;
-  }
-
-  input[type="text"],
-  .select-kit.combo-box.category-chooser {
-    width: 100%;
-  }
-}
-
-.chat-channel-archive-modal-inner {
-  .chat-to-topic-selector {
-    width: auto;
   }
 }
 

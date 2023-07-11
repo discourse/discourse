@@ -84,24 +84,26 @@ module Chat
 
       threads = unread_threads + read_threads
 
-      last_replies =
-        Chat::Message
-          .strict_loading
-          .includes(:user, :uploads)
-          .from(<<~SQL)
-            (
-              SELECT thread_id, MAX(created_at) AS latest_created_at, MAX(id) AS latest_message_id
-              FROM chat_messages
-              WHERE thread_id IN (#{threads.map(&:id).join(",")})
-              GROUP BY thread_id
-            ) AS last_replies_subquery
-          SQL
-          .joins(
-            "INNER JOIN chat_messages ON chat_messages.id = last_replies_subquery.latest_message_id",
-          )
-          .index_by(&:thread_id)
+      if threads.present?
+        last_replies =
+          Chat::Message
+            .strict_loading
+            .includes(:user, :uploads)
+            .from(<<~SQL)
+              (
+                SELECT thread_id, MAX(created_at) AS latest_created_at, MAX(id) AS latest_message_id
+                FROM chat_messages
+                WHERE thread_id IN (#{threads.map(&:id).join(",")})
+                GROUP BY thread_id
+              ) AS last_replies_subquery
+            SQL
+            .joins(
+              "INNER JOIN chat_messages ON chat_messages.id = last_replies_subquery.latest_message_id",
+            )
+            .index_by(&:thread_id)
 
-      threads.each { |thread| thread.last_reply = last_replies[thread.id] }
+        threads.each { |thread| thread.last_reply = last_replies[thread.id] }
+      end
 
       threads
     end
@@ -144,6 +146,10 @@ module Chat
               ON tracked_threads_subquery.thread_id = chat_threads.id",
         )
         .joins(:user_chat_thread_memberships)
+        .joins(
+          "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
+        )
+        .where("original_messages.deleted_at IS NULL")
         .where(user_chat_thread_memberships_chat_threads: { user_id: guardian.user.id })
     end
 

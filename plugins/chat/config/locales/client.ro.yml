@@ -73,6 +73,7 @@ ro:
       settings:
         follow: "Alătură-te"
         followed: "Înscris"
+        threading_enabled: "Activat"
         notifications: "Notificări"
         preview: "Previzualizează"
         save: "Salvare"

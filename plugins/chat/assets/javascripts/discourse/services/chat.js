@@ -1,6 +1,5 @@
 import deprecated from "discourse-common/lib/deprecated";
 import { tracked } from "@glimmer/tracking";
-import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
@@ -144,7 +143,8 @@ export default class Chat extends Service {
               channel.tracking.unreadCount = state.unread_count;
               channel.tracking.mentionCount = state.mention_count;
 
-              channel.updateMembership(channelObject.current_user_membership);
+              channel.currentUserMembership =
+                channelObject.current_user_membership;
 
               this.chatSubscriptionsManager.startChannelSubscription(channel);
             });
@@ -282,11 +282,6 @@ export default class Chat extends Service {
     }
   }
 
-  searchPossibleDirectMessageUsers(options) {
-    // TODO: implement a chat specific user search function
-    return userSearch(options);
-  }
-
   getIdealFirstChannelId() {
     // When user opens chat we need to give them the 'best' channel when they enter.
     //
@@ -380,9 +375,9 @@ export default class Chat extends Service {
   // channel for. The current user will automatically be included in the channel
   // when it is created.
   upsertDmChannelForUsernames(usernames) {
-    return ajax("/chat/direct_messages/create.json", {
+    return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
-      data: { usernames: usernames.uniq() },
+      data: { target_usernames: usernames.uniq() },
     })
       .then((response) => {
         const channel = this.chatChannelsManager.store(response.channel);

@@ -1238,10 +1238,6 @@ pl_PL:
       experimental_sidebar:
         enable: "Włącz pasek boczny"
         options: "Opcje"
-        categories_section: "Sekcja kategorii"
-        categories_section_instruction: "Wybrane kategorie zostaną wyświetlone w sekcji kategorii menu nawigacyjnego. Jeśli nie wybrano żadnych kategorii, zostaną wyświetlone najważniejsze kategorie witryny."
-        tags_section: "Sekcja tagów"
-        tags_section_instruction: "Wybrane tagi będą wyświetlane w sekcji tagów menu nawigacji. Jeśli żadne tagi nie zostaną wybrane, wyświetlone zostaną najważniejsze tagi witryny."
         navigation_section: "Nawigacja"
         navigation_section_instruction: "Gdy lista tematów w menu nawigacyjnym zawiera nowe lub nieprzeczytane elementy…"
         link_to_filtered_list_checkbox_description: "Link do przefiltrowanej listy"
@@ -1283,6 +1279,7 @@ pl_PL:
       watched_first_post_categories_instructions: "Zostaniesz powiadomiony o pierwszym wpisie w każdym nowym temacie w tych kategoriach."
       watched_first_post_tags: "Oglądasz pierwszy wpis"
       watched_first_post_tags_instructions: "Zostaniesz powiadomiony tylko o pierwszym wpisie w każdym nowym temacie oznaczonym tymi tagami."
+      watched_precedence_over_muted: "Powiadamiaj mnie o tematach w obserwowanych przeze mnie kategoriach lub tagach, które również należą do tych, które wyciszyłem."
       muted_categories: "Wyciszone"
       muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
       muted_categories_instructions_dont_hide: "Nie otrzymasz powiadomień o nowych tematach w tych kategoriach. "
@@ -6065,6 +6062,7 @@ pl_PL:
         show_overriden: "Pokaż tylko nadpisane"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
+        interpolation_keys: "Dostępne klucze interpolacji:"
       settings:
         show_overriden: "Pokaż tylko nadpisane"
         history: "Wyświetl historię zmian"

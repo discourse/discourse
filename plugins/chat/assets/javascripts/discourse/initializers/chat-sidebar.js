@@ -9,6 +9,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
   name: "chat-sidebar",
@@ -227,15 +228,19 @@ export default {
               return this.channel.chatable.users.length === 1;
             }
 
+            get contentComponentArgs() {
+              return this.channel.chatable.users[0].get("status");
+            }
+
+            get contentComponent() {
+              return "user-status-message";
+            }
+
             get text() {
               const username = this.channel.escapedTitle.replaceAll("@", "");
               if (this.oneOnOneMessage) {
-                const status = this.channel.chatable.users[0].get("status");
-                const statusHtml = status ? this._userStatusHtml(status) : "";
                 return htmlSafe(
-                  `${escapeExpression(
-                    username
-                  )}${statusHtml} ${decorateUsername(
+                  `${escapeExpression(username)}${decorateUsername(
                     escapeExpression(username)
                   )}`
                 );
@@ -307,14 +312,6 @@ export default {
               return I18n.t("chat.direct_messages.leave");
             }
 
-            _userStatusHtml(status) {
-              const emoji = escapeExpression(`:${status.emoji}:`);
-              const title = this._userStatusTitle(status);
-              return `<span class="user-status">${emojiUnescape(emoji, {
-                title,
-              })}</span>`;
-            }
-
             _userStatusTitle(status) {
               let title = `${escapeExpression(status.description)}`;
 
@@ -333,6 +330,7 @@ export default {
 
           const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
             @service site;
+            @service modal;
             @service router;
             @tracked userCanDirectMessage =
               this.chatService.userCanDirectMessage;
@@ -381,7 +379,7 @@ export default {
                   id: "startDm",
                   title: I18n.t("chat.direct_messages.new"),
                   action: () => {
-                    this.router.transitionTo("chat.draft-channel");
+                    this.modal.show(ChatModalNewMessage);
                   },
                 },
               ];

@@ -272,6 +272,8 @@ fr:
         followed: "Rejoint"
         mobile_notification_level: "Notifications push mobiles"
         mute: "Mettre le canal en sourdine"
+        threading_enabled: "Activée "
+        threading_disabled: "Désactivée"
         muted_on: "Activé"
         muted_off: "Désactivé"
         notifications: "Notifications"
@@ -378,8 +380,8 @@ fr:
           tracking:
             title: "Suivre"
         participants_other_count:
-          one: "+%{count} autre"
-          other: "+%{count} autres"
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"

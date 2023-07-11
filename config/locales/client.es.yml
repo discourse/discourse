@@ -1103,8 +1103,6 @@ es:
       experimental_sidebar:
         enable: "Activar barra lateral"
         options: "Opciones"
-        categories_section: "Sección de categorías"
-        tags_section: "Sección de etiquetas"
         navigation_section: "Navegación"
       change: "cambio"
       featured_topic: "Tema destacado"
@@ -1144,6 +1142,7 @@ es:
       watched_first_post_categories_instructions: "Se te notificará la primera publicación en cada tema nuevo en estas categorías."
       watched_first_post_tags: "Vigilando la primera publicación"
       watched_first_post_tags_instructions: "Se te notificará la primera publicación en cada tema nuevo con estas etiquetas."
+      watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy viendo y que también pertenezcan a una que haya silenciado"
       muted_categories: "Silenciado"
       muted_categories_instructions: "No se te notificará acerca de ningún tema en estas categorías y no aparecerán en la página de categorías o mensajes recientes."
       muted_categories_instructions_dont_hide: "No se te notificará nada acerca de temas nuevos en estas categorías."

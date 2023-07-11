@@ -35,6 +35,10 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/threads/:thread_id/notifications-settings/me" =>
           "channel_threads_current_user_notifications_settings#update"
 
+    # TODO (martin) Remove this when we refactor the DM channel creation to happen
+    # via message creation in a different API controller.
+    post "/direct-message-channels" => "direct_messages#create"
+
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
 
@@ -47,7 +51,6 @@ Chat::Engine.routes.draw do
 
   # direct_messages_controller routes
   get "/direct_messages" => "direct_messages#index"
-  post "/direct_messages/create" => "direct_messages#create"
 
   # incoming_webhooks_controller routes
   post "/hooks/:key" => "incoming_webhooks#create_message"
@@ -62,7 +65,6 @@ Chat::Engine.routes.draw do
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"
   get "/browse/archived" => "chat#respond"
-  get "/draft-channel" => "chat#respond"
   post "/enable" => "chat#enable_chat"
   post "/disable" => "chat#disable_chat"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"

@@ -113,22 +113,38 @@ RSpec.describe Chat::UpdateChannel do
 
       describe "threading_enabled" do
         context "when true" do
+          before { params[:threading_enabled] = true }
+
           it "changes the value to true" do
-            expect {
-              params[:threading_enabled] = true
-              result
-            }.to change { channel.reload.threading_enabled }.from(false).to(true)
+            expect { result }.to change { channel.reload.threading_enabled }.from(false).to(true)
+          end
+
+          it "enqueues a job to mark all threads in the channel as read" do
+            expect_enqueued_with(
+              job: Jobs::Chat::MarkAllChannelThreadsRead,
+              args: {
+                channel_id: channel.id,
+              },
+            ) { result }
           end
         end
 
         context "when false" do
-          it "changes the value to true" do
+          before { params[:threading_enabled] = false }
+
+          it "changes the value to false" do
             channel.update!(threading_enabled: true)
 
-            expect {
-              params[:threading_enabled] = false
-              result
-            }.to change { channel.reload.threading_enabled }.from(true).to(false)
+            expect { result }.to change { channel.reload.threading_enabled }.from(true).to(false)
+          end
+
+          it "does not enqueue a job to mark all threads in the channel as read" do
+            expect_not_enqueued_with(
+              job: Jobs::Chat::MarkAllChannelThreadsRead,
+              args: {
+                channel_id: channel.id,
+              },
+            ) { result }
           end
         end
       end

@@ -1,0 +1,42 @@
+.chat-notices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  min-width: 280px;
+
+  &__notice,
+  .chat-retention-reminder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--tertiary-low);
+    padding: 0.5em 0 0.5em 1em;
+    color: var(--primary);
+    padding: 0.5em 0 0.5em 1em;
+  }
+
+  .btn-flat {
+    margin: 0 0.25em;
+    color: var(--primary-medium);
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+}
+
+.full-page-chat .chat-notices {
+  top: 4rem;
+}

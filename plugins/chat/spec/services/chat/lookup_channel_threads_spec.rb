@@ -10,6 +10,7 @@ RSpec.describe Chat::LookupChannelThreads do
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:channel_with_no_threads) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_3) { Fabricate(:chat_thread, channel: channel) }
@@ -30,6 +31,12 @@ RSpec.describe Chat::LookupChannelThreads do
           t.original_message.update!(created_at: 1.week.ago)
           t.add(current_user)
         end
+      end
+
+      it "does not return any threads when a channel has no threads" do
+        expect(
+          described_class.call(channel_id: channel_with_no_threads.id, guardian:).threads,
+        ).to eq([])
       end
 
       context "when all steps pass" do

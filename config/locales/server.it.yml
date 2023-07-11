@@ -1431,6 +1431,8 @@ it:
     fixed_category_positions_on_create: "Se attivata, verrà mantenuto l'ordinamento delle categorie nella finestra di creazione argomenti (richiede fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Aggiungi l''attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando "rake posts:rebake"'
     exclude_rel_nofollow_domains: "Un elenco di domini dove l'attributo nofollow non dovrebbe essere aggiunto ai collegamenti. \"esempio.com\" consentirà automaticamente anche \"sub.esempio.com\". Come minimo si dovrebbe aggiungere il dominio di questo sito per aiutare i web crawler a trovare tutti i contenuti. Se altre parti del tuo sito web sono in altri domini, aggiungi anche quelle."
+    max_form_template_title_length: "Lunghezza massima consentita per i titoli dei modelli di modulo."
+    max_form_template_content_length: "Lunghezza massima consentita per il contenuto del modello di modulo."
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     topic_excerpt_maxlength: "Lunghezza massima di un estratto / riepilogo di un argomento, generato dal primo messaggio di un argomento."
     show_pinned_excerpt_mobile: "Mostra estratti sugli argomenti appuntati nella visualizzazione in mobilità."

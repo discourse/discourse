@@ -8,10 +8,11 @@ export default class AdminSiteTextIndexController extends Controller {
   searching = false;
   siteTexts = null;
   preferred = false;
-  queryParams = ["q", "overridden", "locale"];
+  queryParams = ["q", "overridden", "outdated", "locale"];
   locale = null;
   q = null;
   overridden = false;
+  outdated = false;
 
   init() {
     super.init(...arguments);
@@ -21,7 +22,10 @@ export default class AdminSiteTextIndexController extends Controller {
 
   _performSearch() {
     this.store
-      .find("site-text", this.getProperties("q", "overridden", "locale"))
+      .find(
+        "site-text",
+        this.getProperties("q", "overridden", "outdated", "locale")
+      )
       .then((results) => {
         this.set("siteTexts", results);
       })
@@ -54,6 +58,13 @@ export default class AdminSiteTextIndexController extends Controller {
   @action
   toggleOverridden() {
     this.toggleProperty("overridden");
+    this.set("searching", true);
+    discourseDebounce(this, this._performSearch, 400);
+  }
+
+  @action
+  toggleOutdated() {
+    this.toggleProperty("outdated");
     this.set("searching", true);
     discourseDebounce(this, this._performSearch, 400);
   }

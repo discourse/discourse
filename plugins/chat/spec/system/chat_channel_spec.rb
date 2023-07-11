@@ -181,10 +181,10 @@ RSpec.describe "Chat channel", type: :system do
       chat.visit_channel(channel_1)
 
       expect(page).to have_selector(
-        ".mention .user-status[title='#{current_user.user_status.description}']",
+        ".mention .user-status-message img[alt='#{current_user.user_status.emoji}']",
       )
       expect(page).to have_selector(
-        ".mention .user-status[title='#{other_user.user_status.description}']",
+        ".mention .user-status-message img[alt='#{other_user.user_status.emoji}']",
       )
     end
   end

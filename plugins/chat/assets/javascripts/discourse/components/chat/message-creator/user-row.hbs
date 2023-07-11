@@ -1,0 +1,36 @@
+<Chat::UserAvatar @user={{@content.model}} />
+<ChatUserDisplayName @user={{@content.model}} />
+
+{{#if (gt @content.tracking.unreadCount 0)}}
+  <div class="unread-indicator -urgent"></div>
+{{/if}}
+
+{{user-status @content.model currentUser=this.currentUser}}
+
+{{#unless @content.enabled}}
+  <span class="disabled-text">
+    {{i18n "chat.new_message_modal.disabled_user"}}
+  </span>
+{{/unless}}
+
+{{#if @selected}}
+  {{#if this.site.mobileView}}
+    <span class="selection-indicator -add">
+      {{d-icon "check"}}
+    </span>
+  {{else}}
+    <span
+      class={{concat-class "selection-indicator" (if @active "-remove" "-add")}}
+    >
+      {{d-icon (if @active "times" "check")}}
+    </span>
+  {{/if}}
+{{else}}
+  {{#if this.site.desktopView}}
+    {{#if @hasSelectedUsers}}
+      <span class="action-indicator">{{this.addUserLabel}}</span>
+    {{else}}
+      <span class="action-indicator">{{this.openChannelLabel}}</span>
+    {{/if}}
+  {{/if}}
+{{/if}}

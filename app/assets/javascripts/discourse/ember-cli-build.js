@@ -4,7 +4,6 @@ const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const resolve = require("path").resolve;
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
-const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
@@ -182,6 +181,14 @@ module.exports = function (defaults) {
     .findAddonByName("discourse-plugins")
     .generatePluginsTree();
 
+  const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
+
+  const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
+
+  const markdownItBundleTree = app.project
+    .findAddonByName("pretty-text")
+    .treeForMarkdownItBundle();
+
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
@@ -196,18 +203,23 @@ module.exports = function (defaults) {
     }),
     generateWorkboxTree(),
     applyTerser(
-      concat(mergeTrees([app.options.adminTree]), {
+      concat(adminTree, {
         inputFiles: ["**/*.js"],
         outputFile: `assets/admin.js`,
       })
     ),
     applyTerser(
-      concat(mergeTrees([app.options.wizardTree]), {
+      concat(wizardTree, {
         inputFiles: ["**/*.js"],
         outputFile: `assets/wizard.js`,
       })
     ),
-    applyTerser(prettyTextEngine(app)),
+    applyTerser(
+      concat(markdownItBundleTree, {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/markdown-it-bundle.js`,
+      })
+    ),
     generateScriptsTree(app),
     applyTerser(discoursePluginsTree),
   ]);
