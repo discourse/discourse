@@ -35,8 +35,8 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[topics#destroy],
           },
           read: {
-            actions: %w[topics#show topics#feed topics#posts],
-            params: %i[topic_id],
+            actions: %w[topics#show topics#feed topics#posts topics#show_by_external_id],
+            params: %i[topic_id external_id],
             aliases: {
               topic_id: :id,
             },
