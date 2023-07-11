@@ -4527,6 +4527,11 @@ en:
               title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
         global_section: "Global section, visible to everyone"
+      panels:
+        forum:
+          label: Forum
+        admin:
+          label: Admin
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"

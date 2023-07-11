@@ -1,7 +1,27 @@
 <DSection @pageClass="has-sidebar" @id="d-sidebar" @class="sidebar-container">
-  <Sidebar::Sections
-    @currentUser={{this.currentUser}}
-    @collapsableSections={{true}}
-  />
+  {{#if this.showMainPanel}}
+    <Sidebar::Sections
+      @currentUser={{this.currentUser}}
+      @collapsableSections={{true}}
+      @panel={{this.currentPanel}}
+    />
+  {{else}}
+    <Sidebar::ApiPanels
+      @currentUser={{this.currentUser}}
+      @collapsableSections={{true}}
+      @panel={{this.currentPanel}}
+    />
+  {{/if}}
+
+  {{#each this.switchPanelButtons as |button|}}
+    <DButton
+      @action={{action "switchPanel" button}}
+      @class="btn-default sidebar__panel-switch-button"
+      @icon={{button.switchButtonIcon}}
+      @translatedLabel={{button.switchButtonLabel}}
+    />
+  {{/each}}
+
+  >>>>>>> 5dfe3bfedd (FEATURE: new API to add panels to sidebar)
   <Sidebar::Footer />
 </DSection>
