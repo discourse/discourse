@@ -9,7 +9,11 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 
 let _messagesCache = {};
-let _recipient_names = [];
+let _recipientNames = [];
+
+const clearRecipientNamesCache = function () {
+  _recipientNames.clear();
+};
 
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
@@ -47,6 +51,8 @@ export default class ComposerMessages extends Component {
     this.appEvents.off("composer:find-similar", this, this._findSimilar);
     this.appEvents.off("composer-messages:close", this, this._closeTop);
     this.appEvents.off("composer-messages:create", this, this._create);
+
+    clearRecipientNamesCache();
   }
 
   _closeTop() {
@@ -122,10 +128,10 @@ export default class ComposerMessages extends Component {
 
       if (
         recipient_names.length > 0 &&
-        recipient_names.length !== _recipient_names.length &&
-        !recipient_names.every((v, i) => v === _recipient_names[i])
+        recipient_names.length !== _recipientNames.length &&
+        !recipient_names.every((v, i) => v === _recipientNames[i])
       ) {
-        _recipient_names = recipient_names;
+        _recipientNames = recipient_names;
 
         const response = await ajax(
           `/composer_messages/user_not_seen_in_a_while`,
