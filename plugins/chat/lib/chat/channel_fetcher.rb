@@ -179,7 +179,7 @@ module Chat
     def self.secured_direct_message_channels_search(user_id, guardian, options = {})
       query =
         Chat::Channel.strict_loading.includes(
-          :last_message,
+          last_message: [:uploads],
           chatable: [{ direct_message_users: [user: :user_option] }, :users],
         )
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
