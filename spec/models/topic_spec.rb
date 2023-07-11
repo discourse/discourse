@@ -1974,6 +1974,61 @@ RSpec.describe Topic do
             end
           end
         end
+
+        describe "when the topic title is not valid" do
+          fab!(:topic_title) { topic.title }
+          fab!(:topic_slug) { topic.slug }
+          fab!(:topic_2) { Fabricate(:topic) }
+
+          it "does not save title or slug when title repeats letters" do
+            topic.title = "a" * 50
+            topic.change_category_to_id(new_category.id)
+
+            expect(topic.reload.title).to eq(topic_title)
+            expect(topic.reload.slug).to eq(topic_slug)
+          end
+
+          it "does not save title or slug when title is too long" do
+            SiteSetting.max_topic_title_length = 200
+
+            topic.title = "Neque porro quisquam est qui dolorem ipsum quia dolor amet" * 100
+            topic.change_category_to_id(new_category.id)
+
+            expect(topic.reload.title).to eq(topic_title)
+            expect(topic.reload.slug).to eq(topic_slug)
+          end
+
+          it "does not save title when it is too short" do
+            SiteSetting.min_topic_title_length = 15
+            topic.title = "Hello world"
+            expect { topic.change_category_to_id(new_category.id) }.not_to change {
+              topic.reload.title
+            }
+          end
+
+          it "does not save title when it is a duplicate" do
+            topic_2.title = topic_title
+            expect { topic_2.change_category_to_id(new_category.id) }.not_to change {
+              topic_2.reload.title
+            }
+          end
+
+          it "does not save title when it is blank" do
+            topic.title = ""
+            expect { topic.change_category_to_id(new_category.id) }.not_to change {
+              topic.reload.title
+            }
+          end
+
+          it "does not save title when there are too many emojis" do
+            SiteSetting.max_emojis_in_title = 2
+
+            topic.title = "Dummy topic title " + "😀" * 5
+            expect { topic.change_category_to_id(new_category.id) }.not_to change {
+              topic.reload.title
+            }
+          end
+        end
       end
 
       context "when allow_uncategorized_topics is false" do
