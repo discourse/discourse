@@ -18,8 +18,16 @@ import pretender, { response } from "../helpers/create-pretender";
 acceptance("Composer - Messages", function (needs) {
   needs.user();
 
+  let userNotSeenRequestCount = 0;
+
+  needs.hooks.afterEach(() => {
+    userNotSeenRequestCount = 0;
+  });
+
   needs.pretender((server, helper) => {
     server.get("/composer_messages/user_not_seen_in_a_while", () => {
+      userNotSeenRequestCount += 1;
+
       return helper.response({
         user_count: 1,
         usernames: ["charlie"],
@@ -31,13 +39,16 @@ acceptance("Composer - Messages", function (needs) {
   test("Shows warning in composer if user hasn't been seen in a long time.", async function (assert) {
     await visit("/u/charlie");
     await click("button.compose-pm");
+
     assert.false(
       exists(".composer-popup"),
       "composer warning is not shown by default"
     );
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+
     assert.true(exists(".composer-popup"), "shows composer warning message");
+
     assert.true(
       query(".composer-popup").innerHTML.includes(
         I18n.t("composer.user_not_seen_in_a_while.single", {
@@ -46,6 +57,20 @@ acceptance("Composer - Messages", function (needs) {
         })
       ),
       "warning message has correct body"
+    );
+
+    assert.strictEqual(
+      userNotSeenRequestCount,
+      1,
+      "ne user not seen request is made to the server"
+    );
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+
+    assert.strictEqual(
+      userNotSeenRequestCount,
+      1,
+      "does not make additional user not seen request to the server if the recipient names are the same"
     );
   });
 });
