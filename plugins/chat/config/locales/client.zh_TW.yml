@@ -134,6 +134,8 @@ zh_TW:
           about: 關於
           members: 成員
           settings: 設定
+      new_message_modal:
+        no_items: "沒有物件"
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述
@@ -142,8 +144,6 @@ zh_TW:
         prefix: "發至:"
         no_results: 沒有結果
         selected_user_title: "取消選取 %{username}"
-      channel_selector:
-        title: "跳轉到頻道"
       create_channel:
         type: "類型"
         types:

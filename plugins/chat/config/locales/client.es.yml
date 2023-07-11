@@ -211,6 +211,8 @@ es:
           about: Acerca de
           members: Miembros
           settings: Ajustes
+      new_message_modal:
+        no_items: "No hay elementos"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Añade un nombre
@@ -224,9 +226,6 @@ es:
         prefix: "Para:"
         no_results: No hay resultados
         selected_user_title: "Deseleccionar %{username}"
-      channel_selector:
-        title: "Ir al canal"
-        no_channels: "Ningún canal coincide con tu búsqueda"
       channel:
         no_memberships: Este canal no tiene miembros
         no_memberships_found: No se ha encontrado ningún miembro

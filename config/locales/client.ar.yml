@@ -4738,8 +4738,8 @@ ar:
           header_action_title: "تعديل فئات الشريط الجانبي"
           configure_defaults: "تكوين الإعدادات الافتراضية"
         community:
-          header_link_text: "المجتمع"
-          header_action_create_topic_title: "إنشاء موضوع"
+          edit_section:
+            header_dropdown: "تخصيص"
           links:
             about:
               content: "نبذة"
