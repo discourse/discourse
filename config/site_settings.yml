@@ -2137,6 +2137,9 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  max_sidebar_section_links:
+    default: 50
+    hidden: true
 
 navigation:
   navigation_menu:
