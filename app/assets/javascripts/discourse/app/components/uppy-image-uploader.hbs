@@ -25,25 +25,15 @@
         @icon="far-trash-alt"
         @type="button"
       />
-      {{#if this.experimentalLightboxEnabled}}
-        <DButton
-          @icon="discourse-expand"
-          @title="expand"
-          @type="button"
-          @class="image-uploader-lightbox-btn no-text"
-          @disabled={{this.loadingLightbox}}
-          data-lightbox-trigger
-        />
-      {{else}}
-        <DButton
-          @icon="discourse-expand"
-          @title="expand"
-          @type="button"
-          @class="image-uploader-lightbox-btn no-text"
-          @action={{action "toggleLightbox"}}
-          @disabled={{this.loadingLightbox}}
-        />
-      {{/if}}
+      <DButton
+        @icon="discourse-expand"
+        @title="expand"
+        @type="button"
+        @class="image-uploader-lightbox-btn no-text"
+        @disabled={{this.loadingLightbox}}
+        @action={{this.toggleLightbox}}
+        data-lightbox-trigger={{if this.experimentalLightboxEnabled "true"}}
+      />
     {{/if}}
 
     <span class="btn {{unless this.uploading 'hidden'}}">{{i18n
