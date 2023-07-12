@@ -20,6 +20,7 @@
         @class="btn btn-flat btn--zoom d-lightbox__zoom-button"
         @title="experimental_lightbox.buttons.zoom"
         @icon={{@zoomButtonIcon}}
+        @ariaHidden="true"
         {{on "click" @toggleZoom passive=true capture=true}}
         aria-hidden="true"
       />
@@ -29,6 +30,7 @@
         @class="btn btn-flat btn--rotate d-lightbox__rotate-button"
         @title="experimental_lightbox.buttons.rotate"
         @icon="redo"
+        @ariaHidden="true"
         {{on "click" @rotateImage passive=true capture=true}}
         aria-hidden="true"
       />
@@ -38,6 +40,7 @@
         @class="btn btn-flat btn--download d-lightbox__download-button"
         @title="experimental_lightbox.buttons.download"
         @icon="download"
+        @ariaHidden="true"
         {{on "click" @downloadImage passive=true capture=true}}
       />
     {{/if}}

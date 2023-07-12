@@ -5,6 +5,7 @@
         @class="btn btn-flat btn--carousel d-lightbox__carousel-button"
         @title="experimental_lightbox.buttons.carousel"
         @icon="images"
+        @ariaHidden="true"
         {{on "click" @toggleCarousel passive=true capture=true}}
         aria-hidden="true"
       />
@@ -27,6 +28,7 @@
         @class="btn btn-flat btn--newtab d-lightbox__new-tab-button"
         @title="experimental_lightbox.buttons.newtab"
         @icon="external-link-alt"
+        @ariaHidden="true"
         {{on "click" @openInNewTab passive=true capture=true}}
         aria-hidden="true"
       />
@@ -36,6 +38,7 @@
         @class="btn btn-flat btn--fullscreen d-lightbox__full-screen-button"
         @title="experimental_lightbox.buttons.fullscreen"
         @icon="discourse-expand"
+        @ariaHidden="true"
         {{on "click" @toggleFullScreen passive=true capture=true}}
         aria-hidden="true"
       />
@@ -44,6 +47,7 @@
       @class="btn btn-flat btn--close d-lightbox__close-button"
       @title="experimental_lightbox.buttons.close"
       @icon="times"
+      @ariaHidden="true"
       {{on "click" @close passive=true capture=true}}
     />
   </div>
