@@ -5,11 +5,8 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import {
-  emailValid,
-  escapeExpression,
-  tinyAvatar,
-} from "discourse/lib/utilities";
+import { emailValid, escapeExpression } from "discourse/lib/utilities";
+import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
 import { Promise } from "rsvp";
