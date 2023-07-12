@@ -51,7 +51,7 @@ export default class RouteScrollManager extends Service {
 
   #pruneOldScrollLocations() {
     while (this.scrollLocationHistory.size > MAX_SCROLL_LOCATIONS) {
-      // JS Set guarantees keys will be returned in insertion order
+      // JS Map guarantees keys will be returned in insertion order
       const oldestUUID = this.scrollLocationHistory.keys().next().value;
       this.scrollLocationHistory.delete(oldestUUID);
     }

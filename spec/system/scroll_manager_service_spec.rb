@@ -31,7 +31,7 @@ describe "Ember route-scroll-manager service", type: :system do
 
     try_until_success { expect(current_scroll_y).to eq(0) }
 
-    page.driver.browser.navigate.back
+    page.go_back
 
     expect(page).to have_css("body.navigation-topics")
     expect(discovery.topic_list).to have_topics
