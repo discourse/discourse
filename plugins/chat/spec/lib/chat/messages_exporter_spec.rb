@@ -22,7 +22,8 @@ describe Chat::MessagesExporter do
   it "exports messages" do
     exporter = Class.new.extend(Chat::MessagesExporter)
 
-    result = exporter.chat_message_export.to_a
+    result = []
+    exporter.chat_message_export { |data_row| result << data_row }
 
     expect(result.length).to be(7)
     assert_exported_message(result[0], public_channel_message_1)
