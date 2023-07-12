@@ -75,6 +75,25 @@ describe "Bookmarking posts and topics", type: :system do
     expect(bookmark).not_to eq(nil)
   end
 
+  it "allows choosing a different auto_delete_preference to the user preference and remembers it when reopening the modal" do
+    current_user.user_option.update!(
+      bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply],
+    )
+    visit_topic_and_open_bookmark_modal(post2)
+    bookmark_modal.open_options_panel
+    expect(bookmark_modal).to have_auto_delete_preference(
+      Bookmark.auto_delete_preferences[:on_owner_reply],
+    )
+    bookmark_modal.select_auto_delete_preference(Bookmark.auto_delete_preferences[:clear_reminder])
+    bookmark_modal.save
+    expect(topic_page).to have_post_bookmarked(post2)
+    topic_page.click_post_action_button(post2, :bookmark)
+    expect(bookmark_modal).to have_open_options_panel
+    expect(bookmark_modal).to have_auto_delete_preference(
+      Bookmark.auto_delete_preferences[:clear_reminder],
+    )
+  end
+
   context "for existing bookmarks" do
     fab!(:bookmark) do
       Fabricate(
@@ -89,6 +108,7 @@ describe "Bookmarking posts and topics", type: :system do
     it "prefills the name of the bookmark and the custom reminder date and time" do
       topic_page.visit_topic(topic)
       topic_page.click_post_action_button(post2, :bookmark)
+      expect(bookmark_modal).to have_open_options_panel
       expect(bookmark_modal.name.value).to eq("test name")
       expect(bookmark_modal.existing_reminder_alert).to have_content(
         bookmark_modal.existing_reminder_alert_message(bookmark),

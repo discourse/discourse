@@ -15,6 +15,25 @@ module PageObjects
         find("#tap_tile_#{identifier}").click
       end
 
+      def open_options_panel
+        find(".bookmark-options-button").click
+      end
+
+      def has_open_options_panel?
+        has_css?(".bookmark-options-panel")
+      end
+
+      def select_auto_delete_preference(preference)
+        select_kit = PageObjects::Components::SelectKit.new("#bookmark-auto-delete-preference")
+        select_kit.expand
+        select_kit.select_row_by_value(preference)
+      end
+
+      def has_auto_delete_preference?(preference)
+        select_kit = PageObjects::Components::SelectKit.new("#bookmark-auto-delete-preference")
+        select_kit.has_selected_value?(preference)
+      end
+
       def custom_date_picker
         find(".tap-tile-date-input #custom-date .date-picker")
       end
