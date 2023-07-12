@@ -307,7 +307,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async downloadImage() {
+  downloadImage() {
     return createDownloadLink(this.currentItem);
   }
 
@@ -322,7 +322,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async toggleCarousel() {
+  toggleCarousel() {
     this.hasCarousel = !this.hasCarousel;
 
     requestAnimationFrame(setCarouselScrollPosition);
