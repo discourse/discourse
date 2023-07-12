@@ -1,6 +1,8 @@
 import Service, { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
+
 const MAX_SCROLL_LOCATIONS = 100;
 
 export default class RouteScrollManager extends Service {
@@ -9,12 +11,19 @@ export default class RouteScrollManager extends Service {
   scrollLocationHistory = new Map();
   uuid;
 
+  scrollElement = isTesting()
+    ? document.getElementById("ember-testing-container")
+    : document.scrollingElement;
+
   @bind
   routeWillChange() {
     if (!this.uuid) {
       return;
     }
-    this.scrollLocationHistory.set(this.uuid, [window.scrollX, window.scrollY]);
+    this.scrollLocationHistory.set(this.uuid, [
+      this.scrollElement.scrollLeft,
+      this.scrollElement.scrollTop,
+    ]);
     this.#pruneOldScrollLocations();
   }
 
@@ -24,7 +33,7 @@ export default class RouteScrollManager extends Service {
 
     const scrollLocation = this.scrollLocationHistory.get(this.uuid) || [0, 0];
     schedule("afterRender", () => {
-      window.scrollTo(...scrollLocation);
+      this.scrollElement.scrollTo(...scrollLocation);
     });
   }
 
