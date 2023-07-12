@@ -28,8 +28,20 @@ export default class RouteScrollManager extends Service {
   }
 
   @bind
-  routeDidChange() {
-    this.uuid = this.router.location.getState?.().uuid;
+  routeDidChange(transition) {
+    const newUuid = this.router.location.getState?.().uuid;
+
+    if (newUuid === this.uuid) {
+      // routeDidChange fired without the history state actually changing. Most likely a refresh.
+      // Forget the previously-stored scroll location so that we scroll to the top
+      this.scrollLocationHistory.delete(this.uuid);
+    }
+
+    this.uuid = newUuid;
+
+    if (!this.#shouldScroll(transition.to)) {
+      return;
+    }
 
     const scrollLocation = this.scrollLocationHistory.get(this.uuid) || [0, 0];
     schedule("afterRender", () => {
@@ -39,9 +51,23 @@ export default class RouteScrollManager extends Service {
 
   #pruneOldScrollLocations() {
     while (this.scrollLocationHistory.size > MAX_SCROLL_LOCATIONS) {
+      // JS Set guarantees keys will be returned in insertion order
       const oldestUUID = this.scrollLocationHistory.keys().next().value;
       this.scrollLocationHistory.delete(oldestUUID);
     }
+  }
+
+  #shouldScroll(routeInfo) {
+    // Leafmost route has priority
+    for (let route = routeInfo; route; route = route.parent) {
+      const scrollOnTransition = route.metadata?.scrollOnTransition;
+      if (typeof scrollOnTransition === "boolean") {
+        return scrollOnTransition;
+      }
+    }
+
+    // No overrides - default to true
+    return true;
   }
 
   init() {
