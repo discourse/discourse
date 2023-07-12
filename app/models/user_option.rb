@@ -295,6 +295,7 @@ end
 #
 # Indexes
 #
-#  index_user_options_on_user_id                       (user_id) UNIQUE
-#  index_user_options_on_user_id_and_default_calendar  (user_id,default_calendar)
+#  index_user_options_on_user_id                        (user_id) UNIQUE
+#  index_user_options_on_user_id_and_default_calendar   (user_id,default_calendar)
+#  index_user_options_on_watched_precedence_over_muted  (watched_precedence_over_muted)
 #
