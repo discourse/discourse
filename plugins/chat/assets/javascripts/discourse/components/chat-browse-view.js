@@ -11,6 +11,8 @@ const TABS = ["all", "open", "closed", "archived"];
 
 export default class ChatBrowseView extends Component {
   @service chatApi;
+  @service modal;
+
   tagName = "";
 
   didReceiveAttrs() {
@@ -56,6 +58,8 @@ export default class ChatBrowseView extends Component {
 
   @action
   debouncedFiltering(event) {
+    this.set("channelsCollection", this.chatApi.channels());
+
     discourseDebounce(
       this,
       this.channelsCollection.load,
