@@ -176,9 +176,9 @@ module Jobs
     def screened_ip_export
       return enum_for(:screened_ip_export) unless block_given?
 
-      ScreenedIpAddress
-        .order("id DESC")
-        .each { |screened_ip| yield get_screened_ip_fields(screened_ip) }
+      ScreenedIpAddress.find_each(order: :desc) do |screened_ip|
+        yield get_screened_ip_fields(screened_ip)
+      end
     end
 
     def screened_url_export
