@@ -100,5 +100,22 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
 
       expect(channel_page).to have_message(text: "reply to message")
     end
+
+    it "renders safe HTML from the original message excerpt" do
+      other_user = Fabricate(:user)
+      original_message.update!(message: "@#{other_user.username} <mark>not marked</mark>")
+      original_message.rebake!
+      chat_page.visit_channel(channel_1)
+      channel_page.reply_to(original_message)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+      )
+
+      channel_page.fill_composer("reply to message")
+      channel_page.click_send_message
+
+      expect(channel_page).to have_message(text: "reply to message")
+    end
   end
 end
