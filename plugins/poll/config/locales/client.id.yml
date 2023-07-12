@@ -19,16 +19,12 @@ id:
           title: "Hasil akan ditampilkan setelah <strong>ditutup</strong>."
         staff:
           title: "Hasil hanya ditampilkan kepada anggota <strong>staf</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            other: "Pilih setidaknya <strong>%{count}</strong> opsi."
       cast-votes:
         title: "Gunakan suaramu"
         label: "Pilih sekarang!"
       show-results:
         title: "Lihat hasil polling"
-        label: "Lihat hasil"
+        label: "Hasil"
       hide-results:
         title: "Kembali ke suaramu"
       group-results:
@@ -51,6 +47,8 @@ id:
         votes: "%{count} suara"
         percentage: "Persentase"
         count: "Jumlah"
+      options:
+        label: "Pilihan"
       error_while_toggling_status: "Maaf, telah terjadi kesalahan pengalihan status dari pemilihan ini."
       ui_builder:
         insert: Masukkan Poll

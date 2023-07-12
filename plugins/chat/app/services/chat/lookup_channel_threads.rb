@@ -10,41 +10,57 @@ module Chat
   # of normal or tracking will be returned.
   #
   # @example
-  #  Chat::LookupChannelThreads.call(channel_id: 2, guardian: guardian)
+  #  Chat::LookupChannelThreads.call(channel_id: 2, guardian: guardian, limit: 5, offset: 2)
   #
   class LookupChannelThreads
     include Service::Base
 
-    MAX_THREADS = 50
+    THREADS_LIMIT = 10
 
-    # @!method call(channel_id:, guardian:)
+    # @!method call(channel_id:, guardian:, limit: nil, offset: nil)
     #   @param [Integer] channel_id
     #   @param [Guardian] guardian
+    #   @param [Integer] limit
+    #   @param [Integer] offset
     #   @return [Service::Base::Context]
 
     policy :threaded_discussions_enabled
     contract
+    step :set_limit
+    step :set_offset
     model :channel
     policy :threading_enabled_for_channel
     policy :can_view_channel
     model :threads
     step :fetch_tracking
     step :fetch_memberships
+    step :build_load_more_url
 
     # @!visibility private
     class Contract
       attribute :channel_id, :integer
       validates :channel_id, presence: true
+
+      attribute :limit, :integer
+      attribute :offset, :integer
     end
 
     private
 
+    def set_limit(contract:, **)
+      context.limit = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
+    end
+
+    def set_offset(contract:, **)
+      context.offset = [contract.offset || 0, 0].max
+    end
+
     def threaded_discussions_enabled
-      SiteSetting.enable_experimental_chat_threaded_discussions
+      ::SiteSetting.enable_experimental_chat_threaded_discussions
     end
 
     def fetch_channel(contract:, **)
-      Chat::Channel.find_by(id: contract.channel_id)
+      ::Chat::Channel.strict_loading.includes(:chatable).find_by(id: contract.channel_id)
     end
 
     def threading_enabled_for_channel(channel:, **)
@@ -65,13 +81,16 @@ module Chat
               OR tracked_threads_subquery.latest_message_id > user_chat_thread_memberships_chat_threads.last_read_message_id
           SQL
           .order("tracked_threads_subquery.latest_message_created_at DESC")
-          .limit(MAX_THREADS)
+          .limit(context.limit)
+          .offset(context.offset)
           .to_a
 
       # We do this to avoid having to query additional threads if the user
       # already has a lot of unread threads.
-      if unread_threads.length < MAX_THREADS
-        final_limit = MAX_THREADS - unread_threads.length
+      if unread_threads.length < context.limit
+        final_limit = context.limit - unread_threads.length
+        final_offset = context.offset + unread_threads.length
+
         read_threads =
           threads_query(guardian, channel)
             .where(<<~SQL)
@@ -79,6 +98,7 @@ module Chat
             SQL
             .order("tracked_threads_subquery.latest_message_created_at DESC")
             .limit(final_limit)
+            .offset(final_offset)
             .to_a
       end
 
@@ -86,7 +106,7 @@ module Chat
 
       if threads.present?
         last_replies =
-          Chat::Message
+          ::Chat::Message
             .strict_loading
             .includes(:user, :uploads)
             .from(<<~SQL)
@@ -101,7 +121,6 @@ module Chat
               "INNER JOIN chat_messages ON chat_messages.id = last_replies_subquery.latest_message_id",
             )
             .index_by(&:thread_id)
-
         threads.each { |thread| thread.last_reply = last_replies[thread.id] }
       end
 
@@ -126,13 +145,14 @@ module Chat
     end
 
     def threads_query(guardian, channel)
-      Chat::Thread
+      ::Chat::Thread
         .strict_loading
         .includes(
           :channel,
           :user_chat_thread_memberships,
           original_message_user: :user_status,
           original_message: [
+            :uploads,
             :chat_webhook_event,
             :chat_channel,
             chat_mentions: {
@@ -154,7 +174,8 @@ module Chat
     end
 
     def tracked_threads_subquery(guardian, channel)
-      Chat::Thread
+      ::Chat::Thread
+        .strict_loading
         .joins(:chat_messages, :user_chat_thread_memberships)
         .joins(
           "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
@@ -167,8 +188,8 @@ module Chat
         .where(
           "user_chat_thread_memberships.notification_level IN (?)",
           [
-            Chat::UserChatThreadMembership.notification_levels[:normal],
-            Chat::UserChatThreadMembership.notification_levels[:tracking],
+            ::Chat::UserChatThreadMembership.notification_levels[:normal],
+            ::Chat::UserChatThreadMembership.notification_levels[:tracking],
           ],
         )
         .where(
@@ -179,6 +200,15 @@ module Chat
           "chat_threads.id AS thread_id, MAX(chat_messages.created_at) AS latest_message_created_at, MAX(chat_messages.id) AS latest_message_id",
         )
         .to_sql
+    end
+
+    def build_load_more_url(contract:, **)
+      load_more_params = { offset: context.offset + context.limit }.to_query
+      context.load_more_url =
+        ::URI::HTTP.build(
+          path: "/chat/api/channels/#{contract.channel_id}/threads",
+          query: load_more_params,
+        ).request_uri
     end
   end
 end

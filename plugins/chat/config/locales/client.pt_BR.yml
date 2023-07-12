@@ -249,6 +249,8 @@ pt_BR:
           about: Sobre
           members: Membros
           settings: Definições
+      new_message_modal:
+        no_items: "Nenhum item"
       channel_edit_name_slug_modal:
         name: Nome do canal
       channel_edit_description_modal:
@@ -260,9 +262,6 @@ pt_BR:
         prefix: "Para:"
         no_results: Nenhum resultado
         selected_user_title: "Desmarcar %{username}"
-      channel_selector:
-        title: "Pular para o canal"
-        no_channels: "Nenhum canal corresponde à sua pesquisa"
       channel:
         no_memberships: Este canal não tem membros
         no_memberships_found: Nenhum membro encontrado

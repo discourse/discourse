@@ -181,8 +181,6 @@ fa_IR:
         title: پیام جدید
         prefix: "به:"
         no_results: هیج نتیجه‌ای نداشت
-      channel_selector:
-        no_channels: "هیچ کانالی با جستجوی شما مطابقت ندارد"
       channel:
         no_memberships: این کانال هنوز هیچ عضوی ندارد
         no_memberships_found: هیچ عضوی یافت نشد

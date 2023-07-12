@@ -235,16 +235,4 @@ module("Unit | Model | user", function (hooks) {
     assert.ok(hideSpy.calledWith("first_notification"));
     assert.ok(showNextSpy.calledWith());
   });
-
-  test("hideUserTipForever() can hide all the user tips", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    const hideAllSpy = sinon.spy(userTips, "hideAllUserTips");
-    await user.hideUserTipForever();
-
-    assert.ok(hideAllSpy.calledWith());
-  });
 });

@@ -3974,8 +3974,8 @@ nl:
           header_action_title: "Bewerk je zijbalkcategorieën"
           configure_defaults: "Standaardinstellingen configureren"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Maak een topic"
+          edit_section:
+            header_dropdown: "Aanpassen"
           links:
             about:
               content: "Over"

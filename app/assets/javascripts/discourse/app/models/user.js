@@ -37,7 +37,6 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 import {
-  hideAllUserTips,
   hideUserTip,
   showNextUserTip,
   showUserTip,
@@ -1202,10 +1201,6 @@ const User = RestModel.extend({
           options.onDismiss?.();
           this.hideUserTipForever(options.id);
         },
-        onDismissAll: () => {
-          options.onDismissAll?.();
-          this.hideUserTipForever();
-        },
       });
     }
   },
@@ -1217,45 +1212,29 @@ const User = RestModel.extend({
     }
 
     // Empty userTipId means all user tips.
-    if (userTipId && !userTips[userTipId]) {
+    if (!userTips[userTipId]) {
       // eslint-disable-next-line no-console
       console.warn("Cannot hide user tip with type =", userTipId);
       return;
     }
 
     // Hide user tips and maybe show the next one.
-    if (userTipId) {
-      hideUserTip(userTipId, true);
-      showNextUserTip();
-    } else {
-      hideAllUserTips();
-    }
+    hideUserTip(userTipId, true);
+    showNextUserTip();
 
     // Update list of seen user tips.
     let seenUserTips = this.user_option?.seen_popups || [];
-    if (userTipId) {
-      if (seenUserTips.includes(userTips[userTipId])) {
-        return;
-      }
-      seenUserTips.push(userTips[userTipId]);
-    } else {
-      if (seenUserTips.includes(-1)) {
-        return;
-      }
-      seenUserTips = [-1];
+    if (seenUserTips.includes(userTips[userTipId])) {
+      return;
     }
+    seenUserTips.push(userTips[userTipId]);
 
     // Save seen user tips on the server.
     if (!this.user_option) {
       this.set("user_option", {});
     }
     this.set("user_option.seen_popups", seenUserTips);
-    if (userTipId) {
-      return this.save(["seen_popups"]);
-    } else {
-      this.set("user_option.skip_new_user_tips", true);
-      return this.save(["seen_popups", "skip_new_user_tips"]);
-    }
+    return this.save(["seen_popups"]);
   },
 });
 

@@ -20,9 +20,9 @@ export default class UserTip extends Component {
         selector,
         content,
         placement,
-        primaryLabel,
+        buttonLabel,
+        buttonIcon,
         onDismiss,
-        onDismissAll,
       } = this.args;
       element = element.parentElement;
 
@@ -30,14 +30,14 @@ export default class UserTip extends Component {
         id,
         titleText: I18n.t(`user_tips.${id}.title`),
         contentText: content || I18n.t(`user_tips.${id}.content`),
-        primaryText: primaryLabel ? I18n.t(primaryLabel) : null,
+        buttonLabel,
+        buttonIcon,
         reference:
           (selector && element.parentElement.querySelector(selector)) ||
           element,
         appendTo: element.parentElement,
         placement,
         onDismiss,
-        onDismissAll,
       });
     });
   }

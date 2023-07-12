@@ -317,6 +317,15 @@ de:
           about: Über
           members: Mitglieder
           settings: Einstellungen
+      new_message_modal:
+        title: Nachricht senden
+        add_user_long: <kbd>Umschalt + Klick</kbd> oder <kbd>Umschalt + Eingabe</kbd><span>Hinzufügen @%{username}</span>
+        add_user_short: <span>Benutzer hinzufügen</span>
+        open_channel: <span>Offener Kanal</span>
+        default_search_placeholder: "#a-channel, @somebody oder irgendwas"
+        user_search_placeholder: "... weitere Nutzer hinzufügen"
+        disabled_user: "hat den Chat deaktiviert"
+        no_items: "Keine Elemente"
       channel_edit_name_slug_modal:
         title: Kanal bearbeiten
         input_placeholder: Einen Namen hinzufügen
@@ -332,9 +341,6 @@ de:
         prefix: "An:"
         no_results: Keine Ergebnisse
         selected_user_title: "%{username} abwählen"
-      channel_selector:
-        title: "Zum Kanal springen"
-        no_channels: "Keine Kanäle entsprechen deiner Suche"
       channel:
         no_memberships: Dieser Kanal hat keine Mitglieder
         no_memberships_found: Keine Mitglieder gefunden

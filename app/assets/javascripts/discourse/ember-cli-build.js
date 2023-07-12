@@ -17,9 +17,8 @@ module.exports = function (defaults) {
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
-  const ui = defaults.project.ui;
-  DeprecationSilencer.silenceUiWarn(ui);
-  DeprecationSilencer.silenceConsoleWarn();
+  DeprecationSilencer.silence(console, "warn");
+  DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
@@ -95,7 +94,7 @@ module.exports = function (defaults) {
     },
 
     babel: {
-      plugins: [DeprecationSilencer.generateBabelPlugin()],
+      plugins: [require.resolve("./lib/deprecation-silencer")],
     },
 
     // We need to build tests in prod for theme tests

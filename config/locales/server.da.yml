@@ -558,7 +558,6 @@ da:
   meta_category_description: "Diskussion om dette websted, hvordan det er organiseret, hvordan det virker og hvordan vi kan forbedre det."
   staff_category_name: "Personale"
   staff_category_description: "Privat kategori for personale diskussioner. Emner er kun synlige for administratorer og moderatorer."
-  admin_quick_start_title: "LÆS ME FØRST: Admin Quick Start Guide"
   category:
     topic_prefix: "Kategoridefinition for %{category}"
     replace_paragraph: "(Erstat dette første afsnit med en kort beskrivelse af din nye kategori. Denne vejledning vises i kategoriudvælgelsesområdet, så prøv at holde det under 200 tegn)."
@@ -1476,7 +1475,6 @@ da:
     tl3_requires_max_flagged: "Brugere må ikke have mere end x indlæg anmeldt af x forskellige brugere i løbet a de sidste (tl3 time period) dage for at kvalificere sig til forfremmelse til tillidsniveau 3. Hvor x er indstillingens værdi (0 eller mere)."
     tl3_promotion_min_duration: "Det mindste antal dage, som en forfremmelse til tillidsniveau 3 varer, før en bruger kan degraderes tilbage til tillidsniveau 2."
     tl3_links_no_follow: "Fjern ikke rel=nofollow fra links indsendt af tillidsniveau 3-brugere."
-    trusted_users_can_edit_others: "Tillad brugere med højt tillidsniveau at redigere indhold fra andre brugere"
     min_trust_to_create_topic: "Det mindste tillidsniveau der skal til for at oprette et nyt emne."
     allow_flagging_staff: "Hvis aktiveret, kan brugerne anmelde indlæg fra personalekonti."
     min_trust_to_edit_wiki_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg markeret som wiki."

@@ -3385,7 +3385,8 @@ sl:
         categories:
           header_link_text: "Kategorije"
         community:
-          header_link_text: "Skupnost"
+          edit_section:
+            header_dropdown: "Prilagodi"
           links:
             about:
               content: "O nas"

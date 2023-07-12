@@ -55,6 +55,8 @@ sk:
           about: O stránke
           members: Členovia
           settings: Nastavenia
+      new_message_modal:
+        no_items: "Žiadne položky"
       direct_message_creator:
         title: Nová správa
         prefix: "Komu:"

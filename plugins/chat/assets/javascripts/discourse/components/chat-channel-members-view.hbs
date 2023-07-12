@@ -1,8 +1,5 @@
 {{#if (gt this.channel.membershipsCount 0)}}
-  <LoadMore
-    @selector=".channel-members-view__list-item"
-    @action={{this.loadMore}}
-  >
+  <LoadMore @selector=".channel-members-view__list-item" @action={{this.load}}>
     <div class="channel-members-view-wrapper">
       <div
         class={{concat
@@ -27,9 +24,11 @@
               <ChatUserInfo @user={{membership.user}} />
             </div>
           {{else}}
-            {{#unless this.isFetchingMembers}}
-              {{i18n "chat.channel.no_memberships_found"}}
-            {{/unless}}
+            {{#if this.members.fetchedOnce}}
+              <div class="chat-thread-list__no-threads">
+                {{i18n "chat.channel.no_memberships_found"}}
+              </div>
+            {{/if}}
           {{/each}}
         </div>
       </div>

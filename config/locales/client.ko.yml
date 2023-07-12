@@ -3550,7 +3550,8 @@ ko:
           header_link_text: "카테고리"
           configure_defaults: "기본값 구성"
         community:
-          header_link_text: "커뮤니티"
+          edit_section:
+            header_dropdown: "사용자 지정"
           links:
             about:
               content: "소개"

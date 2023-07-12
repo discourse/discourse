@@ -189,7 +189,6 @@ de:
     software_update_prompt:
       message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
       dismiss: "Verwerfen"
-    bootstrap_mode: "Bootstrap-Modus"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -4121,9 +4120,8 @@ de:
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Thema erstellen"
-          header_action_edit_section_title: "Community-Abschnitt bearbeiten"
+          edit_section:
+            header_dropdown: "Anpassen"
           links:
             about:
               content: "Über uns"
@@ -5659,6 +5657,7 @@ de:
         go_back: "Zurück zur Suche"
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
+        show_outdated: "Nur veraltet/ungültig anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
         interpolation_keys: "Verfügbare Interpolationsschlüssel:"
