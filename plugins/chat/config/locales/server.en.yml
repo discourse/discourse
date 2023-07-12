@@ -1,6 +1,7 @@
 en:
   site_settings:
     chat_enabled: "Enable the chat plugin."
+    enable_public_channels: "Enable public channels."
     chat_allowed_groups: "Users in these groups can chat. Note that staff can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."

@@ -24,6 +24,10 @@ module PageObjects
           page.has_css?(SELECTOR)
         end
 
+        def closed?
+          page.has_no_css?(SELECTOR)
+        end
+
         def enter_shortcut
           input.send_keys(:enter)
         end

@@ -20,8 +20,48 @@ RSpec.describe "New message", type: :system do
     expect(chat_page.message_creator).to be_opened
   end
 
-  context "when the the content is not filtered" do
+  context "public channels are disabled" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
+
+    before do
+      SiteSetting.enable_public_channels = false
+      channel_1.add(current_user)
+    end
+
+    it "doesn’t list public channels" do
+      visit("/")
+      chat_page.open_new_message
+
+      expect(chat_page.message_creator).to be_not_listing(channel_1)
+    end
+
+    it "has a correct placeholder" do
+      visit("/")
+      chat_page.open_new_message
+
+      expect(chat_page.message_creator.input["placeholder"]).to eq(
+        I18n.t("js.chat.new_message_modal.default_user_search_placeholder"),
+      )
+    end
+  end
+
+  context "public channels are disabled and user can't create direct message" do
+    fab!(:current_user) { Fabricate(:user) }
+
+    before do
+      SiteSetting.enable_public_channels = false
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+    end
+
+    it "doesn’t list public channels" do
+      visit("/")
+      chat_page.open_new_message(check: false)
+
+      expect(chat_page.message_creator).to be_closed
+    end
+  end
+
+  context "when the the content is not filtered" do
     fab!(:channel_2) { Fabricate(:chat_channel) }
     fab!(:user_1) { Fabricate(:user) }
     fab!(:user_2) { Fabricate(:user) }

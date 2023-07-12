@@ -52,6 +52,14 @@ RSpec.describe Chat::SearchChatable do
           expect(result.category_channels).to_not include(private_channel_1)
         end
       end
+
+      context "when public channels are disabled" do
+        it "does not return category channels" do
+          SiteSetting.enable_public_channels = false
+
+          expect(described_class.call(params).category_channels).to be_blank
+        end
+      end
     end
 
     context "when term is prefixed with #" do
