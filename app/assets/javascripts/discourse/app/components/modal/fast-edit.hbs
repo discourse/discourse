@@ -1,0 +1,7 @@
+<DModal @closeModal={{@closeModal}}>
+  <FastEdit
+    @initialValue={{@model.initialValue}}
+    @post={{@model.post}}
+    @afterSave={{@closeModal}}
+  />
+</DModal>
