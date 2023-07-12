@@ -10,13 +10,13 @@ import {
   setSiteThemeColor,
 } from "discourse/lib/lightbox/helpers";
 
-import Mobile from "discourse/lib/mobile";
 import { bind } from "discourse-common/utils/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { processHTML } from "discourse/lib/lightbox/process-html";
 
 export default class LightboxService extends Service {
   @service appEvents;
+  @service site;
 
   lightboxIsOpen = false;
   lightboxClickElements = [];
@@ -40,7 +40,7 @@ export default class LightboxService extends Service {
     };
 
     this.options = {
-      isMobile: Mobile.mobileView,
+      isMobile: this.site.mobileView,
       isRTL: isDocumentRTL(),
       minCarosuelArrowItemCount: MIN_CAROUSEL_ARROW_ITEM_COUNT,
       zoomOnOpen: false,
