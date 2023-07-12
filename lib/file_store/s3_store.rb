@@ -226,6 +226,8 @@ module FileStore
           force_download: force_download,
           filename: upload.original_filename,
         )
+      elsif SiteSetting.s3_use_cdn_url_for_all_uploads
+        cdn_url(upload.url)
       else
         upload.url
       end
