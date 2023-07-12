@@ -222,7 +222,8 @@ module("Integration | Component | user-menu", function (hooks) {
           },
         ];
       } else if (
-        queryParams.filter_by_types === "mentioned,posted,quoted,replied"
+        queryParams.filter_by_types ===
+        "mentioned,group_mentioned,posted,quoted,replied"
       ) {
         data = [
           {
@@ -280,7 +281,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-replies.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "mentioned,posted,quoted,replied",
+      "mentioned,group_mentioned,posted,quoted,replied",
       "request params has filter_by_types set to `mentioned`, `posted`, `quoted` and `replied`"
     );
     assert.strictEqual(queryParams.silent, "true");

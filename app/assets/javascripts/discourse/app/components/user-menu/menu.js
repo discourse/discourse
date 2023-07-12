@@ -37,11 +37,18 @@ const CORE_TOP_TABS = [
     id = "replies";
     icon = "reply";
     panelComponent = UserMenuRepliesNotificationsList;
-    notificationTypes = ["mentioned", "posted", "quoted", "replied"];
+    notificationTypes = [
+      "mentioned",
+      "group_mentioned",
+      "posted",
+      "quoted",
+      "replied",
+    ];
 
     get count() {
       return (
         this.getUnreadCountForType("mentioned") +
+        this.getUnreadCountForType("group_mentioned") +
         this.getUnreadCountForType("posted") +
         this.getUnreadCountForType("quoted") +
         this.getUnreadCountForType("replied")
