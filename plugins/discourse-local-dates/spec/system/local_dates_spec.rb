@@ -16,6 +16,10 @@ describe "Local dates", type: :system do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
+  def formatted_date_for_year(month, day)
+    Date.parse("#{year}-#{month}-#{day}").strftime("%A, %B %-d, %Y")
+  end
+
   it "renders local dates and date ranges correctly" do
     using_browser_timezone("Asia/Singapore") do
       sign_in current_user
@@ -31,19 +35,19 @@ describe "Local dates", type: :system do
       post_dates[0].click
       tippy_date = topic_page.find(".tippy-content .current .date-time")
 
-      expect(tippy_date).to have_text("Thursday, December 15, #{year}\n2:19 PM", exact: true)
+      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n2:19 PM", exact: true)
 
       # Two single dates in the same paragraph.
       #
       post_dates[1].click
       tippy_date = topic_page.find(".tippy-content .current .date-time")
 
-      expect(tippy_date).to have_text("Thursday, December 15, #{year}\n1:20 AM", exact: true)
+      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n1:20 AM", exact: true)
 
       post_dates[2].click
       tippy_date = topic_page.find(".tippy-content .current .date-time")
 
-      expect(tippy_date).to have_text("Thursday, December 15, #{year}\n2:40 AM", exact: true)
+      expect(tippy_date).to have_text("#{formatted_date_for_year(12, 15)}\n2:40 AM", exact: true)
 
       # Two date ranges in the same paragraph.
       #
@@ -51,7 +55,7 @@ describe "Local dates", type: :system do
       tippy_date = topic_page.find(".tippy-content .current .date-time")
 
       expect(tippy_date).to have_text(
-        "Thursday, December 15, #{year}\n11:25 AM → 12:26 AM",
+        "#{formatted_date_for_year(12, 15)}\n11:25 AM → 12:26 AM",
         exact: true,
       )
 
@@ -59,7 +63,7 @@ describe "Local dates", type: :system do
       tippy_date = topic_page.find(".tippy-content .current .date-time")
 
       expect(tippy_date).to have_text(
-        "Thursday, December 22, #{year} 11:57 AM → Friday, December 23, #{year} 11:58 AM",
+        "#{formatted_date_for_year(12, 22)} 11:57 AM → #{formatted_date_for_year(12, 23)} 11:58 AM",
         exact: true,
       )
     end
