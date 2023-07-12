@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { scheduleOnce } from "@ember/runloop";
 
-// Can add a body class from within a component, also will scroll to the top automatically.
+// Can add a body class from within a component
 export default class extends Component {
   tagName = null;
   pageClass = null;
