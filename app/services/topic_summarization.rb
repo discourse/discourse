@@ -5,33 +5,36 @@ class TopicSummarization
     @strategy = strategy
   end
 
-  def summarize(topic)
-    DistributedMutex.synchronize("toppic_summarization_#{topic.id}") do
-      existing_summary = SummarySection.find_by(target: topic, meta_section_id: nil)
-      return existing_summary.summarized_text if existing_summary
+  def summarize(topic, user)
+    existing_summary = SummarySection.find_by(target: topic, meta_section_id: nil)
 
-      content = {
-        resource_path: "#{Discourse.base_path}/t/-/#{topic.id}",
-        content_title: topic.title,
-        contents: [],
-      }
+    # For users without permissions to generate a summary, we return what we have cached.
+    # Existing summary shouldn't be nil in this scenario because the controller checks its existence.
+    return existing_summary if !user || !Summarization::Base.can_request_summary_for?(user)
 
-      targets_data = summary_targets(topic).pluck(:post_number, :raw, :username)
+    return existing_summary if existing_summary && fresh?(existing_summary, topic)
 
-      targets_data.map do |(pn, raw, username)|
-        content[:contents] << { poster: username, id: pn, text: raw }
-      end
+    delete_cached_summaries_of(topic) if existing_summary
 
-      summarization_result = strategy.summarize(content)
+    content = {
+      resource_path: "#{Discourse.base_path}/t/-/#{topic.id}",
+      content_title: topic.title,
+      contents: [],
+    }
 
-      cached_summary(summarization_result, targets_data.map(&:first), topic)
+    targets_data = summary_targets(topic).pluck(:post_number, :raw, :username)
 
-      summarization_result[:summary]
+    targets_data.map do |(pn, raw, username)|
+      content[:contents] << { poster: username, id: pn, text: raw }
     end
+
+    summarization_result = strategy.summarize(content)
+
+    cache_summary(summarization_result, targets_data.map(&:first), topic)
   end
 
   def summary_targets(topic)
-    topic.has_summary? ? best_replies(topic) : pick_selection(topic)
+    @targets ||= topic.has_summary? ? best_replies(topic) : pick_selection(topic)
   end
 
   private
@@ -66,7 +69,18 @@ class TopicSummarization
       .order(:post_number)
   end
 
-  def cached_summary(result, post_numbers, topic)
+  def delete_cached_summaries_of(topic)
+    SummarySection.where(target: topic).destroy_all
+  end
+
+  def fresh?(summary, topic)
+    return true if summary.created_at > 12.hours.ago
+    latest_post_to_summarize = summary_targets(topic).last.post_number
+
+    latest_post_to_summarize <= summary.content_range.to_a.last
+  end
+
+  def cache_summary(result, post_numbers, topic)
     main_summary =
       SummarySection.create!(
         target: topic,
@@ -86,5 +100,7 @@ class TopicSummarization
         meta_section_id: main_summary.id,
       )
     end
+
+    main_summary
   end
 end

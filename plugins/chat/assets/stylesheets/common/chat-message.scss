@@ -226,6 +226,10 @@
     }
   }
 
+  &:has(.tippy-box) {
+    position: relative;
+    z-index: 1;
+  }
   .chat-message-reaction-list .chat-message-react-btn {
     display: none;
   }
