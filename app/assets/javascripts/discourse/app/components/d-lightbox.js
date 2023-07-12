@@ -27,14 +27,8 @@ import { tracked } from "@glimmer/tracking";
 export default class DLightbox extends Component {
   @service appEvents;
 
-  @tracked callbacks = {};
-  @tracked items = [];
-  @tracked options = {};
-
   @tracked isVisible = false;
   @tracked isLoading = false;
-  @tracked willClose = false;
-
   @tracked currentIndex = 0;
   @tracked currentItem = {};
 
@@ -182,13 +176,13 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async registerAppEventListeners() {
+  registerAppEventListeners() {
     this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.OPEN, this.open);
     this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this.close);
   }
 
   @bind
-  async deregisterAppEventListners() {
+  deregisterAppEventListners() {
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.OPEN, this.open);
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this.close);
   }
@@ -221,7 +215,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async close() {
+  close() {
     this.willClose = true;
 
     discourseLater(this.cleanup, this.animationDuration);
@@ -230,7 +224,7 @@ export default class DLightbox extends Component {
   }
 
   async #setCurrentItem(index) {
-    await this.#onBeforeItemChange();
+    this.#onBeforeItemChange();
 
     this.currentIndex = (index + this.totalItemCount) % this.totalItemCount;
     this.currentItem = await preloadItemImages(this.items[this.currentIndex]);
@@ -238,7 +232,7 @@ export default class DLightbox extends Component {
     this.#onAfterItemChange();
   }
 
-  async #onBeforeItemChange() {
+  #onBeforeItemChange() {
     this.callbacks.onItemWillChange?.({
       currentItem: this.currentItem,
     });
@@ -248,7 +242,7 @@ export default class DLightbox extends Component {
     this.isRotated = false;
   }
 
-  async #onAfterItemChange() {
+  #onAfterItemChange() {
     this.isLoading = false;
 
     setSiteThemeColor(this.currentItem.dominantColor);
@@ -266,7 +260,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async centerZoomedBackgroundPosition(zoomedImageContainer) {
+  centerZoomedBackgroundPosition(zoomedImageContainer) {
     return this.options.isMobile
       ? scrollParentToElementCenter({
           element: zoomedImageContainer,
@@ -275,7 +269,7 @@ export default class DLightbox extends Component {
       : false;
   }
 
-  async zoomOnMouseover(event) {
+  zoomOnMouseover(event) {
     const zoomedImageContainer = event.target;
 
     const offsetX = event.offsetX;
@@ -288,7 +282,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async toggleZoom() {
+  toggleZoom() {
     if (this.isLoading || !this.canZoom) {
       return;
     }
@@ -298,13 +292,13 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async rotateImage() {
+  rotateImage() {
     this.rotationAmount = (this.rotationAmount + 90) % 360;
     this.isRotated = this.rotationAmount !== 0;
   }
 
   @bind
-  async toggleFullScreen() {
+  toggleFullScreen() {
     this.isFullScreen = !this.isFullScreen;
 
     return this.isFullScreen
@@ -318,12 +312,12 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async openInNewTab() {
+  openInNewTab() {
     return openImageInNewTab(this.currentItem);
   }
 
   @bind
-  async reloadImage() {
+  reloadImage() {
     this.#setCurrentItem(this.currentIndex);
   }
 
@@ -335,28 +329,28 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async showNextItem() {
+  showNextItem() {
     this.#setCurrentItem(this.currentIndex + 1);
   }
 
   @bind
-  async showPreviousItem() {
+  showPreviousItem() {
     this.#setCurrentItem(this.currentIndex - 1);
   }
 
   @bind
-  async showSelectedImage(event) {
+  showSelectedImage(event) {
     const targetIndex = event.target.dataset?.lightboxItemIndex;
     return targetIndex ? this.#setCurrentItem(Number(targetIndex)) : false;
   }
 
   @bind
-  async toggleExpandTitle() {
+  toggleExpandTitle() {
     this.hasExpandedTitle = !this.hasExpandedTitle;
   }
 
   @bind
-  async onKeyup({ key }) {
+  onKeyup({ key }) {
     if (KEYBOARD_SHORTCUTS.PREVIOUS.includes(key)) {
       return this.showPreviousItem();
     }
@@ -399,7 +393,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async onTouchstart(event = Event) {
+  onTouchstart(event = Event) {
     if (this.isZoomed) {
       return false;
     }
