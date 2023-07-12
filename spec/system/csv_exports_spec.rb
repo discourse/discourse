@@ -3,8 +3,7 @@
 RSpec.describe "CSV Exports", type: :system do
   fab!(:admin) { Fabricate(:admin) }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
-
-  time_format = "%Y-%m-%d %H:%M:%S UTC"
+  let(:time_format) { "%Y-%m-%d %H:%M:%S UTC" }
 
   before do
     Jobs.run_immediately!
@@ -200,14 +199,24 @@ RSpec.describe "CSV Exports", type: :system do
   end
 
   context "with screened emails" do
-    fab!(:screened_email) do
+    fab!(:screened_email_1) do
       Fabricate(
         :screened_email,
         action_type: ScreenedEmail.actions[:do_nothing],
-        match_count: 5,
-        last_match_at: Time.now,
-        created_at: Time.now,
-        ip_address: "94.99.101.228",
+        match_count: 1,
+        last_match_at: Time.now + 1.day,
+        created_at: Time.now + 1.day,
+        ip_address: "11.11.11.11",
+      )
+    end
+    fab!(:screened_email_2) do
+      Fabricate(
+        :screened_email,
+        action_type: ScreenedEmail.actions[:do_nothing],
+        match_count: 2,
+        last_match_at: Time.now + 2.days,
+        created_at: Time.now + 2.days,
+        ip_address: "22.22.22.22",
       )
     end
 
@@ -220,38 +229,53 @@ RSpec.describe "CSV Exports", type: :system do
       expect(csv_export_pm_page).to have_download_link
       exported_data = csv_export_pm_page.download_and_extract
 
-      expect(exported_data.length).to be(2)
+      expect(exported_data.length).to be(3)
       expect(exported_data.first).to eq(
         %w[email action match_count last_match_at created_at ip_address],
       )
-      expect(exported_data.second).to eq(
-        [
-          screened_email.email,
-          "do_nothing",
-          screened_email.match_count.to_s,
-          screened_email.last_match_at.strftime(time_format),
-          screened_email.created_at.strftime(time_format),
-          screened_email.ip_address.to_s,
-        ],
-      )
+      assert_export(exported_data.second, screened_email_2)
+      assert_export(exported_data.third, screened_email_1)
     ensure
       csv_export_pm_page.clear_downloads
+    end
+
+    def assert_export(exported_email, email)
+      expect(exported_email).to eq(
+        [
+          email.email,
+          "do_nothing",
+          email.match_count.to_s,
+          email.last_match_at.strftime(time_format),
+          email.created_at.strftime(time_format),
+          email.ip_address.to_s,
+        ],
+      )
     end
   end
 
   context "with screened ips" do
-    fab!(:screened_ip) do
+    fab!(:screened_ip_1) do
       Fabricate(
         :screened_ip_address,
         action_type: ScreenedIpAddress.actions[:do_nothing],
-        match_count: 5,
-        ip_address: "99.232.23.124",
-        last_match_at: Time.now,
-        created_at: Time.now,
+        match_count: 1,
+        ip_address: "11.11.11.11",
+        last_match_at: Time.now + 1.day,
+        created_at: Time.now + 1.day,
+      )
+    end
+    fab!(:screened_ip_2) do
+      Fabricate(
+        :screened_ip_address,
+        action_type: ScreenedIpAddress.actions[:do_nothing],
+        match_count: 2,
+        ip_address: "22.22.22.22",
+        last_match_at: Time.now + 2.days,
+        created_at: Time.now + 2.days,
       )
     end
 
-    xit "exports data" do
+    it "exports data" do
       visit "admin/logs/screened_ip_addresses"
       click_button "Export"
 
@@ -261,17 +285,22 @@ RSpec.describe "CSV Exports", type: :system do
       exported_data = csv_export_pm_page.download_and_extract
 
       expect(exported_data.first).to eq(%w[ip_address action match_count last_match_at created_at])
-      expect(exported_data.second).to eq(
-        [
-          screened_ip.ip_address.to_s,
-          "do_nothing",
-          screened_ip.match_count.to_s,
-          screened_ip.last_match_at.strftime(time_format),
-          screened_ip.created_at.strftime(time_format),
-        ],
-      )
+      assert_exported_row(exported_data.second, screened_ip_2)
+      assert_exported_row(exported_data.third, screened_ip_1)
     ensure
       csv_export_pm_page.clear_downloads
+    end
+
+    def assert_exported_row(exported_ip, ip)
+      expect(exported_ip).to eq(
+        [
+          ip.ip_address.to_s,
+          "do_nothing",
+          ip.match_count.to_s,
+          ip.last_match_at.strftime(time_format),
+          ip.created_at.strftime(time_format),
+        ],
+      )
     end
   end
 
