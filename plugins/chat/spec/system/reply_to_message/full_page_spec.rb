@@ -9,7 +9,12 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }
   fab!(:original_message) do
-    Fabricate(:chat_message, chat_channel: channel_1, user: Fabricate(:user))
+    Fabricate(
+      :chat_message,
+      chat_channel: channel_1,
+      user: Fabricate(:user),
+      message: "This is a message to reply to!",
+    )
   end
 
   before do
