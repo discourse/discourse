@@ -25,7 +25,7 @@ describe "Viewing sidebar as anonymous user", type: :system do
     Fabricate(:tag, name: "tag 6").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
   end
 
-  let(:sidebar) { PageObjects::Components::Sidebar.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   describe "when viewing the tags section" do
     it "should not display the tags section when tagging has been disabled" do

@@ -47,6 +47,7 @@ export default class SecondFactorBackupEdit extends Component {
         this.args.model.setBackupEnabled(true);
         this.backupEnabled = true;
         this.remainingCodes = response.backup_codes.length;
+        this.args.model.setCodesRemaining(this.remainingCodes);
       })
       .catch((error) => {
         this.args.closeModal();

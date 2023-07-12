@@ -34,14 +34,22 @@ module PageObjects
       def reset
         find(".reset-link").click
         find(".dialog-footer .btn-primary").click
+        closed?
+        self
       end
 
       def save
         find("#save-section").click
+        closed?
+        self
       end
 
       def visible?
         page.has_css?(".sidebar-section-form-modal")
+      end
+
+      def closed?
+        page.has_no_css?(".sidebar-section-form-modal")
       end
 
       def has_disabled_save?

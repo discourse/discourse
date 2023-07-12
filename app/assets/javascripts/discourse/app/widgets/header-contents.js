@@ -2,7 +2,7 @@ import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
 
 createWidget("header-contents", {
-  tagName: "div.contents.clearfix",
+  tagName: "div.contents",
   transform() {
     return {
       showBootstrapMode: this.currentUser?.staff && this.site.desktopView,
@@ -27,6 +27,6 @@ createWidget("header-contents", {
 
     {{before-header-panel-outlet attrs=attrs}}
 
-    <div class="panel clearfix" role="navigation">{{yield}}</div>
+    <div class="panel" role="navigation">{{yield}}</div>
   `,
 });

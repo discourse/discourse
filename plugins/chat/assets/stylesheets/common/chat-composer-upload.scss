@@ -5,7 +5,7 @@
   border: 1px solid var(--primary-low-mid);
   margin-right: 0.5em;
   position: relative;
-  border-radius: 5px;
+  border-radius: var(--d-border-radius);
   box-sizing: border-box;
 
   &--image:not(.chat-composer-upload--in-progress) {
@@ -56,7 +56,7 @@
     .preview-img {
       object-position: center;
       object-fit: cover;
-      border-radius: 5px;
+      border-radius: var(--d-border-radius);
     }
   }
 
@@ -95,7 +95,7 @@
 
     .extension-pill {
       background: var(--primary-low);
-      border-radius: 5px;
+      border-radius: var(--d-border-radius);
       font-size: var(--font-down-2-rem);
       padding: 0.1em 0.4em;
     }

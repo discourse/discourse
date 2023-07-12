@@ -143,7 +143,7 @@ a.chat-drawer-header__title {
   &:hover {
     .chat-drawer-header__top-line {
       background: var(--primary-low);
-      border-radius: 5px;
+      border-radius: var(--d-border-radius);
     }
   }
 }
@@ -151,7 +151,7 @@ a.chat-drawer-header__title {
 .chat-drawer-header {
   box-sizing: border-box;
   border-bottom: solid 1px var(--primary-low);
-  border-radius: 8px 8px 0 0;
+  border-radius: var(--d-border-radius-large) var(--d-border-radius-large) 0 0;
   background: var(--primary-very-low);
   width: 100%;
   display: flex;

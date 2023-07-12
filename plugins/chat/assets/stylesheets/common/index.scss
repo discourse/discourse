@@ -41,8 +41,6 @@
 @import "chat-upload-drop-zone";
 @import "chat-transcript";
 @import "core-extensions";
-@import "create-channel-modal";
-@import "d-progress-bar";
 @import "dc-filter-input";
 @import "full-page-chat-header";
 @import "incoming-chat-webhooks";
@@ -54,8 +52,14 @@
 @import "chat-thread-list-header";
 @import "chat-thread-unread-indicator";
 @import "chat-thread-participants";
-@import "channel-summary-modal";
 @import "chat-message-mention-warning";
 @import "chat-message-error";
-@import "chat-new-message-modal";
 @import "chat-message-creator";
+@import "chat-user-avatar";
+@import "chat-modal-new-message";
+@import "chat-modal-archive-channel";
+@import "chat-modal-edit-channel-description";
+@import "chat-modal-create-channel";
+@import "chat-modal-create-channel";
+@import "chat-modal-channel-summary";
+@import "chat-modal-move-message-to-channel";

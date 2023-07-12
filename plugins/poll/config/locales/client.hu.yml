@@ -25,30 +25,16 @@ hu:
           title: "Az eredmények a <strong>szavazás lezárásakor</strong> lesznek megjelenítve."
         staff:
           title: "Az eredményeket csak a <strong>stábtagok</strong> láthatják."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Legalább <strong>%{count}</strong> lehetőséget válasszon."
-            other: "Legalább <strong>%{count}</strong> lehetőséget válasszon."
-          up_to_max_options:
-            one: "Legfeljebb <strong>%{count}</strong> lehetőséget válasszon."
-            other: "Legfeljebb <strong>%{count}</strong> lehetőséget válasszon."
-          x_options:
-            one: "Válasszon <strong>%{count}</strong> lehetőséget."
-            other: "Válasszon <strong>%{count}</strong> lehetőséget."
-          between_min_and_max_options: "Válasszon legalább <strong>%{min}</strong>, de legfeljebb <strong>%{max}</strong> lehetőséget."
       cast-votes:
         title: "Szavazat leadása"
         label: "Szavazzon most!"
       show-results:
         title: "Eredmények megjelenítése"
-        label: "Eredmények megjelenítése"
+        label: "Eredmények"
       remove-vote:
         title: "Saját szavazat eltávolítása"
-        label: "Szavazat eltávolítása"
       hide-results:
         title: "Vissza a szavazataihoz"
-        label: "Szavazás megjelenítése"
       group-results:
         title: "Szavazatok csoportosítása felhasználói mező szerint"
         label: "Bontás megjelenítése"
@@ -72,6 +58,8 @@ hu:
         breakdown: "Bontás"
         percentage: "Százalék"
         count: "Számláló"
+      options:
+        label: "Beállítások"
       error_while_toggling_status: "Sajnáljuk, hiba történt a szavazás állapotának átváltásakor."
       error_while_casting_votes: "Sajnáljuk, hiba történt a szavazata leadásakor."
       error_while_fetching_voters: "Sajnáljuk, hiba történt a szavazók megjelenítésekor."

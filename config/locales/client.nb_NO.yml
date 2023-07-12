@@ -3403,7 +3403,8 @@ nb_NO:
         categories:
           header_link_text: "Kategorier"
         community:
-          header_link_text: "Gemenskap"
+          edit_section:
+            header_dropdown: "Tilpasse"
           links:
             about:
               content: "Om"

@@ -235,3 +235,15 @@ acceptance(
     });
   }
 );
+
+acceptance("User Preference - No Secondary Emails Allowed", function (needs) {
+  needs.user();
+  needs.pretender(preferencesPretender);
+  needs.settings({ max_allowed_secondary_emails: 0 });
+
+  test("Add Alternate Email Button is unvailable", async function (assert) {
+    await visit("/u/eviltrout/preferences");
+
+    assert.dom(".pref-email a").doesNotExist();
+  });
+});

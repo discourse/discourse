@@ -201,6 +201,8 @@ ja:
           about: 紹介
           members: メンバー
           settings: 設定
+      new_message_modal:
+        no_items: "項目なし"
       channel_edit_name_slug_modal:
         name: チャンネル名
       channel_edit_description_modal:
@@ -212,9 +214,6 @@ ja:
         prefix: "宛先:"
         no_results: 結果がありません
         selected_user_title: "%{username} を選択解除"
-      channel_selector:
-        title: "チャンネルにジャンプ"
-        no_channels: "検索に一致するチャンネルはありません"
       channel:
         no_memberships: このチャンネルにはメンバーがいません
         no_memberships_found: メンバーが見つかりません

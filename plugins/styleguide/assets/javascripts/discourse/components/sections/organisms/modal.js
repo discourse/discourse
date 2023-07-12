@@ -6,6 +6,7 @@ import I18n from "I18n";
 export default class extends Component {
   @tracked inline = true;
   @tracked dismissable = true;
+  @tracked modalTagName = "div";
   @tracked title = I18n.t("styleguide.sections.modal.header");
   @tracked body = this.args.dummy.shortLorem;
   @tracked subtitle = "";
@@ -13,6 +14,7 @@ export default class extends Component {
   @tracked flashType = "success";
 
   flashTypes = ["success", "info", "warning", "error"];
+  modalTagNames = ["div", "form"];
 
   @action
   toggleInline() {

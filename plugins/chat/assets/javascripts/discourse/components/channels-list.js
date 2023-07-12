@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import ChatNewMessageModal from "discourse/plugins/chat/discourse/components/modal/chat-new-message";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default class ChannelsList extends Component {
   @service chat;
@@ -30,7 +30,7 @@ export default class ChannelsList extends Component {
 
   @action
   openNewMessageModal() {
-    this.modal.show(ChatNewMessageModal);
+    this.modal.show(ChatModalNewMessage);
   }
 
   get showMobileDirectMessageButton() {

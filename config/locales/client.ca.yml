@@ -2904,7 +2904,8 @@ ca:
         categories:
           header_link_text: "Categories"
         community:
-          header_link_text: "Comunitat"
+          edit_section:
+            header_dropdown: "Personalitza"
           links:
             about:
               content: "Quant a"

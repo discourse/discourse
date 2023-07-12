@@ -86,6 +86,11 @@ en_GB:
       colors_disabled: "You can’t select colours because you have a category style of none."
     tagging:
       manage_groups_description: "Define groups to organise tags"
+    sidebar:
+      sections:
+        community:
+          edit_section:
+            header_dropdown: "Customise"
   admin_js:
     admin:
       dashboard:

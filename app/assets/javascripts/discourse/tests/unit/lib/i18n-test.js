@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import I18n from "I18n";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 module("Unit | Utility | i18n", function (hooks) {
   hooks.beforeEach(function () {
@@ -287,5 +288,12 @@ module("Unit | Utility | i18n", function (hooks) {
       }),
       "customtest"
     );
+  });
+
+  test("legacy require support", function (assert) {
+    withSilencedDeprecations("discourse.i18n-t-import", () => {
+      const myI18n = require("I18n");
+      assert.strictEqual(myI18n.t("topic.reply.title"), "Répondre");
+    });
   });
 });

@@ -3606,7 +3606,8 @@ da:
           header_link_text: "Kategorier"
           configure_defaults: "Konfigurer standardindstillinger"
         community:
-          header_link_text: "Fællesskab"
+          edit_section:
+            header_dropdown: "Tilpasning"
           links:
             about:
               content: "Om"
