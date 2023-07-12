@@ -6,8 +6,8 @@ import {
   caretPosition,
   formatUsername,
   inCodeBlock,
-  tinyAvatar,
 } from "discourse/lib/utilities";
+import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import discourseComputed, {
   bind,
   debounce,

@@ -50,7 +50,7 @@ export default class ChatBrowseView extends Component {
   onScroll() {
     discourseDebounce(
       this,
-      this.channelsCollection.loadMore,
+      this.channelsCollection.load,
       { filter: this.filter, status: this.status },
       INPUT_DELAY
     );
@@ -58,6 +58,8 @@ export default class ChatBrowseView extends Component {
 
   @action
   debouncedFiltering(event) {
+    this.set("channelsCollection", this.chatApi.channels());
+
     discourseDebounce(
       this,
       this.channelsCollection.load,

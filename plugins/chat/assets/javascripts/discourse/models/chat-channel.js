@@ -266,7 +266,7 @@ export default class ChatChannel {
     });
 
     clonedMessage.thread = thread;
-    this.threadsManager.store(this, thread);
+    this.threadsManager.add(this, thread);
     thread.messagesManager.addMessages([clonedMessage]);
 
     return thread;
