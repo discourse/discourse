@@ -249,15 +249,6 @@ export default class LightboxService extends Service {
       this,
       this.cleanupLightboxes
     );
-
-    this.lightboxClickElements = null;
-    this.lastFocusedElement = null;
-    this.originalSiteThemeColor = null;
-    this.lightboxIsOpen = null;
-    this.onFocus = null;
-    this.callbacks = null;
-    this.options = null;
-    this.selector = null;
   }
 
   willDestroy() {
