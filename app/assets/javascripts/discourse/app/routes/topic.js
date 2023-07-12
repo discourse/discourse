@@ -151,7 +151,7 @@ const TopicRoute = DiscourseRoute.extend({
   showHistory(model, revision) {
     this.modal.show(HistoryModal, {
       model: {
-        postId: model.get("id"),
+        postId: model.id,
         postVersion: revision || "latest",
         post: model,
         topicController: this.controllerFor("topic"),

@@ -183,7 +183,7 @@ export default class History extends Component {
     post
       .revertToRevision(postVersion)
       .then((result) => {
-        this.refresh(post.get("id"), postVersion);
+        this.refresh(post.id, postVersion);
         if (result.topic) {
           post.set("topic.slug", result.topic.slug);
           post.set("topic.title", result.topic.title);
