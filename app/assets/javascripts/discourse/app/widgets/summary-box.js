@@ -34,7 +34,7 @@ export default createWidget("summary-box", {
     const html = [];
 
     if (state.summary) {
-      html.push(new RawHtml({ html: state.summary }));
+      html.push(new RawHtml({ html: `<div>${state.summary}</div>` }));
       html.push(
         h(
           "div.summarized-on",
