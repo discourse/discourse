@@ -3,7 +3,7 @@
 describe "Ember route-scroll-manager service", type: :system do
   before do
     Fabricate(:admin)
-    50.times { Fabricate(:post) }
+    Fabricate.times(50, :post)
   end
 
   let(:discovery) { PageObjects::Pages::Discovery.new }
