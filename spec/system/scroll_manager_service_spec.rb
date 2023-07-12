@@ -10,9 +10,7 @@ describe "Ember route-scroll-manager service", type: :system do
   let(:topic) { PageObjects::Pages::Topic.new }
 
   def current_scroll_y
-    page.execute_script <<~JS
-      return window.scrollY
-    JS
+    page.evaluate_script("window.scrollY")
   end
 
   it "scrolls to top when navigating to new routes, and remembers scroll position when going back" do
