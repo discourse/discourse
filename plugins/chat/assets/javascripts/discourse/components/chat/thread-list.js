@@ -1,24 +1,25 @@
 import Component from "@glimmer/component";
 import { bind } from "discourse-common/utils/decorators";
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default class ChatThreadList extends Component {
   @service chat;
+  @service chatApi;
   @service messageBus;
+  @service chatTrackingStateManager;
 
-  @tracked loading = true;
+  get threadsManager() {
+    return this.args.channel.threadsManager;
+  }
 
   // NOTE: This replicates sort logic from the server. We need this because
   // the thread unread count + last reply date + time update when new messages
   // are sent to the thread, and we want the list to react in realtime to this.
   get sortedThreads() {
-    if (!this.args.channel.threadsManager.threads) {
-      return [];
-    }
-
-    return this.args.channel.threadsManager.threads
+    return this.threadsManager.threads
+      .filter((thread) => !thread.originalMessage.deletedAt)
       .sort((threadA, threadB) => {
         // If both are unread we just want to sort by last reply date + time descending.
         if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
@@ -50,12 +51,16 @@ export default class ChatThreadList extends Component {
         } else {
           return 1;
         }
-      })
-      .filter((thread) => !thread.originalMessage.deletedAt);
+      });
   }
 
   get shouldRender() {
     return !!this.args.channel;
+  }
+
+  @action
+  loadThreads() {
+    return this.threadsCollection.load({ limit: 10 });
   }
 
   @action
@@ -82,11 +87,10 @@ export default class ChatThreadList extends Component {
   }
 
   handleDeleteMessage(data) {
-    const deletedOriginalMessageThread =
-      this.args.channel.threadsManager.threads.findBy(
-        "originalMessage.id",
-        data.deleted_id
-      );
+    const deletedOriginalMessageThread = this.threadsManager.threads.findBy(
+      "originalMessage.id",
+      data.deleted_id
+    );
 
     if (!deletedOriginalMessageThread) {
       return;
@@ -96,11 +100,10 @@ export default class ChatThreadList extends Component {
   }
 
   handleRestoreMessage(data) {
-    const restoredOriginalMessageThread =
-      this.args.channel.threadsManager.threads.findBy(
-        "originalMessage.id",
-        data.chat_message.id
-      );
+    const restoredOriginalMessageThread = this.threadsManager.threads.findBy(
+      "originalMessage.id",
+      data.chat_message.id
+    );
 
     if (!restoredOriginalMessageThread) {
       return;
@@ -109,17 +112,29 @@ export default class ChatThreadList extends Component {
     restoredOriginalMessageThread.originalMessage.deletedAt = null;
   }
 
-  @action
-  loadThreads() {
-    this.loading = true;
-    this.args.channel.threadsManager.index(this.args.channel.id).finally(() => {
-      this.loading = false;
+  @cached
+  get threadsCollection() {
+    return this.chatApi.threads(this.args.channel.id, this.handleLoadedThreads);
+  }
+
+  @bind
+  handleLoadedThreads(result) {
+    return result.threads.map((thread) => {
+      const threadModel = this.threadsManager.add(this.args.channel, thread, {
+        replace: true,
+      });
+
+      this.chatTrackingStateManager.setupChannelThreadState(
+        this.args.channel,
+        result.tracking
+      );
+
+      return threadModel;
     });
   }
 
   @action
   teardown() {
-    this.loading = true;
     this.#unsubscribe();
   }
 

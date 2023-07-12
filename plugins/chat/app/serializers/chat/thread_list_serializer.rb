@@ -21,7 +21,7 @@ module Chat
     end
 
     def meta
-      { channel_id: object.channel.id }
+      { channel_id: object.channel.id, load_more_url: object.load_more_url }
     end
   end
 end
