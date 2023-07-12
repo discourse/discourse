@@ -2,7 +2,7 @@
   {{#if @canNavigate}}
     <div aria-hidden="true" class="d-lightbox__multi-item-controls">
       <DButton
-        @class="btn btn-flat btn--carousel d-lightbox__carousel-button"
+        @class="d-lightbox__carousel-button btn-flat"
         @title="experimental_lightbox.buttons.carousel"
         @icon="images"
         @ariaHidden="true"
@@ -25,7 +25,7 @@
   <div class="d-lightbox__header-buttons">
     {{#if @canDownload}}
       <DButton
-        @class="btn btn-flat btn--newtab d-lightbox__new-tab-button"
+        @class="d-lightbox__new-tab-button btn-flat"
         @title="experimental_lightbox.buttons.newtab"
         @icon="external-link-alt"
         @ariaHidden="true"
@@ -35,7 +35,7 @@
     {{/if}}
     {{#if @canFullscreen}}
       <DButton
-        @class="btn btn-flat btn--fullscreen d-lightbox__full-screen-button"
+        @class="d-lightbox__full-screen-button btn-flat"
         @title="experimental_lightbox.buttons.fullscreen"
         @icon="discourse-expand"
         @ariaHidden="true"
@@ -44,7 +44,7 @@
       />
     {{/if}}
     <DButton
-      @class="btn btn-flat btn--close d-lightbox__close-button"
+      @class="d-lightbox__close-button btn-flat"
       @title="experimental_lightbox.buttons.close"
       @icon="times"
       @ariaHidden="true"

@@ -1,7 +1,7 @@
 <div class="d-lightbox__carousel">
   {{#if @shouldDisplayCarouselArrows}}
     <DButton
-      @class="btn btn-flat btn--previous d-lightbox__carousel-previous-button"
+      @class="d-lightbox__carousel-previous-button btn-flat"
       @title="experimental_lightbox.buttons.previous"
       @icon={{@previousButtonIcon}}
       @ariaHidden="true"
@@ -32,14 +32,14 @@
         style={{item.cssVars}}
         class={{concat
           "d-lightbox__carousel-item"
-          (if (eq item.index @currentIndex) " is-current active")
+          (if (eq item.index @currentIndex) " is-current")
         }}
       />
     {{/each}}
   </div>
   {{#if @shouldDisplayCarouselArrows}}
     <DButton
-      @class="btn btn-flat btn--next d-lightbox__carousel-next-button"
+      @class="d-lightbox__carousel-next-button btn-flat"
       @title="experimental_lightbox.buttons.next"
       @icon={{@nextButtonIcon}}
       @ariaHidden="true"

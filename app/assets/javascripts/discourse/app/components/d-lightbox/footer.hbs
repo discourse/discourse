@@ -17,7 +17,7 @@
   <div class="d-lightbox__footer-buttons">
     {{#if @canZoom}}
       <DButton
-        @class="btn btn-flat btn--zoom d-lightbox__zoom-button"
+        @class="d-lightbox__zoom-button btn-flat"
         @title="experimental_lightbox.buttons.zoom"
         @icon={{@zoomButtonIcon}}
         @ariaHidden="true"
@@ -27,7 +27,7 @@
     {{/if}}
     {{#if @canRotate}}
       <DButton
-        @class="btn btn-flat btn--rotate d-lightbox__rotate-button"
+        @class="d-lightbox__rotate-button btn-flat"
         @title="experimental_lightbox.buttons.rotate"
         @icon="redo"
         @ariaHidden="true"
@@ -37,7 +37,7 @@
     {{/if}}
     {{#if @canDownload}}
       <DButton
-        @class="btn btn-flat btn--download d-lightbox__download-button"
+        @class="d-lightbox__download-button btn-flat"
         @title="experimental_lightbox.buttons.download"
         @icon="download"
         @ariaHidden="true"

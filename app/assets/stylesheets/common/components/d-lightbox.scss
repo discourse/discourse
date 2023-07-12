@@ -79,7 +79,7 @@ html.has-lightbox {
     grid-auto-flow: column;
     grid-template-areas: "lightbox-carousel-toggle lightbox-counter";
 
-    .btn--toggle-carousel {
+    .d-lightbox__carousel-button {
       grid-area: lightbox-carousel-toggle;
     }
   }
@@ -583,7 +583,7 @@ html.has-lightbox {
       gap: 2em 0;
     }
 
-    .btn-flat.btn--carousel .d-icon {
+    .btn-flat.d-lightbox__carousel-button .d-icon {
       color: var(--tertiary);
 
       @include hover {
@@ -658,7 +658,7 @@ html.has-lightbox {
       }
     }
 
-    .btn-flat.btn--zoom .d-icon {
+    .btn-flat.d-lightbox__zoom-button .d-icon {
       color: var(--tertiary);
 
       @include hover {
@@ -679,7 +679,7 @@ html.has-lightbox {
       transform: rotate(var(--d-lightbox-image-rotation));
     }
 
-    .btn-flat.btn--rotate .d-icon {
+    .btn-flat.d-lightbox__rotate-button .d-icon {
       color: var(--tertiary);
       transform: rotate(var(--d-lightbox-image-rotation));
 
@@ -693,7 +693,7 @@ html.has-lightbox {
 // Full screen
 .d-lightbox {
   &.is-fullscreen {
-    .btn-flat.btn--fullscreen .d-icon {
+    .btn-flat.d-lightbox__full-screen-button .d-icon {
       color: var(--tertiary);
 
       @include hover {
