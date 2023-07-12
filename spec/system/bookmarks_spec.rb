@@ -99,7 +99,7 @@ describe "Bookmarking posts and topics", type: :system do
       expect(bookmark_modal.custom_time_picker.value).to eq(
         bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
       )
-      expect(bookmark_modal).to have_active_preset("tap_tile_custom")
+      expect(bookmark_modal).to have_active_preset("custom")
     end
 
     it "can delete the bookmark" do
