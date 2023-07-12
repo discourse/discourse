@@ -17,7 +17,9 @@
           @thread={{thread}}
           {{chat/track-message
             (if
-              (eq thread sortedThreads.lastObject) this.loadThreads (fn (noop))
+              (eq thread this.sortedThreads.lastObject)
+              this.loadThreads
+              (fn (noop))
             )
           }}
         />
