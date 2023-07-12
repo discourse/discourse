@@ -2541,7 +2541,8 @@ et:
         categories:
           header_link_text: "Liigid"
         community:
-          header_link_text: "Kogukond"
+          edit_section:
+            header_dropdown: "Kohanda"
           links:
             about:
               content: "Teave"

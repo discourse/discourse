@@ -124,6 +124,7 @@ export default class ChatThreadList extends Component {
   }
 
   #unsubscribe() {
+    // TODO (joffrey) In drawer we won't have channel anymore at this point
     this.messageBus.unsubscribe(
       `/chat/${this.args.channel.id}`,
       this.onMessageBus

@@ -64,8 +64,8 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def self.google_tag_manager_nonce
-    @gtm_nonce ||= SecureRandom.hex
+  def self.google_tag_manager_nonce(env)
+    env[:discourse_content_security_policy_nonce] ||= SecureRandom.hex
   end
 
   def shared_session_key

@@ -24,7 +24,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
   # This tag should not be displayed in the modal as it has not been used in a topic
   fab!(:tag5) { Fabricate(:tag, name: "tag5") }
 
-  let(:sidebar) { PageObjects::Components::Sidebar.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { sign_in(user) }
 

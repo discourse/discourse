@@ -25,7 +25,7 @@
   text-transform: uppercase;
   padding: 0.25em;
   background: var(--primary-low);
-  border-radius: 3px;
+  border-radius: var(--d-border-radius);
   font-size: var(--font-down-2);
 
   & + .chat-message-info__date {

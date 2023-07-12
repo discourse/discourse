@@ -66,7 +66,7 @@
       &.is-force-pinned {
         .chat-message-separator__text {
           border: 1px solid var(--primary-200);
-          border-radius: 4px;
+          border-radius: var(--d-border-radius);
           color: var(--primary-800);
           background: var(--primary-50);
 
@@ -104,7 +104,7 @@
       .no-touch & {
         &:hover {
           border: 1px solid var(--secondary-high);
-          border-radius: 4px;
+          border-radius: var(--d-border-radius);
           color: var(--primary-800);
           background: var(--primary-50);
         }
@@ -113,7 +113,7 @@
       .touch & {
         &:active {
           border: 1px solid var(--secondary-high);
-          border-radius: 4px;
+          border-radius: var(--d-border-radius);
           color: var(--primary-800);
           background: var(--primary-50);
         }

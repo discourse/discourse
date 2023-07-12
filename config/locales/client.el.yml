@@ -3332,8 +3332,8 @@ el:
           header_link_text: "Κατηγορίες"
           configure_defaults: "Ρύθμιση προεπιλογών"
         community:
-          header_link_text: "Κοινότητα"
-          header_action_create_topic_title: "Δημιουργήστε ένα θέμα"
+          edit_section:
+            header_dropdown: "Προσαρμογή"
           links:
             about:
               content: "Σχετικά"

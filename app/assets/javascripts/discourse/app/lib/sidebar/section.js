@@ -42,7 +42,7 @@ export default class Section {
         {
           action: () => {
             return this.modal.show(SidebarSectionForm, {
-              model: this.section,
+              model: this,
             });
           },
           title: I18n.t("sidebar.sections.custom.edit"),
@@ -78,6 +78,7 @@ export default class Section {
     this.links = this.links.removeObject(link);
     this.links.splice(position, 0, link);
   }
+
   @bind
   reorder() {
     return ajax(`/sidebar_sections/reorder`, {

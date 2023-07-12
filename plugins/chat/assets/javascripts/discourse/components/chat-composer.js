@@ -25,6 +25,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import ChatModalChannelSummary from "discourse/plugins/chat/discourse/components/chat/modal/channel-summary";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -39,6 +40,7 @@ export default class ChatComposer extends Component {
   @service currentUser;
   @service chatApi;
   @service chatDraftsManager;
+  @service modal;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
@@ -377,8 +379,8 @@ export default class ChatComposer extends Component {
 
   @action
   showChannelSummaryModal() {
-    showModal("channel-summary").setProperties({
-      channelId: this.args.channel.id,
+    this.modal.show(ChatModalChannelSummary, {
+      model: { channelId: this.args.channel.id },
     });
   }
 

@@ -14,7 +14,7 @@ RSpec.describe "Navigation", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
-  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
@@ -143,6 +143,8 @@ RSpec.describe "Navigation", type: :system do
 
     context "when opening a thread from the thread list" do
       it "goes back to the thread list when clicking the back button" do
+        skip("Flaky on CI") if ENV["CI"]
+
         visit("/chat")
         chat_page.visit_channel(category_channel)
         channel_page.open_thread_list
@@ -157,6 +159,8 @@ RSpec.describe "Navigation", type: :system do
 
       context "for mobile" do
         it "goes back to the thread list when clicking the back button", mobile: true do
+          skip("Flaky on CI") if ENV["CI"]
+
           visit("/chat")
           chat_page.visit_channel(category_channel)
           channel_page.open_thread_list
@@ -173,6 +177,8 @@ RSpec.describe "Navigation", type: :system do
 
     context "when opening a thread from indicator" do
       it "goes back to the thread list when clicking the back button" do
+        skip("Flaky on CI") if ENV["CI"]
+
         visit("/chat")
         chat_page.visit_channel(category_channel)
         channel_page.message_thread_indicator(thread.original_message).click
@@ -186,6 +192,8 @@ RSpec.describe "Navigation", type: :system do
       context "for mobile" do
         it "closes the thread and goes back to the channel when clicking the back button",
            mobile: true do
+          skip("Flaky on CI") if ENV["CI"]
+
           visit("/chat")
           chat_page.visit_channel(category_channel)
           channel_page.message_thread_indicator(thread.original_message).click

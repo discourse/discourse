@@ -63,6 +63,8 @@ vi:
           about: Giới thiệu
           members: Các thành viên
           settings: Cài đặt
+      new_message_modal:
+        no_items: "Không có mẫu nào"
       direct_message_creator:
         title: Tin nhắn mới
         prefix: "Tới:"

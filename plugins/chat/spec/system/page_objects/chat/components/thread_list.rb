@@ -32,7 +32,7 @@ module PageObjects
         end
 
         def avatar_selector(user)
-          ".chat-thread-list-item__om-user-avatar .chat-user-avatar .chat-user-avatar-container[data-user-card=\"#{user.username}\"] img"
+          ".chat-thread-list-item__om-user-avatar .chat-user-avatar .chat-user-avatar__container[data-user-card=\"#{user.username}\"] img"
         end
 
         def last_reply_datetime_selector(last_reply)
