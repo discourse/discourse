@@ -1462,6 +1462,8 @@ files:
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+  s3_use_cdn_url_for_all_uploads:
+    default: false
   s3_configure_tombstone_policy:
     default: true
   s3_use_acls:
