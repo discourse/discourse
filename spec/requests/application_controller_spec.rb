@@ -640,12 +640,37 @@ RSpec.describe ApplicationController do
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
 
       get "/latest"
-      nonce = ApplicationHelper.google_tag_manager_nonce
-      expect(response.headers).to include("Content-Security-Policy")
 
+      expect(response.headers).to include("Content-Security-Policy")
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
-      expect(script_src.to_s).to include(nonce)
-      expect(response.body).to include(nonce)
+      nonce = extract_nonce_from_script_src(script_src)
+
+      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
+      expect(gtm_meta_tag["data-nonce"]).to eq(nonce)
+    end
+
+    it "doesn't reuse CSP nonces between requests" do
+      SiteSetting.content_security_policy = true
+      SiteSetting.gtm_container_id = "GTM-ABCDEF"
+
+      get "/latest"
+
+      expect(response.headers).to include("Content-Security-Policy")
+      script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      first_nonce = extract_nonce_from_script_src(script_src)
+
+      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
+      expect(gtm_meta_tag["data-nonce"]).to eq(first_nonce)
+
+      get "/latest"
+
+      expect(response.headers).to include("Content-Security-Policy")
+      script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      second_nonce = extract_nonce_from_script_src(script_src)
+
+      expect(first_nonce).not_to eq(second_nonce)
+      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
+      expect(gtm_meta_tag["data-nonce"]).to eq(second_nonce)
     end
 
     it "when splash screen is enabled it adds the fingerprint to the policy" do
@@ -669,6 +694,12 @@ RSpec.describe ApplicationController do
           [directive, sources]
         end
         .to_h
+    end
+
+    def extract_nonce_from_script_src(script_src)
+      nonce = script_src.find { |src| src.match?(/\A'nonce-\h{32}'\z/) }[-33...-1]
+      expect(nonce).to be_present
+      nonce
     end
   end
 

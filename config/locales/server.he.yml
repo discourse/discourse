@@ -694,7 +694,7 @@ he:
       :handshake: **תרומה** על ידי תגובה, שיתוף נקודת המבט שלך, פרסום שאלות או הצעת משוב בדיון. בטרם פרסום תגובות או נושאים חדשים, נא לעיין ב[כללי הקהילה](%{base_path}/faq).
 
       > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך [‎#feedback](%{base_path}/c/site-feedback) או [ליצור קשר עם המנהלים](%{base_path}/about).
-  admin_quick_start_title: "לקרוא אותי קודם: מדריך זריז למנהלים מתחילים"
+  admin_quick_start_title: "מדריך למנהלים: איך מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
     replace_paragraph: "(מוטב להחליף את הפסקה הראשונה הזאת בתיאור קצר של הקטגוריה החדשה שלך. הנחיה זו תופיע באזור בחירת הקטגוריה, לכן עדיף להסתפק במלל שלא יעלה על 200 תווים.)"
@@ -1498,6 +1498,7 @@ he:
     image_magick_warning: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
     failing_emails_warning: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
     subfolder_ends_in_slash: "הגדרת תיקיית המשנה שלך שגויה, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
+    outdated_translations_warning: "חלק ממעקפי התרגומים שלך לא בתוקף. נא לבדוק את <a href='%{base_path}/admin/customize/site_texts?outdated=true'>התאמות הטקסט</a> שלך."
     email_polling_errored_recently:
       one: "ניסיונות שליפת הודעות דוא״ל יצרו תקלה ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
       two: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
@@ -1891,7 +1892,8 @@ he:
     tl3_requires_likes_received: "מספר הלייקים המזערי שיש לקבל במשך (פרק זמן בדרגת אמון 3) הימים האחרונים כדי לעמוד בתנאי הקידום לדרגת אמון 3."
     tl3_links_no_follow: "מניעת הסרת rel=nofollow מקישורים שמפורסמים על ידי משתמשים בדרגת אמון 3."
     tl4_delete_posts_and_topics: "לאפשר למשתמשים בדרגת אמון 4 למחוק פוסטים ונושאים שנוצרו על ידי משתמשים אחרים. משתמשים בדרגת אמון 4 יוכלו גם לצפות בנושאים ובפוסטים שנמחקו."
-    trusted_users_can_edit_others: "לאפשר למשתמשים בדרגת אמון גבוהה לערוך תוכן של משתמשים אחרים"
+    edit_all_topic_groups: "לאפשר למשתמשים בקבוצה זו לערוך את כותרות הנושאים, התגיות והקטגוריות של משתמשים אחרים"
+    edit_all_post_groups: "לאפשר למשתמשים בקבוצה זו לערוך פוסטים של משתמשים אחרים"
     min_trust_to_create_topic: "דרגת האמון המזערית הנדרשת ליצירת נושא חדש."
     allow_flagging_staff: "אם אפשרות זו פעילה, משתמשים יכולים לסמן בדגל פוסטים שפורסמו על ידי חשבונות סגל."
     min_trust_to_edit_wiki_post: "דרגת האמון המזערית הנדרשת לעריכת פוסט המסומן כוויקי."
@@ -2113,8 +2115,8 @@ he:
     permalink_normalizations: "החילו את הביטויים הרגולריים האלו לפני שמתאימים קישורים-קבועים, למשל: /(topic.*)\\?.*/\\1 יסיר מחרוזות שאילתה מנתיבי נושאים. הפורמט הוא regex+string משתמש ב \\1 וכד׳ כדי לגשת להתאמות"
     global_notice: "הצגת מודעה גלובלית דחופה בגדר חירום לכל המבקרים, יש להחליף בתוכן ריק כדי להסתיר אותה (מותר HTML)."
     disable_system_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
-    disable_category_edit_notifications: "השבתת התראות על עריכת קטגוריות בנושאים."
-    disable_tags_edit_notifications: "השבתת התראות על עריכת תגיות בנושאים."
+    disable_category_edit_notifications: "השבתת התראות על עריכות של קטגוריות נושא."
+    disable_tags_edit_notifications: "השבתת התראות על עריכות של תגיות נושא."
     notification_consolidation_threshold: "מספר ההתראות שסומנו בלייק או בקשות שהתקבלו לפני שההתראות קובצו להתראה אחת. יש להגדיר ל־0 כדי להשבית."
     likes_notification_consolidation_window_mins: "משך הזמן בשניות בו התראות מקובצות להתראה אחת לאחר שהגיעו לסף הזה. ניתן להגדיר את הסף דרך `SiteSetting.notification_consolidation_threshold` (סף קיבוץ התראות)."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
@@ -2219,6 +2221,8 @@ he:
     default_text_size: "גודל הטקסט שנבחר כברירת מחדל"
     default_title_count_mode: "מצב בררת מחדל למונה כותרות עמודים"
     enable_offline_indicator: "להציג הודעה למשתמשים כאשר זוהה שהחיבור שלהם לאינטרנט נקטע."
+    default_sidebar_link_to_filtered_list: "להפוך את קישור קישורי תפריט הניווט לרשימה מסוננת כברירת מחדל."
+    default_sidebar_show_count_of_new_items: "להפוך את קישורי תפריט הניווט כך שיציגו מספר פריטים חדשים במקום עיטורים כברירת מחדל."
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
     revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
@@ -2286,6 +2290,7 @@ he:
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     experimental_search_menu_groups: "ניסיוני: מאפשר את תפריט החיפוש החדש ששודרג כך שישתמש ב־glimmer"
+    page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."

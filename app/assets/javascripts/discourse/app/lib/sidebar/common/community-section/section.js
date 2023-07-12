@@ -1,12 +1,8 @@
-import I18n from "I18n";
 import SectionLink from "discourse/lib/sidebar/section-link";
-import Composer from "discourse/models/composer";
-import { getOwner, setOwner } from "@ember/application";
+import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { next } from "@ember/runloop";
-import PermissionType from "discourse/models/permission-type";
+
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
@@ -20,7 +16,6 @@ import {
   customSectionLinks,
   secondaryCustomSectionLinks,
 } from "discourse/lib/sidebar/custom-community-section-links";
-import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 
 const SPECIAL_LINKS_MAP = {
   "/latest": EverythingSectionLink,
@@ -46,6 +41,7 @@ export default class CommunitySection {
   @tracked moreLinks;
 
   reorderable = false;
+  hideSectionHeader = true;
 
   constructor({ section, owner }) {
     setOwner(this, owner);
@@ -135,66 +131,6 @@ export default class CommunitySection {
       inMoreDrawer,
       overridenName,
       overridenIcon,
-    });
-  }
-
-  get decoratedTitle() {
-    return I18n.t(
-      `sidebar.sections.${this.section.title.toLowerCase()}.header_link_text`,
-      { defaultValue: this.section.title }
-    );
-  }
-
-  get headerActions() {
-    if (this.currentUser?.admin) {
-      return [
-        {
-          action: this.editSection,
-          title: I18n.t(
-            "sidebar.sections.community.header_action_edit_section_title"
-          ),
-        },
-      ];
-    }
-    if (this.currentUser) {
-      return [
-        {
-          action: this.composeTopic,
-          title: I18n.t(
-            "sidebar.sections.community.header_action_create_topic_title"
-          ),
-        },
-      ];
-    }
-  }
-
-  get headerActionIcon() {
-    return this.currentUser?.admin ? "pencil-alt" : "plus";
-  }
-
-  @action
-  editSection() {
-    return this.modal.show(SidebarSectionForm, {
-      model: this.section,
-    });
-  }
-
-  @action
-  composeTopic() {
-    const composerArgs = {
-      action: Composer.CREATE_TOPIC,
-      draftKey: Composer.NEW_TOPIC_KEY,
-    };
-
-    const controller = getOwner(this).lookup("controller:navigation/category");
-    const category = controller.category;
-
-    if (category && category.permission === PermissionType.FULL) {
-      composerArgs.categoryId = category.id;
-    }
-
-    next(() => {
-      getOwner(this).lookup("controller:composer").open(composerArgs);
     });
   }
 }

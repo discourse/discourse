@@ -69,6 +69,11 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   @action
+  setCodesRemaining(value) {
+    this.model.set("second_factor_remaining_backup_codes", value);
+  },
+
+  @action
   loadSecondFactors() {
     if (this.dirty === false) {
       return;
@@ -322,6 +327,7 @@ export default Controller.extend(CanCheckEmails, {
           markDirty: () => this.markDirty(),
           onError: (e) => this.handleError(e),
           setBackupEnabled: (e) => this.setBackupEnabled(e),
+          setCodesRemaining: (e) => this.setCodesRemaining(e),
         },
       });
     },

@@ -246,6 +246,8 @@ zh_CN:
           about: 关于
           members: 成员
           settings: 设置
+      new_message_modal:
+        no_items: "无条目"
       channel_edit_name_slug_modal:
         title: 编辑频道
         input_placeholder: 添加一个名字
@@ -261,9 +263,6 @@ zh_CN:
         prefix: "至："
         no_results: 没有结果
         selected_user_title: "取消选择 %{username}"
-      channel_selector:
-        title: "跳转到频道"
-        no_channels: "没有频道符合您的搜索"
       channel:
         no_memberships: 此频道没有成员
         no_memberships_found: 找不到成员

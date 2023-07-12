@@ -227,6 +227,10 @@ sv:
         other: "Tyvärr kunde vi inte skapa en förhandsvisning för den här webbsidan eftersom följande oEmbed / OpenGraph-taggar inte kunde hittas: %{missing_attributes}"
   word_connector:
     comma: ", "
+  custom_fields:
+    validations:
+      max_items: "Maximalt antal anpassade fält för denna enhet har uppnåtts (%{max_items_number})"
+      max_value_length: "Maximal längd för ett anpassat fältvärde har uppnåtts (%{max_value_length})"
   invite:
     expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found: "Din inbjudningskod är ogiltig. <a href='%{base_url}/about'>Kontakta personalen</a>."
@@ -638,7 +642,7 @@ sv:
       :handshake: **Bidra** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
 
       > Om du behöver hjälp eller har ett förslag, fråga gärna i [#feedback](%{base_path}/c/site-feedback) eller [kontakta administratörerna](%{base_path}/about).
-  admin_quick_start_title: "LÄS MIG FÖRST: Administratörers Snabbstartsguide"
+  admin_quick_start_title: "Administratörsguide: Komma igång"
   category:
     topic_prefix: "Om kategorin %{category}"
     replace_paragraph: "(Byt ut det här första stycket mot en sammanfattad beskrivning av din nya kategori. Den här vägledningen kommer att dyka upp i kategorins urvalsområde, så försök att hålla det kortare än 200 tecken.)"
@@ -1390,6 +1394,7 @@ sv:
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
+    outdated_translations_warning: "Vissa av dina översättningsåsidosättningar är inaktuella. Kontrollera dina <a href='%{base_path}/admin/customize/site_texts?outdated=true'>textanpassningar</a>."
     email_polling_errored_recently:
       one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
       other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
@@ -1467,6 +1472,8 @@ sv:
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogrutan för skapandet av ämnen om den här bockas för (kräver fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med "rake posts:rebake"'
     exclude_rel_nofollow_domains: "En lista av alla domän där nofollow inte bör läggas till länkarna. exempel.se kommer automatiskt tillåta underdomän.exempel.se också. Du bör lägga till top-level-domänen för den här webbplatsen för att hjälpa sökrobotar hitta allt innehåll. Om andra delar av din webbplats finns på andra domäner så bör du lägga till dem också."
+    max_form_template_title_length: "Maximal tillåten längd för formulärmallstitlar."
+    max_form_template_content_length: "Maximal tillåten längd för formulärmallsinnehåll."
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag/sammanfattning."
     topic_excerpt_maxlength: "Maxlängd på ett inläggs utdrag/sammanfattning, genererat från det första inlägget i ett ämne."
     default_subcategory_on_read_only_category: "Aktiverar knappen \"Nytt ämne\" och väljer en standardunderkategori för att göra inlägg i kategorier där användaren inte får skapa ett nytt ämne."
@@ -1507,6 +1514,8 @@ sv:
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
+    summarization_strategy: "Ytterligare sätt att sammanfatta innehåll som registrerats av plugins"
+    custom_summarization_allowed_groups: "Grupper som tillåts att sammanfatta innehåll med hjälp av `summarization_strategy`."
     enable_personal_messages: "UTFASAT, använd inställningen \"personal message enabled groups\" istället. Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     personal_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa meddelanden och svara på meddelanden. Förtroendenivågrupper omfattar alla förtroendenivåer över det numret, om till exempel förtroendenivå_1 väljs tillåts också användare på förtroendenivå_2, 3, 4 att skicka PM. Observera att personal alltid kan skicka meddelanden oavsett vad."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
@@ -1777,7 +1786,8 @@ sv:
     tl3_requires_likes_received: "Minsta antalet gillningar som måste ha mottagits de senaste (tl3 time period) dagarna för att kvalificeras för en befordran till förtroendenivå 3."
     tl3_links_no_follow: "Radera ej rel=nofollow från länkarna som lagts upp av användare med förtroendenivå 3."
     tl4_delete_posts_and_topics: "Tillåt TL4-användare att ta bort inlägg och ämnen som skapats av andra användare. TL4-användare kommer också att kunna se raderade ämnen och inlägg."
-    trusted_users_can_edit_others: "Låt användare med hög förtroendenivå redigera innehåll från andra användare"
+    edit_all_topic_groups: "Tillåt användare i den här gruppen att redigera andra användares ämnestitlar, taggar och kategorier"
+    edit_all_post_groups: "Tillåt användare i den här gruppen att redigera andra användares inlägg"
     min_trust_to_create_topic: "Lägsta förtroendenivå som krävs för att skapa ett nytt ämne."
     allow_flagging_staff: "Om aktiverat kan användare flagga inlägg från personalkonton."
     min_trust_to_edit_wiki_post: "Lägsta förtroendenivå som krävs för att redigera inlägg markerade som wiki."
@@ -1999,8 +2009,8 @@ sv:
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
     global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
-    disable_category_edit_notifications: "Inaktivera kategoriredigeringsaviseringar för ämnen."
-    disable_tags_edit_notifications: "Inaktivera notifieringar om att taggar har redigerats för ämnen."
+    disable_category_edit_notifications: "Inaktivera aviseringar för redigeringar av ämneskategorier."
+    disable_tags_edit_notifications: "Inaktivera aviseringar för redigeringar av ämnestaggar."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -2105,6 +2115,8 @@ sv:
     default_text_size: "Textstorlek som är vald som standard"
     default_title_count_mode: "Standardläge för räknaren i sidtiteln"
     enable_offline_indicator: "Visa ett meddelande för användare när det upptäcks att de inte har någon nätverksanslutning"
+    default_sidebar_link_to_filtered_list: "Låt länkar i navigeringsmenyn länka till filtrerad lista som standard."
+    default_sidebar_show_count_of_new_items: "Låt länkar i navigeringsmenyn visa antalet nya objekt istället för utmärkelser som standard."
     retain_web_hook_events_period_days: "Antal dagar för att behålla register över webhook-händelsedata."
     retry_web_hook_events: "Försök automatiskt igen för misslyckade händelser för webhooken 4 gånger. Tidsspannet mellan försöken är 1, 5, 25 och 125 minuter."
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
@@ -2119,6 +2131,8 @@ sv:
     tagging_enabled: "Vill du aktivera taggar på ämnen?"
     min_trust_to_create_tag: "Lägsta förtroendenivå som krävs för att skapa en tagg."
     max_tags_per_topic: "Högsta antal taggar som kan tillskrivas ett ämne."
+    enable_max_tags_per_email_subject: "Använd max_tags_per_email_subject när du skapar ämnet för ett e-postmeddelande"
+    max_tags_per_email_subject: "Det maximala antalet taggar som kan finnas i ett e-postmeddelandes ämne"
     max_tag_length: "Högsta antal tecken som kan användas i en tagg."
     max_tag_search_results: "Maximalt antal resultat som visas vid sökning efter taggar"
     max_tags_in_filter_list: "Högsta antal taggar att visa i filtreringsrullgardinmenyn. De taggar som används mest kommer att visas."
@@ -2162,10 +2176,14 @@ sv:
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
+    default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
+    default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
     enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
+    experimental_search_menu_groups: "EXPERIMENTELLT: Aktiverar den nya sökmenyn som har uppgraderats för att använda glimmer"
+    page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2191,6 +2209,7 @@ sv:
       pop3_polling_password_is_empty: "Du måste ställa in ett 'pop3 polling password' innan du aktiverar POP3-polling."
       pop3_polling_authentication_failed: "POP3-autentisering misslyckades. Verifiera dina pop3-certifikat."
       reply_by_email_address_is_empty: "Du måste ställa in en 'reply by email address' innan du aktiverar svar via e-post."
+      email_polling_disabled: "Du måste aktivera antingen manuell POP3-pollning eller ha en anpassad e-postpollare aktiverad innan du kan aktivera svar via e-post."
       user_locale_not_enabled: "Du måste först aktivera 'allow user locale' innan du aktiverar den här inställningen."
       personal_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka PM, välj personalgrupp."
       invalid_regex: "Vanligt uttryck är ogiltigt eller inte tillåtet."

@@ -25,27 +25,14 @@ el:
           title: "Τα αποτελέσματα θα εμφανιστούν μόλις <strong>κλείσουν</strong>."
         staff:
           title: "Τα αποτελέσματα εμφανίζονται μόνο σε μέλη του <strong>προσωπικού</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογή."
-            other: "Επιλέξτε τουλάχιστον <strong>%{count}</strong> επιλογές."
-          up_to_max_options:
-            one: "Επιλέξτε μέχρι <strong>%{count}</strong> επιλογή."
-            other: "Επιλέξτε μέχρι <strong>%{count}</strong> επιλογές."
-          x_options:
-            one: "Επιλέξτε <strong>%{count}</strong> επιλογή."
-            other: "Επιλέξτε <strong>%{count}</strong> επιλογές."
-          between_min_and_max_options: "Επιλέξτε μεταξύ <strong>%{min}</strong> και <strong>%{max}</strong> επιλογές."
       cast-votes:
         title: "Δώστε τις ψήφους σας"
         label: "Ψηφίστε τώρα!"
       show-results:
         title: "Εμφάνισε τα αποτελέσματα της ψηφοφορίας"
-        label: "Εμφάνισε τα αποτελέσματα"
+        label: "Αποτελέσματα"
       hide-results:
         title: "Πίσω στις ψήφους σας"
-        label: "Εμφάνιση ψήφων"
       group-results:
         title: "Ομαδοποίηση ψήφων ανά πεδίο χρήστη"
         label: "Εμφάνιση ανάλυσης"
@@ -69,6 +56,8 @@ el:
         breakdown: "Ανάλυση"
         percentage: "Ποσοστό"
         count: "Άθροισμα"
+      options:
+        label: "Επιλογές"
       error_while_toggling_status: "Λυπάμαι, παρουσιάστηκε σφάλμα κατά την εναλλαγή της κατάστασης αυτής της δημοσκόπησης."
       error_while_casting_votes: "Λυπάμαι, παρουσιάστηκε ένα σφάλμα κατά την ψηφοφορία."
       error_while_fetching_voters: "Συγνώμη, παρουσιάστηκε ένα σφάλμα κατά τη διαδικασία εμφάνισης των ψηφοφόρων."

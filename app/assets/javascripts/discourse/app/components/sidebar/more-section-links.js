@@ -48,9 +48,9 @@ export default class SidebarMoreSectionLinks extends Component {
   @bind
   closeDetails(event) {
     if (this.open) {
-      const isLinkClick = event.target.className.includes(
-        "sidebar-section-link"
-      );
+      const isLinkClick =
+        event.target.className.includes("sidebar-section-link") ||
+        event.target.className.includes("sidebar-section-link-button");
 
       if (isLinkClick || this.#isOutsideDetailsClick(event)) {
         this.open = false;

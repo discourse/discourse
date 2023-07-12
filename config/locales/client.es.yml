@@ -4038,9 +4038,8 @@ es:
           header_action_title: "Editar las categorías de tu barra lateral"
           configure_defaults: "Configurar valores predeterminados"
         community:
-          header_link_text: "Comunidad"
-          header_action_create_topic_title: "Crear un tema"
-          header_action_edit_section_title: "Editar la sección Comunidad"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Acerca de"

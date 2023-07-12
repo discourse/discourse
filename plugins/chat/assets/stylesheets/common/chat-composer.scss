@@ -44,7 +44,7 @@
     width: 100%;
     flex-direction: row;
     border: 1px solid var(--primary-low);
-    border-radius: 10px;
+    border-radius: var(--d-border-radius-large);
     background-color: var(--secondary);
     min-height: 50px;
     overflow: hidden;

@@ -214,9 +214,6 @@ hu:
         prefix: "Címzett:"
         no_results: Nincs találat
         selected_user_title: "%{username} kijelölésének megszüntetése"
-      channel_selector:
-        title: "Ugrás a csatornára"
-        no_channels: "Egyetlen csatorna sem felel meg a keresésnek"
       channel:
         no_memberships: Ennek a csatornának nincsenek tagjai
         no_memberships_found: Nem találhatók tagok

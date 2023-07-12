@@ -64,6 +64,8 @@ fi:
       actor_preventing_target_user_from_dm: "Olet päättänyt estää käyttäjää %{username} lähettämästä sinulle yksityisviestejä, joten et voi luoda uusia yksityisviestejä hänelle."
       user_cannot_send_direct_messages: "Valitettavasti et voi lähettää yksityisviestejä."
       over_chat_max_direct_message_users_allow_self: "Voit luoda yksityisviestin vain itsellesi."
+      thread_invalid_for_channel: "Ketju ei kuulu ilmoitetulle kanavalle."
+      thread_does_not_match_parent: "Ketju ei vastaa ylemmän tason viestiä."
     reviewables:
       message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
       actions:

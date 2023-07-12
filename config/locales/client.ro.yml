@@ -2949,7 +2949,8 @@ ro:
         categories:
           header_link_text: "Categorii"
         community:
-          header_link_text: "Comunitate"
+          edit_section:
+            header_dropdown: "Personalizare"
           links:
             about:
               content: "Despre"

@@ -87,6 +87,24 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.sidebar_urls.fourth.external).to be false
     end
 
+    it "validates max number of links" do
+      SiteSetting.max_sidebar_section_links = 5
+
+      sign_in(user)
+
+      links =
+        6.times.map do
+          { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" }
+        end
+
+      post "/sidebar_sections.json", params: { title: "custom section", links: links }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
+      )
+    end
+
     it "does not allow regular user to create public section" do
       sign_in(user)
 
@@ -233,6 +251,28 @@ RSpec.describe SidebarSectionsController do
       expect(user_history.subject).to eq("custom section edited")
       expect(user_history.details).to eq(
         "links: latest - /latest, meta - https://meta.discourse.org, homepage - https://discourse.org",
+      )
+    end
+
+    it "validates limit of links" do
+      SiteSetting.max_sidebar_section_links = 5
+
+      sign_in(user)
+
+      links =
+        6.times.map do
+          { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" }
+        end
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: links,
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
       )
     end
 

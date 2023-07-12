@@ -217,7 +217,7 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            const storedThread = this.args.channel.threadsManager.store(
+            const storedThread = this.args.channel.threadsManager.add(
               this.args.channel,
               thread,
               { replace: true }
@@ -333,7 +333,7 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            const storedThread = this.args.channel.threadsManager.store(
+            const storedThread = this.args.channel.threadsManager.add(
               this.args.channel,
               thread,
               { replace: true }

@@ -1462,6 +1462,8 @@ files:
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+  s3_use_cdn_url_for_all_uploads:
+    default: false
   s3_configure_tombstone_policy:
     default: true
   s3_use_acls:
@@ -2019,6 +2021,7 @@ rate_limits:
   max_allowed_secondary_emails:
     default: 10
     hidden: true
+    client: true
   max_batch_presign_multipart_per_minute:
     default: 20
     hidden: true
@@ -2136,6 +2139,9 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  max_sidebar_section_links:
+    default: 50
+    hidden: true
 
 navigation:
   navigation_menu:

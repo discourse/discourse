@@ -20,11 +20,21 @@
     >
 
       <div class="sidebar-more-section-links-details-content">
-        <div class="sidebar-more-section-links-details-content-main">
+        <ul class="sidebar-more-section-links-details-content-main">
           {{#each this.sectionLinks as |sectionLink|}}
             <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
           {{/each}}
-        </div>
+        </ul>
+
+        {{#if @moreButtonAction}}
+          <div class="sidebar-more-section-links-details-content-footer">
+            <Sidebar::SectionLinkButton
+              @action={{@moreButtonAction}}
+              @icon={{@moreButtonIcon}}
+              @text={{@moreButtonText}}
+            />
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>

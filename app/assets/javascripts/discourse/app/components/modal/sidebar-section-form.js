@@ -29,6 +29,7 @@ class Section {
     id,
     publicSection,
     sectionType,
+    hideTitleInput,
   }) {
     this.title = title;
     this.public = publicSection;
@@ -36,6 +37,7 @@ class Section {
     this.links = links;
     this.secondaryLinks = secondaryLinks;
     this.id = id;
+    this.hideTitleInput = hideTitleInput;
   }
 
   get valid() {
@@ -243,26 +245,29 @@ export default class SidebarSectionForm extends Component {
 
   @cached
   get transformedModel() {
-    if (this.model) {
+    const section = this.model?.section;
+
+    if (section) {
       return new Section({
-        title: this.model.title,
-        publicSection: this.model.public,
-        sectionType: this.model.section_type,
-        links: this.model.links.reduce((acc, link) => {
+        title: section.title,
+        publicSection: section.public,
+        sectionType: section.section_type,
+        links: section.links.reduce((acc, link) => {
           if (link.segment === "primary") {
             this.nextObjectId++;
             acc.push(this.initLink(link));
           }
           return acc;
         }, A()),
-        secondaryLinks: this.model.links.reduce((acc, link) => {
+        secondaryLinks: section.links.reduce((acc, link) => {
           if (link.segment === "secondary") {
             this.nextObjectId++;
             acc.push(this.initLink(link));
           }
           return acc;
         }, A()),
-        id: this.model.id,
+        id: section.id,
+        hideTitleInput: this.model.hideSectionHeader,
       });
     } else {
       return new Section({

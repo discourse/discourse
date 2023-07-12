@@ -4012,8 +4012,8 @@ pt_BR:
           header_action_title: "Editar suas categorias de barra lateral"
           configure_defaults: "Configurar padrões"
         community:
-          header_link_text: "Comunidade"
-          header_action_create_topic_title: "Criar um tópico"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Sobre"

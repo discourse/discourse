@@ -53,9 +53,8 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
 
     expect(sidebar_dropdown).to be_visible
 
-    sidebar_dropdown.click_community_header_button
+    sidebar_dropdown.click_categories_header_button
 
-    expect(composer).to be_opened
     expect(sidebar_dropdown).to be_hidden
   end
 
