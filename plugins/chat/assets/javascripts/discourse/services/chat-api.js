@@ -81,8 +81,11 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  threads(channelId) {
-    return this.#getRequest(`/channels/${channelId}/threads`);
+  threads(channelId, handler) {
+    return new Collection(
+      `${this.#basePath}/channels/${channelId}/threads`,
+      handler
+    );
   }
 
   /**
