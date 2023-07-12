@@ -219,6 +219,7 @@ export default function transformPost(
     postAtts.topicSummaryEnabled = postStream.summary;
     postAtts.topicWordCount = topic.word_count;
     postAtts.hasTopRepliesSummary = topic.has_summary;
+    postAtts.summarizable = topic.summarizable;
   }
 
   if (postAtts.isDeleted) {
