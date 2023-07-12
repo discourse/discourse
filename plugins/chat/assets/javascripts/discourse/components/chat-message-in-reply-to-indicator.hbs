@@ -13,7 +13,7 @@
     {{/if}}
 
     <span class="chat-reply__excerpt">
-      {{replace-emoji @message.inReplyTo.excerpt}}
+      {{replace-emoji (html-safe @message.inReplyTo.excerpt)}}
     </span>
   </LinkTo>
 {{/if}}
