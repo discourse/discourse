@@ -4,7 +4,7 @@ module PageObjects
   module Modals
     class Bookmark < PageObjects::Modals::Base
       def fill_name(name)
-        fill_in "bookmark-name", with: name
+        fill_in("bookmark-name", with: name)
       end
 
       def name
@@ -13,6 +13,22 @@ module PageObjects
 
       def select_preset_reminder(identifier)
         find("#tap_tile_#{identifier}").click
+      end
+
+      def has_active_preset?(identifier)
+        has_css?("#tap_tile_#{identifier}.tap-tile.active")
+      end
+
+      def has_preset?(identifier)
+        has_css?("#tap_tile_#{identifier}")
+      end
+
+      def has_no_preset?(identifier)
+        has_no_css?("#tap_tile_#{identifier}")
+      end
+
+      def editing_id?(bookmark_id)
+        has_css?(".bookmark-reminder-modal[data-bookmark-id='#{bookmark_id}']")
       end
 
       def open_options_panel
@@ -71,10 +87,6 @@ module PageObjects
                   .gsub("  ", " "), # have to do this because %l adds padding before the hour but not in JS
             ),
         )
-      end
-
-      def has_active_preset?(identifier)
-        has_css?("#tap_tile_#{identifier}.tap-tile.active")
       end
     end
   end
