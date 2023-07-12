@@ -96,8 +96,10 @@ export default class ChatMessageInteractor {
 
   get canRestoreMessage() {
     return (
-      this.canDelete &&
       this.message?.deletedAt &&
+      (this.currentUser.staff ||
+        (this.message?.user?.id === this.currentUser.id &&
+          this.message?.deletedById === this.currentUser.id)) &&
       this.message.channel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -118,7 +120,7 @@ export default class ChatMessageInteractor {
 
   get canFlagMessage() {
     return (
-      this.currentUser?.id !== this.message?.user?.id &&
+      this.currentUser.id !== this.message?.user?.id &&
       this.message?.userFlagStatus === undefined &&
       this.message.channel?.canFlag &&
       !this.message?.chatWebhookEvent &&
@@ -128,7 +130,7 @@ export default class ChatMessageInteractor {
 
   get canRebakeMessage() {
     return (
-      this.currentUser?.staff &&
+      this.currentUser.staff &&
       this.message.channel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -142,7 +144,7 @@ export default class ChatMessageInteractor {
   }
 
   get canDelete() {
-    return this.currentUser?.id === this.message.user.id
+    return this.currentUser.id === this.message.user.id
       ? this.message.channel?.canDeleteSelf
       : this.message.channel?.canDeleteOthers;
   }

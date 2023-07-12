@@ -52,6 +52,7 @@ export default class ChatMessage {
   @tracked thread;
   @tracked manager;
   @tracked threadTitle;
+  @tracked deletedById;
 
   @tracked _deletedAt;
   @tracked _cooked;
@@ -69,6 +70,7 @@ export default class ChatMessage {
     this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
+    this.deletedById = args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
       this.hidden || this._deletedAt ? false : args.expanded || true;
