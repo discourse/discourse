@@ -32,7 +32,7 @@ html.has-lightbox {
     box-sizing: border-box;
   }
 
-  &--is-visible {
+  &.is-visible {
     display: grid;
     place-items: stretch;
   }
@@ -42,7 +42,7 @@ html.has-lightbox {
     place-items: stretch;
   }
 
-  &--is-vertical &__content {
+  &.is-vertical &__content {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr auto auto;
 
@@ -53,7 +53,7 @@ html.has-lightbox {
       "lightbox-footer";
   }
 
-  &--is-horizontal &__content {
+  &.is-horizontal &__content {
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
@@ -127,9 +127,9 @@ html.has-lightbox {
     place-self: center end;
   }
 
-  &--has-carousel &,
-  &--is-rotated &,
-  &--is-zoomed & {
+  &.has-carousel &,
+  &.is-rotated &,
+  &.is-zoomed & {
     &__body {
       grid-auto-flow: row;
       grid-template-columns: 1fr;
@@ -182,7 +182,7 @@ html.has-lightbox {
     grid-area: lightbox-next;
   }
 
-  &--is-vertical &__carousel {
+  &.is-vertical &__carousel {
     grid-auto-flow: column;
     grid-template-columns: auto 1fr auto;
     grid-template-areas: "lightbox-previous lightbox-preview-images lightbox-next";
@@ -192,11 +192,11 @@ html.has-lightbox {
     grid-auto-flow: column;
   }
   &__carousel-item,
-  &__carousel-item--is-current {
+  &__carousel-item.is-current {
     height: var(--carousel-item-size);
   }
 
-  &--is-horizontal &__carousel {
+  &.is-horizontal &__carousel {
     max-height: 100vh;
     grid-template-rows: 1fr auto 1fr;
     place-items: center;
@@ -206,12 +206,12 @@ html.has-lightbox {
       "lightbox-next";
   }
 
-  &--is-horizontal &__carousel-items {
+  &.is-horizontal &__carousel-items {
     grid-auto-flow: row;
   }
 
   &__carousel-item,
-  &__carousel-item--is-current {
+  &__carousel-item.is-current {
     width: var(--carousel-item-size);
   }
 
@@ -227,7 +227,7 @@ html.has-lightbox {
 /* Base styles */
 
 .d-lightbox {
-  &--is-visible {
+  &.is-visible {
     position: fixed;
     top: 0;
     left: 0;
@@ -380,7 +380,7 @@ html.has-lightbox {
   }
 
   &__carousel-item,
-  &__carousel-item--is-current {
+  &__carousel-item.is-current {
     border: 1px solid transparent;
     box-shadow: 0 0 2px -1px var(--d-lightbox-primary);
     border-radius: 5px;
@@ -396,7 +396,7 @@ html.has-lightbox {
     }
   }
 
-  &__carousel-item--is-current {
+  &__carousel-item.is-current {
     border-color: var(--tertiary);
     pointer-events: none;
     filter: initial;
@@ -404,7 +404,7 @@ html.has-lightbox {
 }
 
 .d-lightbox {
-  &--is-vertical &__carousel {
+  &.is-vertical &__carousel {
     position: relative;
     background-color: var(----d-lightbox-secondary-translucent);
     &:before,
@@ -463,7 +463,7 @@ html.has-lightbox {
     }
   }
 
-  &--is-vertical &__carousel-items {
+  &.is-vertical &__carousel-items {
     padding: 1em 2em;
   }
 
@@ -474,7 +474,7 @@ html.has-lightbox {
 }
 
 .d-lightbox {
-  &--is-horizontal &__carousel {
+  &.is-horizontal &__carousel {
     position: relative;
     &:before,
     &:after {
@@ -520,7 +520,7 @@ html.has-lightbox {
     }
   }
 
-  &--is-horizontal &__carousel-items {
+  &.is-horizontal &__carousel-items {
     padding: 50% 1em;
   }
 
@@ -578,7 +578,7 @@ html.has-lightbox {
 
 // Carousel
 .d-lightbox {
-  &--has-carousel {
+  &.has-carousel {
     .d-lightbox__content {
       gap: 2em 0;
     }
@@ -595,7 +595,7 @@ html.has-lightbox {
 
 // expanded title
 .d-lightbox {
-  &--has-expanded-title {
+  &.has-expanded-title {
     .d-lightbox__content {
       gap: 2em;
     }
@@ -610,7 +610,7 @@ html.has-lightbox {
 
 // Zoom
 .d-lightbox {
-  &--can-zoom {
+  --can-zoom {
     .d-lightbox__body {
       @extend %lightbox-scrollable;
 
@@ -625,7 +625,7 @@ html.has-lightbox {
     }
   }
 
-  &--is-zoomed {
+  &.is-zoomed {
     .d-lightbox__content {
       gap: 0;
     }
@@ -670,7 +670,7 @@ html.has-lightbox {
 
 // Rotate
 .d-lightbox {
-  &--is-rotated {
+  &.is-rotated {
     .d-lightbox__body {
       gap: 0;
     }
@@ -692,7 +692,7 @@ html.has-lightbox {
 
 // Full screen
 .d-lightbox {
-  &--is-fullscreen {
+  &.is-fullscreen {
     .btn-flat.btn--fullscreen .d-icon {
       color: var(--tertiary);
 
@@ -706,7 +706,7 @@ html.has-lightbox {
 /* Animations */
 
 .d-lightbox {
-  &--is-visible &__content {
+  &.is-visible &__content {
     @extend %lightbox-animation-base;
     animation-name: lightbox-fade-in-scale;
   }
@@ -726,7 +726,7 @@ html.has-lightbox {
     opacity: 0;
   }
 
-  &--will-close &__content {
+  --will-close &__content {
     animation-name: lightbox-fade-out;
   }
 }

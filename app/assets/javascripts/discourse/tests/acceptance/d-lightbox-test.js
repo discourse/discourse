@@ -24,7 +24,7 @@ import { SELECTORS } from "discourse/lib/lightbox/constants";
 
 async function waitForLoad() {
   return await waitUntil(
-    () => document.querySelector(".d-lightbox--is-finished-loading"),
+    () => document.querySelector(".d-lightbox.is-finished-loading"),
     {
       timeout: 5000,
     }
@@ -117,9 +117,9 @@ acceptance("Experimental Lightbox - layout single image", function (needs) {
       .dom(SELECTORS.MAIN_IMAGE)
       .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.fullsizeURL);
 
-    assert.dom(".d-lightbox--is-fullscreen").doesNotExist();
-    assert.dom(".d-lightbox--is-rotated").doesNotExist();
-    assert.dom(".d-lightbox--is-zoomed").doesNotExist();
+    assert.dom(".d-lightbox.is-fullscreen").doesNotExist();
+    assert.dom(".d-lightbox.is-rotated").doesNotExist();
+    assert.dom(".d-lightbox.is-zoomed").doesNotExist();
     assert.dom(".d-lightbox__backdrop").exists();
 
     await click(SELECTORS.CLOSE_BUTTON);
@@ -166,25 +166,21 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
 
     await waitForLoad();
-    assert.dom(".d-lightbox--is-zoomed").doesNotExist();
+    assert.dom(".d-lightbox.is-zoomed").doesNotExist();
 
     await click(SELECTORS.ZOOM_BUTTON);
-    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("d-lightbox--is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-zoomed");
     assert.dom(SELECTORS.ACTIVE_ITEM_TITLE).doesNotExist();
 
     await click(SELECTORS.ZOOM_BUTTON);
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-zoomed");
     assert.dom(SELECTORS.ACTIVE_ITEM_TITLE).exists();
 
     await click(SELECTORS.MAIN_IMAGE);
-    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("d-lightbox--is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-zoomed");
 
     await click(".d-lightbox__zoomed-image-container");
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-zoomed");
 
     await click(SELECTORS.CLOSE_BUTTON);
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
@@ -196,30 +192,20 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).exists();
 
     await waitForLoad();
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-rotated");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-rotated");
 
     await click(SELECTORS.ROTATE_BUTTON);
-    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("d-lightbox--is-rotated");
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .hasClass("d-lightbox--is-rotated-90");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-rotated");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-rotated-90");
 
     await click(SELECTORS.ROTATE_BUTTON);
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .hasClass("d-lightbox--is-rotated-180");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-rotated-180");
 
     await click(SELECTORS.ROTATE_BUTTON);
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .hasClass("d-lightbox--is-rotated-270");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-rotated-270");
 
     await click(SELECTORS.ROTATE_BUTTON);
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-rotated");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-rotated");
 
     await click(SELECTORS.CLOSE_BUTTON);
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
@@ -383,9 +369,7 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
 
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-fullscreen");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-fullscreen");
 
     const requestFullscreenStub = sinon.stub(
       document.documentElement,
@@ -396,16 +380,12 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     await click(SELECTORS.FULL_SCREEN_BUTTON);
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .hasClass("d-lightbox--is-fullscreen");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-fullscreen");
     assert.ok(requestFullscreenStub.calledOnce, "it calls requestFullscreen");
 
     await click(SELECTORS.FULL_SCREEN_BUTTON);
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTENT)
-      .doesNotHaveClass("d-lightbox--is-fullscreen");
+    assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotHaveClass("is-fullscreen");
 
     assert.ok(exitFullscreenStub.calledOnce, "it calls exitFullscreen");
 
@@ -576,35 +556,27 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     assert.dom(SELECTORS.COUNTER_CURRENT).hasText("1");
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-zoomed");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 90); // 'z' key
 
-    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("d-lightbox--is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-zoomed");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 90);
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-zoomed");
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-rotated");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-rotated");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 82); // r key
 
-    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("d-lightbox--is-rotated");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-rotated");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 82);
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 82);
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 82);
 
     // back to original rotation
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-rotated");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-rotated");
 
     assert.dom(SELECTORS.CAROUSEL).doesNotExist();
 
@@ -618,42 +590,34 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     assert
       .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--has-expanded-title");
+      .doesNotHaveClass("has-expanded-title");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 84); // 't' key
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .hasClass("d-lightbox--has-expanded-title");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("has-expanded-title");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 84);
 
     assert
       .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--has-expanded-title");
+      .doesNotHaveClass("has-expanded-title");
 
     const requestFullscreenStub = sinon.stub(
       document.documentElement,
       "requestFullscreen"
     );
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-fullscreen");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-fullscreen");
 
     const exitFullscreenStub = sinon.stub(document, "exitFullscreen");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 77); // 'm' key
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .hasClass("d-lightbox--is-fullscreen");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-fullscreen");
 
     await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", 77);
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-fullscreen");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-fullscreen");
 
     requestFullscreenStub.restore();
     exitFullscreenStub.restore();
@@ -694,14 +658,14 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
     assert.dom(SELECTORS.CAROUSEL_NEXT_BUTTON).exists();
 
     // carousel has 5 items and an active item
-    assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 5 });
-    assert.dom(SELECTORS.CAROUSEL_ITEM + "--is-current").exists();
+    assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 6 });
+    assert.dom(SELECTORS.CAROUSEL_ITEM + ".is-current").exists();
 
     await waitForLoad();
 
     // carousel current item is the first image
     assert
-      .dom(SELECTORS.CAROUSEL_ITEM + "--is-current")
+      .dom(SELECTORS.CAROUSEL_ITEM + ".is-current")
       .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.smallURL);
 
     await click(SELECTORS.CAROUSEL_NEXT_BUTTON);
@@ -709,7 +673,7 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
     // carousel next button works and current item is the second image
     assert
-      .dom(SELECTORS.CAROUSEL_ITEM + "--is-current")
+      .dom(SELECTORS.CAROUSEL_ITEM + ".is-current")
       .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.second.smallURL);
 
     await click(SELECTORS.CAROUSEL_PREV_BUTTON);
@@ -717,7 +681,7 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
     // carousel previous button works and current item is the first image again
     assert
-      .dom(SELECTORS.CAROUSEL_ITEM + "--is-current")
+      .dom(SELECTORS.CAROUSEL_ITEM + ".is-current")
       .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.first.smallURL);
 
     await click(SELECTORS.CAROUSEL_ITEM + ":nth-child(3)");
@@ -725,7 +689,7 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
     // carousel manual item selection works and current item is the third image
     assert
-      .dom(SELECTORS.CAROUSEL_ITEM + "--is-current")
+      .dom(SELECTORS.CAROUSEL_ITEM + ".is-current")
       .hasAttribute("src", LIGHTBOX_IMAGE_FIXTURES.third.smallURL);
 
     // carousel closes after clicking the carousel button again
@@ -754,7 +718,7 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
     // carousel opens after clicking the button
     await click(SELECTORS.CAROUSEL_BUTTON);
     assert.dom(SELECTORS.CAROUSEL).exists();
-    assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 2 });
+    assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 3 });
 
     // no prev/next buttons when carousel only has a few images
     assert.dom(SELECTORS.CAROUSEL_PREV_BUTTON).doesNotExist();

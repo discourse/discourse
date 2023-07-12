@@ -93,20 +93,20 @@ export default class DLightbox extends Component {
     }
 
     classNames.push(
-      this.layoutType && `${base}--is-${this.layoutType}`,
-      this.isVisible && `${base}--is-visible`,
-      this.isLoading ? `${base}--is-loading` : `${base}--is-finished-loading`,
-      this.isFullScreen && `${base}--is-fullscreen`,
-      this.isZoomed && `${base}--is-zoomed`,
-      this.isRotated && `${base}--is-rotated`,
-      this.canZoom && `${base}--can-zoom`,
-      this.hasExpandedTitle && `${base}--has-expanded-title`,
-      this.hasCarousel && `${base}--has-carousel`,
-      this.hasLoadingError && `${base}--has-loading-error`,
-      this.willClose && `${base}--will-close`,
+      this.layoutType && `is-${this.layoutType}`,
+      this.isVisible && `is-visible`,
+      this.isLoading ? `is-loading` : `is-finished-loading`,
+      this.isFullScreen && `is-fullscreen`,
+      this.isZoomed && `is-zoomed`,
+      this.isRotated && `is-rotated`,
+      this.canZoom && `can-zoom`,
+      this.hasExpandedTitle && `has-expanded-title`,
+      this.hasCarousel && `has-carousel`,
+      this.hasLoadingError && `has-loading-error`,
+      this.willClose && `will-close`,
       this.isRotated &&
         this.rotationAmount &&
-        `${base}--is-rotated-${this.rotationAmount}`
+        `is-rotated-${this.rotationAmount}`
     );
 
     return classNames.filter(Boolean).join(" ");
@@ -445,7 +445,7 @@ export default class DLightbox extends Component {
   @bind
   cleanup() {
     if (this.isVisible) {
-      this.hasCarousel = !!document.querySelector(".d-lightbox--has-carousel");
+      this.hasCarousel = !!document.querySelector(".d-lightbox.has-carousel");
       this.hasExpandedTitle = false;
       this.isLoading = false;
       this.items = [];

@@ -17,9 +17,7 @@ module("Integration | Component | d-lightbox", function (hooks) {
 
     // lightbox container exists but is not visible
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).exists();
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-visible");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-visible");
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasAttribute("tabindex", "-1");
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
 
@@ -39,21 +37,15 @@ module("Integration | Component | d-lightbox", function (hooks) {
 
     await settled();
 
-    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("d-lightbox--is-visible");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-visible");
 
     assert
       .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .hasClass(/^(d-lightbox--is-vertical|d-lightbox--is-horizontal)$/);
+      .hasClass(/^(is-vertical|is-horizontal)$/);
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-zoomed");
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-rotated");
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-fullscreen");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-zoomed");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-rotated");
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-fullscreen");
 
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveAria("hidden");
@@ -81,10 +73,7 @@ module("Integration | Component | d-lightbox", function (hooks) {
     await click(SELECTORS.CLOSE_BUTTON);
     await settled();
 
-    assert
-      .dom(SELECTORS.LIGHTBOX_CONTAINER)
-      .doesNotHaveClass("d-lightbox--is-visible");
-
+    assert.dom(SELECTORS.LIGHTBOX_CONTAINER).doesNotHaveClass("is-visible");
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
 
     // it is not tabbable
