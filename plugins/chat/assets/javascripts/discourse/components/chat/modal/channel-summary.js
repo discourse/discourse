@@ -27,6 +27,7 @@ export default class ChatModalChannelSummary extends Component {
 
   @action
   summarize(since) {
+    this.sinceHours = since;
     this.loading = true;
 
     if (this.availableSummaries[since]) {

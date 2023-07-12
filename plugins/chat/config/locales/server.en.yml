@@ -159,6 +159,9 @@ en:
         one: "and %{count} other"
         other: "and %{count} others"
 
+    summaries:
+      no_targets: "There were no messages during the selected period."
+
   discourse_push_notifications:
     popup:
       chat_mention:

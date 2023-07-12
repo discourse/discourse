@@ -19,7 +19,9 @@
             <span class="chat-channel-title__name">{{this.usernames}}</span>
           {{else}}
             {{#let @channel.chatable.users.firstObject as |user|}}
-              <span class="chat-channel-title__name">{{user.username}}</span>
+              <span class="chat-channel-title__name">
+                <ChatUserDisplayName @user={{user}} />
+              </span>
               {{#if this.showUserStatus}}
                 <UserStatusMessage
                   @class="chat-channel-title__user-status-message"
@@ -35,8 +37,6 @@
               />
             {{/let}}
           {{/if}}
-        {{else}}
-          <span class="chat-channel-title__name">Add users</span>
         {{/if}}
       </div>
     </div>
