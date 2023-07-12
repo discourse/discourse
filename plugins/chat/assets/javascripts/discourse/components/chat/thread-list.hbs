@@ -12,7 +12,7 @@
     {{/if}}
 
     <div class="chat-thread-list__items">
-      {{#each this.sortedThreads as |thread index|}}
+      {{#each this.sortedThreads as |thread|}}
         <Chat::ThreadList::Item
           @thread={{thread}}
           {{chat/track-message
