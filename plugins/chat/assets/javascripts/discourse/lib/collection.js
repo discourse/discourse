@@ -86,7 +86,7 @@ export default class Collection {
         }
 
         this.meta = result.meta;
-        this.fetchedOnce ??= true;
+        this.fetchedOnce = true;
       })
       .finally(() => {
         this.loading = false;
