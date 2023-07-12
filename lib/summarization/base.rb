@@ -28,10 +28,10 @@ module Summarization
         has_cached_summary = SummarySection.exists?(target: target, meta_section_id: nil)
         return has_cached_summary if user.nil?
 
-        has_cached_summary || can_request_summary_for?(target, user)
+        has_cached_summary || can_request_summary_for?(user)
       end
 
-      def can_request_summary_for?(target, user)
+      def can_request_summary_for?(user)
         return false unless user
 
         user_group_ids = user.group_ids

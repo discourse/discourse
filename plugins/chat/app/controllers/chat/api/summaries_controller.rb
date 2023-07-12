@@ -12,22 +12,29 @@ class Chat::Api::SummariesController < Chat::ApiController
 
     strategy = Summarization::Base.selected_strategy
     raise Discourse::NotFound.new unless strategy
-    raise Discourse::InvalidAccess unless strategy.can_request_summaries?(current_user)
+    raise Discourse::InvalidAccess unless Summarization::Base.can_request_summary_for?(current_user)
 
     RateLimiter.new(current_user, "channel_summary", 6, 5.minutes).performed!
 
     hijack do
-      content =
-        channel
-          .chat_messages
-          .where("chat_messages.created_at > ?", since.hours.ago)
-          .includes(:user)
-          .order(created_at: :asc)
-          .pluck(:username_lower, :message)
-          .map { "#{_1}: #{_2}" }
-          .join("\n")
+      content = { content_title: channel.name }
 
-      render json: { summary: strategy.summarize(content).dig(:summary) }
+      content[:contents] = channel
+        .chat_messages
+        .where("chat_messages.created_at > ?", since.hours.ago)
+        .includes(:user)
+        .order(created_at: :asc)
+        .pluck(:id, :username_lower, :message)
+        .map { { id: _1, poster: _2, text: _3 } }
+
+      summarized_text =
+        if content[:contents].empty?
+          I18n.t("chat.summaries.no_targets")
+        else
+          strategy.summarize(content).dig(:summary)
+        end
+
+      render json: { summary: summarized_text }
     end
   end
 end

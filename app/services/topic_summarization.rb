@@ -10,7 +10,7 @@ class TopicSummarization
 
     # For users without permissions to generate a summary, we return what we have cached.
     # Existing summary shouldn't be nil in this scenario because the controller checks its existence.
-    return existing_summary if !user || !Summarization::Base.can_request_summary_for?(topic, user)
+    return existing_summary if !user || !Summarization::Base.can_request_summary_for?(user)
 
     return existing_summary if existing_summary && fresh?(existing_summary, topic)
 
