@@ -12,5 +12,5 @@ export default function logout({ redirect } = {}) {
     return;
   }
 
-  window.location.href = getURL("/");
+  window.location.href = getURL("/login");
 }
