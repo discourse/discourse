@@ -191,15 +191,6 @@ module Chat
         @chat_message.in_reply_to.thread_id = thread.id
       end
 
-      if @chat_message.chat_channel.threading_enabled
-        Chat::Publisher.publish_thread_created!(
-          @chat_message.chat_channel,
-          @chat_message.in_reply_to,
-          thread.id,
-          @staged_thread_id,
-        )
-      end
-
       @chat_message.thread_id = thread.id
 
       # NOTE: We intentionally do not try to correct thread IDs within the chain
@@ -223,6 +214,15 @@ module Chat
         FROM thread_updater
         WHERE thread_id IS NULL AND chat_messages.id = thread_updater.id
       SQL
+
+      if @chat_message.chat_channel.threading_enabled
+        Chat::Publisher.publish_thread_created!(
+          @chat_message.chat_channel,
+          @chat_message.in_reply_to,
+          thread.id,
+          @staged_thread_id,
+        )
+      end
     end
 
     def resolved_thread
