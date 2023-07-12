@@ -1,12 +1,12 @@
 <div class="d-lightbox__header">
   {{#if @canNavigate}}
     <div aria-hidden="true" class="d-lightbox__multi-item-controls">
-      <DLightbox::Button
-        aria-hidden="true"
-        @class="d-lightbox__carousel-button"
-        @name="carousel"
+      <DButton
+        @class="btn btn-flat btn--carousel d-lightbox__carousel-button"
+        @title="experimental_lightbox.buttons.carousel"
         @icon="images"
-        @onClick={{@toggleCarousel}}
+        {{on "click" @toggleCarousel passive=true capture=true}}
+        aria-hidden="true"
       />
       <div class="d-lightbox__counters">
         <span class="d-lightbox__counter-current">
@@ -23,28 +23,28 @@
   {{/if}}
   <div class="d-lightbox__header-buttons">
     {{#if @canDownload}}
-      <DLightbox::Button
-        aria-hidden="true"
-        @class="d-lightbox__new-tab-button"
-        @name="newtab"
+      <DButton
+        @class="btn btn-flat btn--newtab d-lightbox__new-tab-button"
+        @title="experimental_lightbox.buttons.newtab"
         @icon="external-link-alt"
-        @onClick={{@openInNewTab}}
+        {{on "click" @openInNewTab passive=true capture=true}}
+        aria-hidden="true"
       />
     {{/if}}
     {{#if @canFullscreen}}
-      <DLightbox::Button
-        aria-hidden="true"
-        @class="d-lightbox__full-screen-button"
-        @name="fullscreen"
+      <DButton
+        @class="btn btn-flat btn--fullscreen d-lightbox__full-screen-button"
+        @title="experimental_lightbox.buttons.fullscreen"
         @icon="discourse-expand"
-        @onClick={{@toggleFullScreen}}
+        {{on "click" @toggleFullScreen passive=true capture=true}}
+        aria-hidden="true"
       />
     {{/if}}
-    <DLightbox::Button
-      @class="d-lightbox__close-button"
-      @name="close"
+    <DButton
+      @class="btn btn-flat btn--close d-lightbox__close-button"
+      @title="experimental_lightbox.buttons.close"
       @icon="times"
-      @onClick={{@close}}
+      {{on "click" @close passive=true capture=true}}
     />
   </div>
 </div>

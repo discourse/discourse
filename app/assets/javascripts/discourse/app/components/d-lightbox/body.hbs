@@ -6,11 +6,11 @@
   {{on "click" @toggleZoom passive=true}}
 >
   {{#if @shouldDisplayMainImageArrows}}
-    <DLightbox::Button
-      @name="previous"
-      @class="d-lightbox__previous-button"
+    <DButton
+      @class="d-lightbox__previous-button btn--previous btn-flat"
+      @title="experimental_lightbox.buttons.previous"
       @icon={{@previousButtonIcon}}
-      @onClick={{@showPreviousItem}}
+      {{on "click" @showPreviousItem passive=true capture=true}}
     />
   {{/if}}
   {{#if @isLoading}}
@@ -19,11 +19,11 @@
     </span>
   {{else if @hasLoadingError}}
     <span class="d-lightbox__error-message">
-      <DLightbox::Button
-        @name="retry"
-        @class="d-lightbox__retry-button"
+      <DButton
+        @class="btn btn-flat btn--retry d-lightbox__retry-button"
+        @title="experimental_lightbox.buttons.redo"
         @icon="redo"
-        @onClick={{@reloadImage}}
+        {{on "click" @reloadImage passive=true capture=true}}
       />
       <span>{{i18n "experimental_lightbox.image_load_error"}}</span>
     </span>
@@ -47,11 +47,11 @@
     />
   {{/if}}
   {{#if @shouldDisplayMainImageArrows}}
-    <DLightbox::Button
-      @name="next"
-      @class="d-lightbox__next-button"
+    <DButton
+      @class="btn btn-flat btn--next d-lightbox__next-button"
+      @title="experimental_lightbox.buttons.next"
       @icon={{@nextButtonIcon}}
-      @onClick={{@showNextItem}}
+      {{on "click" @showNextItem passive=true capture=true}}
     />
   {{/if}}
 </div>

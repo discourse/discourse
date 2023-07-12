@@ -16,29 +16,29 @@
   {{/if}}
   <div class="d-lightbox__footer-buttons">
     {{#if @canZoom}}
-      <DLightbox::Button
-        aria-hidden="true"
-        @class="d-lightbox__zoom-button"
-        @name="zoom"
+      <DButton
+        @class="btn btn-flat btn--zoom d-lightbox__zoom-button"
+        @title="experimental_lightbox.buttons.zoom"
         @icon={{@zoomButtonIcon}}
-        @onClick={{@toggleZoom}}
+        {{on "click" @toggleZoom passive=true capture=true}}
+        aria-hidden="true"
       />
     {{/if}}
     {{#if @canRotate}}
-      <DLightbox::Button
-        aria-hidden="true"
-        @class="d-lightbox__rotate-button"
-        @name="rotate"
+      <DButton
+        @class="btn btn-flat btn--rotate d-lightbox__rotate-button"
+        @title="experimental_lightbox.buttons.rotate"
         @icon="redo"
-        @onClick={{@rotateImage}}
+        {{on "click" @rotateImage passive=true capture=true}}
+        aria-hidden="true"
       />
     {{/if}}
     {{#if @canDownload}}
-      <DLightbox::Button
-        @class="d-lightbox__download-button"
-        @name="download"
+      <DButton
+        @class="btn btn-flat btn--download d-lightbox__download-button"
+        @title="experimental_lightbox.buttons.download"
         @icon="download"
-        @onClick={{@downloadImage}}
+        {{on "click" @downloadImage passive=true capture=true}}
       />
     {{/if}}
   </div>
