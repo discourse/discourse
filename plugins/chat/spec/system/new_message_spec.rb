@@ -20,7 +20,7 @@ RSpec.describe "New message", type: :system do
     expect(chat_page.message_creator).to be_opened
   end
 
-  context "public channels are disabled" do
+  context "when public channels are disabled" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
 
     before do
@@ -45,7 +45,7 @@ RSpec.describe "New message", type: :system do
     end
   end
 
-  context "public channels are disabled and user can't create direct message" do
+  context "when public channels are disabled and user can't create direct message" do
     fab!(:current_user) { Fabricate(:user) }
 
     before do
