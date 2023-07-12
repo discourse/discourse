@@ -81,9 +81,9 @@ RSpec.describe Jobs::ExportCsvFile do
     it "works with single-column reports" do
       user.user_visits.create!(visited_at: "2010-01-01", posts_read: 42)
       Fabricate(:user).user_visits.create!(visited_at: "2010-01-03", posts_read: 420)
-
       exporter.extra["name"] = "dau_by_mau"
-      report = exporter.report_export.to_a
+
+      report = export_report
 
       expect(report.first).to contain_exactly("Day", "Percent")
       expect(report.second).to contain_exactly("2010-01-01", "100.0")
@@ -100,7 +100,8 @@ RSpec.describe Jobs::ExportCsvFile do
 
       exporter.extra["name"] = "visits"
       exporter.extra["group"] = group.id
-      report = exporter.report_export.to_a
+
+      report = export_report
 
       expect(report.length).to eq(2)
       expect(report.first).to contain_exactly("Day", "Count")
@@ -110,9 +111,9 @@ RSpec.describe Jobs::ExportCsvFile do
     it "works with single-column reports with default label" do
       user.user_visits.create!(visited_at: "2010-01-01")
       Fabricate(:user).user_visits.create!(visited_at: "2010-01-03")
-
       exporter.extra["name"] = "visits"
-      report = exporter.report_export.to_a
+
+      report = export_report
 
       expect(report.first).to contain_exactly("Day", "Count")
       expect(report.second).to contain_exactly("2010-01-01", "1")
@@ -126,9 +127,9 @@ RSpec.describe Jobs::ExportCsvFile do
         client_ip: "1.1.1.1",
         created_at: "2010-01-01",
       )
-
       exporter.extra["name"] = "staff_logins"
-      report = exporter.report_export.to_a
+
+      report = export_report
 
       expect(report.first).to contain_exactly("User", "Location", "Login at")
       expect(report.second).to contain_exactly(user.username, "Earth", "2010-01-01 00:00:00 UTC")
@@ -147,7 +148,7 @@ RSpec.describe Jobs::ExportCsvFile do
         ip_address: "1.1.1.1",
       )
 
-      report = exporter.report_export.to_a
+      report = export_report
 
       expect(report.first).to contain_exactly("Topic", "Clicks")
       expect(report.second).to contain_exactly(post1.topic.id.to_s, "1")
@@ -167,7 +168,8 @@ RSpec.describe Jobs::ExportCsvFile do
       ApplicationRequest.create!(date: "2010-01-03", req_type: "page_view_crawler", count: 9)
 
       exporter.extra["name"] = "consolidated_page_views"
-      report = exporter.report_export.to_a
+
+      report = export_report
 
       expect(report[0]).to contain_exactly("Day", "Logged in users", "Anonymous users", "Crawlers")
       expect(report[1]).to contain_exactly("2010-01-01", "1", "4", "7")
@@ -193,14 +195,24 @@ RSpec.describe Jobs::ExportCsvFile do
       exporter.extra["name"] = "posts"
 
       exporter.extra["category"] = category.id
-      report = exporter.report_export.to_a
+
+      report = export_report
+
       expect(report[0]).to contain_exactly("Count", "Day")
       expect(report[1]).to contain_exactly("1", "2010-01-01")
 
       exporter.extra["include_subcategories"] = true
-      report = exporter.report_export.to_a
+
+      report = export_report
+
       expect(report[0]).to contain_exactly("Count", "Day")
       expect(report[1]).to contain_exactly("2", "2010-01-01")
+    end
+
+    def export_report
+      report = []
+      exporter.report_export { |entry| report << entry }
+      report
     end
   end
 
@@ -244,7 +256,11 @@ RSpec.describe Jobs::ExportCsvFile do
     ]
   end
 
-  let(:user_list_export) { Jobs::ExportCsvFile.new.user_list_export }
+  let(:user_list_export) do
+    exported_data = []
+    Jobs::ExportCsvFile.new.user_list_export { |entry| exported_data << entry }
+    exported_data
+  end
 
   def to_hash(row)
     Hash[*user_list_header.zip(row).flatten]
