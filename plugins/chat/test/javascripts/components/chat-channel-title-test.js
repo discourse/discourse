@@ -80,6 +80,24 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
     );
   });
 
+  test("direct message channel - one user showing full name", async function (assert) {
+    this.siteSettings.prioritize_username_in_ux = true;
+    this.user = fabricators.user({
+      username: "joffrey",
+      name: "Joffrey Baratheon",
+    });
+    this.channel = fabricators.directMessageChannel({
+      chatable: fabricators.directMessage({ users: [this.user] }),
+    });
+
+    await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
+
+    assert
+      .dom(".chat-user-display-name__username.-first")
+      .hasText(this.user.username);
+    assert.dom(".chat-user-display-name__name").hasText(this.user.name);
+  });
+
   test("direct message channel - multiple users", async function (assert) {
     const channel = fabricators.directMessageChannel();
 
