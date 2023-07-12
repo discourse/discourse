@@ -12,7 +12,7 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import ChatMessageReaction, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import { getOwner, setOwner } from "@ember/application";
+import { setOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
