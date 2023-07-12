@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
@@ -127,11 +128,12 @@ export default Component.extend(UppyUploadMixin, {
     }
   },
 
-  actions: {
-    toggleLightbox() {
-      $(this.element.querySelector("a.lightbox"))?.magnificPopup("open");
-    },
+  @action
+  toggleLightbox() {
+    $(this.element.querySelector("a.lightbox"))?.magnificPopup("open");
+  },
 
+  actions: {
     trash() {
       // uppy needs to be reset to allow for more uploads
       this._reset();

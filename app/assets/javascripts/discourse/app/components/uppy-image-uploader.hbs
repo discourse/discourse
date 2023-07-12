@@ -31,7 +31,7 @@
         @type="button"
         @class="image-uploader-lightbox-btn no-text"
         @disabled={{this.loadingLightbox}}
-        @action={{this.toggleLightbox}}
+        @action={{unless this.experimentalLightboxEnabled this.toggleLightbox}}
         data-lightbox-trigger={{if this.experimentalLightboxEnabled "true"}}
       />
     {{/if}}
