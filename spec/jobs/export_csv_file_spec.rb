@@ -95,7 +95,7 @@ RSpec.describe Jobs::ExportCsvFile do
 
       group = Fabricate(:group)
       user1 = Fabricate(:user)
-      group_user = Fabricate(:group_user, group: group, user: user1)
+      Fabricate(:group_user, group: group, user: user1)
       user1.user_visits.create!(visited_at: "2010-01-03", posts_read: 420)
 
       exporter.extra["name"] = "visits"
@@ -140,7 +140,7 @@ RSpec.describe Jobs::ExportCsvFile do
 
       exporter.extra["name"] = "top_referred_topics"
       post1 = Fabricate(:post)
-      post2 = Fabricate(:post)
+      Fabricate(:post)
       IncomingLink.add(
         host: "a.com",
         referer: "http://twitter.com",
