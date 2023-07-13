@@ -186,15 +186,17 @@ RSpec.describe ::Chat::LookupChannelThreads do
         thread_4.membership_for(current_user).update!(
           notification_level: ::Chat::UserChatThreadMembership.notification_levels[:muted],
         )
-        thread_5 = Fabricate(:chat_thread, channel: channel_1)
+        Fabricate(:chat_thread, channel: channel_1)
 
         expect(result.threads.map(&:id)).to eq([thread_1.id, thread_2.id, thread_3.id])
       end
 
       it "does not count deleted messages for sort order" do
+        original_last_message_id = thread_3.reload.last_message_id
         unread_message = Fabricate(:chat_message, chat_channel: channel_1, thread: thread_3)
         unread_message.update!(created_at: 2.days.ago)
         unread_message.trash!
+        thread_3.reload.update!(last_message_id: original_last_message_id)
 
         expect(result.threads.map(&:id)).to eq([thread_1.id, thread_2.id, thread_3.id])
       end

@@ -182,7 +182,7 @@ module Chat
           ],
         )
         .where(
-          "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL",
+          "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL AND last_message.deleted_at IS NULL",
         )
         .select(
           "chat_threads.id AS thread_id, last_message.created_at AS latest_message_created_at, last_message.id AS latest_message_id",
