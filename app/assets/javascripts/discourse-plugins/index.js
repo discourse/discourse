@@ -135,6 +135,9 @@ module.exports = {
   },
 
   generatePluginsTree() {
+    if (!this.shouldLoadPlugins()) {
+      return mergeTrees([]);
+    }
     const appTree = this._generatePluginAppTree();
     const testTree = this._generatePluginTestTree();
     const adminTree = this._generatePluginAdminTree();
@@ -227,7 +230,16 @@ module.exports = {
     return;
   },
 
-  shouldLoadPluginTestJs() {
-    return EmberApp.env() === "development" || process.env.LOAD_PLUGINS === "1";
+  // Matches logic from GlobalSetting.load_plugins? in the ruby app
+  shouldLoadPlugins() {
+    if (process.env.LOAD_PLUGINS === "1") {
+      return true;
+    } else if (process.env.LOAD_PLUGINS === "0") {
+      return false;
+    } else if (EmberApp.env() === "test") {
+      return false;
+    } else {
+      return true;
+    }
   },
 };
