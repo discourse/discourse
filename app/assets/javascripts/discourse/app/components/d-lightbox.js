@@ -27,6 +27,7 @@ import { tracked } from "@glimmer/tracking";
 export default class DLightbox extends Component {
   @service appEvents;
 
+  @tracked items = [];
   @tracked isVisible = false;
   @tracked isLoading = false;
   @tracked currentIndex = 0;
@@ -40,6 +41,9 @@ export default class DLightbox extends Component {
   @tracked hasCarousel = false;
   @tracked hasExpandedTitle = false;
 
+  options = {};
+  callbacks = {};
+  willClose = false;
   elementId = LIGHTBOX_ELEMENT_ID;
   titleElementId = TITLE_ELEMENT_ID;
   animationDuration = ANIMATION_DURATION;

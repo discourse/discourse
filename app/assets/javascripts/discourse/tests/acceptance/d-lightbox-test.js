@@ -51,7 +51,14 @@ ${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.second)}`;
 
 function setupPretender(server, helper, markup) {
   const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
-  topicResponse.post_stream.posts[0].cooked += markup;
+  let markupFromArray = Array.isArray(markup);
+  let responseTotal = markupFromArray ? markup.length : 1;
+
+  for (let i = 0; i < responseTotal; i++) {
+    topicResponse.post_stream.posts[i].cooked += markupFromArray
+      ? markup[i]
+      : markup;
+  }
 
   server.get("/t/280.json", () => helper.response(topicResponse));
   server.get("/t/280/:post_number.json", () => helper.response(topicResponse));
@@ -632,11 +639,10 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
   needs.settings({ enable_experimental_lightbox: true });
 
   needs.pretender((server, helper) =>
-    setupPretender(
-      server,
-      helper,
-      multipleLargeImagesMarkup + multipleLargeImagesMarkup
-    )
+    setupPretender(server, helper, [
+      multipleLargeImagesMarkup + multipleLargeImagesMarkup,
+      multipleLargeImagesMarkup,
+    ])
   );
 
   test("navigation", async function (assert) {
@@ -705,7 +711,7 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
     const lightboxes = [...queryAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
 
-    const lastThreeLightboxes = lightboxes.slice(-3);
+    const lastThreeLightboxes = lightboxes.slice(-6);
 
     lastThreeLightboxes.forEach((lightbox) => {
       lightbox.remove();
@@ -730,6 +736,27 @@ acceptance("Experimental Lightbox - carousel", function (needs) {
 
     await click(SELECTORS.CLOSE_BUTTON);
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
+  });
+
+  test("images update when changing galleries", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    // click on image from first gallery
+    await click("#post_1 " + SELECTORS.DEFAULT_ITEM_SELECTOR + ":nth-child(1)");
+
+    // toggle carousel open
+    await click(SELECTORS.CAROUSEL_BUTTON);
+
+    // number of images in carousel matches first gallery
+    assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 6 });
+
+    await click(SELECTORS.CLOSE_BUTTON);
+
+    // click on image from second gallery
+    await click("#post_2 " + SELECTORS.DEFAULT_ITEM_SELECTOR + ":nth-child(1)");
+
+    // number of images in carousel matches second gallery
+    assert.dom(SELECTORS.CAROUSEL_ITEM).exists({ count: 3 });
   });
 });
 
