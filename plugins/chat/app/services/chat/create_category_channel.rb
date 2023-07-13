@@ -59,7 +59,7 @@ module Chat
     private
 
     def public_channels_enabled
-      SiteSetting.enabled_public_channels
+      SiteSetting.enable_public_channels
     end
 
     def can_create_channel(guardian:, **)
