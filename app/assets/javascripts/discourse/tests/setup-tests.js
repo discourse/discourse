@@ -135,7 +135,7 @@ function setupToolbar() {
   QUnit.config.urlConfig.push({
     id: "target",
     label: "Target",
-    value: ["core", "plugins", "-----", ...Array.from(pluginNames)],
+    value: ["core", "plugins", "all", "-----", ...Array.from(pluginNames)],
   });
 
   QUnit.begin(() => {
@@ -156,6 +156,8 @@ function setupToolbar() {
     select.value ||= "core";
     select.querySelector("option:not([value])").remove();
     select.querySelector("option[value=-----]").disabled = true;
+    select.querySelector("option[value=all]").innerText =
+      "all (not recommended)";
   });
 
   // Abort tests when the qunit controls are clicked
@@ -365,13 +367,15 @@ export default function setupTests(config) {
     const isCore = !isPlugin;
     const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
 
-    if (target !== "core" && isCore) {
+    const loadCore = target === "core" || target === "all";
+    const loadAllPlugins = target === "plugins" || target === "all";
+
+    if (isCore && !loadCore) {
       return false;
-    } else if (target === "core" && isPlugin) {
-      return false;
-    } else if (!["core", "plugins"].includes(target) && target !== pluginName) {
+    } else if (isPlugin && !(loadAllPlugins || pluginName === target)) {
       return false;
     }
+
     return true;
   };
 
