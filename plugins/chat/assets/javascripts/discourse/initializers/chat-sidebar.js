@@ -94,7 +94,7 @@ export default {
                 // We want to do this so we don't show a blue dot if the user is inside
                 // the channel and a new unread thread comes in.
                 (this.chatService.activeChannel?.id !== this.channel.id &&
-                  this.channel.unreadThreadsSinceLastViewedCount > 0)
+                  this.channel.unreadThreadsCountSinceLastViewed > 0)
                 ? "circle"
                 : "";
             }

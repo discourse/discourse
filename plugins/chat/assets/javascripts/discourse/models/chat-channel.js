@@ -117,7 +117,7 @@ export default class ChatChannel {
     this.lastMessage = args.last_message;
   }
 
-  get unreadThreadsSinceLastViewedCount() {
+  get unreadThreadsCountSinceLastViewed() {
     return Array.from(this.threadsManager.unreadThreadOverview.values()).filter(
       (lastReplyCreatedAt) =>
         lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
