@@ -15,9 +15,16 @@ function fixLegacyExtensions(tree) {
     getDestinationPath: function (relativePath) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
-      } else if (relativePath.endsWith(".raw.hbs")) {
-        return relativePath.replace(".raw.hbs", ".hbr");
+      } else if (relativePath.includes("/templates/")) {
+        if (relativePath.endsWith(".raw.hbs")) {
+          relativePath = relativePath.replace(".raw.hbs", ".hbr");
+        }
+
+        if (relativePath.endsWith(".hbr")) {
+          return relativePath.replace("/templates/", "/raw-templates/");
+        }
       }
+
       return relativePath;
     },
   });
