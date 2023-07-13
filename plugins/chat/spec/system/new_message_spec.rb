@@ -62,6 +62,7 @@ RSpec.describe "New message", type: :system do
   end
 
   context "when the the content is not filtered" do
+    fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:channel_2) { Fabricate(:chat_channel) }
     fab!(:user_1) { Fabricate(:user) }
     fab!(:user_2) { Fabricate(:user) }
