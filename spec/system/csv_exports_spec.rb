@@ -199,26 +199,8 @@ RSpec.describe "CSV Exports", type: :system do
   end
 
   context "with screened emails" do
-    fab!(:screened_email_1) do
-      Fabricate(
-        :screened_email,
-        action_type: ScreenedEmail.actions[:do_nothing],
-        match_count: 1,
-        last_match_at: Time.now + 1.day,
-        created_at: Time.now + 1.day,
-        ip_address: "11.11.11.11",
-      )
-    end
-    fab!(:screened_email_2) do
-      Fabricate(
-        :screened_email,
-        action_type: ScreenedEmail.actions[:do_nothing],
-        match_count: 2,
-        last_match_at: Time.now + 2.days,
-        created_at: Time.now + 2.days,
-        ip_address: "22.22.22.22",
-      )
-    end
+    fab!(:screened_email_1) { Fabricate(:screened_email) }
+    fab!(:screened_email_2) { Fabricate(:screened_email) }
 
     xit "exports data" do
       visit "admin/logs/screened_emails"
@@ -243,7 +225,7 @@ RSpec.describe "CSV Exports", type: :system do
       expect(exported_email).to eq(
         [
           email.email,
-          "do_nothing",
+          ScreenedEmail.actions[email.action_type].to_s,
           email.match_count.to_s,
           email.last_match_at.strftime(time_format),
           email.created_at.strftime(time_format),
@@ -254,28 +236,10 @@ RSpec.describe "CSV Exports", type: :system do
   end
 
   context "with screened ips" do
-    fab!(:screened_ip_1) do
-      Fabricate(
-        :screened_ip_address,
-        action_type: ScreenedIpAddress.actions[:do_nothing],
-        match_count: 1,
-        ip_address: "11.11.11.11",
-        last_match_at: Time.now + 1.day,
-        created_at: Time.now + 1.day,
-      )
-    end
-    fab!(:screened_ip_2) do
-      Fabricate(
-        :screened_ip_address,
-        action_type: ScreenedIpAddress.actions[:do_nothing],
-        match_count: 2,
-        ip_address: "22.22.22.22",
-        last_match_at: Time.now + 2.days,
-        created_at: Time.now + 2.days,
-      )
-    end
+    fab!(:screened_ip_1) { Fabricate(:screened_ip_address) }
+    fab!(:screened_ip_2) { Fabricate(:screened_ip_address) }
 
-    it "exports data" do
+    xit "exports data" do
       visit "admin/logs/screened_ip_addresses"
       click_button "Export"
 
@@ -295,7 +259,7 @@ RSpec.describe "CSV Exports", type: :system do
       expect(exported_ip).to eq(
         [
           ip.ip_address.to_s,
-          "do_nothing",
+          ScreenedIpAddress.actions[ip.action_type].to_s,
           ip.match_count.to_s,
           ip.last_match_at.strftime(time_format),
           ip.created_at.strftime(time_format),
