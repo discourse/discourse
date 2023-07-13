@@ -102,29 +102,7 @@ module Chat
             .to_a
       end
 
-      threads = unread_threads + read_threads
-
-      if threads.present?
-        last_replies =
-          ::Chat::Message
-            .strict_loading
-            .includes(:user, :uploads)
-            .from(<<~SQL)
-              (
-                SELECT thread_id, MAX(created_at) AS latest_created_at, MAX(id) AS latest_message_id
-                FROM chat_messages
-                WHERE thread_id IN (#{threads.map(&:id).join(",")})
-                GROUP BY thread_id
-              ) AS last_replies_subquery
-            SQL
-            .joins(
-              "INNER JOIN chat_messages ON chat_messages.id = last_replies_subquery.latest_message_id",
-            )
-            .index_by(&:thread_id)
-        threads.each { |thread| thread.last_reply = last_replies[thread.id] }
-      end
-
-      threads
+      unread_threads + read_threads
     end
 
     def fetch_tracking(guardian:, threads:, **)
@@ -151,6 +129,14 @@ module Chat
           :channel,
           :user_chat_thread_memberships,
           original_message_user: :user_status,
+          last_message: [
+            :chat_webhook_event,
+            :chat_channel,
+            chat_mentions: {
+              user: :user_status,
+            },
+            user: :user_status,
+          ],
           original_message: [
             :uploads,
             :chat_webhook_event,
@@ -180,6 +166,9 @@ module Chat
         .joins(
           "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
         )
+        .joins(
+          "LEFT JOIN chat_messages last_message ON chat_threads.last_message_id = last_message.id",
+        )
         .where(user_chat_thread_memberships: { user_id: guardian.user.id })
         .where(
           "chat_threads.channel_id = :channel_id AND chat_messages.chat_channel_id = :channel_id",
@@ -193,11 +182,10 @@ module Chat
           ],
         )
         .where(
-          "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL",
+          "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL AND last_message.deleted_at IS NULL",
         )
-        .group("chat_threads.id")
         .select(
-          "chat_threads.id AS thread_id, MAX(chat_messages.created_at) AS latest_message_created_at, MAX(chat_messages.id) AS latest_message_id",
+          "chat_threads.id AS thread_id, last_message.created_at AS latest_message_created_at, last_message.id AS latest_message_id",
         )
         .to_sql
     end

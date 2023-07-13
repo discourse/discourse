@@ -49,14 +49,9 @@ module Chat
     def mark_thread_read(thread:, guardian:, **)
       query = <<~SQL
         UPDATE user_chat_thread_memberships
-        SET last_read_message_id = (
-          SELECT id FROM chat_messages
-          WHERE thread_id = :thread_id
-          AND deleted_at IS NULL
-          ORDER BY created_at DESC, id DESC
-          LIMIT 1
-        )
-        WHERE user_id = :user_id AND thread_id = :thread_id
+        SET last_read_message_id = chat_threads.last_message_id
+        FROM chat_threads
+        WHERE user_id = :user_id AND thread_id = :thread_id AND chat_threads.id = :thread_id
       SQL
       DB.exec(query, thread_id: thread.id, user_id: guardian.user.id)
     end
@@ -73,7 +68,7 @@ module Chat
       ::Chat::Publisher.publish_user_tracking_state!(
         guardian.user,
         thread.channel,
-        thread.last_reply,
+        thread.last_message,
       )
     end
   end

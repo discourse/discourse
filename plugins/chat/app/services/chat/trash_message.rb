@@ -23,6 +23,7 @@ module Chat
     transaction do
       step :trash_message
       step :destroy_notifications
+      step :update_last_message_ids
       step :update_tracking_state
       step :update_thread_reply_cache
     end
@@ -68,6 +69,11 @@ module Chat
 
     def update_thread_reply_cache(message:, **)
       message.thread&.decrement_replies_count_cache
+    end
+
+    def update_last_message_ids(message:, **)
+      message.thread&.update_last_message_id!
+      message.chat_channel.update_last_message_id!
     end
 
     def publish_events(guardian:, message:, **)
