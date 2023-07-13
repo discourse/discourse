@@ -154,7 +154,7 @@ const TopicRoute = DiscourseRoute.extend({
         postId: model.id,
         postVersion: revision || "latest",
         post: model,
-        topicController: this.controllerFor("topic"),
+        editPost: (post) => this.controllerFor("topic").send("editPost", post),
       },
     });
   },

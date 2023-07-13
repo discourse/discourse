@@ -46,7 +46,7 @@ export default class History extends Component {
       this.loading ||
       (!this.postRevision.previous_revision &&
         this.postRevision.current_revision <=
-          this.postRevision.previous_revisionI)
+          this.postRevision.previous_revision)
     );
   }
 
@@ -75,7 +75,9 @@ export default class History extends Component {
   }
 
   get previousVersion() {
-    return this.postRevision?.current_version - 1;
+    return this.postRevision?.current_version
+      ? this.postRevision.current_version - 1
+      : null;
   }
 
   get revisionsText() {
@@ -110,8 +112,9 @@ export default class History extends Component {
           historyOneboxes: ["header", "article", "div[style]"],
         },
       };
-      sanitizeAsync(html, opts).then((result) => (html = result));
-      return html;
+      sanitizeAsync(html, opts).then((result) => {
+        return result;
+      });
     }
   }
 
@@ -148,7 +151,7 @@ export default class History extends Component {
   get displayEdit() {
     return !!(
       this.postRevision?.can_edit &&
-      this.args.model.topicController &&
+      this.args.model.editPost &&
       this.postRevision?.last_revision === this.postRevision?.current_revision
     );
   }
@@ -195,11 +198,7 @@ export default class History extends Component {
         this.args.closeModal();
       })
       .catch(function (e) {
-        if (
-          e.jqXHR.responseJSON &&
-          e.jqXHR.responseJSON.errors &&
-          e.jqXHR.responseJSON.errors[0]
-        ) {
+        if (e.jqXHR.responseJSON?.errors?.[0]) {
           this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
         }
       });
@@ -326,7 +325,7 @@ export default class History extends Component {
 
   @action
   editPost() {
-    this.args.model.topicController.send("editPost", this.args.model.post);
+    this.args.model.editPost(this.args.model.post);
     this.args.closeModal();
   }
 

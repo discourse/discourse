@@ -31,7 +31,7 @@
     />
   </:body>
   <:footer>
-    {{#if @model.topicController}}
+    {{#if @model.editPost}}
       <Modal::History::TopicFooter
         @model={{this.postRevision}}
         @loadFirstVersion={{this.loadFirstVersion}}
