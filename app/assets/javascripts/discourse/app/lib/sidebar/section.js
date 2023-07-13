@@ -1,14 +1,15 @@
 import I18n from "I18n";
-import showModal from "discourse/lib/show-modal";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
+import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 
 export default class Section {
   @service currentUser;
+  @service modal;
   @service router;
 
   @tracked dragCss;
@@ -40,7 +41,9 @@ export default class Section {
       return [
         {
           action: () => {
-            return showModal("sidebar-section-form", { model: this.section });
+            return this.modal.show(SidebarSectionForm, {
+              model: this,
+            });
           },
           title: I18n.t("sidebar.sections.custom.edit"),
         },
@@ -75,6 +78,7 @@ export default class Section {
     this.links = this.links.removeObject(link);
     this.links.splice(position, 0, link);
   }
+
   @bind
   reorder() {
     return ajax(`/sidebar_sections/reorder`, {

@@ -2319,7 +2319,8 @@ sk:
         categories:
           header_link_text: "Kategórie"
         community:
-          header_link_text: "Komunita"
+          edit_section:
+            header_dropdown: "Upraviť"
           links:
             about:
               content: "O stránke"

@@ -58,13 +58,17 @@ module PageObjects
         has_css?(".chat-selection-management")
       end
 
+      def expand_deleted_message(message)
+        message_by_id(message.id).find(".chat-message-expand").click
+      end
+
       def expand_message_actions(message)
         hover_message(message)
         click_more_button
       end
 
       def expand_message_actions_mobile(message, delay: 2)
-        message_by_id(message.id).click(delay: delay)
+        find(message_by_id_selector(message.id)).find(".chat-message-content").click(delay: delay)
       end
 
       def click_message_action_mobile(message, message_action)
@@ -73,7 +77,10 @@ module PageObjects
       end
 
       def hover_message(message)
-        message_by_id(message.id).hover
+        message = message_by_id(message.id)
+        # Scroll to top of message so that the actions are not hidden
+        page.scroll_to(message, align: :top)
+        message.hover
       end
 
       def bookmark_message(message)

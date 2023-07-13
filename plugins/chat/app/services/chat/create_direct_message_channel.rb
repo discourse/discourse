@@ -33,7 +33,6 @@ module Chat
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
     step :update_memberships
-    step :publish_channel
 
     # @!visibility private
     class Contract
@@ -68,7 +67,7 @@ module Chat
       Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
     end
 
-    def update_memberships(guardian:, channel:, target_users:, **)
+    def update_memberships(channel:, target_users:, **)
       always_level = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -77,7 +76,7 @@ module Chat
             user_id: user.id,
             chat_channel_id: channel.id,
             muted: false,
-            following: true,
+            following: false,
             desktop_notification_level: always_level,
             mobile_notification_level: always_level,
             created_at: Time.zone.now,
@@ -89,10 +88,6 @@ module Chat
         memberships,
         unique_by: %i[user_id chat_channel_id],
       )
-    end
-
-    def publish_channel(channel:, target_users:, **)
-      Chat::Publisher.publish_new_channel(channel, target_users)
     end
   end
 end

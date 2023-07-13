@@ -3,7 +3,7 @@
   @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
   @headerActions={{array
     (hash
-      action=(fn (mut this.isModalVisible) true)
+      action=this.showModal
       title=(i18n "sidebar.sections.categories.header_action_title")
     )
   }}
@@ -47,9 +47,3 @@
     />
   {{/if}}
 </Sidebar::Section>
-
-{{#if this.isModalVisible}}
-  <Sidebar::EditNavigationMenu::CategoriesModal
-    @closeModal={{fn (mut this.isModalVisible) false}}
-  />
-{{/if}}

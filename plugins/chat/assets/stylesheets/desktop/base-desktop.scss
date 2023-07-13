@@ -38,7 +38,7 @@
 
     &:hover {
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: var(--d-border-radius);
       box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
         0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
     }
@@ -88,10 +88,6 @@
   .full-page-chat {
     border-right: 1px solid var(--primary-low);
     border-left: 1px solid var(--primary-low);
-
-    .chat-channel {
-      border-radius: unset;
-    }
   }
 
   @media screen and (max-width: var(--max-chat-width)) {

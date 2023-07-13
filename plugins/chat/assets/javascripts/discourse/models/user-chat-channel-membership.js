@@ -13,6 +13,7 @@ export default class UserChatChannelMembership {
   @tracked lastReadMessageId = null;
   @tracked lastViewedAt = null;
   @tracked user = null;
+  @tracked lastViewedAt = null;
 
   constructor(args = {}) {
     this.following = args.following;

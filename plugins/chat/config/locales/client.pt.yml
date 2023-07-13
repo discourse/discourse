@@ -121,6 +121,8 @@ pt:
           about: Sobre
           members: Membros
           settings: Configurações
+      new_message_modal:
+        no_items: "Sem itens"
       channel_edit_name_slug_modal:
         input_placeholder: Adicionar um nome
         slug: Slug do canal (opcional)
@@ -145,6 +147,8 @@ pt:
         auto_join_users_info_no_category: "Verificar de hora em hora quais os utilizadores que estiveram activos nos últimos 3 meses. Adicione-os a este canal se tiverem acesso à categoria seleccionada."
         follow: "Entrar"
         followed: "Juntou-se"
+        threading_enabled: "Ativado"
+        threading_disabled: "Desativado"
         notifications: "Notificações"
         preview: "Pré-visualização"
         save: "Guardar"
@@ -188,6 +192,9 @@ pt:
             title: "Normal"
           tracking:
             title: "A Seguir"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nova Mensagem"
         cancel: "Cancelar"

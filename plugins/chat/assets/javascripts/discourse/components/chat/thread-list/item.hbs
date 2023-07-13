@@ -4,6 +4,7 @@
     (if (gt @thread.tracking.unreadCount 0) "-is-unread")
   }}
   data-thread-id={{@thread.id}}
+  ...attributes
 >
   <div class="chat-thread-list-item__main">
     <div
@@ -14,7 +15,7 @@
     >
       <div class="chat-thread-list-item__header">
         <div class="chat-thread-list-item__om-user-avatar">
-          <ChatUserAvatar @user={{@thread.originalMessage.user}} />
+          <Chat::UserAvatar @user={{@thread.originalMessage.user}} />
         </div>
         <div class="chat-thread-list-item__title overflow-ellipsis">
           {{replace-emoji this.title}}

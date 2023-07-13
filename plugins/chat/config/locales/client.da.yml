@@ -128,12 +128,11 @@ da:
           about: Om
           members: Brugere
           settings: Indstillinger
+      new_message_modal:
+        no_items: "Ingen punkter"
       direct_message_creator:
         title: Ny Besked
         prefix: "Til:"
-      channel_selector:
-        title: "Hop til kanal"
-        no_channels: "Ingen kanaler matcher din søgning"
       create_channel:
         choose_category:
           label: "Vælg en kategori"
@@ -162,6 +161,8 @@ da:
       settings:
         follow: "Tilslut"
         followed: "Tilmeldt"
+        threading_enabled: "Aktiveret"
+        threading_disabled: "Deaktiveret"
         notifications: "Notifikationer"
         preview: "Forhåndsvisning"
         save: "Gem"
@@ -212,6 +213,9 @@ da:
             title: "Normal"
           tracking:
             title: "Følger"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ny Besked"
         cancel: "Annuller"

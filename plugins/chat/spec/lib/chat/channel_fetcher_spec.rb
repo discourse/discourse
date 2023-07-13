@@ -197,9 +197,7 @@ describe Chat::ChannelFetcher do
 
     it "does not include DM channels" do
       expect(
-        described_class.secured_public_channels(guardian, memberships, following: following).map(
-          &:id
-        ),
+        described_class.secured_public_channels(guardian, following: following).map(&:id),
       ).to match_array([category_channel.id])
     end
 
@@ -207,7 +205,6 @@ describe Chat::ChannelFetcher do
       expect(
         described_class.secured_public_channels(
           guardian,
-          memberships,
           following: following,
           filter: "support",
         ).map(&:id),
@@ -218,7 +215,6 @@ describe Chat::ChannelFetcher do
       expect(
         described_class.secured_public_channels(
           guardian,
-          memberships,
           following: following,
           filter: "cool stuff",
         ).map(&:id),
@@ -227,33 +223,29 @@ describe Chat::ChannelFetcher do
 
     it "can filter by an array of slugs" do
       expect(
-        described_class.secured_public_channels(guardian, memberships, slugs: ["support"]).map(
-          &:id
-        ),
+        described_class.secured_public_channels(guardian, slugs: ["support"]).map(&:id),
       ).to match_array([category_channel.id])
     end
 
     it "returns nothing if the array of slugs is empty" do
-      expect(
-        described_class.secured_public_channels(guardian, memberships, slugs: []).map(&:id),
-      ).to eq([])
+      expect(described_class.secured_public_channels(guardian, slugs: []).map(&:id)).to eq([])
     end
 
     it "can filter by status" do
       expect(
-        described_class.secured_public_channels(guardian, memberships, status: "closed").map(&:id),
+        described_class.secured_public_channels(guardian, status: "closed").map(&:id),
       ).to match_array([])
 
       category_channel.closed!(Discourse.system_user)
 
       expect(
-        described_class.secured_public_channels(guardian, memberships, status: "closed").map(&:id),
+        described_class.secured_public_channels(guardian, status: "closed").map(&:id),
       ).to match_array([category_channel.id])
     end
 
     it "can filter by following" do
       expect(
-        described_class.secured_public_channels(guardian, memberships, following: true).map(&:id),
+        described_class.secured_public_channels(guardian, following: true).map(&:id),
       ).to be_blank
     end
 
@@ -262,21 +254,19 @@ describe Chat::ChannelFetcher do
       another_channel = Fabricate(:category_channel)
 
       expect(
-        described_class.secured_public_channels(guardian, memberships, following: false).map(&:id),
+        described_class.secured_public_channels(guardian, following: false).map(&:id),
       ).to match_array([category_channel.id, another_channel.id])
     end
 
     it "ensures offset is >= 0" do
       expect(
-        described_class.secured_public_channels(guardian, memberships, offset: -235).map(&:id),
+        described_class.secured_public_channels(guardian, offset: -235).map(&:id),
       ).to match_array([category_channel.id])
     end
 
     it "ensures limit is > 0" do
       expect(
-        described_class.secured_public_channels(guardian, memberships, limit: -1, offset: 0).map(
-          &:id
-        ),
+        described_class.secured_public_channels(guardian, limit: -1, offset: 0).map(&:id),
       ).to match_array([category_channel.id])
     end
 
@@ -284,17 +274,15 @@ describe Chat::ChannelFetcher do
       over_limit = Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS + 1
       over_limit.times { Fabricate(:category_channel) }
 
-      expect(
-        described_class.secured_public_channels(guardian, memberships, limit: over_limit).length,
-      ).to eq(Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS)
+      expect(described_class.secured_public_channels(guardian, limit: over_limit).length).to eq(
+        Chat::ChannelFetcher::MAX_PUBLIC_CHANNEL_RESULTS,
+      )
     end
 
     it "does not show the user category channels they cannot access" do
       category_channel.update!(chatable: private_category)
       expect(
-        described_class.secured_public_channels(guardian, memberships, following: following).map(
-          &:id
-        ),
+        described_class.secured_public_channels(guardian, following: following).map(&:id),
       ).to be_empty
     end
 
@@ -303,9 +291,7 @@ describe Chat::ChannelFetcher do
 
       it "only returns channels where the user is a member and is following the channel" do
         expect(
-          described_class.secured_public_channels(guardian, memberships, following: following).map(
-            &:id
-          ),
+          described_class.secured_public_channels(guardian, following: following).map(&:id),
         ).to be_empty
 
         Chat::UserChatChannelMembership.create!(
@@ -315,9 +301,7 @@ describe Chat::ChannelFetcher do
         )
 
         expect(
-          described_class.secured_public_channels(guardian, memberships, following: following).map(
-            &:id
-          ),
+          described_class.secured_public_channels(guardian, following: following).map(&:id),
         ).to match_array([category_channel.id])
       end
 
@@ -348,7 +332,7 @@ describe Chat::ChannelFetcher do
   end
 
   describe ".secured_direct_message_channels" do
-    it "includes direct message channels the user is a member of ordered by last_message_sent_at" do
+    it "includes direct message channels the user is a member of ordered by last_message.created_at" do
       Fabricate(
         :user_chat_channel_membership_for_dm,
         chat_channel: direct_message_channel1,
@@ -366,12 +350,15 @@ describe Chat::ChannelFetcher do
       Chat::DirectMessageUser.create!(direct_message: dm_channel2, user: user1)
       Chat::DirectMessageUser.create!(direct_message: dm_channel2, user: user2)
 
-      direct_message_channel1.update!(last_message_sent_at: 1.day.ago)
-      direct_message_channel2.update!(last_message_sent_at: 1.hour.ago)
+      Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel1)
+      Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel2)
 
-      expect(
-        described_class.secured_direct_message_channels(user1.id, memberships, guardian).map(&:id),
-      ).to eq([direct_message_channel2.id, direct_message_channel1.id])
+      direct_message_channel1.last_message.update!(created_at: 1.day.ago)
+      direct_message_channel2.last_message.update!(created_at: 1.hour.ago)
+
+      expect(described_class.secured_direct_message_channels(user1.id, guardian).map(&:id)).to eq(
+        [direct_message_channel2.id, direct_message_channel1.id],
+      )
     end
 
     it "does not include direct message channels where the user is a member but not a direct_message_user" do
@@ -384,7 +371,7 @@ describe Chat::ChannelFetcher do
       Chat::DirectMessageUser.create!(direct_message: dm_channel1, user: user2)
 
       expect(
-        described_class.secured_direct_message_channels(user1.id, memberships, guardian).map(&:id),
+        described_class.secured_direct_message_channels(user1.id, guardian).map(&:id),
       ).not_to include(direct_message_channel1.id)
     end
 

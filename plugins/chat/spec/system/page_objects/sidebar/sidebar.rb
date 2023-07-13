@@ -11,13 +11,6 @@ module PageObjects
         find(".sidebar-section[data-section-name='chat-dms']")
       end
 
-      def open_draft_channel
-        find(
-          ".sidebar-section[data-section-name='chat-dms'] .sidebar-section-header-button",
-          visible: false,
-        ).click
-      end
-
       def open_browse
         find(
           ".sidebar-section[data-section-name='chat-channels'] .sidebar-section-header-button",

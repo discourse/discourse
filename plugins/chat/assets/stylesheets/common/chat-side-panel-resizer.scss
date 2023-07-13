@@ -4,7 +4,7 @@
   left: -3px;
   width: 5px;
   position: absolute;
-  z-index: z("max");
+  z-index: calc(z("header") - 1);
   transition: background-color 0.15s 0.15s;
   background-color: transparent;
 

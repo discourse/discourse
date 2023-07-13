@@ -3490,7 +3490,8 @@ pt:
         categories:
           header_link_text: "Categorias"
         community:
-          header_link_text: "Comunidade"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Sobre"

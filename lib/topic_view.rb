@@ -722,6 +722,10 @@ class TopicView
       end
   end
 
+  def summarizable?
+    Summarization::Base.can_see_summary?(@topic, @user)
+  end
+
   protected
 
   def read_posts_set

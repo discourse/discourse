@@ -5,52 +5,57 @@ const SILENCED_WARN_PREFIXES = [
   "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
 ];
 
-let consoleWarnSilenced = false;
-
-module.exports = class DeprecationSilencer {
-  static silenceUiWarn(ui) {
-    const oldWriteWarning = ui.writeWarnLine.bind(ui);
-    ui.writeWarnLine = (message, ...args) => {
-      if (
-        !SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))
-      ) {
-        return oldWriteWarning(message, ...args);
-      }
-    };
+class DeprecationSilencer {
+  constructor() {
+    this.silenced = new WeakMap();
   }
 
-  static silenceConsoleWarn() {
-    if (consoleWarnSilenced) {
+  silence(object, method) {
+    if (this.alreadySilenced(object, method)) {
       return;
     }
-    /* eslint-disable no-console */
-    const oldConsoleWarn = console.warn.bind(console);
-    console.warn = (message, ...args) => {
-      if (
-        !SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))
-      ) {
-        return oldConsoleWarn(message, ...args);
+
+    let original = object[method];
+
+    object[method] = (message, ...args) => {
+      if (!this.shouldSilence(message)) {
+        return original.call(object, message, ...args);
       }
     };
-    /* eslint-enable no-console */
-    consoleWarnSilenced = true;
   }
 
-  /**
-   * Generates a dummy babel plugin which applies the console.warn silences in worker
-   * processes. Does not actually affect babel output.
-   */
-  static generateBabelPlugin() {
-    return {
-      _parallelBabel: {
-        requireFile: require.resolve("./deprecation-silencer"),
-        buildUsing: "babelShim",
-      },
-    };
+  alreadySilenced(object, method) {
+    let set = this.silenced.get(object);
+
+    if (!set) {
+      set = new Set();
+      this.silenced.set(object, set);
+    }
+
+    if (set.has(method)) {
+      return true;
+    } else {
+      set.add(method);
+      return false;
+    }
   }
 
-  static babelShim() {
-    DeprecationSilencer.silenceConsoleWarn();
-    return {};
+  shouldSilence(message) {
+    return SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix));
   }
+}
+
+const DEPRECATION_SILENCER = new DeprecationSilencer();
+
+/**
+ * Export a dummy babel plugin which applies the console.warn silences in worker
+ * processes. Does not actually affect babel output.
+ */
+module.exports = function () {
+  DEPRECATION_SILENCER.silence(console, "warn");
+  return {};
+};
+
+module.exports.silence = function silence(...args) {
+  DEPRECATION_SILENCER.silence(...args);
 };

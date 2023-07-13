@@ -4,6 +4,8 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+
 export default class ChannelsList extends Component {
   @service chat;
   @service router;
@@ -12,6 +14,7 @@ export default class ChannelsList extends Component {
   @service site;
   @service session;
   @service currentUser;
+  @service modal;
 
   @tracked hasScrollbar = false;
 
@@ -23,6 +26,11 @@ export default class ChannelsList extends Component {
   @action
   computeResizedEntries(entries) {
     this.computeHasScrollbar(entries[0].target);
+  }
+
+  @action
+  openNewMessageModal() {
+    this.modal.show(ChatModalNewMessage);
   }
 
   get showMobileDirectMessageButton() {

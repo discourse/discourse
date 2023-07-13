@@ -245,7 +245,6 @@ uk:
     software_update_prompt:
       message: "Ми оновили цей сайт, <span>оновіть сторінку</span>, інакше у вас може виникнути неочікувана поведінка."
       dismiss: "Відхилити"
-    bootstrap_mode: "Режим завантаження"
     themes:
       default_description: "Типово"
       broken_theme_alert: "Ваш сайт не може працювати, оскільки тема / компонент має помилки."
@@ -1240,8 +1239,6 @@ uk:
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
-        categories_section: "Розділи"
-        tags_section: "Теґи"
         navigation_section: "Навігація"
       change: "змінити"
       featured_topic: "Закріплені теми"
@@ -4506,9 +4503,8 @@ uk:
           header_action_title: "Редагувати розділи бічної панелі"
           configure_defaults: "Налаштувати типові значення"
         community:
-          header_link_text: "Спільнота"
-          header_action_create_topic_title: "Створити тему"
-          header_action_edit_section_title: "Редагувати розділ спільноти"
+          edit_section:
+            header_dropdown: "Customize"
           links:
             about:
               content: "Про"

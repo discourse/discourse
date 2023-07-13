@@ -1008,8 +1008,6 @@ vi:
       experimental_sidebar:
         enable: "Bật thanh bên"
         options: "Tùy chọn"
-        categories_section: "Phần danh mục"
-        tags_section: "Phần thẻ"
         navigation_section: "Điều hướng"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
@@ -3569,7 +3567,8 @@ vi:
           click_to_get_started: "Bấm vào đây để bắt đầu."
           header_link_text: "Thư mục"
         community:
-          header_link_text: "Cộng đồng"
+          edit_section:
+            header_dropdown: "Tùy biến"
           links:
             about:
               content: "Giới thiệu"

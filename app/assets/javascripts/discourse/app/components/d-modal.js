@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
+import ClassicComponent from "@ember/component";
 import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
 export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
 export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
+
+const FLASH_TYPES = ["success", "error", "warning", "info"];
 
 export default class DModal extends Component {
   @service modal;
@@ -160,5 +163,26 @@ export default class DModal extends Component {
   @action
   handleCloseButton() {
     this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_BUTTON });
+  }
+
+  @action
+  validateFlashType(type) {
+    if (type && !FLASH_TYPES.includes(type)) {
+      throw `@flashType must be one of ${FLASH_TYPES.join(", ")}`;
+    }
+  }
+
+  // Could be optimised to remove classic component once RFC389 is implemented
+  // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
+  @cached
+  get dynamicElement() {
+    const tagName = this.args.tagName || "div";
+    if (!["div", "form"].includes(tagName)) {
+      throw `@tagName must be form or div`;
+    }
+
+    return class WrapperComponent extends ClassicComponent {
+      tagName = tagName;
+    };
   }
 }

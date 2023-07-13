@@ -2,7 +2,7 @@ import { classNames } from "@ember-decorators/component";
 import { mapBy } from "@ember/object/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
-import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { htmlSafe } from "@ember/template";

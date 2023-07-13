@@ -39,10 +39,15 @@ module("Integration | Component | d-modal", function (hooks) {
   });
 
   test("flash", async function (assert) {
+    await render(hbs`<DModal @inline={{true}} @flash="Some message"/>`);
+    assert.dom(".d-modal .alert").hasText("Some message");
+  });
+
+  test("flash type", async function (assert) {
     await render(
-      hbs`<DModal @inline={{true}} @flash="Some message" @flashType="error"/> `
+      hbs`<DModal @inline={{true}} @flash="Some message" @flashType="success"/>`
     );
-    assert.dom(".d-modal .alert.alert-error").hasText("Some message");
+    assert.dom(".d-modal .alert").hasClass("alert-success");
   });
 
   test("dismissable", async function (assert) {
@@ -71,5 +76,39 @@ module("Integration | Component | d-modal", function (hooks) {
     );
 
     closeModalCalled = false;
+  });
+
+  test("header and body classes", async function (assert) {
+    await render(
+      hbs`<DModal @inline={{true}} @bodyClass="my-body-class" @headerClass="my-header-class" @title="Hello world" />`
+    );
+
+    assert.dom(".d-modal .modal-header").hasClass("my-header-class");
+    assert.dom(".d-modal .modal-body").hasClass("my-body-class");
+  });
+
+  test("as a form", async function (assert) {
+    let submittedFormData;
+    this.handleSubmit = (event) => {
+      event.preventDefault();
+      submittedFormData = new FormData(event.currentTarget);
+    };
+
+    await render(
+      hbs`
+        <DModal @inline={{true}} @tagName="form" {{on "submit" this.handleSubmit}}>
+          <:body>
+            <input type="text" name="name" value="John Doe" />
+          </:body>
+          <:footer>
+            <button type="submit">Submit</button>
+          </:footer>
+        </DModal>
+        `
+    );
+
+    assert.dom("form.d-modal").exists();
+    await click(".d-modal button[type=submit]");
+    assert.deepEqual(submittedFormData.get("name"), "John Doe");
   });
 });

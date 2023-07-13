@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { render, triggerEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import pretender, { OK } from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
 module(
@@ -53,7 +53,7 @@ module(
 
     hooks.beforeEach(function () {
       pretender.get(`/chat/api/channels/1`, () =>
-        OK({
+        response({
           channel,
           chat_messages: [message],
           meta: { can_delete_self: true },

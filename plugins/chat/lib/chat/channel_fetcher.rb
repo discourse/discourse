@@ -6,10 +6,8 @@ module Chat
 
     def self.structured(guardian, include_threads: false)
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
-      public_channels =
-        secured_public_channels(guardian, memberships, status: :open, following: true)
-      direct_message_channels =
-        secured_direct_message_channels(guardian.user.id, memberships, guardian)
+      public_channels = secured_public_channels(guardian, status: :open, following: true)
+      direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
       {
         public_channels: public_channels,
         direct_message_channels: direct_message_channels,
@@ -90,7 +88,7 @@ module Chat
     def self.secured_public_channel_search(guardian, options = {})
       allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
-      channels = Chat::Channel.includes(chatable: [:topic_only_relative_url])
+      channels = Chat::Channel.includes(:last_message, chatable: [:topic_only_relative_url])
       channels = channels.includes(:chat_channel_archive) if options[:include_archives]
 
       channels =
@@ -152,7 +150,7 @@ module Chat
       channels.limit(options[:limit]).offset(options[:offset])
     end
 
-    def self.secured_public_channels(guardian, memberships, options = { following: true })
+    def self.secured_public_channels(guardian, options = { following: true })
       channels =
         secured_public_channel_search(
           guardian,
@@ -174,19 +172,65 @@ module Chat
       )
     end
 
-    def self.secured_direct_message_channels(user_id, memberships, guardian)
-      query = Chat::Channel.includes(chatable: [{ direct_message_users: :user }, :users])
+    def self.secured_direct_message_channels(user_id, guardian)
+      secured_direct_message_channels_search(user_id, guardian, following: true)
+    end
+
+    def self.secured_direct_message_channels_search(user_id, guardian, options = {})
+      query =
+        Chat::Channel.strict_loading.includes(
+          last_message: [:uploads],
+          chatable: [{ direct_message_users: [user: :user_option] }, :users],
+        )
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
+      query = query.joins(:user_chat_channel_memberships)
+      query =
+        query.joins(
+          "LEFT JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
+        )
 
-      channels =
+      scoped_channels =
+        Chat::Channel
+          .joins(
+            "INNER JOIN direct_message_channels ON direct_message_channels.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'DirectMessage'",
+          )
+          .joins(
+            "INNER JOIN direct_message_users ON direct_message_users.direct_message_channel_id = direct_message_channels.id",
+          )
+          .where("direct_message_users.user_id = :user_id", user_id: user_id)
+
+      if options[:user_ids]
+        scoped_channels =
+          scoped_channels.where(
+            "EXISTS (
+              SELECT 1
+              FROM direct_message_channels AS dmc
+              INNER JOIN direct_message_users AS dmu ON dmu.direct_message_channel_id = dmc.id
+              WHERE dmc.id = chat_channels.chatable_id AND dmu.user_id IN (:user_ids)
+            )",
+            user_ids: options[:user_ids],
+          )
+      end
+
+      if options.key?(:following)
+        query =
+          query.where(
+            user_chat_channel_memberships: {
+              user_id: user_id,
+              following: options[:following],
+            },
+          )
+      else
+        query = query.where(user_chat_channel_memberships: { user_id: user_id })
+      end
+
+      query =
         query
-          .joins(:user_chat_channel_memberships)
-          .where(user_chat_channel_memberships: { user_id: user_id, following: true })
           .where(chatable_type: Chat::Channel.direct_channel_chatable_types)
-          .where("chat_channels.id IN (#{generate_allowed_channel_ids_sql(guardian)})")
-          .order(last_message_sent_at: :desc)
-          .to_a
+          .where(chat_channels: { id: scoped_channels })
+          .order("last_message.created_at DESC NULLS LAST")
 
+      channels = query.to_a
       preload_fields =
         User.allowed_user_custom_fields(guardian) +
           UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }

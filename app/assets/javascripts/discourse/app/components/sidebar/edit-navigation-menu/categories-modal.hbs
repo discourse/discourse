@@ -1,4 +1,5 @@
 <Sidebar::EditNavigationMenu::Modal
+  @class="sidebar__edit-navigation-menu__categories-modal"
   @title="sidebar.categories_form_modal.title"
   @disableSaveButton={{this.saving}}
   @save={{this.save}}
@@ -35,30 +36,31 @@
                 class="sidebar-categories-form__category-label"
                 for={{concat "sidebar-categories-form__input--" category.id}}
               >
-                <div class="sidebar-categories-form__category-badge">
-                  {{category-badge category}}
+                <div class="sidebar-categories-form__category-wrapper">
+                  <div class="sidebar-categories-form__category-badge">
+                    {{category-badge category}}
+                  </div>
+                  {{#unless category.parentCategory}}
+                    <div class="sidebar-categories-form__category-description">
+                      {{dir-span category.description_excerpt htmlSafe="true"}}
+                    </div>
+                  {{/unless}}
                 </div>
 
-                {{#unless category.parentCategory}}
-                  <div class="sidebar-categories-form__category-description">
-                    {{dir-span category.description_excerpt htmlSafe="true"}}
-                  </div>
-                {{/unless}}
+                <Input
+                  id={{concat "sidebar-categories-form__input--" category.id}}
+                  class="sidebar-categories-form__input"
+                  @type="checkbox"
+                  @checked={{includes
+                    this.selectedSidebarCategoryIds
+                    category.id
+                  }}
+                  disabled={{(not
+                    (includes this.filteredCategoryIds category.id)
+                  )}}
+                  {{on "click" (action "toggleCategory" category.id)}}
+                />
               </label>
-
-              <Input
-                id={{concat "sidebar-categories-form__input--" category.id}}
-                class="sidebar-categories-form__input"
-                @type="checkbox"
-                @checked={{includes
-                  this.selectedSidebarCategoryIds
-                  category.id
-                }}
-                disabled={{(not
-                  (includes this.filteredCategoryIds category.id)
-                )}}
-                {{on "click" (action "toggleCategory" category.id)}}
-              />
             </div>
           {{/each}}
         </div>

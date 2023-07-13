@@ -209,6 +209,8 @@ fr:
           about: À propos
           members: Membres
           settings: Paramètres
+      new_message_modal:
+        no_items: "Aucun élément"
       channel_edit_name_slug_modal:
         name: Nom du canal
       channel_edit_description_modal:
@@ -220,9 +222,6 @@ fr:
         prefix: "À :"
         no_results: Aucun résultat
         selected_user_title: "Désélectionner %{username}"
-      channel_selector:
-        title: "Accéder au canal"
-        no_channels: "Aucun canal ne correspond à votre recherche"
       channel:
         no_memberships: Ce canal ne comprend aucun membre
         no_memberships_found: Aucun membre trouvé
@@ -272,6 +271,8 @@ fr:
         followed: "Rejoint"
         mobile_notification_level: "Notifications push mobiles"
         mute: "Mettre le canal en sourdine"
+        threading_enabled: "Activée "
+        threading_disabled: "Désactivée"
         muted_on: "Activé"
         muted_off: "Désactivé"
         notifications: "Notifications"
@@ -378,8 +379,8 @@ fr:
           tracking:
             title: "Suivre"
         participants_other_count:
-          one: "+%{count} autre"
-          other: "+%{count} autres"
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"

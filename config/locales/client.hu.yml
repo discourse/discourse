@@ -184,7 +184,6 @@ hu:
     software_update_prompt:
       message: "Frissítettük a webhelyet, <span>frissítse az oldalt</span>, különben váratlan viselkedést tapasztalhat."
       dismiss: "Elvetés"
-    bootstrap_mode: "Bootstrap mód"
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
@@ -1108,8 +1107,6 @@ hu:
       experimental_sidebar:
         enable: "Oldalsáv engedélyezése"
         options: "Beállítások"
-        categories_section: "Kategóriák szakasz"
-        tags_section: "Címkék szakasz"
         navigation_section: "Navigáció"
       change: "módosítás"
       featured_topic: "Kiemelt téma"
@@ -3690,8 +3687,8 @@ hu:
           header_link_text: "Kategóriák"
           configure_defaults: "Alapértelmezések beállítása"
         community:
-          header_link_text: "Közösség"
-          header_action_create_topic_title: "Téma létrehozása"
+          edit_section:
+            header_dropdown: "Személyre szabás"
           links:
             about:
               content: "Névjegy"

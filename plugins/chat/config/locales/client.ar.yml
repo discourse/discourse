@@ -211,6 +211,8 @@ ar:
           about: نبذة
           members: الأعضاء
           settings: الإعدادات
+      new_message_modal:
+        no_items: "لا توجد عناصر"
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا
@@ -220,9 +222,6 @@ ar:
         prefix: "إلى:"
         no_results: لا توجد نتائج
         selected_user_title: "إلغاء تحديد %{username}"
-      channel_selector:
-        title: "الانتقال إلى القناة"
-        no_channels: "لا توجد قنوات تطابق بحثك"
       channel:
         no_memberships: لا يوجد أعضاء في هذه القناة
         no_memberships_found: لم يتم العثور على أعضاء
@@ -275,6 +274,7 @@ ar:
         followed: "انضم"
         mobile_notification_level: "الإشعارات الفورية للجوَّال"
         mute: "كتم القناة"
+        threading_disabled: "متوقفة"
         muted_on: "تشغيل"
         muted_off: "إيقاف"
         notifications: "الإشعارات"
@@ -401,12 +401,12 @@ ar:
           tracking:
             title: "التتبُّع"
         participants_other_count:
-          zero: "+%{count} آخرين"
-          one: "+%{count} آخر"
-          two: "+%{count} آخران"
-          few: "+%{count} آخرين"
-          many: "+%{count} آخرين"
-          other: "+%{count} آخرين"
+          zero: "+%{count}"
+          one: "+%{count}"
+          two: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "رسالة جديدة"
         cancel: "إلغاء"

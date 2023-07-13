@@ -21,12 +21,11 @@
     "discourse-widget-hbs": "1.0.0",
     "ember-source": "~3.28.12",
     "handlebars": "^4.7.7",
-    "markdown-it": "^13.0.1",
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
-    "@babel/standalone": "^7.22.5",
+    "@babel/core": "^7.22.8",
+    "@babel/standalone": "^7.22.8",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -94,7 +93,7 @@
     "select-kit": "1.0.0",
     "sinon": "^15.2.0",
     "source-map": "^0.7.4",
-    "terser": "^5.18.2",
+    "terser": "^5.19.0",
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",

@@ -1819,8 +1819,9 @@ RSpec.describe TopicsController do
         end
 
         describe "when first post is locked" do
-          it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
-            SiteSetting.trusted_users_can_edit_others = true
+          it "blocks user from editing even if they are in 'edit_all_topic_groups' and 'edit_all_post_groups'" do
+            SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_3]
+            SiteSetting.edit_all_post_groups = Group::AUTO_GROUPS[:trust_level_4]
             user.update!(trust_level: 3)
             topic.first_post.update!(locked_by_id: admin.id)
 
@@ -5468,10 +5469,27 @@ RSpec.describe TopicsController do
     end
 
     context "for anons" do
-      it "returns a 404" do
+      it "returns a 404 if there is no cached summary" do
         get "/t/#{topic.id}/strategy-summary.json"
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a cached summary" do
+        section =
+          SummarySection.create!(
+            target: topic,
+            summarized_text: "test",
+            algorithm: "test",
+            original_content_sha: "test",
+          )
+
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(200)
+
+        summary = response.parsed_body
+        expect(summary["summary"]).to eq(section.summarized_text)
       end
     end
 
@@ -5497,15 +5515,32 @@ RSpec.describe TopicsController do
       end
     end
 
-    context "when the user is not a member of an allowlited group" do
+    context "when the user is not a member of an allowlisted group" do
       fab!(:user) { Fabricate(:user) }
 
       before { sign_in(user) }
 
-      it "return a 404" do
+      it "return a 404 if there is no cached summary" do
         get "/t/#{topic.id}/strategy-summary.json"
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a cached summary" do
+        section =
+          SummarySection.create!(
+            target: topic,
+            summarized_text: "test",
+            algorithm: "test",
+            original_content_sha: "test",
+          )
+
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(200)
+
+        summary = response.parsed_body
+        expect(summary["summary"]).to eq(section.summarized_text)
       end
     end
   end

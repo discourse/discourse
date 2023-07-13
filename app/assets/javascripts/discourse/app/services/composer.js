@@ -100,6 +100,7 @@ export default class ComposerController extends Controller {
   @service site;
   @service store;
   @service appEvents;
+  @service capabilities;
 
   checkedMessages = false;
   messageCount = null;
@@ -126,10 +127,6 @@ export default class ComposerController extends Controller {
 
   get topicController() {
     return getOwner(this).lookup("controller:topic");
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
   }
 
   @on("init")

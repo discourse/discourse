@@ -15,6 +15,7 @@
     "muted": { "type": "boolean" },
     "desktop_notification_level": { "type": "string" },
     "mobile_notification_level": { "type": "string" },
+    "last_viewed_at": { "type": "string" },
     "following": { "type": "boolean" },
     "user": {
       "type": ["object", "null"],

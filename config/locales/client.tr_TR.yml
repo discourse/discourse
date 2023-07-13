@@ -186,7 +186,7 @@ tr_TR:
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik davranışlarla karşılaşabilirsiniz."
       dismiss: "Kapat"
-    bootstrap_mode: "Bootstrap modu"
+    bootstrap_mode: "Başlarken"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -1108,8 +1108,6 @@ tr_TR:
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
-        categories_section: "Kategoriler Bölümü"
-        tags_section: "Etiketler Bölümü"
         navigation_section: "Gezinti"
         navigation_section_instruction: "Gezinme menüsündeki bir konu listesinde yeni veya okunmamış öğeler olduğunda…"
         link_to_filtered_list_checkbox_description: "Filtrelenmiş liste bağlantısı"
@@ -1152,6 +1150,7 @@ tr_TR:
       watched_first_post_categories_instructions: "Bu kategorilerdeki tüm yeni konuların ilk gönderileri için bildirim alacaksınız."
       watched_first_post_tags: "İlk Gönderi izleniyor"
       watched_first_post_tags_instructions: "Bu etiketlere sahip olan her yeni konunun ilk gönderisi için bildirim alacaksınız."
+      watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendir"
       muted_categories: "Sessize alındı"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız ve kategorilerde ya da en son sayfalarda görünmeyecekler."
       muted_categories_instructions_dont_hide: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız."
@@ -1750,6 +1749,10 @@ tr_TR:
       suggested_topics:
         title: "Okumaya devam edin!"
         content: "İşte daha sonra okumak isteyebileceğinizi düşündüğümüz bazı konular."
+      admin_guide:
+        title: "Yeni sitenize hoş geldiniz!"
+        content: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için yönetici kılavuzunu okuyun."
+        primary: "Hadi başlayalım!"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şunu yüklemeye çalışırken:"
@@ -4002,6 +4005,7 @@ tr_TR:
           delete: "Sil"
           reset_confirm: "Bu bölümü varsayılana sıfırlamak istediğinizden emin misiniz?"
           public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getir"
+          always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
           links:
             reset: "Varsayılana sıfırla"
@@ -4052,9 +4056,9 @@ tr_TR:
           header_action_title: "Kenar çubuğu kategorilerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         community:
-          header_link_text: "Topluluk"
-          header_action_create_topic_title: "Yeni konu oluşturun"
-          header_action_edit_section_title: "Topluluk bölümünü düzenle"
+          edit_section:
+            sidebar: "Bu bölümü kişiselleştirin"
+            header_dropdown: "Kişiselleştir"
           links:
             about:
               content: "Hakkında"
@@ -5513,6 +5517,7 @@ tr_TR:
         go_back: "Aramaya geri dön"
         recommended: "Aşağıdaki metni ihtiyaçlarınıza göre özelleştirmenizi öneririz:"
         show_overriden: "Yalnızca geçersiz kılınanları göster"
+        show_outdated: "Yalnızca eski/geçersiz olanları göster"
         locale: "Dil:"
         more_than_50_results: "50'den fazla sonuç var. Lütfen aramanızı daraltın."
       settings:

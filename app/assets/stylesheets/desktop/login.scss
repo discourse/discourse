@@ -274,7 +274,7 @@
   .login-welcome-header {
     grid-area: header;
     padding: 3em 2em 1em;
-
+    background-color: var(--secondary);
     .login-title {
       font-size: var(--font-up-6);
       line-height: var(--line-height-medium);

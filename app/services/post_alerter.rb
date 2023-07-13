@@ -200,9 +200,7 @@ class PostAlerter
 
     DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
-    if !SiteSetting.watched_precedence_over_muted
-      notified = notified + category_or_tag_muters(post.topic)
-    end
+    notified = notified + category_or_tag_muters(post.topic)
 
     if new_record
       if post.topic.private_message?
@@ -270,11 +268,25 @@ class PostAlerter
   end
 
   def category_or_tag_muters(topic)
+    user_option_condition_sql_fragment =
+      if SiteSetting.watched_precedence_over_muted
+        "uo.watched_precedence_over_muted IS false"
+      else
+        "(uo.watched_precedence_over_muted IS NULL OR uo.watched_precedence_over_muted IS false)"
+      end
+
     user_ids_sql = <<~SQL
-      SELECT user_id FROM category_users WHERE category_id = #{topic.category_id.to_i} AND notification_level = #{CategoryUser.notification_levels[:muted]}
-      UNION
-      SELECT user_id FROM tag_users tu JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id} AND tu.notification_level = #{TagUser.notification_levels[:muted]}
-    SQL
+        SELECT uo.user_id FROM user_options uo
+        LEFT JOIN topic_users tus ON tus.user_id = uo.user_id AND tus.topic_id = #{topic.id}
+        LEFT JOIN category_users cu ON cu.user_id = uo.user_id AND cu.category_id = #{topic.category_id.to_i}
+        LEFT JOIN tag_users tu ON tu.user_id = uo.user_id
+        JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id}
+        WHERE
+          (tus.id IS NULL OR tus.notification_level != #{TopicUser.notification_levels[:watching]})
+          AND (cu.notification_level = #{CategoryUser.notification_levels[:muted]} OR tu.notification_level = #{TagUser.notification_levels[:muted]})
+          AND #{user_option_condition_sql_fragment}
+        SQL
+
     User.where("id IN (#{user_ids_sql})")
   end
 

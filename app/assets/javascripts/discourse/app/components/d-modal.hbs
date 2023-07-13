@@ -5,7 +5,7 @@
   @element={{this.modal.containerElement}}
   @inline={{@inline}}
 >
-  <div
+  <this.dynamicElement
     class={{concat-class
       "modal"
       "d-modal"
@@ -63,20 +63,21 @@
 
           {{yield to="belowHeader"}}
 
+          {{this.validateFlashType @flashType}}
           {{#if @flash}}
             <div
               id="modal-alert"
               role="alert"
               class={{concat-class
                 "alert"
-                (concat "alert-" (or @flashType "success"))
+                (if @flashType (concat "alert-" @flashType))
               }}
             >
               {{~@flash~}}
             </div>
           {{/if}}
 
-          <div class="modal-body" tabindex="-1">
+          <div class={{concat-class "modal-body" @bodyClass}} tabindex="-1">
             {{#if (has-block "body")}}
               {{yield to="body"}}
             {{else}}
@@ -94,7 +95,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </this.dynamicElement>
   {{#unless @inline}}
     <div class="modal-backdrop"></div>
   {{/unless}}

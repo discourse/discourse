@@ -56,6 +56,8 @@ gl:
           about: Verbo de
           members: Membros
           settings: Configuración
+      new_message_modal:
+        no_items: "Sen elementos"
       direct_message_creator:
         title: Nova mensaxe
         prefix: "A:"
@@ -73,6 +75,8 @@ gl:
       settings:
         follow: "Participar"
         followed: "Uniuse"
+        threading_enabled: "Activado"
+        threading_disabled: "Desactivado"
         notifications: "Notificacións"
         preview: "Visualizar"
         save: "Gardar"
@@ -116,6 +120,9 @@ gl:
             title: "Normal"
           tracking:
             title: "Seguimento"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nova mensaxe"
         cancel: "Cancelar"

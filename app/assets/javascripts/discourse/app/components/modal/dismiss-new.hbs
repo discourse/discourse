@@ -1,0 +1,33 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "topics.bulk.dismiss_new_modal.title"}}
+>
+  <:body>
+    <p>
+      <PreferenceCheckbox
+        @labelKey="topics.bulk.dismiss_new_modal.topics"
+        @checked={{this.dismissTopics}}
+        @class="dismiss-topics"
+      />
+      <PreferenceCheckbox
+        @labelKey="topics.bulk.dismiss_new_modal.posts"
+        @checked={{this.dismissPosts}}
+        @class="dismiss-posts"
+      />
+      <PreferenceCheckbox
+        @labelKey="topics.bulk.dismiss_new_modal.untrack"
+        @checked={{this.untrack}}
+        @class="untrack"
+      />
+    </p>
+  </:body>
+  <:footer>
+    <DButton
+      id="dismiss-read-confirm"
+      @action={{this.dismissed}}
+      @icon="check"
+      @label="topics.bulk.dismiss"
+      class="btn-primary"
+    />
+  </:footer>
+</DModal>

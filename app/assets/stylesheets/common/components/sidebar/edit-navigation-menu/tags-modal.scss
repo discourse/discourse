@@ -1,19 +1,33 @@
 .sidebar-tags-form {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 0 0.5em;
+  margin: 0;
+  grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
+  &__no-tags {
+    grid-column-start: 1;
+    grid-column-end: -1;
+  }
 
   .sidebar-tags-form__tag {
-    flex-basis: 30%;
     display: flex;
-    flex-direction: row;
     align-items: center;
-    padding: 0.5em 0.25em;
 
     .sidebar-tags-form__tag-label {
       margin-bottom: 0;
+      min-width: 0;
+      padding: 0.33em 0;
+      @include breakpoint(tablet) {
+        // extra tappable space
+        padding: 0.5em 0;
+      }
 
       p {
+        overflow: hidden;
         margin: 0;
+      }
+      &-name {
+        // avoid long tags breaking the layou
+        word-break: break-all;
       }
     }
 
@@ -24,5 +38,6 @@
 
   .sidebar-tags-form__tag-label-count {
     color: var(--primary-medium);
+    margin-left: 0.33em;
   }
 }

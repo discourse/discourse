@@ -3,12 +3,14 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
-import { avatarUrl, escapeExpression } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
+import { avatarUrl } from "discourse-common/lib/avatar-utils";
 import { dasherize } from "@ember/string";
 import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
   name: "chat-sidebar",
@@ -335,6 +337,7 @@ export default {
 
           const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
             @service site;
+            @service modal;
             @service router;
             @tracked userCanDirectMessage =
               this.chatService.userCanDirectMessage;
@@ -383,7 +386,7 @@ export default {
                   id: "startDm",
                   title: I18n.t("chat.direct_messages.new"),
                   action: () => {
-                    this.router.transitionTo("chat.draft-channel");
+                    this.modal.show(ChatModalNewMessage);
                   },
                 },
               ];

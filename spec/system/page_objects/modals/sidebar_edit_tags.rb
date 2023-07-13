@@ -6,12 +6,9 @@ module PageObjects
   module Modals
     class SidebarEditTags < SidebarEditNavigationModal
       def has_tag_checkboxes?(tags)
-        tag_names = tags.map(&:name)
-
-        has_css?(".sidebar-tags-form .sidebar-tags-form__tag", count: tag_names.length) &&
-          all(".sidebar-tags-form .sidebar-tags-form__tag").all? do |row|
-            tag_names.include?(row["data-tag-name"].to_s)
-          end
+        find(".sidebar-tags-form").has_content?(
+          tags.map { |tag| "#{tag.name} (#{tag.public_topic_count})" }.join("\n"),
+        )
       end
 
       def has_no_tag_checkboxes?

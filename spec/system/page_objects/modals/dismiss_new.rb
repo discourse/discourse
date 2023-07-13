@@ -14,6 +14,11 @@ module PageObjects
       def has_untrack_unchecked?
         find(".untrack label").has_no_checked_field?
       end
+
+      def click_dismiss
+        click_button("dismiss-read-confirm")
+        self
+      end
     end
   end
 end

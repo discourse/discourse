@@ -295,11 +295,12 @@ describe Chat::Publisher do
           {
             type: "channel",
             channel_id: channel.id,
-            created_at: message_1.created_at,
-            message_id: message_1.id,
-            user_id: message_1.user_id,
-            username: message_1.user.username,
             thread_id: nil,
+            message:
+              Chat::MessageSerializer.new(
+                message_1,
+                { scope: Guardian.new(nil), root: false },
+              ).as_json,
           },
         )
       end
@@ -355,11 +356,12 @@ describe Chat::Publisher do
               {
                 type: "thread",
                 channel_id: channel.id,
-                created_at: message_1.created_at,
-                message_id: message_1.id,
-                user_id: message_1.user_id,
-                username: message_1.user.username,
                 thread_id: thread.id,
+                message:
+                  Chat::MessageSerializer.new(
+                    message_1,
+                    { scope: Guardian.new(nil), root: false },
+                  ).as_json,
               },
             )
           end

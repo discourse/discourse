@@ -1142,8 +1142,6 @@ hr:
       experimental_sidebar:
         enable: "Omogući bočnu traku"
         options: "Mogućnosti"
-        categories_section: "Odjeljak s kategorijama"
-        tags_section: "Odjeljak s oznakama"
         navigation_section: "Navigacija"
       change: "promijeni"
       featured_topic: "Istaknuta tema"
@@ -4180,8 +4178,8 @@ hr:
           header_action_title: "Uredite svoje kategorije bočne trake"
           configure_defaults: "Konfigurirajte zadane postavke"
         community:
-          header_link_text: "Zajednica"
-          header_action_create_topic_title: "Napravite temu"
+          edit_section:
+            header_dropdown: "Prilagodba"
           links:
             about:
               content: "O nama"

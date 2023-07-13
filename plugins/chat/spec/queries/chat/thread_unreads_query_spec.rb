@@ -147,6 +147,13 @@ describe Chat::ThreadUnreadsQuery do
         )
       end
 
+      it "does not count the thread as unread if the original message is deleted" do
+        thread_1.original_message.destroy
+        expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
+          { channel_id: channel_1.id, mention_count: 0, thread_id: thread_1.id, unread_count: 0 },
+        )
+      end
+
       context "when include_read is false" do
         let(:include_read) { false }
 

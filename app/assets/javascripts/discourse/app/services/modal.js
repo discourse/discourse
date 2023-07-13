@@ -20,10 +20,10 @@ const LEGACY_OPTS = new Set([
 
 @disableImplicitInjections
 class ModalService extends Service {
-  @tracked modalBodyComponent;
+  @tracked activeModal;
   @tracked opts = {};
+
   @tracked containerElement;
-  #resolveShowPromise;
 
   @action
   setContainerElement(element) {
@@ -42,12 +42,13 @@ class ModalService extends Service {
   show(modal, opts) {
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
+    let resolveShowPromise;
     const promise = new Promise((resolve) => {
-      this.#resolveShowPromise = resolve;
+      resolveShowPromise = resolve;
     });
 
     this.opts = opts || {};
-    this.modalBodyComponent = modal;
+    this.activeModal = { component: modal, opts, resolveShowPromise };
 
     const unsupportedOpts = Object.keys(opts).filter((key) =>
       LEGACY_OPTS.has(key)
@@ -64,8 +65,8 @@ class ModalService extends Service {
   }
 
   close(data) {
-    this.#resolveShowPromise?.(data);
-    this.#resolveShowPromise = this.modalBodyComponent = null;
+    this.activeModal?.resolveShowPromise?.(data);
+    this.activeModal = null;
     this.opts = {};
   }
 }
@@ -240,6 +241,6 @@ export default class ModalServiceWithLegacySupport extends ModalService {
   }
 
   get isLegacy() {
-    return this.name && !this.modalBodyComponent;
+    return this.name && !this.activeModal;
   }
 }

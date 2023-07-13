@@ -834,6 +834,8 @@ zh_TW:
       profile: "個人檔案"
       mute: "靜音"
       edit: "編輯喜好設定"
+      download_archive:
+        title: "匯出您的資料"
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
@@ -933,8 +935,6 @@ zh_TW:
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
-        categories_section: "選擇分類"
-        tags_section: "選擇標籤"
         navigation_section: "導覽"
       change: "修改"
       featured_topic: "特色主題"
@@ -1015,8 +1015,8 @@ zh_TW:
         move_to_inbox: "移動到收件匣"
         move_to_archive: "封存"
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
-        tags: "標籤"
-        all_tags: "所有標籤"
+        tags: "標記"
+        all_tags: "所有標記"
         read_more: "想看更多？到<a href='%{basePath}/u/%{username}/messages'>個人訊息</a>瀏覽其他訊息。"
       preferences_nav:
         account: "帳號"
@@ -1779,7 +1779,7 @@ zh_TW:
       search_google_button: "Google"
       search_button: "搜尋"
       categories: "分類"
-      tags: "標籤"
+      tags: "標記"
       type:
         users: "使用者"
         categories: "分類"
@@ -1867,8 +1867,8 @@ zh_TW:
         choose_new_category: "為話題選擇新類別："
         selected:
           other: "你已選擇了 <b>%{count}</b> 個話題。"
-        change_tags: "取代標籤"
-        append_tags: "添加標籤"
+        change_tags: "取代標記"
+        append_tags: "向後追加標記"
         choose_new_tags: "為話題選擇新標籤"
         choose_append_tags: "為話題選擇新標籤"
         changed_tags: "話題的標籤已修改"
@@ -2366,12 +2366,12 @@ zh_TW:
       back: "回到類別"
       general: "一般"
       settings: "設定"
-      tags: "標籤"
+      tags: "標記"
       tags_allowed_tags: "將這些標籤（Tags）限制為此分類做使用："
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
-      allow_global_tags_label: "也允許其他標籤（Tags）"
+      allow_global_tags_label: "還允許使用其他標記"
       required_tag_group:
         delete: "刪除"
       topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
@@ -2742,15 +2742,15 @@ zh_TW:
     download_calendar:
       download: "下載"
     tagging:
-      all_tags: "所有標籤"
-      other_tags: "其他標籤"
+      all_tags: "所有標記"
+      other_tags: "其他標記"
       selector_all_tags: "所有標籤"
-      selector_no_tags: "無標籤"
+      selector_no_tags: "無標記"
       changed: "標籤被修改："
-      tags: "標籤"
+      tags: "標記"
       choose_for_topic: "可選標籤"
       add_synonyms: "新增"
-      delete_tag: "刪除標籤"
+      delete_tag: "刪除標記"
       delete_confirm:
         other: "您確定要刪除此標籤並將它從%{count}個話題中移除嗎？"
       delete_confirm_no_topics: "您是否確定要刪除這個標籤？"
@@ -2758,14 +2758,14 @@ zh_TW:
       sort_by: "排序方式："
       sort_by_count: "總數"
       sort_by_name: "名稱"
-      manage_groups: "管理標籤組"
+      manage_groups: "管理標記群組"
       manage_groups_description: "管理標籤的群組"
-      upload: "上傳標籤"
+      upload: "上傳標記"
       upload_description: "批次上傳 csv 檔案以建立標籤"
       upload_instructions: "一行一個，可選擇以 'tag_name,tag_group' 的格式包含一個標籤群組。"
       upload_successful: "標籤已成功上傳"
       delete_unused_confirmation:
-        other: "%{count}個標籤將被刪除：%{tags}"
+        other: "%{count} 個標記將被刪除：%{tags}"
       delete_unused_confirmation_more_tags:
         other: "%{tags}以及其他%{count}個"
       delete_unused: "刪除未被使用的標籤"
@@ -2793,7 +2793,7 @@ zh_TW:
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
       groups:
         back_btn: "返回所有標籤"
-        title: "標籤組"
+        title: "標記群組"
         about_heading: "選取一個標籤群組或建立一個新標籤群組"
         about_description: "標記組可協助您集中管理多個標籤的權限。"
         new: "新標籤組"
@@ -2808,7 +2808,9 @@ zh_TW:
         delete: "刪除"
         confirm_delete: "確定要刪除此標籤組嗎？"
         everyone_can_use: "所有使用者都能使用標籤。"
+        tags_placeholder: "搜尋或建立標記"
         parent_tag_placeholder: "選擇性"
+        select_groups_placeholder: "選取群組..."
       topics:
         none:
           unread: "你沒有未讀話題。"
@@ -2859,6 +2861,8 @@ zh_TW:
       more: "更多"
       all_categories: "所有分類"
       all_tags: "所有標籤"
+      tags_form_modal:
+        title: "編輯標記導航"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "全部"
@@ -2888,6 +2892,7 @@ zh_TW:
           none: "您尚未新增任何標籤。"
           click_to_get_started: "按一下這裡開始。"
           header_link_text: "標籤"
+          header_action_title: "編輯您的側標條標記"
           configure_defaults: "設定預設值"
         categories:
           none: "您尚未新增任何類別。"
@@ -2895,7 +2900,8 @@ zh_TW:
           header_link_text: "分類"
           configure_defaults: "設定預設值"
         community:
-          header_link_text: "社群"
+          edit_section:
+            header_dropdown: "客製化"
           links:
             about:
               content: "關於"
@@ -3676,9 +3682,11 @@ zh_TW:
           require_approval: "需要審核"
           flag: "檢舉"
           replace: "取代"
+          tag: "標記"
           silence: "靜音"
         form:
           placeholder_regexp: "正規表示法"
+          tag_label: "標記"
           link_placeholder: "https://example.com"
           add: "新增"
           success: "成功"
@@ -3702,6 +3710,7 @@ zh_TW:
           preview: "預覽"
         quick_insert_fields:
           add_new_field: "加入"
+          checkbox: "核取方塊"
           dropdown: "下拉"
         validations_modal:
           table_headers:
@@ -4137,6 +4146,7 @@ zh_TW:
         post_title: "貼文"
         category_id: "分類 ID"
         category_title: "分類"
+        tag_name: "標記名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："
