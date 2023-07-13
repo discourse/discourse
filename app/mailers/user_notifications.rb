@@ -613,6 +613,7 @@ class UserNotifications < ActionMailer::Base
           .visible_tags(Guardian.new(user))
           .joins(:topic_tags)
           .where("topic_tags.topic_id = ?", post.topic_id)
+          .order("tags.public_topic_count DESC", "tags.name ASC")
           .limit(max_tags)
           .pluck(:name)
 
