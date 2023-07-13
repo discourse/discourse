@@ -21,7 +21,7 @@ module PageObjects
         find(".chat-header-icon").click
       end
 
-      def has_right_header_href?(href)
+      def has_header_href?(href)
         find(".chat-header-icon").has_link?(href: href)
       end
 
