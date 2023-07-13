@@ -77,7 +77,7 @@ module Chat
     private
 
     def fetch_channel(contract:, **)
-      Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+      Chat::Channel.includes(:chatable, :last_message).find_by(id: contract.channel_id)
     end
 
     def can_view_channel(guardian:, channel:, **)
@@ -181,9 +181,10 @@ module Chat
         context.threads = []
       else
         context.threads =
-          ::Chat::Thread.includes(original_message_user: :user_status).where(
-            id: messages.map(&:thread_id).compact.uniq,
-          )
+          ::Chat::Thread
+            .strict_loading
+            .includes(last_message: [:user], original_message_user: :user_status)
+            .where(id: messages.map(&:thread_id).compact.uniq)
 
         # Saves us having to load the same message we already have.
         context.threads.each do |thread|

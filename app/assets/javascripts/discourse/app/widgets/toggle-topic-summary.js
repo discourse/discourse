@@ -34,15 +34,36 @@ createWidget("toggle-summary-description", {
 
 export default createWidget("toggle-topic-summary", {
   tagName: "section.information.toggle-summary",
-  html(attrs) {
+  buildKey: (attrs) => `toggle-topic-summary-${attrs.topicId}`,
+
+  defaultState() {
+    return { expandSummaryBox: false };
+  },
+
+  html(attrs, state) {
     const html = [];
     const summarizationButtons = [];
+
+    if (attrs.summarizable) {
+      const title = I18n.t("summary.strategy.button_title");
+
+      summarizationButtons.push(
+        this.attach("button", {
+          className: "btn btn-primary topic-strategy-summarization",
+          icon: "magic",
+          translatedTitle: title,
+          translatedLabel: title,
+          action: "expandSummaryBox",
+          disabled: state.expandSummaryBox,
+        })
+      );
+    }
 
     if (attrs.hasTopRepliesSummary) {
       html.push(this.attach("toggle-summary-description", attrs));
       summarizationButtons.push(
         this.attach("button", {
-          className: "btn btn-primary",
+          className: "btn top-replies",
           icon: attrs.topicSummaryEnabled ? null : "layer-group",
           title: attrs.topicSummaryEnabled ? null : "summary.short_title",
           label: attrs.topicSummaryEnabled
@@ -53,22 +74,18 @@ export default createWidget("toggle-topic-summary", {
       );
     }
 
-    if (attrs.includeSummary) {
-      const title = I18n.t("summary.strategy.button_title");
-
-      summarizationButtons.push(
-        this.attach("button", {
-          className: "btn btn-primary topic-strategy-summarization",
-          icon: "magic",
-          translatedTitle: title,
-          translatedLabel: title,
-          action: "showSummary",
-        })
-      );
+    if (summarizationButtons) {
+      html.push(h("div.summarization-buttons", summarizationButtons));
     }
 
-    html.push(h("div.summarization-buttons", summarizationButtons));
+    if (state.expandSummaryBox) {
+      html.push(this.attach("summary-box", attrs));
+    }
 
     return html;
+  },
+
+  expandSummaryBox() {
+    this.state.expandSummaryBox = true;
   },
 });

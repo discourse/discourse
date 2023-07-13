@@ -1,5 +1,5 @@
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { avatarImg } from "discourse/lib/utilities";
+import { avatarImg } from "discourse-common/lib/avatar-utils";
 import { get } from "@ember/object";
 import { htmlHelper } from "discourse-common/lib/helpers";
 import { isEmpty } from "@ember/utils";

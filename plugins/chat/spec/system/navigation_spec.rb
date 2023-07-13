@@ -286,16 +286,19 @@ RSpec.describe "Navigation", type: :system do
 
     context "when re-opening full page chat after navigating to a channel" do
       it "opens full page chat on correct channel" do
+        chat_channel_path = chat.channel_path(category_channel_2.slug, category_channel_2.id)
+
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.maximize
         sidebar_page.open_channel(category_channel_2)
         find("#site-logo").click
+
+        expect(chat_page).to have_right_header_href(chat_channel_path)
+
         chat_page.open_from_header
 
-        expect(page).to have_current_path(
-          chat.channel_path(category_channel_2.slug, category_channel_2.id),
-        )
+        expect(page).to have_current_path(chat_channel_path)
         expect(page).to have_content(category_channel_2.title)
       end
     end

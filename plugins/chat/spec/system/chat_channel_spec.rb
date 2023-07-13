@@ -241,7 +241,17 @@ RSpec.describe "Chat channel", type: :system do
       chat.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "&amp;lt;mark&amp;gt;not marked&amp;lt;/mark&amp;gt;",
+        "&lt;mark&gt;not marked&lt;/mark&gt;",
+      )
+    end
+
+    it "renders safe HTML like mentions (which are just links) in the reply-to" do
+      message_2.update!(message: "@#{other_user.username} <mark>not marked</mark>")
+      message_2.rebake!
+      chat.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
       )
     end
   end
