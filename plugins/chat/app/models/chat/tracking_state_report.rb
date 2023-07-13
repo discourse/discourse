@@ -43,21 +43,27 @@ module Chat
     end
 
     def find_channel_threads(channel_id)
-      thread_tracking
-        .select { |_, thread| thread[:channel_id] == channel_id }
-        .map { |thread_id, thread| [thread_id, TrackingStateInfo.new(thread)] }
-        .to_h
+      thread_tracking.inject({}) do |result, (thread_id, thread)|
+        if thread[:channel_id] == channel_id
+          result.merge(thread_id => TrackingStateInfo.new(thread))
+        else
+          result
+        end
+      end
     end
 
     def find_channel_thread_overviews(channel_id)
-      thread_tracking
-        .select { |_, thread| thread[:channel_id] == channel_id }
-        .map { |thread_id, thread| [thread_id, thread[:last_reply_created_at]] }
-        .to_h
+      thread_tracking.inject({}) do |result, (thread_id, thread)|
+        if thread[:channel_id] == channel_id
+          result.merge(thread_id => thread[:last_reply_created_at])
+        else
+          result
+        end
+      end
     end
 
     def thread_unread_overview_by_channel
-      thread_tracking.reduce({}) do |acc, tt|
+      thread_tracking.inject({}) do |acc, tt|
         thread_id = tt.first
         data = tt.second
 

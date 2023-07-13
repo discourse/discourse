@@ -124,6 +124,15 @@ export default class ChatChannel {
     ).length;
   }
 
+  // We have to do this since it means the user is currently looking
+  // at the channel and we don't want the unread indicator to show in
+  // the sidebar (since that is based on the lastViewedAt).
+  updateLastViewedAt(activeChannel) {
+    if (this.id === activeChannel?.id) {
+      this.currentUserMembership.lastViewedAt = new Date();
+    }
+  }
+
   findIndexOfMessage(id) {
     return this.messagesManager.findIndexOfMessage(id);
   }

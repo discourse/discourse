@@ -216,12 +216,7 @@ export default class ChatSubscriptionsManager extends Service {
                     busData.message.created_at
                   );
 
-                  // We have to do this since it means the user is currently looking
-                  // at the channel and we don't want the unread indicator to show in
-                  // the sidebar (since that is based on the lastViewedAt).
-                  if (channel.id === this.chat.activeChannel?.id) {
-                    channel.currentUserMembership.lastViewedAt = new Date();
-                  }
+                  channel.updateLastViewedAt(this.chat.activeChannel);
                 }
               });
           }
@@ -268,13 +263,7 @@ export default class ChatSubscriptionsManager extends Service {
                   busData.message.created_at
                 );
                 thread.tracking.unreadCount++;
-
-                // We have to do this since it means the user is currently looking
-                // at the channel and we don't want the unread indicator to show in
-                // the sidebar (since that is based on the lastViewedAt).
-                if (channel.id === this.chat.activeChannel?.id) {
-                  channel.currentUserMembership.lastViewedAt = new Date();
-                }
+                channel.updateLastViewedAt(this.chat.activeChannel);
               }
             }
           }
