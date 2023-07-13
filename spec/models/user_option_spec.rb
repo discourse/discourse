@@ -44,11 +44,34 @@ RSpec.describe UserOption do
       expect(user.user_option.email_digests).to eq(false)
       expect(user.user_option.digest_after_minutes).to eq(0)
     end
+
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is enabled" do
+      SiteSetting.default_sidebar_link_to_filtered_list = true
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_link_to_filtered_list).to eq(true)
+    end
+
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is disabled" do
+      SiteSetting.default_sidebar_link_to_filtered_list = false
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_link_to_filtered_list).to eq(false)
+    end
+
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is enabled" do
+      SiteSetting.default_sidebar_show_count_of_new_items = true
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_show_count_of_new_items).to eq(true)
+    end
+
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is disabled" do
+      SiteSetting.default_sidebar_show_count_of_new_items = false
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
+    end
   end
 
   describe "site settings" do
     it "should apply defaults from site settings" do
-
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_enable_defer = true
       SiteSetting.default_other_external_links_in_new_tab = true
@@ -120,16 +143,24 @@ RSpec.describe UserOption do
               user.stubs(:last_seen_at).returns(5.minutes.ago)
             end
 
-            after do
-              Discourse.redis.flushdb
-            end
+            after { Discourse.redis.flushdb }
 
             it "should have a reason for the first visit" do
               freeze_time do
                 delay = SiteSetting.active_user_rate_limit_secs / 2
 
-                expect_enqueued_with(job: :update_top_redirection, args: { user_id: user.id, redirected_at: Time.zone.now.to_s }, at: Time.zone.now + delay) do
-                  expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.new_user'), period: :monthly)
+                expect_enqueued_with(
+                  job: :update_top_redirection,
+                  args: {
+                    user_id: user.id,
+                    redirected_at: Time.zone.now.to_s,
+                  },
+                  at: Time.zone.now + delay,
+                ) do
+                  expect(user.user_option.redirected_to_top).to eq(
+                    reason: I18n.t("redirected_to_top_reasons.new_user"),
+                    period: :monthly,
+                  )
                 end
               end
             end
@@ -149,8 +180,10 @@ RSpec.describe UserOption do
               user.last_seen_at = 2.months.ago
               user.user_option.expects(:update_last_redirected_to_top!).once
 
-              expect(user.user_option.redirected_to_top).to eq(reason: I18n.t('redirected_to_top_reasons.not_seen_in_a_month'),
-                                                               period: :monthly)
+              expect(user.user_option.redirected_to_top).to eq(
+                reason: I18n.t("redirected_to_top_reasons.not_seen_in_a_month"),
+                period: :monthly,
+              )
             end
           end
         end
@@ -158,26 +191,31 @@ RSpec.describe UserOption do
     end
   end
 
-  describe '.user_tzinfo' do
+  describe ".user_tzinfo" do
     fab!(:user) { Fabricate(:user) }
 
-    context 'with user with valid timezone given' do
-      before do
-        user.user_option.update(timezone: 'Europe/Paris')
+    context "with user with valid timezone given" do
+      before { user.user_option.update(timezone: "Europe/Paris") }
+
+      it "returns the expect timezone" do
+        expect(UserOption.user_tzinfo(user.id)).to eq(
+          ActiveSupport::TimeZone.find_tzinfo("Europe/Paris"),
+        )
       end
 
-      it 'returns the expect timezone' do
-        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo('Europe/Paris'))
+      it "works for Europe/Kyiv" do
+        user.user_option.update(timezone: "Europe/Kyiv")
+        expect(UserOption.user_tzinfo(user.id)).to eq(
+          ActiveSupport::TimeZone.find_tzinfo("Europe/Kyiv"),
+        )
       end
     end
 
-    context 'with user with invalid timezone given' do
-      before do
-        user.user_option.update(timezone: 'Catopia/Catcity')
-      end
+    context "with user with invalid timezone given" do
+      before { user.user_option.update(timezone: "Catopia/Catcity") }
 
-      it 'fallbacks to UTC' do
-        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo('UTC'))
+      it "fallbacks to UTC" do
+        expect(UserOption.user_tzinfo(user.id)).to eq(ActiveSupport::TimeZone.find_tzinfo("UTC"))
       end
     end
   end

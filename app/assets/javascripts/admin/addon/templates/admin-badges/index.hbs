@@ -1,11 +1,20 @@
 <DSection @class="current-badges">
   <div class="badge-intro admin-intro">
-    <img src={{this.badgeIntroEmoji}} class="badge-intro-emoji" alt={{i18n "admin.badges.badge_intro.emoji"}}>
+    <img
+      src={{this.badgeIntroEmoji}}
+      class="badge-intro-emoji"
+      alt={{i18n "admin.badges.badge_intro.emoji"}}
+    />
     <div class="content-wrapper">
       <h1>{{i18n "admin.badges.badge_intro.title"}}</h1>
       <div class="external-resources">
         {{#each this.badgeIntroLinks as |link|}}
-          <a href={{link.href}} class="external-link" target="_blank" rel="noopener noreferrer">
+          <a
+            href={{link.href}}
+            class="external-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {{d-icon link.icon}}
             <span>{{i18n link.text}}</span>
           </a>

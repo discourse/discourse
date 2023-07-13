@@ -2,7 +2,7 @@
 
 module Jobs
   class AdminConfirmationEmail < ::Jobs::Base
-    sidekiq_options queue: 'critical'
+    sidekiq_options queue: "critical"
 
     def execute(args)
       to_address = args[:to_address]
@@ -18,6 +18,5 @@ module Jobs
       message = AdminConfirmationMailer.send_email(to_address, target_email, target_username, token)
       Email::Sender.new(message, :admin_confirmation_message).send
     end
-
   end
 end

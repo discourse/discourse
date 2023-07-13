@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'ipaddr'
+require "ipaddr"
 
 # awkward TopicView is taken
 class TopicViewItem < ActiveRecord::Base
-  self.table_name = 'topic_views'
+  self.table_name = "topic_views"
   belongs_to :user
   belongs_to :topic
   validates_presence_of :topic_id, :ip_address, :viewed_at
@@ -24,7 +24,8 @@ class TopicViewItem < ActiveRecord::Base
 
       TopicViewItem.transaction do
         # this is called real frequently, working hard to avoid exceptions
-        sql = "INSERT INTO topic_views (topic_id, ip_address, viewed_at, user_id)
+        sql =
+          "INSERT INTO topic_views (topic_id, ip_address, viewed_at, user_id)
                SELECT :topic_id, :ip_address, :viewed_at, :user_id
                WHERE NOT EXISTS (
                  SELECT 1 FROM topic_views
@@ -42,17 +43,18 @@ class TopicViewItem < ActiveRecord::Base
 
         result = builder.exec(topic_id: topic_id, ip_address: ip, viewed_at: at, user_id: user_id)
 
-        Topic.where(id: topic_id).update_all 'views = views + 1'
+        Topic.where(id: topic_id).update_all "views = views + 1"
 
         if result > 0
-          UserStat.where(user_id: user_id).update_all 'topics_entered = topics_entered + 1' if user_id
+          if user_id
+            UserStat.where(user_id: user_id).update_all "topics_entered = topics_entered + 1"
+          end
         end
 
         # Update the views count in the parent, if it exists.
       end
     end
   end
-
 end
 
 # == Schema Information

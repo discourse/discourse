@@ -1,4 +1,9 @@
-<DModalBody @title="admin.user.delete_posts.progress.title" @dismissable={{false}}>
+<DModalBody
+  @title="admin.user.delete_posts.progress.title"
+  @dismissable={{false}}
+>
   <p>{{I18n "admin.user.delete_posts.progress.description"}}</p>
-  <div class="progress-bar"><span style={{html-safe (concat "width: " this.deletedPercentage "%")}}></span></div>
+  <div class="progress-bar"><span
+      style={{html-safe (concat "width: " this.deletedPercentage "%")}}
+    ></span></div>
 </DModalBody>

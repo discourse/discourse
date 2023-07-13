@@ -22,7 +22,7 @@ class UserHistorySerializer < ApplicationSerializer
 
   def action_name
     key = UserHistory.actions.key(object.action)
-    [:custom, :custom_staff].include?(key) ? object.custom_type : key.to_s
+    %i[custom custom_staff].include?(key) ? object.custom_type : key.to_s
   end
 
   def new_value

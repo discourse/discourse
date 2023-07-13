@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AboutSerializer < ApplicationSerializer
-
   class UserAboutSerializer < BasicUserSerializer
     attributes :title, :last_seen_at
   end

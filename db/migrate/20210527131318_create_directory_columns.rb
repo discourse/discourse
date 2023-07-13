@@ -9,10 +9,10 @@ class CreateDirectoryColumns < ActiveRecord::Migration[6.1]
       t.boolean :automatic, null: false
       t.boolean :enabled, null: false
       t.integer :position, null: false
-      t.datetime :created_at, default: -> { 'CURRENT_TIMESTAMP' }
+      t.datetime :created_at, default: -> { "CURRENT_TIMESTAMP" }
     end
 
-    add_index :directory_columns, [:enabled, :position, :user_field_id], name: "directory_column_index"
+    add_index :directory_columns, %i[enabled position user_field_id], name: "directory_column_index"
 
     create_automatic_columns
   end
@@ -22,8 +22,7 @@ class CreateDirectoryColumns < ActiveRecord::Migration[6.1]
   end
 
   def create_automatic_columns
-    DB.exec(
-      <<~SQL
+    DB.exec(<<~SQL)
       INSERT INTO directory_columns (
         name, automatic, enabled, automatic_position, position, icon
       )
@@ -36,6 +35,5 @@ class CreateDirectoryColumns < ActiveRecord::Migration[6.1]
         ( 'posts_read', true, true, 6, 6, NULL ),
         ( 'days_visited', true, true, 7, 7, NULL );
       SQL
-    )
   end
 end

@@ -3,7 +3,6 @@
 require "net/pop"
 
 class POP3PollingEnabledSettingValidator
-
   def initialize(opts = {})
     @opts = opts
   end
@@ -12,10 +11,8 @@ class POP3PollingEnabledSettingValidator
     # only validate when enabling polling
     return true if val == "f"
     # ensure we can authenticate
-    SiteSetting.pop3_polling_host.present? &&
-    SiteSetting.pop3_polling_username.present? &&
-    SiteSetting.pop3_polling_password.present? &&
-    authentication_works?
+    SiteSetting.pop3_polling_host.present? && SiteSetting.pop3_polling_username.present? &&
+      SiteSetting.pop3_polling_password.present? && authentication_works?
   end
 
   def error_message
@@ -33,19 +30,20 @@ class POP3PollingEnabledSettingValidator
   private
 
   def authentication_works?
-    @authentication_works ||= begin
-      EmailSettingsValidator.validate_pop3(
-        host: SiteSetting.pop3_polling_host,
-        port: SiteSetting.pop3_polling_port,
-        ssl: SiteSetting.pop3_polling_ssl,
-        username: SiteSetting.pop3_polling_username,
-        password: SiteSetting.pop3_polling_password,
-        openssl_verify: SiteSetting.pop3_polling_openssl_verify
-      )
-    rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
-      false
-    else
-      true
-    end
+    @authentication_works ||=
+      begin
+        EmailSettingsValidator.validate_pop3(
+          host: SiteSetting.pop3_polling_host,
+          port: SiteSetting.pop3_polling_port,
+          ssl: SiteSetting.pop3_polling_ssl,
+          username: SiteSetting.pop3_polling_username,
+          password: SiteSetting.pop3_polling_password,
+          openssl_verify: SiteSetting.pop3_polling_openssl_verify,
+        )
+      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
+        false
+      else
+        true
+      end
   end
 end

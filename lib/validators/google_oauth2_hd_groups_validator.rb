@@ -6,7 +6,13 @@ class GoogleOauth2HdGroupsValidator
   end
 
   def valid_value?(value)
-    @valid = value == "f" || (SiteSetting.google_oauth2_hd.present? && SiteSetting.google_oauth2_hd_groups_service_account_admin_email.present? && SiteSetting.google_oauth2_hd_groups_service_account_json.present?)
+    @valid =
+      value == "f" ||
+        (
+          SiteSetting.google_oauth2_hd.present? &&
+            SiteSetting.google_oauth2_hd_groups_service_account_admin_email.present? &&
+            SiteSetting.google_oauth2_hd_groups_service_account_json.present?
+        )
   end
 
   def error_message

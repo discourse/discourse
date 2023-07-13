@@ -6,7 +6,6 @@
 
 module ActiveSupport
   module Inflector
-
     LRU_CACHE_SIZE = 200
     LRU_CACHES = []
 
@@ -22,26 +21,30 @@ module ActiveSupport
         uncached = "#{method_name}_without_cache"
         alias_method uncached, method_name
 
-        m = define_method(method_name) do |*arguments|
-          # this avoids recursive locks
-          found = true
-          data = cache.fetch(arguments) { found = false }
-          unless found
-            cache[arguments] = data = public_send(uncached, *arguments)
+        m =
+          define_method(method_name) do |*arguments|
+            # this avoids recursive locks
+            found = true
+            data = cache.fetch(arguments) { found = false }
+            cache[arguments] = data = public_send(uncached, *arguments) unless found
+            # so cache is never corrupted
+            data.dup
           end
-          # so cache is never corrupted
-          data.dup
-        end
 
         # https://bugs.ruby-lang.org/issues/16897
-        if Module.respond_to?(:ruby2_keywords, true)
-          ruby2_keywords(m)
-        end
+        ruby2_keywords(m) if Module.respond_to?(:ruby2_keywords, true)
       end
     end
 
-    memoize :pluralize, :singularize, :camelize, :underscore, :humanize,
-            :titleize, :tableize, :classify, :foreign_key
+    memoize :pluralize,
+            :singularize,
+            :camelize,
+            :underscore,
+            :humanize,
+            :titleize,
+            :tableize,
+            :classify,
+            :foreign_key
   end
 end
 

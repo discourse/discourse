@@ -7,6 +7,6 @@ class CreateDismissedTopicUsersTable < ActiveRecord::Migration[6.0]
       t.integer :topic_id
       t.datetime :created_at
     end
-    add_index :dismissed_topic_users, %i(user_id topic_id), unique: true
+    add_index :dismissed_topic_users, %i[user_id topic_id], unique: true
   end
 end

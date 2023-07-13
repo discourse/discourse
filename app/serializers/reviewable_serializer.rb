@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableSerializer < ApplicationSerializer
-
   class_attribute :_payload_for_serialization
 
   attributes(
@@ -16,18 +15,18 @@ class ReviewableSerializer < ApplicationSerializer
     :can_edit,
     :score,
     :version,
-    :target_created_by_trust_level
+    :target_created_by_trust_level,
   )
 
   attribute :status_for_database, key: :status
 
-  has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: 'users'
-  has_one :target_created_by, serializer: UserWithCustomFieldsSerializer, root: 'users'
+  has_one :created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
+  has_one :target_created_by, serializer: UserWithCustomFieldsSerializer, root: "users"
   has_one :topic, serializer: ListableTopicSerializer
   has_many :editable_fields, serializer: ReviewableEditableFieldSerializer, embed: :objects
   has_many :reviewable_scores, serializer: ReviewableScoreSerializer
   has_many :bundled_actions, serializer: ReviewableBundledActionSerializer
-  has_one :claimed_by, serializer: UserWithCustomFieldsSerializer, root: 'users'
+  has_one :claimed_by, serializer: UserWithCustomFieldsSerializer, root: "users"
 
   # Used to keep track of our payload attributes
   class_attribute :_payload_for_serialization
@@ -73,9 +72,7 @@ class ReviewableSerializer < ApplicationSerializer
 
   # This is easier than creating an AMS method for each attribute
   def self.target_attributes(*attributes)
-    attributes.each do |a|
-      create_attribute(a, "object.target&.#{a}")
-    end
+    attributes.each { |a| create_attribute(a, "object.target&.#{a}") }
   end
 
   def self.payload_attributes(*attributes)
@@ -108,7 +105,9 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def target_url
-    return Discourse.base_url + object.target.url if object.target.is_a?(Post) && object.target.present?
+    if object.target.is_a?(Post) && object.target.present?
+      return Discourse.base_url + object.target.url
+    end
     topic_url
   end
 
@@ -135,5 +134,4 @@ class ReviewableSerializer < ApplicationSerializer
   def target_created_by_trust_level
     object&.target_created_by&.trust_level
   end
-
 end

@@ -1,7 +1,0 @@
-{{#unless this.siteSettings.must_approve_users}}
-  <DButton @action={{this.sendActivationEmail}} @label="login.resend_title" @icon="envelope" @class="btn-primary resend" />
-{{/unless}}
-
-{{#if this.canEditEmail}}
-  <DButton @action={{this.editActivationEmail}} @label="login.change_email" @icon="pencil-alt" @class="edit-email" />
-{{/if}}

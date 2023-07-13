@@ -8,7 +8,7 @@ class CreateCategoryTagStats < ActiveRecord::Migration[5.1]
       t.integer :topic_count, default: 0, null: false
     end
 
-    add_index :category_tag_stats, [:category_id, :topic_count]
-    add_index :category_tag_stats, [:category_id, :tag_id], unique: true
+    add_index :category_tag_stats, %i[category_id topic_count]
+    add_index :category_tag_stats, %i[category_id tag_id], unique: true
   end
 end

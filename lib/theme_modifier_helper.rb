@@ -5,8 +5,6 @@ class ThemeModifierHelper
   end
 
   ThemeModifierSet.modifiers.keys.each do |modifier|
-    define_method(modifier) do
-      Theme.lookup_modifier(@theme_ids, modifier)
-    end
+    define_method(modifier) { Theme.lookup_modifier(@theme_ids, modifier) }
   end
 end

@@ -1,17 +1,14 @@
 # frozen_string_literal: true
 
 class GlobalSetting
-
   def self.register(key, default)
-    define_singleton_method(key) do
-      provider.lookup(key, default)
-    end
+    define_singleton_method(key) { provider.lookup(key, default) }
   end
 
-  VALID_SECRET_KEY ||= /^[0-9a-f]{128}$/
+  VALID_SECRET_KEY ||= /\A[0-9a-f]{128}\z/
   # this is named SECRET_TOKEN as opposed to SECRET_KEY_BASE
   # for legacy reasons
-  REDIS_SECRET_KEY ||= 'SECRET_TOKEN'
+  REDIS_SECRET_KEY ||= "SECRET_TOKEN"
 
   REDIS_VALIDATE_SECONDS ||= 30
 
@@ -23,58 +20,57 @@ class GlobalSetting
   # - generate a token on the fly if needed and cache in redis
   # - enforce rules about token format falling back to redis if needed
   def self.safe_secret_key_base
-
-    if @safe_secret_key_base && @token_in_redis && (@token_last_validated + REDIS_VALIDATE_SECONDS) < Time.now
+    if @safe_secret_key_base && @token_in_redis &&
+         (@token_last_validated + REDIS_VALIDATE_SECONDS) < Time.now
       @token_last_validated = Time.now
       token = Discourse.redis.without_namespace.get(REDIS_SECRET_KEY)
-      if token.nil?
-        Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, @safe_secret_key_base)
-      end
+      Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, @safe_secret_key_base) if token.nil?
     end
 
-    @safe_secret_key_base ||= begin
-      token = secret_key_base
-      if token.blank? || token !~ VALID_SECRET_KEY
+    @safe_secret_key_base ||=
+      begin
+        token = secret_key_base
+        if token.blank? || token !~ VALID_SECRET_KEY
+          @token_in_redis = true
+          @token_last_validated = Time.now
 
-        @token_in_redis = true
-        @token_last_validated = Time.now
-
-        token = Discourse.redis.without_namespace.get(REDIS_SECRET_KEY)
-        unless token && token =~ VALID_SECRET_KEY
-          token = SecureRandom.hex(64)
-          Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, token)
+          token = Discourse.redis.without_namespace.get(REDIS_SECRET_KEY)
+          unless token && token =~ VALID_SECRET_KEY
+            token = SecureRandom.hex(64)
+            Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, token)
+          end
         end
+        if !secret_key_base.blank? && token != secret_key_base
+          STDERR.puts "WARNING: DISCOURSE_SECRET_KEY_BASE is invalid, it was re-generated"
+        end
+        token
       end
-      if !secret_key_base.blank? && token != secret_key_base
-        STDERR.puts "WARNING: DISCOURSE_SECRET_KEY_BASE is invalid, it was re-generated"
-      end
-      token
-    end
   rescue Redis::CommandError => e
     @safe_secret_key_base = SecureRandom.hex(64) if e.message =~ /READONLY/
   end
 
   def self.load_defaults
-    default_provider = FileProvider.from(File.expand_path('../../../config/discourse_defaults.conf', __FILE__))
-    default_provider.keys.concat(@provider.keys).uniq.each do |key|
-      default = default_provider.lookup(key, nil)
+    default_provider =
+      FileProvider.from(File.expand_path("../../../config/discourse_defaults.conf", __FILE__))
+    default_provider
+      .keys
+      .concat(@provider.keys)
+      .uniq
+      .each do |key|
+        default = default_provider.lookup(key, nil)
 
-      instance_variable_set("@#{key}_cache", nil)
+        instance_variable_set("@#{key}_cache", nil)
 
-      define_singleton_method(key) do
-        val = instance_variable_get("@#{key}_cache")
-        unless val.nil?
-          val == :missing ? nil : val
-        else
-          val = provider.lookup(key, default)
+        define_singleton_method(key) do
+          val = instance_variable_get("@#{key}_cache")
           if val.nil?
-            val = :missing
+            val = provider.lookup(key, default)
+            val = :missing if val.nil?
+            instance_variable_set("@#{key}_cache", val)
           end
-          instance_variable_set("@#{key}_cache", val)
           val == :missing ? nil : val
         end
       end
-    end
   end
 
   def self.skip_db=(v)
@@ -94,13 +90,17 @@ class GlobalSetting
   end
 
   def self.use_s3?
-    (@use_s3 ||=
-      begin
-        s3_bucket &&
-        s3_region && (
-          s3_use_iam_profile || (s3_access_key_id && s3_secret_access_key)
-        ) ? :true : :false
-      end) == :true
+    (
+      @use_s3 ||=
+        begin
+          if s3_bucket && s3_region &&
+               (s3_use_iam_profile || (s3_access_key_id && s3_secret_access_key))
+            :true
+          else
+            :false
+          end
+        end
+    ) == :true
   end
 
   def self.s3_bucket_name
@@ -122,7 +122,7 @@ class GlobalSetting
   def self.database_config
     hash = { "adapter" => "postgresql" }
 
-    %w{
+    %w[
       pool
       connect_timeout
       timeout
@@ -135,13 +135,13 @@ class GlobalSetting
       password
       replica_host
       replica_port
-    }.each do |s|
+    ].each do |s|
       if val = self.public_send("db_#{s}")
         hash[s] = val
       end
     end
 
-    hostnames = [ hostname ]
+    hostnames = [hostname]
     hostnames << backup_hostname if backup_hostname.present?
 
     hostnames << URI.parse(cdn_url).host if cdn_url.present?
@@ -154,11 +154,11 @@ class GlobalSetting
     hash["reaping_frequency"] = connection_reaper_interval if connection_reaper_interval.present?
     hash["advisory_locks"] = !!self.db_advisory_locks
 
-    db_variables = provider.keys.filter { |k| k.to_s.starts_with? 'db_variables_' }
+    db_variables = provider.keys.filter { |k| k.to_s.starts_with? "db_variables_" }
     if db_variables.length > 0
       hash["variables"] = {}
       db_variables.each do |k|
-        hash["variables"][k.slice(('db_variables_'.length)..)] = self.public_send(k)
+        hash["variables"][k.slice(("db_variables_".length)..)] = self.public_send(k)
       end
     end
 
@@ -183,12 +183,16 @@ class GlobalSetting
 
   def self.get_message_bus_redis_replica_host
     return message_bus_redis_replica_host if message_bus_redis_replica_host.present?
-    message_bus_redis_slave_host if respond_to?(:message_bus_redis_slave_host) && message_bus_redis_slave_host.present?
+    if respond_to?(:message_bus_redis_slave_host) && message_bus_redis_slave_host.present?
+      message_bus_redis_slave_host
+    end
   end
 
   def self.get_message_bus_redis_replica_port
     return message_bus_redis_replica_port if message_bus_redis_replica_port.present?
-    message_bus_redis_slave_port if respond_to?(:message_bus_redis_slave_port) && message_bus_redis_slave_port.present?
+    if respond_to?(:message_bus_redis_slave_port) && message_bus_redis_slave_port.present?
+      message_bus_redis_slave_port
+    end
   end
 
   def self.redis_config
@@ -239,17 +243,13 @@ class GlobalSetting
   end
 
   def self.add_default(name, default)
-    unless self.respond_to? name
-      define_singleton_method(name) do
-        default
-      end
-    end
+    define_singleton_method(name) { default } unless self.respond_to? name
   end
 
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"
-      return $1.to_i if setting.to_s.strip =~ /^([0-9]+)$/
+      return $1.to_i if setting.to_s.strip =~ /\A([0-9]+)\z/
       setting
     end
 
@@ -259,7 +259,7 @@ class GlobalSetting
           current
         else
           default.present? ? default : nil
-        end
+        end,
       )
     end
   end
@@ -267,9 +267,7 @@ class GlobalSetting
   class FileProvider < BaseProvider
     attr_reader :data
     def self.from(file)
-      if File.exist?(file)
-        parse(file)
-      end
+      parse(file) if File.exist?(file)
     end
 
     def initialize(file)
@@ -278,11 +276,15 @@ class GlobalSetting
     end
 
     def read
-      ERB.new(File.read(@file)).result().split("\n").each do |line|
-        if line =~ /^\s*([a-z_]+[a-z0-9_]*)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
-          @data[$1.strip.to_sym] = ($4 || $3 || $2).strip
+      ERB
+        .new(File.read(@file))
+        .result()
+        .split("\n")
+        .each do |line|
+          if line =~ /\A\s*([a-z_]+[a-z0-9_]*)\s*=\s*(\"([^\"]*)\"|\'([^\']*)\'|[^#]*)/
+            @data[$1.strip.to_sym] = ($4 || $3 || $2).strip
+          end
         end
-      end
     end
 
     def lookup(key, default)
@@ -306,17 +308,16 @@ class GlobalSetting
   class EnvProvider < BaseProvider
     def lookup(key, default)
       var = ENV["DISCOURSE_" + key.to_s.upcase]
-      resolve(var , var.nil? ? default : nil)
+      resolve(var, var.nil? ? default : nil)
     end
 
     def keys
-      ENV.keys.select { |k| k =~ /^DISCOURSE_/ }.map { |k| k[10..-1].downcase.to_sym }
+      ENV.keys.select { |k| k =~ /\ADISCOURSE_/ }.map { |k| k[10..-1].downcase.to_sym }
     end
   end
 
   class BlankProvider < BaseProvider
     def lookup(key, default)
-
       if key == :redis_port
         return ENV["DISCOURSE_REDIS_PORT"] if ENV["DISCOURSE_REDIS_PORT"]
       end
@@ -337,8 +338,8 @@ class GlobalSetting
       @provider = BlankProvider.new
     else
       @provider =
-        FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
-        EnvProvider.new
+        FileProvider.from(File.expand_path("../../../config/discourse.conf", __FILE__)) ||
+          EnvProvider.new
     end
   end
 

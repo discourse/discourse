@@ -22,7 +22,11 @@ class LocaleFileWalker
 
   def handle_node(node, depth, parents, consecutive_scalars)
     if node_is_scalar = node.is_a?(Psych::Nodes::Scalar)
-      valid_scalar?(depth, consecutive_scalars) ? handle_scalar(node, depth, parents) : handle_value(node.value, parents)
+      if valid_scalar?(depth, consecutive_scalars)
+        handle_scalar(node, depth, parents)
+      else
+        handle_value(node.value, parents)
+      end
     elsif node.is_a?(Psych::Nodes::Alias)
       handle_alias(node, depth, parents)
     elsif node.is_a?(Psych::Nodes::Mapping)

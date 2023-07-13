@@ -1,0 +1,9 @@
+{{#each this.colors as |c|}}
+  <ColorPickerChoice
+    @color={{c}}
+    @usedColors={{this.usedColors}}
+    @selectColor={{action "selectColor"}}
+  >
+    {{d-icon "check"}}
+  </ColorPickerChoice>
+{{/each}}

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "email/poller"
 
 RSpec.describe Jobs::PollMailbox do
   let(:poller) { Jobs::PollMailbox.new }
@@ -20,8 +21,7 @@ RSpec.describe Jobs::PollMailbox do
   describe ".poll_pop3" do
     # the date is dynamic here because there is a 1 week cutoff for
     # the pop3 polling
-    let(:example_email) do
-      email = <<~EMAIL
+    let(:example_email) { email = <<~EMAIL }
         Return-Path: <one@foo.com>
         From: One <one@foo.com>
         To: team@bar.com
@@ -34,27 +34,22 @@ RSpec.describe Jobs::PollMailbox do
 
         This is an email example.
       EMAIL
-    end
 
     context "with pop errors" do
-      before do
-        Discourse.expects(:handle_job_exception).at_least_once
-      end
+      before { Discourse.expects(:handle_job_exception).at_least_once }
 
-      after do
-        Discourse.redis.del(Jobs::PollMailbox::POLL_MAILBOX_TIMEOUT_ERROR_KEY)
-      end
+      after { Discourse.redis.del(Jobs::PollMailbox::POLL_MAILBOX_TIMEOUT_ERROR_KEY) }
 
       it "add an admin dashboard message on pop authentication error" do
-        Net::POP3.any_instance.expects(:start)
-          .raises(Net::POPAuthenticationError.new).at_least_once
+        Net::POP3.any_instance.expects(:start).raises(Net::POPAuthenticationError.new).at_least_once
 
         poller.poll_pop3
 
-        i18n_key = 'dashboard.poll_pop3_auth_error'
+        i18n_key = "dashboard.poll_pop3_auth_error"
 
-        expect(AdminDashboardData.problem_message_check(i18n_key))
-          .to eq(I18n.t(i18n_key, base_path: Discourse.base_path))
+        expect(AdminDashboardData.problem_message_check(i18n_key)).to eq(
+          I18n.t(i18n_key, base_path: Discourse.base_path),
+        )
       end
 
       it "logs an error on pop connection timeout error" do
@@ -62,10 +57,11 @@ RSpec.describe Jobs::PollMailbox do
 
         4.times { poller.poll_pop3 }
 
-        i18n_key = 'dashboard.poll_pop3_timeout'
+        i18n_key = "dashboard.poll_pop3_timeout"
 
-        expect(AdminDashboardData.problem_message_check(i18n_key))
-          .to eq(I18n.t(i18n_key, base_path: Discourse.base_path))
+        expect(AdminDashboardData.problem_message_check(i18n_key)).to eq(
+          I18n.t(i18n_key, base_path: Discourse.base_path),
+        )
       end
 
       it "logs an error when pop fails and continues with next message" do
@@ -91,7 +87,14 @@ RSpec.describe Jobs::PollMailbox do
 
         SiteSetting.pop3_polling_delete_from_server = true
 
-        poller.expects(:mail_too_old?).returns(false).then.raises(RuntimeError).then.returns(false).times(3)
+        poller
+          .expects(:mail_too_old?)
+          .returns(false)
+          .then
+          .raises(RuntimeError)
+          .then
+          .returns(false)
+          .times(3)
         poller.expects(:process_popmail).times(2)
         poller.poll_pop3
       end
@@ -162,13 +165,56 @@ RSpec.describe Jobs::PollMailbox do
     end
 
     it "does not reply to a bounced email" do
-      expect { process_popmail(:bounced_email) }.to_not change { ActionMailer::Base.deliveries.count }
+      expect { process_popmail(:bounced_email) }.to_not change {
+        ActionMailer::Base.deliveries.count
+      }
 
       incoming_email = IncomingEmail.last
 
       expect(incoming_email.rejection_message).to eq(
-        I18n.t("emails.incoming.errors.bounced_email_error")
+        I18n.t("emails.incoming.errors.bounced_email_error"),
       )
+    end
+  end
+
+  describe "poller plugin" do
+    let(:poller_plugin) do
+      Class
+        .new(described_class) do
+          def set_enabled(e)
+            @enabled = e
+          end
+
+          def enabled?
+            @enabled
+          end
+
+          def poll_mailbox(process_cb)
+            process_cb.call(file_from_fixtures("original_message.eml", "emails"))
+          end
+        end
+        .new
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    before(:each) { plugin.register_email_poller(poller_plugin) }
+
+    after(:each) do
+      Discourse.plugins.delete plugin
+      DiscoursePluginRegistry.reset!
+    end
+
+    it "doesn't call process method when plugin is not active" do
+      poller_plugin.set_enabled(false)
+      poller.expects(:process_popmail).never
+      poller.execute({})
+    end
+
+    it "calls process method when plugin is active" do
+      poller_plugin.set_enabled(true)
+      poller.expects(:process_popmail).once
+      poller.execute({})
     end
   end
 end

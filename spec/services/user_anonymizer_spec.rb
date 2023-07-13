@@ -4,28 +4,30 @@ RSpec.describe UserAnonymizer do
   let(:admin) { Fabricate(:admin) }
 
   describe "event" do
+    subject(:make_anonymous) do
+      described_class.make_anonymous(user, admin, anonymize_ip: "2.2.2.2")
+    end
+
     let(:user) { Fabricate(:user, username: "edward") }
-    subject(:make_anonymous) { described_class.make_anonymous(user, admin, anonymize_ip: '2.2.2.2') }
 
     it "triggers the event" do
-      events = DiscourseEvent.track_events do
-        make_anonymous
-      end
+      events = DiscourseEvent.track_events { make_anonymous }
 
       anon_event = events.detect { |e| e[:event_name] == :user_anonymized }
       expect(anon_event).to be_present
       params_hash = anon_event[:params][0]
 
       expect(params_hash[:user]).to eq(user)
-      expect(params_hash[:opts][:anonymize_ip]).to eq('2.2.2.2')
+      expect(params_hash[:opts][:anonymize_ip]).to eq("2.2.2.2")
     end
   end
 
   describe ".make_anonymous" do
+    subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
+
     let(:original_email) { "edward@example.net" }
     let(:user) { Fabricate(:user, username: "edward", email: original_email) }
     fab!(:another_user) { Fabricate(:evil_trout) }
-    subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
     it "changes username" do
       make_anonymous
@@ -38,7 +40,7 @@ RSpec.describe UserAnonymizer do
     end
 
     it "changes the primary email address when there is an email domain allowlist" do
-      SiteSetting.allowed_email_domains = 'example.net|wayne.com|discourse.org'
+      SiteSetting.allowed_email_domains = "example.net|wayne.com|discourse.org"
 
       make_anonymous
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
@@ -54,7 +56,7 @@ RSpec.describe UserAnonymizer do
     it "turns off all notifications" do
       user.user_option.update_columns(
         email_level: UserOption.email_level_types[:always],
-        email_messages_level: UserOption.email_level_types[:always]
+        email_messages_level: UserOption.email_level_types[:always],
       )
 
       make_anonymous
@@ -66,16 +68,10 @@ RSpec.describe UserAnonymizer do
     end
 
     context "when Site Settings do not require full name" do
-      before do
-        SiteSetting.full_name_required = false
-      end
+      before { SiteSetting.full_name_required = false }
 
       it "resets profile to default values" do
-        user.update!(
-          name: "Bibi",
-          date_of_birth: 19.years.ago,
-          title: "Super Star"
-        )
+        user.update!(name: "Bibi", date_of_birth: 19.years.ago, title: "Super Star")
 
         profile = user.reload.user_profile
         upload = Fabricate(:upload)
@@ -87,7 +83,7 @@ RSpec.describe UserAnonymizer do
           bio_cooked: "I'm Bibi from Moosejaw. I sing and dance.",
           profile_background_upload: upload,
           bio_cooked_version: 2,
-          card_background_upload: upload
+          card_background_upload: upload,
         )
 
         prev_username = user.username
@@ -113,10 +109,17 @@ RSpec.describe UserAnonymizer do
       end
     end
 
+    it "clears existing user status" do
+      user_status = Fabricate(:user_status, user: user)
+
+      expect do
+        make_anonymous
+        user.reload
+      end.to change { user.user_status }.from(user_status).to(nil)
+    end
+
     context "when Site Settings require full name" do
-      before do
-        SiteSetting.full_name_required = true
-      end
+      before { SiteSetting.full_name_required = true }
 
       it "changes name to anonymized username" do
         prev_username = user.username
@@ -161,12 +164,12 @@ RSpec.describe UserAnonymizer do
         [/quote]
       RAW
 
-      old_avatar_url = user.avatar_template.gsub("{size}", "40")
+      old_avatar_url = user.avatar_template.gsub("{size}", "48")
       expect(post.cooked).to include(old_avatar_url)
 
       make_anonymous
       post.reload
-      new_avatar_url = user.reload.avatar_template.gsub("{size}", "40")
+      new_avatar_url = user.reload.avatar_template.gsub("{size}", "48")
 
       expect(post.cooked).to_not include(old_avatar_url)
       expect(post.cooked).to include(new_avatar_url)
@@ -199,8 +202,19 @@ RSpec.describe UserAnonymizer do
     end
 
     it "removes external auth associations" do
-      user.user_associated_accounts = [UserAssociatedAccount.create(user_id: user.id, provider_uid: "example", provider_name: "facebook")]
-      user.single_sign_on_record = SingleSignOnRecord.create(user_id: user.id, external_id: "example", last_payload: "looks good")
+      user.user_associated_accounts = [
+        UserAssociatedAccount.create(
+          user_id: user.id,
+          provider_uid: "example",
+          provider_name: "facebook",
+        ),
+      ]
+      user.single_sign_on_record =
+        SingleSignOnRecord.create(
+          user_id: user.id,
+          external_id: "example",
+          last_payload: "looks good",
+        )
       make_anonymous
       user.reload
       expect(user.user_associated_accounts).to be_empty
@@ -226,9 +240,7 @@ RSpec.describe UserAnonymizer do
     end
 
     context "when executing jobs" do
-      before do
-        Jobs.run_immediately!
-      end
+      before { Jobs.run_immediately! }
 
       it "removes invites" do
         Fabricate(:invited_user, invite: Fabricate(:invite), user: user)
@@ -266,16 +278,25 @@ RSpec.describe UserAnonymizer do
 
       it "removes raw email from posts" do
         post1 = Fabricate(:post, user: user, via_email: true, raw_email: "raw email from user")
-        post2 = Fabricate(:post, user: another_user, via_email: true, raw_email: "raw email from another user")
+        post2 =
+          Fabricate(
+            :post,
+            user: another_user,
+            via_email: true,
+            raw_email: "raw email from another user",
+          )
 
         make_anonymous
 
         expect(post1.reload).to have_attributes(via_email: true, raw_email: nil)
-        expect(post2.reload).to have_attributes(via_email: true, raw_email: "raw email from another user")
+        expect(post2.reload).to have_attributes(
+          via_email: true,
+          raw_email: "raw email from another user",
+        )
       end
 
       it "does not delete profile views" do
-        UserProfileView.add(user.id, '127.0.0.1', another_user.id, Time.now, true)
+        UserProfileView.add(user.id, "127.0.0.1", another_user.id, Time.now, true)
         expect { make_anonymous }.to_not change { UserProfileView.count }
       end
 
@@ -284,10 +305,10 @@ RSpec.describe UserAnonymizer do
         field2 = Fabricate(:user_field)
 
         user.custom_fields = {
-          "some_field": "123",
+          some_field: "123",
           "user_field_#{field1.id}": "foo",
           "user_field_#{field2.id}": "bar",
-          "another_field": "456"
+          another_field: "456",
         }
 
         expect { make_anonymous }.to change { user.custom_fields }
@@ -320,34 +341,39 @@ RSpec.describe UserAnonymizer do
 
       screened_email = ScreenedEmail.create!(email: user.email, ip_address: old_ip)
 
-      search_log = SearchLog.create!(
-        term: 'wat',
-        search_type: SearchLog.search_types[:header],
-        user_id: user.id,
-        ip_address: old_ip
-      )
+      search_log =
+        SearchLog.create!(
+          term: "wat",
+          search_type: SearchLog.search_types[:header],
+          user_id: user.id,
+          ip_address: old_ip,
+        )
 
-      topic_link = TopicLink.create!(
-        user_id: admin.id,
+      topic_link =
+        TopicLink.create!(
+          user_id: admin.id,
+          topic_id: topic.id,
+          url: "https://discourse.org",
+          domain: "discourse.org",
+        )
+
+      topic_link_click =
+        TopicLinkClick.create!(topic_link_id: topic_link.id, user_id: user.id, ip_address: old_ip)
+
+      user_profile_view =
+        UserProfileView.create!(
+          user_id: user.id,
+          user_profile_id: admin.user_profile.id,
+          ip_address: old_ip,
+          viewed_at: Time.now,
+        )
+
+      TopicViewItem.create!(
         topic_id: topic.id,
-        url: 'https://discourse.org',
-        domain: 'discourse.org'
-      )
-
-      topic_link_click = TopicLinkClick.create!(
-        topic_link_id: topic_link.id,
         user_id: user.id,
-        ip_address: old_ip
-      )
-
-      user_profile_view = UserProfileView.create!(
-        user_id: user.id,
-        user_profile_id: admin.user_profile.id,
         ip_address: old_ip,
-        viewed_at: Time.now
+        viewed_at: Time.now,
       )
-
-      TopicViewItem.create!(topic_id: topic.id, user_id: user.id, ip_address: old_ip, viewed_at: Time.now)
       delete_history = StaffActionLogger.new(admin).log_user_deletion(user)
       user_history = StaffActionLogger.new(user).log_backup_create
 
@@ -363,18 +389,17 @@ RSpec.describe UserAnonymizer do
       expect(user_history.reload.ip_address).to eq(anon_ip)
       expect(user_profile_view.reload.ip_address).to eq(anon_ip)
     end
-
   end
 
   describe "anonymize_emails" do
     it "destroys all associated invites" do
-      invite = Fabricate(:invite, email: 'test@example.com')
+      invite = Fabricate(:invite, email: "test@example.com")
       user = invite.redeem
 
       Jobs.run_immediately!
       described_class.make_anonymous(user, admin)
 
-      expect(user.email).not_to eq('test@example.com')
+      expect(user.email).not_to eq("test@example.com")
       expect(Invite.exists?(id: invite.id)).to eq(false)
     end
   end

@@ -90,3 +90,5 @@ fa_IR:
         rich_tooltip:
           description: "توضیحات"
           header: "سربرگ"
+        char_counter:
+          placeholder: "متن خود را اینجا وارد کنید..."

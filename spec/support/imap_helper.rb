@@ -1,17 +1,20 @@
 # frozen_string_literal: true
 
 class MockedImapProvider < Imap::Providers::Gmail
-  def connect!; end
-  def disconnect!; end
-  def open_mailbox(mailbox_name, write: false); end
+  def connect!
+  end
+  def disconnect!
+  end
+  def open_mailbox(mailbox_name, write: false)
+  end
 
   def labels
-    ['INBOX']
+    ["INBOX"]
   end
 end
 
 def EmailFabricator(options)
-  email = +''
+  email = +""
   email += "Date: Sat, 31 Mar 2018 17:50:19 -0700\n"
   email += "From: #{options[:from] || "Dan <dan@discourse.org>"}\n"
   email += "To: #{options[:to] || "Joffrey <joffrey@discourse.org>"}\n"

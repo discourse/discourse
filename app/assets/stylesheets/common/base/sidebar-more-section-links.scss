@@ -1,74 +1,63 @@
-.sidebar-more-section-links-details {
+.btn-flat.sidebar-more-section-links-details-summary {
   &:focus-within,
+  &:active,
   &:hover {
-    background: var(--d-sidebar-highlight-color);
-  }
-
-  .sidebar-more-section-links-details-summary {
-    color: var(--primary-high);
-    transition: background-color 0.25s;
-    display: flex;
-    align-items: center;
-    list-style: none;
-    box-sizing: border-box;
-
-    .sidebar-more-section-links-icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: var(--d-sidebar-section-link-prefix-width);
-      height: var(--d-sidebar-section-link-prefix-width);
-      margin-right: var(--d-sidebar-section-link-prefix-margin-right);
-
-      .d-icon {
-        color: var(--primary-medium);
-        font-size: var(--font-down-1);
-      }
-    }
-
-    &::before {
-      display: none;
+    background: var(--d-sidebar-highlight-background);
+    svg.d-icon {
+      color: var(--d-sidebar-highlight-color);
     }
   }
 
-  .sidebar-more-section-links-details-content-wrapper {
-    position: absolute;
+  height: var(--d-sidebar-row-height);
+  color: var(--d-sidebar-link-color);
+  display: flex;
+  list-style: none;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 var(--d-sidebar-row-horizontal-padding);
+  justify-content: left;
+
+  .d-icon {
+    width: var(--d-sidebar-section-link-prefix-width);
+    margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+    color: var(--d-sidebar-link-icon-color);
+    font-size: var(--font-down-1);
+  }
+}
+
+.sidebar-more-section-links-details-content {
+  background-color: var(--d-sidebar-background);
+  transition: background-color 0.25s;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--primary-low);
+  margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
+
+  .sidebar-row {
+    padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
+  }
+}
+
+.sidebar-more-section-links-details-content-main {
+  position: sticky;
+  margin: 0;
+}
+
+.sidebar-more-section-links-details-content-footer {
+  border-top: 2px solid var(--primary-low);
+  display: flex;
+  width: 100%;
+
+  .sidebar-section-link-wrapper {
     width: 100%;
-    z-index: z("modal", "content") + 1;
-    background: transparent;
   }
+}
 
-  .sidebar-more-section-links-details-content {
-    background-color: var(--secondary);
-    box-shadow: shadow("dropdown");
-    margin: 0 calc(var(--d-sidebar-row-horizontal-padding) * 2 / 3);
+.sidebar-more-section-links-details-content-wrapper {
+  position: absolute;
+  width: 100%;
+  z-index: z("modal", "content") + 1;
+}
 
-    .sidebar-row {
-      // the multiplication by 1 here is a workaround for a bug in the R2 gem
-      // that we use to generate RTL CSS.
-      // the gem generates RTL CSS by converting anything left to right and
-      // vice versa. for example, a `padding-right: 1px;` property becomes
-      // `padding-left: 1px;` when it goes through the gem.
-      // the gem also handles the `padding` property (and similar properties)
-      // when it's in the 4-sides form, e.g. `padding: 1px 2px 3px 4px;` which
-      // gets converted to `padding: 1px 4px 3px 2px;`.
-      // however, the problem is that the gem detects 4-sides properties pretty
-      // naively - it splits the property value on /\s+/ and if it has 4 parts,
-      // it swaps the second and fourth parts.
-      // if you remove the by 1 multiplication in our rule below, we end up
-      // with a value that can be split into 4 parts and that causes the R2 gem
-      // to convert the rule to this:
-      //   padding: 0.33rem 3) / calc(var(--d-sidebar-row-horizontal-padding);
-      // which is clearly invalid and breaks all the rules that come after this
-      // one in the application CSS bundle.
-      // in the long term we should probably find (or write ourselves)
-      // something that's smarter than R2, but for now let's workaround the bug
-      // in R2.
-      padding: 0.33rem calc(1 * var(--d-sidebar-row-horizontal-padding) / 3);
-    }
-  }
-
-  .sidebar-more-section-links-details-content-secondary {
-    border-top: 1.5px solid var(--primary-low);
-  }
+.sidebar-more-section-links-details {
+  position: relative;
 }

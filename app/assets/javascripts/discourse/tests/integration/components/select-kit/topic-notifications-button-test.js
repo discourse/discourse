@@ -85,7 +85,7 @@ module(
     });
 
     test("notification reason text - user mailing list mode", async function (assert) {
-      this.currentUser.set("mailing_list_mode", true);
+      this.currentUser.set("user_option.mailing_list_mode", true);
       this.set("topic", buildTopic.call(this, { level: 2 }));
 
       await render(hbs`

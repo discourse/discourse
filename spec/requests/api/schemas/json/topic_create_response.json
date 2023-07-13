@@ -103,6 +103,12 @@
         "null"
       ]
     },
+    "flair_group_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "version": {
       "type": "integer"
     },
@@ -113,6 +119,9 @@
       "type": "boolean"
     },
     "can_recover": {
+      "type": "boolean"
+    },
+    "can_see_hidden_post": {
       "type": "boolean"
     },
     "can_wiki": {

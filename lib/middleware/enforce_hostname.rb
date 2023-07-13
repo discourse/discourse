@@ -18,7 +18,8 @@ module Middleware
       requested_hostname = env[Rack::HTTP_HOST]
 
       env[Discourse::REQUESTED_HOSTNAME] = requested_hostname
-      env[Rack::HTTP_HOST] = allowed_hostnames.find { |h| h == requested_hostname } || Discourse.current_hostname
+      env[Rack::HTTP_HOST] = allowed_hostnames.find { |h| h == requested_hostname } ||
+        Discourse.current_hostname_with_port
 
       @app.call(env)
     end

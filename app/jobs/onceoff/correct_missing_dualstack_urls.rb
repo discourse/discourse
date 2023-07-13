@@ -9,7 +9,7 @@ module Jobs
 
       return if !base_url.match?(/s3\.dualstack/)
 
-      old = base_url.sub('s3.dualstack.', 's3-')
+      old = base_url.sub("s3.dualstack.", "s3-")
       old_like = %"#{old}%"
 
       DB.exec(<<~SQL, from: old, to: base_url, old_like: old_like)

@@ -113,7 +113,11 @@ module Jobs
     def load_problem_category_ids(limit)
       Category
         .joins("LEFT JOIN category_search_data ON category_id = categories.id")
-        .where("category_search_data.locale IS NULL OR category_search_data.locale != ? OR category_search_data.version != ?", SiteSetting.default_locale, SearchIndexer::CATEGORY_INDEX_VERSION)
+        .where(
+          "category_search_data.locale IS NULL OR category_search_data.locale != ? OR category_search_data.version != ?",
+          SiteSetting.default_locale,
+          SearchIndexer::CATEGORY_INDEX_VERSION,
+        )
         .order("categories.id ASC")
         .limit(limit)
         .pluck(:id)
@@ -122,7 +126,11 @@ module Jobs
     def load_problem_tag_ids(limit)
       Tag
         .joins("LEFT JOIN tag_search_data ON tag_id = tags.id")
-        .where("tag_search_data.locale IS NULL OR tag_search_data.locale != ? OR tag_search_data.version != ?", SiteSetting.default_locale, SearchIndexer::TAG_INDEX_VERSION)
+        .where(
+          "tag_search_data.locale IS NULL OR tag_search_data.locale != ? OR tag_search_data.version != ?",
+          SiteSetting.default_locale,
+          SearchIndexer::TAG_INDEX_VERSION,
+        )
         .order("tags.id ASC")
         .limit(limit)
         .pluck(:id)
@@ -131,7 +139,11 @@ module Jobs
     def load_problem_topic_ids(limit)
       Topic
         .joins("LEFT JOIN topic_search_data ON topic_id = topics.id")
-        .where("topic_search_data.locale IS NULL OR topic_search_data.locale != ? OR topic_search_data.version != ?", SiteSetting.default_locale, SearchIndexer::TOPIC_INDEX_VERSION)
+        .where(
+          "topic_search_data.locale IS NULL OR topic_search_data.locale != ? OR topic_search_data.version != ?",
+          SiteSetting.default_locale,
+          SearchIndexer::TOPIC_INDEX_VERSION,
+        )
         .order("topics.id DESC")
         .limit(limit)
         .pluck(:id)
@@ -143,7 +155,11 @@ module Jobs
         .joins("LEFT JOIN post_search_data ON post_id = posts.id")
         .where("posts.raw != ''")
         .where("topics.deleted_at IS NULL")
-        .where("post_search_data.locale IS NULL OR post_search_data.locale != ? OR post_search_data.version != ?", SiteSetting.default_locale, SearchIndexer::POST_INDEX_VERSION)
+        .where(
+          "post_search_data.locale IS NULL OR post_search_data.locale != ? OR post_search_data.version != ?",
+          SiteSetting.default_locale,
+          SearchIndexer::POST_INDEX_VERSION,
+        )
         .order("posts.id DESC")
         .limit(limit)
         .pluck(:id)
@@ -152,11 +168,14 @@ module Jobs
     def load_problem_user_ids(limit)
       User
         .joins("LEFT JOIN user_search_data ON user_id = users.id")
-        .where("user_search_data.locale IS NULL OR user_search_data.locale != ? OR user_search_data.version != ?", SiteSetting.default_locale, SearchIndexer::USER_INDEX_VERSION)
+        .where(
+          "user_search_data.locale IS NULL OR user_search_data.locale != ? OR user_search_data.version != ?",
+          SiteSetting.default_locale,
+          SearchIndexer::USER_INDEX_VERSION,
+        )
         .order("users.id ASC")
         .limit(limit)
         .pluck(:id)
     end
-
   end
 end

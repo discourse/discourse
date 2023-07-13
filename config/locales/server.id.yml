@@ -40,6 +40,7 @@ id:
   title: "Discourse"
   topics: "Topik"
   posts: "post"
+  views: "views"
   loading: "Memuat"
   powered_by_html: 'Didukung oleh <a href="https://www.discourse.org">Discourse</a>, paling baik dilihat dengan JavaScript diaktifkan'
   sign_up: "Mendaftar"
@@ -51,44 +52,95 @@ id:
   remove_posts_deleted_by_author: "Dihapus oleh penulis"
   redirect_warning: "Kami tidak dapat memverifikasi bahwa tautan yang Anda pilih benar-benar diposkan ke forum. Jika Anda tetap ingin melanjutkan, pilih tautan di bawah ini."
   on_another_topic: "Di topik lain"
+  topic_category_changed: "Dari %{from} ke %{to}"
+  topic_tag_changed:
+    added_and_removed: "Ditambahkan %{added} dan dihapus %{removed}"
+    added: "Ditambahkan %{added}"
+    removed: "Dihapus %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} oleh %{username}"
   themes:
     bad_color_scheme: "Tidak dapat memperbarui tema, palet warna tidak valid"
     other_error: "Terjadi masalah saat memperbarui tema"
+    ember_selector_error: "Maaf – penggunaan pemilih CSS #ember atau .ember-view tidak diizinkan, karena nama ini dihasilkan secara dinamis saat runtime dan akan berubah seiring waktu, yang pada akhirnya menyebabkan CSS rusak. Coba pemilih yang berbeda."
     import_error:
       generic: Terjadi kesalahan saat mengimpor tema itu
+      upload: "Kesalahan saat membuat aset unggahan: %{name}. %{errors}"
+      about_json: "Kesalahan Impor: about.json tidak ada, atau tidak valid. Apakah Anda yakin ini adalah Tema Discourse?"
+      about_json_values: "about.json berisi nilai yang tidak valid: %{errors}"
+      modifier_values: "pengubah about.json berisi nilai yang tidak valid: %{errors}"
+      git: "Kesalahan kloning repositori git, akses ditolak atau repositori tidak ditemukan"
+      git_ref_not_found: "Tidak dapat checkout referensi git: %{ref}"
+      git_unsupported_scheme: "Tidak dapat clone git repo: skema tidak didukung"
       unpack_failed: "Gagal membongkar berkas"
       file_too_big: "Berkas yang tidak dikompresi terlalu besar."
+      unknown_file_type: "File yang Anda unggah tampaknya bukan tema Discourse yang valid."
+      not_allowed_theme: "`%{repo}` tidak ada dalam daftar tema yang diizinkan (centang pengaturan global `allowed_theme_repos`)."
+      ssh_key_gone: "Anda menunggu terlalu lama untuk memasang tema dan kunci SSH kedaluwarsa. Silakan coba lagi."
+    errors:
+      component_no_user_selectable: "Komponen tema tidak dapat dipilih oleh pengguna"
+      component_no_default: "Komponen tema tidak bisa menjadi tema default"
+      component_no_color_scheme: "Komponen tema tidak boleh memiliki palet warna"
+      no_multilevels_components: "Tema dengan tema anak tidak bisa menjadi tema anak itu sendiri"
+      optimized_link: Tautan gambar yang dioptimalkan bersifat sementara dan tidak boleh disertakan dalam kode sumber tema.
     settings_errors:
       invalid_yaml: "YAML yang diberikan tidak valid."
+      data_type_not_a_number: "Pengaturan jenis `%{name}` tidak didukung. Jenis yang didukung adalah `integer`, `bool`, `list`, `enum` dan `upload`"
+      name_too_long: "Ada pengaturan dengan nama yang terlalu panjang. Panjang maksimum adalah 255"
+      default_value_missing: "Pengaturan `%{name}` tidak memiliki nilai bawaan"
+      default_not_match_type: "Pengaturan jenis nilai bawaan `%{name}` tidak cocok dengan jenis pengaturan."
+      default_out_range: "Pengaturan nilai bawaan `%{name}` tidak dalam rentang yang ditentukan."
+      enum_value_not_valid: "Nilai yang dipilih bukan salah satu pilihan enum."
+      number_value_not_valid: "Nilai baru tidak berada dalam rentang yang diizinkan."
       number_value_not_valid_min_max: "Itu harus antara %{min} dan %{max}."
       number_value_not_valid_min: "Itu harus lebih besar dari atau sama dengan %{min}."
       number_value_not_valid_max: "Itu harus lebih kecil dari atau sama dengan %{max}."
       string_value_not_valid: "Panjang nilai baru tidak berada dalam rentang yang diizinkan."
       string_value_not_valid_min_max: "Panjangnya harus antara %{min} dan %{max} karakter."
       string_value_not_valid_min: "Panjangnya minimal %{min} karakter."
+      string_value_not_valid_max: "Panjangnya harus maksimal %{max} karakter."
     locale_errors:
+      top_level_locale: "Kunci level teratas dalam file locale harus cocok dengan nama locale"
       invalid_yaml: "Terjemahan YAML tidak valid"
   emails:
     incoming:
       default_subject: "Topik ini membutuhkan judul"
       show_trimmed_content: "Tampilkan konten yang dipersingkat"
+      maximum_staged_user_per_email_reached: "Mencapai jumlah maksimum pengguna bertahap yang dibuat per email."
       no_subject: "(tidak ada subjek)"
+      no_body: "(bukan siapa-siapa)"
+      missing_attachment: "(Lampiran %{filename} tidak ada)"
+      continuing_old_discussion:
+        other: "Melanjutkan pembahasan dari [%{title}](%{url}), karena dibuat lebih dari %{count} hari yang lalu."
       errors:
         empty_email_error: "Terjadi bila surel mentah yang kami terima tidak berisi apapun (kosong)."
         no_message_id_error: "Terjadi bila surel tidak memiliki header 'Message-Id'."
         auto_generated_email_error: "Terjadi bila 'precedence' header ditentukan sebagai: list, junk, bulk atau auto_reply, atau ketika header lainnya mengandung: kumpulkan otomatis, balas otomatis, atau buat otomatis."
+        no_body_detected_error: "Terjadi ketika kita tidak dapat mengekstrak body dan tidak ada lampiran."
+        no_sender_detected_error: "Terjadi saat kami tidak dapat menemukan alamat email yang valid di header From."
+        from_reply_by_address_error: "Terjadi bila header From cocok dengan balasan oleh alamat email."
         inactive_user_error: "Terjadi bila pengirim sedang tidak aktif"
         silenced_user_error: "Terjadi bila pengirim telah dibungkam"
+        bad_destination_address: "Terjadi bila tidak ada alamat email di bagian To/Cc yang cocok dengan alamat email masuk yang dikonfigurasi."
+        strangers_not_allowed_error: "Terjadi saat pengguna mencoba membuat topik baru dalam kategori yang bukan merupakan anggotanya."
+        insufficient_trust_level_error: "Terjadi saat pengguna mencoba membuat topik baru dalam kategori yang tidak memiliki trust level yang diperlukan."
+        reply_user_not_matching_error: "Terjadi saat balasan masuk dari alamat email berbeda yang menjadi tujuan pengiriman notifikasi."
+        topic_not_found_error: "Terjadi ketika balasan masuk tetapi topik terkait telah dihapus."
+        topic_closed_error: "Terjadi ketika balasan masuk tetapi topik terkait telah ditutup."
+        bounced_email_error: "Email adalah laporan email yang terpental."
         screened_email_error: "Terjadi ketika alamat email pengirim sudah disaring."
         unsubscribe_not_allowed: "Terjadi ketika berhenti berlangganan melalui email tidak diperbolehkan untuk pengguna ini."
         email_not_allowed: "Terjadi ketika alamat email tidak ada dalam daftar yang diizinkan atau ada di daftar blokir."
       unrecognized_error: "Kesalahan Tidak Dikenali"
+    secure_uploads_placeholder: "Disunting: Situs ini mengaktifkan unggahan aman, kunjungi topik atau klik Lihat Media untuk melihat unggahan terlampir."
+    view_redacted_media: "View Media"
   errors: &errors
+    format: ! "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
       too_long_validation: "Dibatasi hingga %{max} karakter; Anda memasukkan %{length} karakter."
+      invalid_boolean: "boolean tidak valid."
       taken: "sudah diambil"
       accepted: harus diterima
       blank: tidak boleh kosong
@@ -104,12 +156,20 @@ id:
       inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
       is_invalid: "tampak tidak jelas, apakah itu sebuah kalimat yang lengkap?"
+      is_invalid_meaningful: "sepertinya tidak jelas, sebagian besar kata mengandung huruf yang sama berulang kali?"
+      is_invalid_unpretentious: "tampaknya tidak jelas, satu atau lebih kata sangat panjang?"
+      is_invalid_quiet: "tampaknya tidak jelas, apakah Anda bermaksud memasukkannya dengan HURUF BESAR SEMUA?"
+      invalid_timezone: "'%{tz}' bukan zona waktu yang valid"
+      contains_censored_words: "berisi kata-kata yang disensor berikut ini: %{censored_words}"
       less_than: harus kurang dari %{count}
       less_than_or_equal_to: harus sama dengan atau kurang dari %{count}
       not_a_number: bukan numerik
       not_an_integer: harus integer
       odd: harus ganjil
       record_invalid: ! "Validasi gagal: %{errors}"
+      max_emojis: "tidak boleh memiliki lebih dari %{max_emojis_count} emoji"
+      emojis_disabled: "tidak dapat memiliki emoji"
+      ip_address_already_screened: "sudah termasuk dalam aturan yang ada"
       restrict_dependent_destroy:
         other: "Tidak bisa menghapus catatan karena ada catatan yang berkaitan: %{record}"
       too_long:
@@ -119,6 +179,7 @@ id:
       wrong_length:
         other: jumlah karakter salah (seharusnya %{count} karakter)
       other_than: "harus lain dari %{count}"
+      auth_overrides_username: "Nama pengguna perlu diperbarui di sisi penyedia autentikasi, karena pengaturan `auth_overrides_username` diaktifkan."
     template:
       body: ! "Ada masalah dengan objek-objek berikut:"
       header:
@@ -126,50 +187,173 @@ id:
     embed:
       load_from_remote: "Ada kesalahan dalam memuat posting itu."
     site_settings:
+      invalid_site_setting: "Tidak ada pengaturan bernama '%{name}'"
+      invalid_category_id: "Anda menentukan kategori yang tidak ada"
+      invalid_choice:
+        other: "'%{name}' adalah pilihan yang tidak valid."
       default_categories_already_selected: "Anda tidak boleh memilih kategori yang digunakan di daftar lainnya."
+      default_tags_already_selected: "Anda tidak dapat memilih tag yang digunakan di daftar lain."
+      s3_upload_bucket_is_required: "Anda tidak dapat mengaktifkan unggahan ke S3 kecuali Anda telah menyediakan 's3_upload_bucket'."
+      enable_s3_uploads_is_required: "Anda tidak dapat mengaktifkan penggunaan inventaris S3 kecuali Anda telah mengaktifkan unggahan S3."
+      page_publishing_requirements: "Penerbitan halaman tidak dapat diaktifkan jika media aman diaktifkan."
+      s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
+      s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
+      secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
+      s3_use_acls_requirements: "Anda harus mengaktifkan ACL S3 saat unggahan aman diaktifkan."
+      share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
+      second_factor_cannot_enforce_with_socials: "Anda tidak dapat menerapkan 2FA dengan login sosial diaktifkan. Anda harus terlebih dahulu menonaktifkan login melalui: %{auth_provider_names}"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Anda tidak dapat menerapkan 2FA jika DiscourseConnect diaktifkan."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "Anda tidak dapat menonaktifkan login lokal jika 2FA diterapkan. Nonaktifkan 2FA yang diberlakukan sebelum menonaktifkan login lokal."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "Anda tidak dapat mengaktifkan unggahan S3 karena unggahan S3 sudah diaktifkan secara global, dan mengaktifkan site-level ini dapat menyebabkan masalah kritis pada unggahan"
+      cors_origins_should_not_have_trailing_slash: "Anda tidak boleh menambahkan garis miring (/) ke CORS origins."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari kesalahan pembatasan pengguna manusia."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Anda tidak dapat menambahkan salah satu nilai berikut ke setelan: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Anda tidak dapat menonaktifkan metadata gambar strip jika 'composer media optimization image enabled' diaktifkan. Nonaktifkan 'composer media optimization image enabled' sebelum menonaktifkan metadata gambar strip."
+      twitter_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
+    conflicting_google_user_id: 'ID Akun Google untuk akun ini telah berubah; intervensi staf diperlukan untuk alasan keamanan. Silakan hubungi staf dan arahkan mereka ke <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
+    onebox:
+      invalid_address: "Maaf, kami tidak dapat membuat pratinjau untuk halaman web ini karena server '%{hostname}' tidak dapat ditemukan. Alih-alih pratinjau, hanya tautan yang akan muncul di post Anda. :cry:"
+      error_response: "Maaf, kami tidak dapat membuat pratinjau untuk halaman web ini, karena server web mengembalikan kode kesalahan %{status_code}. Alih-alih pratinjau, hanya tautan yang akan muncul di post Anda. :cry:"
+      missing_data:
+        other: "Maaf, kami tidak dapat membuat pratinjau untuk halaman web ini, karena tag oEmbed / OpenGraph berikut tidak dapat ditemukan: %{missing_attributes}"
+  word_connector:
+    comma: ", "
+  custom_fields:
+    validations:
+      max_items: "Jumlah maksimum bidang khusus untuk entitas ini telah tercapai (%{max_items_number})"
+      max_value_length: "Panjang maksimum untuk nilai bidang khusus telah tercapai (%{max_value_length})"
   invite:
+    expired: "Token undangan Anda telah kedaluwarsa. Silahkan <a href='%{base_url}/about'>kontak staf</a>."
+    not_found: "Token undangan Anda tidak valid. Silahkan <a href='%{base_url}/about'>kontak staf</a>."
+    not_found_json: "Token undangan Anda tidak valid. Silakan hubungi staf."
+    not_matching_email: "Alamat email Anda dan alamat email yang dikaitkan dengan token undangan tidak cocok. Silakan hubungi staf."
+    not_found_template: |
+      <p>Undangan Anda ke <a href="%{base_url}">%{site_name}</a> telah ditukarkan.</p>
+
+      <p>Jika Anda ingat kata sandi Anda, Anda dapat <a href="%{base_url}/login">Masuk</a>.</p>
+
+      <p>Jika tidak silahkan <a href="%{base_url}/password-reset">Atur Ulang Kata Sandi</a>.</p>
+    not_found_template_link: |
+      <p>Undangan ke <a href="%{base_url}">%{site_name}</a> ini tidak dapat ditukarkan lagi. Harap minta orang yang mengundang Anda untuk mengirimi Anda undangan baru.</p>
+    existing_user_cannot_redeem: "Undangan ini tidak dapat ditukarkan. Harap minta orang yang mengundang Anda untuk mengirimi Anda undangan baru."
+    existing_user_already_redemeed: "Anda telah menukarkan tautan undangan ini."
+    user_exists: "Tidak perlu mengundang <b>%{email}</b>, dia sudah punya akun!"
+    invite_exists: "Anda sudah mengundang <b>%{email}</b>."
+    invalid_email: "%{email} bukan alamat email yang valid."
+    generic_error_response: "Ada masalah dengan permintaan anda."
+    rate_limit:
+      other: "Anda telah mengirim %{count} undangan dalam 24 jam terakhir, harap tunggu %{time_left} sebelum mencoba lagi."
+    confirm_email: "<p>Anda hampir selesai! Kami mengirim email aktivasi ke alamat email Anda. Silakan ikuti petunjuk dalam surel untuk mengaktifkan akun Anda.</p><p>Jika tidak sampai, periksa folder spam Anda.</p>"
+    cant_invite_to_group: "Anda tidak diizinkan mengundang pengguna ke grup(-grup) tertentu. Pastikan Anda adalah pemilik grup(-grup) yang ingin Anda undang."
     disabled_errors:
+      discourse_connect_enabled: "Undangan dinonaktifkan karena DiscourseConnect diaktifkan."
       invalid_access: "Anda tidak diijinkan untuk melihat sumber yang diminta."
+    requires_groups: "Undangan tidak disimpan karena topik yang ditentukan tidak dapat diakses. Tambahkan salah satu grup berikut: %{groups}."
+    domain_not_allowed: "Email Anda tidak dapat digunakan untuk menukarkan undangan ini."
+    max_redemptions_allowed_one: "untuk undangan email harus 1."
+    redemption_count_less_than_max: "harus kurang dari %{max_redemptions_allowed}."
+    email_xor_domain: "Kolom email dan domain tidak diperbolehkan secara bersamaan"
+    existing_user_success: "Undangan berhasil ditukarkan"
+  bulk_invite:
+    file_should_be_csv: "File yang diunggah harus dalam format csv."
+    max_rows: "%{max_bulk_invites} undangan pertama telah dikirim. Cobalah membagi file menjadi bagian-bagian yang lebih kecil."
+    error: "Terjadi kesalahan saat mengunggah file itu. Coba lagi nanti."
+  invite_link:
+    email_taken: "Email ini sudah digunakan. Jika Anda sudah memiliki akun, silakan masuk atau atur ulang kata sandi."
+    max_redemptions_limit: "harus antara 2 dan %{max_limit}."
+  topic_invite:
+    failed_to_invite: "Pengguna tidak dapat diundang ke topik ini tanpa keanggotaan grup di salah satu grup berikut: %{group_names}."
+    not_pm: "Anda hanya dapat mengundang ke pesan pribadi."
+    user_exists: "Maaf, pengguna tersebut telah diundang. Anda hanya dapat mengundang pengguna ke suatu topik satu kali."
+    muted_topic: "Maaf, pengguna tersebut membisukan topik ini."
+    receiver_does_not_allow_pm: "Maaf, pengguna itu tidak mengizinkan Anda mengirimi mereka pesan pribadi."
+    sender_does_not_allow_pm: "Maaf, Anda tidak mengizinkan pengguna itu mengirimi Anda pesan pribadi."
+    user_cannot_see_topic: "%{username} tidak dapat melihat topik."
   backup:
     operation_already_running: "Proses lain sedang berjalan. Tidak dapat menjalankan proses baru saat ini."
     backup_file_should_be_tar_gz: "File backup harus berupa arsip .tar.gz."
     not_enough_space_on_disk: "Ruang penyimpanan tidak cukup untuk menerima unduhan backup ini."
+    invalid_filename: "Nama file cadangan berisi karakter yang tidak valid. Karakter yang valid adalah a-z 0-9 . - _."
+    file_exists: "File yang Anda coba unggah sudah ada."
+  invalid_params: "Anda memberikan parameter yang tidak valid untuk permintaan: %{message}"
   not_logged_in: "Anda harus login untuk melakukan itu."
   not_found: "URL atau sumber yang diminta tidak dapat ditemukan."
   invalid_access: "Anda tidak diijinkan untuk melihat sumber yang diminta."
+  authenticator_not_found: "Metode autentikasi tidak ada, atau telah dinonaktifkan."
+  authenticator_no_connect: "Penyedia autentikasi ini tidak mengizinkan koneksi ke akun forum yang ada."
+  invalid_api_credentials: "Anda tidak diizinkan untuk melihat sumber daya yang diminta. Nama pengguna atau kunci API tidak valid."
+  provider_not_enabled: "Anda tidak diizinkan untuk melihat sumber daya yang diminta. Penyedia autentikasi tidak diaktifkan."
+  provider_not_found: "Anda tidak diizinkan untuk melihat sumber daya yang diminta. Penyedia autentikasi tidak ada."
   read_only_mode_enabled: "Situs ini dalam modus read-only. Interaksi dinonaktifkan."
+  invalid_grant_badge_reason_link: "Tautan discourse tidak valid atau eksternal tidak diperbolehkan dengan alasan badge"
+  email_template_cant_be_modified: "Template email ini tidak dapat diubah"
+  invalid_whisper_access: "Whisper tidak diaktifkan atau Anda tidak memiliki akses untuk membuat post whisper"
   not_in_group:
+    title_topic: "Anda perlu meminta keanggotaan ke grup '%{group}' untuk melihat topik ini."
+    title_category: "Anda perlu meminta keanggotaan ke grup '%{group}' untuk melihat kategori ini."
+    request_membership: "Permintaan Keanggotaan"
     join_group: "Gabung dengan grup"
+  deleted_topic: "Ups! Topik ini telah dihapus dan tidak lagi tersedia."
+  delete_topic_failed: "Terjadi kesalahan saat menghapus topik itu. Silakan hubungi administrator situs."
   reading_time: "Waktu bacaan"
   likes: "Suka"
   too_many_replies:
     other: "Maaft, bagi pengguna baru sementara ini hanya dibatasi hingga %{count} jawaban dalam topik yang sama."
+  max_consecutive_replies:
+    other: "Tidak boleh lebih dari %{count} balasan berturut-turut. Harap edit balasan Anda sebelumnya, atau tunggu seseorang membalas Anda."
   embed:
     start_discussion: "Mulai Diskusi"
     continue: "Lanjutkan Diskusi"
+    error: "Kesalahan Penyematan"
+    referer: "Perujuk:"
+    error_topics: "Setelan situs `embed topics list` tidak diaktifkan"
+    mismatch: "Perujuk tidak dikirim, atau tidak cocok dengan salah satu host berikut:"
+    no_hosts: "Tidak ada host yang disiapkan untuk penyematan."
+    configure: "Konfigurasi Penyematan"
     more_replies:
       other: "%{count} jawaban lainnya"
     loading: "Sedang memuat diskusi..."
+    permalink: "Permalink"
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} balasan"
+    likes:
+      other: "%{count} suka"
+    last_reply: "Balasan terakhir"
     created: "Dibuat"
+    new_topic: "Buat topik baru"
   no_mentions_allowed: "Maaf, Anda tidak dapat menyebut pengguna lain."
   too_many_mentions:
     other: "Maaf, Anda hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
     other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
+  no_embedded_media_allowed_trust: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
+  no_embedded_media_allowed: "Maaf, pengguna baru tidak dapat menyematkan item media dalam post."
+  too_many_embedded_media:
+    other: "Maaf, pengguna baru hanya dapat menempatkan %{count} item media yang disematkan dalam sebuah post."
   no_attachments_allowed: "Maaf, pengguna baru tidak diijinkan untuk mengunggah file/attachment dalam posting."
   too_many_attachments:
     other: "Maaf, pengguna baru hanya diijinkan untuk mengunggah %{count} file/attachment dalam satu posting."
   no_links_allowed: "Maaf, pengguna baru tidak diijinkan untuk menulis tautan dalam posting."
+  links_require_trust: "Maaf, Anda tidak dapat menyertakan link dalam post Anda."
   too_many_links:
     other: "Maaf, pengguna baru hanya diijinkan untuk menulis %{count} tautan dalam satu posting."
+  contains_blocked_word: "Maaf, Anda tidak dapat post kata '%{word}'; itu tidak diperbolehkan."
+  contains_blocked_words: "Maaf, Anda tidak dapat post itu. Tidak diizinkan: %{words}."
   spamming_host: "Maaf, Anda tidak dapat mencantumkan tautan ke host tersebut."
   user_is_suspended: "Pengguna yang dalam masa suspensi tidak diperbolehkan untuk membuat posting."
   topic_not_found: "Ada yang salah. Mungkin topik ini ditutup atau dihapus ketika Anda sedang menjelajahinya?"
+  not_accepting_pms: "Maaf, %{username} tidak menerima pesan saat ini."
+  max_pm_recipients: "Maaf, Anda dapat mengirim pesan ke maksimal %{recipients_limit} penerima."
+  pm_reached_recipients_limit: "Maaf, Anda tidak dapat memiliki lebih dari %{recipients_limit} penerima dalam satu pesan."
+  removed_direct_reply_full_quotes: "Secara otomatis menghapus kutipan dari seluruh post sebelumnya."
+  watched_words_auto_tag: "Topik yang diberi tag secara otomatis"
+  secure_upload_not_allowed_in_public_topic: "Maaf, unggahan(-unggahan) aman berikut tidak dapat digunakan dalam topik publik: %{upload_filenames}."
+  create_pm_on_existing_topic: "Maaf, Anda tidak dapat membuat PM untuk topik yang sudah ada."
+  slow_mode_enabled: "Topik ini dalam mode lambat."
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
   invalid_characters: "memuat karakter yang tidak valid"
   is_invalid: "tampak tidak jelas, apakah itu sebuah kalimat yang lengkap?"
@@ -182,17 +366,44 @@ id:
   rss_topics_in_category: "RSS feed dari topik-topik pada kategori '%{category}'"
   rss_num_posts:
     other: "%{count} post"
+  rss_num_participants:
+    other: "%{count} peserta"
   read_full_topic: "Baca topik sepenuhnya"
   private_message_abbrev: "Psn"
   rss_description:
     latest: "Topik Terbaru"
     top: "Topik unggulan"
+    top_all: "Topik teratas sepanjang masa"
+    top_yearly: "Topik teratas tahunan"
+    top_quarterly: "Topik teratas triwulanan"
+    top_monthly: "Topik teratas bulanan"
+    top_weekly: "Topik teratas mingguan"
+    top_daily: "Topik teratas harian"
     posts: "Pos terbaru"
+    private_posts: "Pesan pribadi terbaru"
     group_posts: "Posting terkini dari %{group_name}"
     group_mentions: "Mention terkini dari %{group_name}"
+    user_posts: "Post terbaru oleh @%{username}"
     user_topics: "Topik terakhir oleh @%{username}"
+    tag: "Topik yang diberi tag"
+    badge: "%{display_name} badge pada %{site_title}"
+  too_late_to_edit: "Post itu dibuat sudah terlalu lama. Itu tidak dapat lagi diedit atau dihapus."
+  edit_conflict: "Post tersebut telah diedit oleh pengguna lain dan perubahan Anda tidak dapat disimpan lagi."
+  revert_version_same: "Versi saat ini sama dengan versi yang ingin Anda kembalikan."
+  reverted_to_version: "dikembalikan ke versi #%{version}"
+  cannot_edit_on_slow_mode: "Topik ini dalam mode lambat. Untuk mendorong diskusi yang bijaksana dan penuh pertimbangan, mengedit postingan lama dalam topik ini saat ini tidak diperbolehkan selama mode lambat."
   excerpt_image: "gambar"
   bookmarks:
+    errors:
+      already_bookmarked_post: "Anda tidak dapat menandai post yang sama dua kali."
+      already_bookmarked: "Anda tidak dapat memberikan bookmark %{type} yang sama dua kali."
+      too_many: "Maaf, Anda tidak dapat menambahkan lebih dari %{limit} bookmark, kunjungi <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> untuk menghapus beberapa."
+      cannot_set_past_reminder: "Anda tidak dapat mengatur pengingat bookmark di masa lalu."
+      cannot_set_reminder_in_distant_future: "Anda tidak dapat menyetel pengingat bookmark lebih dari 10 tahun ke depan."
+      time_must_be_provided: "Waktu harus disediakan untuk semua pengingat"
+      for_topic_must_use_first_post: "Anda hanya dapat menggunakan pos pertama untuk bookmark topik."
+      bookmarkable_id_type_required: "Nama dan jenis catatan untuk bookmark diperlukan."
+      invalid_bookmarkable: "Sebuah %{type} tidak dapat dibuat bookmark."
     reminders:
       at_desktop: "Lain kali saat saya di depan komputer"
       later_today: "Nanti hari ini"
@@ -202,12 +413,25 @@ id:
       next_month: "Bulan depan"
       custom: "Tanggal dan waktu tersuai"
   groups:
+    success:
+      bulk_add:
+        other: "%{count} pengguna telah ditambahkan ke grup."
     errors:
+      grant_trust_level_not_valid: "'%{trust_level}' bukan trust level yang valid."
       can_not_modify_automatic: "Anda tidak bisa mengubah grup otomatis."
+      member_already_exist:
+        other: "Pengguna berikut sudah menjadi anggota grup ini: %{username}"
       invalid_domain: "'%{domain}' bukan domain yang valid."
       invalid_incoming_email: "'%{email}' bukanlah alamat email yang valid."
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
+      cant_allow_membership_requests: "Anda tidak dapat mengizinkan permintaan keanggotaan untuk grup tanpa pemilik."
+      already_requested_membership: "Anda telah meminta keanggotaan untuk grup ini."
+      adding_too_many_users:
+        other: "Maksimum %{count} pengguna dapat ditambahkan sekaligus"
+      usernames_or_emails_required: "Nama pengguna atau email harus ada"
+      no_invites_with_discourse_connect: "Anda hanya dapat mengundang pengguna terdaftar saat DiscourseConnect diaktifkan"
+      no_invites_without_local_logins: "Anda hanya dapat mengundang pengguna terdaftar saat login lokal dinonaktifkan"
     default_names:
       everyone: "setiap orang"
       admins: "admin"
@@ -218,15 +442,45 @@ id:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    request_membership_pm:
+      title: "Permintaan Keanggotaan untuk @%{group_name}"
+    request_accepted_pm:
+      title: "Anda telah diterima di @%{group_name}"
+      body: |
+        Permintaan Anda untuk memasukkan @%{group_name} telah diterima dan Anda sekarang menjadi anggota.
   education:
     until_posts:
       other: "%{count} post"
+    "new-topic": |
+      Selamat datang di %{site_name} &mdash; **terima kasih telah memulai percakapan baru!**
+
+      - Apakah judul terdengar menarik jika Anda membacanya keras-keras? Apakah ini ringkasan yang bagus?
+
+      - Siapa yang akan tertarik dengan ini? Mengapa itu penting? Tanggapan seperti apa yang Anda inginkan?
+
+      - Sertakan kata-kata yang umum digunakan dalam topik Anda sehingga orang lain dapat *menemukan* itu. Untuk mengelompokkan topik Anda dengan topik terkait, pilih kategori (atau tag).
+
+      Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
+    "new-reply": |
+      Selamat datang di %{site_name} &mdash; **terima kasih telah berkontribusi!**
+
+      - Berbaik hatilah kepada sesama anggota komunitas.
+
+      - Apakah balasan Anda meningkatkan percakapan?
+
+      - Kritik konstruktif diperbolehkan, tetapi kritik *ide*, bukan orang.
+
+      Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
+    dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
+    get_a_room: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
+    dont_feed_the_trolls: Posting ini telah ditandai untuk mendapat perhatian moderator. Apakah Anda yakin ingin membalasnya? Balasan ke konten negatif cenderung mendorong lebih banyak perilaku negatif.
   activerecord:
     attributes:
       category:
         name: "Nama Kategori"
       topic:
         title: "Judul"
+        featured_link: "Tautan Pilihan"
         category_id: "Kategori"
       post:
         raw: "Konten"
@@ -237,7 +491,18 @@ id:
         topic:
           attributes:
             base:
+              warning_requires_pm: "Anda hanya dapat melampirkan peringatan ke pesan pribadi."
+              too_many_users: "Anda hanya dapat mengirim peringatan ke satu pengguna dalam satu waktu."
+              cant_send_pm: "Maaf, Anda tidak dapat mengirim pesan pribadi ke pengguna tersebut."
               no_user_selected: "Anda harus memilih pengguna yang valid."
+              reply_by_email_disabled: "Balas melalui email telah dinonaktifkan."
+              send_to_email_disabled: "Maaf, Anda tidak dapat mengirim pesan pribadi ke email."
+              target_user_not_found: "Salah satu pengguna yang Anda kirimi pesan ini tidak dapat ditemukan."
+              unable_to_update: "Terjadi kesalahan saat memperbarui topik itu."
+              unable_to_tag: "Terjadi kesalahan saat menandai topik."
+              unable_to_unlist: "Maaf, Anda tidak dapat membuat topik yang tidak terdaftar."
+            featured_link:
+              invalid: "tidak valid. URL harus menyertakan http:// atau https://."
         user:
           attributes:
             password:
@@ -245,20 +510,102 @@ id:
               same_as_username: "sama dengan username anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_email: "sama denan surel anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_current: "sama dengan kata sandi saat ini."
+              same_as_name: "sama dengan nama Anda."
+              unique_characters: "memiliki terlalu banyak karakter berulang. Harap gunakan kata sandi yang lebih aman."
+            username:
+              same_as_password: "sama dengan kata sandi Anda."
+            name:
+              same_as_password: "sama dengan kata sandi Anda."
             ip_address:
               signup_not_allowed: "Pendaftaran tidak diperbolehkan dari akun ini."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "Topik ini tidak dapat ditampilkan di profil Anda."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "Menugaskan ulang email utama ke pengguna lain tidak diperbolehkan."
         color_scheme_color:
           attributes:
             hex:
               invalid: "bukan warna yang valid."
+        post_reply:
+          base:
+            different_topic: "Post dan balasan harus berasal dari topik yang sama."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL tidak valid. URL harus menyertakan http:// atau https://. Dan tidak boleh ada kosong."
+        custom_emoji:
+          attributes:
+            name:
+              taken: sudah digunakan oleh emoji lain
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "harus di masa depan."
+            duration_minutes:
+              cannot_be_zero: "harus lebih besar dari 0."
+              exceeds_maximum: "tidak boleh lebih dari 20 tahun."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                other: "Kunci interpolasi berikut tidak valid: %{keys}"
+        watched_word:
+          attributes:
+            word:
+              too_many: "Terlalu banyak kata untuk tindakan itu"
+            base:
+              invalid_url: "URL pengganti tidak valid"
+              invalid_tag_list: "Daftar tag pengganti tidak valid"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "tidak valid"
       <<: *errors
+  uncategorized_category_name: "Tidak dikategorikan"
+  general_category_name: "Umum"
+  general_category_description: "Buat topik di sini yang tidak sesuai dengan kategori lain yang ada."
+  meta_category_name: "Umpan Balik Situs"
+  meta_category_description: "Diskusi tentang situs ini, organisasinya, cara kerjanya, dan bagaimana kami dapat memperbaikinya."
   staff_category_name: "Staf"
+  staff_category_description: "Kategori pribadi untuk diskusi staf. Topik hanya dapat dilihat oleh admin dan moderator."
+  discourse_welcome_topic:
+    title: "Selamat datang di %{site_title}! :wave:"
+    body: |
+      Kami sangat senang Anda bergabung dengan kami.
+
+      %{site_info_quote}
+
+      Berikut adalah beberapa hal yang dapat Anda lakukan untuk memulai:
+
+      :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Apa satu hal yang ingin Anda tanyakan?
+
+      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan post yang menarik, informatif, atau menghibur, gunakan :heart: untuk menunjukkan penghargaan atau dukungan Anda!
+
+      :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
+
+      > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di [#feedback](%{base_path}/c/site-feedback) atau [hubungi admin](%{base_path}/about).
   category:
     topic_prefix: "Tentang kategori %{category}"
+    replace_paragraph: "(Ganti paragraf pertama ini dengan deskripsi singkat tentang kategori baru Anda. Panduan ini akan muncul di area pemilihan kategori, jadi cobalah membuatnya di bawah 200 karakter.)"
+    post_template: "%{replace_paragraph}\n\nGunakan paragraf berikut untuk deskripsi yang lebih panjang, atau untuk menetapkan pedoman atau aturan kategori:\n\n- Mengapa orang harus menggunakan kategori ini? Untuk apa ini?\n\n- Bagaimana tepatnya ini berbeda dari kategori lain yang sudah kita miliki?\n\n- Topik apa yang harus ada dalam kategori ini secara umum?\n\n- Apakah kita membutuhkan kategori ini? Bisakah kita menggabungkan dengan kategori lain, atau subkategori?\n"
     errors:
+      not_found: "Kategori tidak ditemukan!"
+      uncategorized_parent: "Tidak dikategorikan tidak boleh memiliki kategori induk"
+      self_parent: "Induk subkategori tidak bisa dirinya sendiri"
+      depth: "Anda tidak dapat menyarangkan subkategori di bawah yang lain"
       invalid_email_in: "'%{email}' bukanlah alamat email yang valid."
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
+      description_incomplete: "Post deskripsi kategori harus memiliki setidaknya satu paragraf."
+      disallowed_topic_tags: "Topik ini memiliki tag yang tidak diizinkan oleh kategori ini: '%{tags}'"
+      disallowed_tags_generic: "Topik ini memiliki tag yang tidak diizinkan."
+      slug_contains_non_ascii_chars: "berisi karakter non-ascii"
+      is_already_in_use: "sedang digunakan"
+      move_topic_to_category_disallowed: "Anda tidak dapat memindahkan topik ini ke kategori di mana Anda tidak memiliki izin untuk membuat topik baru."
     cannot_delete:
       has_subcategories: "Tidak bisa menghapus kategori ini karena memiliki sub-kategori."
       topic_exists_no_oldest: "Tidak dapat menghapus kategori ini karena terdapat %{count} topik."
@@ -266,6 +613,16 @@ id:
   trust_levels:
     admin: "Admin"
     staff: "Staf"
+  post:
+    image_placeholder:
+      broken: "Gambar ini rusak"
+      blocked_hotlinked_title: "Gambar dihosting di situs lain. Klik untuk membuka di tab baru."
+      blocked_hotlinked: "Gambar Eksternal"
+    media_placeholder:
+      blocked_hotlinked_title: "Media dihosting di situs lain. Klik untuk membuka di tab baru."
+      blocked_hotlinked: "Media Eksternal"
+    has_likes:
+      other: "%{count} Suka"
   rate_limiter:
     hours:
       other: "%{count} jam"
@@ -273,6 +630,7 @@ id:
       other: "%{count} menit"
     seconds:
       other: "%{count} detik"
+    short_time: "beberapa detik"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
@@ -322,19 +680,62 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
-    choose_new: "Pilih kata sandi baru"
-    choose: "Pilih kata sandi"
-    update: "Perbaharui Kata Sandi"
-    save: "Atur Kata Sandi"
+    no_token: 'Ups! Tautan yang Anda gunakan tidak berfungsi lagi. Anda dapat <a href="%{base_url}/login">Masuk</a> sekarang. Jika Anda lupa kata sandi, Anda dapat <a href="%{base_url}/password-reset">meminta tautan</a> untuk meresetnya.'
     title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
+  email_login:
+    invalid_token: 'Ups! Tautan yang Anda gunakan tidak berfungsi lagi. Anda dapat <a href="%{base_url}/login">Masuk</a> sekarang. Jika Anda lupa kata sandi, Anda dapat <a href="%{base_url}/password-reset">meminta tautan</a> untuk meresetnya.'
+    title: "Masuk melalui email"
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      discoursehub: "Aplikasi DiscourseHub"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "browser yang tidak dikenal"
+    device:
+      android: "Perangkat Android"
+      chromebook: "OS Chrome"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      linux: "Komputer GNU/Linux"
+      mac: "Mac"
+      mobile: "Perangkat Seluler"
+      windows: "Komputer Windows"
+      unknown: "perangkat tidak dikenal"
+    os:
+      android: "Android"
+      chromeos: "OS Chrome"
+      ios: "iOS"
+      linux: "Linux"
+      macos: "macOS"
+      windows: "Microsoft Windows"
+      unknown: "sistem operasi yang tidak dikenal"
   change_email:
     confirmed: "Surel anda telah diperbaharui."
     please_continue: "Lanjut ke %{site_name}"
     error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
     error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah anda telah mengubah surel anda?"
+    confirm: "Konfirmasi"
+    authorizing_new:
+      title: "Konfirmasi email baru Anda"
+      description: "Konfirmasikan bahwa Anda ingin alamat email Anda diubah menjadi:"
+    authorizing_old:
+      title: "Ubah alamat email Anda"
+      description: "Harap konfirmasi perubahan alamat email Anda"
+      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
+      old_email: "Email lama: %{email}"
+      new_email: "Email baru: %{email}"
+      almost_done_title: "Konfirmasi alamat email baru"
+  associated_accounts:
+    revoke_failed: "Gagal mencabut akun Anda di %{provider_name}."
+    connected: "(terhubung)"
   activation:
     action: "Klik disini untuk mengaktifkan akun anda"
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
@@ -343,38 +744,128 @@ id:
     welcome_to: "Selamat datang ke %{site_name}!"
     approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
     missing_session: "Kami tidak dapat mendeteksi apakah akun anda telah dibuat, mohon pastikan cookies anda aktif."
+    activated: "Maaf, akun ini sudah diaktifkan."
+    admin_confirm:
+      title: "Konfirmasi Akun Admin"
+      description: "Anda yakin ingin <b>%{target_username} (%{target_email})</b> menjadi administrator?"
+      grant: "Berikan Akses Admin"
+      complete: "<b>%{target_username}</b> sekarang menjadi administrator."
+      back_to: "Kembali ke %{title}"
   reviewable_score_types:
     needs_approval:
       title: "Membutuhan Persetujuan"
   post_action_types:
     off_topic:
       title: "Diluar topik"
+      description: "Post ini tidak relevan dengan diskusi saat ini seperti yang didefinisikan oleh judul dan post pertama, dan mungkin harus dipindahkan ke tempat lain."
+      short_description: "Tidak relevan dengan diskusi"
     spam:
+      title: "Spam"
+      description: "Postingan ini adalah iklan, atau vandalisme. Tidak berguna atau relevan dengan topik saat ini."
+      short_description: "Ini adalah iklan atau vandalisme"
+      email_title: '"%{title}" ditandai sebagai spam'
       email_body: "%{link}\n\n%{message}"
+    inappropriate:
+      title: "Tidak pantas"
+      description: 'Post ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
+      short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
     notify_user:
       title: "Kirim @%{username} sebuah pesan"
+      description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
+      short_description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
+      email_title: 'Post Anda di "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Hal Lain"
+      description: "Post ini membutuhkan perhatian staf karena alasan lain yang tidak tercantum di atas."
+      short_description: "Membutuhkan perhatian staf karena alasan lain"
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Penandaan"
+      description: "Bookmark post ini"
+      short_description: "Bookmark post ini"
+    like:
+      title: "Suka"
+      description: "Sukai post ini"
+      short_description: "Sukai post ini"
+  draft:
+    sequence_conflict_error:
+      title: "kesalahan draf"
+      description: "Draf sedang diedit di jendela lain. Muat ulang halaman ini."
+  draft_backup:
+    pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
+    pm_body: "Topik berisi draf cadangan"
+  email_settings:
+    smtp_server_busy_error: "Server SMTP sedang sibuk, coba lagi nanti."
+    smtp_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server SMTP. %{message}"
+    imap_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server IMAP. %{message}"
+    connection_error: "Terjadi masalah saat menghubungkan dengan server, periksa nama dan port server, lalu coba lagi."
+    timeout_error: "Waktu koneksi ke server habis, periksa nama server dan port, lalu coba lagi."
+    unhandled_error: "Kesalahan tidak tertangani saat menguji setelan email. %{message}"
+  webauthn:
+    validation:
+      invalid_type_error: "Jenis webauthn yang diberikan tidak valid. Jenis yang valid adalah webauthn.get dan webauthn.create."
+      malformed_attestation_error: "Terjadi kesalahan saat mengartikan data pengesahan."
+      user_verification_error: "Verifikasi pengguna diperlukan."
+      unsupported_public_key_algorithm_error: "Algoritma kunci publik yang disediakan tidak didukung oleh server."
+      unsupported_attestation_format_error: "Format pengesahan tidak didukung oleh server."
+      credential_id_in_use_error: "ID kredensial yang diberikan sudah digunakan."
+      public_key_error: "Verifikasi kunci publik untuk kredensial gagal."
+      ownership_error: "Kunci keamanan tidak dimiliki oleh pengguna."
+      not_found_error: "Kunci keamanan dengan ID kredensial yang diberikan tidak dapat ditemukan."
+      unknown_cose_algorithm_error: "Algoritma yang digunakan untuk kunci keamanan tidak dikenali."
   topic_flag_types:
     spam:
+      title: "Spam"
+      description: "Topik ini adalah iklan. Ini tidak berguna atau relevan dengan situs ini, tetapi bersifat promosi."
       long_form: "menandai sebagai spam"
+      short_description: "Ini adalah iklan"
     inappropriate:
+      title: "Tidak pantas"
+      description: 'Topik ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
       long_form: "menandai sebagai tidak pantas"
+      short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
     notify_moderators:
       title: "Hal Lain"
+      description: 'Topik ini memerlukan perhatian staf umum berdasarkan <a href="%{base_path}/guidelines">pedoman</a>, <a href="%{tos_url}">TOS</a>, atau karena alasan lain yang tidak tercantum di atas.'
       long_form: "menandai sebagai membutuhkan perhatian moderator"
+      short_description: "Membutuhkan perhatian staf karena alasan lain"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
       email_body: "%{link}\n\n%{message}"
+  ignored:
+    hidden_content: "<p>Konten yang diabaikan</p>"
   archetypes:
     regular:
       title: "Topik Reguler"
+    banner:
+      title: "Topik Spanduk"
+      message:
+        make: "Topik ini sekarang menjadi spanduk. Itu akan muncul di bagian atas setiap halaman sampai ditutup oleh pengguna."
+        remove: "Topik ini bukan lagi spanduk. Itu tidak akan lagi muncul di bagian atas setiap halaman."
+  unsubscribed:
+    title: "Preferensi email diperbarui!"
+    description: "Preferensi email untuk <b>%{email}</b> telah diperbarui. Untuk mengubah pengaturan email Anda <a href='%{url}'>kunjungi preferensi pengguna Anda</a>."
+    topic_description: "Untuk berlangganan ulang %{link}, gunakan kontrol notifikasi di bagian bawah atau kanan topik."
+    private_topic_description: "Untuk berlangganan kembali, gunakan kontrol notifikasi di bagian bawah atau kanan topik."
+  uploads:
+    marked_insecure_from_theme_component_reason: "upload digunakan dalam komponen tema"
   unsubscribe:
+    title: "Berhenti berlangganan"
+    stop_watching_topic: "Berhenti mengikuti topik ini, %{link}"
+    mute_topic: "Nonaktifkan semua notifikasi untuk topik ini, %{link}"
+    unwatch_category: "Berhenti mengikuti semua topik di %{category}"
+    mailing_list_mode: "Nonaktifkan mode milis"
+    all: "Jangan kirimi saya email apa pun dari %{sitename}"
+    different_user_description: "Anda saat ini masuk sebagai pengguna yang berbeda dari yang kami kirimi email. Keluar, atau masuk ke mode anonim, dan coba lagi."
+    not_found_description: "Maaf, kami tidak dapat menemukan langganan tersebut. Mungkin tautan di email Anda terlalu lama dan telah kedaluwarsa?"
+    user_not_found_description: "Maaf, kami tidak dapat menemukan pengguna untuk langganan ini. Anda mungkin mencoba berhenti berlangganan akun yang sudah tidak ada lagi."
     log_out: "Keluar"
+    submit: "Simpan preferensi"
     digest_frequency:
+      title: "Anda menerima email ringkasan %{frequency}"
+      never_title: "Anda tidak menerima email ringkasan"
+      select_title: "Atur frekuensi email ringkasan ke:"
       never: "tidak pernah"
       every_30_minutes: "setiap 30 menit"
       every_hour: "per jam"
@@ -387,52 +878,131 @@ id:
     authorize: "Izinkan"
     read: "baca"
     read_write: "baca/tulis"
+    description: '"%{application_name}" meminta akses berikut ke akun Anda:'
+    instructions: 'Kami baru saja membuat kunci API pengguna baru untuk Anda gunakan dengan "%{application_name}", harap tempelkan kunci berikut ke dalam aplikasi Anda:'
+    otp_description: 'Apakah Anda ingin mengizinkan "%{application_name}" untuk mengakses situs ini?'
     otp_confirmation:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{username}
+      confirm_button: Selesai Login
+    no_trust_level: "Maaf, Anda tidak memiliki trust level yang diperlukan untuk mengakses API pengguna"
+    generic_error: "Maaf, kami tidak dapat mengeluarkan kunci API pengguna, fitur ini mungkin dinonaktifkan oleh admin situs"
+    scopes:
+      message_bus: "Pembaruan langsung"
+      notifications: "Baca dan hapus notifikasi"
+      push: "Pengiriman notifikasi ke layanan eksternal"
+      session_info: "Baca info sesi pengguna"
+      read: "Baca semua"
+      write: "Tulis semua"
+      one_time_password: "Membuat token masuk satu kali"
+      bookmarks_calendar: "Baca pengingat bookmark"
+      user_status: "Baca dan perbarui status pengguna"
+    invalid_public_key: "Maaf, kunci publik tidak valid."
+    invalid_auth_redirect: "Maaf, host auth_redirect ini tidak diizinkan."
+    invalid_token: "Token tidak ada, tidak valid, atau kedaluwarsa."
+  flags:
+    errors:
+      already_handled: "Penanda sudah ditangani"
   reports:
     default:
       labels:
         count: Menghitung
+        percent: Persen
         day: Hari
     post_edits:
+      title: "Pengeditan Post"
       labels:
         edited_at: Tanggal
         post: Postingan
+        editor: Editor
+        author: Pengarang
         edit_reason: Alasan
+      description: "Jumlah edit post baru."
     user_flagging_ratio:
+      title: "Rasio Penandaan Pengguna"
       labels:
         user: Pengguna
+        agreed_flags: Penanda yang disepakati
+        disagreed_flags: Penanda yang tidak disepakati
+        ignored_flags: Penanda yang diabaikan
         score: Skor
+      description: "Daftar pengguna yang diurutkan berdasarkan rasio respons staf terhadap penanda mereka (tidak setuju hingga setuju)."
     moderators_activity:
+      title: "Aktivitas Moderator"
       labels:
         moderator: Moderator
+        flag_count: Penanda ditinjau
+        time_read: Pembacaan waktu
+        topic_count: Topik dibuat
+        post_count: Post dibuat
+        pm_count: PM dibuat
+        revision_count: Revisi
+      description: Daftar aktivitas moderator termasuk penanda yang ditinjau, waktu pembacaan, topik yang dibuat, post yang dibuat, pesan pribadi yang dibuat, dan revisi.
     flags_status:
+      title: "Status Penanda"
+      values:
+        agreed: Setuju
+        disagreed: Tidak setuju
+        deferred: Ditangguhkan
+        no_action: Tidak ada tindakan
       labels:
         flag: Tipe
+        assigned: Ditugaskan
+        poster: Poster
+        flagger: Pemberi penanda
+        time_to_resolution: Waktu resolusi
     visits:
       title: "Kunjungan Pengguna"
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
       xaxis: "Hari"
+      yaxis: "Jumlah pendaftaran"
     new_contributors:
       xaxis: "Hari"
     trust_level_growth:
+      title: "Pertumbuhan Trust Level"
+      xaxis:
+        tl1_reached: "Mencapai TL1"
+        tl2_reached: "Mencapai TL2"
+        tl3_reached: "Mencapai TL3"
+        tl4_reached: "Mencapai TL4"
       yaxis: "Hari"
+      description: "Jumlah pengguna yang meningkatkan Trust Level mereka selama periode ini."
     consolidated_page_views:
+      title: "Tampilan Halaman Terkonsolidasi"
+      xaxis:
+        page_view_crawler: "Perayap"
+        page_view_anon: "Pengguna anonim"
+        page_view_logged_in: "Pengguna yang masuk"
       yaxis: "Hari"
       labels:
         post: Postingan
+        editor: Editor
+        author: Pengarang
         edit_reason: Alasan
     consolidated_api_requests:
+      title: "Permintaan API Terkonsolidasi"
+      xaxis:
+        api: "API"
+        user_api: "API Pengguna"
       yaxis: "Hari"
+      description: "Permintaan API untuk kunci API reguler dan kunci API pengguna."
     dau_by_mau:
+      title: "DAU/MAU"
       xaxis: "Hari"
+      yaxis: "DAU/MAU"
+      description: "Jumlah anggota yang masuk pada hari terakhir dibagi dengan jumlah anggota yang masuk pada bulan lalu – menghasilkan % yang menunjukkan 'stickiness' komunitas. Bertujuan untuk >20%."
     daily_engaged_users:
+      title: "Pengguna yang Terlibat Harian"
       xaxis: "Hari"
+      yaxis: "Pengguna Terlibat"
+      description: "Jumlah pengguna yang menyukai atau memposting di sehari terakhir."
     profile_views:
+      title: "Penampilan Profil Pengguna"
       xaxis: "Hari"
+      yaxis: "Jumlah profil pengguna dilihat"
+      description: "Total penampilan baru dari profil pengguna."
     topics:
       title: "Topik"
       xaxis: "Hari"
@@ -458,6 +1028,9 @@ id:
       title: "Pengguna per Level Kepercayaan"
       xaxis: "Level Kepercayaan"
       yaxis: "Jumlah Pengguna"
+      labels:
+        level: Tingkat
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Tipe"
       yaxis: "Jumlah Pengguna"
@@ -516,28 +1089,43 @@ id:
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Hari"
+      yaxis: "Penampilan-halaman Anonim"
+      description: "Jumlah penampilan-halaman baru oleh pengunjung yang tidak masuk ke akun."
     page_view_logged_in_reqs:
+      title: "Masuk"
       xaxis: "Hari"
     page_view_crawler_reqs:
       xaxis: "Hari"
     page_view_total_reqs:
+      title: "Tampilan halaman"
       xaxis: "Hari"
+      yaxis: "Total Penampilan-halaman"
     page_view_logged_in_mobile_reqs:
+      title: "Tampilan Halaman Masuk"
       xaxis: "Hari"
+      yaxis: "Tampilan Halaman Masuk Seluler"
+      description: "Jumlah tampilan halaman baru dari pengguna di perangkat seluler dan masuk ke akun."
     page_view_anon_mobile_reqs:
+      title: "Tampilan Halaman Anon"
       xaxis: "Hari"
+      yaxis: "Tampilan Halaman Anon Seluler"
+      description: "Jumlah tampilan halaman baru dari pengunjung di perangkat seluler yang tidak masuk."
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"
+      yaxis: "Permintaan digunakan untuk pembaruan dan pelacakan langsung"
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Hari"
       yaxis: "Permohonan Sukses (Status 2xx)"
     http_3xx_reqs:
+      title: "HTTP 3xx (Pengalihan)"
       xaxis: "Hari"
+      yaxis: "Permintaan pengalihan (Status 3xx)"
     http_4xx_reqs:
       title: "HTTP 4xx (Error pada Client)"
       xaxis: "Hari"
+      yaxis: "Kesalahan Klien (Status 4xx)"
     http_5xx_reqs:
       xaxis: "Hari"
     http_total_reqs:
@@ -556,40 +1144,106 @@ id:
       labels:
         user: Pengguna
         location: Lokasi
+        browser: Peramban
+        device: Perangkat
+        os: Sistem operasi
+        login_time: Waktu Masuk
     staff_logins:
       labels:
         user: Pengguna
         location: Lokasi
     top_users_by_likes_received:
+      title: "Pengguna Teratas berdasarkan suka yang diterima"
       labels:
         user: Pengguna
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas yang telah menerima suka."
     top_users_by_likes_received_from_inferior_trust_level:
+      title: "Pengguna Teratas berdasarkan suka yang diterima dari pengguna dengan trust level lebih rendah"
       labels:
         user: Pengguna
+        trust_level: Trust level
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas dengan trust level yang lebih tinggi disukai oleh orang-orang dengan tingkat kepercayaan yang lebih rendah."
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "Pengguna Teratas berdasarkan suka yang diterima dari berbagai orang"
       labels:
         user: Pengguna
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas yang memiliki suka dari banyak orang."
   dashboard:
+    group_email_credentials_warning: 'Ada masalah dengan kredensial email untuk grup <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Tidak ada email yang akan dikirim dari kotak masuk grup hingga masalah ini diatasi. %{error}'
     rails_env_warning: "Server Anda berjalan dalam modus %{env}."
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
+    sidekiq_warning: 'Sidekiq tidak berjalan. Banyak tugas, seperti mengirim email, dijalankan secara asinkron oleh Sidekiq. Harap pastikan setidaknya satu proses Sidekiq sedang berjalan. <a href="https://github.com/mperham/sidekiq" target="_blank">Pelajari tentang Sidekiq di sini</a>.'
+    queue_size_warning: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
     memory_warning: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
+    email_polling_errored_recently:
+      other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
+    missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
+    v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
+    topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
+    max_form_template_title_length: "Panjang maksimum yang diperbolehkan untuk judul templat formulir."
+    max_form_template_content_length: "Panjang maksimum yang diperbolehkan untuk konten templat formulir."
+    default_subcategory_on_read_only_category: "Mengaktifkan tombol 'Topik Baru' dan memilih subkategori bawaan untuk membuat post pada kategori di mana pengguna tidak diizinkan untuk membuat topik baru."
+    apple_touch_icon: "Ikon yang digunakan untuk perangkat sentuh Apple. Backround transparan tidak disarankan. Akan secara otomatis diubah ukurannya menjadi 180x180. Jika dibiarkan kosong, large_icon akan digunakan."
+    summarization_strategy: "Cara tambahan untuk meringkas konten yang didaftarkan oleh plugin"
+    custom_summarization_allowed_groups: "Grup diizinkan untuk meringkas konten menggunakan `summarization_strategy`."
+    include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
+    display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
-    maximum_backups: "Jumlah maksimum backup yang disimpan dalam disk. Backup lama akan dihapus secara otomatis."
+    hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
+    blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
+    allowed_email_domains: "Daftar domain email yang dibatasi pipa yang HARUS digunakan pengguna untuk mendaftarkan akun. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. PERINGATAN: Pengguna dengan domain email selain yang terdaftar tidak akan diizinkan!"
+    auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."
+    discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
+    discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
+    s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
+    composer_media_optimization_image_encode_quality: "Kualitas penyandian JPG digunakan dalam proses penyandian ulang."
+    tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     dark_mode_none: "Tidak ada"
+    sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
+    mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Kunci autentikasi Mandrill digunakan untuk memverifikasi pesan webhook."
+    postmark_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/sparkpost?t=supersecret"
+    email_in: "Izinkan pengguna membuat topik baru melalui surel. Setelah mengaktifkan setelan ini, Anda akan dapat melakukan konfigurasi alamat surel masuk untuk grup dan kategori."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
+    dont_feed_the_trolls_threshold: "Jumlah penanda dari pengguna lain sebelum diperingatkan."
+    native_app_install_banner_ios: "Menampilkan spanduk aplikasi DiscourseHub di perangkat iOS ke pengguna dasar (trust level 1) dan lebih tinggi."
+    native_app_install_banner_android: "Menampilkan spanduk aplikasi DiscourseHub di perangkat Android ke pengguna dasar (trust level 1) dan lebih tinggi."
+    max_prints_per_hour_per_user: "Jumlah maksimum tayangan halaman /print (atur ke 0 untuk menonaktifkan pencetakan)"
+    notify_about_reviewable_item_after: "Jika ada item yang dapat ditinjau yang belum ditangani setelah berjam-jam ini, kirim pesan pribadi ke moderator. Setel ke 0 untuk menonaktifkan."
+    bootstrap_mode_min_users: "Jumlah minimum pengguna yang diperlukan untuk menonaktifkan mode bootstrap (diatur ke 0 untuk menonaktifkan, dapat memakan waktu hingga 24 jam)"
     emoji_set: "Bagaimana dengan emoji Anda?"
+    emoji_deny_list: "Emoji ini tidak akan tersedia untuk digunakan dalam menu atau kode singkat."
+    enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
+    min_trust_level_for_user_api_key: |
+      Trust level diperlukan untuk membuat kunci API pengguna.<br>
+      <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
+    enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
+    max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
+    create_post_for_category_and_tag_changes: "Buat post tindakan kecil saat kategori atau tag topik berubah"
+    enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
+    default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
+    default_navigation_menu_tags: "Tag yang dipilih akan ditampilkan di bawah bagian Tag pada Menu Navigasi secara bawaan."
+    experimental_new_new_view_groups: 'EKSPERIMENTAL: Aktifkan daftar topik baru yang menggabungkan topik yang belum dibaca dan topik baru dan buat tautan "Everything" di tautan sidebar ke sana.'
+    enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
+    experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
+    experimental_search_menu_groups: "EKSPERIMENTAL: Mengaktifkan menu pencarian baru yang telah ditingkatkan untuk menggunakan glimmer"
     errors:
       invalid_email: "Alamat email tidak valid."
+      email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."
       min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
+      invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
+      invalid_search_ranking_weights: "Nilai tidak valid untuk setelan situs search_ranking_weights. Contoh: '{0.1,0.2,0.3,1.0}'. Perhatikan bahwa nilai maksimum untuk setiap bobot adalah 1,0."
   search:
+    within_post: "#%{post_number} oleh %{username}"
     types:
       category: "Kategori"
       topic: "Hasil"
@@ -609,6 +1263,7 @@ id:
       sent_test: "terkirim!"
   user:
     email:
+      blank: "tidak boleh kosong."
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
     ip_address:
@@ -623,6 +1278,15 @@ id:
       subject_template: "Selamat datang ke %{site_name}!"
     tl2_promotion_message:
       subject_template: "Selamat atas promosi tingkat kepercayaan Anda!"
+    user_automatically_silenced:
+      text_body_template: |
+        Ini adalah pesan otomatis.
+
+        Pengguna baru [%{username}](%{user_url}) secara otomatis disenyapkan karena beberapa pengguna menandai kiriman (post) %{username}.
+
+        Harap [tinjau penanda](%{base_url}/review). Jika %{username} salah disenyapkan dari proses post, klik tombol nonaktifkan di [halaman admin untuk pengguna ini](%{user_url}).
+
+        Ambang batas ini dapat diubah melalui pengaturan situs `silence_new_user`.
     spam_post_blocked:
       subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:
@@ -644,8 +1308,8 @@ id:
     page_title: "Halaman Tidak Ditemukan"
     see_more: "Selengkapnya"
     search_button: "Cari"
-  deleted: "dihapus"
-  image: "gambar"
+  login_required:
+    welcome_message: "# [Selamat datang di %{title}](#welcome)"
   upload:
     images:
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"
@@ -663,11 +1327,272 @@ id:
     boolean_no: "Tidak"
   tos_topic:
     title: "Ketentuan Layanan"
+    body: |
+      <h2 id="heading--change-me"><a href="#heading--change-me">Ubah ini</a></h2>
+
+      Admin Forum, berikut ini adalah contoh template awal untuk kebijakan privasi yang dapat Anda sesuaikan dengan kebutuhan situs Anda.
+
+      Ketentuan ini tidak, tetapi mungkin suatu hari nanti, mengatur penggunaan forum Internet di <%{base_url}>. Dalam hal ini, untuk menggunakan forum tersebut, Anda harus menyetujui persyaratan ini dengan %{company_name}, perusahaan yang menjalankan forum tersebut.
+
+      Perusahaan dapat menawarkan produk dan layanan lain, dengan persyaratan yang berbeda. Ketentuan ini hanya berlaku untuk penggunaan forum.
+
+      Loncat ke:
+
+      - [Istilah Penting](#heading--important-terms)
+      - [Izin Anda untuk Menggunakan Forum](#heading--permission)
+      - [Ketentuan Penggunaan Forum](#heading--conditions)
+      - [Penggunaan yang Dapat Diterima](#heading--acceptable-use)
+      - [Standar Konten](#heading--content-standards)
+      - [Enforcement](#heading--enforcement)
+      - [Akun Anda](#heading--your-account)
+      - [Konten Anda](#heading--your-content)
+      - [Tanggung Jawab Anda](#heading--responsibility)
+      - [Disclaimers](#heading--disclaimers)
+      - [Batasan Tanggung Jawab](#heading--liability)
+      - [Feedback](#heading--feedback)
+      - [Termination](#heading--termination)
+      - [Disputes](#heading--disputes)
+      - [Istilah Umum](#heading--general)
+      - [Contact](#heading--contact)
+      - [Changes](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Ketentuan Penting</a></h2>
+
+      *** Ketentuan-ketentuan ini mencakup sejumlah ketentuan penting yang memengaruhi hak dan tanggung jawab Anda, seperti penafian di [Disclaimers](#heading--penafian), batasan tanggung jawab perusahaan terhadap Anda di [Batasan Tanggung Jawab] (#heading--tanggung jawab), persetujuan Anda untuk menanggung perusahaan atas kerusakan yang disebabkan oleh penyalahgunaan forum oleh Anda di [Tanggung Jawab Penggunaan Anda] (#heading--tanggung jawab), dan persetujuan untuk mengarbitrasikan sengketa di [Disputes](#heading--sengketa).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Izin Anda untuk Menggunakan Forum</a></h2>
+
+      Dengan tunduk pada persyaratan ini, perusahaan memberikan izin kepada Anda untuk menggunakan forum. Setiap orang harus menyetujui persyaratan ini untuk menggunakan forum.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Ketentuan Penggunaan Forum</a></h2>
+
+      Izin Anda untuk menggunakan forum tunduk pada ketentuan berikut:
+
+      1. Anda harus berusia minimal tiga belas tahun.
+
+      2. Anda tidak boleh lagi menggunakan forum jika perusahaan menghubungi Anda secara langsung untuk mengatakan bahwa Anda tidak boleh menggunakan forum.
+
+      3. Anda harus menggunakan forum sesuai dengan [Penggunaan yang Dapat Diterima] (#judul--penggunaan yang dapat diterima) dan [Standar Konten] (#judul--standar-konten).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Penggunaan yang Dapat Diterima</a></h2>
+
+      1. Anda tidak boleh melanggar hukum dengan menggunakan forum.
+
+      2. Anda tidak boleh menggunakan atau mencoba menggunakan akun orang lain di forum tanpa izin khusus dari yang bersangkutan.
+
+      3. Anda tidak boleh membeli, menjual, atau memperdagangkan nama pengguna atau pengidentifikasi unik lainnya di forum.
+
+      4. Anda tidak boleh mengirim iklan, surat berantai, atau permintaan lain melalui forum, atau menggunakan forum untuk mengumpulkan alamat atau data pribadi lainnya untuk milis atau basis data komersial.
+
+      5. Anda tidak boleh mengotomatisasi akses ke forum, atau memantau forum, seperti dengan perayap web, plug-in atau pengaya peramban, atau program komputer lain yang bukan peramban web. Anda dapat merayapi forum untuk mengindeksnya untuk mesin pencari yang tersedia untuk umum, jika Anda menjalankannya.
+
+      6. Anda tidak boleh menggunakan forum untuk mengirim email ke daftar distribusi, newsgroup, atau grup email.
+
+      7. Anda tidak boleh menyiratkan bahwa Anda berafiliasi dengan atau didukung oleh perusahaan.
+
+      8. Anda tidak boleh membuat hyperlink ke gambar atau konten non-hiperteks lainnya di forum pada halaman web lain.
+
+      9. Anda tidak boleh menghapus tanda apa pun yang menunjukkan kepemilikan hak milik dari materi yang Anda unduh dari forum.
+
+      10. Anda tidak boleh menampilkan bagian mana pun dari forum di situs web lain dengan `<iframe>`.
+
+      11. Anda tidak boleh menonaktifkan, menghindari, atau mengelabui pembatasan keamanan atau akses forum.
+
+      12. Anda tidak boleh membebani infrastruktur forum dengan volume permintaan yang tidak masuk akal, atau permintaan yang dirancang untuk memberikan beban yang tidak masuk akal pada sistem informasi yang mendasari forum.
+
+      13. Anda tidak boleh menyamar sebagai orang lain melalui forum.
+
+      14. Anda tidak boleh mendorong atau membantu siapa pun yang melanggar ketentuan ini.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Standar Konten</a></h2>
+
+      1. Konten Anda tidak boleh mengirimkan konten ke forum yang ilegal, menyinggung, atau membahayakan orang lain. Ini termasuk konten yang melecehkan, tidak pantas, kasar, atau mengandung kebencian.
+
+      2. Anda tidak boleh mengirimkan konten ke forum yang melanggar hukum, melanggar hak kekayaan intelektual siapa pun, melanggar privasi siapa pun, atau melanggar perjanjian yang Anda miliki dengan orang lain.
+
+      3. Anda tidak boleh mengirimkan konten ke forum yang mengandung kode komputer berbahaya, seperti virus komputer atau spyware.
+
+      4. Anda tidak boleh mengirimkan konten ke forum hanya sebagai placeholder, untuk menyimpan alamat, nama pengguna, atau pengenal unik lainnya.
+
+      5. Anda tidak boleh menggunakan forum untuk mengungkapkan informasi yang tidak berhak Anda ungkapkan, seperti informasi rahasia atau pribadi orang lain.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Penegakan</a></h2>
+
+      Perusahaan dapat menyelidiki dan menuntut pelanggaran terhadap persyaratan ini sampai batas hukum sepenuhnya. Perusahaan dapat memberi tahu dan bekerja sama dengan otoritas penegak hukum dalam menuntut pelanggaran hukum dan ketentuan-ketentuan ini.
+
+      Perusahaan berhak untuk mengubah, menyunting, dan menghapus konten di forum dengan alasan apa pun. Jika Anda yakin seseorang telah mengirimkan konten ke forum yang melanggar ketentuan ini, [segera hubungi kami] (#judul--kontak).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Akun Anda</a></h2>
+
+      Anda harus membuat dan masuk ke sebuah akun untuk menggunakan beberapa fitur forum.
+
+      Untuk membuat akun, Anda harus memberikan beberapa informasi tentang diri Anda. Jika Anda membuat akun, Anda setuju untuk memberikan, setidaknya, alamat email yang valid, dan untuk selalu memperbarui alamat tersebut. Anda dapat menutup akun Anda kapan saja dengan mengirim email ke <%{contact_email}>.
+
+      Anda setuju untuk bertanggung jawab atas semua tindakan yang dilakukan menggunakan akun Anda, baik yang diotorisasi oleh Anda maupun tidak, hingga Anda menutup akun Anda atau memberi tahu perusahaan bahwa akun Anda telah dibobol. Anda setuju untuk segera memberi tahu perusahaan jika Anda mencurigai bahwa akun Anda telah disalahgunakan. Anda setuju untuk memilih kata sandi yang aman untuk akun Anda, dan merahasiakannya.
+
+      Perusahaan dapat membatasi, menangguhkan, atau menutup akun Anda di forum sesuai dengan kebijakannya dalam menangani permintaan penghapusan terkait hak cipta, atau jika perusahaan secara wajar meyakini bahwa Anda telah melanggar peraturan apa pun dalam persyaratan ini.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Konten Anda</a></h2>
+
+      Tidak ada dalam persyaratan ini yang memberikan hak kepemilikan apa pun kepada perusahaan atas kekayaan intelektual yang Anda bagikan ke forum, seperti informasi akun Anda, posting, atau konten lain yang Anda kirimkan ke forum. Tidak ada dalam persyaratan ini yang memberi Anda hak kepemilikan apa pun atas kekayaan intelektual perusahaan.
+
+      Antara Anda dan perusahaan, Anda tetap bertanggung jawab penuh atas konten yang Anda kirimkan ke forum. Anda setuju untuk tidak menyiratkan secara keliru bahwa konten yang Anda kirimkan ke forum disponsori atau disetujui oleh perusahaan. Ketentuan ini tidak mewajibkan perusahaan untuk menyimpan, memelihara, atau menyediakan salinan konten yang Anda kirimkan, dan mengubahnya, sesuai dengan ketentuan ini.
+
+      Konten yang Anda kirimkan ke forum adalah milik Anda, dan Anda yang menentukan izin apa yang akan diberikan kepada orang lain. Namun setidaknya, Anda memberikan lisensi kepada perusahaan untuk memberikan konten yang Anda kirimkan ke forum kepada pengguna forum lainnya. Lisensi khusus tersebut memungkinkan perusahaan untuk menyalin, mempublikasikan, dan menganalisis konten yang Anda kirimkan ke forum.
+
+      Ketika konten yang Anda kirimkan dihapus dari forum, baik oleh Anda maupun oleh perusahaan, lisensi khusus perusahaan akan berakhir ketika salinan terakhir menghilang dari cadangan, cache, dan sistem lain milik perusahaan. Lisensi lain yang Anda terapkan pada konten yang Anda kirimkan, seperti lisensi [Creative Commons] (https://creativecommons.org), dapat terus berlanjut setelah konten Anda dihapus. Lisensi tersebut dapat memberikan hak kepada orang lain, atau perusahaan itu sendiri, untuk membagikan konten Anda melalui forum lagi.
+
+      Orang lain yang menerima konten yang Anda kirimkan ke forum dapat melanggar persyaratan lisensi konten Anda. Anda setuju bahwa perusahaan tidak akan bertanggung jawab kepada Anda atas pelanggaran tersebut atau konsekuensinya.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Tanggung Jawab Anda</a></h2>
+
+      Anda setuju untuk mengganti kerugian perusahaan dari tuntutan hukum oleh pihak lain yang terkait dengan pelanggaran Anda terhadap persyaratan ini, atau pelanggaran persyaratan ini oleh orang lain yang menggunakan akun Anda di forum. Baik Anda maupun perusahaan setuju untuk memberi tahu pihak lain tentang klaim hukum apa pun yang mungkin harus Anda ganti rugi kepada perusahaan sesegera mungkin. Jika perusahaan gagal memberi tahu Anda tentang klaim hukum dengan segera, Anda tidak perlu mengganti kerugian perusahaan atas kerusakan yang dapat Anda pertahankan atau dikurangi dengan pemberitahuan yang cepat. Anda setuju untuk mengizinkan perusahaan mengendalikan penyelidikan, pembelaan, dan penyelesaian tuntutan hukum yang mengharuskan Anda mengganti kerugian kepada perusahaan, dan untuk bekerja sama dalam upaya-upaya tersebut. Perusahaan setuju untuk tidak menyetujui penyelesaian apa pun yang mengakui kesalahan Anda atau membebankan kewajiban kepada Anda tanpa persetujuan Anda sebelumnya.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Penafian</a></h2>
+
+      ***Anda menerima semua risiko penggunaan forum dan konten di forum. Sejauh diizinkan oleh hukum, perusahaan dan pemasoknya menyediakan forum apa adanya, tanpa jaminan apa pun.***
+
+      Forum ini dapat membuat hyperlink ke dan mengintegrasikan forum dan layanan yang dijalankan oleh pihak lain. Perusahaan tidak memberikan jaminan apa pun tentang layanan yang dijalankan oleh pihak lain, atau konten yang mereka sediakan. Penggunaan layanan yang dijalankan oleh pihak lain mungkin diatur oleh ketentuan lain antara Anda dan pihak yang menjalankan layanan.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Batasan Tanggung Jawab</a></h2>
+
+      *** Baik perusahaan maupun pemasoknya tidak akan bertanggung jawab kepada Anda atas kerugian akibat pelanggaran kontrak yang tidak dapat diperkirakan secara wajar oleh personelnya saat Anda menyetujui persyaratan ini.***
+
+      *** Sejauh diizinkan oleh hukum, total tanggung jawab kepada Anda atas klaim apa pun yang terkait dengan forum atau konten di forum akan dibatasi hingga $50.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Umpan Balik</a></h2>
+
+      Perusahaan menyambut baik umpan balik dan saran Anda untuk forum ini. Lihat bagian [Contact](#heading--contact) di bawah ini untuk mengetahui cara-cara menghubungi kami.
+
+      Anda setuju bahwa perusahaan akan bebas untuk menindaklanjuti umpan balik dan saran yang Anda berikan, dan bahwa perusahaan tidak perlu memberi tahu Anda bahwa umpan balik Anda telah digunakan, meminta izin Anda untuk menggunakannya, atau membayar Anda. Anda setuju untuk tidak mengirimkan umpan balik atau saran yang Anda yakini bersifat rahasia atau hak milik, baik kepada Anda maupun orang lain.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Pengakhiran</a></h2>
+
+      Anda atau perusahaan dapat mengakhiri perjanjian yang tertulis dalam persyaratan ini kapan saja. Ketika perjanjian kami berakhir, izin Anda untuk menggunakan forum juga berakhir.
+
+      Ketentuan-ketentuan berikut ini tetap berlaku setelah perjanjian kita berakhir: [Konten Anda] (#judul--konten Anda), [Feedback](#judul--umpan balik), [Tanggung Jawab Anda] (#judul--tanggung jawab), [Disclaimers](#judul--penyangkalan), [Batasan Tanggung Jawab] (#judul--tanggung jawab), dan [Ketentuan Umum] (#judul-umum).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Sengketa</a></h2>
+
+      %{governing_law} akan mengatur setiap sengketa yang terkait dengan persyaratan ini atau penggunaan forum oleh Anda.
+
+      Anda dan perusahaan setuju untuk meminta perintah yang terkait dengan persyaratan ini hanya di pengadilan negara bagian atau federal di %{city_for_disputes}. Baik Anda maupun perusahaan tidak akan keberatan dengan yurisdiksi, forum, atau tempat di pengadilan tersebut.
+
+      ***Selain untuk mendapatkan putusan pengadilan atau untuk klaim berdasarkan Computer Fraud and Abuse Act, Anda dan perusahaan akan menyelesaikan setiap perselisihan melalui arbitrase American Arbitration Association yang mengikat. Arbitrase akan mengikuti Peraturan Arbitrase Komersial AAA dan Prosedur Tambahan untuk Sengketa Terkait Konsumen. Arbitrase akan dilakukan di %{city_for_disputes}. Anda akan menyelesaikan sengketa apa pun sebagai individu, dan bukan sebagai bagian dari gugatan kelompok atau proses perwakilan lainnya, baik sebagai penggugat atau anggota kelompok. Arbiter tidak akan menggabungkan sengketa apa pun dengan arbitrase lain tanpa izin perusahaan.***
+
+      Setiap putusan arbitrase akan mencakup biaya arbitrase, biaya pengacara yang wajar, dan biaya yang wajar untuk para saksi. Anda dan perusahaan dapat mengajukan putusan arbitrase di pengadilan mana pun yang memiliki yurisdiksi.
+
+      <h2 id="heading--general"><a href="#heading--general">Ketentuan Umum</a></h2>
+
+      Jika suatu ketentuan dalam persyaratan ini tidak dapat diberlakukan secara tertulis, tetapi dapat diubah agar dapat diberlakukan, ketentuan tersebut harus dimodifikasi hingga batas minimum yang diperlukan agar dapat diberlakukan. Jika tidak, ketentuan tersebut harus dihapus.
+
+      Anda tidak dapat mengalihkan perjanjian Anda dengan perusahaan. Perusahaan dapat mengalihkan perjanjian Anda kepada afiliasi perusahaan, perusahaan lain yang mendapatkan kendali atas perusahaan, atau perusahaan lain yang membeli aset perusahaan yang terkait dengan forum. Setiap upaya pengalihan yang bertentangan dengan ketentuan ini tidak memiliki dampak hukum.
+
+      Baik pelaksanaan hak apa pun berdasarkan Perjanjian ini, maupun pengabaian pelanggaran apa pun terhadap Perjanjian ini, tidak mengesampingkan pelanggaran lain terhadap Perjanjian ini.
+
+      Ketentuan ini mencakup semua ketentuan perjanjian antara Anda dan perusahaan tentang penggunaan forum. Ketentuan ini sepenuhnya menggantikan semua perjanjian lain tentang penggunaan forum oleh Anda, baik tertulis maupun tidak.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Hubungi</a></h2>
+
+      Anda dapat memberi tahu perusahaan berdasarkan persyaratan ini, dan mengirimkan pertanyaan kepada perusahaan, di <%{contact_email}>.
+
+      Perusahaan dapat memberi tahu Anda berdasarkan persyaratan ini menggunakan alamat email yang Anda berikan untuk akun Anda di forum, atau dengan mengirim pesan ke beranda forum atau halaman akun Anda.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Perubahan</a></h2>
+
+      Perusahaan terakhir kali memperbarui persyaratan ini pada [MASUKKAN TANGGAL PEMBARUAN TERAKHIR DI SINI], dan dapat memperbarui persyaratan ini lagi. Perusahaan akan memposting semua pembaruan ke forum. Untuk pembaruan yang berisi perubahan substansial, perusahaan setuju untuk mengirim email kepada Anda, jika Anda telah membuat akun dan memberikan alamat email yang valid. Perusahaan juga dapat mengumumkan pembaruan dengan pesan atau peringatan khusus di forum.
+
+      Setelah Anda menerima pemberitahuan tentang pembaruan persyaratan ini, Anda harus menyetujui persyaratan baru untuk tetap menggunakan forum.
   privacy_topic:
     title: "Kebijakan Privasi"
+    body: |
+      ## [Admin Forum, berikut ini adalah contoh template awal untuk kebijakan privasi yang dapat Anda sesuaikan dengan situs Anda].
+
+      <a name="collect"></a>
+
+      ## [Informasi apa yang kami kumpulkan?](#collect)
+
+      Kami mengumpulkan informasi dari Anda ketika Anda mendaftar di situs kami dan mengumpulkan data ketika Anda berpartisipasi dalam forum dengan membaca, menulis, dan mengevaluasi konten yang dibagikan di sini.
+
+      Ketika mendaftar di situs kami, Anda mungkin diminta untuk memasukkan nama dan alamat email Anda. Namun, Anda dapat mengunjungi situs kami tanpa mendaftar. Alamat email Anda akan diverifikasi melalui email yang berisi tautan unik. Jika tautan tersebut dikunjungi, kami tahu bahwa Anda yang mengendalikan alamat email tersebut.
+
+      Saat mendaftar dan memposting, kami mencatat alamat IP dari mana posting tersebut berasal. Kami juga dapat menyimpan log server yang mencakup alamat IP setiap permintaan ke server kami.
+
+      <a name="use"></a>
+
+      ## [Untuk apa kami menggunakan informasi Anda?](#use)
+
+      Setiap informasi yang kami kumpulkan dari Anda dapat digunakan dengan salah satu cara berikut:
+
+      * Untuk mempersonalisasi pengalaman Anda &mdash; informasi Anda membantu kami untuk menanggapi kebutuhan pribadi Anda dengan lebih baik.
+      * Untuk meningkatkan situs kami &mdash; kami terus berusaha untuk meningkatkan penawaran situs kami berdasarkan informasi dan umpan balik yang kami terima dari Anda.
+      * Untuk meningkatkan layanan pelanggan &mdash; informasi Anda membantu kami untuk lebih efektif menanggapi permintaan layanan pelanggan dan kebutuhan dukungan Anda.
+      * Untuk mengirim email berkala &mdash; Alamat email yang Anda berikan dapat digunakan untuk mengirimkan informasi, pemberitahuan yang Anda minta tentang perubahan topik atau sebagai tanggapan atas nama pengguna Anda, menanggapi pertanyaan, dan / atau permintaan atau pertanyaan lainnya.
+
+      <a name="protect"></a>
+
+      ## [Bagaimana kami melindungi informasi Anda?](#protect)
+
+      Kami menerapkan berbagai langkah keamanan untuk menjaga keamanan informasi pribadi Anda saat Anda memasukkan, mengirimkan, atau mengakses informasi pribadi Anda.
+
+      <a name="data-retention"></a>
+
+      ## [Apa kebijakan penyimpanan data Anda?](#data-retention)
+
+      Kami akan melakukan upaya dengan iktikad baik untuk:
+
+      * Menyimpan log server yang berisi alamat IP semua permintaan ke server ini tidak lebih dari [JUMLAH HARI] hari.
+
+      <a name="cookies"></a>
+
+      ## [Apakah kami menggunakan cookie?](#cookies)
+
+      Ya. Cookie adalah file kecil yang ditransfer oleh situs atau penyedia layanannya ke hard drive komputer Anda melalui browser Web Anda (jika Anda mengizinkannya). Cookie ini memungkinkan situs untuk mengenali browser Anda dan, jika Anda memiliki akun terdaftar, mengaitkannya dengan akun terdaftar Anda.
+
+      Kami menggunakan cookie untuk memahami dan menyimpan preferensi Anda untuk kunjungan di masa mendatang dan mengumpulkan data agregat tentang lalu lintas situs dan interaksi situs sehingga kami dapat menawarkan pengalaman dan alat bantu situs yang lebih baik di masa mendatang. Kami dapat membuat kontrak dengan penyedia layanan pihak ketiga untuk membantu kami memahami pengunjung situs kami dengan lebih baik. Penyedia layanan ini tidak diizinkan untuk menggunakan informasi yang dikumpulkan atas nama kami kecuali untuk membantu kami menjalankan dan meningkatkan bisnis kami.
+
+      <a name="disclose"></a>
+
+      ## [Apakah kami mengungkapkan informasi apa pun kepada pihak luar?] (#disclose)
+
+      Kami tidak menjual, memperdagangkan, atau memindahkan informasi pribadi Anda kepada pihak luar. Hal ini tidak termasuk pihak ketiga tepercaya yang membantu kami dalam mengoperasikan situs kami, menjalankan bisnis kami, atau melayani Anda, selama pihak-pihak tersebut setuju untuk merahasiakan informasi ini. Kami juga dapat merilis informasi Anda jika kami yakin bahwa rilis tersebut sesuai untuk mematuhi hukum, menegakkan kebijakan situs kami, atau melindungi hak, properti, atau keselamatan kami atau orang lain. Namun, informasi pengunjung yang tidak dapat diidentifikasi secara pribadi dapat diberikan kepada pihak lain untuk pemasaran, periklanan, atau penggunaan lainnya.
+
+      <a name="third-party"></a>
+
+      ## [Tautan pihak ketiga] (#third-party)
+
+      Terkadang, atas kebijakan kami, kami dapat menyertakan atau menawarkan produk atau layanan pihak ketiga di situs kami. Situs pihak ketiga ini memiliki kebijakan privasi yang terpisah dan independen. Oleh karena itu, kami tidak bertanggung jawab atau berkewajiban atas konten dan aktivitas situs-situs yang tertaut ini. Meskipun demikian, kami berusaha untuk melindungi integritas situs kami dan menerima umpan balik tentang situs-situs ini.
+
+      <a name="coppa"></a>
+
+      ## [Kepatuhan terhadap Undang-Undang Perlindungan Privasi Online Anak](#coppa)
+
+      Situs, produk, dan layanan kami ditujukan untuk orang-orang yang berusia minimal 13 tahun atau lebih. Jika server ini berada di Amerika Serikat, dan Anda berusia di bawah 13 tahun, sesuai dengan persyaratan COPPA ([Children's Online Privacy Protection Act] (https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), jangan gunakan situs ini.
+
+      <a name="online"></a>
+
+      ## [Kebijakan Privasi Online Saja](#online)
+
+      Kebijakan privasi online ini hanya berlaku untuk informasi yang dikumpulkan melalui situs kami dan tidak berlaku untuk informasi yang dikumpulkan secara offline.
+
+      <a name="consent"></a>
+
+      ## [Persetujuan Anda](#consent)
+
+      Dengan menggunakan situs kami, Anda menyetujui kebijakan privasi situs web kami.
+
+      <a name="changes"></a>
+
+      ## [Perubahan pada Kebijakan Privasi kami](#changes)
+
+      Jika kami memutuskan untuk mengubah kebijakan privasi kami, kami akan memposting perubahan tersebut di halaman ini.
+
+      Dokumen ini adalah CC-BY-SA. Terakhir kali diperbarui [MASUKKAN TANGGAL PEMBARUAN TERAKHIR DI SINI].
   badges:
     member:
       name: Anggota
+    regular:
+      name: Umum
     first_quote:
       name: Kutipan Pertama
     read_guidelines:
@@ -682,11 +1607,20 @@ id:
       name: Tautan terkenal
   tags:
     title: "Label"
+    limited_to_one_tag_from_group: "Tag %{tags} tidak dapat digunakan secara bersamaan. Harap sertakan salah satunya saja."
   finish_installation:
     resend_email:
       title: "Kirim Ulang Email Aktivasi"
+  safe_mode:
+    description: "Mode aman memungkinkan Anda menguji situs Anda tanpa memuat tema atau penyesuaian plugin client-side. Penyesuaian plugin server-side tetap diaktifkan."
+    no_unofficial_plugins: "Nonaktifkan penyesuaian plugin client-side tidak resmi"
+    no_plugins: "Nonaktifkan semua penyesuaian plugin client-side"
   wizard:
     step:
+      introduction:
+        fields:
+          title:
+            label: "Nama komunitas"
       privacy:
         fields:
           login_required:
@@ -703,27 +1637,74 @@ id:
                 label: "Kategori dan Topik Terbaru"
               categories_and_top_topics:
                 label: "Kategori dan Topik Teratas"
-  joined: "Joined"
+  onebox:
+    discourse:
+      user_joined_community: "Bergabung %{date}"
   reviewables:
     priorities:
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     sensitivity:
+      disabled: "Dinonaktifkan"
+      low: "Rendah"
       medium: "Sedang"
       high: "Tinggi"
     actions:
+      agree:
+        title: "Ya"
+      agree_and_keep:
+        title: "Pertahankan post"
+        description: "Setuju dengan tandai tetapi pertahankan post ini tidak berubah."
+      agree_and_keep_hidden:
+        title: "Tetap sembunyikan post"
+        description: "Setuju dengan tandai dan tetap sembunyikan post."
+      agree_and_suspend:
+        title: "Tangguhkan pengguna"
+      agree_and_silence:
+        title: "Senyapkan pengguna"
+      agree_and_restore:
+        title: "Pulihkan post"
+      agree_and_hide:
+        title: "Sembunyikan pos"
+        description: "Setuju dengan penanda dan sembunyikan kiriman ini + secara otomatis mengirimkan pesan kepada pengguna yang mendesak mereka untuk mengeditnya."
       delete_single:
         title: "Hapus"
+      delete_and_ignore:
+        title: "Abaikan penanda dan hapus post"
+        description: "Abaikan penanda dengan menghapusnya dari antrean dan hapus post; jika post pertama, hapus topiknya juga. "
+      delete_and_ignore_replies:
+        title: "Abaikan penanda, hapus post dan balasan"
+        description: "Abaikan penanda dengan menghapusnya dari antrian, hapus kiriman dan semua balasannya; jika post pertama, hapus topiknya juga"
+      delete_and_agree:
+        title: "Hapus postingan"
+        description: "Setuju dengan menandai dan menghapus postingan ini; jika postingan pertama, hapus juga topiknya."
+      delete_and_agree_replies:
+        title: "Hapus postingan dan balasan"
+        description: "Setuju dengan penanda dan hapus post ini dan semua balasannya; jika post pertama, hapus topiknya juga."
+      disagree_and_restore:
+        title: "Tidak, pulihkan postingan"
+      disagree:
+        title: "Tidak"
       ignore:
         title: "Abaikan"
+      ignore_and_do_nothing:
+        title: "Tidak melakukan apapun"
+        description: "Abaikan penanda dengan menghapusnya dari antrean tanpa melakukan tindakan apa pun. Post tersembunyi akan tetap tersembunyi dan ditangani oleh alat otomatis."
       approve:
         title: "Terima"
       reject_user:
+        title: "Hapus Pengguna..."
         delete:
           title: "Hapus Pengguna"
       reject:
         title: "Tolak"
   fallback_username: "pengguna"
+  form_templates:
+    errors:
+      invalid_yaml: "bukan string YAML yang valid"
+      invalid_type: "berisi tipe templat yang tidak valid: %{type} (tipe yang valid adalah: %{valid_types})"
+      missing_type: "tidak dapat menemukan tipe bidang"
   activemodel:
     errors:
       <<: *errors

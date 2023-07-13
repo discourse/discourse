@@ -1,18 +1,29 @@
 <div class="admin-title">
-  <PeriodChooser @period={{this.period}} @onChange={{action (mut this.period)}} />
-  <ComboBox @content={{this.searchTypeOptions}} @value={{this.searchType}} @class="search-logs-filter" @onChange={{action (mut this.searchType)}} />
+  <PeriodChooser
+    @period={{this.period}}
+    @onChange={{action (mut this.period)}}
+  />
+  <ComboBox
+    @content={{this.searchTypeOptions}}
+    @value={{this.searchType}}
+    @class="search-logs-filter"
+    @onChange={{action (mut this.searchType)}}
+  />
 </div>
 
 <h2>
-  <LinkTo @route="full-page-search" @query={{hash q=this.term}}>{{this.term}}</LinkTo>
+  <LinkTo
+    @route="full-page-search"
+    @query={{hash q=this.term}}
+  >{{this.term}}</LinkTo>
 </h2>
 
 <ConditionalLoadingSpinner @condition={{this.refreshing}}>
   <AdminGraph @model={{this.model}} @type="bar" />
 
-  <br><br>
+  <br /><br />
   <h2> {{i18n "admin.logs.search_logs.header_search_results"}} </h2>
-  <br>
+  <br />
 
   <div class="header-search-results">
     {{#each this.model.search_result.posts as |result|}}

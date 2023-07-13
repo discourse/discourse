@@ -98,6 +98,14 @@ export default function () {
           }
         );
         this.route(
+          "adminCustomizeFormTemplates",
+          { path: "/form-templates", resetNamespace: true },
+          function () {
+            this.route("new", { path: "/new" });
+            this.route("edit", { path: "/:id" });
+          }
+        );
+        this.route(
           "adminWatchedWords",
           { path: "/watched_words", resetNamespace: true },
           function () {
@@ -123,7 +131,7 @@ export default function () {
         { path: "/web_hooks", resetNamespace: true },
         function () {
           this.route("show", { path: "/:web_hook_id" });
-          this.route("showEvents", { path: "/:web_hook_id/events" });
+          this.route("edit", { path: "/:web_hook_id/edit" });
         }
       );
     });

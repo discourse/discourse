@@ -12,7 +12,7 @@ class StepsController < ApplicationController
     updater.update
 
     if updater.success?
-      result = { success: 'OK' }
+      result = { success: "OK" }
       result[:refresh_required] = true if updater.refresh_required?
       render json: result
     else
@@ -23,5 +23,4 @@ class StepsController < ApplicationController
       render json: { errors: errors }, status: 422
     end
   end
-
 end

@@ -11,5 +11,9 @@
 </DModalBody>
 <div class="modal-footer">
   <DButton @action={{action "close"}} @label="close" />
-  <ImagesUploader @uploading={{this.uploading}} @done={{action "uploadDone"}} @class="pull-right" />
+  <ImagesUploader
+    @uploading={{this.uploading}}
+    @done={{action "uploadDone"}}
+    @class="pull-right"
+  />
 </div>

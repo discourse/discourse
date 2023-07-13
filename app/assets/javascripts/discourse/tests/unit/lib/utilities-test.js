@@ -1,7 +1,4 @@
-import { Promise } from "rsvp";
 import {
-  avatarImg,
-  avatarUrl,
   caretRowCol,
   clipboardCopyAsync,
   defaultHomepage,
@@ -9,7 +6,6 @@ import {
   escapeExpression,
   extractDomainFromUrl,
   fillMissingDates,
-  getRawSize,
   inCodeBlock,
   initializeDefaultHomepage,
   mergeSortedLists,
@@ -20,18 +16,18 @@ import {
   toAsciiPrintable,
 } from "discourse/lib/utilities";
 import sinon from "sinon";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import Handlebars from "handlebars";
-import {
-  chromeTest,
-  discourseModule,
-} from "discourse/tests/helpers/qunit-helpers";
+import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { setupURL } from "discourse-common/lib/get-url";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utilities", function () {
+module("Unit | Utilities", function (hooks) {
+  setupTest(hooks);
+
   test("escapeExpression", function (assert) {
     assert.strictEqual(
       escapeExpression(">"),
@@ -86,82 +82,15 @@ discourseModule("Unit | Utilities", function () {
     );
   });
 
-  test("avatarUrl", function (assert) {
-    let rawSize = getRawSize;
-    assert.blank(avatarUrl("", "tiny"), "no template returns blank");
-    assert.strictEqual(
-      avatarUrl("/fake/template/{size}.png", "tiny"),
-      "/fake/template/" + rawSize(20) + ".png",
-      "simple avatar url"
-    );
-    assert.strictEqual(
-      avatarUrl("/fake/template/{size}.png", "large"),
-      "/fake/template/" + rawSize(45) + ".png",
-      "different size"
-    );
-
-    setupURL("https://app-cdn.example.com", "https://example.com", "");
-
-    assert.strictEqual(
-      avatarUrl("/fake/template/{size}.png", "large"),
-      "https://app-cdn.example.com/fake/template/" + rawSize(45) + ".png",
-      "uses CDN if present"
-    );
-  });
-
-  let setDevicePixelRatio = function (value) {
-    if (Object.defineProperty && !window.hasOwnProperty("devicePixelRatio")) {
-      Object.defineProperty(window, "devicePixelRatio", { value: 2 });
-    } else {
-      window.devicePixelRatio = value;
-    }
-  };
-
-  test("avatarImg", function (assert) {
-    let oldRatio = window.devicePixelRatio;
-    setDevicePixelRatio(2);
-
-    let avatarTemplate = "/path/to/avatar/{size}.png";
-    assert.strictEqual(
-      avatarImg({ avatarTemplate, size: "tiny" }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
-      "it returns the avatar html"
-    );
-
-    assert.strictEqual(
-      avatarImg({
-        avatarTemplate,
-        size: "tiny",
-        title: "evilest trout",
-      }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
-      "it adds a title if supplied"
-    );
-
-    assert.strictEqual(
-      avatarImg({
-        avatarTemplate,
-        size: "tiny",
-        extraClasses: "evil fish",
-      }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
-      "it adds extra classes if supplied"
-    );
-
-    assert.blank(
-      avatarImg({ avatarTemplate: "", size: "tiny" }),
-      "it doesn't render avatars for invalid avatar template"
-    );
-
-    setDevicePixelRatio(oldRatio);
-  });
-
   test("defaultHomepage via meta tag", function (assert) {
     let meta = document.createElement("meta");
     meta.name = "discourse_current_homepage";
     meta.content = "hot";
     document.body.appendChild(meta);
-    initializeDefaultHomepage(this.siteSettings);
+
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    initializeDefaultHomepage(siteSettings);
+
     assert.strictEqual(
       defaultHomepage(),
       "hot",
@@ -171,8 +100,10 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("defaultHomepage via site settings", function (assert) {
-    this.siteSettings.top_menu = "top|latest|hot";
-    initializeDefaultHomepage(this.siteSettings);
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.top_menu = "top|latest|hot";
+    initializeDefaultHomepage(siteSettings);
+
     assert.strictEqual(
       defaultHomepage(),
       "top",
@@ -181,8 +112,11 @@ discourseModule("Unit | Utilities", function () {
   });
 
   test("setDefaultHomepage", function (assert) {
-    initializeDefaultHomepage(this.siteSettings);
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    initializeDefaultHomepage(siteSettings);
+
     assert.strictEqual(defaultHomepage(), "latest");
+
     setDefaultHomepage("top");
     assert.strictEqual(defaultHomepage(), "top");
   });
@@ -346,75 +280,71 @@ discourseModule("Unit | Utilities", function () {
       "it correctly merges lists that share common items"
     );
   });
+});
 
-  discourseModule("modKeysPressed", function (hooks) {
-    setupRenderingTest(hooks);
+module("Unit | Utilities | modKeysPressed", function (hooks) {
+  setupRenderingTest(hooks);
 
-    test("returns an array of modifier keys pressed during keyboard or mouse event", async function (assert) {
-      let i = 0;
+  test("returns an array of modifier keys pressed during keyboard or mouse event", async function (assert) {
+    let i = 0;
 
-      this.handleClick = (event) => {
-        if (i === 0) {
-          assert.deepEqual(modKeysPressed(event), []);
-        } else if (i === 1) {
-          assert.deepEqual(modKeysPressed(event), ["alt"]);
-        } else if (i === 2) {
-          assert.deepEqual(modKeysPressed(event), ["shift"]);
-        } else if (i === 3) {
-          assert.deepEqual(modKeysPressed(event), ["meta"]);
-        } else if (i === 4) {
-          assert.deepEqual(modKeysPressed(event), ["ctrl"]);
-        } else if (i === 5) {
-          assert.deepEqual(modKeysPressed(event), [
-            "alt",
-            "shift",
-            "meta",
-            "ctrl",
-          ]);
-        }
-      };
+    this.handleClick = (event) => {
+      if (i === 0) {
+        assert.deepEqual(modKeysPressed(event), []);
+      } else if (i === 1) {
+        assert.deepEqual(modKeysPressed(event), ["alt"]);
+      } else if (i === 2) {
+        assert.deepEqual(modKeysPressed(event), ["shift"]);
+      } else if (i === 3) {
+        assert.deepEqual(modKeysPressed(event), ["meta"]);
+      } else if (i === 4) {
+        assert.deepEqual(modKeysPressed(event), ["ctrl"]);
+      } else if (i === 5) {
+        assert.deepEqual(modKeysPressed(event), [
+          "alt",
+          "shift",
+          "meta",
+          "ctrl",
+        ]);
+      }
+    };
 
-      await render(hbs`<button id="btn" {{on "click" this.handleClick}} />`);
+    await render(hbs`<button id="btn" {{on "click" this.handleClick}} />`);
 
-      await click("#btn");
-      i++;
-      await click("#btn", { altKey: true });
-      i++;
-      await click("#btn", { shiftKey: true });
-      i++;
-      await click("#btn", { metaKey: true });
-      i++;
-      await click("#btn", { ctrlKey: true });
-      i++;
-      await click("#btn", {
-        altKey: true,
-        shiftKey: true,
-        metaKey: true,
-        ctrlKey: true,
-      });
+    await click("#btn");
+    i++;
+    await click("#btn", { altKey: true });
+    i++;
+    await click("#btn", { shiftKey: true });
+    i++;
+    await click("#btn", { metaKey: true });
+    i++;
+    await click("#btn", { ctrlKey: true });
+    i++;
+    await click("#btn", {
+      altKey: true,
+      shiftKey: true,
+      metaKey: true,
+      ctrlKey: true,
     });
   });
 });
 
-discourseModule("Unit | Utilities | clipboard", function (hooks) {
-  let mockClipboard;
+module("Unit | Utilities | clipboard", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
-    mockClipboard = {
+    this.mockClipboard = {
       writeText: sinon.stub().resolves(true),
       write: sinon.stub().resolves(true),
     };
-    sinon.stub(window.navigator, "clipboard").get(() => mockClipboard);
+    sinon.stub(window.navigator, "clipboard").get(() => this.mockClipboard);
   });
 
-  function getPromiseFunction() {
-    return () =>
-      new Promise((resolve) => {
-        resolve(
-          new Blob(["some text to copy"], {
-            type: "text/plain",
-          })
-        );
-      });
+  async function asyncFunction() {
+    return new Blob(["some text to copy"], {
+      type: "text/plain",
+    });
   }
 
   test("clipboardCopyAsync - browser does not support window.ClipboardItem", async function (assert) {
@@ -423,9 +353,9 @@ discourseModule("Unit | Utilities | clipboard", function (hooks) {
       sinon.stub(window, "ClipboardItem").value(null);
     }
 
-    await clipboardCopyAsync(getPromiseFunction());
+    await clipboardCopyAsync(asyncFunction);
     assert.strictEqual(
-      mockClipboard.writeText.calledWith("some text to copy"),
+      this.mockClipboard.writeText.calledWith("some text to copy"),
       true,
       "it writes to the clipboard using writeText instead of write"
     );
@@ -434,9 +364,9 @@ discourseModule("Unit | Utilities | clipboard", function (hooks) {
   chromeTest(
     "clipboardCopyAsync - browser does support window.ClipboardItem",
     async function (assert) {
-      await clipboardCopyAsync(getPromiseFunction());
+      await clipboardCopyAsync(asyncFunction);
       assert.strictEqual(
-        mockClipboard.write.called,
+        this.mockClipboard.write.called,
         true,
         "it writes to the clipboard using write"
       );

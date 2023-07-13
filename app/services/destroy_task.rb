@@ -18,9 +18,7 @@ class DestroyTask
     topics.find_each do |topic|
       @io.puts "Deleting #{topic.slug}..."
       first_post = topic.ordered_posts.first
-      if first_post.nil?
-        return @io.puts "Topic.ordered_posts.first was nil"
-      end
+      return @io.puts "Topic.ordered_posts.first was nil" if first_post.nil?
       @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
     end
   end
@@ -45,17 +43,17 @@ class DestroyTask
 
   def destroy_topics_all_categories
     categories = Category.all
-    categories.each do |c|
-      @io.puts destroy_topics(c.slug, c.parent_category&.slug)
-    end
+    categories.each { |c| @io.puts destroy_topics(c.slug, c.parent_category&.slug) }
   end
 
   def destroy_private_messages
-    Topic.where(archetype: "private_message").find_each do |pm|
-      @io.puts "Destroying #{pm.slug} pm"
-      first_post = pm.ordered_posts.first
-      @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
-    end
+    Topic
+      .where(archetype: "private_message")
+      .find_each do |pm|
+        @io.puts "Destroying #{pm.slug} pm"
+        first_post = pm.ordered_posts.first
+        @io.puts PostDestroyer.new(Discourse.system_user, first_post).destroy
+      end
   end
 
   def destroy_category(category_id, destroy_system_topics = false)
@@ -63,9 +61,7 @@ class DestroyTask
     return @io.puts "A category with the id: #{category_id} could not be found" if c.nil?
     subcategories = Category.where(parent_category_id: c.id)
     @io.puts "There are #{subcategories.count} subcategories to delete" if subcategories
-    subcategories.each do |s|
-      category_topic_destroyer(s, destroy_system_topics)
-    end
+    subcategories.each { |s| category_topic_destroyer(s, destroy_system_topics) }
     category_topic_destroyer(c, destroy_system_topics)
   end
 
@@ -78,21 +74,30 @@ class DestroyTask
   end
 
   def destroy_users
-    User.human_users.where(admin: false).find_each do |user|
-      begin
-        if UserDestroyer.new(Discourse.system_user).destroy(user, delete_posts: true, context: "destroy task")
-          @io.puts "#{user.username} deleted"
-        else
-          @io.puts "#{user.username} not deleted"
+    User
+      .human_users
+      .where(admin: false)
+      .find_each do |user|
+        begin
+          if UserDestroyer.new(Discourse.system_user).destroy(
+               user,
+               delete_posts: true,
+               context: "destroy task",
+             )
+            @io.puts "#{user.username} deleted"
+          else
+            @io.puts "#{user.username} not deleted"
+          end
+        rescue UserDestroyer::PostsExistError
+          raise Discourse::InvalidAccess.new(
+                  "User #{user.username} has #{user.post_count} posts, so can't be deleted.",
+                )
+        rescue NoMethodError
+          @io.puts "#{user.username} could not be deleted"
+        rescue Discourse::InvalidAccess => e
+          @io.puts "#{user.username} #{e.message}"
         end
-      rescue UserDestroyer::PostsExistError
-        raise Discourse::InvalidAccess.new("User #{user.username} has #{user.post_count} posts, so can't be deleted.")
-      rescue NoMethodError
-        @io.puts "#{user.username} could not be deleted"
-      rescue Discourse::InvalidAccess => e
-        @io.puts "#{user.username} #{e.message}"
       end
-    end
   end
 
   def destroy_stats
@@ -112,5 +117,4 @@ class DestroyTask
     @io.puts "Destroying #{category.slug} category"
     category.destroy
   end
-
 end

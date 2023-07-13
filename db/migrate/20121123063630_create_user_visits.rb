@@ -7,6 +7,6 @@ class CreateUserVisits < ActiveRecord::Migration[4.2]
       t.date :visited_at, null: false
     end
 
-    add_index :user_visits, [:user_id, :visited_at], unique: true
+    add_index :user_visits, %i[user_id visited_at], unique: true
   end
 end

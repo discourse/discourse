@@ -49,7 +49,12 @@ module ImportScripts::PhpBB3
     end
 
     def get_option_text(row)
-      text = @text_processor.process_raw_text(row[:poll_option_text]) rescue row[:poll_option_text]
+      text =
+        begin
+          @text_processor.process_raw_text(row[:poll_option_text])
+        rescue StandardError
+          row[:poll_option_text]
+        end
       text.squish!
       text.gsub!(/^(\d+)\./, '\1\.')
       text
@@ -57,23 +62,27 @@ module ImportScripts::PhpBB3
 
     # @param poll_data [ImportScripts::PhpBB3::PollData]
     def get_poll_text(poll_data)
-      title = @text_processor.process_raw_text(poll_data.title) rescue poll_data.title
+      title =
+        begin
+          @text_processor.process_raw_text(poll_data.title)
+        rescue StandardError
+          poll_data.title
+        end
       text = +"#{title}\n\n"
 
       arguments = ["results=always"]
       arguments << "close=#{poll_data.close_time.iso8601}" if poll_data.close_time
 
       if poll_data.max_options > 1
-        arguments << "type=multiple" << "max=#{[poll_data.max_options, poll_data.options.count].min}"
+        arguments << "type=multiple" <<
+          "max=#{[poll_data.max_options, poll_data.options.count].min}"
       else
         arguments << "type=regular"
       end
 
-      text << "[poll #{arguments.join(' ')}]"
+      text << "[poll #{arguments.join(" ")}]"
 
-      poll_data.options.each do |option|
-        text << "\n* #{option[:text]}"
-      end
+      poll_data.options.each { |option| text << "\n* #{option[:text]}" }
 
       text << "\n[/poll]"
     end
@@ -104,9 +113,7 @@ module ImportScripts::PhpBB3
       poll.poll_options.each_with_index do |option, index|
         imported_option = poll_data.options[index]
 
-        imported_option[:ids].each do |imported_id|
-          option_ids[imported_id] = option.id
-        end
+        imported_option[:ids].each { |imported_id| option_ids[imported_id] = option.id }
       end
 
       option_ids

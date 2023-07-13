@@ -1,71 +1,83 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
-  describe 'topic_title_length' do
-    it 'returns a range of min/max topic title length' do
+  describe "topic_title_length" do
+    it "returns a range of min/max topic title length" do
       expect(SiteSetting.topic_title_length).to eq(
-        (SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[:max_topic_title_length])
+        (
+          SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[
+            :max_topic_title_length
+          ]
+        ),
       )
     end
   end
 
-  describe 'post_length' do
-    it 'returns a range of min/max post length' do
-      expect(SiteSetting.post_length).to eq(SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length])
+  describe "post_length" do
+    it "returns a range of min/max post length" do
+      expect(SiteSetting.post_length).to eq(
+        SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length],
+      )
     end
   end
 
-  describe 'first_post_length' do
-    it 'returns a range of min/max first post length' do
-      expect(SiteSetting.first_post_length).to eq(SiteSetting.defaults[:min_first_post_length]..SiteSetting.defaults[:max_post_length])
+  describe "first_post_length" do
+    it "returns a range of min/max first post length" do
+      expect(SiteSetting.first_post_length).to eq(
+        SiteSetting.defaults[:min_first_post_length]..SiteSetting.defaults[:max_post_length],
+      )
     end
   end
 
-  describe 'private_message_title_length' do
-    it 'returns a range of min/max pm topic title length' do
-      expect(SiteSetting.private_message_title_length).to eq(SiteSetting.defaults[:min_personal_message_title_length]..SiteSetting.defaults[:max_topic_title_length])
+  describe "private_message_title_length" do
+    it "returns a range of min/max pm topic title length" do
+      expect(SiteSetting.private_message_title_length).to eq(
+        SiteSetting.defaults[:min_personal_message_title_length]..SiteSetting.defaults[
+          :max_topic_title_length
+        ],
+      )
     end
   end
 
-  describe 'in test we do some judo to ensure SiteSetting is always reset between tests' do
-    it 'is always the correct default' do
-      expect(SiteSetting.contact_email).to eq('')
+  describe "in test we do some judo to ensure SiteSetting is always reset between tests" do
+    it "is always the correct default" do
+      expect(SiteSetting.contact_email).to eq("")
     end
 
-    it 'sets a setting' do
-      SiteSetting.contact_email = 'sam@sam.com'
+    it "sets a setting" do
+      SiteSetting.contact_email = "sam@sam.com"
     end
 
-    it 'is always the correct default' do
-      expect(SiteSetting.contact_email).to eq('')
+    it "is always the correct default" do
+      expect(SiteSetting.contact_email).to eq("")
     end
   end
 
   describe "anonymous_homepage" do
     it "returns latest" do
-      expect(SiteSetting.anonymous_homepage).to eq('latest')
+      expect(SiteSetting.anonymous_homepage).to eq("latest")
     end
   end
 
   describe "top_menu" do
     describe "validations" do
       it "always demands latest" do
-        expect do
-          SiteSetting.top_menu = 'categories'
-        end.to raise_error(Discourse::InvalidParameters)
+        expect do SiteSetting.top_menu = "categories" end.to raise_error(
+          Discourse::InvalidParameters,
+        )
       end
 
       it "does not allow random text" do
-        expect do
-          SiteSetting.top_menu = 'latest|random'
-        end.to raise_error(Discourse::InvalidParameters)
+        expect do SiteSetting.top_menu = "latest|random" end.to raise_error(
+          Discourse::InvalidParameters,
+        )
       end
     end
 
     describe "items" do
       let(:items) { SiteSetting.top_menu_items }
 
-      it 'returns TopMenuItem objects' do
+      it "returns TopMenuItem objects" do
         expect(items[0]).to be_kind_of(TopMenuItem)
       end
     end
@@ -73,7 +85,7 @@ RSpec.describe SiteSetting do
     describe "homepage" do
       it "has homepage" do
         SiteSetting.top_menu = "bookmarks|latest"
-        expect(SiteSetting.homepage).to eq('bookmarks')
+        expect(SiteSetting.homepage).to eq("bookmarks")
       end
     end
   end
@@ -82,11 +94,9 @@ RSpec.describe SiteSetting do
     context "when has_enough_top_topics" do
       before do
         SiteSetting.topics_per_period_in_top_page = 2
-        SiteSetting.top_page_default_timeframe = 'daily'
+        SiteSetting.top_page_default_timeframe = "daily"
 
-        2.times do
-          TopTopic.create!(daily_score: 2.5)
-        end
+        2.times { TopTopic.create!(daily_score: 2.5) }
 
         TopTopic.refresh!
       end
@@ -99,7 +109,7 @@ RSpec.describe SiteSetting do
     context "when does_not_have_enough_top_topics" do
       before do
         SiteSetting.topics_per_period_in_top_page = 20
-        SiteSetting.top_page_default_timeframe = 'daily'
+        SiteSetting.top_page_default_timeframe = "daily"
         TopTopic.refresh!
       end
 
@@ -110,9 +120,7 @@ RSpec.describe SiteSetting do
   end
 
   describe "scheme" do
-    before do
-      SiteSetting.force_https = true
-    end
+    before { SiteSetting.force_https = true }
 
     it "returns http when ssl is disabled" do
       SiteSetting.force_https = false
@@ -140,25 +148,21 @@ RSpec.describe SiteSetting do
     end
   end
 
-  describe 'deprecated site settings' do
+  describe "deprecated site settings" do
     before do
       SiteSetting.force_https = true
       @orig_logger = Rails.logger
       Rails.logger = @fake_logger = FakeLogger.new
     end
 
-    after do
-      Rails.logger = @orig_logger
-    end
+    after { Rails.logger = @orig_logger }
 
-    it 'should act as a proxy to the new methods' do
+    it "should act as a proxy to the new methods" do
       begin
         original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
         SiteSettings::DeprecatedSettings::SETTINGS.clear
 
-        SiteSettings::DeprecatedSettings::SETTINGS.push([
-          'use_https', 'force_https', true, '0.0.1'
-        ])
+        SiteSettings::DeprecatedSettings::SETTINGS.push(["use_https", "force_https", true, "0.0.1"])
 
         SiteSetting.setup_deprecated_methods
 
@@ -167,9 +171,7 @@ RSpec.describe SiteSetting do
           expect(SiteSetting.use_https?).to eq(true)
         end.to change { @fake_logger.warnings.count }.by(2)
 
-        expect do
-          SiteSetting.use_https(warn: false)
-        end.to_not change { @fake_logger.warnings }
+        expect do SiteSetting.use_https(warn: false) end.to_not change { @fake_logger.warnings }
 
         SiteSetting.use_https = false
 
@@ -178,24 +180,22 @@ RSpec.describe SiteSetting do
       ensure
         SiteSettings::DeprecatedSettings::SETTINGS.clear
 
-        SiteSettings::DeprecatedSettings::SETTINGS.concat(
-          original_settings
-        )
+        SiteSettings::DeprecatedSettings::SETTINGS.concat(original_settings)
       end
     end
   end
 
-  describe 'cached settings' do
-    it 'should recalculate cached setting when dependent settings are changed' do
-      SiteSetting.blocked_attachment_filenames = 'foo'
+  describe "cached settings" do
+    it "should recalculate cached setting when dependent settings are changed" do
+      SiteSetting.blocked_attachment_filenames = "foo"
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo/)
 
-      SiteSetting.blocked_attachment_filenames = 'foo|bar'
+      SiteSetting.blocked_attachment_filenames = "foo|bar"
       expect(SiteSetting.blocked_attachment_filenames_regex).to eq(/foo|bar/)
     end
   end
 
-  it 'sanitizes the client settings when they are overridden' do
+  it "sanitizes the client settings when they are overridden" do
     xss = "<b onmouseover=alert('Wufff!')>click me!</b><script>alert('TEST');</script>"
 
     SiteSetting.global_notice = xss
@@ -206,7 +206,7 @@ RSpec.describe SiteSetting do
   it "doesn't corrupt site settings with special characters" do
     value = 'OX5y3Oljb+Qt9Bu809vsBQ==<>!%{}*&!@#$%..._-A'
     settings = new_settings(SiteSettings::LocalProcessProvider.new)
-    settings.setting(:test_setting, '', client: true)
+    settings.setting(:test_setting, "", client: true)
 
     settings.test_setting = value
 

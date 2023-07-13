@@ -1,0 +1,139 @@
+<div class="group-smtp-email-settings">
+  <form class="groups-form form-horizontal">
+    <div>
+      <div class="control-group">
+        <label for="username">{{i18n
+            "groups.manage.email.credentials.username"
+          }}</label>
+        <Input
+          @type="text"
+          name="username"
+          @value={{this.form.email_username}}
+          tabindex="1"
+          {{on "change" (action "resetSettingsValid")}}
+        />
+      </div>
+
+      <div class="control-group">
+        <label for="smtp_server">{{i18n
+            "groups.manage.email.credentials.smtp_server"
+          }}</label>
+        <Input
+          @type="text"
+          name="smtp_server"
+          @value={{this.form.smtp_server}}
+          tabindex="4"
+          {{on "change" (action "resetSettingsValid")}}
+        />
+      </div>
+
+      <label for="enable_ssl">
+        <Input
+          @type="checkbox"
+          @checked={{this.form.smtp_ssl}}
+          id="enable_ssl"
+          tabindex="6"
+          {{on "change" (action "resetSettingsValid")}}
+        />
+        {{i18n "groups.manage.email.credentials.smtp_ssl"}}
+      </label>
+    </div>
+
+    <div>
+      <div class="control-group">
+        <label for="password">{{i18n
+            "groups.manage.email.credentials.password"
+          }}</label>
+        <Input
+          @type="password"
+          name="password"
+          @value={{this.form.email_password}}
+          tabindex="2"
+          {{on "change" (action "resetSettingsValid")}}
+        />
+      </div>
+
+      <div class="control-group">
+        <label for="smtp_port">{{i18n
+            "groups.manage.email.credentials.smtp_port"
+          }}</label>
+        <Input
+          @type="text"
+          name="smtp_port"
+          @value={{this.form.smtp_port}}
+          tabindex="5"
+          {{on "change" (action "resetSettingsValid" this.form.smtp_port)}}
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="control-group">
+        <label for="from_alias">{{i18n
+            "groups.manage.email.settings.from_alias"
+          }}</label>
+        <Input
+          @type="text"
+          name="from_alias"
+          id="from_alias"
+          @value={{this.form.email_from_alias}}
+          {{on "change" (action "resetSettingsValid")}}
+          tabindex="3"
+        />
+        <p>{{i18n "groups.manage.email.settings.from_alias_hint"}}</p>
+      </div>
+    </div>
+  </form>
+
+  <div class="control-group">
+    <div class="group-smtp-prefill-options">
+      {{i18n "groups.manage.email.prefill.title"}}
+      <a
+        id="prefill_smtp_gmail"
+        href
+        {{on "click" (fn this.prefillSettings "gmail")}}
+      >{{i18n "groups.manage.email.prefill.gmail"}}</a>
+    </div>
+  </div>
+
+  <div class="control-group buttons">
+    <DButton
+      @disabled={{or this.missingSettings this.testingSettings}}
+      @class="btn-primary test-smtp-settings"
+      @action={{action "testSmtpSettings"}}
+      @icon="cog"
+      @label="groups.manage.email.test_settings"
+      @tabindex="7"
+      @title="groups.manage.email.settings_required"
+    />
+
+    <ConditionalLoadingSpinner
+      @size="small"
+      @condition={{this.testingSettings}}
+    />
+
+    {{#if this.smtpSettingsValid}}
+      <span class="smtp-settings-ok">
+        {{d-icon "check-circle"}}
+        {{i18n "groups.manage.email.smtp_settings_valid"}}
+      </span>
+    {{/if}}
+  </div>
+
+  {{#if this.group.smtp_updated_at}}
+    <div class="group-email-last-updated-details for-smtp">
+      <small>
+        {{i18n "groups.manage.email.last_updated"}}
+        <strong>{{format-date
+            this.group.smtp_updated_at
+            leaveAgo="true"
+          }}</strong>
+        {{i18n "groups.manage.email.last_updated_by"}}
+        <LinkTo
+          @route="user"
+          @model={{this.group.smtp_updated_by.username}}
+        >{{this.group.smtp_updated_by.username}}</LinkTo>
+      </small>
+    </div>
+  {{/if}}
+</div>

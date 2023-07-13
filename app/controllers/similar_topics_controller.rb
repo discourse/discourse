@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SimilarTopicsController < ApplicationController
-
   class SimilarTopic
     def initialize(topic)
       @topic = topic
@@ -26,5 +25,4 @@ class SimilarTopicsController < ApplicationController
     topics.map! { |t| SimilarTopic.new(t) }
     render_serialized(topics, SimilarTopicSerializer, root: :similar_topics, rest_serializer: true)
   end
-
 end

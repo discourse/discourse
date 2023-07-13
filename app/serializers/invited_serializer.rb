@@ -6,10 +6,17 @@ class InvitedSerializer < ApplicationSerializer
   def invites
     ActiveModel::ArraySerializer.new(
       object.invite_list,
-      each_serializer: object.type == "pending" || object.type == "expired" ? InviteSerializer : InvitedUserSerializer,
+      each_serializer:
+        (
+          if object.type == "pending" || object.type == "expired"
+            InviteSerializer
+          else
+            InvitedUserSerializer
+          end
+        ),
       scope: scope,
       root: false,
-      show_emails: object.show_emails
+      show_emails: object.show_emails,
     ).as_json
   end
 

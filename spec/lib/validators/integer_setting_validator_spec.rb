@@ -1,16 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe IntegerSettingValidator do
-  describe '#valid_value?' do
-
+  describe "#valid_value?" do
     shared_examples "for all IntegerSettingValidator opts" do
       it "returns false for blank values" do
-        expect(validator.valid_value?('')).to eq(false)
+        expect(validator.valid_value?("")).to eq(false)
         expect(validator.valid_value?(nil)).to eq(false)
       end
 
       it "returns false if value is not a valid integer" do
-        expect(validator.valid_value?('two')).to eq(false)
+        expect(validator.valid_value?("two")).to eq(false)
       end
     end
 
@@ -21,21 +20,21 @@ RSpec.describe IntegerSettingValidator do
 
       it "returns true if value is a valid integer" do
         expect(validator.valid_value?(1)).to eq(true)
-        expect(validator.valid_value?('1')).to eq(true)
+        expect(validator.valid_value?("1")).to eq(true)
       end
 
       it "defaults min to 0" do
         expect(validator.valid_value?(-1)).to eq(false)
-        expect(validator.valid_value?('-1')).to eq(false)
+        expect(validator.valid_value?("-1")).to eq(false)
         expect(validator.valid_value?(0)).to eq(true)
-        expect(validator.valid_value?('0')).to eq(true)
+        expect(validator.valid_value?("0")).to eq(true)
       end
 
       it "defaults max to 2_000_000_000" do
         expect(validator.valid_value?(2_000_000_001)).to eq(false)
-        expect(validator.valid_value?('2000000001')).to eq(false)
+        expect(validator.valid_value?("2000000001")).to eq(false)
         expect(validator.valid_value?(2_000_000_000)).to eq(true)
-        expect(validator.valid_value?('2000000000')).to eq(true)
+        expect(validator.valid_value?("2000000000")).to eq(true)
       end
     end
 
@@ -46,17 +45,17 @@ RSpec.describe IntegerSettingValidator do
 
       it "returns true if value is equal to min" do
         expect(validator.valid_value?(2)).to eq(true)
-        expect(validator.valid_value?('2')).to eq(true)
+        expect(validator.valid_value?("2")).to eq(true)
       end
 
       it "returns true if value is greater than min" do
         expect(validator.valid_value?(3)).to eq(true)
-        expect(validator.valid_value?('3')).to eq(true)
+        expect(validator.valid_value?("3")).to eq(true)
       end
 
       it "returns false if value is less than min" do
         expect(validator.valid_value?(1)).to eq(false)
-        expect(validator.valid_value?('1')).to eq(false)
+        expect(validator.valid_value?("1")).to eq(false)
       end
     end
 
@@ -67,17 +66,17 @@ RSpec.describe IntegerSettingValidator do
 
       it "returns true if value is equal to max" do
         expect(validator.valid_value?(3)).to eq(true)
-        expect(validator.valid_value?('3')).to eq(true)
+        expect(validator.valid_value?("3")).to eq(true)
       end
 
       it "returns true if value is less than max" do
         expect(validator.valid_value?(2)).to eq(true)
-        expect(validator.valid_value?('2')).to eq(true)
+        expect(validator.valid_value?("2")).to eq(true)
       end
 
       it "returns false if value is greater than min" do
         expect(validator.valid_value?(4)).to eq(false)
-        expect(validator.valid_value?('4')).to eq(false)
+        expect(validator.valid_value?("4")).to eq(false)
       end
     end
 
@@ -103,7 +102,7 @@ RSpec.describe IntegerSettingValidator do
 
       it "does not impose default validations" do
         expect(validator.valid_value?(-1)).to eq(true)
-        expect(validator.valid_value?(20001)).to eq(true)
+        expect(validator.valid_value?(20_001)).to eq(true)
       end
     end
   end

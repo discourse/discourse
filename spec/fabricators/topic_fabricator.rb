@@ -8,25 +8,21 @@ Fabricator(:topic) do
   end
 end
 
-Fabricator(:deleted_topic, from: :topic) do
-  deleted_at { 1.minute.ago }
-end
+Fabricator(:deleted_topic, from: :topic) { deleted_at { 1.minute.ago } }
 
-Fabricator(:closed_topic, from: :topic) do
-  closed true
-end
+Fabricator(:closed_topic, from: :topic) { closed true }
 
-Fabricator(:banner_topic, from: :topic) do
-  archetype Archetype.banner
-end
+Fabricator(:banner_topic, from: :topic) { archetype Archetype.banner }
 
 Fabricator(:private_message_topic, from: :topic) do
   transient :recipient
   category_id { nil }
   title { sequence(:title) { |i| "This is a private message #{i}" } }
   archetype "private_message"
-  topic_allowed_users { |t| [
-    Fabricate.build(:topic_allowed_user, user: t[:user]),
-    Fabricate.build(:topic_allowed_user, user: t[:recipient] || Fabricate(:user))
-  ]}
+  topic_allowed_users do |t|
+    [
+      Fabricate.build(:topic_allowed_user, user: t[:user]),
+      Fabricate.build(:topic_allowed_user, user: t[:recipient] || Fabricate(:user)),
+    ]
+  end
 end

@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
 class TopicPostCountSerializer < BasicUserSerializer
-
-  attributes :post_count, :primary_group_name,
-             :flair_name, :flair_url, :flair_color, :flair_bg_color,
-             :admin, :moderator, :trust_level,
+  attributes :post_count,
+             :primary_group_name,
+             :flair_name,
+             :flair_url,
+             :flair_color,
+             :flair_bg_color,
+             :flair_group_id,
+             :admin,
+             :moderator,
+             :trust_level
 
   def id
     object[:user].id
@@ -39,6 +45,10 @@ class TopicPostCountSerializer < BasicUserSerializer
     object[:user]&.flair_group&.flair_color
   end
 
+  def flair_group_id
+    object[:user]&.flair_group_id
+  end
+
   def include_admin?
     object[:user].admin
   end
@@ -58,5 +68,4 @@ class TopicPostCountSerializer < BasicUserSerializer
   def trust_level
     object[:user].trust_level
   end
-
 end

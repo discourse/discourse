@@ -6,7 +6,10 @@ class MakeExpressionsLessGeneric < ActiveRecord::Migration[4.2]
     rename_column :expressions, :expression_type_id, :expression_index
     remove_column :expressions, :parent_type
 
-    add_index :expressions, [:post_id, :expression_index, :user_id], unique: true, name: 'unique_by_user'
+    add_index :expressions,
+              %i[post_id expression_index user_id],
+              unique: true,
+              name: "unique_by_user"
   end
 
   def down
@@ -14,5 +17,4 @@ class MakeExpressionsLessGeneric < ActiveRecord::Migration[4.2]
     rename_column :expressions, :expression_index, :expression_type_id
     add_column :expressions, :parent_type, :string, null: true
   end
-
 end

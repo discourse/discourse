@@ -6,7 +6,7 @@ RSpec.describe PostValidator do
   let(:validator) { PostValidator.new({}) }
 
   describe "#post_body_validator" do
-    it 'should not allow a post with an empty raw' do
+    it "should not allow a post with an empty raw" do
       post.raw = ""
       validator.post_body_validator(post)
       expect(post.errors).to_not be_empty
@@ -27,13 +27,16 @@ RSpec.describe PostValidator do
       fab!(:user) { Fabricate(:user) }
 
       let(:topic) do
-        Fabricate(:private_message_topic, topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: robot),
-          Fabricate.build(:topic_allowed_user, user: user)
-        ])
+        Fabricate(
+          :private_message_topic,
+          topic_allowed_users: [
+            Fabricate.build(:topic_allowed_user, user: robot),
+            Fabricate.build(:topic_allowed_user, user: user),
+          ],
+        )
       end
 
-      it 'should allow a post with an empty raw' do
+      it "should allow a post with an empty raw" do
         post = Fabricate.build(:post, topic: topic)
         post.raw = ""
         validator.post_body_validator(post)
@@ -72,7 +75,7 @@ RSpec.describe PostValidator do
       expect(post.errors.count).to eq(1)
 
       post = build(:post, topic: topic)
-      post.raw = "<!-- #{'very long comment' * SiteSetting.min_post_length} -->"
+      post.raw = "<!-- #{"very long comment" * SiteSetting.min_post_length} -->"
       validator.stripped_length(post)
       expect(post.errors.count).to eq(1)
     end
@@ -131,21 +134,21 @@ RSpec.describe PostValidator do
 
     it "should be invalid when new user exceeds max mentions limit" do
       post.acting_user = build(:newuser)
-      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be > 0
     end
 
     it "should be invalid when leader user exceeds max mentions limit" do
       post.acting_user = build(:trust_level_4)
-      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old', 'jake_new'])
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old jake_new])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be > 0
     end
 
     it "should be valid when new user does not exceed max mentions limit" do
       post.acting_user = build(:newuser)
-      post.expects(:raw_mentions).returns(['jake', 'finn'])
+      post.expects(:raw_mentions).returns(%w[jake finn])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be(0)
     end
@@ -153,14 +156,14 @@ RSpec.describe PostValidator do
     it "should be valid when new user exceeds max mentions limit in PM" do
       post.acting_user = build(:newuser)
       post.topic.expects(:private_message?).returns(true)
-      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be(0)
     end
 
     it "should be valid when leader user does not exceed max mentions limit" do
       post.acting_user = build(:trust_level_4)
-      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
+      post.expects(:raw_mentions).returns(%w[jake finn jake_old])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be(0)
     end
@@ -233,7 +236,9 @@ RSpec.describe PostValidator do
   describe "unique_post_validator" do
     fab!(:user) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post, raw: "Non PM topic body", user: user, topic: topic) }
-    fab!(:pm_post) { Fabricate(:post, raw: "PM topic body", user: user, topic: Fabricate(:private_message_topic)) }
+    fab!(:pm_post) do
+      Fabricate(:post, raw: "PM topic body", user: user, topic: Fabricate(:private_message_topic))
+    end
 
     before do
       SiteSetting.unique_posts_mins = 5
@@ -251,16 +256,14 @@ RSpec.describe PostValidator do
     end
 
     context "when post is unique" do
-      let(:new_post) do
-        Fabricate.build(:post, user: user, raw: "unique content", topic: topic)
-      end
+      let(:new_post) { Fabricate.build(:post, user: user, raw: "unique content", topic: topic) }
 
       it "should not add an error" do
         validator.unique_post_validator(new_post)
         expect(new_post.errors.count).to eq(0)
       end
 
-      it 'should not add an error when changing an existing post' do
+      it "should not add an error when changing an existing post" do
         post.raw = "changing raw"
 
         validator.unique_post_validator(post)
@@ -274,7 +277,7 @@ RSpec.describe PostValidator do
           :post,
           user: user,
           raw: raw,
-          topic: is_pm ? Fabricate.build(:private_message_topic) : topic
+          topic: is_pm ? Fabricate.build(:private_message_topic) : topic,
         )
       end
 
@@ -319,9 +322,7 @@ RSpec.describe PostValidator do
     fab!(:other_user) { Fabricate(:user) }
     fab!(:topic) { Fabricate(:topic) }
 
-    before do
-      SiteSetting.max_consecutive_replies = 2
-    end
+    before { SiteSetting.max_consecutive_replies = 2 }
 
     it "should always allow original poster to post" do
       [user, user, user, other_user, user, user, user].each_with_index do |u, i|
@@ -363,7 +364,7 @@ RSpec.describe PostValidator do
       post = Fabricate(:post, user: user, topic: topic)
 
       revisor = PostRevisor.new(post)
-      revisor.revise!(post.user, raw: 'hello world123456789')
+      revisor.revise!(post.user, raw: "hello world123456789")
     end
 
     it "should allow posting more than 2 replies" do

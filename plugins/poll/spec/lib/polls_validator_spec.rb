@@ -3,8 +3,9 @@
 require "rails_helper"
 
 RSpec.describe ::DiscoursePoll::PollsValidator do
+  subject(:validator) { described_class.new(post) }
+
   let(:post) { Fabricate(:post) }
-  subject { described_class.new(post) }
 
   describe "#validate_polls" do
     it "ensures that polls have valid arguments" do
@@ -18,9 +19,15 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       post.raw = raw
       expect(post.valid?).to eq(false)
 
-      expect(post.errors[:base]).to include(I18n.t("poll.invalid_argument", argument: "type", value: "not_good1"))
-      expect(post.errors[:base]).to include(I18n.t("poll.invalid_argument", argument: "status", value: "not_good2"))
-      expect(post.errors[:base]).to include(I18n.t("poll.invalid_argument", argument: "results", value: "not_good3"))
+      expect(post.errors[:base]).to include(
+        I18n.t("poll.invalid_argument", argument: "type", value: "not_good1"),
+      )
+      expect(post.errors[:base]).to include(
+        I18n.t("poll.invalid_argument", argument: "status", value: "not_good2"),
+      )
+      expect(post.errors[:base]).to include(
+        I18n.t("poll.invalid_argument", argument: "results", value: "not_good3"),
+      )
     end
 
     it "ensures that all possible values are valid" do
@@ -70,9 +77,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       post.raw = raw
       expect(post.valid?).to eq(false)
 
-      expect(post.errors[:base]).to include(
-        I18n.t("poll.multiple_polls_without_name")
-      )
+      expect(post.errors[:base]).to include(I18n.t("poll.multiple_polls_without_name"))
 
       raw = <<~RAW
       [poll name=test]
@@ -90,7 +95,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.multiple_polls_with_same_name", name: "test")
+        I18n.t("poll.multiple_polls_with_same_name", name: "test"),
       )
     end
 
@@ -105,9 +110,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       post.raw = raw
       expect(post.valid?).to eq(false)
 
-      expect(post.errors[:base]).to include(
-        I18n.t("poll.default_poll_must_have_different_options")
-      )
+      expect(post.errors[:base]).to include(I18n.t("poll.default_poll_must_have_different_options"))
 
       raw = <<~RAW
       [poll name=test]
@@ -120,7 +123,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.named_poll_must_have_different_options", name: "test")
+        I18n.t("poll.named_poll_must_have_different_options", name: "test"),
       )
     end
 
@@ -136,7 +139,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.default_poll_must_not_have_any_empty_options")
+        I18n.t("poll.default_poll_must_not_have_any_empty_options"),
       )
 
       raw = <<~RAW
@@ -150,7 +153,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.named_poll_must_not_have_any_empty_options", name: "test")
+        I18n.t("poll.named_poll_must_not_have_any_empty_options", name: "test"),
       )
     end
 
@@ -163,9 +166,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       post.raw = raw
       expect(post.valid?).to eq(false)
 
-      expect(post.errors[:base]).to include(
-        I18n.t("poll.default_poll_must_have_at_least_1_option")
-      )
+      expect(post.errors[:base]).to include(I18n.t("poll.default_poll_must_have_at_least_1_option"))
 
       raw = <<~RAW
       [poll name=test]
@@ -176,7 +177,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       expect(post.valid?).to eq(false)
 
       expect(post.errors[:base]).to include(
-        I18n.t("poll.named_poll_must_have_at_least_1_option", name: "test")
+        I18n.t("poll.named_poll_must_have_at_least_1_option", name: "test"),
       )
     end
 
@@ -194,10 +195,9 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       post.raw = raw
       expect(post.valid?).to eq(false)
 
-      expect(post.errors[:base]).to include(I18n.t(
-        "poll.default_poll_must_have_less_options",
-        count: SiteSetting.poll_maximum_options
-      ))
+      expect(post.errors[:base]).to include(
+        I18n.t("poll.default_poll_must_have_less_options", count: SiteSetting.poll_maximum_options),
+      )
 
       raw = <<~RAW
       [poll name=test]
@@ -210,10 +210,13 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
       post.raw = raw
       expect(post.valid?).to eq(false)
 
-      expect(post.errors[:base]).to include(I18n.t(
-        "poll.named_poll_must_have_less_options",
-        name: "test", count: SiteSetting.poll_maximum_options
-      ))
+      expect(post.errors[:base]).to include(
+        I18n.t(
+          "poll.named_poll_must_have_less_options",
+          name: "test",
+          count: SiteSetting.poll_maximum_options,
+        ),
+      )
     end
 
     describe "multiple type polls" do
@@ -230,7 +233,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
         expect(post.valid?).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
         )
 
         raw = <<~RAW
@@ -245,7 +248,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
         expect(post.valid?).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: "test")
+          I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: "test"),
         )
       end
 
@@ -261,7 +264,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
         expect(post.valid?).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
         )
       end
 
@@ -277,7 +280,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
         expect(post.valid?).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
         )
       end
 
@@ -293,7 +296,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
         expect(post.valid?).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
         )
       end
 
@@ -321,7 +324,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
         expect(post.valid?).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
         )
       end
 
@@ -337,7 +340,7 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
         expect(post.valid?).to eq(false)
 
         expect(post.errors[:base]).to include(
-          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters")
+          I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
         )
       end
     end
@@ -350,9 +353,15 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
 
       post.raw = raw
       expect(post.valid?).to eq(false)
-      expect(post.errors[:base]).to include("Min #{I18n.t("errors.messages.greater_than", count: 0)}")
-      expect(post.errors[:base]).to include("Max #{I18n.t("errors.messages.greater_than", count: "min")}")
-      expect(post.errors[:base]).to include("Step #{I18n.t("errors.messages.greater_than", count: 0)}")
+      expect(post.errors[:base]).to include(
+        "Min #{I18n.t("errors.messages.greater_than", count: 0)}",
+      )
+      expect(post.errors[:base]).to include(
+        "Max #{I18n.t("errors.messages.greater_than", count: "min")}",
+      )
+      expect(post.errors[:base]).to include(
+        "Step #{I18n.t("errors.messages.greater_than", count: 0)}",
+      )
 
       raw = <<~RAW
       [poll type=number min=9999999999 max=9999999999 step=1]
@@ -361,8 +370,12 @@ RSpec.describe ::DiscoursePoll::PollsValidator do
 
       post.raw = raw
       expect(post.valid?).to eq(false)
-      expect(post.errors[:base]).to include("Min #{I18n.t("errors.messages.less_than", count: 2_147_483_647)}")
-      expect(post.errors[:base]).to include("Max #{I18n.t("errors.messages.less_than", count: 2_147_483_647)}")
+      expect(post.errors[:base]).to include(
+        "Min #{I18n.t("errors.messages.less_than", count: 2_147_483_647)}",
+      )
+      expect(post.errors[:base]).to include(
+        "Max #{I18n.t("errors.messages.less_than", count: 2_147_483_647)}",
+      )
       expect(post.errors[:base]).to include(I18n.t("poll.default_poll_must_have_at_least_1_option"))
     end
   end

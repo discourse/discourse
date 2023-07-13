@@ -1,7 +1,7 @@
 import RestAdapter from "discourse/adapters/rest";
 
-export default RestAdapter.extend({
+export default class Embedding extends RestAdapter {
   pathFor() {
     return "/admin/customize/embedding";
-  },
-});
+  }
+}

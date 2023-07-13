@@ -10,6 +10,6 @@ class SelectableAvatarsModeValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.empty_selectable_avatars')
+    I18n.t("site_settings.errors.empty_selectable_avatars")
   end
 end

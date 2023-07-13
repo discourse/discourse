@@ -4,35 +4,33 @@ RSpec.describe Users::AssociateAccountsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
 
-  before do
-    OmniAuth.config.test_mode = true
-  end
+  before { OmniAuth.config.test_mode = true }
 
   after do
     Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2] = nil
     OmniAuth.config.test_mode = false
   end
 
-  context 'when attempting reconnect' do
+  context "when attempting reconnect" do
     before do
       SiteSetting.enable_google_oauth2_logins = true
       OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
-        provider: 'google_oauth2',
-        uid: '12345',
+        provider: "google_oauth2",
+        uid: "12345",
         info: {
-          email: 'someemail@test.com',
+          email: "someemail@test.com",
         },
         extra: {
           raw_info: {
             email_verified: true,
-          }
+          },
         },
       )
 
       Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:google_oauth2]
     end
 
-    it 'should work correctly' do
+    it "should work correctly" do
       sign_in(user)
 
       # Reconnect flow:
@@ -57,7 +55,12 @@ RSpec.describe Users::AssociateAccountsController do
       # Make the connection
       events = DiscourseEvent.track_events { post "#{uri.path}.json" }
       expect(events.any? { |e| e[:event_name] == :before_auth }).to eq(true)
-      expect(events.any? { |e| e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] && !e[:params][1].failed? }).to eq(true)
+      expect(
+        events.any? do |e|
+          e[:event_name] === :after_auth && Auth::GoogleOAuth2Authenticator === e[:params][0] &&
+            !e[:params][1].failed?
+        end,
+      ).to eq(true)
 
       expect(response.status).to eq(200)
       expect(UserAssociatedAccount.count).to eq(1)
@@ -67,7 +70,7 @@ RSpec.describe Users::AssociateAccountsController do
       expect(response.status).to eq(404)
     end
 
-    it 'should only work within the current session' do
+    it "should only work within the current session" do
       sign_in(user)
 
       post "/auth/google_oauth2?reconnect=true"

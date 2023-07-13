@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include JSON
 
-      matches_regexp(/^https?:\/\/gfycat\.com\//)
+      matches_regexp(%r{^https?://gfycat\.com/})
       always_https
 
       # This engine should have priority over AllowlistedGenericOnebox.
@@ -60,14 +60,19 @@ module Onebox
       private
 
       def match
-        @match ||= @url.match(/^https?:\/\/gfycat\.com\/(gifs\/detail\/)?(?<name>.+)/)
+        @match ||= @url.match(%r{^https?://gfycat\.com/(gifs/detail/)?(?<name>.+)})
       end
 
       def og_data
         return @og_data if defined?(@og_data)
 
-        response = Onebox::Helpers.fetch_response(url, redirect_limit: 10) rescue nil
-        page = Nokogiri::HTML(response)
+        response =
+          begin
+            Onebox::Helpers.fetch_response(url, redirect_limit: 10)
+          rescue StandardError
+            nil
+          end
+        page = Nokogiri.HTML(response)
         script = page.at_css('script[type="application/ld+json"]')
 
         if json_string = script&.text
@@ -82,15 +87,15 @@ module Onebox
 
         @data = {
           name: match[:name],
-          title: og_data[:headline] || 'No Title',
+          title: og_data[:headline] || "No Title",
           author: og_data[:author],
           url: @url,
         }
 
-        if keywords = og_data[:keywords]&.split(',')
+        if keywords = og_data[:keywords]&.split(",")
           @data[:keywords] = keywords
             .map { |keyword| "<a href='https://gfycat.com/gifs/search/#{keyword}'>##{keyword}</a>" }
-            .join(' ')
+            .join(" ")
         end
 
         if og_data[:video]

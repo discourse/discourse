@@ -23,7 +23,8 @@ class QuoteComparer
     return true if @text.blank?
 
     if @parent_post
-      parent_text = Nokogiri::HTML5::fragment(@parent_post.cooked).text.delete(QuoteComparer.whitespace)
+      parent_text =
+        Nokogiri::HTML5.fragment(@parent_post.cooked).text.delete(QuoteComparer.whitespace)
       text = @text.delete(QuoteComparer.whitespace)
 
       !parent_text.include?(text)

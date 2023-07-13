@@ -92,3 +92,6 @@ tr_TR:
           description: "Açıklama"
           header: "Başlık"
           hover_to_see: "Araç ipucunu görmek için üzerine gidin"
+        char_counter:
+          title: "Karakter Sayacı"
+          placeholder: "Metninizi buraya girin..."

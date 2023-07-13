@@ -8,8 +8,11 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
-import { observes } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import { isTesting } from "discourse-common/config/environment";
+import { DEBUG } from "@glimmer/env";
+import { registerWaiter, unregisterWaiter } from "@ember/test";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
@@ -26,12 +29,13 @@ const SiteHeaderComponent = MountWidget.extend(
     _scheduledRemoveAnimate: null,
     _topic: null,
     _itsatrap: null,
+    _applicationElement: null,
 
     @observes(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
       "currentUser.all_unread_notifications_count",
-      "currentUser.reviewable_count", // TODO: remove this when redesigned_user_menu_enabled is removed
+      "currentUser.reviewable_count",
       "currentUser.unseen_reviewable_count",
       "session.defaultColorSchemeIsDark",
       "session.darkModeAvailable"
@@ -54,6 +58,22 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateOpening(panel) {
+      let waiter;
+      if (DEBUG && isTesting()) {
+        waiter = () => false;
+        registerWaiter(waiter);
+      }
+
+      window.requestAnimationFrame(() => {
+        this._setAnimateOpeningProperties(panel);
+
+        if (DEBUG && isTesting()) {
+          unregisterWaiter(waiter);
+        }
+      });
+    },
+
+    _setAnimateOpeningProperties(panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
@@ -67,13 +87,16 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _animateClosing(panel, menuOrigin) {
-      const windowWidth = document.body.offsetWidth;
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      const offsetDirection = menuOrigin === "left" ? -1 : 1;
-      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
+      if (menuOrigin === "left") {
+        panel.style.setProperty("--offset", `-100vw`);
+      } else {
+        panel.style.setProperty("--offset", `100vw`);
+      }
+
       headerCloak.style.setProperty("--opacity", 0);
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
@@ -181,7 +204,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     dockCheck() {
-      const header = document.querySelector("header.d-header");
+      const header = this.header;
 
       if (this.docAt === null) {
         if (!header) {
@@ -190,7 +213,8 @@ const SiteHeaderComponent = MountWidget.extend(
         this.docAt = header.offsetTop;
       }
 
-      const main = document.querySelector(".ember-application");
+      const main = (this._applicationElement ??=
+        document.querySelector(".ember-application"));
       const offsetTop = main ? main.offsetTop : 0;
       const offset = window.pageYOffset - offsetTop;
       if (offset >= this.docAt) {
@@ -226,9 +250,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.on("header:show-topic", this, "setTopic");
       this.appEvents.on("header:hide-topic", this, "setTopic");
 
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        this.appEvents.on("user-menu:rendered", this, "_animateMenu");
-      }
+      this.appEvents.on("user-menu:rendered", this, "_animateMenu");
 
       if (this._dropDownHeaderEnabled()) {
         this.appEvents.on(
@@ -250,53 +272,35 @@ const SiteHeaderComponent = MountWidget.extend(
 
       const header = document.querySelector("header.d-header");
       this._itsatrap = new ItsATrap(header);
-      const dirs = this.currentUser?.redesigned_user_menu_enabled
-        ? ["up", "down"]
-        : ["right", "left"];
+      const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
     },
 
     _handleArrowKeysNav(event) {
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        const activeTab = document.querySelector(
-          ".menu-tabs-container .btn.active"
+      const activeTab = document.querySelector(
+        ".menu-tabs-container .btn.active"
+      );
+      if (activeTab) {
+        let activeTabNumber = Number(
+          document.activeElement.dataset.tabNumber ||
+            activeTab.dataset.tabNumber
         );
-        if (activeTab) {
-          let activeTabNumber = Number(
-            document.activeElement.dataset.tabNumber ||
-              activeTab.dataset.tabNumber
-          );
-          const maxTabNumber =
-            document.querySelectorAll(".menu-tabs-container .btn").length - 1;
-          const isNext = event.key === "ArrowDown";
-          let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
-          if (isNext && nextTab > maxTabNumber) {
-            nextTab = 0;
-          }
-          if (!isNext && nextTab < 0) {
-            nextTab = maxTabNumber;
-          }
-          event.preventDefault();
-          document
-            .querySelector(
-              `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
-            )
-            .focus();
+        const maxTabNumber =
+          document.querySelectorAll(".menu-tabs-container .btn").length - 1;
+        const isNext = event.key === "ArrowDown";
+        let nextTab = isNext ? activeTabNumber + 1 : activeTabNumber - 1;
+        if (isNext && nextTab > maxTabNumber) {
+          nextTab = 0;
         }
-      } else {
-        const activeTab = document.querySelector(".glyphs .menu-link.active");
-
-        if (activeTab) {
-          let focusedTab = document.activeElement;
-          if (!focusedTab.dataset.tabNumber) {
-            focusedTab = activeTab;
-          }
-
-          this.appEvents.trigger("user-menu:navigation", {
-            key: event.key,
-            tabNumber: Number(focusedTab.dataset.tabNumber),
-          });
+        if (!isNext && nextTab < 0) {
+          nextTab = maxTabNumber;
         }
+        event.preventDefault();
+        document
+          .querySelector(
+            `.menu-tabs-container .btn[data-tab-number='${nextTab}']`
+          )
+          .focus();
       }
     },
 
@@ -315,9 +319,7 @@ const SiteHeaderComponent = MountWidget.extend(
       this.appEvents.off("header:show-topic", this, "setTopic");
       this.appEvents.off("header:hide-topic", this, "setTopic");
       this.appEvents.off("dom:clean", this, "_cleanDom");
-      if (this.currentUser?.redesigned_user_menu_enabled) {
-        this.appEvents.off("user-menu:rendered", this, "_animateMenu");
-      }
+      this.appEvents.off("user-menu:rendered", this, "_animateMenu");
 
       if (this._dropDownHeaderEnabled()) {
         this.appEvents.off(
@@ -343,6 +345,7 @@ const SiteHeaderComponent = MountWidget.extend(
         canSignUp: this.canSignUp,
         sidebarEnabled: this.sidebarEnabled,
         showSidebar: this.showSidebar,
+        navigationMenuQueryParamOverride: this.navigationMenuQueryParamOverride,
       };
     },
 
@@ -364,7 +367,6 @@ const SiteHeaderComponent = MountWidget.extend(
         return;
       }
 
-      const windowWidth = document.body.offsetWidth;
       const viewMode =
         this.site.mobileView || this.site.narrowDesktopView
           ? "slide-in"
@@ -373,9 +375,6 @@ const SiteHeaderComponent = MountWidget.extend(
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
         let width = parseInt(panel.getAttribute("data-max-width"), 10) || 300;
-        if (windowWidth - width < 50) {
-          width = windowWidth - 50;
-        }
         if (this._panMenuOffset) {
           this._panMenuOffset = -width;
         }
@@ -383,77 +382,23 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.remove("drop-down");
         panel.classList.remove("slide-in");
         panel.classList.add(viewMode);
+
         if (this._animate || this._panMenuOffset !== 0) {
           if (
             (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            panel.style.setProperty("--offset", `${-windowWidth}px`);
+            panel.style.setProperty("--offset", `-100vw`);
           } else {
             this._panMenuOrigin = "right";
-            panel.style.setProperty("--offset", `${windowWidth}px`);
+            panel.style.setProperty("--offset", `100vw`);
           }
           headerCloak.style.setProperty("--opacity", 0);
         }
 
-        const panelBody = panel.querySelector(".panel-body");
-
-        // We use a mutationObserver to check for style changes, so it's important
-        // we don't set it if it doesn't change. Same goes for the panelBody!
-
-        if (!this.site.mobileView && !this.site.narrowDesktopView) {
-          const buttonPanel = document.querySelectorAll("header ul.icons");
-          if (buttonPanel.length === 0) {
-            return;
-          }
-
-          // These values need to be set here, not in the css file - this is to deal with the
-          // possibility of the window being resized and the menu changing from .slide-in to .drop-down.
-          if (panel.style.top !== "100%" || panel.style.height !== "auto") {
-            panel.style.setProperty("top", "100%");
-            panel.style.setProperty("height", "auto");
-          }
-        } else {
+        if (viewMode === "slide-in") {
           headerCloak.style.display = "block";
-
-          const menuTop = headerTop();
-
-          const winHeightOffset = this.currentUser?.redesigned_user_menu_enabled
-            ? 0
-            : 16;
-          let initialWinHeight = window.innerHeight;
-          const winHeight = initialWinHeight - winHeightOffset;
-
-          let height = winHeight - menuTop;
-
-          const isIPadApp = document.body.classList.contains("footer-nav-ipad"),
-            heightProp = isIPadApp ? "max-height" : "height",
-            iPadOffset = 10;
-
-          if (isIPadApp) {
-            height = winHeight - menuTop - iPadOffset;
-          }
-
-          if (panelBody.style.height !== "100%") {
-            panelBody.style.setProperty("height", "100%");
-          }
-          if (
-            panel.style.top !== `${menuTop}px` ||
-            panel.style[heightProp] !== `${height}px`
-          ) {
-            panel.style.top = `${menuTop}px`;
-            panel.style.setProperty(heightProp, `${height}px`);
-            if (headerCloak) {
-              headerCloak.style.top = `${menuTop}px`;
-            }
-          }
-        }
-
-        // TODO: remove the if condition when redesigned_user_menu_enabled is
-        // removed
-        if (!panel.classList.contains("revamped")) {
-          panel.style.setProperty("width", `${width}px`);
         }
         if (this._animate) {
           this._animateOpening(panel);
@@ -475,11 +420,43 @@ const SiteHeaderComponent = MountWidget.extend(
 export default SiteHeaderComponent.extend({
   classNames: ["d-header-wrap"],
   classNameBindings: ["site.mobileView::drop-down-mode"],
+  headerWrap: null,
+  header: null,
 
   init() {
     this._super(...arguments);
-
     this._resizeObserver = null;
+  },
+
+  @bind
+  updateHeaderOffset() {
+    let headerWrapTop = this.headerWrap.getBoundingClientRect().top;
+
+    if (headerWrapTop !== 0) {
+      headerWrapTop -= Math.max(0, document.body.getBoundingClientRect().top);
+    }
+
+    if (DEBUG && isTesting()) {
+      headerWrapTop -= document
+        .getElementById("ember-testing-container")
+        .getBoundingClientRect().top;
+
+      headerWrapTop -= 1; // For 1px border on testing container
+    }
+
+    const documentStyle = document.documentElement.style;
+
+    const currentValue = documentStyle.getPropertyValue("--header-offset");
+    const newValue = `${this.headerWrap.offsetHeight + headerWrapTop}px`;
+
+    if (currentValue !== newValue) {
+      documentStyle.setProperty("--header-offset", newValue);
+    }
+  },
+
+  @bind
+  onScroll() {
+    schedule("afterRender", this.updateHeaderOffset);
   },
 
   didInsertElement() {
@@ -487,13 +464,21 @@ export default SiteHeaderComponent.extend({
 
     this.appEvents.on("site-header:force-refresh", this, "queueRerender");
 
-    const header = document.querySelector(".d-header-wrap");
-    if (header) {
+    this.headerWrap = document.querySelector(".d-header-wrap");
+
+    if (this.headerWrap) {
       schedule("afterRender", () => {
+        this.header = this.headerWrap.querySelector("header.d-header");
+        this.updateHeaderOffset();
+        const headerTop = this.header.offsetTop;
         document.documentElement.style.setProperty(
-          "--header-offset",
-          `${header.offsetHeight}px`
+          "--header-top",
+          `${headerTop}px`
         );
+      });
+
+      window.addEventListener("scroll", this.onScroll, {
+        passive: true,
       });
     }
 
@@ -501,27 +486,24 @@ export default SiteHeaderComponent.extend({
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
+            const headerTop = this.header.offsetTop;
             document.documentElement.style.setProperty(
-              "--header-offset",
-              entry.contentRect.height + "px"
+              "--header-top",
+              `${headerTop}px`
             );
+            this.updateHeaderOffset();
           }
         }
       });
 
-      this._resizeObserver.observe(header);
+      this._resizeObserver.observe(this.headerWrap);
     }
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
+    window.removeEventListener("scroll", this.onScroll);
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });
-
-export function headerTop() {
-  const header = document.querySelector("header.d-header");
-  return header.offsetTop ? header.offsetTop : 0;
-}

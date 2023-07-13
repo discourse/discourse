@@ -8,12 +8,17 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { findAll } from "discourse/models/login-method";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
+import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
+import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
+import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
+import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
+import SecondFactorBackupEdit from "discourse/components/modal/second-factor-backup-edit";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
+  modal: service(),
   loading: false,
   dirty: false,
   resetPasswordLoading: false,
@@ -42,6 +47,7 @@ export default Controller.extend(CanCheckEmails, {
     return user && user.enforcedSecondFactor;
   },
 
+  @action
   handleError(error) {
     if (error.jqXHR) {
       error = error.jqXHR;
@@ -57,6 +63,17 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @action
+  setBackupEnabled(value) {
+    this.set("backupEnabled", value);
+  },
+
+  @action
+  setCodesRemaining(value) {
+    this.model.set("second_factor_remaining_backup_codes", value);
+  },
+
+  @action
   loadSecondFactors() {
     if (this.dirty === false) {
       return;
@@ -89,6 +106,7 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("loading", false));
   },
 
+  @action
   markDirty() {
     this.set("dirty", true);
   },
@@ -114,29 +132,6 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("resetPasswordLoading", false));
   },
 
-  disableAllMessage() {
-    let templateElements = [I18n.t("user.second_factor.delete_confirm_header")];
-    templateElements.push("<ul>");
-    this.totps.forEach((totp) => {
-      templateElements.push(`<li>${totp.name}</li>`);
-    });
-    this.security_keys.forEach((key) => {
-      templateElements.push(`<li>${key.name}</li>`);
-    });
-    if (this.currentUser.second_factor_backup_enabled) {
-      templateElements.push(
-        `<li>${I18n.t("user.second_factor_backup.title")}</li>`
-      );
-    }
-    templateElements.push("</ul>");
-    templateElements.push(
-      I18n.t("user.second_factor.delete_confirm_instruction", {
-        confirm: I18n.t("user.second_factor.disable"),
-      })
-    );
-    return htmlSafe(templateElements.join(""));
-  },
-
   actions: {
     confirmPassword() {
       if (!this.password) {
@@ -154,9 +149,13 @@ export default Controller.extend(CanCheckEmails, {
 
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.disable_confirm"),
-        message: this.disableAllMessage(),
+        bodyComponent: SecondFactorConfirmPhrase,
+        bodyComponentModel: {
+          totps: this.totps,
+          security_keys: this.security_keys,
+        },
         confirmButtonLabel: "user.second_factor.disable",
-        confirmPhrase: I18n.t("user.second_factor.disable"),
+        confirmButtonDisabled: true,
         confirmButtonIcon: "ban",
         cancelButtonClass: "btn-flat",
         didConfirm: () => {
@@ -185,40 +184,61 @@ export default Controller.extend(CanCheckEmails, {
         confirmButtonIcon: "ban",
         cancelButtonClass: "btn-flat",
         didConfirm: () => {
-          this.currentUser
-            .updateSecondFactor(
-              secondFactorMethod.id,
-              secondFactorMethod.name,
-              true,
-              secondFactorMethod.method
-            )
-            .then((response) => {
-              if (response.error) {
-                return;
-              }
-              this.markDirty();
-            })
-            .catch((e) => this.handleError(e))
-            .finally(() => {
-              this.setProperties({
-                totps: this.totps.filter(
-                  (totp) =>
-                    totp.id !== secondFactorMethod.id ||
-                    totp.method !== secondFactorMethod.method
-                ),
-                security_keys: this.security_keys.filter(
-                  (key) =>
-                    key.id !== secondFactorMethod.id ||
-                    key.method !== secondFactorMethod.method
-                ),
+          if (this.totps.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecondFactor(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true,
+                secondFactorMethod.method
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "totps",
+                  this.totps.filter(
+                    (totp) =>
+                      totp.id !== secondFactorMethod.id ||
+                      totp.method !== secondFactorMethod.method
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
               });
+          }
 
-              this.set("loading", false);
-            });
+          if (this.security_keys.includes(secondFactorMethod)) {
+            this.currentUser
+              .updateSecurityKey(
+                secondFactorMethod.id,
+                secondFactorMethod.name,
+                true
+              )
+              .then((response) => {
+                if (response.error) {
+                  return;
+                }
+                this.markDirty();
+                this.set(
+                  "security_keys",
+                  this.security_keys.filter(
+                    (securityKey) => securityKey.id !== secondFactorMethod.id
+                  )
+                );
+              })
+              .catch((e) => this.handleError(e))
+              .finally(() => {
+                this.set("loading", false);
+              });
+          }
         },
       });
     },
-
     disableSecondFactorBackup() {
       this.dialog.deleteConfirm({
         title: I18n.t("user.second_factor.delete_backup_codes_confirm_title"),
@@ -254,65 +274,61 @@ export default Controller.extend(CanCheckEmails, {
       });
     },
 
-    createTotp() {
-      const controller = showModal("second-factor-add-totp", {
-        model: this.model,
-        title: "user.second_factor.totp.add",
+    async createTotp() {
+      await this.modal.show(SecondFactorAddTotp, {
+        model: {
+          secondFactor: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    createSecurityKey() {
-      const controller = showModal("second-factor-add-security-key", {
-        model: this.model,
-        title: "user.second_factor.security_key.add",
+    async createSecurityKey() {
+      await this.modal.show(SecondFactorAddSecurityKey, {
+        model: {
+          secondFactor: this.model,
+          markDirty: this.markDirty,
+          onError: this.handleError,
+        },
       });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    editSecurityKey(security_key) {
-      const controller = showModal("second-factor-edit-security-key", {
-        model: security_key,
-        title: "user.second_factor.security_key.edit",
+    async editSecurityKey(security_key) {
+      await this.modal.show(SecondFactorEditSecurityKey, {
+        model: {
+          securityKey: security_key,
+          user: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
-      controller.setProperties({
-        user: this.model,
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    editSecondFactor(second_factor) {
-      const controller = showModal("second-factor-edit", {
-        model: second_factor,
-        title: "user.second_factor.edit_title",
+    async editSecondFactor(second_factor) {
+      await this.modal.show(SecondFactorEdit, {
+        model: {
+          secondFactor: second_factor,
+          user: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
-      controller.setProperties({
-        user: this.model,
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    editSecondFactorBackup() {
-      const controller = showModal("second-factor-backup-edit", {
-        model: this.model,
-        title: "user.second_factor_backup.title",
-      });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
+    async editSecondFactorBackup() {
+      await this.modal.show(SecondFactorBackupEdit, {
+        model: {
+          secondFactor: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+          setBackupEnabled: (e) => this.setBackupEnabled(e),
+          setCodesRemaining: (e) => this.setCodesRemaining(e),
+        },
       });
     },
   },

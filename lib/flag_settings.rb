@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
 class FlagSettings
-
   attr_reader(
     :without_custom_types,
     :notify_types,
     :topic_flag_types,
     :auto_action_types,
-    :custom_types
+    :custom_types,
   )
 
   def initialize
@@ -39,5 +38,4 @@ class FlagSettings
   def flag_types
     @all_flag_types
   end
-
 end

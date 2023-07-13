@@ -5,7 +5,7 @@ module Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
 
   class_methods do
     def report_top_users_by_likes_received_from_a_variety_of_people(report)
-      report.icon = 'heart'
+      report.icon = "heart"
       report.data = []
 
       report.modes = [:table]
@@ -20,12 +20,13 @@ module Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
             username: :username,
             avatar: :user_avatar_template,
           },
-          title: I18n.t("reports.top_users_by_likes_received_from_a_variety_of_people.labels.user")
+          title: I18n.t("reports.top_users_by_likes_received_from_a_variety_of_people.labels.user"),
         },
         {
           type: :number,
           property: :qtt_like,
-          title: I18n.t("reports.top_users_by_likes_received_from_a_variety_of_people.labels.qtt_like")
+          title:
+            I18n.t("reports.top_users_by_likes_received_from_a_variety_of_people.labels.qtt_like"),
         },
       ]
 
@@ -46,15 +47,16 @@ module Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
         LIMIT 10
       SQL
 
-      DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
-        report.data << {
-          user_id: row.user_id,
-          username: row.username,
-          user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
-          qtt_like: row.qtt_like,
-        }
-      end
-
+      DB
+        .query(sql, start_date: report.start_date, end_date: report.end_date)
+        .each do |row|
+          report.data << {
+            user_id: row.user_id,
+            username: row.username,
+            user_avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+            qtt_like: row.qtt_like,
+          }
+        end
     end
   end
 end

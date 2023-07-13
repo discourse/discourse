@@ -6,7 +6,7 @@ RSpec.describe Admin::EmbeddingController do
   fab!(:user) { Fabricate(:user) }
 
   describe "#show" do
-    context 'when logged in as an admin' do
+    context "when logged in as an admin" do
       before { sign_in(admin) }
 
       it "returns embedding" do
@@ -40,16 +40,17 @@ RSpec.describe Admin::EmbeddingController do
   end
 
   describe "#update" do
-    context 'when logged in as an admin' do
+    context "when logged in as an admin" do
       before { sign_in(admin) }
 
       it "updates embedding" do
-        put "/admin/customize/embedding.json", params: {
-          embedding: {
-            embed_by_username: "system",
-            embed_post_limit: 200
-          }
-        }
+        put "/admin/customize/embedding.json",
+            params: {
+              embedding: {
+                embed_by_username: "system",
+                embed_post_limit: 200,
+              },
+            }
 
         expect(response.status).to eq(200)
         expect(response.parsed_body["embedding"]["embed_by_username"]).to eq("system")
@@ -59,12 +60,13 @@ RSpec.describe Admin::EmbeddingController do
 
     shared_examples "embedding updates not allowed" do
       it "prevents updates with a 404 response" do
-        put "/admin/customize/embedding.json", params: {
-          embedding: {
-            embed_by_username: "system",
-            embed_post_limit: 200
-          }
-        }
+        put "/admin/customize/embedding.json",
+            params: {
+              embedding: {
+                embed_by_username: "system",
+                embed_post_limit: 200,
+              },
+            }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))

@@ -20,19 +20,18 @@ DEFAULT_COOKIES_TXT = "/shared/import/cookies.txt"
 ABORT_AFTER_SKIPPED_TOPIC_COUNT = 10
 
 def driver
-  @driver ||= begin
-    chrome_args = ["disable-gpu"]
-    chrome_args << "headless" unless ENV["NOT_HEADLESS"] == '1'
-    chrome_args << "no-sandbox" if inside_container?
-    options = Selenium::WebDriver::Chrome::Options.new(args: chrome_args)
-    Selenium::WebDriver.for(:chrome, options: options)
-  end
+  @driver ||=
+    begin
+      chrome_args = ["disable-gpu"]
+      chrome_args << "headless" unless ENV["NOT_HEADLESS"] == "1"
+      chrome_args << "no-sandbox" if inside_container?
+      options = Selenium::WebDriver::Chrome::Options.new(args: chrome_args)
+      Selenium::WebDriver.for(:chrome, options: options)
+    end
 end
 
 def inside_container?
-  File.foreach("/proc/1/cgroup") do |line|
-    return true if line.include?("docker")
-  end
+  File.foreach("/proc/1/cgroup") { |line| return true if line.include?("docker") }
 
   false
 end
@@ -79,35 +78,38 @@ def base_url
 end
 
 def crawl_topics
-  1.step(nil, 100).each do |start|
-    url = "#{base_url}/#{@groupname}[#{start}-#{start + 99}]"
-    get(url)
+  1
+    .step(nil, 100)
+    .each do |start|
+      url = "#{base_url}/#{@groupname}[#{start}-#{start + 99}]"
+      get(url)
 
-    begin
-      if start == 1 && find("h2").text == "Error 403"
-        exit_with_error(<<~TEXT.red.bold)
+      begin
+        exit_with_error(<<~TEXT.red.bold) if start == 1 && find("h2").text == "Error 403"
           Unable to find topics. Try running the script with the "--domain example.com"
           option if you are a G Suite user and your group's URL contains a path with
           your domain that looks like "/a/example.com".
         TEXT
+      rescue Selenium::WebDriver::Error::NoSuchElementError
+        # Ignore this error. It simply means there wasn't an error.
       end
-    rescue Selenium::WebDriver::Error::NoSuchElementError
-      # Ignore this error. It simply means there wasn't an error.
-    end
 
-    topic_urls = extract(".subject a[href*='#{@groupname}']") { |a| a["href"].sub("/d/topic/", "/forum/?_escaped_fragment_=topic/") }
-    break if topic_urls.size == 0
+      topic_urls =
+        extract(".subject a[href*='#{@groupname}']") do |a|
+          a["href"].sub("/d/topic/", "/forum/?_escaped_fragment_=topic/")
+        end
+      break if topic_urls.size == 0
 
-    topic_urls.each do |topic_url|
-      crawl_topic(topic_url)
+      topic_urls.each do |topic_url|
+        crawl_topic(topic_url)
 
-      # abort if this in an incremental crawl and there were too many consecutive, skipped topics
-      if @finished && @skipped_topic_count > ABORT_AFTER_SKIPPED_TOPIC_COUNT
-        puts "Skipping all other topics, because this is an incremental crawl.".green
-        return
+        # abort if this in an incremental crawl and there were too many consecutive, skipped topics
+        if @finished && @skipped_topic_count > ABORT_AFTER_SKIPPED_TOPIC_COUNT
+          puts "Skipping all other topics, because this is an incremental crawl.".green
+          return
+        end
       end
     end
-  end
 end
 
 def crawl_topic(url)
@@ -126,17 +128,14 @@ def crawl_topic(url)
   messages_crawled = false
 
   extract(".subject a[href*='#{@groupname}']") do |a|
-    [
-      a["href"].sub("/d/msg/", "/forum/message/raw?msg="),
-      a["title"].empty?
-    ]
+    [a["href"].sub("/d/msg/", "/forum/message/raw?msg="), a["title"].empty?]
   end.each do |msg_url, might_be_deleted|
     messages_crawled |= crawl_message(msg_url, might_be_deleted)
   end
 
   @skipped_topic_count = skippable && messages_crawled ? 0 : @skipped_topic_count + 1
   @scraped_topic_urls << url
-rescue
+rescue StandardError
   puts "Failed to scrape topic at #{url}".red
   raise if @abort_on_error
 end
@@ -144,18 +143,16 @@ end
 def crawl_message(url, might_be_deleted)
   get(url)
 
-  filename = File.join(@path, "#{url[/#{@groupname}\/(.+)/, 1].sub("/", "-")}.eml")
+  filename = File.join(@path, "#{url[%r{#{@groupname}/(.+)}, 1].sub("/", "-")}.eml")
   content = find("pre")["innerText"]
 
   if !@first_message_checked
     @first_message_checked = true
 
-    if content.match?(/From:.*\.\.\.@.*/i) && !@force_import
-      exit_with_error(<<~TEXT.red.bold)
+    exit_with_error(<<~TEXT.red.bold) if content.match?(/From:.*\.\.\.@.*/i) && !@force_import
         It looks like you do not have permissions to see email addresses. Aborting.
         Use the --force option to import anyway.
       TEXT
-    end
   end
 
   old_md5 = Digest::MD5.file(filename) if File.exist?(filename)
@@ -169,7 +166,7 @@ rescue Selenium::WebDriver::Error::NoSuchElementError
     puts "Failed to scrape message at #{url}".red
     raise if @abort_on_error
   end
-rescue
+rescue StandardError
   puts "Failed to scrape message at #{url}".red
   raise if @abort_on_error
 end
@@ -178,10 +175,7 @@ def login
   puts "Logging in..."
   get("https://google.com/404")
 
-  add_cookies(
-    "myaccount.google.com",
-    "google.com"
-  )
+  add_cookies("myaccount.google.com", "google.com")
 
   get("https://myaccount.google.com/?utm_source=sign_in_no_continue")
 
@@ -193,20 +187,24 @@ def login
 end
 
 def add_cookies(*domains)
-  File.readlines(@cookies).each do |line|
-    parts = line.chomp.split("\t")
-    next if parts.size != 7 || !domains.any? { |domain| parts[0] =~ /^\.?#{Regexp.escape(domain)}$/ }
+  File
+    .readlines(@cookies)
+    .each do |line|
+      parts = line.chomp.split("\t")
+      if parts.size != 7 || !domains.any? { |domain| parts[0] =~ /^\.?#{Regexp.escape(domain)}$/ }
+        next
+      end
 
-    driver.manage.add_cookie(
-      domain: parts[0],
-      httpOnly: "true".casecmp?(parts[1]),
-      path: parts[2],
-      secure: "true".casecmp?(parts[3]),
-      expires: parts[4] == "0" ? nil : DateTime.strptime(parts[4], "%s"),
-      name: parts[5],
-      value: parts[6]
-    )
-  end
+      driver.manage.add_cookie(
+        domain: parts[0],
+        httpOnly: "true".casecmp?(parts[1]),
+        path: parts[2],
+        secure: "true".casecmp?(parts[3]),
+        expires: parts[4] == "0" ? nil : DateTime.strptime(parts[4], "%s"),
+        name: parts[5],
+        value: parts[6],
+      )
+    end
 end
 
 def wait_for_url
@@ -240,10 +238,7 @@ def crawl
     crawl_topics
     @finished = true
   ensure
-    File.write(status_filename, {
-      finished: @finished,
-      urls: @scraped_topic_urls
-    }.to_yaml)
+    File.write(status_filename, { finished: @finished, urls: @scraped_topic_urls }.to_yaml)
   end
 
   elapsed = Time.now - start_time
@@ -258,20 +253,25 @@ def parse_arguments
   @abort_on_error = false
   @cookies = DEFAULT_COOKIES_TXT if File.exist?(DEFAULT_COOKIES_TXT)
 
-  parser = OptionParser.new do |opts|
-    opts.banner = "Usage: google_groups.rb [options]"
+  parser =
+    OptionParser.new do |opts|
+      opts.banner = "Usage: google_groups.rb [options]"
 
-    opts.on("-g", "--groupname GROUPNAME") { |v| @groupname = v }
-    opts.on("-d", "--domain DOMAIN") { |v| @domain = v }
-    opts.on("-c", "--cookies PATH", "path to cookies.txt") { |v| @cookies = v }
-    opts.on("--path PATH", "output path for emails") { |v| @path = v }
-    opts.on("-f", "--force", "force import when user isn't allowed to see email addresses") { @force_import = true }
-    opts.on("-a", "--abort-on-error", "abort crawl on error instead of skipping message") { @abort_on_error = true }
-    opts.on("-h", "--help") do
-      puts opts
-      exit
+      opts.on("-g", "--groupname GROUPNAME") { |v| @groupname = v }
+      opts.on("-d", "--domain DOMAIN") { |v| @domain = v }
+      opts.on("-c", "--cookies PATH", "path to cookies.txt") { |v| @cookies = v }
+      opts.on("--path PATH", "output path for emails") { |v| @path = v }
+      opts.on("-f", "--force", "force import when user isn't allowed to see email addresses") do
+        @force_import = true
+      end
+      opts.on("-a", "--abort-on-error", "abort crawl on error instead of skipping message") do
+        @abort_on_error = true
+      end
+      opts.on("-h", "--help") do
+        puts opts
+        exit
+      end
     end
-  end
 
   begin
     parser.parse!
@@ -279,10 +279,12 @@ def parse_arguments
     exit_with_error(e.message, "", parser)
   end
 
-  mandatory = [:groupname, :cookies]
+  mandatory = %i[groupname cookies]
   missing = mandatory.select { |name| instance_variable_get("@#{name}").nil? }
 
-  exit_with_error("Missing arguments: #{missing.join(', ')}".red.bold, "", parser, "") if missing.any?
+  if missing.any?
+    exit_with_error("Missing arguments: #{missing.join(", ")}".red.bold, "", parser, "")
+  end
   exit_with_error("cookies.txt not found at #{@cookies}".red.bold, "") if !File.exist?(@cookies)
 
   @path = File.join(DEFAULT_OUTPUT_PATH, @groupname) if @path.nil?

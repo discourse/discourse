@@ -3,27 +3,26 @@
 module ImportScripts
   class LookupContainer
     def initialize
-      puts 'Loading existing groups...'
-      @groups = GroupCustomField.where(name: 'import_id').pluck(:value, :group_id).to_h
+      puts "Loading existing groups..."
+      @groups = GroupCustomField.where(name: "import_id").pluck(:value, :group_id).to_h
 
-      puts 'Loading existing users...'
-      @users = UserCustomField.where(name: 'import_id').pluck(:value, :user_id).to_h
+      puts "Loading existing users..."
+      @users = UserCustomField.where(name: "import_id").pluck(:value, :user_id).to_h
 
-      puts 'Loading existing categories...'
-      @categories = CategoryCustomField.where(name: 'import_id').pluck(:value, :category_id).to_h
+      puts "Loading existing categories..."
+      @categories = CategoryCustomField.where(name: "import_id").pluck(:value, :category_id).to_h
 
-      puts 'Loading existing posts...'
-      @posts = PostCustomField.where(name: 'import_id').pluck(:value, :post_id).to_h
+      puts "Loading existing posts..."
+      @posts = PostCustomField.where(name: "import_id").pluck(:value, :post_id).to_h
 
-      puts 'Loading existing topics...'
+      puts "Loading existing topics..."
       @topics = {}
-      Post.joins(:topic).pluck('posts.id, posts.topic_id, posts.post_number, topics.slug').each do |p|
-        @topics[p[0]] = {
-          topic_id: p[1],
-          post_number: p[2],
-          url: Post.url(p[3], p[1], p[2])
-        }
-      end
+      Post
+        .joins(:topic)
+        .pluck("posts.id, posts.topic_id, posts.post_number, topics.slug")
+        .each do |p|
+          @topics[p[0]] = { topic_id: p[1], post_number: p[2], url: Post.url(p[3], p[1], p[2]) }
+        end
     end
 
     # Get the Discourse Post id based on the id of the source record
@@ -44,7 +43,7 @@ module ImportScripts
 
     # Get the Discourse Group based on the id of the source group
     def find_group_by_import_id(import_id)
-      GroupCustomField.where(name: 'import_id', value: import_id.to_s).first.try(:group)
+      GroupCustomField.where(name: "import_id", value: import_id.to_s).first.try(:group)
     end
 
     # Get the Discourse User id based on the id of the source user
@@ -54,12 +53,12 @@ module ImportScripts
 
     # Get the Discourse User based on the id of the source user
     def find_user_by_import_id(import_id)
-      UserCustomField.where(name: 'import_id', value: import_id.to_s).first.try(:user)
+      UserCustomField.where(name: "import_id", value: import_id.to_s).first.try(:user)
     end
 
     def find_username_by_import_id(import_id)
       user_id = user_id_from_imported_user_id(import_id)
-      User.where(id: user_id).pluck_first(:username) if user_id.present?
+      User.where(id: user_id).pick(:username) if user_id.present?
     end
 
     # Get the Discourse Category id based on the id of the source category
@@ -84,11 +83,7 @@ module ImportScripts
     end
 
     def add_topic(post)
-      @topics[post.id] = {
-        post_number: post.post_number,
-        topic_id: post.topic_id,
-        url: post.url,
-      }
+      @topics[post.id] = { post_number: post.post_number, topic_id: post.topic_id, url: post.url }
     end
 
     def user_already_imported?(import_id)
@@ -98,6 +93,5 @@ module ImportScripts
     def post_already_imported?(import_id)
       @posts.has_key?(import_id) || @posts.has_key?(import_id.to_s)
     end
-
   end
 end

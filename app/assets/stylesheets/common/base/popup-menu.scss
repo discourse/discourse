@@ -3,7 +3,7 @@
   width: 14em;
   border: 1px solid var(--primary-low);
   z-index: z("dropdown");
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
 
   ul {
     margin: 0;
@@ -35,7 +35,7 @@
     &:focus,
     &:hover {
       color: var(--primary);
-      background: var(--tertiary-low);
+      background: var(--d-hover);
 
       .d-icon {
         color: var(--primary-medium);

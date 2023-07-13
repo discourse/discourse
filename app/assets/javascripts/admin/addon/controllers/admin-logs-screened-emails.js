@@ -1,23 +1,24 @@
+import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import ScreenedEmail from "admin/models/screened-email";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 
-export default Controller.extend({
-  loading: false,
+export default class AdminLogsScreenedEmailsController extends Controller {
+  loading = false;
 
-  actions: {
-    clearBlock(row) {
-      row.clearBlock().then(function () {
-        // feeling lazy
-        window.location.reload();
-      });
-    },
+  @action
+  clearBlock(row) {
+    row.clearBlock().then(function () {
+      // feeling lazy
+      window.location.reload();
+    });
+  }
 
-    exportScreenedEmailList() {
-      exportEntity("screened_email").then(outputExportResult);
-    },
-  },
+  @action
+  exportScreenedEmailList() {
+    exportEntity("screened_email").then(outputExportResult);
+  }
 
   show() {
     this.set("loading", true);
@@ -25,5 +26,5 @@ export default Controller.extend({
       this.set("model", result);
       this.set("loading", false);
     });
-  },
-});
+  }
+}

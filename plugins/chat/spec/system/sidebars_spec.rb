@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Navigation", type: :system, js: true do
+RSpec.describe "Navigation", type: :system do
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
@@ -12,18 +12,24 @@ RSpec.describe "Navigation", type: :system, js: true do
   before do
     chat_system_bootstrap(user, [category_channel, category_channel_2])
     sign_in(user)
+    SiteSetting.navigation_menu = "legacy"
+  end
+
+  it "uses chat (not core) sidebar" do
+    visit("/chat")
+
+    expect(page).to have_css(".channels-list")
+    expect(page).to have_no_css("#d-sidebar")
   end
 
   context "when sidebar is enabled as the navigation menu" do
-    before do
-      SiteSetting.navigation_menu = "sidebar"
-    end
+    before { SiteSetting.navigation_menu = "sidebar" }
 
     it "uses core sidebar" do
       visit("/chat")
 
       expect(page).to have_css("#d-sidebar")
-      expect(page).to_not have_css(".channels-list")
+      expect(page).to have_no_css(".channels-list")
     end
 
     context "when visiting on mobile" do
@@ -31,16 +37,9 @@ RSpec.describe "Navigation", type: :system, js: true do
         visit("/?mobile_view=1")
         chat_page.visit_channel(category_channel_2)
 
-        expect(page).to_not have_css("#d-sidebar")
+        expect(page).to have_no_css("#d-sidebar")
       end
     end
-  end
-
-  it "uses chat sidebar" do
-    visit("/chat")
-
-    expect(page).to have_css(".channels-list")
-    expect(page).to_not have_css("#d-sidebar")
   end
 
   context "when visiting on mobile" do
@@ -48,7 +47,7 @@ RSpec.describe "Navigation", type: :system, js: true do
       visit("/?mobile_view=1")
       chat_page.visit_channel(category_channel_2)
 
-      expect(page).to_not have_css(".channels-list")
+      expect(page).to have_no_css(".channels-list")
     end
   end
 end

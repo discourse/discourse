@@ -27,7 +27,7 @@ class AddUserBadgeUniqueIndex < ActiveRecord::Migration[4.2]
       )
     "
 
-    add_index :user_badges, [:badge_id, :user_id, :seq], unique: true, where: 'post_id IS NULL'
+    add_index :user_badges, %i[badge_id user_id seq], unique: true, where: "post_id IS NULL"
   end
 
   def down

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'letter_avatar'
+require "letter_avatar"
 
 RSpec.describe LetterAvatar do
   it "can cleanup correctly" do

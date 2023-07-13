@@ -252,6 +252,11 @@ async function buildFromBootstrap(proxy, baseURL, req, response, preload) {
       url.searchParams.append("safe_mode", reqUrlSafeMode);
     }
 
+    const navigationMenu = forUrlSearchParams.get("navigation_menu");
+    if (navigationMenu) {
+      url.searchParams.append("navigation_menu", navigationMenu);
+    }
+
     const reqUrlPreviewThemeId = forUrlSearchParams.get("preview_theme_id");
     if (reqUrlPreviewThemeId) {
       url.searchParams.append("preview_theme_id", reqUrlPreviewThemeId);
@@ -338,9 +343,9 @@ async function handleRequest(proxy, baseURL, req, res) {
   const csp = response.headers.get("content-security-policy");
   if (csp) {
     const emberCliAdditions = [
-      `http://${originalHost}/assets/`,
-      `http://${originalHost}/ember-cli-live-reload.js`,
-      `http://${originalHost}/_lr/`,
+      `http://${originalHost}${baseURL}assets/`,
+      `http://${originalHost}${baseURL}ember-cli-live-reload.js`,
+      `http://${originalHost}${baseURL}_lr/`,
     ].join(" ");
 
     const newCSP = csp
@@ -458,6 +463,13 @@ to serve API requests. For example:
     baseURL = rootURL === "" ? "/" : cleanBaseURL(rootURL || baseURL);
 
     const rawMiddleware = express.raw({ type: () => true, limit: "100mb" });
+    const pathRestrictedRawMiddleware = (req, res, next) => {
+      if (this.shouldHandleRequest(req, baseURL)) {
+        return rawMiddleware(req, res, next);
+      } else {
+        return next();
+      }
+    };
 
     app.use(
       "/favicon.ico",
@@ -469,9 +481,9 @@ to serve API requests. For example:
       )
     );
 
-    app.use(rawMiddleware, async (req, res, next) => {
+    app.use(pathRestrictedRawMiddleware, async (req, res, next) => {
       try {
-        if (this.shouldForwardRequest(req, baseURL)) {
+        if (this.shouldHandleRequest(req, baseURL)) {
           await handleRequest(proxy, baseURL, req, res);
         } else {
           // Fixes issues when using e.g. "localhost" instead of loopback IP address
@@ -492,7 +504,7 @@ to serve API requests. For example:
     });
   },
 
-  shouldForwardRequest(request, baseURL) {
+  shouldHandleRequest(request, baseURL) {
     if (
       [
         `${baseURL}tests/index.html`,
@@ -504,7 +516,11 @@ to serve API requests. For example:
       return false;
     }
 
-    if (request.path.startsWith("/_lr/")) {
+    if (request.path.startsWith(`${baseURL}_lr/`)) {
+      return false;
+    }
+
+    if (request.path.startsWith(`${baseURL}message-bus/`)) {
       return false;
     }
 

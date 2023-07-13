@@ -19,6 +19,10 @@ export default Controller.extend({
   loading: false,
 
   @observes("filterInput")
+  filterInputChanged() {
+    this._setFilter();
+  },
+
   @debounce(500)
   _setFilter() {
     this.set("filter", this.filterInput);

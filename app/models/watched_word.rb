@@ -1,30 +1,31 @@
 # frozen_string_literal: true
 
 class WatchedWord < ActiveRecord::Base
-
   def self.actions
-    @actions ||= Enum.new(
-      block: 1,
-      censor: 2,
-      require_approval: 3,
-      flag: 4,
-      link: 8,
-      replace: 5,
-      tag: 6,
-      silence: 7,
-    )
+    @actions ||=
+      Enum.new(
+        block: 1,
+        censor: 2,
+        require_approval: 3,
+        flag: 4,
+        link: 8,
+        replace: 5,
+        tag: 6,
+        silence: 7,
+      )
   end
 
   MAX_WORDS_PER_ACTION = 2000
 
   before_validation do
     self.word = self.class.normalize_word(self.word)
-    if self.action == WatchedWord.actions[:link] && !(self.replacement =~ /^https?:\/\//)
-      self.replacement = "#{Discourse.base_url}#{self.replacement&.starts_with?("/") ? "" : "/"}#{self.replacement}"
+    if self.action == WatchedWord.actions[:link] && !(self.replacement =~ %r{\Ahttps?://})
+      self.replacement =
+        "#{Discourse.base_url}#{self.replacement&.starts_with?("/") ? "" : "/"}#{self.replacement}"
     end
   end
 
-  validates :word,   presence: true, uniqueness: true, length: { maximum: 100 }
+  validates :word, presence: true, uniqueness: true, length: { maximum: 100 }
   validates :action, presence: true
 
   validate :replacement_is_url, if: -> { action == WatchedWord.actions[:link] }
@@ -36,26 +37,28 @@ class WatchedWord < ActiveRecord::Base
     end
   end
 
-  after_save    :clear_cache
+  after_save :clear_cache
   after_destroy :clear_cache
 
   scope :by_action, -> { order("action ASC, word ASC") }
-  scope :for, ->(word:) do
-    where("(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')", word: word)
-  end
+  scope :for,
+        ->(word:) {
+          where(
+            "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
+            word: word,
+          )
+        }
 
   def self.normalize_word(w)
-    w.strip.squeeze('*')
+    w.strip.squeeze("*")
   end
 
   def replacement_is_url
-    if !(replacement =~ URI::regexp)
-      errors.add(:base, :invalid_url)
-    end
+    errors.add(:base, :invalid_url) if !(replacement =~ URI.regexp)
   end
 
   def replacement_is_tag_list
-    tag_list = replacement&.split(',')
+    tag_list = replacement&.split(",")
     tags = Tag.where(name: tag_list)
     if (tag_list.blank? || tags.empty? || tag_list.size != tags.size)
       errors.add(:base, :invalid_tag_list)

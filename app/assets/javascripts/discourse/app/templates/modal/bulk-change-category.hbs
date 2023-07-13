@@ -1,9 +1,15 @@
 <p>{{i18n "topics.bulk.choose_new_category"}}</p>
 
 <p>
-  <CategoryChooser @value={{this.newCategoryId}} @onChange={{action (mut this.newCategoryId)}} />
+  <CategoryChooser
+    @value={{this.newCategoryId}}
+    @onChange={{action (mut this.newCategoryId)}}
+  />
 </p>
 
 <ConditionalLoadingSpinner @condition={{this.loading}}>
-  <DButton @action={{action "changeCategory"}} @label="topics.bulk.change_category" />
+  <DButton
+    @action={{action "changeCategory"}}
+    @label="topics.bulk.change_category"
+  />
 </ConditionalLoadingSpinner>

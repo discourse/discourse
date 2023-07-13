@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative '../base'
-require_relative './redis'
-require_relative './mongo'
+require_relative "../base"
+require_relative "./redis"
+require_relative "./mongo"
 
 class ImportScripts::NodeBB < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
   # ATTACHMENT_DIR needs to be absolute, not relative path
-  ATTACHMENT_DIR = '/Users/orlando/www/orlando/NodeBB/public/uploads'
+  ATTACHMENT_DIR = "/Users/orlando/www/orlando/NodeBB/public/uploads"
   BATCH_SIZE = 2000
 
   def initialize
@@ -17,17 +17,13 @@ class ImportScripts::NodeBB < ImportScripts::Base
     # @client = adapter.new('mongodb://127.0.0.1:27017/nodebb')
 
     adapter = NodeBB::Redis
-    @client = adapter.new(
-      host: "localhost",
-      port: "6379",
-      db: 14
-    )
+    @client = adapter.new(host: "localhost", port: "6379", db: 14)
 
     load_merged_posts
   end
 
   def load_merged_posts
-    puts 'loading merged posts with topics...'
+    puts "loading merged posts with topics..."
 
     # we keep here the posts that were merged
     # as topics
@@ -35,13 +31,16 @@ class ImportScripts::NodeBB < ImportScripts::Base
     # { post_id: discourse_post_id }
     @merged_posts_map = {}
 
-    PostCustomField.where(name: 'import_merged_post_id').pluck(:post_id, :value).each do |post_id, import_id|
-      post = Post.find(post_id)
-      topic_id = post.topic_id
-      nodebb_post_id = post.custom_fields['import_merged_post_id']
+    PostCustomField
+      .where(name: "import_merged_post_id")
+      .pluck(:post_id, :value)
+      .each do |post_id, import_id|
+        post = Post.find(post_id)
+        topic_id = post.topic_id
+        nodebb_post_id = post.custom_fields["import_merged_post_id"]
 
-      @merged_posts_map[nodebb_post_id] = topic_id
-    end
+        @merged_posts_map[nodebb_post_id] = topic_id
+      end
   end
 
   def execute
@@ -56,19 +55,14 @@ class ImportScripts::NodeBB < ImportScripts::Base
   end
 
   def import_groups
-    puts '', 'importing groups'
+    puts "", "importing groups"
 
     groups = @client.groups
     total_count = groups.count
     progress_count = 0
     start_time = Time.now
 
-    create_groups(groups) do |group|
-      {
-        id: group["name"],
-        name: group["slug"]
-      }
-    end
+    create_groups(groups) { |group| { id: group["name"], name: group["slug"] } }
   end
 
   def import_categories
@@ -107,15 +101,18 @@ class ImportScripts::NodeBB < ImportScripts::Base
         name: category["name"],
         position: category["order"],
         description: category["description"],
-        parent_category_id: category_id_from_imported_category_id(category["parentCid"])
+        parent_category_id: category_id_from_imported_category_id(category["parentCid"]),
       }
     end
 
     categories.each do |source_category|
-      cid = category_id_from_imported_category_id(source_category['cid'])
-      Permalink.create(url: "/category/#{source_category['slug']}", category_id: cid) rescue nil
+      cid = category_id_from_imported_category_id(source_category["cid"])
+      begin
+        Permalink.create(url: "/category/#{source_category["slug"]}", category_id: cid)
+      rescue StandardError
+        nil
+      end
     end
-
   end
 
   def import_users
@@ -158,12 +155,13 @@ class ImportScripts::NodeBB < ImportScripts::Base
         bio_raw: user["aboutme"],
         active: true,
         custom_fields: {
-          import_pass: user["password"]
+          import_pass: user["password"],
         },
-        post_create_action: proc do |u|
-          import_profile_picture(user, u)
-          import_profile_background(user, u)
-        end
+        post_create_action:
+          proc do |u|
+            import_profile_picture(user, u)
+            import_profile_background(user, u)
+          end,
       }
     end
   end
@@ -204,7 +202,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
       end
 
       # write tmp file
-      file = Tempfile.new(filename, encoding: 'ascii-8bit')
+      file = Tempfile.new(filename, encoding: "ascii-8bit")
       file.write string_io.read
       file.rewind
 
@@ -230,9 +228,21 @@ class ImportScripts::NodeBB < ImportScripts::Base
     imported_user.user_avatar.update(custom_upload_id: upload.id)
     imported_user.update(uploaded_avatar_id: upload.id)
   ensure
-    string_io.close rescue nil
-    file.close rescue nil
-    file.unlind rescue nil
+    begin
+      string_io.close
+    rescue StandardError
+      nil
+    end
+    begin
+      file.close
+    rescue StandardError
+      nil
+    end
+    begin
+      file.unlind
+    rescue StandardError
+      nil
+    end
   end
 
   def import_profile_background(old_user, imported_user)
@@ -264,7 +274,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
       end
 
       # write tmp file
-      file = Tempfile.new(filename, encoding: 'ascii-8bit')
+      file = Tempfile.new(filename, encoding: "ascii-8bit")
       file.write string_io.read
       file.rewind
 
@@ -288,9 +298,21 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
     imported_user.user_profile.upload_profile_background(upload)
   ensure
-    string_io.close rescue nil
-    file.close rescue nil
-    file.unlink rescue nil
+    begin
+      string_io.close
+    rescue StandardError
+      nil
+    end
+    begin
+      file.close
+    rescue StandardError
+      nil
+    end
+    begin
+      file.unlink
+    rescue StandardError
+      nil
+    end
   end
 
   def add_users_to_groups
@@ -305,7 +327,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
       dgroup = find_group_by_import_id(group["name"])
 
       # do thing if we migrated this group already
-      next if dgroup.custom_fields['import_users_added']
+      next if dgroup.custom_fields["import_users_added"]
 
       group_member_ids = group["member_ids"].map { |uid| user_id_from_imported_user_id(uid) }
       group_owner_ids = group["owner_ids"].map { |uid| user_id_from_imported_user_id(uid) }
@@ -320,7 +342,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
       owners = User.find(group_owner_ids)
       owners.each { |owner| dgroup.add_owner(owner) }
 
-      dgroup.custom_fields['import_users_added'] = true
+      dgroup.custom_fields["import_users_added"] = true
       dgroup.save
 
       progress_count += 1
@@ -357,12 +379,13 @@ class ImportScripts::NodeBB < ImportScripts::Base
           created_at: topic["timestamp"],
           views: topic["viewcount"],
           closed: topic["locked"] == "1",
-          post_create_action: proc do |p|
-            # keep track of this to use in import_posts
-            p.custom_fields["import_merged_post_id"] = topic["mainPid"]
-            p.save
-            @merged_posts_map[topic["mainPid"]] = p.id
-          end
+          post_create_action:
+            proc do |p|
+              # keep track of this to use in import_posts
+              p.custom_fields["import_merged_post_id"] = topic["mainPid"]
+              p.save
+              @merged_posts_map[topic["mainPid"]] = p.id
+            end,
         }
 
         data[:pinned_at] = data[:created_at] if topic["pinned"] == "1"
@@ -372,7 +395,11 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
       topics.each do |import_topic|
         topic = topic_lookup_from_imported_post_id("t#{import_topic["tid"]}")
-        Permalink.create(url: "/topic/#{import_topic['slug']}", topic_id: topic[:topic_id]) rescue nil
+        begin
+          Permalink.create(url: "/topic/#{import_topic["slug"]}", topic_id: topic[:topic_id])
+        rescue StandardError
+          nil
+        end
       end
     end
   end
@@ -411,21 +438,23 @@ class ImportScripts::NodeBB < ImportScripts::Base
           topic_id: topic[:topic_id],
           raw: raw,
           created_at: post["timestamp"],
-          post_create_action: proc do |p|
-            post["upvoted_by"].each do |upvoter_id|
-              user = User.new
-              user.id = user_id_from_imported_user_id(upvoter_id) || Discourse::SYSTEM_USER_ID
-              PostActionCreator.like(user, p)
-            end
-          end
+          post_create_action:
+            proc do |p|
+              post["upvoted_by"].each do |upvoter_id|
+                user = User.new
+                user.id = user_id_from_imported_user_id(upvoter_id) || Discourse::SYSTEM_USER_ID
+                PostActionCreator.like(user, p)
+              end
+            end,
         }
 
-        if post['toPid']
+        if post["toPid"]
           # Look reply to topic
-          parent_id = topic_lookup_from_imported_post_id("t#{post['toPid']}").try(:[], :post_number)
+          parent_id = topic_lookup_from_imported_post_id("t#{post["toPid"]}").try(:[], :post_number)
 
           # Look reply post if topic is missing
-          parent_id ||= topic_lookup_from_imported_post_id("p#{post['toPid']}").try(:[], :post_number)
+          parent_id ||=
+            topic_lookup_from_imported_post_id("p#{post["toPid"]}").try(:[], :post_number)
 
           if parent_id
             data[:reply_to_post_number] = parent_id
@@ -448,12 +477,12 @@ class ImportScripts::NodeBB < ImportScripts::Base
 
     Post.find_each do |post|
       begin
-        next if post.custom_fields['import_post_processing']
+        next if post.custom_fields["import_post_processing"]
 
         new_raw = postprocess_post(post)
         if new_raw != post.raw
           post.raw = new_raw
-          post.custom_fields['import_post_processing'] = true
+          post.custom_fields["import_post_processing"] = true
           post.save
         end
       ensure
@@ -463,7 +492,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
   end
 
   def import_attachments
-    puts '', 'importing attachments...'
+    puts "", "importing attachments..."
 
     current = 0
     max = Post.count
@@ -474,7 +503,7 @@ class ImportScripts::NodeBB < ImportScripts::Base
       print_status(current, max, start_time)
 
       new_raw = post.raw.dup
-      new_raw.gsub!(/\[(.*)\]\((\/assets\/uploads\/files\/.*)\)/) do
+      new_raw.gsub!(%r{\[(.*)\]\((/assets/uploads/files/.*)\)}) do
         image_md = Regexp.last_match[0]
         text, filepath = $1, $2
         filepath = filepath.gsub("/assets/uploads", ATTACHMENT_DIR)
@@ -493,7 +522,12 @@ class ImportScripts::NodeBB < ImportScripts::Base
       end
 
       if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from NodeBB')
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: new_raw },
+          bypass_bump: true,
+          edit_reason: "Import attachments from NodeBB",
+        )
       end
     end
   end
@@ -502,28 +536,30 @@ class ImportScripts::NodeBB < ImportScripts::Base
     raw = post.raw
 
     # [link to post](/post/:id)
-    raw = raw.gsub(/\[(.*)\]\(\/post\/(\d+).*\)/) do
-      text, post_id = $1, $2
+    raw =
+      raw.gsub(%r{\[(.*)\]\(/post/(\d+).*\)}) do
+        text, post_id = $1, $2
 
-      if topic_lookup = topic_lookup_from_imported_post_id("p#{post_id}")
-        url = topic_lookup[:url]
-        "[#{text}](#{url})"
-      else
-        "/404"
+        if topic_lookup = topic_lookup_from_imported_post_id("p#{post_id}")
+          url = topic_lookup[:url]
+          "[#{text}](#{url})"
+        else
+          "/404"
+        end
       end
-    end
 
     # [link to topic](/topic/:id)
-    raw = raw.gsub(/\[(.*)\]\(\/topic\/(\d+).*\)/) do
-      text, topic_id = $1, $2
+    raw =
+      raw.gsub(%r{\[(.*)\]\(/topic/(\d+).*\)}) do
+        text, topic_id = $1, $2
 
-      if topic_lookup = topic_lookup_from_imported_post_id("t#{topic_id}")
-        url = topic_lookup[:url]
-        "[#{text}](#{url})"
-      else
-        "/404"
+        if topic_lookup = topic_lookup_from_imported_post_id("t#{topic_id}")
+          url = topic_lookup[:url]
+          "[#{text}](#{url})"
+        else
+          "/404"
+        end
       end
-    end
 
     raw
   end

@@ -18,6 +18,6 @@ class PushNotificationController < ApplicationController
   private
 
   def push_params
-    params.require(:subscription).permit(:endpoint, keys: [:p256dh, :auth])
+    params.require(:subscription).permit(:endpoint, keys: %i[p256dh auth])
   end
 end

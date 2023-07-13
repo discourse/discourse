@@ -4,14 +4,14 @@ RSpec.describe PresenceController do
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group).tap { |g| g.add(user) } }
 
-  let(:ch1) { PresenceChannel.new('/test/public1') }
-  let(:ch2) { PresenceChannel.new('/test/public2') }
+  let(:ch1) { PresenceChannel.new("/test/public1") }
+  let(:ch2) { PresenceChannel.new("/test/public2") }
 
-  let(:secure_user_channel) { PresenceChannel.new('/test/secureuser') }
-  let(:secure_group_channel) { PresenceChannel.new('/test/securegroup') }
-  let(:allowed_user_channel) { PresenceChannel.new('/test/alloweduser') }
-  let(:allowed_group_channel) { PresenceChannel.new('/test/allowedgroup') }
-  let(:count_only_channel) { PresenceChannel.new('/test/countonly') }
+  let(:secure_user_channel) { PresenceChannel.new("/test/secureuser") }
+  let(:secure_group_channel) { PresenceChannel.new("/test/securegroup") }
+  let(:allowed_user_channel) { PresenceChannel.new("/test/alloweduser") }
+  let(:allowed_group_channel) { PresenceChannel.new("/test/allowedgroup") }
+  let(:count_only_channel) { PresenceChannel.new("/test/countonly") }
 
   before do
     PresenceChannel.clear_all!
@@ -20,16 +20,16 @@ RSpec.describe PresenceController do
     secure_group = Fabricate(:group)
     PresenceChannel.register_prefix("test") do |channel|
       case channel
-      when /\A\/test\/public\d*\z/
+      when %r{\A/test/public\d*\z}
         PresenceChannel::Config.new(public: true)
       when "/test/secureuser"
-        PresenceChannel::Config.new(allowed_user_ids: [ secure_user.id ])
+        PresenceChannel::Config.new(allowed_user_ids: [secure_user.id])
       when "/test/securegroup"
-        PresenceChannel::Config.new(allowed_group_ids: [ secure_group.id ])
+        PresenceChannel::Config.new(allowed_group_ids: [secure_group.id])
       when "/test/alloweduser"
-        PresenceChannel::Config.new(allowed_user_ids: [ user.id ])
+        PresenceChannel::Config.new(allowed_user_ids: [user.id])
       when "/test/allowedgroup"
-        PresenceChannel::Config.new(allowed_group_ids: [ group.id ])
+        PresenceChannel::Config.new(allowed_group_ids: [group.id])
       when "/test/countonly"
         PresenceChannel::Config.new(public: true, count_only: true)
       else
@@ -51,28 +51,31 @@ RSpec.describe PresenceController do
       expect(ch1.user_ids).to eq([])
       expect(ch2.user_ids).to eq([])
 
-      post "/presence/update.json", params: {
-        client_id: client_id,
-        present_channels: [ch1.name, ch2.name]
-      }
+      post "/presence/update.json",
+           params: {
+             client_id: client_id,
+             present_channels: [ch1.name, ch2.name],
+           }
       expect(response.status).to eq(200)
       expect(ch1.user_ids).to eq([user.id])
       expect(ch2.user_ids).to eq([user.id])
 
-      post "/presence/update.json", params: {
-        client_id: client_id,
-        present_channels: [ch1.name],
-        leave_channels: [ch2.name]
-      }
+      post "/presence/update.json",
+           params: {
+             client_id: client_id,
+             present_channels: [ch1.name],
+             leave_channels: [ch2.name],
+           }
       expect(response.status).to eq(200)
       expect(ch1.user_ids).to eq([user.id])
       expect(ch2.user_ids).to eq([])
 
-      post "/presence/update.json", params: {
-        client_id: client_id,
-        present_channels: [],
-        leave_channels: [ch1.name]
-      }
+      post "/presence/update.json",
+           params: {
+             client_id: client_id,
+             present_channels: [],
+             leave_channels: [ch1.name],
+           }
       expect(response.status).to eq(200)
       expect(ch1.user_ids).to eq([])
       expect(ch2.user_ids).to eq([])
@@ -86,26 +89,29 @@ RSpec.describe PresenceController do
       expect(secure_user_channel.user_ids).to eq([])
       expect(secure_group_channel.user_ids).to eq([])
 
-      post "/presence/update.json", params: {
-        client_id: client_id,
-        present_channels: [
-          ch1.name,
-          secure_user_channel.name,
-          secure_group_channel.name,
-          allowed_user_channel.name,
-          allowed_group_channel.name,
-          "/test/nonexistent"
-        ]
-      }
+      post "/presence/update.json",
+           params: {
+             client_id: client_id,
+             present_channels: [
+               ch1.name,
+               secure_user_channel.name,
+               secure_group_channel.name,
+               allowed_user_channel.name,
+               allowed_group_channel.name,
+               "/test/nonexistent",
+             ],
+           }
       expect(response.status).to eq(200)
-      expect(response.parsed_body).to eq({
-        ch1.name => true,
-        secure_user_channel.name => false,
-        secure_group_channel.name => false,
-        allowed_user_channel.name => true,
-        allowed_group_channel.name => true,
-        "/test/nonexistent" => false,
-      })
+      expect(response.parsed_body).to eq(
+        {
+          ch1.name => true,
+          secure_user_channel.name => false,
+          secure_group_channel.name => false,
+          allowed_user_channel.name => true,
+          allowed_group_channel.name => true,
+          "/test/nonexistent" => false,
+        },
+      )
 
       expect(ch1.user_ids).to eq([user.id])
       expect(secure_user_channel.user_ids).to eq([])
@@ -123,12 +129,7 @@ RSpec.describe PresenceController do
       expect(response.cookies.keys).to include(session_cookie_name)
 
       client_id = SecureRandom.hex
-      post "/presence/update.json", params: {
-        client_id: client_id,
-        present_channels: [
-          ch1.name,
-        ]
-      }
+      post "/presence/update.json", params: { client_id: client_id, present_channels: [ch1.name] }
       expect(response.status).to eq(200)
       expect(response.cookies.keys).not_to include(session_cookie_name)
     end
@@ -145,8 +146,8 @@ RSpec.describe PresenceController do
         ch1.name => {
           "users" => [],
           "count" => 0,
-          "last_message_id" => MessageBus.last_id(ch1.message_bus_channel_name)
-        }
+          "last_message_id" => MessageBus.last_id(ch1.message_bus_channel_name),
+        },
       )
 
       ch1.present(user_id: user.id, client_id: SecureRandom.hex)
@@ -165,16 +166,17 @@ RSpec.describe PresenceController do
     it "respects the existence/security of the channel" do
       sign_in user
 
-      get "/presence/get", params: {
-        channels: [
-          ch1.name,
-          allowed_user_channel.name,
-          allowed_group_channel.name,
-          secure_user_channel.name,
-          secure_group_channel.name,
-          "/test/nonexistent"
-        ]
-      }
+      get "/presence/get",
+          params: {
+            channels: [
+              ch1.name,
+              allowed_user_channel.name,
+              allowed_group_channel.name,
+              secure_user_channel.name,
+              secure_group_channel.name,
+              "/test/nonexistent",
+            ],
+          }
 
       expect(response.status).to eq(200)
 
@@ -201,7 +203,5 @@ RSpec.describe PresenceController do
       expect(response.status).to eq(200)
       expect(response.parsed_body[count_only_channel.name]["count"]).to eq(1)
     end
-
   end
-
 end

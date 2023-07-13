@@ -31,6 +31,7 @@ class BasicGroupSerializer < ApplicationSerializer
              :members_visibility_level,
              :can_see_members,
              :can_admin_group,
+             :can_edit_group,
              :publish_read_state
 
   def include_display_name?
@@ -44,7 +45,9 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def bio_excerpt
-    PrettyText.excerpt(object.bio_cooked, 110, keep_emoji_images: true) if object.bio_cooked.present?
+    if object.bio_cooked.present?
+      PrettyText.excerpt(object.bio_cooked, 110, keep_emoji_images: true)
+    end
   end
 
   def include_incoming_email?
@@ -69,6 +72,14 @@ class BasicGroupSerializer < ApplicationSerializer
 
   def include_is_group_owner?
     owner_group_ids.present?
+  end
+
+  def can_edit_group
+    scope.can_edit_group?(object)
+  end
+
+  def include_can_edit_group?
+    scope.can_edit_group?(object)
   end
 
   def can_admin_group

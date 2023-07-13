@@ -12,9 +12,18 @@
     <tbody>
       <tr class="filters">
         <td>{{i18n "admin.email.logs.filters.title"}}</td>
-        <td><TextField @value={{this.filter.from}} @placeholderKey="admin.email.incoming_emails.filters.from_placeholder" /></td>
-        <td><TextField @value={{this.filter.to}} @placeholderKey="admin.email.incoming_emails.filters.to_placeholder" /></td>
-        <td><TextField @value={{this.filter.subject}} @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder" /></td>
+        <td><TextField
+            @value={{this.filter.from}}
+            @placeholderKey="admin.email.incoming_emails.filters.from_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.to}}
+            @placeholderKey="admin.email.incoming_emails.filters.to_placeholder"
+          /></td>
+        <td><TextField
+            @value={{this.filter.subject}}
+            @placeholderKey="admin.email.incoming_emails.filters.subject_placeholder"
+          /></td>
       </tr>
 
       {{#each this.model as |email|}}
@@ -49,7 +58,11 @@
           </td>
         </tr>
       {{else}}
-        <tr><td colspan="4">{{i18n "admin.email.incoming_emails.none"}}</td></tr>
+        <tr>
+          <td colspan="4">
+            {{i18n "admin.email.incoming_emails.none"}}
+          </td>
+        </tr>
       {{/each}}
     </tbody>
   </table>

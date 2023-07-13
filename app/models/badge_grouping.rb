@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class BadgeGrouping < ActiveRecord::Base
-
   GettingStarted = 1
   Community = 2
   Posting = 3
@@ -9,6 +8,9 @@ class BadgeGrouping < ActiveRecord::Base
   Other = 5
 
   has_many :badges
+
+  validates :name, length: { maximum: 100 }
+  validates :description, length: { maximum: 500 }
 
   def system?
     id && id <= 5

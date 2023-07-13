@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CleanUpUploads do
-
   def fabricate_upload(attributes = {})
     Fabricate(:upload, { created_at: 2.hours.ago }.merge(attributes))
   end
@@ -22,7 +21,6 @@ RSpec.describe Jobs::CleanUpUploads do
   end
 
   it "only runs upload cleanup every grace period / 2 time" do
-
     SiteSetting.clean_orphan_uploads_grace_period_hours = 48
     expired = fabricate_upload(created_at: 49.hours.ago)
     Jobs::CleanUpUploads.new.execute(nil)
@@ -38,44 +36,31 @@ RSpec.describe Jobs::CleanUpUploads do
 
     Jobs::CleanUpUploads.new.execute(nil)
     expect(Upload.exists?(id: upload.id)).to eq(false)
-
   end
 
   it "deletes orphan uploads" do
-    expect do
-      Jobs::CleanUpUploads.new.execute(nil)
-    end.to change { Upload.count }.by(-1)
+    expect do Jobs::CleanUpUploads.new.execute(nil) end.to change { Upload.count }.by(-1)
 
     expect(Upload.exists?(id: expired_upload.id)).to eq(false)
   end
 
-  describe 'unused callbacks' do
-    before do
-      Upload.add_unused_callback do |uploads|
-        uploads.where.not(id: expired_upload.id)
-      end
-    end
+  describe "unused callbacks" do
+    before { Upload.add_unused_callback { |uploads| uploads.where.not(id: expired_upload.id) } }
 
-    after do
-      Upload.reset_unused_callbacks
-    end
+    after { Upload.reset_unused_callbacks }
 
-    it 'does not delete uploads skipped by an unused callback' do
-      expect do
-        Jobs::CleanUpUploads.new.execute(nil)
-      end.not_to change { Upload.count }
+    it "does not delete uploads skipped by an unused callback" do
+      expect do Jobs::CleanUpUploads.new.execute(nil) end.not_to change { Upload.count }
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
     end
 
-    it 'deletes other uploads not skipped by an unused callback' do
+    it "deletes other uploads not skipped by an unused callback" do
       expired_upload2 = fabricate_upload
       upload = fabricate_upload
       UploadReference.create(target: Fabricate(:post), upload: upload)
 
-      expect do
-        Jobs::CleanUpUploads.new.execute(nil)
-      end.to change { Upload.count }.by(-1)
+      expect do Jobs::CleanUpUploads.new.execute(nil) end.to change { Upload.count }.by(-1)
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
       expect(Upload.exists?(id: expired_upload2.id)).to eq(false)
@@ -83,33 +68,23 @@ RSpec.describe Jobs::CleanUpUploads do
     end
   end
 
-  describe 'in use callbacks' do
-    before do
-      Upload.add_in_use_callback do |upload|
-        expired_upload.id == upload.id
-      end
-    end
+  describe "in use callbacks" do
+    before { Upload.add_in_use_callback { |upload| expired_upload.id == upload.id } }
 
-    after do
-      Upload.reset_in_use_callbacks
-    end
+    after { Upload.reset_in_use_callbacks }
 
-    it 'does not delete uploads that are in use by callback' do
-      expect do
-        Jobs::CleanUpUploads.new.execute(nil)
-      end.not_to change { Upload.count }
+    it "does not delete uploads that are in use by callback" do
+      expect do Jobs::CleanUpUploads.new.execute(nil) end.not_to change { Upload.count }
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
     end
 
-    it 'deletes other uploads that are not in use by callback' do
+    it "deletes other uploads that are not in use by callback" do
       expired_upload2 = fabricate_upload
       upload = fabricate_upload
       UploadReference.create(target: Fabricate(:post), upload: upload)
 
-      expect do
-        Jobs::CleanUpUploads.new.execute(nil)
-      end.to change { Upload.count }.by(-1)
+      expect do Jobs::CleanUpUploads.new.execute(nil) end.to change { Upload.count }.by(-1)
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
       expect(Upload.exists?(id: expired_upload2.id)).to eq(false)
@@ -117,27 +92,20 @@ RSpec.describe Jobs::CleanUpUploads do
     end
   end
 
-  describe 'when clean_up_uploads is disabled' do
-    before do
-      SiteSetting.clean_up_uploads = false
-    end
+  describe "when clean_up_uploads is disabled" do
+    before { SiteSetting.clean_up_uploads = false }
 
-    it 'should still delete invalid upload records' do
-      upload2 = fabricate_upload(
-        url: "",
-        retain_hours: nil
-      )
+    it "should still delete invalid upload records" do
+      upload2 = fabricate_upload(url: "", retain_hours: nil)
 
-      expect do
-        Jobs::CleanUpUploads.new.execute(nil)
-      end.to change { Upload.count }.by(-1)
+      expect do Jobs::CleanUpUploads.new.execute(nil) end.to change { Upload.count }.by(-1)
 
       expect(Upload.exists?(id: expired_upload.id)).to eq(true)
       expect(Upload.exists?(id: upload2.id)).to eq(false)
     end
   end
 
-  it 'does not clean up upload site settings' do
+  it "does not clean up upload site settings" do
     begin
       original_provider = SiteSetting.provider
       SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
@@ -161,8 +129,7 @@ RSpec.describe Jobs::CleanUpUploads do
       SiteSetting.large_icon = large_icon_upload
       SiteSetting.opengraph_image = opengraph_image_upload
 
-      SiteSetting.twitter_summary_large_image =
-        twitter_summary_large_image_upload
+      SiteSetting.twitter_summary_large_image = twitter_summary_large_image_upload
 
       SiteSetting.favicon = favicon_upload
       SiteSetting.apple_touch_icon = apple_touch_icon_upload
@@ -179,11 +146,11 @@ RSpec.describe Jobs::CleanUpUploads do
         twitter_summary_large_image_upload,
         favicon_upload,
         apple_touch_icon_upload,
-        system_upload
+        system_upload,
       ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
 
       fabricate_upload
-      SiteSetting.opengraph_image = ''
+      SiteSetting.opengraph_image = ""
 
       Jobs::CleanUpUploads.new.execute(nil)
     ensure
@@ -307,15 +274,19 @@ RSpec.describe Jobs::CleanUpUploads do
     upload2 = fabricate_upload
     upload3 = fabricate_upload
 
-    Fabricate(:reviewable_queued_post_topic, payload: {
-      raw: "#{upload.short_url}\n#{upload2.short_url}"
-    })
-
-    Fabricate(:reviewable_queued_post_topic,
+    Fabricate(
+      :reviewable_queued_post_topic,
       payload: {
-        raw: "#{upload3.short_url}"
+        raw: "#{upload.short_url}\n#{upload2.short_url}",
       },
-      status: Reviewable.statuses[:rejected]
+    )
+
+    Fabricate(
+      :reviewable_queued_post_topic,
+      payload: {
+        raw: "#{upload3.short_url}",
+      },
+      status: Reviewable.statuses[:rejected],
     )
 
     Jobs::CleanUpUploads.new.execute(nil)
@@ -350,7 +321,7 @@ RSpec.describe Jobs::CleanUpUploads do
 
   it "does not delete custom emojis" do
     upload = fabricate_upload
-    CustomEmoji.create!(name: 'test', upload: upload)
+    CustomEmoji.create!(name: "test", upload: upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -371,7 +342,12 @@ RSpec.describe Jobs::CleanUpUploads do
   it "does not delete theme setting uploads" do
     theme = Fabricate(:theme)
     theme_upload = fabricate_upload
-    ThemeSetting.create!(theme: theme, data_type: ThemeSetting.types[:upload], value: theme_upload.id.to_s, name: "my_setting_name")
+    ThemeSetting.create!(
+      theme: theme,
+      data_type: ThemeSetting.types[:upload],
+      value: theme_upload.id.to_s,
+      name: "my_setting_name",
+    )
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -390,10 +366,30 @@ RSpec.describe Jobs::CleanUpUploads do
   end
 
   it "deletes external upload stubs that have expired" do
-    external_stub1 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:created], created_at: 10.minutes.ago)
-    external_stub2 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:created], created_at: (ExternalUploadStub::CREATED_EXPIRY_HOURS.hours + 10.minutes).ago)
-    external_stub3 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:uploaded], created_at: 10.minutes.ago)
-    external_stub4 = Fabricate(:external_upload_stub, status: ExternalUploadStub.statuses[:uploaded], created_at: (ExternalUploadStub::UPLOADED_EXPIRY_HOURS.hours + 10.minutes).ago)
+    external_stub1 =
+      Fabricate(
+        :external_upload_stub,
+        status: ExternalUploadStub.statuses[:created],
+        created_at: 10.minutes.ago,
+      )
+    external_stub2 =
+      Fabricate(
+        :external_upload_stub,
+        status: ExternalUploadStub.statuses[:created],
+        created_at: (ExternalUploadStub::CREATED_EXPIRY_HOURS.hours + 10.minutes).ago,
+      )
+    external_stub3 =
+      Fabricate(
+        :external_upload_stub,
+        status: ExternalUploadStub.statuses[:uploaded],
+        created_at: 10.minutes.ago,
+      )
+    external_stub4 =
+      Fabricate(
+        :external_upload_stub,
+        status: ExternalUploadStub.statuses[:uploaded],
+        created_at: (ExternalUploadStub::UPLOADED_EXPIRY_HOURS.hours + 10.minutes).ago,
+      )
     Jobs::CleanUpUploads.new.execute(nil)
     expect(ExternalUploadStub.pluck(:id)).to contain_exactly(external_stub1.id, external_stub3.id)
   end

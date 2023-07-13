@@ -22,9 +22,7 @@ module PostsHelper
       url = Discourse.redis.get(key)
 
       # break cache if either slug or topic_id changes
-      if url && !url.start_with?(post.topic.url)
-        url = nil
-      end
+      url = nil if url && !url.start_with?(post.topic.url)
 
       if !url
         url = post.canonical_url

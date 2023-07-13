@@ -6,20 +6,15 @@
 .chat-message-actions {
   .chat-message-reaction {
     @include chat-reaction;
-
-    &:not(.show) {
-      display: none;
-    }
   }
 }
 
 .chat-message-actions-container {
   @include unselectable;
-  position: relative;
+  z-index: z("dropdown") - 1;
 }
 
 .chat-message-actions {
-  border-radius: 0.25em;
   background-color: var(--secondary);
   display: flex;
   box-shadow: 0 0.75px 0px rgba(0, 0, 0, 0.15);
@@ -44,11 +39,16 @@
 
   .react-btn,
   .reply-btn,
+  .chat-message-thread-btn,
   .bookmark-btn {
     margin-right: -1px;
     padding: 0.5em 0;
     width: 2.5em;
     transition: background 0.2s, border-color 0.2s;
+
+    > * {
+      pointer-events: none;
+    }
 
     &:focus {
       .d-icon {
@@ -62,7 +62,7 @@
     }
 
     &:first-child:not(:hover) {
-      border-color: var(--primary-low);
+      border-color: var(--primary-300);
       border-right-color: transparent;
     }
 
@@ -75,18 +75,25 @@
     }
   }
 
+  &.has-no-secondary-actions {
+    .reply-btn {
+      border-right: 1px solid var(--primary-300);
+      border-top: 1px solid var(--primary-300);
+      border-bottom: 1px solid var(--primary-300);
+    }
+  }
+
   .more-buttons.dropdown-select-box {
     .select-kit-header {
       background: none;
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--primary-300);
       border-left-color: transparent;
-      border-radius: 0 0.25em 0.25em 0;
       padding: 0.5em 0;
       width: 2.5em;
       transition: background 0.2s, border-color 0.2s;
 
       &:focus {
-        border-color: var(--primary-low);
+        border-color: var(--primary-300);
         border-left-color: transparent;
 
         .select-kit-header-wrapper .d-icon {
@@ -117,8 +124,8 @@
 
     .select-kit-body {
       padding: 0.5rem;
-      box-shadow: shadow("card");
-      border: 1px solid var(--primary-low);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--primary-300);
     }
 
     .select-kit-row {
@@ -153,9 +160,7 @@
     }
 
     &:first-child {
-      border-bottom-left-radius: 0.25em;
-      border-left-color: var(--primary-low);
-      border-top-left-radius: 0.25em;
+      border-left-color: var(--primary-300);
     }
 
     &.reacted {

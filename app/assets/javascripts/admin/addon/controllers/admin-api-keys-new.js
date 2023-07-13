@@ -1,37 +1,32 @@
+import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isBlank } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, get } from "@ember/object";
-import { equal } from "@ember/object/computed";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 
-export default Controller.extend({
-  userModes: null,
-  scopeModes: null,
-  globalScopes: null,
-  scopes: null,
+export default class AdminApiKeysNewController extends Controller {
+  userModes = [
+    { id: "all", name: I18n.t("admin.api.all_users") },
+    { id: "single", name: I18n.t("admin.api.single_user") },
+  ];
+  scopeModes = [
+    { id: "granular", name: I18n.t("admin.api.scopes.granular") },
+    { id: "read_only", name: I18n.t("admin.api.scopes.read_only") },
+    { id: "global", name: I18n.t("admin.api.scopes.global") },
+  ];
+  globalScopes = null;
+  scopes = null;
+
+  @equal("userMode", "single") showUserSelector;
 
   init() {
-    this._super(...arguments);
-
-    this.set("userModes", [
-      { id: "all", name: I18n.t("admin.api.all_users") },
-      { id: "single", name: I18n.t("admin.api.single_user") },
-    ]);
-
-    this.set("scopeModes", [
-      { id: "granular", name: I18n.t("admin.api.scopes.granular") },
-      { id: "read_only", name: I18n.t("admin.api.scopes.read_only") },
-      { id: "global", name: I18n.t("admin.api.scopes.global") },
-    ]);
-
+    super.init(...arguments);
     this._loadScopes();
-  },
-
-  showUserSelector: equal("userMode", "single"),
+  }
 
   @discourseComputed("model.{description,username}", "showUserSelector")
   saveDisabled(model, showUserSelector) {
@@ -42,12 +37,12 @@ export default Controller.extend({
       return true;
     }
     return false;
-  },
+  }
 
   @action
   updateUsername(selected) {
     this.set("model.username", get(selected, "firstObject"));
-  },
+  }
 
   @action
   changeUserMode(userMode) {
@@ -55,12 +50,12 @@ export default Controller.extend({
       this.model.set("username", null);
     }
     this.set("userMode", userMode);
-  },
+  }
 
   @action
   changeScopeMode(scopeMode) {
     this.set("scopeMode", scopeMode);
-  },
+  }
 
   @action
   save() {
@@ -77,12 +72,12 @@ export default Controller.extend({
     }
 
     return this.model.save().catch(popupAjaxError);
-  },
+  }
 
   @action
   continue() {
     this.transitionToRoute("adminApiKeys.show", this.model.id);
-  },
+  }
 
   @action
   showURLs(urls) {
@@ -90,7 +85,7 @@ export default Controller.extend({
       admin: true,
       model: { urls },
     });
-  },
+  }
 
   _loadScopes() {
     return ajax("/admin/api/keys/scopes.json")
@@ -102,5 +97,5 @@ export default Controller.extend({
         this.set("scopes", data.scopes);
       })
       .catch(popupAjaxError);
-  },
-});
+  }
+}

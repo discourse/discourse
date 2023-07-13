@@ -40,6 +40,47 @@ RSpec.describe CategoryHashtagDataSource do
       group.add(user)
       expect(described_class.lookup(Guardian.new(user), ["secret"]).first).not_to eq(nil)
     end
+
+    context "with sub-sub-categories" do
+      before { SiteSetting.max_category_nesting = 3 }
+
+      it "returns the first matching grandchild category (ordered by IDs) when there are multiple categories with the same slug" do
+        parent1 = Fabricate(:category, slug: "parent1")
+        parent2 = Fabricate(:category, slug: "parent2")
+
+        parent1_child = Fabricate(:category, slug: "child", parent_category_id: parent1.id)
+        parent1_child_grandchild =
+          Fabricate(:category, slug: "grandchild", parent_category_id: parent1_child.id)
+
+        parent2_child = Fabricate(:category, slug: "child", parent_category_id: parent2.id)
+        parent2_child_grandchild =
+          Fabricate(:category, slug: "grandchild", parent_category_id: parent2_child.id)
+
+        result = described_class.lookup(guardian, ["child:grandchild"])
+        expect(result.map(&:relative_url)).to eq([parent1_child_grandchild.url])
+
+        parent1_child.destroy
+        parent1_child = Fabricate(:category, slug: "child", parent_category_id: parent1.id)
+
+        result = described_class.lookup(guardian, ["child:grandchild"])
+        expect(result.map(&:relative_url)).to eq([parent2_child_grandchild.url])
+      end
+
+      it "returns the correct grandchild category when there are multiple children with the same slug and only one of them has the correct grandchild" do
+        parent1 = Fabricate(:category, slug: "parent1")
+        parent1_child = Fabricate(:category, slug: "child", parent_category_id: parent1.id)
+        parent1_child_grandchild =
+          Fabricate(:category, slug: "another-grandchild", parent_category_id: parent1_child.id)
+
+        parent2 = Fabricate(:category, slug: "parent2")
+        parent2_child = Fabricate(:category, slug: "child", parent_category_id: parent2.id)
+        parent2_child_grandchild =
+          Fabricate(:category, slug: "grandchild", parent_category_id: parent2_child.id)
+
+        result = described_class.lookup(guardian, ["child:grandchild"])
+        expect(result.map(&:relative_url)).to eq([parent2_child_grandchild.url])
+      end
+    end
   end
 
   describe "#search" do
@@ -71,7 +112,7 @@ RSpec.describe CategoryHashtagDataSource do
   describe "#search_without_term" do
     it "returns distinct categories ordered by topic_count" do
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).to eq(
-        ["books", "movies", "casual", "random", "fun"],
+        %w[books movies casual random fun],
       )
     end
 
@@ -90,6 +131,33 @@ RSpec.describe CategoryHashtagDataSource do
         notification_level: CategoryUser.notification_levels[:muted],
       )
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).not_to include("random")
+    end
+
+    it "does not return child categories where the user has muted the parent" do
+      CategoryUser.create!(
+        user: user,
+        category: parent_category,
+        notification_level: CategoryUser.notification_levels[:muted],
+      )
+      expect(described_class.search_without_term(guardian, 5).map(&:slug)).not_to include("random")
+    end
+  end
+
+  describe "#search_sort" do
+    it "orders by exact slug match then text" do
+      results_to_sort = [
+        HashtagAutocompleteService::HashtagItem.new(
+          text: "System Tests",
+          slug: "system-test-development",
+        ),
+        HashtagAutocompleteService::HashtagItem.new(text: "Ruby Dev", slug: "ruby-dev"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev", slug: "dev"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev Tools", slug: "dev-tools"),
+        HashtagAutocompleteService::HashtagItem.new(text: "Dev Lore", slug: "dev-lore"),
+      ]
+      expect(described_class.search_sort(results_to_sort, "dev").map(&:slug)).to eq(
+        %w[dev dev-lore dev-tools ruby-dev system-test-development],
+      )
     end
   end
 end

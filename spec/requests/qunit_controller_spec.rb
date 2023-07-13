@@ -2,10 +2,12 @@
 
 RSpec.describe QunitController do
   describe "#theme" do
-    let(:theme) { Fabricate(:theme, name: 'main-theme') }
-    let(:component) { Fabricate(:theme, component: true, name: 'enabled-component') }
-    let(:disabled_component) { Fabricate(:theme, component: true, enabled: false, name: 'disabled-component') }
-    let(:theme_without_tests) { Fabricate(:theme, name: 'no-tests-guy') }
+    let(:theme) { Fabricate(:theme, name: "main-theme") }
+    let(:component) { Fabricate(:theme, component: true, name: "enabled-component") }
+    let(:disabled_component) do
+      Fabricate(:theme, component: true, enabled: false, name: "disabled-component")
+    end
+    let(:theme_without_tests) { Fabricate(:theme, name: "no-tests-guy") }
 
     before do
       Theme.destroy_all
@@ -17,13 +19,13 @@ RSpec.describe QunitController do
           target: :extra_js,
           type: :js,
           name: "discourse/initializers/my-#{t.id}-initializer.js",
-          value: "console.log(#{t.id});"
+          value: "console.log(#{t.id});",
         )
         t.set_field(
           target: :tests_js,
           type: :js,
           name: "acceptance/some-test-#{t.id}.js",
-          value: "assert.ok(#{t.id});"
+          value: "assert.ok(#{t.id});",
         )
         t.save!
       end
@@ -40,25 +42,23 @@ RSpec.describe QunitController do
       end
 
       it "regular users cannot see the page" do
-        get '/theme-qunit'
+        get "/theme-qunit"
         expect(response.status).to eq(404)
       end
 
       it "anons cannot see the page" do
         sign_out
-        get '/theme-qunit'
+        get "/theme-qunit"
         expect(response.status).to eq(404)
       end
     end
 
     context "with admin users" do
-      before do
-        sign_in(Fabricate(:admin))
-      end
+      before { sign_in(Fabricate(:admin)) }
 
       context "when no theme is specified" do
         it "renders a list of themes and components that have tests" do
-          get '/theme-qunit'
+          get "/theme-qunit"
           expect(response.status).to eq(200)
           [theme, component, disabled_component].each do |t|
             expect(response.body).to include(t.name)

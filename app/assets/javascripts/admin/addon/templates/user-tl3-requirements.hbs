@@ -1,16 +1,26 @@
 <div class="admin-controls">
   <nav>
     <ul class="nav nav-pills">
-      <li><LinkTo @route="adminUser" @model={{this.model}}>{{d-icon "caret-left"}} &nbsp;{{this.model.username}}</LinkTo></li>
-      <li><LinkTo @route="adminUsersList.show" @model="member">{{i18n "admin.user.trust_level_2_users"}}</LinkTo></li>
+      <li><LinkTo @route="adminUser" @model={{this.model}}>{{d-icon
+            "caret-left"
+          }}
+          &nbsp;{{this.model.username}}</LinkTo></li>
+      <li><LinkTo @route="adminUsersList.show" @model="member">{{i18n
+            "admin.user.trust_level_2_users"
+          }}</LinkTo></li>
     </ul>
   </nav>
 </div>
 
 <div class="admin-container tl3-requirements">
-  <h2>{{this.model.username}} - {{i18n "admin.user.tl3_requirements.title"}}</h2>
-  <br>
-  <p>{{i18n "admin.user.tl3_requirements.table_title" count=this.model.tl3Requirements.time_period}}</p>
+  <h2>{{this.model.username}}
+    -
+    {{i18n "admin.user.tl3_requirements.title"}}</h2>
+  <br />
+  <p>{{i18n
+      "admin.user.tl3_requirements.table_title"
+      count=this.model.tl3Requirements.time_period
+    }}</p>
 
   <table class="table" style="width: auto;">
     <thead>
@@ -26,14 +36,18 @@
         <th>{{i18n "admin.user.tl3_requirements.visits"}}</th>
         <td>{{check-icon this.model.tl3Requirements.met.days_visited}}</td>
         <td>
-          {{this.model.tl3Requirements.days_visited_percent}}% ({{this.model.tl3Requirements.days_visited}} / {{this.model.tl3Requirements.time_period}} {{i18n "admin.user.tl3_requirements.days"}})
+          {{this.model.tl3Requirements.days_visited_percent}}% ({{this.model.tl3Requirements.days_visited}}
+          /
+          {{this.model.tl3Requirements.time_period}}
+          {{i18n "admin.user.tl3_requirements.days"}})
         </td>
         <td>{{this.model.tl3Requirements.min_days_visited_percent}}%</td>
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.topics_replied_to"}}</th>
         <td>{{check-icon this.model.tl3Requirements.met.topics_replied_to}}</td>
-        <td>{{#if this.model.tl3Requirements.capped_topics_replied_to}}&ge; {{/if}}{{this.model.tl3Requirements.num_topics_replied_to}}</td>
+        <td>{{#if this.model.tl3Requirements.capped_topics_replied_to}}&ge;
+          {{/if}}{{this.model.tl3Requirements.num_topics_replied_to}}</td>
         <td>{{this.model.tl3Requirements.min_topics_replied_to}}</td>
       </tr>
       <tr>
@@ -44,7 +58,9 @@
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.topics_viewed_all_time"}}</th>
-        <td>{{check-icon this.model.tl3Requirements.met.topics_viewed_all_time}}</td>
+        <td>{{check-icon
+            this.model.tl3Requirements.met.topics_viewed_all_time
+          }}</td>
         <td>{{this.model.tl3Requirements.topics_viewed_all_time}}</td>
         <td>{{this.model.tl3Requirements.min_topics_viewed_all_time}}</td>
       </tr>
@@ -56,7 +72,9 @@
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.posts_read_all_time"}}</th>
-        <td>{{check-icon this.model.tl3Requirements.met.posts_read_all_time}}</td>
+        <td>{{check-icon
+            this.model.tl3Requirements.met.posts_read_all_time
+          }}</td>
         <td>{{this.model.tl3Requirements.posts_read_all_time}}</td>
         <td>{{this.model.tl3Requirements.min_posts_read_all_time}}</td>
       </tr>
@@ -64,13 +82,19 @@
         <th>{{i18n "admin.user.tl3_requirements.flagged_posts"}}</th>
         <td>{{check-icon this.model.tl3Requirements.met.flagged_posts}}</td>
         <td>{{this.model.tl3Requirements.num_flagged_posts}}</td>
-        <td>{{i18n "max_of_count" count=this.model.tl3Requirements.max_flagged_posts}}</td>
+        <td>{{i18n
+            "max_of_count"
+            count=this.model.tl3Requirements.max_flagged_posts
+          }}</td>
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.flagged_by_users"}}</th>
         <td>{{check-icon this.model.tl3Requirements.met.flagged_by_users}}</td>
         <td>{{this.model.tl3Requirements.num_flagged_by_users}}</td>
-        <td>{{i18n "max_of_count" count=this.model.tl3Requirements.max_flagged_by_users}}</td>
+        <td>{{i18n
+            "max_of_count"
+            count=this.model.tl3Requirements.max_flagged_by_users
+          }}</td>
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.likes_given"}}</th>
@@ -86,13 +110,17 @@
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.likes_received_days"}}</th>
-        <td>{{check-icon this.model.tl3Requirements.met.likes_received_days}}</td>
+        <td>{{check-icon
+            this.model.tl3Requirements.met.likes_received_days
+          }}</td>
         <td>{{this.model.tl3Requirements.num_likes_received_days}}</td>
         <td>{{this.model.tl3Requirements.min_likes_received_days}}</td>
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.likes_received_users"}}</th>
-        <td>{{check-icon this.model.tl3Requirements.met.likes_received_users}}</td>
+        <td>{{check-icon
+            this.model.tl3Requirements.met.likes_received_users
+          }}</td>
         <td>{{this.model.tl3Requirements.num_likes_received_users}}</td>
         <td>{{this.model.tl3Requirements.min_likes_received_users}}</td>
       </tr>
@@ -111,7 +139,7 @@
     </tbody>
   </table>
 
-  <br>
+  <br />
   <p>
     {{#if this.model.istl3}}
       {{#if this.model.tl3Requirements.requirements_lost}}

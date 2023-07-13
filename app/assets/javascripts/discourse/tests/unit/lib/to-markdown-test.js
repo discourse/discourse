@@ -353,6 +353,18 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(toMarkdown(html), markdown);
   });
 
+  test("strips user status from mentions", function (assert) {
+    const statusHtml = `
+        <img class="emoji user-status"
+             src="/images/emoji/twitter/desert_island.png?v=12"
+             title="vacation">
+    `;
+    const html = `Mentioning <a class="mention" href="/u/andrei">@andrei${statusHtml}</a>`;
+    const expectedMarkdown = `Mentioning @andrei`;
+
+    assert.strictEqual(toMarkdown(html), expectedMarkdown);
+  });
+
   test("keeps hashtag-cooked and converts to bare hashtag with type", function (assert) {
     const html = `
       <p dir="ltr">This is <a class="hashtag-cooked" href="/c/ux/14" data-type="category" data-slug="ux">

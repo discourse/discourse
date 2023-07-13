@@ -3,12 +3,11 @@
 RSpec.describe DirectoryItemSerializer do
   fab!(:user) { Fabricate(:user) }
 
-  before do
-    DirectoryItem.refresh!
-  end
+  before { DirectoryItem.refresh! }
 
   let :serializer do
-    directory_item = DirectoryItem.find_by(user: user, period_type: DirectoryItem.period_types[:all])
+    directory_item =
+      DirectoryItem.find_by(user: user, period_type: DirectoryItem.period_types[:all])
     DirectoryItemSerializer.new(directory_item, { attributes: DirectoryColumn.active_column_names })
   end
 

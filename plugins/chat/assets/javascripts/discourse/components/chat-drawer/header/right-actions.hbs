@@ -1,0 +1,17 @@
+<div class="chat-drawer-header__right-actions">
+  <div class="chat-drawer-header__top-line">
+    {{#if this.showThreadsListButton}}
+      <Chat::Thread::ThreadsListButton @channel={{this.chat.activeChannel}} />
+    {{/if}}
+
+    <ChatDrawer::Header::ToggleExpandButton
+      @toggleExpand={{@drawerActions.toggleExpand}}
+    />
+
+    <ChatDrawer::Header::FullPageButton
+      @openInFullPage={{@drawerActions.openInFullPage}}
+    />
+
+    <ChatDrawer::Header::CloseButton @close={{@drawerActions.close}} />
+  </div>
+</div>

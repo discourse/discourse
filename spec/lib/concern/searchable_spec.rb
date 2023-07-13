@@ -4,14 +4,16 @@ RSpec.describe Searchable do
   describe "has search data" do
     before do
       DB.exec("create temporary table searchable_records(id SERIAL primary key)")
-      DB.exec("create temporary table searchable_record_search_data(searchable_record_id int primary key, search_data tsvector, raw_data text, locale text)")
+      DB.exec(
+        "create temporary table searchable_record_search_data(searchable_record_id int primary key, search_data tsvector, raw_data text, locale text)",
+      )
 
       class SearchableRecord < ActiveRecord::Base
         include Searchable
       end
 
       class SearchableRecordSearchData < ActiveRecord::Base
-        self.primary_key = 'searchable_record_id'
+        self.primary_key = "searchable_record_id"
         belongs_to :test_item
       end
     end
@@ -28,26 +30,20 @@ RSpec.describe Searchable do
 
     let(:item) { SearchableRecord.create! }
 
-    it 'can build the data' do
+    it "can build the data" do
       expect(item.build_searchable_record_search_data).to be_truthy
     end
 
-    it 'can save the data' do
-      item.build_searchable_record_search_data(
-        search_data: '',
-        raw_data: 'a',
-        locale: 'en')
+    it "can save the data" do
+      item.build_searchable_record_search_data(search_data: "", raw_data: "a", locale: "en")
       item.save
 
       loaded = SearchableRecord.find(item.id)
-      expect(loaded.searchable_record_search_data.raw_data).to eq 'a'
+      expect(loaded.searchable_record_search_data.raw_data).to eq "a"
     end
 
-    it 'destroy the search data when the item is deprived' do
-      item.build_searchable_record_search_data(
-        search_data: '',
-        raw_data: 'a',
-        locale: 'en')
+    it "destroy the search data when the item is deprived" do
+      item.build_searchable_record_search_data(search_data: "", raw_data: "a", locale: "en")
       item.save
       item_id = item.id
       item.destroy

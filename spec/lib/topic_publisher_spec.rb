@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'topic_publisher'
+require "topic_publisher"
 
 RSpec.describe TopicPublisher do
   describe "shared drafts" do
     fab!(:shared_drafts_category) { Fabricate(:category) }
     fab!(:category) { Fabricate(:category) }
 
-    before do
-      SiteSetting.shared_drafts_category = shared_drafts_category.id
-    end
+    before { SiteSetting.shared_drafts_category = shared_drafts_category.id }
 
     context "when publishing" do
       fab!(:topic) { Fabricate(:topic, category: shared_drafts_category, visible: false) }
@@ -37,10 +35,12 @@ RSpec.describe TopicPublisher do
           expect(topic.updated_at).to eq_time(published_at)
           expect(topic.shared_draft).to be_blank
 
-          expect(UserHistory.where(
-            acting_user_id: moderator.id,
-            action: UserHistory.actions[:topic_published]
-          )).to be_present
+          expect(
+            UserHistory.where(
+              acting_user_id: moderator.id,
+              action: UserHistory.actions[:topic_published],
+            ),
+          ).to be_present
 
           op.reload
 
@@ -60,13 +60,14 @@ RSpec.describe TopicPublisher do
         TagUser.create!(
           user_id: user.id,
           tag_id: tag.id,
-          notification_level: NotificationLevels.topic_levels[:watching]
+          notification_level: NotificationLevels.topic_levels[:watching],
         )
 
         topic.update!(tags: [tag])
 
-        expect { TopicPublisher.new(topic, moderator, shared_draft.category_id).publish! }
-          .to change { Notification.count }.by(1)
+        expect {
+          TopicPublisher.new(topic, moderator, shared_draft.category_id).publish!
+        }.to change { Notification.count }.by(1)
 
         topic.reload
         expect(topic.tags).to contain_exactly(tag)

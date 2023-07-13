@@ -1,33 +1,37 @@
 # frozen_string_literal: true
 
 class Admin::SiteTextsController < Admin::AdminController
-
   def self.preferred_keys
-    ['system_messages.usage_tips.text_body_template',
-     'education.new-topic',
-     'education.new-reply',
-     'login_required.welcome_message']
+    %w[
+      system_messages.usage_tips.text_body_template
+      education.new-topic
+      education.new-reply
+      login_required.welcome_message
+    ]
   end
 
   def self.restricted_keys
-    ['user_notifications.confirm_old_email.title',
-     'user_notifications.confirm_old_email.subject_template',
-     'user_notifications.confirm_old_email.text_body_template']
+    %w[
+      user_notifications.confirm_old_email.title
+      user_notifications.confirm_old_email.subject_template
+      user_notifications.confirm_old_email.text_body_template
+    ]
   end
 
   def index
-    overridden = params[:overridden] == 'true'
+    overridden = params[:overridden] == "true"
+    outdated = params[:outdated] == "true"
     extras = {}
 
     query = params[:q] || ""
 
     locale = fetch_locale(params[:locale])
 
-    if query.blank? && !overridden
+    if query.blank? && !overridden && !outdated
       extras[:recommended] = true
       results = self.class.preferred_keys.map { |k| record_for(key: k, locale: locale) }
     else
-      results = find_translations(query, overridden, locale)
+      results = find_translations(query, overridden, outdated, locale)
 
       if results.any?
         extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
@@ -61,7 +65,7 @@ class Admin::SiteTextsController < Admin::AdminController
     render_serialized(
       results[first..last - 1],
       SiteTextSerializer,
-      root: 'site_texts',
+      root: "site_texts",
       rest_serializer: true,
       extras: extras,
       overridden_keys: overridden,
@@ -71,7 +75,7 @@ class Admin::SiteTextsController < Admin::AdminController
   def show
     locale = fetch_locale(params[:locale])
     site_text = find_site_text(locale)
-    render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
+    render_serialized(site_text, SiteTextSerializer, root: "site_text", rest_serializer: true)
   end
 
   def update
@@ -92,14 +96,14 @@ class Admin::SiteTextsController < Admin::AdminController
           :bulk_user_title_update,
           new_title: value,
           granted_badge_id: system_badge_id,
-          action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION
+          action: Jobs::BulkUserTitleUpdate::UPDATE_ACTION,
         )
       end
-      render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
+      render_serialized(site_text, SiteTextSerializer, root: "site_text", rest_serializer: true)
     else
-      render json: failed_json.merge(
-        message: translation_override.errors.full_messages.join("\n\n")
-      ), status: 422
+      render json:
+               failed_json.merge(message: translation_override.errors.full_messages.join("\n\n")),
+             status: 422
     end
   end
 
@@ -118,31 +122,27 @@ class Admin::SiteTextsController < Admin::AdminController
       Jobs.enqueue(
         :bulk_user_title_update,
         granted_badge_id: system_badge_id,
-        action: Jobs::BulkUserTitleUpdate::RESET_ACTION
+        action: Jobs::BulkUserTitleUpdate::RESET_ACTION,
       )
     end
-    render_serialized(site_text, SiteTextSerializer, root: 'site_text', rest_serializer: true)
+    render_serialized(site_text, SiteTextSerializer, root: "site_text", rest_serializer: true)
   end
 
   def get_reseed_options
     render_json_dump(
       categories: SeedData::Categories.with_default_locale.reseed_options,
-      topics: SeedData::Topics.with_default_locale.reseed_options
+      topics: SeedData::Topics.with_default_locale.reseed_options,
     )
   end
 
   def reseed
     hijack do
       if params[:category_ids].present?
-        SeedData::Categories.with_default_locale.update(
-          site_setting_names: params[:category_ids]
-        )
+        SeedData::Categories.with_default_locale.update(site_setting_names: params[:category_ids])
       end
 
       if params[:topic_ids].present?
-        SeedData::Topics.with_default_locale.update(
-          site_setting_names: params[:topic_ids]
-        )
+        SeedData::Topics.with_default_locale.update(site_setting_names: params[:topic_ids])
       end
 
       render json: success_json
@@ -152,23 +152,32 @@ class Admin::SiteTextsController < Admin::AdminController
   protected
 
   def is_badge_title?(id = "")
-    badge_parts = id.split('.')
-    badge_parts[0] == 'badges' && badge_parts[2] == 'name'
+    badge_parts = id.split(".")
+    badge_parts[0] == "badges" && badge_parts[2] == "name"
   end
 
   def record_for(key:, value: nil, locale:)
+    en_key = TranslationOverride.transform_pluralized_key(key)
     value ||= I18n.with_locale(locale) { I18n.t(key) }
-    { id: key, value: value, locale: locale }
+    interpolation_keys =
+      I18nInterpolationKeysFinder.find(I18n.overrides_disabled { I18n.t(en_key, locale: :en) })
+    custom_keys = TranslationOverride.custom_interpolation_keys(en_key)
+    { id: key, value: value, locale: locale, interpolation_keys: interpolation_keys + custom_keys }
   end
 
-  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)$/
+  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
 
   def find_site_text(locale)
     if self.class.restricted_keys.include?(params[:id])
-      raise Discourse::InvalidAccess.new(nil, nil, custom_message: 'email_template_cant_be_modified')
+      raise Discourse::InvalidAccess.new(
+              nil,
+              nil,
+              custom_message: "email_template_cant_be_modified",
+            )
     end
 
-    if I18n.exists?(params[:id], locale) || TranslationOverride.exists?(locale: locale, translation_key: params[:id])
+    if I18n.exists?(params[:id], locale) ||
+         TranslationOverride.exists?(locale: locale, translation_key: params[:id])
       return record_for(key: params[:id], locale: locale)
     end
 
@@ -180,10 +189,16 @@ class Admin::SiteTextsController < Admin::AdminController
     raise Discourse::NotFound
   end
 
-  def find_translations(query, overridden, locale)
+  def find_translations(query, overridden, outdated, locale)
     translations = Hash.new { |hash, key| hash[key] = {} }
-    search_results = I18n.with_locale(locale) do
-      I18n.search(query, only_overridden: overridden)
+    search_results = I18n.with_locale(locale) { I18n.search(query, only_overridden: overridden) }
+
+    if outdated
+      outdated_keys =
+        TranslationOverride.where(status: %i[outdated invalid_interpolation_keys]).pluck(
+          :translation_key,
+        )
+      search_results.select! { |k, _| outdated_keys.include?(k) }
     end
 
     search_results.each do |key, value|
@@ -205,7 +220,9 @@ class Admin::SiteTextsController < Admin::AdminController
           plural_value = plural[1]
 
           results << record_for(
-            key: "#{key}.#{plural_key}", value: plural_value, locale: plural.last
+            key: "#{key}.#{plural_key}",
+            value: plural_value,
+            locale: plural.last,
           )
         end
       else
@@ -218,7 +235,7 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def fix_plural_keys(key, value, locale)
     value = value.with_indifferent_access
-    plural_keys = I18n.with_locale(locale) { I18n.t('i18n.plural.keys') }
+    plural_keys = I18n.with_locale(locale) { I18n.t("i18n.plural.keys") }
     return value if value.keys.size == plural_keys.size && plural_keys.all? { |k| value.key?(k) }
 
     fallback_value = I18n.t(key, locale: :en, default: {})

@@ -1,18 +1,54 @@
-.user-tip-container {
-  min-width: 300px;
-  padding: 0.5em;
-  text-align: left;
+.tippy-box[data-theme="user-tip"] {
+  background-color: var(--tertiary);
+  color: var(--secondary);
+  border-color: var(--tertiary);
 
-  .user-tip-title {
-    font-size: $font-up-2;
+  .btn-flat {
+    color: var(--secondary);
+
+    &:hover {
+      color: var(--d-hover);
+    }
+  }
+
+  .btn-primary {
+    background: var(--secondary);
+    color: var(--tertiary);
+
+    &:hover {
+      color: var(--tertiary-hover);
+    }
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  > .tippy-svg-arrow {
+    color: var(--tertiary);
+  }
+}
+
+.user-tip {
+  z-index: z("composer", "content") - 1;
+
+  &__container {
+    font-weight: normal;
+    min-width: 300px;
+    padding: 0.5em;
+    text-align: left;
+  }
+
+  &__title {
+    font-size: var(--font-up-2);
     font-weight: bold;
   }
 
-  .user-tip-content {
+  &__content {
     margin-top: 0.25em;
   }
 
-  .user-tip-buttons {
+  &__buttons {
     margin-top: 1em;
   }
 }
@@ -20,19 +56,19 @@
 .tippy-box[data-theme~="user-tips"][data-placement^="left"]
   > .tippy-svg-arrow
   > svg {
-  left: 11px;
+  left: 12px;
 }
 
 .tippy-box[data-theme~="user-tips"][data-placement^="top"]
   > .tippy-svg-arrow
   > svg {
-  top: 11px;
+  top: 12px;
 }
 
 .tippy-box[data-theme~="user-tips"][data-placement^="bottom"]
   > .tippy-svg-arrow
   > svg {
-  top: -13px;
+  top: -14px;
   left: -1px;
 }
 

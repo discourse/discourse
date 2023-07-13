@@ -37,7 +37,7 @@ RSpec.describe Jobs::CleanUpUnusedStagedUsers do
       end
     end
 
-    context 'when staged user is not old enough' do
+    context "when staged user is not old enough" do
       before { staged_user.update!(created_at: 5.months.ago) }
       include_examples "does not delete"
     end

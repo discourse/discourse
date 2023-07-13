@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class RenameBlockedSilence < ActiveRecord::Migration[5.1]
-
   def setting(old, new)
     execute "UPDATE site_settings SET name='#{new}' where name='#{old}'"
   end

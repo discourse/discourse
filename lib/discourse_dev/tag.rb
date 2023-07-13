@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require 'discourse_dev/record'
-require 'rails'
-require 'faker'
+require "discourse_dev/record"
+require "rails"
+require "faker"
 
 module DiscourseDev
   class Tag < Record
-
     def initialize
       super(::Tag, DiscourseDev.config.tag[:count])
     end
@@ -24,9 +23,7 @@ module DiscourseDev
     end
 
     def data
-      {
-        name: Faker::Discourse.unique.tag,
-      }
+      { name: Faker::Discourse.unique.tag }
     end
   end
 end

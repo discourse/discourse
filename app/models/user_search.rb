@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserSearch
-
   MAX_SIZE_PRIORITY_MENTION ||= 500
 
   def initialize(term, opts = {})
@@ -27,21 +26,21 @@ class UserSearch
 
   def scoped_users
     users = User.where(active: true)
+    users = users.where(approved: true) if SiteSetting.must_approve_users?
     users = users.where(staged: false) unless @include_staged_users
     users = users.not_suspended unless @searching_user&.staff?
 
     if @groups
-      users = users
-        .joins(:group_users)
-        .where("group_users.group_id IN (?)", @groups.map(&:id))
+      users = users.joins(:group_users).where("group_users.group_id IN (?)", @groups.map(&:id))
     end
 
     # Only show users who have access to private topic
     if @topic_allowed_users == "true" && @topic&.category&.read_restricted
-      users = users
-        .references(:categories)
-        .includes(:secure_categories)
-        .where("users.admin OR categories.id = ?", @topic.category_id)
+      users =
+        users
+          .references(:categories)
+          .includes(:secure_categories)
+          .where("users.admin OR categories.id = ?", @topic.category_id)
     end
 
     users
@@ -70,27 +69,27 @@ class UserSearch
       exact_matches = scoped_users.where(username_lower: @term)
 
       # don't pollute mentions with users who haven't shown up in over a year
-      exact_matches = exact_matches.where('last_seen_at > ?', 1.year.ago) if @topic_id || @category_id
+      exact_matches = exact_matches.where("last_seen_at > ?", 1.year.ago) if @topic_id ||
+        @category_id
 
-      exact_matches
-        .limit(@limit)
-        .pluck(:id)
-        .each { |id| users << id }
+      exact_matches.limit(@limit).pluck(:id).each { |id| users << id }
     end
 
     return users.to_a if users.size >= @limit
 
     # 2. in topic
     if @topic_id
-      in_topic = filtered_by_term_users
-        .where('users.id IN (SELECT user_id FROM posts WHERE topic_id = ? AND post_type = ? AND deleted_at IS NULL)', @topic_id, Post.types[:regular])
+      in_topic =
+        filtered_by_term_users.where(
+          "users.id IN (SELECT user_id FROM posts WHERE topic_id = ? AND post_type = ? AND deleted_at IS NULL)",
+          @topic_id,
+          Post.types[:regular],
+        )
 
-      if @searching_user.present?
-        in_topic = in_topic.where('users.id <> ?', @searching_user.id)
-      end
+      in_topic = in_topic.where("users.id <> ?", @searching_user.id) if @searching_user.present?
 
       in_topic
-        .order('last_seen_at DESC NULLS LAST')
+        .order("last_seen_at DESC NULLS LAST")
         .limit(@limit - users.size)
         .pluck(:id)
         .each { |id| users << id }
@@ -131,8 +130,7 @@ class UserSearch
         category_groups = category_groups.members_visible_groups(@searching_user)
       end
 
-      in_category = filtered_by_term_users
-        .where(<<~SQL, category_groups.pluck(:id))
+      in_category = filtered_by_term_users.where(<<~SQL, category_groups.pluck(:id))
           users.id IN (
             SELECT gu.user_id
               FROM group_users gu
@@ -142,11 +140,11 @@ class UserSearch
           SQL
 
       if @searching_user.present?
-        in_category = in_category.where('users.id <> ?', @searching_user.id)
+        in_category = in_category.where("users.id <> ?", @searching_user.id)
       end
 
       in_category
-        .order('last_seen_at DESC NULLS LAST')
+        .order("last_seen_at DESC NULLS LAST")
         .limit(@limit - users.size)
         .pluck(:id)
         .each { |id| users << id }
@@ -157,19 +155,42 @@ class UserSearch
     # 4. global matches
     if @term.present?
       filtered_by_term_users
-        .order('last_seen_at DESC NULLS LAST')
+        .order("last_seen_at DESC NULLS LAST")
         .limit(@limit - users.size)
         .pluck(:id)
         .each { |id| users << id }
     end
 
+    return users.to_a if users.size >= @limit
+
     # 5. last seen users (for search auto-suggestions)
     if @last_seen_users
       scoped_users
-        .order('last_seen_at DESC NULLS LAST')
+        .order("last_seen_at DESC NULLS LAST")
         .limit(@limit - users.size)
         .pluck(:id)
         .each { |id| users << id }
+    end
+
+    return users.to_a if users.size >= @limit
+
+    # 6. similar usernames / names
+    if @term.present? && SiteSetting.user_search_similar_results
+      if SiteSetting.enable_names?
+        scoped_users
+          .where("username_lower <-> ? < 1 OR name <-> ? < 1", @term, @term)
+          .order(["LEAST(username_lower <-> ?, name <-> ?) ASC", @term, @term])
+          .limit(@limit - users.size)
+          .pluck(:id)
+          .each { |id| users << id }
+      else
+        scoped_users
+          .where("username_lower <-> ? < 1", @term)
+          .order(["username_lower <-> ? ASC", @term])
+          .limit(@limit - users.size)
+          .pluck(:id)
+          .each { |id| users << id }
+      end
     end
 
     users.to_a
@@ -179,16 +200,15 @@ class UserSearch
     ids = search_ids
     return User.where("0=1") if ids.empty?
 
-    results = User.joins("JOIN (SELECT unnest uid, row_number() OVER () AS rn
+    results =
+      User.joins(
+        "JOIN (SELECT unnest uid, row_number() OVER () AS rn
       FROM unnest('{#{ids.join(",")}}'::int[])
-    ) x on uid = users.id")
-      .order("rn")
+    ) x on uid = users.id",
+      ).order("rn")
 
-    if SiteSetting.enable_user_status
-      results = results.includes(:user_status)
-    end
+    results = results.includes(:user_status) if SiteSetting.enable_user_status
 
     results
   end
-
 end

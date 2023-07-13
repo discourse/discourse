@@ -54,7 +54,7 @@ export default Component.extend({
         if (this._picker && this.date) {
           const parsedDate =
             this.date instanceof moment ? this.date : moment(this.date);
-          this._picker.setDate(parsedDate.toDate(), true);
+          this._picker.setDate(parsedDate, true);
         }
       });
     });
@@ -66,7 +66,7 @@ export default Component.extend({
     if (this._picker && this.date) {
       const parsedDate =
         this.date instanceof moment ? this.date : moment(this.date);
-      this._picker.setDate(parsedDate.toDate(), true);
+      this._picker.setDate(parsedDate, true);
     }
 
     if (this._picker && this.relativeDate) {
@@ -75,7 +75,7 @@ export default Component.extend({
           ? this.relativeDate
           : moment(this.relativeDate);
 
-      this._picker.setMinDate(parsedRelativeDate.toDate(), true);
+      this._picker.setMinDate(parsedRelativeDate, true);
     }
 
     if (this._picker && !this.date) {

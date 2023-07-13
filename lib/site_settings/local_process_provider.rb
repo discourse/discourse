@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-module SiteSettings; end
+module SiteSettings
+end
 
 class SiteSettings::LocalProcessProvider
   class Setting

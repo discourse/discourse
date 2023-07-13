@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe UserSummary do
-
   it "produces secure summaries" do
     topic = create_post.topic
     user = topic.user

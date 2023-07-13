@@ -11,7 +11,15 @@ class CreateUserProfileViews < ActiveRecord::Migration[4.2]
 
     add_index :user_profile_views, :user_profile_id
     add_index :user_profile_views, :user_id
-    add_index :user_profile_views, [:viewed_at, :ip_address, :user_profile_id], where: "user_id IS NULL", unique: true, name: 'unique_profile_view_ip'
-    add_index :user_profile_views, [:viewed_at, :user_id, :user_profile_id], where: "user_id IS NOT NULL", unique: true, name: 'unique_profile_view_user'
+    add_index :user_profile_views,
+              %i[viewed_at ip_address user_profile_id],
+              where: "user_id IS NULL",
+              unique: true,
+              name: "unique_profile_view_ip"
+    add_index :user_profile_views,
+              %i[viewed_at user_id user_profile_id],
+              where: "user_id IS NOT NULL",
+              unique: true,
+              name: "unique_profile_view_user"
   end
 end

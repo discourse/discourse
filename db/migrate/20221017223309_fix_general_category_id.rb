@@ -6,9 +6,11 @@
 
 class FixGeneralCategoryId < ActiveRecord::Migration[7.0]
   def up
-    general_category_id = DB.query_single("SELECT value FROM site_settings WHERE name = 'general_category_id'")
+    general_category_id =
+      DB.query_single("SELECT value FROM site_settings WHERE name = 'general_category_id'")
     return if general_category_id.blank? || general_category_id[0].to_i < 0
-    matching_category_id = DB.query_single("SELECT id FROM categories WHERE id = #{general_category_id[0]}")
+    matching_category_id =
+      DB.query_single("SELECT id FROM categories WHERE id = #{general_category_id[0]}")
 
     # If the general_category_id has been set to something other than the default and there isn't a matching
     # category to go with it we should set it back to the default.

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe InlineOneboxer do
-
   it "should return nothing with empty input" do
     expect(InlineOneboxer.new([]).process).to be_blank
   end
@@ -23,14 +22,15 @@ RSpec.describe InlineOneboxer do
   describe "caching" do
     fab!(:topic) { Fabricate(:topic) }
 
-    before do
-      InlineOneboxer.invalidate(topic.url)
-    end
+    before { InlineOneboxer.invalidate(topic.url) }
 
     it "puts an entry in the cache" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
       url = "https://example.com/good-url"
-      stub_request(:get, url).to_return(status: 200, body: "<html><head><title>a blog</title></head></html>")
+      stub_request(:get, url).to_return(
+        status: 200,
+        body: "<html><head><title>a blog</title></head></html>",
+      )
 
       InlineOneboxer.invalidate(url)
       expect(InlineOneboxer.cache_lookup(url)).to be_blank
@@ -40,7 +40,7 @@ RSpec.describe InlineOneboxer do
 
       cached = InlineOneboxer.cache_lookup(url)
       expect(cached[:url]).to eq(url)
-      expect(cached[:title]).to eq('a blog')
+      expect(cached[:title]).to eq("a blog")
     end
   end
 
@@ -56,25 +56,52 @@ RSpec.describe InlineOneboxer do
       topic2 = Fabricate(:topic, category: category2)
 
       # Link to `topic` from new topic (same category)
-      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: category.id, skip_cache: true)
+      onebox =
+        InlineOneboxer.lookup(
+          topic.url,
+          user_id: admin.id,
+          category_id: category.id,
+          skip_cache: true,
+        )
       expect(onebox).to be_present
       expect(onebox[:url]).to eq(topic.url)
       expect(onebox[:title]).to eq(topic.title)
 
       # Link to `topic` from `topic`
-      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic.category_id, topic_id: topic.id, skip_cache: true)
+      onebox =
+        InlineOneboxer.lookup(
+          topic.url,
+          user_id: admin.id,
+          category_id: topic.category_id,
+          topic_id: topic.id,
+          skip_cache: true,
+        )
       expect(onebox).to be_present
       expect(onebox[:url]).to eq(topic.url)
       expect(onebox[:title]).to eq(topic.title)
 
       # Link to `topic` from `topic1` (same category)
-      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic1.category_id, topic_id: topic1.id, skip_cache: true)
+      onebox =
+        InlineOneboxer.lookup(
+          topic.url,
+          user_id: admin.id,
+          category_id: topic1.category_id,
+          topic_id: topic1.id,
+          skip_cache: true,
+        )
       expect(onebox).to be_present
       expect(onebox[:url]).to eq(topic.url)
       expect(onebox[:title]).to eq(topic.title)
 
       # Link to `topic` from `topic2` (different category)
-      onebox = InlineOneboxer.lookup(topic.url, user_id: admin.id, category_id: topic2.category_id, topic_id: topic2.id, skip_cache: true)
+      onebox =
+        InlineOneboxer.lookup(
+          topic.url,
+          user_id: admin.id,
+          category_id: topic2.category_id,
+          topic_id: topic2.id,
+          skip_cache: true,
+        )
       expect(onebox).to be_blank
     end
 
@@ -103,12 +130,9 @@ RSpec.describe InlineOneboxer do
       topic = Fabricate(:topic, title: "Inline oneboxer")
       Fabricate(:post, topic: topic) # OP
       Fabricate(:post, topic: topic)
-      lookup = -> (number) do
-        InlineOneboxer.lookup(
-          "#{topic.url}/#{number}",
-          skip_cache: true
-        )[:title]
-      end
+      lookup = ->(number) {
+        InlineOneboxer.lookup("#{topic.url}/#{number}", skip_cache: true)[:title]
+      }
       posts = topic.reload.posts.order("post_number ASC")
 
       expect(lookup.call(0)).to eq("Inline oneboxer")
@@ -139,13 +163,12 @@ RSpec.describe InlineOneboxer do
     it "will crawl anything if allowed to" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
-      stub_request(:get, "https://eviltrout.com/some-path").
-        to_return(status: 200, body: "<html><head><title>a blog</title></head></html>")
-
-      onebox = InlineOneboxer.lookup(
-        "https://eviltrout.com/some-path",
-        skip_cache: true
+      stub_request(:get, "https://eviltrout.com/some-path").to_return(
+        status: 200,
+        body: "<html><head><title>a blog</title></head></html>",
       )
+
+      onebox = InlineOneboxer.lookup("https://eviltrout.com/some-path", skip_cache: true)
 
       expect(onebox).to be_present
       expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
@@ -155,13 +178,12 @@ RSpec.describe InlineOneboxer do
     it "will not return a onebox if it does not meet minimal length" do
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
-      stub_request(:get, "https://eviltrout.com/some-path").
-        to_return(status: 200, body: "<html><head><title>a</title></head></html>")
-
-      onebox = InlineOneboxer.lookup(
-        "https://eviltrout.com/some-path",
-        skip_cache: true
+      stub_request(:get, "https://eviltrout.com/some-path").to_return(
+        status: 200,
+        body: "<html><head><title>a</title></head></html>",
       )
+
+      onebox = InlineOneboxer.lookup("https://eviltrout.com/some-path", skip_cache: true)
 
       expect(onebox).to be_present
       expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
@@ -172,10 +194,7 @@ RSpec.describe InlineOneboxer do
       SiteSetting.allowed_inline_onebox_domains = "eviltrout.com"
       RetrieveTitle.stubs(:crawl).returns("Evil Trout's Blog")
 
-      onebox = InlineOneboxer.lookup(
-        "https://eviltrout.com/some-path",
-        skip_cache: true
-      )
+      onebox = InlineOneboxer.lookup("https://eviltrout.com/some-path", skip_cache: true)
       expect(onebox).to be_present
       expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
       expect(onebox[:title]).to eq("Evil Trout's Blog")
@@ -184,11 +203,10 @@ RSpec.describe InlineOneboxer do
     describe "lookups for blocked domains in the hostname" do
       shared_examples "blocks the domain" do |setting, domain_to_test|
         it "does not retrieve title" do
-          stub_request(:get, domain_to_test)
-            .to_return(
-              status: 200,
-              body: "<html><head><title>hello world</title></head></html>",
-            )
+          stub_request(:get, domain_to_test).to_return(
+            status: 200,
+            body: "<html><head><title>hello world</title></head></html>",
+          )
           SiteSetting.blocked_onebox_domains = setting
 
           onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
@@ -199,11 +217,10 @@ RSpec.describe InlineOneboxer do
 
       shared_examples "does not fulfil blocked domain" do |setting, domain_to_test|
         it "retrieves title" do
-          stub_request(:get, domain_to_test)
-            .to_return(
-              status: 200,
-              body: "<html><head><title>hello world</title></head></html>",
-            )
+          stub_request(:get, domain_to_test).to_return(
+            status: 200,
+            body: "<html><head><title>hello world</title></head></html>",
+          )
           SiteSetting.blocked_onebox_domains = setting
 
           onebox = InlineOneboxer.lookup(domain_to_test, skip_cache: true)
@@ -226,39 +243,55 @@ RSpec.describe InlineOneboxer do
 
       it "doesn't retrieve title if a blocked domain is encountered anywhere in the redirect chain" do
         SiteSetting.blocked_onebox_domains = "redirect.com"
-        stub_request(:get, "https://mainwebsite.com/blah")
-          .to_return(status: 301, body: "", headers: { "location" => "https://redirect.com/blah" })
-        stub_request(:get, "https://redirect.com/blah")
-          .to_return(status: 301, body: "", headers: { "location" => "https://finalwebsite.com/blah" })
-        stub_request(:get, "https://finalwebsite.com/blah")
-          .to_return(status: 200, body: "<html><head><title>hello world</title></head></html>")
+        stub_request(:get, "https://mainwebsite.com/blah").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirect.com/blah",
+          },
+        )
+        stub_request(:get, "https://redirect.com/blah").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://finalwebsite.com/blah",
+          },
+        )
+        stub_request(:get, "https://finalwebsite.com/blah").to_return(
+          status: 200,
+          body: "<html><head><title>hello world</title></head></html>",
+        )
         onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah", skip_cache: true)
 
         expect(onebox[:title]).to be_blank
       end
 
       it "doesn't retrieve title if the Discourse-No-Onebox header == 1" do
-        stub_request(:get, "https://mainwebsite.com/blah")
-          .to_return(
-            status: 200,
-            body: "<html><head><title>hello world</title></head></html>",
-            headers: { "Discourse-No-Onebox" => "1" }
-          )
+        stub_request(:get, "https://mainwebsite.com/blah").to_return(
+          status: 200,
+          body: "<html><head><title>hello world</title></head></html>",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+          },
+        )
         onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah", skip_cache: true)
         expect(onebox[:title]).to be_blank
 
-        stub_request(:get, "https://mainwebsite.com/blah/2")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://mainwebsite.com/blah/2/redirect" }
-          )
-        stub_request(:get, "https://mainwebsite.com/blah/2/redirect")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "Discourse-No-Onebox" => "1", "location" => "https://somethingdoesnotmatter.com" }
-          )
+        stub_request(:get, "https://mainwebsite.com/blah/2").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://mainwebsite.com/blah/2/redirect",
+          },
+        )
+        stub_request(:get, "https://mainwebsite.com/blah/2/redirect").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "Discourse-No-Onebox" => "1",
+            "location" => "https://somethingdoesnotmatter.com",
+          },
+        )
         onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah/2", skip_cache: true)
         expect(onebox[:title]).to be_blank
         onebox = InlineOneboxer.lookup("https://mainwebsite.com/blah/2/redirect", skip_cache: true)
@@ -267,48 +300,46 @@ RSpec.describe InlineOneboxer do
     end
 
     context "when block_onebox_on_redirect is enabled" do
-      before do
-        SiteSetting.block_onebox_on_redirect = true
-      end
+      before { SiteSetting.block_onebox_on_redirect = true }
 
-      after do
-        FinalDestination.clear_https_cache!("redirects.com")
-      end
+      after { FinalDestination.clear_https_cache!("redirects.com") }
 
       it "doesn't onebox if the URL redirects" do
-        stub_request(:get, "https://redirects.com/blah/gg")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects.com/blah/gg/redirect" }
-          )
+        stub_request(:get, "https://redirects.com/blah/gg").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects.com/blah/gg/redirect",
+          },
+        )
         onebox = InlineOneboxer.lookup("https://redirects.com/blah/gg", skip_cache: true)
         expect(onebox[:title]).to be_blank
       end
 
       it "allows an initial http -> https redirect if the redirect URL is identical to the original" do
-        stub_request(:get, "http://redirects.com/blah/gg")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects.com/blah/gg" }
-          )
-        stub_request(:get, "https://redirects.com/blah/gg")
-          .to_return(
-            status: 200,
-            body: "<html><head><title>The Redirects Website</title></head></html>"
-          )
+        stub_request(:get, "http://redirects.com/blah/gg").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects.com/blah/gg",
+          },
+        )
+        stub_request(:get, "https://redirects.com/blah/gg").to_return(
+          status: 200,
+          body: "<html><head><title>The Redirects Website</title></head></html>",
+        )
         onebox = InlineOneboxer.lookup("http://redirects.com/blah/gg", skip_cache: true)
         expect(onebox[:title]).to eq("The Redirects Website")
       end
 
       it "doesn't allow an initial http -> https redirect if the redirect URL is different to the original" do
-        stub_request(:get, "http://redirects.com/blah/gg")
-          .to_return(
-            status: 301,
-            body: "",
-            headers: { "location" => "https://redirects.com/blah/gg/2" }
-          )
+        stub_request(:get, "http://redirects.com/blah/gg").to_return(
+          status: 301,
+          body: "",
+          headers: {
+            "location" => "https://redirects.com/blah/gg/2",
+          },
+        )
         onebox = InlineOneboxer.lookup("http://redirects.com/blah/gg", skip_cache: true)
         expect(onebox[:title]).to be_blank
       end
@@ -319,13 +350,12 @@ RSpec.describe InlineOneboxer do
 
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
-      stub_request(:get, "https://eviltrout.com/some-path").
-        to_return(status: 200, body: "<html><head><title>welcome to my blog</title></head></html>")
-
-      onebox = InlineOneboxer.lookup(
-        "https://eviltrout.com/some-path",
-        skip_cache: true
+      stub_request(:get, "https://eviltrout.com/some-path").to_return(
+        status: 200,
+        body: "<html><head><title>welcome to my blog</title></head></html>",
       )
+
+      onebox = InlineOneboxer.lookup("https://eviltrout.com/some-path", skip_cache: true)
 
       expect(onebox).to be_present
       expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
@@ -337,13 +367,9 @@ RSpec.describe InlineOneboxer do
 
       SiteSetting.enable_inline_onebox_on_all_domains = true
 
-      stub_request(:get, "https://eviltrout.com/some-path").
-        to_return(status: 404, body: "")
+      stub_request(:get, "https://eviltrout.com/some-path").to_return(status: 404, body: "")
 
-      onebox = InlineOneboxer.lookup(
-        "https://eviltrout.com/some-path",
-        skip_cache: true
-      )
+      onebox = InlineOneboxer.lookup("https://eviltrout.com/some-path", skip_cache: true)
 
       expect(onebox).to be_present
       expect(onebox[:url]).to eq("https://eviltrout.com/some-path")
@@ -353,15 +379,15 @@ RSpec.describe InlineOneboxer do
 
   describe ".register_local_handler" do
     it "calls registered local handler" do
-      InlineOneboxer.register_local_handler('wizard') do |url, route|
-        { url: url, title: 'Custom Onebox for Wizard' }
+      InlineOneboxer.register_local_handler("wizard") do |url, route|
+        { url: url, title: "Custom Onebox for Wizard" }
       end
 
       url = "#{Discourse.base_url}/wizard"
       results = InlineOneboxer.new([url], skip_cache: true).process
       expect(results).to be_present
       expect(results[0][:url]).to eq(url)
-      expect(results[0][:title]).to eq('Custom Onebox for Wizard')
+      expect(results[0][:title]).to eq("Custom Onebox for Wizard")
     end
   end
 end

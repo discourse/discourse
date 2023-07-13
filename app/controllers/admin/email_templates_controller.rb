@@ -1,70 +1,69 @@
 # frozen_string_literal: true
 
 class Admin::EmailTemplatesController < Admin::AdminController
-
   def self.email_keys
-    @email_keys ||= [
-      "custom_invite_forum_mailer",
-      "custom_invite_mailer",
-      "invite_forum_mailer",
-      "invite_mailer",
-      "invite_password_instructions",
-      "new_version_mailer",
-      "new_version_mailer_with_notes",
-      "system_messages.backup_failed",
-      "system_messages.backup_succeeded",
-      "system_messages.bulk_invite_failed",
-      "system_messages.bulk_invite_succeeded",
-      "system_messages.csv_export_failed",
-      "system_messages.csv_export_succeeded",
-      "system_messages.download_remote_images_disabled",
-      "system_messages.email_error_notification",
-      "system_messages.email_reject_auto_generated",
-      "system_messages.email_reject_bad_destination_address",
-      "system_messages.email_reject_empty",
-      "system_messages.email_reject_invalid_access",
-      "system_messages.email_reject_parsing",
-      "system_messages.email_reject_reply_key",
-      "system_messages.email_reject_screened_email",
-      "system_messages.email_reject_topic_closed",
-      "system_messages.email_reject_topic_not_found",
-      "system_messages.email_reject_unrecognized_error",
-      "system_messages.email_reject_user_not_found",
-      "system_messages.email_revoked",
-      "system_messages.pending_users_reminder",
-      "system_messages.post_hidden",
-      "system_messages.post_hidden_again",
-      "system_messages.queued_posts_reminder",
-      "system_messages.restore_failed",
-      "system_messages.restore_succeeded",
-      "system_messages.silenced_by_staff",
-      "system_messages.spam_post_blocked",
-      "system_messages.too_many_spam_flags",
-      "system_messages.unsilenced",
-      "system_messages.user_automatically_silenced",
-      "system_messages.welcome_invite",
-      "system_messages.welcome_user",
-      "system_messages.welcome_staff",
-      "test_mailer",
-      "user_notifications.account_created",
-      "user_notifications.admin_login",
-      "user_notifications.confirm_new_email",
-      "user_notifications.email_login",
-      "user_notifications.forgot_password",
-      "user_notifications.notify_old_email",
-      "user_notifications.set_password",
-      "user_notifications.signup",
-      "user_notifications.signup_after_approval",
-      "user_notifications.suspicious_login",
-      "user_notifications.user_invited_to_private_message_pm",
-      "user_notifications.user_invited_to_private_message_pm_group",
-      "user_notifications.user_invited_to_topic",
-      "user_notifications.user_linked",
-      "user_notifications.user_mentioned",
-      "user_notifications.user_posted",
-      "user_notifications.user_posted_pm",
-      "user_notifications.user_quoted",
-      "user_notifications.user_replied",
+    @email_keys ||= %w[
+      custom_invite_forum_mailer
+      custom_invite_mailer
+      invite_forum_mailer
+      invite_mailer
+      invite_password_instructions
+      new_version_mailer
+      new_version_mailer_with_notes
+      system_messages.backup_failed
+      system_messages.backup_succeeded
+      system_messages.bulk_invite_failed
+      system_messages.bulk_invite_succeeded
+      system_messages.csv_export_failed
+      system_messages.csv_export_succeeded
+      system_messages.download_remote_images_disabled
+      system_messages.email_error_notification
+      system_messages.email_reject_auto_generated
+      system_messages.email_reject_bad_destination_address
+      system_messages.email_reject_empty
+      system_messages.email_reject_invalid_access
+      system_messages.email_reject_parsing
+      system_messages.email_reject_reply_key
+      system_messages.email_reject_screened_email
+      system_messages.email_reject_topic_closed
+      system_messages.email_reject_topic_not_found
+      system_messages.email_reject_unrecognized_error
+      system_messages.email_reject_user_not_found
+      system_messages.email_revoked
+      system_messages.pending_users_reminder
+      system_messages.post_hidden
+      system_messages.post_hidden_again
+      system_messages.queued_posts_reminder
+      system_messages.restore_failed
+      system_messages.restore_succeeded
+      system_messages.silenced_by_staff
+      system_messages.spam_post_blocked
+      system_messages.too_many_spam_flags
+      system_messages.unsilenced
+      system_messages.user_automatically_silenced
+      system_messages.welcome_invite
+      system_messages.welcome_user
+      system_messages.welcome_staff
+      test_mailer
+      user_notifications.account_created
+      user_notifications.admin_login
+      user_notifications.confirm_new_email
+      user_notifications.email_login
+      user_notifications.forgot_password
+      user_notifications.notify_old_email
+      user_notifications.set_password
+      user_notifications.signup
+      user_notifications.signup_after_approval
+      user_notifications.suspicious_login
+      user_notifications.user_invited_to_private_message_pm
+      user_notifications.user_invited_to_private_message_pm_group
+      user_notifications.user_invited_to_topic
+      user_notifications.user_linked
+      user_notifications.user_mentioned
+      user_notifications.user_posted
+      user_notifications.user_posted_pm
+      user_notifications.user_quoted
+      user_notifications.user_replied
     ]
   end
 
@@ -91,9 +90,18 @@ class Admin::EmailTemplatesController < Admin::AdminController
       log_site_text_change(subject_result)
       log_site_text_change(body_result)
 
-      render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
+      render_serialized(
+        key,
+        AdminEmailTemplateSerializer,
+        root: "email_template",
+        rest_serializer: true,
+      )
     else
-      TranslationOverride.upsert!(I18n.locale, "#{key}.subject_template", subject_result[:old_value])
+      TranslationOverride.upsert!(
+        I18n.locale,
+        "#{key}.subject_template",
+        subject_result[:old_value],
+      )
       TranslationOverride.upsert!(I18n.locale, "#{key}.text_body_template", body_result[:old_value])
 
       render_json_error(error_messages)
@@ -105,11 +113,22 @@ class Admin::EmailTemplatesController < Admin::AdminController
     raise Discourse::NotFound unless self.class.email_keys.include?(params[:id])
 
     revert_and_log("#{key}.subject_template", "#{key}.text_body_template")
-    render_serialized(key, AdminEmailTemplateSerializer, root: 'email_template', rest_serializer: true)
+    render_serialized(
+      key,
+      AdminEmailTemplateSerializer,
+      root: "email_template",
+      rest_serializer: true,
+    )
   end
 
   def index
-    render_serialized(self.class.email_keys, AdminEmailTemplateSerializer, root: 'email_templates', rest_serializer: true, overridden_keys: overridden_keys)
+    render_serialized(
+      self.class.email_keys,
+      AdminEmailTemplateSerializer,
+      root: "email_templates",
+      rest_serializer: true,
+      overridden_keys: overridden_keys,
+    )
   end
 
   private
@@ -121,11 +140,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       translation_override = TranslationOverride.upsert!(I18n.locale, key, value)
     end
 
-    {
-      key: key,
-      old_value: old_value,
-      error_messages: translation_override&.errors&.full_messages
-    }
+    { key: key, old_value: old_value, error_messages: translation_override&.errors&.full_messages }
   end
 
   def revert_and_log(*keys)
@@ -144,7 +159,10 @@ class Admin::EmailTemplatesController < Admin::AdminController
   def log_site_text_change(update_result)
     new_value = I18n.t(update_result[:key])
     StaffActionLogger.new(current_user).log_site_text_change(
-      update_result[:key], new_value, update_result[:old_value])
+      update_result[:key],
+      new_value,
+      update_result[:old_value],
+    )
   end
 
   def format_error_message(update_result, attribute_key)

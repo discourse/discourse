@@ -5,7 +5,6 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # Edit the constants and initialize method for your import data.
 
 class ImportScripts::DrupalJson < ImportScripts::Base
-
   JSON_FILES_DIR = "/Users/techapj/Documents"
 
   def initialize
@@ -28,20 +27,18 @@ class ImportScripts::DrupalJson < ImportScripts::Base
   end
 
   def import_users
-    puts '', "Importing users"
+    puts "", "Importing users"
 
     create_users(@users_json) do |u|
       {
         id: u["uid"],
         name: u["name"],
         email: u["mail"],
-        created_at: Time.zone.at(u["created"].to_i)
+        created_at: Time.zone.at(u["created"].to_i),
       }
     end
     EmailToken.delete_all
   end
 end
 
-if __FILE__ == $0
-  ImportScripts::DrupalJson.new.perform
-end
+ImportScripts::DrupalJson.new.perform if __FILE__ == $0

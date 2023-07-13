@@ -2,9 +2,7 @@
 
 class TrustLevelAndStaffSetting < TrustLevelSetting
   def self.valid_value?(val)
-    special_group?(val) ||
-    (val.to_i.to_s == val.to_s &&
-     valid_values.any? { |v| v == val.to_i })
+    special_group?(val) || (val.to_i.to_s == val.to_s && valid_values.any? { |v| v == val.to_i })
   end
 
   def self.valid_values
@@ -16,7 +14,7 @@ class TrustLevelAndStaffSetting < TrustLevelSetting
   end
 
   def self.special_groups
-    ['staff', 'admin']
+    %w[staff admin]
   end
 
   def self.translation(value)

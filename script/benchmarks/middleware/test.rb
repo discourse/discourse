@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'memory_profiler'
-require 'benchmark/ips'
+require "memory_profiler"
+require "benchmark/ips"
 
 ENV["RAILS_ENV"] = "production"
 
@@ -14,12 +14,10 @@ def req
     "timings[1]" => "1001",
     "timings[2]" => "1001",
     "timings[3]" => "1001",
-    "topic_id" => "490310"
+    "topic_id" => "490310",
   }
 
-  data = data.map do |k, v|
-    "#{CGI.escape(k)}=#{v}"
-  end.join("&")
+  data = data.map { |k, v| "#{CGI.escape(k)}=#{v}" }.join("&")
 
   {
     "REQUEST_METHOD" => "POST",
@@ -33,7 +31,7 @@ def req
     "HTTP_COOKIE" => "_t=#{_t}",
     "rack.input" => StringIO.new(data),
     "rack.version" => [1, 2],
-    "rack.url_scheme" => "http"
+    "rack.url_scheme" => "http",
   }
 end
 
@@ -45,11 +43,7 @@ end
 exit
 #
 #
-StackProf.run(mode: :wall, out: 'report.dump') do
-  1000.times do
-    Rails.application.call(req)
-  end
-end
+StackProf.run(mode: :wall, out: "report.dump") { 1000.times { Rails.application.call(req) } }
 #
 # MemoryProfiler.start
 # Rails.application.call(req)

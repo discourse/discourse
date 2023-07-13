@@ -1,10 +1,10 @@
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import { createRenderDirector } from "discourse/tests/helpers/reviewable-types-helper";
 import { htmlSafe } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "I18n";
+import { setupTest } from "ember-qunit";
 
 function getReviewable(overrides = {}) {
   return UserMenuReviewable.create(
@@ -22,7 +22,9 @@ function getReviewable(overrides = {}) {
   );
 }
 
-discourseModule("Unit | Reviewable Items | flagged-post", function () {
+module("Unit | Reviewable Items | flagged-post", function (hooks) {
+  setupTest(hooks);
+
   test("description", function (assert) {
     const reviewable = getReviewable({
       topic_fancy_title: "This is safe title &lt;a&gt; :heart:",

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 class UserStat < ActiveRecord::Base
-
   belongs_to :user
   after_save :trigger_badges
 
@@ -21,7 +20,8 @@ class UserStat < ActiveRecord::Base
   def self.update_first_unread_pm(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
     whisperers_group_ids = SiteSetting.whispers_allowed_group_ids
 
-    DB.exec(<<~SQL, archetype: Archetype.private_message, now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago, last_seen: last_seen, limit: limit, whisperers_group_ids: whisperers_group_ids)
+    DB.exec(
+      <<~SQL,
     UPDATE user_stats us
     SET first_unread_pm_at = COALESCE(Z.min_date, :now)
     FROM (
@@ -37,11 +37,11 @@ class UserStat < ActiveRecord::Base
         INNER JOIN topics t ON t.id = tau.topic_id
         INNER JOIN users u ON u.id = tau.user_id
         LEFT JOIN topic_users tu ON t.id = tu.topic_id AND tu.user_id = tau.user_id
-        #{whisperers_group_ids.present? ? 'LEFT JOIN group_users gu ON gu.group_id IN (:whisperers_group_ids) AND gu.user_id = u.id' : ''}
+        #{whisperers_group_ids.present? ? "LEFT JOIN group_users gu ON gu.group_id IN (:whisperers_group_ids) AND gu.user_id = u.id" : ""}
         WHERE t.deleted_at IS NULL
         AND t.archetype = :archetype
         AND tu.last_read_post_number < CASE
-                                       WHEN u.admin OR u.moderator #{whisperers_group_ids.present? ? 'OR gu.id IS NOT NULL' : ''}
+                                       WHEN u.admin OR u.moderator #{whisperers_group_ids.present? ? "OR gu.id IS NOT NULL" : ""}
                                        THEN t.highest_staff_post_number
                                        ELSE t.highest_post_number
                                        END
@@ -67,6 +67,12 @@ class UserStat < ActiveRecord::Base
     ) AS Z
     WHERE us.user_id = Z.user_id
     SQL
+      archetype: Archetype.private_message,
+      now: UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
+      last_seen: last_seen,
+      limit: limit,
+      whisperers_group_ids: whisperers_group_ids,
+    )
   end
 
   def self.update_first_unread(last_seen, limit: UPDATE_UNREAD_USERS_LIMIT)
@@ -140,14 +146,14 @@ class UserStat < ActiveRecord::Base
   end
 
   def self.reset_bounce_scores
-    UserStat.where("reset_bounce_score_after < now()")
+    UserStat
+      .where("reset_bounce_score_after < now()")
       .where("bounce_score > 0")
       .update_all(bounce_score: 0)
   end
 
   # Updates the denormalized view counts for all users
   def self.update_view_counts(last_seen = 1.hour.ago)
-
     # NOTE: we only update the counts for users we have seen in the last hour
     #  this avoids a very expensive query that may run on the entire user base
     #  we also ensure we only touch the table if data changes
@@ -169,19 +175,23 @@ class UserStat < ActiveRecord::Base
 
     # Update denormalized posts_read_count
     DB.exec(<<~SQL, seen_at: last_seen)
+      WITH filtered_users AS (
+        SELECT id FROM users u
+        JOIN user_stats ON user_id = u.id
+        WHERE last_seen_at > :seen_at
+        AND posts_read_count < 10000
+      )
       UPDATE user_stats SET posts_read_count = X.c
-      FROM
-      (SELECT pt.user_id,
-              COUNT(*) AS c
-       FROM users AS u
-       JOIN post_timings AS pt ON pt.user_id = u.id
-       JOIN topics t ON t.id = pt.topic_id
-       WHERE u.last_seen_at > :seen_at AND
-             t.archetype = 'regular' AND
-             t.deleted_at IS NULL
-       GROUP BY pt.user_id) AS X
-       WHERE X.user_id = user_stats.user_id AND
-             X.c <> posts_read_count
+      FROM (SELECT pt.user_id, COUNT(*) as c
+            FROM filtered_users AS u
+            JOIN post_timings AS pt ON pt.user_id = u.id
+            JOIN topics t ON t.id = pt.topic_id
+            WHERE t.archetype = 'regular'
+            AND t.deleted_at IS NULL
+            GROUP BY pt.user_id
+           ) AS X
+      WHERE X.user_id = user_stats.user_id
+      AND X.c <> posts_read_count
     SQL
   end
 
@@ -210,7 +220,8 @@ class UserStat < ActiveRecord::Base
 
   def self.update_draft_count(user_id = nil)
     if user_id.present?
-      draft_count, has_topic_draft = DB.query_single <<~SQL, user_id: user_id, new_topic: Draft::NEW_TOPIC
+      draft_count, has_topic_draft =
+        DB.query_single <<~SQL, user_id: user_id, new_topic: Draft::NEW_TOPIC
         UPDATE user_stats
         SET draft_count = (SELECT COUNT(*) FROM drafts WHERE user_id = :user_id)
         WHERE user_id = :user_id
@@ -219,11 +230,8 @@ class UserStat < ActiveRecord::Base
 
       MessageBus.publish(
         "/user-drafts/#{user_id}",
-        {
-          draft_count: draft_count,
-          has_topic_draft: !!has_topic_draft
-        },
-        user_ids: [user_id]
+        { draft_count: draft_count, has_topic_draft: !!has_topic_draft },
+        user_ids: [user_id],
       )
     else
       DB.exec <<~SQL
@@ -249,7 +257,7 @@ class UserStat < ActiveRecord::Base
       AND topics.user_id <> posts.user_id
       AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
       AND topics.archetype <> 'private_message'
-      #{start_time.nil? ? '' : 'AND posts.created_at > ?'}
+      #{start_time.nil? ? "" : "AND posts.created_at > ?"}
     SQL
     if start_time.nil?
       DB.query_single(sql, self.user_id).first
@@ -303,7 +311,7 @@ class UserStat < ActiveRecord::Base
       "/u/#{user.username_lower}/counters",
       { pending_posts_count: pending_posts_count },
       user_ids: [user.id],
-      group_ids: [Group::AUTO_GROUPS[:staff]]
+      group_ids: [Group::AUTO_GROUPS[:staff]],
     )
   end
 

@@ -6,26 +6,26 @@ RSpec.describe Admin::EmbeddableHostsController do
   fab!(:user) { Fabricate(:user) }
   fab!(:embeddable_host) { Fabricate(:embeddable_host) }
 
-  describe '#create' do
+  describe "#create" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
       it "logs embeddable host create" do
-        post "/admin/embeddable_hosts.json", params: {
-          embeddable_host: { host: "test.com" }
-        }
+        post "/admin/embeddable_hosts.json", params: { embeddable_host: { host: "test.com" } }
 
         expect(response.status).to eq(200)
-        expect(UserHistory.where(acting_user_id: admin.id,
-                                 action: UserHistory.actions[:embeddable_host_create]).exists?).to eq(true)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:embeddable_host_create],
+          ).exists?,
+        ).to eq(true)
       end
     end
 
     shared_examples "embeddable host creation not allowed" do
       it "prevents embeddable host creation with a 404 response" do
-        post "/admin/embeddable_hosts.json", params: {
-          embeddable_host: { host: "test.com" }
-        }
+        post "/admin/embeddable_hosts.json", params: { embeddable_host: { host: "test.com" } }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -39,29 +39,35 @@ RSpec.describe Admin::EmbeddableHostsController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "embeddable host creation not allowed"
     end
   end
 
-  describe '#update' do
+  describe "#update" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
       it "logs embeddable host update" do
         category = Fabricate(:category)
 
-        put "/admin/embeddable_hosts/#{embeddable_host.id}.json", params: {
-          embeddable_host: { host: "test.com", class_name: "test-class", category_id: category.id }
-        }
+        put "/admin/embeddable_hosts/#{embeddable_host.id}.json",
+            params: {
+              embeddable_host: {
+                host: "test.com",
+                category_id: category.id,
+              },
+            }
 
         expect(response.status).to eq(200)
 
-        history_exists = UserHistory.where(
+        history_exists =
+          UserHistory.where(
             acting_user_id: admin.id,
             action: UserHistory.actions[:embeddable_host_update],
-            new_value: "category_id: #{category.id}, class_name: test-class, host: test.com").exists?
+            new_value: "category_id: #{category.id}, host: test.com",
+          ).exists?
 
         expect(history_exists).to eq(true)
       end
@@ -71,9 +77,13 @@ RSpec.describe Admin::EmbeddableHostsController do
       it "prevents updates with a 404 response" do
         category = Fabricate(:category)
 
-        put "/admin/embeddable_hosts/#{embeddable_host.id}.json", params: {
-          embeddable_host: { host: "test.com", class_name: "test-class", category_id: category.id }
-        }
+        put "/admin/embeddable_hosts/#{embeddable_host.id}.json",
+            params: {
+              embeddable_host: {
+                host: "test.com",
+                category_id: category.id,
+              },
+            }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -93,7 +103,7 @@ RSpec.describe Admin::EmbeddableHostsController do
     end
   end
 
-  describe '#destroy' do
+  describe "#destroy" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -101,7 +111,12 @@ RSpec.describe Admin::EmbeddableHostsController do
         delete "/admin/embeddable_hosts/#{embeddable_host.id}.json", params: {}
 
         expect(response.status).to eq(200)
-        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:embeddable_host_destroy]).exists?).to eq(true)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:embeddable_host_destroy],
+          ).exists?,
+        ).to eq(true)
       end
     end
 

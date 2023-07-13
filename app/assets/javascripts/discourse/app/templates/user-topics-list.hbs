@@ -4,20 +4,62 @@
     @body={{this.model.emptyState.body}}
   />
 {{else}}
-  <LoadMore @class="paginated-topics-list" @selector=".paginated-topics-list .topic-list .topic-list-item" @action={{action "loadMore"}}>
-    <TopicDismissButtons @position="top" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
+  <LoadMore
+    @class="paginated-topics-list"
+    @selector=".paginated-topics-list .topic-list .topic-list-item"
+    @action={{action "loadMore"}}
+  >
+    <TopicDismissButtons
+      @position="top"
+      @selectedTopics={{this.selected}}
+      @model={{this.model}}
+      @showResetNew={{this.showResetNew}}
+      @showDismissRead={{this.showDismissRead}}
+      @resetNew={{action "resetNew"}}
+    />
 
     {{#if (gt this.incomingCount 0)}}
       <div class="show-mores">
-        <a tabindex="0" href {{on "click" this.showInserted}} class="alert alert-info clickable">
-          <CountI18n @key="topic_count_" @suffix="latest" @count={{this.incomingCount}} />
+        <a
+          tabindex="0"
+          href
+          {{on "click" this.showInserted}}
+          class="alert alert-info clickable"
+        >
+          <CountI18n
+            @key="topic_count_"
+            @suffix="latest"
+            @count={{this.incomingCount}}
+          />
         </a>
       </div>
     {{/if}}
 
-    <BasicTopicList @topicList={{this.model}} @hideCategory={{this.hideCategory}} @showPosters={{this.showPosters}} @bulkSelectEnabled={{this.bulkSelectEnabled}} @bulkSelectAction={{action "refresh"}} @selected={{this.selected}} @tagsForUser={{this.tagsForUser}} @onScroll={{this.saveScrollPosition}} @canBulkSelect={{this.canBulkSelect}} @scrollOnLoad={{true}} @toggleBulkSelect={{action "toggleBulkSelect"}} @updateAutoAddTopicsToBulkSelect={{action "updateAutoAddTopicsToBulkSelect"}} />
+    <BasicTopicList
+      @topicList={{this.model}}
+      @hideCategory={{this.hideCategory}}
+      @showPosters={{this.showPosters}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @bulkSelectAction={{action "refresh"}}
+      @selected={{this.selected}}
+      @tagsForUser={{this.tagsForUser}}
+      @onScroll={{this.saveScrollPosition}}
+      @canBulkSelect={{this.canBulkSelect}}
+      @scrollOnLoad={{true}}
+      @toggleBulkSelect={{action "toggleBulkSelect"}}
+      @updateAutoAddTopicsToBulkSelect={{action
+        "updateAutoAddTopicsToBulkSelect"
+      }}
+    />
 
-    <TopicDismissButtons @position="bottom" @selectedTopics={{this.selected}} @model={{this.model}} @showResetNew={{this.showResetNew}} @showDismissRead={{this.showDismissRead}} @resetNew={{action "resetNew"}} />
+    <TopicDismissButtons
+      @position="bottom"
+      @selectedTopics={{this.selected}}
+      @model={{this.model}}
+      @showResetNew={{this.showResetNew}}
+      @showDismissRead={{this.showDismissRead}}
+      @resetNew={{action "resetNew"}}
+    />
 
     <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
   </LoadMore>

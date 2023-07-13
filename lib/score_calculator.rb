@@ -1,15 +1,8 @@
 # frozen_string_literal: true
 
 class ScoreCalculator
-
   def self.default_score_weights
-    {
-      reply_count: 5,
-      like_score: 15,
-      incoming_link_count: 5,
-      bookmark_count: 2,
-      reads: 0.2
-    }
+    { reply_count: 5, like_score: 15, incoming_link_count: 5, bookmark_count: 2, reads: 0.2 }
   end
 
   def initialize(weightings = nil)
@@ -26,7 +19,7 @@ class ScoreCalculator
   private
 
   def update_posts_score(opts)
-    limit = 20000
+    limit = 20_000
 
     components = []
     @weightings.each_key { |k| components << "COALESCE(posts.#{k}, 0) * :#{k}" }
@@ -53,7 +46,7 @@ SQL
   end
 
   def update_posts_rank(opts)
-    limit = 20000
+    limit = 20_000
 
     builder = DB.build <<~SQL
       UPDATE posts
@@ -79,7 +72,6 @@ SQL
 
     while builder.exec == limit
     end
-
   end
 
   def update_topics_rank(opts)
@@ -100,7 +92,7 @@ SQL
     defaults = {
       likes_required: SiteSetting.summary_likes_required,
       posts_required: SiteSetting.summary_posts_required,
-      score_required: SiteSetting.summary_score_threshold
+      score_required: SiteSetting.summary_score_threshold,
     }
 
     builder.where(<<~SQL, defaults)
@@ -124,15 +116,12 @@ SQL
     return builder unless opts
 
     if min_topic_age = opts[:min_topic_age]
-      builder.where("topics.bumped_at > :bumped_at ",
-                 bumped_at: min_topic_age)
+      builder.where("topics.bumped_at > :bumped_at ", bumped_at: min_topic_age)
     end
     if max_topic_length = opts[:max_topic_length]
-      builder.where("topics.posts_count < :max_topic_length",
-                 max_topic_length: max_topic_length)
+      builder.where("topics.posts_count < :max_topic_length", max_topic_length: max_topic_length)
     end
 
     builder
   end
-
 end

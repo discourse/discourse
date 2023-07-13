@@ -4,22 +4,19 @@ class IncomingEmail < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
   belongs_to :post
-  belongs_to :group, foreign_key: :imap_group_id, class_name: 'Group'
+  belongs_to :group, foreign_key: :imap_group_id, class_name: "Group"
 
   validates :created_via, presence: true
 
-  scope :errored,  -> { where("NOT is_bounce AND error IS NOT NULL") }
+  scope :errored, -> { where("NOT is_bounce AND error IS NOT NULL") }
 
-  scope :addressed_to, -> (email) do
-    where(<<~SQL, email: "%#{email}%")
+  scope :addressed_to, ->(email) { where(<<~SQL, email: "%#{email}%") }
       incoming_emails.from_address = :email OR
       incoming_emails.to_addresses ILIKE :email OR
       incoming_emails.cc_addresses ILIKE :email
     SQL
-  end
 
-  scope :addressed_to_user, ->(user) do
-    where(<<~SQL, user_id: user.id)
+  scope :addressed_to_user, ->(user) { where(<<~SQL, user_id: user.id) }
       EXISTS(
           SELECT 1
           FROM user_emails
@@ -29,18 +26,11 @@ class IncomingEmail < ActiveRecord::Base
                  incoming_emails.cc_addresses ILIKE '%' || user_emails.email || '%')
       )
     SQL
-  end
 
   scope :without_raw, -> { select(self.column_names - ["raw"]) }
 
   def self.created_via_types
-    @types ||= Enum.new(
-      unknown: 0,
-      handle_mail: 1,
-      pop3_poll: 2,
-      imap: 3,
-      group_smtp: 4
-    )
+    @types ||= Enum.new(unknown: 0, handle_mail: 1, pop3_poll: 2, imap: 3, group_smtp: 4)
   end
 
   def as_mail_message
@@ -64,23 +54,17 @@ class IncomingEmail < ActiveRecord::Base
   end
 
   def to_addresses=(to)
-    if to&.is_a?(Array)
-      to = to.map(&:downcase).join(";")
-    end
+    to = to.map(&:downcase).join(";") if to&.is_a?(Array)
     super(to)
   end
 
   def cc_addresses=(cc)
-    if cc&.is_a?(Array)
-      cc = cc.map(&:downcase).join(";")
-    end
+    cc = cc.map(&:downcase).join(";") if cc&.is_a?(Array)
     super(cc)
   end
 
   def from_address=(from)
-    if from&.is_a?(Array)
-      from = from.first
-    end
+    from = from.first if from&.is_a?(Array)
     super(from)
   end
 end

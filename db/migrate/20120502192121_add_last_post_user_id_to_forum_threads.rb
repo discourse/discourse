@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AddLastPostUserIdToForumThreads < ActiveRecord::Migration[4.2]
-
   def up
     add_column :forum_threads, :last_post_user_id, :integer
 
@@ -14,5 +13,4 @@ class AddLastPostUserIdToForumThreads < ActiveRecord::Migration[4.2]
   def down
     remove_column :forum_threads, :last_post_user_id
   end
-
 end

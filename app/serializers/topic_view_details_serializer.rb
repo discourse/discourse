@@ -1,29 +1,30 @@
 # frozen_string_literal: true
 
 class TopicViewDetailsSerializer < ApplicationSerializer
-
   def self.can_attributes
-    [:can_move_posts,
-     :can_delete,
-     :can_permanently_delete,
-     :can_recover,
-     :can_remove_allowed_users,
-     :can_invite_to,
-     :can_invite_via_email,
-     :can_create_post,
-     :can_reply_as_new_topic,
-     :can_flag_topic,
-     :can_convert_topic,
-     :can_review_topic,
-     :can_edit_tags,
-     :can_publish_page,
-     :can_close_topic,
-     :can_archive_topic,
-     :can_split_merge_topic,
-     :can_edit_staff_notes,
-     :can_toggle_topic_visibility,
-     :can_pin_unpin_topic,
-     :can_moderate_category]
+    %i[
+      can_move_posts
+      can_delete
+      can_permanently_delete
+      can_recover
+      can_remove_allowed_users
+      can_invite_to
+      can_invite_via_email
+      can_create_post
+      can_reply_as_new_topic
+      can_flag_topic
+      can_convert_topic
+      can_review_topic
+      can_edit_tags
+      can_publish_page
+      can_close_topic
+      can_archive_topic
+      can_split_merge_topic
+      can_edit_staff_notes
+      can_toggle_topic_visibility
+      can_pin_unpin_topic
+      can_moderate_category
+    ]
   end
 
   # NOTE: `can_edit` is defined as an attribute because we explicitly want
@@ -35,7 +36,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     *can_attributes,
     :can_remove_self_id,
     :participants,
-    :allowed_users
+    :allowed_users,
   )
 
   has_one :created_by, serializer: BasicUserSerializer, embed: :objects
@@ -46,9 +47,10 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   has_many :allowed_groups, serializer: BasicGroupSerializer, embed: :objects
 
   def participants
-    object.post_counts_by_user.reject { |p| object.participants[p].blank? }.map do |pc|
-      { user: object.participants[pc[0]], post_count: pc[1] }
-    end
+    object
+      .post_counts_by_user
+      .reject { |p| object.participants[p].blank? }
+      .map { |pc| { user: object.participants[pc[0]], post_count: pc[1] } }
   end
 
   def include_participants?
@@ -88,9 +90,7 @@ class TopicViewDetailsSerializer < ApplicationSerializer
     scope.can_remove_allowed_users?(object.topic, scope.user)
   end
 
-  can_attributes.each do |ca|
-    define_method(ca) { true }
-  end
+  can_attributes.each { |ca| define_method(ca) { true } }
 
   # NOTE: A Category Group Moderator moving a topic to a different category
   # may result in the 'can_edit?' result changing from `true` to `false`.
@@ -160,13 +160,14 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   end
 
   def can_perform_action_available_to_group_moderators?
-    @can_perform_action_available_to_group_moderators ||= scope.can_perform_action_available_to_group_moderators?(object.topic)
+    @can_perform_action_available_to_group_moderators ||=
+      scope.can_perform_action_available_to_group_moderators?(object.topic)
   end
-  alias :include_can_close_topic? :can_perform_action_available_to_group_moderators?
-  alias :include_can_archive_topic? :can_perform_action_available_to_group_moderators?
-  alias :include_can_split_merge_topic? :can_perform_action_available_to_group_moderators?
-  alias :include_can_edit_staff_notes? :can_perform_action_available_to_group_moderators?
-  alias :include_can_moderate_category? :can_perform_action_available_to_group_moderators?
+  alias include_can_close_topic? can_perform_action_available_to_group_moderators?
+  alias include_can_archive_topic? can_perform_action_available_to_group_moderators?
+  alias include_can_split_merge_topic? can_perform_action_available_to_group_moderators?
+  alias include_can_edit_staff_notes? can_perform_action_available_to_group_moderators?
+  alias include_can_moderate_category? can_perform_action_available_to_group_moderators?
 
   def include_can_publish_page?
     scope.can_publish_page?(object.topic)
@@ -189,5 +190,4 @@ class TopicViewDetailsSerializer < ApplicationSerializer
   def include_allowed_groups?
     object.personal_message
   end
-
 end

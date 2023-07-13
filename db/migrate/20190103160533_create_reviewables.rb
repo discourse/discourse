@@ -36,8 +36,8 @@ class CreateReviewables < ActiveRecord::Migration[5.2]
     end
 
     add_index :reviewables, :status
-    add_index :reviewables, [:status, :type]
-    add_index :reviewables, [:status, :score]
-    add_index :reviewables, [:type, :target_id], unique: true
+    add_index :reviewables, %i[status type]
+    add_index :reviewables, %i[status score]
+    add_index :reviewables, %i[type target_id], unique: true
   end
 end

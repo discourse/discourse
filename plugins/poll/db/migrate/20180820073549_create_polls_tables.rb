@@ -17,7 +17,7 @@ class CreatePollsTables < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :polls, [:post_id, :name], unique: true
+    add_index :polls, %i[post_id name], unique: true
 
     create_table :poll_options do |t|
       t.references :poll, index: true, foreign_key: true
@@ -27,7 +27,7 @@ class CreatePollsTables < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :poll_options, [:poll_id, :digest], unique: true
+    add_index :poll_options, %i[poll_id digest], unique: true
 
     create_table :poll_votes, id: false do |t|
       t.references :poll, foreign_key: true
@@ -36,6 +36,6 @@ class CreatePollsTables < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :poll_votes, [:poll_id, :poll_option_id, :user_id], unique: true
+    add_index :poll_votes, %i[poll_id poll_option_id user_id], unique: true
   end
 end

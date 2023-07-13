@@ -7,8 +7,23 @@
 {{#if this.expanded}}
   <ul class="drop">
     {{#each this.navItems as |navItem|}}
-      <NavigationItem @content={{navItem}} @filterMode={{this.filterMode}} @category={{this.category}} @class={{concat "nav-item_" navItem.name}} />
+      <NavigationItem
+        @content={{navItem}}
+        @filterMode={{this.filterMode}}
+        @category={{this.category}}
+        @class={{concat "nav-item_" navItem.name}}
+      />
     {{/each}}
-    <PluginOutlet @name="extra-nav-item" @connectorTagName="li" @args={{hash category=this.category filterMode=this.filterMode}} />
+    <PluginOutlet
+      @name="extra-nav-item"
+      @connectorTagName="li"
+      @outletArgs={{hash category=this.category filterMode=this.filterMode}}
+    />
   </ul>
 {{/if}}
+
+<PluginOutlet
+  @name="inline-extra-nav-item"
+  @connectorTagName="li"
+  @outletArgs={{hash category=this.category filterMode=this.filterMode}}
+/>

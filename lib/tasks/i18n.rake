@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'i18n/locale_file_checker'
-require 'seed_data/categories'
-require 'seed_data/topics'
-require 'colored2'
+require "i18n/locale_file_checker"
+require "seed_data/categories"
+require "seed_data/topics"
+require "colored2"
 
 desc "Checks locale files for errors"
 task "i18n:check" => [:environment] do |_, args|
@@ -27,7 +27,7 @@ task "i18n:check" => [:environment] do |_, args|
   locales.each do |locale|
     begin
       all_errors = LocaleFileChecker.new.check(locale)
-    rescue
+    rescue StandardError
       failed_locales << locale
       next
     end

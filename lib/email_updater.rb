@@ -26,8 +26,8 @@ class EmailUpdater
       if SiteSetting.hide_email_address_taken
         Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       else
-        error_message = +'change_email.error'
-        error_message << '_staged' if existing_user.staged?
+        error_message = +"change_email.error"
+        error_message << "_staged" if existing_user.staged?
         errors.add(:base, I18n.t(error_message))
       end
     end
@@ -57,19 +57,23 @@ class EmailUpdater
       @change_req.new_email = email
     end
 
-    if @change_req.change_state.blank? || @change_req.change_state == EmailChangeRequest.states[:complete]
-      @change_req.change_state = if SiteSetting.require_change_email_confirmation || @user.staff?
-        EmailChangeRequest.states[:authorizing_old]
-      else
-        EmailChangeRequest.states[:authorizing_new]
-      end
+    if @change_req.change_state.blank? ||
+         @change_req.change_state == EmailChangeRequest.states[:complete]
+      @change_req.change_state =
+        if SiteSetting.require_change_email_confirmation || @user.staff?
+          EmailChangeRequest.states[:authorizing_old]
+        else
+          EmailChangeRequest.states[:authorizing_new]
+        end
     end
 
     if @change_req.change_state == EmailChangeRequest.states[:authorizing_old]
-      @change_req.old_email_token = @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:email_update])
+      @change_req.old_email_token =
+        @user.email_tokens.create!(email: @user.email, scope: EmailToken.scopes[:email_update])
       send_email(add ? "confirm_old_email_add" : "confirm_old_email", @change_req.old_email_token)
     elsif @change_req.change_state == EmailChangeRequest.states[:authorizing_new]
-      @change_req.new_email_token = @user.email_tokens.create!(email: email, scope: EmailToken.scopes[:email_update])
+      @change_req.new_email_token =
+        @user.email_tokens.create!(email: email, scope: EmailToken.scopes[:email_update])
       send_email("confirm_new_email", @change_req.new_email_token)
     end
 
@@ -83,7 +87,7 @@ class EmailUpdater
     User.transaction do
       email_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_update])
       if email_token.blank?
-        errors.add(:base, I18n.t('change_email.already_done'))
+        errors.add(:base, I18n.t("change_email.already_done"))
         confirm_result = :error
         next
       end
@@ -91,15 +95,24 @@ class EmailUpdater
       email_token.update!(confirmed: true)
 
       @user = email_token.user
-      @change_req = @user.email_change_requests
-        .where('old_email_token_id = :token_id OR new_email_token_id = :token_id', token_id: email_token.id)
-        .first
+      @change_req =
+        @user
+          .email_change_requests
+          .where(
+            "old_email_token_id = :token_id OR new_email_token_id = :token_id",
+            token_id: email_token.id,
+          )
+          .first
 
       case @change_req.try(:change_state)
       when EmailChangeRequest.states[:authorizing_old]
         @change_req.update!(
           change_state: EmailChangeRequest.states[:authorizing_new],
-          new_email_token: @user.email_tokens.create!(email: @change_req.new_email, scope: EmailToken.scopes[:email_update])
+          new_email_token:
+            @user.email_tokens.create!(
+              email: @change_req.new_email,
+              scope: EmailToken.scopes[:email_update],
+            ),
         )
         send_email("confirm_new_email", @change_req.new_email_token)
         confirm_result = :authorizing_new

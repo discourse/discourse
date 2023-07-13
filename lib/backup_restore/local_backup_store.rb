@@ -12,7 +12,12 @@ module BackupRestore
     end
 
     def self.chunk_path(identifier, filename, chunk_number)
-      File.join(LocalBackupStore.base_directory, "tmp", identifier, "#{filename}.part#{chunk_number}")
+      File.join(
+        LocalBackupStore.base_directory,
+        "tmp",
+        identifier,
+        "#{filename}.part#{chunk_number}",
+      )
     end
 
     def initialize(opts = {})
@@ -39,7 +44,7 @@ module BackupRestore
 
     def download_file(filename, destination, failure_message = "")
       path = path_from_filename(filename)
-      Discourse::Utils.execute_command('cp', path, destination, failure_message: failure_message)
+      Discourse::Utils.execute_command("cp", path, destination, failure_message: failure_message)
     end
 
     private
@@ -59,7 +64,7 @@ module BackupRestore
         filename: File.basename(path),
         size: File.size(path),
         last_modified: File.mtime(path).utc,
-        source: include_download_source ? path : nil
+        source: include_download_source ? path : nil,
       )
     end
 

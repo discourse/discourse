@@ -10,9 +10,11 @@ require "import_export/translation_overrides_exporter"
 require "json"
 
 module ImportExport
-
   def self.import(filename)
-    data = ActiveSupport::HashWithIndifferentAccess.new(File.open(filename, "r:UTF-8") { |f| JSON.parse(f.read) })
+    data =
+      ActiveSupport::HashWithIndifferentAccess.new(
+        File.open(filename, "r:UTF-8") { |f| JSON.parse(f.read) },
+      )
     ImportExport::Importer.new(data).perform
   end
 

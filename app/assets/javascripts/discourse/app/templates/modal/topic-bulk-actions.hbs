@@ -1,4 +1,6 @@
 <DModalBody>
-  <p>{{html-safe (i18n "topics.bulk.selected" count=this.model.topics.length)}}</p>
+  <p>{{html-safe
+      (i18n "topics.bulk.selected" count=this.model.topics.length)
+    }}</p>
   {{outlet "bulkOutlet"}}
 </DModalBody>

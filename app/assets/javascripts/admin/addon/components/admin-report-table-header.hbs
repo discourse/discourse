@@ -1,0 +1,13 @@
+{{#if this.showSortingUI}}
+  <DButton
+    @action={{this.sortByLabel}}
+    @icon={{this.sortIcon}}
+    @class="sort-btn"
+  />
+{{/if}}
+
+{{#if this.label.htmlTitle}}
+  <span class="title">{{html-safe this.label.htmlTitle}}</span>
+{{else}}
+  <span class="title">{{this.label.title}}</span>
+{{/if}}

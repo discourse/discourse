@@ -98,7 +98,7 @@ export function createData(store) {
           posts_count: ((topicId * 1234) % 100) + 1,
           views: ((topicId * 123) % 1000) + 1,
           like_count: topicId % 3,
-          created_at: `2017-03-${topicId}`,
+          created_at: `2017-03-${topicId % 30}T12:30:00.000Z`,
           visible: true,
           posters: [
             { extras: "latest", user },
@@ -157,9 +157,9 @@ export function createData(store) {
     id: 1234,
     cooked,
     created_at: moment().subtract(3, "days"),
-    user_id: user.get("id"),
-    username: user.get("username"),
-    avatar_template: user.get("avatar_template"),
+    user_id: user.id,
+    username: user.username,
+    avatar_template: user.avatar_template,
     showLike: true,
     canToggleLike: true,
     canFlag: true,
@@ -168,10 +168,10 @@ export function createData(store) {
     canBookmark: true,
     canManage: true,
     canDelete: true,
-    createdByUsername: user.get("username"),
-    createdByAvatarTemplate: user.get("avatar_template"),
-    lastPostUsername: user.get("username"),
-    lastPostAvatarTemplate: user.get("avatar_template"),
+    createdByUsername: user.username,
+    createdByAvatarTemplate: user.avatar_template,
+    lastPostUsername: user.username,
+    lastPostAvatarTemplate: user.avatar_template,
     topicReplyCount: 123,
     topicViews: 3456,
     participantCount: 10,
@@ -179,6 +179,7 @@ export function createData(store) {
     topicLinkLength: 5,
     topicPostsCount: 4,
     participants: [createUser(), createUser(), createUser(), createUser()],
+    post_number: 1,
     topicLinks: [
       {
         title: "Evil Trout",
@@ -194,6 +195,11 @@ export function createData(store) {
       },
     ],
   };
+
+  const postModel = store.createRecord("post", {
+    ...transformedPost,
+    topic: createTopic(),
+  });
 
   _data = {
     options: [
@@ -216,6 +222,8 @@ export function createData(store) {
       { class: "btn-active", text: "active" },
       { disabled: true, text: "disabled" },
     ],
+
+    toggleSwitchState: true,
 
     navItems: ["latest", "categories", "top"].map((name) => {
       let item = NavItem.fromText(name);
@@ -244,6 +252,7 @@ export function createData(store) {
     soon: moment().add(2, "days"),
 
     transformedPost,
+    postModel,
 
     user,
 
@@ -253,6 +262,8 @@ export function createData(store) {
     }),
 
     lorem: cooked,
+    shortLorem:
+      "Lorem ipsum dolor sit amet, et nec quis viderer prompta, ex omnium ponderum insolens eos, sed discere invenire principes in. Fuisset constituto per ad. Est no scripta propriae facilisis, viderer impedit deserunt in mel. Quot debet facilisis ne vix, nam in detracto tacimates. At quidam petentium vulputate pro. Alia iudico repudiandae ad vel, erat omnis epicuri eos id. Et illum dolor graeci vel, quo feugiat consulatu ei.",
 
     topicTimerUpdateDate: "2017-10-18 18:00",
 
@@ -269,6 +280,8 @@ export function createData(store) {
     settings: "bold|italic|strike|underline",
 
     colors: "f49|c89|564897",
+
+    charCounterContent: "",
   };
 
   return _data;

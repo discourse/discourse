@@ -5,17 +5,24 @@
 
   {{#if this.model}}
     {{#each this.sortedFields as |uf|}}
-      <AdminUserFieldItem @userField={{uf}}
-                          @fieldTypes={{this.fieldTypes}}
-                          @firstField={{this.sortedFields.firstObject}}
-                          @lastField={{this.sortedFields.lastObject}}
-                          @destroyAction={{action "destroy"}}
-                          @moveUpAction={{action "moveUp"}}
-                          @moveDownAction={{action "moveDown"}}
-                          />
+      <AdminUserFieldItem
+        @userField={{uf}}
+        @fieldTypes={{this.fieldTypes}}
+        @firstField={{this.sortedFields.firstObject}}
+        @lastField={{this.sortedFields.lastObject}}
+        @destroyAction={{action "destroyField"}}
+        @moveUpAction={{action "moveUp"}}
+        @moveDownAction={{action "moveDown"}}
+      />
     {{/each}}
   {{/if}}
 
-  <DButton @disabled={{this.createDisabled}} @class="btn-primary" @action={{action "createField"}} @label="admin.user_fields.create" @icon="plus" />
+  <DButton
+    @disabled={{this.createDisabled}}
+    @class="btn-primary"
+    @action={{action "createField"}}
+    @label="admin.user_fields.create"
+    @icon="plus"
+  />
 
 </div>

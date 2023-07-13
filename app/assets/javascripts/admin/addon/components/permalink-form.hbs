@@ -1,0 +1,38 @@
+<div class="permalink-form">
+  <div class="inline-form">
+    <label>{{i18n "admin.permalink.form.label"}}</label>
+
+    <TextField
+      @value={{this.url}}
+      @disabled={{this.formSubmitted}}
+      @class="permalink-url"
+      @placeholderKey="admin.permalink.url"
+      @autocorrect="off"
+      @autocapitalize="off"
+    />
+
+    <ComboBox
+      @content={{this.permalinkTypes}}
+      @value={{this.permalinkType}}
+      @onChange={{action (mut this.permalinkType)}}
+      @class="permalink-type"
+    />
+
+    <TextField
+      @value={{this.permalinkTypeValue}}
+      @disabled={{this.formSubmitted}}
+      @class="permalink-destination"
+      @placeholderKey={{this.permalinkTypePlaceholder}}
+      @autocorrect="off"
+      @autocapitalize="off"
+      @keyDown={{action "submitFormOnEnter"}}
+    />
+
+    <DButton
+      @action={{action "onSubmit"}}
+      @disabled={{this.formSubmitted}}
+      @class="permalink-add"
+      @label="admin.permalink.form.add"
+    />
+  </div>
+</div>

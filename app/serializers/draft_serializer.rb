@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'post_item_excerpt'
+require_relative "post_item_excerpt"
 
 class DraftSerializer < ApplicationSerializer
   include PostItemExcerpt
@@ -24,7 +24,7 @@ class DraftSerializer < ApplicationSerializer
              :archived
 
   def cooked
-    object.parsed_data['reply'] || ""
+    object.parsed_data["reply"] || ""
   end
 
   def draft_username
@@ -86,5 +86,4 @@ class DraftSerializer < ApplicationSerializer
   def include_category_id?
     object.topic&.category_id&.present?
   end
-
 end

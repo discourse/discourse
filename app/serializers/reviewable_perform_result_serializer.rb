@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewablePerformResultSerializer < ApplicationSerializer
-
   attributes(
     :success,
     :transition_to,
@@ -11,7 +10,7 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
     :remove_reviewable_ids,
     :version,
     :reviewable_count,
-    :unseen_reviewable_count
+    :unseen_reviewable_count,
   )
 
   def success
@@ -48,9 +47,5 @@ class ReviewablePerformResultSerializer < ApplicationSerializer
 
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(scope.user)
-  end
-
-  def include_unseen_reviewable_count?
-    scope.user.redesigned_user_menu_enabled?
   end
 end

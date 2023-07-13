@@ -1,11 +1,26 @@
-<CreateAccount @email={{this.accountEmail}} @disabled={{this.submitDisabled}} @action={{action "createAccount"}}>
+<CreateAccount
+  @email={{this.accountEmail}}
+  @disabled={{this.submitDisabled}}
+  @action={{action "createAccount"}}
+>
   {{#unless this.complete}}
-    <PluginOutlet @name="create-account-before-modal-body" @tagName="span" @connectorTagName="div" />
-    <DModalBody @class={{this.modalBodyClasses}} @preventModalAlertHiding={{true}}>
+    <span>
+      <PluginOutlet
+        @name="create-account-before-modal-body"
+        @connectorTagName="div"
+      />
+    </span>
+    <DModalBody
+      @class={{this.modalBodyClasses}}
+      @preventModalAlertHiding={{true}}
+    >
       <div class="create-account-form {{this.authOptions.auth_provider}}">
         <div class="login-welcome-header" id="create-account-title">
-          <h1 class="login-title">{{i18n "create_account.header_title"}}</h1> <img src={{this.wavingHandURL}} alt="" class="waving-hand">
-          <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+          <h1 class="login-title">{{i18n "create_account.header_title"}}</h1>
+          <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
+          <p class="login-subheader">{{i18n
+              "create_account.subheader_title"
+            }}</p>
         </div>
         {{#if this.showCreateForm}}
 
@@ -17,19 +32,45 @@
                 </div>
               {{/if}}
               <div class="input-group create-account-email">
-                <Input @type="email" disabled={{this.emailDisabled}} @value={{this.accountEmail}} id="new-account-email" name="email" class={{value-entered this.accountEmail}} autofocus="autofocus" {{on "focusout" (action "checkEmailAvailability")}} aria-describedby="account-email-validation" aria-invalid={{this.emailValidation.failed}} />
+                <Input
+                  @type="email"
+                  disabled={{this.emailDisabled}}
+                  @value={{this.accountEmail}}
+                  id="new-account-email"
+                  name="email"
+                  class={{value-entered this.accountEmail}}
+                  autofocus="autofocus"
+                  {{on "focusout" (action "checkEmailAvailability")}}
+                  aria-describedby="account-email-validation"
+                  aria-invalid={{this.emailValidation.failed}}
+                />
                 <label class="alt-placeholder" for="new-account-email">
                   {{i18n "user.email.title"}}
                   {{~#if this.userFields~}}
                     <span class="required">*</span>
                   {{/if}}
                 </label>
-                <InputTip @validation={{this.emailValidation}} @id="account-email-validation" />
-                <span class="more-info">{{i18n "user.email.instructions"}}</span>
+                <InputTip
+                  @validation={{this.emailValidation}}
+                  @id="account-email-validation"
+                />
+                <span class="more-info">{{i18n
+                    "user.email.instructions"
+                  }}</span>
               </div>
 
               <div class="input-group create-account__username">
-                <Input @value={{this.accountUsername}} disabled={{this.usernameDisabled}} class={{value-entered this.accountUsername}} id="new-account-username" name="username" maxlength={{this.maxUsernameLength}} aria-describedby="username-validation" aria-invalid={{this.usernameValidation.failed}} autocomplete="off" />
+                <Input
+                  @value={{this.accountUsername}}
+                  disabled={{this.usernameDisabled}}
+                  class={{value-entered this.accountUsername}}
+                  id="new-account-username"
+                  name="username"
+                  maxlength={{this.maxUsernameLength}}
+                  aria-describedby="username-validation"
+                  aria-invalid={{this.usernameValidation.failed}}
+                  autocomplete="off"
+                />
                 <label class="alt-placeholder" for="new-account-username">
                   {{i18n "user.username.title"}}
                   {{~#if this.userFields~}}
@@ -37,13 +78,25 @@
                   {{/if}}
                 </label>
 
-                <InputTip @validation={{this.usernameValidation}} @id="username-validation" />
-                <span class="more-info">{{i18n "user.username.instructions"}}</span>
+                <InputTip
+                  @validation={{this.usernameValidation}}
+                  @id="username-validation"
+                />
+                <span class="more-info">{{i18n
+                    "user.username.instructions"
+                  }}</span>
               </div>
 
               <div class="input-group create-account__fullname">
                 {{#if this.fullnameRequired}}
-                  <TextField @disabled={{this.nameDisabled}} @value={{this.accountName}} @id="new-account-name" @class={{value-entered this.accountName}} @aria-describedby="fullname-validation" @aria-invalid={{this.nameValidation.failed}} />
+                  <TextField
+                    @disabled={{this.nameDisabled}}
+                    @value={{this.accountName}}
+                    @id="new-account-name"
+                    @class={{value-entered this.accountName}}
+                    aria-describedby="fullname-validation"
+                    aria-invalid={{this.nameValidation.failed}}
+                  />
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "user.name.title"}}
                     {{#if this.siteSettings.full_name_required}}
@@ -53,66 +106,122 @@
                     {{/if}}
                   </label>
 
-                  <InputTip @validation={{this.nameValidation}} @id="fullname-validation" />
+                  <InputTip
+                    @validation={{this.nameValidation}}
+                    @id="fullname-validation"
+                  />
                   <span class="more-info">{{this.nameInstructions}}</span>
                 {{/if}}
               </div>
 
-              <PluginOutlet @name="create-account-before-password" @args={{hash
-                    accountName=this.accountName
-                    accountUsername=this.accountUsername
-                    accountPassword=this.accountPassword
-                    userFields=this.userFields
-                    authOptions=this.authOptions
-                  }} />
+              <PluginOutlet
+                @name="create-account-before-password"
+                @outletArgs={{hash
+                  accountName=this.accountName
+                  accountUsername=this.accountUsername
+                  accountPassword=this.accountPassword
+                  userFields=this.userFields
+                  authOptions=this.authOptions
+                }}
+              />
 
               <div class="input-group create-account__password">
                 {{#if this.passwordRequired}}
-                  <PasswordField @value={{this.accountPassword}} @class={{value-entered this.accountPassword}} @type="password" @id="new-account-password" @autocomplete="current-password" @capsLockOn={{this.capsLockOn}} @aria-describedby="password-validation" @aria-invalid={{this.passwordValidation.failed}} />
+                  <PasswordField
+                    @value={{this.accountPassword}}
+                    @class={{value-entered this.accountPassword}}
+                    @type={{if this.maskPassword "password" "text"}}
+                    id="new-account-password"
+                    @autocomplete="current-password"
+                    @capsLockOn={{this.capsLockOn}}
+                    aria-describedby="password-validation"
+                    aria-invalid={{this.passwordValidation.failed}}
+                  />
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "user.password.title"}}
                     {{~#if this.userFields~}}
                       <span class="required">*</span>
                     {{/if}}
                   </label>
-
-                  <InputTip @validation={{this.passwordValidation}} @id="password-validation" />
-                  <span class="more-info">{{this.passwordInstructions}}</span>
-                  <div class="caps-lock-warning {{unless this.capsLockOn "hidden"}}">
-                    {{d-icon "exclamation-triangle"}} {{i18n "login.caps_lock_warning"}}
+                  <div class="create-account__password-info">
+                    <div class="create-account__password-tip-validation">
+                      <InputTip
+                        @validation={{this.passwordValidation}}
+                        @id="password-validation"
+                      />
+                      <span
+                        class="more-info"
+                      >{{this.passwordInstructions}}</span>
+                      <div
+                        class="caps-lock-warning
+                          {{unless this.capsLockOn 'hidden'}}"
+                      >
+                        {{d-icon "exclamation-triangle"}}
+                        {{i18n "login.caps_lock_warning"}}
+                      </div>
+                    </div>
+                    <TogglePasswordMask
+                      @maskPassword={{this.maskPassword}}
+                      @togglePasswordMask={{this.togglePasswordMask}}
+                    />
                   </div>
                 {{/if}}
 
                 <div class="password-confirmation">
-                  <label for="new-account-password-confirmation">{{i18n "user.password_confirmation.title"}}</label>
-                  <HoneypotInput @id="new-account-confirmation" @autocomplete="new-password" @value={{this.accountHoneypot}} />
-                  <Input @value={{this.accountChallenge}} id="new-account-challenge" />
+                  <label for="new-account-password-confirmation">{{i18n
+                      "user.password_confirmation.title"
+                    }}</label>
+                  <HoneypotInput
+                    @id="new-account-confirmation"
+                    @autocomplete="new-password"
+                    @value={{this.accountHoneypot}}
+                  />
+                  <Input
+                    @value={{this.accountChallenge}}
+                    id="new-account-challenge"
+                  />
                 </div>
               </div>
 
-              {{#if this.requireInviteCode }}
+              {{#if this.requireInviteCode}}
                 <div class="input-group create-account__invite-code">
-                  <Input @value={{this.inviteCode}} class={{value-entered this.inviteCode}} id="inviteCode" />
-                  <label class="alt-placeholder" for="invite-code">{{i18n "user.invite_code.title"}}</label>
-                  <span class="more-info">{{i18n "user.invite_code.instructions"}}</span>
+                  <Input
+                    @value={{this.inviteCode}}
+                    class={{value-entered this.inviteCode}}
+                    id="inviteCode"
+                  />
+                  <label class="alt-placeholder" for="invite-code">{{i18n
+                      "user.invite_code.title"
+                    }}</label>
+                  <span class="more-info">{{i18n
+                      "user.invite_code.instructions"
+                    }}</span>
                 </div>
               {{/if}}
 
-              <PluginOutlet @name="create-account-after-password" @args={{hash
+              <PluginOutlet
+                @name="create-account-after-password"
+                @outletArgs={{hash
                   accountName=this.accountName
                   accountUsername=this.accountUsername
                   accountPassword=this.accountPassword
                   userFields=this.userFields
-                }} />
+                }}
+              />
 
               {{#if this.userFields}}
                 <div class="user-fields">
                   {{#each this.userFields as |f|}}
                     <div class="input-group">
-                      {{!-- adding the value-entered class here to
+                      {{! adding the value-entered class here to
                       be able to detect if the user field has a value
-                      entered --}}
-                      <UserField @field={{f.field}} @value={{f.value}} @class={{value-entered f.value}} @validation={{f.validation}} />
+                      entered }}
+                      <UserField
+                        @field={{f.field}}
+                        @value={{f.value}}
+                        @class={{value-entered f.value}}
+                        @validation={{f.validation}}
+                      />
                     </div>
                   {{/each}}
                 </div>
@@ -121,10 +230,22 @@
           </div>
 
           <div class="modal-footer">
-            <DButton @class="btn-large btn-primary" @action={{action "createAccount"}} @disabled={{this.submitDisabled}} @label="create_account.title" @isLoading={{this.formSubmitted}} />
+            <DButton
+              @class="btn-large btn-primary"
+              @action={{action "createAccount"}}
+              @disabled={{this.submitDisabled}}
+              @label="create_account.title"
+              @isLoading={{this.formSubmitted}}
+            />
 
             {{#unless this.hasAuthOptions}}
-              <DButton @class="btn-large" @id="login-link" @action={{route-action "showLogin"}} @disabled={{this.formSubmitted}} @label="log_in" />
+              <DButton
+                @class="btn-large"
+                @id="login-link"
+                @action={{route-action "showLogin"}}
+                @disabled={{this.formSubmitted}}
+                @label="log_in"
+              />
             {{/unless}}
 
             <div class="disclaimer">
@@ -132,7 +253,10 @@
             </div>
           </div>
 
-          <PluginOutlet @name="create-account-after-modal-footer" @connectorTagName="div" />
+          <PluginOutlet
+            @name="create-account-after-modal-footer"
+            @connectorTagName="div"
+          />
 
         {{/if}}
         {{#unless this.hasAuthOptions}}

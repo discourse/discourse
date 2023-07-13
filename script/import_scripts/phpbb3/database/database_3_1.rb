@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'database_3_0'
-require_relative '../support/constants'
+require_relative "database_3_0"
+require_relative "../support/constants"
 
 module ImportScripts::PhpBB3
   class Database_3_1 < Database_3_0
@@ -32,14 +32,15 @@ module ImportScripts::PhpBB3
     private
 
     def profile_fields_query(profile_fields)
-      @profile_fields_query ||= begin
-        if profile_fields.present?
-          columns = profile_fields.map { |field| "pf_#{field[:phpbb_field_name]}" }
-          ", #{columns.join(', ')}"
-        else
-          ""
+      @profile_fields_query ||=
+        begin
+          if profile_fields.present?
+            columns = profile_fields.map { |field| "pf_#{field[:phpbb_field_name]}" }
+            ", #{columns.join(", ")}"
+          else
+            ""
+          end
         end
-      end
     end
   end
 end

@@ -27,7 +27,7 @@ class UploadMarkdown
   end
 
   def playable_media_markdown
-    type = \
+    type =
       if FileHelper.is_supported_audio?(@upload.original_filename)
         "audio"
       elsif FileHelper.is_supported_video?(@upload.original_filename)

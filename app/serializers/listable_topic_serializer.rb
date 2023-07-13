@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ListableTopicSerializer < BasicTopicSerializer
-
   attributes :reply_count,
              :highest_post_number,
              :image_url,
@@ -114,29 +113,30 @@ class ListableTopicSerializer < BasicTopicSerializer
     object.excerpt
   end
 
-  alias :include_last_read_post_number? :has_user_data
+  alias include_last_read_post_number? has_user_data
 
   # TODO: For backwards compatibility with themes,
   #       Remove once Discourse 2.8 is released
   def unread
     0
   end
-  alias :include_unread? :has_user_data
+  alias include_unread? has_user_data
 
   # TODO: For backwards compatibility with themes,
   #       Remove once Discourse 2.8 is released
   def new_posts
     unread_helper.unread_posts
   end
-  alias :include_new_posts? :has_user_data
+  alias include_new_posts? has_user_data
 
   def unread_posts
     unread_helper.unread_posts
   end
-  alias :include_unread_posts? :has_user_data
+  alias include_unread_posts? has_user_data
 
   def include_excerpt?
-    pinned || SiteSetting.always_include_topic_excerpts || theme_modifier_helper.serialize_topic_excerpts
+    pinned || SiteSetting.always_include_topic_excerpts ||
+      theme_modifier_helper.serialize_topic_excerpts
   end
 
   def pinned
@@ -170,5 +170,4 @@ class ListableTopicSerializer < BasicTopicSerializer
   def theme_modifier_helper
     @theme_modifier_helper ||= ThemeModifierHelper.new(request: scope.request)
   end
-
 end

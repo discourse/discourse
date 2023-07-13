@@ -7,7 +7,13 @@
 
 <ConditionalLoadingSpinner @condition={{this.loading}}>
   <div class="permalink-search">
-    <TextField @value={{this.filter}} @class="url-input" @placeholderKey="admin.permalink.form.filter" @autocorrect="off" @autocapitalize="off" />
+    <TextField
+      @value={{this.filter}}
+      @class="url-input"
+      @placeholderKey="admin.permalink.form.filter"
+      @autocorrect="off"
+      @autocapitalize="off"
+    />
   </div>
 
   <div class="permalink-results">
@@ -15,22 +21,32 @@
       <table class="admin-logs-table permalinks grid">
         <thead class="heading-container">
           <th class="col heading first url">{{i18n "admin.permalink.url"}}</th>
-          <th class="col heading destination">{{i18n "admin.permalink.destination"}}</th>
+          <th class="col heading destination">{{i18n
+              "admin.permalink.destination"
+            }}</th>
           <th class="col heading actions"></th>
         </thead>
         <tbody>
           {{#each this.model as |pl|}}
             <tr class="admin-list-item">
               <td class="col first url">
-                <FlatButton @title="admin.permalink.copy_to_clipboard" @icon="far-clipboard" @action={{action "copyUrl" pl}} />
-                <span id="admin-permalink-{{pl.id}}" title={{pl.url}}>{{pl.url}}</span>
+                <FlatButton
+                  @title="admin.permalink.copy_to_clipboard"
+                  @icon="far-clipboard"
+                  @action={{action "copyUrl" pl}}
+                />
+                <span
+                  id="admin-permalink-{{pl.id}}"
+                  title={{pl.url}}
+                >{{pl.url}}</span>
               </td>
               <td class="col destination">
                 {{#if pl.topic_id}}
                   <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
                 {{/if}}
                 {{#if pl.post_id}}
-                  <a href={{pl.post_url}}>{{pl.post_topic_title}} #{{pl.post_number}}</a>
+                  <a href={{pl.post_url}}>{{pl.post_topic_title}}
+                    #{{pl.post_number}}</a>
                 {{/if}}
                 {{#if pl.category_id}}
                   {{category-link pl.category}}
@@ -46,7 +62,12 @@
                 {{/if}}
               </td>
               <td class="col action" style="text-align: right;">
-                <DButton @action={{action "destroy"}} @actionParam={{pl}} @icon="far-trash-alt" @class="btn-danger" />
+                <DButton
+                  @action={{action "destroyRecord"}}
+                  @actionParam={{pl}}
+                  @icon="far-trash-alt"
+                  @class="btn-danger"
+                />
               </td>
             </tr>
           {{/each}}
@@ -56,7 +77,9 @@
       {{#if this.filter}}
         <p class="permalink-results__no-result">{{i18n "search.no_results"}}</p>
       {{else}}
-        <p class="permalink-results__no-permalinks">{{i18n "admin.permalink.no_permalinks"}}</p>
+        <p class="permalink-results__no-permalinks">{{i18n
+            "admin.permalink.no_permalinks"
+          }}</p>
       {{/if}}
     {{/if}}
   </div>

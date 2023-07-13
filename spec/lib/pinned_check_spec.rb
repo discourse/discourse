@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'pinned_check'
+require "pinned_check"
 
 RSpec.describe PinnedCheck do
-
   let(:pinned_at) { 12.hours.ago }
   let(:unpinned_topic) { Fabricate.build(:topic) }
   let(:pinned_topic) { Fabricate.build(:topic, pinned_at: pinned_at) }
 
   context "without a topic_user record (either anonymous or never been in the topic)" do
-
     it "returns false if the topic is not pinned" do
       expect(PinnedCheck.pinned?(unpinned_topic)).to eq(false)
     end
@@ -17,7 +15,6 @@ RSpec.describe PinnedCheck do
     it "returns true if the topic is pinned" do
       expect(PinnedCheck.pinned?(unpinned_topic)).to eq(false)
     end
-
   end
 
   context "with a topic_user record" do
@@ -29,7 +26,6 @@ RSpec.describe PinnedCheck do
       it "returns false" do
         expect(PinnedCheck.pinned?(unpinned_topic, topic_user)).to eq(false)
       end
-
     end
 
     describe "pinned topic" do
@@ -49,7 +45,5 @@ RSpec.describe PinnedCheck do
         expect(PinnedCheck.pinned?(pinned_topic, topic_user)).to eq(true)
       end
     end
-
   end
-
 end

@@ -307,3 +307,29 @@ acceptance("User Preferences - Account", function (needs) {
     );
   });
 });
+
+acceptance("User Preferences — Account - Download Archive", function (needs) {
+  const currentUser = "eviltrout";
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.post("/export_csv/export_entity.json", () => {
+      return helper.response({});
+    });
+  });
+
+  test("Can see and trigger download for account data", async function (assert) {
+    await visit(`/u/${currentUser}/preferences/account`);
+
+    assert.ok(query(".btn-request-archive"), "button exists");
+
+    await click(".btn-request-archive");
+    await click("#dialog-holder .btn-primary");
+
+    assert.equal(
+      query(".dialog-body").innerText.trim(),
+      I18n.t("user.download_archive.success")
+    );
+
+    await click("#dialog-holder .btn-primary");
+  });
+});

@@ -1,0 +1,20 @@
+<DSection
+  @bodyClass="navigation-filter"
+  @class="navigation-container"
+  @scrollTop={{false}}
+>
+  <div class="topic-query-filter">
+    <div class="topic-query-filter__input">
+      {{d-icon "filter" class="topic-query-filter__icon"}}
+      <Input
+        class="topic-query-filter__filter-term"
+        @value={{this.queryString}}
+        @enter={{action
+          this.discoveryFilter.updateTopicsListQueryParams
+          this.queryString
+        }}
+        @type="text"
+      />
+    </div>
+  </div>
+</DSection>

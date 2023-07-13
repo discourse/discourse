@@ -9,6 +9,6 @@ class AddStylesheetCache < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :stylesheet_cache, [:target, :digest], unique: true
+    add_index :stylesheet_cache, %i[target digest], unique: true
   end
 end

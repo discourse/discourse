@@ -2,9 +2,9 @@
 
 class FinishInstallationController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :redirect_to_login_if_required
-  layout 'finish_installation'
+  layout "finish_installation"
 
-  before_action :ensure_no_admins, except: ['confirm_email', 'resend_email']
+  before_action :ensure_no_admins, except: %w[confirm_email resend_email]
 
   def index
   end
@@ -61,7 +61,9 @@ class FinishInstallationController < ApplicationController
   end
 
   def find_allowed_emails
-    return [] unless GlobalSetting.respond_to?(:developer_emails) && GlobalSetting.developer_emails.present?
+    unless GlobalSetting.respond_to?(:developer_emails) && GlobalSetting.developer_emails.present?
+      return []
+    end
     GlobalSetting.developer_emails.split(",").map(&:strip)
   end
 

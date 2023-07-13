@@ -15,15 +15,15 @@
 # (email IS NULL) on the Invite model.
 class InviteRedeemer
   attr_reader :invite,
-    :email,
-    :username,
-    :name,
-    :password,
-    :user_custom_fields,
-    :ip_address,
-    :session,
-    :email_token,
-    :redeeming_user
+              :email,
+              :username,
+              :name,
+              :password,
+              :user_custom_fields,
+              :ip_address,
+              :session,
+              :email_token,
+              :redeeming_user
 
   def initialize(
     invite:,
@@ -35,7 +35,8 @@ class InviteRedeemer
     ip_address: nil,
     session: nil,
     email_token: nil,
-    redeeming_user: nil)
+    redeeming_user: nil
+  )
     @invite = invite
     @username = username
     @name = name
@@ -81,8 +82,19 @@ class InviteRedeemer
 
   # This will _never_ be called if there is a redeeming_user being passed
   # in to InviteRedeemer -- see invited_user below.
-  def self.create_user_from_invite(email:, invite:, username: nil, name: nil, password: nil, user_custom_fields: nil, ip_address: nil, session: nil, email_token: nil)
-    if username && UsernameValidator.new(username).valid_format? && User.username_available?(username, email)
+  def self.create_user_from_invite(
+    email:,
+    invite:,
+    username: nil,
+    name: nil,
+    password: nil,
+    user_custom_fields: nil,
+    ip_address: nil,
+    session: nil,
+    email_token: nil
+  )
+    if username && UsernameValidator.new(username).valid_format? &&
+         User.username_available?(username, email)
       available_username = username
     else
       available_username = UserNameSuggester.suggest(email)
@@ -99,12 +111,11 @@ class InviteRedeemer
       active: false,
       trust_level: SiteSetting.default_invitee_trust_level,
       ip_address: ip_address,
-      registration_ip_address: ip_address
+      registration_ip_address: ip_address,
     }
 
     if (!SiteSetting.must_approve_users && SiteSetting.invite_only) ||
-       (SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(user.email))
-
+         (SiteSetting.must_approve_users? && EmailValidator.can_auto_approve_user?(user.email))
       ReviewableUser.set_approved_fields!(user, Discourse.system_user)
     end
 
@@ -115,7 +126,9 @@ class InviteRedeemer
 
       user_fields.each do |f|
         field_val = field_params[f.id.to_s]
-        fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[0...UserField.max_length] unless field_val.blank?
+        fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
+          0...UserField.max_length
+        ] unless field_val.blank?
       end
       user.custom_fields = fields
     end
@@ -143,9 +156,7 @@ class InviteRedeemer
     authenticator.finish
 
     if invite.emailed_status != Invite.emailed_status_types[:not_required] &&
-        email == invite.email &&
-        invite.email_token.present? &&
-        email_token == invite.email_token
+         email == invite.email && invite.email_token.present? && email_token == invite.email_token
       user.activate
     end
 
@@ -159,9 +170,7 @@ class InviteRedeemer
     return false if email.blank?
 
     # Invite scoped to email has already been redeemed by anyone.
-    if invite.is_email_invite? && InvitedUser.exists?(invite_id: invite.id)
-      return false
-    end
+    return false if invite.is_email_invite? && InvitedUser.exists?(invite_id: invite.id)
 
     # The email will be present for either an invite link (where the user provides
     # us the email manually) or for an invite scoped to an email, where we
@@ -171,17 +180,18 @@ class InviteRedeemer
     email_to_check = redeeming_user&.email || email
 
     if invite.email.present? && !invite.email_matches?(email_to_check)
-      raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.not_matching_email'))
+      raise ActiveRecord::RecordNotSaved.new(I18n.t("invite.not_matching_email"))
     end
 
     if invite.domain.present? && !invite.domain_matches?(email_to_check)
-      raise ActiveRecord::RecordNotSaved.new(I18n.t('invite.domain_not_allowed'))
+      raise ActiveRecord::RecordNotSaved.new(I18n.t("invite.domain_not_allowed"))
     end
 
     # Anon user is trying to redeem an invitation, if an existing user already
     # redeemed it then we cannot redeem now.
     redeeming_user ||= User.where(admin: false, staged: false).find_by_email(email)
-    if redeeming_user.present? && InvitedUser.exists?(user_id: redeeming_user.id, invite_id: invite.id)
+    if redeeming_user.present? &&
+         InvitedUser.exists?(user_id: redeeming_user.id, invite_id: invite.id)
       return false
     end
 
@@ -205,17 +215,18 @@ class InviteRedeemer
 
     # If there was no logged in user then we must attempt to create
     # one based on the provided params.
-    invited_user ||= InviteRedeemer.create_user_from_invite(
-      email: email,
-      invite: invite,
-      username: username,
-      name: name,
-      password: password,
-      user_custom_fields: user_custom_fields,
-      ip_address: ip_address,
-      session: session,
-      email_token: email_token
-    )
+    invited_user ||=
+      InviteRedeemer.create_user_from_invite(
+        email: email,
+        invite: invite,
+        username: username,
+        name: name,
+        password: password,
+        user_custom_fields: user_custom_fields,
+        ip_address: ip_address,
+        session: session,
+        email_token: email_token,
+      )
     invited_user.send_welcome_message = false
     @invited_user = invited_user
     @invited_user
@@ -243,11 +254,13 @@ class InviteRedeemer
     # Should not happen because of ensure_email_is_present!, but better to cover bases.
     return if email.blank?
 
-    topic_ids = TopicInvite.joins(:invite)
-      .joins(:topic)
-      .where("topics.archetype = ?", Archetype::private_message)
-      .where("invites.email = ?", email)
-      .pluck(:topic_id)
+    topic_ids =
+      TopicInvite
+        .joins(:invite)
+        .joins(:topic)
+        .where("topics.archetype = ?", Archetype.private_message)
+        .where("invites.email = ?", email)
+        .pluck(:topic_id)
     topic_ids.each do |id|
       if !TopicAllowedUser.exists?(user_id: invited_user.id, topic_id: id)
         TopicAllowedUser.create!(user_id: invited_user.id, topic_id: id)
@@ -277,7 +290,7 @@ class InviteRedeemer
     return if invite.invited_by.blank?
     invite.invited_by.notifications.create!(
       notification_type: Notification.types[:invitee_accepted],
-      data: { display_username: invited_user.username }.to_json
+      data: { display_username: invited_user.username }.to_json,
     )
   end
 
@@ -286,10 +299,10 @@ class InviteRedeemer
     return if email.blank?
 
     Invite
-      .where('invites.max_redemptions_allowed = 1')
+      .where("invites.max_redemptions_allowed = 1")
       .joins("LEFT JOIN invited_users ON invites.id = invited_users.invite_id")
-      .where('invited_users.user_id IS NULL')
-      .where('invites.email = ? AND invites.id != ?', email, invite.id)
+      .where("invited_users.user_id IS NULL")
+      .where("invites.email = ? AND invites.id != ?", email, invite.id)
       .delete_all
   end
 end

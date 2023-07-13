@@ -1,15 +1,21 @@
 <section class="user-secondary-navigation">
-  <MobileNav @class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
+  <MobileNav
+    @class="activity-nav"
+    @desktopClass="action-list activity-list nav-stacked"
+  >
     {{#if this.model.can_see_members}}
       <GroupActivityFilter @filter="posts" @categoryId={{this.category_id}} />
       <GroupActivityFilter @filter="topics" @categoryId={{this.category_id}} />
     {{/if}}
     {{#if this.siteSettings.enable_mentions}}
-      <GroupActivityFilter @filter="mentions" @categoryId={{this.category_id}} />
+      <GroupActivityFilter
+        @filter="mentions"
+        @categoryId={{this.category_id}}
+      />
     {{/if}}
     <PluginOutlet @name="group-activity-bottom" @connectorTagName="li" />
   </MobileNav>
 </section>
-<section class="user-content">
+<section class="user-content" id="user-content">
   {{outlet}}
 </section>

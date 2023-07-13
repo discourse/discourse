@@ -15,32 +15,17 @@ module Reports::SuspiciousLogins
             id: :user_id,
             avatar: :avatar_template,
           },
-          title: I18n.t("reports.suspicious_logins.labels.user")
+          title: I18n.t("reports.suspicious_logins.labels.user"),
         },
-        {
-          property: :client_ip,
-          title: I18n.t("reports.suspicious_logins.labels.client_ip")
-        },
-        {
-          property: :location,
-          title: I18n.t("reports.suspicious_logins.labels.location")
-        },
-        {
-          property: :browser,
-          title: I18n.t("reports.suspicious_logins.labels.browser")
-        },
-        {
-          property: :device,
-          title: I18n.t("reports.suspicious_logins.labels.device")
-        },
-        {
-          property: :os,
-          title: I18n.t("reports.suspicious_logins.labels.os")
-        },
+        { property: :client_ip, title: I18n.t("reports.suspicious_logins.labels.client_ip") },
+        { property: :location, title: I18n.t("reports.suspicious_logins.labels.location") },
+        { property: :browser, title: I18n.t("reports.suspicious_logins.labels.browser") },
+        { property: :device, title: I18n.t("reports.suspicious_logins.labels.device") },
+        { property: :os, title: I18n.t("reports.suspicious_logins.labels.os") },
         {
           type: :date,
           property: :login_time,
-          title: I18n.t("reports.suspicious_logins.labels.login_time")
+          title: I18n.t("reports.suspicious_logins.labels.login_time"),
         },
       ]
 
@@ -56,26 +41,28 @@ module Reports::SuspiciousLogins
         ORDER BY t.created_at DESC
       SQL
 
-      DB.query(sql, start_date: report.start_date, end_date: report.end_date).each do |row|
-        data = {}
+      DB
+        .query(sql, start_date: report.start_date, end_date: report.end_date)
+        .each do |row|
+          data = {}
 
-        ipinfo = DiscourseIpInfo.get(row.client_ip)
-        browser = BrowserDetection.browser(row.user_agent)
-        device = BrowserDetection.device(row.user_agent)
-        os = BrowserDetection.os(row.user_agent)
+          ipinfo = DiscourseIpInfo.get(row.client_ip)
+          browser = BrowserDetection.browser(row.user_agent)
+          device = BrowserDetection.device(row.user_agent)
+          os = BrowserDetection.os(row.user_agent)
 
-        data[:username] = row.username
-        data[:user_id] = row.user_id
-        data[:avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
-        data[:client_ip] = row.client_ip.to_s
-        data[:location] = ipinfo[:location]
-        data[:browser] = I18n.t("user_auth_tokens.browser.#{browser}")
-        data[:device] = I18n.t("user_auth_tokens.device.#{device}")
-        data[:os] = I18n.t("user_auth_tokens.os.#{os}")
-        data[:login_time] = row.login_time
+          data[:username] = row.username
+          data[:user_id] = row.user_id
+          data[:avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+          data[:client_ip] = row.client_ip.to_s
+          data[:location] = ipinfo[:location]
+          data[:browser] = I18n.t("user_auth_tokens.browser.#{browser}")
+          data[:device] = I18n.t("user_auth_tokens.device.#{device}")
+          data[:os] = I18n.t("user_auth_tokens.os.#{os}")
+          data[:login_time] = row.login_time
 
-        report.data << data
-      end
+          report.data << data
+        end
     end
   end
 end

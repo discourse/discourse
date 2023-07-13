@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require_relative 'database'
-require 'json'
-require 'yaml'
+require_relative "database"
+require "json"
+require "yaml"
 
 module ImportScripts::Mbox
   class Indexer
@@ -15,7 +15,7 @@ module ImportScripts::Mbox
     end
 
     def execute
-      directories = Dir.glob(File.join(@settings.data_dir, '*'))
+      directories = Dir.glob(File.join(@settings.data_dir, "*"))
       directories.select! { |f| File.directory?(f) }
       directories.sort!
 
@@ -25,7 +25,7 @@ module ImportScripts::Mbox
         index_emails(directory, category[:name])
       end
 
-      puts '', 'indexing replies and users'
+      puts "", "indexing replies and users"
       if @settings.group_messages_by_subject
         @database.sort_emails_by_subject
         @database.update_in_reply_to_by_email_subject
@@ -39,24 +39,24 @@ module ImportScripts::Mbox
 
     private
 
-    METADATA_FILENAME = 'metadata.yml'
-    IGNORED_FILE_EXTENSIONS = ['.dbindex', '.dbnames', '.digest', '.subjects', '.yml']
+    METADATA_FILENAME = "metadata.yml"
+    IGNORED_FILE_EXTENSIONS = %w[.dbindex .dbnames .digest .subjects .yml]
 
     def index_category(directory)
       metadata_file = File.join(directory, METADATA_FILENAME)
 
       if File.exist?(metadata_file)
         # workaround for YML files that contain classname in file header
-        yaml = File.read(metadata_file).sub(/^--- !.*$/, '---')
+        yaml = File.read(metadata_file).sub(/^--- !.*$/, "---")
         metadata = YAML.safe_load(yaml)
       else
         metadata = {}
       end
 
       category = {
-        name: metadata['name'].presence || File.basename(directory),
-        description: metadata['description'],
-        parent_category_id: metadata['parent_category_id'].presence,
+        name: metadata["name"].presence || File.basename(directory),
+        description: metadata["description"],
+        parent_category_id: metadata["parent_category_id"].presence,
       }
 
       @database.insert_category(category)
@@ -75,7 +75,7 @@ module ImportScripts::Mbox
             # Detect cases like this and attempt to get actual sender from other headers:
             #    From: Jane Smith via ListName <ListName@lists.example.com>
 
-            if receiver.mail['X-Mailman-Version'] && from_display_name =~ /\bvia \S+$/i
+            if receiver.mail["X-Mailman-Version"] && from_display_name =~ /\bvia \S+$/i
               email_from_from_line = opts[:from_line].scan(/From (\S+)/).flatten.first
               a = Mail::Address.new(email_from_from_line)
               from_email = a.address
@@ -88,7 +88,7 @@ module ImportScripts::Mbox
             end
           end
 
-          from_email = from_email.sub(/^(.*)=/, '') if @settings.elide_equals_in_addresses
+          from_email = from_email.sub(/^(.*)=/, "") if @settings.elide_equals_in_addresses
 
           body, elided, format = receiver.select_body
           reply_message_ids = extract_reply_message_ids(parsed_email)
@@ -109,7 +109,7 @@ module ImportScripts::Mbox
             filename: File.basename(filename),
             first_line_number: opts[:first_line_number],
             last_line_number: opts[:last_line_number],
-            index_duration: (monotonic_time - opts[:start_time]).round(4)
+            index_duration: (monotonic_time - opts[:start_time]).round(4),
           }
 
           @database.transaction do |db|
@@ -132,8 +132,8 @@ module ImportScripts::Mbox
     def imported_file_checksums(category_name)
       rows = @database.fetch_imported_files(category_name)
       rows.each_with_object({}) do |row, hash|
-        filename = File.basename(row['filename'])
-        hash[filename] = row['checksum']
+        filename = File.basename(row["filename"])
+        hash[filename] = row["checksum"]
       end
     end
 
@@ -171,14 +171,14 @@ module ImportScripts::Mbox
       imported_file = {
         category: category_name,
         filename: File.basename(filename),
-        checksum: calc_checksum(filename)
+        checksum: calc_checksum(filename),
       }
 
       @database.insert_imported_file(imported_file)
     end
 
     def each_mail(filename)
-      raw_message = +''
+      raw_message = +""
       first_line_number = 1
       last_line_number = 0
 
@@ -188,7 +188,7 @@ module ImportScripts::Mbox
         if line.scrub =~ @split_regex
           if last_line_number > 0
             yield raw_message, first_line_number, last_line_number, from_line
-            raw_message = +''
+            raw_message = +""
             first_line_number = last_line_number + 1
           end
 
@@ -204,12 +204,10 @@ module ImportScripts::Mbox
     end
 
     def each_line(filename)
-      raw_file = File.open(filename, 'r')
-      text_file = filename.end_with?('.gz') ? Zlib::GzipReader.new(raw_file) : raw_file
+      raw_file = File.open(filename, "r")
+      text_file = filename.end_with?(".gz") ? Zlib::GzipReader.new(raw_file) : raw_file
 
-      text_file.each_line do |line|
-        yield line
-      end
+      text_file.each_line { |line| yield line }
     ensure
       raw_file.close if raw_file
     end
@@ -220,7 +218,9 @@ module ImportScripts::Mbox
     end
 
     def read_mail_from_string(raw_message)
-      Email::Receiver.new(raw_message, convert_plaintext: true, skip_trimming: false) unless raw_message.blank?
+      unless raw_message.blank?
+        Email::Receiver.new(raw_message, convert_plaintext: true, skip_trimming: false)
+      end
     end
 
     def extract_reply_message_ids(mail)
@@ -229,14 +229,13 @@ module ImportScripts::Mbox
 
     def extract_subject(receiver, list_name)
       subject = receiver.subject
-      subject.blank? ? nil : subject.strip.gsub(/\t+/, ' ')
+      subject.blank? ? nil : subject.strip.gsub(/\t+/, " ")
     end
 
     def ignored_file?(path, checksums)
       filename = File.basename(path)
 
-      filename.start_with?('.') ||
-        filename == METADATA_FILENAME ||
+      filename.start_with?(".") || filename == METADATA_FILENAME ||
         IGNORED_FILE_EXTENSIONS.include?(File.extname(filename)) ||
         fully_indexed?(path, filename, checksums)
     end

@@ -13,13 +13,17 @@ RSpec.describe UserBookmarkList do
     user_bookmark
   end
 
+  after { DiscoursePluginRegistry.reset! }
+
   let(:post_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post)) }
   let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic)) }
   let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user)) }
 
   it "returns all types of bookmarks" do
     list.load
-    expect(list.bookmarks.map(&:id)).to match_array([post_bookmark.id, topic_bookmark.id, user_bookmark.id])
+    expect(list.bookmarks.map(&:id)).to match_array(
+      [post_bookmark.id, topic_bookmark.id, user_bookmark.id],
+    )
     expect(list.has_more).to eq(false)
   end
 

@@ -28,6 +28,7 @@ registerUnbound("format-date", function (val, params) {
         format,
         title,
         leaveAgo,
+        prefix: params.prefix,
       })
     );
   }

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require_relative 'shared_context_for_backup_restore'
+require_relative "shared_context_for_backup_restore"
 
 RSpec.describe BackupRestore::MetaDataHandler do
   include_context "with shared stuff"
 
-  let!(:backup_filename) { 'discourse-2019-11-18-143242-v20191108000414.tar.gz' }
+  let!(:backup_filename) { "discourse-2019-11-18-143242-v20191108000414.tar.gz" }
 
   def with_metadata_file(content)
     Dir.mktmpdir do |directory|
@@ -27,8 +27,7 @@ RSpec.describe BackupRestore::MetaDataHandler do
       metadata = '{"source":"discourse","version":20160329101122}'
 
       with_metadata_file(metadata) do |dir|
-        expect(validate_metadata(backup_filename, dir))
-          .to include(version: 20160329101122)
+        expect(validate_metadata(backup_filename, dir)).to include(version: 20_160_329_101_122)
       end
     end
 
@@ -36,15 +35,17 @@ RSpec.describe BackupRestore::MetaDataHandler do
       corrupt_metadata = '{"version":20160329101122'
 
       with_metadata_file(corrupt_metadata) do |dir|
-        expect { validate_metadata(backup_filename, dir) }
-          .to raise_error(BackupRestore::MetaDataError)
+        expect { validate_metadata(backup_filename, dir) }.to raise_error(
+          BackupRestore::MetaDataError,
+        )
       end
     end
 
     it "raises an exception when the metadata file is empty" do
-      with_metadata_file('') do |dir|
-        expect { validate_metadata(backup_filename, dir) }
-          .to raise_error(BackupRestore::MetaDataError)
+      with_metadata_file("") do |dir|
+        expect { validate_metadata(backup_filename, dir) }.to raise_error(
+          BackupRestore::MetaDataError,
+        )
       end
     end
 
@@ -52,8 +53,9 @@ RSpec.describe BackupRestore::MetaDataHandler do
       metadata = '{"source":"discourse","version":"1abcdefghijklm"}'
 
       with_metadata_file(metadata) do |dir|
-        expect { validate_metadata(backup_filename, dir) }
-          .to raise_error(BackupRestore::MetaDataError)
+        expect { validate_metadata(backup_filename, dir) }.to raise_error(
+          BackupRestore::MetaDataError,
+        )
       end
     end
 
@@ -61,8 +63,9 @@ RSpec.describe BackupRestore::MetaDataHandler do
       metadata = '{"source":"discourse","version":""}'
 
       with_metadata_file(metadata) do |dir|
-        expect { validate_metadata(backup_filename, dir) }
-          .to raise_error(BackupRestore::MetaDataError)
+        expect { validate_metadata(backup_filename, dir) }.to raise_error(
+          BackupRestore::MetaDataError,
+        )
       end
     end
   end
@@ -70,36 +73,32 @@ RSpec.describe BackupRestore::MetaDataHandler do
   describe "filename" do
     it "extracts metadata from filename when metadata file does not exist" do
       with_metadata_file(nil) do |dir|
-        expect(validate_metadata(backup_filename, dir))
-          .to include(version: 20191108000414)
+        expect(validate_metadata(backup_filename, dir)).to include(version: 20_191_108_000_414)
       end
     end
 
     it "raises an exception when the filename contains no version number" do
-      filename = 'discourse-2019-11-18-143242.tar.gz'
+      filename = "discourse-2019-11-18-143242.tar.gz"
 
-      expect { validate_metadata(filename, nil) }
-        .to raise_error(BackupRestore::MetaDataError)
+      expect { validate_metadata(filename, nil) }.to raise_error(BackupRestore::MetaDataError)
     end
 
     it "raises an exception when the filename contains an invalid version number" do
-      filename = 'discourse-2019-11-18-143242-v123456789.tar.gz'
-      expect { validate_metadata(filename, nil) }
-        .to raise_error(BackupRestore::MetaDataError)
+      filename = "discourse-2019-11-18-143242-v123456789.tar.gz"
+      expect { validate_metadata(filename, nil) }.to raise_error(BackupRestore::MetaDataError)
 
-      filename = 'discourse-2019-11-18-143242-v1abcdefghijklm.tar.gz'
-      expect { validate_metadata(filename, nil) }
-        .to raise_error(BackupRestore::MetaDataError)
+      filename = "discourse-2019-11-18-143242-v1abcdefghijklm.tar.gz"
+      expect { validate_metadata(filename, nil) }.to raise_error(BackupRestore::MetaDataError)
     end
   end
 
   it "raises an exception when the backup's version is newer than the current version" do
-    new_backup_filename = 'discourse-2019-11-18-143242-v20191113193141.sql.gz'
+    new_backup_filename = "discourse-2019-11-18-143242-v20191113193141.sql.gz"
 
-    BackupRestore.expects(:current_version)
-      .returns(20191025005204).once
+    BackupRestore.expects(:current_version).returns(20_191_025_005_204).once
 
-    expect { validate_metadata(new_backup_filename, nil) }
-      .to raise_error(BackupRestore::MigrationRequiredError)
+    expect { validate_metadata(new_backup_filename, nil) }.to raise_error(
+      BackupRestore::MigrationRequiredError,
+    )
   end
 end

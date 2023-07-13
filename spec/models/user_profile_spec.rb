@@ -22,7 +22,9 @@ RSpec.describe UserProfile do
         end
 
         context "when watched words are of type 'Censor'" do
-          let!(:censored_word) { Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor]) }
+          let!(:censored_word) do
+            Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
+          end
           let(:location) { "censored location" }
 
           it "censors the words upon saving" do
@@ -33,7 +35,12 @@ RSpec.describe UserProfile do
         context "when watched words are of type 'Replace'" do
           let(:location) { "word to replace" }
           let!(:replace_word) do
-            Fabricate(:watched_word, word: "to replace", replacement: "replaced", action: WatchedWord.actions[:replace])
+            Fabricate(
+              :watched_word,
+              word: "to replace",
+              replacement: "replaced",
+              action: WatchedWord.actions[:replace],
+            )
           end
 
           it "replaces the words upon saving" do
@@ -47,7 +54,9 @@ RSpec.describe UserProfile do
 
         it "is not valid" do
           expect(profile.valid?).to eq(false)
-          expect(profile.errors.full_messages).to include(/Location is too long \(maximum is 3000 characters\)/)
+          expect(profile.errors.full_messages).to include(
+            /Location is too long \(maximum is 3000 characters\)/,
+          )
         end
       end
 
@@ -77,7 +86,9 @@ RSpec.describe UserProfile do
 
         it "is not valid" do
           expect(profile.valid?).to eq(false)
-          expect(profile.errors.full_messages).to include(/About Me is too long \(maximum is 3000 characters\)/)
+          expect(profile.errors.full_messages).to include(
+            /About Me is too long \(maximum is 3000 characters\)/,
+          )
         end
       end
 
@@ -87,13 +98,13 @@ RSpec.describe UserProfile do
     end
   end
 
-  it 'is created automatically when a user is created' do
+  it "is created automatically when a user is created" do
     user = Fabricate(:evil_trout)
     expect(user.user_profile).to be_present
   end
 
-  describe 'rebaking' do
-    it 'correctly rebakes bio' do
+  describe "rebaking" do
+    it "correctly rebakes bio" do
       user_profile = Fabricate(:evil_trout).user_profile
       user_profile.update_columns(bio_raw: "test", bio_cooked: "broken", bio_cooked_version: nil)
 
@@ -106,14 +117,14 @@ RSpec.describe UserProfile do
     end
   end
 
-  describe 'new' do
+  describe "new" do
     let(:user_profile) { UserProfile.new(bio_raw: "test") }
 
-    it 'is not valid without user' do
+    it "is not valid without user" do
       expect(user_profile.valid?).to be false
     end
 
-    it 'is is valid with user' do
+    it "is is valid with user" do
       user_profile.user = Fabricate.build(:user)
       expect(user_profile.valid?).to be true
     end
@@ -144,7 +155,7 @@ RSpec.describe UserProfile do
       it "doesn't blow up with an invalid URI" do
         SiteSetting.allowed_user_website_domains = "discourse.org"
 
-        user_profile.website = 'user - https://forum.example.com/user'
+        user_profile.website = "user - https://forum.example.com/user"
         expect { user_profile.save! }.to raise_error(ActiveRecord::RecordInvalid)
       end
 
@@ -154,25 +165,25 @@ RSpec.describe UserProfile do
       end
     end
 
-    describe 'after save' do
+    describe "after save" do
       fab!(:user) { Fabricate(:user) }
 
       before do
-        user.user_profile.bio_raw = 'my bio'
+        user.user_profile.bio_raw = "my bio"
         user.user_profile.save
       end
 
-      it 'has cooked bio' do
+      it "has cooked bio" do
         expect(user.user_profile.bio_cooked).to be_present
       end
 
-      it 'has bio summary' do
+      it "has bio summary" do
         expect(user.user_profile.bio_summary).to be_present
       end
     end
   end
 
-  describe 'changing bio' do
+  describe "changing bio" do
     fab!(:user) { Fabricate(:user) }
 
     before do
@@ -181,36 +192,35 @@ RSpec.describe UserProfile do
       user.user_profile.reload
     end
 
-    it 'should markdown the raw_bio and put it in cooked_bio' do
+    it "should markdown the raw_bio and put it in cooked_bio" do
       expect(user.user_profile.bio_cooked).to eq("<p><strong>turtle power!</strong></p>")
     end
   end
 
-  describe 'bio excerpt emojis' do
+  describe "bio excerpt emojis" do
     fab!(:user) { Fabricate(:user) }
     fab!(:upload) { Fabricate(:upload) }
 
     before do
-      CustomEmoji.create!(name: 'test', upload: upload)
+      CustomEmoji.create!(name: "test", upload: upload)
       Emoji.clear_cache
 
-      user.user_profile.update!(
-        bio_raw: "hello :test: :woman_scientist:t5: 🤔"
-      )
+      user.user_profile.update!(bio_raw: "hello :test: :woman_scientist:t5: 🤔")
     end
 
-    it 'supports emoji images' do
-      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq("hello <img src=\"#{upload.url}?v=#{Emoji::EMOJI_VERSION}\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/thinking.png?v=#{Emoji::EMOJI_VERSION}\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\" loading=\"lazy\" width=\"20\" height=\"20\">")
+    it "supports emoji images" do
+      expect(user.user_profile.bio_excerpt(500, keep_emoji_images: true)).to eq(
+        "hello <img src=\"#{upload.url}?v=#{Emoji::EMOJI_VERSION}\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/woman_scientist/5.png?v=#{Emoji::EMOJI_VERSION}\" title=\":woman_scientist:t5:\" class=\"emoji\" alt=\":woman_scientist:t5:\" loading=\"lazy\" width=\"20\" height=\"20\"> <img src=\"/images/emoji/twitter/thinking.png?v=#{Emoji::EMOJI_VERSION}\" title=\":thinking:\" class=\"emoji\" alt=\":thinking:\" loading=\"lazy\" width=\"20\" height=\"20\">",
+      )
     end
   end
 
-  describe 'bio link stripping' do
-
-    it 'returns an empty string with no bio' do
+  describe "bio link stripping" do
+    it "returns an empty string with no bio" do
       expect(Fabricate.build(:user_profile).bio_excerpt).to be_blank
     end
 
-    context 'with a user that has a link in their bio' do
+    context "with a user that has a link in their bio" do
       let(:user_profile) { Fabricate.build(:user_profile, bio_raw: "I love http://discourse.org") }
       let(:user) do
         user = Fabricate.build(:user, user_profile: user_profile)
@@ -220,80 +230,105 @@ RSpec.describe UserProfile do
 
       fab!(:created_user) do
         user = Fabricate(:user)
-        user.user_profile.bio_raw = 'I love http://discourse.org'
+        user.user_profile.bio_raw = "I love http://discourse.org"
         user.user_profile.save!
         user
       end
 
-      it 'includes the link as nofollow if the user is not new' do
+      it "includes the link as nofollow if the user is not new" do
         user.user_profile.send(:cook)
-        expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>")
-        expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>")
+        expect(user_profile.bio_excerpt).to match_html(
+          "I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>",
+        )
+        expect(user_profile.bio_processed).to match_html(
+          "<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>",
+        )
       end
 
-      it 'removes the link if the user is new' do
+      it "removes the link if the user is new" do
         user.trust_level = TrustLevel[0]
         user_profile.send(:cook)
         expect(user_profile.bio_excerpt).to match_html("I love http://discourse.org")
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
       end
 
-      it 'removes the link if the user is suspended' do
+      it "removes the link if the user is suspended" do
         user.suspended_till = 1.month.from_now
         user_profile.send(:cook)
         expect(user_profile.bio_excerpt).to match_html("I love http://discourse.org")
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
       end
 
-      context 'when tl3_links_no_follow is false' do
+      context "when tl3_links_no_follow is false" do
         before { SiteSetting.tl3_links_no_follow = false }
 
-        it 'includes the link without nofollow if the user is trust level 3 or higher' do
+        it "includes the link without nofollow if the user is trust level 3 or higher" do
           user.trust_level = TrustLevel[3]
           user_profile.send(:cook)
-          expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org'>http://discourse.org</a>")
-          expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>")
+          expect(user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org'>http://discourse.org</a>",
+          )
+          expect(user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>",
+          )
         end
 
-        it 'removes nofollow from links in bio when trust level is increased' do
+        it "removes nofollow from links in bio when trust level is increased" do
           created_user.change_trust_level!(TrustLevel[3])
-          expect(created_user.user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org'>http://discourse.org</a>")
-          expect(created_user.user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>")
+          expect(created_user.user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org'>http://discourse.org</a>",
+          )
+          expect(created_user.user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>",
+          )
         end
 
-        it 'adds nofollow to links in bio when trust level is decreased' do
+        it "adds nofollow to links in bio when trust level is decreased" do
           created_user.trust_level = TrustLevel[3]
           created_user.save
           created_user.reload
           created_user.change_trust_level!(TrustLevel[2])
-          expect(created_user.user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>")
-          expect(created_user.user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>")
+          expect(created_user.user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>",
+          )
+          expect(created_user.user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>",
+          )
         end
       end
 
-      context 'when tl3_links_no_follow is true' do
+      context "when tl3_links_no_follow is true" do
         before { SiteSetting.tl3_links_no_follow = true }
 
-        it 'includes the link with nofollow if the user is trust level 3 or higher' do
+        it "includes the link with nofollow if the user is trust level 3 or higher" do
           user.trust_level = TrustLevel[3]
           user_profile.send(:cook)
-          expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>")
-          expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>")
+          expect(user_profile.bio_excerpt).to match_html(
+            "I love <a href='http://discourse.org' rel='noopener nofollow ugc'>http://discourse.org</a>",
+          )
+          expect(user_profile.bio_processed).to match_html(
+            "<p>I love <a href=\"http://discourse.org\" rel=\"noopener nofollow ugc\">http://discourse.org</a></p>",
+          )
         end
       end
     end
   end
 
-  describe '.import_url_for_user' do
+  describe ".import_url_for_user" do
     fab!(:user) { Fabricate(:user) }
 
     before do
-      stub_request(:any, "thisfakesomething.something.com")
-        .to_return(body: "abc", status: 404, headers: { 'Content-Length' => 3 })
+      stub_request(:any, "thisfakesomething.something.com").to_return(
+        body: "abc",
+        status: 404,
+        headers: {
+          "Content-Length" => 3,
+        },
+      )
     end
 
-    describe 'when profile_background_url returns an invalid status code' do
-      it 'should not do anything' do
+    describe "when profile_background_url returns an invalid status code" do
+      it "should not do anything" do
         url = "http://thisfakesomething.something.com/"
 
         UserProfile.import_url_for_user(url, user, is_card_background: false)
@@ -304,8 +339,8 @@ RSpec.describe UserProfile do
       end
     end
 
-    describe 'when card_background_url returns an invalid status code' do
-      it 'should not do anything' do
+    describe "when card_background_url returns an invalid status code" do
+      it "should not do anything" do
         url = "http://thisfakesomething.something.com/"
 
         UserProfile.import_url_for_user(url, user, is_card_background: true)

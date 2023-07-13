@@ -3,11 +3,10 @@
 # convert huge XML dump to mysql friendly import
 #
 
-require 'ox'
-require 'set'
+require "ox"
+require "set"
 
 class Saxy < Ox::Sax
-
   def initialize
     @stack = []
   end
@@ -32,7 +31,6 @@ class Saxy < Ox::Sax
   def cdata(val)
     @stack[-1][:text] = val
   end
-
 end
 
 class Convert < Saxy
@@ -59,10 +57,13 @@ class Convert < Saxy
   end
 
   def output_table_definition(data)
-    cols = data[:cols].map do |col|
-      attrs = col[:attrs]
-      "#{attrs[:Field]} #{attrs[:Type]}"
-    end.join(", ")
+    cols =
+      data[:cols]
+        .map do |col|
+          attrs = col[:attrs]
+          "#{attrs[:Field]} #{attrs[:Type]}"
+        end
+        .join(", ")
     puts "CREATE TABLE #{data[:attrs][:name]} (#{cols});"
   end
 
@@ -77,4 +78,4 @@ class Convert < Saxy
   end
 end
 
-Ox.sax_parse(Convert.new(skip_data: ['metrics2', 'user_log']), File.open(ARGV[0]))
+Ox.sax_parse(Convert.new(skip_data: %w[metrics2 user_log]), File.open(ARGV[0]))

@@ -9,13 +9,15 @@ class UnicodeUsernameAllowlistValidator
     @error_message = nil
     return true if value.blank?
 
-    if value.match?(/^\/.*\/[imxo]*$/)
-      @error_message = I18n.t("site_settings.errors.allowed_unicode_usernames.leading_trailing_slash")
+    if value.match?(%r{\A/.*/[imxo]*\z})
+      @error_message =
+        I18n.t("site_settings.errors.allowed_unicode_usernames.leading_trailing_slash")
     else
       begin
         Regexp.new(value)
       rescue RegexpError => e
-        @error_message = I18n.t("site_settings.errors.allowed_unicode_usernames.regex_invalid", error: e.message)
+        @error_message =
+          I18n.t("site_settings.errors.allowed_unicode_usernames.regex_invalid", error: e.message)
       end
     end
 

@@ -7,11 +7,15 @@ class UserArchivedMessage < ActiveRecord::Base
   def self.move_to_inbox!(user_id, topic)
     topic_id = topic.id
 
-    return if (TopicUser.where(
-      user_id: user_id,
-      topic_id: topic_id,
-      notification_level: TopicUser.notification_levels[:muted]
-    ).exists?)
+    if (
+         TopicUser.where(
+           user_id: user_id,
+           topic_id: topic_id,
+           notification_level: TopicUser.notification_levels[:muted],
+         ).exists?
+       )
+      return
+    end
 
     UserArchivedMessage.where(user_id: user_id, topic_id: topic_id).destroy_all
     trigger(:move_to_inbox, user_id, topic_id)
@@ -29,9 +33,7 @@ class UserArchivedMessage < ActiveRecord::Base
   def self.trigger(event, user_id, topic_id)
     user = User.find_by(id: user_id)
     topic = Topic.find_by(id: topic_id)
-    if user && topic
-      DiscourseEvent.trigger(event, user: user, topic: topic)
-    end
+    DiscourseEvent.trigger(event, user: user, topic: topic) if user && topic
   end
 end
 

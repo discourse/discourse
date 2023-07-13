@@ -1,39 +1,40 @@
 # frozen_string_literal: true
 
 RSpec.describe PostJobsEnqueuer do
+  subject(:enqueuer) { described_class.new(post, topic, new_topic, opts) }
+
   let!(:post) { Fabricate(:post, topic: topic) }
   let!(:topic) { Fabricate(:topic) }
   let(:new_topic) { false }
   let(:opts) { { post_alert_options: {} } }
 
-  subject { described_class.new(post, topic, new_topic, opts) }
-
   context "for regular topics" do
     it "enqueues the :post_alert job" do
-      expect_enqueued_with(job: :post_alert, args: {
-        post_id: post.id,
-        new_record: true,
-        options: opts[:post_alert_options]
-      }) do
-        subject.enqueue_jobs
-      end
+      expect_enqueued_with(
+        job: :post_alert,
+        args: {
+          post_id: post.id,
+          new_record: true,
+          options: opts[:post_alert_options],
+        },
+      ) { enqueuer.enqueue_jobs }
     end
 
     it "enqueues the :notify_mailing_list_subscribers job" do
       expect_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post.id }) do
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
 
     it "enqueues the :post_update_topic_tracking_state job" do
       expect_enqueued_with(job: :post_update_topic_tracking_state, args: { post_id: post.id }) do
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
 
     it "enqueues the :feature_topic_users job" do
       expect_enqueued_with(job: :feature_topic_users, args: { topic_id: topic.id }) do
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
 
@@ -43,7 +44,7 @@ RSpec.describe PostJobsEnqueuer do
       it "calls the correct topic tracking state class to publish_new" do
         TopicTrackingState.expects(:publish_new).with(topic)
         PrivateMessageTopicTrackingState.expects(:publish_new).never
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
   end
@@ -53,19 +54,19 @@ RSpec.describe PostJobsEnqueuer do
 
     it "does not enqueue the :notify_mailing_list_subscribers job" do
       expect_not_enqueued_with(job: :notify_mailing_list_subscribers, args: { post_id: post.id }) do
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
 
     it "enqueues the :post_update_topic_tracking_state job" do
       expect_enqueued_with(job: :post_update_topic_tracking_state, args: { post_id: post.id }) do
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
 
     it "enqueues the :feature_topic_users job" do
       expect_enqueued_with(job: :feature_topic_users, args: { topic_id: topic.id }) do
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
 
@@ -75,7 +76,7 @@ RSpec.describe PostJobsEnqueuer do
       it "calls the correct topic tracking state class to publish_new" do
         TopicTrackingState.expects(:publish_new).never
         PrivateMessageTopicTrackingState.expects(:publish_new).with(topic)
-        subject.enqueue_jobs
+        enqueuer.enqueue_jobs
       end
     end
 
@@ -93,9 +94,12 @@ RSpec.describe PostJobsEnqueuer do
         end
 
         it "does not enqueue the :make_embedded_topic_visible job" do
-          expect_not_enqueued_with(job: :make_embedded_topic_visible, args: { topic_id: topic.id }) do
-            subject.enqueue_jobs
-          end
+          expect_not_enqueued_with(
+            job: :make_embedded_topic_visible,
+            args: {
+              topic_id: topic.id,
+            },
+          ) { enqueuer.enqueue_jobs }
         end
       end
     end

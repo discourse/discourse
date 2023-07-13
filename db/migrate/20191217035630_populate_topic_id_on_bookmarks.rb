@@ -2,9 +2,10 @@
 
 class PopulateTopicIdOnBookmarks < ActiveRecord::Migration[6.0]
   def up
-    Bookmark.where(topic_id: nil).includes(:post).find_each do |bookmark|
-      bookmark.update_column(:topic_id, bookmark.post.topic_id)
-    end
+    Bookmark
+      .where(topic_id: nil)
+      .includes(:post)
+      .find_each { |bookmark| bookmark.update_column(:topic_id, bookmark.post.topic_id) }
   end
 
   def down

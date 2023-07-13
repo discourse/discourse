@@ -3,16 +3,7 @@
 module UserAuthTokensMixin
   extend ActiveSupport::Concern
 
-  included do
-    attributes :id,
-               :client_ip,
-               :location,
-               :browser,
-               :device,
-               :os,
-               :icon,
-               :created_at
-  end
+  included { attributes :id, :client_ip, :location, :browser, :device, :os, :icon, :created_at }
 
   def client_ip
     object.client_ip.to_s
@@ -20,7 +11,7 @@ module UserAuthTokensMixin
 
   def location
     ipinfo = DiscourseIpInfo.get(client_ip, locale: I18n.locale)
-    ipinfo[:location].presence || I18n.t('staff_action_logs.unknown')
+    ipinfo[:location].presence || I18n.t("staff_action_logs.unknown")
   end
 
   def browser
@@ -41,17 +32,17 @@ module UserAuthTokensMixin
   def icon
     case BrowserDetection.os(object.user_agent)
     when :android
-      'fab-android'
+      "fab-android"
     when :chromeos
-      'fab-chrome'
+      "fab-chrome"
     when :macos, :ios
-      'fab-apple'
+      "fab-apple"
     when :linux
-      'fab-linux'
+      "fab-linux"
     when :windows
-      'fab-windows'
+      "fab-windows"
     else
-      'question'
+      "question"
     end
   end
 end

@@ -11,26 +11,50 @@
   </div>
 </div>
 
-<PluginOutlet @name="tags-below-title" @connectorTagName="div" @tagName="div" @args={{hash model=this.model}} />
+<div>
+  <PluginOutlet
+    @name="tags-below-title"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</div>
 
 <div class="tag-sort-options">
   {{i18n "tagging.sort_by"}}
-  <span class="tag-sort-count {{if this.sortedByCount "active"}}"><a href {{on "click" this.sortByCount}}>{{i18n "tagging.sort_by_count"}}</a></span>
-  <span class="tag-sort-name {{if this.sortedByName "active"}}"><a href {{on "click" this.sortById}}>{{i18n "tagging.sort_by_name"}}</a></span>
+  <span class="tag-sort-count {{if this.sortedByCount 'active'}}"><a
+      href
+      {{on "click" this.sortByCount}}
+    >{{i18n "tagging.sort_by_count"}}</a></span>
+  <span class="tag-sort-name {{if this.sortedByName 'active'}}"><a
+      href
+      {{on "click" this.sortById}}
+    >{{i18n "tagging.sort_by_name"}}</a></span>
 </div>
 
-<hr>
+<hr />
 
 <div class="all-tag-lists">
   {{#each this.model.extras.categories as |category|}}
-    <TagList @tags={{category.tags}} @sortProperties={{this.sortProperties}} @categoryId={{category.id}} />
+    <TagList
+      @tags={{category.tags}}
+      @sortProperties={{this.sortProperties}}
+      @categoryId={{category.id}}
+    />
   {{/each}}
 
   {{#each this.model.extras.tag_groups as |tagGroup|}}
-    <TagList @tags={{tagGroup.tags}} @sortProperties={{this.sortProperties}} @tagGroupName={{tagGroup.name}} />
+    <TagList
+      @tags={{tagGroup.tags}}
+      @sortProperties={{this.sortProperties}}
+      @tagGroupName={{tagGroup.name}}
+    />
   {{/each}}
 
   {{#if this.model}}
-    <TagList @tags={{this.model}} @sortProperties={{this.sortProperties}} @titleKey={{this.otherTagsTitleKey}} />
+    <TagList
+      @tags={{this.model}}
+      @sortProperties={{this.sortProperties}}
+      @titleKey={{this.otherTagsTitleKey}}
+    />
   {{/if}}
 </div>

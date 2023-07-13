@@ -7,8 +7,8 @@ class PostAction < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
   belongs_to :post_action_type
-  belongs_to :related_post, class_name: 'Post'
-  belongs_to :target_user, class_name: 'User'
+  belongs_to :related_post, class_name: "Post"
+  belongs_to :target_user, class_name: "User"
 
   rate_limit :post_action_rate_limiter
 
@@ -55,9 +55,9 @@ class PostAction < ActiveRecord::Base
       ORDER BY p.topic_id, p.post_number
     SQL
 
-    builder.query(user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids).each do |row|
-      (map[row.topic_id] ||= []) << row.post_number
-    end
+    builder
+      .query(user_id: user.id, post_action_type_id: post_action_type_id, topic_ids: topic_ids)
+      .each { |row| (map[row.topic_id] ||= []) << row.post_number }
 
     map
   end
@@ -65,18 +65,24 @@ class PostAction < ActiveRecord::Base
   def self.count_per_day_for_type(post_action_type, opts = nil)
     opts ||= {}
     result = unscoped.where(post_action_type_id: post_action_type)
-    result = result.where('post_actions.created_at >= ?', opts[:start_date] || (opts[:since_days_ago] || 30).days.ago)
-    result = result.where('post_actions.created_at <= ?', opts[:end_date]) if opts[:end_date]
+    result =
+      result.where(
+        "post_actions.created_at >= ?",
+        opts[:start_date] || (opts[:since_days_ago] || 30).days.ago,
+      )
+    result = result.where("post_actions.created_at <= ?", opts[:end_date]) if opts[:end_date]
     if opts[:category_id]
       if opts[:include_subcategories]
-        result = result.joins(post: :topic).where('topics.category_id IN (?)', Category.subcategory_ids(opts[:category_id]))
+        result =
+          result.joins(post: :topic).where(
+            "topics.category_id IN (?)",
+            Category.subcategory_ids(opts[:category_id]),
+          )
       else
-        result = result.joins(post: :topic).where('topics.category_id = ?', opts[:category_id])
+        result = result.joins(post: :topic).where("topics.category_id = ?", opts[:category_id])
       end
     end
-    result.group('date(post_actions.created_at)')
-      .order('date(post_actions.created_at)')
-      .count
+    result.group("date(post_actions.created_at)").order("date(post_actions.created_at)").count
   end
 
   def add_moderator_post_if_needed(moderator, disposition, delete_post = false)
@@ -95,7 +101,13 @@ class PostAction < ActiveRecord::Base
   end
 
   def staff_already_replied?(topic)
-    topic.posts.where("user_id IN (SELECT id FROM users WHERE moderator OR admin) OR (post_type != :regular_post_type)", regular_post_type: Post.types[:regular]).exists?
+    topic
+      .posts
+      .where(
+        "user_id IN (SELECT id FROM users WHERE moderator OR admin) OR (post_type != :regular_post_type)",
+        regular_post_type: Post.types[:regular],
+      )
+      .exists?
   end
 
   def self.limit_action!(user, post, post_action_type_id)
@@ -106,21 +118,17 @@ class PostAction < ActiveRecord::Base
     Discourse.deprecate(
       "PostAction.act is deprecated. Use `PostActionCreator` instead.",
       output_in_test: true,
-      drop_from: '2.9.0',
+      drop_from: "2.9.0",
     )
 
-    result = PostActionCreator.new(
-      created_by,
-      post,
-      post_action_type_id,
-      message: opts[:message]
-    ).perform
+    result =
+      PostActionCreator.new(created_by, post, post_action_type_id, message: opts[:message]).perform
 
     result.success? ? result.post_action : nil
   end
 
   def self.copy(original_post, target_post)
-    cols_to_copy = (column_names - %w{id post_id}).join(', ')
+    cols_to_copy = (column_names - %w[id post_id]).join(", ")
 
     DB.exec <<~SQL
     INSERT INTO post_actions(post_id, #{cols_to_copy})
@@ -136,7 +144,7 @@ class PostAction < ActiveRecord::Base
     Discourse.deprecate(
       "PostAction.remove_act is deprecated. Use `PostActionDestroyer` instead.",
       output_in_test: true,
-      drop_from: '2.9.0',
+      drop_from: "2.9.0",
     )
 
     PostActionDestroyer.new(user, post, post_action_type_id).perform
@@ -160,7 +168,7 @@ class PostAction < ActiveRecord::Base
 
   def is_private_message?
     post_action_type_id == PostActionType.types[:notify_user] ||
-    post_action_type_id == PostActionType.types[:notify_moderators]
+      post_action_type_id == PostActionType.types[:notify_moderators]
   end
 
   # A custom rate limiter for this model
@@ -169,12 +177,13 @@ class PostAction < ActiveRecord::Base
 
     return @rate_limiter if @rate_limiter.present?
 
-    %w(like flag).each do |type|
+    %w[like flag].each do |type|
       if public_send("is_#{type}?")
         limit = SiteSetting.get("max_#{type}s_per_day")
 
         if (is_flag? || is_like?) && user && user.trust_level >= 2
-          multiplier = SiteSetting.get("tl#{user.trust_level}_additional_#{type}s_per_day_multiplier").to_f
+          multiplier =
+            SiteSetting.get("tl#{user.trust_level}_additional_#{type}s_per_day_multiplier").to_f
           multiplier = 1.0 if multiplier < 1.0
 
           limit = (limit * multiplier).to_i
@@ -189,13 +198,15 @@ class PostAction < ActiveRecord::Base
   def ensure_unique_actions
     post_action_type_ids = is_flag? ? PostActionType.notify_flag_types.values : post_action_type_id
 
-    acted = PostAction.where(user_id: user_id)
-      .where(post_id: post_id)
-      .where(post_action_type_id: post_action_type_ids)
-      .where(deleted_at: nil)
-      .where(disagreed_at: nil)
-      .where(targets_topic: targets_topic)
-      .exists?
+    acted =
+      PostAction
+        .where(user_id: user_id)
+        .where(post_id: post_id)
+        .where(post_action_type_id: post_action_type_ids)
+        .where(deleted_at: nil)
+        .where(disagreed_at: nil)
+        .where(targets_topic: targets_topic)
+        .exists?
 
     errors.add(:post_action_type_id) if acted
   end
@@ -207,37 +218,42 @@ class PostAction < ActiveRecord::Base
   def update_counters
     # Update denormalized counts
     column = "#{post_action_type_key}_count"
-    count = PostAction.where(post_id: post_id)
-      .where(post_action_type_id: post_action_type_id)
-      .count
+    count = PostAction.where(post_id: post_id).where(post_action_type_id: post_action_type_id).count
 
     # We probably want to refactor this method to something cleaner.
     case post_action_type_key
     when :like
       # 'like_score' is weighted higher for staff accounts
-      score = PostAction.joins(:user)
-        .where(post_id: post_id)
-        .sum("CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END")
-      Post.where(id: post_id).update_all ["like_count = :count, like_score = :score", count: count, score: score]
+      score =
+        PostAction
+          .joins(:user)
+          .where(post_id: post_id)
+          .sum(
+            "CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END",
+          )
+      Post.where(id: post_id).update_all [
+                     "like_count = :count, like_score = :score",
+                     count: count,
+                     score: score,
+                   ]
     else
       if ActiveRecord::Base.connection.column_exists?(:posts, column)
         Post.where(id: post_id).update_all ["#{column} = ?", count]
       end
     end
 
-    topic_id = Post.with_deleted.where(id: post_id).pluck_first(:topic_id)
+    topic_id = Post.with_deleted.where(id: post_id).pick(:topic_id)
 
     # topic_user
     if post_action_type_key == :like
-      TopicUser.update_post_action_cache(user_id: user_id,
-                                         topic_id: topic_id,
-                                         post_action_type: post_action_type_key)
+      TopicUser.update_post_action_cache(
+        user_id: user_id,
+        topic_id: topic_id,
+        post_action_type: post_action_type_key,
+      )
     end
 
-    if column == "like_count"
-      Topic.find_by(id: topic_id)&.update_action_counts
-    end
-
+    Topic.find_by(id: topic_id)&.update_action_counts if column == "like_count"
   end
 end
 

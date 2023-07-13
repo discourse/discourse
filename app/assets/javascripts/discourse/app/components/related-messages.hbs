@@ -1,0 +1,30 @@
+<div
+  id="related-messages"
+  class="suggested-topics"
+  role="complementary"
+  aria-labelledby="related-messages-title"
+>
+  <h3 class="suggested-topics-title" id="related-messages-title">
+    {{i18n "related_messages.title"}}
+  </h3>
+
+  <div class="topics">
+    <BasicTopicList
+      @hideCategory="true"
+      @showPosters="true"
+      @topics={{this.topic.relatedMessages}}
+    />
+  </div>
+
+  {{#if this.targetUser}}
+    <h3 class="see-all-pms-message">
+      {{html-safe
+        (i18n
+          "related_messages.see_all"
+          path=this.searchLink
+          username=this.targetUser.username
+        )
+      }}
+    </h3>
+  {{/if}}
+</div>

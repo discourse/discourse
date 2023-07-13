@@ -13,9 +13,7 @@ class WizardController < ApplicationController
         render_serialized(wizard, WizardSerializer)
       end
 
-      format.html do
-        render body: nil
-      end
+      format.html { render body: nil }
     end
   end
 end

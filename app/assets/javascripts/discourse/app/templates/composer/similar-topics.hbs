@@ -1,9 +1,18 @@
-<a href {{on "click" (fn this.closeMessage this.message)}} class="close" aria-label={{i18n "composer.esc_label"}}>
-  {{i18n "composer.esc"}} {{d-icon "times"}}
+<a
+  href
+  {{on "click" (fn this.closeMessage this.message)}}
+  class="close"
+  aria-label={{i18n "composer.esc_label"}}
+>
+  {{i18n "composer.esc"}}
+  {{d-icon "times"}}
 </a>
 
 <h3>{{i18n "composer.similar_topics"}}</h3>
 
 <ul class="topics">
-  <MountWidget @widget="search-result-topic" @args={{hash results=this.message.similarTopics}} />
+  <MountWidget
+    @widget="search-result-topic"
+    @args={{hash results=this.message.similarTopics}}
+  />
 </ul>

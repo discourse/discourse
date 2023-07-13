@@ -9,7 +9,6 @@ class CategoryGroup < ActiveRecord::Base
   def self.permission_types
     @permission_types ||= Enum.new(full: 1, create_post: 2, readonly: 3)
   end
-
 end
 
 # == Schema Information

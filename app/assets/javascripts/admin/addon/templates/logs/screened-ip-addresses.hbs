@@ -2,8 +2,20 @@
 
 <div class="screened-ip-controls">
   <div class="filter-screened-ip-address inline-form">
-    <TextField @value={{this.filter}} @class="ip-address-input" @placeholderKey="admin.logs.screened_ips.form.filter" @autocorrect="off" @autocapitalize="off" />
-    <DButton @class="btn-default" @action={{action "exportScreenedIpList"}} @icon="download" @title="admin.export_csv.button_title.screened_ip" @label="admin.export_csv.button_text" />
+    <TextField
+      @value={{this.filter}}
+      @class="ip-address-input"
+      @placeholderKey="admin.logs.screened_ips.form.filter"
+      @autocorrect="off"
+      @autocapitalize="off"
+    />
+    <DButton
+      @class="btn-default"
+      @action={{action "exportScreenedIpList"}}
+      @icon="download"
+      @title="admin.export_csv.button_title.screened_ip"
+      @label="admin.export_csv.button_text"
+    />
   </div>
 
   <ScreenedIpAddressForm @action={{action "recordAdded"}} />
@@ -13,11 +25,17 @@
   {{#if this.model.length}}
     <table class="admin-logs-table screened-ip-addresses grid">
       <thead class="heading-container">
-        <th class="col heading first ip_address">{{i18n "admin.logs.ip_address"}}</th>
+        <th class="col heading first ip_address">{{i18n
+            "admin.logs.ip_address"
+          }}</th>
         <th class="col heading action">{{i18n "admin.logs.action"}}</th>
-        <th class="col heading match_count">{{i18n "admin.logs.match_count"}}</th>
+        <th class="col heading match_count">{{i18n
+            "admin.logs.match_count"
+          }}</th>
         <th class="col heading created_at">{{i18n "admin.logs.created_at"}}</th>
-        <th class="col heading last_match_at">{{i18n "admin.logs.last_match_at"}}</th>
+        <th class="col heading last_match_at">{{i18n
+            "admin.logs.last_match_at"
+          }}</th>
         <th class="col heading actions"></th>
       </thead>
       <tbody>
@@ -27,7 +45,11 @@
               {{#if item.editing}}
                 <TextField @value={{item.ip_address}} @autofocus="autofocus" />
               {{else}}
-                <a href {{on "click" (fn this.edit item)}} class="inline-editable-field">
+                <a
+                  href
+                  {{on "click" (fn this.edit item)}}
+                  class="inline-editable-field"
+                >
                   {{#if item.isRange}}
                     <strong>{{item.ip_address}}</strong>
                   {{else}}
@@ -60,15 +82,46 @@
             </td>
             <td class="col actions">
               {{#if item.editing}}
-                <DButton @class="btn-default" @action={{action "save"}} @actionParam={{item}} @label="admin.logs.save" />
-                <DButton @class="btn-flat" @action={{action "cancel" item}} @translatedLabel={{i18n "cancel"}} />
+                <DButton
+                  @class="btn-default"
+                  @action={{action "save"}}
+                  @actionParam={{item}}
+                  @label="admin.logs.save"
+                />
+                <DButton
+                  @class="btn-flat"
+                  @action={{action "cancel" item}}
+                  @translatedLabel={{i18n "cancel"}}
+                />
               {{else}}
-                <DButton @class="btn-default btn-danger" @action={{action "destroy"}} @actionParam={{item}} @icon="far-trash-alt" />
-                <DButton @class="btn-default" @action={{action "edit"}} @actionParam={{item}} @icon="pencil-alt" />
+                <DButton
+                  @class="btn-default btn-danger"
+                  @action={{action "destroyRecord"}}
+                  @actionParam={{item}}
+                  @icon="far-trash-alt"
+                />
+                <DButton
+                  @class="btn-default"
+                  @action={{action "edit"}}
+                  @actionParam={{item}}
+                  @icon="pencil-alt"
+                />
                 {{#if item.isBlocked}}
-                  <DButton @class="btn-default" @action={{action "allow"}} @actionParam={{item}} @icon="check" @label="admin.logs.screened_ips.actions.do_nothing" />
+                  <DButton
+                    @class="btn-default"
+                    @action={{action "allow"}}
+                    @actionParam={{item}}
+                    @icon="check"
+                    @label="admin.logs.screened_ips.actions.do_nothing"
+                  />
                 {{else}}
-                  <DButton @class="btn-default" @action={{action "block"}} @actionParam={{item}} @icon="ban" @label="admin.logs.screened_ips.actions.block" />
+                  <DButton
+                    @class="btn-default"
+                    @action={{action "block"}}
+                    @actionParam={{item}}
+                    @icon="ban"
+                    @label="admin.logs.screened_ips.actions.block"
+                  />
                 {{/if}}
               {{/if}}
             </td>

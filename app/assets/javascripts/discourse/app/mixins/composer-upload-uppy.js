@@ -325,35 +325,35 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
         cacheShortUploadUrl(upload.short_url, upload);
 
-        if (this.useUploadPlaceholders) {
+        this._generateVideoThumbnail(file, upload.url, () => {
+          if (this.useUploadPlaceholders) {
+            this.appEvents.trigger(
+              `${this.composerEventPrefix}:replace-text`,
+              this.placeholders[file.id].uploadPlaceholder.trim(),
+              markdown
+            );
+          }
+          this._resetUpload(file, { removePlaceholder: false });
           this.appEvents.trigger(
-            `${this.composerEventPrefix}:replace-text`,
-            this.placeholders[file.id].uploadPlaceholder.trim(),
-            markdown
+            `${this.composerEventPrefix}:upload-success`,
+            file.name,
+            upload
           );
-        }
 
-        this._resetUpload(file, { removePlaceholder: false });
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:upload-success`,
-          file.name,
-          upload
-        );
-
-        if (this.inProgressUploads.length === 0) {
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:all-uploads-complete`
-          );
-          this._reset();
-        }
+          if (this.inProgressUploads.length === 0) {
+            this.appEvents.trigger(
+              `${this.composerEventPrefix}:all-uploads-complete`
+            );
+            this._reset();
+          }
+        });
       });
     });
 
     this._uppyInstance.on("upload-error", this._handleUploadError);
 
     this._uppyInstance.on("cancel-all", () => {
-      // uppyInstance.reset() also fires cancel-all, so we want to
-      // only do the manual cancelling work if the user clicked cancel
+      // Do the manual cancelling work only if the user clicked cancel
       if (this.userCancelled) {
         Object.values(this.placeholders).forEach((data) => {
           run(() => {
@@ -453,7 +453,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         placeholderData.processingPlaceholder
       );
 
-      // Safari applies user-defined replacements to text inserted programatically.
+      // Safari applies user-defined replacements to text inserted programmatically.
       // One of the most common replacements is ... -> …, so we take care of the case
       // where that transformation has been applied to the original placeholder
       this.appEvents.trigger(
@@ -545,7 +545,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   _reset() {
-    this._uppyInstance?.reset();
+    this._uppyInstance?.cancelAll();
     this.setProperties({
       uploadProgress: 0,
       isUploading: false,

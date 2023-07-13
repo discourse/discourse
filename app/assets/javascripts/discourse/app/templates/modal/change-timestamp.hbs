@@ -3,12 +3,16 @@
     {{i18n "topic.change_timestamp.instructions"}}
   </p>
 
-  <p class="alert alert-error {{unless this.validTimestamp "hidden"}}">
+  <p class="alert alert-error {{unless this.validTimestamp 'hidden'}}">
     {{i18n "topic.change_timestamp.invalid_timestamp"}}
   </p>
 
   <form>
-    <DatePickerPast @value={{readonly this.date}} @containerId="date-container" @onSelect={{action (mut this.date)}} />
+    <DatePickerPast
+      @value={{readonly this.date}}
+      @containerId="date-container"
+      @onSelect={{action (mut this.date)}}
+    />
 
     <Input @type="time" @value={{this.time}} />
   </form>
@@ -17,5 +21,10 @@
 </DModalBody>
 
 <div class="modal-footer change-timestamp-footer">
-  <DButton @class="btn-primary" @disabled={{this.buttonDisabled}} @action={{action "changeTimestamp"}} @translatedLabel={{this.buttonTitle}} />
+  <DButton
+    @class="btn-primary"
+    @disabled={{this.buttonDisabled}}
+    @action={{action "changeTimestamp"}}
+    @translatedLabel={{this.buttonTitle}}
+  />
 </div>

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-require 'swagger_helper'
+require "swagger_helper"
 
-RSpec.describe 'uploads' do
-
+RSpec.describe "uploads" do
   let(:admin) { Fabricate(:admin) }
   let(:logo_file) { file_from_fixtures("logo.png") }
   let(:logo) { Rack::Test::UploadedFile.new(logo_file) }
@@ -12,32 +11,28 @@ RSpec.describe 'uploads' do
     sign_in(admin)
   end
 
-  path '/uploads.json' do
-    post 'Creates an upload' do
-      tags 'Uploads'
-      operationId 'createUpload'
-      consumes 'multipart/form-data'
+  path "/uploads.json" do
+    post "Creates an upload" do
+      tags "Uploads"
+      operationId "createUpload"
+      consumes "multipart/form-data"
 
-      expected_request_schema = load_spec_schema('upload_create_request')
+      expected_request_schema = load_spec_schema("upload_create_request")
       parameter name: :params, in: :body, schema: expected_request_schema
 
-      let(:params) { {
-        'type' => 'avatar',
-        'user_id' => admin.id,
-        'synchronous' => true,
-        'file' => logo
-      } }
+      let(:params) do
+        { "type" => "avatar", "user_id" => admin.id, "synchronous" => true, "file" => logo }
+      end
 
-      produces 'application/json'
-      response '200', 'file uploaded' do
-        expected_response_schema = load_spec_schema('upload_create_response')
+      produces "application/json"
+      response "200", "file uploaded" do
+        expected_response_schema = load_spec_schema("upload_create_response")
         schema(expected_response_schema)
 
         # Skipping this test for now until https://github.com/rswag/rswag/issues/348
         # is resolved. This still allows the docs to be generated for this endpoint though.
         xit
       end
-
     end
   end
 
@@ -47,11 +42,11 @@ RSpec.describe 'uploads' do
       SiteSetting.enable_direct_s3_uploads = true
     end
 
-    path '/uploads/generate-presigned-put.json' do
-      post 'Initiates a direct external upload' do
-        tags 'Uploads'
-        operationId 'generatePresignedPut'
-        consumes 'application/json'
+    path "/uploads/generate-presigned-put.json" do
+      post "Initiates a direct external upload" do
+        tags "Uploads"
+        operationId "generatePresignedPut"
+        consumes "application/json"
         description <<~TEXT
         Direct external uploads bypass the usual method of creating uploads
         via the POST /uploads route, and upload directly to an external provider,
@@ -68,22 +63,24 @@ RSpec.describe 'uploads' do
         #{direct_uploads_disclaimer}
         TEXT
 
-        expected_request_schema = load_spec_schema('upload_generate_presigned_put_request')
+        expected_request_schema = load_spec_schema("upload_generate_presigned_put_request")
         parameter name: :params, in: :body, schema: expected_request_schema
 
-        produces 'application/json'
-        response '200', 'external upload initialized' do
-          expected_response_schema = load_spec_schema('upload_generate_presigned_put_response')
+        produces "application/json"
+        response "200", "external upload initialized" do
+          expected_response_schema = load_spec_schema("upload_generate_presigned_put_response")
           schema(expected_response_schema)
 
-          let(:params) { {
-            'file_name' => "test.png",
-            'type' => "composer",
-            'file_size' => 4096,
-            'metadata' => {
-              'sha1-checksum' => "830869e4ed99128e4352aa72ff5b0ffc26fdc390"
+          let(:params) do
+            {
+              "file_name" => "test.png",
+              "type" => "composer",
+              "file_size" => 4096,
+              "metadata" => {
+                "sha1-checksum" => "830869e4ed99128e4352aa72ff5b0ffc26fdc390",
+              },
             }
-          } }
+          end
 
           it_behaves_like "a JSON endpoint", 200 do
             let(:expected_response_schema) { expected_response_schema }
@@ -93,8 +90,8 @@ RSpec.describe 'uploads' do
       end
     end
 
-    path '/uploads/complete-external-upload.json' do
-      post 'Completes a direct external upload' do
+    path "/uploads/complete-external-upload.json" do
+      post "Completes a direct external upload" do
         let(:unique_identifier) { "66e86218-80d9-4bda-b4d5-2b6def968705" }
         let!(:external_stub) { Fabricate(:external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
@@ -105,9 +102,9 @@ RSpec.describe 'uploads' do
           external_stub.update(unique_identifier: unique_identifier)
         end
 
-        tags 'Uploads'
-        operationId 'completeExternalUpload'
-        consumes 'application/json'
+        tags "Uploads"
+        operationId "completeExternalUpload"
+        consumes "application/json"
         description <<~TEXT
         Completes an external upload initialized with /get-presigned-put. The
         file will be moved from its temporary location in external storage to
@@ -121,17 +118,15 @@ RSpec.describe 'uploads' do
         #{direct_uploads_disclaimer}
         TEXT
 
-        expected_request_schema = load_spec_schema('upload_complete_external_upload_request')
+        expected_request_schema = load_spec_schema("upload_complete_external_upload_request")
         parameter name: :params, in: :body, schema: expected_request_schema
 
-        produces 'application/json'
-        response '200', 'external upload initialized' do
-          expected_response_schema = load_spec_schema('upload_create_response')
+        produces "application/json"
+        response "200", "external upload initialized" do
+          expected_response_schema = load_spec_schema("upload_create_response")
           schema(expected_response_schema)
 
-          let(:params) { {
-            'unique_identifier' => unique_identifier,
-          } }
+          let(:params) { { "unique_identifier" => unique_identifier } }
 
           it_behaves_like "a JSON endpoint", 200 do
             let(:expected_response_schema) { expected_response_schema }
@@ -141,19 +136,22 @@ RSpec.describe 'uploads' do
       end
     end
 
-    path '/uploads/create-multipart.json' do
-      post 'Creates a multipart external upload' do
+    path "/uploads/create-multipart.json" do
+      post "Creates a multipart external upload" do
         before do
-          ExternalUploadManager.stubs(:create_direct_multipart_upload).returns({
-            external_upload_identifier: "66e86218-80d9-4bda-b4d5-2b6def968705",
-            key: "temp/site/uploads/default/12345/67890.jpg",
-            unique_identifier: "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ"
-          })
+          ExternalUploadManager.stubs(:create_direct_multipart_upload).returns(
+            {
+              external_upload_identifier: "66e86218-80d9-4bda-b4d5-2b6def968705",
+              key: "temp/site/uploads/default/12345/67890.jpg",
+              unique_identifier:
+                "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
+            },
+          )
         end
 
-        tags 'Uploads'
-        operationId 'createMultipartUpload'
-        consumes 'application/json'
+        tags "Uploads"
+        operationId "createMultipartUpload"
+        consumes "application/json"
         description <<~TEXT
         Creates a multipart upload in the external storage provider, storing
         a temporary reference to the external upload similar to /get-presigned-put.
@@ -161,22 +159,24 @@ RSpec.describe 'uploads' do
         #{direct_uploads_disclaimer}
         TEXT
 
-        expected_request_schema = load_spec_schema('upload_create_multipart_request')
+        expected_request_schema = load_spec_schema("upload_create_multipart_request")
         parameter name: :params, in: :body, schema: expected_request_schema
 
-        produces 'application/json'
-        response '200', 'external upload initialized' do
-          expected_response_schema = load_spec_schema('upload_create_multipart_response')
+        produces "application/json"
+        response "200", "external upload initialized" do
+          expected_response_schema = load_spec_schema("upload_create_multipart_response")
           schema(expected_response_schema)
 
-          let(:params) { {
-            'file_name' => "test.png",
-            'upload_type' => "composer",
-            'file_size' => 4096,
-            'metadata' => {
-              'sha1-checksum' => "830869e4ed99128e4352aa72ff5b0ffc26fdc390"
+          let(:params) do
+            {
+              "file_name" => "test.png",
+              "upload_type" => "composer",
+              "file_size" => 4096,
+              "metadata" => {
+                "sha1-checksum" => "830869e4ed99128e4352aa72ff5b0ffc26fdc390",
+              },
             }
-          } }
+          end
 
           it_behaves_like "a JSON endpoint", 200 do
             let(:expected_response_schema) { expected_response_schema }
@@ -186,8 +186,8 @@ RSpec.describe 'uploads' do
       end
     end
 
-    path '/uploads/batch-presign-multipart-parts.json' do
-      post 'Generates batches of presigned URLs for multipart parts' do
+    path "/uploads/batch-presign-multipart-parts.json" do
+      post "Generates batches of presigned URLs for multipart parts" do
         let(:unique_identifier) { "66e86218-80d9-4bda-b4d5-2b6def968705" }
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
@@ -197,9 +197,9 @@ RSpec.describe 'uploads' do
           external_stub.update(unique_identifier: unique_identifier)
         end
 
-        tags 'Uploads'
-        operationId 'batchPresignMultipartParts'
-        consumes 'application/json'
+        tags "Uploads"
+        operationId "batchPresignMultipartParts"
+        consumes "application/json"
         description <<~TEXT
         Multipart uploads are uploaded in chunks or parts to individual presigned
         URLs, similar to the one generated by /generate-presigned-put. The part
@@ -217,18 +217,21 @@ RSpec.describe 'uploads' do
         #{direct_uploads_disclaimer}
         TEXT
 
-        expected_request_schema = load_spec_schema('upload_batch_presign_multipart_parts_request')
+        expected_request_schema = load_spec_schema("upload_batch_presign_multipart_parts_request")
         parameter name: :params, in: :body, schema: expected_request_schema
 
-        produces 'application/json'
-        response '200', 'external upload initialized' do
-          expected_response_schema = load_spec_schema('upload_batch_presign_multipart_parts_response')
+        produces "application/json"
+        response "200", "external upload initialized" do
+          expected_response_schema =
+            load_spec_schema("upload_batch_presign_multipart_parts_response")
           schema(expected_response_schema)
 
-          let(:params) { {
-            'part_numbers' => [1, 2, 3],
-            'unique_identifier' => "66e86218-80d9-4bda-b4d5-2b6def968705"
-          } }
+          let(:params) do
+            {
+              "part_numbers" => [1, 2, 3],
+              "unique_identifier" => "66e86218-80d9-4bda-b4d5-2b6def968705",
+            }
+          end
 
           it_behaves_like "a JSON endpoint", 200 do
             let(:expected_response_schema) { expected_response_schema }
@@ -238,8 +241,8 @@ RSpec.describe 'uploads' do
       end
     end
 
-    path '/uploads/abort-multipart.json' do
-      post 'Abort multipart upload' do
+    path "/uploads/abort-multipart.json" do
+      post "Abort multipart upload" do
         let(:unique_identifier) { "66e86218-80d9-4bda-b4d5-2b6def968705" }
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
@@ -248,13 +251,14 @@ RSpec.describe 'uploads' do
           stub_s3_store
           external_stub.update(
             unique_identifier: unique_identifier,
-            external_upload_identifier: "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ"
+            external_upload_identifier:
+              "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
           )
         end
 
-        tags 'Uploads'
-        operationId 'abortMultipart'
-        consumes 'application/json'
+        tags "Uploads"
+        operationId "abortMultipart"
+        consumes "application/json"
         description <<~TEXT
         This endpoint aborts the multipart upload initiated with /create-multipart.
         This should be used when cancelling the upload. It does not matter if parts
@@ -263,17 +267,20 @@ RSpec.describe 'uploads' do
         #{direct_uploads_disclaimer}
         TEXT
 
-        expected_request_schema = load_spec_schema('upload_abort_multipart_request')
+        expected_request_schema = load_spec_schema("upload_abort_multipart_request")
         parameter name: :params, in: :body, schema: expected_request_schema
 
-        produces 'application/json'
-        response '200', 'external upload initialized' do
-          expected_response_schema = load_spec_schema('success_ok_response')
+        produces "application/json"
+        response "200", "external upload initialized" do
+          expected_response_schema = load_spec_schema("success_ok_response")
           schema(expected_response_schema)
 
-          let(:params) { {
-            'external_upload_identifier' => "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ"
-          } }
+          let(:params) do
+            {
+              "external_upload_identifier" =>
+                "84x83tmxy398t3y._Q_z8CoJYVr69bE6D7f8J6Oo0434QquLFoYdGVerWFx9X5HDEI_TP_95c34n853495x35345394.d.ghQ",
+            }
+          end
 
           it_behaves_like "a JSON endpoint", 200 do
             let(:expected_response_schema) { expected_response_schema }
@@ -283,8 +290,8 @@ RSpec.describe 'uploads' do
       end
     end
 
-    path '/uploads/complete-multipart.json' do
-      post 'Complete multipart upload' do
+    path "/uploads/complete-multipart.json" do
+      post "Complete multipart upload" do
         let(:unique_identifier) { "66e86218-80d9-4bda-b4d5-2b6def968705" }
         let!(:external_stub) { Fabricate(:multipart_external_upload_stub, created_by: admin) }
         let!(:upload) { Fabricate(:upload) }
@@ -296,9 +303,9 @@ RSpec.describe 'uploads' do
           external_stub.update(unique_identifier: unique_identifier)
         end
 
-        tags 'Uploads'
-        operationId 'completeMultipart'
-        consumes 'application/json'
+        tags "Uploads"
+        operationId "completeMultipart"
+        consumes "application/json"
         description <<~TEXT
         Completes the multipart upload in the external store, and copies the
         file from its temporary location to its final location in the store.
@@ -309,23 +316,20 @@ RSpec.describe 'uploads' do
         #{direct_uploads_disclaimer}
         TEXT
 
-        expected_request_schema = load_spec_schema('upload_complete_multipart_request')
+        expected_request_schema = load_spec_schema("upload_complete_multipart_request")
         parameter name: :params, in: :body, schema: expected_request_schema
 
-        produces 'application/json'
-        response '200', 'external upload initialized' do
-          expected_response_schema = load_spec_schema('upload_create_response')
+        produces "application/json"
+        response "200", "external upload initialized" do
+          expected_response_schema = load_spec_schema("upload_create_response")
           schema(expected_response_schema)
 
-          let(:params) { {
-            'unique_identifier' => unique_identifier,
-            'parts' => [
-              {
-                'part_number' => 1,
-                'etag' => '0c376dcfcc2606f4335bbc732de93344'
-              }
-            ]
-          } }
+          let(:params) do
+            {
+              "unique_identifier" => unique_identifier,
+              "parts" => [{ "part_number" => 1, "etag" => "0c376dcfcc2606f4335bbc732de93344" }],
+            }
+          end
 
           it_behaves_like "a JSON endpoint", 200 do
             let(:expected_response_schema) { expected_response_schema }

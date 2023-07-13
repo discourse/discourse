@@ -48,8 +48,7 @@ puts "Current stable version is #{current_stable_version}"
 
 minor = current_stable_version[/^(v\d+\.\d+)\./, 1]
 
-previous_stable_version =
-  run "git describe --abbrev=0 --match 'v*' --exclude '#{minor}*' origin/stable"
+previous_stable_version = "#{minor}.0"
 puts "Previous stable version is #{previous_stable_version}"
 
 stable_post_migrate_filenames =

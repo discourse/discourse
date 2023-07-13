@@ -3,17 +3,26 @@ import {
   withSilencedDeprecations,
   withSilencedDeprecationsAsync,
 } from "discourse-common/lib/deprecated";
+import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
 import { module, test } from "qunit";
 import Sinon from "sinon";
 
 module("Unit | Utility | deprecated", function (hooks) {
   hooks.beforeEach(function () {
+    disableRaiseOnDeprecation();
     this.warnStub = Sinon.stub(console, "warn");
     this.counterStub = Sinon.stub(
       DeprecationCounter.prototype,
       "incrementDeprecation"
     );
+  });
+
+  hooks.afterEach(() => {
+    enableRaiseOnDeprecation();
   });
 
   test("works with just a message", function (assert) {

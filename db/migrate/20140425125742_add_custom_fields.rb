@@ -23,8 +23,8 @@ class AddCustomFields < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :category_custom_fields, [:category_id, :name]
-    add_index :group_custom_fields, [:group_id, :name]
-    add_index :post_custom_fields, [:post_id, :name]
+    add_index :category_custom_fields, %i[category_id name]
+    add_index :group_custom_fields, %i[group_id name]
+    add_index :post_custom_fields, %i[post_id name]
   end
 end

@@ -13,6 +13,7 @@ module("Integration | Component | user-status-message", function (hooks) {
 
   hooks.beforeEach(function () {
     this.currentUser.user_option.timezone = "UTC";
+    this.status = { emoji: "tooth", description: "off to dentist" };
   });
 
   hooks.afterEach(function () {
@@ -22,24 +23,22 @@ module("Integration | Component | user-status-message", function (hooks) {
   });
 
   test("it renders user status emoji", async function (assert) {
-    this.set("status", { emoji: "tooth", description: "off to dentist" });
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
     assert.ok(exists("img.emoji[alt='tooth']"), "the status emoji is shown");
   });
 
   test("it doesn't render status description by default", async function (assert) {
-    this.set("status", { emoji: "tooth", description: "off to dentist" });
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
     assert.notOk(exists(".user-status-message-description"));
   });
 
   test("it renders status description if enabled", async function (assert) {
-    this.set("status", { emoji: "tooth", description: "off to dentist" });
     await render(hbs`
       <UserStatusMessage
        @status={{this.status}}
        @showDescription=true/>
     `);
+
     assert.equal(
       query(".user-status-message-description").innerText.trim(),
       "off to dentist"
@@ -52,11 +51,7 @@ module("Integration | Component | user-status-message", function (hooks) {
       this.currentUser.user_option.timezone,
       true
     );
-    this.set("status", {
-      emoji: "tooth",
-      description: "off to dentist",
-      ends_at: "2100-02-01T12:30:00.000Z",
-    });
+    this.status.ends_at = "2100-02-01T12:30:00.000Z";
 
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
@@ -75,11 +70,7 @@ module("Integration | Component | user-status-message", function (hooks) {
       this.currentUser.user_option.timezone,
       true
     );
-    this.set("status", {
-      emoji: "tooth",
-      description: "off to dentist",
-      ends_at: "2100-02-02T12:30:00.000Z",
-    });
+    this.status.ends_at = "2100-02-02T12:30:00.000Z";
 
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
@@ -98,11 +89,7 @@ module("Integration | Component | user-status-message", function (hooks) {
       this.currentUser.user_option.timezone,
       true
     );
-    this.set("status", {
-      emoji: "tooth",
-      description: "off to dentist",
-      ends_at: null,
-    });
+    this.status.ends_at = null;
 
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
@@ -113,11 +100,6 @@ module("Integration | Component | user-status-message", function (hooks) {
   });
 
   test("it shows tooltip by default", async function (assert) {
-    this.set("status", {
-      emoji: "tooth",
-      description: "off to dentist",
-    });
-
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
     await mouseenter();
 
@@ -127,11 +109,6 @@ module("Integration | Component | user-status-message", function (hooks) {
   });
 
   test("it doesn't show tooltip if disabled", async function (assert) {
-    this.set("status", {
-      emoji: "tooth",
-      description: "off to dentist",
-    });
-
     await render(
       hbs`<UserStatusMessage @status={{this.status}} @showTooltip={{false}} />`
     );
@@ -144,14 +121,20 @@ module("Integration | Component | user-status-message", function (hooks) {
 
   test("doesn't blow up with an anonymous user", async function (assert) {
     this.owner.unregister("service:current-user");
-    this.set("status", {
-      emoji: "tooth",
-      description: "off to dentist",
-      ends_at: "2100-02-02T12:30:00.000Z",
-    });
+    this.status.ends_at = "2100-02-02T12:30:00.000Z";
 
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
     assert.dom(".user-status-message").exists();
+  });
+
+  test("accepts a custom css class", async function (assert) {
+    this.set("status", { emoji: "tooth", description: "off to dentist" });
+
+    await render(
+      hbs`<UserStatusMessage @status={{this.status}} @class="foo" />`
+    );
+
+    assert.dom(".user-status-message.foo").exists();
   });
 });

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-require 'swagger_helper'
+require "swagger_helper"
 
-RSpec.describe 'site' do
-
+RSpec.describe "site" do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:category) { Fabricate(:category) }
   fab!(:subcategory) { Fabricate(:category, parent_category: category) }
@@ -12,21 +11,20 @@ RSpec.describe 'site' do
     sign_in(admin)
   end
 
-  path '/site.json' do
-
-    get 'Get site info' do
-      tags 'Site', 'Categories'
-      operationId 'getSite'
-      description 'Can be used to fetch all categories and subcategories'
-      consumes 'application/json'
+  path "/site.json" do
+    get "Get site info" do
+      tags "Site", "Categories"
+      operationId "getSite"
+      description "Can be used to fetch all categories and subcategories"
+      consumes "application/json"
       expected_request_schema = nil
 
-      produces 'application/json'
-      response '200', 'success response' do
+      produces "application/json"
+      response "200", "success response" do
         begin
           Site.preloaded_category_custom_fields << "no_oddjob"
 
-          expected_response_schema = load_spec_schema('site_response')
+          expected_response_schema = load_spec_schema("site_response")
           schema expected_response_schema
 
           it_behaves_like "a JSON endpoint", 200 do

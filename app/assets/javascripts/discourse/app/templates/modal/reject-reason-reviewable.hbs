@@ -9,6 +9,15 @@
 </DModalBody>
 
 <div class="modal-footer">
-  <DButton @icon="trash-alt" @class="btn-danger" @action={{action "perform"}} @label="admin.user.delete" />
-  <DButton @action={{route-action "closeModal"}} @label="cancel" @class="cancel" />
+  <DButton
+    @icon="trash-alt"
+    @class="btn-danger"
+    @action={{action "perform"}}
+    @label="admin.user.delete"
+  />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @label="cancel"
+    @class="cancel"
+  />
 </div>

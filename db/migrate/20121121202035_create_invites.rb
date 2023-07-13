@@ -12,6 +12,6 @@ class CreateInvites < ActiveRecord::Migration[4.2]
     end
 
     add_index :invites, :invite_key, unique: true
-    add_index :invites, [:email, :invited_by_id], unique: true
+    add_index :invites, %i[email invited_by_id], unique: true
   end
 end

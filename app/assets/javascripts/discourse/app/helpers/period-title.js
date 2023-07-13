@@ -28,7 +28,7 @@ export default htmlHelper((period, options) => {
             .clone()
             .subtract(1, "year")
             .format(I18n.t("dates.long_with_year_no_time")) +
-          " - " +
+          " – " +
           finish.format(I18n.t("dates.long_with_year_no_time"));
         break;
       case "quarterly":
@@ -37,7 +37,7 @@ export default htmlHelper((period, options) => {
             .clone()
             .subtract(3, "month")
             .format(I18n.t("dates.long_no_year_no_time")) +
-          " - " +
+          " – " +
           finish.format(I18n.t("dates.long_no_year_no_time"));
         break;
       case "weekly":
@@ -50,7 +50,7 @@ export default htmlHelper((period, options) => {
 
         dateString =
           start.format(I18n.t("dates.long_no_year_no_time")) +
-          " - " +
+          " – " +
           finish.format(I18n.t("dates.long_no_year_no_time"));
         break;
       case "monthly":
@@ -59,7 +59,7 @@ export default htmlHelper((period, options) => {
             .clone()
             .subtract(1, "month")
             .format(I18n.t("dates.long_no_year_no_time")) +
-          " - " +
+          " – " +
           finish.format(I18n.t("dates.long_no_year_no_time"));
         break;
       case "daily":

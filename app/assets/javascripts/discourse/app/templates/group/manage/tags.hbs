@@ -1,18 +1,29 @@
 <form class="groups-form form-vertical groups-notifications-form">
 
-  <PluginOutlet @name="before-manage-group-tags" @connectorTagName="div" @args={{hash model=this.model}} />
+  <PluginOutlet
+    @name="before-manage-group-tags"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
 
   <div class="control-group">
-    <label class="control-label">{{i18n "groups.manage.tags.long_title"}}</label>
+    <label class="control-label">{{i18n
+        "groups.manage.tags.long_title"
+      }}</label>
     <div>{{i18n "groups.manage.tags.description"}}</div>
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching"}} {{i18n "groups.notifications.watching.title"}}</label>
+    <label>{{d-icon "d-watching"}}
+      {{i18n "groups.notifications.watching.title"}}</label>
 
-    <TagChooser @tags={{this.model.watching_tags}} @blacklist={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-        allowAny=false
-      }} />
+    <TagChooser
+      @tags={{this.model.watching_tags}}
+      @blacklist={{this.selectedTags}}
+      @everyTag={{true}}
+      @unlimitedTagCount={{true}}
+      @options={{hash allowAny=false}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.tags.watched_tags_instructions"}}
@@ -20,11 +31,16 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-tracking"}} {{i18n "groups.notifications.tracking.title"}}</label>
+    <label>{{d-icon "d-tracking"}}
+      {{i18n "groups.notifications.tracking.title"}}</label>
 
-    <TagChooser @tags={{this.model.tracking_tags}} @blacklist={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-        allowAny=false
-      }} />
+    <TagChooser
+      @tags={{this.model.tracking_tags}}
+      @blacklist={{this.selectedTags}}
+      @everyTag={{true}}
+      @unlimitedTagCount={{true}}
+      @options={{hash allowAny=false}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.tags.tracked_tags_instructions"}}
@@ -32,11 +48,16 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-watching-first"}} {{i18n "groups.notifications.watching_first_post.title"}}</label>
+    <label>{{d-icon "d-watching-first"}}
+      {{i18n "groups.notifications.watching_first_post.title"}}</label>
 
-    <TagChooser @tags={{this.model.watching_first_post_tags}} @blacklist={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-        allowAny=false
-      }} />
+    <TagChooser
+      @tags={{this.model.watching_first_post_tags}}
+      @blacklist={{this.selectedTags}}
+      @everyTag={{true}}
+      @unlimitedTagCount={{true}}
+      @options={{hash allowAny=false}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.tags.watching_first_post_tags_instructions"}}
@@ -44,11 +65,16 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-regular"}} {{i18n "groups.notifications.regular.title"}}</label>
+    <label>{{d-icon "d-regular"}}
+      {{i18n "groups.notifications.regular.title"}}</label>
 
-    <TagChooser @tags={{this.model.regular_tags}} @blacklist={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-        allowAny=false
-      }} />
+    <TagChooser
+      @tags={{this.model.regular_tags}}
+      @blacklist={{this.selectedTags}}
+      @everyTag={{true}}
+      @unlimitedTagCount={{true}}
+      @options={{hash allowAny=false}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.tags.regular_tags_instructions"}}
@@ -56,11 +82,16 @@
   </div>
 
   <div class="control-group">
-    <label>{{d-icon "d-muted"}} {{i18n "groups.notifications.muted.title"}}</label>
+    <label>{{d-icon "d-muted"}}
+      {{i18n "groups.notifications.muted.title"}}</label>
 
-    <TagChooser @tags={{this.model.muted_tags}} @blacklist={{this.selectedTags}} @everyTag={{true}} @unlimitedTagCount={{true}} @options={{hash
-        allowAny=false
-      }} />
+    <TagChooser
+      @tags={{this.model.muted_tags}}
+      @blacklist={{this.selectedTags}}
+      @everyTag={{true}}
+      @unlimitedTagCount={{true}}
+      @options={{hash allowAny=false}}
+    />
 
     <div class="control-instructions">
       {{i18n "groups.manage.tags.muted_tags_instructions"}}

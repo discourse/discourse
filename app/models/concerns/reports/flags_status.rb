@@ -13,42 +13,42 @@ module Reports::FlagsStatus
           properties: {
             topic_id: :topic_id,
             number: :post_number,
-            truncated_raw: :post_type
+            truncated_raw: :post_type,
           },
-          title: I18n.t("reports.flags_status.labels.flag")
+          title: I18n.t("reports.flags_status.labels.flag"),
         },
         {
           type: :user,
           properties: {
             username: :staff_username,
             id: :staff_id,
-            avatar: :staff_avatar_template
+            avatar: :staff_avatar_template,
           },
-          title: I18n.t("reports.flags_status.labels.assigned")
+          title: I18n.t("reports.flags_status.labels.assigned"),
         },
         {
           type: :user,
           properties: {
             username: :poster_username,
             id: :poster_id,
-            avatar: :poster_avatar_template
+            avatar: :poster_avatar_template,
           },
-          title: I18n.t("reports.flags_status.labels.poster")
+          title: I18n.t("reports.flags_status.labels.poster"),
         },
         {
           type: :user,
           properties: {
             username: :flagger_username,
             id: :flagger_id,
-            avatar: :flagger_avatar_template
-            },
-          title: I18n.t("reports.flags_status.labels.flagger")
+            avatar: :flagger_avatar_template,
+          },
+          title: I18n.t("reports.flags_status.labels.flagger"),
         },
         {
           type: :seconds,
           property: :response_time,
-          title: I18n.t("reports.flags_status.labels.time_to_resolution")
-        }
+          title: I18n.t("reports.flags_status.labels.time_to_resolution"),
+        },
       ]
 
       report.data = []
@@ -70,7 +70,7 @@ module Reports::FlagsStatus
       user_id,
       COALESCE(disagreed_at, agreed_at, deferred_at) AS responded_at
       FROM post_actions
-      WHERE post_action_type_id IN (#{flag_types.values.join(',')})
+      WHERE post_action_type_id IN (#{flag_types.values.join(",")})
         AND created_at >= '#{report.start_date}'
         AND created_at <= '#{report.end_date}'
       ORDER BY created_at DESC
@@ -136,43 +136,54 @@ module Reports::FlagsStatus
       ON pd.id = pa.id
       SQL
 
-      DB.query(sql).each do |row|
-        data = {}
+      DB
+        .query(sql)
+        .each do |row|
+          data = {}
 
-        data[:post_type] = flag_types.key(row.post_action_type_id).to_s
-        data[:post_number] = row.post_number
-        data[:topic_id] = row.topic_id
+          data[:post_type] = flag_types.key(row.post_action_type_id).to_s
+          data[:post_number] = row.post_number
+          data[:topic_id] = row.topic_id
 
-        if row.staff_id
-          data[:staff_username] = row.staff_username
-          data[:staff_id] = row.staff_id
-          data[:staff_avatar_template] = User.avatar_template(row.staff_username, row.staff_avatar_id)
+          if row.staff_id
+            data[:staff_username] = row.staff_username
+            data[:staff_id] = row.staff_id
+            data[:staff_avatar_template] = User.avatar_template(
+              row.staff_username,
+              row.staff_avatar_id,
+            )
+          end
+
+          if row.poster_id
+            data[:poster_username] = row.poster_username
+            data[:poster_id] = row.poster_id
+            data[:poster_avatar_template] = User.avatar_template(
+              row.poster_username,
+              row.poster_avatar_id,
+            )
+          end
+
+          if row.flagger_id
+            data[:flagger_id] = row.flagger_id
+            data[:flagger_username] = row.flagger_username
+            data[:flagger_avatar_template] = User.avatar_template(
+              row.flagger_username,
+              row.flagger_avatar_id,
+            )
+          end
+
+          if row.agreed_by_id
+            data[:resolution] = I18n.t("reports.flags_status.values.agreed")
+          elsif row.disagreed_by_id
+            data[:resolution] = I18n.t("reports.flags_status.values.disagreed")
+          elsif row.deferred_by_id
+            data[:resolution] = I18n.t("reports.flags_status.values.deferred")
+          else
+            data[:resolution] = I18n.t("reports.flags_status.values.no_action")
+          end
+          data[:response_time] = row.responded_at ? row.responded_at - row.created_at : nil
+          report.data << data
         end
-
-        if row.poster_id
-          data[:poster_username] = row.poster_username
-          data[:poster_id] = row.poster_id
-          data[:poster_avatar_template] = User.avatar_template(row.poster_username, row.poster_avatar_id)
-        end
-
-        if row.flagger_id
-          data[:flagger_id] = row.flagger_id
-          data[:flagger_username] = row.flagger_username
-          data[:flagger_avatar_template] = User.avatar_template(row.flagger_username, row.flagger_avatar_id)
-        end
-
-        if row.agreed_by_id
-          data[:resolution] = I18n.t("reports.flags_status.values.agreed")
-        elsif row.disagreed_by_id
-          data[:resolution] = I18n.t("reports.flags_status.values.disagreed")
-        elsif row.deferred_by_id
-          data[:resolution] = I18n.t("reports.flags_status.values.deferred")
-        else
-          data[:resolution] = I18n.t("reports.flags_status.values.no_action")
-        end
-        data[:response_time] = row.responded_at ? row.responded_at - row.created_at : nil
-        report.data << data
-      end
     end
   end
 end

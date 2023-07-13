@@ -2,7 +2,7 @@
 
 class UserApiKey < ActiveRecord::Base
   self.ignored_columns = [
-    "scopes" # TODO(2020-12-18): remove
+    "scopes", # TODO(2020-12-18): remove
   ]
 
   REVOKE_MATCHER = RouteMatcher.new(actions: "user_api_keys#revoke", methods: :post, params: [:id])
@@ -23,7 +23,9 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def key
-    raise ApiKey::KeyAccessError.new "API key is only accessible immediately after creation" unless key_available?
+    unless key_available?
+      raise ApiKey::KeyAccessError.new "API key is only accessible immediately after creation"
+    end
     @key
   end
 
@@ -41,7 +43,7 @@ class UserApiKey < ActiveRecord::Base
       # invalidate old dupe api key for client if needed
       UserApiKey
         .where(client_id: client_id, user_id: self.user_id)
-        .where('id <> ?', self.id)
+        .where("id <> ?", self.id)
         .destroy_all
 
       update_args[:client_id] = client_id
@@ -59,8 +61,7 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def has_push?
-    scopes.any? { |s| s.name == "push" || s.name == "notifications" } &&
-      push_url.present? &&
+    scopes.any? { |s| s.name == "push" || s.name == "notifications" } && push_url.present? &&
       SiteSetting.allowed_user_api_push_urls.include?(push_url)
   end
 
@@ -69,8 +70,9 @@ class UserApiKey < ActiveRecord::Base
   end
 
   def self.invalid_auth_redirect?(auth_redirect)
-    SiteSetting.allowed_user_api_auth_redirects
-      .split('|')
+    SiteSetting
+      .allowed_user_api_auth_redirects
+      .split("|")
       .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
   end
 

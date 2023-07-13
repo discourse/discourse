@@ -1,9 +1,8 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { module } from "qunit";
+import { module, test } from "qunit";
+import { render } from "@ember/test-helpers";
 
 function displayName() {
   return query(".chat-user-display-name").innerText.trim();
@@ -14,30 +13,22 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    componentTest("username and no name", {
-      template: hbs`{{chat-user-display-name user=user}}`,
+    test("username and no name", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = true;
+      this.set("user", { username: "bob", name: null });
 
-      async beforeEach() {
-        this.siteSettings.prioritize_username_in_ux = true;
-        this.set("user", { username: "bob", name: null });
-      },
+      await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      async test(assert) {
-        assert.equal(displayName(), "bob");
-      },
+      assert.strictEqual(displayName(), "bob");
     });
 
-    componentTest("username and name", {
-      template: hbs`{{chat-user-display-name user=user}}`,
+    test("username and name", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = true;
+      this.set("user", { username: "bob", name: "Bobcat" });
 
-      async beforeEach() {
-        this.siteSettings.prioritize_username_in_ux = true;
-        this.set("user", { username: "bob", name: "Bobcat" });
-      },
+      await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      async test(assert) {
-        assert.equal(displayName(), "bob — Bobcat");
-      },
+      assert.strictEqual(displayName(), "bob — Bobcat");
     });
   }
 );
@@ -47,30 +38,22 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    componentTest("no name", {
-      template: hbs`{{chat-user-display-name user=user}}`,
+    test("no name", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = false;
+      this.set("user", { username: "bob", name: null });
 
-      async beforeEach() {
-        this.siteSettings.prioritize_username_in_ux = false;
-        this.set("user", { username: "bob", name: null });
-      },
+      await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      async test(assert) {
-        assert.equal(displayName(), "bob");
-      },
+      assert.strictEqual(displayName(), "bob");
     });
 
-    componentTest("name and username", {
-      template: hbs`{{chat-user-display-name user=user}}`,
+    test("name and username", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = false;
+      this.set("user", { username: "bob", name: "Bobcat" });
 
-      async beforeEach() {
-        this.siteSettings.prioritize_username_in_ux = false;
-        this.set("user", { username: "bob", name: "Bobcat" });
-      },
+      await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      async test(assert) {
-        assert.equal(displayName(), "Bobcat — bob");
-      },
+      assert.strictEqual(displayName(), "Bobcat — bob");
     });
   }
 );

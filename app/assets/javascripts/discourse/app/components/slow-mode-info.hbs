@@ -1,0 +1,18 @@
+{{#if this.showSlowModeNotice}}
+  <div class="topic-status-info">
+    <h3 class="slow-mode-heading">
+      <span>
+        {{d-icon "hourglass-start"}}
+        {{i18n "topic.slow_mode_notice.duration" duration=this.durationText}}
+      </span>
+
+      {{#if this.user.canManageTopic}}
+        <DButton
+          @class="slow-mode-remove"
+          @action={{action "disableSlowMode"}}
+          @icon="trash-alt"
+        />
+      {{/if}}
+    </h3>
+  </div>
+{{/if}}

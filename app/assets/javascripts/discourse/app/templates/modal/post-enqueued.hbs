@@ -1,8 +1,14 @@
 <DModalBody>
   <p>{{i18n "review.approval.description"}}</p>
 
-  <p>{{html-safe (i18n "review.approval.pending_posts" count=this.model.pending_count)}}</p>
+  <p>{{html-safe
+      (i18n "review.approval.pending_posts" count=this.model.pending_count)
+    }}</p>
 </DModalBody>
 <div class="modal-footer">
-  <DButton @action={{route-action "closeModal"}} @class="btn-primary" @label="review.approval.ok" />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @class="btn-primary"
+    @label="review.approval.ok"
+  />
 </div>

@@ -5,7 +5,7 @@ module Reports::Likes
 
   class_methods do
     def report_likes(report)
-      report.icon = 'heart'
+      report.icon = "heart"
 
       post_action_report report, PostActionType.types[:like]
     end

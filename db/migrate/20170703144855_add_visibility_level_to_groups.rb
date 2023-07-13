@@ -2,7 +2,6 @@
 
 class AddVisibilityLevelToGroups < ActiveRecord::Migration[4.2]
   def change
-
     add_column :groups, :visibility_level, :integer, default: 0, null: false
     execute <<~SQL
       UPDATE groups

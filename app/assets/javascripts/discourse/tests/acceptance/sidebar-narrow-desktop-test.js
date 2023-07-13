@@ -18,14 +18,14 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     await click(".header-sidebar-toggle .btn");
 
-    assert.ok(!exists("#d-sidebar"), "widge sidebar is collapsed");
+    assert.ok(!exists("#d-sidebar"), "wide sidebar is collapsed");
 
     await click(".header-sidebar-toggle .btn");
 
     assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
 
     const bodyElement = document.querySelector("body");
-    bodyElement.style.width = "990px";
+    bodyElement.style.width = "767px";
 
     await waitUntil(
       () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),
@@ -60,7 +60,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     await settled();
 
     const bodyElement = document.querySelector("body");
-    bodyElement.style.width = "990px";
+    bodyElement.style.width = "767px";
 
     await waitUntil(
       () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),

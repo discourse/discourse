@@ -1,0 +1,84 @@
+<table class="table">
+  <thead>
+    <tr>
+      {{#if this.model.computedLabels}}
+        {{#each this.model.computedLabels as |label|}}
+          <AdminReportTableHeader
+            @showSortingUI={{this.showSortingUI}}
+            @currentSortDirection={{this.sortDirection}}
+            @currentSortLabel={{this.sortLabel}}
+            @label={{label}}
+            @sortByLabel={{action "sortByLabel" label}}
+          />
+        {{/each}}
+      {{else}}
+        {{#each this.model.data as |data|}}
+          <th>{{data.x}}</th>
+        {{/each}}
+      {{/if}}
+    </tr>
+  </thead>
+  <tbody>
+    {{#each this.paginatedData as |data|}}
+      <AdminReportTableRow
+        @data={{data}}
+        @labels={{this.model.computedLabels}}
+        @options={{this.options}}
+      />
+    {{/each}}
+
+    {{#if this.showTotalForSample}}
+      <tr class="total-row">
+        <td colspan={{this.totalsForSample.length}}>
+          {{i18n "admin.dashboard.reports.totals_for_sample"}}
+        </td>
+      </tr>
+      <tr class="admin-report-table-row">
+        {{#each this.totalsForSample as |total|}}
+          <td class="admin-report-table-cell {{total.type}} {{total.property}}">
+            {{total.formattedValue}}
+          </td>
+        {{/each}}
+      </tr>
+    {{/if}}
+
+    {{#if this.showTotal}}
+      <tr class="total-row">
+        <td colspan="2">
+          {{i18n "admin.dashboard.reports.total"}}
+        </td>
+      </tr>
+      <tr class="admin-report-table-row">
+        <td class="admin-report-table-cell date x">—</td>
+        <td class="admin-report-table-cell number y">{{number
+            this.model.total
+          }}</td>
+      </tr>
+    {{/if}}
+
+    {{#if this.showAverage}}
+      <tr class="total-row">
+        <td colspan="2">
+          {{i18n "admin.dashboard.reports.average_for_sample"}}
+        </td>
+      </tr>
+      <tr class="admin-report-table-row">
+        <td class="admin-report-table-cell date x">—</td>
+        <td class="admin-report-table-cell number y">{{number
+            this.averageForSample
+          }}</td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {{#each this.pages as |pageState|}}
+    <DButton
+      @translatedLabel={{pageState.page}}
+      @action={{action "changePage"}}
+      @actionParam={{pageState.index}}
+      @class={{pageState.class}}
+    />
+  {{/each}}
+</div>

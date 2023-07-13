@@ -79,7 +79,7 @@ export default Component.extend({
       : this._reset("invisible");
   },
 
-  _set(name, icon, key, iconArgs = null) {
+  _set(name, icon, key, iconArgs) {
     this.set(`${name}Icon`, htmlSafe(iconHTML(`${icon}`, iconArgs)));
     this.set(`${name}Title`, I18n.t(`topic_statuses.${key}.help`));
     return true;

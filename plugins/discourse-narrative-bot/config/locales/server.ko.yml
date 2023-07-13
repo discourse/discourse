@@ -45,8 +45,6 @@ ko:
       trigger: "굴리기"
       invalid: |-
         미안, 수학적으로 그 조합의 주사위는 돌릴 수 없어. :confounded:
-      not_enough_dice:
-        other: "난 주사위가 %{count}개 뿐입니다. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), 나도 알아요!"
       out_of_range: |-
         수학적으로 공평하면서도 [가장 큰 수](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)를 가진 주사위의 면 수가 120이라는 거 아니?
       results: |-

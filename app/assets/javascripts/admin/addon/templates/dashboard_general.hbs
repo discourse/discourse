@@ -1,5 +1,7 @@
 <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-  <PluginOutlet @name="admin-dashboard-general-top" @tagName="span" @connectorTagName="div" />
+  <span>
+    <PluginOutlet @name="admin-dashboard-general-top" @connectorTagName="div" />
+  </span>
 
   {{#if this.isCommunityHealthVisible}}
     <div class="community-health section">
@@ -10,24 +12,63 @@
               {{i18n "admin.dashboard.community_health"}}
             </a>
           </h2>
-          <PeriodChooser @period={{this.period}} @action={{action "changePeriod"}} @content={{this.availablePeriods}} @fullDay={{false}} />
+          <PeriodChooser
+            @period={{this.period}}
+            @action={{action "changePeriod"}}
+            @content={{this.availablePeriods}}
+            @fullDay={{false}}
+          />
         </div>
 
         <div class="section-body">
           <div class="charts">
-            <AdminReport @dataSourceName="consolidated_page_views" @forcedModes="stacked-chart" @filters={{this.filters}} />
+            <AdminReport
+              @dataSourceName="consolidated_page_views"
+              @forcedModes="stacked-chart"
+              @filters={{this.filters}}
+            />
 
-            <AdminReport @dataSourceName="signups" @showTrend={{true}} @forcedModes="chart" @filters={{this.filters}} />
+            <AdminReport
+              @dataSourceName="signups"
+              @showTrend={{true}}
+              @forcedModes="chart"
+              @filters={{this.filters}}
+            />
 
-            <AdminReport @dataSourceName="topics" @showTrend={{true}} @forcedModes="chart" @filters={{this.filters}} />
+            <AdminReport
+              @dataSourceName="topics"
+              @showTrend={{true}}
+              @forcedModes="chart"
+              @filters={{this.filters}}
+            />
 
-            <AdminReport @dataSourceName="posts" @showTrend={{true}} @forcedModes="chart" @filters={{this.filters}} />
+            <AdminReport
+              @dataSourceName="posts"
+              @showTrend={{true}}
+              @forcedModes="chart"
+              @filters={{this.filters}}
+            />
 
-            <AdminReport @dataSourceName="dau_by_mau" @showTrend={{true}} @forcedModes="chart" @filters={{this.filters}} />
+            <AdminReport
+              @dataSourceName="dau_by_mau"
+              @showTrend={{true}}
+              @forcedModes="chart"
+              @filters={{this.filters}}
+            />
 
-            <AdminReport @dataSourceName="daily_engaged_users" @showTrend={{true}} @forcedModes="chart" @filters={{this.filters}} />
+            <AdminReport
+              @dataSourceName="daily_engaged_users"
+              @showTrend={{true}}
+              @forcedModes="chart"
+              @filters={{this.filters}}
+            />
 
-            <AdminReport @dataSourceName="new_contributors" @showTrend={{true}} @forcedModes="chart" @filters={{this.filters}} />
+            <AdminReport
+              @dataSourceName="new_contributors"
+              @showTrend={{true}}
+              @forcedModes="chart"
+              @filters={{this.filters}}
+            />
           </div>
         </div>
       </div>
@@ -52,14 +93,27 @@
               <div class="counters-list">
                 <div class="counters-header">
                   <div class="counters-cell"></div>
-                  <div class="counters-cell">{{i18n "admin.dashboard.reports.today"}}</div>
-                  <div class="counters-cell">{{i18n "admin.dashboard.reports.yesterday"}}</div>
-                  <div class="counters-cell">{{i18n "admin.dashboard.reports.last_7_days"}}</div>
-                  <div class="counters-cell">{{i18n "admin.dashboard.reports.last_30_days"}}</div>
+                  <div class="counters-cell">{{i18n
+                      "admin.dashboard.reports.today"
+                    }}</div>
+                  <div class="counters-cell">{{i18n
+                      "admin.dashboard.reports.yesterday"
+                    }}</div>
+                  <div class="counters-cell">{{i18n
+                      "admin.dashboard.reports.last_7_days"
+                    }}</div>
+                  <div class="counters-cell">{{i18n
+                      "admin.dashboard.reports.last_30_days"
+                    }}</div>
                 </div>
 
                 {{#each this.activityMetrics as |metric|}}
-                  <AdminReport @showHeader={{false}} @filters={{this.activityMetricsFilters}} @forcedModes="counters" @dataSourceName={{metric}} />
+                  <AdminReport
+                    @showHeader={{false}}
+                    @filters={{this.activityMetricsFilters}}
+                    @forcedModes="counters"
+                    @dataSourceName={{metric}}
+                  />
                 {{/each}}
               </div>
             </div>
@@ -69,25 +123,46 @@
 
       <div class="user-metrics">
         <ConditionalLoadingSection @isLoading={{this.isLoading}}>
-          <AdminReport @forcedModes="inline-table" @dataSourceName="users_by_type" />
+          <AdminReport
+            @forcedModes="inline-table"
+            @dataSourceName="users_by_type"
+          />
 
-          <AdminReport @forcedModes="inline-table" @dataSourceName="users_by_trust_level" />
+          <AdminReport
+            @forcedModes="inline-table"
+            @dataSourceName="users_by_trust_level"
+          />
         </ConditionalLoadingSection>
       </div>
 
       <div class="misc">
-        <AdminReport @forcedModes="storage-stats" @dataSourceName="storage_stats" @showHeader={{false}} />
+        <AdminReport
+          @forcedModes="storage-stats"
+          @dataSourceName="storage_stats"
+          @showHeader={{false}}
+        />
 
         <div class="last-dashboard-update">
           <div>
             <h4>{{i18n "admin.dashboard.last_updated"}} </h4>
-            <p>{{format-date this.model.attributes.updated_at leaveAgo="true"}}</p>
+            <p>{{format-date
+                this.model.attributes.updated_at
+                leaveAgo="true"
+              }}</p>
           </div>
           {{#if this.model.attributes.discourse_updated_at}}
             <div>
               <h4>{{i18n "admin.dashboard.discourse_last_updated"}} </h4>
-              <p>{{format-date this.model.attributes.discourse_updated_at leaveAgo="true"}}</p>
-              <a rel="noopener noreferrer" target="_blank" href={{this.model.attributes.release_notes_link}} class="btn btn-default">
+              <p>{{format-date
+                  this.model.attributes.discourse_updated_at
+                  leaveAgo="true"
+                }}</p>
+              <a
+                rel="noopener noreferrer"
+                target="_blank"
+                href={{this.model.attributes.release_notes_link}}
+                class="btn btn-default"
+              >
                 {{i18n "admin.dashboard.whats_new_in_discourse"}}
               </a>
             </div>
@@ -98,13 +173,32 @@
 
     {{#if this.isSearchReportsVisible}}
       <div class="section-column">
-        <AdminReport @filters={{this.topReferredTopicsFilters}} @dataSourceName="top_referred_topics" @reportOptions={{this.topReferredTopicsOptions}} />
+        <AdminReport
+          @filters={{this.topReferredTopicsFilters}}
+          @dataSourceName="top_referred_topics"
+          @reportOptions={{this.topReferredTopicsOptions}}
+        />
 
-        <AdminReport @dataSourceName="trending_search" @reportOptions={{this.trendingSearchOptions}} @filters={{this.trendingSearchFilters}} @isEnabled={{this.logSearchQueriesEnabled}} @disabledLabel={{this.trendingSearchDisabledLabel}} />
-        {{html-safe (i18n "admin.dashboard.reports.trending_search.more" basePath=(base-path))}}
+        <AdminReport
+          @dataSourceName="trending_search"
+          @reportOptions={{this.trendingSearchOptions}}
+          @filters={{this.trendingSearchFilters}}
+          @isEnabled={{this.logSearchQueriesEnabled}}
+          @disabledLabel={{this.trendingSearchDisabledLabel}}
+        />
+        {{html-safe
+          (i18n
+            "admin.dashboard.reports.trending_search.more" basePath=(base-path)
+          )
+        }}
       </div>
     {{/if}}
   </div>
 
-  <PluginOutlet @name="admin-dashboard-general-bottom" @tagName="span" @connectorTagName="div" />
+  <span>
+    <PluginOutlet
+      @name="admin-dashboard-general-bottom"
+      @connectorTagName="div"
+    />
+  </span>
 </ConditionalLoadingSpinner>

@@ -1,18 +1,18 @@
+import { tagName } from "@ember-decorators/component";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "",
-
-  @discourseComputed("type")
+@tagName("")
+export default class AdminPenaltySimilarUsers extends Component {
+  @discourseComputed("penaltyType")
   penaltyField(penaltyType) {
     if (penaltyType === "suspend") {
       return "can_be_suspended";
     } else if (penaltyType === "silence") {
       return "can_be_silenced";
     }
-  },
+  }
 
   @action
   selectUserId(userId, event) {
@@ -25,5 +25,5 @@ export default Component.extend({
     } else {
       this.selectedUserIds.removeObject(userId);
     }
-  },
-});
+  }
+}

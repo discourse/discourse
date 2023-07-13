@@ -2,5 +2,9 @@
   <p>{{html-safe (i18n "post.controls.delete_topic_disallowed_modal")}}</p>
 </DModalBody>
 <div class="modal-footer">
-  <DButton @action={{route-action "closeModal"}} @class="btn-primary" @label="close" />
+  <DButton
+    @action={{route-action "closeModal"}}
+    @class="btn-primary"
+    @label="close"
+  />
 </div>

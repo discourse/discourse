@@ -13,7 +13,7 @@ RSpec.describe Admin::PluginsController do
         get "/admin/plugins.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body.has_key?('plugins')).to eq(true)
+        expect(response.parsed_body.has_key?("plugins")).to eq(true)
       end
     end
 
@@ -24,12 +24,12 @@ RSpec.describe Admin::PluginsController do
         get "/admin/plugins.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body.has_key?('plugins')).to eq(true)
+        expect(response.parsed_body.has_key?("plugins")).to eq(true)
       end
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       it "denies access with a 404 response" do
         get "/admin/plugins.json"

@@ -1,4 +1,5 @@
-import { decorateGithubOneboxBody } from "discourse/initializers/onebox-decorators";
+import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
+import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import I18n from "I18n";
@@ -12,6 +13,7 @@ export default {
 
   initializeWithPluginApi(api, container) {
     const siteSettings = container.lookup("service:site-settings");
+    const site = container.lookup("service:site");
     api.decorateChatMessage((element) => decorateGithubOneboxBody(element), {
       id: "onebox-github-body",
     });
@@ -70,6 +72,10 @@ export default {
         id: "lightbox",
       }
     );
+
+    api.decorateChatMessage((element) => decorateHashtags(element, site), {
+      id: "hashtagIcons",
+    });
   },
 
   _getScrollParent(node, maxParentSelector) {

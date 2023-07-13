@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'colored2'
-require 'psych'
+require "colored2"
+require "psych"
 
 class I18nLinter
   def initialize(filenames_or_patterns)
@@ -27,16 +27,20 @@ end
 
 class LocaleFileValidator
   ERROR_MESSAGES = {
-    invalid_relative_links: "The following keys have relative links, but do not start with %{base_url} or %{base_path}:",
-    invalid_relative_image_sources: "The following keys have relative image sources, but do not start with %{base_url} or %{base_path}:",
-    invalid_interpolation_key_format: "The following keys use {{key}} instead of %{key} for interpolation keys:",
-    wrong_pluralization_keys: "Pluralized strings must have only the sub-keys 'one' and 'other'.\nThe following keys have missing or additional keys:",
-    invalid_one_keys: "The following keys contain the number 1 instead of the interpolation key %{count}:",
-    invalid_message_format_one_key: "The following keys use 'one {1 foo}' instead of the generic 'one {# foo}':",
+    invalid_relative_links:
+      "The following keys have relative links, but do not start with %{base_url} or %{base_path}:",
+    invalid_relative_image_sources:
+      "The following keys have relative image sources, but do not start with %{base_url} or %{base_path}:",
+    invalid_interpolation_key_format:
+      "The following keys use {{key}} instead of %{key} for interpolation keys:",
+    wrong_pluralization_keys:
+      "Pluralized strings must have only the sub-keys 'one' and 'other'.\nThe following keys have missing or additional keys:",
+    invalid_one_keys:
+      "The following keys contain the number 1 instead of the interpolation key %{count}:",
   }
 
-  PLURALIZATION_KEYS = ['zero', 'one', 'two', 'few', 'many', 'other']
-  ENGLISH_KEYS = ['one', 'other']
+  PLURALIZATION_KEYS = %w[zero one two few many other]
+  ENGLISH_KEYS = %w[one other]
 
   def initialize(filename)
     @filename = filename
@@ -66,7 +70,7 @@ class LocaleFileValidator
 
   private
 
-  def each_translation(hash, parent_key = '', &block)
+  def each_translation(hash, parent_key = "", &block)
     hash.each do |key, value|
       current_key = parent_key.empty? ? key : "#{parent_key}.#{key}"
 
@@ -82,28 +86,19 @@ class LocaleFileValidator
     @errors[:invalid_relative_links] = []
     @errors[:invalid_relative_image_sources] = []
     @errors[:invalid_interpolation_key_format] = []
-    @errors[:invalid_message_format_one_key] = []
 
     each_translation(yaml) do |key, value|
-      if value.match?(/href\s*=\s*["']\/[^\/]|\]\(\/[^\/]/i)
-        @errors[:invalid_relative_links] << key
-      end
+      @errors[:invalid_relative_links] << key if value.match?(%r{href\s*=\s*["']/[^/]|\]\(/[^/]}i)
 
-      if value.match?(/src\s*=\s*["']\/[^\/]/i)
-        @errors[:invalid_relative_image_sources] << key
-      end
+      @errors[:invalid_relative_image_sources] << key if value.match?(%r{src\s*=\s*["']/[^/]}i)
 
       if value.match?(/{{.+?}}/) && !key.end_with?("_MF")
         @errors[:invalid_interpolation_key_format] << key
       end
-
-      if key.end_with?("_MF") && value.match?(/one {.*?1.*?}/)
-        @errors[:invalid_message_format_one_key] << key
-      end
     end
   end
 
-  def each_pluralization(hash, parent_key = '', &block)
+  def each_pluralization(hash, parent_key = "", &block)
     hash.each do |key, value|
       if Hash === value
         current_key = parent_key.empty? ? key : "#{parent_key}.#{key}"
@@ -124,8 +119,8 @@ class LocaleFileValidator
 
       @errors[:wrong_pluralization_keys] << key if hash.keys.sort != ENGLISH_KEYS
 
-      one_value = hash['one']
-      if one_value && one_value.include?('1') && !one_value.match?(/%{count}|{{count}}/)
+      one_value = hash["one"]
+      if one_value && one_value.include?("1") && !one_value.match?(/%{count}|{{count}}/)
         @errors[:invalid_one_keys] << key
       end
     end

@@ -6,11 +6,11 @@ RSpec.describe Admin::ImpersonateController do
   fab!(:user) { Fabricate(:user) }
   fab!(:another_admin) { Fabricate(:admin) }
 
-  describe '#index' do
+  describe "#index" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'returns success' do
+      it "returns success" do
         get "/admin/impersonate.json"
 
         expect(response.status).to eq(200)
@@ -39,18 +39,18 @@ RSpec.describe Admin::ImpersonateController do
     end
   end
 
-  describe '#create' do
+  describe "#create" do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it 'requires a username_or_email parameter' do
+      it "requires a username_or_email parameter" do
         post "/admin/impersonate.json"
         expect(response.status).to eq(400)
         expect(session[:current_user_id]).to eq(admin.id)
       end
 
-      it 'returns 404 when that user does not exist' do
-        post "/admin/impersonate.json", params: { username_or_email: 'hedonismbot' }
+      it "returns 404 when that user does not exist" do
+        post "/admin/impersonate.json", params: { username_or_email: "hedonismbot" }
         expect(response.status).to eq(404)
         expect(session[:current_user_id]).to eq(admin.id)
       end
@@ -61,7 +61,7 @@ RSpec.describe Admin::ImpersonateController do
         expect(session[:current_user_id]).to eq(admin.id)
       end
 
-      context 'with success' do
+      context "with success" do
         it "succeeds and logs the impersonation" do
           expect do
             post "/admin/impersonate.json", params: { username_or_email: user.username }

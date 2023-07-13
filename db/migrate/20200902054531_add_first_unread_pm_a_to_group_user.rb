@@ -2,7 +2,11 @@
 
 class AddFirstUnreadPmAToGroupUser < ActiveRecord::Migration[6.0]
   def up
-    add_column :group_users, :first_unread_pm_at, :datetime, null: false, default: -> { 'CURRENT_TIMESTAMP' }
+    add_column :group_users,
+               :first_unread_pm_at,
+               :datetime,
+               null: false,
+               default: -> { "CURRENT_TIMESTAMP" }
 
     execute <<~SQL
     UPDATE group_users gu

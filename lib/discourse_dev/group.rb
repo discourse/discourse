@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require 'discourse_dev/record'
-require 'rails'
-require 'faker'
+require "discourse_dev/record"
+require "rails"
+require "faker"
 
 module DiscourseDev
   class Group < Record
-
     def initialize
       super(::Group, DiscourseDev.config.group[:count])
     end

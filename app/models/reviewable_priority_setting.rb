@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewablePrioritySetting < EnumSiteSetting
-
   def self.valid_value?(val)
     values.any? { |v| v[:value].to_s == val.to_s }
   end
@@ -15,5 +14,4 @@ class ReviewablePrioritySetting < EnumSiteSetting
   def self.translate_names?
     false
   end
-
 end

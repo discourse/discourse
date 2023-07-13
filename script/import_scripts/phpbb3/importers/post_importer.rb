@@ -8,7 +8,14 @@ module ImportScripts::PhpBB3
     # @param poll_importer [ImportScripts::PhpBB3::PollImporter]
     # @param permalink_importer [ImportScripts::PhpBB3::PermalinkImporter]
     # @param settings [ImportScripts::PhpBB3::Settings]
-    def initialize(lookup, text_processor, attachment_importer, poll_importer, permalink_importer, settings)
+    def initialize(
+      lookup,
+      text_processor,
+      attachment_importer,
+      poll_importer,
+      permalink_importer,
+      settings
+    )
       @lookup = lookup
       @text_processor = text_processor
       @attachment_importer = attachment_importer
@@ -24,7 +31,8 @@ module ImportScripts::PhpBB3
     def map_post(row)
       return if @settings.category_mappings.dig(row[:forum_id].to_s, :skip)
 
-      imported_user_id = @settings.prefix(row[:post_username].blank? ? row[:poster_id] : row[:post_username])
+      imported_user_id =
+        @settings.prefix(row[:post_username].blank? ? row[:poster_id] : row[:post_username])
       user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || -1
       is_first_post = row[:post_id] == row[:topic_first_post_id]
 
@@ -35,7 +43,7 @@ module ImportScripts::PhpBB3
         user_id: user_id,
         created_at: Time.zone.at(row[:post_time]),
         raw: @text_processor.process_post(row[:post_text], attachments),
-        import_topic_id: @settings.prefix(row[:topic_id])
+        import_topic_id: @settings.prefix(row[:topic_id]),
       }
 
       if is_first_post
@@ -58,7 +66,9 @@ module ImportScripts::PhpBB3
 
       mapped[:category] = if category_mapping = @settings.category_mappings[row[:forum_id].to_s]
         category_mapping[:discourse_category_id] ||
-          @lookup.category_id_from_imported_category_id(@settings.prefix(category_mapping[:target_category_id]))
+          @lookup.category_id_from_imported_category_id(
+            @settings.prefix(category_mapping[:target_category_id]),
+          )
       else
         @lookup.category_id_from_imported_category_id(@settings.prefix(row[:forum_id]))
       end
@@ -81,7 +91,8 @@ module ImportScripts::PhpBB3
     end
 
     def map_other_post(row, mapped)
-      parent = @lookup.topic_lookup_from_imported_post_id(@settings.prefix(row[:topic_first_post_id]))
+      parent =
+        @lookup.topic_lookup_from_imported_post_id(@settings.prefix(row[:topic_first_post_id]))
 
       if parent.blank?
         puts "Parent post #{@settings.prefix(row[:topic_first_post_id])} doesn't exist. Skipping #{@settings.prefix(row[:post_id])}: #{row[:topic_title][0..40]}"

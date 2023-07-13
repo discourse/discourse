@@ -88,6 +88,11 @@ export function performEmojiUnescape(string, opts) {
       classes += ` ${opts.class}`;
     }
 
+    // hides denied emojis and aliases from the emoji picker
+    if (opts.emojiDenyList?.includes(emojiVal)) {
+      return "";
+    }
+
     const isReplacable =
       (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
       isReplacableInlineEmoji(string, index, opts.inlineEmoji);
@@ -184,6 +189,7 @@ let toSearch;
 export function emojiSearch(term, options) {
   const maxResults = options?.maxResults;
   const diversity = options?.diversity;
+  const exclude = options?.exclude || [];
   if (maxResults === 0) {
     return [];
   }
@@ -200,7 +206,8 @@ export function emojiSearch(term, options) {
 
   function addResult(t) {
     const val = aliasMap.get(t) || t;
-    if (!results.includes(val)) {
+    // dont add skin tone variations or alias of denied emoji to search results
+    if (!results.includes(val) && !exclude.includes(val)) {
       if (diversity && diversity > 1 && isSkinTonableEmoji(val)) {
         results.push(`${val}:t${diversity}`);
       } else {

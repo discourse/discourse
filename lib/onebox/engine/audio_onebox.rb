@@ -5,7 +5,7 @@ module Onebox
     class AudioOnebox
       include Engine
 
-      matches_regexp(/^(https?:)?\/\/.*\.(mp3|ogg|opus|wav|m4a)(\?.*)?$/i)
+      matches_regexp(%r{^(https?:)?//.*\.(mp3|ogg|opus|wav|m4a)(\?.*)?$}i)
 
       def always_https?
         AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.https_hosts)

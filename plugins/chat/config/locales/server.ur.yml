@@ -24,9 +24,8 @@ ur:
         ignore:
           title: "نظر انداز کریں"
     channel:
-      statuses:
-        closed: "بند"
-        open: "کھولیں"
+      dm_title:
+        single_user: "%{username}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "غیر ascii حروف پر مشتمل ہے"

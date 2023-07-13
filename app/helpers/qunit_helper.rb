@@ -6,10 +6,11 @@ module QunitHelper
     return "" if theme.blank?
 
     _, digest = theme.baked_js_tests_with_digest
-    src = "#{GlobalSetting.cdn_url}" \
-      "#{Discourse.base_path}" \
-      "/theme-javascripts/tests/#{theme.id}-#{digest}.js" \
-      "?__ws=#{Discourse.current_hostname}"
+    src =
+      "#{GlobalSetting.cdn_url}" \
+        "#{Discourse.base_path}" \
+        "/theme-javascripts/tests/#{theme.id}-#{digest}.js" \
+        "?__ws=#{Discourse.current_hostname}"
     "<script defer src='#{src}'></script>".html_safe
   end
 end

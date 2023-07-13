@@ -16,9 +16,8 @@ sk:
         disagree:
           title: "Nesúhlasiť"
     channel:
-      statuses:
-        closed: "Zatvorené"
-        open: "Zahájiť"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

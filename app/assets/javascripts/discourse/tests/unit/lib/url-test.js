@@ -139,7 +139,7 @@ module("Unit | Utility | url", function () {
         { path: "/c/foo/1", default_list_filter: "none" },
         false
       ),
-      "/c/foo/1"
+      "/c/foo/1/none"
     );
   });
 

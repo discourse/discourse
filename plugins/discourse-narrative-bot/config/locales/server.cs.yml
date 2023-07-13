@@ -45,11 +45,6 @@ cs:
       trigger: "hodit"
       invalid: |-
         Omlouvám se, ale je matematicky nemožné hodit tuto kombinaci kostek. :confounded:
-      not_enough_dice:
-        one: "Mám jen %{count} kostku. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
-        few: "Mám jen %{count} kostek. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
-        many: "Mám jen %{count} kostek. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
-        other: "Mám jen %{count} kostky. Naprosto [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), já vím!"
       out_of_range: |-
         Víš, že [maximální počet stěn](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) pro matematicky férovou kostku je 120?
       results: |-

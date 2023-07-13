@@ -16,12 +16,10 @@ class RebakeOldAvatarServiceUrls < ActiveRecord::Migration[6.1]
       AND created_at > NOW() - INTERVAL '1 month'
     SQL
 
-    if recently_changed
-      execute <<~SQL
+    execute <<~SQL if recently_changed
         UPDATE posts SET baked_version = 0
         WHERE cooked LIKE '%avatars.discourse.org%'
       SQL
-    end
   end
 
   def down

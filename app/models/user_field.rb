@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class UserField < ActiveRecord::Base
-
   include AnonCacheInvalidator
   include HasSanitizableFields
 
@@ -21,14 +20,16 @@ class UserField < ActiveRecord::Base
   end
 
   def queue_index_search
-    SearchIndexer.queue_users_reindex(UserCustomField.where(name: "user_field_#{self.id}").pluck(:user_id))
+    SearchIndexer.queue_users_reindex(
+      UserCustomField.where(name: "user_field_#{self.id}").pluck(:user_id),
+    )
   end
 
   private
 
   def sanitize_description
     if description_changed?
-      self.description = sanitize_field(self.description)
+      self.description = sanitize_field(self.description, additional_attributes: ["target"])
     end
   end
 end

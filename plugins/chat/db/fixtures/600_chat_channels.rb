@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-ChatSeeder.new.execute if !Rails.env.test?
+Chat::Seeder.new.execute if !Rails.env.test?

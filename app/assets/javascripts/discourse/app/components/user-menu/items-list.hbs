@@ -5,12 +5,16 @@
 {{else if this.items.length}}
   <ul aria-labelledby={{@ariaLabelledby}}>
     {{#each this.items as |item|}}
-      <UserMenu::MenuItem @item={{item}} @closeUserMenu={{@closeUserMenu}}/>
+      <UserMenu::MenuItem @item={{item}} @closeUserMenu={{@closeUserMenu}} />
     {{/each}}
   </ul>
   <div class="panel-body-bottom">
     {{#if this.showAllHref}}
-      <a class="btn btn-default btn-icon no-text show-all" href={{this.showAllHref}} title={{this.showAllTitle}}>
+      <a
+        class="btn btn-default btn-icon no-text show-all"
+        href={{this.showAllHref}}
+        title={{this.showAllTitle}}
+      >
         {{d-icon "chevron-down" aria-label=this.showAllTitle}}
       </a>
     {{/if}}
@@ -25,6 +29,13 @@
         {{i18n "user.dismiss"}}
       </button>
     {{/if}}
+    <PluginOutlet
+      @name="panel-body-bottom"
+      @outletArgs={{hash
+        itemsCacheKey=this.itemsCacheKey
+        closeUserMenu=@closeUserMenu
+      }}
+    />
   </div>
 {{else}}
   {{component this.emptyStateComponent}}

@@ -12,6 +12,15 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
     expect(badge).to be_blank
   end
 
+  it "doesn't award to a bot" do
+    user = Fabricate(:bot, created_at: 400.days.ago)
+    Fabricate(:post, user: user, created_at: 1.week.ago)
+    granter.execute({})
+
+    badge = user.user_badges.where(badge_id: Badge::Anniversary)
+    expect(badge).to be_blank
+  end
+
   it "doesn't award to an inactive user" do
     user = Fabricate(:user, created_at: 400.days.ago, active: false)
     Fabricate(:post, user: user, created_at: 1.week.ago)
@@ -23,6 +32,33 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
 
   it "doesn't award to a silenced user" do
     user = Fabricate(:user, created_at: 400.days.ago, silenced_till: 1.year.from_now)
+    Fabricate(:post, user: user, created_at: 1.week.ago)
+    granter.execute({})
+
+    badge = user.user_badges.where(badge_id: Badge::Anniversary)
+    expect(badge).to be_blank
+  end
+
+  it "doesn't award to a suspended user" do
+    user = Fabricate(:user, created_at: 400.days.ago, suspended_till: 1.year.from_now)
+    Fabricate(:post, user: user, created_at: 1.week.ago)
+    granter.execute({})
+
+    badge = user.user_badges.where(badge_id: Badge::Anniversary)
+    expect(badge).to be_blank
+  end
+
+  it "doesn't award to a staged user" do
+    user = Fabricate(:user, created_at: 400.days.ago, staged: true)
+    Fabricate(:post, user: user, created_at: 1.week.ago)
+    granter.execute({})
+
+    badge = user.user_badges.where(badge_id: Badge::Anniversary)
+    expect(badge).to be_blank
+  end
+
+  it "doesn't award to an anonymous user" do
+    user = Fabricate(:anonymous, created_at: 400.days.ago)
     Fabricate(:post, user: user, created_at: 1.week.ago)
     granter.execute({})
 
@@ -100,9 +136,7 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
       user = Fabricate(:user, created_at: 800.days.ago)
       Fabricate(:post, user: user, created_at: 450.days.ago)
 
-      freeze_time(400.days.ago) do
-        granter.execute({})
-      end
+      freeze_time(400.days.ago) { granter.execute({}) }
 
       badge = user.user_badges.where(badge_id: Badge::Anniversary)
       expect(badge.count).to eq(1)

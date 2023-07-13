@@ -21,15 +21,16 @@ class GroupTagNotificationDefault < ActiveRecord::Base
 
     tag_ids = tag_names.empty? ? [] : Tag.where_name(tag_names).pluck(:id)
 
-    Tag.where_name(tag_names).joins(:target_tag).each do |tag|
-      tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id
-    end
+    Tag
+      .where_name(tag_names)
+      .joins(:target_tag)
+      .each { |tag| tag_ids[tag_ids.index(tag.id)] = tag.target_tag_id }
 
     tag_ids.uniq!
 
     remove = (old_ids - tag_ids)
     if remove.present?
-      records.where('tag_id in (?)', remove).destroy_all
+      records.where("tag_id in (?)", remove).destroy_all
       changed = true
     end
 

@@ -7,11 +7,11 @@ class TopicPoster < OpenStruct
 
   def attributes
     {
-      'user' => user,
-      'description' => description,
-      'extras' => extras,
-      'id' => id,
-      'primary_group' => primary_group
+      "user" => user,
+      "description" => description,
+      "extras" => extras,
+      "id" => id,
+      "primary_group" => primary_group,
     }
   end
 

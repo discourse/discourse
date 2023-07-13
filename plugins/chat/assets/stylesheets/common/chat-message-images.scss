@@ -3,12 +3,15 @@ $max_image_height: 150px;
 .chat-message {
   // append selectors to set images to a
   // max height of $max_image_height
-  .chat-message-collapser .onebox img:not(.ytp-thumbnail-image),
+  .chat-message-collapser
+    .onebox
+    img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
   .chat-message-collapser img.onebox,
   .chat-message-collapser .chat-uploads img,
   .chat-message-collapser p img,
   aside.onebox .onebox-body .aspect-image-full-size,
-  aside.onebox .onebox-body .aspect-image-full-size img {
+  aside.onebox .onebox-body .aspect-image-full-size img,
+  .chat-message-text p img:not(.emoji) {
     object-fit: contain;
     max-height: $max_image_height;
     max-width: 100%;
@@ -19,9 +22,24 @@ $max_image_height: 150px;
   .chat-message-collapser
     .chat-message-collapser-header
     + div
-    .chat-message-collapser-youtube {
+    .chat-message-collapser-lazy-video {
     object-fit: contain;
-    height: $max_image_height;
-    width: calc(#{$max_image_height} / 9 * 16);
+    max-height: $max_image_height;
+    max-width: calc(#{$max_image_height} / 9 * 16);
+  }
+
+  // Prevent overflow of old lazy-yt images
+  // TODO: remove in December 2023
+  .lazyYT.lazyYT-container {
+    border: none;
+    a {
+      display: flex;
+    }
+    .ytp-thumbnail-image {
+      object-fit: contain;
+      height: $max_image_height;
+      width: calc(#{$max_image_height} / 9 * 16);
+      pointer-events: none;
+    }
   }
 }

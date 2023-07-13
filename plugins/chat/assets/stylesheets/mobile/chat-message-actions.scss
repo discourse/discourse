@@ -5,9 +5,11 @@
   right: 0;
   display: flex;
   flex-direction: column;
-  border-radius: 8px 8px 0 0;
-  margin: 0 2px;
-  transition: bottom 0.2s ease;
+  margin: 0 5px;
+  transition: bottom 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    visibility cubic-bezier(0.4, 0, 0.2, 1);
+  visibility: hidden;
+  box-sizing: border-box;
 
   .selected-message-container {
     padding: 0.5em 0.5em 1em 0.5em;
@@ -19,9 +21,10 @@
     padding: 0.5em;
     border: 1px solid var(--primary-low);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.125);
-    border-radius: 8px;
 
     .selected-message-reply {
+      margin-left: 5px;
+
       &:not(.is-expanded) {
         @include ellipsis;
       }
@@ -75,10 +78,15 @@
 
     .chat-message-reaction,
     .reply-btn,
+    .chat-message-thread-btn,
     .react-btn,
     .bookmark-btn {
       flex-grow: 1;
       height: 42px;
+
+      &:active {
+        background: var(--primary-low);
+      }
     }
 
     .bookmark-btn,
@@ -90,7 +98,6 @@
     }
 
     .reply-btn {
-      border-radius: 3px;
       .d-icon {
         font-size: var(--font-up-4);
       }
@@ -109,14 +116,15 @@
       border-bottom: 1px solid var(--primary-low);
       width: 100%;
       list-style: none;
-      padding-bottom: 0.25em;
-      margin-bottom: 0.25em;
+      padding: 0.25em 0;
       display: flex;
 
+      &:active {
+        background: var(--primary-low);
+      }
+
       &:last-child {
-        border: 0;
-        margin: 0;
-        padding: 0;
+        border-bottom: 0;
       }
 
       .chat-message-action {
@@ -143,7 +151,7 @@
   height: 100%;
   width: 100%;
   z-index: z("header") + 1;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.4s ease-in;
 
   .collapse-area {
     width: 100%;
@@ -151,10 +159,11 @@
   }
 
   &.fade-in {
-    background-color: rgba(0, 0, 0, 0.35);
+    background: rgba(var(--always-black-rgb), 0.6);
 
     .chat-message-actions {
-      bottom: 0;
+      bottom: 0px;
+      visibility: visible;
     }
   }
 }

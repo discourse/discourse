@@ -5,6 +5,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 import { setComponentTemplate } from "@glimmer/manager";
 import Component from "@glimmer/component";
+import { forceMobile, resetMobile } from "discourse/lib/mobile";
 
 class MockColocatedComponent extends Component {}
 setComponentTemplate(hbs`Colocated Original`, MockColocatedComponent);
@@ -23,12 +24,20 @@ function registerBaseComponents(namespace = "discourse") {
     MockColocatedComponent
   );
   registerTemporaryModule(
+    `${namespace}/templates/mobile/components/mock-colocated`,
+    hbs`Core mobile template`
+  );
+  registerTemporaryModule(
     `${namespace}/components/mock-resolved`,
     MockResolvedComponent
   );
   registerTemporaryModule(
     `${namespace}/templates/components/mock-resolved`,
     MockResolvedComponentTemplate
+  );
+  registerTemporaryModule(
+    `${namespace}/templates/mobile/components/mock-resolved`,
+    hbs`Core resolved mobile`
   );
 }
 
@@ -38,8 +47,16 @@ function registerThemeOverrides() {
     hbs`Colocated Theme Override`
   );
   registerTemporaryModule(
+    `discourse/theme-12/discourse/templates/mobile/components/mock-colocated`,
+    hbs`Colocated Mobile Theme Override`
+  );
+  registerTemporaryModule(
     "discourse/theme-12/discourse/templates/components/mock-resolved",
     hbs`Resolved Theme Override`
+  );
+  registerTemporaryModule(
+    "discourse/theme-12/discourse/templates/mobile/components/mock-resolved",
+    hbs`Resolved Mobile Theme Override`
   );
 }
 
@@ -81,6 +98,26 @@ module("Integration | Initializers | template-overrides", function () {
     });
   });
 
+  module("with core mobile overrides", function (hooks) {
+    hooks.beforeEach(() => {
+      registerBaseComponents();
+      forceMobile();
+    });
+    hooks.afterEach(resetMobile);
+
+    setupRenderingTest(hooks);
+
+    test("core mobile overrides are used", async function () {
+      await render(TestTemplate);
+      assert
+        .dom("#mock-colocated")
+        .hasText("Core mobile template", "colocated component correct");
+      assert
+        .dom("#mock-resolved")
+        .hasText("Core resolved mobile", "resolved component correct");
+    });
+  });
+
   module("with theme overrides", function (hooks) {
     hooks.beforeEach(() => registerBaseComponents());
     hooks.beforeEach(registerThemeOverrides);
@@ -94,6 +131,33 @@ module("Integration | Initializers | template-overrides", function () {
       assert
         .dom("#mock-resolved")
         .hasText("Resolved Theme Override", "resolved component correct");
+    });
+  });
+
+  module("with mobile theme overrides", function (hooks) {
+    hooks.beforeEach(() => {
+      registerThemeOverrides();
+      forceMobile();
+      registerBaseComponents();
+    });
+    hooks.afterEach(resetMobile);
+
+    setupRenderingTest(hooks);
+
+    test("mobile theme overrides are used", async function () {
+      await render(TestTemplate);
+      assert
+        .dom("#mock-colocated")
+        .hasText(
+          "Colocated Mobile Theme Override",
+          "colocated component correct"
+        );
+      assert
+        .dom("#mock-resolved")
+        .hasText(
+          "Resolved Mobile Theme Override",
+          "resolved component correct"
+        );
     });
   });
 

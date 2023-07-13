@@ -5,9 +5,8 @@ task "annotate" => :environment do |task, args|
   raise if !system "bin/annotate --models"
   STDERR.puts "Annotate executed successfully"
 
-  non_core_plugins = Dir["plugins/*"].filter do |plugin_path|
-    `git check-ignore #{plugin_path}`.present?
-  end
+  non_core_plugins =
+    Dir["plugins/*"].filter { |plugin_path| `git check-ignore #{plugin_path}`.present? }
   if non_core_plugins.length > 0
     STDERR.puts "Warning: you have non-core plugins installed which may affect the annotations"
     STDERR.puts "For core annotations, consider running `bin/rake annotate:clean`"
@@ -18,7 +17,7 @@ desc "ensure the asynchronously-created post_search_data index is present"
 task "annotate:ensure_all_indexes" => :environment do |task, args|
   # One of the indexes on post_search_data is created by a sidekiq job
   # We need to do some acrobatics to create it on-demand
-  SeedData::Topics.with_default_locale.create(include_welcome_topics: true)
+  SeedData::Topics.with_default_locale.create
   SiteSetting.search_enable_recent_regular_posts_offset_size = 1
   Jobs::CreateRecentPostSearchIndexes.new.execute([])
 end

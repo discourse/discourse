@@ -19,12 +19,188 @@ import round from "discourse/lib/round";
 // and you want to ensure cache is reset
 export const SCHEMA_VERSION = 4;
 
-const Report = EmberObject.extend({
-  average: false,
-  percent: false,
-  higher_is_better: true,
-  description_link: null,
-  description: null,
+export default class Report extends EmberObject {
+  static groupingForDatapoints(count) {
+    if (count < DAILY_LIMIT_DAYS) {
+      return "daily";
+    }
+
+    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
+      return "weekly";
+    }
+
+    if (count >= WEEKLY_LIMIT_DAYS) {
+      return "monthly";
+    }
+  }
+
+  static unitForDatapoints(count) {
+    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
+      return "week";
+    } else if (count >= WEEKLY_LIMIT_DAYS) {
+      return "month";
+    } else {
+      return "day";
+    }
+  }
+
+  static unitForGrouping(grouping) {
+    switch (grouping) {
+      case "monthly":
+        return "month";
+      case "weekly":
+        return "week";
+      default:
+        return "day";
+    }
+  }
+
+  static collapse(model, data, grouping) {
+    grouping = grouping || Report.groupingForDatapoints(data.length);
+
+    if (grouping === "daily") {
+      return data;
+    } else if (grouping === "weekly" || grouping === "monthly") {
+      const isoKind = grouping === "weekly" ? "isoWeek" : "month";
+      const kind = grouping === "weekly" ? "week" : "month";
+      const startMoment = moment(model.start_date, "YYYY-MM-DD");
+
+      let currentIndex = 0;
+      let currentStart = startMoment.clone().startOf(isoKind);
+      let currentEnd = startMoment.clone().endOf(isoKind);
+      const transformedData = [
+        {
+          x: currentStart.format("YYYY-MM-DD"),
+          y: 0,
+        },
+      ];
+
+      let appliedAverage = false;
+      data.forEach((d) => {
+        const date = moment(d.x, "YYYY-MM-DD");
+
+        if (
+          !date.isSame(currentStart) &&
+          !date.isBetween(currentStart, currentEnd)
+        ) {
+          if (model.average) {
+            transformedData[currentIndex].y = applyAverage(
+              transformedData[currentIndex].y,
+              currentStart,
+              currentEnd
+            );
+
+            appliedAverage = true;
+          }
+
+          currentIndex += 1;
+          currentStart = currentStart.add(1, kind).startOf(isoKind);
+          currentEnd = currentEnd.add(1, kind).endOf(isoKind);
+        } else {
+          appliedAverage = false;
+        }
+
+        if (transformedData[currentIndex]) {
+          transformedData[currentIndex].y += d.y;
+        } else {
+          transformedData[currentIndex] = {
+            x: d.x,
+            y: d.y,
+          };
+        }
+      });
+
+      if (model.average && !appliedAverage) {
+        transformedData[currentIndex].y = applyAverage(
+          transformedData[currentIndex].y,
+          currentStart,
+          moment(model.end_date).subtract(1, "day") // remove 1 day as model end date is at 00:00 of next day
+        );
+      }
+
+      return transformedData;
+    }
+
+    // ensure we return something if grouping is unknown
+    return data;
+  }
+
+  static fillMissingDates(report, options = {}) {
+    const dataField = options.dataField || "data";
+    const filledField = options.filledField || "data";
+    const startDate = options.startDate || "start_date";
+    const endDate = options.endDate || "end_date";
+
+    if (Array.isArray(report[dataField])) {
+      const startDateFormatted = moment
+        .utc(report[startDate])
+        .locale("en")
+        .format("YYYY-MM-DD");
+      const endDateFormatted = moment
+        .utc(report[endDate])
+        .locale("en")
+        .format("YYYY-MM-DD");
+
+      if (report.modes[0] === "stacked_chart") {
+        report[filledField] = report[dataField].map((rep) => {
+          return {
+            req: rep.req,
+            label: rep.label,
+            color: rep.color,
+            data: fillMissingDates(
+              JSON.parse(JSON.stringify(rep.data)),
+              startDateFormatted,
+              endDateFormatted
+            ),
+          };
+        });
+      } else {
+        report[filledField] = fillMissingDates(
+          JSON.parse(JSON.stringify(report[dataField])),
+          startDateFormatted,
+          endDateFormatted
+        );
+      }
+    }
+  }
+
+  static find(type, startDate, endDate, categoryId, groupId) {
+    return ajax("/admin/reports/" + type, {
+      data: {
+        start_date: startDate,
+        end_date: endDate,
+        category_id: categoryId,
+        group_id: groupId,
+      },
+    }).then((json) => {
+      // don’t fill for large multi column tables
+      // which are not date based
+      const modes = json.report.modes;
+      if (modes.length !== 1 && modes[0] !== "table") {
+        Report.fillMissingDates(json.report);
+      }
+
+      const model = Report.create({ type });
+      model.setProperties(json.report);
+
+      if (json.report.related_report) {
+        // TODO: fillMissingDates if xaxis is date
+        const related = Report.create({
+          type: json.report.related_report.type,
+        });
+        related.setProperties(json.report.related_report);
+        model.set("relatedReport", related);
+      }
+
+      return model;
+    });
+  }
+
+  average = false;
+  percent = false;
+  higher_is_better = true;
+  description_link = null;
+  description = null;
 
   @discourseComputed("type", "start_date", "end_date")
   reportUrl(type, start_date, end_date) {
@@ -35,7 +211,7 @@ const Report = EmberObject.extend({
     return getURL(
       `/admin/reports/${type}?start_date=${start_date}&end_date=${end_date}`
     );
-  },
+  }
 
   valueAt(numDaysAgo) {
     if (this.data) {
@@ -49,7 +225,7 @@ const Report = EmberObject.extend({
       }
     }
     return 0;
-  },
+  }
 
   valueFor(startDaysAgo, endDaysAgo) {
     if (this.data) {
@@ -70,46 +246,46 @@ const Report = EmberObject.extend({
       }
       return round(sum, -2);
     }
-  },
+  }
 
   @discourseComputed("data", "average")
   todayCount() {
     return this.valueAt(0);
-  },
+  }
 
   @discourseComputed("data", "average")
   yesterdayCount() {
     return this.valueAt(1);
-  },
+  }
 
   @discourseComputed("data", "average")
   sevenDaysAgoCount() {
     return this.valueAt(7);
-  },
+  }
 
   @discourseComputed("data", "average")
   thirtyDaysAgoCount() {
     return this.valueAt(30);
-  },
+  }
 
   @discourseComputed("data", "average")
   lastSevenDaysCount() {
     return this.averageCount(7, this.valueFor(1, 7));
-  },
+  }
 
   @discourseComputed("data", "average")
   lastThirtyDaysCount() {
     return this.averageCount(30, this.valueFor(1, 30));
-  },
+  }
 
   averageCount(count, value) {
     return this.average ? value / count : value;
-  },
+  }
 
   @discourseComputed("yesterdayCount", "higher_is_better")
   yesterdayTrend(yesterdayCount, higherIsBetter) {
     return this._computeTrend(this.valueAt(2), yesterdayCount, higherIsBetter);
-  },
+  }
 
   @discourseComputed("lastSevenDaysCount", "higher_is_better")
   sevenDaysTrend(lastSevenDaysCount, higherIsBetter) {
@@ -118,39 +294,39 @@ const Report = EmberObject.extend({
       lastSevenDaysCount,
       higherIsBetter
     );
-  },
+  }
 
   @discourseComputed("data")
   currentTotal(data) {
     return data.reduce((cur, pair) => cur + pair.y, 0);
-  },
+  }
 
   @discourseComputed("data", "currentTotal")
   currentAverage(data, total) {
     return makeArray(data).length === 0
       ? 0
       : parseFloat((total / parseFloat(data.length)).toFixed(1));
-  },
+  }
 
   @discourseComputed("trend", "higher_is_better")
   trendIcon(trend, higherIsBetter) {
     return this._iconForTrend(trend, higherIsBetter);
-  },
+  }
 
   @discourseComputed("sevenDaysTrend", "higher_is_better")
   sevenDaysTrendIcon(sevenDaysTrend, higherIsBetter) {
     return this._iconForTrend(sevenDaysTrend, higherIsBetter);
-  },
+  }
 
   @discourseComputed("thirtyDaysTrend", "higher_is_better")
   thirtyDaysTrendIcon(thirtyDaysTrend, higherIsBetter) {
     return this._iconForTrend(thirtyDaysTrend, higherIsBetter);
-  },
+  }
 
   @discourseComputed("yesterdayTrend", "higher_is_better")
   yesterdayTrendIcon(yesterdayTrend, higherIsBetter) {
     return this._iconForTrend(yesterdayTrend, higherIsBetter);
-  },
+  }
 
   @discourseComputed(
     "prev_period",
@@ -161,7 +337,7 @@ const Report = EmberObject.extend({
   trend(prev, currentTotal, currentAverage, higherIsBetter) {
     const total = this.average ? currentAverage : currentTotal;
     return this._computeTrend(prev, total, higherIsBetter);
-  },
+  }
 
   @discourseComputed(
     "prev30Days",
@@ -180,7 +356,7 @@ const Report = EmberObject.extend({
       lastThirtyDaysCount,
       higherIsBetter
     );
-  },
+  }
 
   @discourseComputed("type")
   method(type) {
@@ -189,7 +365,7 @@ const Report = EmberObject.extend({
     } else {
       return "sum";
     }
-  },
+  }
 
   percentChangeString(val1, val2) {
     const change = this._computeChange(val1, val2);
@@ -201,7 +377,7 @@ const Report = EmberObject.extend({
     } else {
       return change.toFixed(0) + "%";
     }
-  },
+  }
 
   @discourseComputed("prev_period", "currentTotal", "currentAverage")
   trendTitle(prev, currentTotal, currentAverage) {
@@ -224,7 +400,7 @@ const Report = EmberObject.extend({
       prev,
       current,
     });
-  },
+  }
 
   changeTitle(valAtT1, valAtT2, prevPeriodString) {
     const change = this.percentChangeString(valAtT1, valAtT2);
@@ -234,12 +410,12 @@ const Report = EmberObject.extend({
     }
     title += `Was ${number(valAtT1)} ${prevPeriodString}.`;
     return title;
-  },
+  }
 
   @discourseComputed("yesterdayCount")
   yesterdayCountTitle(yesterdayCount) {
     return this.changeTitle(this.valueAt(2), yesterdayCount, "two days ago");
-  },
+  }
 
   @discourseComputed("lastSevenDaysCount")
   sevenDaysCountTitle(lastSevenDaysCount) {
@@ -248,12 +424,12 @@ const Report = EmberObject.extend({
       lastSevenDaysCount,
       "two weeks ago"
     );
-  },
+  }
 
   @discourseComputed("prev30Days", "prev_period")
   canDisplayTrendIcon(prev30Days, prev_period) {
     return prev30Days ?? prev_period;
-  },
+  }
 
   @discourseComputed("prev30Days", "prev_period", "lastThirtyDaysCount")
   thirtyDaysCountTitle(prev30Days, prev_period, lastThirtyDaysCount) {
@@ -262,12 +438,12 @@ const Report = EmberObject.extend({
       lastThirtyDaysCount,
       "in the previous 30 day period"
     );
-  },
+  }
 
   @discourseComputed("data")
   sortedData(data) {
     return this.xAxisIsDate ? data.toArray().reverse() : data.toArray();
-  },
+  }
 
   @discourseComputed("data")
   xAxisIsDate() {
@@ -275,7 +451,7 @@ const Report = EmberObject.extend({
       return false;
     }
     return this.data && this.data[0].x.match(/\d{4}-\d{1,2}-\d{1,2}/);
-  },
+  }
 
   @discourseComputed("labels")
   computedLabels(labels) {
@@ -359,7 +535,7 @@ const Report = EmberObject.extend({
         },
       };
     });
-  },
+  }
 
   _userLabel(properties, row) {
     const username = row[properties.username];
@@ -388,7 +564,7 @@ const Report = EmberObject.extend({
       value: username,
       formattedValue: username ? formattedValue() : "—",
     };
-  },
+  }
 
   _topicLabel(properties, row) {
     const topicTitle = row[properties.title];
@@ -403,7 +579,7 @@ const Report = EmberObject.extend({
       value: topicTitle,
       formattedValue: topicTitle ? formattedValue() : "—",
     };
-  },
+  }
 
   _postLabel(properties, row) {
     const postTitle = row[properties.truncated_raw];
@@ -419,21 +595,21 @@ const Report = EmberObject.extend({
           ? `<a href='${href}'>${escapeExpression(postTitle)}</a>`
           : "—",
     };
-  },
+  }
 
   _secondsLabel(value) {
     return {
       value: toNumber(value),
       formattedValue: durationTiny(value),
     };
-  },
+  }
 
   _percentLabel(value) {
     return {
       value: toNumber(value),
       formattedValue: value ? `${value}%` : "—",
     };
-  },
+  }
 
   _numberLabel(value, options = {}) {
     const formatNumbers = isEmpty(options.formatNumbers)
@@ -446,21 +622,21 @@ const Report = EmberObject.extend({
       value: toNumber(value),
       formattedValue: value ? formattedValue() : "—",
     };
-  },
+  }
 
   _bytesLabel(value) {
     return {
       value: toNumber(value),
       formattedValue: I18n.toHumanSize(value),
     };
-  },
+  }
 
   _dateLabel(value, date, format = "LL") {
     return {
       value,
       formattedValue: value ? date.format(format) : "—",
     };
-  },
+  }
 
   _textLabel(value) {
     const escaped = escapeExpression(value);
@@ -469,7 +645,7 @@ const Report = EmberObject.extend({
       value,
       formattedValue: value ? escaped : "—",
     };
-  },
+  }
 
   _linkLabel(properties, row) {
     const property = properties[0];
@@ -484,11 +660,11 @@ const Report = EmberObject.extend({
       value,
       formattedValue: value ? formattedValue(value, row[properties[1]]) : "—",
     };
-  },
+  }
 
   _computeChange(valAtT1, valAtT2) {
     return ((valAtT2 - valAtT1) / valAtT1) * 100;
-  },
+  }
 
   _computeTrend(valAtT1, valAtT2, higherIsBetter) {
     const change = this._computeChange(valAtT1, valAtT2);
@@ -504,7 +680,7 @@ const Report = EmberObject.extend({
     } else if (change < -2) {
       return higherIsBetter ? "trending-down" : "trending-up";
     }
-  },
+  }
 
   _iconForTrend(trend, higherIsBetter) {
     switch (trend) {
@@ -519,8 +695,8 @@ const Report = EmberObject.extend({
       default:
         return "minus";
     }
-  },
-});
+  }
+}
 
 export const WEEKLY_LIMIT_DAYS = 365;
 export const DAILY_LIMIT_DAYS = 34;
@@ -529,183 +705,3 @@ function applyAverage(value, start, end) {
   const count = end.diff(start, "day") + 1; // 1 to include start
   return parseFloat((value / count).toFixed(2));
 }
-
-Report.reopenClass({
-  groupingForDatapoints(count) {
-    if (count < DAILY_LIMIT_DAYS) {
-      return "daily";
-    }
-
-    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
-      return "weekly";
-    }
-
-    if (count >= WEEKLY_LIMIT_DAYS) {
-      return "monthly";
-    }
-  },
-
-  unitForDatapoints(count) {
-    if (count >= DAILY_LIMIT_DAYS && count < WEEKLY_LIMIT_DAYS) {
-      return "week";
-    } else if (count >= WEEKLY_LIMIT_DAYS) {
-      return "month";
-    } else {
-      return "day";
-    }
-  },
-
-  unitForGrouping(grouping) {
-    switch (grouping) {
-      case "monthly":
-        return "month";
-      case "weekly":
-        return "week";
-      default:
-        return "day";
-    }
-  },
-
-  collapse(model, data, grouping) {
-    grouping = grouping || Report.groupingForDatapoints(data.length);
-
-    if (grouping === "daily") {
-      return data;
-    } else if (grouping === "weekly" || grouping === "monthly") {
-      const isoKind = grouping === "weekly" ? "isoWeek" : "month";
-      const kind = grouping === "weekly" ? "week" : "month";
-      const startMoment = moment(model.start_date, "YYYY-MM-DD");
-
-      let currentIndex = 0;
-      let currentStart = startMoment.clone().startOf(isoKind);
-      let currentEnd = startMoment.clone().endOf(isoKind);
-      const transformedData = [
-        {
-          x: currentStart.format("YYYY-MM-DD"),
-          y: 0,
-        },
-      ];
-
-      let appliedAverage = false;
-      data.forEach((d) => {
-        const date = moment(d.x, "YYYY-MM-DD");
-
-        if (
-          !date.isSame(currentStart) &&
-          !date.isBetween(currentStart, currentEnd)
-        ) {
-          if (model.average) {
-            transformedData[currentIndex].y = applyAverage(
-              transformedData[currentIndex].y,
-              currentStart,
-              currentEnd
-            );
-
-            appliedAverage = true;
-          }
-
-          currentIndex += 1;
-          currentStart = currentStart.add(1, kind).startOf(isoKind);
-          currentEnd = currentEnd.add(1, kind).endOf(isoKind);
-        } else {
-          appliedAverage = false;
-        }
-
-        if (transformedData[currentIndex]) {
-          transformedData[currentIndex].y += d.y;
-        } else {
-          transformedData[currentIndex] = {
-            x: d.x,
-            y: d.y,
-          };
-        }
-      });
-
-      if (model.average && !appliedAverage) {
-        transformedData[currentIndex].y = applyAverage(
-          transformedData[currentIndex].y,
-          currentStart,
-          moment(model.end_date).subtract(1, "day") // remove 1 day as model end date is at 00:00 of next day
-        );
-      }
-
-      return transformedData;
-    }
-
-    // ensure we return something if grouping is unknown
-    return data;
-  },
-
-  fillMissingDates(report, options = {}) {
-    const dataField = options.dataField || "data";
-    const filledField = options.filledField || "data";
-    const startDate = options.startDate || "start_date";
-    const endDate = options.endDate || "end_date";
-
-    if (Array.isArray(report[dataField])) {
-      const startDateFormatted = moment
-        .utc(report[startDate])
-        .locale("en")
-        .format("YYYY-MM-DD");
-      const endDateFormatted = moment
-        .utc(report[endDate])
-        .locale("en")
-        .format("YYYY-MM-DD");
-
-      if (report.modes[0] === "stacked_chart") {
-        report[filledField] = report[dataField].map((rep) => {
-          return {
-            req: rep.req,
-            label: rep.label,
-            color: rep.color,
-            data: fillMissingDates(
-              JSON.parse(JSON.stringify(rep.data)),
-              startDateFormatted,
-              endDateFormatted
-            ),
-          };
-        });
-      } else {
-        report[filledField] = fillMissingDates(
-          JSON.parse(JSON.stringify(report[dataField])),
-          startDateFormatted,
-          endDateFormatted
-        );
-      }
-    }
-  },
-
-  find(type, startDate, endDate, categoryId, groupId) {
-    return ajax("/admin/reports/" + type, {
-      data: {
-        start_date: startDate,
-        end_date: endDate,
-        category_id: categoryId,
-        group_id: groupId,
-      },
-    }).then((json) => {
-      // don’t fill for large multi column tables
-      // which are not date based
-      const modes = json.report.modes;
-      if (modes.length !== 1 && modes[0] !== "table") {
-        Report.fillMissingDates(json.report);
-      }
-
-      const model = Report.create({ type });
-      model.setProperties(json.report);
-
-      if (json.report.related_report) {
-        // TODO: fillMissingDates if xaxis is date
-        const related = Report.create({
-          type: json.report.related_report.type,
-        });
-        related.setProperties(json.report.related_report);
-        model.set("relatedReport", related);
-      }
-
-      return model;
-    });
-  },
-});
-
-export default Report;

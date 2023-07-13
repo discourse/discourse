@@ -41,6 +41,12 @@ acceptance("User Preferences - Second Factor", function (needs) {
       });
     });
 
+    server.put("/u/security_key.json", () => {
+      return helper.response({
+        success: "OK",
+      });
+    });
+
     server.put("/u/second_factors_backup.json", () => {
       return helper.response({
         backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"],
@@ -60,8 +66,13 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".new-totp");
     assert.ok(exists(".qr-code img"), "shows qr code image");
 
-    await click(".add-totp");
+    await click(".modal a.show-second-factor-key");
+    assert.ok(
+      exists(".modal .second-factor-key"),
+      "displays second factor key"
+    );
 
+    await click(".add-totp");
     assert.ok(
       query(".alert-error").innerHTML.includes("provide a name and the code"),
       "shows name/token missing error message"
@@ -102,21 +113,34 @@ acceptance("User Preferences - Second Factor", function (needs) {
 
     await fillIn("#password", "secrets");
     await click(".user-preferences .btn-primary");
-    await click(".totp .btn-danger");
+    await click(".token-based-auth-dropdown .select-kit-header");
+    await click("li[data-name='Disable']");
+
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting an authenticator"
     );
     await click(".dialog-close");
 
-    await click(".security-key .btn-danger");
+    assert.ok(
+      exists(".security-key .second-factor-item"),
+      "User has a physical security key"
+    );
+
+    await click(".security-key-dropdown .select-kit-header");
+    await click("li[data-name='Disable'");
+
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting an authenticator"
     );
-    await click(".dialog-close");
+    await click(".dialog-footer .btn-danger");
+    assert.notOk(
+      exists(".security-key .second-factor-item"),
+      "security key row is removed after a successful delete"
+    );
 
-    await click(".btn-danger.btn-icon-text");
+    await click(".pref-second-factor-disable-all .btn-danger");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Are you sure you want to disable two-factor authentication?"

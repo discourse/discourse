@@ -4,15 +4,38 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import showModal from "discourse/lib/show-modal";
+import { or } from "@ember/object/computed";
 
 export default Component.extend({
   saving: null,
   disabled: false,
   updateExistingUsers: null,
+  hasFlair: or("model.flair_icon", "model.flair_upload_id"),
 
   @discourseComputed("saving")
   savingText(saving) {
     return saving ? I18n.t("saving") : I18n.t("save");
+  },
+
+  @discourseComputed(
+    "model.visibility_level",
+    "model.primary_group",
+    "hasFlair"
+  )
+  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
+    if (visibilityLevel === 0) {
+      return;
+    }
+
+    if (isPrimaryGroup) {
+      return I18n.t("admin.groups.manage.alert.primary_group", {
+        group_name: this.model.name,
+      });
+    } else if (hasFlair) {
+      return I18n.t("admin.groups.manage.alert.flair_group", {
+        group_name: this.model.name,
+      });
+    }
   },
 
   actions: {

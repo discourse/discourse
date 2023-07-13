@@ -18,9 +18,9 @@ RSpec.describe PostRevision do
       {
         "last_version_at" => [
           Time.parse("2013-12-12 21:40:13.225239000 Z"),
-          Time.parse("2013-12-12 22:10:51.433689320 Z")
-        ]
-      }
+          Time.parse("2013-12-12 22:10:51.433689320 Z"),
+        ],
+      },
     )
   end
 
@@ -28,10 +28,6 @@ RSpec.describe PostRevision do
     # Plugins may store symbolized values in this column
     pr = Fabricate(:post_revision, modifications: { key: :value })
     pr.reload
-    expect(pr.modifications).to eq(
-      {
-        key: :value
-      }
-    )
+    expect(pr.modifications).to eq({ key: :value })
   end
 end

@@ -3,16 +3,12 @@
 class CreatePostHotlinkedMedia < ActiveRecord::Migration[6.1]
   def change
     reversible do |dir|
-      dir.up do
-        execute <<~SQL
+      dir.up { execute <<~SQL }
           CREATE TYPE hotlinked_media_status AS ENUM('downloaded', 'too_large', 'download_failed', 'upload_create_failed')
         SQL
-      end
-      dir.down do
-        execute <<~SQL
+      dir.down { execute <<~SQL }
           DROP TYPE hotlinked_media_status
         SQL
-      end
     end
 
     create_table :post_hotlinked_media do |t|

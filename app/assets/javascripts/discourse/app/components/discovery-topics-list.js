@@ -27,12 +27,16 @@ export default Component.extend(UrlRefresh, LoadMore, {
 
   @on("didInsertElement")
   _monitorTrackingState() {
-    this.topicTrackingState.onStateChange(() => this._updateTrackingTopics());
+    this.stateChangeCallbackId = this.topicTrackingState.onStateChange(() =>
+      this._updateTrackingTopics()
+    );
   },
 
   @on("willDestroyElement")
   _removeTrackingStateChangeMonitor() {
-    this.topicTrackingState.offStateChange(this.stateChangeCallbackId);
+    if (this.stateChangeCallbackId) {
+      this.topicTrackingState.offStateChange(this.stateChangeCallbackId);
+    }
   },
 
   _updateTrackingTopics() {

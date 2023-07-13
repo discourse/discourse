@@ -40,7 +40,6 @@ export default DiscourseRoute.extend({
     }
 
     const searchKey = getSearchKey(args);
-
     if (cached && cached.data.searchKey === searchKey) {
       // extend expiry
       setTransient("lastSearch", { searchKey, model: cached.data.model }, 5);
@@ -54,12 +53,7 @@ export default DiscourseRoute.extend({
         return null;
       }
     }).then(async (results) => {
-      const grouped_search_result = results
-        ? results.grouped_search_result
-        : {};
-      const model = (results && (await translateResults(results))) || {
-        grouped_search_result,
-      };
+      const model = (results && (await translateResults(results))) || {};
       setTransient("lastSearch", { searchKey, model }, 5);
       return model;
     });
@@ -67,7 +61,7 @@ export default DiscourseRoute.extend({
 
   @action
   didTransition() {
-    this.controllerFor("full-page-search")._showFooter();
+    this.controllerFor("full-page-search")._afterTransition();
     return true;
   },
 });

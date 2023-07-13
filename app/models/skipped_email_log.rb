@@ -14,37 +14,38 @@ class SkippedEmailLog < ActiveRecord::Base
   validate :ensure_valid_reason_type
 
   def self.reason_types
-    @types ||= Enum.new(
-      custom: 1,
-      exceeded_emails_limit: 2,
-      exceeded_bounces_limit: 3,
-      mailing_list_no_echo_mode: 4,
-      user_email_no_user: 5,
-      user_email_post_not_found: 6,
-      user_email_anonymous_user: 7,
-      user_email_user_suspended_not_pm: 8,
-      user_email_seen_recently: 9,
-      user_email_notification_already_read: 10,
-      user_email_topic_nil: 11,
-      user_email_post_user_deleted: 12,
-      user_email_post_deleted: 13,
-      user_email_user_suspended: 14,
-      user_email_already_read: 15,
-      sender_message_blank: 16,
-      sender_message_to_blank: 17,
-      sender_text_part_body_blank: 18,
-      sender_body_blank: 19,
-      sender_post_deleted: 20,
-      sender_message_to_invalid: 21,
-      user_email_access_denied: 22,
-      sender_topic_deleted: 23,
-      user_email_no_email: 24,
-      group_smtp_post_deleted: 25,
-      group_smtp_topic_deleted: 26,
-      group_smtp_disabled_for_group: 27,
-      # you need to add the reason in server.en.yml below the "skipped_email_log" key
-      # when you add a new enum value
-    )
+    @types ||=
+      Enum.new(
+        custom: 1,
+        exceeded_emails_limit: 2,
+        exceeded_bounces_limit: 3,
+        mailing_list_no_echo_mode: 4,
+        user_email_no_user: 5,
+        user_email_post_not_found: 6,
+        user_email_anonymous_user: 7,
+        user_email_user_suspended_not_pm: 8,
+        user_email_seen_recently: 9,
+        user_email_notification_already_read: 10,
+        user_email_topic_nil: 11,
+        user_email_post_user_deleted: 12,
+        user_email_post_deleted: 13,
+        user_email_user_suspended: 14,
+        user_email_already_read: 15,
+        sender_message_blank: 16,
+        sender_message_to_blank: 17,
+        sender_text_part_body_blank: 18,
+        sender_body_blank: 19,
+        sender_post_deleted: 20,
+        sender_message_to_invalid: 21,
+        user_email_access_denied: 22,
+        sender_topic_deleted: 23,
+        user_email_no_email: 24,
+        group_smtp_post_deleted: 25,
+        group_smtp_topic_deleted: 26,
+        group_smtp_disabled_for_group: 27,
+        # you need to add the reason in server.en.yml below the "skipped_email_log" key
+        # when you add a new enum value
+      )
   end
 
   def reason
@@ -56,7 +57,7 @@ class SkippedEmailLog < ActiveRecord::Base
       I18n.t(
         "skipped_email_log.#{SkippedEmailLog.reason_types[type]}",
         user_id: self.user_id,
-        post_id: self.post_id
+        post_id: self.post_id,
       )
     end
   end
@@ -68,9 +69,7 @@ class SkippedEmailLog < ActiveRecord::Base
   end
 
   def ensure_valid_reason_type
-    unless self.class.reason_types[self.reason_type]
-      self.errors.add(:reason_type, :invalid)
-    end
+    self.errors.add(:reason_type, :invalid) unless self.class.reason_types[self.reason_type]
   end
 end
 

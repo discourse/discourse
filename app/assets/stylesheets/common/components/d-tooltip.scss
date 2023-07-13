@@ -7,5 +7,6 @@
   color: var(--primary);
   background: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("menu-panel");
+  box-shadow: var(--shadow-menu-panel);
+  overflow-wrap: break-word;
 }

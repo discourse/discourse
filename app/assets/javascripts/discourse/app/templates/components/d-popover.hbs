@@ -1,4 +1,0 @@
-{{!-- template-lint-disable no-invalid-interactive --}}
-<div {{on "click" (action "close")}} id={{this.componentId}} class="d-popover {{this.class}} {{if this.isExpanded "is-expanded"}}">
-  {{yield (hash isExpanded=this.isExpanded)}}
-</div>

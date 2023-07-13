@@ -28,7 +28,7 @@ module Onebox
 
           # For links to markdown and rdoc
           if html_doc.css(".Box.md, .Box.rdoc").present?
-            node = html_doc.css('a.anchor').find { |n| n['href'] == "##{fragment}" }
+            node = html_doc.css("a.anchor").find { |n| n["href"] == "##{fragment}" }
             subtitle = node&.parent&.text
           end
 
@@ -40,12 +40,12 @@ module Onebox
           title: Onebox::Helpers.truncate(title, 250),
           path: display_path,
           description: display_description,
-          favicon: get_favicon
+          favicon: get_favicon,
         }
       end
 
       def extract_path(root, max_length)
-        path = url.split('#')[0].split('?')[0]
+        path = url.split("#")[0].split("?")[0]
         path = path["#{root}/tree/".length..-1]
 
         return unless path

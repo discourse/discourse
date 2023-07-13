@@ -3,12 +3,11 @@
 require "securerandom"
 
 class HtmlToMarkdown
-
   def initialize(html, opts = {})
     @opts = opts
 
     # we're only interested in <body>
-    @doc = Nokogiri::HTML5(html).at("body")
+    @doc = Nokogiri.HTML5(html).at("body")
 
     remove_not_allowed!(@doc)
     remove_hidden!(@doc)
@@ -17,9 +16,7 @@ class HtmlToMarkdown
   end
 
   def to_markdown
-    traverse(@doc)
-      .gsub(/\n{2,}/, "\n\n")
-      .strip
+    traverse(@doc).gsub(/\n{2,}/, "\n\n").strip
   end
 
   private
@@ -50,31 +47,33 @@ class HtmlToMarkdown
     loop do
       changed = false
 
-      doc.css("br.#{klass}").each do |br|
-        parent = br.parent
+      doc
+        .css("br.#{klass}")
+        .each do |br|
+          parent = br.parent
 
-        if block?(parent)
-          br.remove_class(klass)
-        else
-          before, after = parent.children.slice_when { |n| n == br }.to_a
+          if block?(parent)
+            br.remove_class(klass)
+          else
+            before, after = parent.children.slice_when { |n| n == br }.to_a
 
-          if before.size > 1
-            b = doc.document.create_element(parent.name)
-            before[0...-1].each { |c| b.add_child(c) }
-            parent.previous = b if b.inner_html.present?
+            if before.size > 1
+              b = doc.document.create_element(parent.name)
+              before[0...-1].each { |c| b.add_child(c) }
+              parent.previous = b if b.inner_html.present?
+            end
+
+            if after.present?
+              a = doc.document.create_element(parent.name)
+              after.each { |c| a.add_child(c) }
+              parent.next = a if a.inner_html.present?
+            end
+
+            parent.replace(br)
+
+            changed = true
           end
-
-          if after.present?
-            a = doc.document.create_element(parent.name)
-            after.each { |c| a.add_child(c) }
-            parent.next = a if a.inner_html.present?
-          end
-
-          parent.replace(br)
-
-          changed = true
         end
-      end
 
       break if !changed
     end
@@ -85,17 +84,21 @@ class HtmlToMarkdown
   def remove_whitespaces!(node)
     return true if "pre" == node.name
 
-    node.children.chunk { |n| is_inline?(n) }.each do |inline, nodes|
-      if inline
-        collapse_spaces!(nodes) && remove_trailing_space!(nodes)
-      else
-        nodes.each { |n| remove_whitespaces!(n) }
+    node
+      .children
+      .chunk { |n| is_inline?(n) }
+      .each do |inline, nodes|
+        if inline
+          collapse_spaces!(nodes) && remove_trailing_space!(nodes)
+        else
+          nodes.each { |n| remove_whitespaces!(n) }
+        end
       end
-    end
   end
 
   def is_inline?(node)
-    node.text? || ("br" != node.name && node.description&.inline? && node.children.all? { |n| is_inline?(n) })
+    node.text? ||
+      ("br" != node.name && node.description&.inline? && node.children.all? { |n| is_inline?(n) })
   end
 
   def collapse_spaces!(nodes, was_space = true)
@@ -141,15 +144,16 @@ class HtmlToMarkdown
     send(visitor, node) if respond_to?(visitor, true)
   end
 
-  ALLOWED_IMG_SRCS ||= %w{http:// https:// www.}
+  ALLOWED_IMG_SRCS ||= %w[http:// https:// www.]
 
   def allowed_hrefs
-    @allowed_hrefs ||= begin
-      hrefs = SiteSetting.allowed_href_schemes.split("|").map { |scheme| "#{scheme}:" }.to_set
-      ALLOWED_IMG_SRCS.each { |src| hrefs << src }
-      hrefs << "mailto:"
-      hrefs.to_a
-    end
+    @allowed_hrefs ||=
+      begin
+        hrefs = SiteSetting.allowed_href_schemes.split("|").map { |scheme| "#{scheme}:" }.to_set
+        ALLOWED_IMG_SRCS.each { |src| hrefs << src }
+        hrefs << "mailto:"
+        hrefs.to_a
+      end
   end
 
   def visit_a(node)
@@ -176,11 +180,9 @@ class HtmlToMarkdown
     end
   end
 
-  ALLOWED ||= %w{kbd del ins small big sub sup dl dd dt mark}
+  ALLOWED ||= %w[kbd del ins small big sub sup dl dd dt mark]
   ALLOWED.each do |tag|
-    define_method("visit_#{tag}") do |node|
-      "<#{tag}>#{traverse(node)}</#{tag}>"
-    end
+    define_method("visit_#{tag}") { |node| "<#{tag}>#{traverse(node)}</#{tag}>" }
   end
 
   def visit_blockquote(node)
@@ -191,7 +193,7 @@ class HtmlToMarkdown
     "\n\n#{text}\n\n"
   end
 
-  BLOCKS ||= %w{div tr}
+  BLOCKS ||= %w[div tr]
   BLOCKS.each do |tag|
     define_method("visit_#{tag}") do |node|
       prefix = block?(node.previous_element) ? "" : "\n"
@@ -203,12 +205,8 @@ class HtmlToMarkdown
     "\n\n#{traverse(node)}\n\n"
   end
 
-  TRAVERSABLES ||= %w{aside font span thead tbody tfooter u}
-  TRAVERSABLES.each do |tag|
-    define_method("visit_#{tag}") do |node|
-      traverse(node)
-    end
-  end
+  TRAVERSABLES ||= %w[aside font span thead tbody tfooter u]
+  TRAVERSABLES.each { |tag| define_method("visit_#{tag}") { |node| traverse(node) } }
 
   def visit_tt(node)
     "`#{traverse(node)}`"
@@ -245,18 +243,10 @@ class HtmlToMarkdown
     visit_abbr(node)
   end
 
-  (1..6).each do |n|
-    define_method("visit_h#{n}") do |node|
-      "#{"#" * n} #{traverse(node)}"
-    end
-  end
+  (1..6).each { |n| define_method("visit_h#{n}") { |node| "#{"#" * n} #{traverse(node)}" } }
 
-  CELLS ||= %w{th td}
-  CELLS.each do |tag|
-    define_method("visit_#{tag}") do |node|
-      "#{traverse(node)} "
-    end
-  end
+  CELLS ||= %w[th td]
+  CELLS.each { |tag| define_method("visit_#{tag}") { |node| "#{traverse(node)} " } }
 
   def visit_table(node)
     if rows = extract_rows(node)
@@ -264,7 +254,8 @@ class HtmlToMarkdown
       text = "| " + headers.map { |td| traverse(td).gsub(/\n/, "<br>") }.join(" | ") + " |\n"
       text << "| " + (["-"] * headers.size).join(" | ") + " |\n"
       rows[1..-1].each do |row|
-        text << "| " + row.css("td").map { |td| traverse(td).gsub(/\n/, "<br>") }.join(" | ") + " |\n"
+        text << "| " + row.css("td").map { |td| traverse(td).gsub(/\n/, "<br>") }.join(" | ") +
+          " |\n"
       end
       "\n\n#{text}\n\n"
     else
@@ -280,7 +271,7 @@ class HtmlToMarkdown
     rows
   end
 
-  LISTS ||= %w{ul ol}
+  LISTS ||= %w[ul ol]
   LISTS.each do |tag|
     define_method("visit_#{tag}") do |node|
       prefix = block?(node.previous_element) ? "" : "\n"
@@ -304,12 +295,12 @@ class HtmlToMarkdown
     "#{marker}#{text}#{suffix}"
   end
 
-  EMPHASES ||= %w{i em}
+  EMPHASES ||= %w[i em]
   EMPHASES.each do |tag|
     define_method("visit_#{tag}") do |node|
       text = traverse(node)
 
-      return ""  if text.empty?
+      return "" if text.empty?
       return " " if text.blank?
       return "<#{tag}>#{text}</#{tag}>" if text["\n"] || (text["*"] && text["_"])
 
@@ -321,12 +312,12 @@ class HtmlToMarkdown
     end
   end
 
-  STRONGS ||= %w{b strong}
+  STRONGS ||= %w[b strong]
   STRONGS.each do |tag|
     define_method("visit_#{tag}") do |node|
       text = traverse(node)
 
-      return ""  if text.empty?
+      return "" if text.empty?
       return " " if text.blank?
       return "<#{tag}>#{text}</#{tag}>" if text["\n"] || (text["*"] && text["_"])
 
@@ -338,12 +329,12 @@ class HtmlToMarkdown
     end
   end
 
-  STRIKES ||= %w{s strike}
+  STRIKES ||= %w[s strike]
   STRIKES.each do |tag|
     define_method("visit_#{tag}") do |node|
       text = traverse(node)
 
-      return ""  if text.empty?
+      return "" if text.empty?
       return " " if text.blank?
       return "<#{tag}>#{text}</#{tag}>" if text["\n"] || text["~~"]
 
@@ -358,7 +349,19 @@ class HtmlToMarkdown
     node.text
   end
 
-  HTML5_BLOCK_ELEMENTS ||= %w[article aside details dialog figcaption figure footer header main nav section]
+  HTML5_BLOCK_ELEMENTS ||= %w[
+    article
+    aside
+    details
+    dialog
+    figcaption
+    figure
+    footer
+    header
+    main
+    nav
+    section
+  ]
   def block?(node)
     return false if !node
     node.description&.block? || HTML5_BLOCK_ELEMENTS.include?(node.name)

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class SiteSerializer < ApplicationSerializer
-
   attributes(
     :default_archetype,
     :notification_types,
@@ -38,8 +37,12 @@ class SiteSerializer < ApplicationSerializer
     :hashtag_configurations,
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
-    :show_welcome_topic_banner,
-    :anonymous_default_sidebar_tags
+    :anonymous_default_navigation_menu_tags,
+    :anonymous_sidebar_sections,
+    :whispers_allowed_groups_names,
+    :denied_emojis,
+    :tos_url,
+    :privacy_policy_url,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -48,19 +51,29 @@ class SiteSerializer < ApplicationSerializer
 
   def user_themes
     cache_fragment("user_themes") do
-      Theme.where('id = :default OR user_selectable',
-                    default: SiteSetting.default_theme_id)
+      Theme
+        .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
         .order("lower(name)")
         .pluck(:id, :name, :color_scheme_id)
-        .map { |id, n, cs| { theme_id: id, name: n, default: id == SiteSetting.default_theme_id, color_scheme_id: cs } }
+        .map do |id, n, cs|
+          {
+            theme_id: id,
+            name: n,
+            default: id == SiteSetting.default_theme_id,
+            color_scheme_id: cs,
+          }
+        end
         .as_json
     end
   end
 
   def user_color_schemes
     cache_fragment("user_color_schemes") do
-      schemes = ColorScheme.includes(:color_scheme_colors).where('user_selectable').order(:name)
-      ActiveModel::ArraySerializer.new(schemes, each_serializer: ColorSchemeSelectableSerializer).as_json
+      schemes = ColorScheme.includes(:color_scheme_colors).where("user_selectable").order(:name)
+      ActiveModel::ArraySerializer.new(
+        schemes,
+        each_serializer: ColorSchemeSelectableSerializer,
+      ).as_json
     end
   end
 
@@ -70,7 +83,9 @@ class SiteSerializer < ApplicationSerializer
 
   def groups
     cache_anon_fragment("group_names") do
-      object.groups.order(:name)
+      object
+        .groups
+        .order(:name)
         .select(:id, :name, :flair_icon, :flair_upload_id, :flair_bg_color, :flair_color)
         .map do |g|
           {
@@ -80,7 +95,8 @@ class SiteSerializer < ApplicationSerializer
             flair_bg_color: g.flair_bg_color,
             flair_color: g.flair_color,
           }
-        end.as_json
+        end
+        .as_json
     end
   end
 
@@ -191,7 +207,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serializable_word_matcher_regexp(:censor)
+    WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js)
   end
 
   def custom_emoji_translation
@@ -207,11 +223,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.word_matcher_regexps(:replace)
+    WordWatcher.word_matcher_regexps(:replace, engine: :js)
   end
 
   def watched_words_link
-    WordWatcher.word_matcher_regexps(:link)
+    WordWatcher.word_matcher_regexps(:link, engine: :js)
   end
 
   def categories
@@ -227,23 +243,66 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def hashtag_icons
-    HashtagAutocompleteService.data_source_icons
+    HashtagAutocompleteService.data_source_icon_map
   end
 
   def displayed_about_plugin_stat_groups
     About.displayed_plugin_stat_groups
   end
 
-  def show_welcome_topic_banner
-    Site.show_welcome_topic_banner?(scope)
+  def anonymous_default_navigation_menu_tags
+    @anonymous_default_navigation_menu_tags ||=
+      SiteSetting.default_navigation_menu_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
   end
 
-  def anonymous_default_sidebar_tags
-    SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
+  def include_anonymous_default_navigation_menu_tags?
+    scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled &&
+      SiteSetting.default_navigation_menu_tags.present? &&
+      anonymous_default_navigation_menu_tags.present?
   end
 
-  def include_anonymous_default_sidebar_tags?
-    scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
+  def anonymous_sidebar_sections
+    SidebarSection
+      .public_sections
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
+
+  def include_anonymous_sidebar_sections?
+    scope.anonymous?
+  end
+
+  def whispers_allowed_groups_names
+    Group.where(id: SiteSetting.whispers_allowed_groups_map).pluck(:name)
+  end
+
+  def include_whispers_allowed_groups_names?
+    scope.can_see_whispers?
+  end
+
+  def denied_emojis
+    @denied_emojis ||= Emoji.denied
+  end
+
+  def include_denied_emojis?
+    denied_emojis.present?
+  end
+
+  def tos_url
+    Discourse.tos_url
+  end
+
+  def include_tos_url?
+    tos_url.present?
+  end
+
+  def privacy_policy_url
+    Discourse.privacy_policy_url
+  end
+
+  def include_privacy_policy_url?
+    privacy_policy_url.present?
   end
 
   private

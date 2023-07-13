@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe PushNotificationPusher do
-
   it "returns badges url by default" do
     expect(PushNotificationPusher.get_badge).to eq("/assets/push-notifications/discourse.png")
   end
@@ -10,8 +9,7 @@ RSpec.describe PushNotificationPusher do
     upload = Fabricate(:upload)
     SiteSetting.push_notifications_icon = upload
 
-    expect(PushNotificationPusher.get_badge)
-      .to eq(UrlHelper.absolute(upload.url))
+    expect(PushNotificationPusher.get_badge).to eq(UrlHelper.absolute(upload.url))
   end
 
   context "with user" do
@@ -31,14 +29,17 @@ RSpec.describe PushNotificationPusher do
     end
 
     def execute_push(notification_type: 1)
-      PushNotificationPusher.push(user, {
-        topic_title: 'Topic',
-        username: 'system',
-        excerpt: 'description',
-        topic_id: 1,
-        post_url: "https://example.com/t/1/2",
-        notification_type: notification_type
-      })
+      PushNotificationPusher.push(
+        user,
+        {
+          topic_title: "Topic",
+          username: "system",
+          excerpt: "description",
+          topic_id: 1,
+          post_url: "https://example.com/t/1/2",
+          notification_type: notification_type,
+        },
+      )
     end
 
     it "correctly guesses an image if missing" do
@@ -53,13 +54,18 @@ RSpec.describe PushNotificationPusher do
 
     it "sends notification in user's locale" do
       SiteSetting.allow_user_locale = true
-      user.update!(locale: 'pt_BR')
+      user.update!(locale: "pt_BR")
 
-      TranslationOverride.upsert!("pt_BR", "discourse_push_notifications.popup.mentioned", "pt_BR notification")
+      TranslationOverride.upsert!(
+        "pt_BR",
+        "discourse_push_notifications.popup.mentioned",
+        "pt_BR notification",
+      )
 
-      Webpush.expects(:payload_send).with do |*args|
-        JSON.parse(args.first[:message])["title"] == "pt_BR notification"
-      end.once
+      WebPush
+        .expects(:payload_send)
+        .with { |*args| JSON.parse(args.first[:message])["title"] == "pt_BR notification" }
+        .once
 
       create_subscription
       execute_push
@@ -71,9 +77,9 @@ RSpec.describe PushNotificationPusher do
       sub = create_subscription
 
       response = Struct.new(:body, :inspect, :message).new("test", "test", "failed")
-      error = Webpush::ResponseError.new(response, "localhost")
+      error = WebPush::ResponseError.new(response, "localhost")
 
-      Webpush.expects(:payload_send).raises(error).times(4)
+      WebPush.expects(:payload_send).raises(error).times(4)
 
       # 3 failures in more than 24 hours
       3.times do
@@ -94,20 +100,48 @@ RSpec.describe PushNotificationPusher do
     end
 
     it "deletes invalid subscriptions during send" do
-      missing_endpoint = PushSubscription.create!(user_id: user.id, data:
-        { p256dh: "public ECDH key", keys: { auth: "private ECDH key" } }.to_json)
+      missing_endpoint =
+        PushSubscription.create!(
+          user_id: user.id,
+          data: { p256dh: "public ECDH key", keys: { auth: "private ECDH key" } }.to_json,
+        )
 
-      missing_p256dh = PushSubscription.create!(user_id: user.id, data:
-        { endpoint: "endpoint 1", keys: { auth: "private ECDH key" } }.to_json)
+      missing_p256dh =
+        PushSubscription.create!(
+          user_id: user.id,
+          data: { endpoint: "endpoint 1", keys: { auth: "private ECDH key" } }.to_json,
+        )
 
-      missing_auth = PushSubscription.create!(user_id: user.id, data:
-        { endpoint: "endpoint 2", keys: { p256dh: "public ECDH key" } }.to_json)
+      missing_auth =
+        PushSubscription.create!(
+          user_id: user.id,
+          data: { endpoint: "endpoint 2", keys: { p256dh: "public ECDH key" } }.to_json,
+        )
 
-      valid_subscription = PushSubscription.create!(user_id: user.id, data:
-        { endpoint: "endpoint 3", keys: { p256dh: "public ECDH key", auth: "private ECDH key" } }.to_json)
+      valid_subscription =
+        PushSubscription.create!(
+          user_id: user.id,
+          data: {
+            endpoint: "endpoint 3",
+            keys: {
+              p256dh: "public ECDH key",
+              auth: "private ECDH key",
+            },
+          }.to_json,
+        )
 
-      expect(PushSubscription.where(user_id: user.id)).to contain_exactly(missing_endpoint, missing_p256dh, missing_auth, valid_subscription)
-      Webpush.expects(:payload_send).with(has_entries(endpoint: "endpoint 3", p256dh: "public ECDH key", auth: "private ECDH key")).once
+      expect(PushSubscription.where(user_id: user.id)).to contain_exactly(
+        missing_endpoint,
+        missing_p256dh,
+        missing_auth,
+        valid_subscription,
+      )
+      WebPush
+        .expects(:payload_send)
+        .with(
+          has_entries(endpoint: "endpoint 3", p256dh: "public ECDH key", auth: "private ECDH key"),
+        )
+        .once
 
       execute_push
 
@@ -115,7 +149,7 @@ RSpec.describe PushNotificationPusher do
     end
 
     it "handles timeouts" do
-      Webpush.expects(:payload_send).raises(Net::ReadTimeout.new)
+      WebPush.expects(:payload_send).raises(Net::ReadTimeout.new)
       subscription = create_subscription
 
       expect { execute_push }.to_not raise_exception

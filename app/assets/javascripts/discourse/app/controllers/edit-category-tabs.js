@@ -6,7 +6,7 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
-import { extractError } from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { underscore } from "@ember/string";
 import { inject as service } from "@ember/service";
 
@@ -113,7 +113,7 @@ export default Controller.extend({
           }
         })
         .catch((error) => {
-          this.dialog.alert(extractError(error));
+          popupAjaxError(error);
           this.set("saving", false);
         });
     },

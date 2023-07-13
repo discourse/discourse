@@ -55,7 +55,7 @@ remove_subject_prefixes:
 # attempt to get the actual sender's address from other available headers like Reply-To or the /^From / line
 fix_mailman_via_addresses: false
 
-# Elide up to last occurence of = in addresses (BATV, etc)
+# Elide up to last occurrence of = in addresses (BATV, etc)
 # ie. normalize these:
 #     prvs=00377ab9a2=someone@somewhere.com
 #     bounces+840901-dbd9-flang-dev=someone@somewhere.com

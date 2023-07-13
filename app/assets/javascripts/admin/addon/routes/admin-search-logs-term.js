@@ -4,12 +4,12 @@ import { ajax } from "discourse/lib/ajax";
 import { fillMissingDates } from "discourse/lib/utilities";
 import { translateResults } from "discourse/lib/search";
 
-export default DiscourseRoute.extend({
-  queryParams: {
+export default class AdminSearchLogsTermRoute extends DiscourseRoute {
+  queryParams = {
     term: { refreshModel: true },
     period: { refreshModel: true },
     searchType: { refreshModel: true },
-  },
+  };
 
   model(params) {
     this._params = params;
@@ -40,7 +40,7 @@ export default DiscourseRoute.extend({
       model.setProperties(json.term);
       return model;
     });
-  },
+  }
 
   setupController(controller, model) {
     const params = this._params;
@@ -50,5 +50,5 @@ export default DiscourseRoute.extend({
       period: params.period,
       searchType: params.searchType,
     });
-  },
-});
+  }
+}

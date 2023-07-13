@@ -3,7 +3,6 @@
 # this class is used to track changes to an arbitrary buffer
 
 class ContentBuffer
-
   def initialize(initial_content)
     @initial_content = initial_content
     @lines = @initial_content.split("\n")
@@ -17,7 +16,6 @@ class ContentBuffer
     text = transform[:text]
 
     if transform[:operation] == :delete
-
       # fix first line
 
       l = @lines[start_row]
@@ -32,16 +30,13 @@ class ContentBuffer
       @lines[start_row] = l
 
       # remove middle lines
-      (finish_row - start_row).times do
-        l = @lines.delete_at start_row + 1
-      end
+      (finish_row - start_row).times { l = @lines.delete_at start_row + 1 }
 
       # fix last line
       @lines[start_row] << @lines[finish_row][finish_col - 1..-1]
     end
 
     if transform[:operation] == :insert
-
       @lines[start_row].insert(start_col, text)
 
       split = @lines[start_row].split("\n")
@@ -53,10 +48,9 @@ class ContentBuffer
           @lines.insert(start_row + i, line)
           i += 1
         end
-        @lines.insert(i, "") unless @lines.length > i
+        @lines.insert(i, "") if @lines.length <= i
         @lines[i] = split[-1] + @lines[i]
       end
-
     end
   end
 

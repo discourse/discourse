@@ -8,7 +8,7 @@ class CreateUserUploads < ActiveRecord::Migration[5.2]
       t.datetime :created_at, null: false
     end
 
-    add_index :user_uploads, [:upload_id, :user_id], unique: true
+    add_index :user_uploads, %i[upload_id user_id], unique: true
 
     execute <<~SQL
       INSERT INTO user_uploads(upload_id, user_id, created_at)

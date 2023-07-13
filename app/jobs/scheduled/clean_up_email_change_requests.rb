@@ -5,7 +5,7 @@ module Jobs
     every 1.day
 
     def execute(args)
-      EmailChangeRequest.where('updated_at < ?', 1.month.ago).delete_all
+      EmailChangeRequest.where("updated_at < ?", 1.month.ago).delete_all
     end
   end
 end

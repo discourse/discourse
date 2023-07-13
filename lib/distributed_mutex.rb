@@ -31,11 +31,7 @@ class DistributedMutex
   LUA
 
   def self.synchronize(key, redis: nil, validity: DEFAULT_VALIDITY, &blk)
-    self.new(
-      key,
-      redis: redis,
-      validity: validity
-    ).synchronize(&blk)
+    self.new(key, redis: redis, validity: validity).synchronize(&blk)
   end
 
   def initialize(key, redis: nil, validity: DEFAULT_VALIDITY)
@@ -58,7 +54,9 @@ class DistributedMutex
       ensure
         current_time = redis.time[0]
         if current_time > expire_time
-          warn("held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs")
+          warn(
+            "held for too long, expected max: #{@validity} secs, took an extra #{current_time - expire_time} secs",
+          )
         end
 
         unlocked = UNLOCK_SCRIPT.eval(redis, [prefixed_key], [expire_time.to_s])
@@ -88,14 +86,11 @@ class DistributedMutex
       # Exponential backoff, max duration 1s
       interval = attempts < 10 ? (0.001 * 2**attempts) : 1
       sleep interval
+      attempts += 1
 
       # in readonly we will never be able to get a lock
-      if @using_global_redis && Discourse.recently_readonly?
-        attempts += 1
-
-        if attempts > CHECK_READONLY_ATTEMPTS
-          raise Discourse::ReadOnly
-        end
+      if @using_global_redis && Discourse.recently_readonly? && attempts > CHECK_READONLY_ATTEMPTS
+        raise Discourse::ReadOnly
       end
     end
   end

@@ -2,7 +2,10 @@
 
 class UpdateAvatarServiceDomain < ActiveRecord::Migration[6.1]
   def up
-    existing_value = DB.query_single("SELECT value FROM site_settings WHERE name = 'external_system_avatars_url'")&.[](0)
+    existing_value =
+      DB.query_single(
+        "SELECT value FROM site_settings WHERE name = 'external_system_avatars_url'",
+      )&.[](0)
 
     if existing_value&.include?("avatars.discourse.org")
       new_value = DB.query_single(<<~SQL)&.[](0)

@@ -1,5 +1,4 @@
 .new-user-wrapper {
-  margin-top: -15px; // temp, can remove margin from sibling element after nav finalized
   .user-navigation {
     --user-navigation__border-width: 4px;
     border-bottom: 1px solid var(--primary-low);
@@ -132,6 +131,10 @@
       @include breakpoint(extra-large) {
         font-size: var(--font-down-1);
       }
+
+      span {
+        display: inline-flex;
+      }
     }
 
     .nav-pills {
@@ -159,43 +162,14 @@
     }
   }
 
-  .user-nav-dropdown-button {
-    background: transparent;
-  }
-
-  .user-nav-dropdown-submenu {
-    background: var(--secondary);
-    list-style-type: none;
-    margin: 0;
-
-    li a {
-      padding: 0.5em 1em;
-      color: var(--primary);
-
-      .discourse-no-touch & {
-        &:hover {
-          background: var(--highlight-medium);
-          color: currentColor;
-        }
-      }
-
-      &.active {
-        background: var(--tertiary-low);
-        color: currentColor;
-      }
-
-      &:first-of-type {
-        padding-top: 0.5em;
-      }
-      &:last-of-type {
-        padding-bottom: 0.5em;
-      }
-    }
-  }
-
   .empty-state {
     padding: 0;
     margin: 1em 0;
+  }
+
+  .solo-preference {
+    grid-column-start: 1;
+    grid-column-end: -1;
   }
 }
 

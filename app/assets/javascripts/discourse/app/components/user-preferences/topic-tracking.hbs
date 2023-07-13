@@ -1,16 +1,36 @@
 <div class="user-preferences_tracking-topics-controls">
   <div class="controls controls-dropdown">
     <label>{{i18n "user.new_topic_duration.label"}}</label>
-    <ComboBox @class="duration" @valueProperty="value" @content={{@considerNewTopicOptions}} @value={{@model.user_option.new_topic_duration_minutes}} @onChange={{action (mut @model.user_option.new_topic_duration_minutes)}} />
+    <ComboBox
+      @class="duration"
+      @valueProperty="value"
+      @content={{@considerNewTopicOptions}}
+      @value={{@model.user_option.new_topic_duration_minutes}}
+      @onChange={{action (mut @model.user_option.new_topic_duration_minutes)}}
+    />
   </div>
 
   <div class="controls controls-dropdown">
     <label>{{i18n "user.auto_track_topics"}}</label>
-    <ComboBox @valueProperty="value" @content={{@autoTrackDurations}} @value={{@model.user_option.auto_track_topics_after_msecs}} @onChange={{action (mut @model.user_option.auto_track_topics_after_msecs)}} />
+    <ComboBox
+      @valueProperty="value"
+      @content={{@autoTrackDurations}}
+      @value={{@model.user_option.auto_track_topics_after_msecs}}
+      @onChange={{action
+        (mut @model.user_option.auto_track_topics_after_msecs)
+      }}
+    />
   </div>
 
   <div class="controls controls-dropdown">
     <label>{{i18n "user.notification_level_when_replying"}}</label>
-    <ComboBox @valueProperty="value" @content={{@notificationLevelsForReplying}} @value={{@model.user_option.notification_level_when_replying}} @onChange={{action (mut @model.user_option.notification_level_when_replying)}} />
+    <ComboBox
+      @valueProperty="value"
+      @content={{@notificationLevelsForReplying}}
+      @value={{@model.user_option.notification_level_when_replying}}
+      @onChange={{action
+        (mut @model.user_option.notification_level_when_replying)
+      }}
+    />
   </div>
 </div>

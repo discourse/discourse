@@ -1,4 +1,9 @@
-<DButton @class="btn-primary" @action={{route-action "new"}} @icon="plus" @label="admin.api.new_key" />
+<DButton
+  @class="btn-primary"
+  @action={{route-action "new"}}
+  @icon="plus"
+  @label="admin.api.new_key"
+/>
 
 {{#if this.model}}
   <LoadMore @selector=".api-keys tr" @action={{action "loadMore"}}>
@@ -44,11 +49,26 @@
               {{/if}}
             </td>
             <td class="key-controls">
-              <DButton @action={{route-action "show" k}} @icon="far-eye" @title="admin.api.show_details" />
+              <DButton
+                @action={{route-action "show" k}}
+                @icon="far-eye"
+                @title="admin.api.show_details"
+              />
               {{#if k.revoked_at}}
-                <DButton @action={{action "undoRevokeKey"}} @actionParam={{k}} @icon="undo" @title="admin.api.undo_revoke" />
+                <DButton
+                  @action={{action "undoRevokeKey"}}
+                  @actionParam={{k}}
+                  @icon="undo"
+                  @title="admin.api.undo_revoke"
+                />
               {{else}}
-                <DButton @class="btn-danger" @action={{action "revokeKey"}} @actionParam={{k}} @icon="times" @title="admin.api.revoke" />
+                <DButton
+                  @class="btn-danger"
+                  @action={{action "revokeKey"}}
+                  @actionParam={{k}}
+                  @icon="times"
+                  @title="admin.api.revoke"
+                />
               {{/if}}
             </td>
           </tr>

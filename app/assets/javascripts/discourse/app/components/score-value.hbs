@@ -1,0 +1,14 @@
+{{#if this.value}}
+  <span class="score-value">
+    <span class="score-number">{{float this.value}}</span>
+    {{#if this.label}}
+      <span
+        title={{i18n (concat "review.explain." this.label ".title")}}
+        class="score-value-type"
+      >
+        {{i18n (concat "review.explain." this.label ".name")}}
+      </span>
+    {{/if}}
+  </span>
+  <span class="op">+</span>
+{{/if}}

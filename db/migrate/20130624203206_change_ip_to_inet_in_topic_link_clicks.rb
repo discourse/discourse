@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'ipaddr'
+require "ipaddr"
 
 class ChangeIpToInetInTopicLinkClicks < ActiveRecord::Migration[4.2]
   def up

@@ -2,7 +2,7 @@
 
 # view model for user badges
 class UserBadges
-  alias :read_attribute_for_serialization :send
+  alias read_attribute_for_serialization send
 
   attr_accessor :user_badges, :username, :grant_count
 

@@ -1,6 +1,7 @@
 :root {
-  --d-sidebar-section-link-prefix-margin-right: 0.4rem;
-  --d-sidebar-section-link-prefix-width: 20px;
+  --d-sidebar-section-link-prefix-margin-right: 0.35rem;
+  --d-sidebar-section-link-prefix-width: 1.35rem;
+  --d-sidebar-section-link-icon-size: 0.8em;
 }
 
 .sidebar-section-link-wrapper {
@@ -12,22 +13,25 @@
     display: inline-flex;
     width: 100%;
     align-items: center;
-    color: var(--primary-high);
+    color: var(--d-sidebar-link-color);
     transition: background-color 0.25s;
 
     &:focus,
     &:hover {
-      background: var(--d-sidebar-highlight-color);
+      background: var(--d-sidebar-highlight-background);
       outline: none;
+      .prefix-text {
+        background: var(--d-sidebar-highlight-prefix-background);
+      }
     }
 
     &.active {
-      color: var(--primary);
-      background: var(--d-sidebar-highlight-color);
+      color: var(--d-sidebar-highlight-color);
+      background: var(--d-sidebar-highlight-background);
 
       .sidebar-section-link-prefix {
         &.icon {
-          color: var(--primary-high);
+          color: var(--d-sidebar-highlight-color);
         }
       }
     }
@@ -35,17 +39,26 @@
     .sidebar-section-link-content-badge {
       @include ellipsis;
       padding-left: 0.5em;
+      padding-right: 0.1em; // avoids some overflow cropping
       text-align: right;
-      color: var(--primary-high);
-      font-size: var(--font-down-1);
+      color: var(--d-sidebar-link-badge-color);
+      font-size: var(--font-down-2);
       font-weight: normal;
       margin-left: auto;
     }
 
     .sidebar-section-link-suffix {
-      margin-left: 0.25rem;
+      margin-left: 1em;
       font-size: var(--font-down-4);
-      color: var(--tertiary-medium);
+      &.icon {
+        &.urgent svg {
+          color: var(--success);
+        }
+
+        &.unread svg {
+          color: var(--tertiary-med-or-tertiary);
+        }
+      }
     }
 
     .sidebar-section-link-content-text {
@@ -69,13 +82,33 @@
     }
   }
 
-  .sidebar-section-link-personal-messages-sent,
-  .sidebar-section-link-personal-messages-new,
-  .sidebar-section-link-personal-messages-archive,
-  .sidebar-section-link-personal-messages-unread,
-  .sidebar-section-link-group-messages-new,
-  .sidebar-section-link-group-messages-unread,
-  .sidebar-section-link-group-messages-archive {
+  .sidebar-section-link-button {
+    color: var(--d-sidebar-link-color);
+    background-color: var(--secondary);
+    width: 100%;
+    justify-content: flex-start;
+
+    &:hover {
+      color: var(--d-sidebar-link-color);
+      background-color: var(--primary-low);
+
+      .d-icon {
+        color: var(--d-sidebar-link-icon-color);
+      }
+    }
+
+    .d-icon {
+      color: var(--d-sidebar-link-icon-color);
+    }
+  }
+
+  .sidebar-section-link[data-link-name="personal-messages-sent"],
+  .sidebar-section-link[data-link-name="personal-messages-new"],
+  .sidebar-section-link[data-link-name="personal-messages-archive"],
+  .sidebar-section-link[data-link-name="personal-messages-unread"],
+  .sidebar-section-link[data-link-name="group-messages-new"],
+  .sidebar-section-link[data-link-name="group-messages-unread"],
+  .sidebar-section-link[data-link-name="group-messages-archive"] {
     .sidebar-section-link-content-text {
       margin-left: calc(
         var(--d-sidebar-section-link-prefix-margin-right) +
@@ -110,25 +143,15 @@
 
     &.text {
       text-align: center;
-
-      .prefix-text {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 100%;
-        background: rgba(var(--primary-rgb), 0.1);
-        width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
-        height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
-      }
     }
 
     &.icon,
     &.span {
       position: relative;
-      color: var(--primary-medium);
+      color: var(--d-sidebar-link-icon-color);
 
       svg {
-        font-size: var(--font-down-1);
+        font-size: var(--d-sidebar-section-link-icon-size);
       }
 
       .prefix-badge {
@@ -136,7 +159,7 @@
         background-color: transparent;
         border-radius: 50%;
         padding: 2px 2px 3px;
-        color: var(--primary-high);
+        color: var(--d-sidebar-link-color);
         height: 0.5rem;
         width: 0.5rem;
         top: -0.2em;
@@ -145,9 +168,20 @@
       }
     }
     .prefix-span {
-      width: 0.9em;
-      height: 0.9em;
+      width: 0.8em;
+      height: 0.8em;
     }
+  }
+
+  .prefix-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    background: var(--d-sidebar-prefix-background);
+    width: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+    height: calc(var(--d-sidebar-section-link-prefix-width) - 2px);
+    font-size: var(--font-down-2);
   }
 
   .sidebar-section-link-hover {
@@ -155,7 +189,7 @@
 
     .sidebar-section-hover-button {
       display: none;
-      color: var(--primary-medium);
+      color: var(--d-sidebar-link-icon-color);
       border: none;
       background: transparent;
       padding: 0 0 0 0.5em;
@@ -165,7 +199,7 @@
       &:focus,
       .discourse-no-touch & {
         &:hover {
-          color: var(--primary);
+          color: var(--d-sidebar-highlight-color);
         }
       }
 
@@ -176,7 +210,7 @@
 
     &:hover {
       .sidebar-section-hover-button {
-        background: var(--primary-low);
+        background: var(--d-sidebar-highlight-background);
       }
     }
   }

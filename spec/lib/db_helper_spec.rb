@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe DbHelper do
-  describe '.remap' do
-    it 'should remap columns properly' do
+  describe ".remap" do
+    it "should remap columns properly" do
       post = Fabricate(:post, cooked: "this is a specialcode that I included")
       post_attributes = post.reload.attributes
 
@@ -19,16 +19,15 @@ RSpec.describe DbHelper do
 
       expect(badge.query).to eq("codespecial")
 
-      expect(badge_attributes.except("query"))
-        .to eq(badge.attributes.except("query"))
+      expect(badge_attributes.except("query")).to eq(badge.attributes.except("query"))
     end
 
-    it 'allows tables to be excluded from scanning' do
+    it "allows tables to be excluded from scanning" do
       post = Fabricate(:post, cooked: "test")
 
-      DbHelper.remap("test", "something else", excluded_tables: %w{posts})
+      DbHelper.remap("test", "something else", excluded_tables: %w[posts])
 
-      expect(post.reload.cooked).to eq('test')
+      expect(post.reload.cooked).to eq("test")
     end
 
     it "does not remap readonly columns" do

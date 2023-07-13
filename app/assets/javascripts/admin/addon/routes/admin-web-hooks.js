@@ -1,8 +1,9 @@
 import Route from "@ember/routing/route";
-export default Route.extend({
+
+export default class AdminWebHooksRoute extends Route {
   model() {
     return this.store.findAll("web-hook");
-  },
+  }
 
   setupController(controller, model) {
     controller.setProperties({
@@ -12,5 +13,5 @@ export default Route.extend({
       contentTypes: model.extras.content_types,
       deliveryStatuses: model.extras.delivery_statuses,
     });
-  },
-});
+  }
+}

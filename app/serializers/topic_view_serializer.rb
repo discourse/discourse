@@ -42,7 +42,7 @@ class TopicViewSerializer < ApplicationSerializer
     :pinned_until,
     :image_url,
     :slow_mode_seconds,
-    :external_id
+    :external_id,
   )
 
   attributes(
@@ -78,7 +78,8 @@ class TopicViewSerializer < ApplicationSerializer
     :user_last_posted_at,
     :is_shared_draft,
     :slow_mode_enabled_until,
-    :subtitle
+    :subtitle,
+    :summarizable
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -248,7 +249,8 @@ class TopicViewSerializer < ApplicationSerializer
   end
 
   def include_destination_category_id?
-    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled? && object.topic.shared_draft.present?
+    scope.can_see_shared_draft? && SiteSetting.shared_drafts_enabled? &&
+      object.topic.shared_draft.present?
   end
 
   def is_shared_draft
@@ -277,20 +279,21 @@ class TopicViewSerializer < ApplicationSerializer
     Group
       .joins(:group_users)
       .where(
-        id: object.topic.custom_fields['requested_group_id'].to_i,
-        group_users: { user_id: scope.user.id, owner: true }
+        id: object.topic.custom_fields["requested_group_id"].to_i,
+        group_users: {
+          user_id: scope.user.id,
+          owner: true,
+        },
       )
-      .pluck_first(:name)
+      .pick(:name)
   end
 
   def include_requested_group_name?
-    object.personal_message && object.topic.custom_fields['requested_group_id']
+    object.personal_message && object.topic.custom_fields["requested_group_id"]
   end
 
   def include_published_page?
-    SiteSetting.enable_page_publishing? &&
-      scope.is_staff? &&
-      object.published_page.present? &&
+    SiteSetting.enable_page_publishing? && scope.is_staff? && object.published_page.present? &&
       !SiteSetting.secure_uploads
   end
 
@@ -313,5 +316,8 @@ class TopicViewSerializer < ApplicationSerializer
 
   def subtitle
     object.topic.custom_fields[:subtitle]
+
+  def summarizable
+    object.summarizable?
   end
 end

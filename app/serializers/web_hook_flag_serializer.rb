@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookFlagSerializer < ApplicationSerializer
-  attributes :id,
-             :post,
-             :flag_type,
-             :created_by,
-             :created_at,
-             :resolved_at,
-             :resolved_by
+  attributes :id, :post, :flag_type, :created_by, :created_at, :resolved_at, :resolved_by
 
   def post
     WebHookPostSerializer.new(object.post, scope: scope, root: false).as_json
@@ -41,7 +35,7 @@ class WebHookFlagSerializer < ApplicationSerializer
     disposed_by_id.present?
   end
 
-protected
+  protected
 
   def disposed_by_id
     object.disagreed_by_id || object.agreed_by_id || object.deferred_by_id

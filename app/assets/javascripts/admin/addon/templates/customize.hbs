@@ -1,16 +1,63 @@
 <AdminNav>
   {{#if this.currentUser.admin}}
-    <NavItem @route="adminCustomizeThemes" @label="admin.customize.theme.title" @class="admin-customize-themes" />
-    <NavItem @route="adminCustomize.colors" @label="admin.customize.colors.title" @class="admin-customize-colors" />
-    <NavItem @route="adminSiteText" @label="admin.site_text.title" @class="admin-customize-site-text" />
-    <NavItem @route="adminCustomizeEmailTemplates" @label="admin.customize.email_templates.title" @class="admin-customize-email-templates" />
-    <NavItem @route="adminCustomizeEmailStyle" @label="admin.customize.email_style.title" @class="admin-customize-email-styles" />
-    <NavItem @route="adminUserFields" @label="admin.user_fields.title" @class="admin-customize-user-fields" />
-    <NavItem @route="adminEmojis" @label="admin.emoji.title" @class="admin-customize-emojis" />
-    <NavItem @route="adminPermalinks" @label="admin.permalink.title" @class="admin-customize-permalinks" />
-    <NavItem @route="adminEmbedding" @label="admin.embedding.title" @class="admin-customize-embedding" />
+    <NavItem
+      @route="adminCustomizeThemes"
+      @label="admin.customize.theme.title"
+      @class="admin-customize-themes"
+    />
+    <NavItem
+      @route="adminCustomize.colors"
+      @label="admin.customize.colors.title"
+      @class="admin-customize-colors"
+    />
+    <NavItem
+      @route="adminSiteText"
+      @label="admin.site_text.title"
+      @class="admin-customize-site-text"
+    />
+    <NavItem
+      @route="adminCustomizeEmailTemplates"
+      @label="admin.customize.email_templates.title"
+      @class="admin-customize-email-templates"
+    />
+    <NavItem
+      @route="adminCustomizeEmailStyle"
+      @label="admin.customize.email_style.title"
+      @class="admin-customize-email-styles"
+    />
+    <NavItem
+      @route="adminUserFields"
+      @label="admin.user_fields.title"
+      @class="admin-customize-user-fields"
+    />
+    <NavItem
+      @route="adminEmojis"
+      @label="admin.emoji.title"
+      @class="admin-customize-emojis"
+    />
+    <NavItem
+      @route="adminPermalinks"
+      @label="admin.permalink.title"
+      @class="admin-customize-permalinks"
+    />
+    <NavItem
+      @route="adminEmbedding"
+      @label="admin.embedding.title"
+      @class="admin-customize-embedding"
+    />
+    {{#if this.siteSettings.experimental_form_templates}}
+      <NavItem
+        @route="adminCustomizeFormTemplates"
+        @label="admin.form_templates.nav_title"
+        @class="admin-customize-form-templates"
+      />
+    {{/if}}
   {{/if}}
-  <NavItem @route="adminWatchedWords" @label="admin.watched_words.title" @class="admin-customize-watched-words" />
+  <NavItem
+    @route="adminWatchedWords"
+    @label="admin.watched_words.title"
+    @class="admin-customize-watched-words"
+  />
 </AdminNav>
 
 <div class="admin-container">

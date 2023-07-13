@@ -7,7 +7,7 @@ export default Component.extend({
 
   @discourseComputed("user")
   flair(user) {
-    if (!user) {
+    if (!user || !user.flair_group_id) {
       return;
     }
 

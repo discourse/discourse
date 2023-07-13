@@ -3,7 +3,9 @@
 class CreateReviewableUsers < ActiveRecord::Migration[5.2]
   def up
     # Create reviewables for approved users
-    if DB.query_single("SELECT 1 FROM site_settings WHERE name = 'must_approve_users' AND value = 't'").first
+    if DB.query_single(
+         "SELECT 1 FROM site_settings WHERE name = 'must_approve_users' AND value = 't'",
+       ).first
       execute(<<~SQL)
         INSERT INTO reviewables (
           type,

@@ -12,6 +12,6 @@ class DropAvatarUrlFromUsers < ActiveRecord::Migration[4.2]
   end
 
   def down
-    add_column :users, :avatar_url, :string, null: false, default: ''
+    add_column :users, :avatar_url, :string, null: false, default: ""
   end
 end

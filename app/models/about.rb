@@ -1,23 +1,12 @@
 # frozen_string_literal: true
 
 class About
-  cattr_reader :plugin_stat_groups
-
-  def self.add_plugin_stat_group(prefix, show_in_ui: false, &block)
-    @@displayed_plugin_stat_groups << prefix if show_in_ui
-    @@plugin_stat_groups[prefix] = block
-  end
-
-  def self.clear_plugin_stat_groups
-    @@displayed_plugin_stat_groups = Set.new
-    @@plugin_stat_groups = {}
-  end
-
   def self.displayed_plugin_stat_groups
-    @@displayed_plugin_stat_groups.to_a
+    DiscoursePluginRegistry
+      .about_stat_groups
+      .select { |stat_group| stat_group[:show_in_ui] }
+      .map { |stat_group| stat_group[:name] }
   end
-
-  clear_plugin_stat_groups
 
   class CategoryMods
     include ActiveModel::Serialization
@@ -32,11 +21,10 @@ class About
   include ActiveModel::Serialization
   include StatsCacheable
 
-  attr_accessor :moderators,
-                :admins
+  attr_accessor :moderators, :admins
 
   def self.stats_cache_key
-    'about-stats'
+    "about-stats"
   end
 
   def self.fetch_stats
@@ -68,58 +56,61 @@ class About
   end
 
   def moderators
-    @moderators ||= User.where(moderator: true, admin: false)
-      .human_users
-      .order("last_seen_at DESC")
+    @moderators ||= User.where(moderator: true, admin: false).human_users.order("last_seen_at DESC")
   end
 
   def admins
-    @admins ||= User.where(admin: true)
-      .human_users
-      .order("last_seen_at DESC")
+    @admins ||= User.where(admin: true).human_users.order("last_seen_at DESC")
   end
 
   def stats
     @stats ||= {
       topic_count: Topic.listable_topics.count,
-      topics_last_day: Topic.listable_topics.where('created_at > ?', 1.days.ago).count,
-      topics_7_days: Topic.listable_topics.where('created_at > ?', 7.days.ago).count,
-      topics_30_days: Topic.listable_topics.where('created_at > ?', 30.days.ago).count,
+      topics_last_day: Topic.listable_topics.where("created_at > ?", 1.days.ago).count,
+      topics_7_days: Topic.listable_topics.where("created_at > ?", 7.days.ago).count,
+      topics_30_days: Topic.listable_topics.where("created_at > ?", 30.days.ago).count,
       post_count: Post.count,
-      posts_last_day: Post.where('created_at > ?', 1.days.ago).count,
-      posts_7_days: Post.where('created_at > ?', 7.days.ago).count,
-      posts_30_days: Post.where('created_at > ?', 30.days.ago).count,
+      posts_last_day: Post.where("created_at > ?", 1.days.ago).count,
+      posts_7_days: Post.where("created_at > ?", 7.days.ago).count,
+      posts_30_days: Post.where("created_at > ?", 30.days.ago).count,
       user_count: User.real.count,
-      users_last_day: User.real.where('created_at > ?', 1.days.ago).count,
-      users_7_days: User.real.where('created_at > ?', 7.days.ago).count,
-      users_30_days: User.real.where('created_at > ?', 30.days.ago).count,
-      active_users_last_day: User.where('last_seen_at > ?', 1.days.ago).count,
-      active_users_7_days: User.where('last_seen_at > ?', 7.days.ago).count,
-      active_users_30_days: User.where('last_seen_at > ?', 30.days.ago).count,
+      users_last_day: User.real.where("created_at > ?", 1.days.ago).count,
+      users_7_days: User.real.where("created_at > ?", 7.days.ago).count,
+      users_30_days: User.real.where("created_at > ?", 30.days.ago).count,
+      active_users_last_day: User.where("last_seen_at > ?", 1.days.ago).count,
+      active_users_7_days: User.where("last_seen_at > ?", 7.days.ago).count,
+      active_users_30_days: User.where("last_seen_at > ?", 30.days.ago).count,
       like_count: UserAction.where(action_type: UserAction::LIKE).count,
-      likes_last_day: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 1.days.ago).count,
-      likes_7_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
-      likes_30_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count
+      likes_last_day:
+        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 1.days.ago).count,
+      likes_7_days:
+        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
+      likes_30_days:
+        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count,
     }.merge(plugin_stats)
   end
 
   def plugin_stats
     final_plugin_stats = {}
-    @@plugin_stat_groups.each do |plugin_stat_group_name, stat_group|
+    DiscoursePluginRegistry.about_stat_groups.each do |stat_group|
       begin
-        stats = stat_group.call
+        stats = stat_group[:block].call
       rescue StandardError => err
-        Discourse.warn_exception(err, message: "Unexpected error when collecting #{plugin_stat_group_name} About stats.")
+        Discourse.warn_exception(
+          err,
+          message: "Unexpected error when collecting #{stat_group[:name]} About stats.",
+        )
         next
       end
 
-      if !stats.key?(:last_day) || !stats.key?("7_days") || !stats.key?("30_days") || !stats.key?(:count)
-        Rails.logger.warn("Plugin stat group #{plugin_stat_group_name} for About stats does not have all required keys, skipping.")
+      if !stats.key?(:last_day) || !stats.key?("7_days") || !stats.key?("30_days") ||
+           !stats.key?(:count)
+        Rails.logger.warn(
+          "Plugin stat group #{stat_group[:name]} for About stats does not have all required keys, skipping.",
+        )
       else
         final_plugin_stats.merge!(
-          stats.transform_keys do |key|
-            "#{plugin_stat_group_name}_#{key}".to_sym
-          end
+          stats.transform_keys { |key| "#{stat_group[:name]}_#{key}".to_sym },
         )
       end
     end
@@ -151,9 +142,7 @@ class About
 
     mods = User.where(id: results.map(&:user_ids).flatten.uniq).index_by(&:id)
 
-    results.map do |row|
-      CategoryMods.new(row.category_id, mods.values_at(*row.user_ids))
-    end
+    results.map { |row| CategoryMods.new(row.category_id, mods.values_at(*row.user_ids)) }
   end
 
   def category_mods_limit

@@ -77,6 +77,8 @@ acceptance("Category Edit", function (needs) {
   test("Editing required tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
+    assert.ok(exists(".minimum-required-tags"));
+
     assert.ok(exists(".required-tag-groups"));
     assert.strictEqual(count(".required-tag-group-row"), 0);
 
@@ -112,6 +114,7 @@ acceptance("Category Edit", function (needs) {
     await allowedTagChooser.expand();
     await allowedTagChooser.selectRowByValue("monkey");
 
+    await allowedTagChooser.collapse();
     const allowedTagGroupChooser = selectKit("#category-allowed-tag-groups");
     await allowedTagGroupChooser.expand();
     await allowedTagGroupChooser.selectRowByValue("TagGroup1");
@@ -125,6 +128,7 @@ acceptance("Category Edit", function (needs) {
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
     assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
 
+    await allowedTagGroupChooser.collapse();
     await allowedTagChooser.expand();
     await allowedTagChooser.deselectItemByValue("monkey");
 

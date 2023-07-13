@@ -1,8 +1,8 @@
 import {
   acceptance,
   count,
+  exists,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
@@ -1156,8 +1156,9 @@ acceptance("Poll results - no voters", function (needs) {
     });
   });
 
-  test("disables show results button", async function (assert) {
+  test("does not show results button", async function (assert) {
     await visit("/t/-/load-more-poll-voters");
-    assert.ok(query(".toggle-results").disabled);
+
+    assert.ok(!exists(".toggle-results"));
   });
 });

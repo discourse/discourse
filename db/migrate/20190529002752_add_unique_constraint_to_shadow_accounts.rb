@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AddUniqueConstraintToShadowAccounts < ActiveRecord::Migration[5.2]
-
   def up
     create_table :anonymous_users do |t|
       t.integer :user_id, null: false
@@ -10,7 +9,7 @@ class AddUniqueConstraintToShadowAccounts < ActiveRecord::Migration[5.2]
       t.timestamps
 
       t.index [:user_id], unique: true
-      t.index [:master_user_id], unique: true, where: 'active'
+      t.index [:master_user_id], unique: true, where: "active"
     end
 
     rows = DB.exec <<~SQL
@@ -24,9 +23,7 @@ class AddUniqueConstraintToShadowAccounts < ActiveRecord::Migration[5.2]
       )
     SQL
 
-    if rows > 0
-      STDERR.puts "Removed #{rows} duplicate shadow users"
-    end
+    STDERR.puts "Removed #{rows} duplicate shadow users" if rows > 0
 
     rows = DB.exec <<~SQL
       INSERT INTO anonymous_users(user_id, master_user_id, created_at, updated_at, active)
@@ -43,9 +40,7 @@ class AddUniqueConstraintToShadowAccounts < ActiveRecord::Migration[5.2]
       WHERE name = 'master_id' AND a.user_id IS NULL
     SQL
 
-    if rows > 0
-      STDERR.puts "Migrated #{rows} anon users to new structure"
-    end
+    STDERR.puts "Migrated #{rows} anon users to new structure" if rows > 0
 
     DB.exec <<~SQL
       DELETE FROM user_custom_fields

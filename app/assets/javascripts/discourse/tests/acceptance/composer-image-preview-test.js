@@ -10,8 +10,8 @@ import {
 import { test } from "qunit";
 
 acceptance("Composer - Image Preview", function (needs) {
-  needs.user();
-  needs.settings({ enable_whispers: true, allow_uncategorized_topics: true });
+  needs.user({});
+  needs.settings({ allow_uncategorized_topics: true });
   needs.site({ can_tag_topics: true });
   needs.pretender((server, helper) => {
     server.post("/uploads/lookup-urls", () => {

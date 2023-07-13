@@ -1,0 +1,58 @@
+{{#if this.foundProblems}}
+  <div class="section dashboard-problems">
+    <div class="section-title">
+      <h2>
+        {{d-icon "heart"}}
+        {{i18n "admin.dashboard.problems_found"}}
+      </h2>
+    </div>
+
+    <div class="section-body">
+      <ConditionalLoadingSection @isLoading={{this.loadingProblems}}>
+        {{#if this.highPriorityProblems.length}}
+          <div class="problem-messages priority-high">
+            <ul>
+              {{#each this.highPriorityProblems as |problem|}}
+                <li
+                  class={{concat
+                    "dashboard-problem "
+                    "priority-"
+                    problem.priority
+                  }}
+                >
+                  {{d-icon "exclamation-triangle"}}
+                  {{html-safe problem.message}}
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+        {{/if}}
+
+        <div class="problem-messages priority-low">
+          <ul>
+            {{#each this.lowPriorityProblems as |problem|}}
+              <li
+                class={{concat
+                  "dashboard-problem "
+                  "priority-"
+                  problem.priority
+                }}
+              >{{html-safe problem.message}}</li>
+            {{/each}}
+          </ul>
+        </div>
+
+        <p class="actions">
+          <DButton
+            @action={{this.refreshProblems}}
+            @class="btn-default"
+            @icon="sync"
+            @label="admin.dashboard.refresh_problems"
+          />
+          {{i18n "admin.dashboard.last_checked"}}:
+          {{this.problemsTimestamp}}
+        </p>
+      </ConditionalLoadingSection>
+    </div>
+  </div>
+{{/if}}

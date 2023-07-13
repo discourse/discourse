@@ -16,7 +16,10 @@ export default class UsersSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.users.content");
+    return I18n.t(
+      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
+      { defaultValue: this.overridenName }
+    );
   }
 
   get shouldDisplay() {
@@ -26,7 +29,7 @@ export default class UsersSectionLink extends BaseSectionLink {
     );
   }
 
-  get prefixValue() {
+  get defaultPrefixValue() {
     return "users";
   }
 }

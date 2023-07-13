@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ReviewableQueuedPostSerializer < ReviewableSerializer
-
   attributes :reply_to_post_number
 
   payload_attributes(
@@ -18,15 +17,14 @@ class ReviewableQueuedPostSerializer < ReviewableSerializer
     :composer_open_duration_msecs,
     :tags,
     :via_email,
-    :raw_email
+    :raw_email,
   )
 
   def reply_to_post_number
-    object.payload['reply_to_post_number'].to_i
+    object.payload["reply_to_post_number"].to_i
   end
 
   def include_reply_to_post_number?
-    object.payload.present? && object.payload['reply_to_post_number'].present?
+    object.payload.present? && object.payload["reply_to_post_number"].present?
   end
-
 end

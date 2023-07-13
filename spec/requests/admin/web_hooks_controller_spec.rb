@@ -6,45 +6,52 @@ RSpec.describe Admin::WebHooksController do
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:user) { Fabricate(:user) }
 
-  describe '#create' do
+  describe "#create" do
     context "when logged in as admin" do
       before { sign_in(admin) }
 
-      it 'creates a webhook' do
-        post "/admin/api/web_hooks.json", params: {
-          web_hook: {
-            payload_url: 'https://meta.discourse.org/',
-            content_type: 1,
-            secret: "a_secret_for_webhooks",
-            wildcard_web_hook: false,
-            active: true,
-            verify_certificate: true,
-            web_hook_event_type_ids: [1],
-            group_ids: [],
-            category_ids: []
-          }
-        }
+      it "creates a webhook" do
+        post "/admin/api/web_hooks.json",
+             params: {
+               web_hook: {
+                 payload_url: "https://meta.discourse.org/",
+                 content_type: 1,
+                 secret: "a_secret_for_webhooks",
+                 wildcard_web_hook: false,
+                 active: true,
+                 verify_certificate: true,
+                 web_hook_event_type_ids: [1],
+                 group_ids: [],
+                 category_ids: [],
+               },
+             }
 
         expect(response.status).to eq(200)
 
         json = response.parsed_body
         expect(json["web_hook"]["payload_url"]).to eq("https://meta.discourse.org/")
-        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:web_hook_create]).count).to eq(1)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:web_hook_create],
+          ).count,
+        ).to eq(1)
       end
 
-      it 'returns error when field is not filled correctly' do
-        post "/admin/api/web_hooks.json", params: {
-          web_hook: {
-            content_type: 1,
-            secret: "a_secret_for_webhooks",
-            wildcard_web_hook: false,
-            active: true,
-            verify_certificate: true,
-            web_hook_event_type_ids: [1],
-            group_ids: [],
-            category_ids: []
-          }
-        }
+      it "returns error when field is not filled correctly" do
+        post "/admin/api/web_hooks.json",
+             params: {
+               web_hook: {
+                 content_type: 1,
+                 secret: "a_secret_for_webhooks",
+                 wildcard_web_hook: false,
+                 active: true,
+                 verify_certificate: true,
+                 web_hook_event_type_ids: [1],
+                 group_ids: [],
+                 category_ids: [],
+               },
+             }
 
         expect(response.status).to eq(422)
         response_body = response.parsed_body
@@ -55,19 +62,20 @@ RSpec.describe Admin::WebHooksController do
 
     shared_examples "webhook creation not allowed" do
       it "prevents creation with a 404 response" do
-        post "/admin/api/web_hooks.json", params: {
-          web_hook: {
-            payload_url: 'https://meta.discourse.org/',
-            content_type: 1,
-            secret: "a_secret_for_webhooks",
-            wildcard_web_hook: false,
-            active: true,
-            verify_certificate: true,
-            web_hook_event_type_ids: [1],
-            group_ids: [],
-            category_ids: []
-          }
-        }
+        post "/admin/api/web_hooks.json",
+             params: {
+               web_hook: {
+                 payload_url: "https://meta.discourse.org/",
+                 content_type: 1,
+                 secret: "a_secret_for_webhooks",
+                 wildcard_web_hook: false,
+                 active: true,
+                 verify_certificate: true,
+                 web_hook_event_type_ids: [1],
+                 group_ids: [],
+                 category_ids: [],
+               },
+             }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -82,34 +90,46 @@ RSpec.describe Admin::WebHooksController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "webhook creation not allowed"
     end
   end
 
-  describe '#update' do
+  describe "#update" do
     context "when logged in as admin" do
       before { sign_in(admin) }
 
       it "logs webhook update" do
-        put "/admin/api/web_hooks/#{web_hook.id}.json", params: {
-          web_hook: { active: false, payload_url: "https://test.com" }
-        }
+        put "/admin/api/web_hooks/#{web_hook.id}.json",
+            params: {
+              web_hook: {
+                active: false,
+                payload_url: "https://test.com",
+              },
+            }
 
         expect(response.status).to eq(200)
-        expect(UserHistory.where(acting_user_id: admin.id,
-                                 action: UserHistory.actions[:web_hook_update],
-                                 new_value: "active: false, payload_url: https://test.com").exists?).to eq(true)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:web_hook_update],
+            new_value: "active: false, payload_url: https://test.com",
+          ).exists?,
+        ).to eq(true)
       end
     end
 
     shared_examples "webhook update not allowed" do
       it "prevents updates with a 404 response" do
         current_payload_url = web_hook.payload_url
-        put "/admin/api/web_hooks/#{web_hook.id}.json", params: {
-          web_hook: { active: false, payload_url: "https://test.com" }
-        }
+        put "/admin/api/web_hooks/#{web_hook.id}.json",
+            params: {
+              web_hook: {
+                active: false,
+                payload_url: "https://test.com",
+              },
+            }
 
         web_hook.reload
         expect(response.status).to eq(404)
@@ -125,23 +145,32 @@ RSpec.describe Admin::WebHooksController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "webhook update not allowed"
     end
   end
 
-  describe '#destroy' do
+  describe "#destroy" do
     context "when logged in as admin" do
       before { sign_in(admin) }
 
       it "logs webhook destroy" do
-        delete "/admin/api/web_hooks/#{web_hook.id}.json", params: {
-          web_hook: { active: false, payload_url: "https://test.com" }
-        }
+        delete "/admin/api/web_hooks/#{web_hook.id}.json",
+               params: {
+                 web_hook: {
+                   active: false,
+                   payload_url: "https://test.com",
+                 },
+               }
 
         expect(response.status).to eq(200)
-        expect(UserHistory.where(acting_user_id: admin.id, action: UserHistory.actions[:web_hook_destroy]).exists?).to eq(true)
+        expect(
+          UserHistory.where(
+            acting_user_id: admin.id,
+            action: UserHistory.actions[:web_hook_destroy],
+          ).exists?,
+        ).to eq(true)
       end
     end
 
@@ -162,20 +191,20 @@ RSpec.describe Admin::WebHooksController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "webhook deletion not allowed"
     end
   end
 
-  describe '#ping' do
+  describe "#ping" do
     context "when logged in as admin" do
       before { sign_in(admin) }
 
-      it 'enqueues the ping event' do
-        expect do
-          post "/admin/api/web_hooks/#{web_hook.id}/ping.json"
-        end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
+      it "enqueues the ping event" do
+        expect do post "/admin/api/web_hooks/#{web_hook.id}/ping.json" end.to change {
+          Jobs::EmitWebHookEvent.jobs.size
+        }.by(1)
 
         expect(response.status).to eq(200)
         job_args = Jobs::EmitWebHookEvent.jobs.first["args"].first
@@ -186,9 +215,9 @@ RSpec.describe Admin::WebHooksController do
 
     shared_examples "webhook ping not allowed" do
       it "fails to enqueue a ping with 404 response" do
-        expect do
-          post "/admin/api/web_hooks/#{web_hook.id}/ping.json"
-        end.not_to change { Jobs::EmitWebHookEvent.jobs.size }
+        expect do post "/admin/api/web_hooks/#{web_hook.id}/ping.json" end.not_to change {
+          Jobs::EmitWebHookEvent.jobs.size
+        }
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -202,31 +231,34 @@ RSpec.describe Admin::WebHooksController do
     end
 
     context "when logged in as a non-staff user" do
-      before  { sign_in(user) }
+      before { sign_in(user) }
 
       include_examples "webhook ping not allowed"
     end
   end
 
-  describe '#redeliver_event' do
+  describe "#redeliver_event" do
     let!(:web_hook_event) do
-      WebHookEvent.create!(
-        web_hook: web_hook,
-        payload: "abc",
-        headers: JSON.dump(aa: "1", bb: "2"),
-      )
+      WebHookEvent.create!(web_hook: web_hook, payload: "abc", headers: JSON.dump(aa: "1", bb: "2"))
     end
 
     before { sign_in(admin) }
 
-    it 'emits the web hook and updates the response headers and body' do
-      stub_request(:post, web_hook.payload_url)
-        .with(body: "abc", headers: { "aa" => 1, "bb" => 2 })
-        .to_return(
-          status: 402,
-          body: "efg",
-          headers: { "Content-Type" => "application/json", "yoo" => "man" }
-        )
+    it "emits the web hook and updates the response headers and body" do
+      stub_request(:post, web_hook.payload_url).with(
+        body: "abc",
+        headers: {
+          "aa" => 1,
+          "bb" => 2,
+        },
+      ).to_return(
+        status: 402,
+        body: "efg",
+        headers: {
+          "Content-Type" => "application/json",
+          "yoo" => "man",
+        },
+      )
       post "/admin/api/web_hooks/#{web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
       expect(response.status).to eq(200)
 
@@ -237,7 +269,9 @@ RSpec.describe Admin::WebHooksController do
       expect(JSON.parse(parsed_event["headers"])).to eq({ "aa" => "1", "bb" => "2" })
       expect(parsed_event["payload"]).to eq("abc")
 
-      expect(JSON.parse(parsed_event["response_headers"])).to eq({ "content-type" => "application/json", "yoo" => "man" })
+      expect(JSON.parse(parsed_event["response_headers"])).to eq(
+        { "content-type" => "application/json", "yoo" => "man" },
+      )
       expect(parsed_event["response_body"]).to eq("efg")
     end
 
@@ -249,7 +283,9 @@ RSpec.describe Admin::WebHooksController do
 
       parsed_event = response.parsed_body["web_hook_event"]
       expect(parsed_event["id"]).to eq(web_hook_event.id)
-      expect(parsed_event["response_headers"]).to eq({ error: I18n.t("webhooks.payload_url.blocked_or_internal") }.to_json)
+      expect(parsed_event["response_headers"]).to eq(
+        { error: I18n.t("webhooks.payload_url.blocked_or_internal") }.to_json,
+      )
       expect(parsed_event["status"]).to eq(-1)
       expect(parsed_event["response_body"]).to eq(nil)
     end
@@ -262,7 +298,9 @@ RSpec.describe Admin::WebHooksController do
 
       parsed_event = response.parsed_body["web_hook_event"]
       expect(parsed_event["id"]).to eq(web_hook_event.id)
-      expect(parsed_event["response_headers"]).to eq({ error: I18n.t("webhooks.payload_url.blocked_or_internal") }.to_json)
+      expect(parsed_event["response_headers"]).to eq(
+        { error: I18n.t("webhooks.payload_url.blocked_or_internal") }.to_json,
+      )
       expect(parsed_event["status"]).to eq(-1)
       expect(parsed_event["response_body"]).to eq(nil)
     end

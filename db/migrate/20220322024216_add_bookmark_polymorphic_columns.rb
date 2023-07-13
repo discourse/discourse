@@ -10,8 +10,11 @@ class AddBookmarkPolymorphicColumns < ActiveRecord::Migration[6.1]
       add_column :bookmarks, :bookmarkable_type, :string
     end
 
-    if !index_exists?(:bookmarks, [:user_id, :bookmarkable_type, :bookmarkable_id])
-      add_index :bookmarks, [:user_id, :bookmarkable_type, :bookmarkable_id], name: "idx_bookmarks_user_polymorphic_unique", unique: true
+    if !index_exists?(:bookmarks, %i[user_id bookmarkable_type bookmarkable_id])
+      add_index :bookmarks,
+                %i[user_id bookmarkable_type bookmarkable_id],
+                name: "idx_bookmarks_user_polymorphic_unique",
+                unique: true
     end
   end
 end

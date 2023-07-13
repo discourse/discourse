@@ -8,11 +8,15 @@
     style={{this.imageStyle}}
     loading="lazy"
     {{on "load" this.imageLoaded}}
-  >
+  />
 {{else if (eq this.type this.VIDEO_TYPE)}}
   <video class="chat-video-upload" preload="metadata" controls>
-    <source src={{@upload.url}}>
+    <source src={{@upload.url}} />
   </video>
+{{else if (eq this.type this.AUDIO_TYPE)}}
+  <audio class="chat-audio-upload" preload="metadata" controls>
+    <source src={{@upload.url}} />
+  </audio>
 {{else}}
   <a
     class="chat-other-upload"

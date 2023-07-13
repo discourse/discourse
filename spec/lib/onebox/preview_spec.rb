@@ -2,8 +2,10 @@
 
 RSpec.describe Onebox::Preview do
   before do
-    stub_request(:get, "https://www.amazon.com/product")
-      .to_return(status: 200, body: onebox_response("amazon"))
+    stub_request(:get, "https://www.amazon.com/product").to_return(
+      status: 200,
+      body: onebox_response("amazon"),
+    )
   end
 
   let(:preview_url) { "http://www.amazon.com/product" }
@@ -11,22 +13,27 @@ RSpec.describe Onebox::Preview do
 
   describe "#to_s" do
     before do
-      stub_request(:get, "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X")
-        .to_return(status: 200, body: onebox_response("amazon"))
+      stub_request(
+        :get,
+        "https://www.amazon.com/Seven-Languages-Weeks-Programming-Programmers/dp/193435659X",
+      ).to_return(status: 200, body: onebox_response("amazon"))
     end
 
     it "returns some html if given a valid url" do
-      title = "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)"
+      title =
+        "Seven Languages in Seven Weeks: A Pragmatic Guide to Learning Programming Languages (Pragmatic Programmers)"
       expect(preview.to_s).to include(title)
     end
 
     it "returns an empty string if the url is not valid" do
-      expect(described_class.new('not a url').to_s).to eq("")
+      expect(described_class.new("not a url").to_s).to eq("")
     end
   end
 
   describe "max_width" do
-    let(:iframe_html) { '<iframe src="//player.vimeo.com/video/96017582" width="1280" height="720" frameborder="0" title="GO BIG OR GO HOME" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>' }
+    let(:iframe_html) do
+      '<iframe src="//player.vimeo.com/video/96017582" width="1280" height="720" frameborder="0" title="GO BIG OR GO HOME" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'
+    end
 
     it "doesn't change dimensions without an option" do
       iframe = described_class.new(preview_url)
@@ -58,7 +65,7 @@ RSpec.describe Onebox::Preview do
 
   describe "#engine" do
     let(:preview_image_url) { "http://www.example.com/image/without/file_extension" }
-    let(:preview_image) { described_class.new(preview_image_url, content_type: 'image/png') }
+    let(:preview_image) { described_class.new(preview_image_url, content_type: "image/png") }
 
     it "returns an engine" do
       expect(preview.send(:engine)).to be_an(Onebox::Engine)
@@ -95,7 +102,8 @@ RSpec.describe Onebox::Preview do
     end
 
     it "allows allowed origins" do
-      preview = described_class.new(preview_url, allowed_iframe_origins: ["https://thirdparty.example.com"])
+      preview =
+        described_class.new(preview_url, allowed_iframe_origins: ["https://thirdparty.example.com"])
       preview.stubs(:engine_html).returns(iframe_html)
 
       result = preview.to_s

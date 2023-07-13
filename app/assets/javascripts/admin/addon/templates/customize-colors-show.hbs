@@ -1,20 +1,48 @@
 <div class="color-scheme show-current-style">
   <div class="admin-container">
-    <h1>{{#if this.model.theme_id}}{{this.model.name}}{{else}}<TextField @class="style-name" @value={{this.model.name}} />{{/if}}</h1>
+    <h1>{{#if this.model.theme_id}}{{this.model.name}}{{else}}<TextField
+          @class="style-name"
+          @value={{this.model.name}}
+        />{{/if}}</h1>
     <div class="controls">
       {{#unless this.model.theme_id}}
-        <DButton @class="btn-primary" @action={{action "save"}} @disabled={{this.model.disableSave}} @label="admin.customize.save" />
+        <DButton
+          @class="btn-primary"
+          @action={{action "save"}}
+          @disabled={{this.model.disableSave}}
+          @label="admin.customize.save"
+        />
       {{/unless}}
-      <DButton @class="btn-default" @action={{action "copy" this.model}} @icon="copy" @label="admin.customize.copy" />
-      <DButton @class="btn-default copy-to-clipboard" @action={{action "copyToClipboard" this.model}} @icon="far-clipboard" @label="admin.customize.copy_to_clipboard" />
-      <span class="saving {{unless this.model.savingStatus "hidden"}}">{{this.model.savingStatus}}</span>
+      <DButton
+        @class="btn-default"
+        @action={{action "copy" this.model}}
+        @icon="copy"
+        @label="admin.customize.copy"
+      />
+      <DButton
+        @class="btn-default copy-to-clipboard"
+        @action={{action "copyToClipboard" this.model}}
+        @icon="far-clipboard"
+        @label="admin.customize.copy_to_clipboard"
+      />
+      <span
+        class="saving {{unless this.model.savingStatus 'hidden'}}"
+      >{{this.model.savingStatus}}</span>
       {{#if this.model.theme_id}}
         <span class="not-editable">
           {{i18n "admin.customize.theme_owner"}}
-          <LinkTo @route="adminCustomizeThemes.show" @model={{this.model.theme_id}}>{{this.model.theme_name}}</LinkTo>
+          <LinkTo
+            @route="adminCustomizeThemes.show"
+            @model={{this.model.theme_id}}
+          >{{this.model.theme_name}}</LinkTo>
         </span>
       {{else}}
-        <DButton @action={{action "destroy"}} @class="btn-danger" @icon="far-trash-alt" @label="admin.customize.delete" />
+        <DButton
+          @action={{action "destroy"}}
+          @class="btn-danger"
+          @icon="far-trash-alt"
+          @label="admin.customize.delete"
+        />
       {{/if}}
     </div>
 
@@ -30,7 +58,12 @@
 
       <div>
         {{#if this.model.theme_id}}
-          <InlineEditCheckbox @action={{action "applyUserSelectable"}} @labelKey="admin.customize.theme.color_scheme_user_selectable" @checked={{this.model.user_selectable}} @modelId={{this.model.id}} />
+          <InlineEditCheckbox
+            @action={{action "applyUserSelectable"}}
+            @labelKey="admin.customize.theme.color_scheme_user_selectable"
+            @checked={{this.model.user_selectable}}
+            @modelId={{this.model.id}}
+          />
         {{else}}
           <label>
             <Input @type="checkbox" @checked={{this.model.user_selectable}} />
@@ -51,16 +84,39 @@
         </thead>
         <tbody>
           {{#each this.colors as |c|}}
-            <tr class="{{if c.changed "changed"}} {{if c.valid "valid" "invalid"}}">
+            <tr
+              class="{{if c.changed 'changed'}}
+                {{if c.valid 'valid' 'invalid'}}"
+            >
               <td class="name" title={{c.name}}>
                 <h3>{{c.translatedName}}</h3>
                 <p class="description">{{c.description}}</p>
               </td>
-              <td class="hex"><ColorInput @hexValue={{c.hex}} @brightnessValue={{c.brightness}} @valid={{c.valid}} /></td>
+              <td class="hex"><ColorInput
+                  @hexValue={{c.hex}}
+                  @brightnessValue={{c.brightness}}
+                  @valid={{c.valid}}
+                /></td>
               <td class="actions">
                 {{#unless this.model.theme_id}}
-                  <DButton @class={{concat "btn-default revert " (unless c.savedIsOverriden "invisible")}} @action={{action "revert" c}} @title="admin.customize.colors.revert_title" @label="revert" />
-                  <DButton @class={{concat "btn-default undo " (unless c.changed "invisible")}} @action={{action "undo" c}} @title="admin.customize.colors.undo_title" @label="undo" />
+                  <DButton
+                    @class={{concat
+                      "btn-default revert "
+                      (unless c.savedIsOverriden "invisible")
+                    }}
+                    @action={{action "revert" c}}
+                    @title="admin.customize.colors.revert_title"
+                    @label="admin.customize.colors.revert"
+                  />
+                  <DButton
+                    @class={{concat
+                      "btn-default undo "
+                      (unless c.changed "invisible")
+                    }}
+                    @action={{action "undo" c}}
+                    @title="admin.customize.colors.undo_title"
+                    @label="admin.customize.colors.undo"
+                  />
                 {{/unless}}
               </td>
             </tr>

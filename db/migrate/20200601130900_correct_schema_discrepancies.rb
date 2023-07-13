@@ -4,7 +4,7 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
   disable_ddl_transaction!
 
   def up
-    timestamp_columns = %w{
+    timestamp_columns = %w[
       category_tag_groups.created_at
       category_tag_groups.updated_at
       category_tags.created_at
@@ -65,9 +65,9 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
       web_hook_events.updated_at
       web_hooks.created_at
       web_hooks.updated_at
-    }
+    ]
 
-    char_limit_columns = %w{
+    char_limit_columns = %w[
       badge_groupings.name
       badge_types.name
       badges.icon
@@ -136,30 +136,25 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
       user_profiles.website
       users.name
       users.title
-    }
+    ]
 
-    float_default_columns = %w{
+    float_default_columns = %w[
       top_topics.all_score
       top_topics.daily_score
       top_topics.monthly_score
       top_topics.weekly_score
       top_topics.yearly_score
-    }
+    ]
 
-    other_default_columns = %w{
-      categories.color
-      topic_search_data.topic_id
-    }
+    other_default_columns = %w[categories.color topic_search_data.topic_id]
 
-    lookup_sql = (
-      timestamp_columns +
-      char_limit_columns +
-      float_default_columns +
-      other_default_columns
-    ).map do |ref|
-      table, column = ref.split(".")
-      "(table_name='#{table}' AND column_name='#{column}')"
-    end.join(" OR ")
+    lookup_sql =
+      (timestamp_columns + char_limit_columns + float_default_columns + other_default_columns)
+        .map do |ref|
+          table, column = ref.split(".")
+          "(table_name='#{table}' AND column_name='#{column}')"
+        end
+        .join(" OR ")
 
     raw_info = DB.query_hash <<~SQL
       SELECT table_name, column_name, is_nullable, character_maximum_length, column_default
@@ -172,9 +167,7 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
 
     schema_hash = {}
 
-    raw_info.each do |row|
-      schema_hash["#{row["table_name"]}.#{row["column_name"]}"] = row
-    end
+    raw_info.each { |row| schema_hash["#{row["table_name"]}.#{row["column_name"]}"] = row }
 
     # In the past, rails changed the default behavior for timestamp columns
     # This only affects older discourse installations
@@ -232,11 +225,9 @@ class CorrectSchemaDiscrepancies < ActiveRecord::Migration[6.0]
 
     # Older sites have a default value like nextval('topic_search_data_topic_id_seq'::regclass)
     # Modern sites do not. This is likely caused by another historical change in rails
-    if schema_hash["topic_search_data.topic_id"]["column_default"] != nil
-      DB.exec <<~SQL
+    DB.exec <<~SQL if schema_hash["topic_search_data.topic_id"]["column_default"] != nil
         ALTER TABLE topic_search_data ALTER COLUMN topic_id SET DEFAULT NULL
       SQL
-    end
   end
 
   def down

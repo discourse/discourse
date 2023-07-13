@@ -1,0 +1,70 @@
+<div class="buttons">
+  {{#if this.embedQuoteButton}}
+    <DButton
+      @class="btn-flat insert-quote"
+      @action={{action "insertQuote"}}
+      @icon="quote-left"
+      @label="post.quote_reply"
+      @title="post.quote_reply_shortcut"
+    />
+  {{/if}}
+
+  {{#if this.siteSettings.enable_fast_edit}}
+    {{#if this._canEditPost}}
+      <DButton
+        @icon="pencil-alt"
+        @action={{action "_toggleFastEditForm"}}
+        @label="post.quote_edit"
+        @class="btn-flat quote-edit-label"
+        @title="post.quote_edit_shortcut"
+      />
+    {{/if}}
+  {{/if}}
+
+  {{#if this.quoteSharingEnabled}}
+    <span class="quote-sharing">
+      {{#if this.quoteSharingShowLabel}}
+        <DButton
+          @icon="share"
+          @label="post.quote_share"
+          @class="btn-flat quote-share-label"
+        />
+      {{/if}}
+
+      <span class="quote-share-buttons">
+        {{#each this.quoteSharingSources as |source|}}
+          <DButton
+            @class="btn-flat"
+            @action={{action "share" source}}
+            @translatedTitle={{source.title}}
+            @icon={{source.icon}}
+          />
+        {{/each}}
+        <PluginOutlet
+          @name="quote-share-buttons-after"
+          @connectorTagName="div"
+        />
+      </span>
+    </span>
+  {{/if}}
+</div>
+
+<div class="extra">
+  {{#if this.siteSettings.enable_fast_edit}}
+    {{#if this._displayFastEditInput}}
+      <div class="fast-edit-container">
+        <Textarea id="fast-edit-input" @value={{this._fastEditNewSelection}} />
+        <DButton
+          @action={{action "_saveFastEdit"}}
+          @class="btn-small btn-primary save-fast-edit"
+          @icon="pencil-alt"
+          @label="composer.save_edit"
+          @translatedTitle={{this._saveEditButtonTitle}}
+          @disabled={{this._saveFastEditDisabled}}
+          @isLoading={{this._isSavingFastEdit}}
+        />
+      </div>
+    {{/if}}
+  {{/if}}
+  <PluginOutlet @name="quote-button-after" @connectorTagName="div" />
+</div>

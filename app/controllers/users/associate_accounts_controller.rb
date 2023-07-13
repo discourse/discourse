@@ -9,11 +9,11 @@ class Users::AssociateAccountsController < ApplicationController
     account_description = authenticator.description_for_auth_hash(auth_hash)
     existing_account_description = authenticator.description_for_user(current_user).presence
     render json: {
-      token: params[:token],
-      provider_name: auth_hash.provider,
-      account_description: account_description,
-      existing_account_description: existing_account_description
-    }
+             token: params[:token],
+             provider_name: auth_hash.provider,
+             account_description: account_description,
+             existing_account_description: existing_account_description,
+           }
   end
 
   def connect
@@ -33,20 +33,23 @@ class Users::AssociateAccountsController < ApplicationController
   private
 
   def auth_hash
-    @auth_hash ||= begin
-      token = params[:token]
-      json = secure_session[self.class.key(token)]
-      raise Discourse::NotFound if json.nil?
+    @auth_hash ||=
+      begin
+        token = params[:token]
+        json = secure_session[self.class.key(token)]
+        raise Discourse::NotFound if json.nil?
 
-      OmniAuth::AuthHash.new(JSON.parse(json))
-    end
+        OmniAuth::AuthHash.new(JSON.parse(json))
+      end
   end
 
   def authenticator
     provider_name = auth_hash.provider
     authenticator = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
-    raise Discourse::InvalidAccess.new(I18n.t('authenticator_not_found')) if authenticator.nil?
-    raise Discourse::InvalidAccess.new(I18n.t('authenticator_no_connect')) if !authenticator.can_connect_existing_user?
+    raise Discourse::InvalidAccess.new(I18n.t("authenticator_not_found")) if authenticator.nil?
+    if !authenticator.can_connect_existing_user?
+      raise Discourse::InvalidAccess.new(I18n.t("authenticator_no_connect"))
+    end
     authenticator
   end
 

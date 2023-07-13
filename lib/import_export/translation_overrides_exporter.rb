@@ -2,11 +2,8 @@
 
 module ImportExport
   class TranslationOverridesExporter < BaseExporter
-
     def initialize()
-      @export_data = {
-        translation_overrides: []
-      }
+      @export_data = { translation_overrides: [] }
     end
 
     def perform
@@ -19,6 +16,5 @@ module ImportExport
     def default_filename_prefix
       "translation-overrides"
     end
-
   end
 end

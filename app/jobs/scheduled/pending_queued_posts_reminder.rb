@@ -2,11 +2,10 @@
 
 module Jobs
   class PendingQueuedPostsReminder < ::Jobs::Scheduled
-
     every 15.minutes
 
     def execute(args)
-      return true unless SiteSetting.notify_about_queued_posts_after > 0
+      return true if SiteSetting.notify_about_queued_posts_after.zero?
 
       queued_post_ids = should_notify_ids
 
@@ -16,8 +15,16 @@ module Jobs
           target_group_names: Group[:moderators].name,
           archetype: Archetype.private_message,
           subtype: TopicSubtype.system_message,
-          title: I18n.t('system_messages.queued_posts_reminder.subject_template', count: queued_post_ids.size),
-          raw: I18n.t('system_messages.queued_posts_reminder.text_body_template', base_url: Discourse.base_url)
+          title:
+            I18n.t(
+              "system_messages.queued_posts_reminder.subject_template",
+              count: queued_post_ids.size,
+            ),
+          raw:
+            I18n.t(
+              "system_messages.queued_posts_reminder.text_body_template",
+              base_url: Discourse.base_url,
+            ),
         )
 
         self.last_notified_id = queued_post_ids.max
@@ -27,9 +34,10 @@ module Jobs
     end
 
     def should_notify_ids
-      ReviewableQueuedPost.pending.where(
-        'created_at < ?', SiteSetting.notify_about_queued_posts_after.to_f.hours.ago
-      ).pluck(:id)
+      ReviewableQueuedPost
+        .pending
+        .where("created_at < ?", SiteSetting.notify_about_queued_posts_after.to_f.hours.ago)
+        .pluck(:id)
     end
 
     def last_notified_id

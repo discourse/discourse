@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-require 'sanitize'
+require "sanitize"
 
 class Search
-
   class GroupedSearchResults
     include ActiveModel::Serialization
 
@@ -24,14 +23,23 @@ class Search
       :term,
       :search_context,
       :more_full_page_results,
-      :error
+      :error,
+      :use_pg_headlines_for_excerpt,
     )
 
     attr_accessor :search_log_id
 
     BLURB_LENGTH = 200
 
-    def initialize(type_filter:, term:, search_context:, blurb_length: nil, blurb_term: nil, is_header_search: false)
+    def initialize(
+      type_filter:,
+      term:,
+      search_context:,
+      blurb_length: nil,
+      blurb_term: nil,
+      is_header_search: false,
+      use_pg_headlines_for_excerpt: SiteSetting.use_pg_headlines_for_excerpt
+    )
       @type_filter = type_filter
       @term = term
       @blurb_term = blurb_term || term
@@ -44,6 +52,7 @@ class Search
       @groups = []
       @error = nil
       @is_header_search = is_header_search
+      @use_pg_headlines_for_excerpt = use_pg_headlines_for_excerpt
     end
 
     def error=(error)
@@ -58,20 +67,19 @@ class Search
       end
     end
 
-    OMISSION = '...'
-    SCRUB_HEADLINE_REGEXP = /<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)<\/span>/
+    OMISSION = "..."
+    SCRUB_HEADLINE_REGEXP =
+      %r{<span(?: \w+="[^"]+")* class="#{Search::HIGHLIGHT_CSS_CLASS}"(?: \w+="[^"]+")*>([^<]*)</span>}
 
     def blurb(post)
-      opts = {
-        term: @blurb_term,
-        blurb_length: @blurb_length
-      }
+      opts = { term: @blurb_term, blurb_length: @blurb_length }
 
-      if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION && !Search.segment_chinese? && !Search.segment_japanese?
-        if SiteSetting.use_pg_headlines_for_excerpt
+      if post.post_search_data.version >= SearchIndexer::MIN_POST_BLURB_INDEX_VERSION &&
+           !Search.segment_chinese? && !Search.segment_japanese?
+        if use_pg_headlines_for_excerpt
           scrubbed_headline = post.headline.gsub(SCRUB_HEADLINE_REGEXP, '\1')
-          prefix_omission = scrubbed_headline.start_with?(post.leading_raw_data) ? '' : OMISSION
-          postfix_omission = scrubbed_headline.end_with?(post.trailing_raw_data) ? '' : OMISSION
+          prefix_omission = scrubbed_headline.start_with?(post.leading_raw_data) ? "" : OMISSION
+          postfix_omission = scrubbed_headline.end_with?(post.trailing_raw_data) ? "" : OMISSION
           return "#{prefix_omission}#{post.headline}#{postfix_omission}"
         else
           opts[:cooked] = post.post_search_data.raw_data
@@ -117,18 +125,13 @@ class Search
       end
 
       if term
-        if term =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
-          term = Regexp.last_match[1]
-        end
+        term = Regexp.last_match[1] if term =~ Regexp.new(Search::PHRASE_MATCH_REGEXP_PATTERN)
 
-        blurb = TextHelper.excerpt(cooked, term,
-          radius: blurb_length / 2
-        )
+        blurb = TextHelper.excerpt(cooked, term, radius: blurb_length / 2)
       end
 
       blurb = TextHelper.truncate(cooked, length: blurb_length) if blurb.blank?
       Sanitize.clean(blurb)
     end
   end
-
 end

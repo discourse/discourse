@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class HandleChunkUpload
-
   def initialize(chunk, params = {})
     @chunk = chunk
     @params = params
@@ -21,7 +20,8 @@ class HandleChunkUpload
 
   def check_chunk
     # check whether the chunk has already been uploaded
-    has_chunk_been_uploaded = File.exist?(@chunk) && File.size(@chunk) == @params[:current_chunk_size]
+    has_chunk_been_uploaded =
+      File.exist?(@chunk) && File.size(@chunk) == @params[:current_chunk_size]
     # 200 = exists, 404 = not uploaded yet
     status = has_chunk_been_uploaded ? 200 : 404
   end
@@ -36,11 +36,11 @@ class HandleChunkUpload
   end
 
   def merge_chunks
-    upload_path     = @params[:upload_path]
+    upload_path = @params[:upload_path]
     tmp_upload_path = @params[:tmp_upload_path]
-    identifier      = @params[:identifier]
-    filename        = @params[:filename]
-    tmp_directory   = @params[:tmp_directory]
+    identifier = @params[:identifier]
+    filename = @params[:filename]
+    tmp_directory = @params[:tmp_directory]
 
     # delete destination files
     begin
@@ -68,5 +68,4 @@ class HandleChunkUpload
     rescue Errno::ENOENT
     end
   end
-
 end

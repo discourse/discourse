@@ -19,9 +19,9 @@ module Onebox
     max_download_kb: (10 * 1024), # 10MB
     load_paths: [File.join(Rails.root, "lib/onebox/templates")],
     allowed_ports: [80, 443],
-    allowed_schemes: ["http", "https"],
+    allowed_schemes: %w[http https],
     sanitize_config: SanitizeConfig::ONEBOX,
-    redirect_limit: 5
+    redirect_limit: 5,
   }
 
   @@options = DEFAULTS

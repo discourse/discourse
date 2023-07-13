@@ -1,0 +1,23 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n @model.title count=@model.count}}
+  class="dismiss-read-modal"
+>
+  <:body>
+    <p>
+      <PreferenceCheckbox
+        @labelKey="topics.bulk.also_dismiss_topics"
+        @checked={{this.dismissTopics}}
+      />
+    </p>
+  </:body>
+  <:footer>
+    <DButton
+      class="btn-primary"
+      @action={{route-action "dismissReadTopics" this.dismissTopics}}
+      @icon="check"
+      id="dismiss-read-confirm"
+      @label="topics.bulk.dismiss"
+    />
+  </:footer>
+</DModal>

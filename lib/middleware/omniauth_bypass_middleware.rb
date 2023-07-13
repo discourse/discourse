@@ -5,7 +5,8 @@ require "csrf_token_verifier"
 # omniauth loves spending lots cycles in its magic middleware stack
 # this middleware bypasses omniauth middleware and only hits it when needed
 class Middleware::OmniauthBypassMiddleware
-  class AuthenticatorDisabled < StandardError; end
+  class AuthenticatorDisabled < StandardError
+  end
 
   def initialize(app, options = {})
     @app = app
@@ -15,11 +16,10 @@ class Middleware::OmniauthBypassMiddleware
     # if you need to test this and are having ssl issues see:
     #  http://stackoverflow.com/questions/6756460/openssl-error-using-omniauth-specified-ssl-path-but-didnt-work
     # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
-    @omniauth = OmniAuth::Builder.new(app) do
-      Discourse.authenticators.each do |authenticator|
-        authenticator.register_middleware(self)
+    @omniauth =
+      OmniAuth::Builder.new(app) do
+        Discourse.authenticators.each { |authenticator| authenticator.register_middleware(self) }
       end
-    end
 
     @omniauth.before_request_phase do |env|
       request = ActionDispatch::Request.new(env)
@@ -28,7 +28,9 @@ class Middleware::OmniauthBypassMiddleware
       CSRFTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
 
       # Check whether the authenticator is enabled
-      if !Discourse.enabled_authenticators.any? { |a| a.name.to_sym == env['omniauth.strategy'].name.to_sym }
+      if !Discourse.enabled_authenticators.any? { |a|
+           a.name.to_sym == env["omniauth.strategy"].name.to_sym
+         }
         raise AuthenticatorDisabled
       end
 
@@ -44,8 +46,9 @@ class Middleware::OmniauthBypassMiddleware
     if env["PATH_INFO"].start_with?("/auth")
       begin
         # When only one provider is enabled, assume it can be completely trusted, and allow GET requests
-        only_one_provider = !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
-        OmniAuth.config.allowed_request_methods = only_one_provider ? [:get, :post] : [:post]
+        only_one_provider =
+          !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
+        OmniAuth.config.allowed_request_methods = only_one_provider ? %i[get post] : [:post]
 
         @omniauth.call(env)
       rescue AuthenticatorDisabled => e
@@ -71,5 +74,4 @@ class Middleware::OmniauthBypassMiddleware
       @app.call(env)
     end
   end
-
 end

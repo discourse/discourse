@@ -13,6 +13,9 @@ import mobile from "discourse/lib/mobile";
 import { inject as service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
+import NotActivatedModal from "../components/modal/not-activated";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -39,6 +42,22 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   shortSiteDescription: setting("short_site_description"),
   documentTitle: service(),
   dialog: service(),
+  composer: service(),
+  modal: service(),
+  loadingSlider: service(),
+
+  @action
+  loading(transition) {
+    if (this.loadingSlider.enabled) {
+      this.loadingSlider.transitionStarted();
+      transition.promise.finally(() => {
+        this.loadingSlider.transitionEnded();
+      });
+      return false;
+    } else {
+      return true; // Use native ember loading implementation
+    }
+  },
 
   actions: {
     toggleAnonymous() {
@@ -72,13 +91,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       this.documentTitle.setTitle(tokens.join(" - "));
     },
 
-    postWasEnqueued(details) {
-      showModal("post-enqueued", {
-        model: details,
-        title: "review.approval.title",
-      });
-    },
-
     composePrivateMessage(user, post) {
       const recipients = user ? user.get("username") : "";
       const reply = post
@@ -91,7 +103,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         : null;
 
       // used only once, one less dependency
-      return this.controllerFor("composer").open({
+      return this.composer.open({
         action: Composer.PRIVATE_MESSAGE,
         recipients,
         archetypeId: "private_message",
@@ -135,15 +147,15 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     ),
 
     showForgotPassword() {
-      this.controllerFor("forgot-password").setProperties({
+      getOwner(this).lookup("controller:forgot-password").setProperties({
         offerHelp: null,
         helpSeen: false,
       });
-      showModal("forgotPassword", { title: "forgot_password.title" });
+      showModal("forgot-password", { title: "forgot_password.title" });
     },
 
     showNotActivated(props) {
-      showModal("not-activated", { title: "log_in" }).setProperties(props);
+      this.modal.show(NotActivatedModal, { model: props });
     },
 
     showUploadSelector() {
@@ -151,51 +163,12 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     showKeyboardShortcutsHelp() {
-      showModal("keyboard-shortcuts-help", {
-        title: "keyboard_shortcuts_help.title",
-      });
+      this.modal.show(KeyboardShortcutsHelp);
     },
 
     // Close the current modal, and destroy its state.
     closeModal(initiatedBy) {
-      const route = getOwner(this).lookup("route:application");
-      let modalController = route.controllerFor("modal");
-      const controllerName = modalController.get("name");
-
-      if (controllerName) {
-        const controller = getOwner(this).lookup(
-          `controller:${controllerName}`
-        );
-        if (controller && controller.beforeClose) {
-          if (false === controller.beforeClose()) {
-            return;
-          }
-        }
-      }
-
-      this.render("hide-modal", { into: "modal", outlet: "modalBody" });
-
-      if (controllerName) {
-        const controller = getOwner(this).lookup(
-          `controller:${controllerName}`
-        );
-
-        if (controller) {
-          this.appEvents.trigger("modal:closed", {
-            name: controllerName,
-            controller,
-          });
-
-          if (controller.onClose) {
-            controller.onClose({
-              initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
-              initiatedByClickOut: initiatedBy === "initiatedByClickOut",
-              initiatedByESC: initiatedBy === "initiatedByESC",
-            });
-          }
-        }
-        modalController.set("name", null);
-      }
+      return this.modal.close(initiatedBy);
     },
 
     /**
@@ -204,11 +177,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
     **/
     hideModal() {
-      $(".d-modal.fixed-modal").modal("hide");
+      return this.modal.hide();
     },
 
     reopenModal() {
-      $(".d-modal.fixed-modal").modal("show");
+      return this.modal.reopen();
     },
 
     editCategory(category) {
@@ -240,7 +213,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     createNewMessageViaParams({
-      recipients = [],
+      recipients = "",
       topicTitle = "",
       topicBody = "",
       hasGroups = false,
@@ -254,20 +227,13 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
   },
 
-  renderTemplate() {
-    this.render("application");
-    this.render("user-card", { into: "application", outlet: "user-card" });
-    this.render("modal", { into: "application", outlet: "modal" });
-    this.render("composer", { into: "application", outlet: "composer" });
-  },
-
   handleShowLogin() {
     if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("login", "login-modal", {
-        notAuto: () => this.controllerFor("login").resetForm(),
+      this._autoLogin("login", {
+        notAuto: () => getOwner(this).lookup("controller:login").resetForm(),
       });
     }
   },
@@ -277,7 +243,8 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("createAccount", "create-account", {
+      this._autoLogin("create-account", {
+        modalClass: "create-account",
         signup: true,
         titleAriaElementId: "create-account-title",
       });
@@ -286,21 +253,24 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
   _autoLogin(
     modal,
-    modalClass,
-    { notAuto = null, signup = false, titleAriaElementId = null } = {}
+    {
+      modalClass = undefined,
+      notAuto = null,
+      signup = false,
+      titleAriaElementId = null,
+    } = {}
   ) {
     const methods = findAll();
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.controllerFor("login").send("externalLogin", methods[0], {
-        signup,
-      });
+      getOwner(this)
+        .lookup("controller:login")
+        .send("externalLogin", methods[0], {
+          signup,
+        });
     } else {
-      showModal(modal, { titleAriaElementId });
-      this.controllerFor("modal").set("modalClass", modalClass);
-      if (notAuto) {
-        notAuto();
-      }
+      showModal(modal, { modalClass, titleAriaElementId });
+      notAuto?.();
     }
   },
 

@@ -12,14 +12,15 @@ class RemoveStaffTagsSetting < ActiveRecord::Migration[5.1]
 
     result = execute("SELECT value FROM site_settings WHERE name = 'staff_tags'").to_a
     if result.length > 0
-      if tags = result[0]['value']&.split('|')
-        tag_group = execute(
-          "INSERT INTO tag_groups (name, created_at, updated_at)
+      if tags = result[0]["value"]&.split("|")
+        tag_group =
+          execute(
+            "INSERT INTO tag_groups (name, created_at, updated_at)
            VALUES ('staff tags', now(), now())
-           RETURNING id"
-        )
+           RETURNING id",
+          )
 
-        tag_group_id = tag_group[0]['id']
+        tag_group_id = tag_group[0]["id"]
 
         execute(
           "INSERT INTO tag_group_permissions
@@ -28,17 +29,17 @@ class RemoveStaffTagsSetting < ActiveRecord::Migration[5.1]
           (#{tag_group_id}, #{Group::AUTO_GROUPS[:everyone]},
            #{TagGroupPermission.permission_types[:readonly]}, now(), now()),
           (#{tag_group_id}, #{Group::AUTO_GROUPS[:staff]},
-           #{TagGroupPermission.permission_types[:full]}, now(), now())"
+           #{TagGroupPermission.permission_types[:full]}, now(), now())",
         )
 
         tags.each do |tag_name|
           tag = execute("SELECT id FROM tags WHERE name = '#{tag_name}'").to_a
-          if tag[0] && tag[0]['id']
+          if tag[0] && tag[0]["id"]
             execute(
               "INSERT INTO tag_group_memberships
               (tag_id, tag_group_id, created_at, updated_at)
               VALUES
-              (#{tag[0]['id']}, #{tag_group_id}, now(), now())"
+              (#{tag[0]["id"]}, #{tag_group_id}, now(), now())",
             )
           end
         end

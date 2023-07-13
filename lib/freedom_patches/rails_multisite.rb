@@ -12,20 +12,17 @@ module RailsMultisite
 
           reading_role = :"#{db}_#{ActiveRecord.reading_role}"
           spec = RailsMultisite::ConnectionManagement.connection_spec(db: db)
+          handler = ActiveRecord::Base.connection_handler
 
-          ActiveRecord::Base.connection_handlers[reading_role] ||= begin
-            handler = ActiveRecord::ConnectionAdapters::ConnectionHandler.new
-            RailsFailover::ActiveRecord.establish_reading_connection(handler, spec)
-            handler
-          end
-
-          ActiveRecord::Base.connected_to(role: reading_role) do
-            yield(db) if block_given?
-          end
+          RailsFailover::ActiveRecord.establish_reading_connection(
+            handler,
+            spec.to_hash,
+            role: reading_role,
+          )
+          ActiveRecord::Base.connected_to(role: reading_role) { yield(db) if block_given? }
         rescue => e
-          STDERR.puts "URGENT: Failed to initialize site #{db}: "\
-            "#{e.class} #{e.message}\n#{e.backtrace.join("\n")}"
-
+          STDERR.puts "URGENT: Failed to initialize site #{db}: " \
+                        "#{e.class} #{e.message}\n#{e.backtrace.join("\n")}"
           # the show must go on, don't stop startup if multisite fails
         end
       end
@@ -34,11 +31,7 @@ module RailsMultisite
 
   class DiscoursePatches
     def self.config
-      {
-        db_lookup: lambda do |env|
-          env["PATH_INFO"] == "/srv/status" ? "default" : nil
-        end
-      }
+      { db_lookup: lambda { |env| env["PATH_INFO"] == "/srv/status" ? "default" : nil } }
     end
   end
 end

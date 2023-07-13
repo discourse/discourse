@@ -14,9 +14,8 @@ th:
         ignore:
           title: "ไม่สนใจ"
     channel:
-      statuses:
-        closed: "ปิด"
-        open: "เปิด"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

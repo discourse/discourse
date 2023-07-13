@@ -14,8 +14,6 @@ class ReviewableSettingsSerializer < ApplicationSerializer
   end
 
   def reviewable_priorities
-    Reviewable.priorities.map do |p|
-      { id: p[1], name: I18n.t("reviewables.priorities.#{p[0]}") }
-    end
+    Reviewable.priorities.map { |p| { id: p[1], name: I18n.t("reviewables.priorities.#{p[0]}") } }
   end
 end

@@ -6,7 +6,7 @@ class ReplyByEmailAddressValidator
   end
 
   def valid_value?(val)
-    return true  if val.blank?
+    return true if val.blank?
     return false if !EmailAddressValidator.valid_value?(val)
 
     if SiteSetting.find_related_post_with_key
@@ -18,6 +18,6 @@ class ReplyByEmailAddressValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_reply_by_email_address')
+    I18n.t("site_settings.errors.invalid_reply_by_email_address")
   end
 end

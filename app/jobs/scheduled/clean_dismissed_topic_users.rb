@@ -27,12 +27,15 @@ module Jobs
                  END, users.created_at, :min_date)
         AND dtu1.id = dtu2.id
       SQL
-      sql = DB.sql_fragment(sql,
-                            now: DateTime.now,
-                            last_visit: User::NewTopicDuration::LAST_VISIT,
-                            always: User::NewTopicDuration::ALWAYS,
-                            default_duration: SiteSetting.default_other_new_topic_duration_minutes,
-                            min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime)
+      sql =
+        DB.sql_fragment(
+          sql,
+          now: DateTime.now,
+          last_visit: User::NewTopicDuration::LAST_VISIT,
+          always: User::NewTopicDuration::ALWAYS,
+          default_duration: SiteSetting.default_other_new_topic_duration_minutes,
+          min_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
+        )
       DB.exec(sql)
     end
 

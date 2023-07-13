@@ -11,11 +11,18 @@ import {
 } from "discourse/lib/uploads";
 import I18n from "I18n";
 import User from "discourse/models/user";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import sinon from "sinon";
-import { test } from "qunit";
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Utility | uploads", function () {
+module("Unit | Utility | uploads", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+  });
+
   test("validateUploadedFiles", function (assert) {
     assert.notOk(
       validateUploadedFiles(null, { siteSettings: this.siteSettings }),
@@ -229,14 +236,16 @@ discourseModule("Unit | Utility | uploads", function () {
   });
 
   test("isImage", function (assert) {
-    ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach((extension) => {
-      let image = "image." + extension;
-      assert.ok(isImage(image), image + " is recognized as an image");
-      assert.ok(
-        isImage("http://foo.bar/path/to/" + image),
-        image + " is recognized as an image"
-      );
-    });
+    ["png", "webp", "jpg", "jpeg", "gif", "ico", "avif"].forEach(
+      (extension) => {
+        let image = "image." + extension;
+        assert.ok(isImage(image), image + " is recognized as an image");
+        assert.ok(
+          isImage("http://foo.bar/path/to/" + image),
+          image + " is recognized as an image"
+        );
+      }
+    );
     assert.notOk(isImage("file.txt"));
     assert.notOk(isImage("http://foo.bar/path/to/file.txt"));
     assert.notOk(isImage(""));

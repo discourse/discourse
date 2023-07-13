@@ -2,7 +2,7 @@ import Helper from "@ember/component/helper";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
 
-export default Helper.extend({
+export default class DispositionIcon extends Helper {
   compute([disposition]) {
     if (!disposition) {
       return null;
@@ -24,5 +24,5 @@ export default Helper.extend({
       }
     }
     return htmlSafe(iconHTML(icon, { title }));
-  },
-});
+  }
+}

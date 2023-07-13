@@ -1,0 +1,13 @@
+<span class="value" title={{this.rawTitle}}>
+  {{#if this.isNumber}}
+    {{number @value}}
+  {{else if this.isDuration}}
+    {{format-duration @value}}
+  {{else}}
+    {{@value}}
+  {{/if}}
+</span>
+<span class="label">
+  {{#if @icon}}{{d-icon @icon}}{{/if}}
+  {{html-safe (i18n @label count=@value)}}
+</span>

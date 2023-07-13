@@ -14,7 +14,7 @@ tr_TR:
     poll_export_data_explorer_query_id: "Anket sonuçlarını dışa aktarmak için kullanılacak Veri Gezgini Sorgusunun kimliği (devre dışı bırakmak için 0)."
   poll:
     poll: "anket"
-    invalid_argument: "\"%{argument}\" bağımsız değişkeni için geçersiz değer \"%{value}."
+    invalid_argument: "\"%{argument}\" bağımsız değişkeni için geçersiz değer \"%{value}\"."
     multiple_polls_without_name: "Adı olmayan birden fazla anket bulunuyor. Anketlerinizi benzersiz bir şekilde tanımlamak için \"<code>ad</code>\" özelliğini kullanın."
     multiple_polls_with_same_name: "Aynı ada sahip birden fazla anket bulunuyor: <strong>%{name}</strong>. Anketlerinizi benzersiz bir şekilde tanımlamak için \"<code>ad</code>\" özelliğini kullanın."
     default_poll_must_have_at_least_1_option: "Ankette en az 1 seçenek olmalıdır."
@@ -47,8 +47,8 @@ tr_TR:
     min_vote_per_user:
       one: Bu anket için en az %{count} oy gereklidir.
       other: Bu anket için en az %{count} oy gereklidir.
-    topic_must_be_open_to_toggle_status: "Durumu değiştirmek için konu açık olmalıdır."
-    only_staff_or_op_can_toggle_status: "Yalnızca bir personel üyesi veya orijinal gönderi sahibi anket durumunu değiştirebilir."
+    topic_must_be_open_to_toggle_status: "Durumu açmak/kapatmak için konu açık olmalıdır."
+    only_staff_or_op_can_toggle_status: "Yalnızca bir personel üyesi veya orijinal gönderi sahibi anket durumunu açabilir/kapatabilir."
     insufficient_rights_to_create: "Anket oluşturmanıza izin verilmiyor."
     email:
       link_to_poll: "Anketi görüntülemek için tıklayın."

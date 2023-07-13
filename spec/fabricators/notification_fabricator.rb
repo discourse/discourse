@@ -27,7 +27,7 @@ Fabricator(:private_message_notification, from: :notification) do
       original_post_type: post.post_type,
       original_username: post.user.username,
       revision_number: nil,
-      display_username: post.user.username
+      display_username: post.user.username,
     }.to_json
   end
 end
@@ -44,7 +44,7 @@ Fabricator(:bookmark_reminder_notification, from: :notification) do
       original_username: post.user.username,
       revision_number: nil,
       display_username: post.user.username,
-      bookmark_name: "Check out Mr Freeze's opinion here"
+      bookmark_name: "Check out Mr Freeze's opinion here",
     }.to_json
   end
 end
@@ -58,7 +58,7 @@ Fabricator(:replied_notification, from: :notification) do
       original_post_id: post.id,
       original_username: post.user.username,
       revision_number: nil,
-      display_username: post.user.username
+      display_username: post.user.username,
     }.to_json
   end
 end
@@ -73,7 +73,7 @@ Fabricator(:posted_notification, from: :notification) do
       original_post_type: post.post_type,
       original_username: post.user.username,
       revision_number: nil,
-      display_username: post.user.username
+      display_username: post.user.username,
     }.to_json
   end
 end
@@ -87,7 +87,7 @@ Fabricator(:mentioned_notification, from: :notification) do
       original_post_type: attrs[:post].post_type,
       original_username: attrs[:post].user.username,
       revision_number: nil,
-      display_username: attrs[:post].user.username
+      display_username: attrs[:post].user.username,
     }.to_json
   end
 end
@@ -101,7 +101,7 @@ Fabricator(:watching_first_post_notification, from: :notification) do
       original_post_type: attrs[:post].post_type,
       original_username: attrs[:post].user.username,
       revision_number: nil,
-      display_username: attrs[:post].user.username
+      display_username: attrs[:post].user.username,
     }.to_json
   end
 end

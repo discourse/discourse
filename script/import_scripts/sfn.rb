@@ -8,7 +8,6 @@ require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Sfn < ImportScripts::Base
-
   BATCH_SIZE = 100_000
   MIN_CREATED_AT = "2003-11-01"
 
@@ -96,22 +95,27 @@ class ImportScripts::Sfn < ImportScripts::Base
           username: email.split("@")[0],
           bio_raw: bio,
           created_at: user["created_at"],
-          post_create_action: proc do |newuser|
-            next if user["avatar"].blank?
+          post_create_action:
+            proc do |newuser|
+              next if user["avatar"].blank?
 
-            avatar = Tempfile.new("sfn-avatar")
-            avatar.write(user["avatar"].encode("ASCII-8BIT").force_encoding("UTF-8"))
-            avatar.rewind
+              avatar = Tempfile.new("sfn-avatar")
+              avatar.write(user["avatar"].encode("ASCII-8BIT").force_encoding("UTF-8"))
+              avatar.rewind
 
-            upload = UploadCreator.new(avatar, "avatar.jpg").create_for(newuser.id)
-            if upload.persisted?
-              newuser.create_user_avatar
-              newuser.user_avatar.update(custom_upload_id: upload.id)
-              newuser.update(uploaded_avatar_id: upload.id)
-            end
+              upload = UploadCreator.new(avatar, "avatar.jpg").create_for(newuser.id)
+              if upload.persisted?
+                newuser.create_user_avatar
+                newuser.user_avatar.update(custom_upload_id: upload.id)
+                newuser.update(uploaded_avatar_id: upload.id)
+              end
 
-            avatar.try(:close!) rescue nil
-          end
+              begin
+                avatar.try(:close!)
+              rescue StandardError
+                nil
+              end
+            end,
         }
       end
     end
@@ -198,9 +202,7 @@ class ImportScripts::Sfn < ImportScripts::Base
   def import_categories
     puts "", "importing categories..."
 
-    create_categories(NEW_CATEGORIES) do |category|
-      { id: category, name: category }
-    end
+    create_categories(NEW_CATEGORIES) { |category| { id: category, name: category } }
   end
 
   def import_topics
@@ -234,7 +236,7 @@ class ImportScripts::Sfn < ImportScripts::Base
       SQL
 
       break if topics.size < 1
-      next if all_records_exist? :posts, topics.map { |t| t['id'].to_i }
+      next if all_records_exist? :posts, topics.map { |t| t["id"].to_i }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
         next unless category_id = CATEGORY_MAPPING[topic["category_id"]]
@@ -286,7 +288,7 @@ class ImportScripts::Sfn < ImportScripts::Base
 
       break if posts.size < 1
 
-      next if all_records_exist? :posts, posts.map { |p| p['id'].to_i }
+      next if all_records_exist? :posts, posts.map { |p| p["id"].to_i }
 
       create_posts(posts, total: posts_count, offset: offset) do |post|
         next unless parent = topic_lookup_from_imported_post_id(post["topic_id"])
@@ -307,7 +309,7 @@ class ImportScripts::Sfn < ImportScripts::Base
 
   def cleanup_raw(raw)
     # fix some html
-    raw.gsub!(/<br\s*\/?>/i, "\n")
+    raw.gsub!(%r{<br\s*/?>}i, "\n")
     # remove "This message has been cross posted to the following eGroups: ..."
     raw.gsub!(/^This message has been cross posted to the following eGroups: .+\n-{3,}/i, "")
     # remove signatures
@@ -320,7 +322,6 @@ class ImportScripts::Sfn < ImportScripts::Base
     @client ||= Mysql2::Client.new(username: "root", database: "sfn")
     @client.query(sql)
   end
-
 end
 
 ImportScripts::Sfn.new.perform

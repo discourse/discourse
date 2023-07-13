@@ -1,0 +1,16 @@
+<div class="controls">
+  <label class="control-label" for={{concat "user-" this.elementId}}>
+    {{this.field.name}}
+    {{#if this.field.required}}<span class="required">*</span>{{/if}}
+  </label>
+  <Input
+    id={{concat "user-" this.elementId}}
+    @value={{this.value}}
+    maxlength={{this.site.user_field_max_length}}
+  />
+  <InputTip
+    @validation={{this.validation}}
+    class={{unless this.validation " hidden"}}
+  />
+  <div class="instructions">{{html-safe this.field.description}}</div>
+</div>

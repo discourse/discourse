@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module CookedProcessorMixin
-
   def post_process_oneboxes
     limit = SiteSetting.max_oneboxes_per_post - @doc.css("aside.onebox, a.inline-onebox").size
     oneboxes = {}
@@ -14,7 +13,7 @@ module CookedProcessorMixin
 
       if skip_onebox
         if is_onebox
-          element.remove_class('onebox')
+          element.remove_class("onebox")
         else
           remove_inline_onebox_loading_class(element)
         end
@@ -26,11 +25,13 @@ module CookedProcessorMixin
       map[url] = true
 
       if is_onebox
-        onebox = Oneboxer.onebox(url,
-          invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
-          user_id: @model&.user_id,
-          category_id: @category_id
-        )
+        onebox =
+          Oneboxer.onebox(
+            url,
+            invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
+            user_id: @model&.user_id,
+            category_id: @category_id,
+          )
 
         @has_oneboxes = true if onebox.present?
         onebox
@@ -56,7 +57,7 @@ module CookedProcessorMixin
       # and wrap in a div
       limit_size!(img)
 
-      next if img["class"]&.include?('onebox-avatar')
+      next if img["class"]&.include?("onebox-avatar")
 
       parent = parent&.parent if parent&.name == "a"
       parent_class = parent && parent["class"]
@@ -69,7 +70,7 @@ module CookedProcessorMixin
           found = false
           parent = img
           while parent = parent.parent
-            if parent["class"] && parent["class"].include?("allowlistedgeneric")
+            if parent["class"] && parent["class"].match?(/\b(allowlistedgeneric|discoursetopic)\b/)
               found = true
               break
             end
@@ -84,12 +85,18 @@ module CookedProcessorMixin
         if width < 64 && height < 64
           img["class"] = img["class"].to_s + " onebox-full-image"
         else
-          img.delete('width')
-          img.delete('height')
-          new_parent = img.add_next_sibling("<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>")
+          img.delete("width")
+          img.delete("height")
+          new_parent =
+            img.add_next_sibling(
+              "<div class='aspect-image' style='--aspect-ratio:#{width}/#{height};'/>",
+            )
           new_parent.first.add_child(img)
         end
-      elsif (parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images") || parent_class&.include?("scale-images")) && width > 0 && height > 0
+      elsif (
+            parent_class&.include?("instagram-images") || parent_class&.include?("tweet-images") ||
+              parent_class&.include?("scale-images")
+          ) && width > 0 && height > 0
         img.remove_attribute("width")
         img.remove_attribute("height")
         parent["class"] = "aspect-image-full-size"
@@ -98,16 +105,18 @@ module CookedProcessorMixin
     end
 
     if @omit_nofollow || !SiteSetting.add_rel_nofollow_to_user_content
-      @doc.css(".onebox-body a[rel], .onebox a[rel]").each do |a|
-        rel_values = a['rel'].split(' ').map(&:downcase)
-        rel_values.delete('nofollow')
-        rel_values.delete('ugc')
-        if rel_values.blank?
-          a.remove_attribute("rel")
-        else
-          a["rel"] = rel_values.join(' ')
+      @doc
+        .css(".onebox-body a[rel], .onebox a[rel]")
+        .each do |a|
+          rel_values = a["rel"].split(" ").map(&:downcase)
+          rel_values.delete("nofollow")
+          rel_values.delete("ugc")
+          if rel_values.blank?
+            a.remove_attribute("rel")
+          else
+            a["rel"] = rel_values.join(" ")
+          end
         end
-      end
     end
   end
 
@@ -116,9 +125,9 @@ module CookedProcessorMixin
     #  1) the width/height attributes
     #  2) the dimension from the preview (image_sizes)
     #  3) the dimension of the original image (HTTP request)
-    w, h = get_size_from_attributes(img) ||
-           get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
-           get_size(img["src"])
+    w, h =
+      get_size_from_attributes(img) || get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
+        get_size(img["src"])
 
     # limit the size of the thumbnail
     img["width"], img["height"] = ImageSizer.resize(w, h)
@@ -126,7 +135,7 @@ module CookedProcessorMixin
 
   def get_size_from_attributes(img)
     w, h = img["width"].to_i, img["height"].to_i
-    return [w, h] unless w <= 0 || h <= 0
+    return w, h if w > 0 && h > 0
     # if only width or height are specified attempt to scale image
     if w > 0 || h > 0
       w = w.to_f
@@ -149,9 +158,9 @@ module CookedProcessorMixin
     return unless image_sizes.present?
     image_sizes.each do |image_size|
       url, size = image_size[0], image_size[1]
-      if url && url.include?(src) &&
-         size && size["width"].to_i > 0 && size["height"].to_i > 0
-        return [size["width"], size["height"]]
+      if url && src && url.include?(src) && size && size["width"].to_i > 0 &&
+           size["height"].to_i > 0
+        return size["width"], size["height"]
       end
     end
     nil
@@ -165,7 +174,7 @@ module CookedProcessorMixin
     return @size_cache[url] if @size_cache.has_key?(url)
 
     absolute_url = url
-    absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
+    absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ %r{\A/[^/]}
 
     return unless absolute_url
 
@@ -184,16 +193,15 @@ module CookedProcessorMixin
     if upload && upload.width && upload.width > 0
       @size_cache[url] = [upload.width, upload.height]
     else
-      @size_cache[url] = FastImage.size(absolute_url)
+      @size_cache[url] = FinalDestination::FastImage.size(absolute_url)
     end
-
   rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.
   end
 
   def is_valid_image_url?(url)
     uri = URI.parse(url)
-    %w(http https).include? uri.scheme
+    %w[http https].include? uri.scheme
   rescue URI::Error
   end
 
@@ -217,9 +225,12 @@ module CookedProcessorMixin
         "help",
         I18n.t(
           "upload.placeholders.too_large_humanized",
-          max_size: ActiveSupport::NumberHelper.number_to_human_size(SiteSetting.max_image_size_kb.kilobytes)
-        )
-      )
+          max_size:
+            ActiveSupport::NumberHelper.number_to_human_size(
+              SiteSetting.max_image_size_kb.kilobytes,
+            ),
+        ),
+      ),
     )
 
     # Only if the image is already linked
@@ -227,7 +238,7 @@ module CookedProcessorMixin
       parent = placeholder.parent
       parent.add_next_sibling(placeholder)
 
-      if parent.name == 'a' && parent["href"].present?
+      if parent.name == "a" && parent["href"].present?
         if url == parent["href"]
           parent.remove
         else
@@ -295,12 +306,13 @@ module CookedProcessorMixin
   end
 
   def process_inline_onebox(element)
-    inline_onebox = InlineOneboxer.lookup(
-      element.attributes["href"].value,
-      invalidate: !!@opts[:invalidate_oneboxes],
-      user_id: @model&.user_id,
-      category_id: @category_id
-    )
+    inline_onebox =
+      InlineOneboxer.lookup(
+        element.attributes["href"].value,
+        invalidate: !!@opts[:invalidate_oneboxes],
+        user_id: @model&.user_id,
+        category_id: @category_id,
+      )
 
     if title = inline_onebox&.dig(:title)
       element.children = CGI.escapeHTML(title)

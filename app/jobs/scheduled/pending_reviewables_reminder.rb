@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class PendingReviewablesReminder < ::Jobs::Scheduled
     every 15.minutes
 
@@ -10,26 +9,34 @@ module Jobs
     def execute(args)
       @sent_reminder = false
 
-      if SiteSetting.notify_about_flags_after > 0
-        reviewable_ids = Reviewable
-          .pending
-          .default_visible
-          .where('latest_score < ?', SiteSetting.notify_about_flags_after.to_f.hours.ago)
-          .order('id DESC')
-          .pluck(:id)
+      if SiteSetting.notify_about_reviewable_item_after > 0
+        reviewable_ids =
+          Reviewable
+            .pending
+            .default_visible
+            .where(
+              "latest_score < ?",
+              SiteSetting.notify_about_reviewable_item_after.to_f.hours.ago,
+            )
+            .order("id DESC")
+            .pluck(:id)
 
         if reviewable_ids.size > 0 && self.class.last_notified_id < reviewable_ids[0]
           usernames = active_moderator_usernames
-          mentions = usernames.size > 0 ? "@#{usernames.join(', @')} " : ""
+          mentions = usernames.size > 0 ? "@#{usernames.join(", @")} " : ""
 
-          message = GroupMessage.new(
-            Group[:moderators].name,
-            'reviewables_reminder',
-            {
-              limit_once_per: false,
-              message_params: { mentions: mentions, count: SiteSetting.notify_about_flags_after }
-            }
-          )
+          message =
+            GroupMessage.new(
+              Group[:moderators].name,
+              "reviewables_reminder",
+              {
+                limit_once_per: false,
+                message_params: {
+                  mentions: mentions,
+                  count: SiteSetting.notify_about_reviewable_item_after,
+                },
+              },
+            )
 
           Topic.transaction do
             message.delete_previous!(match_raw: false)
@@ -58,13 +65,7 @@ module Jobs
     end
 
     def active_moderator_usernames
-      User.where(moderator: true)
-        .human_users
-        .order('last_seen_at DESC')
-        .limit(3)
-        .pluck(:username)
+      User.where(moderator: true).human_users.order("last_seen_at DESC").limit(3).pluck(:username)
     end
-
   end
-
 end

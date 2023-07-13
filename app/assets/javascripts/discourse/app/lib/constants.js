@@ -11,3 +11,13 @@ export const SEARCH_PRIORITIES = {
 };
 
 export const SEARCH_PHRASE_REGEXP = '"([^"]+)"';
+
+export const SIDEBAR_URL = {
+  max_icon_length: 40,
+  max_name_length: 80,
+  max_value_length: 200,
+};
+
+export const SIDEBAR_SECTION = {
+  max_title_length: 30,
+};

@@ -10,7 +10,7 @@ class MigrateGroupListSiteSettings < ActiveRecord::Migration[5.2]
   end
 
   def migrate_value(from, to)
-    cast_type = from == :id ? '::int[]' : ''
+    cast_type = from == :id ? "::int[]" : ""
     DB.exec <<~SQL
       UPDATE site_settings
       SET value = COALESCE(array_to_string(

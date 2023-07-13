@@ -1,4 +1,4 @@
-{{#if this.channel.isFollowing}}
+{{#if @channel.currentUserMembership.following}}
   <DButton
     @action={{action "onLeaveChannel"}}
     @translatedLabel={{this.label}}

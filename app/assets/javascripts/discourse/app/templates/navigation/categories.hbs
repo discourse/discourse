@@ -1,3 +1,11 @@
 <DSection @bodyClass="navigation-categories" @class="navigation-container">
-  <DNavigation @filterType="categories" @showCategoryAdmin={{this.showCategoryAdmin}} @createCategory={{route-action "createCategory"}} @reorderCategories={{route-action "reorderCategories"}} @canCreateTopic={{this.canCreateTopic}} @hasDraft={{this.currentUser.has_topic_draft}} @createTopic={{route-action "createTopic"}} />
+  <DNavigation
+    @filterType="categories"
+    @showCategoryAdmin={{this.showCategoryAdmin}}
+    @createCategory={{route-action "createCategory"}}
+    @reorderCategories={{route-action "reorderCategories"}}
+    @canCreateTopic={{this.canCreateTopic}}
+    @hasDraft={{this.currentUser.has_topic_draft}}
+    @createTopic={{route-action "createTopic"}}
+  />
 </DSection>

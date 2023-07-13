@@ -7,5 +7,4 @@ class Admin::AdminController < ApplicationController
   def index
     render body: nil
   end
-
 end

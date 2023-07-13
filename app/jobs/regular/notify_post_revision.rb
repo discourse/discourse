@@ -9,18 +9,20 @@ module Jobs
       return if post_revision.nil?
 
       ActiveRecord::Base.transaction do
-        User.where(id: args[:user_ids]).find_each do |user|
-          next if post_revision.hidden && !user.staff?
+        User
+          .where(id: args[:user_ids])
+          .find_each do |user|
+            next if post_revision.hidden && !user.staff?
 
-          PostActionNotifier.alerter.create_notification(
-            user,
-            Notification.types[:edited],
-            post_revision.post,
-            display_username: post_revision.user.username,
-            acting_user_id: post_revision&.user_id,
-            revision_number: post_revision.number
-          )
-        end
+            PostActionNotifier.alerter.create_notification(
+              user,
+              Notification.types[:edited],
+              post_revision.post,
+              display_username: post_revision.user.username,
+              acting_user_id: post_revision&.user_id,
+              revision_number: post_revision.number,
+            )
+          end
       end
     end
   end

@@ -1,21 +1,24 @@
 # frozen_string_literal: true
-require 'cose'
+require "cose"
 
 module Webauthn
   class SecurityKeyAuthenticationService < SecurityKeyBaseValidationService
-
     ##
     # See https://w3c.github.io/webauthn/#sctn-verifying-assertion for
     # the steps followed here. Memoized methods are called in their
     # place in the step flow to make the process clearer.
     def authenticate_security_key
-      return false if @params.blank? || (!@params.is_a?(Hash) && !@params.is_a?(ActionController::Parameters))
+      if @params.blank? || (!@params.is_a?(Hash) && !@params.is_a?(ActionController::Parameters))
+        return false
+      end
 
       # 3. Identify the user being authenticated and verify that this user is the
       #    owner of the public key credential source credentialSource identified by credential.id:
       security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId])
-      raise(NotFoundError, I18n.t('webauthn.validation.not_found_error')) if security_key.blank?
-      raise(OwnershipError, I18n.t('webauthn.validation.ownership_error')) if security_key.user != @current_user
+      raise(NotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
+      if security_key.user != @current_user
+        raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
+      end
 
       # 4. Using credential.id (or credential.rawId, if base64url encoding is inappropriate for your use case),
       #    look up the corresponding credential public key and let credentialPublicKey be that credential public key.
@@ -67,18 +70,24 @@ module Webauthn
       cose_algorithm = COSE::Algorithm.find(cose_key.alg)
 
       if cose_algorithm.blank?
-        Rails.logger.error("Unknown COSE algorithm encountered. alg: #{cose_key.alg}. user_id: #{@current_user.id}. params: #{@params.inspect}")
-        raise(UnknownCOSEAlgorithmError, I18n.t('webauthn.validation.unknown_cose_algorithm_error'))
+        Rails.logger.error(
+          "Unknown COSE algorithm encountered. alg: #{cose_key.alg}. user_id: #{@current_user.id}. params: #{@params.inspect}",
+        )
+        raise(UnknownCOSEAlgorithmError, I18n.t("webauthn.validation.unknown_cose_algorithm_error"))
       end
 
-      if !cose_key.to_pkey.verify(cose_algorithm.hash_function, signature, auth_data + client_data_hash)
-        raise(PublicKeyError, I18n.t('webauthn.validation.public_key_error'))
+      if !cose_key.to_pkey.verify(
+           cose_algorithm.hash_function,
+           signature,
+           auth_data + client_data_hash,
+         )
+        raise(PublicKeyError, I18n.t("webauthn.validation.public_key_error"))
       end
 
       # Success! Update the last used at time for the key.
       security_key.update(last_used: Time.zone.now)
     rescue OpenSSL::PKey::PKeyError
-      raise(PublicKeyError, I18n.t('webauthn.validation.public_key_error'))
+      raise(PublicKeyError, I18n.t("webauthn.validation.public_key_error"))
     end
 
     private

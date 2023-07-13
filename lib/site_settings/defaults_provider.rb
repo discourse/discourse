@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-module SiteSettings; end
+module SiteSettings
+end
 
 # A cache for providing default value based on site locale
 class SiteSettings::DefaultsProvider
-  DEFAULT_LOCALE = 'en'
+  DEFAULT_LOCALE = "en"
 
   def initialize(site_setting)
     @site_setting = site_setting
@@ -30,18 +31,18 @@ class SiteSettings::DefaultsProvider
   end
 
   def all(locale = nil)
-    if locale
-      @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults[locale.to_sym] || {})
-    else
-      @defaults[DEFAULT_LOCALE.to_sym].dup
-    end
+    result =
+      if locale
+        @defaults[DEFAULT_LOCALE.to_sym].merge(@defaults[locale.to_sym] || {})
+      else
+        @defaults[DEFAULT_LOCALE.to_sym].dup
+      end
+
+    DiscoursePluginRegistry.apply_modifier(:site_setting_defaults, result)
   end
 
   def get(name, locale = DEFAULT_LOCALE)
-    value = @defaults.dig(locale.to_sym, name.to_sym)
-    return value unless value.nil?
-
-    @defaults.dig(DEFAULT_LOCALE.to_sym, name.to_sym)
+    all(locale)[name.to_sym]
   end
   alias [] get
 
@@ -53,7 +54,9 @@ class SiteSettings::DefaultsProvider
       @defaults[DEFAULT_LOCALE.to_sym][name] = value
       value, type = @site_setting.type_supervisor.to_db_value(name, value)
       @defaults[SiteSetting.default_locale.to_sym] ||= {}
-      @defaults[SiteSetting.default_locale.to_sym][name] = @site_setting.type_supervisor.to_rb_value(name, value, type)
+      @defaults[SiteSetting.default_locale.to_sym][
+        name
+      ] = @site_setting.type_supervisor.to_rb_value(name, value, type)
     else
       raise ArgumentError.new("No setting named '#{name}' exists")
     end
@@ -72,5 +75,4 @@ class SiteSettings::DefaultsProvider
   def current_db
     RailsMultisite::ConnectionManagement.current_db
   end
-
 end

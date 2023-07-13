@@ -1,10 +1,8 @@
-import componentTest, {
-  setupRenderingTest,
-} from "discourse/tests/helpers/component-test";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { module } from "qunit";
-import { settled } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import { render, settled } from "@ember/test-helpers";
 
 const IMAGE_FIXTURE = {
   id: 290,
@@ -25,7 +23,7 @@ const IMAGE_FIXTURE = {
 
 const VIDEO_FIXTURE = {
   id: 290,
-  url: null, // Nulled out to avoid actually setting the img src - avoids an HTTP request
+  url: null, // Nulled out to avoid actually setting the src - avoids an HTTP request
   original_filename: "video.mp4",
   filesize: 172214,
   width: 1024,
@@ -35,6 +33,22 @@ const VIDEO_FIXTURE = {
   extension: "mp4",
   short_url: "upload://mnCnqY5tunCFw2qMgtPnu1mu1C9.mp4",
   short_path: "/uploads/short-url/mnCnqY5tunCFw2qMgtPnu1mu1C9.mp4",
+  retain_hours: null,
+  human_filesize: "168 KB",
+};
+
+const AUDIO_FIXTURE = {
+  id: 290,
+  url: null, // Nulled out to avoid actually setting the src - avoids an HTTP request
+  original_filename: "song.mp3",
+  filesize: 172214,
+  width: 1024,
+  height: 768,
+  thumbnail_width: 666,
+  thumbnail_height: 500,
+  extension: "mp3",
+  short_url: "upload://mnCnqY5tunCFw2qMgtPnu1mu1C9.mp3",
+  short_path: "/uploads/short-url/mnCnqY5tunCFw2qMgtPnu1mu1C9.mp3",
   retain_hours: null,
   human_filesize: "168 KB",
 };
@@ -54,65 +68,68 @@ const TXT_FIXTURE = {
 module("Discourse Chat | Component | chat-upload", function (hooks) {
   setupRenderingTest(hooks);
 
-  componentTest("with an image", {
-    template: hbs`{{chat-upload upload=upload}}`,
+  test("with an image", async function (assert) {
+    this.set("upload", IMAGE_FIXTURE);
 
-    beforeEach() {
-      this.set("upload", IMAGE_FIXTURE);
-    },
+    await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
-    async test(assert) {
-      assert.true(exists("img.chat-img-upload"), "displays as an image");
-      const image = query("img.chat-img-upload");
-      assert.strictEqual(image.loading, "lazy", "is lazy loading");
+    assert.true(exists("img.chat-img-upload"), "displays as an image");
+    const image = query("img.chat-img-upload");
+    assert.strictEqual(image.loading, "lazy", "is lazy loading");
 
-      assert.strictEqual(
-        image.style.backgroundColor,
-        "rgb(120, 131, 112)",
-        "sets background to dominant color"
-      );
+    assert.strictEqual(
+      image.style.backgroundColor,
+      "rgb(120, 131, 112)",
+      "sets background to dominant color"
+    );
 
-      image.dispatchEvent(new Event("load")); // Fake that the image has loaded
-      await settled();
+    image.dispatchEvent(new Event("load")); // Fake that the image has loaded
+    await settled();
 
-      assert.strictEqual(
-        image.style.backgroundColor,
-        "",
-        "removes the background color once the image has loaded"
-      );
-    },
+    assert.strictEqual(
+      image.style.backgroundColor,
+      "",
+      "removes the background color once the image has loaded"
+    );
   });
 
-  componentTest("with a video", {
-    template: hbs`{{chat-upload upload=upload}}`,
+  test("with a video", async function (assert) {
+    this.set("upload", VIDEO_FIXTURE);
 
-    beforeEach() {
-      this.set("upload", VIDEO_FIXTURE);
-    },
+    await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
-    async test(assert) {
-      assert.true(exists("video.chat-video-upload"), "displays as an video");
-      const video = query("video.chat-video-upload");
-      assert.ok(video.hasAttribute("controls"), "has video controls");
-      assert.strictEqual(
-        video.getAttribute("preload"),
-        "metadata",
-        "video has correct preload settings"
-      );
-    },
+    assert.true(exists("video.chat-video-upload"), "displays as an video");
+    const video = query("video.chat-video-upload");
+    assert.true(video.hasAttribute("controls"), "has video controls");
+    assert.strictEqual(
+      video.getAttribute("preload"),
+      "metadata",
+      "video has correct preload settings"
+    );
   });
 
-  componentTest("non image upload", {
-    template: hbs`{{chat-upload upload=upload}}`,
+  test("with a audio", async function (assert) {
+    this.set("upload", AUDIO_FIXTURE);
 
-    beforeEach() {
-      this.set("upload", TXT_FIXTURE);
-    },
+    await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
-    async test(assert) {
-      assert.true(exists("a.chat-other-upload"), "displays as a link");
-      const link = query("a.chat-other-upload");
-      assert.strictEqual(link.href, TXT_FIXTURE.url, "has the correct URL");
-    },
+    assert.true(exists("audio.chat-audio-upload"), "displays as an audio");
+    const audio = query("audio.chat-audio-upload");
+    assert.true(audio.hasAttribute("controls"), "has audio controls");
+    assert.strictEqual(
+      audio.getAttribute("preload"),
+      "metadata",
+      "audio has correct preload settings"
+    );
+  });
+
+  test("non image upload", async function (assert) {
+    this.set("upload", TXT_FIXTURE);
+
+    await render(hbs`<ChatUpload @upload={{this.upload}} />`);
+
+    assert.true(exists("a.chat-other-upload"), "displays as a link");
+    const link = query("a.chat-other-upload");
+    assert.strictEqual(link.href, TXT_FIXTURE.url, "has the correct URL");
   });
 });

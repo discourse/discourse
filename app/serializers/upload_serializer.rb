@@ -17,6 +17,10 @@ class UploadSerializer < ApplicationSerializer
              :dominant_color
 
   def url
-    object.for_site_setting ? object.url : UrlHelper.cook_url(object.url, secure: SiteSetting.secure_uploads? && object.secure)
+    if object.for_site_setting
+      object.url
+    else
+      UrlHelper.cook_url(object.url, secure: SiteSetting.secure_uploads? && object.secure)
+    end
   end
 end

@@ -8,17 +8,12 @@ module Onebox
 
       MAX_LINES = 10
 
-      matches_regexp(/^http?:\/\/pastebin\.com/)
+      matches_regexp(%r{^http?://pastebin\.com})
 
       private
 
       def data
-        @data ||= {
-          title: 'pastebin.com',
-          link: link,
-          content: content,
-          truncated?: truncated?
-        }
+        @data ||= { title: "pastebin.com", link: link, content: content, truncated?: truncated? }
       end
 
       def content
@@ -31,21 +26,30 @@ module Onebox
 
       def lines
         return @lines if defined?(@lines)
-        response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", redirect_limit: 1) rescue ""
+        response =
+          begin
+            Onebox::Helpers.fetch_response(
+              "http://pastebin.com/raw/#{paste_key}",
+              redirect_limit: 1,
+            )
+          rescue StandardError
+            ""
+          end
         @lines = response.split("\n")
       end
 
       def paste_key
-        regex = case uri
-                when /\/raw\//
-                  /\/raw\/([^\/]+)/
-                when /\/download\//
-                  /\/download\/([^\/]+)/
-                when /\/embed\//
-                  /\/embed\/([^\/]+)/
-        else
-                  /\/([^\/]+)/
-        end
+        regex =
+          case uri
+          when %r{/raw/}
+            %r{/raw/([^/]+)}
+          when %r{/download/}
+            %r{/download/([^/]+)}
+          when %r{/embed/}
+            %r{/embed/([^/]+)}
+          else
+            %r{/([^/]+)}
+          end
 
         match = uri.path.match(regex)
         match[1] if match && match[1]

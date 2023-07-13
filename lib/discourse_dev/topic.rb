@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-require 'discourse_dev/record'
-require 'faker'
+require "discourse_dev/record"
+require "faker"
 
 module DiscourseDev
   class Topic < Record
-
     def initialize(private_messages: false, recipient: nil, ignore_current_count: false)
       @settings = DiscourseDev.config.topic
       @private_messages = private_messages
@@ -33,15 +32,9 @@ module DiscourseDev
       end
 
       if @category
-        merge_attributes = {
-          category: @category.id,
-          tags: tags
-        }
+        merge_attributes = { category: @category.id, tags: tags }
       else
-        merge_attributes = {
-          archetype: "private_message",
-          target_usernames: [@recipient]
-        }
+        merge_attributes = { archetype: "private_message", target_usernames: [@recipient] }
       end
 
       {
@@ -51,9 +44,11 @@ module DiscourseDev
         topic_opts: {
           import_mode: true,
           views: Faker::Number.between(from: 1, to: max_views),
-          custom_fields: { dev_sample: true }
+          custom_fields: {
+            dev_sample: true,
+          },
         },
-        skip_validations: true
+        skip_validations: true,
       }.merge(merge_attributes)
     end
 
@@ -61,7 +56,10 @@ module DiscourseDev
       if current_count < I18n.t("faker.discourse.topics").count
         Faker::Discourse.unique.topic
       else
-        Faker::Lorem.unique.sentence(word_count: 5, supplemental: true, random_words_to_add: 4).chomp(".")
+        Faker::Lorem
+          .unique
+          .sentence(word_count: 5, supplemental: true, random_words_to_add: 4)
+          .chomp(".")
       end
     end
 
@@ -70,9 +68,9 @@ module DiscourseDev
 
       @tags = []
 
-      Faker::Number.between(from: @settings.dig(:tags, :min), to: @settings.dig(:tags, :max)).times do
-        @tags << Faker::Discourse.tag
-      end
+      Faker::Number
+        .between(from: @settings.dig(:tags, :min), to: @settings.dig(:tags, :max))
+        .times { @tags << Faker::Discourse.tag }
 
       @tags.uniq
     end
@@ -92,7 +90,11 @@ module DiscourseDev
       if override = @settings.dig(:replies, :overrides).find { |o| o[:title] == topic_data[:title] }
         reply_count = override[:count]
       else
-        reply_count = Faker::Number.between(from: @settings.dig(:replies, :min), to: @settings.dig(:replies, :max))
+        reply_count =
+          Faker::Number.between(
+            from: @settings.dig(:replies, :min),
+            to: @settings.dig(:replies, :max),
+          )
       end
 
       topic = post.topic
@@ -123,9 +125,7 @@ module DiscourseDev
     end
 
     def delete_unwanted_sidekiq_jobs
-      Sidekiq::ScheduledSet.new.each do |job|
-        job.delete if job.item["class"] == "Jobs::UserEmail"
-      end
+      Sidekiq::ScheduledSet.new.each { |job| job.delete if job.item["class"] == "Jobs::UserEmail" }
     end
   end
 end

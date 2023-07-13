@@ -5,3 +5,13 @@
 # https://translate.discourse.org/
 
 lv:
+  js:
+    presence:
+      replying:
+        zero: "atbild"
+        one: "atbild"
+        other: "atbild"
+      replying_to_topic:
+        zero: "atbild"
+        one: "atbild"
+        other: "atbild"

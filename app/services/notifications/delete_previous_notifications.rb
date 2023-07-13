@@ -17,7 +17,7 @@
 
 module Notifications
   class DeletePreviousNotifications < ConsolidationPlan
-    def initialize(type:, previous_query_blk:)
+    def initialize(type:, previous_query_blk: nil)
       @type = type
       @previous_query_blk = previous_query_blk
     end
@@ -35,9 +35,7 @@ module Notifications
       return unless can_consolidate_data?(notification)
 
       notifications = user_notifications(notification, type)
-      if previous_query_blk.present?
-        notifications = previous_query_blk.call(notifications, data)
-      end
+      notifications = previous_query_blk.call(notifications, data) if previous_query_blk.present?
 
       notification.data = data.to_json
 

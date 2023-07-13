@@ -27,8 +27,6 @@ RSpec.describe SiteSettings::LocalProcessProvider, type: :multisite do
   end
 
   it "returns the correct site name" do
-    test_multisite_connection("second") do
-      expect(provider.current_site).to eq("second")
-    end
+    test_multisite_connection("second") { expect(provider.current_site).to eq("second") }
   end
 end

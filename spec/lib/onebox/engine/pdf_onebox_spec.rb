@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Engine::PdfOnebox do
-  let(:link) { "https://acrobatusers.com/assets/uploads/public_downloads/2217/adobe-acrobat-xi-merge-pdf-files-tutorial-ue.pdf" }
+  let(:link) do
+    "https://acrobatusers.com/assets/uploads/public_downloads/2217/adobe-acrobat-xi-merge-pdf-files-tutorial-ue.pdf"
+  end
   let(:html) { described_class.new(link).to_html }
 
-  let(:no_content_length_link) { "https://dspace.lboro.ac.uk/dspace-jspui/bitstream/2134/14294/3/greiffenhagen-ca_and_consumption.pdf" }
+  let(:no_content_length_link) do
+    "https://dspace.lboro.ac.uk/dspace-jspui/bitstream/2134/14294/3/greiffenhagen-ca_and_consumption.pdf"
+  end
   let(:no_filesize_html) { described_class.new(no_content_length_link).to_html }
 
   before do

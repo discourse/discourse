@@ -2,7 +2,6 @@
 
 class ForceRebakeOnPostsWithImages < ActiveRecord::Migration[5.2]
   def up
-
     # commit message has more info:
     # Picking up changes with pngquant, placeholder image, new image magick, retina images
 

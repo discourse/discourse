@@ -9,7 +9,7 @@ class CreatePostTimings < ActiveRecord::Migration[4.2]
       t.integer :msecs, null: false
     end
 
-    add_index :post_timings, [:thread_id, :post_number]
-    add_index :post_timings, [:thread_id, :post_number, :user_id], unique: true
+    add_index :post_timings, %i[thread_id post_number]
+    add_index :post_timings, %i[thread_id post_number user_id], unique: true
   end
 end

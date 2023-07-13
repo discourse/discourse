@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'text_cleaner'
+require "text_cleaner"
 
 RSpec.describe TextCleaner do
   describe "exclamation marks" do
@@ -12,7 +12,9 @@ RSpec.describe TextCleaner do
     end
 
     it "deduplicates ! when enabled" do
-      expect(TextCleaner.clean(duplicated_string, deduplicate_exclamation_marks: true)).to eq(deduplicated_string)
+      expect(TextCleaner.clean(duplicated_string, deduplicate_exclamation_marks: true)).to eq(
+        deduplicated_string,
+      )
     end
   end
 
@@ -25,7 +27,9 @@ RSpec.describe TextCleaner do
     end
 
     it "deduplicates ? when enabled" do
-      expect(TextCleaner.clean(duplicated_string, deduplicate_question_marks: true)).to eq(deduplicated_string)
+      expect(TextCleaner.clean(duplicated_string, deduplicate_question_marks: true)).to eq(
+        deduplicated_string,
+      )
     end
   end
 
@@ -43,7 +47,9 @@ RSpec.describe TextCleaner do
     end
 
     it "ignores almost all upper case text when enabled" do
-      expect(TextCleaner.clean(almost_all_caps, replace_all_upper_case: true)).to eq(almost_all_caps)
+      expect(TextCleaner.clean(almost_all_caps, replace_all_upper_case: true)).to eq(
+        almost_all_caps,
+      )
     end
   end
 
@@ -76,12 +82,18 @@ RSpec.describe TextCleaner do
     end
 
     it "removes unnecessary periods at the end when enabled" do
-      expect(TextCleaner.clean(with_one_period, remove_all_periods_from_the_end: true)).to eq(without_period)
-      expect(TextCleaner.clean(with_several_periods, remove_all_periods_from_the_end: true)).to eq(without_period)
+      expect(TextCleaner.clean(with_one_period, remove_all_periods_from_the_end: true)).to eq(
+        without_period,
+      )
+      expect(TextCleaner.clean(with_several_periods, remove_all_periods_from_the_end: true)).to eq(
+        without_period,
+      )
     end
 
     it "keeps trailing whitespaces when enabled" do
-      expect(TextCleaner.clean(with_several_periods + " ", remove_all_periods_from_the_end: true)).to eq(without_period + " ")
+      expect(
+        TextCleaner.clean(with_several_periods + " ", remove_all_periods_from_the_end: true),
+      ).to eq(without_period + " ")
     end
   end
 
@@ -97,13 +109,21 @@ RSpec.describe TextCleaner do
     end
 
     it "removes extraneous space before the end punctuation when enabled" do
-      expect(TextCleaner.clean(with_space_exclamation, remove_extraneous_space: true)).to eq(without_space_exclamation)
-      expect(TextCleaner.clean(with_space_question, remove_extraneous_space: true)).to eq(without_space_question)
+      expect(TextCleaner.clean(with_space_exclamation, remove_extraneous_space: true)).to eq(
+        without_space_exclamation,
+      )
+      expect(TextCleaner.clean(with_space_question, remove_extraneous_space: true)).to eq(
+        without_space_question,
+      )
     end
 
     it "keep trailing whitespaces when enabled" do
-      expect(TextCleaner.clean(with_space_exclamation + " ", remove_extraneous_space: true)).to eq(without_space_exclamation + " ")
-      expect(TextCleaner.clean(with_space_question + " ", remove_extraneous_space: true)).to eq(without_space_question + " ")
+      expect(TextCleaner.clean(with_space_exclamation + " ", remove_extraneous_space: true)).to eq(
+        without_space_exclamation + " ",
+      )
+      expect(TextCleaner.clean(with_space_question + " ", remove_extraneous_space: true)).to eq(
+        without_space_question + " ",
+      )
     end
   end
 
@@ -184,7 +204,9 @@ RSpec.describe TextCleaner do
       end
 
       it "replaces all upper case unicode text with regular unicode case letters" do
-        expect(TextCleaner.clean_title("INVESTIGAÇÃO POLÍTICA NA CÂMARA")).to eq("Investigação política na câmara")
+        expect(TextCleaner.clean_title("INVESTIGAÇÃO POLÍTICA NA CÂMARA")).to eq(
+          "Investigação política na câmara",
+        )
       end
 
       it "doesn't downcase text if only one word is upcase in a non-ascii alphabet" do
@@ -208,7 +230,8 @@ RSpec.describe TextCleaner do
 
   describe "#normalize_whitespaces" do
     it "normalize whitespaces" do
-      whitespaces = "\u0020\u00A0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u2028\u2029\u202F\u205F\u3000"
+      whitespaces =
+        "\u0020\u00A0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u2028\u2029\u202F\u205F\u3000"
       expect(whitespaces.strip).not_to eq("")
       expect(TextCleaner.normalize_whitespaces(whitespaces).strip).to eq("")
       expect(TextCleaner.normalize_whitespaces(nil)).to be_nil
@@ -218,7 +241,6 @@ RSpec.describe TextCleaner do
       # this is used for khmer, dont mess with it
       expect(TextCleaner.normalize_whitespaces("hello\u200Bworld").strip).to eq("hello\u200Bworld")
       expect(TextCleaner.normalize_whitespaces("hello\uFEFFworld").strip).to eq("hello\uFEFFworld")
-
     end
   end
 

@@ -12,11 +12,11 @@ class AddAutoTrackAfterSecondsAndBanningAndDobToUser < ActiveRecord::Migration[4
 
     add_column :topic_users, :total_msecs_viewed, :integer, null: false, default: 0
 
-    execute 'update topic_users set total_msecs_viewed =
+    execute "update topic_users set total_msecs_viewed =
        (
          select coalesce(sum(msecs) ,0)
          from post_timings t
          where topic_users.topic_id = t.topic_id and topic_users.user_id = t.user_id
-       )'
+       )"
   end
 end

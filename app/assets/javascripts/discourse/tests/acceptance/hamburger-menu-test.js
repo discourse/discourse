@@ -11,11 +11,11 @@ acceptance(
   "Opening the hamburger menu with some reviewables",
   function (needs) {
     needs.user();
-    needs.pretender((server, helper) => {
-      server.get("/review/count.json", () => helper.response({ count: 3 }));
+    needs.settings({
+      navigation_menu: "legacy",
     });
     test("As a staff member", async function (assert) {
-      updateCurrentUser({ moderator: true, admin: false });
+      updateCurrentUser({ moderator: true, admin: false, reviewable_count: 3 });
 
       await visit("/");
       await click(".hamburger-dropdown");
@@ -28,7 +28,10 @@ acceptance(
   }
 );
 
-acceptance("Hamburger Menu accessibility", function () {
+acceptance("Hamburger Menu accessibility", function (needs) {
+  needs.settings({
+    navigation_menu: "legacy",
+  });
   test("Escape key closes hamburger menu", async function (assert) {
     await visit("/");
     await click("#toggle-hamburger-menu");

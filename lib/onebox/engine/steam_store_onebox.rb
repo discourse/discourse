@@ -7,7 +7,7 @@ module Onebox
       include StandardEmbed
 
       always_https
-      matches_regexp(/^https?:\/\/store\.steampowered\.com\/app\/\d+/)
+      matches_regexp(%r{^https?://store\.steampowered\.com/app/\d+})
       requires_iframe_origins "https://store.steampowered.com"
 
       def placeholder_html
@@ -24,7 +24,7 @@ module Onebox
       end
 
       def to_html
-        iframe_url = @url[/https?:\/\/store\.steampowered\.com\/app\/\d+/].gsub("/app/", "/widget/")
+        iframe_url = @url[%r{https?://store\.steampowered\.com/app/\d+}].gsub("/app/", "/widget/")
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(iframe_url)
 
         <<-HTML

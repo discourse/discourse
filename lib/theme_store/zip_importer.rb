@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'compression/engine'
+require "compression/engine"
 
-module ThemeStore; end
+module ThemeStore
+end
 
 class ThemeStore::ZipImporter
-
   attr_reader :url
 
   def initialize(filename, original_filename)
@@ -18,10 +18,12 @@ class ThemeStore::ZipImporter
     FileUtils.mkdir(@temp_folder)
 
     available_size = SiteSetting.decompressed_theme_max_file_size_mb
-    Compression::Engine.engine_for(@original_filename).tap do |engine|
-      engine.decompress(@temp_folder, @filename, available_size)
-      strip_root_directory
-    end
+    Compression::Engine
+      .engine_for(@original_filename)
+      .tap do |engine|
+        engine.decompress(@temp_folder, @filename, available_size)
+        strip_root_directory
+      end
   rescue RuntimeError
     raise RemoteTheme::ImportError, I18n.t("themes.import_error.unpack_failed")
   rescue Compression::Zip::ExtractFailed
@@ -66,5 +68,4 @@ class ThemeStore::ZipImporter
     return nil unless fullpath
     File.read(fullpath)
   end
-
 end

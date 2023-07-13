@@ -1,26 +1,25 @@
 # frozen_string_literal: true
 
 RSpec.describe ForumsController do
-
   describe "read only header" do
     it "returns no read only header by default" do
       get "/srv/status"
       expect(response.status).to eq(200)
-      expect(response.headers['Discourse-Readonly']).to eq(nil)
+      expect(response.headers["Discourse-Readonly"]).to eq(nil)
     end
 
     it "returns a readonly header if the site is read only" do
       Discourse.received_postgres_readonly!
       get "/srv/status"
       expect(response.status).to eq(200)
-      expect(response.headers['Discourse-Readonly']).to eq('true')
+      expect(response.headers["Discourse-Readonly"]).to eq("true")
     end
 
     it "returns a readonly header if the site is in staff-writes-only mode" do
       Discourse.stubs(:staff_writes_only_mode?).returns(true)
       get "/srv/status"
       expect(response.status).to eq(200)
-      expect(response.headers['Discourse-Readonly']).to eq('true')
+      expect(response.headers["Discourse-Readonly"]).to eq("true")
     end
   end
 
@@ -50,5 +49,4 @@ RSpec.describe ForumsController do
       expect(response.status).to eq(200)
     end
   end
-
 end

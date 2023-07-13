@@ -2,7 +2,12 @@
 
 class RequireReviewableScores < ActiveRecord::Migration[5.2]
   def up
-    min_score = DB.query_single("SELECT value FROM site_settings WHERE name = 'min_score_default_visibility'")[0].to_f
+    min_score =
+      DB.query_single(
+        "SELECT value FROM site_settings WHERE name = 'min_score_default_visibility'",
+      )[
+        0
+      ].to_f
     min_score = 1.0 if (min_score < 1.0)
 
     execute(<<~SQL)

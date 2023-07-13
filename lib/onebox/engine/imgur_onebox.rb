@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/(www\.)?imgur\.com/)
+      matches_regexp(%r{^https?://(www\.)?imgur\.com})
       always_https
 
       def to_html
@@ -23,7 +23,7 @@ module Onebox
         <<-HTML
             <video width='#{og.video_width}' height='#{og.video_height}' #{og.title_attr} controls loop>
               <source src='#{og.video_secure_url}' type='video/mp4'>
-              <source src='#{og.video_secure_url.gsub('mp4', 'webm')}' type='video/webm'>
+              <source src='#{og.video_secure_url.gsub("mp4", "webm")}' type='video/webm'>
             </video>
           HTML
       end
@@ -47,10 +47,15 @@ module Onebox
       end
 
       def is_album?
-        response = Onebox::Helpers.fetch_response("https://api.imgur.com/oembed.json?url=#{url}") rescue "{}"
+        response =
+          begin
+            Onebox::Helpers.fetch_response("https://api.imgur.com/oembed.json?url=#{url}")
+          rescue StandardError
+            "{}"
+          end
         oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
-        imgur_data_id = Nokogiri::HTML(oembed_data[:html]).xpath("//blockquote").attr("data-id")
-        imgur_data_id.to_s[/a\//]
+        imgur_data_id = Nokogiri.HTML(oembed_data[:html]).xpath("//blockquote").attr("data-id")
+        imgur_data_id.to_s[%r{a/}]
       end
 
       def image_html(og)

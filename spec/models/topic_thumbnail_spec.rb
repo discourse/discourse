@@ -20,7 +20,7 @@ RSpec.describe "TopicThumbnail" do
     expect(topic.topic_thumbnails.length).to eq(1)
   end
 
-  it "does not enque job if original image is too large" do
+  it "does not enqueue job if original image is too large" do
     upload2.filesize = SiteSetting.max_image_size_kb.kilobytes + 1
     SiteSetting.create_thumbnails = true
     topic2.generate_thumbnails!(extra_sizes: nil)
@@ -32,7 +32,7 @@ RSpec.describe "TopicThumbnail" do
     expect(Jobs::GenerateTopicThumbnails.jobs.size).to eq(0)
   end
 
-  it "does not enque job if image_upload width is nil" do
+  it "does not enqueue job if image_upload width is nil" do
     SiteSetting.create_thumbnails = true
     topic3.image_url(enqueue_if_missing: true)
 
@@ -63,7 +63,7 @@ RSpec.describe "TopicThumbnail" do
 
   it "cleans up unneeded sizes" do
     expect(topic.topic_thumbnails.length).to eq(1)
-    topic.topic_thumbnails[0].update_column(:max_width, 999999)
+    topic.topic_thumbnails[0].update_column(:max_width, 999_999)
 
     TopicThumbnail.ensure_consistency!
     topic.reload

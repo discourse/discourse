@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::AboutStats do
-  it 'caches the stats' do
+  it "caches the stats" do
     begin
       stats = About.fetch_stats.to_json
       cache_key = About.stats_cache_key

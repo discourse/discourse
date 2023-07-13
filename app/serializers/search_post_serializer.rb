@@ -6,7 +6,9 @@ class SearchPostSerializer < BasicPostSerializer
   attributes :like_count, :blurb, :post_number, :topic_title_headline
 
   def include_topic_title_headline?
-    if SiteSetting.use_pg_headlines_for_excerpt
+    if options[:result]
+      options[:result].use_pg_headlines_for_excerpt
+    elsif SiteSetting.use_pg_headlines_for_excerpt
       object.topic_title_headline.present?
     else
       false

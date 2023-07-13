@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 module Jobs
-
   class DownloadBackupEmail < ::Jobs::Base
-
-    sidekiq_options queue: 'critical'
+    sidekiq_options queue: "critical"
 
     def execute(args)
       user_id = args[:user_id]
@@ -20,7 +18,5 @@ module Jobs
       message = DownloadBackupMailer.send_email(user.email, backup_file_path.to_s)
       Email::Sender.new(message, :download_backup_message).send
     end
-
   end
-
 end

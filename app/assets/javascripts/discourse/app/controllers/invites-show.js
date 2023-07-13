@@ -1,7 +1,7 @@
 import { alias, bool, not, readOnly } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL from "discourse/lib/url";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import NameValidation from "discourse/mixins/name-validation";
 import PasswordValidation from "discourse/mixins/password-validation";
@@ -47,6 +47,7 @@ export default Controller.extend(
     inviteImageUrl: getUrl("/images/envelope.svg"),
     isInviteLink: readOnly("model.is_invite_link"),
     rejectedEmails: null,
+    maskPassword: true,
 
     init() {
       this._super(...arguments);
@@ -270,11 +271,12 @@ export default Controller.extend(
 
     @discourseComputed
     disclaimerHtml() {
-      return I18n.t("create_account.disclaimer", {
-        tos_link: this.siteSettings.tos_url || getUrl("/tos"),
-        privacy_link:
-          this.siteSettings.privacy_policy_url || getUrl("/privacy"),
-      });
+      if (this.site.tos_url && this.site.privacy_policy_url) {
+        return I18n.t("create_account.disclaimer", {
+          tos_link: this.site.tos_url,
+          privacy_link: this.site.privacy_policy_url,
+        });
+      }
     },
 
     @discourseComputed("authOptions.associate_url", "authOptions.auth_provider")
@@ -286,6 +288,11 @@ export default Controller.extend(
         associate_link: url,
         provider: I18n.t(`login.${provider}.name`),
       });
+    },
+
+    @action
+    togglePasswordMask() {
+      this.toggleProperty("maskPassword");
     },
 
     actions: {

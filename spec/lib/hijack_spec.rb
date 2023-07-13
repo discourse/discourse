@@ -9,10 +9,7 @@ RSpec.describe Hijack do
     def initialize(env = {})
       @io = StringIO.new
 
-      env.merge!(
-        "rack.hijack" => lambda { @io },
-        "rack.input" => StringIO.new
-      )
+      env.merge!("rack.hijack" => lambda { @io }, "rack.input" => StringIO.new)
 
       self.request = ActionController::TestRequest.new(env, nil, nil)
 
@@ -23,7 +20,6 @@ RSpec.describe Hijack do
     def hijack_test(&blk)
       hijack(&blk)
     end
-
   end
 
   let :tester do
@@ -44,17 +40,14 @@ RSpec.describe Hijack do
       @calls = 0
     end
 
-    after do
-      Middleware::RequestTracker.unregister_detailed_request_logger logger
-    end
+    after { Middleware::RequestTracker.unregister_detailed_request_logger logger }
 
     it "can properly track execution" do
-      app = lambda do |env|
-        tester = Hijack::Tester.new(env)
-        tester.hijack_test do
-          render body: "hello", status: 201
+      app =
+        lambda do |env|
+          tester = Hijack::Tester.new(env)
+          tester.hijack_test { render body: "hello", status: 201 }
         end
-      end
 
       env = create_request_env(path: "/")
       middleware = Middleware::RequestTracker.new(app)
@@ -81,24 +74,20 @@ RSpec.describe Hijack do
   it "handles cors" do
     SiteSetting.cors_origins = "www.rainbows.com"
 
-    app = lambda do |env|
-      tester = Hijack::Tester.new(env)
-      tester.hijack_test do
-        render body: "hello", status: 201
-      end
+    app =
+      lambda do |env|
+        tester = Hijack::Tester.new(env)
+        tester.hijack_test { render body: "hello", status: 201 }
 
-      expect(tester.io.string).to include("Access-Control-Allow-Origin: www.rainbows.com")
-    end
+        expect(tester.io.string).to include("Access-Control-Allow-Origin: www.rainbows.com")
+      end
 
     env = {}
     middleware = Discourse::Cors.new(app)
     middleware.call(env)
 
     # it can do pre-flight
-    env = {
-      'REQUEST_METHOD' => 'OPTIONS',
-      'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'GET'
-    }
+    env = { "REQUEST_METHOD" => "OPTIONS", "HTTP_ACCESS_CONTROL_REQUEST_METHOD" => "GET" }
 
     status, headers, _body = middleware.call(env)
 
@@ -106,7 +95,8 @@ RSpec.describe Hijack do
 
     expected = {
       "Access-Control-Allow-Origin" => "www.rainbows.com",
-      "Access-Control-Allow-Headers" => "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
+      "Access-Control-Allow-Headers" =>
+        "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
       "Access-Control-Allow-Credentials" => "true",
       "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE",
       "Access-Control-Max-Age" => "7200",
@@ -119,24 +109,20 @@ RSpec.describe Hijack do
     GlobalSetting.stubs(:enable_cors).returns(true)
     GlobalSetting.stubs(:cors_origin).returns("https://www.rainbows.com/")
 
-    app = lambda do |env|
-      tester = Hijack::Tester.new(env)
-      tester.hijack_test do
-        render body: "hello", status: 201
-      end
+    app =
+      lambda do |env|
+        tester = Hijack::Tester.new(env)
+        tester.hijack_test { render body: "hello", status: 201 }
 
-      expect(tester.io.string).to include("Access-Control-Allow-Origin: https://www.rainbows.com")
-    end
+        expect(tester.io.string).to include("Access-Control-Allow-Origin: https://www.rainbows.com")
+      end
 
     env = {}
     middleware = Discourse::Cors.new(app)
     middleware.call(env)
 
     # it can do pre-flight
-    env = {
-      'REQUEST_METHOD' => 'OPTIONS',
-      'HTTP_ACCESS_CONTROL_REQUEST_METHOD' => 'GET'
-    }
+    env = { "REQUEST_METHOD" => "OPTIONS", "HTTP_ACCESS_CONTROL_REQUEST_METHOD" => "GET" }
 
     status, headers, _body = middleware.call(env)
 
@@ -144,7 +130,8 @@ RSpec.describe Hijack do
 
     expected = {
       "Access-Control-Allow-Origin" => "https://www.rainbows.com",
-      "Access-Control-Allow-Headers" => "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
+      "Access-Control-Allow-Headers" =>
+        "Content-Type, Cache-Control, X-Requested-With, X-CSRF-Token, Discourse-Present, User-Api-Key, User-Api-Client-Id, Authorization",
       "Access-Control-Allow-Credentials" => "true",
       "Access-Control-Allow-Methods" => "POST, PUT, GET, OPTIONS, DELETE",
       "Access-Control-Max-Age" => "7200",
@@ -173,18 +160,14 @@ RSpec.describe Hijack do
   end
 
   it "renders non 200 status if asked for" do
-    tester.hijack_test do
-      render body: "hello world", status: 402
-    end
+    tester.hijack_test { render body: "hello world", status: 402 }
 
     expect(tester.io.string).to include("402")
     expect(tester.io.string).to include("world")
   end
 
   it "handles send_file correctly" do
-    tester.hijack_test do
-      send_file __FILE__, disposition: nil
-    end
+    tester.hijack_test { send_file __FILE__, disposition: nil }
 
     expect(tester.io.string).to start_with("HTTP/1.1 200")
   end
@@ -193,10 +176,11 @@ RSpec.describe Hijack do
     Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test do
       Process.stubs(:clock_gettime).returns(2.0)
-      redirect_to 'http://awesome.com', allow_other_host: true
+      redirect_to "http://awesome.com", allow_other_host: true
     end
 
-    result = "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 84\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
+    result =
+      "HTTP/1.1 302 Found\r\nLocation: http://awesome.com\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 84\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n<html><body>You are being <a href=\"http://awesome.com\">redirected</a>.</body></html>"
     expect(tester.io.string).to eq(result)
   end
 
@@ -207,7 +191,8 @@ RSpec.describe Hijack do
       render body: nil
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
+    result =
+      "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\n"
     expect(tester.io.string).to eq(result)
   end
 
@@ -218,7 +203,8 @@ RSpec.describe Hijack do
       render plain: "hello world"
     end
 
-    result = "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 11\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\nhello world"
+    result =
+      "HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: 11\r\nConnection: close\r\nX-Runtime: 1.000000\r\n\r\nhello world"
     expect(tester.io.string).to eq(result)
   end
 
@@ -226,7 +212,8 @@ RSpec.describe Hijack do
     Process.stubs(:clock_gettime).returns(1.0)
     tester.hijack_test
 
-    expected = "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 0.000000\r\n\r\n"
+    expected =
+      "HTTP/1.1 500 Internal Server Error\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: 0\r\nConnection: close\r\nX-Runtime: 0.000000\r\n\r\n"
     expect(tester.io.string).to eq(expected)
   end
 
@@ -234,9 +221,7 @@ RSpec.describe Hijack do
     tester.io.close
 
     ran = false
-    tester.hijack_test do
-      ran = true
-    end
+    tester.hijack_test { ran = true }
 
     expect(ran).to eq(false)
   end

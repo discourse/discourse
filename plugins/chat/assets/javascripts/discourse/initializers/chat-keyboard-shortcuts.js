@@ -1,9 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import showModal from "discourse/lib/show-modal";
-
-const APPLE =
-  navigator.platform.startsWith("Mac") || navigator.platform === "iPhone";
-export const KEY_MODIFIER = APPLE ? "meta" : "ctrl";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
   name: "chat-keyboard-shortcuts",
@@ -16,15 +13,19 @@ export default {
 
     const router = container.lookup("service:router");
     const appEvents = container.lookup("service:app-events");
+    const modal = container.lookup("service:modal");
     const chatStateManager = container.lookup("service:chat-state-manager");
-    const openChannelSelector = (e) => {
+    const chatThreadPane = container.lookup("service:chat-thread-pane");
+    const chatThreadListPane = container.lookup(
+      "service:chat-thread-list-pane"
+    );
+    const chatChannelsManager = container.lookup(
+      "service:chat-channels-manager"
+    );
+    const openQuickChannelSelector = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (document.getElementById("chat-channel-selector-modal-inner")) {
-        appEvents.trigger("chat-channel-selector-modal:close");
-      } else {
-        showModal("chat-channel-selector-modal");
-      }
+      modal.show(ChatModalNewMessage);
     };
 
     const handleMoveUpShortcut = (e) => {
@@ -39,7 +40,8 @@ export default {
       chatService.switchChannelUpOrDown("down");
     };
 
-    const isChatComposer = (el) => el.classList.contains("chat-composer-input");
+    const isChatComposer = (el) =>
+      el.classList.contains("chat-composer__input");
     const isInputSelection = (el) => {
       const inputs = ["input", "textarea", "select", "button"];
       const elementTagName = el?.tagName.toLowerCase();
@@ -55,7 +57,10 @@ export default {
       }
       event.preventDefault();
       event.stopPropagation();
-      appEvents.trigger("chat:modify-selection", { type });
+      appEvents.trigger("chat:modify-selection", event, {
+        type,
+        context: event.target.dataset.chatComposerContext,
+      });
     };
 
     const openInsertLinkModal = (event) => {
@@ -64,7 +69,9 @@ export default {
       }
       event.preventDefault();
       event.stopPropagation();
-      appEvents.trigger("chat:open-insert-link-modal", { event });
+      appEvents.trigger("chat:open-insert-link-modal", event, {
+        context: event.target.dataset.chatComposerContext,
+      });
     };
 
     const openChatDrawer = (event) => {
@@ -78,32 +85,60 @@ export default {
       router.transitionTo(chatStateManager.lastKnownChatURL || "chat");
     };
 
-    const closeChatDrawer = (event) => {
-      if (!chatStateManager.isDrawerActive) {
+    const closeChat = (event) => {
+      // TODO (joffrey): removes this when we move from magnific popup
+      // there's no proper way to prevent propagation in mfp
+      if (event.srcElement?.classList?.value?.includes("mfp-wrap")) {
         return;
       }
 
-      if (!isChatComposer(event.target)) {
+      if (chatStateManager.isDrawerActive) {
+        event.preventDefault();
+        event.stopPropagation();
+        appEvents.trigger("chat:toggle-close", event);
         return;
       }
 
+      if (chatThreadPane.isOpened) {
+        event.preventDefault();
+        event.stopPropagation();
+        chatThreadPane.close();
+        return;
+      }
+
+      if (chatThreadListPane.isOpened) {
+        event.preventDefault();
+        event.stopPropagation();
+        chatThreadListPane.close();
+        return;
+      }
+    };
+
+    const markAllChannelsRead = (event) => {
       event.preventDefault();
       event.stopPropagation();
-      appEvents.trigger("chat:toggle-close", event);
+
+      if (chatStateManager.isActive) {
+        chatChannelsManager.markAllChannelsRead();
+      }
     };
 
     withPluginApi("0.12.1", (api) => {
-      api.addKeyboardShortcut(`${KEY_MODIFIER}+k`, openChannelSelector, {
-        global: true,
-        help: {
-          category: "chat",
-          name: "chat.keyboard_shortcuts.open_quick_channel_selector",
-          definition: {
-            keys1: ["meta", "k"],
-            keysDelimiter: "plus",
+      api.addKeyboardShortcut(
+        `${PLATFORM_KEY_MODIFIER}+k`,
+        openQuickChannelSelector,
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.open_quick_channel_selector",
+            definition: {
+              keys1: ["meta", "k"],
+              keysDelimiter: "plus",
+            },
           },
-        },
-      });
+        }
+      );
       api.addKeyboardShortcut("alt+up", handleMoveUpShortcut, {
         global: true,
         help: {
@@ -122,7 +157,7 @@ export default {
         global: true,
       });
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+b`,
+        `${PLATFORM_KEY_MODIFIER}+b`,
         (event) => modifyComposerSelection(event, "bold"),
         {
           global: true,
@@ -137,7 +172,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+i`,
+        `${PLATFORM_KEY_MODIFIER}+i`,
         (event) => modifyComposerSelection(event, "italic"),
         {
           global: true,
@@ -152,7 +187,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+e`,
+        `${PLATFORM_KEY_MODIFIER}+e`,
         (event) => modifyComposerSelection(event, "code"),
         {
           global: true,
@@ -167,7 +202,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+l`,
+        `${PLATFORM_KEY_MODIFIER}+l`,
         (event) => openInsertLinkModal(event),
         {
           global: true,
@@ -191,7 +226,7 @@ export default {
           },
         },
       });
-      api.addKeyboardShortcut("esc", (event) => closeChatDrawer(event), {
+      api.addKeyboardShortcut("esc", (event) => closeChat(event), {
         global: true,
         help: {
           category: "chat",
@@ -201,6 +236,21 @@ export default {
           },
         },
       });
+      api.addKeyboardShortcut(
+        `shift+esc`,
+        (event) => markAllChannelsRead(event),
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.mark_all_channels_read",
+            definition: {
+              keys1: ["shift", "esc"],
+              keysDelimiter: "plus",
+            },
+          },
+        }
+      );
     });
   },
 };

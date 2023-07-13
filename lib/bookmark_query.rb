@@ -11,9 +11,7 @@ class BookmarkQuery
 
   def self.preload(bookmarks, object)
     preload_polymorphic_associations(bookmarks, object.guardian)
-    if @preload
-      @preload.each { |preload| preload.call(bookmarks, object) }
-    end
+    @preload.each { |preload| preload.call(bookmarks, object) } if @preload
   end
 
   # These polymorphic associations are loaded to make the UserBookmarkListSerializer's
@@ -42,24 +40,27 @@ class BookmarkQuery
     ts_query = search_term.present? ? Search.ts_query(term: search_term) : nil
     search_term_wildcard = search_term.present? ? "%#{search_term}%" : nil
 
-    queries = Bookmark.registered_bookmarkables.map do |bookmarkable|
-      interim_results = bookmarkable.perform_list_query(@user, @guardian)
+    queries =
+      Bookmark
+        .registered_bookmarkables
+        .map do |bookmarkable|
+          interim_results = bookmarkable.perform_list_query(@user, @guardian)
 
-      # this could occur if there is some security reason that the user cannot
-      # access the bookmarkables that they have bookmarked, e.g. if they had 1 bookmark
-      # on a topic and that topic was moved into a private category
-      next if interim_results.blank?
+          # this could occur if there is some security reason that the user cannot
+          # access the bookmarkables that they have bookmarked, e.g. if they had 1 bookmark
+          # on a topic and that topic was moved into a private category
+          next if interim_results.blank?
 
-      if search_term.present?
-        interim_results = bookmarkable.perform_search_query(
-          interim_results, search_term_wildcard, ts_query
-        )
-      end
+          if search_term.present?
+            interim_results =
+              bookmarkable.perform_search_query(interim_results, search_term_wildcard, ts_query)
+          end
 
-      # this is purely to make the query easy to read and debug, otherwise it's
-      # all mashed up into a massive ball in MiniProfiler :)
-      "---- #{bookmarkable.model.to_s} bookmarkable ---\n\n #{interim_results.to_sql}"
-    end.compact
+          # this is purely to make the query easy to read and debug, otherwise it's
+          # all mashed up into a massive ball in MiniProfiler :)
+          "---- #{bookmarkable.model.to_s} bookmarkable ---\n\n #{interim_results.to_sql}"
+        end
+        .compact
 
     # same for interim results being blank, the user might have been locked out
     # from all their various bookmarks, in which case they will see nothing and
@@ -68,17 +69,16 @@ class BookmarkQuery
 
     union_sql = queries.join("\n\nUNION\n\n")
     results = Bookmark.select("bookmarks.*").from("(\n\n#{union_sql}\n\n) as bookmarks")
-    results = results.order(
-      "(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END),
+    results =
+      results.order(
+        "(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END),
         bookmarks.reminder_at ASC,
-        bookmarks.updated_at DESC"
-    )
+        bookmarks.updated_at DESC",
+      )
 
     @count = results.count
 
-    if @page.positive?
-      results = results.offset(@page * @params[:per_page])
-    end
+    results = results.offset(@page * @params[:per_page]) if @page.positive?
 
     if updated_results = blk&.call(results)
       results = updated_results

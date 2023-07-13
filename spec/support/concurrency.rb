@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require 'fiber'
+require "fiber"
 
 module Concurrency
   module Logic
-    class DeadEnd < StandardError; end
+    class DeadEnd < StandardError
+    end
 
     module Complete
       class Path
@@ -20,7 +21,7 @@ module Concurrency
         def choose(*options)
           raise DeadEnd if options.empty?
 
-          @path << [options.size, 0] unless @index < @path.size
+          @path << [options.size, 0] if @index >= @path.size
 
           pair = @path[@index]
           raise "non-determinism" unless pair[0] == options.size
@@ -169,9 +170,7 @@ module Concurrency
         until @tasks.empty?
           task = @path.choose(*@tasks)
           task.resume
-          unless task.alive?
-            @tasks.delete(task)
-          end
+          @tasks.delete(task) unless task.alive?
         end
       end
     end
@@ -196,20 +195,14 @@ module Concurrency
     end
 
     def multi(&blk)
-      with_possible_failure do
-        with_in_transaction do
-          @redis.multi(&blk)
-        end
-      end
+      with_possible_failure { with_in_transaction { @redis.multi(&blk) } }
     end
 
     def method_missing(method, *args, &blk)
       if @in_transaction
         @redis.send(method, *args, &blk)
       else
-        with_possible_failure do
-          @redis.send(method, *args, &blk)
-        end
+        with_possible_failure { @redis.send(method, *args, &blk) }
       end
     end
 
@@ -227,25 +220,17 @@ module Concurrency
 
     def with_possible_failure
       outcome =
-        @execution.choose_with_weights(
-          [:succeed, 0.96],
-          [:fail_before, 0.02],
-          [:fail_after, 0.02]
-        )
+        @execution.choose_with_weights([:succeed, 0.96], [:fail_before, 0.02], [:fail_after, 0.02])
 
       @execution.yield
 
-      if outcome == :fail_before
-        raise Redis::ConnectionError
-      end
+      raise Redis::ConnectionError if outcome == :fail_before
 
       result = yield
 
       @execution.yield
 
-      if outcome == :fail_after
-        raise Redis::ConnectionError
-      end
+      raise Redis::ConnectionError if outcome == :fail_after
 
       result
     end

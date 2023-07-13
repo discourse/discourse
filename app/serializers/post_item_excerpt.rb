@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module PostItemExcerpt
-
   def self.included(base)
     base.attributes(:excerpt, :truncated)
   end
@@ -22,5 +21,4 @@ module PostItemExcerpt
   def include_truncated?
     cooked.length > 300
   end
-
 end

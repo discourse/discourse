@@ -1,0 +1,63 @@
+{{#if this.collection}}
+  <ul class="values emoji-value-list">
+    {{#each this.collection as |data index|}}
+      <li class="value" data-index={{index}}>
+        <DButton
+          @action={{action "removeValue"}}
+          @actionParam={{data}}
+          @icon="times"
+          @class="remove-value-btn btn-small"
+          @disabled={{not data.isEditable}}
+        />
+
+        <div
+          class="value-input emoji-details
+            {{if data.isEditable 'can-edit'}}
+            {{if data.isEditing 'd-editor-textarea-wrapper'}}"
+          {{on "click" (fn this.editValue index)}}
+          role="button"
+        >
+          <img
+            height="15px"
+            width="15px"
+            src={{data.emojiUrl}}
+            class="emoji-list-emoji"
+          />
+          <span class="emoji-name">{{data.value}}</span>
+        </div>
+
+        {{#if this.showUpDownButtons}}
+          <DButton
+            @action={{action "shift" -1 index}}
+            @icon="arrow-up"
+            @class="shift-up-value-btn btn-small"
+          />
+          <DButton
+            @action={{action "shift" 1 index}}
+            @icon="arrow-down"
+            @class="shift-down-value-btn btn-small"
+          />
+        {{/if}}
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+<div class="value">
+  <DButton
+    @action={{action "editValue"}}
+    @actionParam={{this.data}}
+    @icon="discourse-emojis"
+    @class="add-emoji-button d-editor-textarea-wrapper"
+    @label="admin.site_settings.emoji_list.add_emoji_button.label"
+  />
+</div>
+
+<EmojiPicker
+  @isActive={{this.emojiPickerIsActive}}
+  @isEditorFocused={{this.isEditorFocused}}
+  @emojiSelected={{action "emojiSelected"}}
+  @onEmojiPickerClose={{action "closeEmojiPicker"}}
+/>
+
+<SettingValidationMessage @message={{this.validationMessage}} />

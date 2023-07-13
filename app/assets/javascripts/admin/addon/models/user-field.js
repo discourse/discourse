@@ -2,14 +2,8 @@ import EmberObject from "@ember/object";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse/lib/computed";
 
-const UserField = RestModel.extend();
-
-const UserFieldType = EmberObject.extend({
-  name: i18n("id", "admin.user_fields.field_types.%@"),
-});
-
-UserField.reopenClass({
-  fieldTypes() {
+export default class UserField extends RestModel {
+  static fieldTypes() {
     if (!this._fieldTypes) {
       this._fieldTypes = [
         UserFieldType.create({ id: "text" }),
@@ -20,11 +14,13 @@ UserField.reopenClass({
     }
 
     return this._fieldTypes;
-  },
+  }
 
-  fieldTypeById(id) {
+  static fieldTypeById(id) {
     return this.fieldTypes().findBy("id", id);
-  },
-});
+  }
+}
 
-export default UserField;
+class UserFieldType extends EmberObject {
+  @i18n("id", "admin.user_fields.field_types.%@") name;
+}

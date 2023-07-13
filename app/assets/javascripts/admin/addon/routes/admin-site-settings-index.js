@@ -4,12 +4,12 @@
 **/
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
+export default class AdminSiteSettingsIndexRoute extends DiscourseRoute {
   beforeModel() {
     this.replaceWith(
       "adminSiteSettingsCategory",
       this.controllerFor("adminSiteSettings").get("visibleSiteSettings")[0]
         .nameKey
     );
-  },
-});
+  }
+}

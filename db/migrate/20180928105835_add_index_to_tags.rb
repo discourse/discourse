@@ -11,7 +11,7 @@ class AddIndexToTags < ActiveRecord::Migration[5.2]
       WHERE EXISTS(SELECT * FROM tags t WHERE lower(t.name) = lower(tags.name) AND t.id < tags.id)
     SQL
 
-    add_index :tags, 'lower(name)', unique: true
+    add_index :tags, "lower(name)", unique: true
   end
   def down
     raise ActiveRecord::IrreversibleMigration

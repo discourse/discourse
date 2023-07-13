@@ -10,14 +10,18 @@ import { test } from "qunit";
 
 async function openUserStatusModal() {
   await click(".header-dropdown-toggle.current-user");
-  await click(".menu-links-row .user-preferences-link");
-  await click(".user-status button");
+  await click("#user-menu-button-profile");
+  await click(".set-user-status button");
 }
 
 async function pickEmoji(emoji) {
   await click(".btn-emoji");
   await fillIn(".emoji-picker-content .filter", emoji);
   await click(".results .emoji");
+}
+
+async function setDoNotDisturbMode() {
+  await click(".pause-notifications input[type=checkbox]");
 }
 
 acceptance("User Status", function (needs) {
@@ -40,32 +44,8 @@ acceptance("User Status", function (needs) {
       publishToMessageBus(`/user-status/${userId}`, null);
       return helper.response({ success: true });
     });
-  });
-
-  test("doesn't show the user status button on the menu by default", async function (assert) {
-    this.siteSettings.enable_user_status = false;
-
-    await visit("/");
-    await click(".header-dropdown-toggle.current-user");
-    await click(".menu-links-row .user-preferences-link");
-
-    assert.notOk(exists("div.quick-access-panel li.user-status"));
-  });
-
-  test("shows the user status button on the menu when enabled in settings", async function (assert) {
-    this.siteSettings.enable_user_status = true;
-
-    await visit("/");
-    await click(".header-dropdown-toggle.current-user");
-    await click(".menu-links-row .user-preferences-link");
-
-    assert.ok(
-      exists("div.quick-access-panel li.user-status"),
-      "shows the button"
-    );
-    assert.ok(
-      exists("div.quick-access-panel li.user-status svg.d-icon-plus-circle"),
-      "shows the icon on the button"
+    server.delete("/do-not-disturb.json", () =>
+      helper.response({ success: true })
     );
   });
 
@@ -77,19 +57,19 @@ acceptance("User Status", function (needs) {
 
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
-    await click(".menu-links-row .user-preferences-link");
+    await click("#user-menu-button-profile");
 
     assert.equal(
       query(
-        "div.quick-access-panel li.user-status span.d-button-label"
+        "div.quick-access-panel li.set-user-status span.item-label"
       ).textContent.trim(),
       userStatus,
       "shows user status description on the menu"
     );
 
     assert.equal(
-      query("div.quick-access-panel li.user-status img.emoji").alt,
-      `:${userStatusEmoji}:`,
+      query("div.quick-access-panel li.set-user-status img.emoji").alt,
+      `${userStatusEmoji}`,
       "shows user status emoji on the menu"
     );
 
@@ -176,18 +156,18 @@ acceptance("User Status", function (needs) {
     );
 
     await click(".header-dropdown-toggle.current-user");
-    await click(".menu-links-row .user-preferences-link");
+    await click("#user-menu-button-profile");
     assert.equal(
       query(
-        "div.quick-access-panel li.user-status span.d-button-label"
+        "div.quick-access-panel li.set-user-status span.item-label"
       ).textContent.trim(),
       userStatus,
       "shows user status description on the menu"
     );
 
     assert.equal(
-      query("div.quick-access-panel li.user-status img.emoji").alt,
-      `:${userStatusEmoji}:`,
+      query("div.quick-access-panel li.set-user-status img.emoji").alt,
+      `${userStatusEmoji}`,
       "shows user status emoji on the menu"
     );
   });
@@ -205,17 +185,17 @@ acceptance("User Status", function (needs) {
     await click(".btn-primary"); // save
 
     await click(".header-dropdown-toggle.current-user");
-    await click(".menu-links-row .user-preferences-link");
+    await click("#user-menu-button-profile");
     assert.equal(
       query(
-        "div.quick-access-panel li.user-status span.d-button-label"
+        "div.quick-access-panel li.set-user-status span.item-label"
       ).textContent.trim(),
       updatedStatus,
       "shows user status description on the menu"
     );
     assert.equal(
-      query("div.quick-access-panel li.user-status img.emoji").alt,
-      `:${userStatusEmoji}:`,
+      query("div.quick-access-panel li.set-user-status img.emoji").alt,
+      `${userStatusEmoji}`,
       "shows user status emoji on the menu"
     );
   });
@@ -243,11 +223,11 @@ acceptance("User Status", function (needs) {
     await click(".btn-primary"); // save
 
     await click(".header-dropdown-toggle.current-user");
-    await click(".menu-links-row .user-preferences-link");
+    await click("#user-menu-button-profile");
 
     assert.equal(
       query(
-        "div.quick-access-panel li.user-status span.relative-date"
+        "div.quick-access-panel li.set-user-status span.relative-date"
       ).textContent.trim(),
       "1h",
       "shows user status timer on the menu"
@@ -345,7 +325,129 @@ acceptance("User Status", function (needs) {
   });
 });
 
-acceptance("User Status - new user menu", function (needs) {
+acceptance(
+  "User Status - pause notifications (do not disturb mode)",
+  function (needs) {
+    const userStatus = "off to dentist";
+    const userStatusEmoji = "tooth";
+    const userId = 1;
+    const userTimezone = "UTC";
+
+    needs.user({ id: userId, "user_option.timezone": userTimezone });
+
+    needs.pretender((server, helper) => {
+      server.put("/user-status.json", () => {
+        return helper.response({ success: true });
+      });
+      server.delete("/user-status.json", () => {
+        return helper.response({ success: true });
+      });
+      server.post("/do-not-disturb.json", (request) => {
+        const duration = request.requestBody.match(/(?<=duration=)\d+/g)[0]; // body is something like "duration=134"
+        const endsAt = moment.utc().add(duration, "minutes").toISOString();
+        return helper.response({ ends_at: endsAt });
+      });
+      server.delete("/do-not-disturb.json", () =>
+        helper.response({ success: true })
+      );
+    });
+
+    test("shows the pause notifications control group", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+
+      await visit("/");
+      await openUserStatusModal();
+
+      assert.dom(".pause-notifications").exists();
+    });
+
+    test("sets do-not-disturb mode", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+
+      await visit("/");
+      await openUserStatusModal();
+
+      await fillIn(".user-status-description", userStatus);
+      await pickEmoji(userStatusEmoji);
+      await click("#tap_tile_one_hour");
+      await setDoNotDisturbMode();
+      await click(".btn-primary"); // save
+
+      assert
+        .dom(".do-not-disturb-background .d-icon-moon")
+        .exists("the DnD mode indicator on the menu is shown");
+    });
+
+    test("sets do-not-disturb mode even if ends at time wasn't chosen", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+
+      await visit("/");
+      await openUserStatusModal();
+
+      await fillIn(".user-status-description", userStatus);
+      await pickEmoji(userStatusEmoji);
+      await setDoNotDisturbMode();
+      await click(".btn-primary"); // save
+
+      assert
+        .dom(".do-not-disturb-background .d-icon-moon")
+        .exists("the DnD mode indicator on the menu is shown");
+    });
+
+    test("unsets do-not-disturb mode when removing status", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+      updateCurrentUser({ status: { description: userStatus } });
+      updateCurrentUser({ do_not_disturb_until: "2100-01-01T08:00:00.000Z" });
+
+      await visit("/");
+      await openUserStatusModal();
+      await click(".btn.delete-status");
+
+      assert
+        .dom(".do-not-disturb-background .d-icon-moon")
+        .doesNotExist("there is no DnD mode indicator on the menu");
+    });
+
+    test("unsets do-not-disturb mode when updating status", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+      updateCurrentUser({
+        status: { emoji: userStatusEmoji, description: userStatus },
+      });
+      updateCurrentUser({ do_not_disturb_until: "2100-01-01T08:00:00.000Z" });
+
+      await visit("/");
+      await openUserStatusModal();
+      await click(".pause-notifications input[type=checkbox]");
+      await click(".btn-primary"); // save
+
+      assert
+        .dom(".do-not-disturb-background .d-icon-moon")
+        .doesNotExist("there is no DnD mode indicator on the menu");
+    });
+
+    test("if user isn't in DnD mode the user status modal shows it", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+      updateCurrentUser({ do_not_disturb_until: null });
+
+      await visit("/");
+      await openUserStatusModal();
+
+      assert.dom(".pause-notifications input").isNotChecked();
+    });
+
+    test("if user is in DnD mode the user status modal shows it", async function (assert) {
+      this.siteSettings.enable_user_status = true;
+      updateCurrentUser({ do_not_disturb_until: "2100-01-01T08:00:00.000Z" });
+
+      await visit("/");
+      await openUserStatusModal();
+
+      assert.dom(".pause-notifications input").isChecked();
+    });
+  }
+);
+
+acceptance("User Status - user menu", function (needs) {
   const userStatus = "off to dentist";
   const userStatusEmoji = "tooth";
   const userId = 1;
@@ -353,8 +455,7 @@ acceptance("User Status - new user menu", function (needs) {
 
   needs.user({
     id: userId,
-    timezone: userTimezone,
-    redesigned_user_menu_enabled: true,
+    "user_option.timezone": userTimezone,
   });
 
   needs.pretender((server, helper) => {

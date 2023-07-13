@@ -48,13 +48,15 @@ class PollSerializer < ApplicationSerializer
       PollOptionSerializer.new(
         option,
         root: false,
-        scope: { can_see_results: can_see_results }
+        scope: {
+          can_see_results: can_see_results,
+        },
       ).as_json
     end
   end
 
   def voters
-    object.poll_votes.count('DISTINCT user_id') + object.anonymous_voters.to_i
+    object.poll_votes.count("DISTINCT user_id") + object.anonymous_voters.to_i
   end
 
   def close
@@ -72,5 +74,4 @@ class PollSerializer < ApplicationSerializer
   def include_preloaded_voters?
     object.can_see_voters?(scope.user)
   end
-
 end

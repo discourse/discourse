@@ -6,7 +6,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/(photos)\.(app\.goo\.gl|google\.com)/)
+      matches_regexp(%r{^https?://(photos)\.(app\.goo\.gl|google\.com)})
       always_https
 
       def to_html

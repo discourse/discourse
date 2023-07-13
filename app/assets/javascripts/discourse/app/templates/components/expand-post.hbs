@@ -1,9 +1,0 @@
-{{#if this.item.truncated}}
-  <a href class={{if this.expanded "collapse-item" "expand-item"}} onclick={{action "toggleItem"}} title={{i18n "post.expand_collapse"}}>
-    {{#if this.expanded}}
-      {{d-icon "chevron-up"}}
-    {{else}}
-      {{d-icon "chevron-down"}}
-    {{/if}}
-  </a>
-{{/if}}

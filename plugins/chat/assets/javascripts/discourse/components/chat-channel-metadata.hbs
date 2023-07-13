@@ -1,9 +1,11 @@
 <div class="chat-channel-metadata">
-  <div class="chat-channel-metadata__date">
-    {{this.lastMessageFormatedDate}}
-  </div>
+  {{#if @channel.lastMessage}}
+    <div class="chat-channel-metadata__date">
+      {{this.lastMessageFormattedDate}}
+    </div>
+  {{/if}}
 
-  {{#if @unreadIndicator}}
+  {{#if this.unreadIndicator}}
     <ChatChannelUnreadIndicator @channel={{@channel}} />
   {{/if}}
 </div>

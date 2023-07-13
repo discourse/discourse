@@ -5,14 +5,21 @@ module Email
   # Email Message-IDs are used in both our outbound and inbound email
   # flow. For the outbound flow via Email::Sender, we assign a unique
   # Message-ID for any emails sent out from the application.
-  # If we are sending an email related to a topic, such as through the
+  # If we are sending an email related to a post, such as through the
   # PostAlerter class, then the Message-ID will contain references to
-  # the topic ID, and if it is for a specific post, the post ID,
-  # along with a random suffix to make the Message-ID truly unique.
-  # The host must also be included on the Message-IDs.
+  # the post ID. The host must also be included on the Message-IDs.
+  # The format looks like this:
+  #
+  # discourse/post/POST_ID@HOST
+  #
+  # We previously had the following formats, but support for these
+  # will be removed in 2023:
+  #
+  # topic/TOPIC_ID/POST_ID@HOST
+  # topic/TOPIC_ID@HOST
   #
   # For the inbound email flow via Email::Receiver, we use Message-IDs
-  # to discern which topic or post the inbound email reply should be
+  # to discern which topic and post the inbound email reply should be
   # in response to. In this case, the Message-ID is extracted from the
   # References and/or In-Reply-To headers, and compared with either
   # the IncomingEmail table, the Post table, or the IncomingEmail to
@@ -27,39 +34,6 @@ module Email
     class << self
       def generate_default
         "<#{SecureRandom.uuid}@#{host}>"
-      end
-
-      # TODO (martin) 2023-01-01 Deprecated, remove this once the new threading
-      # systems have been in place for a while.
-      def generate_for_post(post, use_incoming_email_if_present: false)
-        if use_incoming_email_if_present && post.incoming_email&.message_id.present?
-          return "<#{post.incoming_email.message_id}>"
-        end
-
-        "<topic/#{post.topic_id}/#{post.id}.#{random_suffix}@#{host}>"
-      end
-
-      # TODO (martin) 2023-01-01 Deprecated, remove this once the new threading
-      # systems have been in place for a while.
-      def generate_for_topic(topic, use_incoming_email_if_present: false, canonical: false)
-        first_post = topic.ordered_posts.first
-        incoming_email = first_post.incoming_email
-
-        # If the incoming email was created by handle_mail, then it was an
-        # inbound email sent to Discourse and handled by Email::Receiver,
-        # this is the only case where we want to use the original Message-ID
-        # because we want to maintain threading in the original mail client.
-        if use_incoming_email_if_present &&
-            incoming_email&.message_id.present? &&
-            incoming_email&.created_via == IncomingEmail.created_via_types[:handle_mail]
-          return "<#{first_post.incoming_email.message_id}>"
-        end
-
-        if canonical
-          "<topic/#{topic.id}@#{host}>"
-        else
-          "<topic/#{topic.id}.#{random_suffix}@#{host}>"
-        end
       end
 
       ##
@@ -97,15 +71,29 @@ module Email
       def find_post_from_message_ids(message_ids)
         message_ids = message_ids.map { |message_id| message_id_clean(message_id) }
 
-        # TODO (martin) 2023-01-01 We should remove these backwards-compatible
+        # TODO (martin) 2023-04-01 We should remove these backwards-compatible
         # formats for the Message-ID and solely use the discourse/post/999@host
         # format.
-        topic_ids = message_ids.map { |message_id| message_id[message_id_topic_id_regexp, 1] }.compact.map(&:to_i)
-        post_ids = message_ids.map { |message_id| message_id[message_id_post_id_regexp, 1] }.compact.map(&:to_i)
+        topic_ids =
+          message_ids
+            .map { |message_id| message_id[message_id_topic_id_regexp, 1] }
+            .compact
+            .map(&:to_i)
+        post_ids =
+          message_ids
+            .map { |message_id| message_id[message_id_post_id_regexp, 1] }
+            .compact
+            .map(&:to_i)
 
-        post_ids << message_ids.map { |message_id| message_id[message_id_discourse_regexp, 1] }.compact.map(&:to_i)
+        post_ids << message_ids
+          .map { |message_id| message_id[message_id_discourse_regexp, 1] }
+          .compact
+          .map(&:to_i)
 
-        post_ids << Post.where(outbound_message_id: message_ids).or(Post.where(topic_id: topic_ids, post_number: 1)).pluck(:id)
+        post_ids << Post
+          .where(outbound_message_id: message_ids)
+          .or(Post.where(topic_id: topic_ids, post_number: 1))
+          .pluck(:id)
         post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
         post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
 
@@ -118,11 +106,7 @@ module Email
         Post.where(id: post_ids).order(:created_at).last
       end
 
-      def random_suffix
-        SecureRandom.hex(12)
-      end
-
-      # TODO (martin) 2023-01-01 We should remove these backwards-compatible
+      # TODO (martin) 2023-04-01 We should remove these backwards-compatible
       # formats for the Message-ID and solely use the discourse/post/999@host
       # format.
       def discourse_generated_message_id?(message_id)
@@ -131,7 +115,7 @@ module Email
           !!(message_id =~ message_id_discourse_regexp)
       end
 
-      # TODO (martin) 2023-01-01 We should remove these backwards-compatible
+      # TODO (martin) 2023-04-01 We should remove these backwards-compatible
       # formats for the Message-ID and solely use the discourse/post/999@host
       # format.
       def message_id_post_id_regexp
@@ -151,11 +135,15 @@ module Email
       end
 
       def message_id_clean(message_id)
-        message_id.present? && is_message_id_rfc?(message_id) ? message_id.gsub(/^<|>$/, "") : message_id
+        if message_id.present? && is_message_id_rfc?(message_id)
+          message_id.gsub(/\A<|>\z/, "")
+        else
+          message_id
+        end
       end
 
       def is_message_id_rfc?(message_id)
-        message_id.start_with?('<') && message_id.include?('@') && message_id.end_with?('>')
+        message_id.start_with?("<") && message_id.include?("@") && message_id.end_with?(">")
       end
 
       def host

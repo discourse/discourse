@@ -16,16 +16,12 @@ class UploadValidator < ActiveModel::Validator
 
     extension = File.extname(upload.original_filename)[1..-1] || ""
 
-    if upload.for_site_setting &&
-       upload.user&.staff? &&
-       FileHelper.is_supported_image?(upload.original_filename)
-
+    if upload.for_site_setting && upload.user&.staff? &&
+         FileHelper.is_supported_image?(upload.original_filename)
       return true
     end
 
-    if upload.for_gravatar &&
-       FileHelper.supported_gravatar_extensions.include?(extension)
-
+    if upload.for_gravatar && FileHelper.supported_gravatar_extensions.include?(extension)
       maximum_image_file_size(upload)
       return true
     end
@@ -47,9 +43,9 @@ class UploadValidator < ActiveModel::Validator
   # upload.update_secure_status being run outside of the creation flow,
   # where some cases e.g. have exemptions on the extension enforcement
   def changing_upload_security?(upload)
-    !upload.new_record? && \
+    !upload.new_record? &&
       upload.changed_attributes.keys.all? do |attribute|
-        %w(secure security_last_changed_at security_last_changed_reason).include?(attribute)
+        %w[secure security_last_changed_at security_last_changed_reason].include?(attribute)
       end
   end
 
@@ -88,13 +84,14 @@ class UploadValidator < ActiveModel::Validator
   end
 
   def authorized_extensions(upload)
-    extensions = if upload.for_theme
-      SiteSetting.theme_authorized_extensions
-    elsif upload.for_export
-      SiteSetting.export_authorized_extensions
-    else
-      SiteSetting.authorized_extensions
-    end
+    extensions =
+      if upload.for_theme
+        SiteSetting.theme_authorized_extensions
+      elsif upload.for_export
+        SiteSetting.export_authorized_extensions
+      else
+        SiteSetting.authorized_extensions
+      end
     extensions_to_set(extensions)
   end
 
@@ -110,13 +107,14 @@ class UploadValidator < ActiveModel::Validator
     if upload.user&.staff?
       return true if SiteSetting.authorized_extensions_for_staff.include?("*")
     end
-    extensions = if upload.for_theme
-      SiteSetting.theme_authorized_extensions
-    elsif upload.for_export
-      SiteSetting.export_authorized_extensions
-    else
-      SiteSetting.authorized_extensions
-    end
+    extensions =
+      if upload.for_theme
+        SiteSetting.theme_authorized_extensions
+      elsif upload.for_export
+        SiteSetting.export_authorized_extensions
+      else
+        SiteSetting.authorized_extensions
+      end
     extensions.include?("*")
   end
 
@@ -130,7 +128,11 @@ class UploadValidator < ActiveModel::Validator
     end
 
     unless authorized = extensions.include?(extension.downcase)
-      message = I18n.t("upload.unauthorized", authorized_extensions: (extensions | staff_extensions).to_a.join(", "))
+      message =
+        I18n.t(
+          "upload.unauthorized",
+          authorized_extensions: (extensions | staff_extensions).to_a.join(", "),
+        )
       upload.errors.add(:original_filename, message)
     end
 
@@ -140,19 +142,21 @@ class UploadValidator < ActiveModel::Validator
   def maximum_file_size(upload, type)
     return if !upload.validate_file_size
 
-    max_size_kb = if upload.for_export
-      SiteSetting.max_export_file_size_kb
-    else
-      SiteSetting.get("max_#{type}_size_kb")
-    end
+    max_size_kb =
+      if upload.for_export
+        SiteSetting.max_export_file_size_kb
+      else
+        SiteSetting.get("max_#{type}_size_kb")
+      end
 
     max_size_bytes = max_size_kb.kilobytes
 
     if upload.filesize > max_size_bytes
-      message = I18n.t(
-        "upload.#{type}s.too_large_humanized",
-        max_size: ActiveSupport::NumberHelper.number_to_human_size(max_size_bytes)
-      )
+      message =
+        I18n.t(
+          "upload.#{type}s.too_large_humanized",
+          max_size: ActiveSupport::NumberHelper.number_to_human_size(max_size_bytes),
+        )
       upload.errors.add(:filesize, message)
     end
   end

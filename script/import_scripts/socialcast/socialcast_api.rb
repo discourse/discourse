@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require 'base64'
-require 'json'
+require "base64"
+require "json"
 
 class SocialcastApi
-
   attr_accessor :domain, :username, :password
 
   def initialize(domain, username, password)
@@ -29,12 +28,12 @@ class SocialcastApi
   def list_users(opts = {})
     page = opts[:page] ? opts[:page] : 1
     response = request "#{base_url}/users?page=#{page}"
-    response['users'].sort { |u| u['id'] }
+    response["users"].sort { |u| u["id"] }
   end
 
   def list_messages(opts = {})
     page = opts[:page] ? opts[:page] : 1
     response = request "#{base_url}/messages?page=#{page}"
-    response['messages'].sort { |m| m['id'] }
+    response["messages"].sort { |m| m["id"] }
   end
 end

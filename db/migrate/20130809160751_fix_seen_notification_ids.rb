@@ -2,7 +2,6 @@
 
 class FixSeenNotificationIds < ActiveRecord::Migration[4.2]
   def up
-
     # There was an error where `seen_notification_id` was being updated incorrectly.
     # This tries to fix some of the bad data.
     execute "UPDATE users SET

@@ -1,0 +1,51 @@
+<div
+  class={{concat-class
+    "chat-thread"
+    (if this.loading "loading")
+    (if @thread.staged "staged")
+  }}
+  data-id={{@thread.id}}
+  {{did-insert this.setUploadDropZone}}
+  {{did-insert this.didUpdateThread}}
+  {{did-update this.didUpdateThread @thread.id}}
+  {{will-destroy this.unsubscribeFromUpdates}}
+>
+  {{#if @includeHeader}}
+    <Chat::Thread::Header @channel={{@thread.channel}} @thread={{@thread}} />
+  {{/if}}
+
+  <div
+    class="chat-thread__body popper-viewport"
+    {{did-insert this.setScrollable}}
+    {{on "scroll" this.computeScrollState passive=true}}
+  >
+    <div
+      class="chat-thread__messages chat-messages-scroll chat-messages-container"
+      {{chat/on-resize this.didResizePane (hash delay=10)}}
+    >
+      {{#each @thread.messages key="id" as |message|}}
+        <ChatMessage
+          @message={{message}}
+          @resendStagedMessage={{this.resendStagedMessage}}
+          @context="thread"
+        />
+      {{/each}}
+      {{#if this.loading}}
+        <ChatSkeleton />
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if this.chatThreadPane.selectingMessages}}
+    <Chat::SelectionManager @pane={{this.chatThreadPane}} />
+  {{else}}
+    <Chat::Composer::Thread
+      @channel={{@channel}}
+      @thread={{@thread}}
+      @onSendMessage={{this.onSendMessage}}
+      @uploadDropZone={{this.uploadDropZone}}
+    />
+  {{/if}}
+
+  <ChatUploadDropZone @model={{@thread}} />
+</div>

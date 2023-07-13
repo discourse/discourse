@@ -14,7 +14,13 @@ class CreateUserAssociatedAccounts < ActiveRecord::Migration[5.2]
       t.timestamps
     end
 
-    add_index :user_associated_accounts, [:provider_name, :provider_uid], unique: true, name: 'associated_accounts_provider_uid'
-    add_index :user_associated_accounts, [:provider_name, :user_id], unique: true, name: 'associated_accounts_provider_user'
+    add_index :user_associated_accounts,
+              %i[provider_name provider_uid],
+              unique: true,
+              name: "associated_accounts_provider_uid"
+    add_index :user_associated_accounts,
+              %i[provider_name user_id],
+              unique: true,
+              name: "associated_accounts_provider_user"
   end
 end

@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require 'wizard'
+require "wizard"
 
 RSpec.describe Wizard do
   fab!(:admin) { Fabricate(:admin) }
 
-  before do
-    SiteSetting.wizard_enabled = true
-  end
+  before { SiteSetting.wizard_enabled = true }
 
   describe "defaults" do
     it "has default values" do
@@ -20,13 +18,11 @@ RSpec.describe Wizard do
   describe "append_step" do
     let(:user) { Fabricate.build(:moderator) }
     let(:wizard) { Wizard.new(user) }
-    let(:step1) { wizard.create_step('first-step') }
-    let(:step2) { wizard.create_step('second-step') }
+    let(:step1) { wizard.create_step("first-step") }
+    let(:step2) { wizard.create_step("second-step") }
 
     it "works with a block format" do
-      wizard.append_step('wat') do |step|
-        expect(step).to be_present
-      end
+      wizard.append_step("wat") { |step| expect(step).to be_present }
 
       expect(wizard.steps.size).to eq(1)
     end
@@ -42,7 +38,7 @@ RSpec.describe Wizard do
       expect(step1.index).to eq(0)
 
       expect(step1.fields).to be_empty
-      field = step1.add_field(id: 'test', type: 'text')
+      field = step1.add_field(id: "test", type: "text")
       expect(step1.fields).to eq([field])
     end
 
@@ -64,19 +60,17 @@ RSpec.describe Wizard do
     let(:user) { Fabricate.build(:moderator) }
     let(:wizard) { Wizard.new(user) }
 
-    it 'excludes steps even if they are added via append_step' do
-      wizard.append_step('first') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
+    it "excludes steps even if they are added via append_step" do
+      wizard.append_step("first") { |step| step.add_field(id: "another_element", type: "text") }
 
       Wizard.exclude_step("random-step123")
 
-      wizard.append_step('random-step123') do |step|
-        step.add_field(id: 'another_element', type: 'text')
+      wizard.append_step("random-step123") do |step|
+        step.add_field(id: "another_element", type: "text")
       end
-      wizard.append_step('finished')
+      wizard.append_step("finished")
 
-      expect(wizard.steps.map(&:id)).to eq(['first', 'finished'])
+      expect(wizard.steps.map(&:id)).to eq(%w[first finished])
     end
   end
 
@@ -84,48 +78,36 @@ RSpec.describe Wizard do
     let(:user) { Fabricate.build(:moderator) }
     let(:wizard) { Wizard.new(user) }
 
-    it 'inserts steps after the proper step' do
-      wizard.append_step('first') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
-      wizard.append_step('second') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
-      wizard.append_step('actually-second', after: 'first') do |step|
-        step.add_field(id: 'another_element', type: 'text')
+    it "inserts steps after the proper step" do
+      wizard.append_step("first") { |step| step.add_field(id: "another_element", type: "text") }
+      wizard.append_step("second") { |step| step.add_field(id: "another_element", type: "text") }
+      wizard.append_step("actually-second", after: "first") do |step|
+        step.add_field(id: "another_element", type: "text")
       end
 
-      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "actually-second", "second"])
+      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(%w[first actually-second second])
       expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
     end
 
-    it 'inserts steps at the end if the after value does not match an existing step' do
-      wizard.append_step('first') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
-      wizard.append_step('second') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
-      wizard.append_step('should_be_last', after: 'abcdefghi') do |step|
-        step.add_field(id: 'another_element', type: 'text')
+    it "inserts steps at the end if the after value does not match an existing step" do
+      wizard.append_step("first") { |step| step.add_field(id: "another_element", type: "text") }
+      wizard.append_step("second") { |step| step.add_field(id: "another_element", type: "text") }
+      wizard.append_step("should_be_last", after: "abcdefghi") do |step|
+        step.add_field(id: "another_element", type: "text")
       end
 
-      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "should_be_last"])
+      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(%w[first second should_be_last])
       expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
     end
 
-    it 'inserts steps at the end' do
-      wizard.append_step('first') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
-      wizard.append_step('second') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
-      wizard.append_step('last', after: 'second') do |step|
-        step.add_field(id: 'another_element', type: 'text')
+    it "inserts steps at the end" do
+      wizard.append_step("first") { |step| step.add_field(id: "another_element", type: "text") }
+      wizard.append_step("second") { |step| step.add_field(id: "another_element", type: "text") }
+      wizard.append_step("last", after: "second") do |step|
+        step.add_field(id: "another_element", type: "text")
       end
 
-      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(["first", "second", "last"])
+      expect(wizard.steps.sort_by(&:index).map(&:id)).to eq(%w[first second last])
       expect(wizard.steps.map(&:index).sort).to eq([0, 1, 2])
     end
   end
@@ -135,47 +117,40 @@ RSpec.describe Wizard do
     let(:wizard) { Wizard.new(user) }
 
     it "is complete when all steps with fields have logs" do
-      wizard.append_step('first') do |step|
-        step.add_field(id: 'element', type: 'text')
-      end
+      wizard.append_step("first") { |step| step.add_field(id: "element", type: "text") }
 
-      wizard.append_step('second') do |step|
-        step.add_field(id: 'another_element', type: 'text')
-      end
+      wizard.append_step("second") { |step| step.add_field(id: "another_element", type: "text") }
 
-      wizard.append_step('finished')
+      wizard.append_step("finished")
 
-      expect(wizard.start.id).to eq('first')
-      expect(wizard.completed_steps?('first')).to eq(false)
-      expect(wizard.completed_steps?('second')).to eq(false)
+      expect(wizard.start.id).to eq("first")
+      expect(wizard.completed_steps?("first")).to eq(false)
+      expect(wizard.completed_steps?("second")).to eq(false)
       expect(wizard.completed?).to eq(false)
 
-      updater = wizard.create_updater('first', element: 'test')
+      updater = wizard.create_updater("first", element: "test")
       updater.update
-      expect(wizard.start.id).to eq('second')
-      expect(wizard.completed_steps?('first')).to eq(true)
+      expect(wizard.start.id).to eq("second")
+      expect(wizard.completed_steps?("first")).to eq(true)
       expect(wizard.completed?).to eq(false)
 
-      updater = wizard.create_updater('second', element: 'test')
+      updater = wizard.create_updater("second", element: "test")
       updater.update
 
-      expect(wizard.completed_steps?('first')).to eq(true)
-      expect(wizard.completed_steps?('second')).to eq(true)
-      expect(wizard.completed_steps?('finished')).to eq(false)
+      expect(wizard.completed_steps?("first")).to eq(true)
+      expect(wizard.completed_steps?("second")).to eq(true)
+      expect(wizard.completed_steps?("finished")).to eq(false)
       expect(wizard.completed?).to eq(true)
 
       # Once you've completed the wizard start at the beginning
-      expect(wizard.start.id).to eq('first')
+      expect(wizard.start.id).to eq("first")
     end
   end
 
   describe "#requires_completion?" do
-
     def build_simple(user)
       wizard = Wizard.new(user)
-      wizard.append_step('simple') do |step|
-        step.add_field(id: 'name', type: 'text')
-      end
+      wizard.append_step("simple") { |step| step.add_field(id: "name", type: "text") }
       wizard
     end
 
@@ -217,7 +192,7 @@ RSpec.describe Wizard do
 
     it "is false for staff when complete" do
       wizard = build_simple(admin)
-      updater = wizard.create_updater('simple', name: 'Evil Trout')
+      updater = wizard.create_updater("simple", name: "Evil Trout")
       updater.update
 
       expect(wizard.requires_completion?).to eq(false)
@@ -226,7 +201,5 @@ RSpec.describe Wizard do
       wizard = build_simple(admin)
       expect(wizard.requires_completion?).to eq(false)
     end
-
   end
-
 end

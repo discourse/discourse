@@ -5,9 +5,9 @@ import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { getOwner } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
+import deprecated from "discourse-common/lib/deprecated";
 
 function extractByKey(collection, klass) {
   const retval = {};
@@ -123,9 +123,7 @@ const TopicList = RestModel.extend({
       this.topics.filter((topic) => topic_ids.includes(topic.id))
     );
 
-    const url = `${getURL("/")}${this.filter}.json?topic_ids=${topic_ids.join(
-      ","
-    )}`;
+    const url = `/${this.filter}.json?topic_ids=${topic_ids.join(",")}`;
 
     return ajax({ url, data: this.params }).then((result) => {
       let i = 0;
@@ -198,6 +196,15 @@ TopicList.reopenClass({
   },
 
   find(filter, params) {
+    deprecated(
+      `TopicList.find is deprecated. Use \`findFiltered("topicList")\` on the \`store\` service instead.`,
+      {
+        id: "topic-list-find",
+        since: "3.1.0.beta5",
+        dropFrom: "3.2.0.beta1",
+      }
+    );
+
     const store = getOwner(this).lookup("service:store");
     return store.findFiltered("topicList", { filter, params });
   },

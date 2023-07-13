@@ -5,15 +5,15 @@ class TopicNotifier
     @topic = topic
   end
 
-  { watch!: :watching,
+  {
+    watch!: :watching,
     track!: :tracking,
     regular!: :regular,
-    mute!: :muted }.each_pair do |method_name, level|
-
+    mute!: :muted,
+  }.each_pair do |method_name, level|
     define_method method_name do |user_id|
       change_level user_id, level
     end
-
   end
 
   def watch_topic!(user_id, reason = :created_topic)

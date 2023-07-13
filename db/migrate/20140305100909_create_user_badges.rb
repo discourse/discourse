@@ -9,6 +9,6 @@ class CreateUserBadges < ActiveRecord::Migration[4.2]
       t.integer :granted_by_id, null: false
     end
 
-    add_index :user_badges, [:badge_id, :user_id], unique: true
+    add_index :user_badges, %i[badge_id user_id], unique: true
   end
 end

@@ -1,6 +1,10 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
+  .modal-body {
+    max-height: 70vh;
+  }
+
   #revision-numbers {
     display: inline-block;
     min-width: 96px;
@@ -27,9 +31,28 @@
     padding: 5px;
   }
 
-  #revisions .row:first-of-type {
-    margin-top: 10px;
+  #revisions {
+    .row:first-of-type {
+      margin-top: 10px;
+    }
+    .revision-content table {
+      thead {
+        th {
+          padding-bottom: 2px;
+          font-weight: bold;
+          color: var(--primary);
+        }
+      }
+
+      td {
+        padding: 3px 3px 3px 0.5em;
+        img {
+          max-width: none;
+        }
+      }
+    }
   }
+
   ins,
   .diff-ins {
     code,
@@ -99,7 +122,7 @@
     font-weight: bold;
   }
   span.edit-reason {
-    background-color: var(--highlight-medium);
+    background-color: var(--highlight-bg);
     padding: 3px 5px 5px 5px;
   }
   .d-icon-ban {

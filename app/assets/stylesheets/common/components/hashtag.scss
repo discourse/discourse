@@ -14,7 +14,7 @@ a.hashtag {
   }
 }
 
-a.hashtag-cooked {
+.hashtag-cooked {
   @include mention;
 
   &:visited,
@@ -23,9 +23,12 @@ a.hashtag-cooked {
   }
 
   .d-icon {
-    color: var(--primary-high);
-    font-size: var(--font-down-1);
-    margin: 0 0.2em 0 0.1em;
+    font-size: var(--font-down-2);
+    margin: 0 0.33em 0 0.1em;
+
+    &.hashtag-missing {
+      color: var(--primary-medium);
+    }
   }
 
   img.emoji {
@@ -33,34 +36,92 @@ a.hashtag-cooked {
     height: 15px;
     vertical-align: text-bottom;
   }
+
+  svg {
+    display: inline;
+  }
+
+  .hashtag-category-badge {
+    flex: 0 0 auto;
+    width: 0.72em;
+    height: 0.72em;
+    margin-right: 0.25em;
+    margin-left: 0.1em;
+    display: inline-block;
+
+    &.hashtag-missing {
+      background-color: var(--primary-medium);
+    }
+  }
 }
 
 .hashtag-autocomplete {
-  max-height: 210px;
+  max-height: 13.5em;
   overflow-y: auto;
+  box-shadow: var(--shadow-dropdown);
+  border-radius: 8px;
 
-  .hashtag-autocomplete__option {
-    .hashtag-autocomplete__link {
-      align-items: center;
-      color: var(--primary-medium);
-      display: flex;
+  &__fadeout {
+    height: inherit;
+    max-height: inherit;
+    overflow-y: auto;
 
-      .d-icon {
-        padding-right: 0.5em;
-      }
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 1.5em;
+      background: linear-gradient(
+        to bottom,
+        rgba(var(--secondary-rgb), 0),
+        rgba(var(--secondary-rgb), 100%)
+      );
+    }
+  }
 
-      .hashtag-autocomplete__text {
-        flex: 1;
-        margin-left: 0;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-
-        .emoji {
-          width: 15px;
-          height: 15px;
-        }
+  &__option {
+    &:last-of-type {
+      .hashtag-autocomplete__link {
+        position: relative;
+        z-index: 1;
       }
     }
+  }
+
+  &__link {
+    align-items: center;
+    display: flex;
+
+    &.selected {
+      font-weight: bold;
+    }
+
+    .d-icon {
+      margin-right: 0.25em;
+    }
+
+    .hashtag-category-badge {
+      flex: 0 0 auto;
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+      display: inline-block;
+    }
+  }
+
+  &__text {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    flex: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__meta-text {
+    color: var(--primary-700);
+    font-size: var(--font-down-1);
   }
 }

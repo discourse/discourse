@@ -1,11 +1,24 @@
 <DSection @pageClass="users">
-  <LoadMore @selector=".directory tbody tr" @action={{action "loadMore"}}>
+  <LoadMore
+    @selector=".directory-table .directory-table__cell"
+    @action={{action "loadMore"}}
+  >
     <div class="container">
       <div class="users-directory directory">
-        <PluginOutlet @name="users-top" @tagName="span" @connectorTagName="div" @args={{hash model=this.model}} />
+        <span>
+          <PluginOutlet
+            @name="users-top"
+            @connectorTagName="div"
+            @outletArgs={{hash model=this.model}}
+          />
+        </span>
         <div class="directory-controls">
           <div class="period-controls">
-            <PeriodChooser @period={{this.period}} @onChange={{action (mut this.period)}} @fullDay={{false}} />
+            <PeriodChooser
+              @period={{this.period}}
+              @onChange={{action (mut this.period)}}
+              @fullDay={{false}}
+            />
             {{#if this.lastUpdatedAt}}
               <div class="directory-last-updated">
                 {{i18n "directory.last_updated"}}
@@ -19,22 +32,47 @@
                 {{i18n "directory.total_rows" count=this.model.totalRows}}
               {{/if}}
             </label>
-            <Input @value={{readonly this.nameInput}} placeholder={{i18n "directory.filter_name"}} class="filter-name no-blur" {{on "input" (action "onUsernameFilterChanged" value="target.value")}} />
+            <Input
+              @value={{readonly this.nameInput}}
+              placeholder={{i18n "directory.filter_name"}}
+              class="filter-name no-blur"
+              {{on
+                "input"
+                (action "onUsernameFilterChanged" value="target.value")
+              }}
+            />
             {{#if this.showGroupFilter}}
-              <ComboBox @class="directory-group-selector" @value={{this.group}} @content={{this.groupOptions}} @onChange={{action this.groupChanged}} @options={{hash
-                  none="directory.group.all"
-                }} />
+              <ComboBox
+                @class="directory-group-selector"
+                @value={{this.group}}
+                @content={{this.groupOptions}}
+                @onChange={{action this.groupChanged}}
+                @options={{hash none="directory.group.all"}}
+              />
             {{/if}}
             {{#if this.currentUser.staff}}
-              <DButton @icon="wrench" @action={{action "showEditColumnsModal"}} @class="btn-default open-edit-columns-btn" />
+              <DButton
+                @icon="wrench"
+                @action={{action "showEditColumnsModal"}}
+                @class="btn-default open-edit-columns-btn"
+              />
             {{/if}}
-            <PluginOutlet @name="users-directory-controls" @args={{hash model=this.model}} />
+            <PluginOutlet
+              @name="users-directory-controls"
+              @outletArgs={{hash model=this.model}}
+            />
           </div>
         </div>
 
         <ConditionalLoadingSpinner @condition={{this.isLoading}}>
           {{#if this.model.length}}
-            <DirectoryTable @items={{this.model}} @columns={{this.columns}} @showTimeRead={{this.showTimeRead}} @order={{this.order}} @asc={{this.asc}} />
+            <DirectoryTable
+              @items={{this.model}}
+              @columns={{this.columns}}
+              @showTimeRead={{this.showTimeRead}}
+              @order={{this.order}}
+              @asc={{this.asc}}
+            />
             <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
           {{else}}
             <div class="clearfix"></div>

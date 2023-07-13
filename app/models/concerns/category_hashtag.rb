@@ -9,8 +9,8 @@ module CategoryHashtag
     # TODO (martin) Remove this when enable_experimental_hashtag_autocomplete
     # becomes the norm, it is reimplemented below for CategoryHashtagDataSourcee
     def query_from_hashtag_slug(category_slug)
-      slug_path = category_slug.split(SEPARATOR)
-      return nil if slug_path.empty? || slug_path.size > 2
+      slug_path = split_slug_path(category_slug)
+      return if slug_path.blank?
 
       slug_path.map! { |slug| CGI.escape(slug) } if SiteSetting.slug_generation_method == "encoded"
 
@@ -34,7 +34,9 @@ module CategoryHashtag
       category_slugs
         .map(&:downcase)
         .map do |slug|
-          slug_path = slug.split(":")
+          slug_path = split_slug_path(slug)
+          next if slug_path.blank?
+
           if SiteSetting.slug_generation_method == "encoded"
             slug_path.map! { |slug| CGI.escape(slug) }
           end
@@ -44,23 +46,29 @@ module CategoryHashtag
           # is no child then the "parent" part of the slug is just the
           # entire slug we look for.
           #
-          # Otherwise if the child slug is present, we find the parent
-          # by its slug then find the child by its slug and its parent's
-          # ID to make sure they match.
+          # Otherwise if the child slug is present, we find the child
+          # by its slug then find the parent by its slug and the child's
+          # parent ID to make sure they match.
           if child_slug.present?
-            parent_category = categories.find { |cat| cat.slug.casecmp?(parent_slug) }
-            if parent_category.present?
-              categories.find do |cat|
-                cat.slug.downcase == child_slug && cat.parent_category_id == parent_category.id
+            categories.find do |cat|
+              if cat.slug.casecmp?(child_slug) && cat.parent_category_id
+                categories.find do |parent_category|
+                  parent_category.id == cat.parent_category_id &&
+                    parent_category.slug.casecmp?(parent_slug)
+                end
               end
             end
           else
-            categories.find do |cat|
-              cat.slug.downcase == parent_slug && cat.top_level?
-            end
+            categories.find { |cat| cat.slug.casecmp?(parent_slug) && cat.top_level? }
           end
         end
         .compact
+    end
+
+    def split_slug_path(slug)
+      slug_path = slug.split(SEPARATOR)
+      return if slug_path.empty? || slug_path.size > 2
+      slug_path
     end
   end
 end

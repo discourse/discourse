@@ -6,7 +6,7 @@ module Email
   class MessageBuilder
     attr_reader :template_args
 
-    ALLOW_REPLY_BY_EMAIL_HEADER = 'X-Discourse-Allow-Reply-By-Email'
+    ALLOW_REPLY_BY_EMAIL_HEADER = "X-Discourse-Allow-Reply-By-Email"
 
     def initialize(to, opts = nil)
       @to = to
@@ -21,30 +21,44 @@ module Email
       }.merge!(@opts)
 
       if @template_args[:url].present?
-        @template_args[:header_instructions] ||= I18n.t('user_notifications.header_instructions', @template_args)
+        @template_args[:header_instructions] ||= I18n.t(
+          "user_notifications.header_instructions",
+          @template_args,
+        )
 
         if @opts[:include_respond_instructions] == false
-          @template_args[:respond_instructions] = ''
-          @template_args[:respond_instructions] = I18n.t('user_notifications.pm_participants', @template_args) if @opts[:private_reply]
+          @template_args[:respond_instructions] = ""
+          @template_args[:respond_instructions] = I18n.t(
+            "user_notifications.pm_participants",
+            @template_args,
+          ) if @opts[:private_reply]
         else
           if @opts[:only_reply_by_email]
             string = +"user_notifications.only_reply_by_email"
             string << "_pm" if @opts[:private_reply]
           else
-            string = allow_reply_by_email? ? +"user_notifications.reply_by_email" : +"user_notifications.visit_link_to_respond"
+            string =
+              (
+                if allow_reply_by_email?
+                  +"user_notifications.reply_by_email"
+                else
+                  +"user_notifications.visit_link_to_respond"
+                end
+              )
             string << "_pm" if @opts[:private_reply]
           end
           @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
         end
 
         if @opts[:add_unsubscribe_link]
-          unsubscribe_string = if @opts[:mailing_list_mode]
-            "unsubscribe_mailing_list"
-          elsif SiteSetting.unsubscribe_via_email_footer
-            "unsubscribe_link_and_mail"
-          else
-            "unsubscribe_link"
-          end
+          unsubscribe_string =
+            if @opts[:mailing_list_mode]
+              "unsubscribe_mailing_list"
+            elsif SiteSetting.unsubscribe_via_email_footer
+              "unsubscribe_link_and_mail"
+            else
+              "unsubscribe_link"
+            end
           @template_args[:unsubscribe_instructions] = I18n.t(unsubscribe_string, @template_args)
         end
       end
@@ -52,26 +66,60 @@ module Email
 
     def subject
       if @opts[:template] &&
-          TranslationOverride.exists?(locale: I18n.locale, translation_key: "#{@opts[:template]}.subject_template")
-        augmented_template_args = @template_args.merge({
-          site_name: @template_args[:email_prefix],
-          optional_re: @opts[:add_re_to_subject] ? I18n.t('subject_re') : '',
-          optional_pm: @opts[:private_reply] ? @template_args[:subject_pm] : '',
-          optional_cat: @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '',
-          optional_tags: @template_args[:show_tags_in_subject] ? "#{@template_args[:show_tags_in_subject]} " : '',
-          topic_title: @template_args[:topic_title] ? @template_args[:topic_title] : '',
-        })
+           TranslationOverride.exists?(
+             locale: I18n.locale,
+             translation_key: "#{@opts[:template]}.subject_template",
+           )
+        augmented_template_args =
+          @template_args.merge(
+            {
+              site_name: @template_args[:email_prefix],
+              optional_re: @opts[:add_re_to_subject] ? I18n.t("subject_re") : "",
+              optional_pm: @opts[:private_reply] ? @template_args[:subject_pm] : "",
+              optional_cat:
+                (
+                  if @template_args[:show_category_in_subject]
+                    "[#{@template_args[:show_category_in_subject]}] "
+                  else
+                    ""
+                  end
+                ),
+              optional_tags:
+                (
+                  if @template_args[:show_tags_in_subject]
+                    "#{@template_args[:show_tags_in_subject]} "
+                  else
+                    ""
+                  end
+                ),
+              topic_title: @template_args[:topic_title] ? @template_args[:topic_title] : "",
+            },
+          )
         subject = I18n.t("#{@opts[:template]}.subject_template", augmented_template_args)
       elsif @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
         subject.gsub!("%{site_name}", @template_args[:email_prefix])
-        subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re') : '')
-        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? @template_args[:subject_pm] : '')
-        subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
-        subject.gsub!("%{optional_tags}", @template_args[:show_tags_in_subject] ? "#{@template_args[:show_tags_in_subject]} " : '')
-        subject.gsub!("%{topic_title}", @template_args[:topic_title]) if @template_args[:topic_title] # must be last for safety
+        subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t("subject_re") : "")
+        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? @template_args[:subject_pm] : "")
+        subject.gsub!(
+          "%{optional_cat}",
+          (
+            if @template_args[:show_category_in_subject]
+              "[#{@template_args[:show_category_in_subject]}] "
+            else
+              ""
+            end
+          ),
+        )
+        subject.gsub!(
+          "%{optional_tags}",
+          @template_args[:show_tags_in_subject] ? "#{@template_args[:show_tags_in_subject]} " : "",
+        )
+        if @template_args[:topic_title]
+          subject.gsub!("%{topic_title}", @template_args[:topic_title])
+        end # must be last for safety
       elsif @opts[:use_topic_title_subject]
-        subject = @opts[:add_re_to_subject] ? I18n.t('subject_re') : ''
+        subject = @opts[:add_re_to_subject] ? I18n.t("subject_re") : ""
         subject = "#{subject}#{@template_args[:topic_title]}"
       elsif @opts[:template]
         subject = I18n.t("#{@opts[:template]}.subject_template", @template_args)
@@ -85,34 +133,40 @@ module Email
       return unless html_override = @opts[:html_override]
 
       if @template_args[:unsubscribe_instructions].present?
-        unsubscribe_instructions = PrettyText.cook(@template_args[:unsubscribe_instructions], sanitize: false).html_safe
+        unsubscribe_instructions =
+          PrettyText.cook(@template_args[:unsubscribe_instructions], sanitize: false).html_safe
         html_override.gsub!("%{unsubscribe_instructions}", unsubscribe_instructions)
       else
         html_override.gsub!("%{unsubscribe_instructions}", "")
       end
 
       if @template_args[:header_instructions].present?
-        header_instructions = PrettyText.cook(@template_args[:header_instructions], sanitize: false).html_safe
+        header_instructions =
+          PrettyText.cook(@template_args[:header_instructions], sanitize: false).html_safe
         html_override.gsub!("%{header_instructions}", header_instructions)
       else
         html_override.gsub!("%{header_instructions}", "")
       end
 
       if @template_args[:respond_instructions].present?
-        respond_instructions = PrettyText.cook(@template_args[:respond_instructions], sanitize: false).html_safe
+        respond_instructions =
+          PrettyText.cook(@template_args[:respond_instructions], sanitize: false).html_safe
         html_override.gsub!("%{respond_instructions}", respond_instructions)
       else
         html_override.gsub!("%{respond_instructions}", "")
       end
 
-      html = UserNotificationRenderer.render(
-        template: 'layouts/email_template',
-        format: :html,
-        locals: { html_body: html_override.html_safe }
-      )
+      html =
+        UserNotificationRenderer.render(
+          template: "layouts/email_template",
+          format: :html,
+          locals: {
+            html_body: html_override.html_safe,
+          },
+        )
 
       Mail::Part.new do
-        content_type 'text/html; charset=UTF-8'
+        content_type "text/html; charset=UTF-8"
         body html
       end
     end
@@ -139,13 +193,18 @@ module Email
         to: @to,
         subject: subject,
         body: body,
-        charset: 'UTF-8',
+        charset: "UTF-8",
         from: from_value,
-        cc: @opts[:cc]
+        cc: @opts[:cc],
+        bcc: @opts[:bcc],
       }
 
-      args[:delivery_method_options] = @opts[:delivery_method_options] if @opts[:delivery_method_options]
-      args[:delivery_method_options] = (args[:delivery_method_options] || {}).merge(return_response: true)
+      args[:delivery_method_options] = @opts[:delivery_method_options] if @opts[
+        :delivery_method_options
+      ]
+      args[:delivery_method_options] = (args[:delivery_method_options] || {}).merge(
+        return_response: true,
+      )
 
       args
     end
@@ -153,33 +212,42 @@ module Email
     def header_args
       result = {}
       if @opts[:add_unsubscribe_link]
-        unsubscribe_url = @template_args[:unsubscribe_url].presence || @template_args[:user_preferences_url]
-        result['List-Unsubscribe'] = "<#{unsubscribe_url}>"
+        unsubscribe_url =
+          @template_args[:unsubscribe_url].presence || @template_args[:user_preferences_url]
+        result["List-Unsubscribe"] = "<#{unsubscribe_url}>"
       end
 
-      result['X-Discourse-Post-Id']  = @opts[:post_id].to_s  if @opts[:post_id]
-      result['X-Discourse-Topic-Id'] = @opts[:topic_id].to_s if @opts[:topic_id]
+      result["X-Discourse-Post-Id"] = @opts[:post_id].to_s if @opts[:post_id]
+      result["X-Discourse-Topic-Id"] = @opts[:topic_id].to_s if @opts[:topic_id]
+
+      # at this point these have been filtered by the recipient's guardian for visibility,
+      # see UserNotifications#send_notification_email
+      result["X-Discourse-Tags"] = @template_args[:show_tags_in_subject] if @opts[
+        :show_tags_in_subject
+      ]
+      result["X-Discourse-Category"] = @template_args[:show_category_in_subject] if @opts[
+        :show_category_in_subject
+      ]
 
       # please, don't send us automatic responses...
-      result['X-Auto-Response-Suppress'] = 'All'
+      result["X-Auto-Response-Suppress"] = "All"
 
       if !allow_reply_by_email?
         # This will end up being the notification_email, which is a
         # noreply address.
-        result['Reply-To'] = from_value
+        result["Reply-To"] = from_value
       else
-
         # The only reason we use from address for reply to is for group
         # SMTP emails, where the person will be replying to the group's
         # email_username.
         if !@opts[:use_from_address_for_reply_to]
           result[ALLOW_REPLY_BY_EMAIL_HEADER] = true
-          result['Reply-To'] = reply_by_email_address
+          result["Reply-To"] = reply_by_email_address
         else
           # No point in adding a reply-to header if it is going to be identical
           # to the from address/alias. If the from option is not present, then
           # the default reply-to address is used.
-          result['Reply-To'] = from_value if from_value != alias_email(@opts[:from])
+          result["Reply-To"] = from_value if from_value != alias_email(@opts[:from])
         end
       end
 
@@ -188,23 +256,24 @@ module Email
 
     def self.custom_headers(string)
       result = {}
-      string.split('|').each { |item|
-        header = item.split(':', 2)
-        if header.length == 2
-          name = header[0].strip
-          value = header[1].strip
-          result[name] = value if name.length > 0 && value.length > 0
-        end
-      } unless string.nil?
+      string
+        .split("|")
+        .each do |item|
+          header = item.split(":", 2)
+          if header.length == 2
+            name = header[0].strip
+            value = header[1].strip
+            result[name] = value if name.length > 0 && value.length > 0
+          end
+        end unless string.nil?
       result
     end
 
     protected
 
     def allow_reply_by_email?
-      SiteSetting.reply_by_email_enabled? &&
-      reply_by_email_address.present? &&
-      @opts[:allow_reply_by_email]
+      SiteSetting.reply_by_email_enabled? && reply_by_email_address.present? &&
+        @opts[:allow_reply_by_email]
     end
 
     def private_reply?
@@ -232,9 +301,10 @@ module Email
     end
 
     def alias_email(source)
-      return source if @opts[:from_alias].blank? &&
-        SiteSetting.email_site_title.blank? &&
-        SiteSetting.title.blank?
+      if @opts[:from_alias].blank? && SiteSetting.email_site_title.blank? &&
+           SiteSetting.title.blank?
+        return source
+      end
 
       if @opts[:from_alias].present?
         %Q|"#{Email.cleanup_alias(@opts[:from_alias])}" <#{source}>|
@@ -249,7 +319,5 @@ module Email
       from_alias = Email.site_title
       %Q|"#{Email.cleanup_alias(from_alias)}" <#{source}>|
     end
-
   end
-
 end

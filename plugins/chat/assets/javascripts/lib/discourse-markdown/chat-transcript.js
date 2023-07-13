@@ -21,7 +21,7 @@ const chatTranscriptRule = {
     const channelName = tagInfo.attrs.channel;
     const channelId = tagInfo.attrs.channelId;
     const channelLink = channelId
-      ? options.getURL(`/chat/channel/${channelId}/-`)
+      ? options.getURL(`/chat/c/-/${channelId}`)
       : null;
 
     if (!username || !messageIdStart || !messageTimeStart) {
@@ -122,7 +122,7 @@ const chatTranscriptRule = {
     } else {
       let linkToken = state.push("link_open", "a", 1);
       linkToken.attrs = [
-        ["href", `${channelLink}?messageId=${messageIdStart}`],
+        ["href", `${channelLink}/${messageIdStart}`],
         ["title", messageTimeStart],
       ];
 
@@ -232,7 +232,7 @@ export function setup(helper) {
   });
 
   helper.buildCookFunction((opts, generateCookFunction) => {
-    if (!opts.discourse.additionalOptions) {
+    if (!opts.discourse.additionalOptions?.chat) {
       return;
     }
 

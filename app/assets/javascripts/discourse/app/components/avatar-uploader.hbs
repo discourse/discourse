@@ -1,0 +1,23 @@
+<label
+  class="btn btn-default btn-icon-text"
+  disabled={{this.uploading}}
+  title={{i18n "user.change_avatar.upload_title"}}
+>
+  {{d-icon "far-image"}}
+  {{#if this.uploading}}
+    {{i18n "uploading"}}
+    {{this.uploadProgress}}%
+  {{else}}
+    {{i18n "upload"}}
+  {{/if}}
+  <input
+    class="hidden-upload-field"
+    disabled={{this.uploading}}
+    type="file"
+    accept="image/*"
+  />
+</label>
+
+{{#if this.imageIsNotASquare}}
+  <div class="warning">{{i18n "user.change_avatar.image_is_not_a_square"}}</div>
+{{/if}}

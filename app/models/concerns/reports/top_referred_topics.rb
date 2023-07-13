@@ -14,15 +14,15 @@ module Reports::TopReferredTopics
           type: :topic,
           properties: {
             title: :topic_title,
-            id: :topic_id
+            id: :topic_id,
           },
-          title: I18n.t('reports.top_referred_topics.labels.topic')
+          title: I18n.t("reports.top_referred_topics.labels.topic"),
         },
         {
           property: :num_clicks,
           type: :number,
-          title: I18n.t('reports.top_referred_topics.labels.num_clicks')
-        }
+          title: I18n.t("reports.top_referred_topics.labels.num_clicks"),
+        },
       ]
 
       options = {
@@ -30,7 +30,7 @@ module Reports::TopReferredTopics
         start_date: report.start_date,
         limit: report.limit || 8,
         category_id: category_id,
-        include_subcategories: include_subcategories
+        include_subcategories: include_subcategories,
       }
       result = nil
       result = IncomingLinksReport.find(:top_referred_topics, options)

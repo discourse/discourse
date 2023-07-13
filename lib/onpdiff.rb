@@ -4,7 +4,6 @@
 # in https://publications.mpi-cbg.de/Wu_1990_6334.pdf
 
 class ONPDiff
-
   def initialize(a, b)
     @a, @b = a, b
     @m, @n = a.size, b.size
@@ -42,7 +41,7 @@ class ONPDiff
     begin
       p += 1
 
-      return (@shortest_path = []) if p >= 1000
+      return(@shortest_path = []) if p >= 1000
 
       k = -p
       while k <= @delta - 1
@@ -57,7 +56,6 @@ class ONPDiff
       end
 
       fp[@delta + @offset] = snake(@delta, fp[@delta - 1 + @offset] + 1, fp[@delta + 1 + @offset])
-
     end until fp[@delta + @offset] == @n
 
     r = @path[@delta + @offset]
@@ -176,9 +174,7 @@ class ONPDiff
         end
         j = i + 1
 
-        while j < ses.size && ses[j][1] == op_code
-          j += 1
-        end
+        j += 1 while j < ses.size && ses[j][1] == op_code
 
         if j >= ses.size
           paragraph_ses = paragraph_ses.concat(ses[i..j])
@@ -187,9 +183,7 @@ class ONPDiff
           k = j
           j -= 1
 
-          while k < ses.size && ses[k][1] == opposite_op_code
-            k += 1
-          end
+          k += 1 while k < ses.size && ses[k][1] == opposite_op_code
           k -= 1
 
           num_before = j - i + 1
@@ -226,5 +220,4 @@ class ONPDiff
 
     pairs
   end
-
 end

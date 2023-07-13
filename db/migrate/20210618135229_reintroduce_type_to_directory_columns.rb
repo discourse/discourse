@@ -8,12 +8,10 @@ class ReintroduceTypeToDirectoryColumns < ActiveRecord::Migration[6.1]
       add_column :directory_columns, :type, :integer, default: 0, null: false
     end
 
-    DB.exec(
-      <<~SQL
+    DB.exec(<<~SQL)
         UPDATE directory_columns
         SET type = CASE WHEN automatic THEN 0 ELSE 1 END;
       SQL
-    )
   end
 
   def down

@@ -9,16 +9,17 @@ class PostActionsController < ApplicationController
   def create
     raise Discourse::NotFound if @post.blank?
 
-    creator = PostActionCreator.new(
-      current_user,
-      @post,
-      @post_action_type_id,
-      is_warning: params[:is_warning],
-      message: params[:message],
-      take_action: params[:take_action] == 'true',
-      flag_topic: params[:flag_topic] == 'true',
-      queue_for_review: params[:queue_for_review] == 'true'
-    )
+    creator =
+      PostActionCreator.new(
+        current_user,
+        @post,
+        @post_action_type_id,
+        is_warning: params[:is_warning],
+        message: params[:message],
+        take_action: params[:take_action] == "true",
+        flag_topic: params[:flag_topic] == "true",
+        queue_for_review: params[:queue_for_review] == "true",
+      )
     result = creator.perform
 
     if result.failed?
@@ -29,19 +30,20 @@ class PostActionsController < ApplicationController
 
       if @post_action_type_id == PostActionType.types[:like]
         limiter = result.post_action.post_action_rate_limiter
-        response.headers['Discourse-Actions-Remaining'] = limiter.remaining.to_s
-        response.headers['Discourse-Actions-Max'] = limiter.max.to_s
+        response.headers["Discourse-Actions-Remaining"] = limiter.remaining.to_s
+        response.headers["Discourse-Actions-Max"] = limiter.max.to_s
       end
       render_post_json(@post, add_raw: false)
     end
   end
 
   def destroy
-    result = PostActionDestroyer.new(
-      current_user,
-      Post.find_by(id: params[:id].to_i),
-      @post_action_type_id
-    ).perform
+    result =
+      PostActionDestroyer.new(
+        current_user,
+        Post.find_by(id: params[:id].to_i),
+        @post_action_type_id,
+      ).perform
 
     if result.failed?
       render_json_error(result)
@@ -58,15 +60,16 @@ class PostActionsController < ApplicationController
     flag_topic = params[:flag_topic]
     flag_topic = flag_topic && (flag_topic == true || flag_topic == "true")
 
-    post_id = if flag_topic
-      begin
-        Topic.find(params[:id]).posts.first.id
-      rescue
-        raise Discourse::NotFound
+    post_id =
+      if flag_topic
+        begin
+          Topic.find(params[:id]).posts.first.id
+        rescue StandardError
+          raise Discourse::NotFound
+        end
+      else
+        params[:id]
       end
-    else
-      params[:id]
-    end
 
     finder = Post.where(id: post_id)
 

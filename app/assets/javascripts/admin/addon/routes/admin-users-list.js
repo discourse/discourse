@@ -1,22 +1,24 @@
+import { action } from "@ember/object";
 import AdminUser from "admin/models/admin-user";
 import DiscourseRoute from "discourse/routes/discourse";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 
-export default DiscourseRoute.extend({
-  actions: {
-    exportUsers() {
-      exportEntity("user_list", {
-        trust_level: this.controllerFor("admin-users-list-show").get("query"),
-      }).then(outputExportResult);
-    },
+export default class AdminUsersListRoute extends DiscourseRoute {
+  @action
+  exportUsers() {
+    exportEntity("user_list", {
+      trust_level: this.controllerFor("admin-users-list-show").get("query"),
+    }).then(outputExportResult);
+  }
 
-    sendInvites() {
-      this.transitionTo("userInvited", this.currentUser);
-    },
+  @action
+  sendInvites() {
+    this.transitionTo("userInvited", this.currentUser);
+  }
 
-    deleteUser(user) {
-      AdminUser.create(user).destroy({ deletePosts: true });
-    },
-  },
-});
+  @action
+  deleteUser(user) {
+    AdminUser.create(user).destroy({ deletePosts: true });
+  }
+}

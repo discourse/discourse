@@ -45,7 +45,7 @@ export default class UserMenuTab {
   }
 
   /**
-   * @returns {string} Dasherized version of the component name that should be rendered in the panel area when the tab is active.
+   * @returns {Component} Component class that should be rendered in the panel area when the tab is active.
    */
   get panelComponent() {
     throw new Error("not implemented");

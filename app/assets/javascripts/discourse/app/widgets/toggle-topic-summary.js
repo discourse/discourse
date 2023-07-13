@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
 
 const MIN_POST_READ_TIME = 4;
 
@@ -33,16 +34,58 @@ createWidget("toggle-summary-description", {
 
 export default createWidget("toggle-topic-summary", {
   tagName: "section.information.toggle-summary",
-  html(attrs) {
-    return [
-      this.attach("toggle-summary-description", attrs),
-      this.attach("button", {
-        className: "btn btn-primary",
-        icon: attrs.topicSummaryEnabled ? null : "layer-group",
-        title: attrs.topicSummaryEnabled ? null : "summary.short_title",
-        label: attrs.topicSummaryEnabled ? "summary.disable" : "summary.enable",
-        action: attrs.topicSummaryEnabled ? "cancelFilter" : "showSummary",
-      }),
-    ];
+  buildKey: (attrs) => `toggle-topic-summary-${attrs.topicId}`,
+
+  defaultState() {
+    return { expandSummaryBox: false };
+  },
+
+  html(attrs, state) {
+    const html = [];
+    const summarizationButtons = [];
+
+    if (attrs.summarizable) {
+      const title = I18n.t("summary.strategy.button_title");
+
+      summarizationButtons.push(
+        this.attach("button", {
+          className: "btn btn-primary topic-strategy-summarization",
+          icon: "magic",
+          translatedTitle: title,
+          translatedLabel: title,
+          action: "expandSummaryBox",
+          disabled: state.expandSummaryBox,
+        })
+      );
+    }
+
+    if (attrs.hasTopRepliesSummary) {
+      html.push(this.attach("toggle-summary-description", attrs));
+      summarizationButtons.push(
+        this.attach("button", {
+          className: "btn top-replies",
+          icon: attrs.topicSummaryEnabled ? null : "layer-group",
+          title: attrs.topicSummaryEnabled ? null : "summary.short_title",
+          label: attrs.topicSummaryEnabled
+            ? "summary.disable"
+            : "summary.enable",
+          action: attrs.topicSummaryEnabled ? "cancelFilter" : "showTopReplies",
+        })
+      );
+    }
+
+    if (summarizationButtons) {
+      html.push(h("div.summarization-buttons", summarizationButtons));
+    }
+
+    if (state.expandSummaryBox) {
+      html.push(this.attach("summary-box", attrs));
+    }
+
+    return html;
+  },
+
+  expandSummaryBox() {
+    this.state.expandSummaryBox = true;
   },
 });

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'wizard'
-require 'wizard/builder'
-require 'global_path'
+require "wizard"
+require "wizard/builder"
+require "global_path"
 
 class GlobalPathInstance
   extend GlobalPath
@@ -32,24 +32,21 @@ RSpec.describe Wizard::Builder do
     expect(wizard.steps).to be_blank
   end
 
-  describe 'introduction' do
-    let(:introduction_step) { wizard.steps.find { |s| s.id == 'introduction' } }
+  describe "introduction" do
+    let(:introduction_step) { wizard.steps.find { |s| s.id == "introduction" } }
 
-    it 'should not prefill default site setting values' do
+    it "should not prefill default site setting values" do
       fields = introduction_step.fields
       title_field = fields.first
       description_field = fields.second
-      contact_email_field = fields.third
 
-      expect(title_field.id).to eq('title')
+      expect(title_field.id).to eq("title")
       expect(title_field.value).to eq("")
-      expect(description_field.id).to eq('site_description')
+      expect(description_field.id).to eq("site_description")
       expect(description_field.value).to eq("")
-      expect(contact_email_field.id).to eq('contact_email')
-      expect(contact_email_field.value).to eq("")
     end
 
-    it 'should prefill overridden site setting values' do
+    it "should prefill overridden site setting values" do
       SiteSetting.title = "foobar"
       SiteSetting.site_description = "lorem ipsum"
       SiteSetting.contact_email = "foobar@example.com"
@@ -57,57 +54,63 @@ RSpec.describe Wizard::Builder do
       fields = introduction_step.fields
       title_field = fields.first
       description_field = fields.second
-      contact_email_field = fields.third
 
-      expect(title_field.id).to eq('title')
+      expect(title_field.id).to eq("title")
       expect(title_field.value).to eq("foobar")
-      expect(description_field.id).to eq('site_description')
+      expect(description_field.id).to eq("site_description")
       expect(description_field.value).to eq("lorem ipsum")
-      expect(contact_email_field.id).to eq('contact_email')
-      expect(contact_email_field.value).to eq("foobar@example.com")
     end
   end
 
-  describe 'privacy step' do
-    let(:privacy_step) { wizard.steps.find { |s| s.id == 'privacy' } }
+  describe "privacy step" do
+    let(:privacy_step) { wizard.steps.find { |s| s.id == "privacy" } }
 
-    it 'should set the right default value for the fields' do
+    it "should set the right default value for the fields" do
       SiteSetting.login_required = true
       SiteSetting.invite_only = false
       SiteSetting.must_approve_users = true
+      SiteSetting.chat_enabled = true if defined?(::Chat)
+      SiteSetting.navigation_menu = NavigationMenuSiteSetting::SIDEBAR
 
       fields = privacy_step.fields
       login_required_field = fields.first
       invite_only_field = fields.second
-      must_approve_users_field = fields.last
+      must_approve_users_field = fields.third
+      chat_enabled_field = fields.second_to_last if defined?(::Chat)
+      navigation_menu_field = fields.last
 
-      expect(fields.length).to eq(3)
-      expect(login_required_field.id).to eq('login_required')
+      count = defined?(::Chat) ? 5 : 4
+      expect(fields.length).to eq(count)
+      expect(login_required_field.id).to eq("login_required")
       expect(login_required_field.value).to eq(true)
-      expect(invite_only_field.id).to eq('invite_only')
+      expect(invite_only_field.id).to eq("invite_only")
       expect(invite_only_field.value).to eq(false)
-      expect(must_approve_users_field.id).to eq('must_approve_users')
+      expect(must_approve_users_field.id).to eq("must_approve_users")
       expect(must_approve_users_field.value).to eq(true)
+      if defined?(::Chat)
+        expect(chat_enabled_field.id).to eq("chat_enabled")
+        expect(chat_enabled_field.value).to eq(true)
+      end
+      expect(navigation_menu_field.id).to eq("enable_sidebar")
+      expect(navigation_menu_field.value).to eq(true)
     end
   end
 
-  describe 'styling' do
-    let(:styling_step) { wizard.steps.find { |s| s.id == 'styling' } }
+  describe "styling" do
+    let(:styling_step) { wizard.steps.find { |s| s.id == "styling" } }
     let(:font_field) { styling_step.fields[1] }
     fab!(:theme) { Fabricate(:theme) }
     let(:colors_field) { styling_step.fields.first }
 
-    it 'has the full list of available fonts' do
+    it "has the full list of available fonts" do
       expect(font_field.choices.size).to eq(DiscourseFonts.fonts.size)
     end
 
     context "with colors" do
       context "when the default theme has not been override" do
-        before do
-          SiteSetting.find_by(name: "default_theme_id").destroy!
-        end
+        before { SiteSetting.find_by(name: "default_theme_id").destroy! }
 
-        it 'should set the right default values' do
+        it "should set the right default values" do
           expect(colors_field.required).to eq(true)
           expect(colors_field.value).to eq(ColorScheme::LIGHT_THEME_ID)
         end
@@ -121,18 +124,16 @@ RSpec.describe Wizard::Builder do
           theme.update(color_scheme: color_scheme)
         end
 
-        it 'fallbacks to the color scheme name' do
+        it "fallbacks to the color scheme name" do
           expect(colors_field.required).to eq(false)
           expect(colors_field.value).to eq(color_scheme.name)
         end
       end
 
       context "when the default theme has been overridden by a theme without a color scheme" do
-        before do
-          theme.set_default!
-        end
+        before { theme.set_default! }
 
-        it 'should set the right default values' do
+        it "should set the right default values" do
           expect(colors_field.required).to eq(false)
           expect(colors_field.value).to eq("Light")
         end
@@ -144,7 +145,7 @@ RSpec.describe Wizard::Builder do
           theme.set_default!
         end
 
-        it 'should set the right default values' do
+        it "should set the right default values" do
           expect(colors_field.required).to eq(false)
           expect(colors_field.value).to eq("Dark")
         end
@@ -152,10 +153,10 @@ RSpec.describe Wizard::Builder do
     end
   end
 
-  describe 'branding' do
-    let(:branding_step) { wizard.steps.find { |s| s.id == 'branding' } }
+  describe "branding" do
+    let(:branding_step) { wizard.steps.find { |s| s.id == "branding" } }
 
-    it 'should set the right default value for the fields' do
+    it "should set the right default value for the fields" do
       upload = Fabricate(:upload)
       upload2 = Fabricate(:upload)
 
@@ -166,9 +167,9 @@ RSpec.describe Wizard::Builder do
       logo_field = fields.first
       logo_small_field = fields.last
 
-      expect(logo_field.id).to eq('logo')
+      expect(logo_field.id).to eq("logo")
       expect(logo_field.value).to eq(GlobalPathInstance.full_cdn_url(upload.url))
-      expect(logo_small_field.id).to eq('logo_small')
+      expect(logo_small_field.id).to eq("logo_small")
       expect(logo_small_field.value).to eq(GlobalPathInstance.full_cdn_url(upload2.url))
     end
   end

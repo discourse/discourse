@@ -1,15 +1,12 @@
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import { isCollapsible } from "discourse/plugins/chat/discourse/components/chat-message-collapser";
 
 export default class ChatMessageText extends Component {
-  tagName = "";
-  cooked = null;
-  uploads = null;
-  edited = false;
+  get isEdited() {
+    return this.args.edited ?? false;
+  }
 
-  @computed("cooked", "uploads.[]")
   get isCollapsible() {
-    return isCollapsible(this.cooked, this.uploads);
+    return isCollapsible(this.args.cooked, this.args.uploads);
   }
 }

@@ -11,6 +11,6 @@ class EmailSettingValidator
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_email')
+    I18n.t("site_settings.errors.invalid_email")
   end
 end

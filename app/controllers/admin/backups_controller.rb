@@ -7,7 +7,7 @@ class Admin::BackupsController < Admin::AdminController
   include ExternalUploadHelpers
 
   before_action :ensure_backups_enabled
-  skip_before_action :check_xhr, only: [:index, :show, :logs, :check_backup_chunk, :upload_backup_chunk]
+  skip_before_action :check_xhr, only: %i[index show logs check_backup_chunk upload_backup_chunk]
 
   def index
     respond_to do |format|
@@ -34,6 +34,14 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def create
+    RateLimiter.new(
+      current_user,
+      "max-backups-per-minute",
+      1,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
+
     opts = {
       publish_to_message_bus: true,
       with_uploads: params.fetch(:with_uploads) == "true",
@@ -62,7 +70,7 @@ class Admin::BackupsController < Admin::AdminController
       Jobs.enqueue(
         :download_backup_email,
         user_id: current_user.id,
-        backup_file_path: url_for(controller: 'backups', action: 'show')
+        backup_file_path: url_for(controller: "backups", action: "show"),
       )
 
       render body: nil
@@ -73,8 +81,8 @@ class Admin::BackupsController < Admin::AdminController
 
   def show
     if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
-      @error = I18n.t('download_backup_mailer.no_token')
-      return render layout: 'no_ember', status: 422, formats: [:html]
+      @error = I18n.t("download_backup_mailer.no_token")
+      return render layout: "no_ember", status: 422, formats: [:html]
     end
 
     store = BackupRestore::BackupStore.create
@@ -84,9 +92,9 @@ class Admin::BackupsController < Admin::AdminController
       StaffActionLogger.new(current_user).log_backup_download(backup)
 
       if store.remote?
-        redirect_to backup.source
+        redirect_to backup.source, allow_other_host: true
       else
-        headers['Content-Length'] = File.size(backup.source).to_s
+        headers["Content-Length"] = File.size(backup.source).to_s
         send_file backup.source
       end
     else
@@ -170,9 +178,15 @@ class Admin::BackupsController < Admin::AdminController
     identifier = params.fetch(:resumableIdentifier)
 
     raise Discourse::InvalidParameters.new(:resumableIdentifier) unless valid_filename?(identifier)
-    return render status: 415, plain: I18n.t("backup.backup_file_should_be_tar_gz") unless valid_extension?(filename)
-    return render status: 415, plain: I18n.t("backup.not_enough_space_on_disk") unless has_enough_space_on_disk?(total_size)
-    return render status: 415, plain: I18n.t("backup.invalid_filename") unless valid_filename?(filename)
+    unless valid_extension?(filename)
+      return render status: 415, plain: I18n.t("backup.backup_file_should_be_tar_gz")
+    end
+    unless has_enough_space_on_disk?(total_size)
+      return render status: 415, plain: I18n.t("backup.not_enough_space_on_disk")
+    end
+    unless valid_filename?(filename)
+      return render status: 415, plain: I18n.t("backup.invalid_filename")
+    end
 
     file = params.fetch(:file)
     chunk_number = params.fetch(:resumableChunkNumber).to_i
@@ -187,7 +201,13 @@ class Admin::BackupsController < Admin::AdminController
     uploaded_file_size = previous_chunk_number * chunk_size
     if uploaded_file_size + current_chunk_size >= total_size
       # merge all the chunks in a background thread
-      Jobs.enqueue_in(5.seconds, :backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
+      Jobs.enqueue_in(
+        5.seconds,
+        :backup_chunks_merger,
+        filename: filename,
+        identifier: identifier,
+        chunks: chunk_number,
+      )
     end
 
     render body: nil
@@ -197,7 +217,9 @@ class Admin::BackupsController < Admin::AdminController
     params.require(:filename)
     filename = params.fetch(:filename)
 
-    return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(filename)
+    unless valid_extension?(filename)
+      return render_json_error(I18n.t("backup.backup_file_should_be_tar_gz"))
+    end
     return render_json_error(I18n.t("backup.invalid_filename")) unless valid_filename?(filename)
 
     store = BackupRestore::BackupStore.create
@@ -224,11 +246,11 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def valid_extension?(filename)
-    /\.(tar\.gz|t?gz)$/i =~ filename
+    /\.(tar\.gz|t?gz)\z/i =~ filename
   end
 
   def valid_filename?(filename)
-    !!(/^[a-zA-Z0-9\._\-]+$/ =~ filename)
+    !!(/\A[a-zA-Z0-9\._\-]+\z/ =~ filename)
   end
 
   def render_error(message_key)
@@ -236,8 +258,16 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def validate_before_create_multipart(file_name:, file_size:, upload_type:)
-    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.backup_file_should_be_tar_gz")) unless valid_extension?(file_name)
-    raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.invalid_filename")) unless valid_filename?(file_name)
+    unless valid_extension?(file_name)
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(
+              I18n.t("backup.backup_file_should_be_tar_gz"),
+            )
+    end
+    unless valid_filename?(file_name)
+      raise ExternalUploadHelpers::ExternalUploadValidationError.new(
+              I18n.t("backup.invalid_filename"),
+            )
+    end
   end
 
   def self.serialize_upload(_upload)
@@ -248,7 +278,11 @@ class Admin::BackupsController < Admin::AdminController
     begin
       yield
     rescue BackupRestore::BackupStore::StorageError => err
-      message = debug_upload_error(err, I18n.t("upload.create_multipart_failure", additional_detail: err.message))
+      message =
+        debug_upload_error(
+          err,
+          I18n.t("upload.create_multipart_failure", additional_detail: err.message),
+        )
       raise ExternalUploadHelpers::ExternalUploadValidationError.new(message)
     rescue BackupRestore::BackupStore::BackupFileExists
       raise ExternalUploadHelpers::ExternalUploadValidationError.new(I18n.t("backup.file_exists"))

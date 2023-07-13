@@ -5,11 +5,11 @@ module StatsCacheable
 
   module ClassMethods
     def stats_cache_key
-      raise 'Stats cache key has not been set.'
+      raise "Stats cache key has not been set."
     end
 
     def fetch_stats
-      raise 'Not implemented.'
+      raise "Not implemented."
     end
 
     # Could be configurable, multisite need to support it.

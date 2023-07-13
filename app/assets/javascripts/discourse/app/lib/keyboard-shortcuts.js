@@ -1,5 +1,6 @@
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { getOwner, setOwner } from "@ember/application";
 import { run, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import {
@@ -12,7 +13,7 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { helperContext } from "discourse-common/lib/helpers";
+import { capabilities } from "discourse/services/capabilities";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
@@ -31,6 +32,12 @@ export function clearExtraKeyboardShortcutHelp() {
 }
 
 export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
+
+export const PLATFORM_KEY_MODIFIER = /Mac|iPod|iPhone|iPad/.test(
+  navigator.platform
+)
+  ? "meta"
+  : "ctrl";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -121,7 +128,9 @@ function preventKeyboardEvent(event) {
 }
 
 export default {
-  init(keyTrapper, container) {
+  init(keyTrapper, owner) {
+    setOwner(this, owner);
+
     // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
     // we clear any previous test state.
     if (this.keyTrapper) {
@@ -130,14 +139,13 @@ export default {
     }
 
     this.keyTrapper = new keyTrapper();
-    this.container = container;
     this._stopCallback();
 
-    this.searchService = this.container.lookup("service:search");
-    this.appEvents = this.container.lookup("service:app-events");
-    this.currentUser = this.container.lookup("service:current-user");
-    this.siteSettings = this.container.lookup("service:site-settings");
-    this.site = this.container.lookup("service:site");
+    this.searchService = owner.lookup("service:search");
+    this.appEvents = owner.lookup("service:app-events");
+    this.currentUser = owner.lookup("service:current-user");
+    this.siteSettings = owner.lookup("service:site-settings");
+    this.site = owner.lookup("service:site");
 
     // Disable the shortcut if private messages are disabled
     if (!this.currentUser?.can_send_private_messages) {
@@ -158,11 +166,10 @@ export default {
 
     this.keyTrapper?.destroy();
     this.keyTrapper = null;
-    this.container = null;
   },
 
   isTornDown() {
-    return this.keyTrapper == null || this.container == null;
+    return this.keyTrapper == null;
   },
 
   bindKey(key, binding = null) {
@@ -298,12 +305,12 @@ export default {
     const topic = this.currentTopic();
     if (topic && document.querySelectorAll(".posts-wrapper").length) {
       preventKeyboardEvent(event);
-      this.container.lookup("controller:topic").send("toggleBookmark");
+      getOwner(this).lookup("controller:topic").send("toggleBookmark");
     }
   },
 
   logout() {
-    this.container.lookup("route:application").send("logout");
+    getOwner(this).lookup("route:application").send("logout");
   },
 
   quoteReply() {
@@ -354,7 +361,7 @@ export default {
     if (el) {
       el.click();
     } else {
-      const controller = this.container.lookup("controller:topic");
+      const controller = getOwner(this).lookup("controller:topic");
       // Only the last page contains list of suggested topics.
       const url = `/t/${controller.get("model.id")}/last.json`;
       ajax(url).then((result) => {
@@ -383,7 +390,7 @@ export default {
 
   _jumpTo(direction) {
     if (document.querySelector(".container.posts")) {
-      this.container.lookup("controller:topic").send(direction);
+      getOwner(this).lookup("controller:topic").send(direction);
     }
   },
 
@@ -426,7 +433,7 @@ export default {
     run(() => {
       if (document.querySelector(".container.posts")) {
         event.preventDefault(); // We need to stop printing the current page in Firefox
-        this.container.lookup("controller:topic").print();
+        getOwner(this).lookup("controller:topic").print();
       }
     });
   },
@@ -445,14 +452,14 @@ export default {
       return;
     }
 
-    this.container.lookup("controller:composer").open({
+    getOwner(this).lookup("service:composer").open({
       action: Composer.CREATE_TOPIC,
       draftKey: Composer.NEW_TOPIC_KEY,
     });
   },
 
   focusComposer(event) {
-    const composer = this.container.lookup("controller:composer");
+    const composer = getOwner(this).lookup("service:composer");
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -461,14 +468,14 @@ export default {
   },
 
   fullscreenComposer() {
-    const composer = this.container.lookup("controller:composer");
+    const composer = getOwner(this).lookup("service:composer");
     if (composer.get("model")) {
       composer.toggleFullscreen();
     }
   },
 
   pinUnpinTopic() {
-    this.container.lookup("controller:topic").togglePinnedState();
+    getOwner(this).lookup("controller:topic").togglePinnedState();
   },
 
   goToPost(event) {
@@ -497,7 +504,7 @@ export default {
   },
 
   showHelpModal() {
-    this.container
+    getOwner(this)
       .lookup("controller:application")
       .send("showKeyboardShortcutsHelp");
   },
@@ -531,7 +538,7 @@ export default {
   sendToTopicListItemView(action, elem) {
     elem = elem || document.querySelector("tr.selected.topic-list-item");
     if (elem) {
-      const registry = this.container.lookup("-view-registry:main");
+      const registry = getOwner(this).lookup("-view-registry:main");
       if (registry) {
         const view = registry[elem.id];
         view.send(action);
@@ -540,7 +547,7 @@ export default {
   },
 
   currentTopic() {
-    const topicController = this.container.lookup("controller:topic");
+    const topicController = getOwner(this).lookup("controller:topic");
     if (topicController) {
       const topic = topicController.get("model");
       if (topic) {
@@ -550,7 +557,7 @@ export default {
   },
 
   isPostTextSelected() {
-    const topicController = this.container.lookup("controller:topic");
+    const topicController = getOwner(this).lookup("controller:topic");
     return !!topicController?.get("quoteState")?.postId;
   },
 
@@ -565,7 +572,7 @@ export default {
     }
 
     if (selectedPostId) {
-      const topicController = this.container.lookup("controller:topic");
+      const topicController = getOwner(this).lookup("controller:topic");
       const post = topicController
         .get("model.postStream.posts")
         .findBy("id", selectedPostId);
@@ -574,7 +581,7 @@ export default {
 
         let actionMethod = topicController.actions[action];
         if (!actionMethod) {
-          const topicRoute = this.container.lookup("route:topic");
+          const topicRoute = getOwner(this).lookup("route:topic");
           actionMethod = topicRoute.actions[action];
         }
 
@@ -849,7 +856,7 @@ export default {
   },
 
   _replyToPost() {
-    this.container.lookup("controller:topic").send("replyToPost");
+    getOwner(this).lookup("controller:topic").send("replyToPost");
   },
 
   _getSelectedPost() {
@@ -861,7 +868,7 @@ export default {
   },
 
   deferTopic() {
-    this.container.lookup("controller:topic").send("deferTopic");
+    getOwner(this).lookup("controller:topic").send("deferTopic");
   },
 
   toggleAdminActions() {
@@ -869,13 +876,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.forward();
     }
   },

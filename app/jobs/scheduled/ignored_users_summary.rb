@@ -24,7 +24,11 @@ module Jobs
     private
 
     def notify_user(user)
-      params = SystemMessage.new(user).defaults.merge(ignores_threshold: SiteSetting.ignored_users_count_message_threshold)
+      params =
+        SystemMessage
+          .new(user)
+          .defaults
+          .merge(ignores_threshold: SiteSetting.ignored_users_count_message_threshold)
       title = I18n.t("system_messages.ignored_users_summary.subject_template")
       raw = I18n.t("system_messages.ignored_users_summary.text_body_template", params)
 
@@ -35,7 +39,8 @@ module Jobs
         subtype: TopicSubtype.system_message,
         title: title,
         raw: raw,
-        skip_validations: true)
+        skip_validations: true,
+      )
       IgnoredUser.where(ignored_user_id: user.id).update_all(summarized_at: Time.zone.now)
     end
   end

@@ -33,7 +33,7 @@ module ReadOnlyMixin
   end
 
   def add_readonly_header
-    response.headers['Discourse-Readonly'] = 'true' if @readonly_mode
+    response.headers["Discourse-Readonly"] = "true" if @readonly_mode
   end
 
   def allowed_in_staff_writes_only_mode?

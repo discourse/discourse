@@ -8,8 +8,8 @@ module ImportScripts::PhpBB3
     INACTIVE_MANUAL = 3 # Account deactivated by administrator
     INACTIVE_REMIND = 4 # Forced user account reactivation
 
-    GROUP_ADMINISTRATORS = 'ADMINISTRATORS'
-    GROUP_MODERATORS = 'GLOBAL_MODERATORS'
+    GROUP_ADMINISTRATORS = "ADMINISTRATORS"
+    GROUP_MODERATORS = "GLOBAL_MODERATORS"
 
     # https://wiki.phpbb.com/Table.phpbb_users
     USER_TYPE_NORMAL = 0
@@ -21,9 +21,9 @@ module ImportScripts::PhpBB3
     AVATAR_TYPE_REMOTE = 2
     AVATAR_TYPE_GALLERY = 3
 
-    AVATAR_TYPE_STRING_UPLOADED = 'avatar.driver.upload'
-    AVATAR_TYPE_STRING_REMOTE = 'avatar.driver.remote'
-    AVATAR_TYPE_STRING_GALLERY = 'avatar.driver.local'
+    AVATAR_TYPE_STRING_UPLOADED = "avatar.driver.upload"
+    AVATAR_TYPE_STRING_REMOTE = "avatar.driver.remote"
+    AVATAR_TYPE_STRING_GALLERY = "avatar.driver.local"
 
     FORUM_TYPE_CATEGORY = 0
     FORUM_TYPE_POST = 1

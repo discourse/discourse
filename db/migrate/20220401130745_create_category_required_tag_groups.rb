@@ -10,7 +10,10 @@ class CreateCategoryRequiredTagGroups < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index :category_required_tag_groups, [:category_id, :tag_group_id], name: "idx_category_required_tag_groups", unique: true
+    add_index :category_required_tag_groups,
+              %i[category_id tag_group_id],
+              name: "idx_category_required_tag_groups",
+              unique: true
 
     execute <<~SQL
       INSERT INTO category_required_tag_groups

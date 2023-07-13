@@ -3,59 +3,53 @@
 RSpec.describe PostSerializer do
   fab!(:post) { Fabricate(:post) }
 
-  before do
-    Group.refresh_automatic_groups!
-  end
+  before { Group.refresh_automatic_groups! }
 
   context "with a post with lots of actions" do
     fab!(:actor) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
-    let(:acted_ids) {
-      PostActionType.public_types.values
-        .concat([:notify_user, :spam].map { |k| PostActionType.types[k] })
-    }
+    let(:acted_ids) do
+      PostActionType.public_types.values.concat(
+        %i[notify_user spam].map { |k| PostActionType.types[k] },
+      )
+    end
 
     def visible_actions_for(user)
       serializer = PostSerializer.new(post, scope: Guardian.new(user), root: false)
       # NOTE this is messy, we should extract all this logic elsewhere
-      serializer.post_actions = PostAction.counts_for([post], actor)[post.id] if user.try(:id) == actor.id
+      serializer.post_actions = PostAction.counts_for([post], actor)[post.id] if user.try(:id) ==
+        actor.id
       actions = serializer.as_json[:actions_summary]
       lookup = PostActionType.types.invert
       actions.keep_if { |a| (a[:count] || 0) > 0 }.map { |a| lookup[a[:id]] }
     end
 
     before do
-      acted_ids.each do |id|
-        PostActionCreator.new(actor, post, id).perform
-      end
+      acted_ids.each { |id| PostActionCreator.new(actor, post, id).perform }
       post.reload
     end
 
     it "displays the correct info" do
-      expect(visible_actions_for(actor).sort).to eq([:like, :notify_user, :spam])
+      expect(visible_actions_for(actor).sort).to eq(%i[like notify_user spam])
       expect(visible_actions_for(post.user).sort).to eq([:like])
       expect(visible_actions_for(nil).sort).to eq([:like])
-      expect(visible_actions_for(admin).sort).to eq([:like, :notify_user, :spam])
+      expect(visible_actions_for(admin).sort).to eq(%i[like notify_user spam])
     end
 
     it "can't flag your own post to notify yourself" do
       serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
-      notify_user_action = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
+      notify_user_action =
+        serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
       expect(notify_user_action).to be_blank
     end
 
     it "should not allow user to flag post and notify non human user" do
       post.update!(user: Discourse.system_user)
 
-      serializer = PostSerializer.new(
-        post,
-        scope: Guardian.new(actor),
-        root: false
-      )
+      serializer = PostSerializer.new(post, scope: Guardian.new(actor), root: false)
 
-      notify_user_action = serializer.actions_summary.find do |a|
-        a[:id] == PostActionType.types[:notify_user]
-      end
+      notify_user_action =
+        serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
 
       expect(notify_user_action).to eq(nil)
     end
@@ -65,7 +59,8 @@ RSpec.describe PostSerializer do
     let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
 
     it "includes the reviewable data" do
-      json = PostSerializer.new(post, scope: Guardian.new(Fabricate(:moderator)), root: false).as_json
+      json =
+        PostSerializer.new(post, scope: Guardian.new(Fabricate(:moderator)), root: false).as_json
       expect(json[:reviewable_id]).to eq(reviewable.id)
       expect(json[:reviewable_score_count]).to eq(1)
       expect(json[:reviewable_score_pending_count]).to eq(1)
@@ -73,42 +68,35 @@ RSpec.describe PostSerializer do
   end
 
   context "with a post by a nuked user" do
-    before do
-      post.update!(
-        user_id: nil,
-        deleted_at: Time.zone.now
-      )
+    subject(:serializer) do
+      PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
     end
 
-    subject { PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json }
+    before { post.update!(user_id: nil, deleted_at: Time.zone.now) }
 
     it "serializes correctly" do
-      [:name, :username, :display_username, :avatar_template, :user_title, :trust_level].each do |attr|
-        expect(subject[attr]).to be_nil
+      %i[name username display_username avatar_template user_title trust_level].each do |attr|
+        expect(serializer[attr]).to be_nil
       end
-      [:moderator, :staff, :yours].each do |attr|
-        expect(subject[attr]).to eq(false)
-      end
+      %i[moderator staff yours].each { |attr| expect(serializer[attr]).to eq(false) }
     end
   end
 
   context "with a post by a suspended user" do
-    def subject
+    def serializer
       PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
     end
 
     it "serializes correctly" do
-      expect(subject[:user_suspended]).to be_nil
+      expect(serializer[:user_suspended]).to be_nil
 
-      post.user.update!(
-        suspended_till: 1.month.from_now,
-      )
+      post.user.update!(suspended_till: 1.month.from_now)
 
-      expect(subject[:user_suspended]).to eq(true)
+      expect(serializer[:user_suspended]).to eq(true)
 
       freeze_time (2.months.from_now)
 
-      expect(subject[:user_suspended]).to be_nil
+      expect(serializer[:user_suspended]).to be_nil
     end
   end
 
@@ -130,7 +118,7 @@ RSpec.describe PostSerializer do
 
   context "with a hidden post with add_raw enabled" do
     let(:user) { Fabricate(:user) }
-    let(:raw)  { "Raw contents of the post." }
+    let(:raw) { "Raw contents of the post." }
 
     context "with a public post" do
       let(:post) { Fabricate(:post, raw: raw, user: user) }
@@ -143,7 +131,22 @@ RSpec.describe PostSerializer do
     end
 
     context "with a hidden post" do
-      let(:post) { Fabricate(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
+      let(:post) do
+        Fabricate(
+          :post,
+          raw: raw,
+          user: user,
+          hidden: true,
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+      end
+
+      it "includes if the user can see it" do
+        expect(serialized_post_for_user(Fabricate(:moderator))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:admin))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(user)[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:user))[:can_see_hidden_post]).to eq(false)
+      end
 
       it "shows the raw post only if authorized to see it" do
         expect(serialized_post_for_user(nil)[:raw]).to eq(nil)
@@ -165,13 +168,13 @@ RSpec.describe PostSerializer do
     end
 
     context "with a hidden revised post" do
-      fab!(:post) { Fabricate(:post, raw: 'Hello world!', hidden: true) }
+      fab!(:post) { Fabricate(:post, raw: "Hello world!", hidden: true) }
 
       before do
         SiteSetting.editing_grace_period_max_diff = 1
 
         revisor = PostRevisor.new(post)
-        revisor.revise!(post.user, raw: 'Hello, everyone!')
+        revisor.revise!(post.user, raw: "Hello, everyone!")
       end
 
       it "will not leak version to users" do
@@ -196,15 +199,16 @@ RSpec.describe PostSerializer do
     end
 
     context "with a hidden wiki post" do
-      let(:post) {
+      let(:post) do
         Fabricate(
           :post,
           raw: raw,
           user: user,
           wiki: true,
           hidden: true,
-          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
-      }
+          hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+        )
+      end
 
       it "can view edit history only if authorized" do
         expect(serialized_post_for_user(nil)[:can_view_edit_history]).to eq(false)
@@ -214,7 +218,6 @@ RSpec.describe PostSerializer do
         expect(serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history]).to eq(true)
       end
     end
-
   end
 
   context "with a post with notices" do
@@ -222,12 +225,15 @@ RSpec.describe PostSerializer do
     fab!(:user_tl1) { Fabricate(:user, trust_level: 1) }
     fab!(:user_tl2) { Fabricate(:user, trust_level: 2) }
 
-    let(:post) {
+    let(:post) do
       post = Fabricate(:post, user: user)
-      post.custom_fields[Post::NOTICE] = { type: Post.notices[:returning_user], last_posted_at: 1.day.ago }
+      post.custom_fields[Post::NOTICE] = {
+        type: Post.notices[:returning_user],
+        last_posted_at: 1.day.ago,
+      }
       post.save_custom_fields
       post
-    }
+    end
 
     def json_for_user(user)
       PostSerializer.new(post, scope: Guardian.new(user), root: false).as_json
@@ -258,7 +264,9 @@ RSpec.describe PostSerializer do
     end
 
     context "when a Bookmark record exists for the user on the post" do
-      let!(:bookmark) { Fabricate(:bookmark_next_business_day_reminder, user: current_user, bookmarkable: post) }
+      let!(:bookmark) do
+        Fabricate(:bookmark_next_business_day_reminder, user: current_user, bookmarkable: post)
+      end
 
       context "with bookmarks with reminders" do
         it "returns true" do
@@ -290,7 +298,6 @@ RSpec.describe PostSerializer do
       post.update!(user: group_user.user)
       expect(serialized_post_for_user(nil)[:group_moderator]).to eq(true)
     end
-
   end
 
   context "with a post with small action" do

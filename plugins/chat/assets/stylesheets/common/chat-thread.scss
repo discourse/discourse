@@ -1,0 +1,16 @@
+.chat-thread {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  @include chat-height;
+
+  &__body {
+    overflow-y: scroll;
+    @include chat-scrollbar();
+    box-sizing: border-box;
+    flex-grow: 1;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+  }
+}

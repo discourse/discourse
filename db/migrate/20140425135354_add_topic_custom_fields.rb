@@ -9,7 +9,7 @@ class AddTopicCustomFields < ActiveRecord::Migration[4.2]
       t.timestamps null: false
     end
 
-    add_index :topic_custom_fields, [:topic_id, :name]
+    add_index :topic_custom_fields, %i[topic_id name]
 
     # migrate meta_data into custom fields
     execute <<-SQL

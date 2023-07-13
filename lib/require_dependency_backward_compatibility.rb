@@ -13,8 +13,8 @@
 module RequireDependencyBackwardCompatibility
   def require_dependency(filename)
     name = filename.to_s
-    return if name == 'jobs/base'
-    return super(name.sub(/^lib\//, '')) if name.start_with?('lib/')
+    return if name == "jobs/base"
+    return super(name.sub(%r{\Alib/}, "")) if name.start_with?("lib/")
     super
   end
 

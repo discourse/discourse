@@ -110,6 +110,9 @@ if [ "${initialize}" = "initialize" ]; then
     echo "Installing gems..."
     "${SCRIPTPATH}/bundle" install
 
+    echo "Yarn install..."
+    "${SCRIPTPATH}/exec" yarn install --cwd app/assets/javascripts/discourse
+
     echo "Migrating database..."
     "${SCRIPTPATH}/rake" db:migrate
     RAILS_ENV=test "${SCRIPTPATH}/rake" db:migrate

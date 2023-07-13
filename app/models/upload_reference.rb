@@ -4,8 +4,12 @@ class UploadReference < ActiveRecord::Base
   belongs_to :upload
   belongs_to :target, polymorphic: true
 
+  delegate :to_markdown, to: :upload
+
   def self.ensure_exist!(upload_ids: [], target: nil, target_type: nil, target_id: nil)
-    raise "target OR target_type and target_id are required" if !target && !(target_type && target_id)
+    if !target && !(target_type && target_id)
+      raise "target OR target_type and target_id are required"
+    end
 
     if target.present?
       target_type = target.class
@@ -16,22 +20,21 @@ class UploadReference < ActiveRecord::Base
     target_type = target_type.to_s
 
     if upload_ids.empty?
-      UploadReference
-        .where(target_type: target_type, target_id: target_id)
-        .delete_all
+      UploadReference.where(target_type: target_type, target_id: target_id).delete_all
 
       return
     end
 
-    rows = upload_ids.map do |upload_id|
-      {
-        upload_id: upload_id,
-        target_type: target_type,
-        target_id: target_id,
-        created_at: Time.zone.now,
-        updated_at: Time.zone.now,
-      }
-    end
+    rows =
+      upload_ids.map do |upload_id|
+        {
+          upload_id: upload_id,
+          target_type: target_type,
+          target_id: target_id,
+          created_at: Time.zone.now,
+          updated_at: Time.zone.now,
+        }
+      end
 
     UploadReference.transaction do |transaction|
       UploadReference

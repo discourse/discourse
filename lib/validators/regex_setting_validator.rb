@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class RegexSettingValidator
-
-  LOREM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget sem non elit tincidunt rhoncus.'
+  LOREM =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eget sem non elit tincidunt rhoncus."
 
   def initialize(opts = {})
     @opts = opts
@@ -17,11 +17,11 @@ class RegexSettingValidator
     r = Regexp.new(val)
     matches = r.match(LOREM)
     matches.nil? || matches[0].length < (LOREM.length - 10)
-  rescue
+  rescue StandardError
     false
   end
 
   def error_message
-    I18n.t('site_settings.errors.invalid_regex')
+    I18n.t("site_settings.errors.invalid_regex")
   end
 end

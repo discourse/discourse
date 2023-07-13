@@ -12,11 +12,11 @@ class UserStatCountUpdater
 
     def set!(user_stat:, count:, count_column:)
       return if user_stat.blank?
-      return if ![:post_count, :topic_count].include?(count_column)
+      return if !%i[post_count topic_count].include?(count_column)
 
       if SiteSetting.verbose_user_stat_count_logging && count < 0
         Rails.logger.warn(
-          "Attempted to insert negative count into UserStat##{count_column} for user #{user_stat.user_id}, using 0 instead. Caller:\n #{caller[0..10].join("\n")}"
+          "Attempted to insert negative count into UserStat##{count_column} for user #{user_stat.user_id}, using 0 instead. Caller:\n #{caller[0..10].join("\n")}",
         )
       end
 
@@ -47,7 +47,7 @@ class UserStatCountUpdater
       if action == :decrement! && stat.public_send(column) < 1
         if SiteSetting.verbose_user_stat_count_logging
           Rails.logger.warn(
-            "Attempted to insert negative count into UserStat##{column} for post with id '#{post.id}'. Caller:\n #{caller[0..10].join("\n")}"
+            "Attempted to insert negative count into UserStat##{column} for post with id '#{post.id}'. Caller:\n #{caller[0..10].join("\n")}",
           )
         end
 

@@ -5,28 +5,28 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # Edit the constants and initialize method for your import data.
 
 class ImportScripts::Ning < ImportScripts::Base
-
   JSON_FILES_DIR = "/Users/techapj/Downloads/ben/ADEM"
-  ATTACHMENT_PREFIXES = ["discussions", "pages", "blogs", "members", "photos"]
-  EXTRA_AUTHORIZED_EXTENSIONS = ["bmp", "ico", "txt", "pdf", "gif", "jpg", "jpeg", "html"]
+  ATTACHMENT_PREFIXES = %w[discussions pages blogs members photos]
+  EXTRA_AUTHORIZED_EXTENSIONS = %w[bmp ico txt pdf gif jpg jpeg html]
 
   def initialize
     super
 
     @system_user = Discourse.system_user
 
-    @users_json       = load_ning_json("ning-members-local.json")
+    @users_json = load_ning_json("ning-members-local.json")
     @discussions_json = load_ning_json("ning-discussions-local.json")
 
     # An example of a custom category from Ning:
     @blogs_json = load_ning_json("ning-blogs-local.json")
 
-    @photos_json      = load_ning_json("ning-photos-local.json")
-    @pages_json       = load_ning_json("ning-pages-local.json")
+    @photos_json = load_ning_json("ning-photos-local.json")
+    @pages_json = load_ning_json("ning-pages-local.json")
 
-    SiteSetting.max_image_size_kb = 10240
-    SiteSetting.max_attachment_size_kb = 10240
-    SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + EXTRA_AUTHORIZED_EXTENSIONS).uniq.join("|")
+    SiteSetting.max_image_size_kb = 10_240
+    SiteSetting.max_attachment_size_kb = 10_240
+    SiteSetting.authorized_extensions =
+      (SiteSetting.authorized_extensions.split("|") + EXTRA_AUTHORIZED_EXTENSIONS).uniq.join("|")
 
     # Example of importing a custom profile field:
     # @interests_field = UserField.find_by_name("My interests")
@@ -60,23 +60,23 @@ class ImportScripts::Ning < ImportScripts::Base
   end
 
   def repair_json(arg)
-    arg.gsub!(/^\(/, "")     # content of file is surround by ( )
+    arg.gsub!(/^\(/, "") # content of file is surround by ( )
     arg.gsub!(/\)$/, "")
 
-    arg.gsub!(/\]\]$/, "]")  # there can be an extra ] at the end
+    arg.gsub!(/\]\]$/, "]") # there can be an extra ] at the end
 
     arg.gsub!(/\}\{/, "},{") # missing commas sometimes!
 
-    arg.gsub!("}]{", "},{")  # surprise square brackets
-    arg.gsub!("}[{", "},{")  # :troll:
+    arg.gsub!("}]{", "},{") # surprise square brackets
+    arg.gsub!("}[{", "},{") # :troll:
 
     arg
   end
 
   def import_users
-    puts '', "Importing users"
+    puts "", "Importing users"
 
-    staff_levels = ["admin", "moderator", "owner"]
+    staff_levels = %w[admin moderator owner]
 
     create_users(@users_json) do |u|
       {
@@ -88,57 +88,58 @@ class ImportScripts::Ning < ImportScripts::Base
         location: "#{u["location"]} #{u["country"]}",
         avatar_url: u["profilePhoto"],
         bio_raw: u["profileQuestions"].is_a?(Hash) ? u["profileQuestions"]["About Me"] : nil,
-        post_create_action: proc do |newuser|
-          # if u["profileQuestions"].is_a?(Hash)
-          #   newuser.custom_fields = {"user_field_#{@interests_field.id}" => u["profileQuestions"]["My interests"]}
-          # end
+        post_create_action:
+          proc do |newuser|
+            # if u["profileQuestions"].is_a?(Hash)
+            #   newuser.custom_fields = {"user_field_#{@interests_field.id}" => u["profileQuestions"]["My interests"]}
+            # end
 
-          if staff_levels.include?(u["level"].downcase)
-            if u["level"].downcase == "admin" || u["level"].downcase == "owner"
-              newuser.admin = true
-            else
-              newuser.moderator = true
-            end
-          end
-
-          # states: ["active", "suspended", "left", "pending"]
-          if u["state"] == "active" && newuser.approved_at.nil?
-            newuser.approved = true
-            newuser.approved_by_id = @system_user.id
-            newuser.approved_at = newuser.created_at
-          end
-
-          newuser.save
-
-          if u["profilePhoto"] && newuser.user_avatar.try(:custom_upload_id).nil?
-            photo_path = file_full_path(u["profilePhoto"])
-            if File.exist?(photo_path)
-              begin
-                upload = create_upload(newuser.id, photo_path, File.basename(photo_path))
-                if upload.persisted?
-                  newuser.import_mode = false
-                  newuser.create_user_avatar
-                  newuser.import_mode = true
-                  newuser.user_avatar.update(custom_upload_id: upload.id)
-                  newuser.update(uploaded_avatar_id: upload.id)
-                else
-                  puts "Error: Upload did not persist for #{photo_path}!"
-                end
-              rescue SystemCallError => err
-                puts "Could not import avatar #{photo_path}: #{err.message}"
+            if staff_levels.include?(u["level"].downcase)
+              if u["level"].downcase == "admin" || u["level"].downcase == "owner"
+                newuser.admin = true
+              else
+                newuser.moderator = true
               end
-            else
-              puts "avatar file not found at #{photo_path}"
             end
-          end
-        end
+
+            # states: ["active", "suspended", "left", "pending"]
+            if u["state"] == "active" && newuser.approved_at.nil?
+              newuser.approved = true
+              newuser.approved_by_id = @system_user.id
+              newuser.approved_at = newuser.created_at
+            end
+
+            newuser.save
+
+            if u["profilePhoto"] && newuser.user_avatar.try(:custom_upload_id).nil?
+              photo_path = file_full_path(u["profilePhoto"])
+              if File.exist?(photo_path)
+                begin
+                  upload = create_upload(newuser.id, photo_path, File.basename(photo_path))
+                  if upload.persisted?
+                    newuser.import_mode = false
+                    newuser.create_user_avatar
+                    newuser.import_mode = true
+                    newuser.user_avatar.update(custom_upload_id: upload.id)
+                    newuser.update(uploaded_avatar_id: upload.id)
+                  else
+                    puts "Error: Upload did not persist for #{photo_path}!"
+                  end
+                rescue SystemCallError => err
+                  puts "Could not import avatar #{photo_path}: #{err.message}"
+                end
+              else
+                puts "avatar file not found at #{photo_path}"
+              end
+            end
+          end,
       }
     end
     EmailToken.delete_all
   end
 
   def suspend_users
-    puts '', "Updating suspended users"
+    puts "", "Updating suspended users"
 
     count = 0
     suspended = 0
@@ -151,7 +152,10 @@ class ImportScripts::Ning < ImportScripts::Base
           user.suspended_till = 200.years.from_now
 
           if user.save
-            StaffActionLogger.new(@system_user).log_user_suspend(user, "Import data indicates account is suspended.")
+            StaffActionLogger.new(@system_user).log_user_suspend(
+              user,
+              "Import data indicates account is suspended.",
+            )
             suspended += 1
           else
             puts "Failed to suspend user #{user.username}. #{user.errors.try(:full_messages).try(:inspect)}"
@@ -168,13 +172,15 @@ class ImportScripts::Ning < ImportScripts::Base
 
   def import_categories
     puts "", "Importing categories"
-    create_categories((["Blog", "Pages", "Photos"] + @discussions_json.map { |d| d["category"] }).uniq.compact) do |name|
+    create_categories(
+      (%w[Blog Pages Photos] + @discussions_json.map { |d| d["category"] }).uniq.compact,
+    ) do |name|
       if name.downcase == "uncategorized"
         nil
       else
         {
           id: name, # ning has no id for categories, so use the name
-          name: name
+          name: name,
         }
       end
     end
@@ -220,9 +226,7 @@ class ImportScripts::Ning < ImportScripts::Base
           unless topic["category"].nil? || topic["category"].downcase == "uncategorized"
             mapped[:category] = category_id_from_imported_category_id(topic["category"])
           end
-          if topic["category"].nil? && default_category
-            mapped[:category] = default_category
-          end
+          mapped[:category] = default_category if topic["category"].nil? && default_category
           mapped[:title] = CGI.unescapeHTML(topic["title"])
           mapped[:raw] = process_ning_post_body(topic["description"])
 
@@ -230,13 +234,9 @@ class ImportScripts::Ning < ImportScripts::Base
             mapped[:raw] = add_file_attachments(mapped[:raw], topic["fileAttachments"])
           end
 
-          if topic["photoUrl"]
-            mapped[:raw] = add_photo(mapped[:raw], topic["photoUrl"])
-          end
+          mapped[:raw] = add_photo(mapped[:raw], topic["photoUrl"]) if topic["photoUrl"]
 
-          if topic["embedCode"]
-            mapped[:raw] = add_video(mapped[:raw], topic["embedCode"])
-          end
+          mapped[:raw] = add_video(mapped[:raw], topic["embedCode"]) if topic["embedCode"]
 
           parent_post = create_post(mapped, mapped[:id])
           unless parent_post.is_a?(Post)
@@ -247,23 +247,24 @@ class ImportScripts::Ning < ImportScripts::Base
 
         if topic["comments"].present?
           topic["comments"].reverse.each do |post|
-
             if post_id_from_imported_post_id(post["id"])
               next # already imported this post
             end
 
             raw = process_ning_post_body(post["description"])
-            if post["fileAttachments"]
-              raw = add_file_attachments(raw, post["fileAttachments"])
-            end
+            raw = add_file_attachments(raw, post["fileAttachments"]) if post["fileAttachments"]
 
-            new_post = create_post({
-                id: post["id"],
-                topic_id: parent_post.topic_id,
-                user_id: user_id_from_imported_user_id(post["contributorName"]) || -1,
-                raw: raw,
-                created_at: Time.zone.parse(post["createdDate"])
-              }, post["id"])
+            new_post =
+              create_post(
+                {
+                  id: post["id"],
+                  topic_id: parent_post.topic_id,
+                  user_id: user_id_from_imported_user_id(post["contributorName"]) || -1,
+                  raw: raw,
+                  created_at: Time.zone.parse(post["createdDate"]),
+                },
+                post["id"],
+              )
 
             if new_post.is_a?(Post)
               posts += 1
@@ -288,11 +289,17 @@ class ImportScripts::Ning < ImportScripts::Base
   end
 
   def attachment_regex
-    @_attachment_regex ||= Regexp.new(%Q[<a (?:[^>]*)href="(?:#{ATTACHMENT_PREFIXES.join('|')})\/(?:[^"]+)"(?:[^>]*)><img (?:[^>]*)src="([^"]+)"(?:[^>]*)><\/a>])
+    @_attachment_regex ||=
+      Regexp.new(
+        %Q[<a (?:[^>]*)href="(?:#{ATTACHMENT_PREFIXES.join("|")})\/(?:[^"]+)"(?:[^>]*)><img (?:[^>]*)src="([^"]+)"(?:[^>]*)><\/a>],
+      )
   end
 
   def youtube_iframe_regex
-    @_youtube_iframe_regex ||= Regexp.new(%Q[<p><iframe(?:[^>]*)src="\/\/www.youtube.com\/embed\/([^"]+)"(?:[^>]*)><\/iframe>(?:[^<]*)<\/p>])
+    @_youtube_iframe_regex ||=
+      Regexp.new(
+        %Q[<p><iframe(?:[^>]*)src="\/\/www.youtube.com\/embed\/([^"]+)"(?:[^>]*)><\/iframe>(?:[^<]*)<\/p>],
+      )
   end
 
   def process_ning_post_body(arg)
@@ -382,15 +389,16 @@ class ImportScripts::Ning < ImportScripts::Base
 
   def add_video(arg, embed_code)
     raw = arg
-    youtube_regex = Regexp.new(%Q[<iframe(?:[^>]*)src="http:\/\/www.youtube.com\/embed\/([^"]+)"(?:[^>]*)><\/iframe>])
+    youtube_regex =
+      Regexp.new(
+        %Q[<iframe(?:[^>]*)src="http:\/\/www.youtube.com\/embed\/([^"]+)"(?:[^>]*)><\/iframe>],
+      )
 
     raw.gsub!(youtube_regex) do |s|
       matches = youtube_regex.match(s)
       video_id = matches[1].split("?").first
 
-      if video_id
-        raw += "\n\nhttps://www.youtube.com/watch?v=#{video_id}\n"
-      end
+      raw += "\n\nhttps://www.youtube.com/watch?v=#{video_id}\n" if video_id
     end
 
     raw += "\n" + embed_code + "\n"
@@ -398,6 +406,4 @@ class ImportScripts::Ning < ImportScripts::Base
   end
 end
 
-if __FILE__ == $0
-  ImportScripts::Ning.new.perform
-end
+ImportScripts::Ning.new.perform if __FILE__ == $0

@@ -2,8 +2,7 @@
 
 module Jobs
   class UpdateUsername < ::Jobs::Base
-
-    sidekiq_options queue: 'low'
+    sidekiq_options queue: "low"
 
     def execute(args)
       @user_id = args[:user_id]
@@ -12,9 +11,13 @@ module Jobs
 
       @old_username = args[:old_username].unicode_normalize
       @new_username = args[:new_username].unicode_normalize
+
       @avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
 
-      @raw_mention_regex = /
+      @quote_rewriter = QuoteRewriter.new(@user_id)
+
+      @raw_mention_regex =
+        /
         (?:
           (?<![\p{Alnum}\p{M}`])     # make sure there is no preceding letter, number or backtick
         )
@@ -26,12 +29,10 @@ module Jobs
         )
       /ix
 
-      @raw_quote_regex = /(\[quote\s*=\s*["'']?)#{@old_username}(\,?[^\]]*\])/i
-
       cooked_username = PrettyText::Helpers.format_username(@old_username)
-      @cooked_mention_username_regex = /^@#{cooked_username}$/i
-      @cooked_mention_user_path_regex = /^\/u(?:sers)?\/#{UrlHelper.encode_component(cooked_username)}$/i
-      @cooked_quote_username_regex = /(?<=\s)#{cooked_username}(?=:)/i
+      @cooked_mention_username_regex = /\A@#{cooked_username}\z/i
+      @cooked_mention_user_path_regex =
+        %r{\A/u(?:sers)?/#{UrlHelper.encode_component(cooked_username)}\z}i
 
       update_posts
       update_revisions
@@ -45,37 +46,46 @@ module Jobs
     def update_posts
       updated_post_ids = Set.new
 
-      Post.with_deleted
+      # Other people mentioning this user
+      Post
+        .with_deleted
         .joins(mentioned("posts.id"))
         .where("a.user_id = :user_id", user_id: @user_id)
         .find_each do |post|
+          update_post(post)
+          updated_post_ids << post.id
+        end
 
-        update_post(post)
-        updated_post_ids << post.id
-      end
+      # User mentioning self (not included in post_actions table)
+      Post
+        .with_deleted
+        .where("raw ILIKE ?", "%@#{@old_username}%")
+        .where("posts.user_id = :user_id", user_id: @user_id)
+        .find_each do |post|
+          update_post(post)
+          updated_post_ids << post.id
+        end
 
-      Post.with_deleted
+      Post
+        .with_deleted
         .joins(quoted("posts.id"))
         .where("p.user_id = :user_id", user_id: @user_id)
         .find_each { |post| update_post(post) unless updated_post_ids.include?(post.id) }
     end
 
     def update_revisions
-      PostRevision.joins(mentioned("post_revisions.post_id"))
-        .where("a.user_id = :user_id", user_id: @user_id)
+      PostRevision
+        .where("modifications SIMILAR TO ?", "%(raw|cooked)%@#{@old_username}%")
         .find_each { |revision| update_revision(revision) }
 
-      PostRevision.joins(quoted("post_revisions.post_id"))
+      PostRevision
+        .joins(quoted("post_revisions.post_id"))
         .where("p.user_id = :user_id", user_id: @user_id)
         .find_each { |revision| update_revision(revision) }
     end
 
     def update_notifications
-      params = {
-        user_id: @user_id,
-        old_username: @old_username,
-        new_username: @new_username
-      }
+      params = { user_id: @user_id, old_username: @old_username, new_username: @new_username }
 
       DB.exec(<<~SQL, params)
         UPDATE notifications
@@ -150,8 +160,11 @@ module Jobs
     end
 
     def update_raw(raw)
-      raw.gsub(@raw_mention_regex, "@#{@new_username}")
-        .gsub(@raw_quote_regex, "\\1#{@new_username}\\2")
+      @quote_rewriter.rewrite_raw_username(
+        raw.gsub(@raw_mention_regex, "@#{@new_username}"),
+        @old_username,
+        @new_username,
+      )
     end
 
     # Uses Nokogiri instead of rebake, because it works for posts and revisions
@@ -160,39 +173,19 @@ module Jobs
     def update_cooked(cooked)
       doc = Nokogiri::HTML5.fragment(cooked)
 
-      doc.css("a.mention").each do |a|
-        a.content = a.content.gsub(@cooked_mention_username_regex, "@#{@new_username}")
-        a["href"] = a["href"].gsub(@cooked_mention_user_path_regex, "/u/#{UrlHelper.encode_component(@new_username)}") if a["href"]
-      end
-
-      doc.css("aside.quote").each do |aside|
-        next unless div = aside.at_css("div.title")
-
-        username_replaced = false
-
-        aside["data-username"] = @new_username if aside["data-username"] == @old_username
-
-        div.children.each do |child|
-          if child.text?
-            content = child.content
-            username_replaced = content.gsub!(@cooked_quote_username_regex, @new_username).present?
-            child.content = content if username_replaced
-          end
+      doc
+        .css("a.mention")
+        .each do |a|
+          a.content = a.content.gsub(@cooked_mention_username_regex, "@#{@new_username}")
+          a["href"] = a["href"].gsub(
+            @cooked_mention_user_path_regex,
+            "/u/#{UrlHelper.encode_component(@new_username)}",
+          ) if a["href"]
         end
 
-        if username_replaced || quotes_correct_user?(aside)
-          div.at_css("img.avatar")&.replace(@avatar_img)
-        end
-      end
+      @quote_rewriter.rewrite_cooked_username(doc, @old_username, @new_username, @avatar_img)
 
       doc.to_html
-    end
-
-    def quotes_correct_user?(aside)
-      Post.where(
-        topic_id: aside["data-topic"],
-        post_number: aside["data-post"]
-      ).pluck_first(:user_id) == @user_id
     end
   end
 end

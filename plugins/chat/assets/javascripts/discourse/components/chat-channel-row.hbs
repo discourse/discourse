@@ -1,10 +1,10 @@
 <LinkTo
   @route="chat.channel"
-  @models={{array @channel.id (or @channel.slug "-")}}
+  @models={{@channel.routeModels}}
   class={{concat-class
     "chat-channel-row"
     (if @channel.focused "focused")
-    (if @channel.current_user_membership.muted "muted")
+    (if @channel.currentUserMembership.muted "muted")
     (if @options.leaveButton "can-leave")
     (if (eq this.chat.activeChannel.id @channel.id) "active")
     (if this.channelHasUnread "has-unread")

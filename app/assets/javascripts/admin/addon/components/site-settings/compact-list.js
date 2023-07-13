@@ -1,40 +1,36 @@
+import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 
-export default Component.extend({
-  tokenSeparator: "|",
+export default class CompactList extends Component {
+  tokenSeparator = "|";
+  createdChoices = null;
 
-  createdChoices: null,
-
-  settingValue: computed("value", function () {
+  @computed("value")
+  get settingValue() {
     return this.value.toString().split(this.tokenSeparator).filter(Boolean);
-  }),
+  }
 
-  settingChoices: computed(
-    "settingValue",
-    "setting.choices.[]",
-    "createdChoices.[]",
-    function () {
-      return [
-        ...new Set([
-          ...makeArray(this.settingValue),
-          ...makeArray(this.setting.choices),
-          ...makeArray(this.createdChoices),
-        ]),
-      ];
-    }
-  ),
+  @computed("settingValue", "setting.choices.[]", "createdChoices.[]")
+  get settingChoices() {
+    return [
+      ...new Set([
+        ...makeArray(this.settingValue),
+        ...makeArray(this.setting.choices),
+        ...makeArray(this.createdChoices),
+      ]),
+    ];
+  }
 
-  actions: {
-    onChangeListSetting(value) {
-      this.set("value", value.join(this.tokenSeparator));
-    },
+  @action
+  onChangeListSetting(value) {
+    this.set("value", value.join(this.tokenSeparator));
+  }
 
-    onChangeChoices(choices) {
-      this.set("createdChoices", [
-        ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
-      ]);
-    },
-  },
-});
+  @action
+  onChangeChoices(choices) {
+    this.set("createdChoices", [
+      ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
+    ]);
+  }
+}

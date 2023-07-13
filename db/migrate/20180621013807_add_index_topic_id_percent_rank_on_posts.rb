@@ -2,10 +2,10 @@
 
 class AddIndexTopicIdPercentRankOnPosts < ActiveRecord::Migration[5.2]
   def up
-    add_index :posts, [:topic_id, :percent_rank], order: { percent_rank: :asc }
+    add_index :posts, %i[topic_id percent_rank], order: { percent_rank: :asc }
   end
 
   def down
-    remove_index :posts, [:topic_id, :percent_rank]
+    remove_index :posts, %i[topic_id percent_rank]
   end
 end

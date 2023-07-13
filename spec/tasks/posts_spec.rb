@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'highline/import'
-require 'highline/simulate'
+require "highline/import"
+require "highline/simulate"
 
 RSpec.describe "Post rake tasks" do
-  fab!(:post) { Fabricate(:post, raw: 'The quick brown fox jumps over the lazy dog') }
-  fab!(:tricky_post) { Fabricate(:post, raw: 'Today ^Today') }
+  fab!(:post) { Fabricate(:post, raw: "The quick brown fox jumps over the lazy dog") }
+  fab!(:tricky_post) { Fabricate(:post, raw: "Today ^Today") }
 
   before do
     Rake::Task.clear
@@ -13,58 +13,56 @@ RSpec.describe "Post rake tasks" do
     STDOUT.stubs(:write)
   end
 
-  describe 'remap' do
-    it 'should remap posts' do
-      HighLine::Simulate.with('y') do
-        Rake::Task['posts:remap'].invoke("brown", "red")
-      end
+  describe "remap" do
+    it "should remap posts" do
+      HighLine::Simulate.with("y") { Rake::Task["posts:remap"].invoke("brown", "red") }
 
       post.reload
-      expect(post.raw).to eq('The quick red fox jumps over the lazy dog')
+      expect(post.raw).to eq("The quick red fox jumps over the lazy dog")
     end
 
-    context 'when type == string' do
-      it 'remaps input as string' do
-        HighLine::Simulate.with('y') do
-          Rake::Task['posts:remap'].invoke('^Today', 'Yesterday', 'string')
+    context "when type == string" do
+      it "remaps input as string" do
+        HighLine::Simulate.with("y") do
+          Rake::Task["posts:remap"].invoke("^Today", "Yesterday", "string")
         end
 
-        expect(tricky_post.reload.raw).to eq('Today Yesterday')
+        expect(tricky_post.reload.raw).to eq("Today Yesterday")
       end
     end
 
-    context 'when type == regex' do
-      it 'remaps input as regex' do
-        HighLine::Simulate.with('y') do
-          Rake::Task['posts:remap'].invoke('^Today', 'Yesterday', 'regex')
+    context "when type == regex" do
+      it "remaps input as regex" do
+        HighLine::Simulate.with("y") do
+          Rake::Task["posts:remap"].invoke("^Today", "Yesterday", "regex")
         end
 
-        expect(tricky_post.reload.raw).to eq('Yesterday ^Today')
+        expect(tricky_post.reload.raw).to eq("Yesterday ^Today")
       end
     end
   end
 
-  describe 'rebake_match' do
-    it 'rebakes matched posts' do
-      post.update(cooked: '')
+  describe "rebake_match" do
+    it "rebakes matched posts" do
+      post.update(cooked: "")
 
-      HighLine::Simulate.with('y') do
-        Rake::Task['posts:rebake_match'].invoke('brown')
-      end
+      HighLine::Simulate.with("y") { Rake::Task["posts:rebake_match"].invoke("brown") }
 
-      expect(post.reload.cooked).to eq('<p>The quick brown fox jumps over the lazy dog</p>')
+      expect(post.reload.cooked).to eq("<p>The quick brown fox jumps over the lazy dog</p>")
     end
   end
 
-  describe 'missing_uploads' do
-    let(:url) { "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/1X/d1c2d40ab994e8410c.png" }
+  describe "missing_uploads" do
+    let(:url) do
+      "/uploads/#{RailsMultisite::ConnectionManagement.current_db}/original/1X/d1c2d40ab994e8410c.png"
+    end
     let(:upload) { Fabricate(:upload, url: url) }
 
-    it 'should create post custom field for missing upload' do
+    it "should create post custom field for missing upload" do
       post = Fabricate(:post, raw: "A sample post <img src='#{url}'>")
       upload.destroy!
 
-      Rake::Task['posts:missing_uploads'].invoke
+      Rake::Task["posts:missing_uploads"].invoke
 
       post.reload
       expect(post.custom_fields[Post::MISSING_UPLOADS]).to eq([url])
@@ -76,7 +74,7 @@ RSpec.describe "Post rake tasks" do
       post.save_custom_fields
       upload.destroy!
 
-      Rake::Task['posts:missing_uploads'].invoke
+      Rake::Task["posts:missing_uploads"].invoke
 
       post.reload
       expect(post.custom_fields[Post::MISSING_UPLOADS]).to be_nil

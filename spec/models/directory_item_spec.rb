@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DirectoryItem do
-  describe '#period_types' do
+  describe "#period_types" do
     context "when verifying enum sequence" do
-      before do
-        @period_types = DirectoryItem.period_types
-      end
+      before { @period_types = DirectoryItem.period_types }
 
       it "'all' should be at 1st position" do
         expect(@period_types[:all]).to eq(1)
@@ -17,8 +15,8 @@ RSpec.describe DirectoryItem do
     end
   end
 
-  describe 'inactive and silenced users' do
-    it 'removes silenced users correctly' do
+  describe "inactive and silenced users" do
+    it "removes silenced users correctly" do
       post = create_post
       DirectoryItem.refresh_period!(:daily)
 
@@ -42,13 +40,12 @@ RSpec.describe DirectoryItem do
 
       count = DirectoryItem.where(user_id: post.user_id).count
       expect(count).to eq(0)
-
     end
   end
 
-  describe '.refresh!' do
+  describe ".refresh!" do
     before do
-      freeze_time DateTime.parse('2017-02-02 12:00')
+      freeze_time DateTime.parse("2017-02-02 12:00")
       UserActionManager.enable
     end
 
@@ -62,8 +59,10 @@ RSpec.describe DirectoryItem do
 
       DirectoryItem.refresh!
 
-      item1 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: post.user_id)
-      item2 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: user2.id)
+      item1 =
+        DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: post.user_id)
+      item2 =
+        DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: user2.id)
 
       expect(item1.topic_count).to eq(1)
       expect(item1.likes_received).to eq(1)
@@ -75,8 +74,10 @@ RSpec.describe DirectoryItem do
 
       DirectoryItem.refresh!
 
-      item1 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: post.user_id)
-      item2 = DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: user2.id)
+      item1 =
+        DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: post.user_id)
+      item2 =
+        DirectoryItem.find_by(period_type: DirectoryItem.period_types[:all], user_id: user2.id)
 
       expect(item1.likes_given).to eq(0)
       expect(item1.likes_received).to eq(0)
@@ -96,57 +97,84 @@ RSpec.describe DirectoryItem do
       freeze_time(2.years.from_now)
 
       DirectoryItem.refresh!
-      [:yearly, :monthly, :weekly, :daily, :quarterly].each do |period|
-        directory_item = DirectoryItem
-          .where(period_type: DirectoryItem.period_types[period])
-          .where(user_id: post.user.id)
-          .first
+      %i[yearly monthly weekly daily quarterly].each do |period|
+        directory_item =
+          DirectoryItem
+            .where(period_type: DirectoryItem.period_types[period])
+            .where(user_id: post.user.id)
+            .first
         expect(directory_item.topic_count).to eq(0)
         expect(directory_item.post_count).to eq(0)
       end
 
-      directory_item = DirectoryItem
-        .where(period_type: DirectoryItem.period_types[:all])
-        .where(user_id: post.user.id)
-        .first
+      directory_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:all])
+          .where(user_id: post.user.id)
+          .first
       expect(directory_item.topic_count).to eq(1)
     end
 
     it "creates directory item with correct activity count per period_type" do
       user = Fabricate(:user)
-      UserVisit.create(user_id: user.id, visited_at: 1.minute.ago, posts_read: 1, mobile: false, time_read: 1)
-      UserVisit.create(user_id: user.id, visited_at: 2.days.ago, posts_read: 1, mobile: false, time_read: 1)
-      UserVisit.create(user_id: user.id, visited_at: 1.week.ago, posts_read: 1, mobile: false, time_read: 1)
-      UserVisit.create(user_id: user.id, visited_at: 1.month.ago, posts_read: 1, mobile: false, time_read: 1)
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 1.minute.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 1,
+      )
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 2.days.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 1,
+      )
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 1.week.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 1,
+      )
+      UserVisit.create(
+        user_id: user.id,
+        visited_at: 1.month.ago,
+        posts_read: 1,
+        mobile: false,
+        time_read: 1,
+      )
 
       DirectoryItem.refresh!
 
-      daily_directory_item = DirectoryItem
-        .where(period_type: DirectoryItem.period_types[:daily])
-        .where(user_id: user.id)
-        .first
+      daily_directory_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:daily])
+          .where(user_id: user.id)
+          .first
 
       expect(daily_directory_item.days_visited).to eq(1)
 
-      weekly_directory_item = DirectoryItem
-        .where(period_type: DirectoryItem.period_types[:weekly])
-        .where(user_id: user.id)
-        .first
+      weekly_directory_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:weekly])
+          .where(user_id: user.id)
+          .first
 
       expect(weekly_directory_item.days_visited).to eq(2)
 
-      monthly_directory_item = DirectoryItem
-        .where(period_type: DirectoryItem.period_types[:monthly])
-        .where(user_id: user.id)
-        .first
+      monthly_directory_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:monthly])
+          .where(user_id: user.id)
+          .first
 
       expect(monthly_directory_item.days_visited).to eq(3)
     end
 
-    context 'when must_approve_users is true' do
-      before do
-        SiteSetting.must_approve_users = true
-      end
+    context "when must_approve_users is true" do
+      before { SiteSetting.must_approve_users = true }
 
       it "doesn't include user who hasn't been approved" do
         user = Fabricate(:user, approved: false)

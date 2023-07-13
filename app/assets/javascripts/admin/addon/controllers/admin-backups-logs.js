@@ -1,13 +1,10 @@
-import Controller, { inject as controller } from "@ember/controller";
 import { alias } from "@ember/object/computed";
+import Controller, { inject as controller } from "@ember/controller";
 
-export default Controller.extend({
-  adminBackups: controller(),
-  status: alias("adminBackups.model"),
+export default class AdminBackupsLogsController extends Controller {
+  @controller adminBackups;
 
-  init() {
-    this._super(...arguments);
+  @alias("adminBackups.model") status;
 
-    this.logs = [];
-  },
-});
+  logs = [];
+}

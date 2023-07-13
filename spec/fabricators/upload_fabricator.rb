@@ -12,9 +12,7 @@ Fabricator(:upload) do
 
   url do |attrs|
     sequence(:url) do |n|
-      Discourse.store.get_path_for(
-        "original", n + 1, attrs[:sha1], ".#{attrs[:extension]}"
-      )
+      Discourse.store.get_path_for("original", n + 1, attrs[:sha1], ".#{attrs[:extension]}")
     end
   end
 
@@ -33,17 +31,19 @@ end
 
 Fabricator(:image_upload, from: :upload) do
   transient color: "white"
+  transient color_depth: 8
 
   after_create do |upload, transients|
-    file = Tempfile.new(['fabricated', '.png'])
-    `convert -size #{upload.width}x#{upload.height} xc:#{transients[:color]} "#{file.path}"`
+    file = Tempfile.new(%w[fabricated .png])
+    `convert -size #{upload.width}x#{upload.height} -depth #{transients[:color_depth]} xc:#{transients[:color]} "#{file.path}"`
 
     upload.url = Discourse.store.store_upload(file, upload)
     upload.sha1 = Upload.generate_digest(file.path)
 
-    WebMock
-      .stub_request(:get, "http://#{Discourse.current_hostname}#{upload.url}")
-      .to_return(status: 200, body: File.new(file.path))
+    WebMock.stub_request(:get, "http://#{Discourse.current_hostname}#{upload.url}").to_return(
+      status: 200,
+      body: File.new(file.path),
+    )
   end
 end
 
@@ -72,13 +72,9 @@ end
 Fabricator(:upload_s3, from: :upload) do
   url do |attrs|
     sequence(:url) do |n|
-      path = +Discourse.store.get_path_for(
-        "original", n + 1, attrs[:sha1], ".#{attrs[:extension]}"
-      )
+      path = +Discourse.store.get_path_for("original", n + 1, attrs[:sha1], ".#{attrs[:extension]}")
 
-      if Rails.configuration.multisite
-        path.prepend(File.join(Discourse.store.upload_path, "/"))
-      end
+      path.prepend(File.join(Discourse.store.upload_path, "/")) if Rails.configuration.multisite
 
       File.join(Discourse.store.absolute_base_url, path)
     end
@@ -87,15 +83,13 @@ end
 
 Fabricator(:s3_image_upload, from: :upload_s3) do
   after_create do |upload|
-    file = Tempfile.new(['fabricated', '.png'])
+    file = Tempfile.new(%w[fabricated .png])
     `convert -size #{upload.width}x#{upload.height} xc:white "#{file.path}"`
 
     upload.url = Discourse.store.store_upload(file, upload)
     upload.sha1 = Upload.generate_digest(file.path)
 
-    WebMock
-      .stub_request(:get, upload.url)
-      .to_return(status: 200, body: File.new(file.path))
+    WebMock.stub_request(:get, upload.url).to_return(status: 200, body: File.new(file.path))
   end
 end
 
@@ -103,4 +97,9 @@ Fabricator(:secure_upload_s3, from: :upload_s3) do
   secure true
   sha1 { SecureRandom.hex(20) }
   original_sha1 { sequence(:sha1) { |n| Digest::SHA1.hexdigest(n.to_s) } }
+end
+
+Fabricator(:upload_reference) do
+  target
+  upload
 end

@@ -2,6 +2,7 @@ import User from "discourse/models/user";
 import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
+import { escape } from "pretty-text/sanitizer";
 
 let _renderer = defaultRenderTag;
 
@@ -44,11 +45,11 @@ export function defaultRenderTag(tag, params) {
     href +
     " data-tag-name=" +
     tag +
-    (params.description ? ' title="' + params.description + '" ' : "") +
+    (params.description ? ' title="' + escape(params.description) + '" ' : "") +
     " class='" +
     classes.join(" ") +
     "'>" +
-    visibleName +
+    (params.displayName ? escape(params.displayName) : visibleName) +
     "</" +
     tagName +
     ">";

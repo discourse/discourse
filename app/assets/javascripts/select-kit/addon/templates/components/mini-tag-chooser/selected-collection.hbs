@@ -1,9 +1,0 @@
-{{#if this.tags}}
-  <div class="mini-tag-chooser-selected-collection selected-tags">
-    {{#each this.tags as |tag|}}
-      <DButton @translatedTitle={{tag.value}} @icon="times" @action={{action this.selectKit.deselect}} @actionParam={{tag.value}} @class={{tag.classNames}} @tabindex={{0}}>
-        {{discourse-tag tag.value noHref=true}}
-      </DButton>
-    {{/each}}
-  </div>
-{{/if}}

@@ -1,5 +1,12 @@
 <div class="flagged-post-header">
-  <LinkTo @route="chat.channel" @models={{array this.chatChannel.id this.chatChannel.title}} @query={{hash messageId=@reviewable.target_id}}>
+  <LinkTo
+    @route="chat.channel.near-message"
+    @models={{array
+      this.chatChannel.slugifiedTitle
+      this.chatChannel.id
+      @reviewable.target_id
+    }}
+  >
     <ChatChannelTitle @channel={{this.chatChannel}} />
   </LinkTo>
 </div>
@@ -7,7 +14,11 @@
 <div class="post-contents-wrapper">
   <ReviewableCreatedBy @user={{@reviewable.target_created_by}} @tagName="" />
   <div class="post-contents">
-    <ReviewablePostHeader @reviewable={{@reviewable}} @createdBy={{@reviewable.target_created_by}} @tagName="" />
+    <ReviewablePostHeader
+      @reviewable={{@reviewable}}
+      @createdBy={{@reviewable.target_created_by}}
+      @tagName=""
+    />
 
     <div class="post-body">
       {{html-safe (or @reviewable.payload.message_cooked @reviewable.cooked)}}
@@ -15,7 +26,11 @@
 
     {{#if @reviewable.payload.transcript_topic_id}}
       <div class="transcript">
-        <LinkTo @route="topic" @models={{array "-" @reviewable.payload.transcript_topic_id}} class="btn btn-small">
+        <LinkTo
+          @route="topic"
+          @models={{array "-" @reviewable.payload.transcript_topic_id}}
+          class="btn btn-small"
+        >
           {{i18n "review.transcript.view"}}
         </LinkTo>
       </div>

@@ -123,6 +123,27 @@ acceptance("Admin - User Index", function (needs) {
 
       return helper.response({});
     });
+
+    server.get("/admin/users/6.json", () => {
+      return helper.response({
+        id: 6,
+        username: "user6",
+        name: null,
+        avatar_template: "/letter_avatar_proxy/v4/letter/b/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_grant_admin: true,
+        can_revoke_admin: false,
+      });
+    });
+
+    server.put("/admin/users/6/grant_admin", () => {
+      return helper.response(403, {
+        error: "A message with <strong>bold</strong> text.",
+        html_message: true,
+      });
+    });
   });
 
   needs.hooks.beforeEach(() => {
@@ -222,7 +243,7 @@ acceptance("Admin - User Index", function (needs) {
     );
   });
 
-  test("grant admin - shows the confirmation bootbox", async function (assert) {
+  test("grant admin - shows the confirmation dialog", async function (assert) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
     assert.ok(exists(".dialog-content"));
@@ -232,6 +253,17 @@ acceptance("Admin - User Index", function (needs) {
     );
 
     await click(".dialog-footer .btn-primary");
+  });
+
+  test("grant admin - optionally allows HTML to be shown in the confirmation dialog", async function (assert) {
+    await visit("/admin/users/6/user6");
+    await click(".grant-admin");
+    assert.ok(exists(".dialog-content"));
+
+    assert.ok(
+      exists(".dialog-content .dialog-body strong"),
+      "HTML is rendered in the dialog"
+    );
   });
 
   test("grant admin - redirects to the 2fa page", async function (assert) {

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require 'admin_confirmation'
+require "admin_confirmation"
 RSpec.describe AdminConfirmation do
-
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 
@@ -32,25 +31,27 @@ RSpec.describe AdminConfirmation do
       expect(ac.target_user).to eq(user)
       expect(ac.token).to eq(@token)
 
-      expect_enqueued_with(job: :send_system_message, args: { user_id: user.id, message_type: 'welcome_staff', message_options: { role: :admin } }) do
-        ac.email_confirmed!
-      end
+      expect_enqueued_with(
+        job: :send_system_message,
+        args: {
+          user_id: user.id,
+          message_type: "welcome_staff",
+          message_options: {
+            role: :admin,
+          },
+        },
+      ) { ac.email_confirmed! }
 
       user.reload
       expect(user.admin?).to eq(true)
 
       # It creates a staff log
-      logs = UserHistory.where(
-        action: UserHistory.actions[:grant_admin],
-        target_user_id: user.id
-      )
+      logs = UserHistory.where(action: UserHistory.actions[:grant_admin], target_user_id: user.id)
       expect(logs).to be_present
 
       # It removes the redis keys for another user
       expect(AdminConfirmation.find_by_code(ac.token)).to eq(nil)
       expect(AdminConfirmation.exists_for?(user.id)).to eq(false)
     end
-
   end
-
 end

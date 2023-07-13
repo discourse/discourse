@@ -7,7 +7,7 @@ module Reports::Flags
     def report_flags(report)
       category_id, include_subcategories = report.add_category_filter
 
-      report.icon = 'flag'
+      report.icon = "flag"
       report.higher_is_better = false
 
       basic_report_about(
@@ -17,20 +17,21 @@ module Reports::Flags
         report.start_date,
         report.end_date,
         category_id,
-        include_subcategories
+        include_subcategories,
       )
 
       countable = ReviewableFlaggedPost.scores_with_topics
 
       if category_id
         if include_subcategories
-          countable = countable.where('topics.category_id IN (?)', Category.subcategory_ids(category_id))
+          countable =
+            countable.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
         else
-          countable = countable.where('topics.category_id = ?', category_id)
+          countable = countable.where("topics.category_id = ?", category_id)
         end
       end
 
-      add_counts report, countable, 'reviewable_scores.created_at'
+      add_counts report, countable, "reviewable_scores.created_at"
     end
   end
 end

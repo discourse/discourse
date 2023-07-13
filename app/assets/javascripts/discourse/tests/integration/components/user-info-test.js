@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
@@ -90,5 +90,59 @@ module("Integration | Component | user-info", function (hooks) {
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
     assert.notOk(exists(".user-status-message"));
+  });
+
+  test("doesn't show status description by default", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
+
+    await render(
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
+    );
+
+    assert
+      .dom(".user-status-message .user-status-message-description")
+      .doesNotExist();
+  });
+
+  test("shows status description if enabled", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
+
+    await render(
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} @showStatusDescription={{true}} />`
+    );
+
+    assert
+      .dom(".user-status-message .user-status-message-description")
+      .exists();
+  });
+
+  test("doesn't show status tooltip by default", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
+
+    await render(
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
+    );
+    await triggerEvent(query(".user-status-message"), "mouseenter");
+
+    assert.notOk(
+      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
+    );
+  });
+
+  test("shows status tooltip if enabled", async function (assert) {
+    this.currentUser.name = "Evil Trout";
+    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
+
+    await render(
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} @showStatusTooltip={{true}} />`
+    );
+    await triggerEvent(query(".user-status-message"), "mouseenter");
+
+    assert.ok(
+      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
+    );
   });
 });

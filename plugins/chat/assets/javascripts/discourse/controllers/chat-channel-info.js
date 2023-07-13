@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { reads } from "@ember/object/computed";
+import { computed } from "@ember/object";
 
 export default class ChatChannelInfoIndexController extends Controller {
   @service router;
@@ -10,28 +10,25 @@ export default class ChatChannelInfoIndexController extends Controller {
 
   @reads("router.currentRoute.localName") tab;
 
-  @computed("model.chatChannel.{membershipsCount,status}")
+  @computed("model.{membershipsCount,status,currentUserMembership.following}")
   get tabs() {
     const tabs = [];
 
-    if (!this.model.chatChannel.isDirectMessageChannel) {
+    if (!this.model.isDirectMessageChannel) {
       tabs.push("about");
     }
 
-    if (
-      this.model.chatChannel.isOpen &&
-      this.model.chatChannel.membershipsCount >= 1
-    ) {
+    if (this.model.isOpen && this.model.membershipsCount >= 1) {
       tabs.push("members");
     }
 
-    tabs.push("settings");
+    if (
+      this.currentUser?.staff ||
+      this.model.currentUserMembership?.following
+    ) {
+      tabs.push("settings");
+    }
 
     return tabs;
-  }
-
-  @action
-  switchChannel(channel) {
-    return this.chat.openChannel(channel);
   }
 }

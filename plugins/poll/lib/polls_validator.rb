@@ -2,7 +2,6 @@
 
 module DiscoursePoll
   class PollsValidator
-
     MAX_VALUE = 2_147_483_647
 
     def initialize(post)
@@ -12,17 +11,19 @@ module DiscoursePoll
     def validate_polls
       polls = {}
 
-      DiscoursePoll::Poll::extract(@post.raw, @post.topic_id, @post.user_id).each do |poll|
-        return false unless valid_arguments?(poll)
-        return false unless valid_numbers?(poll)
-        return false unless unique_poll_name?(polls, poll)
-        return false unless unique_options?(poll)
-        return false unless any_blank_options?(poll)
-        return false unless at_least_one_option?(poll)
-        return false unless valid_number_of_options?(poll)
-        return false unless valid_multiple_choice_settings?(poll)
-        polls[poll["name"]] = poll
-      end
+      DiscoursePoll::Poll
+        .extract(@post.raw, @post.topic_id, @post.user_id)
+        .each do |poll|
+          return false unless valid_arguments?(poll)
+          return false unless valid_numbers?(poll)
+          return false unless unique_poll_name?(polls, poll)
+          return false unless unique_options?(poll)
+          return false unless any_blank_options?(poll)
+          return false unless at_least_one_option?(poll)
+          return false unless valid_number_of_options?(poll)
+          return false unless valid_multiple_choice_settings?(poll)
+          polls[poll["name"]] = poll
+        end
 
       polls
     end
@@ -33,17 +34,26 @@ module DiscoursePoll
       valid = true
 
       if poll["type"].present? && !::Poll.types.has_key?(poll["type"])
-        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "type", value: poll["type"]))
+        @post.errors.add(
+          :base,
+          I18n.t("poll.invalid_argument", argument: "type", value: poll["type"]),
+        )
         valid = false
       end
 
       if poll["status"].present? && !::Poll.statuses.has_key?(poll["status"])
-        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "status", value: poll["status"]))
+        @post.errors.add(
+          :base,
+          I18n.t("poll.invalid_argument", argument: "status", value: poll["status"]),
+        )
         valid = false
       end
 
       if poll["results"].present? && !::Poll.results.has_key?(poll["results"])
-        @post.errors.add(:base, I18n.t("poll.invalid_argument", argument: "results", value: poll["results"]))
+        @post.errors.add(
+          :base,
+          I18n.t("poll.invalid_argument", argument: "results", value: poll["results"]),
+        )
         valid = false
       end
 
@@ -69,7 +79,10 @@ module DiscoursePoll
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_have_different_options"))
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_different_options", name: poll["name"]))
+          @post.errors.add(
+            :base,
+            I18n.t("poll.named_poll_must_have_different_options", name: poll["name"]),
+          )
         end
 
         return false
@@ -83,7 +96,10 @@ module DiscoursePoll
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_not_have_any_empty_options"))
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_not_have_any_empty_options", name: poll["name"]))
+          @post.errors.add(
+            :base,
+            I18n.t("poll.named_poll_must_not_have_any_empty_options", name: poll["name"]),
+          )
         end
 
         return false
@@ -97,7 +113,10 @@ module DiscoursePoll
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_1_option"))
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_1_option", name: poll["name"]))
+          @post.errors.add(
+            :base,
+            I18n.t("poll.named_poll_must_have_at_least_1_option", name: poll["name"]),
+          )
         end
 
         return false
@@ -109,9 +128,22 @@ module DiscoursePoll
     def valid_number_of_options?(poll)
       if poll["options"].size > SiteSetting.poll_maximum_options
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
-          @post.errors.add(:base, I18n.t("poll.default_poll_must_have_less_options", count: SiteSetting.poll_maximum_options))
+          @post.errors.add(
+            :base,
+            I18n.t(
+              "poll.default_poll_must_have_less_options",
+              count: SiteSetting.poll_maximum_options,
+            ),
+          )
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_less_options", name: poll["name"], count: SiteSetting.poll_maximum_options))
+          @post.errors.add(
+            :base,
+            I18n.t(
+              "poll.named_poll_must_have_less_options",
+              name: poll["name"],
+              count: SiteSetting.poll_maximum_options,
+            ),
+          )
         end
 
         return false
@@ -128,9 +160,18 @@ module DiscoursePoll
 
         if min > max || min <= 0 || max <= 0 || max > options || min >= options
           if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
-            @post.errors.add(:base, I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"))
+            @post.errors.add(
+              :base,
+              I18n.t("poll.default_poll_with_multiple_choices_has_invalid_parameters"),
+            )
           else
-            @post.errors.add(:base, I18n.t("poll.named_poll_with_multiple_choices_has_invalid_parameters", name: poll["name"]))
+            @post.errors.add(
+              :base,
+              I18n.t(
+                "poll.named_poll_with_multiple_choices_has_invalid_parameters",
+                name: poll["name"],
+              ),
+            )
           end
 
           return false
@@ -172,7 +213,10 @@ module DiscoursePoll
         if poll["name"] == ::DiscoursePoll::DEFAULT_POLL_NAME
           @post.errors.add(:base, I18n.t("poll.default_poll_must_have_at_least_1_option"))
         else
-          @post.errors.add(:base, I18n.t("poll.named_poll_must_have_at_least_1_option", name: poll["name"]))
+          @post.errors.add(
+            :base,
+            I18n.t("poll.named_poll_must_have_at_least_1_option", name: poll["name"]),
+          )
         end
         valid = false
       end

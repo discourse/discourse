@@ -1,23 +1,19 @@
 # frozen_string_literal: true
 
-require 'suggested_topics_builder'
+require "suggested_topics_builder"
 
 RSpec.describe SuggestedTopicsBuilder do
   fab!(:topic) { Fabricate(:topic) }
   let(:builder) { SuggestedTopicsBuilder.new(topic) }
 
-  before do
-    SiteSetting.suggested_topics = 5
-  end
+  before { SiteSetting.suggested_topics = 5 }
 
   describe "splicing category results" do
     def fake_topic(topic_id, category_id)
       build(:topic, id: topic_id, category_id: category_id)
     end
 
-    let(:builder) do
-      SuggestedTopicsBuilder.new(fake_topic(1, 1))
-    end
+    let(:builder) { SuggestedTopicsBuilder.new(fake_topic(1, 1)) }
 
     it "prioritizes category correctly" do
       builder.splice_results([fake_topic(2, 2)], :high)

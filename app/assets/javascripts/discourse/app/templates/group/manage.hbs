@@ -1,5 +1,8 @@
 <section class="user-secondary-navigation">
-  <MobileNav @class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
+  <MobileNav
+    @class="activity-nav"
+    @desktopClass="action-list activity-list nav-stacked"
+  >
     {{#each this.tabs as |tab|}}
       <li>
         <LinkTo @route={{tab.route}} @model={{this.model.name}}>
@@ -9,6 +12,6 @@
     {{/each}}
   </MobileNav>
 </section>
-<section class="user-content">
+<section class="user-content" id="user-content">
   {{outlet}}
 </section>

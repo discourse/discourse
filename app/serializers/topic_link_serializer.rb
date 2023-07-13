@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class TopicLinkSerializer < ApplicationSerializer
-
   attributes :url,
              :title,
              # :fancy_title,
@@ -11,7 +10,7 @@ class TopicLinkSerializer < ApplicationSerializer
              :clicks,
              :user_id,
              :domain,
-             :root_domain,
+             :root_domain
 
   def attachment
     Discourse.store.has_been_uploaded?(object.url)
@@ -24,5 +23,4 @@ class TopicLinkSerializer < ApplicationSerializer
   def root_domain
     MiniSuffix.domain(domain)
   end
-
 end

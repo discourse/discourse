@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 class AuthProviderSerializer < ApplicationSerializer
-
-  attributes :name, :custom_url, :pretty_name_override, :title_override,
-             :frame_width, :frame_height, :can_connect, :can_revoke,
+  attributes :name,
+             :custom_url,
+             :pretty_name_override,
+             :title_override,
+             :frame_width,
+             :frame_height,
+             :can_connect,
+             :can_revoke,
              :icon
 
   def title_override
@@ -15,5 +20,4 @@ class AuthProviderSerializer < ApplicationSerializer
     return SiteSetting.get(object.pretty_name_setting) if object.pretty_name_setting
     object.pretty_name
   end
-
 end

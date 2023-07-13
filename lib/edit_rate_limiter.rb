@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'rate_limiter'
+require "rate_limiter"
 class EditRateLimiter < RateLimiter
   def initialize(user)
     limit = SiteSetting.max_edits_per_day

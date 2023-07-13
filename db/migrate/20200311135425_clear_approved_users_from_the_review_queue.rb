@@ -11,12 +11,12 @@ class ClearApprovedUsersFromTheReviewQueue < ActiveRecord::Migration[6.0]
     SQL
 
     system_user_id = Discourse::SYSTEM_USER_ID
-    scores = reviewables.map do |id|
-      "(#{id}, 1, #{Reviewable.statuses[:approved]}, #{system_user_id}, NOW(), NOW())"
-    end
+    scores =
+      reviewables.map do |id|
+        "(#{id}, 1, #{Reviewable.statuses[:approved]}, #{system_user_id}, NOW(), NOW())"
+      end
 
-    if scores.present?
-      DB.exec <<~SQL
+    DB.exec <<~SQL if scores.present?
         INSERT INTO reviewable_histories (
           reviewable_id,
           reviewable_history_type,
@@ -25,9 +25,8 @@ class ClearApprovedUsersFromTheReviewQueue < ActiveRecord::Migration[6.0]
           created_at,
           updated_at
         )
-        VALUES #{scores.join(',') << ';'}
+        VALUES #{scores.join(",") << ";"}
       SQL
-    end
   end
 
   def down

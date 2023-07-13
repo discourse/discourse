@@ -3,6 +3,12 @@
 
   &:hover {
     background: var(--primary-very-low);
-    border-radius: 5px;
+    border-radius: var(--d-border-radius);
+  }
+
+  .chat-channel-title {
+    &__user-info {
+      overflow: hidden;
+    }
   }
 }

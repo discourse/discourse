@@ -45,6 +45,8 @@ export function actionDescription(
   });
 }
 
+const addPostSmallActionClassesCallbacks = [];
+
 const groupActionCodes = ["invited_group", "removed_group"];
 
 const icons = {
@@ -81,6 +83,14 @@ export function addGroupPostSmallActionCode(actionCode) {
   groupActionCodes.push(actionCode);
 }
 
+export function addPostSmallActionClassesCallback(callback) {
+  addPostSmallActionClassesCallbacks.push(callback);
+}
+
+export function resetPostSmallActionClassesCallbacks() {
+  addPostSmallActionClassesCallbacks.length = 0;
+}
+
 export default createWidget("post-small-action", {
   buildKey: (attrs) => `post-small-act-${attrs.id}`,
   tagName: "div.small-action.onscreen-post",
@@ -90,9 +100,23 @@ export default createWidget("post-small-action", {
   },
 
   buildClasses(attrs) {
+    let classNames = [];
+
     if (attrs.deleted) {
-      return "deleted";
+      classNames.push("deleted");
     }
+
+    if (addPostSmallActionClassesCallbacks.length > 0) {
+      addPostSmallActionClassesCallbacks.forEach((callback) => {
+        const additionalClasses = callback.call(this, attrs);
+
+        if (additionalClasses) {
+          classNames.push(...additionalClasses);
+        }
+      });
+    }
+
+    return classNames;
   },
 
   html(attrs) {

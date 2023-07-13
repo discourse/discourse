@@ -1,0 +1,66 @@
+{{#if this.editing}}
+  <td class="editing-input">
+    <div class="label">{{i18n "admin.embedding.host"}}</div>
+    <Input
+      @value={{this.buffered.host}}
+      placeholder="example.com"
+      @enter={{action "save"}}
+      class="host-name"
+      autofocus={{true}}
+    />
+  </td>
+  <td class="editing-input">
+    <div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>
+    <Input
+      @value={{this.buffered.allowed_paths}}
+      placeholder="/blog/.*"
+      @enter={{action "save"}}
+      class="path-allowlist"
+    />
+  </td>
+  <td class="editing-input">
+    <div class="label">{{i18n "admin.embedding.category"}}</div>
+    <CategoryChooser
+      @value={{this.categoryId}}
+      @class="small"
+      @onChange={{action (mut this.categoryId)}}
+    />
+  </td>
+  <td class="editing-controls">
+    <DButton
+      @icon="check"
+      @action={{action "save"}}
+      @class="btn-primary"
+      @disabled={{this.cantSave}}
+    />
+    <DButton
+      @icon="times"
+      @action={{action "cancel"}}
+      @class="btn-danger"
+      @disabled={{this.host.isSaving}}
+    />
+  </td>
+{{else}}
+  <td>
+    <div class="label">{{i18n "admin.embedding.host"}}</div>
+    {{this.host.host}}
+  </td>
+  <td>
+    <div class="label">
+      {{i18n "admin.embedding.allowed_paths"}}
+    </div>
+    {{this.host.allowed_paths}}
+  </td>
+  <td>
+    <div class="label">{{i18n "admin.embedding.category"}}</div>
+    {{category-badge this.host.category allowUncategorized=true}}
+  </td>
+  <td class="controls">
+    <DButton @icon="pencil-alt" @action={{action "edit"}} />
+    <DButton
+      @icon="far-trash-alt"
+      @action={{action "delete"}}
+      @class="btn-danger"
+    />
+  </td>
+{{/if}}

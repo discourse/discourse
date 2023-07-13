@@ -18,33 +18,33 @@ module Reports::ModeratorsActivity
         {
           property: :flag_count,
           type: :number,
-          title: I18n.t("reports.moderators_activity.labels.flag_count")
+          title: I18n.t("reports.moderators_activity.labels.flag_count"),
         },
         {
           type: :seconds,
           property: :time_read,
-          title: I18n.t("reports.moderators_activity.labels.time_read")
+          title: I18n.t("reports.moderators_activity.labels.time_read"),
         },
         {
           property: :topic_count,
           type: :number,
-          title: I18n.t("reports.moderators_activity.labels.topic_count")
+          title: I18n.t("reports.moderators_activity.labels.topic_count"),
         },
         {
           property: :pm_count,
           type: :number,
-          title: I18n.t("reports.moderators_activity.labels.pm_count")
+          title: I18n.t("reports.moderators_activity.labels.pm_count"),
         },
         {
           property: :post_count,
           type: :number,
-          title: I18n.t("reports.moderators_activity.labels.post_count")
+          title: I18n.t("reports.moderators_activity.labels.post_count"),
         },
         {
           property: :revision_count,
           type: :number,
-          title: I18n.t("reports.moderators_activity.labels.revision_count")
-        }
+          title: I18n.t("reports.moderators_activity.labels.revision_count"),
+        },
       ]
 
       report.modes = [:table]
@@ -75,7 +75,7 @@ module Reports::ModeratorsActivity
           SELECT agreed_by_id,
           disagreed_by_id
           FROM post_actions
-          WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(',')})
+          WHERE post_action_type_id IN (#{PostActionType.flag_types_without_custom.values.join(",")})
           AND created_at >= '#{report.start_date}'
           AND created_at <= '#{report.end_date}'
           ),
@@ -173,19 +173,21 @@ module Reports::ModeratorsActivity
       ORDER BY m.username
       SQL
 
-      DB.query(query).each do |row|
-        mod = {}
-        mod[:username] = row.username
-        mod[:user_id] = row.user_id
-        mod[:user_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
-        mod[:time_read] = row.time_read
-        mod[:flag_count] = row.flag_count
-        mod[:revision_count] = row.revision_count
-        mod[:topic_count] = row.topic_count
-        mod[:post_count] = row.post_count
-        mod[:pm_count] = row.pm_count
-        report.data << mod
-      end
+      DB
+        .query(query)
+        .each do |row|
+          mod = {}
+          mod[:username] = row.username
+          mod[:user_id] = row.user_id
+          mod[:user_avatar_template] = User.avatar_template(row.username, row.uploaded_avatar_id)
+          mod[:time_read] = row.time_read
+          mod[:flag_count] = row.flag_count
+          mod[:revision_count] = row.revision_count
+          mod[:topic_count] = row.topic_count
+          mod[:post_count] = row.post_count
+          mod[:pm_count] = row.pm_count
+          report.data << mod
+        end
     end
   end
 end

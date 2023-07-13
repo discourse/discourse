@@ -9,6 +9,6 @@ class CreateHotTopics < ActiveRecord::Migration[4.2]
     end
 
     add_index :hot_topics, :topic_id, unique: true
-    add_index :hot_topics, :score, order: 'desc'
+    add_index :hot_topics, :score, order: "desc"
   end
 end

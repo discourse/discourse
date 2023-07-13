@@ -7,7 +7,7 @@
     </div>
     <span class="presence-text">
       <span class="description">
-        {{#if this.isReply ~}}
+        {{#if this.isReply~}}
           {{i18n "presence.replying" count=this.presenceUsers.length}}
         {{~else~}}
           {{i18n "presence.editing" count=this.presenceUsers.length}}
@@ -17,8 +17,9 @@
       {{~""~}}
       <span class="wave">
         {{~""~}}
-        <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
-        {{~""~}}
+        <span class="dot">.</span>{{~""~}}
+        <span class="dot">.</span>{{~""~}}
+        <span class="dot">.</span>{{~""~}}
       </span>
     </span>
   </div>

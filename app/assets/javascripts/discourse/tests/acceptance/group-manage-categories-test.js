@@ -12,7 +12,7 @@ acceptance("Managing Group Category Notification Defaults", function () {
     await visit("/g/discourse/manage/categories");
 
     assert.ok(
-      exists(".group-members tr"),
+      exists(".group-members .group-member"),
       "it should redirect to members page for an anonymous user"
     );
   });

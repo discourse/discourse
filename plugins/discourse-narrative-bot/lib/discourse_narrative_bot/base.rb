@@ -4,7 +4,8 @@ module DiscourseNarrativeBot
   class Base
     include Actions
 
-    class InvalidTransitionError < StandardError; end
+    class InvalidTransitionError < StandardError
+    end
 
     def input(input, user, post: nil, topic_id: nil, skip: false)
       new_post = nil
@@ -30,16 +31,18 @@ module DiscourseNarrativeBot
             next_opts = self.class::TRANSITION_TABLE.fetch(next_state)
             prerequisite = next_opts[:prerequisite]
 
-            if (!prerequisite || instance_eval(&prerequisite)) && !(
-              SiteSetting.discourse_narrative_bot_skip_tutorials.present? &&
-              SiteSetting.discourse_narrative_bot_skip_tutorials.split("|").include?(next_state.to_s))
-
+            if (!prerequisite || instance_eval(&prerequisite)) &&
+                 !(
+                   SiteSetting.discourse_narrative_bot_skip_tutorials.present? &&
+                     SiteSetting
+                       .discourse_narrative_bot_skip_tutorials
+                       .split("|")
+                       .include?(next_state.to_s)
+                 )
               break
             end
 
-            [:next_state, :next_instructions].each do |key|
-              opts[key] = next_opts[key]
-            end
+            %i[next_state next_instructions].each { |key| opts[key] = next_opts[key] }
           end
         rescue InvalidTransitionError
           # For given input, no transition for current state
@@ -78,16 +81,9 @@ module DiscourseNarrativeBot
               end_reply
               cancel_timeout_job(user)
 
-              BadgeGranter.grant(
-                Badge.find_by(name: self.class.badge_name),
-                user
-              )
+              BadgeGranter.grant(Badge.find_by(name: self.class.badge_name), user)
 
-              set_data(@user,
-                topic_id: new_post.topic_id,
-                state: :end,
-                track: self.class.to_s
-              )
+              set_data(@user, topic_id: new_post.topic_id, state: :end, track: self.class.to_s)
             end
           end
         rescue => e
@@ -116,25 +112,29 @@ module DiscourseNarrativeBot
       @data = get_data(user) || {}
 
       if post = Post.find_by(id: @data[:last_post_id])
-        reply_to(post, I18n.t("discourse_narrative_bot.timeout.message",
-          i18n_post_args(
-            username: user.username,
-            skip_trigger: TrackSelector.skip_trigger,
-            reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}"
-          )
-        ), {}, skip_send_email: false)
+        reply_to(
+          post,
+          I18n.t(
+            "discourse_narrative_bot.timeout.message",
+            i18n_post_args(
+              username: user.username,
+              skip_trigger: TrackSelector.skip_trigger,
+              reset_trigger: "#{TrackSelector.reset_trigger} #{self.class.reset_trigger}",
+            ),
+          ),
+          {},
+          skip_send_email: false,
+        )
       end
     end
 
     def certificate(type = nil)
-      options = {
-        user_id: @user.id,
-        date: Time.zone.now.strftime('%b %d %Y'),
-        format: :svg
-      }
+      options = { user_id: @user.id, date: Time.zone.now.strftime("%b %d %Y"), format: :svg }
       options.merge!(type: type) if type
 
-      src = Discourse.base_url + DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_path(options)
+      src =
+        Discourse.base_url +
+          DiscourseNarrativeBot::Engine.routes.url_helpers.certificate_path(options)
       alt = CGI.escapeHTML(I18n.t("#{self.class::I18N_KEY}.certificate.alt"))
 
       "<iframe class='discobot-certificate' src='#{src}' width='650' height='464' alt='#{alt}'></iframe>"
@@ -192,7 +192,7 @@ module DiscourseNarrativeBot
     end
 
     def not_implemented
-      raise 'Not implemented.'
+      raise "Not implemented."
     end
 
     private

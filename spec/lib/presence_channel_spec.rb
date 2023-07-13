@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'presence_channel'
+require "presence_channel"
 
 RSpec.describe PresenceChannel do
   fab!(:user) { Fabricate(:user) }
@@ -14,16 +14,18 @@ RSpec.describe PresenceChannel do
     secure_group = Fabricate(:group)
     PresenceChannel.register_prefix("test") do |channel|
       case channel
-      when /\A\/test\/public\d*\z/
+      when %r{\A/test/public\d*\z}
         PresenceChannel::Config.new(public: true)
       when "/test/secureuser"
-        PresenceChannel::Config.new(allowed_user_ids: [ secure_user.id ])
+        PresenceChannel::Config.new(allowed_user_ids: [secure_user.id])
       when "/test/securegroup"
-        PresenceChannel::Config.new(allowed_group_ids: [ secure_group.id ])
+        PresenceChannel::Config.new(allowed_group_ids: [secure_group.id])
       when "/test/alloweduser"
-        PresenceChannel::Config.new(allowed_user_ids: [ user.id ])
+        PresenceChannel::Config.new(allowed_user_ids: [user.id])
       when "/test/allowedgroup"
-        PresenceChannel::Config.new(allowed_group_ids: [ group.id ])
+        PresenceChannel::Config.new(allowed_group_ids: [group.id])
+      when "/test/everyonegroup"
+        PresenceChannel::Config.new(allowed_group_ids: [Group::AUTO_GROUPS[:everyone]])
       when "/test/noaccess"
         PresenceChannel::Config.new
       when "/test/countonly"
@@ -36,7 +38,7 @@ RSpec.describe PresenceChannel do
 
   after do
     PresenceChannel.clear_all!
-    PresenceChannel.unregister_prefix('test')
+    PresenceChannel.unregister_prefix("test")
   end
 
   it "can perform basic channel functionality" do
@@ -81,9 +83,10 @@ RSpec.describe PresenceChannel do
   it "correctly sends messages to message bus" do
     channel = PresenceChannel.new("/test/public1")
 
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.present(user_id: user.id, client_id: "a")
-    end
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.present(user_id: user.id, client_id: "a")
+      end
 
     data = messages.map(&:data)
     expect(data.count).to eq(1)
@@ -92,9 +95,7 @@ RSpec.describe PresenceChannel do
 
     freeze_time Time.zone.now + 1 + PresenceChannel::DEFAULT_TIMEOUT
 
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.auto_leave
-    end
+    messages = MessageBus.track_publish(channel.message_bus_channel_name) { channel.auto_leave }
 
     data = messages.map(&:data)
     expect(data.count).to eq(1)
@@ -117,38 +118,38 @@ RSpec.describe PresenceChannel do
 
     freeze_time start_time + PresenceChannel::DEFAULT_TIMEOUT + 1
 
-    messages = MessageBus.track_publish do
-      PresenceChannel.auto_leave_all
-    end
+    messages = MessageBus.track_publish { PresenceChannel.auto_leave_all }
 
-    expect(messages.map { |m| [ m.channel, m.data ] }).to contain_exactly(
+    expect(messages.map { |m| [m.channel, m.data] }).to contain_exactly(
       ["/presence/test/public1", { "leaving_user_ids" => [user.id] }],
-      ["/presence/test/public2", { "leaving_user_ids" => [user.id] }]
+      ["/presence/test/public2", { "leaving_user_ids" => [user.id] }],
     )
 
     expect(channel1.user_ids).to eq([])
     expect(channel2.user_ids).to eq([user2.id])
   end
 
-  it 'only sends one `enter` and `leave` message' do
+  it "only sends one `enter` and `leave` message" do
     channel = PresenceChannel.new("/test/public1")
 
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.present(user_id: user.id, client_id: "a")
-      channel.present(user_id: user.id, client_id: "a")
-      channel.present(user_id: user.id, client_id: "b")
-    end
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.present(user_id: user.id, client_id: "a")
+        channel.present(user_id: user.id, client_id: "a")
+        channel.present(user_id: user.id, client_id: "b")
+      end
 
     data = messages.map(&:data)
     expect(data.count).to eq(1)
     expect(data[0].keys).to contain_exactly("entering_users")
     expect(data[0]["entering_users"].map { |u| u[:id] }).to contain_exactly(user.id)
 
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.leave(user_id: user.id, client_id: "a")
-      channel.leave(user_id: user.id, client_id: "a")
-      channel.leave(user_id: user.id, client_id: "b")
-    end
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.leave(user_id: user.id, client_id: "a")
+        channel.leave(user_id: user.id, client_id: "a")
+        channel.leave(user_id: user.id, client_id: "b")
+      end
 
     data = messages.map(&:data)
     expect(data.count).to eq(1)
@@ -179,8 +180,14 @@ RSpec.describe PresenceChannel do
     initial_zlist_ttl = r.ttl(channel.send(:redis_key_zlist))
     initial_hash_ttl = r.ttl(channel.send(:redis_key_hash))
 
-    expect(initial_zlist_ttl).to be_between(PresenceChannel::GC_SECONDS, PresenceChannel::GC_SECONDS + 5.minutes)
-    expect(initial_hash_ttl).to be_between(PresenceChannel::GC_SECONDS, PresenceChannel::GC_SECONDS + 5.minutes)
+    expect(initial_zlist_ttl).to be_between(
+      PresenceChannel::GC_SECONDS,
+      PresenceChannel::GC_SECONDS + 5.minutes,
+    )
+    expect(initial_hash_ttl).to be_between(
+      PresenceChannel::GC_SECONDS,
+      PresenceChannel::GC_SECONDS + 5.minutes,
+    )
 
     freeze_time 1.minute.from_now
 
@@ -194,65 +201,69 @@ RSpec.describe PresenceChannel do
     expect(new_hash_ttl).to be > initial_hash_ttl
   end
 
-  it 'handles security correctly for anon' do
+  it "handles security correctly for anon" do
     expect(PresenceChannel.new("/test/public1").can_enter?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/secureuser").can_enter?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/securegroup").can_enter?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/noaccess").can_enter?(user_id: nil)).to eq(false)
+    expect(PresenceChannel.new("/test/everyonegroup").can_enter?(user_id: nil)).to eq(false)
 
     expect(PresenceChannel.new("/test/public1").can_view?(user_id: nil)).to eq(true)
     expect(PresenceChannel.new("/test/secureuser").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/securegroup").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: nil)).to eq(false)
+    expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: nil)).to eq(false)
   end
 
-  it 'handles security correctly for a user' do
+  it "handles security correctly for a user" do
     expect(PresenceChannel.new("/test/secureuser").can_enter?(user_id: user.id)).to eq(false)
     expect(PresenceChannel.new("/test/securegroup").can_enter?(user_id: user.id)).to eq(false)
     expect(PresenceChannel.new("/test/alloweduser").can_enter?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/allowedgroup").can_enter?(user_id: user.id)).to eq(true)
+    expect(PresenceChannel.new("/test/everyonegroup").can_enter?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/noaccess").can_enter?(user_id: user.id)).to eq(false)
 
     expect(PresenceChannel.new("/test/secureuser").can_view?(user_id: user.id)).to eq(false)
     expect(PresenceChannel.new("/test/securegroup").can_view?(user_id: user.id)).to eq(false)
     expect(PresenceChannel.new("/test/alloweduser").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/allowedgroup").can_view?(user_id: user.id)).to eq(true)
+    expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: user.id)).to eq(false)
   end
 
-  it 'publishes messages with appropriate security' do
+  it "publishes messages with appropriate security" do
     channel = PresenceChannel.new("/test/alloweduser")
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.present(user_id: user.id, client_id: "a")
-    end
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.present(user_id: user.id, client_id: "a")
+      end
     expect(messages.count).to eq(1)
     expect(messages[0].user_ids).to eq([user.id])
 
     channel = PresenceChannel.new("/test/allowedgroup")
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.present(user_id: user.id, client_id: "a")
-    end
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.present(user_id: user.id, client_id: "a")
+      end
     expect(messages.count).to eq(1)
     expect(messages[0].group_ids).to eq([group.id])
   end
 
-  it 'publishes messages correctly in count_only mode' do
+  it "publishes messages correctly in count_only mode" do
     channel = PresenceChannel.new("/test/countonly")
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.present(user_id: user.id, client_id: "a")
-    end
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.present(user_id: user.id, client_id: "a")
+      end
     expect(messages.count).to eq(1)
-    expect(messages[0].data).to eq({
-      "count_delta" => 1
-    })
+    expect(messages[0].data).to eq({ "count_delta" => 1 })
 
-    messages = MessageBus.track_publish(channel.message_bus_channel_name) do
-      channel.leave(user_id: user.id, client_id: "a")
-    end
+    messages =
+      MessageBus.track_publish(channel.message_bus_channel_name) do
+        channel.leave(user_id: user.id, client_id: "a")
+      end
     expect(messages.count).to eq(1)
-    expect(messages[0].data).to eq({
-      "count_delta" => -1
-    })
+    expect(messages[0].data).to eq({ "count_delta" => -1 })
   end
 
   it "sets a mutex when the change involves publishing messages" do
@@ -269,14 +280,14 @@ RSpec.describe PresenceChannel do
 
     # Enter and leave
     expect(PresenceChannel.redis.get(redis_key_mutex)).to eq(nil)
-    channel.present(user_id: user.id, client_id: 'a')
+    channel.present(user_id: user.id, client_id: "a")
     expect(PresenceChannel.redis.get(redis_key_mutex)).to eq(nil)
-    channel.leave(user_id: user.id, client_id: 'a')
+    channel.leave(user_id: user.id, client_id: "a")
     expect(PresenceChannel.redis.get(redis_key_mutex)).to eq(nil)
     expect(messages_published).to eq(2)
 
     # Enter and auto_leave
-    channel.present(user_id: user.id, client_id: 'a')
+    channel.present(user_id: user.id, client_id: "a")
     expect(PresenceChannel.redis.get(redis_key_mutex)).to eq(nil)
     freeze_time 1.hour.from_now
     channel.auto_leave

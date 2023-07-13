@@ -82,14 +82,14 @@ class HtmlPrettify < String
     elsif @options.include?(-1)
       do_stupefy = true
     else
-      do_quotes      = @options.include?(:quotes)
-      do_backticks   = @options.include?(:backticks)
-      do_backticks   = :both if @options.include?(:allbackticks)
-      do_dashes      = :normal if @options.include?(:dashes)
-      do_dashes      = :oldschool if @options.include?(:oldschool)
-      do_dashes      = :inverted if @options.include?(:inverted)
-      do_ellipses    = @options.include?(:ellipses)
-      do_stupefy     = @options.include?(:stupefy)
+      do_quotes = @options.include?(:quotes)
+      do_backticks = @options.include?(:backticks)
+      do_backticks = :both if @options.include?(:allbackticks)
+      do_dashes = :normal if @options.include?(:dashes)
+      do_dashes = :oldschool if @options.include?(:oldschool)
+      do_dashes = :inverted if @options.include?(:inverted)
+      do_ellipses = @options.include?(:ellipses)
+      do_stupefy = @options.include?(:stupefy)
     end
 
     # Parse the HTML
@@ -110,8 +110,8 @@ class HtmlPrettify < String
     tokens.each do |token|
       if token.first == :tag
         result << token[1]
-        if token[1] =~ %r!<(/?)(?:pre|code|kbd|script|math)[\s>]!
-          in_pre = ($1 != "/")  # Opening or closing tag?
+        if token[1] =~ %r{<(/?)(?:pre|code|kbd|script|math)[\s>]}
+          in_pre = ($1 != "/") # Opening or closing tag?
         end
       else
         t = token[1]
@@ -120,24 +120,23 @@ class HtmlPrettify < String
         last_char = t[-1].chr
 
         unless in_pre
-
           t.gsub!("&#39;", "'")
           t.gsub!("&quot;", '"')
 
           if do_dashes
-            t = educate_dashes t            if do_dashes == :normal
-            t = educate_dashes_oldschool t  if do_dashes == :oldschool
-            t = educate_dashes_inverted t   if do_dashes == :inverted
+            t = educate_dashes t if do_dashes == :normal
+            t = educate_dashes_oldschool t if do_dashes == :oldschool
+            t = educate_dashes_inverted t if do_dashes == :inverted
           end
 
-          t = educate_ellipses t  if do_ellipses
+          t = educate_ellipses t if do_ellipses
 
           t = educate_fractions t
 
           # Note: backticks need to be processed before quotes.
           if do_backticks
             t = educate_backticks t
-            t = educate_single_backticks t  if do_backticks == :both
+            t = educate_single_backticks t if do_backticks == :both
           end
 
           if do_quotes
@@ -161,7 +160,7 @@ class HtmlPrettify < String
             end
           end
 
-          t = stupefy_entities t  if do_stupefy
+          t = stupefy_entities t if do_stupefy
         end
 
         prev_token_last_char = last_char
@@ -179,8 +178,7 @@ class HtmlPrettify < String
   # em-dash HTML entity.
   #
   def educate_dashes(str)
-    str.
-      gsub(/--/, entity(:em_dash))
+    str.gsub(/--/, entity(:em_dash))
   end
 
   # The string, with each instance of "<tt>--</tt>" translated to an
@@ -188,9 +186,7 @@ class HtmlPrettify < String
   # em-dash HTML entity.
   #
   def educate_dashes_oldschool(str)
-    str.
-      gsub(/---/, entity(:em_dash)).
-      gsub(/--/,  entity(:en_dash))
+    str.gsub(/---/, entity(:em_dash)).gsub(/--/, entity(:en_dash))
   end
 
   # Return the string, with each instance of "<tt>--</tt>" translated
@@ -204,9 +200,7 @@ class HtmlPrettify < String
   # Aaron Swartz for the idea.)
   #
   def educate_dashes_inverted(str)
-    str.
-      gsub(/---/, entity(:en_dash)).
-      gsub(/--/,  entity(:em_dash))
+    str.gsub(/---/, entity(:en_dash)).gsub(/--/, entity(:em_dash))
   end
 
   # Return the string, with each instance of "<tt>...</tt>" translated
@@ -214,31 +208,25 @@ class HtmlPrettify < String
   # spaces between the dots.
   #
   def educate_ellipses(str)
-    str.
-      gsub('...',   entity(:ellipsis)).
-      gsub('. . .', entity(:ellipsis))
+    str.gsub("...", entity(:ellipsis)).gsub(". . .", entity(:ellipsis))
   end
 
   # Return the string, with "<tt>``backticks''</tt>"-style single quotes
   # translated into HTML curly quote entities.
   #
   def educate_backticks(str)
-    str.
-      gsub("``", entity(:double_left_quote)).
-      gsub("''", entity(:double_right_quote))
+    str.gsub("``", entity(:double_left_quote)).gsub("''", entity(:double_right_quote))
   end
 
   # Return the string, with "<tt>`backticks'</tt>"-style single quotes
   # translated into HTML curly quote entities.
   #
   def educate_single_backticks(str)
-    str.
-      gsub("`", entity(:single_left_quote)).
-      gsub("'", entity(:single_right_quote))
+    str.gsub("`", entity(:single_left_quote)).gsub("'", entity(:single_right_quote))
   end
 
   def educate_fractions(str)
-    str.gsub(/(\s+|^)(1\/4|1\/2|3\/4)([,.;\s]|$)/) do
+    str.gsub(%r{(\s+|^)(1/4|1/2|3/4)([,.;\s]|$)}) do
       frac =
         if $2 == "1/2"
           entity(:frac12)
@@ -261,52 +249,45 @@ class HtmlPrettify < String
     # Special case if the very first character is a quote followed by
     # punctuation at a non-word-break. Close the quotes by brute
     # force:
-    str.gsub!(/^'(?=#{punct_class}\B)/,
-              entity(:single_right_quote))
-    str.gsub!(/^"(?=#{punct_class}\B)/,
-              entity(:double_right_quote))
+    str.gsub!(/\A'(?=#{punct_class}\B)/, entity(:single_right_quote))
+    str.gsub!(/\A"(?=#{punct_class}\B)/, entity(:double_right_quote))
 
     # Special case for double sets of quotes, e.g.:
     #   <p>He said, "'Quoted' words in a larger quote."</p>
-    str.gsub!(/"'(?=\w)/,
-              "#{entity(:double_left_quote)}#{entity(:single_left_quote)}")
-    str.gsub!(/'"(?=\w)/,
-              "#{entity(:single_left_quote)}#{entity(:double_left_quote)}")
+    str.gsub!(/"'(?=\w)/, "#{entity(:double_left_quote)}#{entity(:single_left_quote)}")
+    str.gsub!(/'"(?=\w)/, "#{entity(:single_left_quote)}#{entity(:double_left_quote)}")
 
     # Special case for decade abbreviations (the '80s):
-    str.gsub!(/'(?=\d\ds)/,
-              entity(:single_right_quote))
+    str.gsub!(/'(?=\d\ds)/, entity(:single_right_quote))
 
     close_class = %![^\ \t\r\n\\[\{\(\-]!
     dec_dashes = "#{entity(:en_dash)}|#{entity(:em_dash)}"
 
     # Get most opening single quotes:
-    str.gsub!(/(\s|&nbsp;|=|--|&[mn]dash;|#{dec_dashes}|&#x201[34];)'(?=\w)/,
-             '\1' + entity(:single_left_quote))
+    str.gsub!(
+      /(\s|&nbsp;|=|--|&[mn]dash;|#{dec_dashes}|&#x201[34];)'(?=\w)/,
+      '\1' + entity(:single_left_quote),
+    )
 
     # Single closing quotes:
-    str.gsub!(/(#{close_class})'/,
-              '\1' + entity(:single_right_quote))
-    str.gsub!(/'(\s|s\b|$)/,
-              entity(:single_right_quote) + '\1')
+    str.gsub!(/(#{close_class})'/, '\1' + entity(:single_right_quote))
+    str.gsub!(/'(\s|s\b|$)/, entity(:single_right_quote) + '\1')
 
     # Any remaining single quotes should be opening ones:
-    str.gsub!(/'/,
-              entity(:single_left_quote))
+    str.gsub!(/'/, entity(:single_left_quote))
 
     # Get most opening double quotes:
-    str.gsub!(/(\s|&nbsp;|=|--|&[mn]dash;|#{dec_dashes}|&#x201[34];)"(?=\w)/,
-             '\1' + entity(:double_left_quote))
+    str.gsub!(
+      /(\s|&nbsp;|=|--|&[mn]dash;|#{dec_dashes}|&#x201[34];)"(?=\w)/,
+      '\1' + entity(:double_left_quote),
+    )
 
     # Double closing quotes:
-    str.gsub!(/(#{close_class})"/,
-              '\1' + entity(:double_right_quote))
-    str.gsub!(/"(\s|s\b|$)/,
-              entity(:double_right_quote) + '\1')
+    str.gsub!(/(#{close_class})"/, '\1' + entity(:double_right_quote))
+    str.gsub!(/"(\s|s\b|$)/, entity(:double_right_quote) + '\1')
 
     # Any remaining quotes should be opening ones:
-    str.gsub!(/"/,
-              entity(:double_left_quote))
+    str.gsub!(/"/, entity(:double_left_quote))
 
     str
   end
@@ -320,16 +301,14 @@ class HtmlPrettify < String
     new_str = str.dup
 
     {
-      en_dash: '-',
-      em_dash: '--',
+      en_dash: "-",
+      em_dash: "--",
       single_left_quote: "'",
       single_right_quote: "'",
       double_left_quote: '"',
       double_right_quote: '"',
-      ellipsis: '...'
-    }.each do |k, v|
-      new_str.gsub!(/#{entity(k)}/, v)
-    end
+      ellipsis: "...",
+    }.each { |k, v| new_str.gsub!(/#{entity(k)}/, v) }
 
     new_str
   end
@@ -354,14 +333,12 @@ class HtmlPrettify < String
     prev_end = 0
 
     scan(tag_soup) do
-      tokens << [:text, $1]  if $1 != ""
+      tokens << [:text, $1] if $1 != ""
       tokens << [:tag, $2]
       prev_end = $~.end(0)
     end
 
-    if prev_end < size
-      tokens << [:text, self[prev_end..-1]]
-    end
+    tokens << [:text, self[prev_end..-1]] if prev_end < size
 
     tokens
   end
@@ -385,5 +362,4 @@ class HtmlPrettify < String
   def entity(key)
     @entities[key]
   end
-
 end

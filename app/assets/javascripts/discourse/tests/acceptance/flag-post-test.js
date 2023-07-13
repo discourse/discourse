@@ -125,7 +125,7 @@ acceptance("flagging", function (needs) {
     assert.ok(exists(".modal-body"));
     await fillIn(".silence-reason", "for breaking the rules");
 
-    await click(".perform-silence");
+    await click(".perform-penalize");
     assert.ok(!exists(".modal-body"));
   });
 

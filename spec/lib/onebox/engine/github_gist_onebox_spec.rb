@@ -4,8 +4,10 @@ RSpec.describe Onebox::Engine::GithubGistOnebox do
   before do
     @link = "https://gist.github.com/karreiro/208fdd59fc4b4c39283b"
 
-    stub_request(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b")
-      .to_return(status: 200, body: onebox_response(described_class.onebox_name))
+    stub_request(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b").to_return(
+      status: 200,
+      body: onebox_response(described_class.onebox_name),
+    )
   end
 
   include_context "with engines"
@@ -14,7 +16,7 @@ RSpec.describe Onebox::Engine::GithubGistOnebox do
   describe "#data" do
     let(:gist_files) { data[:gist_files] }
 
-    it 'includes contents with 10 lines at most' do
+    it "includes contents with 10 lines at most" do
       gist_files.each do |gist_file|
         truncated_lines = gist_file.content.split("\n").size
         expect(truncated_lines).to be < 10
@@ -23,7 +25,7 @@ RSpec.describe Onebox::Engine::GithubGistOnebox do
   end
 
   describe "#to_html" do
-    describe 'when Gist API responds correctly' do
+    describe "when Gist API responds correctly" do
       it "includes the link to original page" do
         expect(html).to include("https://gist.github.com/karreiro/208fdd59fc4b4c39283b")
       end
@@ -49,10 +51,11 @@ RSpec.describe Onebox::Engine::GithubGistOnebox do
       end
     end
 
-    describe 'when the rate limit has been reached' do
+    describe "when the rate limit has been reached" do
       before do
-        stub_request(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b")
-          .to_return(status: 403)
+        stub_request(:get, "https://api.github.com/gists/208fdd59fc4b4c39283b").to_return(
+          status: 403,
+        )
       end
 
       it "includes the link to original page" do

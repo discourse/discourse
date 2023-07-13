@@ -4,6 +4,11 @@ export default function slugifyChannel(channel) {
   if (channel.slug) {
     return channel.slug;
   }
+
+  if (!channel.escapedTitle && !channel.title) {
+    return "-";
+  }
+
   const slug = slugify(channel.escapedTitle || channel.title);
   const resolvedSlug = (
     slug.length

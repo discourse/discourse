@@ -6,7 +6,8 @@
 class DiscourseSourcemappingUrlProcessor < Sprockets::Rails::SourcemappingUrlProcessor
   def self.sourcemap_asset_path(sourcemap_logical_path, context:)
     result = super(sourcemap_logical_path, context: context)
-    if (File.basename(sourcemap_logical_path) === sourcemap_logical_path) || sourcemap_logical_path.start_with?("plugins/")
+    if (File.basename(sourcemap_logical_path) === sourcemap_logical_path) ||
+         sourcemap_logical_path.start_with?("plugins/")
       # If the original sourcemap reference is relative, keep it relative
       result = File.basename(result)
     end

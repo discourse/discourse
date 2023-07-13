@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class PostMerger
-  class CannotMergeError < StandardError; end
+  class CannotMergeError < StandardError
+  end
 
   def initialize(user, posts)
     @user = user
@@ -17,10 +18,11 @@ class PostMerger
     guardian = Guardian.new(@user)
     ensure_can_merge!(guardian)
 
-    posts = @posts.sort_by do |post|
-      guardian.ensure_can_delete!(post)
-      post.post_number
-    end
+    posts =
+      @posts.sort_by do |post|
+        guardian.ensure_can_delete!(post)
+        post.post_number
+      end
 
     post_content = posts.map(&:raw)
     post = posts.pop
@@ -28,13 +30,13 @@ class PostMerger
     merged_post_raw = post_content.join("\n\n")
     changes = {
       raw: merged_post_raw,
-      edit_reason: I18n.t("merge_posts.edit_reason", count: posts.length, username: @user.username)
+      edit_reason: I18n.t("merge_posts.edit_reason", count: posts.length, username: @user.username),
     }
 
     ensure_max_post_length!(merged_post_raw)
-    PostRevisor.new(post, post.topic).revise!(@user, changes) do
-      posts.each { |p| PostDestroyer.new(@user, p).destroy }
-    end
+    PostRevisor
+      .new(post, post.topic)
+      .revise!(@user, changes) { posts.each { |p| PostDestroyer.new(@user, p).destroy } }
   end
 
   private

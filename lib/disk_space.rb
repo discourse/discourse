@@ -18,13 +18,13 @@ class DiskSpace
   end
 
   def self.free(path)
-    output = Discourse::Utils.execute_command('df', '-Pk', path)
+    output = Discourse::Utils.execute_command("df", "-Pk", path)
     size_line = output.split("\n")[1]
     size_line.split(/\s+/)[3].to_i * 1024
   end
 
   def self.percent_free(path)
-    output = Discourse::Utils.execute_command('df', '-P', path)
+    output = Discourse::Utils.execute_command("df", "-P", path)
     size_line = output.split("\n")[1]
     size_line.split(/\s+/)[4].to_i
   end

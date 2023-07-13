@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::IgnoredUsersSummary do
+  subject(:job) { Jobs::IgnoredUsersSummary.new.execute({}) }
+
   before do
     SiteSetting.ignored_users_count_message_threshold = 1
     SiteSetting.ignored_users_message_gap_days = 365
   end
 
-  subject { Jobs::IgnoredUsersSummary.new.execute({}) }
-
   context "with no ignored users" do
     it "does nothing" do
-      subject
-      expect { subject }.to_not change { Post.count }
+      job
+      expect { job }.to_not change { Post.count }
     end
   end
 
@@ -27,23 +27,24 @@ RSpec.describe Jobs::IgnoredUsersSummary do
 
     context "when no system message exists for the ignored users" do
       context "when threshold is not hit" do
-        before do
-          SiteSetting.ignored_users_count_message_threshold = 5
-        end
+        before { SiteSetting.ignored_users_count_message_threshold = 5 }
 
         it "does nothing" do
-          subject
-          expect { subject }.to_not change { Post.count }
+          job
+          expect { job }.to_not change { Post.count }
         end
       end
 
       context "when threshold is hit" do
         it "creates a system message" do
-          subject
-          posts = Post.joins(:topic).where(topics: {
-            archetype: Archetype.private_message,
-            subtype: TopicSubtype.system_message
-          })
+          job
+          posts =
+            Post.joins(:topic).where(
+              topics: {
+                archetype: Archetype.private_message,
+                subtype: TopicSubtype.system_message,
+              },
+            )
           expect(posts.count).to eq(2)
           expect(posts.find { |post| post.raw.include?(matt.username) }).to be_present
           expect(posts.find { |post| post.raw.include?(john.username) }).to be_present
@@ -53,20 +54,18 @@ RSpec.describe Jobs::IgnoredUsersSummary do
 
     context "when a system message already exists for the ignored users" do
       context "when threshold is not hit" do
-        before do
-          SiteSetting.ignored_users_count_message_threshold = 5
-        end
+        before { SiteSetting.ignored_users_count_message_threshold = 5 }
 
         it "does nothing" do
-          subject
-          expect { subject }.to_not change { Post.count }
+          job
+          expect { job }.to_not change { Post.count }
         end
       end
 
       context "when threshold is hit" do
         it "does nothing" do
-          subject
-          expect { subject }.to_not change { Post.count }
+          job
+          expect { job }.to_not change { Post.count }
         end
       end
     end

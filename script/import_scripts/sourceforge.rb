@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'base.rb'
+require_relative "base.rb"
 
 # Import script for SourceForge discussions.
 #
@@ -15,10 +15,10 @@ require_relative 'base.rb'
 class ImportScripts::Sourceforge < ImportScripts::Base
   # When the URL of your project is https://sourceforge.net/projects/foo/
   # than the value of PROJECT_NAME is 'foo'
-  PROJECT_NAME = 'project_name'
+  PROJECT_NAME = "project_name"
 
   # This is the path to the discussion.json that you exported from SourceForge.
-  JSON_FILE = '/path/to/discussion.json'
+  JSON_FILE = "/path/to/discussion.json"
 
   def initialize
     super
@@ -27,7 +27,7 @@ class ImportScripts::Sourceforge < ImportScripts::Base
   end
 
   def execute
-    puts '', 'Importing from SourceForge...'
+    puts "", "Importing from SourceForge..."
 
     load_json
 
@@ -40,25 +40,26 @@ class ImportScripts::Sourceforge < ImportScripts::Base
   end
 
   def import_categories
-    puts '', 'importing categories'
+    puts "", "importing categories"
 
     create_categories(@json[:forums]) do |forum|
       {
         id: forum[:shortname],
         name: forum[:name],
-        post_create_action: proc do |category|
-          changes = { raw: forum[:description] }
-          opts = { revised_at: Time.now, bypass_bump: true }
+        post_create_action:
+          proc do |category|
+            changes = { raw: forum[:description] }
+            opts = { revised_at: Time.now, bypass_bump: true }
 
-          post = category.topic.first_post
-          post.revise(@system_user, changes, opts)
-        end
+            post = category.topic.first_post
+            post.revise(@system_user, changes, opts)
+          end,
       }
     end
   end
 
   def import_topics
-    puts '', 'importing posts'
+    puts "", "importing posts"
     imported_post_count = 0
     total_post_count = count_posts
 
@@ -78,7 +79,7 @@ class ImportScripts::Sourceforge < ImportScripts::Base
             id: "#{thread[:_id]}_#{post[:slug]}",
             user_id: @system_user,
             created_at: Time.zone.parse(post[:timestamp]),
-            raw: process_post_text(forum, thread, post)
+            raw: process_post_text(forum, thread, post),
           }
 
           if post == first_post
@@ -103,9 +104,7 @@ class ImportScripts::Sourceforge < ImportScripts::Base
     total_count = 0
 
     @json[:forums].each do |forum|
-      forum[:threads].each do |thread|
-        total_count += thread[:posts].size
-      end
+      forum[:threads].each { |thread| total_count += thread[:posts].size }
     end
 
     total_count
@@ -117,20 +116,22 @@ class ImportScripts::Sourceforge < ImportScripts::Base
 
   def process_post_text(forum, thread, post)
     text = post[:text]
-    text.gsub!(/~{3,}/, '```') # Discourse doesn't recognize ~~~ as beginning/end of code blocks
+    text.gsub!(/~{3,}/, "```") # Discourse doesn't recognize ~~~ as beginning/end of code blocks
 
     # SourceForge doesn't allow symbols in usernames, so we are safe here.
     # Well, unless it's the anonymous user, which has an evil asterisk in the JSON file...
     username = post[:author]
-    username = 'anonymous' if username == '*anonymous'
+    username = "anonymous" if username == "*anonymous"
 
     # anonymous and nobody are nonexistent users. Make sure we don't create links for them.
-    user_without_profile = username == 'anonymous' || username == 'nobody'
-    user_link = user_without_profile ? username : "[#{username}](https://sourceforge.net/u/#{username}/)"
+    user_without_profile = username == "anonymous" || username == "nobody"
+    user_link =
+      user_without_profile ? username : "[#{username}](https://sourceforge.net/u/#{username}/)"
 
     # Create a nice looking header for each imported post that links to the author's user profile and the old post.
-    post_date = Time.zone.parse(post[:timestamp]).strftime('%A, %B %d, %Y')
-    post_url = "https://sourceforge.net/p/#{PROJECT_NAME}/discussion/#{forum[:shortname]}/thread/#{thread[:_id]}/##{post[:slug]}"
+    post_date = Time.zone.parse(post[:timestamp]).strftime("%A, %B %d, %Y")
+    post_url =
+      "https://sourceforge.net/p/#{PROJECT_NAME}/discussion/#{forum[:shortname]}/thread/#{thread[:_id]}/##{post[:slug]}"
 
     "**#{user_link}** wrote on [#{post_date}](#{post_url}):\n\n#{text}"
   end

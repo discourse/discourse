@@ -13,13 +13,15 @@ module ImportScripts::PhpBB3
 
     def change_site_settings
       normalizations = SiteSetting.permalink_normalizations
-      normalizations = normalizations.blank? ? [] : normalizations.split('|')
+      normalizations = normalizations.blank? ? [] : normalizations.split("|")
 
-      add_normalization(normalizations, CATEGORY_LINK_NORMALIZATION) if @settings.create_category_links
+      if @settings.create_category_links
+        add_normalization(normalizations, CATEGORY_LINK_NORMALIZATION)
+      end
       add_normalization(normalizations, POST_LINK_NORMALIZATION) if @settings.create_post_links
       add_normalization(normalizations, TOPIC_LINK_NORMALIZATION) if @settings.create_topic_links
 
-      SiteSetting.permalink_normalizations = normalizations.join('|')
+      SiteSetting.permalink_normalizations = normalizations.join("|")
     end
 
     def create_for_category(category, import_id)
@@ -50,8 +52,8 @@ module ImportScripts::PhpBB3
 
     def add_normalization(normalizations, normalization)
       if @settings.normalization_prefix.present?
-        prefix = @settings.normalization_prefix[%r|^/?(.*?)/?$|, 1]
-        normalization = "/#{prefix.gsub('/', '\/')}\\#{normalization}"
+        prefix = @settings.normalization_prefix[%r{^/?(.*?)/?$}, 1]
+        normalization = "/#{prefix.gsub("/", '\/')}\\#{normalization}"
       end
 
       normalizations << normalization unless normalizations.include?(normalization)

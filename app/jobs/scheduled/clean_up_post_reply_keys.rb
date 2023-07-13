@@ -9,7 +9,7 @@ module Jobs
 
       PostReplyKey.where(
         "created_at < ?",
-        SiteSetting.disallow_reply_by_email_after_days.days.ago
+        SiteSetting.disallow_reply_by_email_after_days.days.ago,
       ).delete_all
     end
   end

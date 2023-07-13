@@ -9,12 +9,13 @@ module Compression
         Compression::Zip.new,
         Compression::Pipeline.new([Compression::Tar.new, Compression::Gzip.new]),
         Compression::Gzip.new,
-        Compression::Tar.new
+        Compression::Tar.new,
       ]
     end
 
     def self.engine_for(filename, strategies: default_strategies)
-      strategy = strategies.detect(-> { raise UnsupportedFileExtension }) { |e| e.can_handle?(filename) }
+      strategy =
+        strategies.detect(-> { raise UnsupportedFileExtension }) { |e| e.can_handle?(filename) }
       new(strategy)
     end
 

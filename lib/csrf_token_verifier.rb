@@ -2,7 +2,8 @@
 
 # Provides a way to check a CSRF token outside of a controller
 class CSRFTokenVerifier
-  class InvalidCSRFToken < StandardError; end
+  class InvalidCSRFToken < StandardError
+  end
 
   include ActiveSupport::Configurable
   include ActionController::RequestForgeryProtection
@@ -18,9 +19,7 @@ class CSRFTokenVerifier
   def call(env)
     @request = ActionDispatch::Request.new(env.dup)
 
-    unless verified_request?
-      raise InvalidCSRFToken
-    end
+    raise InvalidCSRFToken unless verified_request?
   end
 
   public :form_authenticity_token

@@ -19,11 +19,11 @@ def run_or_fail(command)
   exit 1 unless $?.exitstatus == 0
 end
 
-unless ENV['NO_UPDATE']
+unless ENV["NO_UPDATE"]
   run_or_fail("git reset --hard")
   run_or_fail("git fetch")
 
-  checkout = ENV['COMMIT_HASH'] || "FETCH_HEAD"
+  checkout = ENV["COMMIT_HASH"] || "origin/tests-passed"
   run_or_fail("LEFTHOOK=0 git checkout #{checkout}")
 
   run_or_fail("bundle")
@@ -31,7 +31,7 @@ end
 
 log("Running tests")
 
-if ENV['RUN_SMOKE_TESTS']
+if ENV["RUN_SMOKE_TESTS"]
   run_or_fail("bundle exec rake smoke:test")
 else
   run_or_fail("bundle exec rake docker:test")

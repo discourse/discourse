@@ -200,6 +200,9 @@ body.has-sidebar-page {
   #main-outlet-wrapper {
     grid-template-columns: var(--d-sidebar-width) minmax(0, 1fr);
     gap: 0 2em;
+    @include breakpoint(large) {
+      gap: 0 1em;
+    }
     padding-left: 0;
   }
 }

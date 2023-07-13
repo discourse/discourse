@@ -3,7 +3,7 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import PreloadStore from "discourse/lib/preload-store";
 import I18n from "I18n";
 import { test } from "qunit";
@@ -97,6 +97,17 @@ acceptance("Invite accept", function (needs) {
     });
 
     await visit("/invites/my-valid-invite-token");
+
+    assert.notOk(
+      document.body.classList.contains("has-sidebar-page"),
+      "does not display the sidebar on the invites page"
+    );
+
+    assert.notOk(
+      exists(".d-header"),
+      "does not display the site header on the invites page"
+    );
+
     assert.ok(exists("#new-account-email"), "shows the email input");
     assert.ok(exists("#new-account-username"), "shows the username input");
     assert.strictEqual(
@@ -109,6 +120,16 @@ acceptance("Invite accept", function (needs) {
     assert.ok(
       exists(".invites-show .btn-primary:disabled"),
       "submit is disabled because name and email is not filled"
+    );
+
+    assert.ok(
+      exists("#new-account-password[type='password']"),
+      "password is masked by default"
+    );
+    await click(".toggle-password-mask");
+    assert.ok(
+      exists("#new-account-password[type='text']"),
+      "password is unmasked when toggle is clicked"
     );
 
     await fillIn("#new-account-name", "John Doe");

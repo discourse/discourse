@@ -1,16 +1,16 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'action_mailer'
+require "action_mailer"
 
 # Make this your email address. Poor example.com gets SO MUCH MAIL
 YOUR_EMAIL = "nobody@example.com"
 
 # Change these to be the same settings as your Discourse environment
-DISCOURSE_SMTP_ADDRESS = "smtp.example.com"       # (mandatory)
-@DISCOURSE_SMTP_PORT = 587                    # (optional)
-@DISCOURSE_SMTP_USER_NAME = "username"              # (optional)
-@DISCOURSE_SMTP_PASSWORD  = "blah"                  # (optional)
+DISCOURSE_SMTP_ADDRESS = "smtp.example.com" # (mandatory)
+@DISCOURSE_SMTP_PORT = 587 # (optional)
+@DISCOURSE_SMTP_USER_NAME = "username" # (optional)
+@DISCOURSE_SMTP_PASSWORD = "blah" # (optional)
 #@DISCOURSE_SMTP_OPENSSL_VERIFY_MODE = "none"       # (optional) none|peer|client_once|fail_if_no_peer_cert
 
 # Note that DISCOURSE_SMTP_ADDRESS should NOT BE ALLOWED to relay mail to
@@ -24,16 +24,18 @@ $delivery_options = {
   password: @DISCOURSE_SMTP_PASSWORD || nil,
   address: DISCOURSE_SMTP_ADDRESS,
   port: @DISCOURSE_SMTP_PORT || nil,
-  openssl_verify_mode: @DISCOURSE_SMTP_OPENSSL_VERIFY_MODE || nil
+  openssl_verify_mode: @DISCOURSE_SMTP_OPENSSL_VERIFY_MODE || nil,
 }
 
 class EmailTestMailer < ActionMailer::Base
   def email_test(mailfrom, mailto)
-    mail(from: mailfrom,
-         to: mailto,
-         body: "Testing email settings",
-         subject: "Discourse email settings test",
-         delivery_method_options: $delivery_options)
+    mail(
+      from: mailfrom,
+      to: mailto,
+      body: "Testing email settings",
+      subject: "Discourse email settings test",
+      delivery_method_options: $delivery_options,
+    )
   end
 end
 

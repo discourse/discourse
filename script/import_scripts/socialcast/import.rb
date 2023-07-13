@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
-require_relative './socialcast_message.rb'
-require_relative './socialcast_user.rb'
-require 'set'
+require_relative "./socialcast_message.rb"
+require_relative "./socialcast_user.rb"
+require "set"
 require File.expand_path(File.dirname(__FILE__) + "/../base.rb")
 
 class ImportScripts::Socialcast < ImportScripts::Base
-
   MESSAGES_DIR = "output/messages"
   USERS_DIR = "output/users"
 
@@ -29,15 +28,13 @@ class ImportScripts::Socialcast < ImportScripts::Base
     imported = 0
     total = count_files(MESSAGES_DIR)
     Dir.foreach(MESSAGES_DIR) do |filename|
-      next if filename == ('.') || filename == ('..')
+      next if filename == (".") || filename == ("..")
       topics += 1
-      message_json = File.read MESSAGES_DIR + '/' + filename
+      message_json = File.read MESSAGES_DIR + "/" + filename
       message = SocialcastMessage.new(message_json)
       next unless message.title
       created_topic = import_topic message.topic
-      if created_topic
-        import_posts message.replies, created_topic.topic_id
-      end
+      import_posts message.replies, created_topic.topic_id if created_topic
       imported += 1
       print_status topics, total
     end
@@ -48,8 +45,8 @@ class ImportScripts::Socialcast < ImportScripts::Base
     users = 0
     total = count_files(USERS_DIR)
     Dir.foreach(USERS_DIR) do |filename|
-      next if filename == ('.') || filename == ('..')
-      user_json = File.read USERS_DIR + '/' + filename
+      next if filename == (".") || filename == ("..")
+      user_json = File.read USERS_DIR + "/" + filename
       user = SocialcastUser.new(user_json).user
       create_user user, user[:id]
       users += 1
@@ -58,7 +55,7 @@ class ImportScripts::Socialcast < ImportScripts::Base
   end
 
   def count_files(path)
-    Dir.foreach(path).select { |f| f != '.' && f != '..' }.count
+    Dir.foreach(path).select { |f| f != "." && f != ".." }.count
   end
 
   def import_topic(topic)
@@ -80,9 +77,7 @@ class ImportScripts::Socialcast < ImportScripts::Base
   end
 
   def import_posts(posts, topic_id)
-    posts.each do |post|
-      import_post post, topic_id
-    end
+    posts.each { |post| import_post post, topic_id }
   end
 
   def import_post(post, topic_id)
@@ -95,9 +90,6 @@ class ImportScripts::Socialcast < ImportScripts::Base
       puts new_post.inspect
     end
   end
-
 end
 
-if __FILE__ == $0
-  ImportScripts::Socialcast.new.perform
-end
+ImportScripts::Socialcast.new.perform if __FILE__ == $0

@@ -28,6 +28,7 @@ export function transformBasicPost(post) {
     flair_url: post.flair_url,
     flair_bg_color: post.flair_bg_color,
     flair_color: post.flair_color,
+    flair_group_id: post.flair_group_id,
     wiki: post.wiki,
     lastWikiEdit: post.last_wiki_edit,
     firstPost: post.post_number === 1,
@@ -58,6 +59,7 @@ export function transformBasicPost(post) {
     canPermanentlyDelete: false,
     showFlagDelete: false,
     canRecover: post.can_recover,
+    canSeeHiddenPost: post.can_see_hidden_post,
     canEdit: post.can_edit,
     canFlag: !post.get("topic.deleted") && !isEmpty(post.get("flagsAvailable")),
     canReviewTopic: false,
@@ -218,7 +220,8 @@ export default function transformPost(
     postAtts.userFilters = postStream.userFilters;
     postAtts.topicSummaryEnabled = postStream.summary;
     postAtts.topicWordCount = topic.word_count;
-    postAtts.hasTopicSummary = topic.has_summary;
+    postAtts.hasTopRepliesSummary = topic.has_summary;
+    postAtts.summarizable = topic.summarizable;
   }
 
   if (postAtts.isDeleted) {

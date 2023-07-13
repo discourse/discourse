@@ -19,6 +19,10 @@ export default {
 
     withPluginApi("0.12.1", (api) => {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
+        if (user.isInDoNotDisturb()) {
+          return;
+        }
+
         if (!user.chat_sound) {
           return;
         }

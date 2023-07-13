@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'thread'
+require "thread"
 
 class SidekiqPauser
   TTL = 60
@@ -27,9 +27,7 @@ class SidekiqPauser
       stop_extend_lease_thread
     end
 
-    RailsMultisite::ConnectionManagement.each_connection do
-      unpause! if paused?
-    end
+    RailsMultisite::ConnectionManagement.each_connection { unpause! if paused? }
   end
 
   def paused_dbs
@@ -62,9 +60,7 @@ class SidekiqPauser
         begin
           t.wakeup
         rescue ThreadError => e
-          unless e.message =~ /killed thread/
-            raise e
-          end
+          raise e unless e.message =~ /killed thread/
         end
 
         sleep 0
@@ -76,25 +72,26 @@ class SidekiqPauser
     @mutex.synchronize do
       @dbs << RailsMultisite::ConnectionManagement.current_db
 
-      @extend_lease_thread ||= Thread.new do
-        while true do
-          break if !@extend_lease_thread
+      @extend_lease_thread ||=
+        Thread.new do
+          while true
+            break if !@extend_lease_thread
 
-          @mutex.synchronize do
-            @dbs.each do |db|
-              RailsMultisite::ConnectionManagement.with_connection(db) do
-                if !Discourse.redis.expire(PAUSED_KEY, TTL)
-                  # if it was unpaused in another process we got to remove the
-                  # bad key
-                  @dbs.delete(db)
+            @mutex.synchronize do
+              @dbs.each do |db|
+                RailsMultisite::ConnectionManagement.with_connection(db) do
+                  if !Discourse.redis.expire(PAUSED_KEY, TTL)
+                    # if it was unpaused in another process we got to remove the
+                    # bad key
+                    @dbs.delete(db)
+                  end
                 end
               end
             end
-          end
 
-          sleep(Rails.env.test? ? 0.01 : TTL / 2)
+            sleep(Rails.env.test? ? 0.01 : TTL / 2)
+          end
         end
-      end
     end
   end
 end
@@ -125,14 +122,13 @@ end
 
 # server middleware that will reschedule work whenever Sidekiq is paused
 class Sidekiq::Pausable
-
   def initialize(delay = 5.seconds)
     @delay = delay
   end
 
   def call(worker, msg, queue)
     if sidekiq_paused?(msg) && !(Jobs::RunHeartbeat === worker)
-      worker.class.perform_in(@delay, *msg['args'])
+      worker.class.perform_in(@delay, *msg["args"])
     else
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       result = yield
@@ -146,10 +142,7 @@ class Sidekiq::Pausable
 
   def sidekiq_paused?(msg)
     if site_id = msg["args"]&.first&.dig("current_site_id")
-      RailsMultisite::ConnectionManagement.with_connection(site_id) do
-        Sidekiq.paused?
-      end
+      RailsMultisite::ConnectionManagement.with_connection(site_id) { Sidekiq.paused? }
     end
   end
-
 end

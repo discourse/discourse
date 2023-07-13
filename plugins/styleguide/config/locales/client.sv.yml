@@ -92,3 +92,6 @@ sv:
           description: "Beskrivning"
           header: "Sidhuvud"
           hover_to_see: "Håll muspekaren kvar för att se en knappbeskrivning"
+        char_counter:
+          title: "Teckenräknare"
+          placeholder: "Skriv din text här..."

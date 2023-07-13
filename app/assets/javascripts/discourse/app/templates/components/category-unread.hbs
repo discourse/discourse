@@ -1,6 +1,0 @@
-{{#if this.category.unreadTopics}}
-  <a href={{this.category.unreadUrl}} title={{i18n "topic.unread_topics" count=this.category.unreadTopics}} class="badge new-posts badge-notification">{{i18n "filters.unread.lower_title_with_count" count=this.category.unreadTopics}}</a>
-{{/if}}
-{{#if this.category.newTopics}}
-  <a href={{this.category.newUrl}} title={{i18n "topic.new_topics" count=this.category.newTopics}} class="badge new-posts badge-notification">{{i18n "filters.new.lower_title_with_count" count=this.category.newTopics}}</a>
-{{/if}}

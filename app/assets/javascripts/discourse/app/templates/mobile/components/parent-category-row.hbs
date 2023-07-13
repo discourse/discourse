@@ -1,6 +1,14 @@
 {{#unless this.isHidden}}
-  <PluginOutlet @name="category-list-above-each-category" @args={{hash category=this.category}} />
-  <div data-category-id={{this.category.id}} data-notification-level={{this.category.notificationLevelString}} style={{border-color this.category.color}} class="category-list-item category {{if this.isMuted "muted"}}">
+  <PluginOutlet
+    @name="category-list-above-each-category"
+    @outletArgs={{hash category=this.category}}
+  />
+  <div
+    data-category-id={{this.category.id}}
+    data-notification-level={{this.category.notificationLevelString}}
+    style={{border-color this.category.color}}
+    class="category-list-item category {{if this.isMuted 'muted'}}"
+  >
     <table class="topic-list">
       <tbody>
         <tr>
@@ -24,14 +32,20 @@
         {{/unless}}
         {{#if this.category.isGrandParent}}
           {{#each this.category.subcategories as |subcategory|}}
-            <SubCategoryRow @category={{subcategory}} @listType={{this.listType}} />
+            <SubCategoryRow
+              @category={{subcategory}}
+              @listType={{this.listType}}
+            />
           {{/each}}
         {{else if this.category.subcategories}}
           <tr class="subcategories-list">
             <td>
               <div class="subcategories">
                 {{#each this.category.subcategories as |subcategory|}}
-                  <SubCategoryItem @category={{subcategory}} @listType={{this.listType}} />
+                  <SubCategoryItem
+                    @category={{subcategory}}
+                    @listType={{this.listType}}
+                  />
                 {{/each}}
               </div>
             </td>

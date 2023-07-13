@@ -1,23 +1,23 @@
 # frozen_string_literal: true
 
-require 'mysql2'
+require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-require 'htmlentities'
+require "htmlentities"
 
 class ImportScripts::Modx < ImportScripts::Base
   BATCH_SIZE = 1000
 
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
-  DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['DB_NAME'] || "modx"
-  DB_PW ||= ENV['DB_PW'] || "modex"
-  DB_USER ||= ENV['DB_USER'] || "modx"
-  TIMEZONE ||= ENV['TIMEZONE'] || "America/Los_Angeles"
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "modx_"
-  ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/path/to/your/attachment/folder'
-  RANDOM_CATEGORY_COLOR ||= !ENV['RANDOM_CATEGORY_COLOR'].nil?
-  SUSPEND_ALL_USERS ||= !ENV['SUSPEND_ALL_USERS']
+  DB_HOST ||= ENV["DB_HOST"] || "localhost"
+  DB_NAME ||= ENV["DB_NAME"] || "modx"
+  DB_PW ||= ENV["DB_PW"] || "modex"
+  DB_USER ||= ENV["DB_USER"] || "modx"
+  TIMEZONE ||= ENV["TIMEZONE"] || "America/Los_Angeles"
+  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "modx_"
+  ATTACHMENT_DIR ||= ENV["ATTACHMENT_DIR"] || "/path/to/your/attachment/folder"
+  RANDOM_CATEGORY_COLOR ||= !ENV["RANDOM_CATEGORY_COLOR"].nil?
+  SUSPEND_ALL_USERS ||= !ENV["SUSPEND_ALL_USERS"]
 
   #   TODO: replace modx_ with #{TABLE_PREFIX}
 
@@ -34,14 +34,10 @@ class ImportScripts::Modx < ImportScripts::Base
 
     @htmlentities = HTMLEntities.new
 
-    @client = Mysql2::Client.new(
-      host: DB_HOST,
-      username: DB_USER,
-      password: DB_PW,
-      database: DB_NAME
-    )
+    @client =
+      Mysql2::Client.new(host: DB_HOST, username: DB_USER, password: DB_PW, database: DB_NAME)
   rescue Exception => e
-    puts '=' * 50
+    puts "=" * 50
     puts e.message
     puts <<~TEXT
       Cannot connect in to database.
@@ -83,22 +79,20 @@ class ImportScripts::Modx < ImportScripts::Base
     SQL
 
     create_groups(groups) do |group|
-      {
-        id: group["usergroupid"],
-        name: @htmlentities.decode(group["title"]).strip
-      }
+      { id: group["usergroupid"], name: @htmlentities.decode(group["title"]).strip }
     end
   end
 
   def import_users
     puts "", "importing users"
 
-    user_count = mysql_query("SELECT COUNT(id) count FROM #{TABLE_PREFIX}discuss_users").first["count"]
+    user_count =
+      mysql_query("SELECT COUNT(id) count FROM #{TABLE_PREFIX}discuss_users").first["count"]
 
     last_user_id = -1
 
     batches(BATCH_SIZE) do |offset|
-      users = mysql_query(<<-SQL
+      users = mysql_query(<<-SQL).to_a
 SELECT id as userid, email, concat (name_first, " ", name_last) as name, username,
 location, website, status, last_active as last_seen_at,
 createdon as created_at, birthdate as date_of_birth,
@@ -112,7 +106,6 @@ FROM #{TABLE_PREFIX}discuss_users
         ORDER BY id
            LIMIT #{BATCH_SIZE};
       SQL
-                         ).to_a
 
       break if users.empty?
 
@@ -123,14 +116,14 @@ FROM #{TABLE_PREFIX}discuss_users
       create_users(users, total: user_count, offset: offset) do |user|
         {
           id: user["userid"],
-          name: user['name'],
-          username: user['username'],
-          email: user['email'],
-          website: user['website'],
+          name: user["name"],
+          username: user["username"],
+          email: user["email"],
+          website: user["website"],
           created_at: parse_timestamp(user["created_at"]),
           last_seen_at: parse_timestamp(user["last_seen_at"]),
-          date_of_birth: user['date_of_birth'],
-          password: "#{user['password']}:#{user['salt']}" # not tested
+          date_of_birth: user["date_of_birth"],
+          password: "#{user["password"]}:#{user["salt"]}", # not tested
         }
       end
     end
@@ -144,13 +137,13 @@ FROM #{TABLE_PREFIX}discuss_users
     categories = mysql_query("select id, name, description from modx_discuss_categories").to_a
 
     create_categories(categories) do |category|
-      puts "Creating #{category['name']}"
+      puts "Creating #{category["name"]}"
       puts category
       {
-        id: "cat#{category['id']}",
+        id: "cat#{category["id"]}",
         name: category["name"],
         color: RANDOM_CATEGORY_COLOR ? (0..2).map { "%0x" % (rand * 0x80) }.join : nil,
-        description: category["description"]
+        description: category["description"],
       }
     end
 
@@ -159,13 +152,13 @@ FROM #{TABLE_PREFIX}discuss_users
     boards = mysql_query("select id, category, name, description from modx_discuss_boards;").to_a
     create_categories(boards) do |category|
       puts category
-      parent_category_id = category_id_from_imported_category_id("cat#{category['category']}")
+      parent_category_id = category_id_from_imported_category_id("cat#{category["category"]}")
       {
         id: category["id"],
         parent_category_id: parent_category_id.to_s,
         name: category["name"],
         color: RANDOM_CATEGORY_COLOR ? (0..2).map { "%0x" % (rand * 0x80) }.join : nil,
-        description: category["description"]
+        description: category["description"],
       }
     end
   end
@@ -173,12 +166,15 @@ FROM #{TABLE_PREFIX}discuss_users
   def import_topics_and_posts
     puts "", "creating topics and posts"
 
-    total_count = mysql_query("SELECT count(id) count from #{TABLE_PREFIX}discuss_posts").first["count"]
+    total_count =
+      mysql_query("SELECT count(id) count from #{TABLE_PREFIX}discuss_posts").first["count"]
 
     topic_first_post_id = {}
 
     batches(BATCH_SIZE) do |offset|
-      results = mysql_query("
+      results =
+        mysql_query(
+          "
          SELECT id,
 		thread topic_id,
                 board category_id,
@@ -191,27 +187,28 @@ FROM #{TABLE_PREFIX}discuss_users
        ORDER BY createdon
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
-      ")
+      ",
+        )
 
       break if results.size < 1
 
-      next if all_records_exist? :posts, results.map { |m| m['id'].to_i }
+      next if all_records_exist? :posts, results.map { |m| m["id"].to_i }
 
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
         mapped = {}
 
-        mapped[:id] = m['id']
-        mapped[:user_id] = user_id_from_imported_user_id(m['user_id']) || -1
-        mapped[:raw] = post_process_raw(m['raw'])
-        mapped[:created_at] = Time.zone.at(m['created_at'])
+        mapped[:id] = m["id"]
+        mapped[:user_id] = user_id_from_imported_user_id(m["user_id"]) || -1
+        mapped[:raw] = post_process_raw(m["raw"])
+        mapped[:created_at] = Time.zone.at(m["created_at"])
 
-        if m['parent'] == 0
-          mapped[:category] = category_id_from_imported_category_id(m['category_id'])
-          mapped[:title] = m['title']
-          topic_first_post_id[m['topic_id']] = m['id']
+        if m["parent"] == 0
+          mapped[:category] = category_id_from_imported_category_id(m["category_id"])
+          mapped[:title] = m["title"]
+          topic_first_post_id[m["topic_id"]] = m["id"]
         else
-          parent = topic_lookup_from_imported_post_id(topic_first_post_id[m['topic_id']])
+          parent = topic_lookup_from_imported_post_id(topic_first_post_id[m["topic_id"]])
           if parent
             mapped[:topic_id] = parent[:topic_id]
           else
@@ -227,10 +224,11 @@ FROM #{TABLE_PREFIX}discuss_users
 
   def post_process_raw(raw)
     # [QUOTE]...[/QUOTE]
-    raw = raw.gsub(/\[quote.*?\](.+?)\[\/quote\]/im) { |quote|
-      quote = quote.gsub(/\[quote author=(.*?) .+\]/i) { "\n[quote=\"#{$1}\"]\n" }
-      quote = quote.gsub(/[^\n]\[\/quote\]/im) { "\n[/quote]\n" }
-    }
+    raw =
+      raw.gsub(%r{\[quote.*?\](.+?)\[/quote\]}im) do |quote|
+        quote = quote.gsub(/\[quote author=(.*?) .+\]/i) { "\n[quote=\"#{$1}\"]\n" }
+        quote = quote.gsub(%r{[^\n]\[/quote\]}im) { "\n[/quote]\n" }
+      end
 
     raw
   end
@@ -249,25 +247,27 @@ FROM #{TABLE_PREFIX}discuss_users
 
   # find the uploaded file information from the db
   def not_find_upload(post, attachment_id)
-    sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
+    sql =
+      "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
                   a.caption caption
              FROM #{TABLE_PREFIX}attachment a
             WHERE a.attachmentid = #{attachment_id}"
     results = mysql_query(sql)
 
     unless row = results.first
-      puts "Couldn't find attachment record for post.id = #{post.id}, import_id = #{post.custom_fields['import_id']}"
+      puts "Couldn't find attachment record for post.id = #{post.id}, import_id = #{post.custom_fields["import_id"]}"
       return
     end
 
-    filename = File.join(ATTACHMENT_DIR, row['user_id'].to_s.split('').join('/'), "#{row['file_id']}.attach")
+    filename =
+      File.join(ATTACHMENT_DIR, row["user_id"].to_s.split("").join("/"), "#{row["file_id"]}.attach")
     unless File.exist?(filename)
       puts "Attachment file doesn't exist: #{filename}"
       return
     end
 
-    real_filename = row['filename']
-    real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
+    real_filename = row["filename"]
+    real_filename.prepend SecureRandom.hex if real_filename[0] == "."
     upload = create_upload(post.user.id, filename, real_filename)
 
     if upload.nil? || !upload.valid?
@@ -286,24 +286,24 @@ FROM #{TABLE_PREFIX}discuss_users
   def not_import_private_messages
     puts "", "importing private messages..."
 
-    topic_count = mysql_query("SELECT COUNT(pmtextid) count FROM #{TABLE_PREFIX}pmtext").first["count"]
+    topic_count =
+      mysql_query("SELECT COUNT(pmtextid) count FROM #{TABLE_PREFIX}pmtext").first["count"]
 
     last_private_message_id = -1
 
     batches(BATCH_SIZE) do |offset|
-      private_messages = mysql_query(<<-SQL
+      private_messages = mysql_query(<<-SQL).to_a
           SELECT pmtextid, fromuserid, title, message, touserarray, dateline
             FROM #{TABLE_PREFIX}pmtext
            WHERE pmtextid > #{last_private_message_id}
         ORDER BY pmtextid
            LIMIT #{BATCH_SIZE}
       SQL
-                                    ).to_a
 
       break if private_messages.empty?
 
       last_private_message_id = private_messages[-1]["pmtextid"]
-      private_messages.reject! { |pm| @lookup.post_already_imported?("pm-#{pm['pmtextid']}") }
+      private_messages.reject! { |pm| @lookup.post_already_imported?("pm-#{pm["pmtextid"]}") }
 
       title_username_of_pm_first_post = {}
 
@@ -311,11 +311,16 @@ FROM #{TABLE_PREFIX}discuss_users
         skip = false
         mapped = {}
 
-        mapped[:id] = "pm-#{m['pmtextid']}"
-        mapped[:user_id] = user_id_from_imported_user_id(m['fromuserid']) || Discourse::SYSTEM_USER_ID
-        mapped[:raw] = preprocess_post_raw(m['message']) rescue nil
-        mapped[:created_at] = Time.zone.at(m['dateline'])
-        title = @htmlentities.decode(m['title']).strip[0...255]
+        mapped[:id] = "pm-#{m["pmtextid"]}"
+        mapped[:user_id] = user_id_from_imported_user_id(m["fromuserid"]) ||
+          Discourse::SYSTEM_USER_ID
+        mapped[:raw] = begin
+          preprocess_post_raw(m["message"])
+        rescue StandardError
+          nil
+        end
+        mapped[:created_at] = Time.zone.at(m["dateline"])
+        title = @htmlentities.decode(m["title"]).strip[0...255]
         topic_id = nil
 
         next if mapped[:raw].blank?
@@ -324,9 +329,9 @@ FROM #{TABLE_PREFIX}discuss_users
         target_usernames = []
         target_userids = []
         begin
-          to_user_array = PHP.unserialize(m['touserarray'])
-        rescue
-          puts "#{m['pmtextid']} -- #{m['touserarray']}"
+          to_user_array = PHP.unserialize(m["touserarray"])
+        rescue StandardError
+          puts "#{m["pmtextid"]} -- #{m["touserarray"]}"
           skip = true
         end
 
@@ -346,8 +351,8 @@ FROM #{TABLE_PREFIX}discuss_users
               target_usernames << username if username
             end
           end
-        rescue
-          puts "skipping pm-#{m['pmtextid']} `to_user_array` is not properly serialized -- #{to_user_array.inspect}"
+        rescue StandardError
+          puts "skipping pm-#{m["pmtextid"]} `to_user_array` is not properly serialized -- #{to_user_array.inspect}"
           skip = true
         end
 
@@ -355,18 +360,18 @@ FROM #{TABLE_PREFIX}discuss_users
         participants << mapped[:user_id]
         begin
           participants.sort!
-        rescue
+        rescue StandardError
           puts "one of the participant's id is nil -- #{participants.inspect}"
         end
 
         if title =~ /^Re:/
-
-          parent_id = title_username_of_pm_first_post[[title[3..-1], participants]] ||
-                      title_username_of_pm_first_post[[title[4..-1], participants]] ||
-                      title_username_of_pm_first_post[[title[5..-1], participants]] ||
-                      title_username_of_pm_first_post[[title[6..-1], participants]] ||
-                      title_username_of_pm_first_post[[title[7..-1], participants]] ||
-                      title_username_of_pm_first_post[[title[8..-1], participants]]
+          parent_id =
+            title_username_of_pm_first_post[[title[3..-1], participants]] ||
+              title_username_of_pm_first_post[[title[4..-1], participants]] ||
+              title_username_of_pm_first_post[[title[5..-1], participants]] ||
+              title_username_of_pm_first_post[[title[6..-1], participants]] ||
+              title_username_of_pm_first_post[[title[7..-1], participants]] ||
+              title_username_of_pm_first_post[[title[8..-1], participants]]
 
           if parent_id
             if t = topic_lookup_from_imported_post_id("pm-#{parent_id}")
@@ -374,21 +379,21 @@ FROM #{TABLE_PREFIX}discuss_users
             end
           end
         else
-          title_username_of_pm_first_post[[title, participants]] ||= m['pmtextid']
+          title_username_of_pm_first_post[[title, participants]] ||= m["pmtextid"]
         end
 
-        unless topic_id
+        if topic_id
+          mapped[:topic_id] = topic_id
+        else
           mapped[:title] = title
           mapped[:archetype] = Archetype.private_message
-          mapped[:target_usernames] = target_usernames.join(',')
+          mapped[:target_usernames] = target_usernames.join(",")
 
           if mapped[:target_usernames].size < 1 # pm with yourself?
             # skip = true
             mapped[:target_usernames] = "system"
-            puts "pm-#{m['pmtextid']} has no target (#{m['touserarray']})"
+            puts "pm-#{m["pmtextid"]} has no target (#{m["touserarray"]})"
           end
-        else
-          mapped[:topic_id] = topic_id
         end
 
         skip ? nil : mapped
@@ -397,22 +402,21 @@ FROM #{TABLE_PREFIX}discuss_users
   end
 
   def not_import_attachments
-    puts '', 'importing attachments...'
+    puts "", "importing attachments..."
 
     current_count = 0
 
-    total_count = mysql_query(<<-SQL
+    total_count = mysql_query(<<-SQL).first["count"]
       SELECT COUNT(postid) count
         FROM #{TABLE_PREFIX}post p
         JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
        WHERE t.firstpostid <> p.postid
     SQL
-                             ).first["count"]
 
     success_count = 0
     fail_count = 0
 
-    attachment_regex = /\[attach[^\]]*\](\d+)\[\/attach\]/i
+    attachment_regex = %r{\[attach[^\]]*\](\d+)\[/attach\]}i
 
     Post.find_each do |post|
       current_count += 1
@@ -433,7 +437,12 @@ FROM #{TABLE_PREFIX}discuss_users
       end
 
       if new_raw != post.raw
-        PostRevisor.new(post).revise!(post.user, { raw: new_raw }, bypass_bump: true, edit_reason: 'Import attachments from modx')
+        PostRevisor.new(post).revise!(
+          post.user,
+          { raw: new_raw },
+          bypass_bump: true,
+          edit_reason: "Import attachments from modx",
+        )
       end
 
       success_count += 1
@@ -496,14 +505,14 @@ FROM #{TABLE_PREFIX}discuss_users
   end
 
   def not_create_permalink_file
-    puts '', 'Creating Permalink File...', ''
+    puts "", "Creating Permalink File...", ""
 
     id_mapping = []
 
     Topic.listable_topics.find_each do |topic|
       pcf = topic.first_post.custom_fields
       if pcf && pcf["import_id"]
-        id = pcf["import_id"].split('-').last
+        id = pcf["import_id"].split("-").last
         id_mapping.push("XXX#{id}  YYY#{topic.id}")
       end
     end
@@ -517,11 +526,8 @@ FROM #{TABLE_PREFIX}discuss_users
     # end
 
     CSV.open(File.expand_path("../vb_map.csv", __FILE__), "w") do |csv|
-      id_mapping.each do |value|
-        csv << [value]
-      end
+      id_mapping.each { |value| csv << [value] }
     end
-
   end
 
   def deactivate_all_users
@@ -529,16 +535,23 @@ FROM #{TABLE_PREFIX}discuss_users
   end
 
   def suspend_users
-    puts '', "updating blocked users"
+    puts "", "updating blocked users"
 
     banned = 0
     failed = 0
-    total = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}user_attributes where blocked != 0").first['count']
+    total =
+      mysql_query(
+        "SELECT count(*) count FROM #{TABLE_PREFIX}user_attributes where blocked != 0",
+      ).first[
+        "count"
+      ]
 
     system_user = Discourse.system_user
 
-    mysql_query("SELECT id, blockedafter, blockeduntil FROM #{TABLE_PREFIX}user_attributes").each do |b|
-      user = User.find_by_id(user_id_from_imported_user_id(b['id']))
+    mysql_query(
+      "SELECT id, blockedafter, blockeduntil FROM #{TABLE_PREFIX}user_attributes",
+    ).each do |b|
+      user = User.find_by_id(user_id_from_imported_user_id(b["id"]))
       if user
         user.suspended_at = parse_timestamp(user["blockedafter"])
         user.suspended_till = parse_timestamp(user["blockeduntil"])
@@ -550,7 +563,7 @@ FROM #{TABLE_PREFIX}discuss_users
           failed += 1
         end
       else
-        puts "Not found: #{b['userid']}"
+        puts "Not found: #{b["userid"]}"
         failed += 1
       end
 
@@ -565,7 +578,6 @@ FROM #{TABLE_PREFIX}discuss_users
   def mysql_query(sql)
     @client.query(sql, cache_rows: true)
   end
-
 end
 
 ImportScripts::Modx.new.perform

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class AdminDetailedUserSerializer < AdminUserSerializer
-
   attributes :moderator,
              :can_grant_admin,
              :can_revoke_admin,
@@ -108,11 +107,11 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def next_penalty
     step_number = penalty_counts.total
-    steps = SiteSetting.penalty_step_hours.split('|')
+    steps = SiteSetting.penalty_step_hours.split("|")
     step_number = [step_number, steps.length].min
     penalty_hours = steps[step_number]
     Integer(penalty_hours, 10).hours.from_now
-  rescue
+  rescue StandardError
     nil
   end
 
@@ -161,7 +160,6 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   def similar_users
     ActiveModel::ArraySerializer.new(
       @options[:similar_users],
-      each_serializer: AdminUserListSerializer,
       each_serializer: SimilarAdminUserSerializer,
       scope: scope,
       root: false,

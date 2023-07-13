@@ -1,4 +1,8 @@
-<DModalBody @title="discourse_local_dates.title" @class="discourse-local-dates-create-modal" @style="overflow: auto">
+<DModalBody
+  @title="discourse_local_dates.title"
+  @class="discourse-local-dates-create-modal"
+  @style="overflow: auto"
+>
 
   <div class="form">
     {{#if this.isValid}}
@@ -18,23 +22,37 @@
 
     <div class="date-time-configuration">
       <div class="inputs-panel">
-        <div class="date-time-control from {{if this.fromSelected "is-selected"}} {{if this.fromFilled "is-filled"}}">
+        <div
+          class="date-time-control from
+            {{if this.fromSelected 'is-selected'}}
+            {{if this.fromFilled 'is-filled'}}"
+        >
           {{d-icon "calendar-alt"}}
           <DButton
             @id="from-date-time"
             @action={{action "focusFrom"}}
             @translatedLabel={{this.formattedFrom}}
-            @class="date-time" />
+            @class="date-time"
+          />
         </div>
 
-        <div class="date-time-control to {{if this.toSelected "is-selected"}} {{if this.toFilled "is-filled"}}">
+        <div
+          class="date-time-control to
+            {{if this.toSelected 'is-selected'}}
+            {{if this.toFilled 'is-filled'}}"
+        >
           {{d-icon "calendar-alt"}}
           <DButton
             @action={{action "focusTo"}}
             @translatedLabel={{this.formattedTo}}
-            @class="date-time" />
+            @class="date-time"
+          />
           {{#if this.toFilled}}
-            <DButton @icon="times" @action={{action "eraseToDateTime"}} @class="delete-to-date" />
+            <DButton
+              @icon="times"
+              @action={{action "eraseToDateTime"}}
+              @class="delete-to-date"
+            />
           {{/if}}
         </div>
 
@@ -54,7 +72,14 @@
         {{#if this.fromSelected}}
           <div class="time-pickers">
             {{d-icon "far-clock"}}
-            <Input maxlength={{5}} placeholder="hh:mm" @type="time" @value={{this.time}} class="time-picker" {{on "input" (action "setTime")}} />
+            <Input
+              maxlength={{5}}
+              placeholder="hh:mm"
+              @type="time"
+              @value={{this.time}}
+              class="time-picker"
+              {{on "input" (action "setTime")}}
+            />
           </div>
         {{/if}}
 
@@ -62,7 +87,14 @@
           {{#if this.toDate}}
             <div class="time-pickers">
               {{d-icon "far-clock"}}
-              <Input maxlength={{5}} placeholder="hh:mm" @type="time" @value={{this.toTime}} class="time-picker" {{on "input" (action "setToTime")}} />
+              <Input
+                maxlength={{5}}
+                placeholder="hh:mm"
+                @type="time"
+                @value={{this.toTime}}
+                class="time-picker"
+                {{on "input" (action "setToTime")}}
+              />
             </div>
           {{/if}}
         {{/if}}
@@ -84,7 +116,9 @@
             <label class="control-label">
               {{i18n "discourse_local_dates.create.form.recurring_title"}}
             </label>
-            <p>{{html-safe (i18n "discourse_local_dates.create.form.recurring_description")}}</p>
+            <p>{{html-safe
+                (i18n "discourse_local_dates.create.form.recurring_description")
+              }}</p>
             <div class="controls">
               <ComboBox
                 @content={{this.recurringOptions}}
@@ -99,11 +133,36 @@
           </div>
         {{/unless}}
 
+        <div class="control-group timezones">
+          <label>{{i18n
+              "discourse_local_dates.create.form.timezones_title"
+            }}</label>
+          <p>{{i18n
+              "discourse_local_dates.create.form.timezones_description"
+            }}</p>
+          <div class="controls">
+            <MultiSelect
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @class="timezones-input"
+              @content={{this.allTimezones}}
+              @value={{this.timezones}}
+              @options={{hash allowAny=false maximum=5}}
+            />
+          </div>
+        </div>
+
         <div class="control-group format">
-          <label>{{i18n "discourse_local_dates.create.form.format_title"}}</label>
+          <label>{{i18n
+              "discourse_local_dates.create.form.format_title"
+            }}</label>
           <p>
             {{i18n "discourse_local_dates.create.form.format_description"}}
-            <a target="_blank" href="https://momentjs.com/docs/#/parsing/string-format/" rel="noopener noreferrer">
+            <a
+              target="_blank"
+              href="https://momentjs.com/docs/#/parsing/string-format/"
+              rel="noopener noreferrer"
+            >
               {{d-icon "question-circle"}}
             </a>
           </p>
@@ -115,7 +174,11 @@
           <ul class="formats">
             {{#each this.previewedFormats as |previewedFormat|}}
               <li class="format">
-                <a class="moment-format" href {{on "click" (fn this.updateFormat previewedFormat.format)}}>
+                <a
+                  class="moment-format"
+                  href
+                  {{on "click" (fn this.updateFormat previewedFormat.format)}}
+                >
                   {{previewedFormat.format}}
                 </a>
                 <span class="previewed-format">
@@ -124,24 +187,6 @@
               </li>
             {{/each}}
           </ul>
-        </div>
-
-        <div class="control-group timezones">
-          <label>{{i18n "discourse_local_dates.create.form.timezones_title"}}</label>
-          <p>{{i18n "discourse_local_dates.create.form.timezones_description"}}</p>
-          <div class="controls">
-            <MultiSelect
-              @valueProperty={{null}}
-              @nameProperty={{null}}
-              @class="timezones-input"
-              @content={{this.allTimezones}}
-              @value={{this.timezones}}
-              @options={{hash
-                allowAny=false
-                maximum=5
-              }}
-            />
-          </div>
         </div>
       </div>
     {{/if}}
@@ -153,17 +198,20 @@
     <DButton
       @class="btn-primary"
       @action={{action "save"}}
-      @label="discourse_local_dates.create.form.insert" />
+      @label="discourse_local_dates.create.form.insert"
+    />
   {{/if}}
 
   <DButton
     @class="btn-flat"
     @action={{action "cancel"}}
-    @translatedLabel={{i18n "cancel"}} />
+    @translatedLabel={{i18n "cancel"}}
+  />
 
   <DButton
     @class="btn-default advanced-mode-btn"
     @action={{action "advancedMode"}}
     @icon="cog"
-    @label={{this.toggleModeBtnLabel}} />
+    @label={{this.toggleModeBtnLabel}}
+  />
 </div>

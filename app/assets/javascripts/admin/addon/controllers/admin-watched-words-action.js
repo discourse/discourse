@@ -1,32 +1,35 @@
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { or } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import WatchedWord from "admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
-import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
-import { inject as service } from "@ember/service";
 
-export default Controller.extend({
-  adminWatchedWords: controller(),
-  actionNameKey: null,
-  dialog: service(),
-  downloadLink: fmt(
-    "actionNameKey",
-    "/admin/customize/watched_words/action/%@/download"
-  ),
-  showWordsList: or("adminWatchedWords.showWords", "adminWatchedWords.filter"),
+export default class AdminWatchedWordsActionController extends Controller {
+  @service dialog;
+  @controller adminWatchedWords;
+
+  actionNameKey = null;
+
+  @fmt("actionNameKey", "/admin/customize/watched_words/action/%@/download")
+  downloadLink;
+
+  @or("adminWatchedWords.showWords", "adminWatchedWords.filter")
+  showWordsList;
 
   findAction(actionName) {
     return (this.adminWatchedWords.model || []).findBy("nameKey", actionName);
-  },
+  }
 
   @discourseComputed("actionNameKey", "adminWatchedWords.model")
   currentAction(actionName) {
     return this.findAction(actionName);
-  },
+  }
 
   @discourseComputed("currentAction.words.[]")
   regexpError(words) {
@@ -37,78 +40,81 @@ export default Controller.extend({
         return I18n.t("admin.watched_words.invalid_regex", { word });
       }
     }
-  },
+  }
 
   @discourseComputed("actionNameKey")
   actionDescription(actionNameKey) {
     return I18n.t("admin.watched_words.action_descriptions." + actionNameKey);
-  },
+  }
 
-  actions: {
-    recordAdded(arg) {
-      const action = this.findAction(this.actionNameKey);
-      if (!action) {
-        return;
-      }
+  @action
+  recordAdded(arg) {
+    const foundAction = this.findAction(this.actionNameKey);
+    if (!foundAction) {
+      return;
+    }
 
-      action.words.unshiftObject(arg);
-      schedule("afterRender", () => {
-        // remove from other actions lists
-        let match = null;
-        this.adminWatchedWords.model.forEach((otherAction) => {
+    foundAction.words.unshiftObject(arg);
+    schedule("afterRender", () => {
+      // remove from other actions lists
+      let match = null;
+      this.adminWatchedWords.model.forEach((otherAction) => {
+        if (match) {
+          return;
+        }
+
+        if (otherAction.nameKey !== this.actionNameKey) {
+          match = otherAction.words.findBy("id", arg.id);
           if (match) {
-            return;
+            otherAction.words.removeObject(match);
           }
+        }
+      });
+    });
+  }
 
-          if (otherAction.nameKey !== this.actionNameKey) {
-            match = otherAction.words.findBy("id", arg.id);
-            if (match) {
-              otherAction.words.removeObject(match);
-            }
+  @action
+  recordRemoved(arg) {
+    if (this.currentAction) {
+      this.currentAction.words.removeObject(arg);
+    }
+  }
+
+  @action
+  uploadComplete() {
+    WatchedWord.findAll().then((data) => {
+      this.adminWatchedWords.set("model", data);
+    });
+  }
+
+  @action
+  test() {
+    WatchedWord.findAll().then((data) => {
+      this.adminWatchedWords.set("model", data);
+      showModal("admin-watched-word-test", {
+        admin: true,
+        model: this.currentAction,
+      });
+    });
+  }
+
+  @action
+  clearAll() {
+    const actionKey = this.actionNameKey;
+    this.dialog.yesNoConfirm({
+      message: I18n.t("admin.watched_words.clear_all_confirm", {
+        action: I18n.t("admin.watched_words.actions." + actionKey),
+      }),
+      didConfirm: () => {
+        ajax(`/admin/customize/watched_words/action/${actionKey}.json`, {
+          type: "DELETE",
+        }).then(() => {
+          const foundAction = this.findAction(actionKey);
+          if (foundAction) {
+            foundAction.set("words", []);
           }
         });
-      });
-    },
-
-    recordRemoved(arg) {
-      if (this.currentAction) {
-        this.currentAction.words.removeObject(arg);
-      }
-    },
-
-    uploadComplete() {
-      WatchedWord.findAll().then((data) => {
-        this.adminWatchedWords.set("model", data);
-      });
-    },
-
-    test() {
-      WatchedWord.findAll().then((data) => {
-        this.adminWatchedWords.set("model", data);
-        showModal("admin-watched-word-test", {
-          admin: true,
-          model: this.currentAction,
-        });
-      });
-    },
-
-    clearAll() {
-      const actionKey = this.actionNameKey;
-      this.dialog.yesNoConfirm({
-        message: I18n.t("admin.watched_words.clear_all_confirm", {
-          action: I18n.t("admin.watched_words.actions." + actionKey),
-        }),
-        didConfirm: () => {
-          ajax(`/admin/customize/watched_words/action/${actionKey}.json`, {
-            type: "DELETE",
-          }).then(() => {
-            const action = this.findAction(actionKey);
-            if (action) {
-              action.set("words", []);
-            }
-          });
-        },
-      });
-    },
-  },
-});
+      },
+    });
+  }
+}

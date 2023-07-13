@@ -2,11 +2,10 @@
 
 module Jobs
   class RunHeartbeat < ::Jobs::Base
-
-    sidekiq_options queue: 'critical'
+    sidekiq_options queue: "critical"
 
     def self.heartbeat_key
-      'heartbeat_last_run'
+      "heartbeat_last_run"
     end
 
     def execute(args)

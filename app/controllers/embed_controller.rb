@@ -5,10 +5,10 @@ class EmbedController < ApplicationController
 
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  before_action :prepare_embeddable, except: [ :info ]
-  before_action :ensure_api_request, only: [ :info ]
+  before_action :prepare_embeddable, except: [:info]
+  before_action :ensure_api_request, only: [:info]
 
-  layout 'embed'
+  layout "embed"
 
   rescue_from Discourse::InvalidAccess do
     if current_user.try(:admin?)
@@ -16,26 +16,28 @@ class EmbedController < ApplicationController
       @show_reason = true
       @hosts = EmbeddableHost.all
     end
-    render 'embed_error', status: 400
+    render "embed_error", status: 400
   end
 
   def topics
     discourse_expires_in 1.minute
 
     unless SiteSetting.embed_topics_list?
-      render 'embed_topics_error', status: 400
+      render "embed_topics_error", status: 400
       return
     end
 
     if @embed_id = params[:discourse_embed_id]
-      raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /^de\-[a-zA-Z0-9]+$/
+      raise Discourse::InvalidParameters.new(:embed_id) unless @embed_id =~ /\Ade\-[a-zA-Z0-9]+\z/
     end
 
     if @embed_class = params[:embed_class]
-      raise Discourse::InvalidParameters.new(:embed_class) unless @embed_class =~ /^[a-zA-Z0-9\-_]+$/
+      unless @embed_class =~ /\A[a-zA-Z0-9\-_]+\z/
+        raise Discourse::InvalidParameters.new(:embed_class)
+      end
     end
 
-    response.headers['X-Robots-Tag'] = 'noindex, indexifembedded'
+    response.headers["X-Robots-Tag"] = "noindex, indexifembedded"
 
     if params.has_key?(:template) && params[:template] == "complete"
       @template = "complete"
@@ -46,8 +48,7 @@ class EmbedController < ApplicationController
     list_options = build_topic_list_options
 
     if params.has_key?(:per_page)
-      list_options[:per_page] =
-        [params[:per_page].to_i, SiteSetting.embed_topic_limit_per_page].min
+      list_options[:per_page] = [params[:per_page].to_i, SiteSetting.embed_topic_limit_per_page].min
     end
 
     if params[:allow_create]
@@ -67,11 +68,12 @@ class EmbedController < ApplicationController
       valid_top_period = false
     end
 
-    @list = if valid_top_period
-      topic_query.list_top_for(top_period)
-    else
-      topic_query.list_latest
-    end
+    @list =
+      if valid_top_period
+        topic_query.list_top_for(top_period)
+      else
+        topic_query.list_latest
+      end
   end
 
   def comments
@@ -80,7 +82,7 @@ class EmbedController < ApplicationController
     embed_topic_id = params[:topic_id]&.to_i
 
     unless embed_topic_id || EmbeddableHost.url_allowed?(embed_url)
-      raise Discourse::InvalidAccess.new('invalid embed host')
+      raise Discourse::InvalidAccess.new("invalid embed host")
     end
 
     topic_id = nil
@@ -91,28 +93,33 @@ class EmbedController < ApplicationController
     end
 
     if topic_id
-      @topic_view = TopicView.new(topic_id,
-                                  current_user,
-                                  limit: SiteSetting.embed_post_limit,
-                                  only_regular: true,
-                                  exclude_first: true,
-                                  exclude_deleted_users: true,
-                                  exclude_hidden: true)
+      @topic_view =
+        TopicView.new(
+          topic_id,
+          current_user,
+          limit: SiteSetting.embed_post_limit,
+          only_regular: true,
+          exclude_first: true,
+          exclude_deleted_users: true,
+          exclude_hidden: true,
+        )
       raise Discourse::NotFound if @topic_view.blank?
 
       @posts_left = 0
       @second_post_url = "#{@topic_view.topic.url}/2"
       @reply_count = @topic_view.filtered_posts.count - 1
       @reply_count = 0 if @reply_count < 0
-      @posts_left = @reply_count - SiteSetting.embed_post_limit if @reply_count > SiteSetting.embed_post_limit
+      @posts_left = @reply_count - SiteSetting.embed_post_limit if @reply_count >
+        SiteSetting.embed_post_limit
     elsif embed_url.present?
-      Jobs.enqueue(:retrieve_topic,
-                      user_id: current_user.try(:id),
-                      embed_url: embed_url,
-                      author_username: embed_username,
-                      referer: request.env['HTTP_REFERER']
-                  )
-      render 'loading'
+      Jobs.enqueue(
+        :retrieve_topic,
+        user_id: current_user.try(:id),
+        embed_url: embed_url,
+        author_username: embed_username,
+        referer: request.env["HTTP_REFERER"],
+      )
+      render "loading"
     end
 
     discourse_expires_in 1.minute
@@ -132,16 +139,16 @@ class EmbedController < ApplicationController
     by_url = {}
 
     if embed_urls.present?
-      urls = embed_urls.map { |u| u.sub(/#discourse-comments$/, '').sub(/\/$/, '') }
+      urls = embed_urls.map { |u| u.sub(/#discourse-comments\z/, "").sub(%r{/\z}, "") }
       topic_embeds = TopicEmbed.where(embed_url: urls).includes(:topic).references(:topic)
 
       topic_embeds.each do |te|
         url = te.embed_url
         url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
         if te.topic.present?
-          by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+          by_url[url] = I18n.t("embed.replies", count: te.topic.posts_count - 1)
         else
-          by_url[url] = I18n.t('embed.replies', count: 0)
+          by_url[url] = I18n.t("embed.replies", count: 0)
         end
       end
     end
@@ -152,16 +159,34 @@ class EmbedController < ApplicationController
   private
 
   def prepare_embeddable
-    response.headers.delete('X-Frame-Options')
-    @embeddable_css_class = ""
-    embeddable_host = EmbeddableHost.record_for_url(request.referer)
-    @embeddable_css_class = " class=\"#{embeddable_host.class_name}\"" if embeddable_host.present? && embeddable_host.class_name.present?
+    response.headers.delete("X-Frame-Options")
 
-    @data_referer = request.referer
-    @data_referer = '*' if SiteSetting.embed_any_origin? && @data_referer.blank?
+    embeddable_host = EmbeddableHost.record_for_url(request.referer)
+
+    @embeddable_css_class =
+      if params[:class_name]
+        " class=\"#{CGI.escapeHTML(params[:class_name])}\""
+      elsif embeddable_host.present? && embeddable_host.class_name.present?
+        Discourse.deprecate(
+          "class_name field of EmbeddableHost has been deprecated. Prefer passing class_name as a parameter.",
+          since: "3.1.0.beta1",
+          drop_from: "3.2",
+        )
+
+        " class=\"#{CGI.escapeHTML(embeddable_host.class_name)}\""
+      else
+        ""
+      end
+
+    @data_referer =
+      if SiteSetting.embed_any_origin? && @data_referer.blank?
+        "*"
+      else
+        request.referer
+      end
   end
 
   def ensure_api_request
-    raise Discourse::InvalidAccess.new('api key not set') if !is_api?
+    raise Discourse::InvalidAccess.new("api key not set") if !is_api?
   end
 end

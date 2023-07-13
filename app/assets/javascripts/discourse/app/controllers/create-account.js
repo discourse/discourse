@@ -18,7 +18,6 @@ import { ajax } from "discourse/lib/ajax";
 import { emailValid } from "discourse/lib/utilities";
 import { findAll } from "discourse/models/login-method";
 import discourseDebounce from "discourse-common/lib/debounce";
-import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
@@ -42,6 +41,7 @@ export default Controller.extend(
     prefilledUsername: null,
     userFields: null,
     isDeveloper: false,
+    maskPassword: true,
 
     hasAuthOptions: notEmpty("authOptions"),
     canCreateLocal: setting("enable_local_logins"),
@@ -68,6 +68,7 @@ export default Controller.extend(
         rejectedPasswords: [],
         prefilledUsername: null,
         isDeveloper: false,
+        maskPassword: true,
       });
       this._createUserFields();
     },
@@ -127,11 +128,12 @@ export default Controller.extend(
 
     @discourseComputed
     disclaimerHtml() {
-      return I18n.t("create_account.disclaimer", {
-        tos_link: this.siteSettings.tos_url || getURL("/tos"),
-        privacy_link:
-          this.siteSettings.privacy_policy_url || getURL("/privacy"),
-      });
+      if (this.site.tos_url && this.site.privacy_policy_url) {
+        return I18n.t("create_account.disclaimer", {
+          tos_link: this.site.tos_url,
+          privacy_link: this.site.privacy_policy_url,
+        });
+      }
     },
 
     // Check the email address
@@ -433,6 +435,11 @@ export default Controller.extend(
         associate_link: url,
         provider: I18n.t(`login.${provider}.name`),
       });
+    },
+
+    @action
+    togglePasswordMask() {
+      this.toggleProperty("maskPassword");
     },
 
     actions: {

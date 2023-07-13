@@ -1,0 +1,20 @@
+{{#if @model.members.length}}
+  <p>
+    {{d-icon "users"}}
+    {{i18n "admin.groups.delete_details" count=@model.members.length}}
+  </p>
+{{/if}}
+{{#if @model.message_count}}
+  <p>
+    {{d-icon "envelope"}}
+    {{i18n
+      "admin.groups.delete_with_messages_confirm"
+      count=@model.message_count
+    }}
+  </p>
+{{/if}}
+
+<p>
+  {{d-icon "exclamation-triangle"}}
+  {{i18n "admin.groups.delete_warning"}}
+</p>

@@ -2,7 +2,7 @@
   <%if flash[:error]%>
     <div class='invite-error'>
       <div class="error-image">
-        <img src="/images/sweat-smile-face.svg" alt="sweat-smile-face emoji">
+        <img src="<%= Discourse.base_path + '/images/sweat-smile-face.svg' %>" alt="sweat-smile-face emoji">
       </div>
       <div class="error-info">
         <%=flash[:error].html_safe%>

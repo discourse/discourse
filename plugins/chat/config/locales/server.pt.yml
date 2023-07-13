@@ -5,6 +5,48 @@
 # https://translate.discourse.org/
 
 pt:
+  site_settings:
+    chat_enabled: "Ativar o plug-in de bate-papo."
+    chat_allowed_groups: "Os usuários desses grupos podem bater papo. Observe que a equipe sempre pode acessar o chat."
+    chat_channel_retention_days: "As mensagens de bate-papo em canais regulares serão retidas por essa quantidade de dias. Defina como '0' para reter as mensagens para sempre."
+    chat_dm_retention_days: "As conversas em canais de bate-papo pessoais serão retidas por essa quantidade de dias. Defina como '0' para reter as mensagens para sempre."
+    chat_auto_silence_duration: "Quantidade de minutos que os usuários serão silenciados quando excederem o limite de taxa de criação de mensagens. Defina como '0' para desativar o silenciamento automático."
+    chat_allowed_messages_for_trust_level_0: "Número de mensagens que os usuários de nível 0 de confiança podem enviar em 30 segundos. Defina como '0' para desativar o limite."
+    chat_allowed_messages_for_other_trust_levels: "Número de mensagens que os usuários com níveis de confiança 1-4 podem enviar em 30 segundos. Defina como '0' para desativar o limite."
+    chat_silence_user_sensitivity: "Probabilidade de um usuário sinalizado no chat ser automaticamente silenciado."
+    chat_auto_silence_from_flags_duration: "Quantidade de minutos que os usuários serão silenciados quando forem silenciados automaticamente devido a mensagens de bate-papo sinalizadas."
+    chat_default_channel_id: "O canal de chat que será aberto por padrão quando um usuário não tiver mensagens não lidas ou menções em outros canais."
+    chat_duplicate_message_sensitivity: "Probabilidade de uma mensagem duplicada do mesmo remetente ser bloqueada em um curto período. Número decimal entre 0 e 1,0, sendo 1,0 a configuração mais alta (bloqueia mensagens com mais frequência em um período de tempo menor). Defina como `0` para permitir mensagens duplicadas."
+    chat_minimum_message_length: "Quantidade mínima de caracteres para uma mensagem de bate-papo."
+    chat_allow_uploads: "Permitir uploads em canais de bate-papo públicos e canais de mensagens diretas."
+    chat_archive_destination_topic_status: "O status que o tópico de destino deve ter quando o arquivamente de um canal for concluído. Isso só se aplica quando o tópico de destino é um novo tópico, não um tópico existente."
+    default_emoji_reactions: "Reação padrão de emoji para mensagens de bate-papo. Adicione até 5 emojis para uma reação rápida."
+    direct_message_enabled_groups: "Permita que os usuários desses grupos criem bate-papos pessoais entre usuários. Observação: a equipe sempre pode criar bate-papos pessoais e os usuários poderão responder aos bate-papos pessoais iniciados por usuários que têm permissão para criá-los."
+    chat_message_flag_allowed_groups: "Os usuários desses grupos têm permissão para sinalizar mensagens de bate-papo."
+    max_mentions_per_chat_message: "Número máximo de notificações @usuário que um usuário pode usar em uma mensagem de bate-papo."
+    chat_max_direct_message_users: "Os usuários não podem adicionar mais do que essa quantidade de outros usuários ao criar uma nova mensagem direta. Defina como 0 para permitir mensagens apenas para si mesmo. Membros da equipe estão isentos dessa configuração."
+    chat_allow_archiving_channels: "Permita que membros da equipe arquivem mensagens em um tópico ao fecharem um canal."
+    errors:
+      chat_default_channel: "O canal padrão de chat deve ser um canal público."
+      direct_message_enabled_groups_invalid: "Você deve especificar pelo menos um grupo para esta configuração. Se você não deseja que ninguém, exceto a equipe, envie mensagens diretas, escolha o grupo de equipe."
+  system_messages:
+    chat_channel_archive_complete:
+      text_body_template: |
+        O arquivamento do canal de chat %{channel_hashtag_or_name} foi concluído com sucesso. As mensagens foram copiadas para o tópico [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Falha no Arquivo do Canal de Chat"
+      subject_template: "O arquivo do canal de chat falhou"
+      text_body_template: |
+        O arquivamento do canal de chat %{channel_hashtag_or_name} falhou. %{messages_archived} mensagens foram arquivadas. As mensagens parcialmente arquivadas foram copiadas para o tópico [%{topic_title}](%{topic_url}). Visite o canal em %{channel_url} para tentar de novo.
+    chat_channel_archive_failed_no_topic:
+      title: "Falha no Arquivo do Canal de Chat"
+      subject_template: "O arquivo do canal de chat falhou"
+      text_body_template: |
+        O arquivamento do canal de chat %{channel_hashtag_or_name} falhou. Nenhuma mensagem foi arquivada. O tópico não foi criado com sucesso pelas seguintes razões:
+
+          %{topic_validation_errors}
+
+        Visite o canal em %{channel_url} para tentar de novo.
   chat:
     deleted_chat_username: eliminado
     errors:
@@ -20,9 +62,8 @@ pt:
         ignore:
           title: "Ignorar"
     channel:
-      statuses:
-        closed: "Fechado"
-        open: "Abrir"
+      dm_title:
+        single_user: "%{username}"
   discourse_push_notifications:
     popup:
       chat_mention:

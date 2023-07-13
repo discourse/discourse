@@ -1,0 +1,12 @@
+{{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<TextField
+  @class="hex-input"
+  @value={{this.hexValue}}
+  @maxlength={{this.maxlength}}
+  @input={{action "onHexInput" value="target.value"}}
+/>
+<input
+  class="picker"
+  type="color"
+  value={{this.normalizedHexValue}}
+  {{on "input" this.onPickerInput}}
+/>

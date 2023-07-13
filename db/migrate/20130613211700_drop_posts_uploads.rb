@@ -13,6 +13,6 @@ class DropPostsUploads < ActiveRecord::Migration[4.2]
 
     add_index :posts_uploads, :post_id
     add_index :posts_uploads, :upload_id
-    add_index :posts_uploads, [:post_id, :upload_id], unique: true
+    add_index :posts_uploads, %i[post_id upload_id], unique: true
   end
 end

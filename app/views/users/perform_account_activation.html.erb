@@ -9,7 +9,7 @@
       <br>
       <div class='perform-activation'>
         <div class="image">
-          <img src="/images/wizard/tada.svg" alt="" class="waving-hand">
+          <img src="<%= Discourse.base_path + '/images/wizard/tada.svg' %>" alt="tada emoji" class="waving-hand">
         </div>
         <% if @needs_approval %>
           <p><%= t 'activation.approval_required' %></p>

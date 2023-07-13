@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBookmarkListSerializer do
-
   fab!(:user) { Fabricate(:user) }
 
   context "for polymorphic bookmarks" do
@@ -11,6 +10,8 @@ RSpec.describe UserBookmarkListSerializer do
       Fabricate(:topic_user, user: user, topic: topic_bookmark.bookmarkable)
       user_bookmark
     end
+
+    after { DiscoursePluginRegistry.reset! }
 
     let(:post_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post)) }
     let(:topic_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:topic)) }
@@ -24,7 +25,9 @@ RSpec.describe UserBookmarkListSerializer do
 
     it "chooses the correct class of serializer for all the bookmarkable types" do
       serializer = run_serializer
-      expect(serializer.bookmarks.map(&:class).map(&:to_s)).to match_array(["UserTestBookmarkSerializer", "UserTopicBookmarkSerializer", "UserPostBookmarkSerializer"])
+      expect(serializer.bookmarks.map(&:class).map(&:to_s)).to match_array(
+        %w[UserTestBookmarkSerializer UserTopicBookmarkSerializer UserPostBookmarkSerializer],
+      )
     end
   end
 end

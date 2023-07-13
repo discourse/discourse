@@ -4,28 +4,8 @@ import DiscourseURL from "discourse/lib/url";
 import Controller from "@ember/controller";
 import I18n from "I18n";
 import { schedule } from "@ember/runloop";
-
-const ButtonBackBright = {
-    classes: "btn-primary",
-    action: "back",
-    key: "errors.buttons.back",
-  },
-  ButtonBackDim = {
-    classes: "",
-    action: "back",
-    key: "errors.buttons.back",
-  },
-  ButtonTryAgain = {
-    classes: "btn-primary",
-    action: "tryLoading",
-    key: "errors.buttons.again",
-    icon: "sync",
-  },
-  ButtonLoadPage = {
-    classes: "btn-primary",
-    action: "tryLoading",
-    key: "errors.buttons.fixed",
-  };
+import { action } from "@ember/object";
+import { cached } from "@glimmer/tracking";
 
 // The controller for the nice error page
 export default Controller.extend({
@@ -114,42 +94,69 @@ export default Controller.extend({
     }
   },
 
+  @cached
+  get buttons() {
+    return {
+      ButtonBackBright: {
+        classes: "btn-primary",
+        action: this.back,
+        key: "errors.buttons.back",
+      },
+      ButtonBackDim: {
+        classes: "",
+        action: this.back,
+        key: "errors.buttons.back",
+      },
+      ButtonTryAgain: {
+        classes: "btn-primary",
+        action: this.tryLoading,
+        key: "errors.buttons.again",
+        icon: "sync",
+      },
+      ButtonLoadPage: {
+        classes: "btn-primary",
+        action: this.tryLoading,
+        key: "errors.buttons.fixed",
+      },
+    };
+  },
+
   @discourseComputed("networkFixed", "isNetwork", "lastTransition")
   enabledButtons(networkFixed, isNetwork, lastTransition) {
     if (networkFixed) {
-      return [ButtonLoadPage];
+      return [this.buttons.ButtonLoadPage];
     } else if (isNetwork) {
-      return [ButtonBackDim, ButtonTryAgain];
+      return [this.buttons.ButtonBackDim, this.buttons.ButtonTryAgain];
     } else if (!lastTransition) {
-      return [ButtonBackBright];
+      return [this.buttons.ButtonBackBright];
     } else {
-      return [ButtonBackBright, ButtonTryAgain];
+      return [this.buttons.ButtonBackBright, this.buttons.ButtonTryAgain];
     }
   },
 
-  actions: {
-    back() {
-      // Strip off subfolder
-      const currentURL = DiscourseURL.router.location.getURL();
-      if (this.lastTransition && currentURL !== "/exception") {
-        this.lastTransition.abort();
-        this.setProperties({ lastTransition: null, thrown: null });
-        // Can't use routeTo because it handles navigation to the same page
-        DiscourseURL.handleURL(currentURL);
-      } else {
-        window.history.back();
-      }
-    },
+  @action
+  back() {
+    // Strip off subfolder
+    const currentURL = DiscourseURL.router.location.getURL();
+    if (this.lastTransition && currentURL !== "/exception") {
+      this.lastTransition.abort();
+      this.setProperties({ lastTransition: null, thrown: null });
+      // Can't use routeTo because it handles navigation to the same page
+      DiscourseURL.handleURL(currentURL);
+    } else {
+      window.history.back();
+    }
+  },
 
-    tryLoading() {
-      this.set("loading", true);
+  @action
+  tryLoading() {
+    this.set("loading", true);
 
-      schedule("afterRender", () => {
-        const transition = this.lastTransition;
-        this.setProperties({ lastTransition: null, thrown: null });
-        transition.retry();
-        this.set("loading", false);
-      });
-    },
+    schedule("afterRender", () => {
+      const transition = this.lastTransition;
+      this.setProperties({ lastTransition: null, thrown: null });
+      transition.retry();
+      this.set("loading", false);
+    });
   },
 });

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class ThemeSettingsParser
-  class InvalidYaml < StandardError; end
+  class InvalidYaml < StandardError
+  end
 
   def initialize(setting_field)
     @setting_field = setting_field
@@ -36,9 +37,7 @@ class ThemeSettingsParser
       opts[:min] = raw_opts[:min].is_a?(Numeric) ? raw_opts[:min] : -Float::INFINITY
     end
 
-    if raw_opts[:list_type]
-      opts[:list_type] = raw_opts[:list_type]
-    end
+    opts[:list_type] = raw_opts[:list_type] if raw_opts[:list_type]
 
     opts[:textarea] = !!raw_opts[:textarea]
     opts[:json_schema] = raw_opts[:json_schema]

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'shared_context_for_backup_restore'
+require_relative "shared_context_for_backup_restore"
 
 RSpec.describe BackupRestore::DatabaseRestorer do
+  subject(:restorer) { BackupRestore::DatabaseRestorer.new(logger, current_db) }
+
   include_context "with shared stuff"
 
   let(:current_db) { RailsMultisite::ConnectionManagement.current_db }
-
-  subject { BackupRestore::DatabaseRestorer.new(logger, current_db) }
 
   describe "#restore" do
     it "executes everything in the correct order" do
@@ -18,7 +18,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
       expect_db_migrate.in_sequence(restore)
       expect_db_reconnect.in_sequence(restore)
 
-      subject.restore("foo.sql")
+      restorer.restore("foo.sql")
     end
 
     it "stores the date of the last restore" do
@@ -32,7 +32,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
     context "with real psql" do
       after do
         psql = BackupRestore::DatabaseRestorer.psql_command
-        system("#{psql} -c 'DROP TABLE IF EXISTS foo'", [:out, :err] => File::NULL)
+        system("#{psql} -c 'DROP TABLE IF EXISTS foo'", %i[out err] => File::NULL)
       end
 
       def restore(filename, stub_migrate: true)
@@ -74,24 +74,27 @@ RSpec.describe BackupRestore::DatabaseRestorer do
       end
 
       it "detects error during restore" do
-        expect { restore("error.sql", stub_migrate: false) }
-          .to raise_error(BackupRestore::DatabaseRestoreError)
+        expect { restore("error.sql", stub_migrate: false) }.to raise_error(
+          BackupRestore::DatabaseRestoreError,
+        )
       end
     end
 
     describe "rewrites database dump" do
       let(:logger) do
-        Class.new do
-          attr_reader :log_messages
+        Class
+          .new do
+            attr_reader :log_messages
 
-          def initialize
-            @log_messages = []
-          end
+            def initialize
+              @log_messages = []
+            end
 
-          def log(message, ex = nil)
-            @log_messages << message if message
+            def log(message, ex = nil)
+              @log_messages << message if message
+            end
           end
-        end.new
+          .new
       end
 
       def restore_and_log_output(filename)
@@ -108,8 +111,12 @@ RSpec.describe BackupRestore::DatabaseRestorer do
         expect(log).not_to be_blank
         expect(log).not_to match(/CREATE SCHEMA public/)
         expect(log).not_to match(/EXECUTE FUNCTION/)
-        expect(log).to match(/^CREATE TRIGGER foo_topic_id_readonly .+? EXECUTE PROCEDURE discourse_functions.raise_foo_topic_id_readonly/)
-        expect(log).to match(/^CREATE TRIGGER foo_user_id_readonly .+? EXECUTE PROCEDURE discourse_functions.raise_foo_user_id_readonly/)
+        expect(log).to match(
+          /^CREATE TRIGGER foo_topic_id_readonly .+? EXECUTE PROCEDURE discourse_functions.raise_foo_topic_id_readonly/,
+        )
+        expect(log).to match(
+          /^CREATE TRIGGER foo_user_id_readonly .+? EXECUTE PROCEDURE discourse_functions.raise_foo_user_id_readonly/,
+        )
       end
 
       it "does not replace `EXECUTE FUNCTION` when restoring on PostgreSQL >= 11" do
@@ -119,13 +126,17 @@ RSpec.describe BackupRestore::DatabaseRestorer do
         expect(log).not_to be_blank
         expect(log).not_to match(/CREATE SCHEMA public/)
         expect(log).not_to match(/EXECUTE PROCEDURE/)
-        expect(log).to match(/^CREATE TRIGGER foo_topic_id_readonly .+? EXECUTE FUNCTION discourse_functions.raise_foo_topic_id_readonly/)
-        expect(log).to match(/^CREATE TRIGGER foo_user_id_readonly .+? EXECUTE FUNCTION discourse_functions.raise_foo_user_id_readonly/)
+        expect(log).to match(
+          /^CREATE TRIGGER foo_topic_id_readonly .+? EXECUTE FUNCTION discourse_functions.raise_foo_topic_id_readonly/,
+        )
+        expect(log).to match(
+          /^CREATE TRIGGER foo_user_id_readonly .+? EXECUTE FUNCTION discourse_functions.raise_foo_user_id_readonly/,
+        )
       end
     end
 
     describe "database connection" do
-      it 'it is not erroring for non-multisite' do
+      it "it is not erroring for non-multisite" do
         expect { execute_stubbed_restore }.not_to raise_error
       end
     end
@@ -135,25 +146,25 @@ RSpec.describe BackupRestore::DatabaseRestorer do
     it "moves tables back when tables were moved" do
       BackupRestore.stubs(:can_rollback?).returns(true)
       BackupRestore.expects(:move_tables_between_schemas).with("backup", "public").never
-      subject.rollback
+      restorer.rollback
 
       execute_stubbed_restore
 
       BackupRestore.expects(:move_tables_between_schemas).with("backup", "public").once
-      subject.rollback
+      restorer.rollback
     end
   end
 
   describe "readonly functions" do
     before do
       BackupRestore::DatabaseRestorer.stubs(:core_migration_files).returns(
-        Dir[Rails.root.join("spec/fixtures/db/post_migrate/drop_column/**/*.rb")]
+        Dir[Rails.root.join("spec/fixtures/db/post_migrate/drop_column/**/*.rb")],
       )
     end
 
     it "doesn't try to drop function when no functions have been created" do
       Migration::BaseDropper.expects(:drop_readonly_function).never
-      subject.clean_up
+      restorer.clean_up
     end
 
     it "creates and drops all functions when none exist" do
@@ -163,50 +174,47 @@ RSpec.describe BackupRestore::DatabaseRestorer do
 
       Migration::BaseDropper.expects(:drop_readonly_function).with(:posts, :via_email)
       Migration::BaseDropper.expects(:drop_readonly_function).with(:posts, :raw_email)
-      subject.clean_up
+      restorer.clean_up
     end
 
     it "creates and drops only missing functions during restore" do
-      Migration::BaseDropper.stubs(:existing_discourse_function_names)
-        .returns(%w(raise_email_logs_readonly raise_posts_raw_email_readonly))
+      Migration::BaseDropper.stubs(:existing_discourse_function_names).returns(
+        %w[raise_email_logs_readonly raise_posts_raw_email_readonly],
+      )
 
       Migration::BaseDropper.expects(:create_readonly_function).with(:posts, :via_email)
       execute_stubbed_restore(stub_readonly_functions: false)
 
       Migration::BaseDropper.expects(:drop_readonly_function).with(:posts, :via_email)
-      subject.clean_up
+      restorer.clean_up
     end
   end
 
   describe ".drop_backup_schema" do
-    subject { BackupRestore::DatabaseRestorer }
-
     context "when no backup schema exists" do
       it "doesn't do anything" do
         ActiveRecord::Base.connection.expects(:schema_exists?).with("backup").returns(false)
         ActiveRecord::Base.connection.expects(:drop_schema).never
 
-        subject.drop_backup_schema
+        described_class.drop_backup_schema
       end
     end
 
     context "when a backup schema exists" do
-      before do
-        ActiveRecord::Base.connection.expects(:schema_exists?).with("backup").returns(true)
-      end
+      before { ActiveRecord::Base.connection.expects(:schema_exists?).with("backup").returns(true) }
 
       it "drops the schema when the last restore was long ago" do
         ActiveRecord::Base.connection.expects(:drop_schema).with("backup")
         BackupMetadata.update_last_restore_date(8.days.ago)
 
-        subject.drop_backup_schema
+        described_class.drop_backup_schema
       end
 
       it "doesn't drop the schema when the last restore was recently" do
         ActiveRecord::Base.connection.expects(:drop_schema).with("backup").never
         BackupMetadata.update_last_restore_date(6.days.ago)
 
-        subject.drop_backup_schema
+        described_class.drop_backup_schema
       end
 
       it "stores the current date when there is no record of the last restore" do
@@ -215,7 +223,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
         date_string = "2020-01-08T17:38:27Z"
         freeze_time(Time.parse(date_string))
 
-        subject.drop_backup_schema
+        described_class.drop_backup_schema
         expect(BackupMetadata.value_for(BackupMetadata::LAST_RESTORE_DATE)).to eq(date_string)
       end
     end

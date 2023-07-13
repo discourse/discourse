@@ -5,3 +5,11 @@
 # https://translate.discourse.org/
 
 bg:
+  js:
+    presence:
+      replying:
+        one: "отговаря"
+        other: "отговаря"
+      replying_to_topic:
+        one: "отговаря"
+        other: "отговаря"

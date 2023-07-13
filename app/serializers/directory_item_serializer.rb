@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DirectoryItemSerializer < ApplicationSerializer
-
   class UserSerializer < UserNameSerializer
     include UserPrimaryGroupMixin
 
@@ -12,9 +11,7 @@ class DirectoryItemSerializer < ApplicationSerializer
 
       object.user_custom_fields.each do |cuf|
         user_field_id = @options[:user_custom_field_map][cuf.name]
-        if user_field_id
-          fields[user_field_id] = cuf.value
-        end
+        fields[user_field_id] = cuf.value if user_field_id
       end
 
       fields
@@ -38,9 +35,7 @@ class DirectoryItemSerializer < ApplicationSerializer
   def attributes
     hash = super
 
-    @options[:attributes].each do |attr|
-      hash.merge!("#{attr}": object[attr])
-    end
+    @options[:attributes].each { |attr| hash.merge!("#{attr}": object[attr]) }
 
     if object.period_type == DirectoryItem.period_types[:all]
       hash.merge!(time_read: object.user_stat.time_read)

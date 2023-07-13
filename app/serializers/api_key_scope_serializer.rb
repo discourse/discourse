@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
 class ApiKeyScopeSerializer < ApplicationSerializer
-
-  attributes :resource,
-             :action,
-             :parameters,
-             :urls,
-             :allowed_parameters,
-             :key
+  attributes :resource, :action, :parameters, :urls, :allowed_parameters, :key
 
   def parameters
     ApiKeyScope.scope_mappings.dig(object.resource.to_sym, object.action.to_sym, :params).to_a
@@ -18,7 +12,7 @@ class ApiKeyScopeSerializer < ApplicationSerializer
   end
 
   def action
-    object.action.to_s.gsub('_', ' ')
+    object.action.to_s.gsub("_", " ")
   end
 
   def key

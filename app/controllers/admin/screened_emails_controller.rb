@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class Admin::ScreenedEmailsController < Admin::StaffController
-
   def index
-    screened_emails = ScreenedEmail.limit(200).order('last_match_at desc').to_a
+    screened_emails = ScreenedEmail.limit(200).order("last_match_at desc").to_a
     render_serialized(screened_emails, ScreenedEmailSerializer)
   end
 
@@ -12,5 +11,4 @@ class Admin::ScreenedEmailsController < Admin::StaffController
     screen.destroy!
     render json: success_json
   end
-
 end

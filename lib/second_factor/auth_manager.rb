@@ -124,25 +124,22 @@ class SecondFactor::AuthManager
     challenge_json = secure_session["current_second_factor_auth_challenge"]
     if challenge_json.blank?
       raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_not_found",
-        status_code: 404
-      )
+              "second_factor_auth.challenge_not_found",
+              status_code: 404,
+            )
     end
 
     challenge = JSON.parse(challenge_json).deep_symbolize_keys
     if challenge[:nonce] != nonce
       raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_not_found",
-        status_code: 404
-      )
+              "second_factor_auth.challenge_not_found",
+              status_code: 404,
+            )
     end
 
     generated_at = challenge[:generated_at]
     if generated_at < MAX_CHALLENGE_AGE.ago.to_i
-      raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_expired",
-        status_code: 401
-      )
+      raise SecondFactor::BadChallenge.new("second_factor_auth.challenge_expired", status_code: 401)
     end
     challenge
   end
@@ -151,10 +148,8 @@ class SecondFactor::AuthManager
     @guardian = guardian
     @current_user = guardian.user
     @action = action
-    @allowed_methods = Set.new([
-      UserSecondFactor.methods[:totp],
-      UserSecondFactor.methods[:security_key],
-    ]).freeze
+    @allowed_methods =
+      Set.new([UserSecondFactor.methods[:totp], UserSecondFactor.methods[:security_key]]).freeze
   end
 
   def allow_backup_codes!
@@ -189,14 +184,10 @@ class SecondFactor::AuthManager
       callback_path: config[:callback_path] || request.path,
       callback_params: callback_params,
       allowed_methods: allowed_methods.to_a,
-      generated_at: Time.zone.now.to_i
+      generated_at: Time.zone.now.to_i,
     }
-    if config[:description]
-      challenge[:description] = config[:description]
-    end
-    if config[:redirect_url].present?
-      challenge[:redirect_url] = config[:redirect_url]
-    end
+    challenge[:description] = config[:description] if config[:description]
+    challenge[:redirect_url] = config[:redirect_url] if config[:redirect_url].present?
     secure_session["current_second_factor_auth_challenge"] = challenge.to_json
     nonce
   end
@@ -205,9 +196,9 @@ class SecondFactor::AuthManager
     challenge = self.class.find_second_factor_challenge(nonce, secure_session)
     if !challenge[:successful]
       raise SecondFactor::BadChallenge.new(
-        "second_factor_auth.challenge_not_completed",
-        status_code: 401
-      )
+              "second_factor_auth.challenge_not_completed",
+              status_code: 401,
+            )
     end
 
     secure_session["current_second_factor_auth_challenge"] = nil

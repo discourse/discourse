@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'net/imap'
-require 'net/smtp'
-require 'net/pop'
+require "net/imap"
+require "net/smtp"
+require "net/pop"
 
 class EmailSettingsExceptionHandler
   EXPECTED_EXCEPTIONS = [
@@ -17,7 +17,7 @@ class EmailSettingsExceptionHandler
     Net::OpenTimeout,
     Net::ReadTimeout,
     SocketError,
-    Errno::ECONNREFUSED
+    Errno::ECONNREFUSED,
   ]
 
   class GenericProvider
@@ -63,7 +63,10 @@ class EmailSettingsExceptionHandler
       if @exception.message.match(/Invalid credentials/)
         I18n.t("email_settings.imap_authentication_error")
       else
-        I18n.t("email_settings.imap_no_response_error", message: @exception.message.gsub(" (Failure)", ""))
+        I18n.t(
+          "email_settings.imap_no_response_error",
+          message: @exception.message.gsub(" (Failure)", ""),
+        )
       end
     end
 

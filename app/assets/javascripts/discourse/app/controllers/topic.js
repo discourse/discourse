@@ -2,7 +2,11 @@ import Category from "discourse/models/category";
 import Controller, { inject as controller } from "@ember/controller";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
+import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
@@ -49,7 +53,7 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default Controller.extend(bufferedProperty("model"), {
-  composer: controller(),
+  composer: service(),
   application: controller(),
   dialog: service(),
   documentTitle: service(),
@@ -521,9 +525,9 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    showSummary() {
+    showTopReplies() {
       return this.get("model.postStream")
-        .showSummary()
+        .showTopReplies()
         .then(() => {
           this.updateQueryParams();
         });
@@ -581,7 +585,10 @@ export default Controller.extend(bufferedProperty("model"), {
         return;
       }
 
-      const backToInbox = () => this.gotoInbox(topic.get("inboxGroupName"));
+      const backToInbox = () => {
+        resetCachedTopicList(this.session);
+        this.gotoInbox(topic.get("inboxGroupName"));
+      };
 
       if (topic.get("message_archived")) {
         topic.moveToInbox().then(backToInbox);
@@ -780,7 +787,10 @@ export default Controller.extend(bufferedProperty("model"), {
     deletePost(post, opts) {
       if (post.get("post_number") === 1) {
         return this.deleteTopic(opts);
-      } else if (!post.can_delete) {
+      } else if (
+        (!opts?.force_destroy && !post.can_delete) ||
+        (opts?.force_destroy && !post.can_permanently_delete)
+      ) {
         return false;
       }
 
@@ -932,7 +942,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
       // Cancel and reopen the composer for the first post
       if (editingFirst) {
-        composer.cancelComposer().then(() => composer.open(opts));
+        composer.cancelComposer(opts).then(() => composer.open(opts));
       } else {
         composer.open(opts);
       }
@@ -949,12 +959,7 @@ export default Controller.extend(bufferedProperty("model"), {
         );
         return this._modifyPostBookmark(
           bookmarkForPost ||
-            Bookmark.create({
-              bookmarkable_id: post.id,
-              bookmarkable_type: "Post",
-              auto_delete_preference:
-                this.currentUser.user_option.bookmark_auto_delete_preference,
-            }),
+            Bookmark.createFor(this.currentUser, "Post", post.id),
           post
         );
       } else {
@@ -1462,12 +1467,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
     if (this.model.bookmarkCount === 0) {
       return this._modifyTopicBookmark(
-        Bookmark.create({
-          bookmarkable_id: this.model.id,
-          bookmarkable_type: "Topic",
-          auto_delete_preference:
-            this.currentUser.user_option.bookmark_auto_delete_preference,
-        })
+        Bookmark.createFor(this.currentUser, "Topic", this.model.id)
       );
     }
   },
@@ -1715,157 +1715,9 @@ export default Controller.extend(bufferedProperty("model"), {
   subscribe() {
     this.unsubscribe();
 
-    const refresh = (args) =>
-      this.appEvents.trigger("post-stream:refresh", args);
-
     this.messageBus.subscribe(
       `/topic/${this.get("model.id")}`,
-      (data) => {
-        const topic = this.model;
-
-        if (isPresent(data.notification_level_change)) {
-          topic.set(
-            "details.notification_level",
-            data.notification_level_change
-          );
-          topic.set(
-            "details.notifications_reason_id",
-            data.notifications_reason_id
-          );
-          return;
-        }
-
-        const postStream = this.get("model.postStream");
-
-        if (data.reload_topic) {
-          topic.reload().then(() => {
-            this.send("postChangedRoute", topic.get("post_number") || 1);
-            this.appEvents.trigger("header:update-topic", topic);
-            if (data.refresh_stream) {
-              postStream.refresh();
-            }
-          });
-
-          return;
-        }
-
-        switch (data.type) {
-          case "acted":
-            postStream
-              .triggerChangedPost(data.id, data.updated_at, {
-                preserveCooked: true,
-              })
-              .then(() => refresh({ id: data.id, refreshLikes: true }));
-            break;
-          case "read": {
-            postStream
-              .triggerReadPost(data.id, data.readers_count)
-              .then(() => refresh({ id: data.id, refreshLikes: true }));
-            break;
-          }
-          case "liked":
-          case "unliked": {
-            postStream
-              .triggerLikedPost(
-                data.id,
-                data.likes_count,
-                data.user_id,
-                data.type
-              )
-              .then(() => refresh({ id: data.id, refreshLikes: true }));
-            break;
-          }
-          case "revised":
-          case "rebaked": {
-            postStream
-              .triggerChangedPost(data.id, data.updated_at)
-              .then(() => refresh({ id: data.id }));
-            break;
-          }
-          case "deleted": {
-            postStream
-              .triggerDeletedPost(data.id)
-              .then(() => refresh({ id: data.id }));
-            break;
-          }
-          case "destroyed": {
-            postStream
-              .triggerDestroyedPost(data.id)
-              .then(() => refresh({ id: data.id }));
-            break;
-          }
-          case "recovered": {
-            postStream
-              .triggerRecoveredPost(data.id)
-              .then(() => refresh({ id: data.id }));
-            break;
-          }
-          case "created": {
-            this._newPostsInStream.push(data.id);
-
-            this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
-              const postIds = this._newPostsInStream;
-              this._newPostsInStream = [];
-
-              return postStream
-                .triggerNewPostsInStream(postIds, { background: true })
-                .then(() => refresh())
-                .catch((e) => {
-                  this._newPostsInStream = postIds.concat(
-                    this._newPostsInStream
-                  );
-                  throw e;
-                });
-            });
-
-            if (this.get("currentUser.id") !== data.user_id) {
-              this.documentTitle.incrementBackgroundContextCount();
-            }
-            break;
-          }
-          case "move_to_inbox": {
-            topic.set("message_archived", false);
-            break;
-          }
-          case "archived": {
-            topic.set("message_archived", true);
-            break;
-          }
-          case "stats": {
-            let updateStream = false;
-            ["last_posted_at", "like_count", "posts_count"].forEach(
-              (property) => {
-                const value = data[property];
-                if (typeof value !== "undefined") {
-                  topic.set(property, value);
-                  updateStream = true;
-                }
-              }
-            );
-
-            if (data["last_poster"]) {
-              topic.details.set("last_poster", data["last_poster"]);
-              updateStream = true;
-            }
-
-            if (updateStream) {
-              postStream
-                .triggerChangedTopicStats()
-                .then((firstPostId) => refresh({ id: firstPostId }));
-            }
-            break;
-          }
-          default: {
-            let callback = customPostMessageCallbacks[data.type];
-            if (callback) {
-              callback(this, data);
-            } else {
-              // eslint-disable-next-line no-console
-              console.warn("unknown topic bus message type", data);
-            }
-          }
-        }
-      },
+      this.onMessage,
       this.get("model.message_bus_last_id")
     );
   },
@@ -1875,7 +1727,146 @@ export default Controller.extend(bufferedProperty("model"), {
     if (!this.get("model.id")) {
       return;
     }
-    this.messageBus.unsubscribe("/topic/*");
+
+    this.messageBus.unsubscribe("/topic/*", this.onMessage);
+  },
+
+  @bind
+  onMessage(data) {
+    const topic = this.model;
+    const refresh = (args) =>
+      this.appEvents.trigger("post-stream:refresh", args);
+
+    if (isPresent(data.notification_level_change)) {
+      topic.set("details.notification_level", data.notification_level_change);
+      topic.set(
+        "details.notifications_reason_id",
+        data.notifications_reason_id
+      );
+      return;
+    }
+
+    const postStream = this.get("model.postStream");
+
+    if (data.reload_topic) {
+      topic.reload().then(() => {
+        this.send("postChangedRoute", topic.get("post_number") || 1);
+        this.appEvents.trigger("header:update-topic", topic);
+        if (data.refresh_stream) {
+          postStream.refresh();
+        }
+      });
+
+      return;
+    }
+
+    switch (data.type) {
+      case "acted":
+        postStream
+          .triggerChangedPost(data.id, data.updated_at, {
+            preserveCooked: true,
+          })
+          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        break;
+      case "read": {
+        postStream
+          .triggerReadPost(data.id, data.readers_count)
+          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        break;
+      }
+      case "liked":
+      case "unliked": {
+        postStream
+          .triggerLikedPost(data.id, data.likes_count, data.user_id, data.type)
+          .then(() => refresh({ id: data.id, refreshLikes: true }));
+        break;
+      }
+      case "revised":
+      case "rebaked": {
+        postStream
+          .triggerChangedPost(data.id, data.updated_at)
+          .then(() => refresh({ id: data.id }));
+        break;
+      }
+      case "deleted": {
+        postStream
+          .triggerDeletedPost(data.id)
+          .then(() => refresh({ id: data.id }));
+        break;
+      }
+      case "destroyed": {
+        postStream
+          .triggerDestroyedPost(data.id)
+          .then(() => refresh({ id: data.id }));
+        break;
+      }
+      case "recovered": {
+        postStream
+          .triggerRecoveredPost(data.id)
+          .then(() => refresh({ id: data.id }));
+        break;
+      }
+      case "created": {
+        this._newPostsInStream.push(data.id);
+
+        this.retryOnRateLimit(RETRIES_ON_RATE_LIMIT, () => {
+          const postIds = this._newPostsInStream;
+          this._newPostsInStream = [];
+
+          return postStream
+            .triggerNewPostsInStream(postIds, { background: true })
+            .then(() => refresh())
+            .catch((e) => {
+              this._newPostsInStream = postIds.concat(this._newPostsInStream);
+              throw e;
+            });
+        });
+
+        if (this.get("currentUser.id") !== data.user_id) {
+          this.documentTitle.incrementBackgroundContextCount();
+        }
+        break;
+      }
+      case "move_to_inbox": {
+        topic.set("message_archived", false);
+        break;
+      }
+      case "archived": {
+        topic.set("message_archived", true);
+        break;
+      }
+      case "stats": {
+        let updateStream = false;
+        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
+          const value = data[property];
+          if (typeof value !== "undefined") {
+            topic.set(property, value);
+            updateStream = true;
+          }
+        });
+
+        if (data["last_poster"]) {
+          topic.details.set("last_poster", data["last_poster"]);
+          updateStream = true;
+        }
+
+        if (updateStream) {
+          postStream
+            .triggerChangedTopicStats()
+            .then((firstPostId) => refresh({ id: firstPostId }));
+        }
+        break;
+      }
+      default: {
+        let callback = customPostMessageCallbacks[data.type];
+        if (callback) {
+          callback(this, data);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn("unknown topic bus message type", data);
+        }
+      }
+    }
   },
 
   reply() {

@@ -2,7 +2,6 @@ import Controller, { inject as controller } from "@ember/controller";
 import { alias, equal, not } from "@ember/object/computed";
 import { action } from "@ember/object";
 import Category from "discourse/models/category";
-import discourseComputed from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { inject as service } from "@ember/service";
 
@@ -21,24 +20,6 @@ export default Controller.extend({
   noSubcategories: alias("navigationCategory.noSubcategories"),
 
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
-
-  @discourseComputed(
-    "router.currentRouteName",
-    "router.currentRoute.queryParams.f",
-    "site.show_welcome_topic_banner"
-  )
-  showEditWelcomeTopicBanner(
-    currentRouteName,
-    hasParams,
-    showWelcomeTopicBanner
-  ) {
-    return (
-      this.currentUser?.staff &&
-      currentRouteName === "discovery.latest" &&
-      showWelcomeTopicBanner &&
-      !hasParams
-    );
-  },
 
   @action
   loadingBegan() {
@@ -77,6 +58,13 @@ export default Controller.extend({
     urlSearchParams.set("period", period);
 
     return `${url}?${urlSearchParams.toString()}`;
+  },
+
+  get showLoadingSpinner() {
+    return (
+      this.get("loading") &&
+      this.siteSettings.page_loading_indicator === "spinner"
+    );
   },
 
   actions: {

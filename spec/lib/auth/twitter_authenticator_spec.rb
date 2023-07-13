@@ -14,7 +14,7 @@ RSpec.describe Auth::TwitterAuthenticator do
         nickname: "minion",
       },
       uid: "123",
-      provider: "twitter"
+      provider: "twitter",
     }
 
     result = auth.after_authenticate(auth_token)
@@ -25,7 +25,7 @@ RSpec.describe Auth::TwitterAuthenticator do
     expect(info.info["email"]).to eq(user.email)
   end
 
-  it 'can connect to a different existing user account' do
+  it "can connect to a different existing user account" do
     authenticator = Auth::TwitterAuthenticator.new
     user1 = Fabricate(:user)
     user2 = Fabricate(:user)
@@ -40,7 +40,7 @@ RSpec.describe Auth::TwitterAuthenticator do
         nickname: "minion",
       },
       uid: "100",
-      provider: "twitter"
+      provider: "twitter",
     }
 
     result = authenticator.after_authenticate(hash, existing_account: user2)
@@ -50,19 +50,19 @@ RSpec.describe Auth::TwitterAuthenticator do
     expect(UserAssociatedAccount.exists?(provider_name: "twitter", user_id: user2.id)).to eq(true)
   end
 
-  describe 'revoke' do
+  describe "revoke" do
     fab!(:user) { Fabricate(:user) }
     let(:authenticator) { Auth::TwitterAuthenticator.new }
 
-    it 'raises exception if no entry for user' do
+    it "raises exception if no entry for user" do
       expect { authenticator.revoke(user) }.to raise_error(Discourse::NotFound)
     end
 
-      it 'revokes correctly' do
-        UserAssociatedAccount.create!(provider_name: "twitter", user_id: user.id, provider_uid: 100)
-        expect(authenticator.can_revoke?).to eq(true)
-        expect(authenticator.revoke(user)).to eq(true)
-        expect(authenticator.description_for_user(user)).to eq("")
-      end
+    it "revokes correctly" do
+      UserAssociatedAccount.create!(provider_name: "twitter", user_id: user.id, provider_uid: 100)
+      expect(authenticator.can_revoke?).to eq(true)
+      expect(authenticator.revoke(user)).to eq(true)
+      expect(authenticator.description_for_user(user)).to eq("")
+    end
   end
 end

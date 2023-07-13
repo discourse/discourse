@@ -19,6 +19,8 @@ export default Controller.extend(ModalFunctionality, {
     const currentStatus = { ...this.model.status };
     this.setProperties({
       status: currentStatus,
+      hidePauseNotifications: this.model.hidePauseNotifications,
+      pauseNotifications: this.model.pauseNotifications,
       showDeleteButton: !!this.model.status,
       timeShortcuts: this._buildTimeShortcuts(),
       prefilledDateTime: currentStatus?.ends_at,
@@ -70,7 +72,7 @@ export default Controller.extend(ModalFunctionality, {
       ends_at: this.status.endsAt?.toISOString(),
     };
 
-    Promise.resolve(this.model.saveAction(newStatus))
+    Promise.resolve(this.model.saveAction(newStatus, this.pauseNotifications))
       .then(() => this.send("closeModal"))
       .catch((e) => this._handleError(e));
   },

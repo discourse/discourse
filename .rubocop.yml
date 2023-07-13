@@ -1,5 +1,5 @@
 inherit_gem:
-  rubocop-discourse: default.yml
+  rubocop-discourse: stree-compat.yml
 
 # Still work to do in ensuring we don't link old files
 Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
@@ -7,3 +7,7 @@ Discourse/NoAddReferenceOrAliasesActiveRecordMigration:
 
 Discourse/NoResetColumnInformationInMigrations:
   Enabled: true
+
+Lint/Debugger:
+  Exclude:
+    - script/**/*

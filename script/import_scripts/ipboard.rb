@@ -3,13 +3,13 @@
 
 require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-require 'htmlentities'
+require "htmlentities"
 begin
-  require 'reverse_markdown' # https://github.com/jqr/php-serialize
+  require "reverse_markdown" # https://github.com/jqr/php-serialize
 rescue LoadError
   puts
-  puts 'reverse_markdown not found.'
-  puts 'Add to Gemfile, like this: '
+  puts "reverse_markdown not found."
+  puts "Add to Gemfile, like this: "
   puts
   puts "echo gem \\'reverse_markdown\\' >> Gemfile"
   puts "bundle install"
@@ -32,28 +32,27 @@ export USERDIR="user"
 =end
 
 class ImportScripts::IpboardSQL < ImportScripts::Base
-
-  DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['DB_NAME'] || "ipboard"
-  DB_PW ||= ENV['DB_PW'] || "ipboard"
-  DB_USER ||= ENV['DB_USER'] || "ipboard"
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "ipb_"
-  IMPORT_AFTER ||= ENV['IMPORT_AFTER'] || "1970-01-01"
-  UPLOADS ||= ENV['UPLOADS'] || "http://UPLOADS+LOCATION+IS+NOT+SET/uploads"
-  USERDIR ||= ENV['USERDIR'] || "user"
-  URL ||= ENV['URL'] || "https://forum.example.com"
-  AVATARS_DIR ||= ENV['AVATARS_DIR'] || '/home/pfaffman/data/example.com/avatars/'
+  DB_HOST ||= ENV["DB_HOST"] || "localhost"
+  DB_NAME ||= ENV["DB_NAME"] || "ipboard"
+  DB_PW ||= ENV["DB_PW"] || "ipboard"
+  DB_USER ||= ENV["DB_USER"] || "ipboard"
+  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "ipb_"
+  IMPORT_AFTER ||= ENV["IMPORT_AFTER"] || "1970-01-01"
+  UPLOADS ||= ENV["UPLOADS"] || "http://UPLOADS+LOCATION+IS+NOT+SET/uploads"
+  USERDIR ||= ENV["USERDIR"] || "user"
+  URL ||= ENV["URL"] || "https://forum.example.com"
+  AVATARS_DIR ||= ENV["AVATARS_DIR"] || "/home/pfaffman/data/example.com/avatars/"
   BATCH_SIZE = 1000
   ID_FIRST = true
   QUIET = true
   DEBUG = false
-  GALLERY_CAT_ID = 1234567
-  GALLERY_CAT_NAME = 'galeria'
-  EMO_DIR ||= ENV['EMO_DIR'] || "default"
+  GALLERY_CAT_ID = 1_234_567
+  GALLERY_CAT_NAME = "galeria"
+  EMO_DIR ||= ENV["EMO_DIR"] || "default"
   OLD_FORMAT = false
   if OLD_FORMAT
     MEMBERS_TABLE = "#{TABLE_PREFIX}core_members"
-    FORUMS_TABLE =  "#{TABLE_PREFIX}forums_forums"
+    FORUMS_TABLE = "#{TABLE_PREFIX}forums_forums"
     POSTS_TABLE = "#{TABLE_PREFIX}forums_posts"
     TOPICS_TABLE = "#{TABLE_PREFIX}forums_topics"
   else
@@ -89,8 +88,8 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     # TODO figure this out
     puts "WARNING: permalink_normalizations not set!!!"
     sleep 1
-  #raw = "[ORIGINAL POST](#{URL}/topic/#{id}-#{slug})\n\n" + raw
-  #SiteSetting.permalink_normalizations='/topic/(.*t)\?.*/\1'
+    #raw = "[ORIGINAL POST](#{URL}/topic/#{id}-#{slug})\n\n" + raw
+    #SiteSetting.permalink_normalizations='/topic/(.*t)\?.*/\1'
   else
     # remove stuff after a "?" and work for urls that end in .html
     SiteSetting.permalink_normalizations = '/(.*t)[?.].*/\1'
@@ -98,21 +97,15 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   end
 
   def initialize
-    if IMPORT_AFTER > "1970-01-01"
-      print_warning("Importing data after #{IMPORT_AFTER}")
-    end
+    print_warning("Importing data after #{IMPORT_AFTER}") if IMPORT_AFTER > "1970-01-01"
 
     super
     @htmlentities = HTMLEntities.new
     begin
-      @client = Mysql2::Client.new(
-        host: DB_HOST,
-        username: DB_USER,
-        password: DB_PW,
-        database: DB_NAME
-      )
+      @client =
+        Mysql2::Client.new(host: DB_HOST, username: DB_USER, password: DB_PW, database: DB_NAME)
     rescue Exception => e
-      puts '=' * 50
+      puts "=" * 50
       puts e.message
       puts <<~TEXT
         Cannot log in to database.
@@ -151,18 +144,24 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     # NOT SUPPORTED import_gallery_topics
     update_tl0
     create_permalinks
-
   end
 
   def import_users
-    puts '', "creating users"
+    puts "", "creating users"
 
-    total_count = mysql_query("SELECT count(*) count FROM #{MEMBERS_TABLE}
-         WHERE last_activity > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'));").first['count']
+    total_count =
+      mysql_query(
+        "SELECT count(*) count FROM #{MEMBERS_TABLE}
+         WHERE last_activity > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'));",
+      ).first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
       #notes: no location, url,
-      results = mysql_query("
+      results =
+        mysql_query(
+          "
              SELECT member_id id,
                 name username,
                 member_group_id usergroup,
@@ -184,58 +183,64 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
                 AND member_group_id = g_id
                 order by member_id ASC
                 LIMIT #{BATCH_SIZE}
-                OFFSET #{offset};")
+                OFFSET #{offset};",
+        )
 
       break if results.size < 1
 
-      next if all_records_exist? :users, results.map { |u| u['id'].to_i }
+      next if all_records_exist? :users, results.map { |u| u["id"].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
-        next if user['email'].blank?
-        next if user['username'].blank?
-        next if @lookup.user_id_from_imported_user_id(user['id'])
+        next if user["email"].blank?
+        next if user["username"].blank?
+        next if @lookup.user_id_from_imported_user_id(user["id"])
 
-        birthday = Date.parse("#{user['bday_year']}-#{user['bday_month']}-#{user['bday_day']}") rescue nil
-        # TODO: what about timezones?
-        next if user['id'] == 0
-        { id: user['id'],
-          email: user['email'],
-          username: user['username'],
-          avatar_url: user['avatar_url'],
-          title: user['member_type'],
-          created_at: user['created_at'] == nil ? 0 : Time.zone.at(user['created_at']),
-          # bio_raw: user['bio_raw'],
-          registration_ip_address: user['registration_ip_address'],
-          # birthday: birthday,
-          last_seen_at: user['last_seen_at'] == nil ? 0 : Time.zone.at(user['last_seen_at']),
-          admin: /^Admin/.match(user['member_type']) ? true : false,
-          moderator: /^MOD/.match(user['member_type']) ? true : false,
-          post_create_action: proc do |newuser|
-            if user['avatar_url'] && user['avatar_url'].length > 0
-              photo_path = AVATARS_DIR + user['avatar_url']
-              if File.exist?(photo_path)
-                begin
-                  upload = create_upload(newuser.id, photo_path, File.basename(photo_path))
-                  if upload && upload.persisted?
-                    newuser.import_mode = false
-                    newuser.create_user_avatar
-                    newuser.import_mode = true
-                    newuser.user_avatar.update(custom_upload_id: upload.id)
-                    newuser.update(uploaded_avatar_id: upload.id)
-                  else
-                    puts "Error: Upload did not persist for #{photo_path}!"
-                  end
-                rescue SystemCallError => err
-                  puts "Could not import avatar #{photo_path}: #{err.message}"
-                end
-              else
-                puts "avatar file not found at #{photo_path}"
-              end
-            end
-            if user['banned'] != 0
-              suspend_user(newuser)
-            end
+        birthday =
+          begin
+            Date.parse("#{user["bday_year"]}-#{user["bday_month"]}-#{user["bday_day"]}")
+          rescue StandardError
+            nil
           end
+        # TODO: what about timezones?
+        next if user["id"] == 0
+        {
+          id: user["id"],
+          email: user["email"],
+          username: user["username"],
+          avatar_url: user["avatar_url"],
+          title: user["member_type"],
+          created_at: user["created_at"] == nil ? 0 : Time.zone.at(user["created_at"]),
+          # bio_raw: user['bio_raw'],
+          registration_ip_address: user["registration_ip_address"],
+          # birthday: birthday,
+          last_seen_at: user["last_seen_at"] == nil ? 0 : Time.zone.at(user["last_seen_at"]),
+          admin: /^Admin/.match(user["member_type"]) ? true : false,
+          moderator: /^MOD/.match(user["member_type"]) ? true : false,
+          post_create_action:
+            proc do |newuser|
+              if user["avatar_url"] && user["avatar_url"].length > 0
+                photo_path = AVATARS_DIR + user["avatar_url"]
+                if File.exist?(photo_path)
+                  begin
+                    upload = create_upload(newuser.id, photo_path, File.basename(photo_path))
+                    if upload && upload.persisted?
+                      newuser.import_mode = false
+                      newuser.create_user_avatar
+                      newuser.import_mode = true
+                      newuser.user_avatar.update(custom_upload_id: upload.id)
+                      newuser.update(uploaded_avatar_id: upload.id)
+                    else
+                      puts "Error: Upload did not persist for #{photo_path}!"
+                    end
+                  rescue SystemCallError => err
+                    puts "Could not import avatar #{photo_path}: #{err.message}"
+                  end
+                else
+                  puts "avatar file not found at #{photo_path}"
+                end
+              end
+              suspend_user(newuser) if user["banned"] != 0
+            end,
         }
       end
     end
@@ -244,7 +249,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   def suspend_user(user)
     user.suspended_at = Time.now
     user.suspended_till = 200.years.from_now
-    ban_reason = 'Account deactivated by administrator'
+    ban_reason = "Account deactivated by administrator"
 
     user_option = user.user_option
     user_option.email_digests = false
@@ -266,45 +271,50 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   def import_image_categories
     puts "", "importing image categories..."
 
-    categories = mysql_query("
+    categories =
+      mysql_query(
+        "
                   SELECT category_id id,
                          category_name_seo name,
 	                 category_parent_id as parent_id
                   FROM #{TABLE_PREFIX}gallery_categories
                   ORDER BY id ASC
-                            ").to_a
+                            ",
+      ).to_a
 
-    category_names = mysql_query("
+    category_names =
+      mysql_query(
+        "
                   SELECT DISTINCT word_key, word_default title
                   FROM #{TABLE_PREFIX}core_sys_lang_words where word_app='gallery'
                   AND word_key REGEXP 'gallery_category_[0-9]+$'
                   ORDER BY word_key ASC
-                            ").to_a
+                            ",
+      ).to_a
 
     cat_map = {}
     puts "Creating gallery_cat_map"
     category_names.each do |name|
-      title = name['title']
-      word_key = name['word_key']
+      title = name["title"]
+      word_key = name["word_key"]
       puts "Processing #{word_key}: #{title}"
-      id = word_key.gsub('gallery_category_', '')
+      id = word_key.gsub("gallery_category_", "")
       next if cat_map[id]
       cat_map[id] = cat_map.has_value?(title) ? title + " " + id : title
       puts "#{id} => #{cat_map[id]}"
     end
 
-    params = { id: GALLERY_CAT_ID,
-               name: GALLERY_CAT_NAME }
+    params = { id: GALLERY_CAT_ID, name: GALLERY_CAT_NAME }
     create_category(params, params[:id])
 
     create_categories(categories) do |category|
-      id = (category['id']).to_s
+      id = (category["id"]).to_s
       name = CGI.unescapeHTML(cat_map[id])
       {
-        id: id + 'gal',
+        id: id + "gal",
         name: name,
         parent_category_id: @lookup.category_id_from_imported_category_id(GALLERY_CAT_ID),
-        color: random_category_color
+        color: random_category_color,
       }
     end
   end
@@ -312,34 +322,34 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   def import_categories
     puts "", "importing categories..."
 
-    categories = mysql_query("
+    categories =
+      mysql_query(
+        "
                   SELECT id,
                          name name,
 	                 parent_id as parent_id
                   FROM #{FORUMS_TABLE}
                   ORDER BY parent_id ASC
-                            ").to_a
+                            ",
+      ).to_a
 
     top_level_categories = categories.select { |c| c["parent.id"] == -1 }
 
     create_categories(top_level_categories) do |category|
-      id = category['id'].to_s
-      name = category['name']
-      {
-        id: id,
-        name: name,
-      }
+      id = category["id"].to_s
+      name = category["name"]
+      { id: id, name: name }
     end
 
     children_categories = categories.select { |c| c["parent.id"] != -1 }
     create_categories(children_categories) do |category|
-      id = category['id'].to_s
-      name = category['name']
+      id = category["id"].to_s
+      name = category["name"]
       {
         id: id,
         name: name,
-        parent_category_id: @lookup.category_id_from_imported_category_id(category['parent_id']),
-        color: random_category_color
+        parent_category_id: @lookup.category_id_from_imported_category_id(category["parent_id"]),
+        color: random_category_color,
       }
     end
   end
@@ -347,13 +357,17 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   def import_topics
     puts "", "importing topics..."
 
-    total_count = mysql_query("SELECT count(*) count FROM #{POSTS_TABLE}
+    total_count =
+      mysql_query(
+        "SELECT count(*) count FROM #{POSTS_TABLE}
        	        WHERE post_date > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'))
-                AND new_topic=1;")
-      .first['count']
+                AND new_topic=1;",
+      ).first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
-      discussions = mysql_query(<<-SQL
+      discussions = mysql_query(<<-SQL)
             SELECT #{TOPICS_TABLE}.tid tid,
                #{TOPICS_TABLE}.forum_id category,
                #{POSTS_TABLE}.pid pid,
@@ -371,29 +385,29 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
             LIMIT #{BATCH_SIZE}
             OFFSET #{offset}
             SQL
-                               )
 
       break if discussions.size < 1
-      next if all_records_exist? :posts, discussions.map { |t| "discussion#" + t['tid'].to_s }
+      next if all_records_exist? :posts, discussions.map { |t| "discussion#" + t["tid"].to_s }
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
-        slug = discussion['slug']
-        id = discussion['tid']
-        raw = clean_up(discussion['raw'])
+        slug = discussion["slug"]
+        id = discussion["tid"]
+        raw = clean_up(discussion["raw"])
         {
-          id: "discussion#" + discussion['tid'].to_s,
-          user_id: user_id_from_imported_user_id(discussion['user_id']) || Discourse::SYSTEM_USER_ID,
-          title: CGI.unescapeHTML(discussion['title']),
-          category: category_id_from_imported_category_id(discussion['category'].to_s),
+          id: "discussion#" + discussion["tid"].to_s,
+          user_id:
+            user_id_from_imported_user_id(discussion["user_id"]) || Discourse::SYSTEM_USER_ID,
+          title: CGI.unescapeHTML(discussion["title"]),
+          category: category_id_from_imported_category_id(discussion["category"].to_s),
           raw: raw,
-          pinned_at: discussion['pinned'].to_i == 1 ? Time.zone.at(discussion['created_at']) : nil,
-          created_at: Time.zone.at(discussion['created_at']),
+          pinned_at: discussion["pinned"].to_i == 1 ? Time.zone.at(discussion["created_at"]) : nil,
+          created_at: Time.zone.at(discussion["created_at"]),
         }
       end
     end
   end
 
-  def array_from_members_string(invited_members = 'a:3:{i:0;i:22629;i:1;i:21837;i:2;i:22234;}')
+  def array_from_members_string(invited_members = "a:3:{i:0;i:22629;i:1;i:21837;i:2;i:22234;}")
     out = []
     count_regex = /a:(\d)+:/
     count = count_regex.match(invited_members)[1]
@@ -403,7 +417,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
       i = m[1]
       rest.sub!(i_regex, "")
       puts "i: #{i}, #{rest}"
-      out += [ i.to_i ]
+      out += [i.to_i]
     end
     out
   end
@@ -411,12 +425,13 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   def import_private_messages
     puts "", "importing private messages..."
 
-    topic_count = mysql_query("SELECT COUNT(msg_id) count FROM #{TABLE_PREFIX}message_posts").first["count"]
+    topic_count =
+      mysql_query("SELECT COUNT(msg_id) count FROM #{TABLE_PREFIX}message_posts").first["count"]
 
     last_private_message_topic_id = -1
 
     batches(BATCH_SIZE) do |offset|
-      private_messages = mysql_query(<<-SQL
+      private_messages = mysql_query(<<-SQL)
           SELECT msg_id pmtextid,
                  msg_topic_id topic_id,
                  msg_author_id fromuserid,
@@ -433,12 +448,12 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
       SQL
-                                    )
 
       puts "Processing #{private_messages.count} messages"
       break if private_messages.count < 1
       puts "Processing . . . "
-      private_messages = private_messages.reject { |pm| @lookup.post_already_imported?("pm-#{pm['pmtextid']}") }
+      private_messages =
+        private_messages.reject { |pm| @lookup.post_already_imported?("pm-#{pm["pmtextid"]}") }
 
       title_username_of_pm_first_post = {}
 
@@ -446,11 +461,16 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
         skip = false
         mapped = {}
 
-        mapped[:id] = "pm-#{m['pmtextid']}"
-        mapped[:user_id] = user_id_from_imported_user_id(m['fromuserid']) || Discourse::SYSTEM_USER_ID
-        mapped[:raw] = clean_up(m['message']) rescue nil
-        mapped[:created_at] = Time.zone.at(m['dateline'])
-        title = @htmlentities.decode(m['title']).strip[0...255]
+        mapped[:id] = "pm-#{m["pmtextid"]}"
+        mapped[:user_id] = user_id_from_imported_user_id(m["fromuserid"]) ||
+          Discourse::SYSTEM_USER_ID
+        mapped[:raw] = begin
+          clean_up(m["message"])
+        rescue StandardError
+          nil
+        end
+        mapped[:created_at] = Time.zone.at(m["dateline"])
+        title = @htmlentities.decode(m["title"]).strip[0...255]
         topic_id = nil
 
         next if mapped[:raw].blank?
@@ -459,9 +479,9 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
         target_usernames = []
         target_userids = []
         begin
-          to_user_array = [ m['to_user_id'] ] + array_from_members_string(m['touserarray'])
-        rescue
-          puts "#{m['pmtextid']} -- #{m['touserarray']}"
+          to_user_array = [m["to_user_id"]] + array_from_members_string(m["touserarray"])
+        rescue StandardError
+          puts "#{m["pmtextid"]} -- #{m["touserarray"]}"
           skip = true
         end
 
@@ -477,8 +497,8 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
               puts "Can't find user: #{to_user}"
             end
           end
-        rescue
-          puts "skipping pm-#{m['pmtextid']} `to_user_array` is broken -- #{to_user_array.inspect}"
+        rescue StandardError
+          puts "skipping pm-#{m["pmtextid"]} `to_user_array` is broken -- #{to_user_array.inspect}"
           skip = true
         end
 
@@ -486,30 +506,32 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
         participants << mapped[:user_id]
         begin
           participants.sort!
-        rescue
+        rescue StandardError
           puts "one of the participant's id is nil -- #{participants.inspect}"
         end
 
-        if last_private_message_topic_id != m['topic_id']
-          last_private_message_topic_id = m['topic_id']
-          puts "New message: #{m['topic_id']}: #{title} from #{m['fromuserid']} (#{mapped[:user_id]})" unless QUIET
+        if last_private_message_topic_id != m["topic_id"]
+          last_private_message_topic_id = m["topic_id"]
+          unless QUIET
+            puts "New message: #{m["topic_id"]}: #{title} from #{m["fromuserid"]} (#{mapped[:user_id]})"
+          end
           # topic post message
-          topic_id = m['topic_id']
+          topic_id = m["topic_id"]
           mapped[:title] = title
           mapped[:archetype] = Archetype.private_message
-          mapped[:target_usernames] = target_usernames.join(',')
+          mapped[:target_usernames] = target_usernames.join(",")
           if mapped[:target_usernames].size < 1 # pm with yourself?
             # skip = true
             mapped[:target_usernames] = "system"
-            puts "pm-#{m['pmtextid']} has no target (#{m['touserarray']})"
+            puts "pm-#{m["pmtextid"]} has no target (#{m["touserarray"]})"
           end
         else # reply
           topic_id = topic_lookup_from_imported_post_id("pm-#{topic_id}")
-          if !topic_id
-            skip = true
-          end
+          skip = true if !topic_id
           mapped[:topic_id] = topic_id
-          puts "Reply message #{topic_id}: #{m['topic_id']}: from #{m['fromuserid']} (#{mapped[:user_id]})"  unless QUIET
+          unless QUIET
+            puts "Reply message #{topic_id}: #{m["topic_id"]}: from #{m["fromuserid"]} (#{mapped[:user_id]})"
+          end
         end
         #        puts "#{target_usernames} -- #{mapped[:target_usernames]}"
         #        puts "Adding #{mapped}"
@@ -524,9 +546,13 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     puts "", "importing gallery albums..."
 
     gallery_count = 0
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}gallery_images
-                ;")
-      .first['count']
+    total_count =
+      mysql_query(
+        "SELECT count(*) count FROM #{TABLE_PREFIX}gallery_images
+                ;",
+      ).first[
+        "count"
+      ]
 
     # NOTE: for imports with huge numbers of galleries, this needs to use limits
 
@@ -546,7 +572,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
       #       SQL
       #                        )
 
-      images = mysql_query(<<-SQL
+      images = mysql_query(<<-SQL)
 
             SELECT #{TABLE_PREFIX}gallery_albums.album_id tid,
                 #{TABLE_PREFIX}gallery_albums.album_category_id category,
@@ -570,43 +596,46 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
 
             SQL
 
-                          )
-
       break if images.size < 1
-      next if all_records_exist? :posts, images.map { |t| "gallery#" + t['tid'].to_s + t['image_id'].to_s }
+      if all_records_exist? :posts,
+                            images.map { |t| "gallery#" + t["tid"].to_s + t["image_id"].to_s }
+        next
+      end
 
-      last_id = images.first['tid']
-      raw = "Gallery ID: #{last_id}\n" + clean_up(images.first['raw'])
-      raw += "#{clean_up(images.first['description'])}\n"
+      last_id = images.first["tid"]
+      raw = "Gallery ID: #{last_id}\n" + clean_up(images.first["raw"])
+      raw += "#{clean_up(images.first["description"])}\n"
       last_gallery = images.first.dup
       create_posts(images, total: total_count, offset: offset) do |gallery|
-        id = gallery['tid'].to_i
+        id = gallery["tid"].to_i
         #puts "ID: #{id}, last_id: #{last_id}, image: #{gallery['image_id']}"
         if id == last_id
-          raw += "### #{gallery['caption']}\n"
-          raw += "#{UPLOADS}/#{gallery['orig']}\n"
+          raw += "### #{gallery["caption"]}\n"
+          raw += "#{UPLOADS}/#{gallery["orig"]}\n"
           last_gallery = gallery.dup
           next
         else
           insert_raw = raw.dup
-          last_id = gallery['tid']
+          last_id = gallery["tid"]
           if DEBUG
-            raw = "Gallery ID: #{last_id}\n" + clean_up(gallery['raw'])
-            raw += "Cat: #{last_gallery['category'].to_s} - #{category_id_from_imported_category_id(last_gallery['category'].to_s + 'gal')}"
+            raw = "Gallery ID: #{last_id}\n" + clean_up(gallery["raw"])
+            raw +=
+              "Cat: #{last_gallery["category"].to_s} - #{category_id_from_imported_category_id(last_gallery["category"].to_s + "gal")}"
           end
-          raw += "#{clean_up(images.first['description'])}\n"
-          raw += "### #{gallery['caption']}\n"
-          if DEBUG
-            raw += "User #{gallery['user_id']}, image_id: #{gallery['image_id']}\n"
-          end
-          raw += "#{UPLOADS}/#{gallery['orig']}\n"
+          raw += "#{clean_up(images.first["description"])}\n"
+          raw += "### #{gallery["caption"]}\n"
+          raw += "User #{gallery["user_id"]}, image_id: #{gallery["image_id"]}\n" if DEBUG
+          raw += "#{UPLOADS}/#{gallery["orig"]}\n"
           gallery_count += 1
-          puts "#{gallery_count}--Cat: #{last_gallery['category'].to_s} ==> #{category_id_from_imported_category_id(last_gallery['category'].to_s + 'gal')}" unless QUIET
+          unless QUIET
+            puts "#{gallery_count}--Cat: #{last_gallery["category"].to_s} ==> #{category_id_from_imported_category_id(last_gallery["category"].to_s + "gal")}"
+          end
           {
-            id: "gallery#" + last_gallery['tid'].to_s + last_gallery['image_id'].to_s,
-            user_id: user_id_from_imported_user_id(last_gallery['user_id']) || Discourse::SYSTEM_USER_ID,
-            title: CGI.unescapeHTML(last_gallery['title']),
-            category: category_id_from_imported_category_id(last_gallery['category'].to_s + 'gal'),
+            id: "gallery#" + last_gallery["tid"].to_s + last_gallery["image_id"].to_s,
+            user_id:
+              user_id_from_imported_user_id(last_gallery["user_id"]) || Discourse::SYSTEM_USER_ID,
+            title: CGI.unescapeHTML(last_gallery["title"]),
+            category: category_id_from_imported_category_id(last_gallery["category"].to_s + "gal"),
             raw: insert_raw,
           }
         end
@@ -630,11 +659,11 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   def import_comments
     puts "", "importing gallery comments..."
 
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}gallery_comments;")
-      .first['count']
+    total_count =
+      mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}gallery_comments;").first["count"]
 
     batches(BATCH_SIZE) do |offset|
-      comments = mysql_query(<<-SQL
+      comments = mysql_query(<<-SQL)
 
             SELECT #{TABLE_PREFIX}gallery_comments.tid tid,
                #{TABLE_PREFIX}gallery_topics.forum_id category,
@@ -652,20 +681,19 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
             OFFSET #{offset}
 
             SQL
-                            )
 
       break if comments.size < 1
-      next if all_records_exist? :posts, comments.map { |comment| "comment#" + comment['pid'].to_s }
+      next if all_records_exist? :posts, comments.map { |comment| "comment#" + comment["pid"].to_s }
 
       create_posts(comments, total: total_count, offset: offset) do |comment|
-        next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['tid'].to_s)
-        next if comment['raw'].blank?
+        next unless t = topic_lookup_from_imported_post_id("discussion#" + comment["tid"].to_s)
+        next if comment["raw"].blank?
         {
-          id: "comment#" + comment['pid'].to_s,
-          user_id: user_id_from_imported_user_id(comment['user_id']) || Discourse::SYSTEM_USER_ID,
+          id: "comment#" + comment["pid"].to_s,
+          user_id: user_id_from_imported_user_id(comment["user_id"]) || Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
-          raw: clean_up(comment['raw']),
-          created_at: Time.zone.at(comment['created_at'])
+          raw: clean_up(comment["raw"]),
+          created_at: Time.zone.at(comment["created_at"]),
         }
       end
     end
@@ -674,13 +702,17 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   def import_posts
     puts "", "importing posts..."
 
-    total_count = mysql_query("SELECT count(*) count FROM #{POSTS_TABLE}
+    total_count =
+      mysql_query(
+        "SELECT count(*) count FROM #{POSTS_TABLE}
        	        WHERE post_date > UNIX_TIMESTAMP(STR_TO_DATE('#{IMPORT_AFTER}', '%Y-%m-%d'))
-                AND new_topic=0;")
-      .first['count']
+                AND new_topic=0;",
+      ).first[
+        "count"
+      ]
 
     batches(BATCH_SIZE) do |offset|
-      comments = mysql_query(<<-SQL
+      comments = mysql_query(<<-SQL)
             SELECT #{TOPICS_TABLE}.tid tid,
                #{TOPICS_TABLE}.forum_id category,
                #{POSTS_TABLE}.pid pid,
@@ -696,20 +728,19 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
             LIMIT #{BATCH_SIZE}
             OFFSET #{offset}
             SQL
-                            )
 
       break if comments.size < 1
-      next if all_records_exist? :posts, comments.map { |comment| "comment#" + comment['pid'].to_s }
+      next if all_records_exist? :posts, comments.map { |comment| "comment#" + comment["pid"].to_s }
 
       create_posts(comments, total: total_count, offset: offset) do |comment|
-        next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['tid'].to_s)
-        next if comment['raw'].blank?
+        next unless t = topic_lookup_from_imported_post_id("discussion#" + comment["tid"].to_s)
+        next if comment["raw"].blank?
         {
-          id: "comment#" + comment['pid'].to_s,
-          user_id: user_id_from_imported_user_id(comment['user_id']) || Discourse::SYSTEM_USER_ID,
+          id: "comment#" + comment["pid"].to_s,
+          user_id: user_id_from_imported_user_id(comment["user_id"]) || Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
-          raw: clean_up(comment['raw']),
-          created_at: Time.zone.at(comment['created_at'])
+          raw: clean_up(comment["raw"]),
+          created_at: Time.zone.at(comment["created_at"]),
         }
       end
     end
@@ -719,59 +750,61 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     # this makes proper quotes with user/topic/post references.
     # I'm not clear if it is for just some bizarre imported data, or it might ever be useful
     # It should be integrated into the Nokogiri section of clean_up, though.
-    @doc = Nokogiri::XML("<html>" + raw + "</html>")
+    @doc = Nokogiri.XML("<html>" + raw + "</html>")
 
     # handle <blockquote>s with links to original post
-    @doc.css('blockquote[class=ipsQuote]').each do |b|
-      # puts "\n#{'#'*50}\n#{b}\n\nCONTENT: #{b['data-ipsquote-contentid']}"
-      # b.options = Nokogiri::XML::ParseOptions::STRICT
-      imported_post_id = b['data-ipsquote-contentcommentid'].to_s
-      content_type = b['data-ipsquote-contenttype'].to_s
-      content_class = b['data-ipsquote-contentclass'].to_s
-      content_id = b['data-ipsquote-contentid'].to_s || b['data-cid'].to_s
-      topic_lookup = topic_lookup_from_imported_post_id("comment#" + imported_post_id)
-      post_lookup = topic_lookup_from_imported_post_id("discussion#" + content_id)
-      post = topic_lookup ? topic_lookup[:post_number] : nil
-      topic = topic_lookup ? topic_lookup[:topic_id] : nil
-      post ||= post_lookup ? post_lookup[:post_number] : nil
-      topic ||= post_lookup ? post_lookup[:topic_id] : nil
+    @doc
+      .css("blockquote[class=ipsQuote]")
+      .each do |b|
+        # puts "\n#{'#'*50}\n#{b}\n\nCONTENT: #{b['data-ipsquote-contentid']}"
+        # b.options = Nokogiri::XML::ParseOptions::STRICT
+        imported_post_id = b["data-ipsquote-contentcommentid"].to_s
+        content_type = b["data-ipsquote-contenttype"].to_s
+        content_class = b["data-ipsquote-contentclass"].to_s
+        content_id = b["data-ipsquote-contentid"].to_s || b["data-cid"].to_s
+        topic_lookup = topic_lookup_from_imported_post_id("comment#" + imported_post_id)
+        post_lookup = topic_lookup_from_imported_post_id("discussion#" + content_id)
+        post = topic_lookup ? topic_lookup[:post_number] : nil
+        topic = topic_lookup ? topic_lookup[:topic_id] : nil
+        post ||= post_lookup ? post_lookup[:post_number] : nil
+        topic ||= post_lookup ? post_lookup[:topic_id] : nil
 
-      # TODO: consider: <blockquote class="ipsStyle_spoiler" data-ipsspoiler="">
-      # consider: <pre class="ipsCode prettyprint">
-      # TODO make sure it's the imported username
-      # TODO: do _s still get \-escaped?
-      ips_username = b['data-ipsquote-username'] || b['data-author']
-      username = ips_username
-      new_text = ""
-      if DEBUG
-        # new_text += "post: #{imported_post_id} --> #{post_lookup} --> |#{post}|<br>\n"
-        # new_text += "topic: #{content_id} --> #{topic_lookup} --> |#{topic}|<br>\n"
-        # new_text += "user: #{ips_username} --> |#{username}|<br>\n"
-        # new_text += "class: #{content_class}<br>\n"
-        # new_text += "type: #{content_type}<br>\n"
-        if content_class.length > 0 && content_class != "forums_Topic"
-          new_text += "UNEXPECTED CONTENT CLASS! #{content_class}<br>\n"
+        # TODO: consider: <blockquote class="ipsStyle_spoiler" data-ipsspoiler="">
+        # consider: <pre class="ipsCode prettyprint">
+        # TODO make sure it's the imported username
+        # TODO: do _s still get \-escaped?
+        ips_username = b["data-ipsquote-username"] || b["data-author"]
+        username = ips_username
+        new_text = ""
+        if DEBUG
+          # new_text += "post: #{imported_post_id} --> #{post_lookup} --> |#{post}|<br>\n"
+          # new_text += "topic: #{content_id} --> #{topic_lookup} --> |#{topic}|<br>\n"
+          # new_text += "user: #{ips_username} --> |#{username}|<br>\n"
+          # new_text += "class: #{content_class}<br>\n"
+          # new_text += "type: #{content_type}<br>\n"
+          if content_class.length > 0 && content_class != "forums_Topic"
+            new_text += "UNEXPECTED CONTENT CLASS! #{content_class}<br>\n"
+          end
+          if content_type.length > 0 && content_type != "forums"
+            new_text += "UNEXPECTED CONTENT TYPE! #{content_type}<br>\n"
+          end
+          # puts "#{'-'*20} and NOWWWWW!!!! \n #{new_text}"
         end
-        if content_type.length > 0 && content_type != "forums"
-          new_text += "UNEXPECTED CONTENT TYPE! #{content_type}<br>\n"
-        end
-        # puts "#{'-'*20} and NOWWWWW!!!! \n #{new_text}"
-      end
-      if post && topic && username
-        quote = "\n[quote=\"#{username}, post:#{post}, topic: #{topic}\"]\n\n"
-      else
-        if username && username.length > 1
-          quote = "\n[quote=\"#{username}\"]\n\n"
+        if post && topic && username
+          quote = "\n[quote=\"#{username}, post:#{post}, topic: #{topic}\"]\n\n"
         else
-          quote = "\n[quote]\n"
+          if username && username.length > 1
+            quote = "\n[quote=\"#{username}\"]\n\n"
+          else
+            quote = "\n[quote]\n"
+          end
+          # new_doc = Nokogiri::XML("<div>#{new_text}</div>")
         end
-        # new_doc = Nokogiri::XML("<div>#{new_text}</div>")
+        puts "QUOTE: #{quote}"
+        sleep 1
+        b.content = quote + b.content + "\n[/quote]\n"
+        b.name = "div"
       end
-      puts "QUOTE: #{quote}"
-      sleep 1
-      b.content = quote + b.content + "\n[/quote]\n"
-      b.name = 'div'
-    end
 
     raw = @doc.to_html
   end
@@ -783,24 +816,30 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     # TODO what about uploads?
     # raw.gsub!(/<fileStore.core_Attachment>/,UPLOADS)
     raw.gsub!(/<br>/, "\n\n")
-    raw.gsub!(/<br \/>/, "\n\n")
-    raw.gsub!(/<p>&nbsp;<\/p>/, "\n\n")
+    raw.gsub!(%r{<br />}, "\n\n")
+    raw.gsub!(%r{<p>&nbsp;</p>}, "\n\n")
     raw.gsub!(/\[hr\]/, "\n***\n")
     raw.gsub!(/&#39;/, "'")
-    raw.gsub!(/\[url="(.+?)"\]http.+?\[\/url\]/, "\\1\n")
-    raw.gsub!(/\[media\](.+?)\[\/media\]/, "\n\\1\n\n")
-    raw.gsub!(/\[php\](.+?)\[\/php\]/m) { |m| "\n\n```php\n\n" + @htmlentities.decode($1.gsub(/\n\n/, "\n")) + "\n\n```\n\n" }
-    raw.gsub!(/\[code\](.+?)\[\/code\]/m) { |m| "\n\n```\n\n" + @htmlentities.decode($1.gsub(/\n\n/, "\n")) + "\n\n```\n\n" }
-    raw.gsub!(/\[list\](.+?)\[\/list\]/m) { |m| "\n" + $1.gsub(/\[\*\]/, "\n- ") + "\n\n" }
+    raw.gsub!(%r{\[url="(.+?)"\]http.+?\[/url\]}, "\\1\n")
+    raw.gsub!(%r{\[media\](.+?)\[/media\]}, "\n\\1\n\n")
+    raw.gsub!(%r{\[php\](.+?)\[/php\]}m) do |m|
+      "\n\n```php\n\n" + @htmlentities.decode($1.gsub(/\n\n/, "\n")) + "\n\n```\n\n"
+    end
+    raw.gsub!(%r{\[code\](.+?)\[/code\]}m) do |m|
+      "\n\n```\n\n" + @htmlentities.decode($1.gsub(/\n\n/, "\n")) + "\n\n```\n\n"
+    end
+    raw.gsub!(%r{\[list\](.+?)\[/list\]}m) { |m| "\n" + $1.gsub(/\[\*\]/, "\n- ") + "\n\n" }
     raw.gsub!(/\[quote\]/, "\n[quote]\n")
-    raw.gsub!(/\[\/quote\]/, "\n[/quote]\n")
-    raw.gsub!(/date=\'(.+?)\'/, '')
-    raw.gsub!(/timestamp=\'(.+?)\' /, '')
+    raw.gsub!(%r{\[/quote\]}, "\n[/quote]\n")
+    raw.gsub!(/date=\'(.+?)\'/, "")
+    raw.gsub!(/timestamp=\'(.+?)\' /, "")
 
     quote_regex = /\[quote name=\'(.+?)\'\s+post=\'(\d+?)\'\s*\]/
     while quote = quote_regex.match(raw)
       # get IPB post number and find Discourse post and topic number
-      puts "----------------------------------------\nName: #{quote[1]}, post: #{quote[2]}" unless QUIET
+      unless QUIET
+        puts "----------------------------------------\nName: #{quote[1]}, post: #{quote[2]}"
+      end
       imported_post_id = quote[2].to_s
       topic_lookup = topic_lookup_from_imported_post_id("comment#" + imported_post_id)
       post_lookup = topic_lookup_from_imported_post_id("discussion#" + imported_post_id)
@@ -826,21 +865,24 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     while attach = attach_regex.match(raw)
       attach_id = attach[1]
       attachments =
-        mysql_query("SELECT attach_location as loc,
+        mysql_query(
+          "SELECT attach_location as loc,
                             attach_file as filename
                      FROM #{ATTACHMENT_TABLE}
-                     WHERE attach_id=#{attach_id}")
+                     WHERE attach_id=#{attach_id}",
+        )
       if attachments.count < 1
         puts "Attachment #{attach_id} not found."
         attach_string = "Attachment #{attach_id} not found."
       else
-        attach_url = "#{UPLOADS}/#{attachments.first['loc'].gsub(' ', '%20')}"
-        if attachments.first['filename'].match(/(png|jpg|jpeg|gif)$/)
+        attach_url = "#{UPLOADS}/#{attachments.first["loc"].gsub(" ", "%20")}"
+        if attachments.first["filename"].match(/(png|jpg|jpeg|gif)$/)
           # images are rendered as a link that contains the image
-          attach_string = "#{attach_id}\n\n[![#{attachments.first['filename']}](#{attach_url})](#{attach_url})\n"
+          attach_string =
+            "#{attach_id}\n\n[![#{attachments.first["filename"]}](#{attach_url})](#{attach_url})\n"
         else
           # other attachments are simple download links
-          attach_string = "#{attach_id}\n\n[#{attachments.first['filename']}](#{attach_url})\n"
+          attach_string = "#{attach_id}\n\n[#{attachments.first["filename"]}](#{attach_url})\n"
         end
       end
       raw.sub!(attach_regex, attach_string)
@@ -850,7 +892,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   end
 
   def random_category_color
-    colors = SiteSetting.category_colors.split('|')
+    colors = SiteSetting.category_colors.split("|")
     colors[rand(colors.count)]
   end
 
@@ -865,78 +907,78 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     raw.gsub!(/<fileStore.core_Attachment>/, UPLOADS)
     raw.gsub!(/<br>/, "\n")
 
-    @doc = Nokogiri::XML("<html>" + raw + "</html>")
+    @doc = Nokogiri.XML("<html>" + raw + "</html>")
 
     # handle <blockquote>s with links to original post
-    @doc.css('blockquote[class=ipsQuote]').each do |b|
-      imported_post_id = b['data-ipsquote-contentcommentid'].to_s
-      content_type = b['data-ipsquote-contenttype'].to_s
-      content_class = b['data-ipsquote-contentclass'].to_s
-      content_id = b['data-ipsquote-contentid'].to_s || b['data-cid'].to_s
-      topic_lookup = topic_lookup_from_imported_post_id("comment#" + imported_post_id)
-      post_lookup = topic_lookup_from_imported_post_id("discussion#" + content_id)
-      post = topic_lookup ? topic_lookup[:post_number] : nil
-      topic = topic_lookup ? topic_lookup[:topic_id] : nil
-      post ||= post_lookup ? post_lookup[:post_number] : nil
-      topic ||= post_lookup ? post_lookup[:topic_id] : nil
+    @doc
+      .css("blockquote[class=ipsQuote]")
+      .each do |b|
+        imported_post_id = b["data-ipsquote-contentcommentid"].to_s
+        content_type = b["data-ipsquote-contenttype"].to_s
+        content_class = b["data-ipsquote-contentclass"].to_s
+        content_id = b["data-ipsquote-contentid"].to_s || b["data-cid"].to_s
+        topic_lookup = topic_lookup_from_imported_post_id("comment#" + imported_post_id)
+        post_lookup = topic_lookup_from_imported_post_id("discussion#" + content_id)
+        post = topic_lookup ? topic_lookup[:post_number] : nil
+        topic = topic_lookup ? topic_lookup[:topic_id] : nil
+        post ||= post_lookup ? post_lookup[:post_number] : nil
+        topic ||= post_lookup ? post_lookup[:topic_id] : nil
 
-      # TODO: consider: <blockquote class="ipsStyle_spoiler" data-ipsspoiler="">
-      # consider: <pre class="ipsCode prettyprint">
-      ips_username = b['data-ipsquote-username'] || b['data-author']
-      username = ips_username
-      new_text = ""
-      if DEBUG
-        if content_class.length > 0 && content_class != "forums_Topic"
-          new_text += "UNEXPECTED CONTENT CLASS! #{content_class}<br>\n"
+        # TODO: consider: <blockquote class="ipsStyle_spoiler" data-ipsspoiler="">
+        # consider: <pre class="ipsCode prettyprint">
+        ips_username = b["data-ipsquote-username"] || b["data-author"]
+        username = ips_username
+        new_text = ""
+        if DEBUG
+          if content_class.length > 0 && content_class != "forums_Topic"
+            new_text += "UNEXPECTED CONTENT CLASS! #{content_class}<br>\n"
+          end
+          if content_type.length > 0 && content_type != "forums"
+            new_text += "UNEXPECTED CONTENT TYPE! #{content_type}<br>\n"
+          end
         end
-        if content_type.length > 0 && content_type != "forums"
-          new_text += "UNEXPECTED CONTENT TYPE! #{content_type}<br>\n"
-        end
-      end
-      if post && topic && username
-        quote = "[quote=\"#{username}, post:#{post}, topic: #{topic}\"]\n\n"
-      else
-        if username && username.length > 1
-          quote = "[quote=\"#{username}\"]\n\n"
+        if post && topic && username
+          quote = "[quote=\"#{username}, post:#{post}, topic: #{topic}\"]\n\n"
         else
-          quote = "[quote]\n"
+          if username && username.length > 1
+            quote = "[quote=\"#{username}\"]\n\n"
+          else
+            quote = "[quote]\n"
+          end
         end
+        b.content = quote + b.content + "\n[/quote]\n"
+        b.name = "div"
       end
-      b.content = quote + b.content + "\n[/quote]\n"
-      b.name = 'div'
-    end
 
-    @doc.css('object param embed').each do |embed|
-      embed.replace("\n#{embed['src']}\n")
-    end
+    @doc.css("object param embed").each { |embed| embed.replace("\n#{embed["src"]}\n") }
 
     # handle <iframe data-embedcontent>s with links to original post
     # no examples in recent import
-    @doc.css('iframe[data-embedcontent]').each do |d|
-      d.to_s.match(/\-([0-9]+)t/)
-      imported_post_id = $1
-      if imported_post_id
-        puts "Searching for #{imported_post_id}" unless QUIET
-        topic_lookup = topic_lookup_from_imported_post_id("discussion#" + imported_post_id)
-        topic = topic_lookup ? topic_lookup[:topic_id] : nil
-        if topic
-          url = URL + "/t/#{topic}"
-          d.to_s.match(/comment=([0-9]+)&/)
-          content_id = $1 || "-1"
-          if content_id
-            post_lookup = topic_lookup_from_imported_post_id("comment#" + content_id)
-            post = topic_lookup ? topic_lookup[:post_number] : 1
-            url += "/#{post}"
+    @doc
+      .css("iframe[data-embedcontent]")
+      .each do |d|
+        d.to_s.match(/\-([0-9]+)t/)
+        imported_post_id = $1
+        if imported_post_id
+          puts "Searching for #{imported_post_id}" unless QUIET
+          topic_lookup = topic_lookup_from_imported_post_id("discussion#" + imported_post_id)
+          topic = topic_lookup ? topic_lookup[:topic_id] : nil
+          if topic
+            url = URL + "/t/#{topic}"
+            d.to_s.match(/comment=([0-9]+)&/)
+            content_id = $1 || "-1"
+            if content_id
+              post_lookup = topic_lookup_from_imported_post_id("comment#" + content_id)
+              post = topic_lookup ? topic_lookup[:post_number] : 1
+              url += "/#{post}"
+            end
+            d.content = url
           end
-          d.content = url
         end
+        d.name = "div"
       end
-      d.name = 'div'
-    end
 
-    @doc.css('div[class=ipsQuote_citation]').each do |d|
-      d.remove
-    end
+    @doc.css("div[class=ipsQuote_citation]").each { |d| d.remove }
 
     raw = @doc.to_html
 
@@ -948,7 +990,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
 
     # un \-escape _s in usernames in [quote]s
     raw.gsub!(/^\[quote=.+?_.*$/) do |match|
-      match = match.gsub('\_', '_')
+      match = match.gsub('\_', "_")
       match
     end
     raw
@@ -964,35 +1006,52 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   end
 
   def create_permalinks
-    puts '', 'Creating redirects...', ''
+    puts "", "Creating redirects...", ""
 
     # TODO: permalink normalizations: /(.*t)\?.*/\1
 
-    puts '', 'Users...', ''
+    puts "", "Users...", ""
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
         username = UrlHelper.encode_component(ucf["import_username"])
-        Permalink.create(url: "#{USERDIR}/#{ucf['import_id']}-#{username}", external_url: "/users/#{u.username}") rescue nil
-        print '.'
+        begin
+          Permalink.create(
+            url: "#{USERDIR}/#{ucf["import_id"]}-#{username}",
+            external_url: "/users/#{u.username}",
+          )
+        rescue StandardError
+          nil
+        end
+        print "."
       end
     end
 
-    puts '', 'Posts...', ''
+    puts "", "Posts...", ""
     Post.find_each do |post|
       pcf = post.custom_fields
       if pcf && pcf["import_id"]
         if post.post_number == 1
           topic = post.topic
-          id = pcf["import_id"].split('#').last
+          id = pcf["import_id"].split("#").last
           slug = topic.slug
           if ID_FIRST
-            Permalink.create(url: "topic/#{id}-#{slug}", topic_id: topic.id) rescue nil
+            begin
+              Permalink.create(url: "topic/#{id}-#{slug}", topic_id: topic.id)
+            rescue StandardError
+              nil
+            end
             unless QUIET
-              print_warning("#{URL}topic/#{id}-#{slug} --> http://localhost:3000/topic/#{id}-#{slug}")
+              print_warning(
+                "#{URL}topic/#{id}-#{slug} --> http://localhost:3000/topic/#{id}-#{slug}",
+              )
             end
           else
-            Permalink.create(url: "#{slug}-#{id}t", topic_id: topic.id) rescue nil
+            begin
+              Permalink.create(url: "#{slug}-#{id}t", topic_id: topic.id)
+            rescue StandardError
+              nil
+            end
             unless QUIET
               print_warning("#{URL}/#{slug}-#{id}t --> http://localhost:3000/t/#{topic.id}")
             end
@@ -1003,27 +1062,28 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
           #   print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}/#{post.id}")
           # end
         end
-        print '.'
+        print "."
       end
     end
 
-    puts '', 'Categories...', ''
+    puts "", "Categories...", ""
     Category.find_each do |cat|
       ccf = cat.custom_fields
       next unless id = ccf["import_id"]
-      slug = cat['slug']
-      unless QUIET
-        print_warning("/forum/#{URL}-#{slug}-#{id} --> /c/#{slug}")
+      slug = cat["slug"]
+      print_warning("/forum/#{URL}-#{slug}-#{id} --> /c/#{slug}") unless QUIET
+      begin
+        Permalink.create(url: "/forum/#{id}-#{slug}", category_id: cat.id)
+      rescue StandardError
+        nil
       end
-      Permalink.create(url: "/forum/#{id}-#{slug}", category_id: cat.id) rescue nil
-      print '.'
+      print "."
     end
   end
 
   def print_warning(message)
     $stderr.puts "#{message}"
   end
-
 end
 
 ImportScripts::IpboardSQL.new.perform

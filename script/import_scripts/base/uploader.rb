@@ -13,8 +13,16 @@ module ImportScripts
       STDERR.puts "Failed to create upload: #{e}"
       nil
     ensure
-      tmp.close rescue nil
-      tmp.unlink rescue nil
+      begin
+        tmp.close
+      rescue StandardError
+        nil
+      end
+      begin
+        tmp.unlink
+      rescue StandardError
+        nil
+      end
     end
 
     def create_avatar(user, avatar_path)
@@ -30,7 +38,7 @@ module ImportScripts
         STDERR.puts "Failed to upload avatar for user #{user.username}: #{avatar_path}"
         STDERR.puts upload.errors.inspect if upload
       end
-    rescue
+    rescue StandardError
       STDERR.puts "Failed to create avatar for user #{user.username}: #{avatar_path}"
     ensure
       tempfile.close! if tempfile
@@ -52,11 +60,9 @@ module ImportScripts
 
     def copy_to_tempfile(source_path)
       extension = File.extname(source_path)
-      tmp = Tempfile.new(['discourse-upload', extension])
+      tmp = Tempfile.new(["discourse-upload", extension])
 
-      File.open(source_path) do |source_stream|
-        IO.copy_stream(source_stream, tmp)
-      end
+      File.open(source_path) { |source_stream| IO.copy_stream(source_stream, tmp) }
 
       tmp.rewind
       tmp

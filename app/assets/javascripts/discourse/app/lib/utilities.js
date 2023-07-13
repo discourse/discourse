@@ -1,13 +1,30 @@
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
 import I18n from "I18n";
-import { deepMerge } from "discourse-common/lib/object";
 import { escape } from "pretty-text/sanitizer";
-import { helperContext } from "discourse-common/lib/helpers";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
+import * as AvatarUtils from "discourse-common/lib/avatar-utils";
+import { capabilities } from "discourse/services/capabilities";
 
 let _defaultHomepage;
+
+function deprecatedAvatarUtil(name) {
+  return function () {
+    deprecated(
+      `${name} should be imported from discourse-common/lib/avatar-utils instead of discourse/lib/utilities`,
+      { id: "discourse.avatar-utils" }
+    );
+    return AvatarUtils[name](...arguments);
+  };
+}
+
+export const translateSize = deprecatedAvatarUtil("translateSize");
+export const getRawSize = deprecatedAvatarUtil("getRawSize");
+export const getRawAvatarSize = deprecatedAvatarUtil("getRawAvatarSize");
+export const avatarUrl = deprecatedAvatarUtil("avatarUrl");
+export const avatarImg = deprecatedAvatarUtil("avatarImg");
+export const tinyAvatar = deprecatedAvatarUtil("tinyAvatar");
 
 export function splitString(str, separator = ",") {
   if (typeof str === "string") {
@@ -15,24 +32,6 @@ export function splitString(str, separator = ",") {
   } else {
     return [];
   }
-}
-
-export function translateSize(size) {
-  switch (size) {
-    case "tiny":
-      return 20;
-    case "small":
-      return 25;
-    case "medium":
-      return 32;
-    case "large":
-      return 45;
-    case "extra_large":
-      return 60;
-    case "huge":
-      return 120;
-  }
-  return size;
 }
 
 export function escapeExpression(string) {
@@ -56,51 +55,6 @@ export function formatUsername(username) {
 
 export function replaceFormatter(fn) {
   _usernameFormatDelegate = fn;
-}
-
-export function avatarUrl(template, size, { customGetURL } = {}) {
-  if (!template) {
-    return "";
-  }
-  const rawSize = getRawSize(translateSize(size));
-  const templatedPath = template.replace(/\{size\}/g, rawSize);
-  return (customGetURL || getURLWithCDN)(templatedPath);
-}
-
-export function getRawSize(size) {
-  const pixelRatio = window.devicePixelRatio || 1;
-  let rawSize = 1;
-  if (pixelRatio > 1.1 && pixelRatio < 2.1) {
-    rawSize = 2;
-  } else if (pixelRatio >= 2.1) {
-    rawSize = 3;
-  }
-  return size * rawSize;
-}
-
-export function avatarImg(options, customGetURL) {
-  const size = translateSize(options.size);
-  let url = avatarUrl(options.avatarTemplate, size, { customGetURL });
-
-  // We won't render an invalid url
-  if (!url) {
-    return "";
-  }
-
-  const classes =
-    "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
-
-  let title = "";
-  if (options.title) {
-    const escaped = escapeExpression(options.title || "");
-    title = ` title='${escaped}' aria-label='${escaped}'`;
-  }
-
-  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
-}
-
-export function tinyAvatar(avatarTemplate, options) {
-  return avatarImg(deepMerge({ avatarTemplate, size: "tiny" }, options));
 }
 
 export function postUrl(slug, topicId, postNumber) {
@@ -314,7 +268,7 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  let caps = helperContext().capabilities;
+  let caps = capabilities;
   return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
 }
 
@@ -497,20 +451,22 @@ export function modKeysPressed(event) {
 }
 
 export function translateModKey(string) {
-  const { isApple } = helperContext().capabilities;
+  const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
     string = string
-      .replace("Shift", "\u21E7")
-      .replace("Meta", "\u2318")
-      .replace("Alt", "\u2325")
+      .toLowerCase()
+      .replace("shift", "\u21E7")
+      .replace("meta", "\u2318")
+      .replace("alt", "\u2325")
       .replace(/\+/g, "");
   } else {
     string = string
-      .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
-      .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("Meta", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
+      .toLowerCase()
+      .replace("shift", I18n.t("shortcut_modifier_key.shift"))
+      .replace("ctrl", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("meta", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("alt", I18n.t("shortcut_modifier_key.alt"));
   }
 
   return string;
@@ -638,6 +594,3 @@ export function mergeSortedLists(list1, list2, comparator) {
   }
   return merged;
 }
-
-// This prevents a mini racer crash
-export default {};

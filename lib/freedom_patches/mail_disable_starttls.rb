@@ -11,9 +11,7 @@ module FreedomPatches
     def build_smtp_session
       super.tap do |smtp|
         unless settings[:enable_starttls_auto]
-          if smtp.respond_to?(:disable_starttls)
-            smtp.disable_starttls
-          end
+          smtp.disable_starttls if smtp.respond_to?(:disable_starttls)
         end
       end
     end

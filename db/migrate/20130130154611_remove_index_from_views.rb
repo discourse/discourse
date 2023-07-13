@@ -7,7 +7,7 @@ class RemoveIndexFromViews < ActiveRecord::Migration[4.2]
   end
 
   def down
-    add_index "views", ["parent_id", "parent_type", "ip", "viewed_at"], name: "unique_views", unique: true
+    add_index "views", %w[parent_id parent_type ip viewed_at], name: "unique_views", unique: true
     change_column :views, :viewed_at, :timestamp
   end
 end

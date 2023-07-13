@@ -1,0 +1,70 @@
+<div class="web-hooks-listing">
+  <p>{{i18n "admin.web_hooks.instruction"}}</p>
+
+  <div class="new-webhook">
+    <LinkTo
+      @route="adminWebHooks.edit"
+      @model="new"
+      class="btn btn-default admin-webhooks__new-button"
+    >
+      {{d-icon "plus"}}
+      {{i18n "admin.web_hooks.new"}}
+    </LinkTo>
+  </div>
+
+  {{#if this.model}}
+    <LoadMore @selector=".web-hooks tr" @action={{this.loadMore}}>
+      <table class="web-hooks grid">
+        <thead>
+          <tr>
+            <th>{{i18n "admin.web_hooks.delivery_status.title"}}</th>
+            <th>{{i18n "admin.web_hooks.payload_url"}}</th>
+            <th>{{i18n "admin.web_hooks.description_label"}}</th>
+            <th>{{i18n "admin.web_hooks.controls"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each this.model as |webhook|}}
+            <tr>
+              <td class="delivery-status">
+                <LinkTo @route="adminWebHooks.show" @model={{webhook}}>
+                  <WebhookStatus
+                    @deliveryStatuses={{this.deliveryStatuses}}
+                    @webhook={{webhook}}
+                  />
+                </LinkTo>
+              </td>
+              <td class="payload-url">
+                <LinkTo @route="adminWebHooks.edit" @model={{webhook}}>
+                  {{webhook.payload_url}}
+                </LinkTo>
+              </td>
+              <td class="description">{{webhook.description}}</td>
+              <td class="controls">
+                <LinkTo
+                  @route="adminWebHooks.edit"
+                  @model={{webhook}}
+                  class="btn btn-default no-text"
+                  title={{i18n "admin.web_hooks.edit"}}
+                >
+                  {{d-icon "far-edit"}}
+                </LinkTo>
+
+                <DButton
+                  @class="destroy btn-danger"
+                  @action={{this.destroy}}
+                  @actionParam={{webhook}}
+                  @icon="times"
+                  @title="delete"
+                />
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
+    </LoadMore>
+  {{else}}
+    <p>{{i18n "admin.web_hooks.none"}}</p>
+  {{/if}}
+</div>
