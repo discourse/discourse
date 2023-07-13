@@ -12,6 +12,7 @@ export default class ChannelsList extends Component {
   @service chatStateManager;
   @service chatChannelsManager;
   @service site;
+  @service siteSettings;
   @service session;
   @service currentUser;
   @service modal;
@@ -71,6 +72,10 @@ export default class ChannelsList extends Component {
   }
 
   get displayPublicChannels() {
+    if (!this.siteSettings.enable_public_channels) {
+      return false;
+    }
+
     if (this.publicMessageChannelsEmpty) {
       return (
         this.currentUser?.staff ||

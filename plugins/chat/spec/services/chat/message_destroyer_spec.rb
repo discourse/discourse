@@ -62,5 +62,11 @@ RSpec.describe Chat::MessageDestroyer do
       expect { message_1.reload }.to raise_exception(ActiveRecord::RecordNotFound)
       expect(message_2.reload).to be_present
     end
+
+    it "sets the last_message_id for the channel if that message is deleted" do
+      expect(message_1.chat_channel.last_message_id).to eq(message_1.id)
+      described_class.new.destroy_in_batches(Chat::Message.where(id: message_1.id))
+      expect(message_1.chat_channel.reload.last_message_id).to eq(nil)
+    end
   end
 end

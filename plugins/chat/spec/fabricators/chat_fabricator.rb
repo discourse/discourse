@@ -160,6 +160,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   transient :with_replies
   transient :channel
   transient :original_message_user
+  transient :old_om
 
   original_message do |attrs|
     Fabricate(
@@ -170,7 +171,13 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   end
 
   after_create do |thread, transients|
-    thread.original_message.update!(thread_id: thread.id)
+    attrs = { thread_id: thread.id }
+
+    # Sometimes we  make this older via created_at so any messages fabricated for this thread
+    # afterwards are not created earlier in time than the OM.
+    attrs[:created_at] = 1.week.ago if transients[:old_om]
+
+    thread.original_message.update!(**attrs)
     thread.add(thread.original_message_user)
 
     if transients[:with_replies]
