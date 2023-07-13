@@ -34,6 +34,10 @@ module PageObjects
         find("#{TOPIC_LIST_BODY_SELECTOR} a", text: title).click
       end
 
+      def visit_topic(topic)
+        find("#{topic_list_item_class(topic)} a.raw-topic-link").click
+      end
+
       private
 
       def topic_list_item_class(topic)
