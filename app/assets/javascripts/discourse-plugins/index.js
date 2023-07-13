@@ -15,7 +15,7 @@ function fixLegacyExtensions(tree) {
     getDestinationPath: function (relativePath) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
-      } else if (relativePath.includes('/templates/')) {
+      } else if (relativePath.includes("/templates/")) {
         if (relativePath.endsWith(".raw.hbs")) {
           relativePath = relativePath.replace(".raw.hbs", ".hbr");
         }

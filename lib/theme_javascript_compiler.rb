@@ -98,9 +98,7 @@ class ThemeJavascriptCompiler
       if filename.ends_with? ".js.es6"
         filename.sub(/\.js\.es6\z/, ".js")
       elsif filename.include? "/templates/"
-        if filename.ends_with? ".raw.hbs"
-          filename = filename.sub(/\.raw\.hbs\z/, ".hbr")
-        end
+        filename = filename.sub(/\.raw\.hbs\z/, ".hbr") if filename.ends_with? ".raw.hbs"
 
         if filename.ends_with? ".hbr"
           filename.sub(%r{/templates/}, "/raw-templates/")
