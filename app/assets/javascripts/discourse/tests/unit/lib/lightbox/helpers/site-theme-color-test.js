@@ -55,5 +55,15 @@ module(
 
       querySelectorSpy.restore();
     });
+
+    test("invalid color given", async function (assert) {
+      await setSiteThemeColor("##0000ff");
+
+      assert.strictEqual(
+        document.querySelector('meta[name="theme-color"]').content,
+        "#0000ff",
+        "converts to a the correct theme color"
+      );
+    });
   }
 );
