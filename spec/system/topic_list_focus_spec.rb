@@ -26,7 +26,7 @@ describe "Ember route-scroll-manager service", type: :system do
     # Going back to the topic-list should re-focus
     page.go_back
     expect(page).to have_css("body.navigation-topics")
-    focussed_row_id = expect(focussed_topic_id).to eq(topics[5].id)
+    expect(focussed_topic_id).to eq(topics[5].id)
 
     # Click topic again
     discovery.topic_list.visit_topic(topics[5])
@@ -35,6 +35,6 @@ describe "Ember route-scroll-manager service", type: :system do
     # Visiting a topic list another way should not focus
     find(".sidebar-section-link[data-link-name='everything']").click
     expect(page).to have_css("body.navigation-topics")
-    focussed_row_id = expect(focussed_topic_id).to eq(nil)
+    expect(focussed_topic_id).to eq(nil)
   end
 end
