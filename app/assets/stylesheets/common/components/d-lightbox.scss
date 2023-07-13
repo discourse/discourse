@@ -406,7 +406,7 @@ html.has-lightbox {
 .d-lightbox {
   &.is-vertical &__carousel {
     position: relative;
-    background-color: var(----d-lightbox-secondary-translucent);
+    background-color: var(--d-lightbox-secondary-translucent);
     &:before,
     &:after {
       content: "";
@@ -610,7 +610,7 @@ html.has-lightbox {
 
 // Zoom
 .d-lightbox {
-  --can-zoom {
+  &.can-zoom {
     .d-lightbox__body {
       @extend %lightbox-scrollable;
 
@@ -726,7 +726,7 @@ html.has-lightbox {
     opacity: 0;
   }
 
-  --will-close &__content {
+  &.will-close &__content {
     animation-name: lightbox-fade-out;
   }
 }
