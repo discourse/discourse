@@ -83,8 +83,8 @@ export default class ChatThreadPanel extends Component {
 
     if (this.#isAtBottom()) {
       this.updateLastReadMessage();
-      this.onScrollEnded();
       this.fetchMoreMessages({ direction: FUTURE });
+      this.onScrollEnded();
     } else {
       this.isScrolling = true;
       this.onScrollEndedHandler = discourseLater(this, this.onScrollEnded, 150);
