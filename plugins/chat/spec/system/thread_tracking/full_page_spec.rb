@@ -118,6 +118,14 @@ describe "Thread tracking state | full page", type: :system do
         Fabricate(:chat_message, thread: thread)
         expect(sidebar_page).to have_no_unread_channel(channel)
       end
+
+      it "shows an unread indicator for the channel sidebar if a new thread message arrives while the user is not looking at the channel" do
+        chat_page.visit_channel(channel)
+        expect(sidebar_page).to have_no_unread_channel(channel)
+        chat_page.visit_channel(other_channel)
+        Fabricate(:chat_message, thread: thread)
+        expect(sidebar_page).to have_unread_channel(channel)
+      end
     end
 
     context "when the user's notification level for the thread is set to normal" do

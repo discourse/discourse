@@ -58,8 +58,7 @@ module Chat
         ) AS unread_count,
         0 AS mention_count,
         chat_threads.channel_id,
-        memberships.thread_id,
-        MAX(chat_messages.created_at) AS last_reply_created_at
+        memberships.thread_id
         FROM user_chat_thread_memberships AS memberships
         INNER JOIN chat_threads ON chat_threads.id = memberships.thread_id
         LEFT JOIN chat_messages ON chat_messages.thread_id = memberships.thread_id AND chat_messages.deleted_at IS NULL
@@ -79,8 +78,7 @@ module Chat
 
       sql += <<~SQL if include_missing_memberships && include_read
         UNION ALL
-        SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id,
-          MAX(chat_messages.created_at) AS last_reply_created_at
+        SELECT 0 AS unread_count, 0 AS mention_count, chat_threads.channel_id, chat_threads.id AS thread_id
         FROM chat_channels
         INNER JOIN chat_threads ON chat_threads.channel_id = chat_channels.id
         LEFT JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id

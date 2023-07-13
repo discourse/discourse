@@ -301,6 +301,7 @@ module Chat
           channel_ids: [channel.id],
           include_threads: true,
           include_read: false,
+          include_last_reply_details: true,
         ).find_channel_thread_overviews(channel.id)
 
         data[:thread_tracking] = ::Chat::TrackingStateReportQuery.call(

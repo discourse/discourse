@@ -173,6 +173,7 @@ RSpec.describe Chat::ChannelViewBuilder do
             channel_ids: [channel.id],
             include_threads: true,
             include_read: false,
+            include_last_reply_details: true,
           )
           .returns(Chat::TrackingStateReport.new)
           .once
@@ -196,14 +197,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         thread.add(current_user)
         Fabricate(:chat_message, chat_channel: channel, thread: thread)
         expect(result.view.tracking.thread_tracking).to eq(
-          {
-            thread.id => {
-              channel_id: channel.id,
-              last_reply_created_at: thread.last_reply.created_at,
-              unread_count: 1,
-              mention_count: 0,
-            },
-          },
+          { thread.id => { channel_id: channel.id, unread_count: 1, mention_count: 0 } },
         )
       end
 
