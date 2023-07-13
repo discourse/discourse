@@ -1774,10 +1774,10 @@
   resolved "https://registry.yarnpkg.com/@uppy/store-default/-/store-default-3.0.3.tgz#37d0e95c8fd360b3283bca7fdf94cce7400008e7"
   integrity sha512-/zlvQNj4HjkthI+7dNdj/8mOlTg1Zb1gJ/ZsOxof0g3xXD+OAwm7asRnOwpfj2dos+lExdW/zMn8XsRGsuvb6Q==
 
-"@uppy/utils@5.4.0", "@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0", "@uppy/utils@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.4.0.tgz#1f0816334ef8cfe3eaaf7c6a1d3dc28ac9bbced8"
-  integrity sha512-X9f43OvTcymhoiDEzA2CqH7W5pADTVv2bhQ/9NUaVwYRLUadDjZc27ZgnNraKSYgnOhKFJlC63nyCwcd0yaQIQ==
+"@uppy/utils@5.4.1", "@uppy/utils@^5.0.2", "@uppy/utils@^5.2.0", "@uppy/utils@^5.3.0", "@uppy/utils@^5.4.0":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@uppy/utils/-/utils-5.4.1.tgz#4986e62f5a1248b5ad5f950193d8cb1d4b4cb6da"
+  integrity sha512-HZBX1KB4fjMbGjlQPUekN95Jy/KhUKnCi/OIGoyO3QVhRlxbPq5xCmdxdgn8ANwaTG1mqP9i03cTmXhXZfVMkw==
   dependencies:
     lodash "^4.17.21"
 
