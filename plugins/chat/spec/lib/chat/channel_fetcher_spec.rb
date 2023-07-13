@@ -201,6 +201,12 @@ describe Chat::ChannelFetcher do
       ).to match_array([category_channel.id])
     end
 
+    it "returns an empty array when public channels are disabled" do
+      SiteSetting.enable_public_channels = false
+
+      expect(described_class.secured_public_channels(guardian, following: nil)).to be_empty
+    end
+
     it "can filter by channel name, or category name" do
       expect(
         described_class.secured_public_channels(

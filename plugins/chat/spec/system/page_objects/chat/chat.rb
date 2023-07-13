@@ -29,9 +29,9 @@ module PageObjects
         visit("/chat")
       end
 
-      def open_new_message
+      def open_new_message(ensure_open: true)
         send_keys([PLATFORM_KEY_MODIFIER, "k"])
-        find(".chat-modal-new-message")
+        find(".chat-modal-new-message") if ensure_open
       end
 
       def has_drawer?(channel_id: nil, expanded: true)
