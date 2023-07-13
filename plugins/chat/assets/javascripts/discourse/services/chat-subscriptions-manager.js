@@ -213,7 +213,7 @@ export default class ChatSubscriptionsManager extends Service {
                 if (thread.currentUserMembership) {
                   channel.threadsManager.markThreadUnread(
                     busData.thread_id,
-                    busData.created_at
+                    busData.message.created_at
                   );
 
                   // We have to do this since it means the user is currently looking
@@ -265,7 +265,7 @@ export default class ChatSubscriptionsManager extends Service {
               ) {
                 channel.threadsManager.markThreadUnread(
                   busData.thread_id,
-                  busData.created_at
+                  busData.message.created_at
                 );
                 thread.tracking.unreadCount++;
 

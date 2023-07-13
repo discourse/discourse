@@ -244,6 +244,7 @@ after_initialize do
         channel_ids: structured[:public_channels].map(&:id),
         include_threads: true,
         include_read: false,
+        include_last_reply_details: true,
       ).thread_unread_overview_by_channel
     end
 
