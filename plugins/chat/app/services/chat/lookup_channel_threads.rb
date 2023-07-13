@@ -79,6 +79,7 @@ module Chat
           :user_chat_thread_memberships,
           original_message_user: :user_status,
           last_message: [
+            :uploads,
             :chat_webhook_event,
             :chat_channel,
             chat_mentions: {
