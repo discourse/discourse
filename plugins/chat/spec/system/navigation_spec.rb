@@ -294,7 +294,7 @@ RSpec.describe "Navigation", type: :system do
         sidebar_page.open_channel(category_channel_2)
         find("#site-logo").click
 
-        expect(chat_page).to have_right_header_href(chat_channel_path)
+        expect(chat_page).to have_header_href(chat_channel_path)
 
         chat_page.open_from_header
 
