@@ -72,57 +72,6 @@ module Chat
     end
 
     def fetch_threads(guardian:, channel:, **)
-      read_threads = []
-
-      unread_threads =
-        threads_query(guardian, channel)
-          .where(<<~SQL)
-            user_chat_thread_memberships_chat_threads.last_read_message_id IS NULL
-              OR tracked_threads_subquery.latest_message_id > user_chat_thread_memberships_chat_threads.last_read_message_id
-          SQL
-          .order("tracked_threads_subquery.latest_message_created_at DESC")
-          .limit(context.limit)
-          .offset(context.offset)
-          .to_a
-
-      # We do this to avoid having to query additional threads if the user
-      # already has a lot of unread threads.
-      if unread_threads.length < context.limit
-        final_limit = context.limit - unread_threads.length
-        final_offset = context.offset + unread_threads.length
-
-        read_threads =
-          threads_query(guardian, channel)
-            .where(<<~SQL)
-              tracked_threads_subquery.latest_message_id <= user_chat_thread_memberships_chat_threads.last_read_message_id
-            SQL
-            .order("tracked_threads_subquery.latest_message_created_at DESC")
-            .limit(final_limit)
-            .offset(final_offset)
-            .to_a
-      end
-
-      unread_threads + read_threads
-    end
-
-    def fetch_tracking(guardian:, threads:, **)
-      context.tracking =
-        ::Chat::TrackingStateReportQuery.call(
-          guardian: guardian,
-          thread_ids: threads.map(&:id),
-          include_threads: true,
-        ).thread_tracking
-    end
-
-    def fetch_memberships(guardian:, threads:, **)
-      context.memberships =
-        ::Chat::UserChatThreadMembership.where(
-          thread_id: threads.map(&:id),
-          user_id: guardian.user.id,
-        )
-    end
-
-    def threads_query(guardian, channel)
       ::Chat::Thread
         .strict_loading
         .includes(
@@ -147,33 +96,8 @@ module Chat
             user: :user_status,
           ],
         )
-        .joins(
-          "JOIN (#{tracked_threads_subquery(guardian, channel)}) tracked_threads_subquery
-              ON tracked_threads_subquery.thread_id = chat_threads.id",
-        )
-        .joins(:user_chat_thread_memberships)
-        .joins(
-          "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
-        )
-        .where("original_messages.deleted_at IS NULL")
-        .where(user_chat_thread_memberships_chat_threads: { user_id: guardian.user.id })
-    end
-
-    def tracked_threads_subquery(guardian, channel)
-      ::Chat::Thread
-        .strict_loading
-        .joins(:chat_messages, :user_chat_thread_memberships)
-        .joins(
-          "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
-        )
-        .joins(
-          "LEFT JOIN chat_messages last_message ON chat_threads.last_message_id = last_message.id",
-        )
-        .where(user_chat_thread_memberships: { user_id: guardian.user.id })
-        .where(
-          "chat_threads.channel_id = :channel_id AND chat_messages.chat_channel_id = :channel_id",
-          channel_id: channel.id,
-        )
+        .joins(:user_chat_thread_memberships, :last_message, :original_message)
+        .where("user_chat_thread_memberships.user_id = ?", guardian.user.id)
         .where(
           "user_chat_thread_memberships.notification_level IN (?)",
           [
@@ -181,13 +105,29 @@ module Chat
             ::Chat::UserChatThreadMembership.notification_levels[:tracking],
           ],
         )
-        .where(
-          "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL AND last_message.deleted_at IS NULL",
+        .where("chat_threads.channel_id = ?", channel.id)
+        .limit(context.limit)
+        .offset(context.offset)
+        .order(
+          "CASE WHEN chat_threads.last_message_id > user_chat_thread_memberships.last_read_message_id THEN 0 ELSE 1 END, chat_messages.created_at DESC",
         )
-        .select(
-          "chat_threads.id AS thread_id, last_message.created_at AS latest_message_created_at, last_message.id AS latest_message_id",
+    end
+
+    def fetch_tracking(guardian:, threads:, **)
+      context.tracking =
+        ::Chat::TrackingStateReportQuery.call(
+          guardian: guardian,
+          thread_ids: threads.map(&:id),
+          include_threads: true,
+        ).thread_tracking
+    end
+
+    def fetch_memberships(guardian:, threads:, **)
+      context.memberships =
+        ::Chat::UserChatThreadMembership.where(
+          thread_id: threads.map(&:id),
+          user_id: guardian.user.id,
         )
-        .to_sql
     end
 
     def build_load_more_url(contract:, **)
