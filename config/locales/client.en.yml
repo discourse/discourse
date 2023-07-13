@@ -2062,6 +2062,7 @@ en:
       short_label: "Top replies"
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
       strategy:
+        hide_button_title: "Hide summary"
         button_title: "Summarize this topic"
         title: "Topic summary"
 
