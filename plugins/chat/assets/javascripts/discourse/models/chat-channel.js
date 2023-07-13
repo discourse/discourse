@@ -124,11 +124,12 @@ export default class ChatChannel {
     ).length;
   }
 
-  // We have to do this since it means the user is currently looking
-  // at the channel and we don't want the unread indicator to show in
-  // the sidebar (since that is based on the lastViewedAt).
-  updateLastViewedAt(activeChannel) {
-    if (this.id === activeChannel?.id) {
+  // If the user is currently looking at this channel via activeChannel, we don't want the unread
+  // indicator to show in the sidebar for unread threads (since that is based on the lastViewedAt).
+  //
+  // Other times we just want to bump this, and not compare with activeChannel.
+  updateLastViewedAt(activeChannel = null) {
+    if (!activeChannel || this.id === activeChannel.id) {
       this.currentUserMembership.lastViewedAt = new Date();
     }
   }

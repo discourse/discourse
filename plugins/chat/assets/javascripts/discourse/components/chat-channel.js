@@ -216,7 +216,7 @@ export default class ChatLivePane extends Component {
 
         // We update this value server-side when we load the Channel
         // here, so this reflects reality for sidebar unread logic.
-        this.args.channel.currentUserMembership.lastViewedAt = new Date();
+        this.args.channel.updateLastViewedAt();
 
         if (result.threads) {
           result.threads.forEach((thread) => {
