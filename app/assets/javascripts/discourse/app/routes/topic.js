@@ -21,6 +21,12 @@ const TopicRoute = DiscourseRoute.extend({
   lastScrollPos: null,
   isTransitioning: false,
 
+  buildRouteInfoMetadata() {
+    return {
+      scrollOnTransition: false,
+    };
+  },
+
   redirect() {
     return this.redirectIfLoginRequired();
   },

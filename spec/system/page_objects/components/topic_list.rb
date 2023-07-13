@@ -10,8 +10,12 @@ module PageObjects
         TOPIC_LIST_BODY_SELECTOR
       end
 
-      def has_topics?(count:)
-        page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
+      def has_topics?(count: nil)
+        if count.nil?
+          page.has_css?(TOPIC_LIST_ITEM_SELECTOR)
+        else
+          page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
+        end
       end
 
       def has_no_topics?
