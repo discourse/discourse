@@ -281,8 +281,12 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  onLongPressStart() {
+  onLongPressStart(element, event) {
     if (!this.args.message.expanded) {
+      return;
+    }
+
+    if (event.target.tagName === "IMG") {
       return;
     }
 
