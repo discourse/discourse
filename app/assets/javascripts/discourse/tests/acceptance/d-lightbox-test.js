@@ -55,8 +55,9 @@ function setupPretender(server, helper, markup) {
   let responseTotal = markupFromArray ? markup.length : 1;
 
   for (let i = 0; i < responseTotal; i++) {
-    let content = markupFromArray ? markup[i] : markup;
-    topicResponse.post_stream.posts[i].cooked += content;
+    topicResponse.post_stream.posts[i].cooked += markupFromArray
+      ? markup[i]
+      : markup;
   }
 
   server.get("/t/280.json", () => helper.response(topicResponse));
