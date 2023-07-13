@@ -5,6 +5,15 @@ import { isTesting } from "discourse-common/config/environment";
 
 const MAX_SCROLL_LOCATIONS = 100;
 
+/**
+ * This service is responsible for managing scroll position when transitioning.
+ * When visiting a new route, this service will scroll to the top of the page.
+ * When returning to a previously-visited route via the browser back button,
+ * this service will scroll to the previous scroll position.
+ *
+ * To opt-out of the behaviour, individual routes can add a scrollOnTransition
+ * boolean to their RouteInfo metadata using Ember's `buildRouteInfoMetadata` hook.
+ */
 export default class RouteScrollManager extends Service {
   @service router;
 
