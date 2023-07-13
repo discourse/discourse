@@ -3,10 +3,15 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 
 export const customPanels = [];
+export let currentPanelKey = "main";
 
 export function addSidebarPanel(func) {
   const panelClass = func.call(this, BaseCustomSidebarPanel);
   customPanels.push(new panelClass());
+}
+
+export function setSidebarPanel(name) {
+  currentPanelKey = name;
 }
 
 export function addSidebarSection(func, panelKey) {
