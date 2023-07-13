@@ -15,6 +15,7 @@ describe Chat::Publisher do
         MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }[0].data
 
       expect(data["deleted_at"]).to eq(message_2.deleted_at.iso8601(3))
+      expect(data["deleted_by_id"]).to eq(message_2.deleted_by_id)
       expect(data["deleted_id"]).to eq(message_2.id)
       expect(data["latest_not_deleted_message_id"]).to eq(message_1.id)
       expect(data["type"]).to eq("delete")

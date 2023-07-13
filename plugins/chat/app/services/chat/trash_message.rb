@@ -50,8 +50,8 @@ module Chat
       guardian.can_delete_chat?(message, message.chat_channel.chatable)
     end
 
-    def trash_message(message:, **)
-      message.trash!
+    def trash_message(message:, guardian:, **)
+      message.trash!(guardian.user)
     end
 
     def destroy_notifications(message:, **)
