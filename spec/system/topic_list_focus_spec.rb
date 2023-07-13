@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Ember route-scroll-manager service", type: :system do
+describe "Topic list focus", type: :system do
   let!(:topics) { Fabricate.times(10, :post).map(&:topic) }
 
   before { Fabricate(:admin) }
