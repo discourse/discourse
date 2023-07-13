@@ -52,7 +52,7 @@ RSpec.describe "Restore message", type: :system do
   context "when staff deletes user message" do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: regular_user) }
 
-    it "can restore the message" do
+    it "disallows user to restore it" do
       using_session(:regular_user) do
         sign_in(regular_user)
         chat_page.visit_channel(channel_1)
