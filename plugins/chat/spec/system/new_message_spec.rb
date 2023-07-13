@@ -55,7 +55,7 @@ RSpec.describe "New message", type: :system do
 
     it "doesn’t list public channels" do
       visit("/")
-      chat_page.open_new_message(check: false)
+      chat_page.open_new_message(ensure_open: false)
 
       expect(chat_page.message_creator).to be_closed
     end
