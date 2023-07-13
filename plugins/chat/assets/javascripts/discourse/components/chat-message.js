@@ -312,7 +312,11 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  onLongPressEnd() {
+  onLongPressEnd(element, event) {
+    if (event.target.tagName === "IMG") {
+      return;
+    }
+
     cancel(this._makeMessageActiveHandler);
     this.isActive = false;
 
