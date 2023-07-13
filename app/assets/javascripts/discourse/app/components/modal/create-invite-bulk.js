@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import CreateInviteUploader from "discourse/components/create-invite-uploader";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 export default class CreateInviteBulk extends Component {
-  @tracked data;
+  @tracked uploader = new TrackedObject();
 
   @action
-  submit(data) {
-    this.data = data;
-    this.data.submit();
+  setUploader(value) {
+    this.uploader = value;
+    console.log(this.uploader);
   }
 
-  willDestroy() {
-    if (this.data) {
-      this.data.abort();
-      this.data = null;
-    }
+  @action
+  uploading() {
+    this.uploader.set("data", data);
   }
 }

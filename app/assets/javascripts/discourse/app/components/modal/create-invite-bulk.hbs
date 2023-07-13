@@ -1,40 +1,42 @@
-<CreateInviteUploader as |status|>
-  <DModal
-    @title={{i18n "user.invited.bulk_invite.text"}}
-    class="create-invite-bulk-modal"
-    @closeModal={{@closeModal}}
-  >
-    <:body>
-      {{#if status.uploaded}}
+<DModal
+  @title={{i18n "user.invited.bulk_invite.text"}}
+  class="create-invite-bulk-modal"
+  @closeModal={{@closeModal}}
+>
+  <:body>
+    <CreateInviteUploader as |uploader|>
+      {{#if this.uploader.uploaded}}
         {{i18n "user.invited.bulk_invite.success"}}
       {{else}}
         {{html-safe (i18n "user.invited.bulk_invite.instructions")}}
-
         <input
           id="csv-file"
-          disabled={{status.uploading}}
+          disabled={{this.uploader.uploading}}
           type="file"
           accept=".csv"
+          {{on "input" this.uploading}}
+          {{did-insert (fn this.setUploader uploader)}}
         />
       {{/if}}
-    </:body>
-    <:footer>
-      {{#unless status.uploaded}}
-        <DButton
-          @icon={{if this.isEmail "envelope" "link"}}
-          @translatedLabel={{if
-            status.uploading
-            (i18n
-              "user.invited.bulk_invite.progress" progress=status.uploadProgress
-            )
-            (i18n "user.invited.bulk_invite.text")
-          }}
-          class="btn-primary"
-          @action={{status.startUpload}}
-          @disabled={{status.submitDisabled}}
-        />
-      {{/unless}}
-      <DButton @label="close" class="btn-primary" @action={{@closeModal}} />
-    </:footer>
-  </DModal>
-</CreateInviteUploader>
+    </CreateInviteUploader>
+  </:body>
+  <:footer>
+    {{#unless this.uploader.uploaded}}
+      <DButton
+        @icon="link"
+        @translatedLabel={{if
+          this.uploader.uploading
+          (i18n
+            "user.invited.bulk_invite.progress"
+            progress=this.uploader.uploadProgress
+          )
+          (i18n "user.invited.bulk_invite.text")
+        }}
+        class="btn-primary"
+        @action={{this.uploader.startUpload}}
+        @disabled={{this.uploader.submitDisabled}}
+      />
+    {{/unless}}
+    <DButton @label="close" class="btn-primary" @action={{@closeModal}} />
+  </:footer>
+</DModal>

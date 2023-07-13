@@ -159,6 +159,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
 
     this._uppyInstance.on("upload", (data) => {
+      console.log(this);
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
