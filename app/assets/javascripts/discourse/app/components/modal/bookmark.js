@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { extractError } from "discourse/lib/ajax-error";
+import { sanitize } from "discourse/lib/text";
 import { CLOSE_INITIATED_BY_CLICK_OUTSIDE } from "discourse/components/d-modal";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
@@ -16,7 +18,6 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { and, notEmpty } from "@ember/object/computed";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 
 const BOOKMARK_BINDINGS = {
@@ -33,6 +34,8 @@ export default class BookmarkModal extends Component {
   @tracked postDetectedLocalTime = null;
   @tracked postDetectedLocalTimezone = null;
   @tracked prefilledDatetime = null;
+  @tracked flash = null;
+  @tracked flashType = "error";
   @tracked userTimezone = this.currentUser.user_option.timezone;
   @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
@@ -129,8 +132,7 @@ export default class BookmarkModal extends Component {
     return labels;
   }
 
-  @action
-  unbindKeyboard() {
+  willDestroy() {
     this._itsatrap?.destroy();
     this._itsatrap = null;
     KeyboardShortcuts.unpause();
@@ -155,6 +157,7 @@ export default class BookmarkModal extends Component {
 
   @action
   saveAndClose() {
+    this.flash = null;
     if (this._saving || this._deleting) {
       return;
     }
@@ -164,7 +167,9 @@ export default class BookmarkModal extends Component {
     return this.#saveBookmark()
       .then(() => this.args.closeModal())
       .catch((error) => this.#handleSaveError(error))
-      .finally(() => (this._saving = false));
+      .finally(() => {
+        this._saving = false;
+      });
   }
 
   @action
@@ -196,7 +201,7 @@ export default class BookmarkModal extends Component {
       !this._savingBookmarkManually
     ) {
       this.#saveBookmark()
-        .catch((e) => this._handleSaveError(e))
+        .catch((e) => this.#handleSaveError(e))
         .then(() => {
           this.args.closeModal(closeModalArgs);
         });
@@ -294,9 +299,9 @@ export default class BookmarkModal extends Component {
   #handleSaveError(error) {
     this._savingBookmarkManually = false;
     if (typeof error === "string") {
-      this.dialog.alert(error);
+      this.flash = sanitize(error);
     } else {
-      popupAjaxError(error);
+      this.flash = sanitize(extractError(error));
     }
   }
 

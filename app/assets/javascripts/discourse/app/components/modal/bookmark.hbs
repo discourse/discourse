@@ -1,11 +1,12 @@
 <DModal
   @closeModal={{this.closingModal}}
   @title={{this.modalTitle}}
-  @id="bookmark-reminder-modal"
+  @flash={{this.flash}}
+  @flashType={{this.flashType}}
+  id="bookmark-reminder-modal"
   class="bookmark-reminder-modal bookmark-with-reminder"
   data-bookmark-id={{this.bookmark.id}}
   {{did-insert this.didInsert}}
-  {{will-destroy this.unbindKeyboard}}
 >
   <:body>
     <div class="control-group bookmark-name-wrap">
@@ -16,13 +17,12 @@
         class="bookmark-name"
         @enter={{action "saveAndClose"}}
         placeholder={{i18n "post.bookmarks.name_placeholder"}}
-        maxlength="100"
         aria-label={{i18n "post.bookmarks.name_input_label"}}
       />
       <DButton
         @icon="cog"
-        @action={{action "toggleShowOptions"}}
-        @class="bookmark-options-button"
+        @action={{this.toggleShowOptions}}
+        class="bookmark-options-button"
         @ariaLabel="post.bookmarks.options"
         @title="post.bookmarks.options"
       />
@@ -79,18 +79,18 @@
   <:footer>
     <div class="control-group">
       <DButton
-        @id="save-bookmark"
+        id="save-bookmark"
         @label="bookmarks.save"
-        @class="btn-primary"
-        @action={{action "saveAndClose"}}
+        class="btn-primary"
+        @action={{this.saveAndClose}}
       />
       <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
       {{#if this.showDelete}}
         <DButton
-          @id="delete-bookmark"
+          id="delete-bookmark"
           @icon="trash-alt"
-          @class="delete-bookmark btn-danger"
-          @action={{action "delete"}}
+          class="delete-bookmark btn-danger"
+          @action={{this.delete}}
           @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
           @title="post.bookmarks.actions.delete_bookmark.name"
         />
