@@ -26,20 +26,16 @@ export default createWidget("summary-box", {
   tagName: "article.summary-box",
   buildKey: (attrs) => `summary-box-${attrs.topicId}`,
 
-  defaultState() {
-    return { summary: "" };
-  },
-
-  html(attrs, state) {
+  html(attrs) {
     const html = [];
 
-    if (state.summary) {
-      html.push(new RawHtml({ html: state.summary }));
+    if (attrs.summary) {
+      html.push(new RawHtml({ html: `<div>${attrs.summary}</div>` }));
       html.push(
         h(
           "div.summarized-on",
           {},
-          I18n.t("summary.summarized_on", { date: state.summarized_on })
+          I18n.t("summary.summarized_on", { date: attrs.summarizedOn })
         )
       );
     } else {
@@ -53,11 +49,12 @@ export default createWidget("summary-box", {
   fetchSummary(topicId) {
     ajax(`/t/${topicId}/strategy-summary`)
       .then((data) => {
-        this.state.summarized_on = shortDateNoYear(data.summarized_on);
-
         cookAsync(data.summary).then((cooked) => {
-          this.state.summary = cooked.string;
-          this.scheduleRerender();
+          // We store the summary in the parent so we can re-render it without doing a new request.
+          this.sendWidgetEvent("summaryUpdated", {
+            summary: cooked.string,
+            summarizedOn: shortDateNoYear(data.summarized_on),
+          });
         });
       })
       .catch(popupAjaxError);

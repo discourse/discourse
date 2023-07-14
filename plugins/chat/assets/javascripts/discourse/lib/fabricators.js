@@ -54,7 +54,7 @@ function messageFabricator(args = {}) {
 function channelFabricator(args = {}) {
   const id = args.id || sequence++;
 
-  return ChatChannel.create(
+  const channel = ChatChannel.create(
     Object.assign(
       {
         id,
@@ -62,7 +62,6 @@ function channelFabricator(args = {}) {
           args.chatable?.type ||
           args.chatable_type ||
           CHATABLE_TYPES.categoryChannel,
-        last_message_sent_at: args.last_message_sent_at,
         chatable_id: args.chatable?.id || args.chatable_id,
         title: args.title || "General",
         description: args.description,
@@ -73,6 +72,10 @@ function channelFabricator(args = {}) {
       args
     )
   );
+
+  channel.lastMessage = messageFabricator({ channel });
+
+  return channel;
 }
 
 function categoryFabricator(args = {}) {

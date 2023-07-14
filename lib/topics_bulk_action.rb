@@ -86,6 +86,7 @@ class TopicsBulkAction
   def dismiss_posts
     highest_number_source_column =
       @user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
+
     sql = <<~SQL
       UPDATE topic_users tu
       SET last_read_post_number = t.#{highest_number_source_column}
@@ -94,6 +95,8 @@ class TopicsBulkAction
     SQL
 
     DB.exec(sql, user_id: @user.id, topic_ids: @topic_ids)
+    TopicTrackingState.publish_dismiss_new_posts(@user.id, topic_ids: @topic_ids.sort)
+
     @changed_ids.concat @topic_ids
   end
 
@@ -115,7 +118,9 @@ class TopicsBulkAction
       now = Time.zone.now
       rows = ids.map { |id| { topic_id: id, user_id: @user.id, created_at: now } }
       DismissedTopicUser.insert_all(rows)
+      TopicTrackingState.publish_dismiss_new(@user.id, topic_ids: ids.sort)
     end
+
     @changed_ids = ids
   end
 

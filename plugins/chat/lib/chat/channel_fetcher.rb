@@ -86,9 +86,11 @@ module Chat
     end
 
     def self.secured_public_channel_search(guardian, options = {})
+      return ::Chat::Channel.none if !SiteSetting.enable_public_channels
+
       allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
-      channels = Chat::Channel.includes(chatable: [:topic_only_relative_url])
+      channels = Chat::Channel.includes(:last_message, chatable: [:topic_only_relative_url])
       channels = channels.includes(:chat_channel_archive) if options[:include_archives]
 
       channels =
@@ -179,10 +181,15 @@ module Chat
     def self.secured_direct_message_channels_search(user_id, guardian, options = {})
       query =
         Chat::Channel.strict_loading.includes(
+          last_message: [:uploads],
           chatable: [{ direct_message_users: [user: :user_option] }, :users],
         )
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
       query = query.joins(:user_chat_channel_memberships)
+      query =
+        query.joins(
+          "LEFT JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
+        )
 
       scoped_channels =
         Chat::Channel
@@ -223,7 +230,7 @@ module Chat
         query
           .where(chatable_type: Chat::Channel.direct_channel_chatable_types)
           .where(chat_channels: { id: scoped_channels })
-          .order(last_message_sent_at: :desc)
+          .order("last_message.created_at DESC NULLS LAST")
 
       channels = query.to_a
       preload_fields =

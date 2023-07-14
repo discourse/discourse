@@ -21,13 +21,17 @@ module PageObjects
         find(".chat-header-icon").click
       end
 
+      def has_header_href?(href)
+        find(".chat-header-icon").has_link?(href: href)
+      end
+
       def open
         visit("/chat")
       end
 
-      def open_new_message
+      def open_new_message(ensure_open: true)
         send_keys([PLATFORM_KEY_MODIFIER, "k"])
-        find(".chat-modal-new-message")
+        find(".chat-modal-new-message") if ensure_open
       end
 
       def has_drawer?(channel_id: nil, expanded: true)
@@ -77,7 +81,7 @@ module PageObjects
       end
 
       def has_message?(message)
-        container = find(".chat-message-container[data-id=\"#{message.id}\"")
+        container = find(".chat-message-container[data-id=\"#{message.id}\"]")
         container.has_content?(message.message)
         container.has_content?(message.user.username)
       end

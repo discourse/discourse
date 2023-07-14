@@ -3,7 +3,13 @@
 RSpec.describe "Chat composer draft", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+  fab!(:message_1) do
+    Fabricate(
+      :chat_message,
+      chat_channel: channel_1,
+      message: "This is a message for draft and replies",
+    )
+  end
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }

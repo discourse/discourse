@@ -268,19 +268,26 @@ class PostAlerter
   end
 
   def category_or_tag_muters(topic)
+    user_option_condition_sql_fragment =
+      if SiteSetting.watched_precedence_over_muted
+        "uo.watched_precedence_over_muted IS false"
+      else
+        "(uo.watched_precedence_over_muted IS NULL OR uo.watched_precedence_over_muted IS false)"
+      end
+
     user_ids_sql = <<~SQL
-      SELECT user_id FROM category_users WHERE category_id = #{topic.category_id.to_i} AND notification_level = #{CategoryUser.notification_levels[:muted]}
-      UNION
-      SELECT user_id FROM tag_users tu JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id} AND tu.notification_level = #{TagUser.notification_levels[:muted]}
-      EXCEPT
-      SELECT user_id FROM topic_users tus WHERE tus.topic_id = #{topic.id} AND tus.notification_level = #{TopicUser.notification_levels[:watching]}
-    SQL
-    User
-      .where("id IN (#{user_ids_sql})")
-      .joins("LEFT JOIN user_options ON user_options.user_id = users.id")
-      .where(
-        "user_options.watched_precedence_over_muted IS false OR (user_options.watched_precedence_over_muted IS NULL AND #{!SiteSetting.watched_precedence_over_muted})",
-      )
+        SELECT uo.user_id FROM user_options uo
+        LEFT JOIN topic_users tus ON tus.user_id = uo.user_id AND tus.topic_id = #{topic.id}
+        LEFT JOIN category_users cu ON cu.user_id = uo.user_id AND cu.category_id = #{topic.category_id.to_i}
+        LEFT JOIN tag_users tu ON tu.user_id = uo.user_id
+        JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id}
+        WHERE
+          (tus.id IS NULL OR tus.notification_level != #{TopicUser.notification_levels[:watching]})
+          AND (cu.notification_level = #{CategoryUser.notification_levels[:muted]} OR tu.notification_level = #{TagUser.notification_levels[:muted]})
+          AND #{user_option_condition_sql_fragment}
+        SQL
+
+    User.where("id IN (#{user_ids_sql})")
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)

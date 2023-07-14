@@ -1,0 +1,49 @@
+<div class="d-lightbox__carousel">
+  {{#if @shouldDisplayCarouselArrows}}
+    <DButton
+      @class="d-lightbox__carousel-previous-button btn-flat"
+      @title="experimental_lightbox.buttons.previous"
+      @icon={{@previousButtonIcon}}
+      @ariaHidden="true"
+      {{on "click" @showPreviousItem passive=true capture=true}}
+    />
+  {{/if}}
+  <div
+    class="d-lightbox__carousel-items"
+    tabindex="-1"
+    role="list"
+    aria-hidden="true"
+    {{on "click" @showSelectedImage passive=true capture=true}}
+    {{on "focus" @showSelectedImage passive=true capture=true}}
+  >
+    {{#each @items as |item|}}
+      <img
+        data-lightbox-carousel-item={{if
+          (eq item.index @currentIndex)
+          "current"
+          ""
+        }}
+        fetchPriority="low"
+        decoding="async"
+        loading="lazy"
+        tabindex="-1"
+        src={{item.smallURL}}
+        data-lightbox-item-index={{item.index}}
+        style={{item.cssVars}}
+        class={{concat
+          "d-lightbox__carousel-item"
+          (if (eq item.index @currentIndex) " is-current")
+        }}
+      />
+    {{/each}}
+  </div>
+  {{#if @shouldDisplayCarouselArrows}}
+    <DButton
+      @class="d-lightbox__carousel-next-button btn-flat"
+      @title="experimental_lightbox.buttons.next"
+      @icon={{@nextButtonIcon}}
+      @ariaHidden="true"
+      {{on "click" @showNextItem passive=true capture=true}}
+    />
+  {{/if}}
+</div>

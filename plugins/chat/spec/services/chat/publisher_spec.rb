@@ -15,6 +15,7 @@ describe Chat::Publisher do
         MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }[0].data
 
       expect(data["deleted_at"]).to eq(message_2.deleted_at.iso8601(3))
+      expect(data["deleted_by_id"]).to eq(message_2.deleted_by_id)
       expect(data["deleted_id"]).to eq(message_2.id)
       expect(data["latest_not_deleted_message_id"]).to eq(message_1.id)
       expect(data["type"]).to eq("delete")
@@ -281,10 +282,12 @@ describe Chat::Publisher do
           {
             type: "channel",
             channel_id: channel.id,
-            message_id: message_1.id,
-            user_id: message_1.user_id,
-            username: message_1.user.username,
             thread_id: nil,
+            message:
+              Chat::MessageSerializer.new(
+                message_1,
+                { scope: Guardian.new(nil), root: false },
+              ).as_json,
           },
         )
       end
@@ -340,10 +343,12 @@ describe Chat::Publisher do
               {
                 type: "thread",
                 channel_id: channel.id,
-                message_id: message_1.id,
-                user_id: message_1.user_id,
-                username: message_1.user.username,
                 thread_id: thread.id,
+                message:
+                  Chat::MessageSerializer.new(
+                    message_1,
+                    { scope: Guardian.new(nil), root: false },
+                  ).as_json,
               },
             )
           end

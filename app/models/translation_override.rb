@@ -45,7 +45,7 @@ class TranslationOverride < ActiveRecord::Base
 
   validate :check_interpolation_keys
 
-  enum :status, %i[up_to_date outdated invalid_interpolation_keys]
+  enum :status, %i[up_to_date outdated invalid_interpolation_keys deprecated]
 
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
@@ -129,6 +129,12 @@ class TranslationOverride < ActiveRecord::Base
   private_class_method :i18n_changed
   private_class_method :expire_cache
 
+  def original_translation_deleted?
+    !I18n.overrides_disabled { I18n.t!(transformed_key, locale: :en) }.is_a?(String)
+  rescue I18n::MissingTranslationData
+    true
+  end
+
   def original_translation_updated?
     return false if original_translation.blank?
 
@@ -157,6 +163,10 @@ class TranslationOverride < ActiveRecord::Base
   end
 
   private
+
+  def transformed_key
+    @transformed_key ||= self.class.transform_pluralized_key(translation_key)
+  end
 
   def check_interpolation_keys
     invalid_keys = invalid_interpolation_keys

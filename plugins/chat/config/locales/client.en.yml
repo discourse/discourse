@@ -330,6 +330,8 @@ en:
         add_user_short: <span>Add user</span>
         open_channel: <span>Open channel</span>
         default_search_placeholder: "#a-channel, @somebody or anything"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@somebody"
         user_search_placeholder: "...add more users"
         disabled_user: "has disabled chat"
         no_items: "No items"
