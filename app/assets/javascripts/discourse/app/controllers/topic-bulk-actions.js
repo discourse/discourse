@@ -13,7 +13,6 @@ import AppendTags from "../components/bulk-actions/append-tags";
 
 const _customButtons = [];
 
-// TODO: clean
 export function _addBulkButton(opts) {
   _customButtons.push({
     label: opts.label,
@@ -22,6 +21,10 @@ export function _addBulkButton(opts) {
     visible: opts.visible,
     action: opts.action,
   });
+}
+
+export function clearBulkButtons() {
+  _customButtons.length = 0;
 }
 
 // Modal for performing bulk actions on topics
