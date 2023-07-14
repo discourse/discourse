@@ -111,8 +111,12 @@ module Chat
       object.revisions.any?
     end
 
+    def created_at
+      object.created_at.iso8601
+    end
+
     def deleted_at
-      object.user ? object.deleted_at : Time.zone.now
+      object.user ? object.deleted_at.iso8601 : Time.zone.now
     end
 
     def deleted_by_id
