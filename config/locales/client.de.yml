@@ -189,7 +189,6 @@ de:
     software_update_prompt:
       message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
       dismiss: "Verwerfen"
-    bootstrap_mode: "Bootstrap-Modus"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -1128,14 +1127,10 @@ de:
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
-        categories_section: "Abschnitt „Kategorien“"
-        categories_section_instruction: "Ausgewählte Kategorien werden im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
-        tags_section: "Abschnitt „Schlagwörter“"
-        tags_section_instruction: "Ausgewählte Schlagwörter werden im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
         navigation_section: "Navigation"
-        list_destination_instruction: "Wenn es neue Inhalte in der Seitenleiste gibt …"
-        list_destination_default: "den Standardlink verwenden und ein Symbol für neue Elemente anzeigen"
-        list_destination_unread_new: "auf ungelesen/neu verlinken und die Anzahl der neuen Elemente anzeigen"
+        navigation_section_instruction: "Wenn eine Themenliste im Navigationsmenü neue oder ungelesene Einträge enthält…"
+        link_to_filtered_list_checkbox_description: "Link zur gefilterten Liste"
+        show_count_new_items_checkbox_description: "Zählung der neuen Artikel anzeigen"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1174,6 +1169,7 @@ de:
       watched_first_post_categories_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
       watched_first_post_tags: "Ersten Beitrag beobachten"
       watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
+      watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       muted_categories_instructions_dont_hide: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien."
@@ -1316,7 +1312,7 @@ de:
         tags: "Schlagwörter"
         interface: "Oberfläche"
         apps: "Apps"
-        sidebar: "Seitenleiste"
+        navigation_menu: "Navigationsmenü"
       change_password:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
@@ -1864,10 +1860,13 @@ de:
         other: "Es gibt <b>%{count}</b> Antworten."
       description_time_MF: |
         Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>.
-      enable: "Dieses Thema zusammenfassen"
+      enable: "Top-Antworten anzeigen"
       disable: "Alle Beiträge anzeigen"
       short_label: "Zusammenfassen"
       short_title: "Eine Zusammenfassung dieses Themas anzeigen: die laut der Community interessantesten Beiträge"
+      strategy:
+        button_title: "Dieses Thema zusammenfassen"
+        title: "Zusammenfassung des Themas"
     deleted_filter:
       enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit versteckt sind."
       disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt."
@@ -4041,11 +4040,25 @@ de:
       more: "Mehr"
       all_categories: "Alle Kategorien"
       all_tags: "Alle Schlagwörter"
-      categories_form:
-        save: "Speichern"
+      categories_form_modal:
         title: "Kategorien-Navigation bearbeiten"
+        subtitle:
+          text: "und wir zeigen automatisch die beliebtesten Kategorien dieser Seite an"
         filter_placeholder: "Kategorien filtern"
         no_categories: "Es gibt keine Kategorien, die dem angegebenen Begriff entsprechen."
+      tags_form_modal:
+        title: "Schlagwörter-Navigation bearbeiten"
+        filter_placeholder: "Schlagwörter filtern"
+        no_tags: "Es gibt keine Schlagwörter, die auf den angegebenen Begriff passen."
+        subtitle:
+          text: "und wir werden automatisch die Top-Schlagwörter dieser Seite anzeigen"
+      edit_navigation_modal_form:
+        deselect_button_text: "Alle abwählen"
+        reset_to_defaults: "Auf Standards zurücksetzen"
+        filter_dropdown:
+          all: "Gesamt"
+          selected: "Ausgewählt"
+          unselected: "Nicht ausgewählt"
       sections:
         custom:
           add: "Benutzerdefinierten Abschnitt hinzufügen"
@@ -4095,29 +4108,20 @@ de:
             unread_with_count: "Ungelesen (%{count})"
             archive: "Archiv"
         tags:
-          links:
-            add_tags:
-              content: "Schlagwörter hinzufügen"
-              title: "Du hast noch keine Schlagwörter hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Schlagwörter hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Schlagwörter"
           header_action_title: "Bearbeite die Schlagwörter in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         categories:
-          links:
-            add_categories:
-              content: "Kategorien hinzufügen"
-              title: "Du hast noch keine Kategorien hinzugefügt. Klicke, um loszulegen."
           none: "Du hast keine Kategorien hinzugefügt."
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Thema erstellen"
-          header_action_edit_section_title: "Community-Abschnitt bearbeiten"
+          edit_section:
+            header_dropdown: "Anpassen"
           links:
             about:
               content: "Über uns"
@@ -4128,6 +4132,9 @@ de:
             badges:
               content: "Abzeichen"
               title: "Alle Abzeichen, die es zu verdienen gibt"
+            topics:
+              content: "Themen"
+              title: "Alle Themen"
             faq:
               content: "FAQ"
               title: "Richtlinien für die Nutzung dieser Website"
@@ -4159,6 +4166,30 @@ de:
       exceeded: "Die maximal zulässige Anzahl von Zeichen wurde überschritten."
     form_template_chooser:
       select_template: "Formularvorlagen auswählen"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Bitte fülle dieses Feld aus."
+          text: "Bitte fülle dieses Feld aus."
+          select-one: "Bitte wähle ein Element aus der Liste aus."
+          select-multiple: "Bitte wähle mindestens ein Element aus der Liste aus."
+          checkbox: "Bitte markiere dieses Feld, wenn du fortfahren möchtest."
+        typeMismatch:
+          default: "Bitte gib einen gültigen Wert ein."
+          color: "Bitte gib eine Farbe ein."
+          date: "Bitte gib ein Datum ein."
+          email: "Bitte gib eine gültige E-Mail-Adresse ein."
+          number: "Bitte gib eine Zahl ein."
+          password: "Bitte gib ein gültiges Passwort ein."
+          tel: "Bitte gib eine gültige Telefonnummer ein."
+          text: "Bitte gib einen Textwert ein."
+          url: "Bitte gib eine gültige URL ein."
+        tooShort: "Die Eingabe muss %{minLength} Zeichen oder länger sein."
+        tooLong: "Die Eingabe muss weniger als %{maxLength} Zeichen umfassen."
+        rangeOverflow: "Der Eingang muss kleiner als %{max} sein."
+        rangeUnderflow: "Die Eingabe muss mehr als %{min} betragen."
+        patternMismatch: "Bitte beachte das gewünschte Format."
+        badInput: "Bitte gib eine gültige Eingabe ein."
   admin_js:
     type_to_filter: "zum Filtern hier eingeben …"
     admin:
@@ -5261,14 +5292,19 @@ de:
             minimum:
               key: "Minimum"
               type: "Ganzzahl"
+              description: "Legt für Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
             maximum:
               key: "Maximum"
               type: "Ganzzahl"
+              description: "Legt für Textfelder die maximal zulässige Anzahl von Zeichen fest."
             pattern:
               key: "Muster"
               type: "Regex-Zeichenfolge"
+              description: "Für Textfelder ein regulärer Ausdruck, der die zulässige Eingabe angibt."
             type:
               key: "art"
+              type: "Zeichenfolge"
+              description: "Für Eingabefelder kannst du die Art der Eingabe angeben, die erwartet wird (Text|E-Mail|Datum|Nummer|Url|Tel|Farbe)"
         preview_modal:
           title: "Vorschau Vorlage"
         field_placeholders:
@@ -5621,8 +5657,10 @@ de:
         go_back: "Zurück zur Suche"
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
+        show_outdated: "Nur veraltet/ungültig anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
+        interpolation_keys: "Verfügbare Interpolationsschlüssel:"
       settings:
         show_overriden: "Nur geänderte Texte anzeigen"
         history: "Änderungsverlauf ansehen"

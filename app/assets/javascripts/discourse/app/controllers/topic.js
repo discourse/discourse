@@ -826,7 +826,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
       // Cancel and reopen the composer for the first post
       if (editingFirst) {
-        composer.cancelComposer().then(() => composer.open(opts));
+        composer.cancelComposer(opts).then(() => composer.open(opts));
       } else {
         composer.open(opts);
       }

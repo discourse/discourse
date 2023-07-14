@@ -4,9 +4,12 @@ import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
 import Section from "discourse/lib/sidebar/section";
-import CommunitySection from "discourse/lib/sidebar/community-section";
+import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
+import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 
 export default class SidebarCustomSection extends Component {
+  @service currentUser;
+  @service navigationMenu;
   @service site;
   @service siteSettings;
 
@@ -22,19 +25,14 @@ export default class SidebarCustomSection extends Component {
     super.willDestroy();
   }
 
-  get isDesktopDropdownMode() {
-    const headerDropdownMode =
-      this.siteSettings.navigation_menu === "header dropdown";
-
-    return !this.site.mobileView && headerDropdownMode;
-  }
-
   #initializeSection() {
     let sectionClass = Section;
 
     switch (this.args.sectionData.section_type) {
       case "community":
-        sectionClass = CommunitySection;
+        sectionClass = this.currentUser?.admin
+          ? AdminCommunitySection
+          : CommonCommunitySection;
         break;
     }
 

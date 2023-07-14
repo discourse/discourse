@@ -1,0 +1,17 @@
+{{#if this.loadingSlider.enabled}}
+  <div
+    class={{concat-class
+      "loading-indicator-container"
+      this.state
+      (if this.capabilities.isAppWebview "discourse-hub-webview")
+    }}
+    {{on "transitionend" this.onContainerTransitionEnd}}
+    style={{this.containerStyle}}
+  >
+    <div
+      class="loading-indicator"
+      {{on "transitionend" this.onBarTransitionEnd}}
+    >
+    </div>
+  </div>
+{{/if}}

@@ -52,6 +52,7 @@ export default class ChatMessage {
   @tracked thread;
   @tracked manager;
   @tracked threadTitle;
+  @tracked deletedById;
 
   @tracked _deletedAt;
   @tracked _cooked;
@@ -69,6 +70,7 @@ export default class ChatMessage {
     this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
+    this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
       this.hidden || this._deletedAt ? false : args.expanded || true;
@@ -194,7 +196,7 @@ export default class ChatMessage {
 
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
     }
 
     if (
@@ -203,7 +205,13 @@ export default class ChatMessage {
         new Date(this.createdAt)
       )
     ) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
+    }
+  }
+
+  get formattedFirstMessageDate() {
+    if (this.firstMessageOfTheDayAt) {
+      return this.#calendarDate(this.firstMessageOfTheDayAt);
     }
   }
 
@@ -362,5 +370,9 @@ export default class ChatMessage {
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate()
     );
+  }
+
+  #startOfDay(date) {
+    return moment(date).startOf("day").format();
   }
 }

@@ -59,7 +59,10 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
     end
 
     context "when last message is deleted" do
-      before { last_thread_message.trash! }
+      before do
+        last_thread_message.trash!
+        thread_1.update_last_message_id!
+      end
 
       it "does not edit a message" do
         chat_page.visit_thread(thread_1)

@@ -1,11 +1,9 @@
 import Service, { inject as service } from "@ember/service";
-import EmberObject from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 
-// TODO (martin) This export can be removed once we move the handleSentMessage
-// code completely out of ChatLivePane
 export function handleStagedMessage(channel, messagesManager, data) {
   const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
 
@@ -72,8 +70,6 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     this.model = null;
   }
 
-  // TODO (martin) This can be removed once we move the handleSentMessage
-  // code completely out of ChatLivePane
   handleStagedMessageInternal(channel, data) {
     return handleStagedMessage(channel, this.messagesManager, data);
   }
@@ -119,6 +115,9 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
         break;
       case "update_thread_original_message":
         this.handleThreadOriginalMessageUpdate(busData);
+        break;
+      case "notice":
+        this.handleNotice(busData);
         break;
     }
   }
@@ -178,6 +177,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
 
     if (this.currentUser.staff || this.currentUser.id === targetMsg.user.id) {
       targetMsg.deletedAt = data.deleted_at;
+      targetMsg.deletedById = data.deleted_by_id;
       targetMsg.expanded = false;
     } else {
       this.messagesManager.removeMessage(targetMsg);
@@ -200,7 +200,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   handleMentionWarning(data) {
     const message = this.messagesManager.findMessage(data.chat_message_id);
     if (message) {
-      message.mentionWarning = EmberObject.create(data);
+      message.mentionWarning = ChatMessageMentionWarning.create(message, data);
     }
   }
 
@@ -249,6 +249,10 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   }
 
   handleThreadOriginalMessageUpdate() {
+    throw "not implemented";
+  }
+
+  handleNotice() {
     throw "not implemented";
   }
 

@@ -386,6 +386,7 @@ createWidget("revamped-hamburger-menu-wrapper", {
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
+      event.target.closest(".sidebar-section-link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
       this.sendWidgetAction("toggleHamburger");
@@ -464,7 +465,7 @@ createWidget("glimmer-search-menu-wrapper", {
 });
 
 export default createWidget("header", {
-  tagName: "header.d-header.clearfix",
+  tagName: "header.d-header",
   buildKey: () => `header`,
   services: ["router", "search"],
 

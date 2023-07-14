@@ -50,9 +50,23 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     await fillIn(toDateInput(), "2019-01-30");
     await toTimeSelectKit.expand();
     rows = toTimeSelectKit.rows();
-
     assert.equal(rows[0].dataset.name, "00:00");
     assert.equal(rows[rows.length - 1].dataset.name, "23:45");
+  });
+
+  test("setting relativeDate results in correct intervals (4x 15m then 30m)", async function (assert) {
+    this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
+
+    await render(
+      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @relativeDate={{this.state.from}} @onChange={{action (mut this.state)}} />`
+    );
+
+    await fillIn(toDateInput(), "2019-01-29");
+    const toTimeSelectKit = selectKit(".to .d-time-input .select-kit");
+    await toTimeSelectKit.expand();
+    let rows = toTimeSelectKit.rows();
+    assert.equal(rows[4].dataset.name, "15:45");
+    assert.equal(rows[5].dataset.name, "16:15");
   });
 
   test("timezone support", async function (assert) {

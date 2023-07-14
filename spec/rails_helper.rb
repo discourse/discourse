@@ -77,6 +77,7 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
+Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
@@ -149,7 +150,12 @@ module TestSetup
   end
 end
 
-TestProf::BeforeAll.configure { |config| config.before(:begin) { TestSetup.test_setup } }
+TestProf::BeforeAll.configure do |config|
+  config.after(:begin) do
+    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+    TestSetup.test_setup
+  end
+end
 
 if ENV["PREFABRICATION"] == "0"
   module Prefabrication
@@ -281,6 +287,7 @@ RSpec.configure do |config|
         .tap do |options|
           apply_base_chrome_options(options)
           options.add_argument("--window-size=1400,1400")
+          options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
     Capybara.register_driver :selenium_chrome do |app|
@@ -339,17 +346,12 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
-
-    if ActiveRecord::Base.connection_pool.stat[:busy] > 1
-      raise ActiveRecord::Base.connection_pool.stat.inspect
-    end
   end
 
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
+    Downloads.clear
   end
-
-  config.before :each, &TestSetup.method(:test_setup)
 
   config.around :each do |example|
     before_event_count = DiscourseEvent.events.values.sum(&:count)
@@ -385,6 +387,7 @@ RSpec.configure do |config|
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+    TestSetup.test_setup
   end
 
   # Match the request hostname to the value in `database.yml`
@@ -433,7 +436,18 @@ RSpec.configure do |config|
           if logs.empty?
             lines << "(no logs)"
           else
-            logs.each { |log| lines << log.message }
+            logs.each do |log|
+              # System specs are full of image load errors that are just noise, no need
+              # to log this.
+              if (
+                   log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
+                     (log.message.include?("uploads") || log.message.include?("images"))
+                 ) || log.message.include?("favicon.ico")
+                next
+              end
+
+              lines << log.message
+            end
           end
           lines << "~~~~~ END JS LOGS ~~~~~"
         end

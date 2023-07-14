@@ -33,7 +33,7 @@
   &__join-channel-btn {
     font-size: var(--font-up-2);
     border: 1px solid transparent;
-    border-radius: 0.25rem;
+    border-radius: var(--d-button-border-radius);
     line-height: normal;
     box-sizing: border-box;
     padding: 0.5em 0.65em;

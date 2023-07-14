@@ -104,6 +104,8 @@ ru:
       heading: "Чат"
       join: "Подписаться"
       last_visit: "последнее посещение"
+      summarization:
+        summarize: "Сводка"
       mention_warning:
         dismiss: "Отклонить"
         invitations_sent:
@@ -205,6 +207,8 @@ ru:
           about: Информация
           members: Участники
           settings: Настройки
+      new_message_modal:
+        no_items: "Нет компонентов"
       channel_edit_name_slug_modal:
         name: Название канала
       channel_edit_description_modal:
@@ -216,9 +220,6 @@ ru:
         prefix: "Кому:"
         no_results: Нет результатов
         selected_user_title: "Отменить выбор пользователя %{username}"
-      channel_selector:
-        title: "Перейти на канал"
-        no_channels: "Нет каналов, соответствующих вашему запросу"
       channel:
         no_memberships: На этом канале нет участников
         no_memberships_found: Участники не найдены
@@ -270,6 +271,8 @@ ru:
         followed: "Подписан"
         mobile_notification_level: "Мобильные push-уведомления"
         mute: "Отключить канал"
+        threading_enabled: "Включён"
+        threading_disabled: "Отключен"
         muted_on: "Включено"
         muted_off: "Выключено"
         notifications: "Уведомления"
@@ -380,6 +383,16 @@ ru:
           other: "%{count} ответ"
         settings: "Настройки"
         last_reply: "последний ответ"
+        notifications:
+          regular:
+            title: "Обычный"
+          tracking:
+            title: "В отслеживаемых"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"

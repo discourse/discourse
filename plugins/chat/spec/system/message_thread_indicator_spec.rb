@@ -74,6 +74,20 @@ describe "Thread indicator for chat messages", type: :system do
       )
     end
 
+    it "it shows the reply count but no participant avatars when there is only one participant" do
+      single_user_thread =
+        Fabricate(:chat_thread, channel: channel, original_message_user: current_user)
+      Fabricate(:chat_message, thread: single_user_thread, user: current_user)
+      Fabricate(:chat_message, thread: single_user_thread, user: current_user)
+      chat_page.visit_channel(channel)
+      expect(
+        channel_page.message_thread_indicator(single_user_thread.original_message),
+      ).to have_reply_count(2)
+      expect(
+        channel_page.message_thread_indicator(single_user_thread.original_message),
+      ).to have_no_participants
+    end
+
     it "clicking a thread indicator opens the thread panel" do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread_1.original_message).click
@@ -116,7 +130,7 @@ describe "Thread indicator for chat messages", type: :system do
       )
     end
 
-    it "shows participants of the thread" do
+    it "shows avatars for the participants of the thread" do
       chat_page.visit_channel(channel)
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
         current_user,
@@ -127,19 +141,21 @@ describe "Thread indicator for chat messages", type: :system do
     end
 
     it "shows an excerpt of the last reply in the thread" do
+      thread_1.last_message.update!(message: "test for excerpt")
+      thread_1.last_message.rebake!
+
       chat_page.visit_channel(channel)
-
-      excerpt_text = thread_excerpt(thread_1.last_reply)
-
       expect(
         channel_page.message_thread_indicator(thread_1.original_message).excerpt,
-      ).to have_content(excerpt_text)
+      ).to have_content(thread_excerpt(thread_1.last_message))
     end
 
     it "updates the last reply excerpt and participants when a new message is added to the thread" do
       new_user = Fabricate(:user)
       chat_system_user_bootstrap(user: new_user, channel: channel)
-      original_last_reply = thread_1.replies.last
+      original_last_reply = thread_1.last_message
+      original_last_reply.update!(message: "test for excerpt")
+      original_last_reply.rebake!
 
       chat_page.visit_channel(channel)
 
@@ -163,7 +179,8 @@ describe "Thread indicator for chat messages", type: :system do
         new_user,
       )
 
-      excerpt_text = thread_excerpt(thread_1.replies.where(user: new_user).first)
+      new_user_reply = thread_1.replies.where(user: new_user).first
+      excerpt_text = thread_excerpt(new_user_reply)
 
       expect(
         channel_page.message_thread_indicator(thread_1.original_message).excerpt,

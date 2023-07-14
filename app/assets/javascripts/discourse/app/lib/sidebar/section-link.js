@@ -9,8 +9,13 @@ const MOUSE_DELAY = 250;
 export default class SectionLink {
   @tracked linkDragCss;
 
-  constructor({ external, icon, id, name, value }, section, router) {
+  constructor(
+    { external, full_reload, icon, id, name, value },
+    section,
+    router
+  ) {
     this.external = external;
+    this.fullReload = full_reload;
     this.prefixValue = icon;
     this.id = id;
     this.name = name;
@@ -18,7 +23,7 @@ export default class SectionLink {
     this.value = value;
     this.section = section;
 
-    if (!this.external) {
+    if (!this.externalOrFullReload) {
       const routeInfoHelper = new RouteInfoHelper(router, value);
       this.route = routeInfoHelper.route;
       this.models = routeInfoHelper.models;
@@ -30,12 +35,17 @@ export default class SectionLink {
     return true;
   }
 
+  get externalOrFullReload() {
+    return this.external || this.fullReload;
+  }
+
   @bind
   didStartDrag(event) {
     // 0 represents left button of the mouse
     if (event.button === 0 || event.targetTouches) {
       this.startMouseY = this.#calcMouseY(event);
       this.willDrag = true;
+
       discourseLater(
         () => {
           this.delayedStart(event);
@@ -44,9 +54,11 @@ export default class SectionLink {
       );
     }
   }
+
   delayedStart(event) {
     if (this.willDrag) {
       const currentMouseY = this.#calcMouseY(event);
+
       if (currentMouseY === this.startMouseY) {
         event.stopPropagation();
         event.preventDefault();
@@ -71,24 +83,29 @@ export default class SectionLink {
   @bind
   dragMove(event) {
     this.startMouseY = this.#calcMouseY(event);
+
     if (!this.drag) {
       return;
     }
+
     event.stopPropagation();
     event.preventDefault();
     const currentMouseY = this.#calcMouseY(event);
     const distance = currentMouseY - this.mouseY;
+
     if (!this.linkHeight) {
       this.linkHeight = document.getElementsByClassName(
         "sidebar-section-link-wrapper"
       )[0].clientHeight;
     }
+
     if (distance >= this.linkHeight) {
       if (this.section.links.indexOf(this) !== this.section.links.length - 1) {
         this.section.moveLinkDown(this);
         this.mouseY = currentMouseY;
       }
     }
+
     if (distance <= -this.linkHeight) {
       if (this.section.links.indexOf(this) !== 0) {
         this.section.moveLinkUp(this);

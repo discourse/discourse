@@ -170,7 +170,7 @@ describe Chat do
         user_2.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_3.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_4.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        Jobs::Chat::UpdateUserCountsForChannels.new.execute({})
+        Chat::Channel.ensure_consistency!
 
         expect(Oneboxer.preview(chat_url)).to match_html <<~HTML
           <aside class="onebox chat-onebox">

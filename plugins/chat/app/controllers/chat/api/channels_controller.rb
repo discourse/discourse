@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-CHANNEL_EDITABLE_PARAMS = %i[name description slug]
-CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
+CHANNEL_EDITABLE_PARAMS ||= %i[name description slug]
+CATEGORY_CHANNEL_EDITABLE_PARAMS ||= %i[
+  auto_join_users
+  allow_channel_wide_mentions
+  threading_enabled
+]
 
 class Chat::Api::ChannelsController < Chat::ApiController
   def index
@@ -12,7 +16,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
 
     memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
-    channels = Chat::ChannelFetcher.secured_public_channels(guardian, memberships, options)
+    channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
     serialized_channels =
       channels.map do |channel|
         Chat::ChannelSerializer.new(
@@ -36,7 +40,14 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   def create
     channel_params =
-      params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
+      params.require(:channel).permit(
+        :chatable_id,
+        :name,
+        :slug,
+        :description,
+        :auto_join_users,
+        :threading_enabled,
+      )
 
     # NOTE: We don't allow creating channels for anything but category chatable types
     # at the moment. This may change in future, at which point we will need to pass in
@@ -68,14 +79,14 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
-    if params[:target_message_id].present? || params[:include_messages].present? ||
-         params[:fetch_from_last_read].present?
+    if should_build_channel_view?
       with_service(
         Chat::ChannelViewBuilder,
         **params.permit(
           :channel_id,
           :target_message_id,
           :thread_id,
+          :target_date,
           :page_size,
           :direction,
           :fetch_from_last_read,
@@ -83,6 +94,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
           :channel_id,
           :target_message_id,
           :thread_id,
+          :target_date,
           :page_size,
           :direction,
           :fetch_from_last_read,
@@ -159,5 +171,10 @@ class Chat::Api::ChannelsController < Chat::ApiController
     permitted_params = CHANNEL_EDITABLE_PARAMS
     permitted_params += CATEGORY_CHANNEL_EDITABLE_PARAMS if channel.category_channel?
     params.require(:channel).permit(*permitted_params)
+  end
+
+  def should_build_channel_view?
+    params[:target_message_id].present? || params[:target_date].present? ||
+      params[:include_messages].present? || params[:fetch_from_last_read].present?
   end
 end

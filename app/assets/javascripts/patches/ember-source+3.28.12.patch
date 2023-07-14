@@ -1,0 +1,18 @@
+diff --git a/node_modules/ember-source/lib/index.js b/node_modules/ember-source/lib/index.js
+index ce887fbeb..8caf078c5 100644
+--- a/node_modules/ember-source/lib/index.js
++++ b/node_modules/ember-source/lib/index.js
+@@ -45,13 +45,6 @@ module.exports = {
+   init() {
+     this._super.init && this._super.init.apply(this, arguments);
+ 
+-    if ('ember' in this.project.bowerDependencies()) {
+-      // TODO: move this to a throw soon.
+-      this.ui.writeWarnLine(
+-        'Ember.js is now provided by node_module `ember-source`, please remove it from bower'
+-      );
+-    }
+-
+     // resets `this.root` to the correct location by default ember-cli
+     // considers `__dirname` here to be the root, but since our main entry
+     // point is within a subfolder we need to correct that

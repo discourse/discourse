@@ -2,7 +2,6 @@ import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import I18n from "I18n";
 import optionalService from "discourse/lib/optional-service";
-import { ajax } from "discourse/lib/ajax";
 import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
@@ -15,6 +14,7 @@ import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-m
 import { tracked } from "@glimmer/tracking";
 
 let _chatMessageDecorators = [];
+let _tippyInstances = [];
 
 export function addChatMessageDecorator(decorator) {
   _chatMessageDecorators.push(decorator);
@@ -101,6 +101,10 @@ export default class ChatMessage extends Component {
     );
   }
 
+  get shouldRenderOpenEmojiPickerButton() {
+    return this.chat.userCanInteractWithChat && this.site.desktopView;
+  }
+
   @action
   expand() {
     const recursiveExpand = (message) => {
@@ -129,7 +133,15 @@ export default class ChatMessage extends Component {
   willDestroyMessage() {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
+    cancel(this._makeMessageActiveHandler);
     this.#teardownMentionedUsers();
+  }
+
+  #destroyTippyInstances() {
+    _tippyInstances.forEach((instance) => {
+      instance.destroy();
+    });
+    _tippyInstances = [];
   }
 
   @action
@@ -142,7 +154,7 @@ export default class ChatMessage extends Component {
         );
 
         mentions.forEach((mention) => {
-          updateUserStatusOnMention(mention, user.status, this.currentUser);
+          updateUserStatusOnMention(mention, user.status, _tippyInstances);
         });
       });
     });
@@ -269,16 +281,26 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressStart() {
+  onLongPressStart(element, event) {
     if (!this.args.message.expanded) {
       return;
     }
 
-    this.isActive = true;
+    if (event.target.tagName === "IMG") {
+      return;
+    }
+
+    // prevents message to show as active when starting scroll
+    // at this moment scroll has no momentum and the row can
+    // capture the touch event instead of a scroll
+    this._makeMessageActiveHandler = discourseLater(() => {
+      this.isActive = true;
+    }, 125);
   }
 
   @action
   onLongPressCancel() {
+    cancel(this._makeMessageActiveHandler);
     this.isActive = false;
 
     // this a tricky bit of code which is needed to prevent the long press
@@ -294,7 +316,12 @@ export default class ChatMessage extends Component {
   }
 
   @action
-  handleLongPressEnd() {
+  onLongPressEnd(element, event) {
+    if (event.target.tagName === "IMG") {
+      return;
+    }
+
+    cancel(this._makeMessageActiveHandler);
     this.isActive = false;
 
     if (isZoomed()) {
@@ -386,86 +413,11 @@ export default class ChatMessage extends Component {
     );
   }
 
-  get mentionWarning() {
-    return this.args.message.mentionWarning;
-  }
-
-  get mentionedCannotSeeText() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.cannot_see",
-      "chat.mention_warning.cannot_see_multiple",
-      {
-        username: this.mentionWarning?.cannot_see?.[0]?.username,
-        count: this.mentionWarning?.cannot_see?.length,
-      }
-    );
-  }
-
-  get mentionedWithoutMembershipText() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.without_membership",
-      "chat.mention_warning.without_membership_multiple",
-      {
-        username: this.mentionWarning?.without_membership?.[0]?.username,
-        count: this.mentionWarning?.without_membership?.length,
-      }
-    );
-  }
-
-  get groupsWithDisabledMentions() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.group_mentions_disabled",
-      "chat.mention_warning.group_mentions_disabled_multiple",
-      {
-        group_name: this.mentionWarning?.group_mentions_disabled?.[0],
-        count: this.mentionWarning?.group_mentions_disabled?.length,
-      }
-    );
-  }
-
-  get groupsWithTooManyMembers() {
-    return this._findTranslatedWarning(
-      "chat.mention_warning.too_many_members",
-      "chat.mention_warning.too_many_members_multiple",
-      {
-        group_name: this.mentionWarning.groups_with_too_many_members?.[0],
-        count: this.mentionWarning.groups_with_too_many_members?.length,
-      }
-    );
-  }
-
-  _findTranslatedWarning(oneKey, multipleKey, args) {
-    const translationKey = args.count === 1 ? oneKey : multipleKey;
-    args.count--;
-    return I18n.t(translationKey, args);
-  }
-
-  @action
-  inviteMentioned() {
-    const userIds = this.mentionWarning.without_membership.mapBy("id");
-
-    ajax(`/chat/${this.args.message.channel.id}/invite`, {
-      method: "PUT",
-      data: { user_ids: userIds, chat_message_id: this.args.message.id },
-    }).then(() => {
-      this.args.message.mentionWarning.set("invitationSent", true);
-      this._invitationSentTimer = discourseLater(() => {
-        this.dismissMentionWarning();
-      }, 3000);
-    });
-
-    return false;
-  }
-
-  @action
-  dismissMentionWarning() {
-    this.args.message.mentionWarning = null;
-  }
-
   #teardownMentionedUsers() {
     this.args.message.mentionedUsers.forEach((user) => {
       user.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
+    this.#destroyTippyInstances();
   }
 }

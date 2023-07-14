@@ -21,6 +21,14 @@ module PageObjects
       def click_primary_button
         find(".modal-footer .btn-primary").click
       end
+
+      def open?
+        has_css?(".modal.d-modal")
+      end
+
+      def closed?
+        has_no_css?(".modal.d-modal")
+      end
     end
   end
 end

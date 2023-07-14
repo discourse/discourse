@@ -110,91 +110,91 @@ RSpec.describe Chat::Api::ChannelMessagesController do
   describe "#restore" do
     RSpec.shared_examples "chat_message_restoration" do
       it "doesn't allow a user to restore another user's message" do
-        sign_in(other_user)
+        another_user = Fabricate(:user)
+        message = Fabricate(:chat_message, chat_channel: chat_channel, user: another_user)
+        message.trash!(another_user)
 
-        put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
+        sign_in(current_user)
+
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
         expect(response.status).to eq(403)
       end
 
       it "allows a user to restore their own messages" do
+        message = Fabricate(:chat_message, chat_channel: chat_channel, user: current_user)
+        message.trash!(current_user)
+
         sign_in(current_user)
 
-        put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
         expect(response.status).to eq(200)
-        expect(deleted_message.reload.deleted_at).to be_nil
+        expect(message.reload.deleted_at).to be_nil
       end
 
       it "allows admin to restore others' messages" do
+        message = Fabricate(:chat_message, chat_channel: chat_channel, user: current_user)
+        message.trash!(current_user)
+
         sign_in(admin)
 
-        put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
         expect(response.status).to eq(200)
-        expect(deleted_message.reload.deleted_at).to be_nil
+        expect(message.reload.deleted_at).to be_nil
       end
 
       it "does not allow message restore when channel is read_only" do
+        message = Fabricate(:chat_message, chat_channel: chat_channel, user: current_user)
+        message.trash!(current_user)
+
         sign_in(current_user)
 
         chat_channel.update!(status: :read_only)
 
-        put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
         expect(response.status).to eq(403)
-        expect(deleted_message.reload.deleted_at).not_to be_nil
+        expect(message.reload.deleted_at).not_to be_nil
 
         sign_in(admin)
-        put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
         expect(response.status).to eq(403)
       end
 
       it "only allows admin to restore when channel is closed" do
+        message = Fabricate(:chat_message, chat_channel: chat_channel, user: current_user)
+        message.trash!(current_user)
+
         sign_in(admin)
 
         chat_channel.update!(status: :read_only)
 
-        put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
         expect(response.status).to eq(403)
-        expect(deleted_message.reload.deleted_at).not_to be_nil
+        expect(message.reload.deleted_at).not_to be_nil
 
         chat_channel.update!(status: :closed)
-        put "/chat/api/channels/#{chat_channel.id}/messages/#{deleted_message.id}/restore.json"
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{message.id}/restore.json"
         expect(response.status).to eq(200)
-        expect(deleted_message.reload.deleted_at).to be_nil
+        expect(message.reload.deleted_at).to be_nil
       end
     end
 
     fab!(:admin) { Fabricate(:admin) }
-    fab!(:second_user) { Fabricate(:user) }
-
-    before do
-      message =
-        Chat::Message.create(
-          user: current_user,
-          message: "this is a message",
-          chat_channel: chat_channel,
-        )
-      message.trash!
-    end
-
-    let(:deleted_message) do
-      Chat::Message.unscoped.where(user: current_user, chat_channel: chat_channel).last
-    end
+    fab!(:another_user) { Fabricate(:user) }
 
     describe "for category" do
       fab!(:category) { Fabricate(:category) }
       fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
 
-      it_behaves_like "chat_message_restoration" do
-        let(:other_user) { second_user }
-      end
+      it_behaves_like "chat_message_restoration"
     end
 
     describe "for dm channel" do
       fab!(:user_2) { Fabricate(:user) }
-      fab!(:chat_channel) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
-
-      it_behaves_like "chat_message_restoration" do
-        let(:other_user) { user_2 }
+      fab!(:chat_channel) do
+        Fabricate(:direct_message_channel, users: [current_user, another_user])
       end
+
+      it_behaves_like "chat_message_restoration"
     end
   end
 end

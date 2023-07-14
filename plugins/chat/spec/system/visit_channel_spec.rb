@@ -11,6 +11,7 @@ RSpec.describe "Visit channel", type: :system do
   fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before { chat_system_bootstrap }
 
@@ -143,13 +144,7 @@ RSpec.describe "Visit channel", type: :system do
           it "allows to join it" do
             chat.visit_channel(dm_channel_1)
 
-            expect(page).to have_content(I18n.t("js.chat.channel_settings.join_channel"))
-          end
-
-          it "shows a preview of the channel" do
-            chat.visit_channel(dm_channel_1)
-
-            expect(chat).to have_message(message_1)
+            expect(channel_page.composer).to be_enabled
           end
         end
       end

@@ -86,12 +86,17 @@ class CategoryList
 
     if @guardian.authenticated?
       @all_topics =
-        @all_topics.joins(
-          "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
-        ).where(
-          "COALESCE(tu.notification_level,1) > :muted",
-          muted: TopicUser.notification_levels[:muted],
-        )
+        @all_topics
+          .joins(
+            "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
+          )
+          .joins(
+            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{@guardian.user.id}",
+          )
+          .where(
+            "COALESCE(tu.notification_level,1) > :muted",
+            muted: TopicUser.notification_levels[:muted],
+          )
     end
 
     @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)

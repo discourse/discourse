@@ -1194,7 +1194,6 @@ et:
       hide_forever: "tänan, ei"
     summary:
       enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
-      enable: "Võta see teema kokku"
       disable: "Näita kõiki postitusi"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
@@ -2513,8 +2512,9 @@ et:
         other: "%{count} uut"
       more: "Veel"
       all_categories: "Kõik foorumid"
-      categories_form:
-        save: "Salvesta"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Kõik"
       sections:
         custom:
           save: "Salvesta"
@@ -2541,7 +2541,8 @@ et:
         categories:
           header_link_text: "Liigid"
         community:
-          header_link_text: "Kogukond"
+          edit_section:
+            header_dropdown: "Kohanda"
           links:
             about:
               content: "Teave"
@@ -2549,6 +2550,8 @@ et:
               content: "Admin"
             badges:
               content: "Märgised"
+            topics:
+              content: "Teemasid"
             faq:
               content: "KKK"
             groups:
@@ -2559,6 +2562,11 @@ et:
               content: "Minu"
             review:
               content: "Vaata üle"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Palun sisesta korrektne väärtus."
+          email: "Sisesta palun korrektne meiliaadress."
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:

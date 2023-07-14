@@ -21,11 +21,13 @@ export function resetChatDrawerStateCallbacks() {
 }
 export default class ChatStateManager extends Service {
   @service chat;
+  @service chatHistory;
   @service router;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
   @tracked isDrawerActive = false;
+
   @tracked _chatURL = null;
   @tracked _appURL = null;
 

@@ -1,20 +1,21 @@
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { cached } from "@glimmer/tracking";
 
 import { debounce } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import SidebarCommonCategoriesSection from "discourse/components/sidebar/common/categories-section";
-import showModal from "discourse/lib/show-modal";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
+import SidebarEditNavigationMenuCategoriesModal from "discourse/components/sidebar/edit-navigation-menu/categories-modal";
 
 export const REFRESH_COUNTS_APP_EVENT_NAME =
   "sidebar:refresh-categories-section-counts";
 
 export default class SidebarUserCategoriesSection extends SidebarCommonCategoriesSection {
-  @service router;
-  @service currentUser;
   @service appEvents;
+  @service currentUser;
+  @service modal;
+  @service router;
 
   constructor() {
     super(...arguments);
@@ -65,13 +66,7 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
   }
 
   @action
-  editTracked() {
-    if (
-      this.currentUser.new_edit_sidebar_categories_tags_interface_groups_enabled
-    ) {
-      showModal("sidebar-categories-form");
-    } else {
-      this.router.transitionTo("preferences.navigation-menu", this.currentUser);
-    }
+  showModal() {
+    this.modal.show(SidebarEditNavigationMenuCategoriesModal);
   }
 }

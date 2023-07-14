@@ -50,6 +50,9 @@ export default class SectionLink extends Component {
   }
 
   get target() {
+    if (this.args.fullReload) {
+      return "_self";
+    }
     return this.currentUser?.user_option?.external_links_in_new_tab
       ? "_blank"
       : "_self";

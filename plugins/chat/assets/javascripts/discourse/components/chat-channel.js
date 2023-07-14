@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 // TODO (martin) Remove this when the handleSentMessage logic inside chatChannelPaneSubscriptionsManager
 // is moved over from this file completely.
 import { handleStagedMessage } from "discourse/plugins/chat/discourse/services/chat-pane-base-subscriptions-manager";
-import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cancel, later, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
@@ -114,6 +113,13 @@ export default class ChatLivePane extends Component {
       return;
     }
 
+    if (
+      this.args.channel.isDirectMessageChannel &&
+      !this.args.channel.isFollowing
+    ) {
+      this.chatChannelsManager.follow(this.args.channel);
+    }
+
     // Technically we could keep messages to avoid re-fetching them, but
     // it's not worth the complexity for now
     this.args.channel.clearMessages();
@@ -132,6 +138,8 @@ export default class ChatLivePane extends Component {
     } else {
       this.resetComposerMessage();
     }
+
+    this.composer.focus();
 
     this.loadMessages();
   }
@@ -183,6 +191,8 @@ export default class ChatLivePane extends Component {
     if (this.requestedTargetMessageId) {
       findArgs.targetMessageId = this.requestedTargetMessageId;
       scrollToMessageId = this.requestedTargetMessageId;
+    } else if (this.requestedTargetDate) {
+      findArgs.targetDate = this.requestedTargetDate;
     } else if (fetchingFromLastRead) {
       findArgs.fetchFromLastRead = true;
       scrollToMessageId =
@@ -206,11 +216,17 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            const storedThread = this.args.channel.threadsManager.store(
+            const storedThread = this.args.channel.threadsManager.add(
               this.args.channel,
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -230,6 +246,15 @@ export default class ChatLivePane extends Component {
             highlight: true,
           });
           return;
+        } else if (this.requestedTargetDate) {
+          const message = this.args.channel?.findFirstMessageOfDay(
+            this.requestedTargetDate
+          );
+
+          this.scrollToMessage(message.id, {
+            highlight: true,
+          });
+          return;
         }
 
         if (
@@ -240,7 +265,6 @@ export default class ChatLivePane extends Component {
           this.scrollToMessage(scrollToMessageId);
           return;
         }
-
         this.scrollToBottom();
       })
       .catch(this._handleErrors)
@@ -251,6 +275,7 @@ export default class ChatLivePane extends Component {
 
         this.loadedOnce = true;
         this.requestedTargetMessageId = null;
+        this.requestedTargetDate = null;
         this.loadingMorePast = false;
         this.debounceFillPaneAttempt();
         this.updateLastReadMessage();
@@ -307,11 +332,17 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            const storedThread = this.args.channel.threadsManager.store(
+            const storedThread = this.args.channel.threadsManager.add(
               this.args.channel,
               thread,
               { replace: true }
             );
+
+            this.#preloadThreadTrackingState(
+              storedThread,
+              result.tracking.thread_tracking
+            );
+
             const originalMessage = messages.findBy(
               "id",
               storedThread.originalMessage.id
@@ -364,6 +395,16 @@ export default class ChatLivePane extends Component {
   }
 
   @bind
+  fetchMessagesByDate(date) {
+    const message = this.args.channel?.findFirstMessageOfDay(date);
+    if (message.firstOfResults && this.args.channel?.canLoadMorePast) {
+      this.requestedTargetDate = date;
+      this.debounceFetchMessages();
+    } else {
+      this.highlightOrFetchMessage(message.id);
+    }
+  }
+
   fillPaneAttempt() {
     if (this._selfDeleted) {
       return;
@@ -392,9 +433,7 @@ export default class ChatLivePane extends Component {
     let foundFirstNew = false;
 
     result.chat_messages.forEach((messageData, index) => {
-      if (index === 0) {
-        messageData.firstOfResults = true;
-      }
+      messageData.firstOfResults = index === 0;
 
       if (this.currentUser.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
@@ -491,16 +530,6 @@ export default class ChatLivePane extends Component {
     });
   }
 
-  @action
-  messageDidEnterViewport(message) {
-    message.visible = true;
-  }
-
-  @action
-  messageDidLeaveViewport(message) {
-    message.visible = false;
-  }
-
   @debounce(READ_INTERVAL_MS)
   updateLastReadMessage() {
     schedule("afterRender", () => {
@@ -539,7 +568,21 @@ export default class ChatLivePane extends Component {
         }
       }
 
-      this.args.channel.updateLastReadMessage(lastUnreadVisibleMessage.id);
+      if (!this.args.channel.isFollowing || !lastUnreadVisibleMessage.id) {
+        return;
+      }
+
+      if (
+        this.args.channel.currentUserMembership.lastReadMessageId >=
+        lastUnreadVisibleMessage.id
+      ) {
+        return;
+      }
+
+      return this.chatApi.markChannelAsRead(
+        this.args.channel.id,
+        lastUnreadVisibleMessage.id
+      );
     });
   }
 
@@ -621,10 +664,6 @@ export default class ChatLivePane extends Component {
   }
 
   handleSentMessage(data) {
-    if (this.args.channel.isFollowing) {
-      this.args.channel.lastMessageSentAt = new Date();
-    }
-
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
       const stagedMessage = handleStagedMessage(
         this.args.channel,
@@ -643,18 +682,18 @@ export default class ChatLivePane extends Component {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
+      this.args.channel.lastMessage = message;
       this.scrollToLatestMessage();
       this.updateLastReadMessage();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
+      this.args.channel.lastMessage = message;
       this.hasNewMessages = true;
     }
   }
 
-  // TODO (martin) Maybe change this to public, since its referred to by
-  // livePanel.linkedComponent at the moment.
   get _selfDeleted() {
     return this.isDestroying || this.isDestroyed;
   }
@@ -703,33 +742,6 @@ export default class ChatLivePane extends Component {
 
     resetIdle();
 
-    // TODO: all send message logic is due for massive refactoring
-    // This is all the possible case Im currently aware of
-    // - messaging to a public channel where you are not a member yet (preview = true)
-    // - messaging to an existing direct channel you were not tracking yet through dm creator (channel draft)
-    // - messaging to a new direct channel through DM creator (channel draft)
-    // - message to a direct channel you were tracking (preview = false, not draft)
-    // - message to a public channel you were tracking (preview = false, not draft)
-    // - message to a channel when we haven't loaded all future messages yet.
-    if (!this.args.channel.isFollowing || this.args.channel.isDraft) {
-      const data = {
-        message: message.message,
-        upload_ids: message.uploads.map((upload) => upload.id),
-      };
-
-      this.resetComposerMessage();
-
-      return this._upsertChannelWithMessage(this.args.channel, data).finally(
-        () => {
-          if (this._selfDeleted) {
-            return;
-          }
-          this.pane.sending = false;
-          this.scrollToLatestMessage();
-        }
-      );
-    }
-
     await this.args.channel.stageMessage(message);
     this.resetComposerMessage();
 
@@ -755,26 +767,6 @@ export default class ChatLivePane extends Component {
         this.pane.sending = false;
       }
     }
-  }
-
-  async _upsertChannelWithMessage(channel, data) {
-    let promise = Promise.resolve(channel);
-
-    if (channel.isDirectMessageChannel || channel.isDraft) {
-      promise = this.chat.upsertDmChannelForUsernames(
-        channel.chatable.users.mapBy("username")
-      );
-    }
-
-    return promise.then((c) =>
-      ajax(`/chat/${c.id}.json`, {
-        type: "POST",
-        data,
-      }).then(() => {
-        this.pane.sending = false;
-        this.router.transitionTo("chat.channel", "-", c.id);
-      })
-    );
   }
 
   _onSendError(id, error) {
@@ -831,13 +823,8 @@ export default class ChatLivePane extends Component {
   onCloseFullScreen() {
     this.chatStateManager.prefersDrawer();
 
-    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL, {
-      afterRouteComplete: () => {
-        this.appEvents.trigger(
-          "chat:open-url",
-          this.chatStateManager.lastKnownChatURL
-        );
-      },
+    DiscourseURL.routeTo(this.chatStateManager.lastKnownAppURL).then(() => {
+      DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
     });
   }
 
@@ -944,14 +931,9 @@ export default class ChatLivePane extends Component {
       return;
     }
 
-    if (!this.args.channel.isDraft) {
-      event.preventDefault();
-      this.composer.focus({ addText: event.key });
-      return;
-    }
-
     event.preventDefault();
-    event.stopPropagation();
+    this.composer.focus({ addText: event.key });
+    return;
   }
 
   @action
@@ -1088,5 +1070,16 @@ export default class ChatLivePane extends Component {
     cancel(this._onScrollEndedHandler);
     cancel(this._laterComputeHandler);
     cancel(this._debounceFetchMessagesHandler);
+  }
+
+  #preloadThreadTrackingState(storedThread, threadTracking) {
+    if (!threadTracking[storedThread.id]) {
+      return;
+    }
+
+    storedThread.tracking.unreadCount =
+      threadTracking[storedThread.id].unread_count;
+    storedThread.tracking.mentionCount =
+      threadTracking[storedThread.id].mention_count;
   }
 }

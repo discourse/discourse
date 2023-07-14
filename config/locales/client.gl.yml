@@ -1540,7 +1540,6 @@ gl:
         other: "Hai <b>%{count}</b> respostas."
       description_time_MF: |
         Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
-      enable: "Resumir este tema"
       disable: "Amosar todas as publicacións"
     deleted_filter:
       enabled_description: "Este tema contén publicacións eliminadas, que se ocultaron."
@@ -3313,8 +3312,9 @@ gl:
         other: "%{count} novos"
       more: "Máis"
       all_categories: "Todas as categorías"
-      categories_form:
-        save: "Gardar"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Todas"
       sections:
         custom:
           save: "Gardar"
@@ -3344,7 +3344,8 @@ gl:
         categories:
           header_link_text: "Categorías"
         community:
-          header_link_text: "Comunidade"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Verbo de"
@@ -3352,6 +3353,8 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            topics:
+              content: "Temas"
             faq:
               content: "PMF"
             groups:
@@ -3363,6 +3366,11 @@ gl:
             review:
               content: "Revisar"
     until: "Ata:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Introduza un valor correcto."
+          email: "Introduza un enderezo de correo electrónico correcto."
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:

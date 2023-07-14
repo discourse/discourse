@@ -969,7 +969,7 @@ class Topic < ActiveRecord::Base
       old_category = category
 
       if self.category_id != new_category.id
-        self.update_attribute(:category_id, new_category.id)
+        self.update(category_id: new_category.id)
 
         if old_category
           Category.where(id: old_category.id).update_all("topic_count = topic_count - 1")

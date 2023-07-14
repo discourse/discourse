@@ -30,7 +30,6 @@ class TopicsController < ApplicationController
                    publish
                    reset_bump_date
                    set_slow_mode
-                   summary
                  ]
 
   before_action :consider_user_for_promotion, only: :show
@@ -1101,11 +1100,12 @@ class TopicsController < ApplicationController
 
     dismissed_topic_ids = []
     dismissed_post_topic_ids = []
+
     if !current_user.new_new_view_enabled? || params[:dismiss_topics]
       dismissed_topic_ids =
         TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
-      TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
     end
+
     if params[:dismiss_posts]
       if params[:untrack]
         dismissed_post_topic_ids =
@@ -1172,23 +1172,16 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id])
     guardian.ensure_can_see!(topic)
     strategy = Summarization::Base.selected_strategy
-    raise Discourse::NotFound.new unless strategy
 
-    raise Discourse::InvalidAccess unless strategy.can_request_summaries?(current_user)
+    if strategy.nil? || !Summarization::Base.can_see_summary?(topic, current_user)
+      raise Discourse::NotFound
+    end
 
-    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
 
     hijack do
-      summary_opts = {
-        filter: "summary",
-        exclude_deleted_users: true,
-        exclude_hidden: true,
-        show_deleted: false,
-      }
-
-      content = TopicView.new(topic, current_user, summary_opts).posts.pluck(:raw).join("\n")
-
-      render json: { summary: strategy.summarize(content) }
+      summary = TopicSummarization.new(strategy).summarize(topic, current_user)
+      render json: { summary: summary&.summarized_text, summarized_on: summary&.updated_at }
     end
   end
 

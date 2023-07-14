@@ -20,17 +20,18 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def index
     overridden = params[:overridden] == "true"
+    outdated = params[:outdated] == "true"
     extras = {}
 
     query = params[:q] || ""
 
     locale = fetch_locale(params[:locale])
 
-    if query.blank? && !overridden
+    if query.blank? && !overridden && !outdated
       extras[:recommended] = true
       results = self.class.preferred_keys.map { |k| record_for(key: k, locale: locale) }
     else
-      results = find_translations(query, overridden, locale)
+      results = find_translations(query, overridden, outdated, locale)
 
       if results.any?
         extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
@@ -156,8 +157,12 @@ class Admin::SiteTextsController < Admin::AdminController
   end
 
   def record_for(key:, value: nil, locale:)
+    en_key = TranslationOverride.transform_pluralized_key(key)
     value ||= I18n.with_locale(locale) { I18n.t(key) }
-    { id: key, value: value, locale: locale }
+    interpolation_keys =
+      I18nInterpolationKeysFinder.find(I18n.overrides_disabled { I18n.t(en_key, locale: :en) })
+    custom_keys = TranslationOverride.custom_interpolation_keys(en_key)
+    { id: key, value: value, locale: locale, interpolation_keys: interpolation_keys + custom_keys }
   end
 
   PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
@@ -184,9 +189,17 @@ class Admin::SiteTextsController < Admin::AdminController
     raise Discourse::NotFound
   end
 
-  def find_translations(query, overridden, locale)
+  def find_translations(query, overridden, outdated, locale)
     translations = Hash.new { |hash, key| hash[key] = {} }
     search_results = I18n.with_locale(locale) { I18n.search(query, only_overridden: overridden) }
+
+    if outdated
+      outdated_keys =
+        TranslationOverride.where(status: %i[outdated invalid_interpolation_keys]).pluck(
+          :translation_key,
+        )
+      search_results.select! { |k, _| outdated_keys.include?(k) }
+    end
 
     search_results.each do |key, value|
       if PLURALIZED_REGEX.match(key)

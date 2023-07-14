@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { PIE_CHART_TYPE } from "../controllers/poll-ui-builder";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 import RawHtml from "discourse/widgets/raw-html";
 import { ajax } from "discourse/lib/ajax";
 import { avatarFor } from "discourse/widgets/post";
@@ -7,27 +7,53 @@ import { createWidget } from "discourse/widgets/widget";
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
+import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import loadScript from "discourse/lib/load-script";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
 import round from "discourse/lib/round";
-import showModal from "discourse/lib/show-modal";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import hbs from "discourse/widgets/hbs-compiler";
+import PollBreakdownModal from "../components/modal/poll-breakdown";
+import { getOwner } from "@ember/application";
 
 const FETCH_VOTERS_COUNT = 25;
+
+const buttonOptionsMap = {
+  exportResults: {
+    className: "btn-default export-results",
+    label: "poll.export-results.label",
+    title: "poll.export-results.title",
+    icon: "download",
+    action: "exportResults",
+  },
+  showBreakdown: {
+    className: "btn-default show-breakdown",
+    label: "poll.breakdown.breakdown",
+    icon: "chart-pie",
+    action: "showBreakdown",
+  },
+  openPoll: {
+    className: "btn-default toggle-status",
+    label: "poll.open.label",
+    title: "poll.open.title",
+    icon: "unlock-alt",
+    action: "toggleStatus",
+  },
+  closePoll: {
+    className: "btn-default toggle-status",
+    label: "poll.close.label",
+    title: "poll.close.title",
+    icon: "lock",
+    action: "toggleStatus",
+  },
+};
 
 function optionHtml(option, siteSettings = {}) {
   const el = document.createElement("span");
   el.innerHTML = option.html;
   applyLocalDates(el.querySelectorAll(".discourse-local-date"), siteSettings);
   return new RawHtml({ html: `<span>${el.innerHTML}</span>` });
-}
-
-function infoTextHtml(text) {
-  return new RawHtml({
-    html: `<span class="info-text">${text}</span>`,
-  });
 }
 
 function checkUserGroups(user, poll) {
@@ -406,14 +432,18 @@ createWidget("discourse-poll-info", {
   },
 
   html(attrs) {
-    const { poll } = attrs;
+    const { poll, post } = attrs;
+    const closed = attrs.isClosed;
+    const isStaff = this.currentUser && this.currentUser.staff;
+    const isMe = this.currentUser && post.user_id === this.currentUser.id;
     const count = poll.voters;
     const contents = [
-      h("p", [
+      h("div.poll-info_counts-count", [
         h("span.info-number", count.toString()),
         h("span.info-label", I18n.t("poll.voters", { count })),
       ]),
     ];
+    const instructions = [];
 
     if (attrs.isMultiple) {
       if (attrs.showResults || attrs.isClosed) {
@@ -422,7 +452,7 @@ createWidget("discourse-poll-info", {
         }, 0);
 
         contents.push(
-          h("p", [
+          h("div.poll-info_counts-count", [
             h("span.info-number", totalVotes.toString()),
             h(
               "span.info-label",
@@ -437,9 +467,72 @@ createWidget("discourse-poll-info", {
           poll.options.length
         );
         if (help) {
-          contents.push(infoTextHtml(help));
+          instructions.push(
+            new RawHtml({
+              html: `<li>
+                      ${iconHTML("list-ul")}
+                      <span>${help}</span>
+                     </li>`,
+            })
+          );
         }
       }
+    }
+
+    if (poll.close) {
+      const closeDate = moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z");
+      if (closeDate.isValid()) {
+        const title = closeDate.format("LLL");
+        let label;
+        let icon;
+
+        if (attrs.isAutomaticallyClosed) {
+          const age = relativeAge(closeDate.toDate(), { addAgo: true });
+          label = I18n.t("poll.automatic_close.age", { age });
+          icon = "lock";
+        } else {
+          const timeLeft = moment().to(closeDate, true);
+          label = I18n.t("poll.automatic_close.closes_in", { timeLeft });
+          icon = "far-clock";
+        }
+
+        instructions.push(
+          new RawHtml({
+            html: `<li title="${title}">
+                    ${iconHTML(icon)}
+                    <span>${label}</span>
+                   </li>`,
+          })
+        );
+      }
+    }
+
+    let infoText;
+    if (poll.results === "on_vote" && !attrs.hasVoted && !isMe) {
+      infoText = new RawHtml({
+        html: `<li>
+                ${iconHTML("check")}
+                <span>${I18n.t("poll.results.vote.title")}</span>
+               </li>`,
+      });
+    } else if (poll.results === "on_close" && !closed) {
+      infoText = new RawHtml({
+        html: `<li>
+                ${iconHTML("lock")}
+                <span>${I18n.t("poll.results.closed.title")}</span>
+               </li>`,
+      });
+    } else if (poll.results === "staff_only" && !isStaff) {
+      infoText = new RawHtml({
+        html: `<li>
+                ${iconHTML("shield-alt")}
+                <span>${I18n.t("poll.results.staff.title")}</span>
+               </li>`,
+      });
+    }
+
+    if (infoText) {
+      instructions.push(infoText);
     }
 
     if (
@@ -448,10 +541,20 @@ createWidget("discourse-poll-info", {
       poll.public &&
       poll.results !== "staff_only"
     ) {
-      contents.push(infoTextHtml(I18n.t("poll.public.title")));
+      instructions.push(
+        new RawHtml({
+          html: `<li>
+                  ${iconHTML("far-eye")} 
+                  <span>${I18n.t("poll.public.title")}</span>
+                 </li>`,
+        })
+      );
     }
 
-    return contents;
+    return [
+      h("div.poll-info_counts", contents),
+      h("ul.poll-info_instructions", instructions),
+    ];
   },
 });
 
@@ -594,6 +697,82 @@ function stripHtml(html) {
   return doc.body.textContent || "";
 }
 
+createWidget("discourse-poll-buttons-dropdown", {
+  tagName: "div.poll-buttons-dropdown",
+
+  buildId(attrs) {
+    return `poll-buttons-dropdown-${attrs.id}`;
+  },
+
+  transform(attrs) {
+    return {
+      content: this._buildContent(attrs),
+      onChange: (item) => this.sendWidgetAction(item.id, item.param),
+    };
+  },
+
+  template: hbs`
+  {{attach
+    widget="widget-dropdown"
+    attrs=(hash
+      id=this.attrs.id
+      icon="cog"
+      label="poll.options.label"
+      content=this.transformed.content
+      onChange=this.transformed.onChange
+      options=this.transformed.options
+    )
+  }}
+`,
+
+  optionsCount(attrs) {
+    return this._buildContent(attrs).length;
+  },
+
+  _buildContent(attrs) {
+    const contents = [];
+    const isAdmin = this.currentUser && this.currentUser.admin;
+    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
+    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
+    const { poll, post } = attrs;
+    const closed = attrs.isClosed;
+    const isStaff = this.currentUser && this.currentUser.staff;
+    const topicArchived = post.get("topic.archived");
+
+    if (attrs.groupableUserFields.length && poll.voters > 0) {
+      const option = { ...buttonOptionsMap.showBreakdown };
+      option.id = option.action;
+      contents.push(option);
+    }
+
+    if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
+      const option = { ...buttonOptionsMap.exportResults };
+      option.id = option.action;
+      contents.push(option);
+    }
+
+    if (
+      this.currentUser &&
+      (this.currentUser.id === post.user_id || isStaff) &&
+      !topicArchived
+    ) {
+      if (closed) {
+        if (!attrs.isAutomaticallyClosed) {
+          const option = { ...buttonOptionsMap.openPoll };
+          option.id = option.action;
+          contents.push(option);
+        }
+      } else {
+        const option = { ...buttonOptionsMap.closePoll };
+        option.id = option.action;
+        contents.push(option);
+      }
+    }
+
+    return contents;
+  },
+});
+
 createWidget("discourse-poll-buttons", {
   tagName: "div.poll-buttons",
 
@@ -604,13 +783,12 @@ createWidget("discourse-poll-buttons", {
     const closed = attrs.isClosed;
     const staffOnly = poll.results === "staff_only";
     const isStaff = this.currentUser && this.currentUser.staff;
-    const isAdmin = this.currentUser && this.currentUser.admin;
     const isMe = this.currentUser && post.user_id === this.currentUser.id;
-    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const hideResultsDisabled = !staffOnly && (closed || topicArchived);
-    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
+    const dropdown = this.attach("discourse-poll-buttons-dropdown", attrs);
+    const dropdownOptionsCount = dropdown.optionsCount(attrs);
 
-    if (attrs.isMultiple && !hideResultsDisabled) {
+    if (attrs.isMultiple && !hideResultsDisabled && !attrs.showResults) {
       const castVotesDisabled = !attrs.canCastVotes;
       contents.push(
         this.attach("button", {
@@ -619,47 +797,41 @@ createWidget("discourse-poll-buttons", {
           }`,
           label: "poll.cast-votes.label",
           title: "poll.cast-votes.title",
+          icon: castVotesDisabled ? "far-square" : "check",
           disabled: castVotesDisabled,
           action: "castVotes",
         })
       );
-      contents.push(" ");
     }
 
-    if (attrs.showResults || hideResultsDisabled) {
+    if (attrs.showResults && !hideResultsDisabled) {
       contents.push(
         this.attach("button", {
           className: "btn-default toggle-results",
           label: "poll.hide-results.label",
           title: "poll.hide-results.title",
-          icon: "far-eye-slash",
-          disabled: hideResultsDisabled,
+          icon: "chevron-left",
           action: "toggleResults",
         })
       );
-    } else {
-      let showResultsButton;
-      let infoText;
+    }
 
-      if (poll.results === "on_vote" && !attrs.hasVoted && !isMe) {
-        infoText = infoTextHtml(I18n.t("poll.results.vote.title"));
-      } else if (poll.results === "on_close" && !closed) {
-        infoText = infoTextHtml(I18n.t("poll.results.closed.title"));
-      } else if (poll.results === "staff_only" && !isStaff) {
-        infoText = infoTextHtml(I18n.t("poll.results.staff.title"));
-      } else {
+    if (!attrs.showResults && !hideResultsDisabled) {
+      let showResultsButton;
+
+      if (
+        !(poll.results === "on_vote" && !attrs.hasVoted && !isMe) &&
+        !(poll.results === "on_close" && !closed) &&
+        !(poll.results === "staff_only" && !isStaff) &&
+        poll.voters > 0
+      ) {
         showResultsButton = this.attach("button", {
           className: "btn-default toggle-results",
           label: "poll.show-results.label",
           title: "poll.show-results.title",
-          icon: "far-eye",
-          disabled: poll.voters === 0,
+          icon: "chart-bar",
           action: "toggleResults",
         });
-      }
-
-      if (showResultsButton) {
-        contents.push(showResultsButton);
       }
 
       if (attrs.hasSavedVote) {
@@ -668,95 +840,32 @@ createWidget("discourse-poll-buttons", {
             className: "btn-default remove-vote",
             label: "poll.remove-vote.label",
             title: "poll.remove-vote.title",
-            icon: "trash-alt",
+            icon: "undo",
             action: "removeVote",
           })
         );
       }
 
-      if (infoText) {
-        contents.push(infoText);
+      if (showResultsButton) {
+        contents.push(showResultsButton);
       }
     }
 
-    if (attrs.groupableUserFields.length && poll.voters > 0) {
-      const button = this.attach("button", {
-        className: "btn-default poll-show-breakdown",
-        label: "poll.group-results.label",
-        title: "poll.group-results.title",
-        icon: "far-eye",
-        action: "showBreakdown",
-      });
-
-      contents.push(button);
-    }
-
-    if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
-      contents.push(
-        this.attach("button", {
-          className: "btn btn-default export-results",
-          label: "poll.export-results.label",
-          title: "poll.export-results.title",
-          icon: "download",
-          disabled: poll.voters === 0,
-          action: "exportResults",
-        })
-      );
-    }
-
-    if (poll.close) {
-      const closeDate = moment(poll.close);
-      if (closeDate.isValid()) {
-        const title = closeDate.format("LLL");
-        let label;
-
-        if (attrs.isAutomaticallyClosed) {
-          const age = relativeAge(closeDate.toDate(), { addAgo: true });
-          label = I18n.t("poll.automatic_close.age", { age });
-        } else {
-          const timeLeft = moment().to(closeDate, true);
-          label = I18n.t("poll.automatic_close.closes_in", { timeLeft });
-        }
-
-        contents.push(
-          new RawHtml({
-            html: `<span class="info-text" title="${title}">${label}</span>`,
-          })
-        );
+    // only show the dropdown if there's more than 1 button
+    // otherwise just show the button
+    if (dropdownOptionsCount > 1) {
+      contents.push(dropdown);
+    } else if (dropdownOptionsCount === 1) {
+      const singleOptionId = dropdown._buildContent(attrs)[0].id;
+      let singleOption = buttonOptionsMap[singleOptionId];
+      if (singleOptionId === "toggleStatus") {
+        singleOption = closed
+          ? buttonOptionsMap.openPoll
+          : buttonOptionsMap.closePoll;
       }
+      contents.push(this.attach("button", singleOption));
     }
-
-    if (
-      this.currentUser &&
-      (this.currentUser.id === post.user_id || isStaff) &&
-      !topicArchived
-    ) {
-      if (closed) {
-        if (!attrs.isAutomaticallyClosed) {
-          contents.push(
-            this.attach("button", {
-              className: "btn-default toggle-status",
-              label: "poll.open.label",
-              title: "poll.open.title",
-              icon: "unlock-alt",
-              action: "toggleStatus",
-            })
-          );
-        }
-      } else {
-        contents.push(
-          this.attach("button", {
-            className: "toggle-status btn-danger",
-            label: "poll.close.label",
-            title: "poll.close.title",
-            icon: "lock",
-            action: "toggleStatus",
-          })
-        );
-      }
-    }
-
-    return contents;
+    return [contents];
   },
 });
 
@@ -805,11 +914,11 @@ export default createWidget("discourse-poll", {
       showResults,
     });
 
-    return h("div", [
+    return [
       this.attach("discourse-poll-container", newAttrs),
       this.attach("discourse-poll-info", newAttrs),
       this.attach("discourse-poll-buttons", newAttrs),
-    ]);
+    ];
   },
 
   min() {
@@ -832,7 +941,9 @@ export default createWidget("discourse-poll", {
 
   isAutomaticallyClosed() {
     const { poll } = this.attrs;
-    return poll.close && moment.utc(poll.close) <= moment();
+    return (
+      poll.close && moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
+    );
   },
 
   isClosed() {
@@ -1070,12 +1181,8 @@ export default createWidget("discourse-poll", {
   },
 
   showBreakdown() {
-    showModal("poll-breakdown", {
+    getOwner(this).lookup("service:modal").show(PollBreakdownModal, {
       model: this.attrs,
-      panels: [
-        { id: "percentage", title: "poll.breakdown.percentage" },
-        { id: "count", title: "poll.breakdown.count" },
-      ],
     });
   },
 });

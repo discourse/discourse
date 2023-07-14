@@ -75,8 +75,9 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user deletes self" do
-      let(:destroy_opts) { { delete_posts: true, context: "/u/username/preferences/account" } }
       subject(:destroy) { UserDestroyer.new(user).destroy(user, destroy_opts) }
+
+      let(:destroy_opts) { { delete_posts: true, context: "/u/username/preferences/account" } }
 
       include_examples "successfully destroy a user"
 
@@ -147,6 +148,7 @@ RSpec.describe UserDestroyer do
 
       context "when delete_posts is false" do
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }
+
         before do
           user.stubs(:post_count).returns(1)
           user.stubs(:first_post_created_at).returns(Time.zone.now)
@@ -253,18 +255,21 @@ RSpec.describe UserDestroyer do
     end
 
     context "when user has no posts, but user_stats table has post_count > 0" do
+      subject(:destroy) { UserDestroyer.new(user).destroy(user, delete_posts: false) }
+
+      let(:destroy_opts) { {} }
+
       before do
         # out of sync user_stat data shouldn't break UserDestroyer
         user.user_stat.update_attribute(:post_count, 1)
       end
-      let(:destroy_opts) { {} }
-      subject(:destroy) { UserDestroyer.new(user).destroy(user, delete_posts: false) }
 
       include_examples "successfully destroy a user"
     end
 
     context "when user has deleted posts" do
       let!(:deleted_post) { Fabricate(:post, user: user, deleted_at: 1.hour.ago) }
+
       it "should mark the user's deleted posts as belonging to a nuked user" do
         expect { UserDestroyer.new(admin).destroy(user) }.to change { User.count }.by(-1)
         expect(deleted_post.reload.user_id).to eq(nil)
@@ -273,8 +278,9 @@ RSpec.describe UserDestroyer do
 
     context "when user has no posts" do
       context "when destroy succeeds" do
-        let(:destroy_opts) { {} }
         subject(:destroy) { UserDestroyer.new(admin).destroy(user) }
+
+        let(:destroy_opts) { {} }
 
         include_examples "successfully destroy a user"
         include_examples "email block list"

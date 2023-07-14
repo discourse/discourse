@@ -23,27 +23,16 @@ zh_TW:
           title: "結果將顯示一次之後<strong>關閉</strong>。"
         staff:
           title: "結果僅向 <strong>內部人員顯示</strong> 。"
-      multiple:
-        help:
-          at_least_min_options:
-            other: "至少選擇 <strong>%{count}</strong> 個選項。"
-          up_to_max_options:
-            other: "最多可選擇 <strong>%{count}</strong> 個選項。"
-          x_options:
-            other: "選擇 <strong>%{count}</strong> 個選項。"
-          between_min_and_max_options: "在 <strong>%{min}</strong> 和 <strong>%{max}</strong> 個選項之間進行選擇。"
       cast-votes:
         title: "投你的票"
         label: "現在投票！"
       show-results:
         title: "顯示投票結果"
-        label: "顯示結果"
+        label: "結果"
       remove-vote:
         title: "移除您的投票"
-        label: "移除投票"
       hide-results:
         title: "返回到你的投票"
-        label: "顯示投票"
       group-results:
         title: "按用戶字段分組投票"
         label: "顯示細分"
@@ -67,6 +56,8 @@ zh_TW:
         breakdown: "故障"
         percentage: "百分比"
         count: "次數"
+      options:
+        label: "選項"
       error_while_toggling_status: "對不起，改變投票狀態時出錯了。"
       error_while_casting_votes: "對不起，投票時出錯了。"
       error_while_fetching_voters: "對不起，顯示投票者時出錯了。"

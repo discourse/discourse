@@ -1,6 +1,7 @@
 import Service from "@ember/service";
 import A11yDialog from "a11y-dialog";
 import { bind } from "discourse-common/utils/decorators";
+import { next } from "@ember/runloop";
 
 export default Service.extend({
   dialogInstance: null,
@@ -26,7 +27,7 @@ export default Service.extend({
   class: null,
   _confirming: false,
 
-  dialog(params) {
+  async dialog(params) {
     const {
       message,
       bodyComponent,
@@ -48,7 +49,19 @@ export default Service.extend({
       buttons,
     } = params;
 
-    const element = document.getElementById("dialog-holder");
+    let element = document.getElementById("dialog-holder");
+    if (!element) {
+      await new Promise((resolve) => next(resolve));
+      element = document.getElementById("dialog-holder");
+    }
+
+    if (!element) {
+      const msg =
+        "dialog-holder wrapper element not found. Unable to render dialog";
+      // eslint-disable-next-line no-console
+      console.error(msg, params);
+      throw new Error(msg);
+    }
 
     this.setProperties({
       message,

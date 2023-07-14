@@ -79,16 +79,16 @@ RSpec.describe "Move message to channel", type: :system do
         chat_page.visit_channel(channel_1)
         channel_page.messages.select(message_1)
         channel_page.selection_management.move
-        find(".chat-move-message-channel-chooser").click
+        find(".chat-modal-move-message-to-channel__channel-chooser").click
         find("[data-value='#{channel_2.id}']").click
         click_button(I18n.t("js.chat.move_to_channel.confirm_move"))
 
         expect(page).to have_current_path(chat.channel_path(channel_2.slug, channel_2.id))
-        expect(channel_page).to have_message(text: message_1.message)
+        expect(channel_page.messages).to have_message(text: message_1.message)
 
         chat_page.visit_channel(channel_1)
 
-        expect(channel_page).to have_deleted_message(message_1)
+        expect(channel_page.messages).to have_deleted_message(message_1)
       end
     end
   end

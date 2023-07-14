@@ -28,9 +28,14 @@ Discourse::Application.routes.draw do
     get "/404-body" => "exceptions#not_found_body"
 
     get "/bootstrap" => "bootstrap#index"
+
     if Rails.env.test? || Rails.env.development?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
     end
+
+    # This is not a valid production route and is causing routing errors to be raised in
+    # the test env adding noise to the logs. Just handle it here so we eliminate the noise.
+    get "/favicon.ico", to: proc { [200, {}, [""]] } if Rails.env.test?
 
     post "webhooks/aws" => "webhooks#aws"
     post "webhooks/mailgun" => "webhooks#mailgun"
@@ -120,9 +125,6 @@ Discourse::Application.routes.draw do
         collection { put "automatic_membership_count" => "groups#automatic_membership_count" }
       end
 
-      get "groups/:type" => "groups#show", :constraints => AdminConstraint.new
-      get "groups/:type/:id" => "groups#show", :constraints => AdminConstraint.new
-
       resources :users, id: RouteFormat.username, only: %i[index destroy] do
         collection do
           get "list" => "users#index"
@@ -181,7 +183,6 @@ Discourse::Application.routes.draw do
           get "bounced"
           get "received"
           get "rejected"
-          get "/incoming/:id/raw" => "email#raw_email"
           get "/incoming/:id" => "email#incoming"
           get "/incoming_from_bounced/:id" => "email#incoming_from_bounced"
           get "preview-digest" => "email#preview_digest"
@@ -1122,12 +1123,7 @@ Discourse::Application.routes.draw do
 
     resources :post_action_users, only: %i[index]
     resources :post_readers, only: %i[index]
-    resources :post_actions, only: %i[create destroy] do
-      collection do
-        get "users"
-        post "defer_flags"
-      end
-    end
+    resources :post_actions, only: %i[create destroy]
     resources :user_actions, only: %i[index show]
 
     resources :badges, only: [:index]
@@ -1193,9 +1189,8 @@ Discourse::Application.routes.draw do
       get "top/#{period}", to: redirect("top?period=#{period}", status: 301)
     end
 
-    Discourse.anonymous_filters.each do |filter|
-      get "#{filter}.rss" => "list##{filter}_feed", :format => :rss
-    end
+    get "latest.rss" => "list#latest_feed", :format => :rss
+    get "top.rss" => "list#top_feed", :format => :rss
 
     Discourse.filters.each { |filter| get "#{filter}" => "list##{filter}" }
 
@@ -1489,6 +1484,7 @@ Discourse::Application.routes.draw do
       get "/" => "tags#index"
       get "/filter/list" => "tags#index"
       get "/filter/search" => "tags#search"
+      get "/list" => "tags#list"
       get "/personal_messages/:username" => "tags#personal_messages",
           :constraints => {
             username: RouteFormat.username,

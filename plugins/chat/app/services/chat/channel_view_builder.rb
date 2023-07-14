@@ -39,6 +39,7 @@ module Chat
     step :fetch_tracking
     step :fetch_thread_memberships
     step :fetch_thread_participants
+    step :update_channel_last_viewed_at
     step :build_view
 
     class Contract
@@ -51,6 +52,7 @@ module Chat
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
       attribute :fetch_from_last_read, :boolean # (optional)
+      attribute :target_date, :string # (optional)
 
       validates :channel_id, presence: true
       validates :direction,
@@ -75,7 +77,7 @@ module Chat
     private
 
     def fetch_channel(contract:, **)
-      Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+      Chat::Channel.includes(:chatable, :last_message).find_by(id: contract.channel_id)
     end
 
     def can_view_channel(guardian:, channel:, **)
@@ -128,16 +130,17 @@ module Chat
           include_thread_messages: include_thread_messages,
           page_size: contract.page_size,
           direction: contract.direction,
+          target_date: contract.target_date,
         )
 
       context.can_load_more_past = messages_data[:can_load_more_past]
       context.can_load_more_future = messages_data[:can_load_more_future]
 
-      if !messages_data[:target_message]
+      if !messages_data[:target_message] && !messages_data[:target_date]
         context.messages = messages_data[:messages]
       else
         messages_data[:target_message] = (
-          if !include_thread_messages && messages_data[:target_message].thread_reply?
+          if !include_thread_messages && messages_data[:target_message]&.thread_reply?
             []
           else
             [messages_data[:target_message]]
@@ -148,7 +151,7 @@ module Chat
           messages_data[:past_messages].reverse,
           messages_data[:target_message],
           messages_data[:future_messages],
-        ].reduce([], :concat)
+        ].reduce([], :concat).compact
       end
     end
 
@@ -178,9 +181,10 @@ module Chat
         context.threads = []
       else
         context.threads =
-          ::Chat::Thread.includes(original_message_user: :user_status).where(
-            id: messages.map(&:thread_id).compact.uniq,
-          )
+          ::Chat::Thread
+            .strict_loading
+            .includes(last_message: [:user], original_message_user: :user_status)
+            .where(id: messages.map(&:thread_id).compact.uniq)
 
         # Saves us having to load the same message we already have.
         context.threads.each do |thread|
@@ -222,6 +226,10 @@ module Chat
     def fetch_thread_participants(threads:, **)
       context.thread_participants =
         ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
+    end
+
+    def update_channel_last_viewed_at(channel:, guardian:, **)
+      channel.membership_for(guardian.user)&.update!(last_viewed_at: Time.zone.now)
     end
 
     def build_view(

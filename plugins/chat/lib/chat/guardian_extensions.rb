@@ -173,9 +173,9 @@ module Chat
       if message.user_id == current_user.id
         case chatable
         when Category
-          return can_see_category?(chatable)
+          return message.deleted_by_id == current_user.id || can_see_category?(chatable)
         when Chat::DirectMessage
-          return true
+          return message.deleted_by_id == current_user.id || is_staff?
         end
       end
 

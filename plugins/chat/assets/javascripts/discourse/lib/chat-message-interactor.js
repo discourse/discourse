@@ -12,7 +12,7 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import ChatMessageReaction, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import { getOwner, setOwner } from "@ember/application";
+import { setOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
@@ -42,6 +42,7 @@ export default class ChatMessageInteractor {
   @service currentUser;
   @service site;
   @service router;
+  @service capabilities;
 
   @tracked message = null;
   @tracked context = null;
@@ -54,10 +55,6 @@ export default class ChatMessageInteractor {
     this.message = message;
     this.context = context;
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
   }
 
   get pane() {
@@ -99,8 +96,10 @@ export default class ChatMessageInteractor {
 
   get canRestoreMessage() {
     return (
-      this.canDelete &&
       this.message?.deletedAt &&
+      (this.currentUser.staff ||
+        (this.message?.user?.id === this.currentUser.id &&
+          this.message?.deletedById === this.currentUser.id)) &&
       this.message.channel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -121,7 +120,7 @@ export default class ChatMessageInteractor {
 
   get canFlagMessage() {
     return (
-      this.currentUser?.id !== this.message?.user?.id &&
+      this.currentUser.id !== this.message?.user?.id &&
       this.message?.userFlagStatus === undefined &&
       this.message.channel?.canFlag &&
       !this.message?.chatWebhookEvent &&
@@ -131,7 +130,7 @@ export default class ChatMessageInteractor {
 
   get canRebakeMessage() {
     return (
-      this.currentUser?.staff &&
+      this.currentUser.staff &&
       this.message.channel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -145,7 +144,7 @@ export default class ChatMessageInteractor {
   }
 
   get canDelete() {
-    return this.currentUser?.id === this.message.user.id
+    return this.currentUser.id === this.message.user.id
       ? this.message.channel?.canDeleteSelf
       : this.message.channel?.canDeleteOthers;
   }

@@ -5,10 +5,10 @@
 >
   <div class="chat-reply">
     {{d-icon (if @message.editing "pencil-alt" "reply")}}
-    <ChatUserAvatar @user={{@message.user}} />
+    <Chat::UserAvatar @user={{@message.user}} />
     <span class="chat-reply__username">{{@message.user.username}}</span>
     <span class="chat-reply__excerpt">
-      {{replace-emoji @message.excerpt}}
+      {{replace-emoji (html-safe @message.excerpt)}}
     </span>
   </div>
 

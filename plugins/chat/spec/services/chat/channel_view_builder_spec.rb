@@ -11,6 +11,8 @@ RSpec.describe Chat::ChannelViewBuilder do
   end
 
   describe ".call" do
+    subject(:result) { described_class.call(params) }
+
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:category_channel) }
 
@@ -21,6 +23,7 @@ RSpec.describe Chat::ChannelViewBuilder do
     let(:direction) { nil }
     let(:thread_id) { nil }
     let(:fetch_from_last_read) { nil }
+    let(:target_date) { nil }
     let(:params) do
       {
         guardian: guardian,
@@ -30,17 +33,18 @@ RSpec.describe Chat::ChannelViewBuilder do
         page_size: page_size,
         direction: direction,
         thread_id: thread_id,
+        target_date: target_date,
       }
     end
 
-    subject(:result) { described_class.call(params) }
+    before { channel.add(current_user) }
 
     it "threads_enabled is false by default" do
-      expect(subject.threads_enabled).to eq(false)
+      expect(result.threads_enabled).to eq(false)
     end
 
     it "include_thread_messages is true by default" do
-      expect(subject.include_thread_messages).to eq(true)
+      expect(result.include_thread_messages).to eq(true)
     end
 
     it "queries messages" do
@@ -54,9 +58,10 @@ RSpec.describe Chat::ChannelViewBuilder do
           include_thread_messages: true,
           page_size: page_size,
           direction: direction,
+          target_date: target_date,
         )
         .returns({ messages: [] })
-      subject
+      result
     end
 
     it "returns channel messages and thread replies" do
@@ -68,23 +73,31 @@ RSpec.describe Chat::ChannelViewBuilder do
           chat_channel: channel,
           thread: Fabricate(:chat_thread, channel: channel),
         )
-      expect(subject.view.chat_messages).to eq(
+      expect(result.view.chat_messages).to eq(
         [message_1, message_2, message_3.thread.original_message, message_3],
       )
     end
 
+    it "updates the channel membership last_viewed_at" do
+      membership = channel.membership_for(current_user)
+      membership.update!(last_viewed_at: 1.day.ago)
+      old_last_viewed_at = membership.last_viewed_at
+      result
+      expect(membership.reload.last_viewed_at).not_to eq_time(old_last_viewed_at)
+    end
+
     it "does not query thread tracking overview or state by default" do
       Chat::TrackingStateReportQuery.expects(:call).never
-      subject
+      result
     end
 
     it "does not query threads by default" do
       Chat::Thread.expects(:where).never
-      subject
+      result
     end
 
     it "returns a Chat::View" do
-      expect(subject.view).to be_a(Chat::View)
+      expect(result.view).to be_a(Chat::View)
     end
 
     context "when page_size is null" do
@@ -106,11 +119,11 @@ RSpec.describe Chat::ChannelViewBuilder do
       end
 
       it "threads_enabled is true" do
-        expect(subject.threads_enabled).to eq(true)
+        expect(result.threads_enabled).to eq(true)
       end
 
       it "include_thread_messages is false" do
-        expect(subject.include_thread_messages).to eq(false)
+        expect(result.include_thread_messages).to eq(false)
       end
 
       it "returns channel messages but not thread replies" do
@@ -122,7 +135,7 @@ RSpec.describe Chat::ChannelViewBuilder do
             chat_channel: channel,
             thread: Fabricate(:chat_thread, channel: channel),
           )
-        expect(subject.view.chat_messages).to eq(
+        expect(result.view.chat_messages).to eq(
           [message_1, message_2, message_3.thread.original_message],
         )
       end
@@ -134,7 +147,7 @@ RSpec.describe Chat::ChannelViewBuilder do
             chat_channel: channel,
             thread: Fabricate(:chat_thread, channel: channel),
           )
-        expect(subject.view.threads).to eq([message_1.thread])
+        expect(result.view.threads).to eq([message_1.thread])
       end
 
       it "fetches thread memberships for the current user for fetched threads" do
@@ -145,7 +158,7 @@ RSpec.describe Chat::ChannelViewBuilder do
             thread: Fabricate(:chat_thread, channel: channel),
           )
         message_1.thread.add(current_user)
-        expect(subject.view.thread_memberships).to eq(
+        expect(result.view.thread_memberships).to eq(
           [message_1.thread.membership_for(current_user)],
         )
       end
@@ -168,21 +181,21 @@ RSpec.describe Chat::ChannelViewBuilder do
           .with(guardian: guardian, thread_ids: [thread.id], include_threads: true)
           .returns(Chat::TrackingStateReport.new)
           .once
-        subject
+        result
       end
 
       it "fetches an overview of threads with unread messages in the channel" do
         thread = Fabricate(:chat_thread, channel: channel)
         thread.add(current_user)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)
-        expect(subject.view.unread_thread_ids).to eq([message_1.thread.id])
+        expect(result.view.unread_thread_ids).to eq([message_1.thread.id])
       end
 
       it "fetches the tracking state of threads in the channel" do
         thread = Fabricate(:chat_thread, channel: channel)
         thread.add(current_user)
         Fabricate(:chat_message, chat_channel: channel, thread: thread)
-        expect(subject.view.tracking.thread_tracking).to eq(
+        expect(result.view.tracking.thread_tracking).to eq(
           { thread.id => { channel_id: channel.id, unread_count: 1, mention_count: 0 } },
         )
       end
@@ -191,7 +204,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         let(:thread_id) { Fabricate(:chat_thread, channel: channel).id }
 
         it "include_thread_messages is true" do
-          expect(subject.include_thread_messages).to eq(true)
+          expect(result.include_thread_messages).to eq(true)
         end
       end
     end
@@ -230,7 +243,7 @@ RSpec.describe Chat::ChannelViewBuilder do
 
       context "if the user is not a member of the channel" do
         it "does not error and still returns messages" do
-          expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+          expect(result.view.chat_messages).to eq([past_message_2, past_message_1, message])
         end
       end
 
@@ -243,7 +256,7 @@ RSpec.describe Chat::ChannelViewBuilder do
           before { membership.update!(last_read_message_id: past_message_1.id) }
 
           it "uses the last_read_message_id of the user's membership as the target_message_id" do
-            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+            expect(result.view.chat_messages).to eq([past_message_2, past_message_1, message])
           end
         end
 
@@ -251,7 +264,7 @@ RSpec.describe Chat::ChannelViewBuilder do
           before { membership.update!(last_read_message_id: nil) }
 
           it "does not error and still returns messages" do
-            expect(subject.view.chat_messages).to eq([past_message_2, past_message_1, message])
+            expect(result.view.chat_messages).to eq([past_message_2, past_message_1, message])
           end
 
           context "if page_size is nil" do
@@ -263,7 +276,7 @@ RSpec.describe Chat::ChannelViewBuilder do
                 .with(has_entries(page_size: Chat::MessagesQuery::MAX_PAGE_SIZE))
                 .once
                 .returns({ messages: [] })
-              subject
+              result
             end
           end
         end
@@ -285,7 +298,7 @@ RSpec.describe Chat::ChannelViewBuilder do
       let(:target_message_id) { message.id }
 
       it "includes the target message as well as past and future messages" do
-        expect(subject.view.chat_messages).to eq([past_message, message, future_message])
+        expect(result.view.chat_messages).to eq([past_message, message, future_message])
       end
 
       context "when page_size is null" do
@@ -300,7 +313,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         before { message.update!(thread: thread) }
 
         it "includes it by default" do
-          expect(subject.view.chat_messages).to eq(
+          expect(result.view.chat_messages).to eq(
             [past_message, message, thread.original_message, future_message],
           )
         end
@@ -312,7 +325,7 @@ RSpec.describe Chat::ChannelViewBuilder do
           end
 
           it "does not include the target message" do
-            expect(subject.view.chat_messages).to eq(
+            expect(result.view.chat_messages).to eq(
               [past_message, thread.original_message, future_message],
             )
           end
@@ -335,6 +348,25 @@ RSpec.describe Chat::ChannelViewBuilder do
 
           it { is_expected.not_to fail_a_policy(:target_message_exists) }
         end
+      end
+    end
+
+    context "when target_date provided" do
+      fab!(:past_message) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: 3.days.ago)
+        msg
+      end
+      fab!(:future_message) do
+        msg = Fabricate(:chat_message, chat_channel: channel)
+        msg.update!(created_at: 1.days.ago)
+        msg
+      end
+
+      let(:target_date) { 2.days.ago }
+
+      it "includes past and future messages" do
+        expect(result.view.chat_messages).to eq([past_message, future_message])
       end
     end
   end

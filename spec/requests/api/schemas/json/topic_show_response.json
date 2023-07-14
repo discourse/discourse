@@ -715,6 +715,9 @@
         "null"
       ]
     },
+    "summarizable": {
+      "type": "boolean"
+    },
     "details": {
       "type": "object",
       "additionalProperties": false,
@@ -985,6 +988,7 @@
     "show_read_indicator",
     "thumbnails",
     "slow_mode_enabled_until",
+    "summarizable",
     "details"
   ]
 }

@@ -21,6 +21,12 @@ const TopicRoute = DiscourseRoute.extend({
   lastScrollPos: null,
   isTransitioning: false,
 
+  buildRouteInfoMetadata() {
+    return {
+      scrollOnTransition: false,
+    };
+  },
+
   redirect() {
     return this.redirectIfLoginRequired();
   },
@@ -317,9 +323,6 @@ const TopicRoute = DiscourseRoute.extend({
   activate() {
     this._super(...arguments);
     this.set("isTransitioning", false);
-
-    const topic = this.modelFor("topic");
-    this.session.set("lastTopicIdViewed", parseInt(topic.get("id"), 10));
   },
 
   deactivate() {
