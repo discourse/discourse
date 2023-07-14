@@ -40,7 +40,7 @@ module PageObjects
         end
 
         def last_reply_datetime_selector(last_reply)
-          ".chat-thread-list-item__last-reply .relative-date[data-time='#{(last_reply.created_at.to_f * 1000).to_i}']"
+          ".chat-thread-list-item__last-reply .relative-date[data-time='#{(last_reply.created_at.iso8601.to_time.to_f * 1000).to_i}']"
         end
 
         def has_no_unread_item?(id)
