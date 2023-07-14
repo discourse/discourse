@@ -174,6 +174,7 @@ module Chat
           type: "delete",
           deleted_id: chat_message.id,
           deleted_at: chat_message.deleted_at,
+          deleted_by_id: chat_message.deleted_by_id,
           latest_not_deleted_message_id: latest_not_deleted_message_id,
         },
       )

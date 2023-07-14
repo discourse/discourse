@@ -41,6 +41,10 @@ RSpec.describe Chat::TrashMessage do
         it "trashes the message" do
           result
           expect(Chat::Message.find_by(id: message.id)).to be_nil
+
+          deleted_message = Chat::Message.unscoped.find_by(id: message.id)
+          expect(deleted_message.deleted_by_id).to eq(current_user.id)
+          expect(deleted_message.deleted_at).to be_within(1.minute).of(Time.zone.now)
         end
 
         it "destroys notifications for mentions" do
@@ -65,6 +69,7 @@ RSpec.describe Chat::TrashMessage do
             {
               "type" => "delete",
               "deleted_id" => message.id,
+              "deleted_by_id" => current_user.id,
               "deleted_at" => message.reload.deleted_at.iso8601(3),
               "latest_not_deleted_message_id" => nil,
             },

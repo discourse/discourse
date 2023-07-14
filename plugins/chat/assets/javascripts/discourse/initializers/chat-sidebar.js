@@ -21,161 +21,165 @@ export default {
       return;
     }
 
+    this.siteSettings = container.lookup("service:site-settings");
+
     withPluginApi("1.3.0", (api) => {
-      api.addSidebarSection(
-        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
-          const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
-            constructor({ channel, chatService }) {
-              super(...arguments);
-              this.channel = channel;
-              this.chatService = chatService;
-            }
-
-            get name() {
-              return dasherize(this.channel.slugifiedTitle);
-            }
-
-            get classNames() {
-              const classes = [];
-
-              if (this.channel.currentUserMembership.muted) {
-                classes.push("sidebar-section-link--muted");
+      if (this.siteSettings.enable_public_channels) {
+        api.addSidebarSection(
+          (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+            const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
+              constructor({ channel, chatService }) {
+                super(...arguments);
+                this.channel = channel;
+                this.chatService = chatService;
               }
 
-              if (this.channel.id === this.chatService.activeChannel?.id) {
-                classes.push("sidebar-section-link--active");
+              get name() {
+                return dasherize(this.channel.slugifiedTitle);
               }
 
-              classes.push(`channel-${this.channel.id}`);
+              get classNames() {
+                const classes = [];
 
-              return classes.join(" ");
-            }
+                if (this.channel.currentUserMembership.muted) {
+                  classes.push("sidebar-section-link--muted");
+                }
 
-            get route() {
-              return "chat.channel";
-            }
+                if (this.channel.id === this.chatService.activeChannel?.id) {
+                  classes.push("sidebar-section-link--active");
+                }
 
-            get models() {
-              return this.channel.routeModels;
-            }
+                classes.push(`channel-${this.channel.id}`);
 
-            get text() {
-              return htmlSafe(emojiUnescape(this.channel.escapedTitle));
-            }
-
-            get prefixType() {
-              return "icon";
-            }
-
-            get prefixValue() {
-              return "d-chat";
-            }
-
-            get prefixColor() {
-              return this.channel.chatable.color;
-            }
-
-            get title() {
-              return this.channel.escapedDescription
-                ? htmlSafe(this.channel.escapedDescription)
-                : `${this.channel.escapedTitle} ${I18n.t("chat.title")}`;
-            }
-
-            get prefixBadge() {
-              return this.channel.chatable.read_restricted ? "lock" : "";
-            }
-
-            get suffixType() {
-              return "icon";
-            }
-
-            get suffixValue() {
-              return this.channel.tracking.unreadCount > 0 ||
-                // We want to do this so we don't show a blue dot if the user is inside
-                // the channel and a new unread thread comes in.
-                (this.chatService.activeChannel?.id !== this.channel.id &&
-                  this.channel.unreadThreadsCountSinceLastViewed > 0)
-                ? "circle"
-                : "";
-            }
-
-            get suffixCSSClass() {
-              return this.channel.tracking.mentionCount > 0
-                ? "urgent"
-                : "unread";
-            }
-          };
-
-          const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
-            @tracked currentUserCanJoinPublicChannels =
-              this.sidebar.currentUser &&
-              (this.sidebar.currentUser.staff ||
-                this.sidebar.currentUser.has_joinable_public_channels);
-
-            constructor() {
-              super(...arguments);
-
-              if (container.isDestroyed) {
-                return;
+                return classes.join(" ");
               }
-              this.chatService = container.lookup("service:chat");
-              this.chatChannelsManager = container.lookup(
-                "service:chat-channels-manager"
-              );
-              this.router = container.lookup("service:router");
-            }
 
-            get sectionLinks() {
-              return this.chatChannelsManager.publicMessageChannels.map(
-                (channel) =>
-                  new SidebarChatChannelsSectionLink({
-                    channel,
-                    chatService: this.chatService,
-                  })
-              );
-            }
+              get route() {
+                return "chat.channel";
+              }
 
-            get name() {
-              return "chat-channels";
-            }
+              get models() {
+                return this.channel.routeModels;
+              }
 
-            get title() {
-              return I18n.t("chat.chat_channels");
-            }
+              get text() {
+                return htmlSafe(emojiUnescape(this.channel.escapedTitle));
+              }
 
-            get text() {
-              return I18n.t("chat.chat_channels");
-            }
+              get prefixType() {
+                return "icon";
+              }
 
-            get actions() {
-              return [
-                {
-                  id: "browseChannels",
-                  title: I18n.t("chat.channels_list_popup.browse"),
-                  action: () => this.router.transitionTo("chat.browse.open"),
-                },
-              ];
-            }
+              get prefixValue() {
+                return "d-chat";
+              }
 
-            get actionsIcon() {
-              return "pencil-alt";
-            }
+              get prefixColor() {
+                return this.channel.chatable.color;
+              }
 
-            get links() {
-              return this.sectionLinks;
-            }
+              get title() {
+                return this.channel.escapedDescription
+                  ? htmlSafe(this.channel.escapedDescription)
+                  : `${this.channel.escapedTitle} ${I18n.t("chat.title")}`;
+              }
 
-            get displaySection() {
-              return (
-                this.sectionLinks.length > 0 ||
-                this.currentUserCanJoinPublicChannels
-              );
-            }
-          };
+              get prefixBadge() {
+                return this.channel.chatable.read_restricted ? "lock" : "";
+              }
 
-          return SidebarChatChannelsSection;
-        }
-      );
+              get suffixType() {
+                return "icon";
+              }
+
+              get suffixValue() {
+                return this.channel.tracking.unreadCount > 0 ||
+                  // We want to do this so we don't show a blue dot if the user is inside
+                  // the channel and a new unread thread comes in.
+                  (this.chatService.activeChannel?.id !== this.channel.id &&
+                    this.channel.unreadThreadsCountSinceLastViewed > 0)
+                  ? "circle"
+                  : "";
+              }
+
+              get suffixCSSClass() {
+                return this.channel.tracking.mentionCount > 0
+                  ? "urgent"
+                  : "unread";
+              }
+            };
+
+            const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
+              @tracked currentUserCanJoinPublicChannels =
+                this.sidebar.currentUser &&
+                (this.sidebar.currentUser.staff ||
+                  this.sidebar.currentUser.has_joinable_public_channels);
+
+              constructor() {
+                super(...arguments);
+
+                if (container.isDestroyed) {
+                  return;
+                }
+                this.chatService = container.lookup("service:chat");
+                this.chatChannelsManager = container.lookup(
+                  "service:chat-channels-manager"
+                );
+                this.router = container.lookup("service:router");
+              }
+
+              get sectionLinks() {
+                return this.chatChannelsManager.publicMessageChannels.map(
+                  (channel) =>
+                    new SidebarChatChannelsSectionLink({
+                      channel,
+                      chatService: this.chatService,
+                    })
+                );
+              }
+
+              get name() {
+                return "chat-channels";
+              }
+
+              get title() {
+                return I18n.t("chat.chat_channels");
+              }
+
+              get text() {
+                return I18n.t("chat.chat_channels");
+              }
+
+              get actions() {
+                return [
+                  {
+                    id: "browseChannels",
+                    title: I18n.t("chat.channels_list_popup.browse"),
+                    action: () => this.router.transitionTo("chat.browse.open"),
+                  },
+                ];
+              }
+
+              get actionsIcon() {
+                return "pencil-alt";
+              }
+
+              get links() {
+                return this.sectionLinks;
+              }
+
+              get displaySection() {
+                return (
+                  this.sectionLinks.length > 0 ||
+                  this.currentUserCanJoinPublicChannels
+                );
+              }
+            };
+
+            return SidebarChatChannelsSection;
+          }
+        );
+      }
 
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {

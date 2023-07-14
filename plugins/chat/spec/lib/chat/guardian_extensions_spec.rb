@@ -236,8 +236,14 @@ RSpec.describe Chat::GuardianExtensions do
       context "when chatable is a direct message" do
         fab!(:chatable) { Chat::DirectMessage.create! }
 
-        it "allows owner to restore" do
+        it "allows owner to restore when deleted by owner" do
+          message.trash!(guardian.user)
           expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+        end
+
+        it "disallow owner to restore when deleted by staff" do
+          message.trash!(staff_guardian.user)
+          expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
         end
 
         it "allows staff to restore" do
@@ -323,8 +329,14 @@ RSpec.describe Chat::GuardianExtensions do
             expect(staff_guardian.can_restore_chat?(message, chatable)).to eq(true)
           end
 
-          it "allows owner to restore" do
+          it "allows owner to restore when deleted by owner" do
+            message.trash!(guardian.user)
             expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+          end
+
+          it "disallow owner to restore when deleted by staff" do
+            message.trash!(staff_guardian.user)
+            expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
           end
         end
       end

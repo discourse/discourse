@@ -113,6 +113,7 @@ export default class ChatMessageCreator extends Component {
   @service site;
   @service router;
   @service currentUser;
+  @service siteSettings;
 
   @tracked selection = new TrackedArray();
   @tracked activeSelection = new TrackedArray();
@@ -124,10 +125,25 @@ export default class ChatMessageCreator extends Component {
   @tracked _activeResultIdentifier = null;
 
   get placeholder() {
-    if (this.hasSelectedUsers) {
-      return I18n.t("chat.new_message_modal.user_search_placeholder");
-    } else {
-      return I18n.t("chat.new_message_modal.default_search_placeholder");
+    if (
+      this.siteSettings.enable_public_channels &&
+      this.chat.userCanDirectMessage
+    ) {
+      if (this.hasSelectedUsers) {
+        return I18n.t("chat.new_message_modal.user_search_placeholder");
+      } else {
+        return I18n.t("chat.new_message_modal.default_search_placeholder");
+      }
+    } else if (this.siteSettings.enable_public_channels) {
+      return I18n.t(
+        "chat.new_message_modal.default_channel_search_placeholder"
+      );
+    } else if (this.chat.userCanDirectMessage) {
+      if (this.hasSelectedUsers) {
+        return I18n.t("chat.new_message_modal.user_search_placeholder");
+      } else {
+        return I18n.t("chat.new_message_modal.default_user_search_placeholder");
+      }
     }
   }
 

@@ -13,6 +13,7 @@ import { schedule } from "@ember/runloop";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -39,11 +40,18 @@ export function navigateToTopic(topic, href) {
     // so skip setting it early.
     this.appEvents.trigger("header:update-topic", topic);
   }
+
+  this.session.set("lastTopicIdViewed", {
+    topicId: topic.id,
+    historyUuid: this.router.location.getState?.().uuid,
+  });
+
   DiscourseURL.routeTo(href || topic.get("url"));
   return false;
 }
 
 export default Component.extend({
+  router: service(),
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id", "role", "ariaLevel:aria-level"],
@@ -328,7 +336,14 @@ export default Component.extend({
 
   _highlightIfNeeded: on("didInsertElement", function () {
     // highlight the last topic viewed
-    if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
+    const lastViewedTopicInfo = this.session.get("lastTopicIdViewed");
+
+    const isLastViewedTopic =
+      lastViewedTopicInfo?.topicId === this.topic.id &&
+      lastViewedTopicInfo?.historyUuid ===
+        this.router.location.getState?.().uuid;
+
+    if (isLastViewedTopic) {
       this.session.set("lastTopicIdViewed", null);
       this.highlight({ isLastViewedTopic: true });
     } else if (this.get("topic.highlight")) {

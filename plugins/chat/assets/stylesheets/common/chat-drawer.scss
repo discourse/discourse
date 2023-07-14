@@ -73,8 +73,8 @@ html.rtl {
     background: var(--secondary);
     border: 1px solid var(--primary-low);
     border-bottom: 0;
-    border-top-left-radius: var(--border-radius-large);
-    border-top-right-radius: var(--border-radius-large);
+    border-top-left-radius: var(--d-border-radius-large);
+    border-top-right-radius: var(--d-border-radius-large);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.125);
     box-sizing: border-box;
     display: flex;

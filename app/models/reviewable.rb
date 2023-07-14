@@ -367,14 +367,6 @@ class Reviewable < ActiveRecord::Base
     status_previously_changed?(from: "pending")
   end
 
-  def post_options
-    Discourse.deprecate(
-      "Reviewable#post_options is deprecated. Please use #payload instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
-  end
-
   def self.bulk_perform_targets(performed_by, action, type, target_ids, args = nil)
     args ||= {}
     viewable_by(performed_by)

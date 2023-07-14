@@ -1,5 +1,4 @@
 import { observes, on } from "discourse-common/utils/decorators";
-import { next, schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import UrlRefresh from "discourse/mixins/url-refresh";
@@ -9,21 +8,6 @@ export default Component.extend(UrlRefresh, LoadMore, {
   classNames: ["contents"],
   eyelineSelector: ".topic-list-item",
   documentTitle: service(),
-
-  @on("didInsertElement")
-  @observes("model")
-  _readjustScrollPosition() {
-    const scrollTo = this.session.topicListScrollPosition;
-    if (scrollTo >= 0) {
-      schedule("afterRender", () => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo));
-        }
-      });
-    } else {
-      scheduleOnce("afterRender", this, this.loadMoreUnlessFull);
-    }
-  },
 
   @on("didInsertElement")
   _monitorTrackingState() {
@@ -48,10 +32,6 @@ export default Component.extend(UrlRefresh, LoadMore, {
     this.documentTitle.updateContextCount(this.incomingCount);
   },
 
-  saveScrollPosition() {
-    this.session.set("topicListScrollPosition", $(window).scrollTop());
-  },
-
   actions: {
     loadMore() {
       this.documentTitle.updateContextCount(0);
@@ -64,7 +44,6 @@ export default Component.extend(UrlRefresh, LoadMore, {
         ) {
           this.addTopicsToBulkSelect(newTopics);
         }
-        schedule("afterRender", () => this.saveScrollPosition());
         if (moreTopicsUrl && $(window).height() >= $(document).height()) {
           this.send("loadMore");
         }
