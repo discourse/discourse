@@ -155,6 +155,35 @@ RSpec.describe ::Chat::LookupChannelThreads do
         expect(result.threads.map(&:id)).to eq([thread_2.id, thread_1.id, thread_3.id])
       end
 
+      describe "when there are more threads than the limit" do
+        let(:limit) { 5 }
+
+        it "sorts very old unreads to top over recency, and sorts both unreads and other threads by recency" do
+          thread_4 = Fabricate(:chat_thread, channel: channel_1)
+          thread_5 = Fabricate(:chat_thread, channel: channel_1)
+          thread_6 = Fabricate(:chat_thread, channel: channel_1)
+          thread_7 = Fabricate(:chat_thread, channel: channel_1)
+
+          [thread_4, thread_5, thread_6, thread_7].each do |t|
+            t.add(current_user)
+            t.mark_read_for_user!(current_user)
+          end
+          [thread_1, thread_2, thread_3].each { |t| t.mark_read_for_user!(current_user) }
+
+          # The old unread messages.
+          Fabricate(:chat_message, chat_channel: channel_1, thread: thread_7).update!(
+            created_at: 2.months.ago,
+          )
+          Fabricate(:chat_message, chat_channel: channel_1, thread: thread_6).update!(
+            created_at: 3.months.ago,
+          )
+
+          expect(result.threads.map(&:id)).to eq(
+            [thread_7.id, thread_6.id, thread_5.id, thread_4.id, thread_1.id],
+          )
+        end
+      end
+
       it "does not return threads where the original message is trashed" do
         thread_1.original_message.trash!
 
