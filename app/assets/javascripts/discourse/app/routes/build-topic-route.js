@@ -56,7 +56,7 @@ async function findTopicList(
     session.set("topicList", null);
   } else {
     // Clear the cache
-    session.setProperties({ topicList: null, topicListScrollPosition: null });
+    session.setProperties({ topicList: null });
   }
 
   if (!list) {

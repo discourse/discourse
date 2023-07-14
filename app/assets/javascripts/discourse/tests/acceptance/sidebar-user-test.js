@@ -7,6 +7,7 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import Sinon from "sinon";
 
 acceptance(
   "Sidebar - Logged on user - Legacy navigation menu enabled",
@@ -162,7 +163,7 @@ acceptance(
 
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
       const capabilities = this.container.lookup("service:capabilities");
-      capabilities.touch = true;
+      Sinon.stub(capabilities, "touch").value(true);
 
       await visit("/");
 

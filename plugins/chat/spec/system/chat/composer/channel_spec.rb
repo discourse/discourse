@@ -24,7 +24,7 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
 
       expect(channel_page.composer.message_details).to have_message(
         id: message_1.id,
-        exact_text: "&lt;mark&gt;not marked&lt;/mark&gt;",
+        exact_text: "<mark>not marked</mark>",
       )
     end
 

@@ -1016,6 +1016,10 @@ const TopicTrackingState = EmberObject.extend({
       this._dismissNewTopics(data.payload.topic_ids);
     }
 
+    if (data.message_type === "dismiss_new_posts") {
+      this._dismissNewPosts(data.payload.topic_ids);
+    }
+
     if (["new_topic", "unread", "read"].includes(data.message_type)) {
       this.notifyIncoming(data);
       if (!deepEqual(old, data.payload)) {
@@ -1055,6 +1059,23 @@ const TopicTrackingState = EmberObject.extend({
     topicIds.forEach((topicId) => {
       this.modifyStateProp(topicId, "is_seen", true);
     });
+
+    this.incrementMessageCount();
+  },
+
+  _dismissNewPosts(topicIds) {
+    topicIds.forEach((topicId) => {
+      const state = this.findState(topicId);
+
+      if (state) {
+        this.modifyStateProp(
+          topicId,
+          "last_read_post_number",
+          state.highest_post_number
+        );
+      }
+    });
+
     this.incrementMessageCount();
   },
 

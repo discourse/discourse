@@ -160,9 +160,7 @@
     }
 
     &:first-child {
-      border-bottom-left-radius: 0.25em;
       border-left-color: var(--primary-300);
-      border-top-left-radius: 0.25em;
     }
 
     &.reacted {

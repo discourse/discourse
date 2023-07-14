@@ -3854,7 +3854,7 @@ RSpec.describe TopicsController do
 
       context "when tracked is unset" do
         it "updates the `new_since` date" do
-          TopicTrackingState.expects(:publish_dismiss_new)
+          TopicTrackingState.expects(:publish_dismiss_new).never
 
           put "/topics/reset-new.json"
           expect(response.status).to eq(200)
@@ -4052,15 +4052,10 @@ RSpec.describe TopicsController do
             messages =
               MessageBus.track_publish do
                 put "/topics/reset-new.json", params: { category_id: private_category.id }
+                expect(response.status).to eq(200)
               end
-            expect(response.status).to eq(200)
-            expect(messages.size).to eq(1)
-            expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
-            expect(messages[0].user_ids).to eq([user.id])
-            expect(messages[0].data["message_type"]).to eq(
-              TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
-            )
-            expect(messages[0].data["payload"]["topic_ids"]).to eq([])
+
+            expect(messages.size).to eq(0)
             expect(DismissedTopicUser.where(user_id: user.id).count).to eq(0)
           end
 
@@ -5469,10 +5464,27 @@ RSpec.describe TopicsController do
     end
 
     context "for anons" do
-      it "returns a 404" do
+      it "returns a 404 if there is no cached summary" do
         get "/t/#{topic.id}/strategy-summary.json"
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a cached summary" do
+        section =
+          SummarySection.create!(
+            target: topic,
+            summarized_text: "test",
+            algorithm: "test",
+            original_content_sha: "test",
+          )
+
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(200)
+
+        summary = response.parsed_body
+        expect(summary["summary"]).to eq(section.summarized_text)
       end
     end
 
@@ -5498,15 +5510,32 @@ RSpec.describe TopicsController do
       end
     end
 
-    context "when the user is not a member of an allowlited group" do
+    context "when the user is not a member of an allowlisted group" do
       fab!(:user) { Fabricate(:user) }
 
       before { sign_in(user) }
 
-      it "return a 404" do
+      it "return a 404 if there is no cached summary" do
         get "/t/#{topic.id}/strategy-summary.json"
 
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a cached summary" do
+        section =
+          SummarySection.create!(
+            target: topic,
+            summarized_text: "test",
+            algorithm: "test",
+            original_content_sha: "test",
+          )
+
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(200)
+
+        summary = response.parsed_body
+        expect(summary["summary"]).to eq(section.summarized_text)
       end
     end
   end

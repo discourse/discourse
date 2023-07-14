@@ -56,6 +56,7 @@ module Chat
 
     def fetch_category_channels(guardian:, **)
       return if context.mode == :user
+      return if !SiteSetting.enable_public_channels
 
       context.category_channels =
         ::Chat::ChannelFetcher.secured_public_channel_search(

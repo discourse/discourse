@@ -160,10 +160,10 @@
   input.warning {
     border: 1px solid var(--danger);
   }
+  .icon.warning,
   .value.warning {
     position: absolute;
   }
-
   .sidebar-section-form__input-wrapper {
     margin-bottom: 1em;
 

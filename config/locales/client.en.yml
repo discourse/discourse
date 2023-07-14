@@ -2040,7 +2040,9 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
+      in_progress: "Summary in progress..."
+      summarized_on: "Summarized on %{date}" 
+      enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
         other: "There are <b>%{count}</b> replies."
@@ -2057,9 +2059,10 @@ en:
 
       enable: "Show top replies"
       disable: "Show All Posts"
-      short_label: "Summarize"
-      short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      short_label: "Top replies"
+      short_title: "Show this topic top replies: the most interesting posts as determined by the community"
       strategy:
+        hide_button_title: "Hide summary"
         button_title: "Summarize this topic"
         title: "Topic summary"
 
@@ -3633,7 +3636,7 @@ en:
       filtered_replies:
         viewing_posts_by: "Viewing %{post_count} posts by"
         viewing_subset: "Some replies are collapsed"
-        viewing_summary: "Viewing a summary of this topic"
+        viewing_summary: "Viewing this topic top replies"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Show all"
 
@@ -4037,6 +4040,21 @@ en:
       close: "Close (Esc)"
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
+
+    experimental_lightbox:
+      image_load_error: "The image could not be loaded."
+      screen_reader_image_title: "Image %{current} of %{total}: %{title}"
+      buttons:
+        next: "Next (Right or down arrow key)"
+        previous: "Previous (Left or up arrow key)"
+        close: "Close (Esc)"
+        download: "Download image"
+        newtab: "Open image in a new tab"
+        zoom: "Zoom image in/out (Z key)"
+        rotate: "Rotate image (R key)"
+        fullscreen: "Toggle browser full screen mode (M key)"
+        carousel: "Display all images in a carousel (A key)"
+        retry: "Retry loading the image"
 
     cannot_render_video: This video cannot be rendered because your browser does not support the codec.
 

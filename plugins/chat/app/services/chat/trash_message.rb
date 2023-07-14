@@ -23,6 +23,7 @@ module Chat
     transaction do
       step :trash_message
       step :destroy_notifications
+      step :update_last_message_ids
       step :update_tracking_state
       step :update_thread_reply_cache
     end
@@ -49,8 +50,8 @@ module Chat
       guardian.can_delete_chat?(message, message.chat_channel.chatable)
     end
 
-    def trash_message(message:, **)
-      message.trash!
+    def trash_message(message:, guardian:, **)
+      message.trash!(guardian.user)
     end
 
     def destroy_notifications(message:, **)
@@ -68,6 +69,11 @@ module Chat
 
     def update_thread_reply_cache(message:, **)
       message.thread&.decrement_replies_count_cache
+    end
+
+    def update_last_message_ids(message:, **)
+      message.thread&.update_last_message_id!
+      message.chat_channel.update_last_message_id!
     end
 
     def publish_events(guardian:, message:, **)

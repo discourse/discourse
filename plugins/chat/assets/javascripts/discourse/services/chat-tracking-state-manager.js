@@ -34,8 +34,9 @@ export default class ChatTrackingStateManager extends Service {
 
   setupChannelThreadState(channel, threadTracking) {
     channel.threadsManager.threads.forEach((thread) => {
-      if (threadTracking[thread.id.toString()]) {
-        this.#setState(thread, threadTracking[thread.id.toString()]);
+      const tracking = threadTracking[thread.id.toString()];
+      if (tracking) {
+        this.#setState(thread, tracking);
       }
     });
   }

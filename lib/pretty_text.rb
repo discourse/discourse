@@ -104,9 +104,9 @@ module PrettyText
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/avatar-utils")
     apply_es6_file(ctx, root_path, "discourse-common/addon/utils/watched-words")
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
-    apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
@@ -260,7 +260,7 @@ module PrettyText
         __optInput = {};
         __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
         __paths = #{paths_json};
-        __utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
+        require("discourse-common/lib/avatar-utils").avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
       JS
   end
 

@@ -216,7 +216,7 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            const storedThread = this.args.channel.threadsManager.store(
+            const storedThread = this.args.channel.threadsManager.add(
               this.args.channel,
               thread,
               { replace: true }
@@ -332,7 +332,7 @@ export default class ChatLivePane extends Component {
 
         if (result.threads) {
           result.threads.forEach((thread) => {
-            const storedThread = this.args.channel.threadsManager.store(
+            const storedThread = this.args.channel.threadsManager.add(
               this.args.channel,
               thread,
               { replace: true }
@@ -664,10 +664,6 @@ export default class ChatLivePane extends Component {
   }
 
   handleSentMessage(data) {
-    if (this.args.channel.isFollowing) {
-      this.args.channel.lastMessageSentAt = new Date();
-    }
-
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
       const stagedMessage = handleStagedMessage(
         this.args.channel,
@@ -686,12 +682,14 @@ export default class ChatLivePane extends Component {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
+      this.args.channel.lastMessage = message;
       this.scrollToLatestMessage();
       this.updateLastReadMessage();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
+      this.args.channel.lastMessage = message;
       this.hasNewMessages = true;
     }
   }

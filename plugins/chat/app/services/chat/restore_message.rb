@@ -22,6 +22,7 @@ module Chat
     policy :invalid_access
     transaction do
       step :restore_message
+      step :update_last_message_ids
       step :update_thread_reply_cache
     end
     step :publish_events
@@ -53,6 +54,11 @@ module Chat
 
     def update_thread_reply_cache(message:, **)
       message.thread&.increment_replies_count_cache
+    end
+
+    def update_last_message_ids(message:, **)
+      message.thread&.update_last_message_id!
+      message.chat_channel.update_last_message_id!
     end
 
     def publish_events(guardian:, message:, **)

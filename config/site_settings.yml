@@ -2130,6 +2130,9 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  enable_experimental_lightbox:
+    default: false
+    client: true
   experimental_topics_filter:
     client: true
     default: false

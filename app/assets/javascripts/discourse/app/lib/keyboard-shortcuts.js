@@ -13,7 +13,7 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { helperContext } from "discourse-common/lib/helpers";
+import { capabilities } from "discourse/services/capabilities";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
@@ -876,13 +876,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.forward();
     }
   },
