@@ -55,6 +55,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
         destination_channel_id: this.destinationChannelId,
       })
       .then((response) => {
+        this.args.closeModal();
         this.router.transitionTo(
           "chat.channel.near-message",
           "-",
