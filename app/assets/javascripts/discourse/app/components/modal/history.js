@@ -28,6 +28,7 @@ export default class History extends Component {
   @tracked loading;
   @tracked postRevision;
   @tracked viewMode = this.site?.mobileView ? "inline" : "side_by_side";
+  @tracked bodyDiff;
 
   constructor() {
     super(...arguments);
@@ -100,11 +101,14 @@ export default class History extends Component {
     return this.postRevision?.title_changes?.[mode];
   }
 
-  get bodyDiff() {
-    let html = this.postRevision?.body_changes?.[this.viewMode];
-    if (this.viewMode === "side_by_side_markdown") {
-      return html;
-    } else {
+  get bodyDiffHTML() {
+    return this.postRevision?.body_changes?.[this.viewMode];
+  }
+
+  @action
+  async calculateBodyDiff(_, bodyDiff) {
+    let html = bodyDiff;
+    if (this.viewMode !== "side_by_side_markdown") {
       const opts = {
         features: { editHistory: true, historyOneboxes: true },
         allowListed: {
@@ -112,10 +116,9 @@ export default class History extends Component {
           historyOneboxes: ["header", "article", "div[style]"],
         },
       };
-      sanitizeAsync(html, opts).then((result) => {
-        return result;
-      });
+      html = await sanitizeAsync(html, opts);
     }
+    this.bodyDiff = html;
   }
 
   get previousTagChanges() {

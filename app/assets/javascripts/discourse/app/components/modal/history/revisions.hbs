@@ -66,7 +66,10 @@
     />
   </span>
 
-  <LinksRedirect @class="row body-diff">
+  <LinksRedirect
+    @class="row body-diff"
+    {{did-update @calculateBodyDiff @bodyDiffHTML}}
+  >
     {{html-safe @bodyDiff}}
   </LinksRedirect>
 </div>
