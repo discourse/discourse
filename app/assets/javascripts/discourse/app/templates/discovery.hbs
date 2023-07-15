@@ -17,8 +17,7 @@
     @name="discovery-navigation-bar-above"
     @connectorTagName="div"
   />
-  <div class="container">
-    {{outlet "navigation-bar"}}
+  <div class="container" {{did-insert this.registerNavigationBarElement}}>
   </div>
 </div>
 
@@ -49,7 +48,9 @@
           @connectorTagName="span"
           @outletArgs={{hash category=this.category listLoading=this.loading}}
         />
+        {{outlet}}
         {{outlet "list-container"}}
+
       </div>
     </div>
   </div>

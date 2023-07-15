@@ -38,9 +38,9 @@ export default DiscourseRoute.extend({
         let params = { category, id: category.id };
 
         this.replaceWith(route, params).then((e) => {
-          if (this.controllerFor("navigation/category").canCreateTopic) {
-            this._sendTransition(e, transition, categoryId);
-          }
+          // if (this.controllerFor("navigation/category").canCreateTopic) {
+          //   this._sendTransition(e, transition, categoryId);
+          // }
         });
       } else {
         if (transition.from) {

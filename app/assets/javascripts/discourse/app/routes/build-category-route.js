@@ -23,6 +23,7 @@ export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
     composer: service(),
+    templateName: "discovery/category",
 
     model(modelParams) {
       const category = Category.findBySlugPathWithID(
@@ -70,7 +71,6 @@ export default (filterArg, params) => {
         );
       }
 
-      this._setupNavigation(category);
       return all([
         this._createSubcategoryList(category),
         this._retrieveTopicList(category, transition, modelParams),
@@ -83,15 +83,15 @@ export default (filterArg, params) => {
         : filterArg;
     },
 
-    _setupNavigation(category) {
+    _navigationArgs(category) {
       const noSubcategories = params && !!params.no_subcategories,
         filterType = this.filter(category).split("/")[0];
 
-      this.controllerFor("navigation/category").setProperties({
+      return {
         category,
         filterType,
         noSubcategories,
-      });
+      };
     },
 
     _createSubcategoryList(category) {
@@ -150,34 +150,45 @@ export default (filterArg, params) => {
       });
     },
 
+    get canCreateTopicOnCategory() {
+      const topics = this.topics,
+        category = this.model.category,
+        canCreateTopic = topics.get("can_create_topic");
+      return (
+        canCreateTopic && category?.get("permission") === PermissionType.FULL
+      );
+    },
+
     setupController(controller, model) {
       const topics = this.topics,
         category = model.category,
         canCreateTopic = topics.get("can_create_topic");
 
-      let canCreateTopicOnCategory =
-        canCreateTopic && category.get("permission") === PermissionType.FULL;
-      let cannotCreateTopicOnCategory = !canCreateTopicOnCategory;
-      let defaultSubcategory;
-      let canCreateTopicOnSubCategory;
+      // let defaultSubcategory;
+      // let canCreateTopicOnSubCategory;
 
-      if (this.siteSettings.default_subcategory_on_read_only_category) {
-        cannotCreateTopicOnCategory = false;
+      // if (this.siteSettings.default_subcategory_on_read_only_category) {
+      //   cannotCreateTopicOnCategory = false;
 
-        if (!canCreateTopicOnCategory && category.subcategories) {
-          defaultSubcategory = category.subcategories.find((subcategory) => {
-            return subcategory.get("permission") === PermissionType.FULL;
-          });
-          canCreateTopicOnSubCategory = !!defaultSubcategory;
-        }
-      }
+      //   if (!canCreateTopicOnCategory && category.subcategories) {
+      //     defaultSubcategory = category.subcategories.find((subcategory) => {
+      //       return subcategory.get("permission") === PermissionType.FULL;
+      //     });
+      //     canCreateTopicOnSubCategory = !!defaultSubcategory;
+      //   }
+      // }
 
-      this.controllerFor("navigation/category").setProperties({
-        canCreateTopicOnCategory,
-        cannotCreateTopicOnCategory,
-        canCreateTopic,
-        canCreateTopicOnSubCategory,
-        defaultSubcategory,
+      // this.controllerFor("navigation/category").setProperties({
+      //   // canCreateTopicOnCategory,
+      //   // cannotCreateTopicOnCategory,
+      //   canCreateTopic,
+      //   canCreateTopicOnSubCategory,
+      //   defaultSubcategory,
+      // });
+
+      controller.setProperties({
+        discovery: this.controllerFor("discovery"),
+        navigationArgs: this._navigationArgs(category),
       });
 
       let topicOpts = {
@@ -190,9 +201,9 @@ export default (filterArg, params) => {
         noSubcategories: params && !!params.no_subcategories,
         expandAllPinned: true,
         canCreateTopic,
-        canCreateTopicOnCategory,
-        canCreateTopicOnSubCategory,
-        defaultSubcategory,
+        canCreateTopicOnCategory: this.canCreateTopicOnCategory,
+        // canCreateTopicOnSubCategory,
+        // defaultSubcategory,
       };
 
       const p = category.get("params");
@@ -211,8 +222,6 @@ export default (filterArg, params) => {
     },
 
     renderTemplate() {
-      this.render("navigation/category", { outlet: "navigation-bar" });
-
       if (this._categoryList) {
         this.render("discovery/categories", {
           outlet: "header-list-container",
@@ -225,6 +234,7 @@ export default (filterArg, params) => {
         controller: "discovery/topics",
         outlet: "list-container",
       });
+      this.render();
     },
 
     deactivate() {

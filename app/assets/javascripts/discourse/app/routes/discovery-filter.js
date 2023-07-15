@@ -25,12 +25,11 @@ export default class extends DiscourseRoute {
   }
 
   renderTemplate() {
-    this.render("navigation/filter", { outlet: "navigation-bar" });
-
     this.render("discovery/topics", {
       controller: "discovery/topics",
       outlet: "list-container",
     });
+    this.render(); // Render own template to {{outlet}}
   }
 
   // TODO(tgxworld): This action is required by the `discovery/topics` controller which is not necessary for this route.

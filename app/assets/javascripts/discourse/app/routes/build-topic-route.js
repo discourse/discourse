@@ -100,13 +100,7 @@ export default function (filter, extras) {
     {
       screenTrack: service(),
       queryParams,
-
-      beforeModel() {
-        this.controllerFor("navigation/default").set(
-          "filterType",
-          filter.split("/")[0]
-        );
-      },
+      templateName: "discovery/topic-route", // TODO change
 
       model(data, transition) {
         // attempt to stop early cause we need this to be called before .sync
@@ -147,19 +141,20 @@ export default function (filter, extras) {
 
         this.controllerFor("discovery/topics").setProperties(topicOpts);
 
-        this.controllerFor("navigation/default").set(
-          "canCreateTopic",
-          model.get("can_create_topic")
-        );
+        controller.setProperties({
+          discovery: this.controllerFor("discovery"),
+          filterType: filter.split("/")[0],
+        });
       },
 
       renderTemplate() {
-        this.render("navigation/default", { outlet: "navigation-bar" });
+        // this.render("navigation/default", { outlet: "navigation-bar" });
 
         this.render("discovery/topics", {
           controller: "discovery/topics",
           outlet: "list-container",
         });
+        this.render();
       },
 
       @action

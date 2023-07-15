@@ -36,7 +36,7 @@ export default Mixin.create({
 
     set(key, value) {
       this.set("rawFilterMode", value);
-      this.set("filterType", value.split("/").pop());
+      this.set("filterType", value?.split("/")?.pop());
 
       return value;
     },

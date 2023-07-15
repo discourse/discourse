@@ -13,9 +13,11 @@ import showModal from "discourse/lib/show-modal";
 import Session from "discourse/models/session";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
+  templateName: "discovery/categories-route",
+
   renderTemplate() {
-    this.render("navigation/categories", { outlet: "navigation-bar" });
     this.render("discovery/categories", { outlet: "list-container" });
+    this.render();
   },
 
   findCategories() {
@@ -129,11 +131,11 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   },
 
   setupController(controller, model) {
-    controller.set("model", model);
-
-    this.controllerFor("navigation/categories").setProperties({
-      showCategoryAdmin: model.get("can_create_category"),
-      canCreateTopic: model.get("can_create_topic"),
+    controller.setProperties({
+      model,
+      discovery: this.controllerFor("discovery"),
+      // showCategoryAdmin: model.get("can_create_category"),
+      // canCreateTopic: model.get("can_create_topic"),
     });
   },
 

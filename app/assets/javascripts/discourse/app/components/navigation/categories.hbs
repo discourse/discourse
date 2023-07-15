@@ -1,10 +1,10 @@
 <DSection @bodyClass="navigation-categories" @class="navigation-container">
   <DNavigation
     @filterType="categories"
-    @showCategoryAdmin={{this.showCategoryAdmin}}
+    @showCategoryAdmin={{@showCategoryAdmin}}
     @createCategory={{route-action "createCategory"}}
     @reorderCategories={{route-action "reorderCategories"}}
-    @canCreateTopic={{this.canCreateTopic}}
+    @canCreateTopic={{@canCreateTopic}}
     @hasDraft={{this.currentUser.has_topic_draft}}
     @createTopic={{route-action "createTopic"}}
   />

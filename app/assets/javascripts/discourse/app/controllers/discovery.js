@@ -7,7 +7,7 @@ import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   discoveryTopics: controller("discovery/topics"),
-  navigationCategory: controller("navigation/category"),
+  // navigationCategory: controller("navigation/category"),
   application: controller(),
   router: service(),
   viewingCategoriesList: equal(
@@ -16,8 +16,8 @@ export default Controller.extend({
   ),
   loading: false,
 
-  category: alias("navigationCategory.category"),
-  noSubcategories: alias("navigationCategory.noSubcategories"),
+  // category: alias("navigationCategory.category"),
+  // noSubcategories: alias("navigationCategory.noSubcategories"),
 
   loadedAllItems: not("discoveryTopics.model.canLoadMore"),
 
@@ -65,6 +65,11 @@ export default Controller.extend({
       this.get("loading") &&
       this.siteSettings.page_loading_indicator === "spinner"
     );
+  },
+
+  @action
+  registerNavigationBarElement(element) {
+    this.set("navigationBarWrapper", element);
   },
 
   actions: {

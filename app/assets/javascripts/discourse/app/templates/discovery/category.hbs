@@ -1,0 +1,14 @@
+<ConditionalInElement @element={{this.discovery.navigationBarWrapper}}>
+  <Navigation::Category
+    @category={{this.navigationArgs.category}}
+    @filterType={{this.navigationArgs.filterType}}
+    @noSubcategories={{this.navigationArgs.noSubcategories}}
+    @canCreateTopicOnCategory={{this.canCreateTopicOnCategory}}
+    @canCreateTopic={{this.topics.can_create_topic}}
+    {{! TODO subcategory creation }}
+  />
+</ConditionalInElement>
+Yo
+{{this.model}}
+{{log this.model}}
+{{log this.discovery}}
