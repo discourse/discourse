@@ -15,11 +15,6 @@ import Session from "discourse/models/session";
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
   templateName: "discovery/categories-route",
 
-  renderTemplate() {
-    this.render("discovery/categories", { outlet: "list-container" });
-    this.render();
-  },
-
   findCategories() {
     let style =
       !this.site.mobileView && this.siteSettings.desktop_category_page_style;

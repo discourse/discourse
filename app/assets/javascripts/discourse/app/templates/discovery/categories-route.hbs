@@ -4,3 +4,57 @@
     @canCreateTopic={{this.model.can_create_topic}}
   />
 </ConditionalInElement>
+
+<PluginOutlet
+  @name="above-discovery-categories"
+  @connectorTagName="div"
+  @outletArgs={{hash
+    categories=this.model.categories
+    categoryPageStyle=this.categoryPageStyle
+    topics=this.model.topics
+  }}
+/>
+
+<DiscoveryCategories @refresh={{action "refresh"}}>
+  {{#if (and this.topicTrackingState.hasIncoming this.isCategoriesRoute)}}
+    <div class="show-more {{if this.hasTopics 'has-topics'}}">
+      <div
+        role="button"
+        class="alert alert-info clickable"
+        {{on "click" this.showInserted}}
+      >
+        <CountI18n
+          @key="topic_count_"
+          @suffix={{this.topicTrackingState.filter}}
+          @count={{this.topicTrackingState.incomingCount}}
+        />
+      </div>
+    </div>
+  {{/if}}
+
+  {{#if
+    (eq this.categoryPageStyle "categories-and-latest-topics-created-date")
+  }}
+    <CategoriesAndLatestTopics
+      @categories={{this.model.categories}}
+      @topics={{this.model.topics}}
+    />
+  {{else}}
+    {{component
+      this.categoryPageStyle
+      categories=this.model.categories
+      topics=this.model.topics
+    }}
+  {{/if}}
+
+</DiscoveryCategories>
+
+<PluginOutlet
+  @name="below-discovery-categories"
+  @connectorTagName="div"
+  @outletArgs={{hash
+    categories=this.model.categories
+    categoryPageStyle=this.categoryPageStyle
+    topics=this.model.topics
+  }}
+/>
