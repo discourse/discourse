@@ -1,17 +1,20 @@
-<ConditionalInElement @element={{this.discovery.navigationBarWrapper}}>
-  <Navigation::Category
-    @category={{this.navigationArgs.category}}
-    @filterType={{this.navigationArgs.filterType}}
-    @noSubcategories={{this.navigationArgs.noSubcategories}}
-    @canCreateTopicOnCategory={{this.canCreateTopicOnCategory}}
-    @canCreateTopic={{this.topics.can_create_topic}}
-    {{! TODO subcategory creation }}
-  />
-</ConditionalInElement>
-
-<Discovery::Topics
-  @period={{this.period}}
-  @expandAllPinned={{this.expandAllPinned}}
-  @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
-  @model={{this.model}}
-/>
+<Discovery::Layout>
+  <:navigation>
+    <Navigation::Category
+      @category={{this.navigationArgs.category}}
+      @filterType={{this.navigationArgs.filterType}}
+      @noSubcategories={{this.navigationArgs.noSubcategories}}
+      @canCreateTopicOnCategory={{this.canCreateTopicOnCategory}}
+      @canCreateTopic={{this.topics.can_create_topic}}
+      {{! TODO subcategory creation }}
+    />
+  </:navigation>
+  <:list>
+    <Discovery::Topics
+      @period={{this.period}}
+      @expandAllPinned={{this.expandAllPinned}}
+      @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
+      @model={{this.model}}
+    />
+  </:list>
+</Discovery::Layout>

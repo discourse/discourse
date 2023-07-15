@@ -1,13 +1,16 @@
-<ConditionalInElement @element={{this.discovery.navigationBarWrapper}}>
-  <Navigation::Default
-    @canCreateTopic={{this.model.can_create_topic}}
-    @filterType={{this.filterType}}
-  />
-</ConditionalInElement>
-
-<Discovery::Topics
-  @period={{this.period}}
-  @expandAllPinned={{this.expandAllPinned}}
-  @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
-  @model={{this.model}}
-/>
+<Discovery::Layout>
+  <:navigation>
+    <Navigation::Default
+      @canCreateTopic={{this.model.can_create_topic}}
+      @filterType={{this.filterType}}
+    />
+  </:navigation>
+  <:list>
+    <Discovery::Topics
+      @period={{this.period}}
+      @expandAllPinned={{this.expandAllPinned}}
+      @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
+      @model={{this.model}}
+    />
+  </:list>
+</Discovery::Layout>

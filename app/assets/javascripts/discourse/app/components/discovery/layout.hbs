@@ -17,7 +17,8 @@
     @name="discovery-navigation-bar-above"
     @connectorTagName="div"
   />
-  <div class="container" {{did-insert this.registerNavigationBarElement}}>
+  <div class="container">
+    {{yield to="navigation"}}
   </div>
 </div>
 
@@ -31,6 +32,7 @@
   <div class="row">
     <div class="full-width">
       <div id="header-list-area">
+        {{yield to="header-list"}}
         {{!-- {{outlet "header-list-container"}} --}}
         <PluginOutlet
           @name="header-list-container-bottom"
@@ -48,8 +50,7 @@
           @connectorTagName="span"
           @outletArgs={{hash category=this.category listLoading=this.loading}}
         />
-        {{outlet}}
-        {{!-- {{outlet "list-container"}} --}}
+        {{yield to="list"}}
       </div>
     </div>
   </div>
