@@ -20,17 +20,17 @@ export default class extends DiscourseRoute {
     return I18n.t("filters.with_topics", { filter: filterText });
   }
 
-  setupController(_controller, model) {
-    this.controllerFor("discovery/topics").setProperties({ model });
-  }
+  // setupController(_controller, model) {
+  //   this.controllerFor("discovery/topics").setProperties({ model });
+  // }
 
-  renderTemplate() {
-    this.render("discovery/topics", {
-      controller: "discovery/topics",
-      outlet: "list-container",
-    });
-    this.render(); // Render own template to {{outlet}}
-  }
+  // renderTemplate() {
+  //   this.render("discovery/topics", {
+  //     controller: "discovery/topics",
+  //     outlet: "list-container",
+  //   });
+  //   this.render(); // Render own template to {{outlet}}
+  // }
 
   // TODO(tgxworld): This action is required by the `discovery/topics` controller which is not necessary for this route.
   // Figure out a way to remove this.

@@ -8,7 +8,10 @@
     {{! TODO subcategory creation }}
   />
 </ConditionalInElement>
-Yo
-{{this.model}}
-{{log this.model}}
-{{log this.discovery}}
+
+<Discovery::Topics
+  @period={{this.period}}
+  @expandAllPinned={{this.expandAllPinned}}
+  @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
+  @model={{this.model}}
+/>

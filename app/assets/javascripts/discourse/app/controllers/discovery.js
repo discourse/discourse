@@ -6,7 +6,7 @@ import DiscourseURL from "discourse/lib/url";
 import { inject as service } from "@ember/service";
 
 export default Controller.extend({
-  discoveryTopics: controller("discovery/topics"),
+  // discoveryTopics: controller("discovery/topics"),
   // navigationCategory: controller("navigation/category"),
   application: controller(),
   router: service(),
@@ -70,11 +70,5 @@ export default Controller.extend({
   @action
   registerNavigationBarElement(element) {
     this.set("navigationBarWrapper", element);
-  },
-
-  actions: {
-    changePeriod(p) {
-      DiscourseURL.routeTo(this.showMoreUrl(p));
-    },
   },
 });

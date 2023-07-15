@@ -1,6 +1,13 @@
 <ConditionalInElement @element={{this.discovery.navigationBarWrapper}}>
   <Navigation::Default
-    @canCreateTopic={{this.model.canCreateTopic}}
+    @canCreateTopic={{this.model.can_create_topic}}
     @filterType={{this.filterType}}
   />
 </ConditionalInElement>
+
+<Discovery::Topics
+  @period={{this.period}}
+  @expandAllPinned={{this.expandAllPinned}}
+  @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
+  @model={{this.model}}
+/>

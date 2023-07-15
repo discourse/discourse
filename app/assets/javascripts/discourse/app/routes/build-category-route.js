@@ -197,7 +197,7 @@ export default (filterArg, params) => {
         period:
           topics.get("for_period") ||
           (model.modelParams && model.modelParams.period),
-        selected: [],
+        // selected: [],
         noSubcategories: params && !!params.no_subcategories,
         expandAllPinned: true,
         canCreateTopic,
@@ -216,24 +216,28 @@ export default (filterArg, params) => {
         }
       }
 
-      this.controllerFor("discovery/topics").setProperties(topicOpts);
+      // this.controllerFor("discovery/topics").setProperties(topicOpts);
       this.searchService.searchContext = category.get("searchContext");
       this.set("topics", null);
+
+      controller.setProperties(topicOpts);
+
+      // this._super(...arguments);
     },
 
     renderTemplate() {
       if (this._categoryList) {
-        this.render("discovery/categories", {
-          outlet: "header-list-container",
-          model: this._categoryList,
-        });
+        // this.render("discovery/categories", {
+        //   outlet: "header-list-container",
+        //   model: this._categoryList,
+        // });
       } else {
-        this.disconnectOutlet({ outlet: "header-list-container" });
+        // this.disconnectOutlet({ outlet: "header-list-container" });
       }
-      this.render("discovery/topics", {
-        controller: "discovery/topics",
-        outlet: "list-container",
-      });
+      // this.render("discovery/topics", {
+      //   controller: "discovery/topics",
+      //   outlet: "list-container",
+      // });
       this.render();
     },
 

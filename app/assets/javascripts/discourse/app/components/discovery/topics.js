@@ -1,20 +1,19 @@
 import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import DismissTopics from "discourse/mixins/dismiss-topics";
-import DiscoveryController from "discourse/controllers/discovery";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
-import { inject as controller } from "@ember/controller";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
 import { inject as service } from "@ember/service";
-import { userPath } from "discourse/lib/url";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import { action } from "@ember/object";
+import Component from "@ember/component";
 
-const controllerOpts = {
-  discovery: controller(),
+export default Component.extend(BulkTopicSelection, DismissTopics, {
+  // discovery: controller(),
   router: service(),
 
   period: null,
@@ -187,10 +186,9 @@ const controllerOpts = {
       ),
     });
   },
-};
 
-export default DiscoveryController.extend(
-  controllerOpts,
-  BulkTopicSelection,
-  DismissTopics
-);
+  @action
+  changePeriod(p) {
+    DiscourseURL.routeTo(this.showMoreUrl(p));
+  },
+});

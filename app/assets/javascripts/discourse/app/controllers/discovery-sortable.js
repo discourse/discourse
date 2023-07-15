@@ -25,7 +25,7 @@ export const queryParams = {
 
 // Basic controller options
 const controllerOpts = {
-  discoveryTopics: controller("discovery/topics"),
+  // discoveryTopics: controller("discovery/topics"),
   queryParams: Object.keys(queryParams),
 };
 

@@ -130,30 +130,36 @@ export default function (filter, extras) {
       },
 
       setupController(controller, model) {
-        const topicOpts = {
-          model,
-          category: null,
-          period: model.get("for_period") || model.get("params.period"),
-          selected: [],
-          expandAllPinned: false,
-          expandGloballyPinned: true,
-        };
+        // const topicOpts = {
+        //   model,
+        //   category: null,
+        //   period: model.get("for_period") || model.get("params.period"),
+        //   selected: [],
+        //   expandAllPinned: false,
+        //   expandGloballyPinned: true,
+        // };
 
-        this.controllerFor("discovery/topics").setProperties(topicOpts);
+        // this.controllerFor("discovery/topics").setProperties(topicOpts);
 
         controller.setProperties({
           discovery: this.controllerFor("discovery"),
           filterType: filter.split("/")[0],
+          period: model.get("for_period") || model.get("params.period"),
+          // selected: [],
+          expandAllPinned: false,
+          expandGloballyPinned: true,
         });
+
+        this._super(...arguments);
       },
 
       renderTemplate() {
         // this.render("navigation/default", { outlet: "navigation-bar" });
 
-        this.render("discovery/topics", {
-          controller: "discovery/topics",
-          outlet: "list-container",
-        });
+        // this.render("discovery/topics", {
+        //   controller: "discovery/topics",
+        //   outlet: "list-container",
+        // });
         this.render();
       },
 

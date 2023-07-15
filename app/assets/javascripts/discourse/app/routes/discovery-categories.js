@@ -130,13 +130,12 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     return I18n.t("filters.categories.title");
   },
 
-  setupController(controller, model) {
+  setupController(controller) {
     controller.setProperties({
-      model,
       discovery: this.controllerFor("discovery"),
-      // showCategoryAdmin: model.get("can_create_category"),
-      // canCreateTopic: model.get("can_create_topic"),
     });
+
+    this._super(...arguments);
   },
 
   @action

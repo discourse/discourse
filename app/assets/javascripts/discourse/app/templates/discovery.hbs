@@ -31,7 +31,7 @@
   <div class="row">
     <div class="full-width">
       <div id="header-list-area">
-        {{outlet "header-list-container"}}
+        {{!-- {{outlet "header-list-container"}} --}}
         <PluginOutlet
           @name="header-list-container-bottom"
           @outletArgs={{hash category=this.category}}
@@ -49,8 +49,7 @@
           @outletArgs={{hash category=this.category listLoading=this.loading}}
         />
         {{outlet}}
-        {{outlet "list-container"}}
-
+        {{!-- {{outlet "list-container"}} --}}
       </div>
     </div>
   </div>

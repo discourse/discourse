@@ -62,8 +62,8 @@ export default DiscourseRoute.extend(OpenComposer, {
   didTransition() {
     this.send("loadingComplete");
 
-    const model = this.controllerFor("discovery/topics").get("model");
-    setTopicList(model);
+    // const model = this.controllerFor("discovery/topics").get("model");
+    // setTopicList(model);
   },
 
   // clear a pinned topic
@@ -77,7 +77,7 @@ export default DiscourseRoute.extend(OpenComposer, {
     if (this.get("currentUser.has_topic_draft")) {
       this.openTopicDraft();
     } else {
-      this.openComposer(this.controllerFor("discovery/topics"));
+      // this.openComposer(this.controllerFor("discovery/topics"));
     }
   },
 
