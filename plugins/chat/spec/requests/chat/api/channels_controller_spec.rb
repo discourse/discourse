@@ -295,7 +295,8 @@ RSpec.describe Chat::Api::ChannelsController do
               }
           messages = response.parsed_body["chat_messages"]
           expect(messages.count).to eq(page_size)
-          expect(messages.first["created_at"].to_time).to be < messages.last["created_at"].to_time
+          expect(messages.first["id"]).to eq(message_40.id)
+          expect(messages.last["id"]).to eq(message_69.id)
         end
 
         it "returns `can_flag=true` for public channels" do
@@ -437,8 +438,8 @@ RSpec.describe Chat::Api::ChannelsController do
                 }
             messages = response.parsed_body["chat_messages"]
             expect(messages.count).to eq(page_size)
-            expect(messages.first["created_at"].to_time).to eq_time(message_10.created_at)
-            expect(messages.last["created_at"].to_time).to eq_time(message_39.created_at)
+            expect(messages.first["id"]).to eq(message_10.id)
+            expect(messages.last["id"]).to eq(message_39.id)
           end
 
           it "returns 'can_load...' properly when there are more past messages" do
@@ -477,8 +478,8 @@ RSpec.describe Chat::Api::ChannelsController do
                 }
             messages = response.parsed_body["chat_messages"]
             expect(messages.count).to eq(page_size)
-            expect(messages.first["created_at"].to_time).to eq_time(message_11.created_at)
-            expect(messages.last["created_at"].to_time).to eq_time(message_40.created_at)
+            expect(messages.first["id"]).to eq(message_11.id)
+            expect(messages.last["id"]).to eq(message_40.id)
           end
 
           it "return 'can_load..' properly when there are future messages" do

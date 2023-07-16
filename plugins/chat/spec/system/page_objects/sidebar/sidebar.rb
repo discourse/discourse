@@ -27,11 +27,17 @@ module PageObjects
       end
 
       def open_channel(channel)
-        find(".sidebar-section-link[href='/chat/c/#{channel.slug}/#{channel.id}']").click
+        find(".sidebar-section-link.channel-#{channel.id}").click
+      end
+
+      def remove_channel(channel)
+        selector = ".sidebar-section-link.channel-#{channel.id}"
+        find(selector).hover
+        find(selector + " .sidebar-section-hover-button").click
       end
 
       def find_channel(channel)
-        find(".sidebar-section-link[href='/chat/c/#{channel.slug}/#{channel.id}']")
+        find(".sidebar-section-link.channel-#{channel.id}")
         self
       end
     end

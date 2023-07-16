@@ -284,6 +284,28 @@ RSpec.describe TranslationOverride do
     end
   end
 
+  describe "#original_translation_deleted?" do
+    context "when the original translation still exists" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }
+
+      it { expect(translation.original_translation_deleted?).to eq(false) }
+    end
+
+    context "when the original translation has been turned into a nested key" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }
+
+      before { translation.update_attribute("translation_key", "dates") }
+
+      it { expect(translation.original_translation_deleted?).to eq(true) }
+    end
+
+    context "when the original translation no longer exists" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "foo.bar") }
+
+      it { expect(translation.original_translation_deleted?).to eq(true) }
+    end
+  end
+
   describe "#original_translation_updated?" do
     context "when the translation is up to date" do
       fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }

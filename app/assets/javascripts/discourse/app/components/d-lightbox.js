@@ -192,7 +192,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async open({ items, startingIndex, callbacks, options }) {
+  open({ items, startingIndex, callbacks, options }) {
     this.options = options;
 
     this.items = items;
@@ -202,7 +202,7 @@ export default class DLightbox extends Component {
     this.isLoading = true;
     this.isVisible = true;
 
-    await this.#setCurrentItem(this.currentIndex);
+    this.#setCurrentItem(this.currentIndex);
 
     if (
       this.options.zoomOnOpen &&

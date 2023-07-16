@@ -97,7 +97,10 @@ module Chat
             user: :user_status,
           ],
         )
-        .joins(:user_chat_thread_memberships, :last_message, :original_message)
+        .joins(:user_chat_thread_memberships, :original_message)
+        .joins(
+          "LEFT JOIN chat_messages AS last_message ON last_message.id = chat_threads.last_message_id",
+        )
         .where("user_chat_thread_memberships.user_id = ?", guardian.user.id)
         .where(
           "user_chat_thread_memberships.notification_level IN (?)",
@@ -107,10 +110,14 @@ module Chat
           ],
         )
         .where("chat_threads.channel_id = ?", channel.id)
+        .where("last_message.deleted_at IS NULL")
         .limit(context.limit)
         .offset(context.offset)
         .order(
-          "CASE WHEN chat_threads.last_message_id > user_chat_thread_memberships.last_read_message_id THEN 0 ELSE 1 END, chat_messages.created_at DESC",
+          "CASE WHEN (
+            chat_threads.last_message_id > user_chat_thread_memberships.last_read_message_id OR
+              user_chat_thread_memberships.last_read_message_id IS NULL
+          ) THEN 0 ELSE 1 END, last_message.created_at DESC",
         )
     end
 
