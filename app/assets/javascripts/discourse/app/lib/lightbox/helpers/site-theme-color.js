@@ -6,7 +6,7 @@ export async function getSiteThemeColor() {
 }
 
 export async function setSiteThemeColor(color = "000000") {
-  const _color = `#${color}`;
+  const _color = `#${color.replace(/^#*/, "")}`;
 
   const siteThemeColor = document.querySelector('meta[name="theme-color"]');
 

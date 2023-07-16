@@ -27,6 +27,7 @@ import { tracked } from "@glimmer/tracking";
 export default class DLightbox extends Component {
   @service appEvents;
 
+  @tracked items = [];
   @tracked isVisible = false;
   @tracked isLoading = false;
   @tracked currentIndex = 0;
@@ -40,6 +41,9 @@ export default class DLightbox extends Component {
   @tracked hasCarousel = false;
   @tracked hasExpandedTitle = false;
 
+  options = {};
+  callbacks = {};
+  willClose = false;
   elementId = LIGHTBOX_ELEMENT_ID;
   titleElementId = TITLE_ELEMENT_ID;
   animationDuration = ANIMATION_DURATION;
@@ -188,7 +192,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  async open({ items, startingIndex, callbacks, options }) {
+  open({ items, startingIndex, callbacks, options }) {
     this.options = options;
 
     this.items = items;
@@ -198,7 +202,7 @@ export default class DLightbox extends Component {
     this.isLoading = true;
     this.isVisible = true;
 
-    await this.#setCurrentItem(this.currentIndex);
+    this.#setCurrentItem(this.currentIndex);
 
     if (
       this.options.zoomOnOpen &&

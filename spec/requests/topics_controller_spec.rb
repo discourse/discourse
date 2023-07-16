@@ -3854,7 +3854,7 @@ RSpec.describe TopicsController do
 
       context "when tracked is unset" do
         it "updates the `new_since` date" do
-          TopicTrackingState.expects(:publish_dismiss_new)
+          TopicTrackingState.expects(:publish_dismiss_new).never
 
           put "/topics/reset-new.json"
           expect(response.status).to eq(200)
@@ -4052,15 +4052,10 @@ RSpec.describe TopicsController do
             messages =
               MessageBus.track_publish do
                 put "/topics/reset-new.json", params: { category_id: private_category.id }
+                expect(response.status).to eq(200)
               end
-            expect(response.status).to eq(200)
-            expect(messages.size).to eq(1)
-            expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
-            expect(messages[0].user_ids).to eq([user.id])
-            expect(messages[0].data["message_type"]).to eq(
-              TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
-            )
-            expect(messages[0].data["payload"]["topic_ids"]).to eq([])
+
+            expect(messages.size).to eq(0)
             expect(DismissedTopicUser.where(user_id: user.id).count).to eq(0)
           end
 

@@ -25,7 +25,6 @@ export default DiscourseRoute.extend({
 
     this.session.setProperties({
       bookmarksModel: null,
-      bookmarkListScrollPosition: null,
     });
 
     controller.set("loading", true);

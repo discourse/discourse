@@ -37,7 +37,12 @@ export default createWidget("toggle-topic-summary", {
   buildKey: (attrs) => `toggle-topic-summary-${attrs.topicId}`,
 
   defaultState() {
-    return { expandSummaryBox: false };
+    return {
+      expandSummaryBox: false,
+      summaryBoxHidden: true,
+      summary: "",
+      summarizedOn: null,
+    };
   },
 
   html(attrs, state) {
@@ -45,16 +50,20 @@ export default createWidget("toggle-topic-summary", {
     const summarizationButtons = [];
 
     if (attrs.summarizable) {
-      const title = I18n.t("summary.strategy.button_title");
+      const expandTitle = I18n.t("summary.strategy.button_title");
+      const collapseTitle = I18n.t("summary.strategy.hide_button_title");
+      const canCollapse = !this.loadingSummary() && this.summaryBoxVisble();
 
       summarizationButtons.push(
         this.attach("button", {
           className: "btn btn-primary topic-strategy-summarization",
-          icon: "magic",
-          translatedTitle: title,
-          translatedLabel: title,
-          action: "expandSummaryBox",
-          disabled: state.expandSummaryBox,
+          icon: canCollapse ? "chevron-up" : "magic",
+          translatedTitle: canCollapse ? collapseTitle : expandTitle,
+          translatedLabel: canCollapse ? collapseTitle : expandTitle,
+          action: state.expandSummaryBox
+            ? "toggleSummaryBox"
+            : "expandSummaryBox",
+          disabled: this.loadingSummary(),
         })
       );
     }
@@ -78,14 +87,34 @@ export default createWidget("toggle-topic-summary", {
       html.push(h("div.summarization-buttons", summarizationButtons));
     }
 
-    if (state.expandSummaryBox) {
+    if (this.summaryBoxVisble()) {
+      attrs.summary = this.state.summary;
+      attrs.summarizedOn = this.state.summarizedOn;
       html.push(this.attach("summary-box", attrs));
     }
 
     return html;
   },
 
+  loadingSummary() {
+    return this.summaryBoxVisble() && !this.state.summary;
+  },
+
+  summaryUpdatedEvent(update) {
+    this.state.summary = update.summary;
+    this.state.summarizedOn = update.summarizedOn;
+  },
+
+  summaryBoxVisble() {
+    return this.state.expandSummaryBox && !this.state.summaryBoxHidden;
+  },
+
   expandSummaryBox() {
     this.state.expandSummaryBox = true;
+    this.state.summaryBoxHidden = false;
+  },
+
+  toggleSummaryBox() {
+    this.state.summaryBoxHidden = !this.state.summaryBoxHidden;
   },
 });

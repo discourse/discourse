@@ -1100,11 +1100,12 @@ class TopicsController < ApplicationController
 
     dismissed_topic_ids = []
     dismissed_post_topic_ids = []
+
     if !current_user.new_new_view_enabled? || params[:dismiss_topics]
       dismissed_topic_ids =
         TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
-      TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
     end
+
     if params[:dismiss_posts]
       if params[:untrack]
         dismissed_post_topic_ids =
