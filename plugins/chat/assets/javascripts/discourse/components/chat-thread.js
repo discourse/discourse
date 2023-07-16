@@ -12,7 +12,9 @@ import { cancel, next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
+const FUTURE = "future";
+const PAST = "past";
 const READ_INTERVAL_MS = 1000;
 
 export default class ChatThreadPanel extends Component {
@@ -31,6 +33,8 @@ export default class ChatThreadPanel extends Component {
 
   @tracked loading;
   @tracked uploadDropZone;
+  @tracked canLoadMoreFuture;
+  @tracked canLoadMorePast;
 
   scrollable = null;
 
@@ -79,6 +83,7 @@ export default class ChatThreadPanel extends Component {
 
     if (this.#isAtBottom()) {
       this.updateLastReadMessage();
+      this.fetchMoreMessages({ direction: FUTURE });
       this.onScrollEnded();
     } else {
       this.isScrolling = true;
@@ -164,6 +169,7 @@ export default class ChatThreadPanel extends Component {
       pageSize: PAGE_SIZE,
       threadId: this.args.thread.id,
       includeMessages: true,
+      direction: FUTURE,
     };
     return this.chatApi
       .channel(this.args.thread.channel.id, findArgs)
@@ -189,6 +195,8 @@ export default class ChatThreadPanel extends Component {
           result
         );
         this.args.thread.messagesManager.addMessages(messages);
+        this.canLoadMorePast = result.meta.can_load_more_past;
+        this.canLoadMoreFuture = result.meta.can_load_more_future;
         this.args.thread.details = meta;
         this.markThreadAsRead();
       })
@@ -198,6 +206,52 @@ export default class ChatThreadPanel extends Component {
           return;
         }
 
+        this.loading = false;
+      });
+  }
+
+  @action
+  fetchMoreMessages({ direction }) {
+    const loadingPast = direction === PAST;
+
+    const canLoadMore = loadingPast
+      ? this.canLoadMorePast
+      : this.canLoadMoreFuture;
+
+    if (!canLoadMore) {
+      return Promise.resolve();
+    }
+    this.loading = true;
+
+    const messageIndex = loadingPast ? 0 : this.args.thread.messages.length - 1;
+    const messageId = this.args.thread.messages[messageIndex].id;
+
+    const findArgs = {
+      threadId: this.args.thread.id,
+      pageSize: PAGE_SIZE,
+      includeMessages: true,
+      direction: FUTURE,
+      messageId,
+    };
+
+    return this.chatApi
+      .channel(this.args.thread.channel.id, findArgs)
+      .then((result) => {
+        const [messages, meta] = this.afterFetchCallback(
+          this.args.thread,
+          result
+        );
+        this.args.thread.messagesManager.addMessages(messages);
+        this.canLoadMorePast = result.meta.can_load_more_past;
+        this.canLoadMoreFuture = result.meta.can_load_more_future;
+
+        this.args.thread.details = meta;
+      })
+      .catch(this.#handleErrors)
+      .finally(() => {
+        if (this._selfDeleted) {
+          return;
+        }
         this.loading = false;
       });
   }
