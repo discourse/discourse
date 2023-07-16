@@ -35,7 +35,6 @@ export default class BookmarkModal extends Component {
   @tracked postDetectedLocalTimezone = null;
   @tracked prefilledDatetime = null;
   @tracked flash = null;
-  @tracked flashType = "error";
   @tracked userTimezone = this.currentUser.user_option.timezone;
   @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
