@@ -2,6 +2,7 @@
 
 describe TopicSummarization do
   fab!(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:admin) }
   fab!(:post_1) { Fabricate(:post, topic: topic) }
   fab!(:post_2) { Fabricate(:post, topic: topic) }
 
@@ -79,24 +80,25 @@ describe TopicSummarization do
       let(:summary) { { summary: "This is the final summary", chunks: [] } }
 
       it "caches the summary" do
-        summarized_text = summarization.summarize(topic)
+        section = summarization.summarize(topic, user)
 
-        expect(summarized_text).to eq(summary[:summary])
+        expect(section.summarized_text).to eq(summary[:summary])
 
         assert_summary_is_cached(topic, summary)
       end
 
       it "returns the cached version in subsequent calls" do
-        summarization.summarize(topic)
+        summarization.summarize(topic, user)
 
         cached_summary_text = "This is a cached summary"
         cached_summary =
           SummarySection.find_by(target: topic, meta_section_id: nil).update!(
             summarized_text: cached_summary_text,
+            updated_at: 24.hours.ago,
           )
 
-        summarized_text = summarization.summarize(topic)
-        expect(summarized_text).to eq(cached_summary_text)
+        section = summarization.summarize(topic, user)
+        expect(section.summarized_text).to eq(cached_summary_text)
       end
     end
 
@@ -112,13 +114,63 @@ describe TopicSummarization do
       end
 
       it "caches the summary and each chunk" do
-        summarized_text = summarization.summarize(topic)
+        section = summarization.summarize(topic, user)
 
-        expect(summarized_text).to eq(summary[:summary])
+        expect(section.summarized_text).to eq(summary[:summary])
 
         assert_summary_is_cached(topic, summary)
 
         summary[:chunks].each { |c| assert_chunk_is_cached(topic, c) }
+      end
+    end
+
+    describe "invalidating cached summaries" do
+      let(:cached_text) { "This is a cached summary" }
+      let(:summarized_text) { "This is the final summary" }
+      let(:summary) do
+        {
+          summary: summarized_text,
+          chunks: [
+            { ids: [topic.first_post.post_number], summary: "this is the first chunk" },
+            { ids: [post_1.post_number, post_2.post_number], summary: "this is the second chunk" },
+          ],
+        }
+      end
+
+      def cached_summary
+        SummarySection.find_by(target: topic, meta_section_id: nil)
+      end
+
+      before do
+        summarization.summarize(topic, user)
+
+        cached_summary.update!(summarized_text: cached_text, created_at: 24.hours.ago)
+      end
+
+      context "when the summary targets changed" do
+        before { cached_summary.update!(content_range: (1..1)) }
+
+        it "deletes existing summaries and create a new one" do
+          section = summarization.summarize(topic, user)
+
+          expect(section.summarized_text).to eq(summarized_text)
+        end
+
+        it "does nothing if the last summary is less than 12 hours old" do
+          cached_summary.update!(created_at: 6.hours.ago)
+
+          section = summarization.summarize(topic, user)
+
+          expect(section.summarized_text).to eq(cached_text)
+        end
+      end
+
+      context "when the summary targets are still the same" do
+        it "doesn't create a new summary" do
+          section = summarization.summarize(topic, user)
+
+          expect(section.summarized_text).to eq(cached_text)
+        end
       end
     end
   end

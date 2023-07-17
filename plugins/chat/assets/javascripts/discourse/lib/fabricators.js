@@ -54,7 +54,7 @@ function messageFabricator(args = {}) {
 function channelFabricator(args = {}) {
   const id = args.id || sequence++;
 
-  return ChatChannel.create(
+  const channel = ChatChannel.create(
     Object.assign(
       {
         id,
@@ -62,16 +62,20 @@ function channelFabricator(args = {}) {
           args.chatable?.type ||
           args.chatable_type ||
           CHATABLE_TYPES.categoryChannel,
-        last_message_sent_at: args.last_message_sent_at,
         chatable_id: args.chatable?.id || args.chatable_id,
         title: args.title || "General",
         description: args.description,
         chatable: args.chatable || categoryFabricator(),
         status: CHANNEL_STATUSES.open,
+        slug: args.chatable?.slug || "general",
       },
       args
     )
   );
+
+  channel.lastMessage = messageFabricator({ channel });
+
+  return channel;
 }
 
 function categoryFabricator(args = {}) {
@@ -113,6 +117,7 @@ function userFabricator(args = {}) {
     username: args.username || "hawk",
     name: args.name,
     avatar_template: "/letter_avatar_proxy/v3/letter/t/41988e/{size}.png",
+    suspended_till: args.suspended_till,
   });
 }
 

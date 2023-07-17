@@ -67,16 +67,11 @@ export default class ChatChannelsManager extends Service {
 
     if (!model.currentUserMembership.following) {
       return this.chatApi.followChannel(model.id).then((membership) => {
-        model.currentUserMembership.following = membership.following;
-        model.currentUserMembership.muted = membership.muted;
-        model.currentUserMembership.desktopNotificationLevel =
-          membership.desktopNotificationLevel;
-        model.currentUserMembership.mobileNotificationLevel =
-          membership.mobileNotificationLevel;
+        model.currentUserMembership = membership;
         return model;
       });
     } else {
-      return Promise.resolve(model);
+      return model;
     }
   }
 
@@ -99,6 +94,16 @@ export default class ChatChannelsManager extends Service {
   remove(model) {
     this.chatSubscriptionsManager.stopChannelSubscription(model);
     delete this._cached[model.id];
+  }
+
+  get allChannels() {
+    return [...this.publicMessageChannels, ...this.directMessageChannels].sort(
+      (a, b) => {
+        return b?.currentUserMembership?.lastViewedAt?.localeCompare?.(
+          a?.currentUserMembership?.lastViewedAt
+        );
+      }
+    );
   }
 
   get publicMessageChannels() {
@@ -146,8 +151,17 @@ export default class ChatChannelsManager extends Service {
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
+      if (!a.lastMessage) {
+        return 1;
+      }
+
+      if (!b.lastMessage) {
+        return -1;
+      }
+
       if (a.tracking.unreadCount === b.tracking.unreadCount) {
-        return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
+        return new Date(a.lastMessage.createdAt) >
+          new Date(b.lastMessage.createdAt)
           ? -1
           : 1;
       } else {

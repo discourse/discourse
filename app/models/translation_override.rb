@@ -45,14 +45,18 @@ class TranslationOverride < ActiveRecord::Base
 
   validate :check_interpolation_keys
 
+  enum :status, %i[up_to_date outdated invalid_interpolation_keys deprecated]
+
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
 
     translation_override = find_or_initialize_by(params)
     sanitized_value =
       translation_override.sanitize_field(value, additional_attributes: ["data-auto-route"])
+    original_translation =
+      I18n.overrides_disabled { I18n.t(transform_pluralized_key(key), locale: :en) }
 
-    data = { value: sanitized_value }
+    data = { value: sanitized_value, original_translation: original_translation }
     if key.end_with?("_MF")
       _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
       data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, sanitized_value)
@@ -125,39 +129,58 @@ class TranslationOverride < ActiveRecord::Base
   private_class_method :i18n_changed
   private_class_method :expire_cache
 
-  private
+  def original_translation_deleted?
+    !I18n.overrides_disabled { I18n.t!(transformed_key, locale: :en) }.is_a?(String)
+  rescue I18n::MissingTranslationData
+    true
+  end
 
-  def check_interpolation_keys
+  def original_translation_updated?
+    return false if original_translation.blank?
+
+    transformed_key = self.class.transform_pluralized_key(translation_key)
+
+    original_translation != I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
+  end
+
+  def invalid_interpolation_keys
     transformed_key = self.class.transform_pluralized_key(translation_key)
 
     original_text = I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
 
-    if original_text
-      original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
-      new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
-      custom_interpolation_keys = []
+    return [] if original_text.blank?
 
-      ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
-        custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
-      end
+    original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
+    new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
+    custom_interpolation_keys = []
 
-      invalid_keys =
-        (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
-          custom_interpolation_keys
-
-      if invalid_keys.present?
-        self.errors.add(
-          :base,
-          I18n.t(
-            "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-            keys: invalid_keys.join(I18n.t("word_connector.comma")),
-            count: invalid_keys.size,
-          ),
-        )
-
-        false
-      end
+    ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
+      custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
     end
+
+    (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
+      custom_interpolation_keys
+  end
+
+  private
+
+  def transformed_key
+    @transformed_key ||= self.class.transform_pluralized_key(translation_key)
+  end
+
+  def check_interpolation_keys
+    invalid_keys = invalid_interpolation_keys
+
+    return if invalid_keys.blank?
+
+    self.errors.add(
+      :base,
+      I18n.t(
+        "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+        keys: invalid_keys.join(I18n.t("word_connector.comma")),
+        count: invalid_keys.size,
+      ),
+    )
   end
 end
 
@@ -165,13 +188,15 @@ end
 #
 # Table name: translation_overrides
 #
-#  id              :integer          not null, primary key
-#  locale          :string           not null
-#  translation_key :string           not null
-#  value           :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  compiled_js     :text
+#  id                   :integer          not null, primary key
+#  locale               :string           not null
+#  translation_key      :string           not null
+#  value                :string           not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  compiled_js          :text
+#  original_translation :text
+#  status               :integer          default("up_to_date"), not null
 #
 # Indexes
 #

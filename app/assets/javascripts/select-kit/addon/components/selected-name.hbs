@@ -6,6 +6,14 @@
     data-name={{this.name}}
     class="select-kit-selected-name selected-name choice"
   >
+    {{#if this.selectKit.options.formName}}
+      <input
+        type="hidden"
+        name={{this.selectKit.options.formName}}
+        value={{this.value}}
+      />
+    {{/if}}
+
     {{#if this.item.icon}}
       {{d-icon this.item.icon}}
     {{/if}}

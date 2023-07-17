@@ -11,6 +11,6 @@ export default function logout({ redirect } = {}) {
     window.location.href = redirect;
     return;
   }
-
-  window.location.href = getURL("/");
+  const url = ctx.siteSettings.login_required ? "/login" : "/";
+  window.location.href = getURL(url);
 }

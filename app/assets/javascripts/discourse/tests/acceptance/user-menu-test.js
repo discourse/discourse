@@ -882,7 +882,9 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click(".user-menu .notifications-dismiss");
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .modal-body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.default", { count: 10 }),
       "confirmation modal is shown when there are unread high pri notifications"
     );
@@ -918,7 +920,9 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".user-menu .notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .modal-body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
         count: 103,
       }),
@@ -972,7 +976,9 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".user-menu .notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .modal-body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.messages", {
         count: 89,
       }),

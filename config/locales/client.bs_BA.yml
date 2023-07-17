@@ -3068,7 +3068,8 @@ bs_BA:
         categories:
           header_link_text: "Kategorije"
         community:
-          header_link_text: "Zajednica"
+          edit_section:
+            header_dropdown: "Customize"
           links:
             about:
               content: "O nama"

@@ -81,8 +81,11 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  threads(channelId) {
-    return this.#getRequest(`/channels/${channelId}/threads`);
+  threads(channelId, handler) {
+    return new Collection(
+      `${this.#basePath}/channels/${channelId}/threads`,
+      handler
+    );
   }
 
   /**
@@ -409,6 +412,17 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Lists all possible chatables.
+   *
+   * @param {term} string - The term to search for. # prefix will scope to channels, @ to users.
+   *
+   * @returns {Promise}
+   */
+  chatables(args = {}) {
+    return this.#getRequest("/chatables", args);
+  }
+
+  /**
    * Marks messages for a single user chat channel membership as read. If no
    * message ID is provided, then the latest message for the channel is fetched
    * on the server and used for the last read message.
@@ -465,13 +479,25 @@ export default class ChatApi extends Service {
    *
    * @param {number} channelId - The ID of the channel.
    * @param {Array<number>} userIds - The IDs of the users to invite.
-   * @param {Array<number>} [messageId] - The ID of a message to highlight when opening the notification.
+   * @param {object} options
+   * @param {number} options.chat_message_id - A message ID to display in the invite.
    */
   invite(channelId, userIds, options = {}) {
     return ajax(`/chat/${channelId}/invite`, {
       type: "put",
       data: { user_ids: userIds, chat_message_id: options.messageId },
     });
+  }
+
+  /**
+   * Summarize a channel.
+   *
+   * @param {number} channelId - The ID of the channel to summarize.
+   * @param {object} options
+   * @param {number} options.since - Number of hours ago the summary should start (1, 3, 6, 12, 24, 72, 168).
+   */
+  summarize(channelId, options = {}) {
+    return this.#getRequest(`/channels/${channelId}/summarize`, options);
   }
 
   get #basePath() {

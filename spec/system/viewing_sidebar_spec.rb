@@ -5,6 +5,8 @@ describe "Viewing sidebar", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:category_sidebar_section_link) { Fabricate(:category_sidebar_section_link, user: user) }
 
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+
   before { sign_in(user) }
 
   describe "when using the legacy navigation menu" do
@@ -13,8 +15,6 @@ describe "Viewing sidebar", type: :system do
     it "should display the sidebar when `navigation_menu` query param is 'sidebar'" do
       visit("/latest?navigation_menu=sidebar")
 
-      sidebar = PageObjects::Components::Sidebar.new
-
       expect(sidebar).to be_visible
       expect(sidebar).to have_category_section_link(category_sidebar_section_link.linkable)
       expect(page).not_to have_css(".hamburger-dropdown")
@@ -22,8 +22,6 @@ describe "Viewing sidebar", type: :system do
 
     it "should display the sidebar dropdown menu when `navigation_menu` query param is 'header_dropdown'" do
       visit("/latest?navigation_menu=header_dropdown")
-
-      sidebar = PageObjects::Components::Sidebar.new
 
       expect(sidebar).to be_not_visible
 
@@ -40,16 +38,12 @@ describe "Viewing sidebar", type: :system do
     it "should display the sidebar when `navigation_menu` query param is 'sidebar'" do
       visit("/latest?navigation_menu=sidebar")
 
-      sidebar = PageObjects::Components::Sidebar.new
-
       expect(sidebar).to be_visible
       expect(page).not_to have_css(".hamburger-dropdown")
     end
 
     it "should display the legacy dropdown menu when `navigation_menu` query param is 'legacy'" do
       visit("/latest?navigation_menu=legacy")
-
-      sidebar = PageObjects::Components::Sidebar.new
 
       expect(sidebar).to be_not_visible
 
@@ -66,8 +60,6 @@ describe "Viewing sidebar", type: :system do
     it "should display the legacy dropdown menu when `navigation_menu` query param is 'legacy'" do
       visit("/latest?navigation_menu=legacy")
 
-      sidebar = PageObjects::Components::Sidebar.new
-
       expect(sidebar).to be_not_visible
 
       legacy_header_dropdown = PageObjects::Components::LegacyHeaderDropdown.new
@@ -78,8 +70,6 @@ describe "Viewing sidebar", type: :system do
 
     it "should display the sidebar dropdown menu when `navigation_menu` query param is 'header_dropdown'" do
       visit("/latest?navigation_menu=header_dropdown")
-
-      sidebar = PageObjects::Components::Sidebar.new
 
       expect(sidebar).to be_not_visible
 

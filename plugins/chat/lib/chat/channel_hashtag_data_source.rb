@@ -23,7 +23,7 @@ module Chat
     end
 
     def self.lookup(guardian, slugs)
-      if SiteSetting.enable_experimental_hashtag_autocomplete
+      if SiteSetting.enable_experimental_hashtag_autocomplete && SiteSetting.enable_public_channels
         return [] if !guardian.can_chat?
         Chat::ChannelFetcher
           .secured_public_channel_slug_lookup(guardian, slugs)
@@ -39,7 +39,7 @@ module Chat
       limit,
       condition = HashtagAutocompleteService.search_conditions[:contains]
     )
-      if SiteSetting.enable_experimental_hashtag_autocomplete
+      if SiteSetting.enable_experimental_hashtag_autocomplete && SiteSetting.enable_public_channels
         return [] if !guardian.can_chat?
         Chat::ChannelFetcher
           .secured_public_channel_search(
@@ -61,7 +61,7 @@ module Chat
     end
 
     def self.search_without_term(guardian, limit)
-      if SiteSetting.enable_experimental_hashtag_autocomplete
+      if SiteSetting.enable_experimental_hashtag_autocomplete && SiteSetting.enable_public_channels
         return [] if !guardian.can_chat?
         allowed_channel_ids_sql =
           Chat::ChannelFetcher.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)

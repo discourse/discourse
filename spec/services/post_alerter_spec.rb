@@ -1905,10 +1905,22 @@ RSpec.describe PostAlerter do
       fab!(:topic_with_muted_category_and_watched_tag) do
         Fabricate(:topic, category: muted_category, tags: [watched_tag])
       end
+      fab!(:directly_watched_topic) do
+        Fabricate(:topic, category: muted_category, tags: [muted_tag])
+      end
+      fab!(:topic_user) do
+        Fabricate(
+          :topic_user,
+          topic: directly_watched_topic,
+          user: user,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+      end
       fab!(:topic_with_watched_category) { Fabricate(:topic, category: category) }
       fab!(:post) { Fabricate(:post, topic: topic_with_muted_tag_and_watched_category) }
       fab!(:post_2) { Fabricate(:post, topic: topic_with_muted_category_and_watched_tag) }
       fab!(:post_3) { Fabricate(:post, topic: topic_with_watched_category) }
+      fab!(:post_4) { Fabricate(:post, topic: directly_watched_topic) }
 
       before do
         CategoryUser.set_notification_level_for_category(
@@ -1926,6 +1938,9 @@ RSpec.describe PostAlerter do
         expect {
           PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
         }.to change { Notification.count }.by(1)
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
       end
 
       it "respects user option even if watched_precedence_over_muted site setting is true" do
@@ -1937,6 +1952,9 @@ RSpec.describe PostAlerter do
         expect {
           PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
         }.not_to change { Notification.count }
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
       end
 
       it "does not add notification when watched_precedence_over_muted setting is false" do
@@ -1950,6 +1968,9 @@ RSpec.describe PostAlerter do
         expect { PostAlerter.post_created(topic_with_watched_category.posts.first) }.to change {
           Notification.count
         }.by(1)
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
       end
 
       it "respects user option even if watched_precedence_over_muted site setting is false" do
@@ -1961,6 +1982,9 @@ RSpec.describe PostAlerter do
         expect {
           PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
         }.to change { Notification.count }.by(1)
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
       end
     end
 

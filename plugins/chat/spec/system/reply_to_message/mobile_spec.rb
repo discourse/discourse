@@ -9,7 +9,12 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }
   fab!(:original_message) do
-    Fabricate(:chat_message, chat_channel: channel_1, user: Fabricate(:user))
+    Fabricate(
+      :chat_message,
+      chat_channel: channel_1,
+      user: Fabricate(:user),
+      message: "This is a message to reply to!",
+    )
   end
 
   before do
@@ -61,7 +66,7 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
 
       expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
-      channel_page.reply_to(original_message)
+      channel_page.message_thread_indicator(original_message).click
       thread_page.send_message("reply to message")
 
       expect(thread_page.messages).to have_message(text: message_1.message)

@@ -83,10 +83,7 @@ module Chat
       Chat::MessageRateLimiter.run!(current_user)
 
       @user_chat_channel_membership =
-        Chat::ChannelMembershipManager.new(@chat_channel).find_for_user(
-          current_user,
-          following: true,
-        )
+        Chat::ChannelMembershipManager.new(@chat_channel).find_for_user(current_user)
       raise Discourse::InvalidAccess unless @user_chat_channel_membership
 
       reply_to_msg_id = params[:in_reply_to_id]
@@ -121,22 +118,21 @@ module Chat
         # If any of the channel users is ignoring, muting, or preventing DMs from
         # the current user then we should not auto-follow the channel once again or
         # publish the new channel.
-        user_ids_allowing_communication =
+        allowed_user_ids =
           UserCommScreener.new(
             acting_user: current_user,
             target_user_ids:
               @chat_channel.user_chat_channel_memberships.where(following: false).pluck(:user_id),
           ).allowing_actor_communication
 
-        if user_ids_allowing_communication.any?
-          Chat::Publisher.publish_new_channel(
-            @chat_channel,
-            User.where(id: user_ids_allowing_communication),
-          )
+        allowed_user_ids << current_user.id if !@user_chat_channel_membership.following
+
+        if allowed_user_ids.any?
+          Chat::Publisher.publish_new_channel(@chat_channel, User.where(id: allowed_user_ids))
 
           @chat_channel
             .user_chat_channel_memberships
-            .where(user_id: user_ids_allowing_communication)
+            .where(user_id: allowed_user_ids)
             .update_all(following: true)
         end
       end
@@ -151,7 +147,7 @@ module Chat
         )
 
       Chat::Publisher.publish_user_tracking_state!(current_user, @chat_channel, message)
-      render json: success_json
+      render json: success_json.merge(message_id: message.id)
     end
 
     def edit_message

@@ -9,7 +9,7 @@ export default class UserMenuOtherNotificationsList extends UserMenuNotification
     return "user-menu/other-notifications-list-empty-state";
   }
 
-  dismissWarningModal() {
-    return null;
+  get renderDismissConfirmation() {
+    return false;
   }
 }

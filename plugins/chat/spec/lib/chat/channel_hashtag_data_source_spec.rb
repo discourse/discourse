@@ -79,6 +79,11 @@ RSpec.describe Chat::ChannelHashtagDataSource do
       Group.refresh_automatic_groups!
       expect(described_class.lookup(Guardian.new(user), ["random"])).to be_empty
     end
+
+    it "returns an empty array if public channels are disabled" do
+      SiteSetting.enable_public_channels = false
+      expect(described_class.lookup(guardian, ["random"])).to eq([])
+    end
   end
 
   describe "#search" do
@@ -144,6 +149,11 @@ RSpec.describe Chat::ChannelHashtagDataSource do
       Group.refresh_automatic_groups!
       expect(described_class.search(Guardian.new(user), "rand", 10)).to be_empty
     end
+
+    it "returns an empty array if public channels are disabled" do
+      SiteSetting.enable_public_channels = false
+      expect(described_class.search(guardian, "rand", 10)).to eq([])
+    end
   end
 
   describe "#search_without_term" do
@@ -170,6 +180,11 @@ RSpec.describe Chat::ChannelHashtagDataSource do
       expect(described_class.search_without_term(guardian, 5).map(&:slug)).to eq(
         %w[chat code-review random general],
       )
+    end
+
+    it "returns an empty array if public channels are disabled" do
+      SiteSetting.enable_public_channels = false
+      expect(described_class.search_without_term(guardian, 5)).to eq([])
     end
 
     it "does not return channels the user does not have permission to view" do

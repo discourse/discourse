@@ -12,6 +12,7 @@ export default class UserChatChannelMembership {
   @tracked mobileNotificationLevel = null;
   @tracked lastReadMessageId = null;
   @tracked user = null;
+  @tracked lastViewedAt = null;
 
   constructor(args = {}) {
     this.following = args.following;
@@ -19,6 +20,7 @@ export default class UserChatChannelMembership {
     this.desktopNotificationLevel = args.desktop_notification_level;
     this.mobileNotificationLevel = args.mobile_notification_level;
     this.lastReadMessageId = args.last_read_message_id;
+    this.lastViewedAt = args.last_viewed_at;
     this.user = this.#initUserModel(args.user);
   }
 

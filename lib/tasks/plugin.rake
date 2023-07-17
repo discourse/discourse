@@ -209,14 +209,17 @@ task "plugin:qunit", %i[plugin timeout] do |t, args|
   rake = "#{Rails.root}/bin/rake"
 
   cmd = "LOAD_PLUGINS=1 "
-  cmd += "QUNIT_SKIP_CORE=1 "
 
-  if args[:plugin] == "*"
-    puts "Running qunit tests for all plugins"
-  else
-    puts "Running qunit tests for #{args[:plugin]}"
-    cmd += "QUNIT_SINGLE_PLUGIN='#{args[:plugin]}' "
-  end
+  target =
+    if args[:plugin] == "*"
+      puts "Running qunit tests for all plugins"
+      "plugins"
+    else
+      puts "Running qunit tests for #{args[:plugin]}"
+      args[:plugin]
+    end
+
+  cmd += "TARGET='#{target}' "
 
   cmd += "#{rake} qunit:test"
   cmd += "[#{args[:timeout]}]" if args[:timeout]

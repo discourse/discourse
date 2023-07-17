@@ -1403,7 +1403,8 @@ be:
         categories:
           header_link_text: "катэгорыі"
         community:
-          header_link_text: "супольнасць"
+          edit_section:
+            header_dropdown: "Кастамізаваць"
           links:
             about:
               content: "Аб тэме"

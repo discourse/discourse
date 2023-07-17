@@ -1,4 +1,4 @@
-import { avatarImg } from "discourse/lib/utilities";
+import { avatarImg } from "discourse-common/lib/avatar-utils";
 import { htmlHelper } from "discourse-common/lib/helpers";
 import { isEmpty } from "@ember/utils";
 

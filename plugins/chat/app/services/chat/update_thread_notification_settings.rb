@@ -61,7 +61,7 @@ module Chat
       membership = thread.membership_for(guardian.user)
       if !membership
         membership = thread.add(guardian.user)
-        membership.update!(last_read_message_id: thread.last_reply.id)
+        membership.update!(last_read_message_id: thread.last_message_id)
       end
       membership.update!(notification_level: contract.notification_level)
       context.membership = membership

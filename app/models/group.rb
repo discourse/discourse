@@ -275,12 +275,12 @@ class Group < ActiveRecord::Base
   scope :messageable,
         lambda { |user|
           where(
-            "messageable_level in (:levels) OR
+            "groups.messageable_level in (:levels) OR
           (
-            messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            groups.messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND groups.id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
           ) OR (
-            messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            groups.messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND groups.id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
           )",
             levels: alias_levels(user),
@@ -290,14 +290,14 @@ class Group < ActiveRecord::Base
 
   def self.mentionable_sql_clause(include_public: true)
     clause = +<<~SQL
-      mentionable_level in (:levels)
+      groups.mentionable_level in (:levels)
       OR (
-        mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
-        AND id in (
+        groups.mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
+        AND groups.id in (
           SELECT group_id FROM group_users WHERE user_id = :user_id)
       ) OR (
-        mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
-        AND id in (
+        groups.mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+        AND groups.id in (
           SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
       )
       SQL

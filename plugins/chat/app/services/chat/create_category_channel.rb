@@ -27,6 +27,7 @@ module Chat
     #   @option params_to_create [Boolean] threading_enabled
     #   @return [Service::Base::Context]
 
+    policy :public_channels_enabled
     policy :can_create_channel
     contract
     model :category, :fetch_category
@@ -56,6 +57,10 @@ module Chat
     end
 
     private
+
+    def public_channels_enabled
+      SiteSetting.enable_public_channels
+    end
 
     def can_create_channel(guardian:, **)
       guardian.can_create_chat_channel?

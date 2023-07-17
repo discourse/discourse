@@ -68,7 +68,7 @@
           {{/each}}
         </div>
 
-        {{#if this.model.can_edit_email}}
+        {{#if this.canAddEmail}}
           <LinkTo
             @route="preferences.email"
             @query={{hash new=1}}

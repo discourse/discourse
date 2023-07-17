@@ -3,7 +3,7 @@
 RSpec.describe "Deleted message", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel_1) { Fabricate(:category_channel) }

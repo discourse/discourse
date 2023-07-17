@@ -10,6 +10,7 @@ import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { create } from "virtual-dom";
 import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
+import { SELECTORS } from "discourse/lib/lightbox/constants";
 
 export default {
   initialize(owner) {
@@ -18,6 +19,8 @@ export default {
       const session = owner.lookup("service:session");
       const site = owner.lookup("service:site");
       const modal = owner.lookup("service:modal");
+      // will eventually just be called lightbox
+      const lightboxService = owner.lookup("service:lightbox");
       api.decorateCookedElement(
         (elem) => {
           return highlightSyntax(elem, siteSettings, session);
@@ -27,12 +30,32 @@ export default {
         }
       );
 
-      api.decorateCookedElement(
-        (elem) => {
-          return lightbox(elem, siteSettings);
-        },
-        { id: "discourse-lightbox" }
-      );
+      if (siteSettings.enable_experimental_lightbox) {
+        api.decorateCookedElement(
+          (element, helper) => {
+            return helper &&
+              element.querySelector(SELECTORS.DEFAULT_ITEM_SELECTOR)
+              ? lightboxService.setupLightboxes({
+                  container: element,
+                  selector: SELECTORS.DEFAULT_ITEM_SELECTOR,
+                })
+              : null;
+          },
+          {
+            id: "experimental-discourse-lightbox",
+            onlyStream: true,
+          }
+        );
+
+        api.cleanupStream(lightboxService.cleanupLightboxes);
+      } else {
+        api.decorateCookedElement(
+          (elem) => {
+            return lightbox(elem, siteSettings);
+          },
+          { id: "discourse-lightbox" }
+        );
+      }
 
       api.decorateCookedElement(
         (elem) => {

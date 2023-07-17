@@ -1,4 +1,5 @@
 import { getResolverOption } from "discourse-common/resolver";
+import require from "require";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
 
@@ -45,11 +46,8 @@ export function buildRawConnectorCache(findOutlets) {
 }
 
 export function eagerLoadRawTemplateModules() {
-  for (const [key, value] of Object.entries(requirejs.entries)) {
-    if (
-      key.includes("/templates/") &&
-      value.deps.includes("discourse-common/lib/raw-templates")
-    ) {
+  for (const key of Object.keys(requirejs.entries)) {
+    if (key.includes("/raw-templates/")) {
       require(key);
     }
   }

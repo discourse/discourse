@@ -1,4 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -56,25 +57,11 @@ export default class ChatChannel {
     return new ChatChannel(args);
   }
 
-  static createDirectMessageChannelDraft(args = {}) {
-    const channel = ChatChannel.create({
-      chatable_type: CHATABLE_TYPES.directMessageChannel,
-      chatable: {
-        users: args.users || [],
-      },
-    });
-    channel.isDraft = true;
-    return channel;
-  }
-
-  @tracked currentUserMembership = null;
-  @tracked isDraft = false;
   @tracked title;
   @tracked slug;
   @tracked description;
   @tracked status;
   @tracked activeThread = null;
-  @tracked lastMessageSentAt;
   @tracked canDeleteOthers;
   @tracked canDeleteSelf;
   @tracked canFlag;
@@ -94,6 +81,8 @@ export default class ChatChannel {
   messagesManager = new ChatMessagesManager(getOwner(this));
 
   @tracked _unreadThreadIds = new TrackedSet();
+  @tracked _currentUserMembership;
+  @tracked _lastMessage;
 
   constructor(args = {}) {
     this.id = args.id;
@@ -111,7 +100,6 @@ export default class ChatChannel {
     this.userSilenced = args.user_silenced;
     this.canModerate = args.can_moderate;
     this.description = args.description;
-    this.lastMessageSentAt = args.last_message_sent_at;
     this.threadingEnabled = args.threading_enabled;
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
@@ -121,15 +109,14 @@ export default class ChatChannel {
           users: args.chatable?.users,
         })
       : Category.create(args.chatable);
-    this.currentUserMembership = UserChatChannelMembership.create(
-      args.current_user_membership
-    );
+    this.currentUserMembership = args.current_user_membership;
 
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
+    this.lastMessage = args.last_message;
   }
 
   get unreadThreadCount() {
@@ -170,10 +157,6 @@ export default class ChatChannel {
 
   removeMessage(message) {
     this.messagesManager.removeMessage(message);
-  }
-
-  get lastMessage() {
-    return this.messagesManager.findLastMessage();
   }
 
   lastUserMessage(user) {
@@ -283,7 +266,7 @@ export default class ChatChannel {
     });
 
     clonedMessage.thread = thread;
-    this.threadsManager.store(this, thread);
+    this.threadsManager.add(this, thread);
     thread.messagesManager.addMessages([clonedMessage]);
 
     return thread;
@@ -313,15 +296,34 @@ export default class ChatChannel {
     return !READONLY_STATUSES.includes(this.status);
   }
 
-  updateMembership(membership) {
-    this.currentUserMembership.following = membership.following;
-    this.currentUserMembership.lastReadMessage_id =
-      membership.last_read_message_id;
-    this.currentUserMembership.desktopNotificationLevel =
-      membership.desktop_notification_level;
-    this.currentUserMembership.mobileNotificationLevel =
-      membership.mobile_notification_level;
-    this.currentUserMembership.muted = membership.muted;
+  get currentUserMembership() {
+    return this._currentUserMembership;
+  }
+
+  set currentUserMembership(membership) {
+    if (membership instanceof UserChatChannelMembership) {
+      this._currentUserMembership = membership;
+    } else {
+      this._currentUserMembership =
+        UserChatChannelMembership.create(membership);
+    }
+  }
+
+  get lastMessage() {
+    return this._lastMessage;
+  }
+
+  set lastMessage(message) {
+    if (!message) {
+      this._lastMessage = null;
+      return;
+    }
+
+    if (message instanceof ChatMessage) {
+      this._lastMessage = message;
+    } else {
+      this._lastMessage = ChatMessage.create(this, message);
+    }
   }
 
   clearSelectedMessages() {

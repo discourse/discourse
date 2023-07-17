@@ -32,6 +32,11 @@ export default class ChatThreadPaneSubscriptionsManager extends ChatPaneBaseSubs
     return;
   }
 
+  // NOTE: We don't yet handle notices inside of threads so do nothing.
+  handleNotice() {
+    return;
+  }
+
   _afterDeleteMessage(targetMsg, data) {
     if (this.model.currentUserMembership?.lastReadMessageId === targetMsg.id) {
       this.model.currentUserMembership.lastReadMessageId =

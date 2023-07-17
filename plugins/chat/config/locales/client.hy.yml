@@ -56,6 +56,8 @@ hy:
           about: Մասին
           members: Անդամներ
           settings: Կարգավորումներ
+      new_message_modal:
+        no_items: "Տարրեր չկան"
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"

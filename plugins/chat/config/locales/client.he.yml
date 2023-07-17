@@ -343,6 +343,15 @@ he:
           about: אודות
           members: חברים
           settings: הגדרות
+      new_message_modal:
+        title: שליחת הודעה
+        add_user_long: <kbd>shift + לחיצת עכבר</kbd> או <kbd>shift + enter</kbd><span>מוסיפים ‎@%{username}</span>
+        add_user_short: <span>הוספת משתמש</span>
+        open_channel: <span>פתיחת ערוץ</span>
+        default_search_placeholder: "#ערוץ, @מישהם או כל דבר אחר"
+        user_search_placeholder: "…הוספת משתמשים נוספים"
+        disabled_user: "השבית את הצ׳אט"
+        no_items: "אין פריטים"
       channel_edit_name_slug_modal:
         title: עריכת ערוץ
         input_placeholder: הוספת שם
@@ -358,9 +367,6 @@ he:
         prefix: "אל:"
         no_results: אין תוצאות
         selected_user_title: "ביטול בחירת %{username}"
-      channel_selector:
-        title: "קפיצה לערוץ"
-        no_channels: "אין ערוצים שתואמים לחיפוש שלך"
       channel:
         no_memberships: אין חברים בערוץ הזה
         no_memberships_found: לא נמצאו חברים
