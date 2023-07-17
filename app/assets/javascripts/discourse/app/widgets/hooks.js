@@ -17,6 +17,7 @@ const MOUSE_OVER_ATTRIBUTE_NAME = "_discourse_mouse_over_widget";
 const MOUSE_OUT_ATTRIBUTE_NAME = "_discourse_mouse_out_widget";
 const TOUCH_START_ATTRIBUTE_NAME = "_discourse_touch_start_widget";
 const TOUCH_END_ATTRIBUTE_NAME = "_discourse_touch_end_widget";
+const TOUCH_MOVE_ATTRIBUTE_NAME = "_discourse_touch_move_widget";
 
 class WidgetBaseHook {
   constructor(widget) {
@@ -64,6 +65,7 @@ export const WidgetMouseMoveHook = buildHook(MOUSE_MOVE_ATTRIBUTE_NAME);
 export const WidgetMouseOverHook = buildHook(MOUSE_OVER_ATTRIBUTE_NAME);
 export const WidgetMouseOutHook = buildHook(MOUSE_OUT_ATTRIBUTE_NAME);
 export const WidgetTouchEndHook = buildHook(TOUCH_END_ATTRIBUTE_NAME);
+export const WidgetTouchMoveHook = buildHook(TOUCH_MOVE_ATTRIBUTE_NAME);
 
 // `touchstart` and `touchmove` events are particularly performance sensitive because
 // they block scrolling on mobile. Therefore we want to avoid registering global non-passive
@@ -258,6 +260,12 @@ WidgetClickHook.setupDocumentCallback = function () {
 
   $(document).on("touchend.discourse-widget", (e) => {
     nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, (w) => w.touchEnd(e), {
+      rerender: false,
+    });
+  });
+
+  $(document).on("touchmove.discourse-widget", (e) => {
+    nodeCallback(e.target, TOUCH_MOVE_ATTRIBUTE_NAME, (w) => w.touchMove(e), {
       rerender: false,
     });
   });
