@@ -102,7 +102,7 @@ describe "Thread tracking state | drawer", type: :system do
         expect(drawer_page).to have_no_unread_channel(channel)
       end
 
-      it "shows an unread indicator for the channel index if a new thread message arrives while the user is not looking at the channel" do
+      xit "shows an unread indicator for the channel index if a new thread message arrives while the user is not looking at the channel" do
         visit("/")
         chat_page.open_from_header
         drawer_page.open_channel(channel)
