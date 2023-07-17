@@ -14,6 +14,14 @@ RSpec.describe HashtagAutocompleteService do
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe ".enabled_data_sources" do
+    it "only returns data sources that are enabled" do
+      expect(HashtagAutocompleteService.enabled_data_sources).to eq(
+        HashtagAutocompleteService::DEFAULT_DATA_SOURCES,
+      )
+    end
+  end
+
   describe ".contexts_with_ordered_types" do
     it "returns a hash of all the registered search contexts and their types in the defined priority order" do
       expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
