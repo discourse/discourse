@@ -23,28 +23,7 @@ export default {
 
     this.siteSettings = container.lookup("service:site-settings");
 
-    withPluginApi("1.7.1", (api) => {
-      api.addSidebarPanel((BaseCustomSidebarPanel) => {
-        const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
-          get key() {
-            return "chat";
-          }
-          get switchButtonLabel() {
-            return I18n.t("sidebar.panels.chat.label");
-          }
-
-          get switchButtonIcon() {
-            return "d-chat";
-          }
-
-          get switchButtonDefaultUrl() {
-            return "/chat";
-          }
-        };
-
-        return ChatSidebarPanel;
-      });
-
+    withPluginApi("1.3.0", (api) => {
       if (this.siteSettings.enable_public_channels) {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
