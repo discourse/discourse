@@ -108,6 +108,7 @@ describe "Bookmarking posts and topics", type: :system do
       expect(dialog).to have_content(I18n.t("js.bookmarks.confirm_clear"))
       dialog.click_yes
       expect(dialog).to be_closed
+      expect(topic_page).to have_no_bookmarks
       expect(Bookmark.where(user: current_user).count).to eq(0)
     end
   end
