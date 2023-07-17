@@ -9,9 +9,9 @@ import { inject as service } from "@ember/service";
 const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
-  @controller("exception") exceptionController;
   @service router;
   @service siteSettings;
+  @controller("exception") exceptionController;
 
   isLoading = false;
   dashboardFetchedAt = null;

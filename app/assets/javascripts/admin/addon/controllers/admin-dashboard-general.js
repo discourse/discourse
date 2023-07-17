@@ -19,9 +19,9 @@ function staticReport(reportType) {
 export default class AdminDashboardGeneralController extends Controller.extend(
   PeriodComputationMixin
 ) {
-  @controller("exception") exceptionController;
   @service router;
   @service siteSettings;
+  @controller("exception") exceptionController;
 
   isLoading = false;
   dashboardFetchedAt = null;
