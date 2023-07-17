@@ -173,7 +173,7 @@ export default class ModalServiceWithLegacySupport extends ModalService {
 
     if (!KNOWN_LEGACY_MODALS.includes(modal)) {
       deprecated(
-        "Defining modals using a controller is deprecated. Use the component-based API instead.",
+        `Defining modals using a controller is deprecated. Use the component-based API instead. (modal: ${modal})`,
         {
           id: "discourse.modal-controllers",
           since: "3.1",
