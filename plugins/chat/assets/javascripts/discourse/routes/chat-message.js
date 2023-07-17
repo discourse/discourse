@@ -10,7 +10,7 @@ export default class ChatMessageRoute extends DiscourseRoute {
   async model(params) {
     return ajax(`/chat/message/${params.messageId}.json`)
       .then((response) => {
-        this.router.transitionTo
+        this.router.transitionTo(
           "chat.channel.near-message",
           response.chat_channel_title,
           response.chat_channel_id,
@@ -22,7 +22,7 @@ export default class ChatMessageRoute extends DiscourseRoute {
 
   beforeModel() {
     if (!this.chat.userCanChat) {
-      return this.router.transitionTo`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
   }
 }

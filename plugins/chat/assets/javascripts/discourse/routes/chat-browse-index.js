@@ -9,7 +9,7 @@ export default class ChatBrowseIndexRoute extends DiscourseRoute {
 
   beforeModel() {
     if (!this.siteSettings.enable_public_channels) {
-      return this.router.transitionTo`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
   }
 

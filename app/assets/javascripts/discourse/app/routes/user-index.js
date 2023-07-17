@@ -17,7 +17,7 @@ export default DiscourseRoute.extend({
     if (this.site.mobileView) {
       this.replaceWith(destination);
     } else {
-      this.router.transitionTodestination);
+      this.router.transitionTo(destination);
     }
   },
 });

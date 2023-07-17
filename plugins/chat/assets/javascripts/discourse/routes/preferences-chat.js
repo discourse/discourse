@@ -10,7 +10,7 @@ export default class PreferencesChatRoute extends RestrictedUserRoute {
 
   setupController(controller, user) {
     if (!user?.can_chat && !this.currentUser.admin) {
-      return this.router.transitionTo`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
     controller.set("model", user);
   }
