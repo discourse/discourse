@@ -227,7 +227,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   transitionToEditRoute() {
-    this.router.transitionToRoute(
+    this.router.transitionTo(
       this.editRouteName,
       this.get("model.id"),
       "common",
@@ -384,7 +384,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           this.allThemes.removeObject(model);
-          this.router.transitionToRoute("adminCustomizeThemes");
+          this.router.transitionTo("adminCustomizeThemes");
         });
       },
     });

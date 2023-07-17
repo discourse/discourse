@@ -10,7 +10,7 @@ export default Controller.extend({
       const tagGroups = this.tagGroups.model;
       tagGroups.removeObject(this.model);
 
-      this.router.transitionToRoute("tagGroups.index");
+      this.router.transitionTo("tagGroups.index");
     },
   },
 });

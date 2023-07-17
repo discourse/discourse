@@ -120,7 +120,7 @@ export default class AdminSiteSettingsController extends Controller {
     if (isEmpty(this.filter) && !this.onlyOverridden) {
       this.set("visibleSiteSettings", this.allSiteSettings);
       if (this.categoryNameKey === "all_results") {
-        this.router.transitionToRoute("adminSiteSettings");
+        this.router.transitionTo("adminSiteSettings");
       }
       return;
     }
@@ -141,7 +141,7 @@ export default class AdminSiteSettingsController extends Controller {
     }
 
     this.set("visibleSiteSettings", matchesGroupedByCategory);
-    this.router.transitionToRoute(
+    this.router.transitionTo(
       "adminSiteSettingsCategory",
       category || "all_results"
     );

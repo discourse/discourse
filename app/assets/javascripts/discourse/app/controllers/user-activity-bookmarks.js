@@ -53,7 +53,7 @@ export default Controller.extend({
 
   @action
   search() {
-    this.router.transitionToRoute({
+    this.router.transitionTo({
       queryParams: { q: this.searchTerm },
     });
   },

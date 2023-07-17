@@ -97,7 +97,7 @@ export default class AdminWebHooksEditController extends Controller {
 
       this.set("saved", true);
       this.adminWebHooks.model.addObject(this.model);
-      this.router.transitionToRoute("adminWebHooks.show", this.model);
+      this.router.transitionTo("adminWebHooks.show", this.model);
     } catch (e) {
       popupAjaxError(e);
     }

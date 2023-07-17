@@ -52,7 +52,7 @@ export default class AdminSiteTextIndexController extends Controller {
 
   @action
   edit(siteText) {
-    this.router.transitionToRoute("adminSiteText.edit", siteText.get("id"), {
+    this.router.transitionTo("adminSiteText.edit", siteText.get("id"), {
       queryParams: {
         locale: this.locale,
       },

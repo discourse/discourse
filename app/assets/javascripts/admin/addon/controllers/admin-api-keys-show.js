@@ -56,7 +56,7 @@ export default class AdminApiKeysShowController extends Controller.extend(
   deleteKey(key) {
     key
       .destroyRecord()
-      .then(() => this.router.transitionToRoute("adminApiKeys.index"))
+      .then(() => this.router.transitionTo("adminApiKeys.index"))
       .catch(popupAjaxError);
   }
 

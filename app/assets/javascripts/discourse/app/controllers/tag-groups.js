@@ -6,7 +6,7 @@ export default Controller.extend({
 
   actions: {
     newTagGroup() {
-      this.router.transitionToRoute("tagGroups.new");
+      this.router.transitionTo("tagGroups.new");
     },
   },
 });

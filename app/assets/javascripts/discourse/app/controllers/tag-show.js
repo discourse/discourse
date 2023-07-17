@@ -181,7 +181,7 @@ export default DiscoverySortableController.extend(
         didConfirm: () => {
           return this.tag
             .destroyRecord()
-            .then(() => this.router.transitionToRoute("tags.index"))
+            .then(() => this.router.transitionTo("tags.index"))
             .catch(() => this.dialog.alert(I18n.t("generic_error")));
         },
       });

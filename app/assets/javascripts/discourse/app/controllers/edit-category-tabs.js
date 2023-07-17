@@ -112,10 +112,7 @@ export default Controller.extend({
               notification_level: NotificationLevels.REGULAR,
             });
             this.site.updateCategory(model);
-            this.router.transitionToRoute(
-              "editCategory",
-              Category.slugFor(model)
-            );
+            this.router.transitionTo("editCategory", Category.slugFor(model));
           }
         })
         .catch((error) => {
@@ -132,7 +129,7 @@ export default Controller.extend({
           this.model
             .destroy()
             .then(() => {
-              this.router.transitionToRoute("discovery.categories");
+              this.router.transitionTo("discovery.categories");
             })
             .catch(() => {
               this.displayErrors([I18n.t("category.delete_error")]);

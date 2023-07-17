@@ -79,7 +79,7 @@ export default class AdminApiKeysNewController extends Controller {
 
   @action
   continue() {
-    this.router.transitionToRoute("adminApiKeys.show", this.model.id);
+    this.router.transitionTo("adminApiKeys.show", this.model.id);
   }
 
   @action

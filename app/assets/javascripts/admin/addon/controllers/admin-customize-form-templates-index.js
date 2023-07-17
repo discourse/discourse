@@ -7,7 +7,7 @@ export default class AdminCustomizeFormTemplatesIndex extends Controller {
 
   @action
   newTemplate() {
-    this.router.transitionToRoute("adminCustomizeFormTemplates.new");
+    this.router.transitionTo("adminCustomizeFormTemplates.new");
   }
 
   @action

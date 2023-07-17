@@ -23,11 +23,11 @@ export default Controller.extend({
   actions: {
     sendActivationEmail() {
       resendActivationEmail(this.get("accountCreated.username")).then(() => {
-        this.router.transitionToRoute("account-created.resent");
+        this.router.transitionTo("account-created.resent");
       });
     },
     editActivationEmail() {
-      this.router.transitionToRoute("account-created.edit-email");
+      this.router.transitionTo("account-created.edit-email");
     },
   },
 });

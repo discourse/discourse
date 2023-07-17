@@ -63,7 +63,7 @@ export default Controller.extend({
     group
       .create()
       .then(() => {
-        this.router.transitionToRoute("group.members", group.name);
+        this.router.transitionTo("group.members", group.name);
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));

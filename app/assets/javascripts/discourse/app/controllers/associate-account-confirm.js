@@ -16,7 +16,7 @@ export default Controller.extend(ModalFunctionality, {
       })
         .then((result) => {
           if (result.success) {
-            this.router.transitionToRoute(
+            this.router.transitionTo(
               "preferences.account",
               this.currentUser.findDetails()
             );

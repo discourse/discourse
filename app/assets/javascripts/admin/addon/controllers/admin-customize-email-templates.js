@@ -11,9 +11,6 @@ export default class AdminCustomizeEmailTemplatesController extends Controller {
 
   @action
   onSelectTemplate(template) {
-    this.router.transitionToRoute(
-      "adminCustomizeEmailTemplates.edit",
-      template
-    );
+    this.router.transitionTo("adminCustomizeEmailTemplates.edit", template);
   }
 }

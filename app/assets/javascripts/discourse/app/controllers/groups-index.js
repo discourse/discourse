@@ -57,7 +57,7 @@ export default Controller.extend({
 
   @action
   new() {
-    this.router.transitionToRoute("groups.new");
+    this.router.transitionTo("groups.new");
   },
 
   _debouncedFilter(filter) {

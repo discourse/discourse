@@ -16,14 +16,14 @@ export default Controller.extend({
     if (response?.refresh_required) {
       document.location = getUrl(`/wizard/steps/${next}`);
     } else if (response?.success && next) {
-      this.router.transitionToRoute("wizard.step", next);
+      this.router.transitionTo("wizard.step", next);
     } else if (response?.success) {
-      this.router.transitionToRoute("discovery.latest");
+      this.router.transitionTo("discovery.latest");
     }
   },
 
   @action
   goBack() {
-    this.router.transitionToRoute("wizard.step", this.step.previous);
+    this.router.transitionTo("wizard.step", this.step.previous);
   },
 });

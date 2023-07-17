@@ -149,7 +149,7 @@ export default Controller.extend({
       didConfirm: () => {
         model
           .destroy()
-          .then(() => this.router.transitionToRoute("groups.index"))
+          .then(() => this.router.transitionTo("groups.index"))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);

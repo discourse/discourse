@@ -20,13 +20,13 @@ export default Controller.extend({
       changeEmail({ email })
         .then(() => {
           this.set("accountCreated.email", email);
-          this.router.transitionToRoute("account-created.resent");
+          this.router.transitionTo("account-created.resent");
         })
         .catch(popupAjaxError);
     },
 
     cancel() {
-      this.router.transitionToRoute("account-created.index");
+      this.router.transitionTo("account-created.index");
     },
   },
 });
