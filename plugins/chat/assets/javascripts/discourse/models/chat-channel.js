@@ -1,6 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -80,7 +79,6 @@ export default class ChatChannel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  @tracked _unreadThreadIds = new TrackedSet();
   @tracked _currentUserMembership;
   @tracked _lastMessage;
 
@@ -119,16 +117,15 @@ export default class ChatChannel {
     this.lastMessage = args.last_message;
   }
 
-  get unreadThreadCount() {
-    return this.unreadThreadIds.size;
+  get unreadThreadsCountSinceLastViewed() {
+    return Array.from(this.threadsManager.unreadThreadOverview.values()).filter(
+      (lastReplyCreatedAt) =>
+        lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
+    ).length;
   }
 
-  get unreadThreadIds() {
-    return this._unreadThreadIds;
-  }
-
-  set unreadThreadIds(unreadThreadIds) {
-    this._unreadThreadIds = new TrackedSet(unreadThreadIds);
+  updateLastViewedAt() {
+    this.currentUserMembership.lastViewedAt = new Date();
   }
 
   findIndexOfMessage(id) {

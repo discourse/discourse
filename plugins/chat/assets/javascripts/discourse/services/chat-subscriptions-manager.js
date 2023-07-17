@@ -211,7 +211,11 @@ export default class ChatSubscriptionsManager extends Service {
               .find(channel.id, busData.thread_id)
               .then((thread) => {
                 if (thread.currentUserMembership) {
-                  channel.unreadThreadIds.add(busData.thread_id);
+                  channel.threadsManager.markThreadUnread(
+                    busData.thread_id,
+                    busData.message.created_at
+                  );
+                  this._updateActiveLastViewedAt(channel);
                 }
               });
           }
@@ -228,7 +232,9 @@ export default class ChatSubscriptionsManager extends Service {
           if (busData.message.user.id === this.currentUser.id) {
             // Thread should no longer be considered unread.
             if (thread.currentUserMembership) {
-              channel.unreadThreadIds.delete(busData.thread_id);
+              channel.threadsManager.unreadThreadOverview.delete(
+                parseInt(busData.thread_id, 10)
+              );
               thread.currentUserMembership.lastReadMessageId =
                 busData.message.id;
             }
@@ -251,13 +257,25 @@ export default class ChatSubscriptionsManager extends Service {
                   (thread.currentUserMembership.lastReadMessageId || 0) &&
                 !thread.currentUserMembership.isQuiet
               ) {
-                channel.unreadThreadIds.add(busData.thread_id);
+                channel.threadsManager.markThreadUnread(
+                  busData.thread_id,
+                  busData.message.created_at
+                );
                 thread.tracking.unreadCount++;
+                this._updateActiveLastViewedAt(channel);
               }
             }
           }
         });
     });
+  }
+
+  // If the user is currently looking at this channel via activeChannel, we don't want the unread
+  // indicator to show in the sidebar for unread threads (since that is based on the lastViewedAt).
+  _updateActiveLastViewedAt(channel) {
+    if (this.chat.activeChannel?.id === channel.id) {
+      channel.updateLastViewedAt();
+    }
   }
 
   _startUserTrackingStateSubscription(lastId) {
@@ -316,8 +334,9 @@ export default class ChatSubscriptionsManager extends Service {
       channel.tracking.unreadCount = busData.unread_count;
       channel.tracking.mentionCount = busData.mention_count;
 
-      if (busData.hasOwnProperty("unread_thread_ids")) {
-        channel.unreadThreadIds = busData.unread_thread_ids;
+      if (busData.hasOwnProperty("unread_thread_overview")) {
+        channel.threadsManager.unreadThreadOverview =
+          busData.unread_thread_overview;
       }
 
       if (busData.thread_id && busData.hasOwnProperty("thread_tracking")) {

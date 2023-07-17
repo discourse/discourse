@@ -20,10 +20,20 @@ module PageObjects
       end
 
       def open_channel(channel)
-        find(
-          "#{VISIBLE_DRAWER} .channels-list .chat-channel-row[data-chat-channel-id='#{channel.id}']",
-        ).click
+        find("#{VISIBLE_DRAWER} .channels-list #{channel_row_selector(channel)}").click
         has_no_css?(".chat-skeleton")
+      end
+
+      def channel_row_selector(channel)
+        ".chat-channel-row[data-chat-channel-id='#{channel.id}']"
+      end
+
+      def has_unread_channel?(channel)
+        has_css?("#{channel_row_selector(channel)} .chat-channel-unread-indicator")
+      end
+
+      def has_no_unread_channel?(channel)
+        has_no_css?("#{channel_row_selector(channel)} .chat-channel-unread-indicator")
       end
 
       def maximize
