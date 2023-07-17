@@ -147,7 +147,9 @@ export default class LightboxService extends Service {
     const handlerOptions = { capture: true };
     container.addEventListener(
       "click",
-      this.handleClickEvent.bind(this, this.selector),
+      (event) => {
+        this.handleClickEvent(event, selector);
+      },
       handlerOptions
     );
 
@@ -233,7 +235,7 @@ export default class LightboxService extends Service {
     );
   }
 
-  handleClickEvent(trigger) {
+  handleClickEvent(event, trigger) {
     const isLightboxClick = event
       .composedPath()
       .find(
