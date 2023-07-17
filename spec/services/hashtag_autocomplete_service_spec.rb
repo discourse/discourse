@@ -471,7 +471,7 @@ RSpec.describe HashtagAutocompleteService do
         result = service.lookup(%w[the-book-club great-books fiction-books], %w[category tag])
         expect(result[:category].map(&:slug)).to eq(["the-book-club"])
         expect(result[:category].map(&:relative_url)).to eq(["/c/the-book-club/#{category1.id}"])
-        expect(result[:tag]).to eq([])
+        expect(result[:tag]).to eq(nil)
       end
     end
   end
