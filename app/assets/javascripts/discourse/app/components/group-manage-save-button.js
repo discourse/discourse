@@ -93,9 +93,9 @@ export default Component.extend({
     await this.modal.show(GroupDefaultNotificationsModal, {
       model: {
         count: json.user_count,
-        setUpdateExistingUsers: (e) => this.setUpdateExistingUsers(e),
+        setUpdateExistingUsers: this.setUpdateExistingUsers,
       },
     });
-    this.send("save");
+    this.save();
   },
 });
