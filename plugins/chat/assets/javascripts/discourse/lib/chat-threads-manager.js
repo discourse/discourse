@@ -66,6 +66,10 @@ export default class ChatThreadsManager {
     }
   }
 
+  remove(threadObject) {
+    delete this._cached[threadObject.id];
+  }
+
   add(channel, threadObject, options = {}) {
     let model;
 
