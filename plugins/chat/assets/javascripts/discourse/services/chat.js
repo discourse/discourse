@@ -311,6 +311,10 @@ export default class Chat extends Service {
     this.chatChannelsManager.channels.forEach((channel) => {
       const membership = channel.currentUserMembership;
 
+      if (!membership.following) {
+        return;
+      }
+
       if (channel.isDirectMessageChannel) {
         if (!dmChannelWithUnread && channel.tracking.unreadCount > 0) {
           dmChannelWithUnread = channel.id;

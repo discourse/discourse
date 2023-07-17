@@ -7,5 +7,9 @@ module Chat
     # created_at. In future we may want to serialize more for this, at which
     # point we need to check existing code so we don't introduce N1s.
     attributes *Chat::MessageSerializer::BASIC_ATTRIBUTES
+
+    def created_at
+      object.created_at.iso8601
+    end
   end
 end

@@ -52,20 +52,18 @@ export default createWidget("toggle-topic-summary", {
     if (attrs.summarizable) {
       const expandTitle = I18n.t("summary.strategy.button_title");
       const collapseTitle = I18n.t("summary.strategy.hide_button_title");
+      const canCollapse = !this.loadingSummary() && this.summaryBoxVisble();
 
       summarizationButtons.push(
         this.attach("button", {
           className: "btn btn-primary topic-strategy-summarization",
-          icon: this.summaryBoxVisble() ? "chevron-up" : "magic",
-          translatedTitle: this.summaryBoxVisble()
-            ? collapseTitle
-            : expandTitle,
-          translatedLabel: this.summaryBoxVisble()
-            ? collapseTitle
-            : expandTitle,
+          icon: canCollapse ? "chevron-up" : "magic",
+          translatedTitle: canCollapse ? collapseTitle : expandTitle,
+          translatedLabel: canCollapse ? collapseTitle : expandTitle,
           action: state.expandSummaryBox
             ? "toggleSummaryBox"
             : "expandSummaryBox",
+          disabled: this.loadingSummary(),
         })
       );
     }
@@ -96,6 +94,10 @@ export default createWidget("toggle-topic-summary", {
     }
 
     return html;
+  },
+
+  loadingSummary() {
+    return this.summaryBoxVisble() && !this.state.summary;
   },
 
   summaryUpdatedEvent(update) {
