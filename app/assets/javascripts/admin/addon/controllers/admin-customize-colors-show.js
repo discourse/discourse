@@ -7,6 +7,7 @@ import { inject as service } from "@ember/service";
 
 export default class AdminCustomizeColorsShowController extends Controller {
   @service dialog;
+  @service router;
   onlyOverridden = false;
 
   @computed("model.colors.[]", "onlyOverridden")
@@ -58,7 +59,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
     );
     newColorScheme.save().then(() => {
       this.allColors.pushObject(newColorScheme);
-      this.replaceRoute("adminCustomize.colors.show", newColorScheme);
+      this.router.replaceRoute("adminCustomize.colors.show", newColorScheme);
     });
   }
 
@@ -79,7 +80,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
       didConfirm: () => {
         return this.model.destroy().then(() => {
           this.allColors.removeObject(this.model);
-          this.replaceRoute("adminCustomize.colors");
+          this.router.replaceRoute("adminCustomize.colors");
         });
       },
     });
