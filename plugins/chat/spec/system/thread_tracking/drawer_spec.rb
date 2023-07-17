@@ -53,6 +53,12 @@ describe "Thread tracking state | drawer", type: :system do
     end
 
     it "shows unread indicators for the header icon and the list when a new unread arrives" do
+      skip(<<~TEXT)
+      Flaky at the following assertion:
+
+      expected `#<PageObjects::Components::Chat::ThreadList:0x00007f082393ada0>.has_unread_item?(2)` to be truthy, got false
+      TEXT
+
       thread.membership_for(current_user).update!(last_read_message_id: message_2.id)
       visit("/")
       chat_page.open_from_header
