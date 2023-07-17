@@ -107,31 +107,6 @@ export default class LightboxService extends Service {
   }
 
   @bind
-  handleEvent(event) {
-    const isLightboxClick = event
-      .composedPath()
-      .find(
-        (element) =>
-          element.matches &&
-          (element.matches(this.selector) ||
-            element.matches("[data-lightbox-trigger]"))
-      );
-
-    if (!isLightboxClick) {
-      return;
-    }
-
-    event.preventDefault();
-
-    this.openLightbox({
-      container: event.currentTarget,
-      selector: this.selector,
-    });
-
-    event.target.toggleAttribute(SELECTORS.DOCUMENT_LAST_FOCUSED_ELEMENT);
-  }
-
-  @bind
   async openLightbox({ container, selector }) {
     const { items, startingIndex } = await processHTML({ container, selector });
 
@@ -170,8 +145,11 @@ export default class LightboxService extends Service {
     }
 
     const handlerOptions = { capture: true };
-
-    container.addEventListener("click", this, handlerOptions);
+    container.addEventListener(
+      "click",
+      this.handleClickEvent.bind(this, this.selector),
+      handlerOptions
+    );
 
     this.lightboxClickElements.push({ container, handlerOptions });
   }
@@ -185,7 +163,11 @@ export default class LightboxService extends Service {
     this.closeLightbox();
 
     this.lightboxClickElements.forEach(({ container, handlerOptions }) => {
-      container.removeEventListener("click", this, handlerOptions);
+      container.removeEventListener(
+        "click",
+        this.handleClickEvent,
+        handlerOptions
+      );
     });
 
     this.lightboxClickElements = [];
@@ -249,6 +231,30 @@ export default class LightboxService extends Service {
       this,
       this.cleanupLightboxes
     );
+  }
+
+  handleClickEvent(trigger) {
+    const isLightboxClick = event
+      .composedPath()
+      .find(
+        (element) =>
+          element.matches &&
+          (element.matches(trigger) ||
+            element.matches("[data-lightbox-trigger]"))
+      );
+
+    if (!isLightboxClick) {
+      return;
+    }
+
+    event.preventDefault();
+
+    this.openLightbox({
+      container: event.currentTarget,
+      selector: trigger,
+    });
+
+    event.target.toggleAttribute(SELECTORS.DOCUMENT_LAST_FOCUSED_ELEMENT);
   }
 
   willDestroy() {
