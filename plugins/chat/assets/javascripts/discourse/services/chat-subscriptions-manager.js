@@ -215,8 +215,7 @@ export default class ChatSubscriptionsManager extends Service {
                     busData.thread_id,
                     busData.message.created_at
                   );
-
-                  channel.updateLastViewedAt(this.chat.activeChannel);
+                  this._updateActiveLastViewedAt(channel);
                 }
               });
           }
@@ -263,12 +262,20 @@ export default class ChatSubscriptionsManager extends Service {
                   busData.message.created_at
                 );
                 thread.tracking.unreadCount++;
-                channel.updateLastViewedAt(this.chat.activeChannel);
+                this._updateActiveLastViewedAt(channel);
               }
             }
           }
         });
     });
+  }
+
+  // If the user is currently looking at this channel via activeChannel, we don't want the unread
+  // indicator to show in the sidebar for unread threads (since that is based on the lastViewedAt).
+  _updateActiveLastViewedAt(channel) {
+    if (this.chat.activeChannel?.id === channel.id) {
+      channel.updateLastViewedAt();
+    }
   }
 
   _startUserTrackingStateSubscription(lastId) {

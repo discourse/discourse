@@ -124,14 +124,8 @@ export default class ChatChannel {
     ).length;
   }
 
-  // If the user is currently looking at this channel via activeChannel, we don't want the unread
-  // indicator to show in the sidebar for unread threads (since that is based on the lastViewedAt).
-  //
-  // Other times we just want to bump this, and not compare with activeChannel.
-  updateLastViewedAt(activeChannel = null) {
-    if (!activeChannel || this.id === activeChannel.id) {
-      this.currentUserMembership.lastViewedAt = new Date();
-    }
+  updateLastViewedAt() {
+    this.currentUserMembership.lastViewedAt = new Date();
   }
 
   findIndexOfMessage(id) {

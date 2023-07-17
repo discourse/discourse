@@ -64,5 +64,53 @@ describe "Thread tracking state | drawer", type: :system do
       expect(drawer_page).to have_unread_thread_indicator(count: 1)
       expect(thread_list_page).to have_unread_item(thread.id)
     end
+
+    describe "channel index unread indicators" do
+      fab!(:other_channel) { Fabricate(:chat_channel) }
+
+      before { other_channel.add(current_user) }
+
+      it "shows an unread indicator for the channel with unread threads in the index" do
+        visit("/")
+        chat_page.open_from_header
+        expect(drawer_page).to have_unread_channel(channel)
+      end
+
+      it "does not show an unread indicator for the channel if the user has visited the channel since the unread thread message arrived" do
+        channel.membership_for(current_user).update!(last_viewed_at: Time.zone.now)
+        visit("/")
+        chat_page.open_from_header
+        expect(drawer_page).to have_no_unread_channel(channel)
+      end
+
+      it "clears the index unread indicator for the channel when opening it but keeps the thread list unread indicator" do
+        visit("/")
+        chat_page.open_from_header
+        drawer_page.open_channel(channel)
+        expect(channel_page).to have_unread_thread_indicator(count: 1)
+        drawer_page.back
+        expect(drawer_page).to have_no_unread_channel(channel)
+      end
+
+      it "does not show an unread indicator for the channel index if a new thread message arrives while the user is looking at the channel" do
+        visit("/")
+        chat_page.open_from_header
+        expect(drawer_page).to have_unread_channel(channel)
+        drawer_page.open_channel(channel)
+        Fabricate(:chat_message, thread: thread)
+        drawer_page.back
+        expect(drawer_page).to have_no_unread_channel(channel)
+      end
+
+      it "shows an unread indicator for the channel index if a new thread message arrives while the user is not looking at the channel" do
+        visit("/")
+        chat_page.open_from_header
+        drawer_page.open_channel(channel)
+        drawer_page.back
+        expect(drawer_page).to have_no_unread_channel(channel)
+        Fabricate(:chat_message, thread: thread)
+        expect(drawer_page).to have_unread_channel(channel)
+      end
+    end
   end
 end
