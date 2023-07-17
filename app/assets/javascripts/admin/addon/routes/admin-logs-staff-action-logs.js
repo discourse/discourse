@@ -1,7 +1,10 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject, { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
+  @service router;
+
   queryParams = {
     filters: { refreshModel: true },
   };
@@ -36,7 +39,7 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
 
   @action
   onFiltersChange(filters) {
-    this.transitionTo("adminLogs.staffActionLogs", {
+    this.router.transitionTo("adminLogs.staffActionLogs", {
       queryParams: { filters },
     });
   }
