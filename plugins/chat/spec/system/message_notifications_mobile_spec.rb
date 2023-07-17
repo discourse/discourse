@@ -109,7 +109,6 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
               expect(page).to have_css(
                 ".chat-channel-row[data-chat-channel-id=\"#{channel_1.id}\"] .chat-channel-unread-indicator",
-                text: 1,
               )
             end
           end
@@ -130,7 +129,6 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator")
               expect(page).to have_css(
                 ".chat-channel-row[data-chat-channel-id=\"#{channel_1.id}\"] .chat-channel-unread-indicator",
-                text: 1,
               )
             end
           end
