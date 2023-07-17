@@ -104,7 +104,7 @@ class TagsController < ::ApplicationController
 
   def list
     offset = params[:offset].to_i || 0
-    tags = guardian.can_admin_tags? ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+    tags = guardian.can_admin_tags? ? Tag.all : Tag.visible(guardian)
 
     load_more_query_params = { offset: offset + 1 }
 
