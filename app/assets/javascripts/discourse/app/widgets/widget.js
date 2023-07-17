@@ -14,6 +14,7 @@ import {
   WidgetMouseOverHook,
   WidgetMouseUpHook,
   WidgetTouchEndHook,
+  WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -479,6 +480,10 @@ export default class Widget {
 
     if (this.touchEnd) {
       properties["widget-touch-end"] = new WidgetTouchEndHook(this);
+    }
+
+    if (this.touchMove) {
+      properties["widget-touch-move"] = new WidgetTouchMoveHook(this);
     }
 
     const attributes = properties["attributes"] || {};

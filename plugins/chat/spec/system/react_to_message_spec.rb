@@ -78,10 +78,8 @@ RSpec.describe "React to message", type: :system do
               chat.visit_channel(category_channel_1)
             end
 
-            using_session(:tab_2) do
-              sign_in(current_user)
-              chat.visit_channel(category_channel_1)
-            end
+            sign_in(current_user)
+            chat.visit_channel(category_channel_1)
 
             using_session(:tab_1) do |session|
               channel.hover_message(message_1)
@@ -92,10 +90,7 @@ RSpec.describe "React to message", type: :system do
               session.quit
             end
 
-            using_session(:tab_2) do |session|
-              expect(channel).to have_reaction(message_1, reaction.emoji)
-              session.quit
-            end
+            expect(channel).to have_reaction(message_1, reaction.emoji)
           end
         end
       end
