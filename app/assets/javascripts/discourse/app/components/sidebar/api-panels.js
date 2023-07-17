@@ -10,10 +10,11 @@ export default class SidebarApiPanels extends Component {
   constructor() {
     super(...arguments);
 
-    this.customSections = this.args.panel?.sections?.map((customSection) => {
-      const section = new customSection({ sidebar: this });
-      setOwner(section, getOwner(this));
-      return section;
-    });
+    this.customSections =
+      this.args.panel?.sections?.map((customSection) => {
+        const section = new customSection({ sidebar: this });
+        setOwner(section, getOwner(this));
+        return section;
+      }) || [];
   }
 }
