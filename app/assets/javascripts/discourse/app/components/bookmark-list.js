@@ -2,7 +2,6 @@ import Component from "@ember/component";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import { action } from "@ember/object";
-import { next, schedule } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import {
   openLinkInNewTab,
