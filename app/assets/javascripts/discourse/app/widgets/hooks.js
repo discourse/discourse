@@ -65,7 +65,6 @@ export const WidgetMouseMoveHook = buildHook(MOUSE_MOVE_ATTRIBUTE_NAME);
 export const WidgetMouseOverHook = buildHook(MOUSE_OVER_ATTRIBUTE_NAME);
 export const WidgetMouseOutHook = buildHook(MOUSE_OUT_ATTRIBUTE_NAME);
 export const WidgetTouchEndHook = buildHook(TOUCH_END_ATTRIBUTE_NAME);
-export const WidgetTouchMoveHook = buildHook(TOUCH_MOVE_ATTRIBUTE_NAME);
 
 // `touchstart` and `touchmove` events are particularly performance sensitive because
 // they block scrolling on mobile. Therefore we want to avoid registering global non-passive
@@ -74,6 +73,9 @@ export const WidgetTouchMoveHook = buildHook(TOUCH_MOVE_ATTRIBUTE_NAME);
 // the specific widget DOM elements when required.
 function touchStartHandler(e) {
   return e.currentTarget[TOUCH_START_ATTRIBUTE_NAME].touchStart(e);
+}
+function touchMoveHandler(e) {
+  return e.currentTarget[TOUCH_MOVE_ATTRIBUTE_NAME].touchMove(e);
 }
 
 export class WidgetTouchStartHook extends WidgetBaseHook {
@@ -91,6 +93,24 @@ export class WidgetTouchStartHook extends WidgetBaseHook {
     if (!newValue) {
       // Element removed from DOM
       node.removeEventListener("touchstart", touchStartHandler);
+    }
+  }
+}
+export class WidgetTouchMoveHook extends WidgetBaseHook {
+  hook(node, propertyName, previousValue) {
+    node[TOUCH_MOVE_ATTRIBUTE_NAME] = this.widget;
+    if (!previousValue) {
+      // Element added to DOM
+      node.addEventListener("touchmove", touchMoveHandler, {
+        passive: false,
+      });
+    }
+  }
+
+  unhook(node, propertyName, newValue) {
+    if (!newValue) {
+      // Element removed from DOM
+      node.removeEventListener("touchmove", touchMoveHandler);
     }
   }
 }
@@ -260,12 +280,6 @@ WidgetClickHook.setupDocumentCallback = function () {
 
   $(document).on("touchend.discourse-widget", (e) => {
     nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, (w) => w.touchEnd(e), {
-      rerender: false,
-    });
-  });
-
-  $(document).on("touchmove.discourse-widget", (e) => {
-    nodeCallback(e.target, TOUCH_MOVE_ATTRIBUTE_NAME, (w) => w.touchMove(e), {
       rerender: false,
     });
   });
