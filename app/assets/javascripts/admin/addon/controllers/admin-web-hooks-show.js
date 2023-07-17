@@ -22,7 +22,7 @@ export default class AdminWebHooksShowController extends Controller {
         try {
           await this.model.destroyRecord();
           this.adminWebHooks.model.removeObject(this.model);
-          this.transitionToRoute("adminWebHooks");
+          this.router.transitionToRoute("adminWebHooks");
         } catch (e) {
           popupAjaxError(e);
         }

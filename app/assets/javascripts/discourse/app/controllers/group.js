@@ -20,6 +20,9 @@ const Tab = EmberObject.extend({
 export default Controller.extend({
   application: controller(),
   dialog: service(),
+  currentUser: service(),
+  router: service(),
+
   counts: null,
   showing: "members",
   destroying: null,
@@ -146,7 +149,7 @@ export default Controller.extend({
       didConfirm: () => {
         model
           .destroy()
-          .then(() => this.transitionToRoute("groups.index"))
+          .then(() => this.router.transitionToRoute("groups.index"))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);

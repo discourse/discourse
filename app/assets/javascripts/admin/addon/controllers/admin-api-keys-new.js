@@ -7,8 +7,11 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, get } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
 
 export default class AdminApiKeysNewController extends Controller {
+  @service router;
+
   userModes = [
     { id: "all", name: I18n.t("admin.api.all_users") },
     { id: "single", name: I18n.t("admin.api.single_user") },
@@ -76,7 +79,7 @@ export default class AdminApiKeysNewController extends Controller {
 
   @action
   continue() {
-    this.transitionToRoute("adminApiKeys.show", this.model.id);
+    this.router.transitionToRoute("adminApiKeys.show", this.model.id);
   }
 
   @action

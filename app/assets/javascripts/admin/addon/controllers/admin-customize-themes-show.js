@@ -21,6 +21,7 @@ const THEME_UPLOAD_VAR = 2;
 
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
+  @service router;
 
   editRouteName = "adminCustomizeThemes.edit";
 
@@ -226,7 +227,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   transitionToEditRoute() {
-    this.transitionToRoute(
+    this.router.transitionToRoute(
       this.editRouteName,
       this.get("model.id"),
       "common",
@@ -383,7 +384,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           this.allThemes.removeObject(model);
-          this.transitionToRoute("adminCustomizeThemes");
+          this.router.transitionToRoute("adminCustomizeThemes");
         });
       },
     });
