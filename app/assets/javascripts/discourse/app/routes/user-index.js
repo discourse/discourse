@@ -15,7 +15,7 @@ export default DiscourseRoute.extend({
     // transition into a user's activity works. This makes the back button work on mobile
     // where there is no user card as well as desktop where there is.
     if (this.site.mobileView) {
-      this.replaceWith(destination);
+      this.router.replaceWith(destination);
     } else {
       this.router.transitionTo(destination);
     }
