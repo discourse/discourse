@@ -3,16 +3,22 @@
     box-sizing: border-box;
     min-width: 310px;
   }
+
   .modal-footer {
     margin: 0;
     border-top: 0;
-    padding: 10px 0;
+    padding: 0 1em 1em 1em;
 
     .delete-bookmark {
       margin-left: auto;
       margin-right: 0;
     }
   }
+
+  .modal-inner-container {
+    max-width: 375px;
+  }
+
   .modal-body {
     width: 375px;
     box-sizing: border-box;
