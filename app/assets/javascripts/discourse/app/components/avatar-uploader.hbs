@@ -2,6 +2,8 @@
   class="btn btn-default btn-icon-text"
   disabled={{this.uploading}}
   title={{i18n "user.change_avatar.upload_title"}}
+  data-uploaded={{this.customAvatarUploaded}}
+  data-avatar-upload-id={{this.uploadedAvatarId}}
 >
   {{d-icon "far-image"}}
   {{#if this.uploading}}
