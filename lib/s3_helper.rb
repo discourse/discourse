@@ -260,10 +260,7 @@ class S3Helper
   def self.s3_options(obj)
     opts = { region: obj.s3_region }
 
-    if SiteSetting.s3_endpoint.present?
-      opts[:endpoint] = SiteSetting.s3_endpoint
-      # opts[:force_path_style] = true
-    end
+    opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
 
     unless obj.s3_use_iam_profile
