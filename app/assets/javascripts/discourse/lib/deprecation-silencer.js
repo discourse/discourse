@@ -1,7 +1,5 @@
 const SILENCED_WARN_PREFIXES = [
   "Setting the `jquery-integration` optional feature flag",
-  "The Ember Classic edition has been deprecated",
-  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
   "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
 ];
 
