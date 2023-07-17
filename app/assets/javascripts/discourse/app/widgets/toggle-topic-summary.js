@@ -42,6 +42,7 @@ export default createWidget("toggle-topic-summary", {
       summaryBoxHidden: true,
       summary: "",
       summarizedOn: null,
+      summarizedBy: null,
     };
   },
 
@@ -90,6 +91,7 @@ export default createWidget("toggle-topic-summary", {
     if (this.summaryBoxVisble()) {
       attrs.summary = this.state.summary;
       attrs.summarizedOn = this.state.summarizedOn;
+      attrs.summarizedBy = this.state.summarizedBy;
       html.push(this.attach("summary-box", attrs));
     }
 
@@ -103,6 +105,7 @@ export default createWidget("toggle-topic-summary", {
   summaryUpdatedEvent(update) {
     this.state.summary = update.summary;
     this.state.summarizedOn = update.summarizedOn;
+    this.state.summarizedBy = update.summarizedBy;
   },
 
   summaryBoxVisble() {
