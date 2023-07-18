@@ -728,9 +728,18 @@ export default {
       }
     }
 
-    article = articles[index + direction];
-    if (!article) {
-      return;
+    let newIndex = index;
+    while (true) {
+      newIndex += direction;
+      article = articles[newIndex];
+
+      if (!article) {
+        // Element doesn't exist
+        return;
+      } else if (article.offsetParent !== null) {
+        // Element is not hidden
+        break;
+      }
     }
 
     for (const a of articles) {
