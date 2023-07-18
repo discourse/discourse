@@ -35,6 +35,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   id: null,
   uploadRootPath: "/uploads",
   fileInputSelector: ".hidden-upload-field",
+  autoFindInput: true,
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
@@ -68,9 +69,13 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
 
   @on("didInsertElement")
   _initialize() {
-    this.setProperties({
-      fileInputEl: this.element.querySelector(this.fileInputSelector),
-    });
+    if (this.autoFindInput) {
+      this.setProperties({
+        fileInputEl: this.element.querySelector(this.fileInputSelector),
+      });
+    } else if (!this.fileInputEl) {
+      return;
+    }
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
     this.set("inProgressUploads", []);
 
@@ -159,7 +164,6 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     });
 
     this._uppyInstance.on("upload", (data) => {
-      console.log(this);
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
