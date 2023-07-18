@@ -9,7 +9,7 @@ const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
-const DeprecationSilencer = require("./lib/deprecation-silencer");
+const DeprecationSilencer = require("deprecation-silencer");
 const generateWorkboxTree = require("./lib/workbox-tree-builder");
 
 module.exports = function (defaults) {
@@ -94,7 +94,7 @@ module.exports = function (defaults) {
     },
 
     babel: {
-      plugins: [require.resolve("./lib/deprecation-silencer")],
+      plugins: [require.resolve("deprecation-silencer")],
     },
 
     // We need to build tests in prod for theme tests

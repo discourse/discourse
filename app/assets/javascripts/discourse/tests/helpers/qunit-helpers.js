@@ -87,6 +87,7 @@ import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
+import { clearBulkButtons } from "discourse/controllers/topic-bulk-actions";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -223,6 +224,7 @@ export function testCleanup(container, app) {
   resetMentions();
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
+  clearBulkButtons();
 }
 
 function cleanupCssGeneratorTags() {

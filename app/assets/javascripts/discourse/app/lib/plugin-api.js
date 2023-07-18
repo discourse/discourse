@@ -120,12 +120,13 @@ import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
+import { _addBulkButton } from "discourse/controllers/topic-bulk-actions";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.7.0";
+export const PLUGIN_API_VERSION = "1.7.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1962,15 +1963,15 @@ class PluginApi {
    * })
    * ```
    *
-   * @params {Object} arg - An object
-   * @params {string} arg.categoryId - The id of the category
-   * @params {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
-   * @params {string} arg.prefixValue - The value of the prefix to use.
+   * @param {Object} arg - An object
+   * @param {string} arg.categoryId - The id of the category
+   * @param {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
+   * @param {string} arg.prefixValue - The value of the prefix to use.
    *                                    For "icon", pass in the name of a FontAwesome 5 icon.
    *                                    For "image", pass in the src of the image.
    *                                    For "text", pass in the text to display.
    *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
-   * @params {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
+   * @param {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
    */
   registerCustomCategorySectionLinkPrefix({
     categoryId,
@@ -2000,10 +2001,10 @@ class PluginApi {
    * });
    * ```
    *
-   * @params {Object} arg - An object
-   * @params {string} arg.tagName - The name of the tag
-   * @params {string} arg.prefixValue - The name of a FontAwesome 5 icon.
-   * @params {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
+   * @param {Object} arg - An object
+   * @param {string} arg.tagName - The name of the tag
+   * @param {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @param {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
    */
   registerCustomTagSectionLinkPrefixIcon({
     tagName,
@@ -2278,6 +2279,49 @@ class PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Adds a button to the bulk topic actions modal.
+   *
+   * ```
+   * api.addBulkActionButton({
+   *   label: "super_plugin.bulk.enhance",
+   *   icon: "magic",
+   *   class: "btn-default",
+   *   visible: ({ currentUser, siteSettings }) => siteSettings.super_plugin_enabled && currentUser.staff,
+   *   async action({ setComponent }) {
+   *     await doSomething(this.model.topics);
+   *     setComponent(MyBulkModal);
+   *   },
+   * });
+   * ```
+   *
+   * @callback buttonVisibilityCallback
+   * @param {Object} opts
+   * @param {Topic[]} opts.topics - the selected topic for the bulk action
+   * @param {Category} opts.category - the category in which the action is performed (if applicable)
+   * @param {User} opts.currentUser
+   * @param {SiteSettings} opts.siteSettings
+   * @returns {Boolean} - whether the button should be visible or not
+   *
+   * @callback buttonAction
+   * @param {Object} opts
+   * @param {Topic[]} opts.topics - the selected topic for the bulk action
+   * @param {Category} opts.category - the category in which the action is performed (if applicable)
+   * @param {function} opts.setComponent - render a template in the bulk action modal (pass in an imported component)
+   * @param {function} opts.performAndRefresh
+   * @param {function} opts.forEachPerformed
+   *
+   * @param {Object} opts
+   * @param {string} opts.label
+   * @param {string} opts.icon
+   * @param {string} opts.class
+   * @param {buttonVisibilityCallback} opts.visible
+   * @param {buttonAction} opts.action
+   */
+  addBulkActionButton(opts) {
+    _addBulkButton(opts);
   }
 }
 
