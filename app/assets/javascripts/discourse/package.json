@@ -97,7 +97,7 @@
     "tippy.js": "^6.3.7",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
-    "webpack": "^5.88.1",
+    "webpack": "^5.88.2",
     "wizard": "1.0.0",
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",
@@ -112,6 +112,6 @@
     "yarn": ">= 1.21.1"
   },
   "ember": {
-    "edition": "default"
+    "edition": "octane"
   }
 }
