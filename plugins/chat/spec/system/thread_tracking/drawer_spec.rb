@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Thread tracking state | drawer", type: :system do
+  include ActiveSupport::Testing::TimeHelpers
+
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user) { Fabricate(:user) }
@@ -61,6 +63,7 @@ describe "Thread tracking state | drawer", type: :system do
       drawer_page.open_thread_list
       expect(drawer_page).to have_no_unread_thread_indicator
       expect(thread_list_page).to have_no_unread_item(thread.id)
+      travel_to(1.minute.from_now)
       Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
       expect(drawer_page).to have_unread_thread_indicator(count: 1)
       expect(thread_list_page).to have_unread_item(thread.id)
@@ -109,6 +112,7 @@ describe "Thread tracking state | drawer", type: :system do
         drawer_page.open_channel(channel)
         drawer_page.back
         expect(drawer_page).to have_no_unread_channel(channel)
+        travel_to(1.minute.from_now)
         Fabricate(:chat_message, thread: thread, user: other_user)
         expect(drawer_page).to have_unread_channel(channel)
       end
