@@ -1,5 +1,6 @@
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import * as GlimmerManager from "@glimmer/manager";
+import ClassicComponent from "@ember/component";
 
 const COLOCATED_TEMPLATE_OVERRIDES = new Map();
 
@@ -38,6 +39,10 @@ export default {
         const overrideTemplate = require(finalOverrideModuleName).default;
 
         COLOCATED_TEMPLATE_OVERRIDES.set(component, overrideTemplate);
+      } else if (!component) {
+        // Plugin/theme component template with no backing class.
+        // Treat as classic component to emulate pre-template-only-glimmer-component behaviour.
+        owner.register(`component:${componentName}`, ClassicComponent);
       }
     });
   },

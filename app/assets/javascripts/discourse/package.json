@@ -112,6 +112,6 @@
     "yarn": ">= 1.21.1"
   },
   "ember": {
-    "edition": "default"
+    "edition": "octane"
   }
 }
