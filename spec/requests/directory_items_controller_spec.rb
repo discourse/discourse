@@ -18,6 +18,8 @@ RSpec.describe DirectoryItemsController do
   end
 
   context "with limit parameter" do
+    let!(:users) { Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) } }
+
     before { DirectoryItem.refresh! }
 
     it "limits the number of returned items" do
@@ -26,6 +28,15 @@ RSpec.describe DirectoryItemsController do
       json = response.parsed_body
 
       expect(json["directory_items"].length).to eq(2)
+    end
+
+    it "does not exceed PAGE_SIZE if limit parameter is more than PAGE_SIZE" do
+      large_limit = DirectoryItemsController::PAGE_SIZE + 10
+      get "/directory_items.json", params: { period: "all", limit: large_limit }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      expect(json["directory_items"].length).to eq(DirectoryItemsController::PAGE_SIZE)
     end
 
     it "handles invalid limit parameters gracefully" do
