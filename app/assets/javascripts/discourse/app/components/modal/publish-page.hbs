@@ -1,6 +1,6 @@
 <DModal
   @closeModal={{@closeModal}}
-  @title={{i18n "login.change_email"}}
+  @title={{i18n "topic.publish_page.title"}}
   class="publish-page-modal"
 >
   <:body>
@@ -85,7 +85,7 @@
           @class="close-publish-page"
           @icon="times"
           @label="close"
-          @action={{action "closeModal"}}
+          @action={{@closeModal}}
         />
       {{else if this.unpublished}}
         <DButton
