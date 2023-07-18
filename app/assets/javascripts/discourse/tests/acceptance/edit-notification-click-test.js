@@ -1,5 +1,5 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, settled, visit, waitFor } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Edit Notification Click", function (needs) {
