@@ -2290,23 +2290,28 @@ class PluginApi {
    *   icon: "magic",
    *   class: "btn-default",
    *   visible: ({ currentUser, siteSettings }) => siteSettings.super_plugin_enabled && currentUser.staff,
-   *   async action() {
-   *     await enhance(this.model.topics);
-   *     doSomethingElse();
+   *   async action({ setComponent }) {
+   *     await doSomething(this.model.topics);
+   *     setComponent(MyBulkModal);
    *   },
    * });
    * ```
    *
    * @callback buttonVisibilityCallback
    * @param {Object} opts
-   * @param {Topic[]} opts.topics
+   * @param {Topic[]} opts.topics - the selected topic for the bulk action
+   * @param {Category} opts.category - the category in which the action is performed (if applicable)
    * @param {User} opts.currentUser
    * @param {SiteSettings} opts.siteSettings
    * @returns {Boolean} - whether the button should be visible or not
    *
    * @callback buttonAction
    * @param {Object} opts
-   * ?
+   * @param {Topic[]} opts.topics - the selected topic for the bulk action
+   * @param {Category} opts.category - the category in which the action is performed (if applicable)
+   * @param {function} opts.setComponent - render a template in the bulk action modal (pass in an imported component)
+   * @param {function} opts.performAndRefresh
+   * @param {function} opts.forEachPerformed
    *
    * @param {Object} opts
    * @param {string} opts.label

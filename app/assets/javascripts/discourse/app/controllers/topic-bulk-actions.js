@@ -47,8 +47,8 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "pencil-alt",
       class: "btn-default",
       visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
-      action() {
-        this.activeComponent = ChangeCategory;
+      action({ setComponent }) {
+        setComponent(ChangeCategory);
       },
     },
     {
@@ -56,8 +56,8 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "lock",
       class: "btn-default",
       visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
-      action() {
-        this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
+      action({ forEachPerformed }) {
+        forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
       },
     },
     {
@@ -65,10 +65,8 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "folder",
       class: "btn-default",
       visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
-      action() {
-        this.forEachPerformed({ type: "archive" }, (t) =>
-          t.set("archived", true)
-        );
+      action({ forEachPerformed }) {
+        forEachPerformed({ type: "archive" }, (t) => t.set("archived", true));
       },
     },
     {
@@ -76,12 +74,12 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "folder",
       class: "btn-default",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
-      action() {
+      action: ({ performAndRefresh }) => {
         let params = { type: "archive_messages" };
         if (this.userPrivateMessages.isGroup) {
           params.group = this.userPrivateMessages.groupFilter;
         }
-        this.performAndRefresh(params);
+        performAndRefresh(params);
       },
     },
     {
@@ -89,20 +87,20 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "folder",
       class: "btn-default",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
-      action() {
+      action: ({ performAndRefresh }) => {
         let params = { type: "move_messages_to_inbox" };
         if (this.userPrivateMessages.isGroup) {
           params.group = this.userPrivateMessages.groupFilter;
         }
-        this.performAndRefresh(params);
+        performAndRefresh(params);
       },
     },
     {
       label: "topics.bulk.notification_level",
       icon: "d-regular",
       class: "btn-default",
-      action() {
-        this.activeComponent = NotificationLevel;
+      action({ setComponent }) {
+        setComponent(NotificationLevel);
       },
     },
     {
@@ -110,8 +108,8 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "circle",
       class: "btn-default",
       visible: ({ currentUser }) => currentUser.user_option.enable_defer,
-      action() {
-        this.performAndRefresh({ type: "destroy_post_timing" });
+      action({ performAndRefresh }) {
+        performAndRefresh({ type: "destroy_post_timing" });
       },
     },
     {
@@ -121,10 +119,8 @@ export default class TopicBulkActions extends Controller.extend(
       visible: ({ topics }) =>
         topics.some((t) => t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
-      action() {
-        this.forEachPerformed({ type: "unlist" }, (t) =>
-          t.set("visible", false)
-        );
+      action({ forEachPerformed }) {
+        forEachPerformed({ type: "unlist" }, (t) => t.set("visible", false));
       },
     },
     {
@@ -134,10 +130,8 @@ export default class TopicBulkActions extends Controller.extend(
       visible: ({ topics }) =>
         topics.some((t) => !t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
-      action() {
-        this.forEachPerformed({ type: "relist" }, (t) =>
-          t.set("visible", true)
-        );
+      action({ forEachPerformed }) {
+        forEachPerformed({ type: "relist" }, (t) => t.set("visible", true));
       },
     },
     {
@@ -145,8 +139,8 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "anchor",
       class: "btn-default",
       visible: ({ currentUser }) => currentUser.canManageTopic,
-      action() {
-        this.performAndRefresh({ type: "reset_bump_dates" });
+      action({ performAndRefresh }) {
+        performAndRefresh({ type: "reset_bump_dates" });
       },
     },
     {
@@ -155,8 +149,8 @@ export default class TopicBulkActions extends Controller.extend(
       class: "btn-default",
       visible: ({ currentUser, siteSettings }) =>
         siteSettings.tagging_enabled && currentUser.canManageTopic,
-      action() {
-        this.activeComponent = ChangeTags;
+      action({ setComponent }) {
+        setComponent(ChangeTags);
       },
     },
     {
@@ -165,8 +159,8 @@ export default class TopicBulkActions extends Controller.extend(
       class: "btn-default",
       visible: ({ currentUser, siteSettings }) =>
         siteSettings.tagging_enabled && currentUser.canManageTopic,
-      action() {
-        this.activeComponent = AppendTags;
+      action({ setComponent }) {
+        setComponent(AppendTags);
       },
     },
     {
@@ -175,12 +169,12 @@ export default class TopicBulkActions extends Controller.extend(
       class: "btn-default",
       visible: ({ currentUser, siteSettings }) =>
         siteSettings.tagging_enabled && currentUser.canManageTopic,
-      action() {
+      action: ({ performAndRefresh, topics }) => {
         this.dialog.deleteConfirm({
           message: I18n.t("topics.bulk.confirm_remove_tags", {
-            count: this.model.topics.length,
+            count: topics.length,
           }),
-          didConfirm: () => this.performAndRefresh({ type: "remove_tags" }),
+          didConfirm: () => performAndRefresh({ type: "remove_tags" }),
         });
       },
     },
@@ -189,26 +183,25 @@ export default class TopicBulkActions extends Controller.extend(
       icon: "trash-alt",
       class: "btn-danger delete-topics",
       visible: ({ currentUser }) => currentUser.staff,
-      action() {
-        this.performAndRefresh({ type: "delete" });
+      action({ performAndRefresh }) {
+        performAndRefresh({ type: "delete" });
       },
     },
   ];
 
   get buttons() {
-    return [...this.defaultButtons, ..._customButtons]
-      .filter(({ visible }) => {
-        if (visible) {
-          return visible({
-            topics: this.model.topics,
-            currentUser: this.currentUser,
-            siteSettings: this.siteSettings,
-          });
-        } else {
-          return true;
-        }
-      })
-      .map((button) => ({ ...button, action: button.action.bind(this) }));
+    return [...this.defaultButtons, ..._customButtons].filter(({ visible }) => {
+      if (visible) {
+        return visible({
+          topics: this.model.topics,
+          category: this.model.category,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+        });
+      } else {
+        return true;
+      }
+    });
   }
 
   onShow() {
@@ -281,6 +274,11 @@ export default class TopicBulkActions extends Controller.extend(
 
       resolveNextTask();
     });
+  }
+
+  @action
+  setComponent(component) {
+    this.activeComponent = component;
   }
 
   @action

@@ -10,15 +10,26 @@
   {{else if this.activeComponent}}
     <this.activeComponent
       @loading={{this.loading}}
+      @topics={{this.model.topics}}
+      @category={{this.model.category}}
+      @setComponent={{this.setComponent}}
       @forEachPerformed={{this.forEachPerformed}}
       @performAndRefresh={{this.performAndRefresh}}
-      @categoryId={{this.model.category.id}}
     />
   {{else}}
     <div class="bulk-buttons">
       {{#each this.buttons as |button|}}
         <DButton
-          @action={{button.action}}
+          @action={{fn
+            button.action
+            (hash
+              topics=this.model.topics
+              category=this.model.category
+              setComponent=this.setComponent
+              performAndRefresh=this.performAndRefresh
+              forEachPerformed=this.forEachPerformed
+            )
+          }}
           @label={{button.label}}
           @icon={{button.icon}}
           class={{button.class}}
