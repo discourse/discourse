@@ -72,8 +72,11 @@ export default class Sidebar extends Component {
   switchPanel(panel) {
     this.currentPanel.lastKnownURL = this.router.currentURL;
     this.currentPanelKey = panel.key;
-    this.router.transitionTo(
-      panel.lastKnownURL || panel.switchButtonDefaultUrl
-    );
+    const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
+    if (url === "/") {
+      this.router.transitionTo("latest");
+    } else {
+      this.router.transitionTo(url);
+    }
   }
 }
