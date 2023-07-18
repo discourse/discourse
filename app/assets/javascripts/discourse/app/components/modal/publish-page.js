@@ -1,7 +1,6 @@
 import { action, computed } from "@ember/object";
 import { equal, not } from "@ember/object/computed";
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Component from "@ember/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
@@ -22,7 +21,7 @@ Object.keys(States).forEach((name) => {
   StateHelpers[name] = equal("state", name);
 });
 
-export default Controller.extend(ModalFunctionality, StateHelpers, {
+const PublishPageModal = Component.extend(StateHelpers, {
   state: null,
   reason: null,
   publishedPage: null,
@@ -40,9 +39,9 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
     return this.state === States.existing || this.state === States.unpublishing;
   }),
 
-  onShow() {
+  init() {
+    this._super(...arguments);
     this.set("state", States.initializing);
-
     this.store
       .find("published_page", this.model.id)
       .then((page) => {
@@ -128,3 +127,5 @@ export default Controller.extend(ModalFunctionality, StateHelpers, {
     }
   },
 });
+
+export default PublishPageModal;
