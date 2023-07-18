@@ -2,7 +2,7 @@
   {{#if this.embedQuoteButton}}
     <DButton
       @class="btn-flat insert-quote"
-      @action={{action "insertQuote"}}
+      @action={{this.insertQuote}}
       @icon="quote-left"
       @label="post.quote_reply"
       @title="post.quote_reply_shortcut"
@@ -13,7 +13,7 @@
     {{#if this._canEditPost}}
       <DButton
         @icon="pencil-alt"
-        @action={{action "_toggleFastEditForm"}}
+        @action={{this._toggleFastEditForm}}
         @label="post.quote_edit"
         @class="btn-flat quote-edit-label"
         @title="post.quote_edit_shortcut"
