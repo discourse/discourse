@@ -16,9 +16,7 @@ export default class AdminCustomizeThemesShowRoute extends Route {
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
     const model = all.findBy("id", parseInt(params.theme_id, 10));
-    return model
-      ? model
-      : this.router.replaceWith("adminCustomizeThemes.index");
+    return model || this.router.replaceWith("adminCustomizeThemes.index");
   }
 
   setupController(controller, model) {
