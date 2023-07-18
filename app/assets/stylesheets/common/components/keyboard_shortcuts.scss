@@ -29,6 +29,7 @@
 
 .keyboard-shortcuts-modal {
   .modal-inner-container {
+    width: 100%;
     --modal-max-width: 80vw;
   }
 }
@@ -41,7 +42,7 @@
   box-sizing: border-box;
   overflow-x: hidden;
   overflow-y: auto;
-  max-height: 85vh !important; // overrides a default modal !important for extra space
+  max-height: 80vh !important; // overrides a default modal !important for extra space
 
   .keyboard-shortcuts-help__container {
     columns: auto 20em;

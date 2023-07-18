@@ -26,24 +26,56 @@ export default createWidget("summary-box", {
   tagName: "article.summary-box",
   buildKey: (attrs) => `summary-box-${attrs.topicId}`,
 
-  html(attrs) {
+  defaultState() {
+    return { expandSummarizedOn: false };
+  },
+
+  html(attrs, state) {
     const html = [];
 
     if (attrs.summary) {
       html.push(new RawHtml({ html: `<div>${attrs.summary}</div>` }));
-      html.push(
-        h(
-          "div.summarized-on",
-          {},
-          I18n.t("summary.summarized_on", { date: attrs.summarizedOn })
-        )
-      );
+
+      if (state.expandSummarizedOn) {
+        html.push(
+          h(
+            "div.summarized-on",
+            {},
+            I18n.t("summary.summarized_on", {
+              method: attrs.summarizedBy,
+              date: attrs.summarizedOn,
+            })
+          )
+        );
+      } else {
+        html.push(
+          h("div.summarized-on", [
+            this.attach("button", {
+              className: "btn btn-link summarized-on",
+              translatedTitle: I18n.t("summary.summarized_on", {
+                method: "AI",
+                date: attrs.summarizedOn,
+              }),
+              translatedLabel: I18n.t("summary.summarized_on", {
+                method: "AI",
+                date: attrs.summarizedOn,
+              }),
+              action: "showFullSummarizedOn",
+            }),
+          ])
+        );
+      }
     } else {
       html.push(this.attach("summary-skeleton"));
       this.fetchSummary(attrs.topicId);
     }
 
     return html;
+  },
+
+  showFullSummarizedOn() {
+    this.state.expandSummarizedOn = true;
+    this.scheduleRerender();
   },
 
   fetchSummary(topicId) {
@@ -54,6 +86,7 @@ export default createWidget("summary-box", {
           this.sendWidgetEvent("summaryUpdated", {
             summary: cooked.string,
             summarizedOn: shortDateNoYear(data.summarized_on),
+            summarizedBy: data.summarized_by,
           });
         });
       })

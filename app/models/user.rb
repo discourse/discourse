@@ -659,11 +659,11 @@ class User < ActiveRecord::Base
     results.to_h
   end
 
-  ###
-  # DEPRECATED: This is only maintained for backwards compat until v2.5. There
-  # may be inconsistencies with counts in the UI because of this, because unread
-  # high priority includes PMs AND bookmark reminders.
   def unread_private_messages
+    Discourse.deprecate(
+      "#unread_private_messages is deprecated, use #unread_high_priority_notifications instead.",
+      drop_from: "2.5.0",
+    )
     @unread_pms ||= unread_high_priority_notifications
   end
 

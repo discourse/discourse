@@ -1181,7 +1181,12 @@ class TopicsController < ApplicationController
 
     hijack do
       summary = TopicSummarization.new(strategy).summarize(topic, current_user)
-      render json: { summary: summary&.summarized_text, summarized_on: summary&.updated_at }
+
+      render json: {
+               summary: summary.summarized_text,
+               summarized_on: summary.updated_at,
+               summarized_by: summary.algorithm,
+             }
     end
   end
 

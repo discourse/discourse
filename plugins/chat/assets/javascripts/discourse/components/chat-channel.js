@@ -214,6 +214,10 @@ export default class ChatLivePane extends Component {
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
+        // We update this value server-side when we load the Channel
+        // here, so this reflects reality for sidebar unread logic.
+        this.args.channel.updateLastViewedAt();
+
         if (result.threads) {
           result.threads.forEach((thread) => {
             const storedThread = this.args.channel.threadsManager.add(
@@ -237,8 +241,9 @@ export default class ChatLivePane extends Component {
           });
         }
 
-        if (result.unread_thread_ids) {
-          this.args.channel.unreadThreadIds = result.unread_thread_ids;
+        if (result.unread_thread_overview) {
+          this.args.channel.threadsManager.unreadThreadOverview =
+            result.unread_thread_overview;
         }
 
         if (this.requestedTargetMessageId) {
@@ -353,12 +358,9 @@ export default class ChatLivePane extends Component {
           });
         }
 
-        if (result.thread_tracking_overview) {
-          result.thread_tracking_overview.forEach((threadId) => {
-            if (!this.args.channel.threadTrackingOverview.includes(threadId)) {
-              this.args.channel.threadTrackingOverview.push(threadId);
-            }
-          });
+        if (result.unread_thread_overview) {
+          this.args.channel.threadsManager.unreadThreadOverview =
+            result.unread_thread_overview;
         }
 
         this.args.channel.details = meta;

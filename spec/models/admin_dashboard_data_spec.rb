@@ -45,6 +45,18 @@ RSpec.describe AdminDashboardData do
         expect(problems.map(&:to_s)).to include("a problem was found")
       end
     end
+
+    describe "when `navigation_menu` site setting is `legacy`" do
+      it "should include the right problem message" do
+        SiteSetting.set(:navigation_menu, "legacy")
+
+        problem = AdminDashboardData.fetch_problems.last
+
+        expect(problem.message).to include(
+          I18n.t("dashboard.legacy_navigation_menu_deprecated", base_path: Discourse.base_path),
+        )
+      end
+    end
   end
 
   describe "adding scheduled checks" do
