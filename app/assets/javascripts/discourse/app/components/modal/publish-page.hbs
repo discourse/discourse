@@ -17,8 +17,8 @@
             <label>{{i18n "topic.publish_page.slug"}}</label>
             <TextField
               @value={{this.publishedPage.slug}}
-              @onChange={{action "checkSlug"}}
-              @onChangeImmediate={{action "startCheckSlug"}}
+              @onChange={{this.checkSlug}}
+              @onChangeImmediate={{this.startCheckSlug}}
               @disabled={{this.existing}}
               @class="publish-slug"
             />
@@ -31,7 +31,7 @@
               <Input
                 @type="checkbox"
                 @checked={{readonly this.publishedPage.public}}
-                {{on "click" (action "onChangePublic" value="target.checked")}}
+                {{on "click" this.onChangePublic}}
               />
               {{i18n "topic.publish_page.public_description"}}
             </p>
@@ -71,37 +71,35 @@
     {{/if}}
   </:body>
   <:footer>
-    <div class="modal-footer">
-      {{#if this.showUnpublish}}
-        <DButton
-          @label="topic.publish_page.unpublish"
-          @icon="trash-alt"
-          @class="btn-danger"
-          @isLoading={{this.unpublishing}}
-          @action={{action "unpublish"}}
-        />
+    {{#if this.showUnpublish}}
+      <DButton
+        @label="topic.publish_page.unpublish"
+        @icon="trash-alt"
+        @class="btn-danger"
+        @isLoading={{this.unpublishing}}
+        @action={{this.unpublish}}
+      />
 
-        <DButton
-          @class="close-publish-page"
-          @icon="times"
-          @label="close"
-          @action={{@closeModal}}
-        />
-      {{else if this.unpublished}}
-        <DButton
-          @label="topic.publish_page.publishing_settings"
-          @action={{action "startNew"}}
-        />
-      {{else}}
-        <DButton
-          @label="topic.publish_page.publish"
-          @class="btn-primary publish-page"
-          @icon="file"
-          @disabled={{this.disabled}}
-          @isLoading={{this.saving}}
-          @action={{action "publish"}}
-        />
-      {{/if}}
-    </div>
+      <DButton
+        @class="close-publish-page"
+        @icon="times"
+        @label="close"
+        @action={{@closeModal}}
+      />
+    {{else if this.unpublished}}
+      <DButton
+        @label="topic.publish_page.publishing_settings"
+        @action={{this.startNew}}
+      />
+    {{else}}
+      <DButton
+        @label="topic.publish_page.publish"
+        @class="btn-primary publish-page"
+        @icon="file"
+        @disabled={{this.disabled}}
+        @isLoading={{this.saving}}
+        @action={{this.publish}}
+      />
+    {{/if}}
   </:footer>
 </DModal>
