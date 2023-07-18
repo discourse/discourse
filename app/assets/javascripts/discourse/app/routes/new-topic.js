@@ -37,10 +37,9 @@ export default DiscourseRoute.extend({
       }
 
       if (category) {
-        let route = "discovery.category";
-        let params = { category, id: category.id };
-
-        this.router.replaceWith(route, params).then((e) => {
+        // Using URL-based transition to avoid bug with dynamic segments and refreshModel query params
+        // https://github.com/emberjs/ember.js/issues/16992
+        this.router.replaceWith(`/c/${category.id}`).then((e) => {
           if (this.controllerFor("navigation/category").canCreateTopic) {
             this._sendTransition(e, transition, categoryId);
           }
