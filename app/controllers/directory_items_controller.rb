@@ -81,7 +81,8 @@ class DirectoryItemsController < ApplicationController
       end
     end
 
-    limit = params[:limit].to_i > 0 ? params[:limit].to_i : PAGE_SIZE
+    limit = [params[:limit].to_i, PAGE_SIZE].min if params[:limit].to_i > 0
+    limit ||= PAGE_SIZE
 
     result_count = result.count
     result = result.limit(limit).offset(limit * page).to_a
