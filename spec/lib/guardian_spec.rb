@@ -2542,11 +2542,21 @@ RSpec.describe Guardian do
             Guardian.new(anonymous_user).can_delete_post_action?(non_like_post_action),
           ).to be_falsey
         end
+
+        it "returns false if the window has expired" do
+          post_action.created_at = 20.minutes.ago
+          SiteSetting.post_undo_action_window_mins = 10
+
+          expect(Guardian.new(anonymous_user).can_delete?(post_action)).to be_falsey
+        end
       end
     end
 
     context "with allow_anonymous_likes disabled" do
-      before { SiteSetting.allow_anonymous_likes = false }
+      before do
+        SiteSetting.allow_anonymous_likes = false
+        SiteSetting.allow_anonymous_posting = true
+      end
       describe "an anonymous user" do
         let(:post_action) do
           user.id = anonymous_user.id
