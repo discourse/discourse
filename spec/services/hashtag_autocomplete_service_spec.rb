@@ -39,6 +39,13 @@ RSpec.describe HashtagAutocompleteService do
         { "topic-composer" => %w[category tag], "awesome-composer" => %w[tag category] },
       )
     end
+
+    it "does not return types which have been disabled" do
+      SiteSetting.tagging_enabled = false
+      expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
+        { "topic-composer" => %w[category] },
+      )
+    end
   end
 
   describe ".data_source_icon_map" do
@@ -294,6 +301,13 @@ RSpec.describe HashtagAutocompleteService do
             "great-books",
             "book",
           ],
+        )
+      end
+
+      it "does not error if a type provided for priority order has been disabled" do
+        SiteSetting.tagging_enabled = false
+        expect(service.search(nil, %w[category tag]).map(&:ref)).to eq(
+          %w[book-dome book-zone media book uncategorized the-book-club],
         )
       end
     end
