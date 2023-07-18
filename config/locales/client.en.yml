@@ -2040,8 +2040,8 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      in_progress: "Summary in progress..."
-      summarized_on: "Summarized on %{date}" 
+      in_progress: "Summarizing topic using AI..."
+      summarized_on: "Summarized with %{method} on %{date}" 
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
@@ -2063,8 +2063,7 @@ en:
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
       strategy:
         hide_button_title: "Hide summary"
-        button_title: "Summarize this topic"
-        title: "Topic summary"
+        button_title: "Summarize with AI"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."

@@ -876,7 +876,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal");
+        const inModal = this.element.closest("#discourse-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );

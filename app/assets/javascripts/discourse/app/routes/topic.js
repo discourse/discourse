@@ -10,12 +10,14 @@ import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
+import HistoryModal from "discourse/components/modal/history";
 
 const SCROLL_DELAY = 500;
 
 const TopicRoute = DiscourseRoute.extend({
   composer: service(),
   screenTrack: service(),
+  modal: service(),
 
   scheduledReplace: null,
   lastScrollPos: null,
@@ -153,13 +155,14 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showHistory(model, revision) {
-    let historyController = showModal("history", {
-      model,
-      modalClass: "history-modal",
+    this.modal.show(HistoryModal, {
+      model: {
+        postId: model.id,
+        postVersion: revision || "latest",
+        post: model,
+        editPost: (post) => this.controllerFor("topic").send("editPost", post),
+      },
     });
-    historyController.refresh(model.get("id"), revision || "latest");
-    historyController.set("post", model);
-    historyController.set("topicController", this.controllerFor("topic"));
   },
 
   @action

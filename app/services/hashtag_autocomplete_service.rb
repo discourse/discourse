@@ -15,6 +15,8 @@ class HashtagAutocompleteService
 
   attr_reader :guardian
 
+  # NOTE: This is not meant to be called directly; use `enabled_data_sources`
+  # or the individual data_source_X methods instead.
   def self.data_sources
     # Category and Tag data sources are in core and always should be
     # included for searches and lookups.
@@ -30,16 +32,20 @@ class HashtagAutocompleteService
     )
   end
 
+  def self.enabled_data_sources
+    self.data_sources.filter(&:enabled?)
+  end
+
   def self.data_source_types
-    data_sources.map(&:type)
+    self.enabled_data_sources.map(&:type)
   end
 
   def self.data_source_icon_map
-    data_sources.map { |ds| [ds.type, ds.icon] }.to_h
+    self.enabled_data_sources.map { |ds| [ds.type, ds.icon] }.to_h
   end
 
   def self.data_source_from_type(type)
-    data_sources.find { |ds| ds.type == type }
+    self.enabled_data_sources.find { |ds| ds.type == type }
   end
 
   def self.find_priorities_for_context(context)

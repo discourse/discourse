@@ -82,7 +82,39 @@ function registerOtherPluginOverrides() {
   );
 }
 
-module("Integration | Initializers | template-overrides", function () {
+function registerTemplateOnlyComponents() {
+  registerTemporaryModule(
+    `discourse/templates/components/core-template-only-definition`,
+    hbs`glimmer template-only component`
+  );
+
+  registerTemporaryModule(
+    `discourse/plugins/some-plugin-name/discourse/templates/components/plugin-template-only-definition`,
+    hbs`classic component`
+  );
+}
+
+module("Integration | Initializers | plugin-component-templates", function () {
+  module("template-only component definition behaviour", function (hooks) {
+    hooks.beforeEach(() => registerTemplateOnlyComponents());
+    setupRenderingTest(hooks);
+
+    test("treats plugin template-only definition as classic component", async function () {
+      await render(hbs`<PluginTemplateOnlyDefinition class='test-class'/>`);
+      assert
+        .dom("div.test-class")
+        .hasText("classic component", "renders as classic component");
+    });
+
+    test("leaves core template-only definition as glimmer template-only component", async function () {
+      await render(hbs`<CoreTemplateOnlyDefinition class='test-class'/>`);
+      assert
+        .dom("div.test-class")
+        .doesNotExist("no classic component rendered");
+      assert.dom().hasText("glimmer template-only component");
+    });
+  });
+
   module("with no overrides", function (hooks) {
     hooks.beforeEach(() => registerBaseComponents());
     setupRenderingTest(hooks);
@@ -178,6 +210,7 @@ module("Integration | Initializers | template-overrides", function () {
   });
 
   module("with theme and plugin overrides", function (hooks) {
+    hooks.beforeEach(() => registerBaseComponents());
     hooks.beforeEach(registerPluginOverrides);
     hooks.beforeEach(registerThemeOverrides);
     setupRenderingTest(hooks);

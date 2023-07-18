@@ -10,6 +10,11 @@ import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import {
+  CLOSE_INITIATED_BY_BUTTON,
+  CLOSE_INITIATED_BY_ESC,
+} from "discourse/components/d-modal";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
@@ -29,7 +34,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark";
 
 let customPostMessageCallbacks = {};
 
@@ -53,6 +58,7 @@ export default Controller.extend(bufferedProperty("model"), {
   dialog: service(),
   documentTitle: service(),
   screenTrack: service(),
+  modal: service(),
 
   multiSelect: false,
   selectedPostIds: null,
@@ -1272,43 +1278,60 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyTopicBookmark(bookmark) {
-    return openBookmarkModal(bookmark, {
-      onAfterSave: (savedData) => {
-        this._syncBookmarks(savedData);
-        this.model.set("bookmarking", false);
-        this.model.set("bookmarked", true);
-        this.model.incrementProperty("bookmarksWereChanged");
-        this.appEvents.trigger(
-          "bookmarks:changed",
-          savedData,
-          bookmark.attachedTo()
-        );
-      },
-      onAfterDelete: (topicBookmarked, bookmarkId) => {
-        this.model.removeBookmark(bookmarkId);
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(bookmark),
+        afterSave: (savedData) => {
+          this._syncBookmarks(savedData);
+          this.model.set("bookmarking", false);
+          this.model.set("bookmarked", true);
+          this.model.incrementProperty("bookmarksWereChanged");
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+        },
+        afterDelete: (topicBookmarked, bookmarkId) => {
+          this.model.removeBookmark(bookmarkId);
+        },
       },
     });
   },
 
   _modifyPostBookmark(bookmark, post) {
-    return openBookmarkModal(bookmark, {
-      onCloseWithoutSaving: () => {
-        post.appEvents.trigger("post-stream:refresh", {
-          id: bookmark.bookmarkable_id,
-        });
-      },
-      onAfterSave: (savedData) => {
-        this._syncBookmarks(savedData);
-        this.model.set("bookmarking", false);
-        post.createBookmark(savedData);
-        this.model.afterPostBookmarked(post, savedData);
-        return [post.id];
-      },
-      onAfterDelete: (topicBookmarked, bookmarkId) => {
-        this.model.removeBookmark(bookmarkId);
-        post.deleteBookmark(topicBookmarked);
-      },
-    });
+    this.modal
+      .show(BookmarkModal, {
+        model: {
+          bookmark: new BookmarkFormData(bookmark),
+          afterSave: (savedData) => {
+            this._syncBookmarks(savedData);
+            this.model.set("bookmarking", false);
+            post.createBookmark(savedData);
+            this.model.afterPostBookmarked(post, savedData);
+            return [post.id];
+          },
+          afterDelete: (topicBookmarked, bookmarkId) => {
+            this.model.removeBookmark(bookmarkId);
+            post.deleteBookmark(topicBookmarked);
+          },
+        },
+      })
+      .then((closeData) => {
+        if (!closeData) {
+          return;
+        }
+
+        if (
+          closeData.closeWithoutSaving ||
+          closeData.initiatedBy === CLOSE_INITIATED_BY_ESC ||
+          closeData.initiatedBy === CLOSE_INITIATED_BY_BUTTON
+        ) {
+          post.appEvents.trigger("post-stream:refresh", {
+            id: bookmark.bookmarkable_id,
+          });
+        }
+      });
   },
 
   _syncBookmarks(data) {

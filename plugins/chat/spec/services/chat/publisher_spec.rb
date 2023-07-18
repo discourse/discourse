@@ -96,8 +96,10 @@ describe Chat::Publisher do
 
     context "when the channel has threading enabled and the message is a thread reply" do
       fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+
       before do
         message_1.update!(thread: thread)
+        thread.update_last_message_id!
         channel.update!(threading_enabled: true)
       end
 
@@ -106,16 +108,22 @@ describe Chat::Publisher do
 
         it "publishes the tracking state with correct counts" do
           expect(data["thread_id"]).to eq(thread.id)
-          expect(data["unread_thread_ids"]).to eq([thread.id])
-          expect(data["thread_tracking"]).to eq({ "unread_count" => 1, "mention_count" => 0 })
+          expect(data["unread_thread_overview"]).to eq(
+            { thread.id.to_s => thread.reload.last_message.created_at.iso8601(3) },
+          )
+          expect(data["thread_tracking"]).to eq(
+            { "unread_count" => 1, "mention_count" => 0, "last_reply_created_at" => nil },
+          )
         end
       end
 
       context "when the user has no thread membership" do
         it "publishes the tracking state with zeroed out counts" do
           expect(data["thread_id"]).to eq(thread.id)
-          expect(data["unread_thread_ids"]).to eq([])
-          expect(data["thread_tracking"]).to eq({ "unread_count" => 0, "mention_count" => 0 })
+          expect(data["unread_thread_overview"]).to eq({})
+          expect(data["thread_tracking"]).to eq(
+            { "unread_count" => 0, "mention_count" => 0, "last_reply_created_at" => nil },
+          )
         end
       end
     end

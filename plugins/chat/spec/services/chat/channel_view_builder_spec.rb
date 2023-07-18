@@ -173,6 +173,7 @@ RSpec.describe Chat::ChannelViewBuilder do
             channel_ids: [channel.id],
             include_threads: true,
             include_read: false,
+            include_last_reply_details: true,
           )
           .returns(Chat::TrackingStateReport.new)
           .once
@@ -188,7 +189,7 @@ RSpec.describe Chat::ChannelViewBuilder do
         thread = Fabricate(:chat_thread, channel: channel)
         thread.add(current_user)
         message_1 = Fabricate(:chat_message, chat_channel: channel, thread: thread)
-        expect(result.view.unread_thread_ids).to eq([message_1.thread.id])
+        expect(result.view.unread_thread_overview).to eq({ thread.id => message_1.created_at })
       end
 
       it "fetches the tracking state of threads in the channel" do

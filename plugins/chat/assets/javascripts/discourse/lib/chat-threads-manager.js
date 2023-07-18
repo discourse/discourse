@@ -3,7 +3,7 @@ import { setOwner } from "@ember/application";
 import Promise from "rsvp";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import { cached, tracked } from "@glimmer/tracking";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TrackedMap, TrackedObject } from "@ember-compat/tracked-built-ins";
 
 /*
   The ChatThreadsManager is responsible for managing the loaded chat threads
@@ -19,9 +19,35 @@ export default class ChatThreadsManager {
   @service chatApi;
 
   @tracked _cached = new TrackedObject();
+  @tracked _unreadThreadOverview = new TrackedMap();
 
   constructor(owner) {
     setOwner(this, owner);
+  }
+
+  get unreadThreadCount() {
+    return this.unreadThreadOverview.size;
+  }
+
+  get unreadThreadOverview() {
+    return this._unreadThreadOverview;
+  }
+
+  set unreadThreadOverview(unreadThreadOverview) {
+    this._unreadThreadOverview.clear();
+
+    for (const [threadId, lastReplyCreatedAt] of Object.entries(
+      unreadThreadOverview
+    )) {
+      this.markThreadUnread(threadId, lastReplyCreatedAt);
+    }
+  }
+
+  markThreadUnread(threadId, lastReplyCreatedAt) {
+    this.unreadThreadOverview.set(
+      parseInt(threadId, 10),
+      new Date(lastReplyCreatedAt)
+    );
   }
 
   @cached

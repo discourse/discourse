@@ -35,7 +35,8 @@ module Chat
       thread_ids: nil,
       include_missing_memberships: false,
       include_threads: false,
-      include_read: true
+      include_read: true,
+      include_last_reply_details: false
     )
       report = ::Chat::TrackingStateReport.new
 
@@ -59,24 +60,40 @@ module Chat
       if !include_threads || (thread_ids.blank? && channel_ids.blank?)
         report.thread_tracking = {}
       else
+        tracking =
+          ::Chat::ThreadUnreadsQuery.call(
+            channel_ids: channel_ids,
+            thread_ids: thread_ids,
+            user_id: guardian.user.id,
+            include_missing_memberships: include_missing_memberships,
+            include_read: include_read,
+          )
+
+        last_reply_details =
+          DB.query(<<~SQL, tracking.map(&:thread_id)) if include_last_reply_details
+            SELECT chat_threads.id AS thread_id, last_message.created_at
+            FROM chat_threads
+            INNER JOIN chat_messages AS last_message ON last_message.id = chat_threads.last_message_id
+            WHERE chat_threads.id IN (?)
+              AND last_message.deleted_at IS NULL
+          SQL
+
         report.thread_tracking =
-          ::Chat::ThreadUnreadsQuery
-            .call(
-              channel_ids: channel_ids,
-              thread_ids: thread_ids,
-              user_id: guardian.user.id,
-              include_missing_memberships: include_missing_memberships,
-              include_read: include_read,
-            )
+          tracking
             .map do |tt|
-              [
-                tt.thread_id,
-                {
-                  channel_id: tt.channel_id,
-                  mention_count: tt.mention_count,
-                  unread_count: tt.unread_count,
-                },
-              ]
+              data = {
+                channel_id: tt.channel_id,
+                mention_count: tt.mention_count,
+                unread_count: tt.unread_count,
+              }
+
+              if include_last_reply_details
+                data[:last_reply_created_at] = last_reply_details
+                  .find { |details| details.thread_id == tt.thread_id }
+                  &.created_at
+              end
+
+              [tt.thread_id, data]
             end
             .to_h
       end

@@ -249,7 +249,9 @@ export default class DLightbox extends Component {
   #onAfterItemChange() {
     this.isLoading = false;
 
-    setSiteThemeColor(this.currentItem.dominantColor);
+    if (this.currentItem.dominantColor) {
+      setSiteThemeColor(this.currentItem.dominantColor);
+    }
 
     setCarouselScrollPosition({
       behavior: "smooth",

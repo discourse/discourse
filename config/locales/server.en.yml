@@ -1491,6 +1491,7 @@ en:
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
+    legacy_navigation_menu_deprecated: "Your Discourse is currently using the 'legacy' navigation menu which <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>will be removed in the first beta release of Discourse 3.2</a>. Migrate to the new navigation menu by updating your <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>navigation menu site setting</a> to 'sidebar' or 'header dropdown'."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
