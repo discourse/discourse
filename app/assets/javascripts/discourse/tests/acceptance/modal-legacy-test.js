@@ -11,6 +11,13 @@ import { hbs } from "ember-cli-htmlbars";
 import showModal from "discourse/lib/show-modal";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
+
+function silencedShowModal() {
+  return withSilencedDeprecations("discourse.modal-controllers", () =>
+    showModal(...arguments)
+  );
+}
 
 acceptance("Legacy Modal", function (needs) {
   let _translations;
@@ -59,7 +66,7 @@ acceptance("Legacy Modal", function (needs) {
       hbs`{{#d-modal-body title="" class="" dismissable=false}}test{{/d-modal-body}}`
     );
 
-    showModal("not-dismissable", {});
+    silencedShowModal("not-dismissable", {});
     await settled();
 
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
@@ -89,7 +96,7 @@ acceptance("Legacy Modal", function (needs) {
     ];
 
     await visit("/");
-    showModal("test-raw-title-panels", { panels });
+    silencedShowModal("test-raw-title-panels", { panels });
     await settled();
 
     assert.strictEqual(
@@ -108,7 +115,7 @@ acceptance("Legacy Modal", function (needs) {
 
     await visit("/");
 
-    showModal("test-title", { title: "test_title" });
+    silencedShowModal("test-title", { title: "test_title" });
     await settled();
     assert.strictEqual(
       query(".d-modal .title").innerText.trim(),
@@ -118,7 +125,7 @@ acceptance("Legacy Modal", function (needs) {
 
     await click(".d-modal .close");
 
-    showModal("test-title-with-body", { title: "test_title" });
+    silencedShowModal("test-title-with-body", { title: "test_title" });
     await settled();
     assert.strictEqual(
       query(".d-modal .title").innerText.trim(),
@@ -128,7 +135,7 @@ acceptance("Legacy Modal", function (needs) {
 
     await click(".d-modal .close");
 
-    showModal("test-title");
+    silencedShowModal("test-title");
     await settled();
     assert.ok(
       !exists(".d-modal .title"),
