@@ -206,7 +206,7 @@ export default class ChatSubscriptionsManager extends Service {
           }
 
           // Thread should be considered unread if not already.
-          if (busData.thread_id) {
+          if (busData.thread_id && channel.threadingEnabled) {
             channel.threadsManager
               .find(channel.id, busData.thread_id)
               .then((thread) => {
@@ -226,6 +226,10 @@ export default class ChatSubscriptionsManager extends Service {
 
   _onNewThreadMessage(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
+      if (!channel.threadingEnabled) {
+        return;
+      }
+
       channel.threadsManager
         .find(busData.channel_id, busData.thread_id)
         .then((thread) => {
@@ -334,12 +338,19 @@ export default class ChatSubscriptionsManager extends Service {
       channel.tracking.unreadCount = busData.unread_count;
       channel.tracking.mentionCount = busData.mention_count;
 
-      if (busData.hasOwnProperty("unread_thread_overview")) {
+      if (
+        busData.hasOwnProperty("unread_thread_overview") &&
+        channel.threadingEnabled
+      ) {
         channel.threadsManager.unreadThreadOverview =
           busData.unread_thread_overview;
       }
 
-      if (busData.thread_id && busData.hasOwnProperty("thread_tracking")) {
+      if (
+        busData.thread_id &&
+        busData.hasOwnProperty("thread_tracking") &&
+        channel.threadingEnabled
+      ) {
         channel.threadsManager
           .find(channelId, busData.thread_id)
           .then((thread) => {
