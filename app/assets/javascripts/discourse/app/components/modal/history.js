@@ -168,8 +168,8 @@ export default class History extends Component {
   refresh(postId, postVersion) {
     this.loading = true;
     Post.loadRevision(postId, postVersion).then((result) => {
-      this.loading = false;
       this.postRevision = result;
+      this.loading = false;
     });
   }
 

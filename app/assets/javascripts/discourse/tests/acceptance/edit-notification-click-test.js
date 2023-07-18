@@ -1,5 +1,5 @@
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 
 acceptance("Edit Notification Click", function (needs) {
@@ -42,7 +42,6 @@ acceptance("Edit Notification Click", function (needs) {
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
     await click(".notification.edited a");
-
     const [v1, v2] = queryAll(".history-modal .revision-content");
 
     assert.strictEqual(
