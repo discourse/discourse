@@ -31,6 +31,8 @@ export function clearBulkButtons() {
 export default class TopicBulkActions extends Controller.extend(
   ModalFunctionality
 ) {
+  @service currentUser;
+  @service siteSettings;
   @service dialog;
   @controller("user-private-messages") userPrivateMessages;
 
@@ -44,7 +46,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.change_category",
       icon: "pencil-alt",
       class: "btn-default",
-      visible: (topics) => !topics.some((t) => t.isPrivateMessage),
+      visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
       action() {
         this.activeComponent = ChangeCategory;
       },
@@ -53,7 +55,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.close_topics",
       icon: "lock",
       class: "btn-default",
-      visible: (topics) => !topics.some((t) => t.isPrivateMessage),
+      visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
       action() {
         this.forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
       },
@@ -62,7 +64,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.archive_topics",
       icon: "folder",
       class: "btn-default",
-      visible: (topics) => !topics.some((t) => t.isPrivateMessage),
+      visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
       action() {
         this.forEachPerformed({ type: "archive" }, (t) =>
           t.set("archived", true)
@@ -73,7 +75,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.archive_topics",
       icon: "folder",
       class: "btn-default",
-      visible: (topics) => topics.some((t) => t.isPrivateMessage),
+      visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action() {
         let params = { type: "archive_messages" };
         if (this.userPrivateMessages.isGroup) {
@@ -86,7 +88,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.move_messages_to_inbox",
       icon: "folder",
       class: "btn-default",
-      visible: (topics) => topics.some((t) => t.isPrivateMessage),
+      visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action() {
         let params = { type: "move_messages_to_inbox" };
         if (this.userPrivateMessages.isGroup) {
@@ -107,7 +109,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.defer",
       icon: "circle",
       class: "btn-default",
-      visible: () => this.currentUser.user_option.enable_defer,
+      visible: ({ currentUser }) => currentUser.user_option.enable_defer,
       action() {
         this.performAndRefresh({ type: "destroy_post_timing" });
       },
@@ -116,7 +118,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.unlist_topics",
       icon: "far-eye-slash",
       class: "btn-default",
-      visible: (topics) =>
+      visible: ({ topics }) =>
         topics.some((t) => t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
       action() {
@@ -129,7 +131,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.relist_topics",
       icon: "far-eye",
       class: "btn-default",
-      visible: (topics) =>
+      visible: ({ topics }) =>
         topics.some((t) => !t.visible) &&
         !topics.some((t) => t.isPrivateMessage),
       action() {
@@ -142,7 +144,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.reset_bump_dates",
       icon: "anchor",
       class: "btn-default",
-      visible: () => this.currentUser.canManageTopic,
+      visible: ({ currentUser }) => currentUser.canManageTopic,
       action() {
         this.performAndRefresh({ type: "reset_bump_dates" });
       },
@@ -151,8 +153,8 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.change_tags",
       icon: "tag",
       class: "btn-default",
-      visible: () =>
-        this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
+      visible: ({ currentUser, siteSettings }) =>
+        siteSettings.tagging_enabled && currentUser.canManageTopic,
       action() {
         this.activeComponent = ChangeTags;
       },
@@ -161,8 +163,8 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.append_tags",
       icon: "tag",
       class: "btn-default",
-      visible: () =>
-        this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
+      visible: ({ currentUser, siteSettings }) =>
+        siteSettings.tagging_enabled && currentUser.canManageTopic,
       action() {
         this.activeComponent = AppendTags;
       },
@@ -171,8 +173,8 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.remove_tags",
       icon: "tag",
       class: "btn-default",
-      visible: () =>
-        this.siteSettings.tagging_enabled && this.currentUser.canManageTopic,
+      visible: ({ currentUser, siteSettings }) =>
+        siteSettings.tagging_enabled && currentUser.canManageTopic,
       action() {
         this.dialog.deleteConfirm({
           message: I18n.t("topics.bulk.confirm_remove_tags", {
@@ -186,7 +188,7 @@ export default class TopicBulkActions extends Controller.extend(
       label: "topics.bulk.delete",
       icon: "trash-alt",
       class: "btn-danger delete-topics",
-      visible: () => this.currentUser.staff,
+      visible: ({ currentUser }) => currentUser.staff,
       action() {
         this.performAndRefresh({ type: "delete" });
       },
@@ -197,7 +199,11 @@ export default class TopicBulkActions extends Controller.extend(
     return [...this.defaultButtons, ..._customButtons]
       .filter(({ visible }) => {
         if (visible) {
-          return visible.call(this, this.model.topics);
+          return visible({
+            topics: this.model.topics,
+            currentUser: this.currentUser,
+            siteSettings: this.siteSettings,
+          });
         } else {
           return true;
         }
