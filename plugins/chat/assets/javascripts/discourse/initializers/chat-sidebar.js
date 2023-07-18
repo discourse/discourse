@@ -110,10 +110,11 @@ export default {
             };
 
             const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
+              @service currentUser;
               @tracked currentUserCanJoinPublicChannels =
-                this.sidebar.currentUser &&
-                (this.sidebar.currentUser.staff ||
-                  this.sidebar.currentUser.has_joinable_public_channels);
+                this.currentUser &&
+                (this.currentUser.staff ||
+                  this.currentUser.has_joinable_public_channels);
 
               constructor() {
                 super(...arguments);

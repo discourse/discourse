@@ -12,7 +12,7 @@ export default class SidebarUserSections extends Component {
 
     this.customSections =
       this.args.panel?.sections?.map((customSection) => {
-        const section = new customSection({ sidebar: this });
+        const section = new customSection();
         setOwner(section, getOwner(this));
         return section;
       }) || [];

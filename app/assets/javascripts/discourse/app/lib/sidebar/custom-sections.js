@@ -3,7 +3,27 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import I18n from "I18n";
 
-export const customPanels = [];
+class MainSidebarPanel {
+  sections = [];
+
+  get key() {
+    return "main";
+  }
+  get switchButtonLabel() {
+    return I18n.t("sidebar.panels.forum.label");
+  }
+
+  get switchButtonIcon() {
+    return "random";
+  }
+
+  get switchButtonDefaultUrl() {
+    return "/";
+  }
+}
+
+export let customPanels = [new MainSidebarPanel()];
+
 export let currentPanelKey = "main";
 
 export function addSidebarPanel(func) {
@@ -29,26 +49,6 @@ export function addSidebarSection(func, panelKey) {
 }
 
 export function resetSidebarPanels() {
-  customPanels.length = 0;
-  addSidebarPanel(() => {
-    const MainSidebarPanel = class extends BaseCustomSidebarPanel {
-      get key() {
-        return "main";
-      }
-      get switchButtonLabel() {
-        return I18n.t("sidebar.panels.forum.label");
-      }
-
-      get switchButtonIcon() {
-        return "random";
-      }
-
-      get switchButtonDefaultUrl() {
-        return "/";
-      }
-    };
-
-    return MainSidebarPanel;
-  });
+  customPanels = [new MainSidebarPanel()];
   currentPanelKey = "main";
 }
