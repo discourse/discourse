@@ -15,7 +15,7 @@ export default DiscourseRoute.extend({
     const groupName = params.groupname || params.group_name;
 
     if (this.currentUser) {
-      this.router.replaceWith("discovery.latest").then((e) => {
+      this.router.replaceWith("/latest").then((e) => {
         if (params.username) {
           e.send("createNewMessageViaParams", {
             recipients: params.username,
