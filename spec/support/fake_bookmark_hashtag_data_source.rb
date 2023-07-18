@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class FakeBookmarkHashtagDataSource
+  def self.enabled?
+    true
+  end
+
   def self.icon
     "bookmark"
   end

@@ -126,7 +126,7 @@ import { _addBulkButton } from "discourse/controllers/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.6.1";
+export const PLUGIN_API_VERSION = "1.7.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1814,7 +1814,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
    * class which extends from the BaseSectionLink class interface. See `lib/sidebar/user/community-section/base-section-link.js`
    * for documentation on the BaseSectionLink class interface.
@@ -1874,7 +1873,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Registers a new countable for section links under Sidebar Categories section on top of the default countables of
    * unread topics count and new topics count.
    *
@@ -1943,7 +1941,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Changes the lock icon used for a sidebar category section link to indicate that a category is read restricted.
    *
    * @param {String} Name of a FontAwesome 5 icon
@@ -1953,7 +1950,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Register a custom prefix for a sidebar category section link.
    *
    * Example:
@@ -1992,7 +1988,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Register a custom prefix for a sidebar tag section link.
    *
    * Example:
@@ -2024,7 +2019,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Triggers a refresh of the counts for all category section links under the categories section for a logged in user.
    */
   refreshUserSidebarCategoriesSectionCounts() {
@@ -2036,7 +2030,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
    * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
@@ -2160,7 +2153,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Register a custom renderer for a notification type or override the
    * renderer of an existing type. See lib/notification-types/base.js for
    * documentation and the default renderer.
@@ -2224,7 +2216,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Apply transformation using a callback on a list of model instances of a
    * specific type. Currently, this API only works on lists rendered in the
    * user menu such as notifications, bookmarks and topics (i.e. messages), but
@@ -2255,7 +2246,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Adds a row to the dropdown used on the `userPrivateMessages` route used to navigate between the different user
    * messages pages.
    *

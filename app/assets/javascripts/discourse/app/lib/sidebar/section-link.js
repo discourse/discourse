@@ -84,12 +84,13 @@ export default class SectionLink {
   dragMove(event) {
     this.startMouseY = this.#calcMouseY(event);
 
+    event.stopPropagation();
+    event.preventDefault();
+
     if (!this.drag) {
       return;
     }
 
-    event.stopPropagation();
-    event.preventDefault();
     const currentMouseY = this.#calcMouseY(event);
     const distance = currentMouseY - this.mouseY;
 

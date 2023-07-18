@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Thread tracking state | drawer", type: :system do
+  include ActiveSupport::Testing::TimeHelpers
+
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user) { Fabricate(:user) }
@@ -15,6 +17,7 @@ describe "Thread tracking state | drawer", type: :system do
   before do
     SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap(current_user, [channel])
+    chat_system_user_bootstrap(user: other_user, channel: channel)
     sign_in(current_user)
     thread.add(current_user)
   end
@@ -60,7 +63,8 @@ describe "Thread tracking state | drawer", type: :system do
       drawer_page.open_thread_list
       expect(drawer_page).to have_no_unread_thread_indicator
       expect(thread_list_page).to have_no_unread_item(thread.id)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread)
+      travel_to(1.minute.from_now)
+      Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
       expect(drawer_page).to have_unread_thread_indicator(count: 1)
       expect(thread_list_page).to have_unread_item(thread.id)
     end
@@ -97,18 +101,19 @@ describe "Thread tracking state | drawer", type: :system do
         chat_page.open_from_header
         expect(drawer_page).to have_unread_channel(channel)
         drawer_page.open_channel(channel)
-        Fabricate(:chat_message, thread: thread)
+        Fabricate(:chat_message, thread: thread, user: other_user)
         drawer_page.back
         expect(drawer_page).to have_no_unread_channel(channel)
       end
 
-      xit "shows an unread indicator for the channel index if a new thread message arrives while the user is not looking at the channel" do
+      it "shows an unread indicator for the channel index if a new thread message arrives while the user is not looking at the channel" do
         visit("/")
         chat_page.open_from_header
         drawer_page.open_channel(channel)
         drawer_page.back
         expect(drawer_page).to have_no_unread_channel(channel)
-        Fabricate(:chat_message, thread: thread)
+        travel_to(1.minute.from_now)
+        Fabricate(:chat_message, thread: thread, user: other_user)
         expect(drawer_page).to have_unread_channel(channel)
       end
     end
