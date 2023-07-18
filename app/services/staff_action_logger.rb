@@ -796,8 +796,8 @@ class StaffActionLogger
 
     topic = reviewable.topic || Topic.with_deleted.find_by(id: reviewable.topic_id)
     topic_title = topic&.title || I18n.t("staff_action_logs.not_found")
-    username = reviewable.created_by&.username || I18n.t("staff_action_logs.unknown")
-    name = reviewable.created_by&.name || I18n.t("staff_action_logs.unknown")
+    username = reviewable.target_created_by&.username || I18n.t("staff_action_logs.unknown")
+    name = reviewable.target_created_by&.name || I18n.t("staff_action_logs.unknown")
 
     details = [
       "created_at: #{reviewable.created_at}",
