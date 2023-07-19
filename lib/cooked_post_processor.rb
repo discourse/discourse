@@ -238,7 +238,7 @@ class CookedPostProcessor
       srcset = +""
 
       # Skip srcset for onebox images. Because onebox thumbnails by default
-      # are fairly small the width and height of the image is likely larger
+      # are fairly small the width/height of the smallest thumbnail is likely larger
       # than what the onebox thumbnail size will be displayed at, so we shouldn't
       # need to upscale for retina devices
       if !onebox
