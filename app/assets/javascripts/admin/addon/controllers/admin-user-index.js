@@ -13,7 +13,7 @@ import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import DeletePostsConfirmationModal from "../components/delete-posts-confirmation";
+import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 
 export default class AdminUserIndexController extends Controller.extend(
   CanCheckEmails
