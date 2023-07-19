@@ -10,14 +10,28 @@ export default class DeletePostsConfirmation extends Component {
   @tracked value;
 
   get text() {
-    return I18n.t(`admin.user.delete_posts.confirmation.text`, {
+    return I18n.t("admin.user.delete_posts.confirmation.text", {
       username: this.args.model.username,
-      postCount: this.args.model.post_count,
+      post_count: this.args.model.post_count,
+    });
+  }
+
+  get title() {
+    return I18n.t("admin.user.delete_posts.confirmation.title", {
+      username: this.args.model.username,
+    });
+  }
+
+  get description() {
+    return I18n.t("admin.user.delete_posts.confirmation.description", {
+      username: this.args.model.username,
+      post_count: this.args.model.post_count,
+      text: this.text,
     });
   }
 
   get deleteButtonText() {
-    return I18n.t(`admin.user.delete_posts.confirmation.delete`, {
+    return I18n.t("admin.user.delete_posts.confirmation.delete", {
       username: this.args.model.username,
     });
   }

@@ -21,6 +21,7 @@ export default class AdminUserIndexController extends Controller.extend(
   @service router;
   @service dialog;
   @service adminTools;
+  @service modal;
 
   originalPrimaryGroupId = null;
   customGroupIdsBuffer = null;
@@ -620,7 +621,7 @@ export default class AdminUserIndexController extends Controller.extend(
 
   @action
   showDeletePostsConfirmation() {
-    showModal(DeletePostsConfirmationModal, {
+    this.modal.show(DeletePostsConfirmationModal, {
       model: this.model,
     });
   }

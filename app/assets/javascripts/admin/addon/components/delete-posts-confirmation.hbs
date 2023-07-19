@@ -1,18 +1,6 @@
-<DModal
-  @title={{html-safe
-    (i18n "admin.user.delete_posts.confirmation.title" username=this.username)
-  }}
-  @closeModal={{@closeModal}}
->
+<DModal @title={{html-safe this.title}} @closeModal={{@closeModal}}>
   <:body>
-    <p>{{html-safe
-        (i18n
-          "admin.user.delete_posts.confirmation.description"
-          username=this.username
-          post_count=this.postCount
-          text=this.text
-        )
-      }}</p>
+    <p>{{html-safe this.description}}</p>
     <Input @type="text" @value={{this.value}} />
   </:body>
   <:footer>
