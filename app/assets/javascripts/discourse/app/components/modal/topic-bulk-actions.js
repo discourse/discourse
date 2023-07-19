@@ -1,15 +1,15 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
-import ChangeCategory from "../components/bulk-actions/change-category";
-import NotificationLevel from "../components/bulk-actions/notification-level";
-import ChangeTags from "../components/bulk-actions/change-tags";
-import AppendTags from "../components/bulk-actions/append-tags";
+import ChangeCategory from "../bulk-actions/change-category";
+import NotificationLevel from "../bulk-actions/notification-level";
+import ChangeTags from "../bulk-actions/change-tags";
+import AppendTags from "../bulk-actions/append-tags";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 const _customButtons = [];
 
@@ -28,13 +28,10 @@ export function clearBulkButtons() {
 }
 
 // Modal for performing bulk actions on topics
-export default class TopicBulkActions extends Controller.extend(
-  ModalFunctionality
-) {
+export default class TopicBulkActions extends Component {
   @service currentUser;
   @service siteSettings;
   @service dialog;
-  @controller("user-private-messages") userPrivateMessages;
 
   @tracked loading = false;
   @tracked showProgress = false;
@@ -54,7 +51,7 @@ export default class TopicBulkActions extends Controller.extend(
     {
       label: "topics.bulk.close_topics",
       icon: "lock",
-      class: "btn-default",
+      class: "btn-default bulk-actions__close-topics",
       visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
       action({ forEachPerformed }) {
         forEachPerformed({ type: "close" }, (t) => t.set("closed", true));
@@ -75,10 +72,15 @@ export default class TopicBulkActions extends Controller.extend(
       class: "btn-default",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action: ({ performAndRefresh }) => {
+        const userPrivateMessages = getOwner(this).lookup(
+          "controller:user-private-messages"
+        );
         let params = { type: "archive_messages" };
-        if (this.userPrivateMessages.isGroup) {
-          params.group = this.userPrivateMessages.groupFilter;
+
+        if (userPrivateMessages.isGroup) {
+          params.group = userPrivateMessages.groupFilter;
         }
+
         performAndRefresh(params);
       },
     },
@@ -88,10 +90,15 @@ export default class TopicBulkActions extends Controller.extend(
       class: "btn-default",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action: ({ performAndRefresh }) => {
+        const userPrivateMessages = getOwner(this).lookup(
+          "controller:user-private-messages"
+        );
         let params = { type: "move_messages_to_inbox" };
-        if (this.userPrivateMessages.isGroup) {
-          params.group = this.userPrivateMessages.groupFilter;
+
+        if (userPrivateMessages.isGroup) {
+          params.group = userPrivateMessages.groupFilter;
         }
+
         performAndRefresh(params);
       },
     },
@@ -193,8 +200,8 @@ export default class TopicBulkActions extends Controller.extend(
     return [...this.defaultButtons, ..._customButtons].filter(({ visible }) => {
       if (visible) {
         return visible({
-          topics: this.model.topics,
-          category: this.model.category,
+          topics: this.args.model.topics,
+          category: this.args.model.category,
           currentUser: this.currentUser,
           siteSettings: this.siteSettings,
         });
@@ -204,15 +211,10 @@ export default class TopicBulkActions extends Controller.extend(
     });
   }
 
-  onShow() {
-    this.modal.set("modalClass", "topic-bulk-actions-modal small");
-    this.activeComponent = null;
-  }
-
   async perform(operation) {
     this.loading = true;
 
-    if (this.model.topics.length > 20) {
+    if (this.args.model.topics.length > 20) {
       this.showProgress = true;
     }
 
@@ -242,7 +244,7 @@ export default class TopicBulkActions extends Controller.extend(
   }
 
   _processChunks(operation) {
-    const allTopics = this.model.topics;
+    const allTopics = this.args.model.topics;
     const topicChunks = this._generateTopicChunks(allTopics);
     const topicIds = [];
 
@@ -287,8 +289,8 @@ export default class TopicBulkActions extends Controller.extend(
 
     if (topics) {
       topics.forEach(cb);
-      this.refreshClosure?.();
-      this.send("closeModal");
+      this.args.model.refreshClosure?.();
+      this.args.closeModal();
     }
   }
 
@@ -296,7 +298,7 @@ export default class TopicBulkActions extends Controller.extend(
   async performAndRefresh(operation) {
     await this.perform(operation);
 
-    this.refreshClosure?.();
-    this.send("closeModal");
+    this.args.model.refreshClosure?.();
+    this.args.closeModal();
   }
 }

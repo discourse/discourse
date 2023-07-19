@@ -1,7 +1,6 @@
 import {
   acceptance,
   count,
-  invisible,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -126,10 +125,9 @@ acceptance("Topic - Bulk Actions", function (needs) {
     await click(".bulk-select-actions");
     await click(".modal-body .delete-topics");
 
-    assert.true(
-      invisible(".topic-bulk-actions-modal"),
-      "it closes the bulk select modal"
-    );
+    assert
+      .dom(".topic-bulk-actions-modal")
+      .doesNotExist("it closes the bulk select modal");
   });
 
   test("bulk select - Shift click selection", async function (assert) {
