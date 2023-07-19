@@ -159,7 +159,7 @@ module Chat
 
     def group_users_to_notify(users)
       potential_members, unreachable =
-        users.partition { |user| @chat_channel.can_be_joined_by?(user) }
+        users.partition { |user| user.guardian.can_join_chat_channel?(@chat_channel) }
 
       members, welcome_to_join =
         potential_members.partition { |user| @chat_channel.joined_by?(user) }

@@ -119,10 +119,6 @@ module Chat
       update_user_counts
     end
 
-    def can_be_joined_by?(user)
-      user.guardian.can_chat? && user.guardian.can_join_chat_channel?(self)
-    end
-
     def joined_by?(user)
       user.user_chat_channel_memberships.any? do |membership|
         predicate = membership.chat_channel_id == id
