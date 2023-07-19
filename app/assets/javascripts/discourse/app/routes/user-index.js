@@ -1,6 +1,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  router: service(),
+
   beforeModel() {
     const { currentUser } = this;
     const viewingMe =
@@ -12,9 +15,9 @@ export default DiscourseRoute.extend({
     // transition into a user's activity works. This makes the back button work on mobile
     // where there is no user card as well as desktop where there is.
     if (this.site.mobileView) {
-      this.replaceWith(destination);
+      this.router.replaceWith(destination);
     } else {
-      this.transitionTo(destination);
+      this.router.transitionTo(destination);
     }
   },
 });

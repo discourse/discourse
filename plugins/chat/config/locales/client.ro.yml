@@ -6,6 +6,11 @@
 
 ro:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
       create: "Creează"
       cancel: "Anulare"
@@ -14,17 +19,27 @@ ro:
         add: "Adaugă"
         join: "Alătură-te"
         leave: "Părăsește"
+      channel_delete:
+        instructions: "<p>Șterge canalul <strong>%{name}</strong> și istoricul de chat. Toate mesajele și datele asociate, cum ar fi reacțiile și încărcările, vor fi șterse permanent. Dacă doriți să păstrați istoricul canalului și să-l decomisionați, s-ar putea să doriți să arhivați canalul în schimb.</p> <p>Sunteți sigur că doriți să ștergeți <strong>permanent</strong> canalul? Pentru a confirma, tastați numele canalului în caseta de mai jos.</p>"
       close: "Închide sondajul"
+      expand: "Extinde sertarul de chat"
       delete: "Șterge"
       muted: "silențios"
       joined: "înscris"
       email_frequency:
         never: "Niciodată"
       header_indicator_preference:
+        title: "Afișați indicatorul de activitate în antet"
+        all_new: "Toate mesajele noi"
+        dm_and_mentions: "Mesaje directe și mențiuni"
         never: "Niciodată"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
       last_visit: "ultima vizită"
+      summarization:
+        title: "Rezumați mesajele"
+        description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
+        summarize: "Rezumat"
       mention_warning:
         dismiss: "renunță"
       reply: "Răspunde"

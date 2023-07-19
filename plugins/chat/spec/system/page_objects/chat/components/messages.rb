@@ -16,6 +16,22 @@ module PageObjects
           page.find(context)
         end
 
+        def has_action?(action, **args)
+          message = find(args)
+          message.open_more_menu
+          page.has_css?("[data-value='#{action}']")
+        end
+
+        def has_no_action?(action, **args)
+          message = find(args)
+          message.open_more_menu
+          page.has_no_css?("[data-value='#{action}']")
+        end
+
+        def expand(**args)
+          find(args).expand
+        end
+
         def select(args)
           find(args).select
         end

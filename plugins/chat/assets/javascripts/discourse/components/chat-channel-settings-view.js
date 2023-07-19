@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
+import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
+import ChatModalDeleteChannel from "discourse/plugins/chat/discourse/components/chat/modal/delete-channel";
+import ChatModalToggleChannelStatus from "discourse/plugins/chat/discourse/components/chat/modal/toggle-channel-status";
 
 const NOTIFICATION_LEVELS = [
   { name: I18n.t("chat.notification_levels.never"), value: "never" },
@@ -41,6 +43,7 @@ export default class ChatChannelSettingsView extends Component {
   @service siteSettings;
   @service router;
   @service dialog;
+  @service modal;
 
   notificationLevels = NOTIFICATION_LEVELS;
   mutedOptions = MUTED_OPTIONS;
@@ -107,20 +110,21 @@ export default class ChatChannelSettingsView extends Component {
 
   @action
   onArchiveChannel() {
-    const controller = showModal("chat-channel-archive-modal");
-    controller.set("chatChannel", this.args.channel);
+    return this.modal.show(ChatModalArchiveChannel, {
+      model: { channel: this.args.channel },
+    });
   }
 
   @action
   onDeleteChannel() {
-    const controller = showModal("chat-channel-delete-modal");
-    controller.set("chatChannel", this.args.channel);
+    return this.modal.show(ChatModalDeleteChannel, {
+      model: { channel: this.args.channel },
+    });
   }
 
   @action
   onToggleChannelState() {
-    const controller = showModal("chat-channel-toggle");
-    controller.set("chatChannel", this.args.channel);
+    this.modal.show(ChatModalToggleChannelStatus, { model: this.args.channel });
   }
 
   @action

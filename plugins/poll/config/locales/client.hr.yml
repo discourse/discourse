@@ -27,33 +27,16 @@ hr:
           title: "Rezultati će biti prikazani nakon <strong>zatvaranja</strong>."
         staff:
           title: "Rezultati se prikazuju samo članovima <strong>osoblja</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Odaberite najmanje <strong>%{count}</strong> opciju."
-            few: "Odaberite najmanje <strong>%{count}</strong> opcije."
-            other: "Odaberite najmanje <strong>%{count}</strong> opcija."
-          up_to_max_options:
-            one: "Odaberite najviše <strong>%{count}</strong> opciju."
-            few: "Odaberite najviše <strong>%{count}</strong> opcije."
-            other: "Odaberite najviše <strong>%{count}</strong> opcija."
-          x_options:
-            one: "Odaberite <strong>%{count}</strong> opciju."
-            few: "Odaberite <strong>%{count}</strong> opcije."
-            other: "Odaberite <strong>%{count}</strong> opcija."
-          between_min_and_max_options: "Odaberite između <strong>%{min}</strong> i <strong>%{max}</strong> mogućnosti."
       cast-votes:
         title: "Dajte svoj glas"
         label: "Glasaj sada!"
       show-results:
         title: "Prikaži resultate anketa"
-        label: "Pokaži rezultate"
+        label: "Rezultati"
       remove-vote:
         title: "Ukloni svoj glas"
-        label: "Ukloni glas"
       hide-results:
         title: "Nazad na vaše glasove"
-        label: "Prikaži glasovanje"
       group-results:
         title: "Grupiranje glasova prema korisničkom polju"
         label: "Prikaži detaljnu podjelu"
@@ -77,6 +60,8 @@ hr:
         breakdown: "Slom"
         percentage: "Postotak"
         count: "Količina"
+      options:
+        label: "Mogućnosti"
       error_while_toggling_status: "Nažalost, došlo je do pogreške prilikom izmjene statusa ove ankete."
       error_while_casting_votes: "Žao nam je, došlo je do pogreške prilikom vašeg glasanja."
       error_while_fetching_voters: "Žao nam je, došlo je do pogreške prilikom prikaza glasača."

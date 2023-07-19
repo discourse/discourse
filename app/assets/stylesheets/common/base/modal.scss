@@ -74,6 +74,8 @@
   .modal-close {
     order: 2;
     margin-left: auto;
+    align-self: start;
+    padding: 0.15em 0;
 
     .close {
       color: var(--primary-high);

@@ -29,6 +29,7 @@ class TopicTrackingState
   DESTROY_MESSAGE_TYPE = "destroy"
   READ_MESSAGE_TYPE = "read"
   DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
+  DISMISS_NEW_POSTS_MESSAGE_TYPE = "dismiss_new_posts"
   MAX_TOPICS = 5000
 
   NEW_MESSAGE_BUS_CHANNEL = "/new"
@@ -228,6 +229,11 @@ class TopicTrackingState
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
     message = { message_type: DISMISS_NEW_MESSAGE_TYPE, payload: { topic_ids: topic_ids } }
+    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+  end
+
+  def self.publish_dismiss_new_posts(user_id, topic_ids: [])
+    message = { message_type: DISMISS_NEW_POSTS_MESSAGE_TYPE, payload: { topic_ids: topic_ids } }
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 

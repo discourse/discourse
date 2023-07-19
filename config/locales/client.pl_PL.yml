@@ -200,6 +200,8 @@ pl_PL:
       facebook: "Udostępnij na Facebooku"
       email: "Wyślij e-mailem"
       url: "Skopiuj i udostępnij adres URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
       open_topic: "Przekonwertowano to na temat %{when}"
@@ -243,7 +245,6 @@ pl_PL:
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
       dismiss: "Odrzuć"
-    bootstrap_mode: "Tryb Bootstrap"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -4447,6 +4448,12 @@ pl_PL:
           text: "i automatycznie pokażemy najpopularniejsze kategorie tej witryny"
         filter_placeholder: "Filtruj kategorie"
         no_categories: "Brak kategorii pasujących do podanego terminu."
+      tags_form_modal:
+        title: "Edytuj nawigację tagów"
+        filter_placeholder: "Filtruj tagi"
+        no_tags: "Brak tagów pasujących do podanego terminu."
+        subtitle:
+          text: "a my automatycznie pokażemy najlepsze tagi tej witryny"
       edit_navigation_modal_form:
         deselect_button_text: "Odznacz wszystkie"
         reset_to_defaults: "Przywróć domyślne"
@@ -4463,6 +4470,7 @@ pl_PL:
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
           reset_confirm: "Czy na pewno chcesz przywrócić tę sekcję do ustawień domyślnych?"
           public: "Ustaw tę sekcję jako publiczną i widoczną dla wszystkich"
+          more_menu: "Menu więcej"
           links:
             add: "Dodaj kolejny link"
             delete: "Usuń link"
@@ -4514,9 +4522,8 @@ pl_PL:
           header_action_title: "Edytuj kategorie paska bocznego"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         community:
-          header_link_text: "Społeczność"
-          header_action_create_topic_title: "Utwórz temat"
-          header_action_edit_section_title: "Edytuj sekcję Społeczność"
+          edit_section:
+            header_dropdown: "Wygląd"
           links:
             about:
               content: "O stronie"
@@ -4568,11 +4575,25 @@ pl_PL:
         valueMissing:
           default: "Proszę wypełnić to pole."
           text: "Proszę wypełnić to pole."
+          select-one: "Wybierz pozycję z listy."
+          select-multiple: "Wybierz co najmniej jedną pozycję z listy."
+          checkbox: "Zaznacz to pole, jeśli chcesz kontynuować."
         typeMismatch:
           default: "Wprowadź poprawną wartość."
           color: "Proszę wprowadzić kolor."
           date: "Proszę wprowadzić kolor."
           email: "Podaj poprawny adres email."
+          number: "Wprowadź liczbę."
+          password: "Wprowadź prawidłowe hasło."
+          tel: "Wprowadź prawidłowy numer telefonu."
+          text: "Wprowadź wartość tekstową."
+          url: "Wprowadź prawidłowy adres URL."
+        tooShort: "Wprowadzane dane muszą zawierać %{minLength} znaków lub więcej."
+        tooLong: "Wprowadzane dane muszą zawierać mniej niż %{maxLength} znaków."
+        rangeOverflow: "Dane wejściowe muszą być mniejsze niż %{max}."
+        rangeUnderflow: "Dane wejściowe muszą być większe niż %{min}."
+        patternMismatch: "Proszę dopasować żądany format."
+        badInput: "Wprowadź prawidłowe dane wejściowe."
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:

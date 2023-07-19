@@ -25,30 +25,16 @@ tr_TR:
           title: "Sonuçlar <strong>kapandığında</strong> gösterilir."
         staff:
           title: "Sonuçlar sadece <strong>personel</strong> üyelerine gösterilir."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "En az <strong>%{count}</strong> seçeneği seçin."
-            other: "En az <strong>%{count}</strong> seçenek belirleyin."
-          up_to_max_options:
-            one: "En fazla <strong>%{count}</strong> seçenek belirleyin."
-            other: "En fazla <strong>%{count}</strong> seçenek belirleyin."
-          x_options:
-            one: "<strong>%{count}</strong> seçenek belirleyin."
-            other: "<strong>%{count}</strong> seçenek belirleyin."
-          between_min_and_max_options: "<strong>%{min}</strong> ila <strong>%{max}</strong> seçenek belirleyin."
       cast-votes:
         title: "Oylarınızı kullanın"
         label: "Hemen oy verin!"
       show-results:
         title: "Anket sonuçlarını göster"
-        label: "Sonuçları göster"
+        label: "Sonuçlar"
       remove-vote:
         title: "Oyunuzu kaldırın"
-        label: "Oyu kaldırın"
       hide-results:
         title: "Oylarınıza dönün"
-        label: "Oylamayı göster"
       group-results:
         title: "Kullanıcı alanına göre oyları gruplandır"
         label: "Dağılımı göster"
@@ -72,6 +58,8 @@ tr_TR:
         breakdown: "Dağılım"
         percentage: "Yüzde"
         count: "Sayı"
+      options:
+        label: "Seçenekler"
       error_while_toggling_status: "Üzgünüz, bu anketin durumunu değiştirirken bir hata oluştu."
       error_while_casting_votes: "Üzgünüm, oylarınızı kullanırken bir hata oluştu."
       error_while_fetching_voters: "Üzgünüz, oy verenler gösterilirken bir hata oluştu."

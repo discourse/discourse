@@ -32,6 +32,15 @@
         {{on "click" this.toggleDismissable}}
       />
     </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="@tagName">
+      <ComboBox
+        @value={{this.modalTagName}}
+        @content={{this.modalTagNames}}
+        @onChange={{fn (mut this.modalTagName)}}
+        @valueProperty={{null}}
+        @nameProperty={{null}}
+      />
+    </Styleguide::Controls::Row>
     <Styleguide::Controls::Row @name="@title">
       <Input @value={{this.title}} />
     </Styleguide::Controls::Row>

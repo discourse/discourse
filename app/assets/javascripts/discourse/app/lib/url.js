@@ -464,7 +464,7 @@ const DiscourseURL = EmberObject.extend({
     transition._discourse_original_url = path;
 
     const promise = transition.promise || transition;
-    promise.then(() => this.jumpToElement(elementId));
+    return promise.then(() => this.jumpToElement(elementId));
   },
 
   jumpToElement(elementId) {

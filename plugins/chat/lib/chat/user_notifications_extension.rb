@@ -73,7 +73,7 @@ module Chat
       # Prioritize messages from regular channels over direct messages
       if channels.any?
         channel_notification_text(
-          channels.sort_by { |channel| [channel.last_message_sent_at, channel.created_at] },
+          channels.sort_by { |channel| [channel.last_message.created_at, channel.created_at] },
           dm_users,
         )
       else

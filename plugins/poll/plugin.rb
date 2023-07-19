@@ -7,8 +7,6 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/poll
 
 register_asset "stylesheets/common/poll.scss"
-register_asset "stylesheets/desktop/poll.scss", :desktop
-register_asset "stylesheets/mobile/poll.scss", :mobile
 register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll-ui-builder.scss", :desktop
 register_asset "stylesheets/common/poll-breakdown.scss"

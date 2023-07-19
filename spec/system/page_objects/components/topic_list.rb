@@ -10,8 +10,16 @@ module PageObjects
         TOPIC_LIST_BODY_SELECTOR
       end
 
-      def has_topics?(count:)
-        page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
+      def has_topics?(count: nil)
+        if count.nil?
+          page.has_css?(TOPIC_LIST_ITEM_SELECTOR)
+        else
+          page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
+        end
+      end
+
+      def has_no_topics?
+        page.has_no_css?(TOPIC_LIST_ITEM_SELECTOR)
       end
 
       def has_topic?(topic)
@@ -24,6 +32,10 @@ module PageObjects
 
       def visit_topic_with_title(title)
         find("#{TOPIC_LIST_BODY_SELECTOR} a", text: title).click
+      end
+
+      def visit_topic(topic)
+        find("#{topic_list_item_class(topic)} a.raw-topic-link").click
       end
 
       private

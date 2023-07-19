@@ -51,7 +51,6 @@ Chat::Engine.routes.draw do
 
   # direct_messages_controller routes
   get "/direct_messages" => "direct_messages#index"
-  post "/direct_messages/create" => "direct_messages#create"
 
   # incoming_webhooks_controller routes
   post "/hooks/:key" => "incoming_webhooks#create_message"
@@ -66,7 +65,6 @@ Chat::Engine.routes.draw do
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"
   get "/browse/archived" => "chat#respond"
-  get "/draft-channel" => "chat#respond"
   post "/enable" => "chat#enable_chat"
   post "/disable" => "chat#disable_chat"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"

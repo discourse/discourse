@@ -1,6 +1,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 
 export default class extends DiscourseRoute {
+  @service router;
+
   model(params) {
     return this.modelFor("user")
       .get("groups")
@@ -11,7 +14,7 @@ export default class extends DiscourseRoute {
 
   afterModel(model) {
     if (!model) {
-      this.transitionTo("exception-unknown");
+      this.router.transitionTo("exception-unknown");
       return;
     }
   }

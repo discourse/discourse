@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 import { Promise } from "rsvp";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -45,6 +47,7 @@ export default class ChatThreadPanel extends Component {
   @action
   didUpdateThread() {
     this.subscribeToUpdates();
+    this.chatThreadComposer.focus();
     this.loadMessages();
     this.resetComposerMessage();
   }
@@ -165,10 +168,11 @@ export default class ChatThreadPanel extends Component {
     return this.chatApi
       .channel(this.args.thread.channel.id, findArgs)
       .then((result) => {
-        if (
-          this._selfDeleted ||
-          this.args.thread.channel.id !== result.meta.channel_id
-        ) {
+        if (this._selfDeleted) {
+          return;
+        }
+
+        if (this.args.thread.channel.id !== result.meta.channel_id) {
           if (this.chatHistory.previousRoute?.name === "chat.channel.index") {
             this.router.transitionTo(
               "chat.channel",
@@ -269,6 +273,13 @@ export default class ChatThreadPanel extends Component {
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.staged ? null : message.thread.id,
           staged_thread_id: message.thread.staged ? message.thread.id : null,
+        })
+        .then((response) => {
+          this.args.thread.currentUserMembership ??=
+            UserChatThreadMembership.create({
+              notification_level: NotificationLevels.TRACKING,
+              last_read_message_id: response.message_id,
+            });
         })
         .catch((error) => {
           this.#onSendError(message.id, error);

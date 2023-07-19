@@ -6,13 +6,14 @@ export default class AdminSiteTextIndexRoute extends Route {
   queryParams = {
     q: { replace: true },
     overridden: { replace: true },
+    outdated: { replace: true },
     locale: { replace: true },
   };
 
   model(params) {
     return this.store.find(
       "site-text",
-      getProperties(params, "q", "overridden", "locale")
+      getProperties(params, "q", "overridden", "outdated", "locale")
     );
   }
 

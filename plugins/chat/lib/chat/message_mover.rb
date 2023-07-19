@@ -66,6 +66,7 @@ module Chat
         update_references
         delete_source_messages
         update_reply_references
+        update_tracking_state
         update_thread_references
       end
 
@@ -206,6 +207,10 @@ module Chat
       SET in_reply_to_id = NULL
       WHERE in_reply_to_id IN (:deleted_reply_to_ids)
     SQL
+    end
+
+    def update_tracking_state
+      ::Chat::Action::ResetUserLastReadChannelMessage.call(@source_message_ids, @source_channel.id)
     end
 
     def update_thread_references

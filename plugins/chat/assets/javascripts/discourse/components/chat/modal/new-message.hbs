@@ -1,0 +1,10 @@
+{{#if this.shouldRender}}
+  <DModal
+    @closeModal={{@closeModal}}
+    class="chat-modal-new-message"
+    @title="chat.new_message_modal.title"
+    @inline={{@inline}}
+  >
+    <Chat::MessageCreator @onClose={{@closeModal}} />
+  </DModal>
+{{/if}}

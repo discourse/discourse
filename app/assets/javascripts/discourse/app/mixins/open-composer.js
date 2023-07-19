@@ -59,7 +59,7 @@ export default Mixin.create({
   },
 
   openComposerWithMessageParams({
-    recipients = [],
+    recipients = "",
     topicTitle = "",
     topicBody = "",
     hasGroups = false,

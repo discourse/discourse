@@ -21,13 +21,24 @@ module Summarization
 
         find_strategy(SiteSetting.summarization_strategy)
       end
-    end
 
-    def can_request_summaries?(user)
-      user_group_ids = user.group_ids
+      def can_see_summary?(target, user)
+        return false if SiteSetting.summarization_strategy.blank?
 
-      SiteSetting.custom_summarization_allowed_groups_map.any? do |group_id|
-        user_group_ids.include?(group_id)
+        has_cached_summary = SummarySection.exists?(target: target, meta_section_id: nil)
+        return has_cached_summary if user.nil?
+
+        has_cached_summary || can_request_summary_for?(user)
+      end
+
+      def can_request_summary_for?(user)
+        return false unless user
+
+        user_group_ids = user.group_ids
+
+        SiteSetting.custom_summarization_allowed_groups_map.any? do |group_id|
+          user_group_ids.include?(group_id)
+        end
       end
     end
 

@@ -45,6 +45,18 @@ RSpec.describe AdminDashboardData do
         expect(problems.map(&:to_s)).to include("a problem was found")
       end
     end
+
+    describe "when `navigation_menu` site setting is `legacy`" do
+      it "should include the right problem message" do
+        SiteSetting.set(:navigation_menu, "legacy")
+
+        problem = AdminDashboardData.fetch_problems.last
+
+        expect(problem.message).to include(
+          I18n.t("dashboard.legacy_navigation_menu_deprecated", base_path: Discourse.base_path),
+        )
+      end
+    end
   end
 
   describe "adding scheduled checks" do
@@ -343,6 +355,28 @@ RSpec.describe AdminDashboardData do
 
       remote.update!(last_error_text: nil)
       expect(dashboard_data.out_of_date_themes).to eq(nil)
+    end
+  end
+
+  describe "#translation_overrides_check" do
+    subject(:dashboard_data) { described_class.new }
+
+    context "when there are outdated translations" do
+      before { Fabricate(:translation_override, translation_key: "foo.bar", status: "outdated") }
+
+      it "outputs the correct message" do
+        expect(dashboard_data.translation_overrides_check).to eq(
+          I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path),
+        )
+      end
+    end
+
+    context "when there are no outdated translations" do
+      before { Fabricate(:translation_override, status: "up_to_date") }
+
+      it "outputs nothing" do
+        expect(dashboard_data.translation_overrides_check).to eq(nil)
+      end
     end
   end
 end

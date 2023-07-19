@@ -8,13 +8,13 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { findAll } from "discourse/models/login-method";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
 import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
 import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
 import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
+import SecondFactorBackupEdit from "discourse/components/modal/second-factor-backup-edit";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
@@ -61,6 +61,16 @@ export default Controller.extend(CanCheckEmails, {
     } else {
       popupAjaxError(error);
     }
+  },
+
+  @action
+  setBackupEnabled(value) {
+    this.set("backupEnabled", value);
+  },
+
+  @action
+  setCodesRemaining(value) {
+    this.model.set("second_factor_remaining_backup_codes", value);
   },
 
   @action
@@ -310,15 +320,15 @@ export default Controller.extend(CanCheckEmails, {
       this.loadSecondFactors();
     },
 
-    editSecondFactorBackup() {
-      const controller = showModal("second-factor-backup-edit", {
-        model: this.model,
-        title: "user.second_factor_backup.title",
-      });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
+    async editSecondFactorBackup() {
+      await this.modal.show(SecondFactorBackupEdit, {
+        model: {
+          secondFactor: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+          setBackupEnabled: (e) => this.setBackupEnabled(e),
+          setCodesRemaining: (e) => this.setCodesRemaining(e),
+        },
       });
     },
   },

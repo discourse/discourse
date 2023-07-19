@@ -206,7 +206,7 @@ export default class AdminBadgesShowController extends Controller.extend(
             if (!adminBadges.includes(model)) {
               adminBadges.pushObject(model);
             }
-            this.transitionToRoute("adminBadges.show", model.get("id"));
+            this.router.transitionTo("adminBadges.show", model.get("id"));
           } else {
             this.commitBuffer();
             this.savingStatus = I18n.t("saved");
@@ -237,7 +237,7 @@ export default class AdminBadgesShowController extends Controller.extend(
           .destroy()
           .then(() => {
             adminBadges.removeObject(model);
-            this.transitionToRoute("adminBadges.index");
+            this.router.transitionTo("adminBadges.index");
           })
           .catch(() => {
             this.dialog.alert(I18n.t("generic_error"));

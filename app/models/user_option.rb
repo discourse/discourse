@@ -89,6 +89,8 @@ class UserOption < ActiveRecord::Base
     self.title_count_mode = SiteSetting.default_title_count_mode
 
     self.hide_profile_and_presence = SiteSetting.default_hide_profile_and_presence
+    self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
+    self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
 
     true
   end
@@ -293,6 +295,7 @@ end
 #
 # Indexes
 #
-#  index_user_options_on_user_id                       (user_id) UNIQUE
-#  index_user_options_on_user_id_and_default_calendar  (user_id,default_calendar)
+#  index_user_options_on_user_id                        (user_id) UNIQUE
+#  index_user_options_on_user_id_and_default_calendar   (user_id,default_calendar)
+#  index_user_options_on_watched_precedence_over_muted  (watched_precedence_over_muted)
 #

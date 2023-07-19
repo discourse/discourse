@@ -642,7 +642,6 @@ de:
       :handshake: **Beitrage** bei, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
 
       > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) oder [contact the admins](%{base_path}/about) fragen.
-  admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
   category:
     topic_prefix: "Über die Kategorie %{category}"
     replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Orientierung wird in der Kategorienauswahl angezeigt, versuche also, weniger als 200 Zeichen zu benutzen.)"
@@ -1394,6 +1393,7 @@ de:
     image_magick_warning: 'Der Server ist so konfiguriert, dass er Vorschaubilder von großen Bildern erstellt, aber ImageMagick ist nicht installiert. Installiere ImageMagick mit deinem bevorzugten Paketmanager oder <a href="https://www.imagemagick.org/script/download.php" target="_blank">lade die aktuelle Version herunter</a>.'
     failing_emails_warning: '%{num_failed_jobs} E-Mail-Jobs sind fehlgeschlagen. Überprüfe deine app.yml und stelle sicher, dass die Mailservereinstellungen korrekt sind. <a href="%{base_path}/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq anzeigen</a>.'
     subfolder_ends_in_slash: "Deine Unterordner-Konfiguration ist fehlerhaft; DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
+    outdated_translations_warning: "Einige deiner Übersetzungsüberschreibungen sind nicht mehr aktuell. Bitte überprüfe deine <a href='%{base_path}/admin/customize/site_texts?outdated=true'>Textanpassungen</a>."
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
       other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
@@ -1785,7 +1785,8 @@ de:
     tl3_requires_likes_received: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen eingehen muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     tl4_delete_posts_and_topics: "Erlaube TL4-Nutzern, Beiträge und Themen zu löschen, die von anderen Nutzern erstellt wurden. TL4-Nutzer/innen können auch gelöschte Themen und Beiträge sehen."
-    trusted_users_can_edit_others: "Erlaube Benutzern mit hohen Vertrauensstufen, Inhalte von anderen Benutzern zu bearbeiten."
+    edit_all_topic_groups: "Nutzern in dieser Gruppe erlauben, die Thementitel, Schlagwörter und Kategorien anderer Nutzer zu bearbeiten"
+    edit_all_post_groups: "Nutzern in dieser Gruppe erlauben, die Beiträge anderer Nutzer zu bearbeiten"
     min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
     allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
     min_trust_to_edit_wiki_post: "Minimale Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
@@ -2007,8 +2008,8 @@ de:
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw., um Teilausdrücke zu verwenden"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-Meldung in Form eines nicht ausblendbaren, global sichtbaren Banners an. Leere den Inhalt, um sie wieder auszublenden (HTML ist erlaubt)."
     disable_system_edit_notifications: "Unterdrückt Bearbeitungsbenachrichtigungen durch den System-Benutzer, wenn die „download_remote_images_to_local“-Einstellung aktiviert ist."
-    disable_category_edit_notifications: "Benachrichtigungen über Kategorie-Änderungen bei Themen deaktivieren."
-    disable_tags_edit_notifications: "Benachrichtigungen über Schlagwort-Änderungen bei Themen deaktivieren."
+    disable_category_edit_notifications: "Deaktiviere Benachrichtigungen für die Bearbeitung von Themenkategorien."
+    disable_tags_edit_notifications: "Deaktiviere Benachrichtigungen für Änderungen von Themen-Schlagwörtern."
     notification_consolidation_threshold: "Anzahl von „Gefällt mir“- oder Mitgliedschaftsanfragen-Benachrichtigungen, bevor die Benachrichtigungen zu einer einzelnen zusammengefasst werden. Zum Deaktivieren auf 0 setzen."
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere „Gefällt mir“-Benachrichtigungen zu einer einzelnen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann mittels `SiteSetting.notification_consolidation_threshold` eingestellt werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
@@ -2113,6 +2114,8 @@ de:
     default_text_size: "Schriftgröße, die standardmäßig ausgewählt ist"
     default_title_count_mode: "Standardmodus für den Seitentitel-Zähler"
     enable_offline_indicator: "Zeigt Benutzern eine Meldung an, wenn festgestellt wird, dass sie keine Netzwerkverbindung haben"
+    default_sidebar_link_to_filtered_list: "Verbinde die Links im Navigationsmenü standardmäßig mit der gefilterten Liste."
+    default_sidebar_show_count_of_new_items: "Die Links im Navigationsmenü zeigen jetzt standardmäßig die Anzahl der neuen Artikel anstelle von Abzeichen an."
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
     revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"
@@ -2180,6 +2183,7 @@ de:
     enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
     experimental_topics_filter: "EXPERIMENTELL: Aktiviert die Filterroute für experimentelle Themen unter /filter"
     experimental_search_menu_groups: "EXPERIMENTELL: Aktiviert das neue Suchmenü, das für die Verwendung von Glimmer aktualisiert wurde"
+    page_loading_indicator: "Konfiguriere die Ladeanzeige, die bei der Seitennavigation in Discourse erscheint. \"Spinner\" ist ein ganzseitiger Indikator. \"Slider\" zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

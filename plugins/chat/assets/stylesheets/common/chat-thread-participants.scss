@@ -11,7 +11,7 @@
     align-items: center;
     justify-content: flex-end;
 
-    .chat-user-avatar-container {
+    .chat-user-avatar__container {
       padding: 0;
     }
 
@@ -32,6 +32,7 @@
     &__avatar-group {
       flex-direction: row;
       justify-content: flex-start;
+
       .chat-user-avatar {
         &:not(:last-child) {
           margin-right: -10px;

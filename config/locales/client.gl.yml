@@ -3344,7 +3344,8 @@ gl:
         categories:
           header_link_text: "Categorías"
         community:
-          header_link_text: "Comunidade"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Verbo de"

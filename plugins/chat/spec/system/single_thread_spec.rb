@@ -112,7 +112,7 @@ describe "Single thread in side panel", type: :system do
         expect(side_panel).to have_open_thread(thread)
         thread_page.send_message("new thread message")
         expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
-        thread_message = thread.last_reply
+        thread_message = thread.last_message
         expect(thread_message.chat_channel_id).to eq(channel.id)
         expect(thread_message.thread.channel_id).to eq(channel.id)
       end
@@ -127,6 +127,16 @@ describe "Single thread in side panel", type: :system do
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
 
+      it "changes the tracking bell to be Tracking level in the thread panel" do
+        new_thread = Fabricate(:chat_thread, channel: channel, with_replies: 1)
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(new_thread.original_message).click
+        expect(side_panel).to have_open_thread(new_thread)
+        expect(thread_page).to have_notification_level("normal")
+        thread_page.send_message("new thread message")
+        expect(thread_page).to have_notification_level("tracking")
+      end
+
       it "handles updates from multiple users sending messages in the thread" do
         using_session(:tab_1) do
           sign_in(current_user)
@@ -136,30 +146,26 @@ describe "Single thread in side panel", type: :system do
 
         other_user = Fabricate(:user)
         chat_system_user_bootstrap(user: other_user, channel: channel)
-        using_session(:tab_2) do
-          sign_in(other_user)
-          chat_page.visit_channel(channel)
-          channel_page.message_thread_indicator(thread.original_message).click
-        end
+        sign_in(other_user)
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(thread.original_message).click
 
-        using_session(:tab_2) do
-          expect(side_panel).to have_open_thread(thread)
-          thread_page.send_message("the other user message")
-          expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
-        end
+        expect(side_panel).to have_open_thread(thread)
 
-        using_session(:tab_1) do |session|
+        thread_page.send_message("the other user message")
+
+        expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
+
+        using_session(:tab_1) do
           expect(side_panel).to have_open_thread(thread)
           expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
+
           thread_page.send_message("this is a test message")
+
           expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
-          session.quit
         end
 
-        using_session(:tab_2) do |session|
-          expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
-          session.quit
-        end
+        expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
       end
 
       it "does not mark the channel unread if another user sends a message in the thread" do

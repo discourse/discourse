@@ -121,8 +121,8 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
 
   it "has a new dm channel button" do
     visit("/chat")
-    find(".open-draft-channel-page-btn").click
+    find(".open-new-message-btn").click
 
-    expect(page).to have_current_path("/chat/draft-channel")
+    expect(chat.message_creator).to be_opened
   end
 end

@@ -3562,7 +3562,8 @@ lt:
         categories:
           header_link_text: "Kategorijos"
         community:
-          header_link_text: "Bendruomenė"
+          edit_section:
+            header_dropdown: "Pakeisti"
           links:
             about:
               content: "Apie"

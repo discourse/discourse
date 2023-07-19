@@ -53,7 +53,7 @@ class User < ActiveRecord::Base
   has_many :pending_posts,
            -> { merge(Reviewable.pending) },
            class_name: "ReviewableQueuedPost",
-           foreign_key: :created_by_id
+           foreign_key: :target_created_by_id
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -356,6 +356,7 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
+        admin_guide: 6,
       )
   end
 
@@ -658,11 +659,11 @@ class User < ActiveRecord::Base
     results.to_h
   end
 
-  ###
-  # DEPRECATED: This is only maintained for backwards compat until v2.5. There
-  # may be inconsistencies with counts in the UI because of this, because unread
-  # high priority includes PMs AND bookmark reminders.
   def unread_private_messages
+    Discourse.deprecate(
+      "#unread_private_messages is deprecated, use #unread_high_priority_notifications instead.",
+      drop_from: "2.5.0",
+    )
     @unread_pms ||= unread_high_priority_notifications
   end
 

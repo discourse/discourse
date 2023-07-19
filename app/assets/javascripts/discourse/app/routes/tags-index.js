@@ -2,8 +2,11 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import Tag from "discourse/models/tag";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  router: service(),
+
   model() {
     return this.store.findAll("tag").then((result) => {
       if (result.extras) {
@@ -43,7 +46,7 @@ export default DiscourseRoute.extend({
 
   @action
   showTagGroups() {
-    this.transitionTo("tagGroups");
+    this.router.transitionTo("tagGroups");
     return true;
   },
 

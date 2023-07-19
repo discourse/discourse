@@ -1,6 +1,5 @@
 import deprecated from "discourse-common/lib/deprecated";
 import { tracked } from "@glimmer/tracking";
-import userSearch from "discourse/lib/user-search";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
@@ -144,7 +143,8 @@ export default class Chat extends Service {
               channel.tracking.unreadCount = state.unread_count;
               channel.tracking.mentionCount = state.mention_count;
 
-              channel.updateMembership(channelObject.current_user_membership);
+              channel.currentUserMembership =
+                channelObject.current_user_membership;
 
               this.chatSubscriptionsManager.startChannelSubscription(channel);
             });
@@ -173,36 +173,44 @@ export default class Chat extends Service {
     this.set("isNetworkUnreliable", false);
   }
 
-  setupWithPreloadedChannels(channels) {
+  setupWithPreloadedChannels(channelsView) {
     this.chatSubscriptionsManager.startChannelsSubscriptions(
-      channels.meta.message_bus_last_ids
+      channelsView.meta.message_bus_last_ids
     );
-    this.presenceChannel.subscribe(channels.global_presence_channel_state);
+    this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
 
-    [...channels.public_channels, ...channels.direct_message_channels].forEach(
-      (channelObject) => {
-        const channel = this.chatChannelsManager.store(channelObject);
-        const storedDraft = (this.currentUser?.chat_drafts || []).find(
-          (draft) => draft.channel_id === channel.id
-        );
+    [
+      ...channelsView.public_channels,
+      ...channelsView.direct_message_channels,
+    ].forEach((channelObject) => {
+      const storedChannel = this.chatChannelsManager.store(channelObject);
+      const storedDraft = (this.currentUser?.chat_drafts || []).find(
+        (draft) => draft.channel_id === storedChannel.id
+      );
 
-        if (storedDraft) {
-          this.chatDraftsManager.add(
-            ChatMessage.createDraftMessage(
-              channel,
-              Object.assign(
-                { user: this.currentUser },
-                JSON.parse(storedDraft.data)
-              )
+      if (storedDraft) {
+        this.chatDraftsManager.add(
+          ChatMessage.createDraftMessage(
+            storedChannel,
+            Object.assign(
+              { user: this.currentUser },
+              JSON.parse(storedDraft.data)
             )
-          );
-        }
-
-        return this.chatChannelsManager.follow(channel);
+          )
+        );
       }
-    );
 
-    this.chatTrackingStateManager.setupWithPreloadedState(channels.tracking);
+      if (channelsView.unread_thread_overview?.[storedChannel.id]) {
+        storedChannel.threadsManager.unreadThreadOverview =
+          channelsView.unread_thread_overview[storedChannel.id];
+      }
+
+      return this.chatChannelsManager.follow(storedChannel);
+    });
+
+    this.chatTrackingStateManager.setupWithPreloadedState(
+      channelsView.tracking
+    );
   }
 
   willDestroy() {
@@ -282,11 +290,6 @@ export default class Chat extends Service {
     }
   }
 
-  searchPossibleDirectMessageUsers(options) {
-    // TODO: implement a chat specific user search function
-    return userSearch(options);
-  }
-
   getIdealFirstChannelId() {
     // When user opens chat we need to give them the 'best' channel when they enter.
     //
@@ -307,6 +310,10 @@ export default class Chat extends Service {
 
     this.chatChannelsManager.channels.forEach((channel) => {
       const membership = channel.currentUserMembership;
+
+      if (!membership.following) {
+        return;
+      }
 
       if (channel.isDirectMessageChannel) {
         if (!dmChannelWithUnread && channel.tracking.unreadCount > 0) {

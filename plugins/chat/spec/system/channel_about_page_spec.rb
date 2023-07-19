@@ -97,12 +97,12 @@ RSpec.describe "Channel - Info - About page", type: :system do
       find(".edit-description-btn").click
 
       expect(page).to have_selector(
-        ".chat-channel-edit-description-modal__description-input",
+        ".chat-modal-edit-channel-description__description-input",
         text: channel_1.description,
       )
 
       description = "A new description"
-      find(".chat-channel-edit-description-modal__description-input").fill_in(with: description)
+      find(".chat-modal-edit-channel-description__description-input").fill_in(with: description)
       find(".create").click
 
       expect(page).to have_content(description)

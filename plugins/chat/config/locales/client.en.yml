@@ -324,6 +324,18 @@ en:
           members: Members
           settings: Settings
 
+      new_message_modal:
+        title: Send message
+        add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Add @%{username}</span>
+        add_user_short: <span>Add user</span>
+        open_channel: <span>Open channel</span>
+        default_search_placeholder: "#a-channel, @somebody or anything"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@somebody"
+        user_search_placeholder: "...add more users"
+        disabled_user: "has disabled chat"
+        no_items: "No items"
+
       channel_edit_name_slug_modal:
         title: Edit channel
         input_placeholder: Add a name
@@ -341,10 +353,6 @@ en:
         prefix: "To:"
         no_results: No results
         selected_user_title: "Deselect %{username}"
-
-      channel_selector:
-        title: "Jump to channel"
-        no_channels: "No channels match your search"
 
       channel:
         no_memberships: This channel has no members
