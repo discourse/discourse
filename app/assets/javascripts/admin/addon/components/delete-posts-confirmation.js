@@ -23,7 +23,7 @@ export default class DeletePostsConfirmation extends Component {
   }
 
   get deleteDisabled() {
-    return !this.value || this.text !== value;
+    return !this.value || this.text !== this.value;
   }
 
   @action
