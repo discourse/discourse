@@ -21,6 +21,10 @@ export default {
 
   @bind
   onMessage(data = {}) {
-    this.site.set("banner", EmberObject.create(data));
+    if (data) {
+      this.site.set("banner", EmberObject.create(data));
+    } else {
+      this.site.set("banner", null);
+    }
   },
 };
