@@ -510,10 +510,6 @@ GEM
       hkdf (~> 1.0)
       jwt (~> 2.0)
       openssl (~> 3.0)
-    webdrivers (5.2.0)
-      nokogiri (~> 1.6)
-      rubyzip (>= 1.3.0)
-      selenium-webdriver (~> 4.0)
     webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -668,7 +664,6 @@ DEPENDENCIES
   unf
   unicorn
   web-push
-  webdrivers
   webmock
   webrick
   yaml-lint

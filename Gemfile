@@ -143,7 +143,6 @@ group :test do
   gem "simplecov", require: false
   gem "selenium-webdriver", require: false
   gem "test-prof"
-  gem "webdrivers", require: false
   gem "rails-dom-testing", require: false
 end
 
