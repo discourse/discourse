@@ -1,0 +1,7 @@
+<DModal @title={{i18n "post.quote_edit"}} @closeModal={{@closeModal}}>
+  <FastEdit
+    @initialValue={{@model.initialValue}}
+    @post={{@model.post}}
+    @afterSave={{@closeModal}}
+  />
+</DModal>
