@@ -193,6 +193,8 @@ export default class ModalServiceWithLegacySupport extends ModalService {
       return super.show(modal, opts);
     }
 
+    this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
+
     if (!KNOWN_LEGACY_MODALS.includes(modal)) {
       deprecated(
         `Defining modals using a controller is deprecated. Use the component-based API instead. (modal: ${modal})`,

@@ -12,6 +12,8 @@ import showModal from "discourse/lib/show-modal";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
+import Component from "@glimmer/component";
+import { setComponentTemplate } from "@glimmer/manager";
 
 function silencedShowModal() {
   return withSilencedDeprecations("discourse.modal-controllers", () =>
@@ -141,6 +143,32 @@ acceptance("Legacy Modal", function (needs) {
       !exists(".d-modal .title"),
       "it should not re-use the previous title"
     );
+  });
+
+  test("opening legacy modal while modern modal is open", async function (assert) {
+    registerTemporaryModule(
+      "discourse/templates/modal/legacy-modal",
+      hbs`<DModalBody @rawTitle="legacy modal title" />`
+    );
+
+    class ModernModal extends Component {}
+    setComponentTemplate(
+      hbs`<DModal @title="modern modal title" />`,
+      ModernModal
+    );
+
+    await visit("/");
+
+    const modalService = getOwner(this).lookup("service:modal");
+
+    modalService.show(ModernModal);
+    await settled();
+    assert.dom(".d-modal .title").hasText("modern modal title");
+
+    silencedShowModal("legacy-modal");
+    await settled();
+
+    assert.dom(".d-modal .title").hasText("legacy modal title");
   });
 });
 
