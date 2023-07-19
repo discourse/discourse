@@ -5,6 +5,13 @@ export default class BaseCustomSidebarPanel {
   sections = [];
 
   /**
+   * @returns {string} Identifier for sidebar panel
+   */
+  get key() {
+    this.#notImplemented();
+  }
+
+  /**
    * @returns {string} Text for the switch button
    */
   get switchButtonLabel() {
