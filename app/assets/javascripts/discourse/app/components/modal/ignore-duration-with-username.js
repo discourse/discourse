@@ -1,4 +1,4 @@
-import Controller from "@ember/controller";
+import Component from "@ember/component";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import User from "discourse/models/user";
@@ -6,7 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Controller.extend(ModalFunctionality, {
+export default Component.extend(ModalFunctionality, {
   loading: false,
   ignoredUntil: null,
   ignoredUsername: null,
