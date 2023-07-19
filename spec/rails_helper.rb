@@ -283,6 +283,33 @@ RSpec.configure do |config|
 
     Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
 
+    module MatcherTimeoutExtension
+      class MatcherTimedOut < StandardError
+        def initialize(wait_time)
+          super "Matcher waited for the full wait duration (#{wait_time}s). " +
+                  "This will slow down the test suite. " +
+                  "Beware of negating the result of selenium's RSpec matchers."
+        end
+      end
+
+      def synchronize(seconds = nil, errors: nil)
+        return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+        begin
+          super
+        rescue StandardError => e
+          seconds = session_options.default_max_wait_time if [nil, true].include? seconds
+          if catch_error?(e, errors) && seconds != 0
+            # This error will only have been raised if the timer expired. Raise our own error instead.
+            raise MatcherTimedOut.new(seconds)
+          else
+            raise
+          end
+        end
+      end
+    end
+
+    Capybara::Node::Base.prepend(MatcherTimeoutExtension)
+
     # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
     browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
 
