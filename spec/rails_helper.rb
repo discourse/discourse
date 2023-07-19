@@ -63,6 +63,8 @@ require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
 
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
 Shoulda::Matchers.configure do |config|

@@ -80,7 +80,7 @@ import {
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderIcons } from "discourse/widgets/header";
-import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
@@ -214,7 +214,7 @@ export function testCleanup(container, app) {
   clearResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
-  resetSidebarSection();
+  resetSidebarPanels();
   resetNotificationTypeRenderers();
   clearExtraHeaderIcons();
   resetOnKeyDownCallbacks();

@@ -48,7 +48,7 @@ describe "Reviewables", type: :system do
 
         expect(review_page).to have_no_error_dialog_visible
         expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
-        expect(review_page).not_to have_reviewable_action_dropdown
+        expect(review_page).to have_no_reviewable_action_dropdown
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
       end
