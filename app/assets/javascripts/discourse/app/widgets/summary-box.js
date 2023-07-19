@@ -1,5 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
-import hbs from "discourse/widgets/hbs-compiler";
+import { hbs } from "ember-cli-htmlbars";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
@@ -7,18 +7,35 @@ import RawHtml from "discourse/widgets/raw-html";
 import I18n from "I18n";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { h } from "virtual-dom";
+import { iconNode } from "discourse-common/lib/icon-library";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 
 createWidget("summary-skeleton", {
   tagName: "section.placeholder-summary",
-  template: hbs`
-    <div class="placeholder-summary-text placeholder-animation"></div>
-    <div class="placeholder-summary-text placeholder-animation"></div>
-    <div class="placeholder-summary-text placeholder-animation"></div>
-    <div class="placeholder-summary-text">{{transformed.in_progress_label}}</div>
-  `,
 
-  transform() {
-    return { in_progress_label: I18n.t("summary.in_progress") };
+  html() {
+    const html = [];
+
+    html.push(this.buildPlaceholderDiv());
+    html.push(this.buildPlaceholderDiv());
+    html.push(this.buildPlaceholderDiv());
+
+    html.push(
+      h("span", {}, [
+        iconNode("magic", { class: "rotate-center" }),
+        h(
+          "p.placeholder-generating-summary-text",
+          {},
+          I18n.t("summary.in_progress")
+        ),
+      ])
+    );
+
+    return html;
+  },
+
+  buildPlaceholderDiv() {
+    return h("div.placeholder-summary-text.placeholder-animation");
   },
 });
 
@@ -30,41 +47,28 @@ export default createWidget("summary-box", {
     return { expandSummarizedOn: false };
   },
 
-  html(attrs, state) {
+  html(attrs) {
     const html = [];
 
     if (attrs.summary) {
       html.push(new RawHtml({ html: `<div>${attrs.summary}</div>` }));
-
-      if (state.expandSummarizedOn) {
-        html.push(
-          h(
-            "div.summarized-on",
-            {},
-            I18n.t("summary.summarized_on", {
-              method: attrs.summarizedBy,
-              date: attrs.summarizedOn,
-            })
-          )
-        );
-      } else {
-        html.push(
-          h("div.summarized-on", [
-            this.attach("button", {
-              className: "btn btn-link summarized-on",
-              translatedTitle: I18n.t("summary.summarized_on", {
-                method: "AI",
+      html.push(
+        h("div.summarized-on", {}, [
+          new RenderGlimmer(
+            this,
+            "div",
+            hbs`{{@data.summarizedOn}}<DTooltip @placement="top-end">{{d-icon "info-circle"}}
+              {{i18n "summary.model_used" model=@data.attrs.summarizedBy}}
+            </DTooltip>`,
+            {
+              attrs,
+              summarizedOn: I18n.t("summary.summarized_on", {
                 date: attrs.summarizedOn,
               }),
-              translatedLabel: I18n.t("summary.summarized_on", {
-                method: "AI",
-                date: attrs.summarizedOn,
-              }),
-              action: "showFullSummarizedOn",
-            }),
-          ])
-        );
-      }
+            }
+          ),
+        ])
+      );
     } else {
       html.push(this.attach("summary-skeleton"));
       this.fetchSummary(attrs.topicId);
