@@ -46,6 +46,10 @@ module PageObjects
         page.has_css?(REVIEWABLE_ACTION_DROPDOWN)
       end
 
+      def has_no_reviewable_action_dropdown?
+        page.has_no_css?(REVIEWABLE_ACTION_DROPDOWN)
+      end
+
       def has_reviewable_with_pending_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".status .pending") }
       end
@@ -59,7 +63,7 @@ module PageObjects
       end
 
       def has_no_error_dialog_visible?
-        !has_error_dialog_visible?
+        page.has_no_css?("dialog-container .dialog-content")
       end
 
       private
