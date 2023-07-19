@@ -54,7 +54,6 @@ const KNOWN_LEGACY_MODALS = [
   "request-group-membership-form",
   "share-and-invite",
   "tag-upload",
-  "topic-bulk-actions",
   "topic-summary",
   "user-status",
   "admin-add-upload",

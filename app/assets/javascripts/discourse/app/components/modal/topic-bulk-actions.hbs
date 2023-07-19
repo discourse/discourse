@@ -1,6 +1,10 @@
-<DModalBody>
+<DModal
+  @title={{i18n "topics.bulk.actions"}}
+  @closeModal={{@closeModal}}
+  class="topic-bulk-actions-modal small"
+>
   <p>
-    {{html-safe (i18n "topics.bulk.selected" count=this.model.topics.length)}}
+    {{html-safe (i18n "topics.bulk.selected" count=@model.topics.length)}}
   </p>
 
   {{#if this.showProgress}}
@@ -10,8 +14,8 @@
   {{else if this.activeComponent}}
     <this.activeComponent
       @loading={{this.loading}}
-      @topics={{this.model.topics}}
-      @category={{this.model.category}}
+      @topics={{@model.topics}}
+      @category={{@model.category}}
       @setComponent={{this.setComponent}}
       @forEachPerformed={{this.forEachPerformed}}
       @performAndRefresh={{this.performAndRefresh}}
@@ -23,8 +27,8 @@
           @action={{fn
             button.action
             (hash
-              topics=this.model.topics
-              category=this.model.category
+              topics=@model.topics
+              category=@model.category
               setComponent=this.setComponent
               performAndRefresh=this.performAndRefresh
               forEachPerformed=this.forEachPerformed
@@ -37,4 +41,4 @@
       {{/each}}
     </div>
   {{/if}}
-</DModalBody>
+</DModal>

@@ -193,16 +193,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       user.checkEmail();
     },
 
-    changeBulkTemplate(w) {
-      const controllerName = w.replace("modal/", "");
-      const controller = getOwner(this).lookup("controller:" + controllerName);
-      this.render(w, {
-        into: "modal/topic-bulk-actions",
-        outlet: "bulkOutlet",
-        controller: controller ? controllerName : "topic-bulk-actions",
-      });
-    },
-
     createNewTopicViaParams(title, body, category_id, tags) {
       this.openComposerWithTopicParams(
         this.controllerFor("discovery/topics"),
