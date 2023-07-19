@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "React to message", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
+  fab!(:other_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
   fab!(:category_channel_1) { Fabricate(:category_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
@@ -137,7 +137,7 @@ RSpec.describe "React to message", type: :system do
   end
 
   context "when current user and another have reacted" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
 
     fab!(:reaction_1) do
       Chat::MessageReactor.new(current_user, category_channel_1).react!(
@@ -205,7 +205,7 @@ RSpec.describe "React to message", type: :system do
     end
 
     context "when receiving a duplicate reaction event" do
-      fab!(:user_1) { Fabricate(:user) }
+      fab!(:user_1) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
 
       fab!(:reaction_2) do
         Chat::MessageReactor.new(user_1, category_channel_1).react!(

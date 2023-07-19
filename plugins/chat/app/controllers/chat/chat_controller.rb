@@ -212,8 +212,7 @@ module Chat
           .not_suspended
           .where(id: params[:user_ids])
       users.each do |user|
-        guardian = Guardian.new(user)
-        if guardian.can_chat? && guardian.can_join_chat_channel?(@chat_channel)
+        if user.guardian.can_join_chat_channel?(@chat_channel)
           data = {
             message: "chat.invitation_notification",
             chat_channel_id: @chat_channel.id,
