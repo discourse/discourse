@@ -6,7 +6,7 @@ module PageObjects
       VISIBLE_DRAWER = ".chat-drawer.is-expanded"
 
       def channel_index
-        ::PageObjects::Components::Chat::ChannelIndex.new(VISIBLE_DRAWER)
+        @channel_index ||= ::PageObjects::Components::Chat::ChannelIndex.new(VISIBLE_DRAWER)
       end
 
       def open_browse

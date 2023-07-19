@@ -17,7 +17,7 @@ module PageObjects
           find(context).find(SELECTOR)
         end
 
-        def open_channel
+        def open_channel(channel)
           component.find("#{channel_row_selector(channel)}").click
         end
 
@@ -28,13 +28,15 @@ module PageObjects
         def has_unread_channel?(channel, count: nil, wait: Capybara.default_max_wait_time)
           unread_indicator_selector =
             "#{channel_row_selector(channel)} .chat-channel-unread-indicator"
-          has_css?(unread_indicator_selector)
-          if count
-            has_css?(
-              "#{unread_indicator_selector} .chat-channel-unread-indicator__number",
-              text: count,
-            )
-          end
+          has_css?(unread_indicator_selector) &&
+            if count
+              has_css?(
+                "#{unread_indicator_selector} .chat-channel-unread-indicator__number",
+                text: count,
+              )
+            else
+              true
+            end
         end
 
         def has_no_unread_channel?(channel)
