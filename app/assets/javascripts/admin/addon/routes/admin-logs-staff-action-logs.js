@@ -18,7 +18,7 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
   }
 
   deserializeQueryParam(value, urlKey, defaultValueType) {
-    if (urlKey === "filters") {
+    if (urlKey === "filters" && value) {
       return EmberObject.create(JSON.parse(decodeURIComponent(value)));
     }
 
