@@ -27,6 +27,6 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   get showUnreadCount() {
-    return this.args.channel.isDirectMessageChannel;
+    return this.args.channel.isDirectMessageChannel || this.isUrgent;
   }
 }
