@@ -163,6 +163,13 @@ RSpec.describe PrettyText::Helpers do
       )
     end
 
+    it "does not return any results for disabled types" do
+      SiteSetting.tagging_enabled = false
+      expect(
+        PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user.id, %w[category tag]),
+      ).to eq(nil)
+    end
+
     it "returns nil when no tag or category that matches exists" do
       expect(PrettyText::Helpers.hashtag_lookup("blah", user.id, %w[category tag])).to eq(nil)
     end
