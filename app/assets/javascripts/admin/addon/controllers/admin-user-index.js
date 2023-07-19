@@ -622,7 +622,7 @@ export default class AdminUserIndexController extends Controller.extend(
   @action
   showDeletePostsConfirmation() {
     this.modal.show(DeletePostsConfirmationModal, {
-      model: this.model,
+      model: { user: this.model, deleteAllPosts: this.deleteAllPosts },
     });
   }
 
