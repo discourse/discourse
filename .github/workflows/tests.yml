@@ -175,6 +175,10 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
+      - name: Setup Webdriver
+        if: matrix.build_type == 'system'
+        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.required_version='114.0.5735.90'; Webdrivers::Chromedriver.update"
+
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: bin/rspec spec/system --format documentation --profile
