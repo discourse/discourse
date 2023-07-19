@@ -2,11 +2,8 @@ import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 import cookie from "discourse/lib/cookie";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
-  router: service(),
-
   beforeModel(transition) {
     if (this.currentUser) {
       let category, categoryId;
@@ -37,9 +34,10 @@ export default DiscourseRoute.extend({
       }
 
       if (category) {
-        // Using URL-based transition to avoid bug with dynamic segments and refreshModel query params
-        // https://github.com/emberjs/ember.js/issues/16992
-        this.router.replaceWith(`/c/${category.id}`).then((e) => {
+        let route = "discovery.category";
+        let params = { category, id: category.id };
+
+        this.replaceWith(route, params).then((e) => {
           if (this.controllerFor("navigation/category").canCreateTopic) {
             this._sendTransition(e, transition, categoryId);
           }
@@ -49,7 +47,7 @@ export default DiscourseRoute.extend({
           transition.abort();
           this.send("createNewTopicViaParams");
         } else {
-          this.router.replaceWith("discovery.latest").then((e) => {
+          this.replaceWith("discovery.latest").then((e) => {
             if (this.controllerFor("navigation/default").canCreateTopic) {
               this._sendTransition(e, transition);
             }
@@ -59,7 +57,7 @@ export default DiscourseRoute.extend({
     } else {
       // User is not logged in
       cookie("destination_url", window.location.href);
-      this.router.replaceWith("login");
+      this.replaceWith("login");
     }
   },
 
