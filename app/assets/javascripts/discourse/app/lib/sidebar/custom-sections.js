@@ -9,6 +9,7 @@ class MainSidebarPanel {
   get key() {
     return "main";
   }
+
   get switchButtonLabel() {
     return I18n.t("sidebar.panels.forum.label");
   }
