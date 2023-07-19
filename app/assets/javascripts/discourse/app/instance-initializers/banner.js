@@ -20,7 +20,7 @@ export default {
   },
 
   @bind
-  onMessage(data = {}) {
+  onMessage(data) {
     if (data) {
       this.site.set("banner", EmberObject.create(data));
     } else {
