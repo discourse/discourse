@@ -1,7 +1,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  router: service(),
   showFooter: true,
 
   titleToken() {
@@ -18,7 +20,7 @@ export default DiscourseRoute.extend({
       (!(this.modelFor("group").can_admin_group && group.get("automatic")) &&
         !this.currentUser.canManageGroup(group))
     ) {
-      this.transitionTo("group.members", group);
+      this.router.transitionTo("group.members", group);
     }
   },
 

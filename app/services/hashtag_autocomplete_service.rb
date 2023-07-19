@@ -57,7 +57,10 @@ class HashtagAutocompleteService
   end
 
   def self.ordered_types_for_context(context)
-    find_priorities_for_context(context).sort_by { |ctp| -ctp[:priority] }.map { |ctp| ctp[:type] }
+    find_priorities_for_context(context)
+      .sort_by { |ctp| -ctp[:priority] }
+      .map { |ctp| ctp[:type] }
+      .reject { |type| data_source_types.exclude?(type) }
   end
 
   def self.contexts_with_ordered_types
@@ -230,16 +233,16 @@ class HashtagAutocompleteService
   )
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
     limit = [limit, SEARCH_MAX_LIMIT].min
+    types_in_priority_order =
+      types_in_priority_order.select do |type|
+        HashtagAutocompleteService.data_source_types.include?(type)
+      end
 
     return search_without_term(types_in_priority_order, limit) if term.blank?
 
     limited_results = []
     top_ranked_type = nil
     term = term.downcase
-    types_in_priority_order =
-      types_in_priority_order.select do |type|
-        HashtagAutocompleteService.data_source_types.include?(type)
-      end
 
     # Float exact matches by slug to the top of the list, any of these will be excluded
     # from further results.

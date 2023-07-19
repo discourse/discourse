@@ -5,10 +5,11 @@ import { defaultHomepage } from "discourse/lib/utilities";
 export default class ChatBrowseIndexRoute extends DiscourseRoute {
   @service chat;
   @service siteSettings;
+  @service router;
 
   beforeModel() {
     if (!this.siteSettings.enable_public_channels) {
-      return this.transitionTo(`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
   }
 
@@ -17,6 +18,6 @@ export default class ChatBrowseIndexRoute extends DiscourseRoute {
   }
 
   afterModel() {
-    this.replaceWith("chat.browse.open");
+    this.router.replaceWith("chat.browse.open");
   }
 }
