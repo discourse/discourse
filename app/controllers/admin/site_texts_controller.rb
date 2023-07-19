@@ -128,6 +128,26 @@ class Admin::SiteTextsController < Admin::AdminController
     render_serialized(site_text, SiteTextSerializer, root: "site_text", rest_serializer: true)
   end
 
+  def dismiss_outdated
+    locale = fetch_locale(params[:locale])
+    override = TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+
+    raise Discourse::NotFound if override.blank?
+
+    if override.outdated?
+      override.update!(
+        status: "up_to_date",
+        original_translation:
+          I18n.overrides_disabled do
+            I18n.t(TranslationOverride.transform_pluralized_key(params[:id]), locale: :en)
+          end,
+      )
+      render json: success_json
+    else
+      render json: failed_json.merge(message: "Can only dismiss outdated translations"), status: 422
+    end
+  end
+
   def get_reseed_options
     render_json_dump(
       categories: SeedData::Categories.with_default_locale.reseed_options,
