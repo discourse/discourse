@@ -54,7 +54,6 @@ const KNOWN_LEGACY_MODALS = [
   "request-group-membership-form",
   "share-and-invite",
   "tag-upload",
-  "topic-bulk-actions",
   "topic-summary",
   "user-status",
   "admin-add-upload",
@@ -192,6 +191,8 @@ export default class ModalServiceWithLegacySupport extends ModalService {
     if (typeof modal !== "string") {
       return super.show(modal, opts);
     }
+
+    this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
 
     if (!KNOWN_LEGACY_MODALS.includes(modal)) {
       deprecated(

@@ -59,6 +59,11 @@ export default Controller.extend(bufferedProperty("model"), {
   documentTitle: service(),
   screenTrack: service(),
   modal: service(),
+  currentUser: service(),
+  router: service(),
+  siteSettings: service(),
+  site: service(),
+  appEvents: service(),
 
   multiSelect: false,
   selectedPostIds: null,
@@ -565,7 +570,7 @@ export default Controller.extend(bufferedProperty("model"), {
         .removeAllowedUser(user)
         .then(() => {
           if (this.currentUser.id === user.id) {
-            this.transitionToRoute("userPrivateMessages", user);
+            this.router.transitionTo("userPrivateMessages", user);
           }
         });
     },

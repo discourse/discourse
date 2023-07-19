@@ -68,6 +68,7 @@
 
   <LinksRedirect
     @class="row body-diff"
+    {{did-insert @calculateBodyDiff @bodyDiffHTML}}
     {{did-update @calculateBodyDiff @bodyDiffHTML}}
   >
     {{html-safe @bodyDiff}}

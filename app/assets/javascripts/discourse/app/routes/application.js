@@ -45,6 +45,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   composer: service(),
   modal: service(),
   loadingSlider: service(),
+  router: service(),
 
   @action
   loading(transition) {
@@ -124,7 +125,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       }
 
       if (xhrOrErr && xhrOrErr.status === 404) {
-        return this.transitionTo("exception-unknown");
+        return this.router.transitionTo("exception-unknown");
       }
 
       exceptionController.setProperties({
@@ -190,16 +191,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     checkEmail(user) {
       user.checkEmail();
-    },
-
-    changeBulkTemplate(w) {
-      const controllerName = w.replace("modal/", "");
-      const controller = getOwner(this).lookup("controller:" + controllerName);
-      this.render(w, {
-        into: "modal/topic-bulk-actions",
-        outlet: "bulkOutlet",
-        controller: controller ? controllerName : "topic-bulk-actions",
-      });
     },
 
     createNewTopicViaParams(title, body, category_id, tags) {

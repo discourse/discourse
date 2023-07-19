@@ -231,6 +231,16 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
           stagedThread.id = data.thread_id;
           stagedThread.originalMessage.thread = stagedThread;
           stagedThread.originalMessage.thread.preview.replyCount ??= 1;
+
+          // We have to do this because the thread manager cache is keyed by
+          // staged_thread_id, but the thread_id is what we want to use to
+          // look up the thread, otherwise calls to .find() will not return
+          // the thread by its actual ID, and we will end up with double-ups
+          // in places like the thread list when .add() is called.
+          this.model.threadsManager.remove({ id: data.staged_thread_id });
+          this.model.threadsManager.add(this.model, stagedThread, {
+            replace: true,
+          });
         } else if (data.thread_id) {
           this.model.threadsManager
             .find(this.model.id, data.thread_id, { fetchIfNotFound: true })

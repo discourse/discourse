@@ -63,6 +63,8 @@ require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
 
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
 Shoulda::Matchers.configure do |config|
@@ -676,7 +678,22 @@ def apply_base_chrome_options(options)
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
-  options.add_argument("--force-device-scale-factor=1")
+
+  # A file that contains just a list of paths like so:
+  #
+  # /home/me/.config/google-chrome/Default/Extensions/bmdblncegkenkacieihfhpjfppoconhi/4.9.1_0
+  #
+  # These paths can be found for each individual extension via the
+  # chrome://extensions/ page.
+  if ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].present?
+    File
+      .readlines(ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"])
+      .each { |path| options.add_argument("--load-extension=#{path}") }
+  end
+
+  if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
+    options.add_argument("--force-device-scale-factor=1")
+  end
 end
 
 class SpecSecureRandom

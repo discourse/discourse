@@ -11,6 +11,7 @@ import showModal from "discourse/lib/show-modal";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import HistoryModal from "discourse/components/modal/history";
+import PublishPageModal from "discourse/components/modal/publish-page";
 
 const SCROLL_DELAY = 500;
 
@@ -112,9 +113,8 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showPagePublish() {
     const model = this.modelFor("topic");
-    showModal("publish-page", {
+    this.modal.show(PublishPageModal, {
       model,
-      title: "topic.publish_page.title",
     });
   },
 

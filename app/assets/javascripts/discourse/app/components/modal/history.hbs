@@ -4,33 +4,35 @@
   class="history-modal"
 >
   <:body>
-    <Modal::History::Revision
-      @model={{this.postRevision}}
-      @mobileView={{this.site.mobileView}}
-      @wikiDisabled={{this.wikiDisabled}}
-      @previousCategory={{this.previousCategory}}
-      @currentCategory={{this.currentCategory}}
-      @displayInline={{this.displayInline}}
-      @displaySideBySide={{this.displaySideBySide}}
-      @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
-      @viewMode={{this.viewMode}}
-    />
-    <Modal::History::Revisions
-      @model={{this.postRevision}}
-      @hiddenClasses={{this.hiddenClasses}}
-      @mobileView={{this.site.mobileView}}
-      @userChanges={{this.user_changes}}
-      @wikiDisabled={{this.wikiDisabled}}
-      @postTypeDisabled={{this.postTypeDisabled}}
-      @previousCategory={{this.previousCategory}}
-      @currentCategory={{this.currentCategory}}
-      @previousTagChanges={{this.previousTagChanges}}
-      @currentTagChanges={{this.currentTagChanges}}
-      @bodyDiffHTML={{this.bodyDiffHTML}}
-      @bodyDiff={{this.bodyDiff}}
-      @calculateBodyDiff={{this.calculateBodyDiff}}
-      @titleDiff={{this.titleDiff}}
-    />
+    <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <Modal::History::Revision
+        @model={{this.postRevision}}
+        @mobileView={{this.site.mobileView}}
+        @wikiDisabled={{this.wikiDisabled}}
+        @previousCategory={{this.previousCategory}}
+        @currentCategory={{this.currentCategory}}
+        @displayInline={{this.displayInline}}
+        @displaySideBySide={{this.displaySideBySide}}
+        @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
+        @viewMode={{this.viewMode}}
+      />
+      <Modal::History::Revisions
+        @model={{this.postRevision}}
+        @hiddenClasses={{this.hiddenClasses}}
+        @mobileView={{this.site.mobileView}}
+        @userChanges={{this.user_changes}}
+        @wikiDisabled={{this.wikiDisabled}}
+        @postTypeDisabled={{this.postTypeDisabled}}
+        @previousCategory={{this.previousCategory}}
+        @currentCategory={{this.currentCategory}}
+        @previousTagChanges={{this.previousTagChanges}}
+        @currentTagChanges={{this.currentTagChanges}}
+        @bodyDiffHTML={{this.bodyDiffHTML}}
+        @bodyDiff={{this.bodyDiff}}
+        @calculateBodyDiff={{this.calculateBodyDiff}}
+        @titleDiff={{this.titleDiff}}
+      />
+    </ConditionalLoadingSpinner>
   </:body>
   <:footer>
     {{#if @model.editPost}}
