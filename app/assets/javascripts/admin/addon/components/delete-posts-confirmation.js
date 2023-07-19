@@ -5,8 +5,9 @@ import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default class DeletePostsConfirmation extends Component {
-  @tracked value;
   @controller adminUserIndex;
+
+  @tracked value;
 
   get text() {
     return I18n.t(`admin.user.delete_posts.confirmation.text`, {
