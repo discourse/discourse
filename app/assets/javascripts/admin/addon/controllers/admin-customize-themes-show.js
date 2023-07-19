@@ -14,14 +14,15 @@ import ThemeSettings from "admin/models/theme-settings";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { url } from "discourse/lib/computed";
+import ThemeUploadAddModal from "../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;
 
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
   @service router;
+  @service modal;
 
   editRouteName = "adminCustomizeThemes.edit";
 
@@ -274,7 +275,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   addUploadModal() {
-    showModal("admin-add-upload", { admin: true, name: "" });
+    this.modal.show(ThemeUploadAddModal);
   }
 
   @action
