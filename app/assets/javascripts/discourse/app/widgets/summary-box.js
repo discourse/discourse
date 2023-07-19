@@ -54,17 +54,17 @@ export default createWidget("summary-box", {
       html.push(new RawHtml({ html: `<div>${attrs.summary}</div>` }));
       html.push(
         h("div.summarized-on", {}, [
-          I18n.t("summary.summarized_on", {
-            date: attrs.summarizedOn,
-          }),
           new RenderGlimmer(
             this,
             "div",
-            hbs`<DTooltip @placement="top">{{d-icon "info-circle"}}
+            hbs`{{@data.summarizedOn}}<DTooltip @placement="top-end">{{d-icon "info-circle"}}
               {{i18n "summary.model_used" model=@data.attrs.summarizedBy}}
             </DTooltip>`,
             {
               attrs,
+              summarizedOn: I18n.t("summary.summarized_on", {
+                date: attrs.summarizedOn,
+              }),
             }
           ),
         ])
