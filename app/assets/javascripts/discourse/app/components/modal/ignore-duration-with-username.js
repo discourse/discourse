@@ -1,12 +1,11 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import User from "discourse/models/user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend(ModalFunctionality, {
+export default Component.extend({
   loading: false,
   ignoredUntil: null,
   ignoredUsername: null,
@@ -51,7 +50,7 @@ export default Component.extend(ModalFunctionality, {
           })
           .then(() => {
             this.onUserIgnored(this.ignoredUsername);
-            this.send("closeModal");
+            this.args.closeModal();
           })
           .catch(popupAjaxError)
           .finally(() => this.set("loading", false));
