@@ -882,6 +882,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
           get key() {
             return "new-panel";
           }
+
           get switchButtonLabel() {
             "New panel";
           }
