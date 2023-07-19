@@ -57,7 +57,9 @@ export default createWidget("summary-box", {
           new RenderGlimmer(
             this,
             "div",
-            hbs`{{@data.summarizedOn}}<DTooltip @placement="top-end">{{d-icon "info-circle"}}
+            hbs`{{@data.summarizedOn}}
+            {{d-icon "info-circle"}}
+            <DTooltip @placement="top-end">
               {{i18n "summary.model_used" model=@data.attrs.summarizedBy}}
             </DTooltip>`,
             {
