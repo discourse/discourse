@@ -15,6 +15,7 @@ describe Chat::Publisher do
         MessageBus.track_publish { described_class.publish_delete!(channel, message_2) }[0].data
 
       expect(data["deleted_at"]).to eq(message_2.deleted_at.iso8601(3))
+      expect(data["deleted_by_id"]).to eq(message_2.deleted_by_id)
       expect(data["deleted_id"]).to eq(message_2.id)
       expect(data["latest_not_deleted_message_id"]).to eq(message_1.id)
       expect(data["type"]).to eq("delete")
@@ -95,8 +96,10 @@ describe Chat::Publisher do
 
     context "when the channel has threading enabled and the message is a thread reply" do
       fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+
       before do
         message_1.update!(thread: thread)
+        thread.update_last_message_id!
         channel.update!(threading_enabled: true)
       end
 
@@ -105,16 +108,22 @@ describe Chat::Publisher do
 
         it "publishes the tracking state with correct counts" do
           expect(data["thread_id"]).to eq(thread.id)
-          expect(data["unread_thread_ids"]).to eq([thread.id])
-          expect(data["thread_tracking"]).to eq({ "unread_count" => 1, "mention_count" => 0 })
+          expect(data["unread_thread_overview"]).to eq(
+            { thread.id.to_s => thread.reload.last_message.created_at.iso8601(3) },
+          )
+          expect(data["thread_tracking"]).to eq(
+            { "unread_count" => 1, "mention_count" => 0, "last_reply_created_at" => nil },
+          )
         end
       end
 
       context "when the user has no thread membership" do
         it "publishes the tracking state with zeroed out counts" do
           expect(data["thread_id"]).to eq(thread.id)
-          expect(data["unread_thread_ids"]).to eq([])
-          expect(data["thread_tracking"]).to eq({ "unread_count" => 0, "mention_count" => 0 })
+          expect(data["unread_thread_overview"]).to eq({})
+          expect(data["thread_tracking"]).to eq(
+            { "unread_count" => 0, "mention_count" => 0, "last_reply_created_at" => nil },
+          )
         end
       end
     end
@@ -281,10 +290,12 @@ describe Chat::Publisher do
           {
             type: "channel",
             channel_id: channel.id,
-            message_id: message_1.id,
-            user_id: message_1.user_id,
-            username: message_1.user.username,
             thread_id: nil,
+            message:
+              Chat::MessageSerializer.new(
+                message_1,
+                { scope: Guardian.new(nil), root: false },
+              ).as_json,
           },
         )
       end
@@ -340,10 +351,12 @@ describe Chat::Publisher do
               {
                 type: "thread",
                 channel_id: channel.id,
-                message_id: message_1.id,
-                user_id: message_1.user_id,
-                username: message_1.user.username,
                 thread_id: thread.id,
+                message:
+                  Chat::MessageSerializer.new(
+                    message_1,
+                    { scope: Guardian.new(nil), root: false },
+                  ).as_json,
               },
             )
           end

@@ -1,20 +1,16 @@
-import { propertyEqual } from "discourse/lib/computed";
 import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   postUrl,
   selectedElement,
   selectedRange,
   selectedText,
   setCaretPosition,
-  translateModKey,
 } from "discourse/lib/utilities";
 import Component from "@ember/component";
-import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import Sharing from "discourse/lib/sharing";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -24,6 +20,8 @@ import toMarkdown from "discourse/lib/to-markdown";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 import { createPopper } from "@popperjs/core";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
+import { inject as service } from "@ember/service";
+import FastEditModal from "discourse/components/modal/fast-edit";
 
 function getQuoteTitle(element) {
   const titleEl = element.querySelector(".title");
@@ -39,13 +37,15 @@ function getQuoteTitle(element) {
   return titleEl.textContent.trim().replace(/:$/, "");
 }
 
-function fixQuotes(str) {
+export function fixQuotes(str) {
   // u+201c, u+201d = “ ”
   // u+2018, u+2019 = ‘ ’
   return str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
 }
 
 export default Component.extend(KeyEnterEscape, {
+  modal: service(),
+
   classNames: ["quote-button"],
   classNameBindings: [
     "visible",
@@ -63,16 +63,12 @@ export default Component.extend(KeyEnterEscape, {
   _isFastEditable: false,
   _displayFastEditInput: false,
   _fastEditInitialSelection: null,
-  _fastEditNewSelection: null,
-  _isSavingFastEdit: false,
   _canEditPost: false,
-  _saveEditButtonTitle: I18n.t("composer.title", {
-    modifier: translateModKey("Meta+"),
-  }),
 
   _isMouseDown: false,
   _reselected: false,
 
+  @bind
   _hideButton() {
     this.quoteState.clear();
     this.set("visible", false);
@@ -81,7 +77,6 @@ export default Component.extend(KeyEnterEscape, {
     this.set("_isFastEditable", false);
     this.set("_displayFastEditInput", false);
     this.set("_fastEditInitialSelection", null);
-    this.set("_fastEditNewSelection", null);
     this._teardownSelectionListeners();
   },
 
@@ -157,10 +152,7 @@ export default Component.extend(KeyEnterEscape, {
     this.set("visible", quoteState.buffer.length > 0);
 
     if (this.siteSettings.enable_fast_edit) {
-      this.set(
-        "_canEditPost",
-        this.topic.postStream.findLoadedPost(postId)?.can_edit
-      );
+      this.set("_canEditPost", this.post?.can_edit);
 
       if (this._canEditPost) {
         const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
@@ -176,11 +168,9 @@ export default Component.extend(KeyEnterEscape, {
         ) {
           this.set("_isFastEditable", false);
           this.set("_fastEditInitialSelection", null);
-          this.set("_fastEditNewSelection", null);
         } else if (matches?.length === 1) {
           this.set("_isFastEditable", true);
           this.set("_fastEditInitialSelection", quoteState.buffer);
-          this.set("_fastEditNewSelection", quoteState.buffer);
         }
       }
     }
@@ -313,6 +303,11 @@ export default Component.extend(KeyEnterEscape, {
     this._teardownSelectionListeners();
   },
 
+  @computed("topic", "quoteState.postId")
+  get post() {
+    return this.topic.postStream.findLoadedPost(this.quoteState.postId);
+  },
+
   @discourseComputed("topic.{isPrivateMessage,invisible,category}")
   quoteSharingEnabled(topic) {
     if (
@@ -343,11 +338,11 @@ export default Component.extend(KeyEnterEscape, {
     return this.quoteSharingSources.length > 1;
   },
 
-  @discourseComputed("topic.{id,slug}", "quoteState")
-  shareUrl(topic, quoteState) {
-    const postId = quoteState.postId;
-    const postNumber = topic.postStream.findLoadedPost(postId).post_number;
-    return getAbsoluteURL(postUrl(topic.slug, topic.id, postNumber));
+  @computed("topic.{id,slug}", "post")
+  get shareUrl() {
+    return getAbsoluteURL(
+      postUrl(this.topic.slug, this.topic.id, this.post.post_number)
+    );
   },
 
   @discourseComputed(
@@ -361,113 +356,69 @@ export default Component.extend(KeyEnterEscape, {
     );
   },
 
-  _saveFastEditDisabled: propertyEqual(
-    "_fastEditInitialSelection",
-    "_fastEditNewSelection"
-  ),
-
   @action
   insertQuote() {
     this.attrs.selectText().then(() => this._hideButton());
   },
 
   @action
-  _toggleFastEditForm() {
+  async _toggleFastEditForm() {
     if (this._isFastEditable) {
-      this.toggleProperty("_displayFastEditInput");
+      if (this.site.desktopView) {
+        this.toggleProperty("_displayFastEditInput");
+      } else {
+        this.modal.show(FastEditModal, {
+          model: {
+            initialValue: this._fastEditInitialSelection,
+            post: this.post,
+          },
+        });
+        this._hideButton();
+      }
 
-      schedule("afterRender", () => {
-        if (this.site.mobileView) {
-          this.textRange = document.querySelector("#main-outlet");
-          this._popper?.update();
-        }
-        next(() => document.querySelector("#fast-edit-input")?.focus());
-      });
-    } else {
-      const postId = this.quoteState.postId;
-      const postModel = this.topic.postStream.findLoadedPost(postId);
-      return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false }).then(
-        (result) => {
-          let bestIndex = 0;
-          const rows = result.raw.split("\n");
-
-          // selecting even a part of the text of a list item will include
-          // "* " at the beginning of the buffer, we remove it to be able
-          // to find it in row
-          const buffer = fixQuotes(
-            this.quoteState.buffer.split("\n")[0].replace(/^\* /, "")
-          );
-
-          rows.some((row, index) => {
-            if (row.length && row.includes(buffer)) {
-              bestIndex = index;
-              return true;
-            }
-          });
-
-          this.editPost(postModel);
-
-          document
-            .querySelector("#reply-control")
-            ?.addEventListener("transitionend", () => {
-              const textarea = document.querySelector(".d-editor-input");
-              if (!textarea || this.isDestroyed || this.isDestroying) {
-                return;
-              }
-
-              // best index brings us to one row before as slice start from 1
-              // we add 1 to be at the beginning of next line, unless we start from top
-              setCaretPosition(
-                textarea,
-                rows.slice(0, bestIndex).join("\n").length +
-                  (bestIndex > 0 ? 1 : 0)
-              );
-
-              // ensures we correctly scroll to caret and reloads composer
-              // if we do another selection/edit
-              textarea.blur();
-              textarea.focus();
-            });
-        }
-      );
+      return;
     }
-  },
 
-  @action
-  _saveFastEdit() {
-    const postId = this.quoteState?.postId;
-    const postModel = this.topic.postStream.findLoadedPost(postId);
+    const result = await ajax(`/posts/${this.post.id}`, { cache: false });
+    let bestIndex = 0;
+    const rows = result.raw.split("\n");
 
-    this.set("_isSavingFastEdit", true);
+    // selecting even a part of the text of a list item will include
+    // "* " at the beginning of the buffer, we remove it to be able
+    // to find it in row
+    const buffer = fixQuotes(
+      this.quoteState.buffer.split("\n")[0].replace(/^\* /, "")
+    );
 
-    return ajax(`/posts/${postModel.id}`, { type: "GET", cache: false })
-      .then((result) => {
-        const newRaw = result.raw.replace(
-          fixQuotes(this._fastEditInitialSelection),
-          fixQuotes(this._fastEditNewSelection)
+    rows.some((row, index) => {
+      if (row.length && row.includes(buffer)) {
+        bestIndex = index;
+        return true;
+      }
+    });
+
+    this.editPost(this.post);
+
+    document
+      .querySelector("#reply-control")
+      ?.addEventListener("transitionend", () => {
+        const textarea = document.querySelector(".d-editor-input");
+        if (!textarea || this.isDestroyed || this.isDestroying) {
+          return;
+        }
+
+        // best index brings us to one row before as slice start from 1
+        // we add 1 to be at the beginning of next line, unless we start from top
+        setCaretPosition(
+          textarea,
+          rows.slice(0, bestIndex).join("\n").length + (bestIndex > 0 ? 1 : 0)
         );
 
-        postModel
-          .save({ raw: newRaw })
-          .catch(popupAjaxError)
-          .finally(() => {
-            this.set("_isSavingFastEdit", false);
-            this._hideButton();
-          });
-      })
-      .catch(popupAjaxError);
-  },
-
-  @action
-  save() {
-    if (this._displayFastEditInput && !this._saveFastEditDisabled) {
-      this._saveFastEdit();
-    }
-  },
-
-  @action
-  cancelled() {
-    this._hideButton();
+        // ensures we correctly scroll to caret and reloads composer
+        // if we do another selection/edit
+        textarea.blur();
+        textarea.focus();
+      });
   },
 
   @action

@@ -21,11 +21,13 @@ class ContentSecurityPolicy
 
       headers["Content-Security-Policy"] = policy(
         theme_id,
+        env: env,
         base_url: base_url,
         path_info: env["PATH_INFO"],
       ) if SiteSetting.content_security_policy
       headers["Content-Security-Policy-Report-Only"] = policy(
         theme_id,
+        env: env,
         base_url: base_url,
         path_info: env["PATH_INFO"],
       ) if SiteSetting.content_security_policy_report_only

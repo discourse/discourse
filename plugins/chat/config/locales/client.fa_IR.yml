@@ -181,8 +181,6 @@ fa_IR:
         title: پیام جدید
         prefix: "به:"
         no_results: هیج نتیجه‌ای نداشت
-      channel_selector:
-        no_channels: "هیچ کانالی با جستجوی شما مطابقت ندارد"
       channel:
         no_memberships: این کانال هنوز هیچ عضوی ندارد
         no_memberships_found: هیچ عضوی یافت نشد
@@ -223,6 +221,7 @@ fa_IR:
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"
         notifications: "اعلان‌ها"

@@ -1,0 +1,11 @@
+<ChatChannelTitle @channel={{@content.model}} />
+
+{{#if (gt @content.tracking.unreadCount 0)}}
+  <div
+    class={{concat-class "unread-indicator" (if this.isUrgent "-urgent")}}
+  ></div>
+{{/if}}
+
+{{#if this.site.desktopView}}
+  <span class="action-indicator">{{this.openChannelLabel}}</span>
+{{/if}}

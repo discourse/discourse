@@ -1105,7 +1105,7 @@ RSpec.describe PostsController do
           user.reload
           expect(user).to be_silenced
 
-          rp = ReviewableQueuedPost.find_by(created_by: user)
+          rp = ReviewableQueuedPost.find_by(target_created_by: user)
           expect(rp.payload["typing_duration_msecs"]).to eq(100)
           expect(rp.payload["composer_open_duration_msecs"]).to eq(204)
           expect(rp.payload["reply_to_post_number"]).to eq(123)
@@ -1199,7 +1199,7 @@ RSpec.describe PostsController do
         parsed = response.parsed_body
 
         expect(parsed["action"]).to eq("enqueued")
-        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        reviewable = ReviewableQueuedPost.find_by(target_created_by: user)
         score = reviewable.reviewable_scores.first
         expect(score.reason).to eq("auto_silence_regex")
 
@@ -1222,7 +1222,7 @@ RSpec.describe PostsController do
         parsed = response.parsed_body
 
         expect(parsed["action"]).to eq("enqueued")
-        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        reviewable = ReviewableQueuedPost.find_by(target_created_by: user)
         score = reviewable.reviewable_scores.first
         expect(score.reason).to eq("auto_silence_regex")
 

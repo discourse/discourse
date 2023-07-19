@@ -37,7 +37,6 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 import {
-  hideAllUserTips,
   hideUserTip,
   showNextUserTip,
   showUserTip,
@@ -131,6 +130,7 @@ let userOptionFields = [
   "bookmark_auto_delete_preference",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
+  "watched_precedence_over_muted",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -437,10 +437,6 @@ const User = RestModel.extend({
     });
   },
 
-  copy() {
-    return User.create(this.getProperties(Object.keys(this)));
-  },
-
   save(fields) {
     const data = this.getProperties(
       userFields.filter((uf) => !fields || fields.includes(uf))
@@ -682,11 +678,6 @@ const User = RestModel.extend({
     return groups.length === 0 ? null : groups;
   },
 
-  @discourseComputed("filteredGroups", "numGroupsToDisplay")
-  showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
-    return filteredGroups.length > numGroupsToDisplay;
-  },
-
   // NOTE: This only includes groups *visible* to the user via the serializer,
   // so be wary when using this.
   isInAnyGroups(groupIds) {
@@ -837,17 +828,6 @@ const User = RestModel.extend({
     return ajax("/invites", {
       type: "POST",
       data: { email, skip_email: true, group_ids, topic_id },
-    });
-  },
-
-  generateMultipleUseInviteLink(
-    group_ids,
-    max_redemptions_allowed,
-    expires_at
-  ) {
-    return ajax("/invites", {
-      type: "POST",
-      data: { group_ids, max_redemptions_allowed, expires_at },
     });
   },
 
@@ -1191,33 +1171,38 @@ const User = RestModel.extend({
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   },
 
-  showUserTip(options) {
+  canSeeUserTip(id) {
     const userTips = Site.currentProp("user_tips");
     if (!userTips || this.user_option?.skip_new_user_tips) {
-      return;
+      return false;
     }
 
-    if (!userTips[options.id]) {
+    if (!userTips[id]) {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
-        console.warn("Cannot show user tip with type =", options.id);
+        console.warn("Cannot show user tip with type =", id);
       }
-      return;
+      return false;
     }
 
     const seenUserTips = this.user_option?.seen_popups || [];
-    if (
-      seenUserTips.includes(-1) ||
-      seenUserTips.includes(userTips[options.id])
-    ) {
-      return;
+    if (seenUserTips.includes(-1) || seenUserTips.includes(userTips[id])) {
+      return false;
     }
 
-    showUserTip({
-      ...options,
-      onDismiss: () => this.hideUserTipForever(options.id),
-      onDismissAll: () => this.hideUserTipForever(),
-    });
+    return true;
+  },
+
+  showUserTip(options) {
+    if (this.canSeeUserTip(options.id)) {
+      showUserTip({
+        ...options,
+        onDismiss: () => {
+          options.onDismiss?.();
+          this.hideUserTipForever(options.id);
+        },
+      });
+    }
   },
 
   hideUserTipForever(userTipId) {
@@ -1227,45 +1212,29 @@ const User = RestModel.extend({
     }
 
     // Empty userTipId means all user tips.
-    if (userTipId && !userTips[userTipId]) {
+    if (!userTips[userTipId]) {
       // eslint-disable-next-line no-console
       console.warn("Cannot hide user tip with type =", userTipId);
       return;
     }
 
     // Hide user tips and maybe show the next one.
-    if (userTipId) {
-      hideUserTip(userTipId);
-      showNextUserTip();
-    } else {
-      hideAllUserTips();
-    }
+    hideUserTip(userTipId, true);
+    showNextUserTip();
 
     // Update list of seen user tips.
     let seenUserTips = this.user_option?.seen_popups || [];
-    if (userTipId) {
-      if (seenUserTips.includes(userTips[userTipId])) {
-        return;
-      }
-      seenUserTips.push(userTips[userTipId]);
-    } else {
-      if (seenUserTips.includes(-1)) {
-        return;
-      }
-      seenUserTips = [-1];
+    if (seenUserTips.includes(userTips[userTipId])) {
+      return;
     }
+    seenUserTips.push(userTips[userTipId]);
 
     // Save seen user tips on the server.
     if (!this.user_option) {
       this.set("user_option", {});
     }
     this.set("user_option.seen_popups", seenUserTips);
-    if (userTipId) {
-      return this.save(["seen_popups"]);
-    } else {
-      this.set("user_option.skip_new_user_tips", true);
-      return this.save(["seen_popups", "skip_new_user_tips"]);
-    }
+    return this.save(["seen_popups"]);
   },
 });
 
@@ -1380,9 +1349,7 @@ User.reopenClass(Singleton, {
       data: { timezone: user.user_option.timezone },
     });
   },
-});
 
-User.reopenClass({
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);

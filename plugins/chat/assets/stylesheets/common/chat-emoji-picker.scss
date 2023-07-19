@@ -17,7 +17,7 @@
     &:hover,
     &:focus {
       background: var(--primary-very-low);
-      border-radius: 5px;
+      border-radius: var(--d-border-radius);
       transform: scale(1.25);
     }
   }
@@ -139,7 +139,7 @@
     background: none;
     margin-right: 0.5rem;
     border: 0;
-    border-radius: 5px;
+    border-radius: var(--d-border-radius);
 
     .d-icon {
       visibility: hidden;

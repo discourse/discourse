@@ -29,6 +29,8 @@ class SidebarSectionsController < ApplicationController
     render_serialized(sidebar_section, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
+  rescue ActiveRecord::NestedAttributes::TooManyRecords => e
+    render_json_error(e.message)
   end
 
   def update
@@ -62,6 +64,8 @@ class SidebarSectionsController < ApplicationController
     render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
+  rescue ActiveRecord::NestedAttributes::TooManyRecords => e
+    render_json_error(e.message)
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end

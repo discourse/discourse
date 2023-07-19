@@ -57,6 +57,8 @@ ca:
           about: Quant a
           members: Membres
           settings: Configuració
+      new_message_modal:
+        no_items: "Sense elements"
       direct_message_creator:
         title: Missatge nou
         prefix: "A:"
@@ -74,6 +76,8 @@ ca:
       settings:
         follow: "Registre"
         followed: "Registrat"
+        threading_enabled: "Activat"
+        threading_disabled: "Desactivat"
         notifications: "Notificacions"
         preview: "Previsualitza"
         save: "Desa"

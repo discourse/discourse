@@ -3,7 +3,7 @@ import {
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { viewTrackingRequired } from "discourse/lib/ajax";
+import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
 
 export default {
   after: "inject-objects",
@@ -11,7 +11,7 @@ export default {
   initialize(owner) {
     // Tell our AJAX system to track a page transition
     const router = owner.lookup("router:main");
-    router.on("routeWillChange", viewTrackingRequired);
+    router.on("routeWillChange", this.handleRouteWillChange);
 
     let appEvents = owner.lookup("service:app-events");
     let documentTitle = owner.lookup("service:document-title");
@@ -64,7 +64,15 @@ export default {
     }
   },
 
+  handleRouteWillChange(transition) {
+    // will be null on initial boot transition, which is already tracked as a pageview via the HTML request
+    if (transition.from) {
+      trackNextAjaxAsPageview();
+    }
+  },
+
   teardown() {
     resetPageTracking();
+    resetAjax();
   },
 };

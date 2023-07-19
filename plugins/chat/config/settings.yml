@@ -2,6 +2,9 @@ chat:
   chat_enabled:
     default: true
     client: true
+  enable_public_channels:
+    default: true
+    client: true
   chat_allowed_groups:
     client: true
     type: group_list
@@ -115,5 +118,4 @@ chat:
     hidden: true
   enable_experimental_chat_threaded_discussions:
     default: false
-    hidden: true
     client: true

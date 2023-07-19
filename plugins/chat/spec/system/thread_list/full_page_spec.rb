@@ -5,6 +5,7 @@ describe "Thread list in side panel | full page", type: :system do
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:other_user) { Fabricate(:user) }
 
+  let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
@@ -22,6 +23,50 @@ describe "Thread list in side panel | full page", type: :system do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(page).to have_content(I18n.t("js.chat.threads.none"))
+    end
+  end
+
+  context "for threads the user is not a participant in" do
+    fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel) }
+
+    before { chat_system_user_bootstrap(user: other_user, channel: channel) }
+
+    it "does not show existing threads in the channel if the user is not tracking them" do
+      Fabricate(:chat_thread, original_message: thread_om, channel: channel)
+      chat_page.visit_channel(channel)
+      channel_page.open_thread_list
+      expect(page).to have_content(I18n.t("js.chat.threads.none"))
+    end
+
+    it "does not show new threads in the channel in the thread list if the user is not tracking them" do
+      chat_page.visit_channel(channel)
+
+      using_session(:other_user) do |session|
+        sign_in(other_user)
+        chat_page.visit_channel(channel)
+        channel_page.reply_to(thread_om)
+        thread_page.send_message("hey everyone!")
+        expect(channel_page).to have_thread_indicator(thread_om)
+        session.quit
+      end
+
+      channel_page.open_thread_list
+      expect(page).to have_content(I18n.t("js.chat.threads.none"))
+    end
+
+    describe "when the user creates a new thread" do
+      it "does not double up the staged thread and the actual thread in the list" do
+        chat_page.visit_channel(channel)
+        channel_page.reply_to(thread_om)
+        thread_page.send_message("hey everyone!")
+        expect(channel_page).to have_thread_indicator(thread_om)
+        thread_page.close
+        channel_page.open_thread_list
+        expect(page).to have_css(
+          thread_list_page.item_by_id_selector(thread_om.reload.thread_id),
+          count: 1,
+        )
+      end
     end
   end
 
@@ -88,6 +133,53 @@ describe "Thread list in side panel | full page", type: :system do
       expect(side_panel).to have_open_thread(thread_1)
     end
 
+    describe "deleting and restoring the original message of the thread" do
+      before do
+        thread_1.update!(original_message_user: other_user)
+        thread_1.original_message.update!(user: other_user)
+      end
+
+      it "hides the thread in the list when another user deletes the original message" do
+        chat_page.visit_channel(channel)
+        channel_page.open_thread_list
+        expect(thread_list_page).to have_thread(thread_1)
+
+        using_session(:tab_2) do |session|
+          sign_in(other_user)
+          chat_page.visit_thread(thread_1)
+          expect(side_panel_page).to have_open_thread(thread_1)
+          thread_page.delete_message(thread_1.original_message)
+          session.quit
+        end
+
+        expect(thread_list_page).to have_no_thread(thread_1)
+      end
+
+      it "shows the thread in the list when another user restores the original message" do
+        # This is necessary because normal users can't see deleted messages
+        other_user.update!(admin: true)
+        current_user.update!(admin: true)
+
+        thread_1.original_message.trash!
+        chat_page.visit_channel(channel)
+        channel_page.open_thread_list
+        expect(thread_list_page).to have_no_thread(thread_1)
+
+        using_session(:tab_2) do |session|
+          sign_in(other_user)
+          chat_page.visit_channel(channel)
+          expect(channel_page).to have_no_loading_skeleton
+          channel_page.expand_deleted_message(thread_1.original_message)
+          channel_page.message_thread_indicator(thread_1.original_message).click
+          expect(side_panel_page).to have_open_thread(thread_1)
+          thread_page.restore_message(thread_1.original_message)
+          session.quit
+        end
+
+        expect(thread_list_page).to have_thread(thread_1)
+      end
+    end
+
     describe "updating the title of the thread" do
       let(:new_title) { "wow new title" }
 
@@ -102,7 +194,7 @@ describe "Thread list in side panel | full page", type: :system do
         open_thread_list
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
-        find(".thread-title-input").fill_in(with: new_title)
+        find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
         expect(thread_page.header).to have_title_content(new_title)
       end
@@ -113,7 +205,7 @@ describe "Thread list in side panel | full page", type: :system do
         open_thread_list
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
-        find(".thread-title-input").fill_in(with: new_title)
+        find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
         expect(thread_page.header).to have_title_content(new_title)
       end

@@ -90,6 +90,8 @@ export default class ChatMessageReaction extends Component {
 
   @action
   onTouchEnd(event) {
+    event.preventDefault();
+
     if (this.touching) {
       this.handleClick(event);
     }

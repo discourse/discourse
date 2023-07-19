@@ -245,7 +245,7 @@ he:
     software_update_prompt:
       message: "עדכנו את האתר הזה, <span>נא לרענן</span> או שיתכן שתופענה כל מיני תופעות בלתי מוסברות."
       dismiss: "התעלמות"
-    bootstrap_mode: "מצב ראשוני"
+    bootstrap_mode: "איך מתחילים"
     themes:
       default_description: "ברירת מחדל"
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
@@ -1240,10 +1240,6 @@ he:
       experimental_sidebar:
         enable: "הפעלת סרגל צד"
         options: "אפשרויות"
-        categories_section: "סעיף קטגוריות"
-        categories_section_instruction: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט. אם לא נבחרו קטגוריות, תופענה הקטגוריות המובילות של האתר."
-        tags_section: "סעיף תגיות"
-        tags_section_instruction: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט. אם לא נבחרו תגיות, תופענה התגיות המובילות של האתר."
         navigation_section: "ניווט"
         navigation_section_instruction: "כאשר לנושא בתפריט הניווט יש פריטים חדשים או שלא נקראו…"
         link_to_filtered_list_checkbox_description: "קישור לרשימה המסוננת"
@@ -1286,6 +1282,7 @@ he:
       watched_first_post_categories_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בקטגוריות אלו."
       watched_first_post_tags: "צפייה בפוסט ראשון"
       watched_first_post_tags_instructions: "אתם תיודעו לגבי הפוסט הראשון בכל נושא חדש בתגיות אלו."
+      watched_precedence_over_muted: "להודיע לי על נושאים בקטגוריות או תגיות שאני עוקב אחריהם שגם שייכים לזה שהשתקתי"
       muted_categories: "מושתק"
       muted_categories_instructions: "לא תקבל הודעה בנוגע לנושאים חדשים בקטגוריות אלה, והם לא יופיעו בקטגוריות או בדפים האחרונים."
       muted_categories_instructions_dont_hide: "לא תישלחנה אליך התראות על שום דבר שנוגע לנושאים בקטגוריות האלו."
@@ -1961,6 +1958,10 @@ he:
       suggested_topics:
         title: "אפשר להמשיך לקרוא!"
         content: "הינה כמה נושאים שלדעתנו יעניין אותך לקרוא בהמשך."
+      admin_guide:
+        title: "ברוך בואך לאתר החדש שלך!"
+        content: "כדאי לקרוא את המדריך למנהלים בטרם בניית האתר והקהילה שלך."
+        primary: "קדימה!"
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -4478,6 +4479,7 @@ he:
           delete_confirm: "למחוק את המקטע הזה?"
           reset_confirm: "לאפס את המקטע הזה לברירת המחדל?"
           public: "להפוך את הסעיף הזה לציבורי וגלוי לכולם"
+          always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
           more_menu: "תפריט נוסף"
           links:
             add: "הוספת קישור נוסף"
@@ -4530,9 +4532,9 @@ he:
           header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
           configure_defaults: "הגדרת ברירות מחדל"
         community:
-          header_link_text: "קהילה"
-          header_action_create_topic_title: "יצירת נושא"
-          header_action_edit_section_title: "עריכת מקטע הקהילה"
+          edit_section:
+            sidebar: "עריכת הסעיף הזה"
+            header_dropdown: "התאמה אישית"
           links:
             about:
               content: "על אודות"
@@ -6096,8 +6098,10 @@ he:
         go_back: "חזרה לחיפוש"
         recommended: "אנו ממליצים לערוך את הטקסט הבא כדי שיתאים לצרכים שלך:"
         show_overriden: "להציג רק את אלו שנדרסו"
+        show_outdated: "להציג רק מיושן/שגוי"
         locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
+        interpolation_keys: "מפתחות השילוב הזמינים:"
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"
         history: "הצגת היסטוריית שינויים"

@@ -72,6 +72,8 @@ sl:
       settings:
         follow: "Pridruži se"
         followed: "Pridružen"
+        threading_enabled: "Vključeno"
+        threading_disabled: "Onemogočeno"
         notifications: "Obvestila"
         preview: "Predogled"
         save: "Shrani"
@@ -117,6 +119,11 @@ sl:
             title: "Običajna"
           tracking:
             title: "Sledim"
+        participants_other_count:
+          one: "+%{count}"
+          two: "+%{count}"
+          few: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Novo zasebno sporočilo"
         cancel: "Prekliči"

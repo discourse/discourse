@@ -2,6 +2,8 @@
 require "highline/import"
 
 module SystemHelpers
+  PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+
   def pause_test
     result =
       ask(

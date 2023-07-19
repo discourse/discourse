@@ -238,45 +238,6 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
           end
         end
       end
-
-      context "with dm and public channel" do
-        fab!(:current_user) { Fabricate(:admin) }
-        fab!(:user_1) { Fabricate(:user) }
-        fab!(:channel_1) { Fabricate(:category_channel) }
-        fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
-
-        before do
-          channel_1.add(user_1)
-          channel_1.add(current_user)
-        end
-
-        context "when messages are created" do
-          xit "correctly renders notifications" do
-            using_session(:current_user) { visit("/") }
-
-            using_session(:user_1) { create_message(channel: channel_1, creator: user_1) }
-
-            using_session(:current_user) do
-              expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
-              expect(page).to have_css(".sidebar-row.channel-#{channel_1.id} .unread")
-            end
-
-            using_session(:user_1) do |session|
-              create_message(channel: dm_channel_1, creator: user_1)
-              session.quit
-            end
-
-            using_session(:current_user) do |session|
-              expect(page).to have_css(".sidebar-row.channel-#{dm_channel_1.id} .icon.urgent")
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "1",
-              )
-              session.quit
-            end
-          end
-        end
-      end
     end
   end
 end

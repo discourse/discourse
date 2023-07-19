@@ -189,7 +189,6 @@ bg:
     software_update_prompt:
       message: "Актуализирахме този сайт, <span>моля, презаредете</span>, или може да изпитате неочаквано поведение."
       dismiss: "Отмени"
-    bootstrap_mode: "Режим Bootstrap"
     themes:
       default_description: "По подразбиране"
       broken_theme_alert: "Вашият сайт може да не работи, защото тема/компонент има грешки."
@@ -1115,8 +1114,6 @@ bg:
       experimental_sidebar:
         enable: "Активиране на страничната лента"
         options: "Опции"
-        categories_section: "Раздел Категории"
-        tags_section: "Раздел за етикети"
         navigation_section: "Навигация"
       change: "промени"
       featured_topic: "Представена тема"
@@ -3400,7 +3397,8 @@ bg:
         categories:
           header_link_text: "Категории"
         community:
-          header_link_text: "Общност "
+          edit_section:
+            header_dropdown: "Персонализация"
           links:
             about:
               content: "Относно"

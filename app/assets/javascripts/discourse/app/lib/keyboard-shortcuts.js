@@ -13,7 +13,7 @@ import domUtils from "discourse-common/utils/dom-utils";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { ajax } from "discourse/lib/ajax";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { helperContext } from "discourse-common/lib/helpers";
+import { capabilities } from "discourse/services/capabilities";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
@@ -32,6 +32,12 @@ export function clearExtraKeyboardShortcutHelp() {
 }
 
 export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
+
+export const PLATFORM_KEY_MODIFIER = /Mac|iPod|iPhone|iPad/.test(
+  navigator.platform
+)
+  ? "meta"
+  : "ctrl";
 
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
@@ -722,9 +728,18 @@ export default {
       }
     }
 
-    article = articles[index + direction];
-    if (!article) {
-      return;
+    let newIndex = index;
+    while (true) {
+      newIndex += direction;
+      article = articles[newIndex];
+
+      if (!article) {
+        // Element doesn't exist
+        return;
+      } else if (article.offsetParent !== null) {
+        // Element is not hidden
+        break;
+      }
     }
 
     for (const a of articles) {
@@ -870,13 +885,13 @@ export default {
   },
 
   webviewKeyboardBack() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.forward();
     }
   },

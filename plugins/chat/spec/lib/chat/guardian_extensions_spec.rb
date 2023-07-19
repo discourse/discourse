@@ -3,13 +3,16 @@
 require "rails_helper"
 
 RSpec.describe Chat::GuardianExtensions do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:chatters) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
   fab!(:staff) { Fabricate(:user, admin: true) }
   fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel) }
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
+
+  before { SiteSetting.chat_allowed_groups = [chatters] }
 
   it "cannot chat if the user is not in the Chat.allowed_group_ids" do
     SiteSetting.chat_allowed_groups = ""
@@ -236,8 +239,14 @@ RSpec.describe Chat::GuardianExtensions do
       context "when chatable is a direct message" do
         fab!(:chatable) { Chat::DirectMessage.create! }
 
-        it "allows owner to restore" do
+        it "allows owner to restore when deleted by owner" do
+          message.trash!(guardian.user)
           expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+        end
+
+        it "disallow owner to restore when deleted by staff" do
+          message.trash!(staff_guardian.user)
+          expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
         end
 
         it "allows staff to restore" do
@@ -323,8 +332,14 @@ RSpec.describe Chat::GuardianExtensions do
             expect(staff_guardian.can_restore_chat?(message, chatable)).to eq(true)
           end
 
-          it "allows owner to restore" do
+          it "allows owner to restore when deleted by owner" do
+            message.trash!(guardian.user)
             expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+          end
+
+          it "disallow owner to restore when deleted by staff" do
+            message.trash!(staff_guardian.user)
+            expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
           end
         end
       end

@@ -173,6 +173,27 @@ RSpec.describe TopicGuardian do
     end
   end
 
+  describe "#is_in_edit_topic_groups?" do
+    it "returns true if the user is in edit_all_topic_groups" do
+      group.add(user)
+      SiteSetting.edit_all_topic_groups = group.id.to_s
+
+      expect(Guardian.new(user).is_in_edit_topic_groups?).to eq(true)
+    end
+
+    it "returns false if the user is not in edit_all_topic_groups" do
+      SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      expect(Guardian.new(tl3_user).is_in_edit_topic_groups?).to eq(false)
+    end
+
+    it "returns false if the edit_all_topic_groups is empty" do
+      SiteSetting.edit_all_topic_groups = nil
+
+      expect(Guardian.new(user).is_in_edit_topic_groups?).to eq(false)
+    end
+  end
+
   describe "#can_review_topic?" do
     it "returns false for TL4 users" do
       topic = Fabricate(:topic)

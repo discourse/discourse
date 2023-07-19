@@ -1366,7 +1366,8 @@ te:
         categories:
           header_link_text: "వర్గాలు"
         community:
-          header_link_text: "కమ్యునిటీ"
+          edit_section:
+            header_dropdown: "కస్టమైజ్"
           links:
             about:
               content: "గురించి"

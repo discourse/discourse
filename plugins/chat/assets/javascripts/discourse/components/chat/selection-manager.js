@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { isTesting } from "discourse-common/config/environment";
@@ -8,14 +7,21 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
+import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
 
 export default class ChatSelectionManager extends Component {
   @service("composer") topicComposer;
   @service router;
+  @service modal;
   @service site;
   @service("chat-api") api;
 
+  // NOTE: showCopySuccess is used to display the message which animates
+  // after a delay. The on-animation-end helper is not really usable in
+  // system specs because it fires straight away, so we use lastCopySuccessful
+  // with a data attr instead so it's not instantly mutated.
   @tracked showCopySuccess = false;
+  @tracked lastCopySuccessful = false;
 
   get enableMove() {
     return this.args.enableMove ?? false;
@@ -37,9 +43,11 @@ export default class ChatSelectionManager extends Component {
 
   @action
   openMoveMessageModal() {
-    showModal("chat-message-move-to-channel-modal").setProperties({
-      sourceChannel: this.args.pane.channel,
-      selectedMessageIds: this.args.pane.selectedMessageIds,
+    this.modal.show(ChatModalMoveMessageToChannel, {
+      model: {
+        sourceChannel: this.args.pane.channel,
+        selectedMessageIds: this.args.pane.selectedMessageIds,
+      },
     });
   }
 
@@ -88,6 +96,7 @@ export default class ChatSelectionManager extends Component {
   @action
   async copyMessages() {
     try {
+      this.lastCopySuccessful = false;
       this.showCopySuccess = false;
 
       if (!isTesting()) {
@@ -96,6 +105,7 @@ export default class ChatSelectionManager extends Component {
       }
 
       this.showCopySuccess = true;
+      this.lastCopySuccessful = true;
     } catch (error) {
       popupAjaxError(error);
     }

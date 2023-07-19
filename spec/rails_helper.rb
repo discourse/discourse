@@ -63,6 +63,8 @@ require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
 
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
 Shoulda::Matchers.configure do |config|
@@ -77,6 +79,7 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
+Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
@@ -149,7 +152,12 @@ module TestSetup
   end
 end
 
-TestProf::BeforeAll.configure { |config| config.before(:begin) { TestSetup.test_setup } }
+TestProf::BeforeAll.configure do |config|
+  config.after(:begin) do
+    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+    TestSetup.test_setup
+  end
+end
 
 if ENV["PREFABRICATION"] == "0"
   module Prefabrication
@@ -281,6 +289,7 @@ RSpec.configure do |config|
         .tap do |options|
           apply_base_chrome_options(options)
           options.add_argument("--window-size=1400,1400")
+          options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
     Capybara.register_driver :selenium_chrome do |app|
@@ -315,6 +324,9 @@ RSpec.configure do |config|
     else
       DB.exec "SELECT setval('uploads_id_seq', 1)"
     end
+
+    # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
+    SiteIconManager.clear_cache!
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
@@ -339,17 +351,12 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
-
-    if ActiveRecord::Base.connection_pool.stat[:busy] > 1
-      raise ActiveRecord::Base.connection_pool.stat.inspect
-    end
   end
 
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
+    Downloads.clear
   end
-
-  config.before :each, &TestSetup.method(:test_setup)
 
   config.around :each do |example|
     before_event_count = DiscourseEvent.events.values.sum(&:count)
@@ -385,6 +392,7 @@ RSpec.configure do |config|
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+    TestSetup.test_setup
   end
 
   # Match the request hostname to the value in `database.yml`
@@ -670,7 +678,22 @@ def apply_base_chrome_options(options)
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
-  options.add_argument("--force-device-scale-factor=1")
+
+  # A file that contains just a list of paths like so:
+  #
+  # /home/me/.config/google-chrome/Default/Extensions/bmdblncegkenkacieihfhpjfppoconhi/4.9.1_0
+  #
+  # These paths can be found for each individual extension via the
+  # chrome://extensions/ page.
+  if ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].present?
+    File
+      .readlines(ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"])
+      .each { |path| options.add_argument("--load-extension=#{path}") }
+  end
+
+  if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
+    options.add_argument("--force-device-scale-factor=1")
+  end
 end
 
 class SpecSecureRandom

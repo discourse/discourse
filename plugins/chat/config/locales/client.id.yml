@@ -91,6 +91,8 @@ id:
         title: Pesan Baru
         prefix: "Kepada:"
       create_channel:
+        threading:
+          label: "Aktifkan threading"
         type: "Tipe"
         types:
           category: "Kategori"
@@ -98,8 +100,12 @@ id:
       notification_levels:
         never: "Tidak pernah"
       settings:
+        channel_threading_label: "Threading"
+        channel_threading_description: "Ketika threading diaktifkan, balasan ke pesan obrolan akan membuat percakapan terpisah, yang akan ada di samping saluran utama."
         follow: "Gabung"
         followed: "Joined"
+        threading_enabled: "Diaktifkan"
+        threading_disabled: "Dinonaktifkan"
         notifications: "Pemberitahuan"
         save: "Simpan"
         saved: "Tersimpan"
@@ -141,8 +147,6 @@ id:
           tracking:
             title: "Pelacakan"
             description: "Jumlah balasan baru untuk utas ini akan ditampilkan di daftar utas dan kanal. Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
-        participants_other_count:
-          other: "+%{count} lainnya"
       threads:
         list: "Diskusi yang sedang berlangsung"
         none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."

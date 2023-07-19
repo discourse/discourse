@@ -1,5 +1,5 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
-const { shouldLoadPluginTestJs } = require("discourse-plugins");
+const { shouldLoadPlugins } = require("discourse-plugins");
 const fs = require("fs");
 
 class Reporter {
@@ -139,7 +139,7 @@ if (process.argv.includes("-t")) {
       });
     },
   ];
-} else if (shouldLoadPluginTestJs()) {
+} else if (shouldLoadPlugins()) {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
     "/assets/plugins/*_extra.js": {

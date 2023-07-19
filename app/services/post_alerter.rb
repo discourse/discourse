@@ -200,9 +200,7 @@ class PostAlerter
 
     DiscourseEvent.trigger(:post_alerter_before_post, post, new_record, notified)
 
-    if !SiteSetting.watched_precedence_over_muted
-      notified = notified + category_or_tag_muters(post.topic)
-    end
+    notified = notified + category_or_tag_muters(post.topic)
 
     if new_record
       if post.topic.private_message?
@@ -270,15 +268,26 @@ class PostAlerter
   end
 
   def category_or_tag_muters(topic)
-    User
-      .joins(
-        "LEFT JOIN category_users ON users.id = category_users.user_id AND category_users.category_id = #{topic.category_id.to_i} AND category_users.notification_level = #{CategoryUser.notification_levels[:muted].to_i}",
-      )
-      .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = #{topic.id.to_i}")
-      .joins(
-        "LEFT JOIN tag_users ON users.id = tag_users.user_id AND tag_users.tag_id = topic_tags.tag_id AND tag_users.notification_level = #{TagUser.notification_levels[:muted].to_i}",
-      )
-      .where("category_users.id IS NOT NULL OR tag_users.id IS NOT NULL")
+    user_option_condition_sql_fragment =
+      if SiteSetting.watched_precedence_over_muted
+        "uo.watched_precedence_over_muted IS false"
+      else
+        "(uo.watched_precedence_over_muted IS NULL OR uo.watched_precedence_over_muted IS false)"
+      end
+
+    user_ids_sql = <<~SQL
+        SELECT uo.user_id FROM user_options uo
+        LEFT JOIN topic_users tus ON tus.user_id = uo.user_id AND tus.topic_id = #{topic.id}
+        LEFT JOIN category_users cu ON cu.user_id = uo.user_id AND cu.category_id = #{topic.category_id.to_i}
+        LEFT JOIN tag_users tu ON tu.user_id = uo.user_id
+        JOIN topic_tags tt ON tt.tag_id = tu.tag_id AND tt.topic_id = #{topic.id}
+        WHERE
+          (tus.id IS NULL OR tus.notification_level != #{TopicUser.notification_levels[:watching]})
+          AND (cu.notification_level = #{CategoryUser.notification_levels[:muted]} OR tu.notification_level = #{TagUser.notification_levels[:muted]})
+          AND #{user_option_condition_sql_fragment}
+        SQL
+
+    User.where("id IN (#{user_ids_sql})")
   end
 
   def notify_first_post_watchers(post, user_ids, notified = nil)

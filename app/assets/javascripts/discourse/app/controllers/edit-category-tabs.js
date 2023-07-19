@@ -12,6 +12,9 @@ import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   dialog: service(),
+  site: service(),
+  router: service(),
+
   selectedTab: "general",
   saving: false,
   deleting: false,
@@ -109,7 +112,7 @@ export default Controller.extend({
               notification_level: NotificationLevels.REGULAR,
             });
             this.site.updateCategory(model);
-            this.transitionToRoute("editCategory", Category.slugFor(model));
+            this.router.transitionTo("editCategory", Category.slugFor(model));
           }
         })
         .catch((error) => {
@@ -126,7 +129,7 @@ export default Controller.extend({
           this.model
             .destroy()
             .then(() => {
-              this.transitionToRoute("discovery.categories");
+              this.router.transitionTo("discovery.categories");
             })
             .catch(() => {
               this.displayErrors([I18n.t("category.delete_error")]);

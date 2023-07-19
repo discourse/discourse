@@ -189,7 +189,6 @@ fr:
     software_update_prompt:
       message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Ignorer"
-    bootstrap_mode: "Mode Bootstrap"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -1093,8 +1092,6 @@ fr:
       experimental_sidebar:
         enable: "Activer la barre latérale"
         options: "Options"
-        categories_section: "Section Catégories"
-        tags_section: "Section Étiquettes"
         navigation_section: "Navigation"
       change: "modifier"
       featured_topic: "Sujet vedette"
@@ -3983,8 +3980,8 @@ fr:
           header_action_title: "Modifier les catégories de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         community:
-          header_link_text: "Communauté"
-          header_action_create_topic_title: "Créer un sujet"
+          edit_section:
+            header_dropdown: "Personnaliser"
           links:
             about:
               content: "À propos"

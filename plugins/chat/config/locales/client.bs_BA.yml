@@ -56,6 +56,8 @@ bs_BA:
           about: O nama
           members: Članovi
           settings: Postavke
+      new_message_modal:
+        no_items: "Nema stavki"
       direct_message_creator:
         title: Nova poruka
         prefix: "Za:"
@@ -73,6 +75,8 @@ bs_BA:
       settings:
         follow: "Učlani se"
         followed: "Pridružio se"
+        threading_enabled: "Omogućen"
+        threading_disabled: "Neomogućen"
         notifications: "Obavijest"
         preview: "Pregled"
         save: "Save"

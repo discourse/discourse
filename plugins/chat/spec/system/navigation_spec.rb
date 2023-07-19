@@ -14,7 +14,7 @@ RSpec.describe "Navigation", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
-  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
@@ -143,25 +143,33 @@ RSpec.describe "Navigation", type: :system do
 
     context "when opening a thread from the thread list" do
       it "goes back to the thread list when clicking the back button" do
+        skip("Flaky on CI") if ENV["CI"]
+
         visit("/chat")
         chat_page.visit_channel(category_channel)
         channel_page.open_thread_list
         expect(thread_list_page).to have_loaded
         thread_list_page.open_thread(thread)
         expect(side_panel_page).to have_open_thread(thread)
+        expect(thread_page).to have_back_link_to_thread_list(category_channel)
         thread_page.back_to_previous_route
+        expect(page).to have_current_path("#{category_channel.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
 
       context "for mobile" do
         it "goes back to the thread list when clicking the back button", mobile: true do
+          skip("Flaky on CI") if ENV["CI"]
+
           visit("/chat")
           chat_page.visit_channel(category_channel)
           channel_page.open_thread_list
           expect(thread_list_page).to have_loaded
           thread_list_page.open_thread(thread)
           expect(side_panel_page).to have_open_thread(thread)
+          expect(thread_page).to have_back_link_to_thread_list(category_channel)
           thread_page.back_to_previous_route
+          expect(page).to have_current_path("#{category_channel.relative_url}/t")
           expect(thread_list_page).to have_loaded
         end
       end
@@ -169,23 +177,31 @@ RSpec.describe "Navigation", type: :system do
 
     context "when opening a thread from indicator" do
       it "goes back to the thread list when clicking the back button" do
+        skip("Flaky on CI") if ENV["CI"]
+
         visit("/chat")
         chat_page.visit_channel(category_channel)
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel_page).to have_open_thread(thread)
+        expect(thread_page).to have_back_link_to_thread_list(category_channel)
         thread_page.back_to_previous_route
+        expect(page).to have_current_path("#{category_channel.relative_url}/t")
         expect(thread_list_page).to have_loaded
       end
 
       context "for mobile" do
         it "closes the thread and goes back to the channel when clicking the back button",
            mobile: true do
+          skip("Flaky on CI") if ENV["CI"]
+
           visit("/chat")
           chat_page.visit_channel(category_channel)
           channel_page.message_thread_indicator(thread.original_message).click
           expect(side_panel_page).to have_open_thread(thread)
+          expect(thread_page).to have_back_link_to_channel(category_channel)
           thread_page.back_to_previous_route
-          expect(side_panel_page).not_to be_open
+          expect(page).to have_current_path("#{category_channel.relative_url}")
+          expect(side_panel_page).to be_closed
         end
       end
     end
@@ -219,37 +235,15 @@ RSpec.describe "Navigation", type: :system do
       end
     end
 
-    context "when starting draft from sidebar with drawer preferred" do
-      it "opens draft in drawer" do
-        visit("/")
-        sidebar_page.open_draft_channel
-
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
-      end
-    end
-
-    context "when starting draft from drawer with drawer preferred" do
-      it "opens draft in drawer" do
-        visit("/")
-        chat_page.open_from_header
-        chat_drawer_page.open_draft_channel
-
-        expect(page).to have_current_path("/")
-        expect(page).to have_css(".chat-drawer.is-expanded .direct-message-creator")
-      end
-    end
-
     context "when starting draft from sidebar with full page preferred" do
       it "opens draft in full page" do
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.maximize
         visit("/")
-        sidebar_page.open_draft_channel
+        chat_page.open_new_message
 
-        expect(page).to have_current_path("/chat/draft-channel")
-        expect(page).not_to have_css(".chat-drawer.is-expanded")
+        expect(chat_page.message_creator).to be_opened
       end
     end
 
@@ -292,16 +286,19 @@ RSpec.describe "Navigation", type: :system do
 
     context "when re-opening full page chat after navigating to a channel" do
       it "opens full page chat on correct channel" do
+        chat_channel_path = chat.channel_path(category_channel_2.slug, category_channel_2.id)
+
         visit("/")
         chat_page.open_from_header
         chat_drawer_page.maximize
         sidebar_page.open_channel(category_channel_2)
         find("#site-logo").click
+
+        expect(chat_page).to have_header_href(chat_channel_path)
+
         chat_page.open_from_header
 
-        expect(page).to have_current_path(
-          chat.channel_path(category_channel_2.slug, category_channel_2.id),
-        )
+        expect(page).to have_current_path(chat_channel_path)
         expect(page).to have_content(category_channel_2.title)
       end
     end

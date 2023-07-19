@@ -2879,7 +2879,8 @@ hy:
         categories:
           header_link_text: "Կատեգորիաներ"
         community:
-          header_link_text: "Համայնք"
+          edit_section:
+            header_dropdown: "Անհատականացնել"
           links:
             about:
               content: "Մասին"

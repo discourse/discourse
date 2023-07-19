@@ -7,7 +7,7 @@ export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
 }
 
-function shortDateNoYear(date) {
+export function shortDateNoYear(date) {
   return moment(date).format(I18n.t("dates.tiny.date_month"));
 }
 

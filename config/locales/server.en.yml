@@ -699,7 +699,7 @@ en:
 
       > If you need help or have a suggestion, feel free to ask in [#feedback](%{base_path}/c/site-feedback) or [contact the admins](%{base_path}/about).
 
-  admin_quick_start_title: "READ ME FIRST: Admin Quick Start Guide"
+  admin_quick_start_title: "Admin Guide: Getting Started"
 
   category:
     topic_prefix: "About the %{category} category"
@@ -1478,6 +1478,7 @@ en:
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="https://www.imagemagick.org/script/download.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="%{base_path}/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
+    outdated_translations_warning: "Some of your translation overrides are out of date. Please check your <a href='%{base_path}/admin/customize/site_texts?outdated=true'>text customizations</a>."
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
@@ -1490,6 +1491,7 @@ en:
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
+    legacy_navigation_menu_deprecated: "Your Discourse is currently using the 'legacy' navigation menu which <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>will be removed in the first beta release of Discourse 3.2</a>. Migrate to the new navigation menu by updating your <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>navigation menu site setting</a> to 'sidebar' or 'header dropdown'."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1861,6 +1863,7 @@ en:
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images, attachments, and backups."
     s3_region: "The Amazon S3 region name that will be used to upload images and backups."
     s3_cdn_url: "The CDN URL to use for all s3 assets (for example: https://cdn.somewhere.com). WARNING: after changing this setting you must rebake all old posts."
+    s3_use_cdn_url_for_all_uploads: "Use CDN URL for all the files uploaded to s3 instead of only for images."
 
     avatar_sizes: "List of automatically generated avatar sizes."
 
@@ -1923,7 +1926,8 @@ en:
     tl3_requires_likes_received: "The minimum number of likes that must be received in the last (tl3 time period) days to qualify for promotion to trust level 3."
     tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
     tl4_delete_posts_and_topics: "Allow TL4 users to delete posts and topics created by other users. TL4 users will also be able to see deleted topics and posts."
-    trusted_users_can_edit_others: "Allow users with high trust levels to edit content from other users"
+    edit_all_topic_groups: "Allow users in this group to edit other users' topic titles, tags, and categories"
+    edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
@@ -1967,7 +1971,7 @@ en:
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     allow_uppercase_posts: "Allow all caps in a topic title or a post body."
-    max_consecutive_replies: "Number of posts a user has to make in a row in a topic before being prevented from adding another reply."
+    max_consecutive_replies: "Number of posts in a row a user can make in a topic before being prevented from adding another reply. This limit does not apply to the topic owner, site staff, or category moderators."
     enable_filtered_replies_view: '"(n) replies" button collapses all other posts and only shows the current post and its replies.'
 
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
@@ -2213,9 +2217,9 @@ en:
 
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
-    disable_category_edit_notifications: "Disable category edit notifications on topics."
+    disable_category_edit_notifications: "Disable notifications for topic category edits."
 
-    disable_tags_edit_notifications: "Disable tags edit notifications on topics."
+    disable_tags_edit_notifications: "Disable notifications for topic tag edits."
 
     notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
@@ -2351,6 +2355,8 @@ en:
 
     default_title_count_mode: "Default mode for the page title counter"
     enable_offline_indicator: "Display a message to users when it is detected that they have no network connection"
+    default_sidebar_link_to_filtered_list: "Make navigation menu links link to filtered list by default."
+    default_sidebar_show_count_of_new_items: "Make navigation menu links show count of new items instead of badges by default."
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
@@ -2434,6 +2440,9 @@ en:
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     experimental_search_menu_groups: "EXPERIMENTAL: Enables the new search menu that has been upgraded to use glimmer"
+    enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
+
+    page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

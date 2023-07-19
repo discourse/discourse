@@ -29,18 +29,20 @@
 
 .keyboard-shortcuts-modal {
   .modal-inner-container {
+    width: 100%;
     --modal-max-width: 80vw;
   }
 }
 
+.modal-body:has(#keyboard-shortcuts-help) {
+  overflow-y: hidden;
+}
+
 #keyboard-shortcuts-help {
   box-sizing: border-box;
-  padding: 1em;
   overflow-x: hidden;
   overflow-y: auto;
-  width: 80vw;
-  max-width: 1500px;
-  max-height: 85vh !important; // overrides a default modal !important for extra space
+  max-height: 80vh !important; // overrides a default modal !important for extra space
 
   .keyboard-shortcuts-help__container {
     columns: auto 20em;

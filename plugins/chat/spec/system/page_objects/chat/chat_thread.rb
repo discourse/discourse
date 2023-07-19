@@ -58,6 +58,16 @@ module PageObjects
         header.find(".chat-thread__close").click
       end
 
+      def has_back_link_to_thread_list?(channel)
+        header.has_css?(
+          ".chat-thread__back-to-previous-route[href='#{channel.relative_url + "/t"}']",
+        )
+      end
+
+      def has_back_link_to_channel?(channel)
+        header.has_css?(".chat-thread__back-to-previous-route[href='#{channel.relative_url}']")
+      end
+
       def back_to_previous_route
         header.find(".chat-thread__back-to-previous-route").click
       end
@@ -122,10 +132,29 @@ module PageObjects
         end
       end
 
+      def expand_deleted_message(message)
+        message_by_id(message.id).find(".chat-message-expand").click
+      end
+
       def copy_link(message)
+        expand_message_actions(message)
+        find("[data-value='copyLink']").click
+      end
+
+      def delete_message(message)
+        expand_message_actions(message)
+        find("[data-value='delete']").click
+      end
+
+      def restore_message(message)
+        expand_deleted_message(message)
+        expand_message_actions(message)
+        find("[data-value='restore']").click
+      end
+
+      def expand_message_actions(message)
         hover_message(message)
         click_more_button
-        find("[data-value='copyLink']").click
       end
 
       def click_more_button

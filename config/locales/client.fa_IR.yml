@@ -1026,8 +1026,6 @@ fa_IR:
       experimental_sidebar:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
-        categories_section: "بخش دسته‌بندی‌ها"
-        tags_section: "بخش برچسب‌ها"
         navigation_section: "ناوبری"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
@@ -3363,6 +3361,7 @@ fa_IR:
           save: "ذخیره"
           delete: "حذف"
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
+          always_public: "محتوای این بخش همیشه عمومی است"
           links:
             delete: "حذف پیوند"
             reset: "بازگردانی به پیش‌فرض"
@@ -3398,8 +3397,8 @@ fa_IR:
           header_action_title: "ويرايش دسته‌بندی‌های نوار کناری خود"
           configure_defaults: "تنظیمات پیش‌فرض"
         community:
-          header_link_text: "انجمن"
-          header_action_create_topic_title: "ایجاد موضوع"
+          edit_section:
+            header_dropdown: "سفارشی‌سازی"
           links:
             about:
               content: "درباره"

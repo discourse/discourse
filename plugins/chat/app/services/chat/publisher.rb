@@ -53,12 +53,13 @@ module Chat
           {
             type: "channel",
             channel_id: chat_channel.id,
-            message_id: chat_message.id,
-            user_id: chat_message.user.id,
-            username: chat_message.user.username,
             thread_id: chat_message.thread_id,
+            message:
+              Chat::MessageSerializer.new(
+                chat_message,
+                { scope: anonymous_guardian, root: false },
+              ).as_json,
           },
-          permissions(chat_channel),
         )
       end
 
@@ -68,10 +69,12 @@ module Chat
           {
             type: "thread",
             channel_id: chat_channel.id,
-            message_id: chat_message.id,
-            user_id: chat_message.user.id,
-            username: chat_message.user.username,
             thread_id: chat_message.thread_id,
+            message:
+              Chat::MessageSerializer.new(
+                chat_message,
+                { scope: anonymous_guardian, root: false },
+              ).as_json,
           },
           permissions(chat_channel),
         )
@@ -171,6 +174,7 @@ module Chat
           type: "delete",
           deleted_id: chat_message.id,
           deleted_at: chat_message.deleted_at,
+          deleted_by_id: chat_message.deleted_by_id,
           latest_not_deleted_message_id: latest_not_deleted_message_id,
         },
       )
@@ -293,15 +297,13 @@ module Chat
       # and a message is sent in the thread. We also need to pass the actual
       # thread tracking state.
       if channel.threading_enabled && message.thread_reply?
-        data[:unread_thread_ids] = ::Chat::TrackingStateReportQuery
-          .call(
-            guardian: user.guardian,
-            channel_ids: [channel.id],
-            include_threads: true,
-            include_read: false,
-          )
-          .find_channel_threads(channel.id)
-          .keys
+        data[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
+          guardian: user.guardian,
+          channel_ids: [channel.id],
+          include_threads: true,
+          include_read: false,
+          include_last_reply_details: true,
+        ).find_channel_thread_overviews(channel.id)
 
         data[:thread_tracking] = ::Chat::TrackingStateReportQuery.call(
           guardian: user.guardian,
@@ -364,23 +366,26 @@ module Chat
     NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
 
     def self.publish_new_channel(chat_channel, users)
-      users.each do |user|
-        # FIXME: This could generate a lot of queries depending on the amount of users
-        membership = chat_channel.membership_for(user)
+      Chat::UserChatChannelMembership
+        .includes(:user)
+        .where(chat_channel: chat_channel, user: users)
+        .find_in_batches do |memberships|
+          memberships.each do |membership|
+            serialized_channel =
+              Chat::ChannelSerializer.new(
+                chat_channel,
+                scope: membership.user.guardian, # We need a guardian here for direct messages
+                root: :channel,
+                membership: membership,
+              ).as_json
 
-        # TODO: this event is problematic as some code will update the membership before calling it
-        # and other code will update it after calling it
-        # it means frontend must handle logic for both cases
-        serialized_channel =
-          Chat::ChannelSerializer.new(
-            chat_channel,
-            scope: Guardian.new(user), # We need a guardian here for direct messages
-            root: :channel,
-            membership: membership,
-          ).as_json
-
-        MessageBus.publish(NEW_CHANNEL_MESSAGE_BUS_CHANNEL, serialized_channel, user_ids: [user.id])
-      end
+            MessageBus.publish(
+              NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
+              serialized_channel,
+              user_ids: [membership.user.id],
+            )
+          end
+        end
     end
 
     def self.publish_inaccessible_mentions(
@@ -470,6 +475,12 @@ module Chat
         },
         permissions(chat_channel),
       )
+    end
+
+    def self.publish_notice(user_id:, channel_id:, text_content:)
+      payload = { type: "notice", text_content: text_content, channel_id: channel_id }
+
+      MessageBus.publish("/chat/#{channel_id}", payload, user_ids: [user_id])
     end
 
     private

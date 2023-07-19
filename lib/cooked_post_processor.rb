@@ -228,6 +228,7 @@ class CookedPostProcessor
 
   def optimize_image!(img, upload, cropped: false)
     w, h = img["width"].to_i, img["height"].to_i
+    onebox = img.ancestors(".onebox, .onebox-body").first
 
     # note: optimize_urls cooks the src further after this
     thumbnail = upload.thumbnail(w, h)
@@ -236,21 +237,27 @@ class CookedPostProcessor
 
       srcset = +""
 
-      each_responsive_ratio do |ratio|
-        resized_w = (w * ratio).to_i
-        resized_h = (h * ratio).to_i
+      # Skip srcset for onebox images. Because onebox thumbnails by default
+      # are fairly small the width/height of the smallest thumbnail is likely larger
+      # than what the onebox thumbnail size will be displayed at, so we shouldn't
+      # need to upscale for retina devices
+      if !onebox
+        each_responsive_ratio do |ratio|
+          resized_w = (w * ratio).to_i
+          resized_h = (h * ratio).to_i
 
-        if !cropped && upload.width && resized_w > upload.width
-          cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_uploads?)
-          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
-        elsif t = upload.thumbnail(resized_w, resized_h)
-          cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_uploads?)
-          srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
+          if !cropped && upload.width && resized_w > upload.width
+            cooked_url = UrlHelper.cook_url(upload.url, secure: @post.with_secure_uploads?)
+            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
+          elsif t = upload.thumbnail(resized_w, resized_h)
+            cooked_url = UrlHelper.cook_url(t.url, secure: @post.with_secure_uploads?)
+            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
+          end
+
+          img[
+            "srcset"
+          ] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_uploads?)}#{srcset}" if srcset.present?
         end
-
-        img[
-          "srcset"
-        ] = "#{UrlHelper.cook_url(img["src"], secure: @post.with_secure_uploads?)}#{srcset}" if srcset.present?
       end
     else
       img["src"] = upload.url

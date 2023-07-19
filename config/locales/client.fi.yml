@@ -189,7 +189,6 @@ fi:
     software_update_prompt:
       message: "Sivusto on juuri päivitetty, <span>päivitä sivu</span>, tai sivusto voi käyttäytyä odottamattomasti."
       dismiss: "Sulje"
-    bootstrap_mode: "Aloitustila"
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
@@ -1096,8 +1095,6 @@ fi:
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"
         options: "Asetukset"
-        categories_section: "Alueet-osio"
-        tags_section: "Tunnisteet-osio"
         navigation_section: "Navigointi"
         navigation_section_instruction: "Kun navigointivalikon aihelistalla on uusia tai lukemattomia kohteita…"
         link_to_filtered_list_checkbox_description: "Linkki suodatettuun listaan"
@@ -4015,9 +4012,9 @@ fi:
           header_action_title: "Muokkaa sivupalkin alueitasi"
           configure_defaults: "Määritä oletukset"
         community:
-          header_link_text: "Yhteisö"
-          header_action_create_topic_title: "Aloita aihe"
-          header_action_edit_section_title: "Muokkaa Yhteisö-osiota"
+          edit_section:
+            sidebar: "Mukauta osiota"
+            header_dropdown: "Mukauta"
           links:
             about:
               content: "Tietoa"

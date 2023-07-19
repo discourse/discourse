@@ -14,6 +14,7 @@ import {
   WidgetMouseOverHook,
   WidgetMouseUpHook,
   WidgetTouchEndHook,
+  WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
@@ -24,6 +25,7 @@ import { get } from "@ember/object";
 import { h } from "virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
 import { consolePrefix } from "discourse/lib/source-identifier";
+import { getOwner, setOwner } from "@ember/application";
 
 const _registry = {};
 
@@ -146,6 +148,7 @@ export default class Widget {
     this.dirtyKeys = opts.dirtyKeys;
 
     register.deprecateContainer(this);
+    setOwner(this, getOwner(register));
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
     this.site = register.lookup("service:site");
@@ -477,6 +480,10 @@ export default class Widget {
 
     if (this.touchEnd) {
       properties["widget-touch-end"] = new WidgetTouchEndHook(this);
+    }
+
+    if (this.touchMove) {
+      properties["widget-touch-move"] = new WidgetTouchMoveHook(this);
     }
 
     const attributes = properties["attributes"] || {};

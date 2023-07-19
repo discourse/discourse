@@ -19,6 +19,9 @@ export default DiscoverySortableController.extend(
   {
     application: controller(),
     dialog: service(),
+    router: service(),
+    currentUser: service(),
+    siteSettings: service(),
 
     tag: null,
     additionalTags: null,
@@ -178,7 +181,7 @@ export default DiscoverySortableController.extend(
         didConfirm: () => {
           return this.tag
             .destroyRecord()
-            .then(() => this.transitionToRoute("tags.index"))
+            .then(() => this.router.transitionTo("tags.index"))
             .catch(() => this.dialog.alert(I18n.t("generic_error")));
         },
       });

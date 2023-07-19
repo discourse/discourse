@@ -640,12 +640,37 @@ RSpec.describe ApplicationController do
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
 
       get "/latest"
-      nonce = ApplicationHelper.google_tag_manager_nonce
-      expect(response.headers).to include("Content-Security-Policy")
 
+      expect(response.headers).to include("Content-Security-Policy")
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
-      expect(script_src.to_s).to include(nonce)
-      expect(response.body).to include(nonce)
+      nonce = extract_nonce_from_script_src(script_src)
+
+      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
+      expect(gtm_meta_tag["data-nonce"]).to eq(nonce)
+    end
+
+    it "doesn't reuse CSP nonces between requests" do
+      SiteSetting.content_security_policy = true
+      SiteSetting.gtm_container_id = "GTM-ABCDEF"
+
+      get "/latest"
+
+      expect(response.headers).to include("Content-Security-Policy")
+      script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      first_nonce = extract_nonce_from_script_src(script_src)
+
+      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
+      expect(gtm_meta_tag["data-nonce"]).to eq(first_nonce)
+
+      get "/latest"
+
+      expect(response.headers).to include("Content-Security-Policy")
+      script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      second_nonce = extract_nonce_from_script_src(script_src)
+
+      expect(first_nonce).not_to eq(second_nonce)
+      gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
+      expect(gtm_meta_tag["data-nonce"]).to eq(second_nonce)
     end
 
     it "when splash screen is enabled it adds the fingerprint to the policy" do
@@ -669,6 +694,12 @@ RSpec.describe ApplicationController do
           [directive, sources]
         end
         .to_h
+    end
+
+    def extract_nonce_from_script_src(script_src)
+      nonce = script_src.find { |src| src.match?(/\A'nonce-\h{32}'\z/) }[-33...-1]
+      expect(nonce).to be_present
+      nonce
     end
   end
 
@@ -1130,6 +1161,98 @@ RSpec.describe ApplicationController do
       it "shouldn't have the Link header on xhr api requests" do
         get("/latest.json")
         expect(response.headers).not_to include("Link")
+      end
+    end
+  end
+
+  describe "preloading data" do
+    def preloaded_json
+      JSON.parse(
+        Nokogiri::HTML5.fragment(response.body).css("div#data-preloaded").first["data-preloaded"],
+      )
+    end
+
+    context "when user is anon" do
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+          ],
+        )
+      end
+    end
+
+    context "when user is regular user" do
+      fab!(:user) { Fabricate(:user) }
+
+      before { sign_in(user) }
+
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "currentUser",
+            "topicTrackingStates",
+            "topicTrackingStateMeta",
+          ],
+        )
+      end
+    end
+
+    context "when user is admin" do
+      fab!(:user) { Fabricate(:admin) }
+
+      before { sign_in(user) }
+
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "currentUser",
+            "topicTrackingStates",
+            "topicTrackingStateMeta",
+            "fontMap",
+          ],
+        )
+      end
+
+      it "generates a fontMap" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        font_map = JSON.parse(preloaded_json["fontMap"])
+        expect(font_map.keys).to match_array(
+          DiscourseFonts.fonts.filter { |f| f[:variants].present? }.map { |f| f[:key] },
+        )
       end
     end
   end

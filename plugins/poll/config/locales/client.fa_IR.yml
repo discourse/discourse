@@ -25,27 +25,14 @@ fa_IR:
           title: "نتایج بعد از <strong>پایان</strong> مدت نظرسنجی نمایش داده خواهند شد."
         staff:
           title: "فقط تیم <strong>مدیران</strong> می توانند نتایج نظرسنجی را مشاهده کنند."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "حداقل <strong>%{count}</strong> مورد را انتخاب کنید."
-            other: "حداقل <strong>%{count}</strong> مورد را انتخاب کنید."
-          up_to_max_options:
-            one: "تا <strong>%{count}</strong> گزینه را می توانید انتخاب کنید."
-            other: "تا <strong>%{count}</strong> گزینه را می توانید انتخاب کنید."
-          x_options:
-            one: "<strong>%{count}</strong> گزینه را انتخاب کنید."
-            other: "<strong>%{count}</strong> گزینه را انتخاب کنید."
-          between_min_and_max_options: "بین <strong>%{min}</strong> تا <strong>%{max}</strong> گزینه را انتخاب کنید."
       cast-votes:
         title: "انداختن رأی شما"
         label: "ثبت رای!"
       show-results:
         title: "نمایش نتایج"
-        label: "نمایش نتایج"
+        label: "نتایج"
       hide-results:
         title: "برگشتن به رای گیری "
-        label: "نمایش رأی"
       group-results:
         title: "آراء گروه با توجه به نام کاربر"
       export-results:
@@ -67,6 +54,8 @@ fa_IR:
         votes: "%{count} رای"
         percentage: "درصد"
         count: "تعداد"
+      options:
+        label: "تنظیمات"
       error_while_toggling_status: "متاسفانه در تغییر وضعیت این نظرسنجی، خطایی رخ داده است."
       error_while_casting_votes: "متاسفانه در ثبت رای شما خطایی رخ داده است."
       error_while_fetching_voters: "متاسفانه در نمایش رای دهندگان خطایی رخ داده است."

@@ -2807,7 +2807,8 @@ lv:
         categories:
           header_link_text: "Sadaļas"
         community:
-          header_link_text: "Kopiena"
+          edit_section:
+            header_dropdown: "Pielāgot"
           links:
             about:
               content: "Par"

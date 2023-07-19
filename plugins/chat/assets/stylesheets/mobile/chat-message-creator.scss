@@ -1,0 +1,40 @@
+.chat-message-creator {
+  &__open-dm-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  &__row {
+    padding-block: 0.5rem;
+  }
+
+  .chat-channel-title__name,
+  .chat-user-display-name {
+    font-size: var(--font-up-1);
+  }
+
+  .chat-channel-title__category-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: 2px;
+    width: 24px;
+    height: 24px;
+
+    svg:not(.chat-channel-title__restricted-category-icon) {
+      height: inherit;
+      width: inherit;
+    }
+  }
+
+  .chat-user-avatar {
+    &__container {
+      padding: 0;
+    }
+    img {
+      width: 28px;
+      height: 28px;
+      box-sizing: border-box;
+    }
+  }
+}

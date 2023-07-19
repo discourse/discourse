@@ -211,7 +211,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode: "Bootstrap mode"
+    bootstrap_mode: "Getting started"
 
     themes:
       default_description: "Default"
@@ -1248,6 +1248,7 @@ en:
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
       watched_first_post_tags: "Watching First Post"
       watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+      watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
@@ -1908,8 +1909,7 @@ en:
       remove_status: "Remove status"
 
     user_tips:
-      primary: "Got it!"
-      secondary: "don't show me these tips"
+      button: "Got it!"
 
       first_notification:
         title: "Your first notification!"
@@ -1930,6 +1930,11 @@ en:
       suggested_topics:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
+
+      admin_guide:
+        title: "Welcome to your new site!"
+        content: "Read the admin guide to continue building your site and community."
+        button: "Let's go!"
 
     loading: "Loading..."
     errors:
@@ -2035,7 +2040,10 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
+      in_progress: "Summarizing topic using AI..."
+      summarized_on: "Summarized with AI on %{date}"
+      model_used: "AI used: %{model}"
+      enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
         other: "There are <b>%{count}</b> replies."
@@ -2052,11 +2060,11 @@ en:
 
       enable: "Show top replies"
       disable: "Show All Posts"
-      short_label: "Summarize"
-      short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      short_label: "Top replies"
+      short_title: "Show this topic top replies: the most interesting posts as determined by the community"
       strategy:
-        button_title: "Summarize this topic"
-        title: "Topic summary"
+        hide_button_title: "Hide summary"
+        button_title: "Summarize with AI"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -3628,7 +3636,7 @@ en:
       filtered_replies:
         viewing_posts_by: "Viewing %{post_count} posts by"
         viewing_subset: "Some replies are collapsed"
-        viewing_summary: "Viewing a summary of this topic"
+        viewing_summary: "Viewing this topic top replies"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Show all"
 
@@ -4033,6 +4041,21 @@ en:
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
+    experimental_lightbox:
+      image_load_error: "The image could not be loaded."
+      screen_reader_image_title: "Image %{current} of %{total}: %{title}"
+      buttons:
+        next: "Next (Right or down arrow key)"
+        previous: "Previous (Left or up arrow key)"
+        close: "Close (Esc)"
+        download: "Download image"
+        newtab: "Open image in a new tab"
+        zoom: "Zoom image in/out (Z key)"
+        rotate: "Rotate image (R key)"
+        fullscreen: "Toggle browser full screen mode (M key)"
+        carousel: "Display all images in a carousel (A key)"
+        retry: "Retry loading the image"
+
     cannot_render_video: This video cannot be rendered because your browser does not support the codec.
 
     keyboard_shortcuts_help:
@@ -4414,6 +4437,7 @@ en:
           delete_confirm: "Are you sure you want to delete this section?"
           reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Make this section public and visible to everyone"
+          always_public: "Content in this section is always public"
           more_menu: "More menu"
           links:
             add: "Add another link"
@@ -4466,9 +4490,9 @@ en:
           header_action_title: "Edit your sidebar categories"
           configure_defaults: "Configure defaults"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Create a topic"
-          header_action_edit_section_title: "Edit Community section"
+          edit_section:
+            sidebar: "Customize this section"
+            header_dropdown: "Customize"
           links:
             about:
               content: "About"
@@ -4504,6 +4528,9 @@ en:
               title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
         global_section: "Global section, visible to everyone"
+      panels:
+        forum:
+          label: Forum
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -6067,9 +6094,16 @@ en:
         go_back: "Back to Search"
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
+        show_outdated: "Only show outdated/invalid"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         interpolation_keys: "Available interpolation keys:"
+        outdated:
+          title: "This translation is outdated"
+          description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
+          old_default: "Old default"
+          new_default: "New default"
+          dismiss: "Dismiss"
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"

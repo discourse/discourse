@@ -66,13 +66,14 @@ acceptance("Poll breakdown", function (needs) {
 
   test("Displaying the poll breakdown modal", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
+    await click(".widget-dropdown-header");
 
     assert.ok(
-      exists(".poll-show-breakdown"),
+      exists(".item-showBreakdown"),
       "shows the breakdown button when poll_groupable_user_fields is non-empty"
     );
 
-    await click(".poll-show-breakdown");
+    await click(".item-showBreakdown");
 
     assert.ok(exists(".poll-breakdown-total-votes"), "displays the vote count");
 
@@ -90,7 +91,8 @@ acceptance("Poll breakdown", function (needs) {
 
   test("Changing the display mode from percentage to count", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
-    await click(".poll-show-breakdown");
+    await click(".widget-dropdown-header");
+    await click(".item-showBreakdown");
 
     assert.strictEqual(
       query(".poll-breakdown-option-count").textContent.trim(),

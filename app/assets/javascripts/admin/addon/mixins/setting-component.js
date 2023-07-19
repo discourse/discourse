@@ -69,6 +69,8 @@ const DEFAULT_USER_PREFERENCES = [
   "default_title_count_mode",
   "default_navigation_menu_categories",
   "default_navigation_menu_tags",
+  "default_sidebar_link_to_filtered_list",
+  "default_sidebar_show_count_of_new_items",
 ];
 
 export default Mixin.create({

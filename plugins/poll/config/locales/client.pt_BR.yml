@@ -25,30 +25,16 @@ pt_BR:
           title: "Resultados serão mostrados quando a votação <strong>terminar</strong>."
         staff:
           title: "Resultados são mostrados apenas para membros da <strong>equipe</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Escolha pelo menos <strong>%{count}</strong> opção."
-            other: "Escolha pelo menos <strong>%{count}</strong> opções."
-          up_to_max_options:
-            one: "Escolha até <strong>%{count}</strong> opção."
-            other: "Escolha até <strong>%{count}</strong> opções."
-          x_options:
-            one: "Escolha <strong>%{count}</strong> opção."
-            other: "Escolha <strong>%{count}</strong> opções."
-          between_min_and_max_options: "Escolha entre <strong>%{min}</strong> e <strong>%{max}</strong> opções."
       cast-votes:
         title: "Participe da enquete"
         label: "Votar agora!"
       show-results:
         title: "Mostrar o resultado da enquete"
-        label: "Mostrar resultados"
+        label: "Resultados"
       remove-vote:
         title: "Remover seu voto"
-        label: "Remover voto"
       hide-results:
         title: "Voltar para os seus votos"
-        label: "Mostrar voto"
       group-results:
         title: "Agrupar votos por campo de usuário(a)"
         label: "Mostrar divisão"
@@ -72,6 +58,8 @@ pt_BR:
         breakdown: "Divisão"
         percentage: "Porcentagem"
         count: "Contagem"
+      options:
+        label: "Opções"
       error_while_toggling_status: "Desculpe, houve um erro ao mudar o status desta enquete."
       error_while_casting_votes: "Desculpe, houve um erro ao registrar os seus votos."
       error_while_fetching_voters: "Desculpe, houve um erro ao exibir os votantes."

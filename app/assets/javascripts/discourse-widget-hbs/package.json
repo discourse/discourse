@@ -7,7 +7,6 @@
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
   "scripts": {
     "build": "ember build",
     "lint:hbs": "ember-template-lint .",
@@ -21,7 +20,7 @@
     "handlebars": "^4.7.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.5",
+    "@babel/core": "^7.22.9",
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.1.1",
     "@embroider/test-setup": "^3.0.1",
@@ -38,7 +37,7 @@
     "ember-source": "~3.28.12",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.88.1"
+    "webpack": "^5.88.2"
   },
   "engines": {
     "node": "16.* || >= 18",

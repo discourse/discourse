@@ -42,7 +42,6 @@ acceptance("Edit Notification Click", function (needs) {
     await visit("/");
     await click(".header-dropdown-toggle.current-user");
     await click(".notification.edited a");
-
     const [v1, v2] = queryAll(".history-modal .revision-content");
 
     assert.strictEqual(

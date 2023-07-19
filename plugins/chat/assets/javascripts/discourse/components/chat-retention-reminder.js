@@ -9,11 +9,10 @@ export default class ChatRetentionReminder extends Component {
 
   get show() {
     return (
-      !this.args.channel?.isDraft &&
-      ((this.args.channel?.isDirectMessageChannel &&
+      (this.args.channel?.isDirectMessageChannel &&
         this.currentUser?.get("needs_dm_retention_reminder")) ||
-        (this.args.channel?.isCategoryChannel &&
-          this.currentUser?.get("needs_channel_retention_reminder")))
+      (this.args.channel?.isCategoryChannel &&
+        this.currentUser?.get("needs_channel_retention_reminder"))
     );
   }
 
