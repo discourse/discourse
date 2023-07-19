@@ -589,6 +589,14 @@ RSpec.describe Plugin::Instance do
       expect(custom_emoji.url).to eq("/baz/bar.png")
       expect(custom_emoji.group).to eq("baz")
     end
+
+    it "sanitizes emojis' names" do
+      Plugin::Instance.new.register_emoji("?", "/baz/bar.png", "baz")
+      Plugin::Instance.new.register_emoji("?test?!!", "/foo/bar.png", "baz")
+
+      expect(Emoji.custom.first.name).to eq("_")
+      expect(Emoji.custom.second.name).to eq("_test_")
+    end
   end
 
   describe "#replace_flags" do
