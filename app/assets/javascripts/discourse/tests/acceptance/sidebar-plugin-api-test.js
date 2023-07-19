@@ -874,4 +874,122 @@ acceptance("Sidebar - Plugin API", function (needs) {
       resetCustomTagSectionLinkPrefixIcons();
     }
   });
+
+  test("New custom sidebar panel and option to set default", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
+          get key() {
+            return "new-panel";
+          }
+
+          get switchButtonLabel() {
+            "New panel";
+          }
+
+          get switchButtonIcon() {
+            return "d-chat";
+          }
+
+          get switchButtonDefaultUrl() {
+            return "/chat";
+          }
+        };
+        return ChatSidebarPanel;
+      });
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            get name() {
+              return "test-chat-channels";
+            }
+
+            get text() {
+              return "chat channels text";
+            }
+
+            get actionsIcon() {
+              return "cog";
+            }
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return "random-channel";
+                  }
+
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
+                  get route() {
+                    return "topic";
+                  }
+
+                  get models() {
+                    return ["some-slug", 1];
+                  }
+
+                  get title() {
+                    return "random channel title";
+                  }
+
+                  get text() {
+                    return "random channel text";
+                  }
+
+                  get prefixType() {
+                    return "icon";
+                  }
+
+                  get prefixValue() {
+                    return "d-chat";
+                  }
+
+                  get prefixColor() {
+                    return "FF0000";
+                  }
+
+                  get prefixBadge() {
+                    return "lock";
+                  }
+
+                  get suffixType() {
+                    return "icon";
+                  }
+
+                  get suffixValue() {
+                    return "circle";
+                  }
+
+                  get suffixCSSClass() {
+                    return "unread";
+                  }
+                })(),
+              ];
+            }
+          };
+        },
+        "new-panel"
+      );
+      api.setSidebarPanel("new-panel");
+    });
+
+    await visit("/");
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      ).textContent.trim(),
+      "chat channels text",
+      "displays header with correct text"
+    );
+
+    await click(".sidebar__panel-switch-button");
+
+    assert
+      .dom(".sidebar-section[data-section-name='test-chat-channels']")
+      .doesNotExist();
+  });
 });

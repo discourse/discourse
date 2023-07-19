@@ -105,7 +105,11 @@ import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
-import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import {
+  addSidebarPanel,
+  addSidebarSection,
+  setSidebarPanel,
+} from "discourse/lib/sidebar/custom-sections";
 import {
   registerCustomCategoryLockIcon,
   registerCustomCategorySectionLinkPrefix,
@@ -126,7 +130,7 @@ import { _addBulkButton } from "discourse/controllers/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.7.1";
+export const PLUGIN_API_VERSION = "1.8.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2030,6 +2034,44 @@ class PluginApi {
   }
 
   /**
+   * EXPERIMENTAL. Do not use.
+   * Support for adding a Sidebar panel by returning a class which extends from the BaseCustomSidebarPanel
+   * class interface. See `lib/sidebar/user/base-custom-sidebar-panel.js` for documentation on the BaseCustomSidebarPanel class
+   * interface.
+   *
+   * ```
+   * api.addSidebarPanel((BaseCustomSidebarPanel) => {
+   *   const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
+   *     get key() {
+   *       return "chat";
+   *     }
+   *     get switchButtonLabel() {
+   *       return I18n.t("sidebar.panels.chat.label");
+   *     }
+   *     get switchButtonIcon() {
+   *       return "d-chat";
+   *     }
+   *     get switchButtonDefaultUrl() {
+   *       return "/chat";
+   *     }
+   *   };
+   *   return ChatSidebarPanel;
+   * });
+   * ```
+   */
+  addSidebarPanel(func) {
+    addSidebarPanel(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for setting a Sidebar panel.
+   */
+  setSidebarPanel(name) {
+    setSidebarPanel(name);
+  }
+
+  /**
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
    * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
@@ -2148,8 +2190,8 @@ class PluginApi {
    * })
    * ```
    */
-  addSidebarSection(func) {
-    addSidebarSection(func);
+  addSidebarSection(func, panelKey = "main") {
+    addSidebarSection(func, panelKey);
   }
 
   /**
