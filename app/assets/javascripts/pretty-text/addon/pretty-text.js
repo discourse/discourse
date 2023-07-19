@@ -1,3 +1,4 @@
+import "./loader-shims";
 import {
   cook as cookIt,
   setup as setupIt,
