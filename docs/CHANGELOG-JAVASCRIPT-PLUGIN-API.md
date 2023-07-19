@@ -7,6 +7,47 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2023-07-18
+
+### Added
+
+- Adds `addBulkActionButton` which adds actions to the Bulk Topic modal
+
+## [1.7.0] - 2023-07-17
+
+### Added
+
+- Adds `addCommunitySectionLink` which allows plugins to add a navigation link to the Sidebar community section under
+  the "More..." links drawer.
+
+- Adds `registerUserCategorySectionLinkCountable` which allows plugins to register a new countable for section links
+  under Sidebar Categories section on top of the default countables of unread topics count and new topics count.
+
+- Adds `registerCustomCategorySectionLinkLockIcon` which allows plugins to change the lock icon used for a sidebar
+  category section link to indicate that a category is read restricted.
+
+- Adds `registerCustomCategorySectionLinkPrefix` which allows plugins to register a custom prefix for a sidebar category
+  section link.
+
+- Adds `registerCustomTagSectionLinkPrefixValue` which allows plugins to register a custom prefix for a sidebar tag
+  section link.
+
+- Adds `refreshUserSidebarCategoriesSectionCounts` which allows plugins to trigger a refresh of the counts for all
+  category section links under the categories section for a logged in user.
+
+- Adds `addSidebarSection` which allows plugins to add a Sidebar section.
+
+- Adds `registerNotificationTypeRenderer` which allows plugins to register a custom renderer for a notification type
+  or override the renderer of an existing type. See lib/notification-types/base.js for documentation and the default
+  renderer.
+
+- Adds `registerModelTransformer` which allows plugins to apply transformation using a callback on a list of model
+  instances of a specific type. Currently, this API only works on lists rendered in the user menu such as notifications,
+  bookmarks and topics (i.e. messages), but it may be extended to other lists in other parts of the app.
+
+- Adds `addUserMessagesNavigationDropdownRow` which allows plugins to add a row to the dropdown used on the
+  `userPrivateMessages` route used to navigate between the different user messages pages.
+
 ## [1.6.0] - 2022-12-13
 
 ### Added

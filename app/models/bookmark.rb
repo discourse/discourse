@@ -123,6 +123,10 @@ class Bookmark < ActiveRecord::Base
     update!(reminder_last_sent_at: Time.zone.now, reminder_set_at: nil)
   end
 
+  def reminder_at_in_zone(timezone)
+    self.reminder_at.in_time_zone(timezone)
+  end
+
   scope :with_reminders, -> { where("reminder_at IS NOT NULL") }
 
   scope :pending_reminders,

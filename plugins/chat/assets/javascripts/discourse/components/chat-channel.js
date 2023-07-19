@@ -215,6 +215,10 @@ export default class ChatLivePane extends Component {
         this.args.channel.addMessages(messages);
         this.args.channel.details = meta;
 
+        // We update this value server-side when we load the Channel
+        // here, so this reflects reality for sidebar unread logic.
+        this.args.channel.updateLastViewedAt();
+
         if (result.threads) {
           result.threads.forEach((thread) => {
             const storedThread = this.args.channel.threadsManager.add(
@@ -238,8 +242,9 @@ export default class ChatLivePane extends Component {
           });
         }
 
-        if (result.unread_thread_ids) {
-          this.args.channel.unreadThreadIds = result.unread_thread_ids;
+        if (result.unread_thread_overview) {
+          this.args.channel.threadsManager.unreadThreadOverview =
+            result.unread_thread_overview;
         }
 
         if (this.requestedTargetMessageId) {
@@ -354,12 +359,9 @@ export default class ChatLivePane extends Component {
           });
         }
 
-        if (result.thread_tracking_overview) {
-          result.thread_tracking_overview.forEach((threadId) => {
-            if (!this.args.channel.threadTrackingOverview.includes(threadId)) {
-              this.args.channel.threadTrackingOverview.push(threadId);
-            }
-          });
+        if (result.unread_thread_overview) {
+          this.args.channel.threadsManager.unreadThreadOverview =
+            result.unread_thread_overview;
         }
 
         this.args.channel.details = meta;
@@ -665,10 +667,6 @@ export default class ChatLivePane extends Component {
   }
 
   handleSentMessage(data) {
-    if (this.args.channel.isFollowing) {
-      this.args.channel.lastMessageSentAt = new Date();
-    }
-
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
       const stagedMessage = handleStagedMessage(
         this.args.channel,
@@ -687,12 +685,14 @@ export default class ChatLivePane extends Component {
       // If we are at the bottom, we append the message and scroll to it
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
+      this.args.channel.lastMessage = message;
       this.scrollToLatestMessage();
       this.updateLastReadMessage();
     } else {
       // If we are almost at the bottom, we append the message and notice the user
       const message = ChatMessage.create(this.args.channel, data.chat_message);
       this.args.channel.addMessages([message]);
+      this.args.channel.lastMessage = message;
       this.hasNewMessages = true;
     }
   }

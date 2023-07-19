@@ -276,9 +276,9 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    // hack to prevent the whole viewport
-    // to move on focus input
-    textarea = document.querySelector(".chat-composer__input");
+    // hack to prevent the whole viewport to move on focus input
+    // we need access to native node
+    textarea = this.composer.textarea.textarea;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {

@@ -13,7 +13,7 @@ RSpec.describe User do
 
   it do
     is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
-      :created_by_id,
+      :target_created_by_id,
     )
   end
 

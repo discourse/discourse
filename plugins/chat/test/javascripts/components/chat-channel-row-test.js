@@ -47,13 +47,15 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("renders correct channel metadata", async function (assert) {
-    this.categoryChatChannel.lastMessageSentAt = moment().toISOString();
+    this.categoryChatChannel.lastMessage = fabricators.message({
+      created_at: moment().toISOString(),
+    });
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
     assert
       .dom(".chat-channel-metadata")
       .hasText(
-        moment(this.categoryChatChannel.lastMessageSentAt).format("h:mm A")
+        moment(this.categoryChatChannel.lastMessage.createdAt).format("h:mm A")
       );
   });
 

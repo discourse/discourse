@@ -1,0 +1,101 @@
+<div id="revision">
+  <div id="revision-details">
+    {{d-icon "pencil-alt"}}
+    <LinkTo @route="user" @model={{@model.username}}>
+      {{bound-avatar-template @model.avatar_template "small"}}
+      {{@model.username}}
+    </LinkTo>
+    <PluginOutlet
+      @name="revision-user-details-after"
+      @outletArgs={{hash model=@model}}
+    />
+    <span class="date">{{bound-date @model.created_at}}</span>
+    {{#if @model.edit_reason}}
+      &mdash;
+      <span class="edit-reason">{{@model.edit_reason}}</span>
+    {{/if}}
+    {{#unless @mobileView}}
+      {{#if @model.user_changes}}
+        &mdash;
+        {{bound-avatar-template
+          @model.user_changes.previous.avatar_template
+          "small"
+        }}
+        {{@model.user_changes.previous.username}}
+        &rarr;
+        {{bound-avatar-template
+          @model.user_changes.current.avatar_template
+          "small"
+        }}
+        {{@model.user_changes.current.username}}
+      {{/if}}
+      {{#if @model.wiki_changes}}
+        &mdash;
+        <DisabledIcon @icon="far-edit" @disabled={{@wikiDisabled}} />
+      {{/if}}
+      {{#if @model.post_type_changes}}
+        &mdash;
+        <DisabledIcon @icon="shield-alt" @disabled={{@postTypeDisabled}} />
+      {{/if}}
+      {{#if @model.category_id_changes}}
+        &mdash;
+        {{html-safe @previousCategory}}
+        &rarr;
+        {{html-safe @currentCategory}}
+      {{/if}}
+    {{/unless}}
+  </div>
+  {{#unless @mobileView}}
+    <div id="display-modes">
+      <ul class="nav nav-pills">
+        <li>
+          <a
+            href
+            class={{concat-class
+              "inline-mode"
+              (if (eq @viewMode "inline") "active")
+            }}
+            {{on "click" @displayInline}}
+            title={{i18n "post.revisions.displays.inline.title"}}
+            aria-label={{i18n "post.revisions.displays.inline.title"}}
+          >
+            {{d-icon "far-square"}}
+            {{i18n "post.revisions.displays.inline.button"}}
+          </a>
+        </li>
+        <li>
+          <a
+            href
+            class={{concat-class
+              "side-by-side-mode"
+              (if (eq @viewMode "side_by_side") "active")
+            }}
+            {{on "click" @displaySideBySide}}
+            title={{i18n "post.revisions.displays.side_by_side.title"}}
+            aria-label={{i18n "post.revisions.displays.side_by_side.title"}}
+          >
+            {{d-icon "columns"}}
+            {{i18n "post.revisions.displays.side_by_side.button"}}
+          </a>
+        </li>
+        <li>
+          <a
+            href
+            class={{concat-class
+              "side-by-side-markdown-mode"
+              (if (eq @viewMode "side_by_side_markdown") "active")
+            }}
+            {{on "click" @displaySideBySideMarkdown}}
+            title={{i18n "post.revisions.displays.side_by_side_markdown.title"}}
+            aria-label={{i18n
+              "post.revisions.displays.side_by_side_markdown.title"
+            }}
+          >
+            {{d-icon "columns"}}
+            {{i18n "post.revisions.displays.side_by_side_markdown.button"}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  {{/unless}}
+</div>

@@ -120,6 +120,12 @@ module PageObjects
         find("[data-value='delete']").click
       end
 
+      def restore_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='restore']").click
+      end
+
       def open_edit_message(message)
         hover_message(message)
         click_more_button

@@ -44,21 +44,11 @@ module Chat
       guardian.can_join_chat_channel?(thread.channel)
     end
 
-    # NOTE: In future we will pass in the last_read_message_id
-    # to the service and this query will be unnecessary.
+    # NOTE: In future we will pass in a specific last_read_message_id
+    # to the service, so this will need to change because currently it's
+    # just using the thread's last_message_id.
     def mark_thread_read(thread:, guardian:, **)
-      query = <<~SQL
-        UPDATE user_chat_thread_memberships
-        SET last_read_message_id = (
-          SELECT id FROM chat_messages
-          WHERE thread_id = :thread_id
-          AND deleted_at IS NULL
-          ORDER BY created_at DESC, id DESC
-          LIMIT 1
-        )
-        WHERE user_id = :user_id AND thread_id = :thread_id
-      SQL
-      DB.exec(query, thread_id: thread.id, user_id: guardian.user.id)
+      thread.mark_read_for_user!(guardian.user)
     end
 
     def mark_associated_mentions_as_read(thread:, guardian:, **)
@@ -73,7 +63,7 @@ module Chat
       ::Chat::Publisher.publish_user_tracking_state!(
         guardian.user,
         thread.channel,
-        thread.last_reply,
+        thread.last_message,
       )
     end
   end

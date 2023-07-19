@@ -10,16 +10,25 @@ import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
+import HistoryModal from "discourse/components/modal/history";
+import PublishPageModal from "discourse/components/modal/publish-page";
 
 const SCROLL_DELAY = 500;
 
 const TopicRoute = DiscourseRoute.extend({
   composer: service(),
   screenTrack: service(),
+  modal: service(),
 
   scheduledReplace: null,
   lastScrollPos: null,
   isTransitioning: false,
+
+  buildRouteInfoMetadata() {
+    return {
+      scrollOnTransition: false,
+    };
+  },
 
   redirect() {
     return this.redirectIfLoginRequired();
@@ -104,9 +113,8 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showPagePublish() {
     const model = this.modelFor("topic");
-    showModal("publish-page", {
+    this.modal.show(PublishPageModal, {
       model,
-      title: "topic.publish_page.title",
     });
   },
 
@@ -147,13 +155,14 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showHistory(model, revision) {
-    let historyController = showModal("history", {
-      model,
-      modalClass: "history-modal",
+    this.modal.show(HistoryModal, {
+      model: {
+        postId: model.id,
+        postVersion: revision || "latest",
+        post: model,
+        editPost: (post) => this.controllerFor("topic").send("editPost", post),
+      },
     });
-    historyController.refresh(model.get("id"), revision || "latest");
-    historyController.set("post", model);
-    historyController.set("topicController", this.controllerFor("topic"));
   },
 
   @action
@@ -317,9 +326,6 @@ const TopicRoute = DiscourseRoute.extend({
   activate() {
     this._super(...arguments);
     this.set("isTransitioning", false);
-
-    const topic = this.modelFor("topic");
-    this.session.set("lastTopicIdViewed", parseInt(topic.get("id"), 10));
   },
 
   deactivate() {

@@ -5,6 +5,7 @@ import Route from "@ember/routing/route";
 
 export default class AdminCustomizeThemesEditRoute extends Route {
   @service dialog;
+  @service router;
 
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
@@ -15,7 +16,7 @@ export default class AdminCustomizeThemesEditRoute extends Route {
           target: params.target,
           field_name: params.field_name,
         }
-      : this.replaceWith("adminCustomizeThemes.index");
+      : this.router.replaceWith("adminCustomizeThemes.index");
   }
 
   serialize(wrapper) {
@@ -32,11 +33,11 @@ export default class AdminCustomizeThemesEditRoute extends Route {
       .get("fields")
       [wrapper.target].map((f) => f.name);
     if (wrapper.model.remote_theme && wrapper.model.remote_theme.is_git) {
-      this.transitionTo("adminCustomizeThemes.index");
+      this.router.transitionTo("adminCustomizeThemes.index");
       return;
     }
     if (!fields.includes(wrapper.field_name)) {
-      this.transitionTo(
+      this.router.transitionTo(
         "adminCustomizeThemes.edit",
         wrapper.model.id,
         wrapper.target,

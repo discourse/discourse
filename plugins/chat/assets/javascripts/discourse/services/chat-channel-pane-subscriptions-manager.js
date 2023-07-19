@@ -36,7 +36,7 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
 
   handleThreadOriginalMessageUpdate(data) {
     const message = this.messagesManager.findMessage(data.original_message_id);
-    if (message.thread) {
+    if (message?.thread) {
       message.thread.preview = ChatThreadPreview.create(data.preview);
     }
   }

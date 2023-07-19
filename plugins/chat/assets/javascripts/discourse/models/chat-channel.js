@@ -1,5 +1,5 @@
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -61,7 +61,6 @@ export default class ChatChannel {
   @tracked description;
   @tracked status;
   @tracked activeThread = null;
-  @tracked lastMessageSentAt;
   @tracked canDeleteOthers;
   @tracked canDeleteSelf;
   @tracked canFlag;
@@ -80,8 +79,8 @@ export default class ChatChannel {
   threadsManager = new ChatThreadsManager(getOwner(this));
   messagesManager = new ChatMessagesManager(getOwner(this));
 
-  @tracked _unreadThreadIds = new TrackedSet();
   @tracked _currentUserMembership;
+  @tracked _lastMessage;
 
   constructor(args = {}) {
     this.id = args.id;
@@ -99,7 +98,6 @@ export default class ChatChannel {
     this.userSilenced = args.user_silenced;
     this.canModerate = args.can_moderate;
     this.description = args.description;
-    this.lastMessageSentAt = args.last_message_sent_at;
     this.threadingEnabled = args.threading_enabled;
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
@@ -116,18 +114,18 @@ export default class ChatChannel {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
+    this.lastMessage = args.last_message;
   }
 
-  get unreadThreadCount() {
-    return this.unreadThreadIds.size;
+  get unreadThreadsCountSinceLastViewed() {
+    return Array.from(this.threadsManager.unreadThreadOverview.values()).filter(
+      (lastReplyCreatedAt) =>
+        lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
+    ).length;
   }
 
-  get unreadThreadIds() {
-    return this._unreadThreadIds;
-  }
-
-  set unreadThreadIds(unreadThreadIds) {
-    this._unreadThreadIds = new TrackedSet(unreadThreadIds);
+  updateLastViewedAt() {
+    this.currentUserMembership.lastViewedAt = new Date();
   }
 
   findIndexOfMessage(id) {
@@ -156,10 +154,6 @@ export default class ChatChannel {
 
   removeMessage(message) {
     this.messagesManager.removeMessage(message);
-  }
-
-  get lastMessage() {
-    return this.messagesManager.findLastMessage();
   }
 
   lastUserMessage(user) {
@@ -309,6 +303,23 @@ export default class ChatChannel {
     } else {
       this._currentUserMembership =
         UserChatChannelMembership.create(membership);
+    }
+  }
+
+  get lastMessage() {
+    return this._lastMessage;
+  }
+
+  set lastMessage(message) {
+    if (!message) {
+      this._lastMessage = null;
+      return;
+    }
+
+    if (message instanceof ChatMessage) {
+      this._lastMessage = message;
+    } else {
+      this._lastMessage = ChatMessage.create(this, message);
     }
   }
 

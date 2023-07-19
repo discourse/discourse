@@ -53,12 +53,13 @@ module Chat
           {
             type: "channel",
             channel_id: chat_channel.id,
-            message_id: chat_message.id,
-            user_id: chat_message.user.id,
-            username: chat_message.user.username,
             thread_id: chat_message.thread_id,
+            message:
+              Chat::MessageSerializer.new(
+                chat_message,
+                { scope: anonymous_guardian, root: false },
+              ).as_json,
           },
-          permissions(chat_channel),
         )
       end
 
@@ -68,10 +69,12 @@ module Chat
           {
             type: "thread",
             channel_id: chat_channel.id,
-            message_id: chat_message.id,
-            user_id: chat_message.user.id,
-            username: chat_message.user.username,
             thread_id: chat_message.thread_id,
+            message:
+              Chat::MessageSerializer.new(
+                chat_message,
+                { scope: anonymous_guardian, root: false },
+              ).as_json,
           },
           permissions(chat_channel),
         )
@@ -171,6 +174,7 @@ module Chat
           type: "delete",
           deleted_id: chat_message.id,
           deleted_at: chat_message.deleted_at,
+          deleted_by_id: chat_message.deleted_by_id,
           latest_not_deleted_message_id: latest_not_deleted_message_id,
         },
       )
@@ -293,15 +297,13 @@ module Chat
       # and a message is sent in the thread. We also need to pass the actual
       # thread tracking state.
       if channel.threading_enabled && message.thread_reply?
-        data[:unread_thread_ids] = ::Chat::TrackingStateReportQuery
-          .call(
-            guardian: user.guardian,
-            channel_ids: [channel.id],
-            include_threads: true,
-            include_read: false,
-          )
-          .find_channel_threads(channel.id)
-          .keys
+        data[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
+          guardian: user.guardian,
+          channel_ids: [channel.id],
+          include_threads: true,
+          include_read: false,
+          include_last_reply_details: true,
+        ).find_channel_thread_overviews(channel.id)
 
         data[:thread_tracking] = ::Chat::TrackingStateReportQuery.call(
           guardian: user.guardian,

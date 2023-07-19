@@ -160,10 +160,10 @@
   input.warning {
     border: 1px solid var(--danger);
   }
+  .icon.warning,
   .value.warning {
     position: absolute;
   }
-
   .sidebar-section-form__input-wrapper {
     margin-bottom: 1em;
 
@@ -279,5 +279,12 @@
         }
       }
     }
+  }
+}
+
+.sidebar__panel-switch-button {
+  margin: 1em 1.3em 0 1.3em;
+  &:last-of-type {
+    margin-bottom: 1em;
   }
 }

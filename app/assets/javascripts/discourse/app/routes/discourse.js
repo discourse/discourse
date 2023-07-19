@@ -4,8 +4,10 @@ import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
 import { seenUser } from "discourse/lib/user-presence";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { inject as service } from "@ember/service";
 
 const DiscourseRoute = Route.extend({
+  router: service(),
   showFooter: false,
 
   willTransition() {
@@ -49,7 +51,7 @@ const DiscourseRoute = Route.extend({
   redirectIfLoginRequired() {
     const app = this.controllerFor("application");
     if (app.get("loginRequired")) {
-      this.replaceWith("login");
+      this.router.replaceWith("login");
     }
   },
 

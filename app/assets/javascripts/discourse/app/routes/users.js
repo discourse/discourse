@@ -4,8 +4,10 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  router: service(),
   queryParams: {
     period: { refreshModel: true },
     order: { refreshModel: true },
@@ -35,7 +37,7 @@ export default DiscourseRoute.extend({
 
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      this.replaceWith("discovery");
+      this.router.replaceWith("discovery");
     }
   },
 

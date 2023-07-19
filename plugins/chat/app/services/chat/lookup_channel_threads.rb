@@ -72,59 +72,53 @@ module Chat
     end
 
     def fetch_threads(guardian:, channel:, **)
-      read_threads = []
-
-      unread_threads =
-        threads_query(guardian, channel)
-          .where(<<~SQL)
-            user_chat_thread_memberships_chat_threads.last_read_message_id IS NULL
-              OR tracked_threads_subquery.latest_message_id > user_chat_thread_memberships_chat_threads.last_read_message_id
-          SQL
-          .order("tracked_threads_subquery.latest_message_created_at DESC")
-          .limit(context.limit)
-          .offset(context.offset)
-          .to_a
-
-      # We do this to avoid having to query additional threads if the user
-      # already has a lot of unread threads.
-      if unread_threads.length < context.limit
-        final_limit = context.limit - unread_threads.length
-        final_offset = context.offset + unread_threads.length
-
-        read_threads =
-          threads_query(guardian, channel)
-            .where(<<~SQL)
-              tracked_threads_subquery.latest_message_id <= user_chat_thread_memberships_chat_threads.last_read_message_id
-            SQL
-            .order("tracked_threads_subquery.latest_message_created_at DESC")
-            .limit(final_limit)
-            .offset(final_offset)
-            .to_a
-      end
-
-      threads = unread_threads + read_threads
-
-      if threads.present?
-        last_replies =
-          ::Chat::Message
-            .strict_loading
-            .includes(:user, :uploads)
-            .from(<<~SQL)
-              (
-                SELECT thread_id, MAX(created_at) AS latest_created_at, MAX(id) AS latest_message_id
-                FROM chat_messages
-                WHERE thread_id IN (#{threads.map(&:id).join(",")})
-                GROUP BY thread_id
-              ) AS last_replies_subquery
-            SQL
-            .joins(
-              "INNER JOIN chat_messages ON chat_messages.id = last_replies_subquery.latest_message_id",
-            )
-            .index_by(&:thread_id)
-        threads.each { |thread| thread.last_reply = last_replies[thread.id] }
-      end
-
-      threads
+      ::Chat::Thread
+        .strict_loading
+        .includes(
+          :channel,
+          :user_chat_thread_memberships,
+          original_message_user: :user_status,
+          last_message: [
+            :uploads,
+            :chat_webhook_event,
+            :chat_channel,
+            chat_mentions: {
+              user: :user_status,
+            },
+            user: :user_status,
+          ],
+          original_message: [
+            :uploads,
+            :chat_webhook_event,
+            :chat_channel,
+            chat_mentions: {
+              user: :user_status,
+            },
+            user: :user_status,
+          ],
+        )
+        .joins(:user_chat_thread_memberships, :original_message)
+        .joins(
+          "LEFT JOIN chat_messages AS last_message ON last_message.id = chat_threads.last_message_id",
+        )
+        .where("user_chat_thread_memberships.user_id = ?", guardian.user.id)
+        .where(
+          "user_chat_thread_memberships.notification_level IN (?)",
+          [
+            ::Chat::UserChatThreadMembership.notification_levels[:normal],
+            ::Chat::UserChatThreadMembership.notification_levels[:tracking],
+          ],
+        )
+        .where("chat_threads.channel_id = ?", channel.id)
+        .where("last_message.deleted_at IS NULL")
+        .limit(context.limit)
+        .offset(context.offset)
+        .order(
+          "CASE WHEN (
+            chat_threads.last_message_id > user_chat_thread_memberships.last_read_message_id OR
+              user_chat_thread_memberships.last_read_message_id IS NULL
+          ) THEN 0 ELSE 1 END, last_message.created_at DESC",
+        )
     end
 
     def fetch_tracking(guardian:, threads:, **)
@@ -142,64 +136,6 @@ module Chat
           thread_id: threads.map(&:id),
           user_id: guardian.user.id,
         )
-    end
-
-    def threads_query(guardian, channel)
-      ::Chat::Thread
-        .strict_loading
-        .includes(
-          :channel,
-          :user_chat_thread_memberships,
-          original_message_user: :user_status,
-          original_message: [
-            :uploads,
-            :chat_webhook_event,
-            :chat_channel,
-            chat_mentions: {
-              user: :user_status,
-            },
-            user: :user_status,
-          ],
-        )
-        .joins(
-          "JOIN (#{tracked_threads_subquery(guardian, channel)}) tracked_threads_subquery
-              ON tracked_threads_subquery.thread_id = chat_threads.id",
-        )
-        .joins(:user_chat_thread_memberships)
-        .joins(
-          "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
-        )
-        .where("original_messages.deleted_at IS NULL")
-        .where(user_chat_thread_memberships_chat_threads: { user_id: guardian.user.id })
-    end
-
-    def tracked_threads_subquery(guardian, channel)
-      ::Chat::Thread
-        .strict_loading
-        .joins(:chat_messages, :user_chat_thread_memberships)
-        .joins(
-          "LEFT JOIN chat_messages original_messages ON chat_threads.original_message_id = original_messages.id",
-        )
-        .where(user_chat_thread_memberships: { user_id: guardian.user.id })
-        .where(
-          "chat_threads.channel_id = :channel_id AND chat_messages.chat_channel_id = :channel_id",
-          channel_id: channel.id,
-        )
-        .where(
-          "user_chat_thread_memberships.notification_level IN (?)",
-          [
-            ::Chat::UserChatThreadMembership.notification_levels[:normal],
-            ::Chat::UserChatThreadMembership.notification_levels[:tracking],
-          ],
-        )
-        .where(
-          "original_messages.deleted_at IS NULL AND chat_messages.deleted_at IS NULL AND original_messages.id IS NOT NULL",
-        )
-        .group("chat_threads.id")
-        .select(
-          "chat_threads.id AS thread_id, MAX(chat_messages.created_at) AS latest_message_created_at, MAX(chat_messages.id) AS latest_message_id",
-        )
-        .to_sql
     end
 
     def build_load_more_url(contract:, **)

@@ -37,6 +37,7 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
 
 export default Controller.extend({
   dialog: service(),
+  router: service(),
   saving: null,
 
   @discourseComputed("model.ownerUsernames")
@@ -62,7 +63,7 @@ export default Controller.extend({
     group
       .create()
       .then(() => {
-        this.transitionToRoute("group.members", group.name);
+        this.router.transitionTo("group.members", group.name);
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));

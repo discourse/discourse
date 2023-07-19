@@ -893,16 +893,6 @@ class Category < ActiveRecord::Base
     end
   end
 
-  def url_with_id
-    Discourse.deprecate(
-      "Category#url_with_id is deprecated. Use `Category#url` instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
-
-    url
-  end
-
   # If the name changes, try and update the category definition topic too if it's an exact match
   def rename_category_definition
     return unless topic.present?
