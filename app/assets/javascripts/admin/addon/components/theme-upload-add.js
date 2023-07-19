@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
@@ -53,11 +52,11 @@ const SCSS_VARIABLE_NAMES = [
 ];
 
 export default class ThemeUploadAdd extends Component {
+  @controller adminCustomizeThemesShow;
+
   @tracked name;
   @tracked fileSelected = false;
   @tracked flash;
-
-  @controller adminCustomizeThemesShow;
 
   get enabled() {
     return this.nameValid && this.fileSelected;
