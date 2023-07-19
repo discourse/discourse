@@ -1,3 +1,4 @@
+import "./loader-shims";
 import {
   applyPretender,
   exists,

@@ -136,6 +136,7 @@ module.exports = function (defaults) {
 
     const testHelpers = concat(appTestTrees, {
       inputFiles: [
+        "**/tests/loader-shims.js",
         "**/tests/test-boot-ember-cli.js",
         "**/tests/helpers/**/*.js",
         "**/tests/fixtures/**/*.js",
