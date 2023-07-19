@@ -687,7 +687,3 @@ en:
       sections:
         chat:
           title: Chat
-    sidebar:
-      panels:
-        chat:
-          label: Chat

@@ -2041,7 +2041,7 @@ en:
 
     summary:
       in_progress: "Summarizing topic using AI..."
-      summarized_on: "Summarized with %{method} on %{date}" 
+      summarized_on: "Summarized with %{method} on %{date}"
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
@@ -4530,8 +4530,6 @@ en:
       panels:
         forum:
           label: Forum
-        admin:
-          label: Admin
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
