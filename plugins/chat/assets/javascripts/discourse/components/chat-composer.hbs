@@ -111,7 +111,19 @@
       @existingUploads={{this.currentMessage.uploads}}
       @uploadDropZone={{@uploadDropZone}}
       @composerInputEl={{this.composer.textarea.element}}
+      @onBackgroundUpload={{this.onBackgroundUpload}}
     />
+
+    {{#each-in this.backgroundUploads as |id uploads|}}
+      <ChatComposerBackgroundUploads
+        @uploads={{uploads}}
+        @backgroundUploadId={{id}}
+        @onBackgroundUploadComplete={{this.onBackgroundUploadComplete}}
+        @thread={{this.currentMessage.thread}}
+        @channel={{this.currentMessage.channel}}
+        @inReplyTo={{this.currentMessage.inReplyTo}}
+      />
+    {{/each-in}}
   {{/if}}
 
   {{#if this.shouldRenderReplyingIndicator}}

@@ -76,7 +76,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     } else if (!this.fileInputEl) {
       return;
     }
-    this.set("allowMultipleFiles", this.fileInputEl.multiple);
+    this.set("allowMultipleFiles", this.fileInputEl?.multiple);
     this.set("inProgressUploads", []);
 
     this._bindFileInputChange();
@@ -93,15 +93,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     this._uppyInstance = new Uppy({
       id: this.id,
       autoProceed: this.autoStartUploads,
-
-      // need to use upload_type because uppy overrides type with the
-      // actual file type
-      meta: deepMerge(
-        { upload_type: this.type },
-        this.additionalParams || {},
-        this.data || {}
-      ),
-
+      meta: this._uploadMeta(),
       onBeforeFileAdded: (currentFile) => {
         const validationOpts = deepMerge(
           {
@@ -148,6 +140,12 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           Object.values(files).forEach((file) => {
             deepMerge(file.meta, this._perFileData());
           });
+        }
+
+        if (this.uploadingStartedWithShift) {
+          this.enqueueBackgroundUpload?.(files);
+          this._reset();
+          return false;
         }
       },
     });
@@ -415,10 +413,12 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _bindFileInputChange() {
-    this.fileInputEventListener = bindFileInputChangeListener(
-      this.fileInputEl,
-      this._addFiles
-    );
+    if (this.fileInputEl) {
+      this.fileInputEventListener = bindFileInputChangeListener(
+        this.fileInputEl,
+        this._addFiles
+      );
+    }
   },
 
   @bind
@@ -468,7 +468,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       uploadProgress: 0,
       filesAwaitingUpload: false,
     });
-    this.fileInputEl.value = "";
+    if (this.fileInputEl) {
+      this.fileInputEl.value = "";
+    }
   },
 
   _removeInProgressUpload(fileId) {
@@ -503,5 +505,15 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     this._onAllUploadsComplete?.();
 
     this._reset();
+  },
+
+  _uploadMeta() {
+    // need to use upload_type because uppy overrides type with the
+    // actual file type
+    return deepMerge(
+      { upload_type: this.type },
+      this.additionalParams || {},
+      this.data || {}
+    );
   },
 });

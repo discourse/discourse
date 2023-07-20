@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import guid from "pretty-text/guid";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
@@ -45,6 +47,7 @@ export default class ChatComposer extends Component {
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
+  @tracked backgroundUploads = new TrackedObject();
 
   get shouldRenderMessageDetails() {
     return (
@@ -385,10 +388,18 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onAllUploadsComplete(opts) {
-    if (opts.holdingShift) {
-      this.onSend();
-    }
+  onBackgroundUpload(files) {
+    this.backgroundUploads[guid()] = files;
+  }
+
+  @action
+  onBackgroundUploadComplete(id) {
+    delete this.backgroundUploads[id];
+  }
+
+  @action
+  onAllUploadsComplete() {
+    this.onSend();
   }
 
   #addMentionedUser(userData) {

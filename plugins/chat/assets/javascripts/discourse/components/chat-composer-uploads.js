@@ -16,12 +16,12 @@ export default Component.extend(UppyUploadMixin, {
   existingUploads: null,
   uploads: null,
   useMultipartUploadsIfAvailable: true,
-  uploadDropZone: null,
-  holdingShift: false,
   uploadingStartedWithShift: false,
+  uploadDropZone: null,
 
   init() {
     this._super(...arguments);
+
     this.setProperties({
       fileInputSelector: `#${this.fileUploadElementId}`,
     });
@@ -143,10 +143,8 @@ export default Component.extend(UppyUploadMixin, {
     });
   },
 
-  _onAllUploadsComplete() {
-    this.onAllUploadsComplete({
-      holdingShift: this.uploadingStartedWithShift,
-    });
+  enqueueBackgroundUpload(files) {
+    this.onBackgroundUpload(Object.values(files).mapBy("data"));
     this.set("uploadingStartedWithShift", false);
   },
 });
