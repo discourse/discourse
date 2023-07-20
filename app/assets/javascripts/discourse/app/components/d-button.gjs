@@ -47,7 +47,13 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
         {{~icon "spinner" class="loading-icon"~}}
       {{else}}
         {{#if @icon}}
-          {{~icon @icon~}}
+          {{#if @ariaHidden}}
+            <span aria-hidden="true">
+              {{~icon @icon~}}
+            </span>
+          {{else}}
+            {{~icon @icon~}}
+          {{/if}}
         {{/if}}
       {{/if}}
 
