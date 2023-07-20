@@ -1,9 +1,11 @@
 import Component from "@ember/component";
+import { inject as service } from "@ember/service";
 import User from "discourse/models/user";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
+import IgnoreDurationModal from "./modal/ignore-duration-with-username";
 
 export default Component.extend({
+  modal: service(),
   item: null,
   actions: {
     removeIgnoredUser(item) {
@@ -20,13 +22,13 @@ export default Component.extend({
       });
     },
     newIgnoredUser() {
-      const modal = showModal("ignore-duration-with-username", {
-        model: this.model,
-      });
-      modal.setProperties({
-        ignoredUsername: null,
-        onUserIgnored: (username) => {
-          this.items.addObject(username);
+      this.modal.show(IgnoreDurationModal, {
+        model: {
+          actingUser: this.model,
+          ignoredUsername: null,
+          onUserIgnored: (username) => {
+            this.items.addObject(username);
+          },
         },
       });
     },
