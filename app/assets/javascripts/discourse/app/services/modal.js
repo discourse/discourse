@@ -58,7 +58,6 @@ const KNOWN_LEGACY_MODALS = [
   "user-status",
   "admin-add-upload",
   "admin-delete-posts-confirmation",
-  "admin-incoming-email",
   "admin-merge-users-prompt",
   "admin-start-backup",
   "admin-watched-word-test",
