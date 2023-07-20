@@ -41,18 +41,11 @@ export default Component.extend(UppyUploadMixin, {
 
   didInsertElement() {
     this._super(...arguments);
-
-    this.composerInputEl?.addEventListener(
-      "keydown",
-      this._keydownEventListener
-    );
-    this.composerInputEl?.addEventListener("keyup", this._keyupEventListener);
     this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
   },
 
   willDestroyElement() {
     this._super(...arguments);
-
     this.composerInputEl?.removeEventListener(
       "paste",
       this._pasteEventListener
@@ -86,9 +79,9 @@ export default Component.extend(UppyUploadMixin, {
   _uploadDropTargetOptions() {
     return {
       target: this.uploadDropZone || document.body,
-      onDrop: () => {
-        if (this.holdingShift) {
-          this.uploadingStartedWithShift = true;
+      onDrop: (e) => {
+        if (e.shiftKey) {
+          this.set("uploadingStartedWithShift", true);
         }
       },
     };
@@ -114,20 +107,6 @@ export default Component.extend(UppyUploadMixin, {
       const inProgressUpload = this.inProgressUploads.findBy("id", file.id);
       inProgressUpload?.set("processing", false);
     });
-  },
-
-  @bind
-  _keydownEventListener(event) {
-    if (event.shiftKey) {
-      this.holdingShift = true;
-    }
-  },
-
-  @bind
-  _keyupEventListener() {
-    if (!event.shiftKey) {
-      this.holdingShift = false;
-    }
   },
 
   @bind
@@ -168,6 +147,6 @@ export default Component.extend(UppyUploadMixin, {
     this.onAllUploadsComplete({
       holdingShift: this.uploadingStartedWithShift,
     });
-    this.uploadingStartedWithShift = false;
+    this.set("uploadingStartedWithShift", false);
   },
 });
