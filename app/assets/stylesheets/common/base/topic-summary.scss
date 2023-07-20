@@ -30,9 +30,13 @@
     .summarized-on {
       text-align: right;
 
-      .model-used {
+      .info-icon {
         margin-left: 3px;
       }
+    }
+
+    .outdated-summary {
+      color: var(--primary-medium);
     }
   }
 }
