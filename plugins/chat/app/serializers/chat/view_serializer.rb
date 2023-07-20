@@ -36,7 +36,7 @@ module Chat
     end
 
     def include_thread_data?
-      channel.threading_enabled && SiteSetting.enable_experimental_chat_threaded_discussions
+      channel.threading_enabled
     end
 
     def channel

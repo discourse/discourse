@@ -51,10 +51,7 @@ export default class ChatModalCreateChannel extends Component {
   }
 
   get threadingAvailable() {
-    return (
-      this.siteSettings.enable_experimental_chat_threaded_discussions &&
-      this.categorySelected
-    );
+    return this.categorySelected;
   }
 
   get createDisabled() {

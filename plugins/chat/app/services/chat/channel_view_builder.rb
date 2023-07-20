@@ -112,8 +112,7 @@ module Chat
     end
 
     def determine_threads_enabled(channel:, **)
-      context.threads_enabled =
-        SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+      context.threads_enabled = channel.threading_enabled
     end
 
     def determine_include_thread_messages(contract:, threads_enabled:, **)

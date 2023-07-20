@@ -8,10 +8,6 @@ module Chat
       object[:tracking]
     end
 
-    def include_unread_thread_overview?
-      SiteSetting.enable_experimental_chat_threaded_discussions
-    end
-
     def unread_thread_overview
       object[:unread_thread_overview]
     end

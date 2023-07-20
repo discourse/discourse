@@ -60,11 +60,7 @@ export default class ChatChannelSettingsView extends Component {
   }
 
   get togglingThreadingAvailable() {
-    return (
-      this.siteSettings.enable_experimental_chat_threaded_discussions &&
-      this.args.channel.isCategoryChannel &&
-      this.currentUser?.admin
-    );
+    return this.args.channel.isCategoryChannel && this.currentUser?.admin;
   }
 
   get autoJoinAvailable() {

@@ -177,7 +177,7 @@ module Chat
     end
 
     def include_threading_data?
-      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+      channel.threading_enabled
     end
 
     def include_thread_id?

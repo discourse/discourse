@@ -906,8 +906,6 @@ RSpec.describe Chat::Api::ChannelsController do
       end
 
       describe "when updating threading_enabled" do
-        before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
-
         it "sets the new value" do
           expect {
             put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }

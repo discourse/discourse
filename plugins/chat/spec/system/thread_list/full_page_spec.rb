@@ -13,7 +13,6 @@ describe "Thread list in side panel | full page", type: :system do
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap(current_user, [channel])
     sign_in(current_user)
   end
