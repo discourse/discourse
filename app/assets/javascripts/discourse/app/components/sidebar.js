@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 import {
   currentPanelKey,
   customPanels as sidebarCustomPanels,
@@ -30,11 +31,6 @@ export default class Sidebar extends Component {
     return sidebarCustomPanels.find(
       (panel) => panel.key === this.currentPanelKey
     );
-  }
-
-  @bind
-  setCurrentPanelKey(key) {
-    this.currentPanelKey = key;
   }
 
   get showSwitchPanelButtonsOnTop() {
@@ -74,5 +70,10 @@ export default class Sidebar extends Component {
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }
+  }
+
+  @action
+  setCurrentPanelKey(key) {
+    this.currentPanelKey = key;
   }
 }
