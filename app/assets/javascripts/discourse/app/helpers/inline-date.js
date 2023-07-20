@@ -1,10 +1,14 @@
-import { registerHelper } from "discourse-common/lib/helpers";
+import deprecated from "discourse-common/lib/deprecated";
 import { relativeAge } from "discourse/lib/formatter";
 
-registerHelper("inline-date", function ([dt]) {
-  // TODO: Remove this in 1.13 or greater
+export default function inlineDate(dt) {
+  deprecated("inline-date helper is deprecated", {
+    id: "discourse.inline-date",
+    since: "3.1.0.beta6",
+  });
+
   if (dt.value) {
     dt = dt.value();
   }
   return relativeAge(new Date(dt));
-});
+}
