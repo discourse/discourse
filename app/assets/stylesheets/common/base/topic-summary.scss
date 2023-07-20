@@ -1,0 +1,38 @@
+.topic-map {
+  .toggle-summary {
+    .summarization-buttons {
+      display: flex;
+    }
+
+    .placeholder-summary {
+      padding-top: 0.5em;
+    }
+
+    .placeholder-summary-text {
+      display: inline-block;
+      height: 1em;
+      margin-top: 0.6em;
+      width: 100%;
+    }
+
+    .rotate-center {
+      -webkit-animation: rotate-center 3s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+        0.5s infinite both;
+      animation: rotate-center 3s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.5s
+        infinite both;
+    }
+
+    .placeholder-generating-summary-text {
+      display: inline-block;
+      margin-left: 3px;
+    }
+
+    .summarized-on {
+      text-align: right;
+
+      .model-used {
+        margin-left: 3px;
+      }
+    }
+  }
+}

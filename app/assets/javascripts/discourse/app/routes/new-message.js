@@ -7,7 +7,6 @@ import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
   dialog: service(),
-  router: service(),
 
   beforeModel(transition) {
     const params = transition.to.queryParams;
@@ -15,7 +14,7 @@ export default DiscourseRoute.extend({
     const groupName = params.groupname || params.group_name;
 
     if (this.currentUser) {
-      this.router.replaceWith("/latest").then((e) => {
+      this.replaceWith("discovery.latest").then((e) => {
         if (params.username) {
           e.send("createNewMessageViaParams", {
             recipients: params.username,
@@ -50,7 +49,7 @@ export default DiscourseRoute.extend({
       });
     } else {
       cookie("destination_url", window.location.href);
-      this.router.replaceWith("login");
+      this.replaceWith("login");
     }
   },
 });

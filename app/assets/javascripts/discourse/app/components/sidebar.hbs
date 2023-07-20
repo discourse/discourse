@@ -1,4 +1,12 @@
 <DSection @pageClass="has-sidebar" @id="d-sidebar" @class="sidebar-container">
+  {{#if this.showSwitchPanelButtonsOnTop}}
+    <Sidebar::SwitchPanelButtons
+      @currentPanel={{this.currentPanel}}
+      @buttons={{this.switchPanelButtons}}
+      @setCurrentPanelKey={{this.setCurrentPanelKey}}
+    />
+  {{/if}}
+
   {{#if this.showMainPanel}}
     <Sidebar::Sections
       @currentUser={{this.currentUser}}
@@ -13,14 +21,13 @@
     />
   {{/if}}
 
-  {{#each this.switchPanelButtons as |button|}}
-    <DButton
-      @action={{action "switchPanel" button}}
-      @class="btn-default sidebar__panel-switch-button"
-      @icon={{button.switchButtonIcon}}
-      @translatedLabel={{button.switchButtonLabel}}
+  {{#unless this.showSwitchPanelButtonsOnTop}}
+    <Sidebar::SwitchPanelButtons
+      @currentPanel={{this.currentPanel}}
+      @buttons={{this.switchPanelButtons}}
+      @setCurrentPanelKey={{this.setCurrentPanelKey}}
     />
-  {{/each}}
+  {{/unless}}
 
   <Sidebar::Footer />
 </DSection>

@@ -295,6 +295,18 @@ $mobile-breakpoint: 700px;
       line-height: var(--line-height-large);
       color: var(--primary-medium);
     }
+    .outdated {
+      border: 1px solid var(--primary-low);
+      box-sizing: border-box;
+      color: var(--primary);
+      margin-bottom: 1em;
+      max-width: 800px;
+      padding: 1em;
+
+      p {
+        color: var(--primary-high);
+      }
+    }
   }
   p.warning {
     color: var(--danger);

@@ -8,10 +8,8 @@ import User from "discourse/models/user";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { action } from "@ember/object";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend(OpenComposer, {
-  router: service(),
   queryParams: {
     filter: { refreshModel: true },
   },
@@ -31,14 +29,14 @@ export default DiscourseRoute.extend(OpenComposer, {
       User.currentProp("user_option.should_be_redirected_to_top", false);
       const period =
         User.currentProp("user_option.redirected_to_top.period") || "all";
-      this.router.replaceWith("discovery.top", {
+      this.replaceWith("discovery.top", {
         queryParams: {
           period,
         },
       });
     } else if (url && (matches = url.match(/top\/(.*)$/))) {
       if (this.site.periods.includes(matches[1])) {
-        this.router.replaceWith("discovery.top", {
+        this.replaceWith("discovery.top", {
           queryParams: {
             period: matches[1],
           },

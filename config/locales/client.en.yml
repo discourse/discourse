@@ -2041,7 +2041,8 @@ en:
 
     summary:
       in_progress: "Summarizing topic using AI..."
-      summarized_on: "Summarized with %{method} on %{date}"
+      summarized_on: "Summarized with AI on %{date}"
+      model_used: "AI used: %{model}"
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
@@ -6097,6 +6098,12 @@ en:
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         interpolation_keys: "Available interpolation keys:"
+        outdated:
+          title: "This translation is outdated"
+          description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
+          old_default: "Old default"
+          new_default: "New default"
+          dismiss: "Dismiss"
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"

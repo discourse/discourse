@@ -1,5 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import {
   getSearchKey,
   isValidSearchTerm,
@@ -20,9 +23,9 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import showModal from "discourse/lib/show-modal";
 import userSearch from "discourse/lib/user-search";
 import { inject as service } from "@ember/service";
+import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -51,8 +54,9 @@ export function registerFullPageSearchType(
 export default Controller.extend({
   application: controller(),
   composer: service(),
-  bulkSelectEnabled: null,
+  modal: service(),
 
+  bulkSelectEnabled: null,
   loading: false,
   queryParams: [
     "q",
@@ -310,6 +314,7 @@ export default Controller.extend({
 
   searchButtonDisabled: or("searching", "loading"),
 
+  @bind
   _search() {
     if (this.searching) {
       return;
@@ -496,14 +501,12 @@ export default Controller.extend({
     },
 
     showBulkActions() {
-      const modalController = showModal("topic-bulk-actions", {
+      this.modal.show(TopicBulkActions, {
         model: {
           topics: this.selected,
+          refreshClosure: this._search,
         },
-        title: "topics.bulk.actions",
       });
-
-      modalController.set("refreshClosure", () => this._search());
     },
 
     search(options = {}) {

@@ -1,0 +1,36 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "user.user_notifications.ignore_duration_title"}}
+  @flash={{this.flash}}
+  @autoFocus="false"
+  class="ignore-duration-with-username-modal"
+>
+  <:body>
+    <div class="controls tracking-controls">
+      <label>{{d-icon "far-eye-slash" class="icon"}}
+        {{i18n "user.user_notifications.ignore_duration_username"}}</label>
+      <EmailGroupUserChooser
+        @value={{this.ignoredUsername}}
+        @onChange={{this.updateIgnoredUsername}}
+        @options={{hash excludeCurrentUser=true maximum=1}}
+      />
+    </div>
+    <FutureDateInput
+      @label="user.user_notifications.ignore_duration_when"
+      @input={{readonly this.ignoredUntil}}
+      @customShortcuts={{this.timeShortcuts}}
+      @includeDateTime={{false}}
+      @onChangeInput={{action (mut this.ignoredUntil)}}
+    />
+    <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
+  </:body>
+  <:footer>
+    <DButton
+      @class="btn-primary"
+      @disabled={{this.saveDisabled}}
+      @label="user.user_notifications.ignore_duration_save"
+      @action={{this.ignore}}
+    />
+    <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
+  </:footer>
+</DModal>
