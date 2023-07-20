@@ -2043,10 +2043,18 @@ en:
       in_progress: "Summarizing topic using AI..."
       summarized_on: "Summarized with AI on %{date}"
       model_used: "AI used: %{model}"
+      outdated: "Summary is outdated"
+      outdated_posts: 
+        one: "(%{count} post missing)"
+        other: "(%{count} posts missing)"
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
         other: "There are <b>%{count}</b> replies."
+      buttons:
+        hide: "Hide summary"
+        generate: "Summarize with AI"
+        regenerate: "Regenerate summary"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       description_time_MF: |
@@ -2062,9 +2070,6 @@ en:
       disable: "Show All Posts"
       short_label: "Top replies"
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
-      strategy:
-        hide_button_title: "Hide summary"
-        button_title: "Summarize with AI"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
