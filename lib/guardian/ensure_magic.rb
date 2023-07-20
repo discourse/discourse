@@ -3,7 +3,7 @@
 # Support for ensure_{blah}! methods.
 module EnsureMagic
   def method_missing(method, *args, &block)
-    if method.to_s =~ /^ensure_(.*)\!$/
+    if method.to_s =~ /\Aensure_(.*)\!\z/
       can_method = :"#{Regexp.last_match[1]}?"
 
       if respond_to?(can_method)

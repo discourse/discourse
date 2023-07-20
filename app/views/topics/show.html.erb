@@ -34,88 +34,87 @@
   <%= server_plugin_outlet "topic_header" %>
 
   <%- if include_crawler_content? %>
-
-  <% @topic_view.posts.each_with_index do |post, idx| %>
-    <% if (u = post.user) %>
-      <div id='post_<%= post.post_number %>' itemscope itemtype='http://schema.org/DiscussionForumPosting' class='topic-body crawler-post'>
-        <div class='crawler-post-meta'>
-          <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
-            <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
-            <% if application_logo_url.present? %>
-              <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
-                <meta itemprop='url' content='<%= application_logo_url %>'>
-              </div>
-            <% end %>
+    <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
+      <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <% if @topic_view.topic.category.present? %>
+        <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
+      <% end %>
+      <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
+      <div itemprop='publisher' itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop='name' content='<%= SiteSetting.company_name.presence || SiteSetting.title %>'>
+        <% if application_logo_url.present? %>
+          <div itemprop='logo' itemscope itemtype="http://schema.org/ImageObject">
+            <meta itemprop='url' content='<%= application_logo_url %>'>
           </div>
-          <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            <a itemprop="url" href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
-            <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
-            <%
-              post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
-              who_username = post_custom_fields["action_code_who"] || ""
-              small_action_href = post_custom_fields["action_code_path"] || ""
-              if post.action_code
-            %>
-              <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username, href: small_action_href).html_safe %>
-            <% end %>
-          </span>
-
-          <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
-
-          <% if post.image_url %>
-            <link itemprop="image" href="<%= post.image_url %>">
-          <% end %>
-
-          <span class="crawler-post-infos">
-              <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
-                <%= l post.created_at, format: :long %>
-              </time>
-            <% if post.version > 1 %>
-              <meta itemprop='dateModified' content='<%= post.last_version_at.to_formatted_s(:iso8601) %>'>
-            <% else %>
-              <meta itemprop='dateModified' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
-            <% end %>
-          <span itemprop='position'>#<%= post.post_number %></span>
-          </span>
-        </div>
-        <div class='post' itemprop='articleBody'>
-          <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
-        </div>
-
-        <meta itemprop='headline' content='<%= @topic_view.title %>'>
-        <% if idx == 0 %>
-          <meta itemprop='keywords' content='<%= @tags.map(&:name).join(', ') %>'>
         <% end %>
-
-        <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
-           <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
-           <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
-           <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
-         </div>
-
-         <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
-            <meta itemprop="interactionType" content="http://schema.org/CommentAction"/>
-            <meta itemprop="userInteractionCount" content="<%= post.reply_count %>" />
-          </div>
-
-          <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
-            <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
-              <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
-                <% if link[:reflection] && link[:title].present? %>
-                  <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-                    <a href="<%=link[:url]%>" itemscope itemtype='http://schema.org/DiscussionForumPosting' itemprop='item'>
-                      <meta itemprop='url' content='<%=link[:url]%>'>
-                      <span itemprop='name'><%=link[:title]%></span>
-                    </a>
-                    <meta itemprop='position' content='<%= i+1 %>'>
-                  </div>
-                <% end %>
-              <% end %>
-            </div>
-         <% end %>
       </div>
-    <% end %>
-  <% end %>
+
+      <% @topic_view.posts.each do |post| %>
+        <% if (u = post.user) %>
+          <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
+            <div class='crawler-post-meta'>
+              <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                <a itemprop="url" href='<%= Discourse.base_url %>/u/<%= u.username %>'><span itemprop='name'><%= u.username %></span></a>
+                <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+                <%
+                  post_custom_fields = @topic_view.post_custom_fields[post.id] || {}
+                  who_username = post_custom_fields["action_code_who"] || ""
+                  small_action_href = post_custom_fields["action_code_path"] || ""
+                  if post.action_code
+                %>
+                  <%= t("js.action_codes.#{post.action_code}", when: "", who: who_username, href: small_action_href).html_safe %>
+                <% end %>
+              </span>
+
+              <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+
+              <% if post.image_url %>
+                <link itemprop="image" href="<%= post.image_url %>">
+              <% end %>
+
+              <span class="crawler-post-infos">
+                  <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
+                    <%= l post.created_at, format: :long %>
+                  </time>
+                <% if post.version > 1 %>
+                  <meta itemprop='dateModified' content='<%= post.last_version_at.to_formatted_s(:iso8601) %>'>
+                <% else %>
+                  <meta itemprop='dateModified' content='<%= post.created_at.to_formatted_s(:iso8601) %>'>
+                <% end %>
+              <span itemprop='position'><%= post.post_number %></span>
+              </span>
+            </div>
+            <div class='post' itemprop='<%= post.is_first_post? ? 'articleBody' : 'text'  %>'>
+              <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+              <meta itemprop="interactionType" content="http://schema.org/LikeAction"/>
+              <meta itemprop="userInteractionCount" content="<%= post.like_count %>" />
+              <span class='post-likes'><%= post.like_count > 0 ? t('post.has_likes', count: post.like_count) : '' %></span>
+            </div>
+
+            <div itemprop="interactionStatistic" itemscope itemtype="http://schema.org/InteractionCounter">
+                <meta itemprop="interactionType" content="http://schema.org/CommentAction"/>
+                <meta itemprop="userInteractionCount" content="<%= post.reply_count %>" />
+              </div>
+
+              <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].filter { |l| l[:reflection] }.length > 0 %>
+                <div class='crawler-linkback-list' itemscope itemtype='http://schema.org/ItemList'>
+                  <% @topic_view.link_counts[post.id].each_with_index do |link, i| %>
+                    <% if link[:reflection] && link[:title].present? %>
+                      <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+                        <a itemprop='url' href="<%=link[:url]%>"><%=link[:title]%></a>
+                        <meta itemprop='position' content='<%= i+1 %>'>
+                      </div>
+                    <% end %>
+                  <% end %>
+                </div>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
 
   <% if @topic_view.prev_page || @topic_view.next_page %>
     <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement' class="topic-body crawler-post">
@@ -132,7 +131,7 @@
 
   <% content_for :head do %>
     <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, rel: 'alternate nofollow', title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
-    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time) %>
+    <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time, breadcrumbs: @breadcrumbs, tags: @tags.map(&:name)) %>
 
     <% if @topic_view.prev_page || @topic_view.next_page %>
       <% if @topic_view.prev_page %>

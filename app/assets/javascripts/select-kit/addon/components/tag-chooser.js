@@ -15,7 +15,11 @@ export default MultiSelectComponent.extend(TagsMixin, {
     maximum: "maximumTagCount",
   },
 
-  modifyComponentForRow() {
+  modifyComponentForRow(collection, item) {
+    if (this.getValue(item) === this.selectKit.filter && !item.count) {
+      return "select-kit/select-kit-row";
+    }
+
     return "tag-chooser-row";
   },
 

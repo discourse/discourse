@@ -1,0 +1,17 @@
+{{#if this.topicResults}}
+  {{! template-lint-disable no-invalid-interactive }}
+  <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
+    {{#if this.moreUrl}}
+      <a href={{this.moreUrl}} class="filter search-link">
+        {{i18n "more"}}...
+      </a>
+    {{else if this.topicResults.more}}
+      <a
+        {{on "click" (fn this.moreOfType this.topicResults.type)}}
+        class="filter search-link"
+      >
+        {{i18n "more"}}...
+      </a>
+    {{/if}}
+  </div>
+{{/if}}

@@ -1,0 +1,26 @@
+<DButton
+  class="btn-default bootstrap-mode"
+  @label="bootstrap_mode"
+  @action={{this.routeToAdminGuide}}
+  {{did-insert this.setupUserTip}}
+>
+  {{#if this.showUserTip}}
+    <UserTip
+      @id="admin_guide"
+      @buttonLabel="user_tips.admin_guide.button"
+      @buttonIcon="link"
+      @onDismiss={{this.routeToAdminGuide}}
+    />
+  {{else}}
+    <DTooltip @theme="user-tip" @arrow={{true}}>
+      <div class="user-tip__container">
+        <div class="user-tip__title">
+          {{i18n "user_tips.admin_guide.title"}}
+        </div>
+        <div class="user-tip__content">
+          {{i18n "user_tips.admin_guide.content"}}
+        </div>
+      </div>
+    </DTooltip>
+  {{/if}}
+</DButton>

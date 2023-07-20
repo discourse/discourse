@@ -16,9 +16,19 @@ html.composer-open {
   margin-right: auto;
   max-width: $reply-area-max-width;
   width: 100%;
+
   &.hide-preview {
     max-width: 740px;
   }
+
+  &:has(.has-form-template) {
+    max-width: 740px;
+
+    .toggle-preview {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
@@ -26,7 +36,7 @@ html.composer-open {
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
     max-width 250ms ease, padding-bottom 250ms ease;
   background-color: var(--secondary);
-  box-shadow: shadow("composer");
+  box-shadow: var(--shadow-composer);
 
   .reply-area {
     display: flex;
@@ -120,11 +130,9 @@ html.composer-open {
       width: auto;
       max-width: 100%;
 
-      .avatar {
-        width: 20px;
-      }
-
       .action-title {
+        display: flex;
+        align-items: center;
         line-height: normal;
         @include ellipsis;
       }
@@ -270,7 +278,7 @@ html.composer-open {
     }
   }
 
-  .with-tags {
+  .with-tags.with-category {
     .title-and-category {
       flex-wrap: wrap;
     }
@@ -311,8 +319,7 @@ html.composer-open {
 
   .mini-tag-chooser {
     flex-grow: 1;
-    max-width: calc(50% - 4px);
-    margin: 0 0 8px 8px;
+    margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
     .select-kit-header {
       color: var(--primary-high);
@@ -337,7 +344,8 @@ html.composer-open {
   .save-or-cancel {
     align-items: center;
     display: flex;
-    flex: 1 1 auto;
+    flex: 0 1 auto;
+    margin-right: 1em;
 
     .btn-primary {
       flex: 0 0 auto;
@@ -358,35 +366,55 @@ html.composer-open {
       }
     }
 
-    #draft-status,
-    #file-uploading {
-      margin-left: 25px;
-    }
-    #file-uploading {
-      display: flex;
-      align-items: center;
-      a {
-        margin-left: 5px;
-        color: var(--primary-high);
-      }
-      .spinner {
-        margin-right: 5px;
-      }
-    }
-    #draft-status .d-icon-user-edit {
-      color: var(--danger);
-      font-size: 20px;
-      vertical-align: -5.5px;
+    .preview-template {
+      margin-left: 0.5rem;
     }
   }
 
   #draft-status,
   #file-uploading {
     color: var(--primary-high);
+    margin-right: 0.5em;
+  }
+
+  #file-uploading {
+    display: flex;
+    align-items: center;
+    margin-right: auto;
+    a {
+      margin-left: 0.33em;
+      color: var(--primary-high);
+    }
+    .spinner {
+      margin-right: 0.33em;
+    }
+  }
+
+  #draft-status {
+    margin-left: auto;
+    .d-icon-user-edit {
+      color: var(--danger);
+      font-size: 20px;
+      vertical-align: -5.5px;
+    }
+    + .btn-mini-toggle {
+      margin-left: 0;
+    }
   }
 
   #file-uploader {
     display: none;
+  }
+
+  .composer-select-form-template {
+    margin-bottom: 8px;
+    width: 100%;
+
+    .name,
+    .formatted-selection,
+    .d-icon {
+      color: var(--primary-high);
+    }
   }
 }
 
@@ -397,7 +425,7 @@ html.composer-open {
   width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("dropdown-lite");
+  box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
   ul {
@@ -423,12 +451,12 @@ html.composer-open {
         padding: 0.3em 1em;
 
         @include hover {
-          background-color: var(--highlight-low);
+          background-color: var(--d-hover);
           text-decoration: none;
         }
 
         &.selected {
-          background-color: var(--tertiary-low);
+          background-color: var(--d-selected);
 
           .username,
           .name,
@@ -447,10 +475,17 @@ html.composer-open {
           color: var(--primary-high);
         }
 
-        .status-description {
-          @include ellipsis;
-          font-size: var(--font-down-2);
-          color: var(--primary-high);
+        .user-status-message {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+
+          .user-status-message-description {
+            @include ellipsis;
+            font-size: var(--font-down-2);
+            color: var(--primary-high);
+            margin: 0;
+          }
         }
 
         .relative-date {
@@ -595,7 +630,7 @@ body:not(.ios-safari-composer-hacks) {
 }
 
 .toggle-preview {
-  margin-left: 8px;
+  margin-left: auto;
   transition: all 0.33s ease-out;
 
   &.active {

@@ -71,19 +71,27 @@ class Site
       .cache
       .fetch(categories_cache_key, expires_in: 30.minutes) do
         categories =
-          Category
-            .includes(
-              :uploaded_logo,
-              :uploaded_logo_dark,
-              :uploaded_background,
-              :tags,
-              :tag_groups,
-              category_required_tag_groups: :tag_group,
-            )
-            .joins("LEFT JOIN topics t on t.id = categories.topic_id")
-            .select("categories.*, t.slug topic_slug")
-            .order(:position)
-            .to_a
+          begin
+            query =
+              Category
+                .includes(
+                  :uploaded_logo,
+                  :uploaded_logo_dark,
+                  :uploaded_background,
+                  :tags,
+                  :tag_groups,
+                  :form_templates,
+                  category_required_tag_groups: :tag_group,
+                )
+                .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+                .select("categories.*, t.slug topic_slug")
+                .order(:position)
+
+            query =
+              DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
+
+            query.to_a
+          end
 
         if preloaded_category_custom_fields.present?
           Category.preload_custom_fields(categories, preloaded_category_custom_fields)
@@ -150,7 +158,13 @@ class Site
   end
 
   def groups
-    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true).includes(:flair_upload)
+    query =
+      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(
+        :flair_upload,
+      )
+    query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
+
+    query
   end
 
   def archetypes
@@ -214,38 +228,5 @@ class Site
     # publishing forces the sequence up
     # the cache is validated based on the sequence
     MessageBus.publish(SITE_JSON_CHANNEL, "")
-  end
-
-  def self.welcome_topic_banner_cache_key(user_id)
-    "show_welcome_topic_banner:#{user_id}"
-  end
-
-  def self.welcome_topic_exists_and_is_not_edited?
-    Post
-      .joins(:topic)
-      .where(
-        "topics.id = :topic_id AND topics.deleted_at IS NULL AND posts.post_number = 1 AND posts.version = 1 AND posts.created_at > :created_at",
-        topic_id: SiteSetting.welcome_topic_id,
-        created_at: 1.month.ago,
-      )
-      .exists?
-  end
-
-  def self.show_welcome_topic_banner?(guardian)
-    return false if !guardian.is_admin?
-    user_id = guardian.user.id
-
-    show_welcome_topic_banner = Discourse.cache.read(welcome_topic_banner_cache_key(user_id))
-    return show_welcome_topic_banner unless show_welcome_topic_banner.nil?
-
-    show_welcome_topic_banner =
-      if (user_id == User.first_login_admin_id)
-        welcome_topic_exists_and_is_not_edited?
-      else
-        false
-      end
-
-    Discourse.cache.write(welcome_topic_banner_cache_key(user_id), show_welcome_topic_banner)
-    show_welcome_topic_banner
   end
 end

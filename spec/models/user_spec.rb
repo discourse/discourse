@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe User do
+  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+
   fab!(:group) { Fabricate(:group) }
 
-  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+  it_behaves_like "it has custom fields"
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
@@ -11,7 +13,7 @@ RSpec.describe User do
 
   it do
     is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
-      :created_by_id,
+      :target_created_by_id,
     )
   end
 
@@ -46,8 +48,8 @@ RSpec.describe User do
       before do
         SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
-        SiteSetting.default_sidebar_categories = "#{category.id}|#{secured_category.id}"
-        SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
+        SiteSetting.default_navigation_menu_categories = "#{category.id}|#{secured_category.id}"
+        SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{hidden_tag.name}"
       end
 
       it "creates the right sidebar section link records for categories and tags that a user can see" do
@@ -131,7 +133,7 @@ RSpec.describe User do
       it "should not create any sidebar section link records for staged users" do
         user = Fabricate(:user, staged: true)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should create sidebar section link records when user has been unstaged" do
@@ -142,9 +144,10 @@ RSpec.describe User do
       end
 
       it "should not create any sidebar section link records for non human users" do
-        user = Fabricate(:user, id: -Time.now.to_i)
+        id = -Time.now.to_i
+        user = Fabricate(:user, id: id)
 
-        expect(SidebarSectionLink.exists?).to eq(false)
+        expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
 
       it "should not create any tag sidebar section link records when tagging is disabled" do
@@ -154,6 +157,19 @@ RSpec.describe User do
 
         expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
         expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
+      end
+    end
+
+    describe "#change_display_name" do
+      it "enqueues a job to retroactively update display name in quotes, etc." do
+        expect_enqueued_with(
+          job: :change_display_name,
+          args: {
+            user_id: user.id,
+            old_name: "Bruce Wayne",
+            new_name: "Batman",
+          },
+        ) { user.update(name: "Batman") }
       end
     end
   end
@@ -360,6 +376,23 @@ RSpec.describe User do
               user.save!
               expect(user_field_value).to eq "word to replace"
             end
+          end
+        end
+
+        context "when watched words are of type 'link'" do
+          let(:value) { "don't replace me" }
+          let!(:replace_word) do
+            Fabricate(
+              :watched_word,
+              word: "replace",
+              replacement: "touch",
+              action: WatchedWord.actions[:link],
+            )
+          end
+
+          it "does not replace anything" do
+            user.save!
+            expect(user_field_value).to eq value
           end
         end
       end
@@ -608,35 +641,33 @@ RSpec.describe User do
   end
 
   describe "new" do
-    subject { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     it { is_expected.to be_valid }
     it { is_expected.not_to be_admin }
     it { is_expected.not_to be_approved }
 
     it "is properly initialized" do
-      expect(subject.approved_at).to be_blank
-      expect(subject.approved_by_id).to be_blank
+      expect(user.approved_at).to be_blank
+      expect(user.approved_by_id).to be_blank
     end
 
     it "triggers an extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.first
+      event = DiscourseEvent.track_events { user.save! }.first
 
       expect(event[:event_name]).to eq(:user_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(user)
     end
 
     context "with after_save" do
-      before { subject.save! }
+      before { user.save! }
 
       it "has correct settings" do
-        expect(subject.email_tokens).to be_present
-        expect(subject.user_stat).to be_present
-        expect(subject.user_profile).to be_present
-        expect(subject.user_option.email_messages_level).to eq(
-          UserOption.email_level_types[:always],
-        )
-        expect(subject.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
+        expect(user.email_tokens).to be_present
+        expect(user.user_stat).to be_present
+        expect(user.user_profile).to be_present
+        expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
+        expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
     end
 
@@ -723,41 +754,37 @@ RSpec.describe User do
   end
 
   describe "staff and regular users" do
-    let(:user) { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     describe "#staff?" do
-      subject { user.staff? }
-
-      it { is_expected.to eq(false) }
+      it { is_expected.not_to be_staff }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
     end
 
     describe "#regular?" do
-      subject { user.regular? }
-
-      it { is_expected.to eq(true) }
+      it { is_expected.to be_regular }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
     end
   end
@@ -1342,7 +1369,7 @@ RSpec.describe User do
       describe "after 3 days" do
         it "should log a second visited_at record when we log an update later" do
           user.update_last_seen!
-          future_date = freeze_time(3.days.from_now)
+          freeze_time(3.days.from_now)
           user.update_last_seen!
 
           expect(user.user_visits.count).to eq(2)
@@ -1839,8 +1866,8 @@ RSpec.describe User do
   describe "hash_passwords" do
     let(:too_long) { "x" * (User.max_password_length + 1) }
 
-    def hash(password, salt)
-      User.new.send(:hash_password, password, salt)
+    def hash(password, salt, algorithm = User::TARGET_PASSWORD_ALGORITHM)
+      User.new.send(:hash_password, password, salt, algorithm)
     end
 
     it "returns the same hash for the same password and salt" do
@@ -1857,6 +1884,44 @@ RSpec.describe User do
 
     it "raises an error when passwords are too long" do
       expect { hash(too_long, "gravy") }.to raise_error(StandardError)
+    end
+
+    it "uses the target algorithm for new users" do
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+    end
+
+    it "can use an older algorithm to verify existing passwords, then upgrade" do
+      old_algorithm = "$pbkdf2-sha256$i=5,l=32$"
+      expect(old_algorithm).not_to eq(User::TARGET_PASSWORD_ALGORITHM)
+
+      password = "poutine"
+      old_hash = hash(password, user.salt, old_algorithm)
+
+      user.update!(password_algorithm: old_algorithm, password_hash: old_hash)
+
+      expect(user.password_algorithm).to eq(old_algorithm)
+      expect(user.password_hash).to eq(old_hash)
+
+      # With an incorrect attempt, should return false with no side effects
+      expect(user.confirm_password?("notthepassword")).to eq(false)
+      expect(user.password_algorithm).to eq(old_algorithm)
+      expect(user.password_hash).to eq(old_hash)
+
+      # Should correctly verify against old algorithm
+      expect(user.confirm_password?(password)).to eq(true)
+
+      # Auto-upgrades to new algorithm
+      expected_new_hash = hash(password, user.salt, User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_hash).to eq(expected_new_hash)
+
+      # And persists to the db
+      user.reload
+      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_hash).to eq(expected_new_hash)
+
+      # And can still log in
+      expect(user.confirm_password?(password)).to eq(true)
     end
   end
 
@@ -1938,7 +2003,10 @@ RSpec.describe User do
           .perform(moderator, :agree_and_keep)
 
         post_deferred = Fabricate(:post)
-        PostActionCreator.inappropriate(user, post_deferred).reviewable.perform(moderator, :ignore)
+        PostActionCreator
+          .inappropriate(user, post_deferred)
+          .reviewable
+          .perform(moderator, :ignore_and_do_nothing)
 
         post_disagreed = Fabricate(:post)
         PostActionCreator
@@ -2077,6 +2145,13 @@ RSpec.describe User do
       expect(CategoryUser.lookup(user, :regular).pluck(:category_id)).to eq([category4.id])
     end
 
+    it "does not error on duplicate categories for set_default_categories_preferences" do
+      SiteSetting.default_categories_normal = category4.id.to_s + "|" + category4.id.to_s
+      user = nil
+      expect { user = Fabricate(:user, trust_level: 1) }.not_to raise_error
+      expect(CategoryUser.lookup(user, :normal).pluck(:category_id)).to include(category4.id)
+    end
+
     it "does not set category preferences for staged users" do
       user = Fabricate(:user, staged: true)
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([])
@@ -2130,22 +2205,6 @@ RSpec.describe User do
         user.update!(trust_level: TrustLevel[1])
 
         expect(user.read_first_notification?).to eq(false)
-      end
-    end
-
-    describe "when user is trust level 2" do
-      it "should return the right value" do
-        user.update!(trust_level: TrustLevel[2])
-
-        expect(user.read_first_notification?).to eq(true)
-      end
-    end
-
-    describe "when user is an old user" do
-      it "should return the right value" do
-        user.update!(first_seen_at: 1.year.ago)
-
-        expect(user.read_first_notification?).to eq(true)
       end
     end
 
@@ -2284,15 +2343,15 @@ RSpec.describe User do
     end
 
     it "has the correct counts" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
-      notification3 =
+      _notification = Fabricate(:notification, user: user)
+      _notification2 = Fabricate(:notification, user: user, read: true)
+      _notification3 =
         Fabricate(
           :notification,
           user: user,
           notification_type: Notification.types[:private_message],
         )
-      notification4 =
+      _notification4 =
         Fabricate(
           :notification,
           user: user,
@@ -2312,8 +2371,8 @@ RSpec.describe User do
     end
 
     it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
+      _notification = Fabricate(:notification, user: user)
+      _notification2 = Fabricate(:notification, user: user, read: true)
       user.update(last_seen_at: 31.days.ago)
 
       message =
@@ -2644,24 +2703,22 @@ RSpec.describe User do
   describe "#title=" do
     fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: false) }
 
-    it "sets badge_granted_title correctly" do
+    it "sets granted_title_badge_id correctly" do
       BadgeGranter.grant(badge, user)
 
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
       user.update!(title: "Custom")
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
+      expect(user.user_profile.reload.granted_title_badge_id).to be_nil
 
       badge.update!(allow_title: true)
       user.badges.reload
       user.update!(title: badge.name)
-      expect(user.user_profile.reload.badge_granted_title).to eq(true)
       expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
 
       user.update!(title: nil)
-      expect(user.user_profile.reload.badge_granted_title).to eq(false)
-      expect(user.user_profile.granted_title_badge_id).to eq(nil)
+      expect(user.user_profile.granted_title_badge_id).to be_nil
     end
 
     context "when a custom badge name has been set and it matches the title" do
@@ -2671,12 +2728,11 @@ RSpec.describe User do
         TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
       end
 
-      it "sets badge_granted_title correctly" do
+      it "sets granted_title_badge_id correctly" do
         BadgeGranter.grant(badge, user)
 
         badge.update!(allow_title: true)
         user.update!(title: customized_badge_name)
-        expect(user.user_profile.reload.badge_granted_title).to eq(true)
         expect(user.user_profile.reload.granted_title_badge_id).to eq(badge.id)
       end
 
@@ -2872,7 +2928,7 @@ RSpec.describe User do
       it "only includes enabled totp 2FA" do
         enabled_totp_2fa =
           Fabricate(:user_second_factor_totp, user: user, name: "Enabled TOTP", enabled: true)
-        disabled_totp_2fa =
+        _disabled_totp_2fa =
           Fabricate(:user_second_factor_totp, user: user, name: "Disabled TOTP", enabled: false)
 
         expect(user.totps.map(&:id)).to eq([enabled_totp_2fa.id])
@@ -2888,7 +2944,7 @@ RSpec.describe User do
             name: "Enabled YubiKey",
             enabled: true,
           )
-        disabled_security_key_2fa =
+        _disabled_security_key_2fa =
           Fabricate(
             :user_security_key_with_random_credential,
             user: user,
@@ -3173,7 +3229,7 @@ RSpec.describe User do
     end
 
     it "returns false if no whispers groups exist" do
-      expect(subject.whisperer?).to eq(false)
+      expect(user.whisperer?).to eq(false)
     end
   end
 
@@ -3309,7 +3365,7 @@ RSpec.describe User do
       last_notification = Fabricate(:notification, user: user)
       deleted_notification = Fabricate(:notification, user: user)
       deleted_notification.topic.trash!
-      someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
+      _someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
 
       expect(user.bump_last_seen_notification!).to eq(true)
       expect(user.reload.seen_notification_id).to eq(last_notification.id)

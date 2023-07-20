@@ -110,12 +110,15 @@ class UsersController < ApplicationController
 
     @user =
       fetch_user_from_params(
-        include_inactive:
-          current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts),
+        include_inactive: current_user&.staff? || for_card || SiteSetting.show_inactive_accounts,
       )
 
     user_serializer = nil
-    if guardian.can_see_profile?(@user)
+    if !current_user&.staff? && !@user.active?
+      user_serializer = InactiveUserSerializer.new(@user, scope: guardian, root: "user")
+    elsif !guardian.can_see_profile?(@user)
+      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
+    else
       serializer_class = for_card ? UserCardSerializer : UserSerializer
       user_serializer = serializer_class.new(@user, scope: guardian, root: "user")
 
@@ -125,8 +128,6 @@ class UsersController < ApplicationController
           topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count,
         }
       end
-    else
-      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
     end
 
     track_visit_to_user_profile if !params[:skip_track_visit] && (@user != current_user)
@@ -394,14 +395,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     report = TopicTrackingState.report(user)
-    serializer =
-      ActiveModel::ArraySerializer.new(
-        report,
-        each_serializer: TopicTrackingStateSerializer,
-        scope: guardian,
-      )
+    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
 
-    render json: MultiJson.dump(serializer)
+    render json: MultiJson.dump(serializer.as_json[:data])
   end
 
   def private_message_topic_tracking_state
@@ -473,7 +469,7 @@ class UsersController < ApplicationController
   end
 
   def my_redirect
-    raise Discourse::NotFound if params[:path] !~ %r{^[a-z_\-/]+$}
+    raise Discourse::NotFound if params[:path] !~ %r{\A[a-z_\-/]+\z}
 
     if current_user.blank?
       cookies[:destination_url] = path("/my/#{params[:path]}")
@@ -1238,6 +1234,11 @@ class UsersController < ApplicationController
         groups = block.call(groups, current_user) if params[param_name.to_s]
       end
 
+      # the plugin registry callbacks above are only evaluated when a param
+      # is present matching the name of the callback. Any modifier registered using
+      # register_modifier(:groups_for_users_search) will be evaluated without needing the
+      # param.
+      groups = DiscoursePluginRegistry.apply_modifier(:groups_for_users_search, groups)
       groups = Group.search_groups(term, groups: groups, sort: :auto)
 
       to_render[:groups] = groups.map { |m| { name: m.name, full_name: m.full_name } }
@@ -1847,16 +1848,21 @@ class UsersController < ApplicationController
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
       limit = USER_MENU_LIST_LIMIT - unread_notifications.size
+
       messages_list =
         TopicQuery
           .new(current_user, per_page: limit)
-          .list_private_messages_direct_and_groups(current_user) do |query|
+          .list_private_messages_direct_and_groups(
+            current_user,
+            groups_messages_notification_level: :watching,
+          ) do |query|
             if exclude_topic_ids.present?
               query.where("topics.id NOT IN (?)", exclude_topic_ids)
             else
               query
             end
           end
+
       read_notifications =
         Notification
           .for_user_menu(current_user.id, limit: limit)
@@ -2013,12 +2019,31 @@ class UsersController < ApplicationController
       result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    modify_user_params(result)
+    deprecate_modify_user_params_method
+    result = modify_user_params(result)
+    DiscoursePluginRegistry.apply_modifier(
+      :users_controller_update_user_params,
+      result,
+      current_user,
+      params,
+    )
   end
 
   # Plugins can use this to modify user parameters
   def modify_user_params(attrs)
     attrs
+  end
+
+  def deprecate_modify_user_params_method
+    # only issue a deprecation warning if the method is overriden somewhere
+    if method(:modify_user_params).source_location[0] !=
+         "#{Rails.root}/app/controllers/users_controller.rb"
+      Discourse.deprecate(
+        "`UsersController#modify_user_params` method is deprecated. Please use the `users_controller_update_user_params` modifier instead.",
+        since: "3.1.0.beta4",
+        drop_from: "3.2.0",
+      )
+    end
   end
 
   def fail_with(key)

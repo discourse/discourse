@@ -38,9 +38,11 @@ const Category = RestModel.extend({
   @discourseComputed("required_tag_groups", "minimum_required_tags")
   minimumRequiredTags() {
     if (this.required_tag_groups?.length > 0) {
-      return this.required_tag_groups.reduce(
-        (sum, rtg) => sum + rtg.min_count,
-        0
+      // it should require the max between the bare minimum set in the category and the sum of the min_count of the
+      // required_tag_groups
+      return Math.max(
+        this.required_tag_groups.reduce((sum, rtg) => sum + rtg.min_count, 0),
+        this.minimum_required_tags || 0
       );
     } else {
       return this.minimum_required_tags > 0 ? this.minimum_required_tags : null;
@@ -68,7 +70,11 @@ const Category = RestModel.extend({
 
   @discourseComputed("parentCategory.level")
   level(parentLevel) {
-    return (parentLevel || -1) + 1;
+    if (!parentLevel) {
+      return parentLevel === 0 ? 1 : 0;
+    } else {
+      return parentLevel + 1;
+    }
   },
 
   @discourseComputed("subcategories")
@@ -192,6 +198,14 @@ const Category = RestModel.extend({
     return notificationLevel >= NotificationLevels.TRACKING;
   },
 
+  get unreadTopicsCount() {
+    return this.topicTrackingState.countUnread({ categoryId: this.id });
+  },
+
+  get newTopicsCount() {
+    return this.topicTrackingState.countNew({ categoryId: this.id });
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
@@ -219,8 +233,10 @@ const Category = RestModel.extend({
         uploaded_logo_dark_id: this.get("uploaded_logo_dark.id"),
         uploaded_background_id: this.get("uploaded_background.id"),
         allow_badges: this.allow_badges,
+        category_setting_attributes: this.category_setting,
         custom_fields: this.custom_fields,
         topic_template: this.topic_template,
+        form_template_ids: this.form_template_ids,
         all_topics_wiki: this.all_topics_wiki,
         allow_unlimited_owner_edits_on_first_post:
           this.allow_unlimited_owner_edits_on_first_post,
@@ -300,16 +316,6 @@ const Category = RestModel.extend({
     if (topics && topics.length) {
       return topics.slice(0, this.num_featured_topics || 2);
     }
-  },
-
-  @discourseComputed("id", "topicTrackingState.messageCount")
-  unreadTopics(id) {
-    return this.topicTrackingState.countUnread({ categoryId: id });
-  },
-
-  @discourseComputed("id", "topicTrackingState.messageCount")
-  newTopics(id) {
-    return this.topicTrackingState.countNew({ categoryId: id });
   },
 
   setNotification(notification_level) {

@@ -1,5 +1,5 @@
 {{#if this.canChangePassword}}
-  <div class="control-group pref-password">
+  <div class="control-group pref-password" data-setting-name="user-password">
     <label class="control-label">{{i18n "user.password.title"}}</label>
     <div class="controls">
       <a href {{on "click" this.changePassword}} class="btn btn-default">
@@ -15,7 +15,10 @@
     </div>
   </div>
 
-  <div class="control-group pref-second-factor">
+  <div
+    class="control-group pref-second-factor"
+    data-setting-name="user-second-factor"
+  >
     <label class="control-label">{{i18n "user.second_factor.title"}}</label>
     {{#unless this.model.second_factor_enabled}}
       <label>
@@ -34,7 +37,10 @@
 {{/if}}
 
 {{#if this.canCheckEmails}}
-  <div class="control-group pref-auth-tokens">
+  <div
+    class="control-group pref-auth-tokens"
+    data-setting-name="user-auth-tokens"
+  >
     <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
 
     <div class="auth-tokens">
@@ -100,22 +106,22 @@
   </div>
 {{/if}}
 
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <UserPreferences::UserApiKeys @model={{@model}} />
-{{/if}}
+<UserPreferences::UserApiKeys @model={{@model}} />
 
-<PluginOutlet
-  @name="user-preferences-security"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-security"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>

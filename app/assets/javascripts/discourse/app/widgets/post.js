@@ -1,9 +1,6 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import {
-  avatarUrl,
-  formatUsername,
-  translateSize,
-} from "discourse/lib/utilities";
+import { formatUsername } from "discourse/lib/utilities";
+import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import DiscourseURL from "discourse/lib/url";
@@ -23,9 +20,10 @@ import {
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import showModal from "discourse/lib/show-modal";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { hideUserTip } from "discourse/lib/user-tips";
+import ShareTopicModal from "discourse/components/modal/share-topic";
+import { getOwner } from "@ember/application";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -64,6 +62,7 @@ export function avatarImg(wanted, attrs) {
       title,
       "aria-label": title,
       loading: "lazy",
+      tabindex: "-1",
     },
     className,
   };
@@ -141,10 +140,19 @@ createWidget("reply-to-tab", {
     return { loading: false };
   },
 
-  buildAttributes() {
-    return {
+  buildAttributes(attrs) {
+    let result = {
       tabindex: "0",
     };
+
+    if (!this.attrs.mobileView) {
+      result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
+      result["aria-expanded"] = this.attrs.repliesAbove.length
+        ? "true"
+        : "false";
+    }
+
+    return result;
   },
 
   html(attrs, state) {
@@ -216,13 +224,15 @@ createWidget("post-avatar", {
 
     const postAvatarBody = [body];
 
-    if (attrs.flair_url || attrs.flair_bg_color) {
-      postAvatarBody.push(this.attach("avatar-flair", attrs));
-    } else {
-      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+    if (attrs.flair_group_id) {
+      if (attrs.flair_url || attrs.flair_bg_color) {
+        postAvatarBody.push(this.attach("avatar-flair", attrs));
+      } else {
+        const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
 
-      if (autoFlairAttrs) {
-        postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
+        if (autoFlairAttrs) {
+          postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
+        }
       }
     }
 
@@ -398,8 +408,11 @@ createWidget("post-date", {
   showShareModal() {
     const post = this.findAncestorModel();
     const topic = post.topic;
-    const controller = showModal("share-topic", { model: topic.category });
-    controller.setProperties({ topic, post });
+    getOwner(this)
+      .lookup("service:modal")
+      .show(ShareTopicModal, {
+        model: { category: topic.category, topic, post },
+      });
   },
 });
 
@@ -485,7 +498,7 @@ createWidget("post-contents", {
 
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
-    if (attrs.cooked_hidden) {
+    if (attrs.cooked_hidden && attrs.canSeeHiddenPost) {
       result.push(this.attach("expand-hidden", attrs));
     }
 
@@ -504,28 +517,31 @@ createWidget("post-contents", {
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
       result.push(
-        h("section.embedded-posts.bottom", [
-          repliesBelow.map((p) => {
-            return this.attach("embedded-post", p, {
-              model: p.asPost,
-              state: {
-                role: "region",
-                "aria-label": I18n.t("post.sr_embedded_reply_description", {
-                  post_number: attrs.post_number,
-                  username: p.username,
-                }),
-              },
-            });
-          }),
-          this.attach("button", {
-            title: "post.collapse",
-            icon: "chevron-up",
-            action: "toggleRepliesBelow",
-            actionParam: "true",
-            className: "btn collapse-up",
-            translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
-          }),
-        ])
+        h(
+          `section.embedded-posts.bottom#embedded-posts__bottom--${this.attrs.post_number}`,
+          [
+            repliesBelow.map((p) => {
+              return this.attach("embedded-post", p, {
+                model: p.asPost,
+                state: {
+                  role: "region",
+                  "aria-label": I18n.t("post.sr_embedded_reply_description", {
+                    post_number: attrs.post_number,
+                    username: p.username,
+                  }),
+                },
+              });
+            }),
+            this.attach("button", {
+              title: "post.collapse",
+              icon: "chevron-up",
+              action: "toggleRepliesBelow",
+              actionParam: "true",
+              className: "btn collapse-up",
+              translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
+            }),
+          ]
+        )
       );
     }
 
@@ -612,9 +628,20 @@ createWidget("post-contents", {
     const post = this.findAncestorModel();
     nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
       const topic = post.topic;
-      const controller = showModal("share-topic", { model: topic.category });
-      controller.setProperties({ topic, post });
+      getOwner(this)
+        .lookup("service:modal")
+        .show(ShareTopicModal, {
+          model: { category: topic.category, topic, post },
+        });
     });
+  },
+
+  init() {
+    this.postContentsDestroyCallbacks = [];
+  },
+
+  destroy() {
+    this.postContentsDestroyCallbacks.forEach((c) => c());
   },
 });
 
@@ -738,16 +765,19 @@ createWidget("post-article", {
       rows.push(
         h(
           "div.row",
-          h("section.embedded-posts.top.topic-body", [
-            this.attach("button", {
-              title: "post.collapse",
-              icon: "chevron-down",
-              action: "toggleReplyAbove",
-              actionParam: "true",
-              className: "btn collapse-down",
-            }),
-            replies,
-          ])
+          h(
+            `section.embedded-posts.top.topic-body#embedded-posts__top--${attrs.post_number}`,
+            [
+              this.attach("button", {
+                title: "post.collapse",
+                icon: "chevron-down",
+                action: "toggleReplyAbove",
+                actionParam: "true",
+                className: "btn collapse-down",
+              }),
+              replies,
+            ]
+          )
         )
       );
     }
@@ -759,7 +789,10 @@ createWidget("post-article", {
     rows.push(
       h("div.row", [
         this.attach("post-avatar", attrs),
-        this.attach("post-body", attrs),
+        this.attach("post-body", {
+          ...attrs,
+          repliesAbove: state.repliesAbove,
+        }),
       ])
     );
     return rows;

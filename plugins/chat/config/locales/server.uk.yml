@@ -33,9 +33,34 @@ uk:
   chat:
     deleted_chat_username: видалено
     errors:
+      channel_new_message_disallowed:
+        archived: "Канал заархівований, нові повідомлення не надсилаються"
+        closed: "Канал закрито, нові повідомлення не надсилаються"
+        read_only: "Канал тільки для читання, нові повідомлення не надсилаються"
+      channel_modify_message_disallowed:
+        archived: "Канал заархівовано, жодні повідомлення не можна редагувати чи видаляти"
+        closed: "Канал закритий, жодні повідомлення не можна редагувати чи видаляти"
+        read_only: "Канал доступний лише для читання, жодні повідомлення не можна редагувати чи видаляти"
       auto_silence_from_flags: "Повідомлення чату, позначене достатньо високим балом, щоб заблокувати користувача."
+      minimum_length_not_met:
+        one: "Повідомлення занадто коротке, повинно містити мінімум %{count} символ."
+        few: "Повідомлення занадто коротке, повинно містити мінімум %{count} символи."
+        many: "Повідомлення занадто коротке, повинно містити мінімум %{count} символів."
+        other: "Повідомлення занадто коротке, повинно містити мінімум %{count} символів."
+      message_too_long:
+        one: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символ."
+        few: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символи."
+        many: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символів."
+        other: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символів."
       draft_too_long: "Чернетка занадто довга."
       not_accepting_dms: "На жаль, %{username} в даний момент не приймає повідомлення."
+      over_chat_max_direct_message_users_allow_self: "Ви можете створити пряме повідомлення тільки з самим собою."
+      over_chat_max_direct_message_users:
+        one: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншим користувачем."
+        few: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншими користувачами."
+        many: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншими користувачами."
+        other: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншими користувачами."
+      original_message_not_found: "Попередника повідомлення, на яке ви відповідаєте, неможливо знайти або його було видалено."
     reviewables:
       actions:
         agree:
@@ -57,15 +82,14 @@ uk:
         ignore:
           title: "Ігнорувати"
     channel:
-      statuses:
-        read_only: "Тільки для читання"
-        archived: "Архівовано"
-        closed: "Закриті"
-        open: "Відкрити"
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} і ще %{leftover}"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} і ще %{count}"
+          few: "%{comma_separated_usernames} і ще %{count}"
+          many: "%{comma_separated_usernames} і ще %{count}"
+          other: "%{comma_separated_usernames} і ще %{count}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"

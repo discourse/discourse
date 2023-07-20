@@ -10,6 +10,7 @@ class ReviewableFlaggedPost < Reviewable
       agree_and_silence: :agree_and_keep,
       agree_and_suspend: :agree_and_keep,
       disagree_and_restore: :disagree,
+      ignore_and_do_nothing: :ignore,
     }
   end
 
@@ -56,6 +57,20 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree)
     end
 
+    if guardian.can_delete_post_or_topic?(post)
+      build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree)
+
+      if post.reply_count > 0
+        build_action(
+          actions,
+          :delete_and_agree_replies,
+          icon: "far-trash-alt",
+          bundle: agree,
+          confirm: true,
+        )
+      end
+    end
+
     if guardian.can_suspend?(target_created_by)
       build_action(
         actions,
@@ -74,48 +89,43 @@ class ReviewableFlaggedPost < Reviewable
     end
 
     build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree) if post.user_deleted?
-
     if post.hidden?
       build_action(actions, :disagree_and_restore, icon: "thumbs-down")
     else
       build_action(actions, :disagree, icon: "thumbs-down")
     end
 
-    build_action(actions, :ignore, icon: "external-link-alt")
+    ignore =
+      actions.add_bundle(
+        "#{id}-ignore",
+        icon: "thumbs-up",
+        label: "reviewables.actions.ignore.title",
+      )
 
-    delete_user_actions(actions) if potential_spam? && guardian.can_delete_user?(target_created_by)
-
+    if !post.hidden?
+      build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
+    end
     if guardian.can_delete_post_or_topic?(post)
-      delete =
-        actions.add_bundle(
-          "#{id}-delete",
-          icon: "far-trash-alt",
-          label: "reviewables.actions.delete.title",
-        )
-      build_action(actions, :delete_and_ignore, icon: "external-link-alt", bundle: delete)
+      build_action(actions, :delete_and_ignore, icon: "far-trash-alt", bundle: ignore)
       if post.reply_count > 0
         build_action(
           actions,
           :delete_and_ignore_replies,
-          icon: "external-link-alt",
+          icon: "far-trash-alt",
           confirm: true,
-          bundle: delete,
-        )
-      end
-      build_action(actions, :delete_and_agree, icon: "thumbs-up", bundle: delete)
-      if post.reply_count > 0
-        build_action(
-          actions,
-          :delete_and_agree_replies,
-          icon: "external-link-alt",
-          bundle: delete,
-          confirm: true,
+          bundle: ignore,
         )
       end
     end
+
+    delete_user_actions(actions) if potential_spam? && guardian.can_delete_user?(target_created_by)
   end
 
   def perform_ignore(performed_by, args)
+    perform_ignore_and_do_nothing(performed_by, args)
+  end
+
+  def perform_ignore_and_do_nothing(performed_by, args)
     actions =
       PostAction
         .active
@@ -221,13 +231,13 @@ class ReviewableFlaggedPost < Reviewable
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    result = perform_ignore(performed_by, args)
+    result = perform_ignore_and_do_nothing(performed_by, args)
     destroyer(performed_by, post).destroy
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    result = perform_ignore(performed_by, args)
+    result = perform_ignore_and_do_nothing(performed_by, args)
     PostDestroyer.delete_with_replies(performed_by, post, self)
 
     result

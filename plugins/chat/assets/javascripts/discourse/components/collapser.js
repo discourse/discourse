@@ -6,14 +6,17 @@ export default Component.extend({
 
   collapsed: false,
   header: null,
+  onToggle: null,
 
   @action
   open() {
     this.set("collapsed", false);
+    this.onToggle?.(false);
   },
 
   @action
   close() {
     this.set("collapsed", true);
+    this.onToggle?.(true);
   },
 });

@@ -198,12 +198,12 @@ export default createWidget("hamburger-menu", {
         .filter((c) => c.notification_level !== NotificationLevels.MUTED);
 
       categories = allCategories
-        .filter((c) => c.get("newTopics") > 0 || c.get("unreadTopics") > 0)
+        .filter((c) => c.newTopicsCount > 0 || c.unreadTopicsCount > 0)
         .sort((a, b) => {
           return (
-            b.get("newTopics") +
-            b.get("unreadTopics") -
-            (a.get("newTopics") + a.get("unreadTopics"))
+            b.newTopicsCount +
+            b.unreadTopicsCount -
+            (a.unreadTopicsCount + a.newTopicsCount)
           );
         });
 
@@ -354,15 +354,7 @@ export default createWidget("hamburger-menu", {
       });
   },
 
-  html(attrs, state) {
-    if (
-      this.currentUser &&
-      !this.currentUser.redesigned_user_menu_enabled &&
-      !state.loaded
-    ) {
-      this.refreshReviewableCount(state);
-    }
-
+  html() {
     return this.attach("menu-panel", {
       contents: () => this.panelContents(),
       maxWidth: this.settings.maxWidth,

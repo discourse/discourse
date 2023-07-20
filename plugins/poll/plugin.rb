@@ -7,8 +7,6 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/poll
 
 register_asset "stylesheets/common/poll.scss"
-register_asset "stylesheets/desktop/poll.scss", :desktop
-register_asset "stylesheets/mobile/poll.scss", :mobile
 register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll-ui-builder.scss", :desktop
 register_asset "stylesheets/common/poll-breakdown.scss"
@@ -20,7 +18,7 @@ hide_plugin
 
 after_initialize do
   module ::DiscoursePoll
-    PLUGIN_NAME ||= "discourse_poll"
+    PLUGIN_NAME ||= "poll"
     DATA_PREFIX ||= "data-poll-"
     HAS_POLLS ||= "has_polls"
     DEFAULT_POLL_NAME ||= "poll"
@@ -169,7 +167,20 @@ after_initialize do
   end
 
   on(:merging_users) do |source_user, target_user|
-    PollVote.where(user_id: source_user.id).update_all(user_id: target_user.id)
+    DB.exec(<<-SQL, source_user_id: source_user.id, target_user_id: target_user.id)
+      DELETE FROM poll_votes
+      WHERE user_id = :source_user_id
+      AND EXISTS (
+        SELECT 1
+        FROM poll_votes
+        WHERE user_id = :target_user_id
+          AND poll_votes.poll_id = poll_votes.poll_id
+      );
+
+      UPDATE poll_votes
+      SET user_id = :target_user_id
+      WHERE user_id = :source_user_id;
+    SQL
   end
 
   add_to_class(:topic_view, :polls) do
@@ -195,7 +206,7 @@ after_initialize do
       end
   end
 
-  add_to_serializer(:post, :preloaded_polls, false) do
+  add_to_class(PostSerializer, :preloaded_polls) do
     @preloaded_polls ||=
       if @topic_view.present?
         @topic_view.polls[object.id]
@@ -204,15 +215,18 @@ after_initialize do
       end
   end
 
-  add_to_serializer(:post, :include_preloaded_polls?) { false }
-
-  add_to_serializer(:post, :polls, false) do
+  add_to_serializer(:post, :polls, include_condition: -> { preloaded_polls.present? }) do
     preloaded_polls.map { |p| PollSerializer.new(p, root: false, scope: self.scope) }
   end
 
-  add_to_serializer(:post, :include_polls?) { SiteSetting.poll_enabled && preloaded_polls.present? }
-
-  add_to_serializer(:post, :polls_votes, false) do
+  add_to_serializer(
+    :post,
+    :polls_votes,
+    include_condition: -> do
+      scope.user&.id.present? && preloaded_polls.present? &&
+        preloaded_polls.any? { |p| p.has_voted?(scope.user) }
+    end,
+  ) do
     preloaded_polls
       .map do |poll|
         user_poll_votes =
@@ -227,8 +241,11 @@ after_initialize do
       .to_h
   end
 
-  add_to_serializer(:post, :include_polls_votes?) do
-    SiteSetting.poll_enabled && scope.user&.id.present? && preloaded_polls.present? &&
-      preloaded_polls.any? { |p| p.has_voted?(scope.user) }
+  register_search_advanced_filter(/in:polls/) do |posts, match|
+    if SiteSetting.poll_enabled
+      posts.joins(:polls)
+    else
+      posts
+    end
   end
 end

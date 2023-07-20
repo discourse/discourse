@@ -1,176 +1,113 @@
-import Component from "@ember/component";
-import I18n from "I18n";
-import { next, schedule } from "@ember/runloop";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import Component from "@glimmer/component";
+import ClassicComponent from "@ember/component";
+import { action } from "@ember/object";
+import { cached, tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 
-export default Component.extend({
-  classNameBindings: [
-    ":modal",
-    ":d-modal",
-    "modalClass",
-    "modalStyle",
-    "hasPanels",
-  ],
-  attributeBindings: [
-    "data-keyboard",
-    "aria-modal",
-    "role",
-    "ariaLabelledby:aria-labelledby",
-  ],
-  submitOnEnter: true,
-  dismissable: true,
-  title: null,
-  titleAriaElementId: null,
-  subtitle: null,
-  role: "dialog",
-  headerClass: null,
+export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
+export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
+export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
+export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 
-  init() {
-    this._super(...arguments);
+const FLASH_TYPES = ["success", "error", "warning", "info"];
 
-    // If we need to render a second modal for any reason, we can't
-    // use `elementId`
-    if (this.modalStyle !== "inline-modal") {
-      this.set("elementId", "discourse-modal");
-      this.set("modalStyle", "fixed-modal");
-    }
-  },
+export default class DModal extends Component {
+  @service modal;
+  @tracked wrapperElement;
 
-  // We handle ESC ourselves
-  "data-keyboard": "false",
-  // Inform screenreaders of the modal
-  "aria-modal": "true",
-
-  @discourseComputed("title", "titleAriaElementId")
-  ariaLabelledby(title, titleAriaElementId) {
-    if (titleAriaElementId) {
-      return titleAriaElementId;
-    }
-    if (title) {
-      return "discourse-modal-title";
-    }
-
-    return;
-  },
-
-  @on("didInsertElement")
-  setUp() {
-    this.appEvents.on("modal:body-shown", this, "_modalBodyShown");
+  @action
+  setupListeners(element) {
     document.documentElement.addEventListener(
       "keydown",
-      this._handleModalEvents
+      this.handleDocumentKeydown
     );
-  },
+    this.wrapperElement = element;
+    this.trapTab();
+  }
 
-  @on("willDestroyElement")
-  cleanUp() {
-    this.appEvents.off("modal:body-shown", this, "_modalBodyShown");
+  @action
+  cleanupListeners() {
     document.documentElement.removeEventListener(
       "keydown",
-      this._handleModalEvents
+      this.handleDocumentKeydown
     );
-  },
+  }
 
-  triggerClickOnEnter(e) {
-    if (!this.submitOnEnter) {
+  get dismissable() {
+    if (!this.args.closeModal) {
+      return false;
+    } else if ("dismissable" in this.args) {
+      return this.args.dismissable;
+    } else {
+      return true;
+    }
+  }
+
+  shouldTriggerClickOnEnter(event) {
+    if (this.args.submitOnEnter === false) {
       return false;
     }
 
     // skip when in a form or a textarea element
     if (
-      e.target.closest("form") ||
-      (document.activeElement && document.activeElement.nodeName === "TEXTAREA")
+      event.target.closest("form") ||
+      document.activeElement?.nodeName === "TEXTAREA"
     ) {
       return false;
     }
 
     return true;
-  },
+  }
 
-  mouseDown(e) {
+  @action
+  handleMouseUp(e) {
+    if (e.button !== 0) {
+      return; // Non-default mouse button
+    }
+
     if (!this.dismissable) {
       return;
     }
-    const $target = $(e.target);
+
     if (
-      $target.hasClass("modal-middle-container") ||
-      $target.hasClass("modal-outer-container")
+      e.target.classList.contains("modal-middle-container") ||
+      e.target.classList.contains("modal-outer-container")
     ) {
-      // Send modal close (which bubbles to ApplicationRoute) if clicked outside.
-      // We do this because some CSS of ours seems to cover the backdrop and makes
-      // it unclickable.
-      return (
-        this.attrs.closeModal && this.attrs.closeModal("initiatedByClickOut")
-      );
+      return this.args.closeModal?.({
+        initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+      });
     }
-  },
+  }
 
-  _modalBodyShown(data) {
-    if (this.isDestroying || this.isDestroyed) {
-      return;
-    }
-
-    if (data.fixed) {
-      this.element.classList.remove("hidden");
-    }
-
-    if (data.title) {
-      this.set("title", I18n.t(data.title));
-    } else if (data.rawTitle) {
-      this.set("title", data.rawTitle);
-    }
-
-    if (data.subtitle) {
-      this.set("subtitle", I18n.t(data.subtitle));
-    } else if (data.rawSubtitle) {
-      this.set("subtitle", data.rawSubtitle);
-    } else {
-      // if no subtitle provided, makes sure the previous subtitle
-      // of another modal is not used
-      this.set("subtitle", null);
-    }
-
-    if ("submitOnEnter" in data) {
-      this.set("submitOnEnter", data.submitOnEnter);
-    }
-
-    if ("dismissable" in data) {
-      this.set("dismissable", data.dismissable);
-    } else {
-      this.set("dismissable", true);
-    }
-
-    this.set("headerClass", data.headerClass || null);
-
-    schedule("afterRender", () => {
-      this._trapTab();
-    });
-  },
-
-  @bind
-  _handleModalEvents(event) {
-    if (this.element.classList.contains("hidden")) {
+  @action
+  handleDocumentKeydown(event) {
+    if (this.args.hidden) {
       return;
     }
 
     if (event.key === "Escape" && this.dismissable) {
-      next(() => this.attrs.closeModal("initiatedByESC"));
+      this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC });
     }
-    if (event.key === "Enter" && this.triggerClickOnEnter(event)) {
-      this.element?.querySelector(".modal-footer .btn-primary")?.click();
+
+    if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
+      this.wrapperElement.querySelector(".modal-footer .btn-primary")?.click();
       event.preventDefault();
     }
-    if (event.key === "Tab") {
-      this._trapTab(event);
-    }
-  },
 
-  _trapTab(event) {
-    if (this.element.classList.contains("hidden")) {
+    if (event.key === "Tab") {
+      this.trapTab(event);
+    }
+  }
+
+  @action
+  trapTab(event) {
+    if (this.args.hidden) {
       return true;
     }
 
-    const innerContainer = this.element.querySelector(".modal-inner-container");
+    const innerContainer = this.wrapperElement.querySelector(
+      ".modal-inner-container"
+    );
     if (!innerContainer) {
       return;
     }
@@ -190,18 +127,21 @@ export default Component.extend({
         // attempt to focus the first of the focusable elements or just the modal-body
         // to make it possible to scroll with arrow down/up
         (
+          autofocusedElement ||
           innerContainer.querySelector(
             focusableElements + ", button:not(.modal-close)"
-          ) || innerContainer.querySelector(".modal-body")
+          ) ||
+          innerContainer.querySelector(".modal-body")
         )?.focus();
       }
 
       return;
     }
 
-    focusableElements = focusableElements + ", button:enabled";
+    focusableElements += ", button:enabled";
+
     const firstFocusableElement =
-      innerContainer.querySelectorAll(focusableElements)?.[0];
+      innerContainer.querySelector(focusableElements);
     const focusableContent = innerContainer.querySelectorAll(focusableElements);
     const lastFocusableElement = focusableContent[focusableContent.length - 1];
 
@@ -218,5 +158,31 @@ export default Component.extend({
         event.preventDefault();
       }
     }
-  },
-});
+  }
+
+  @action
+  handleCloseButton() {
+    this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_BUTTON });
+  }
+
+  @action
+  validateFlashType(type) {
+    if (type && !FLASH_TYPES.includes(type)) {
+      throw `@flashType must be one of ${FLASH_TYPES.join(", ")}`;
+    }
+  }
+
+  // Could be optimised to remove classic component once RFC389 is implemented
+  // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
+  @cached
+  get dynamicElement() {
+    const tagName = this.args.tagName || "div";
+    if (!["div", "form"].includes(tagName)) {
+      throw `@tagName must be form or div`;
+    }
+
+    return class WrapperComponent extends ClassicComponent {
+      tagName = tagName;
+    };
+  }
+}

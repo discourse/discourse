@@ -203,12 +203,12 @@ class SessionController < ApplicationController
         end
 
         # If it's not a relative URL check the host
-        if return_path !~ %r{^/[^/]}
+        if return_path !~ %r{\A/[^/]}
           begin
             uri = URI(return_path)
             if (uri.hostname == Discourse.current_hostname)
               return_path = uri.to_s
-            elsif !SiteSetting.discourse_connect_allows_all_return_paths
+            elsif !domain_redirect_allowed?(uri.hostname)
               return_path = path("/")
             end
           rescue StandardError
@@ -807,5 +807,13 @@ class SessionController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
+  end
+
+  def domain_redirect_allowed?(hostname)
+    allowed_domains = SiteSetting.discourse_connect_allowed_redirect_domains
+    return false if allowed_domains.blank?
+    return true if allowed_domains.split("|").include?("*")
+
+    allowed_domains.split("|").include?(hostname)
   end
 end

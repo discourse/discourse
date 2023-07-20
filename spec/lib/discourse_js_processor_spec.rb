@@ -35,6 +35,64 @@ RSpec.describe DiscourseJsProcessor do
     it "returns false if the header is not present" do
       expect(DiscourseJsProcessor.skip_module?("// just some JS\nconsole.log()")).to eq(false)
     end
+
+    it "works end-to-end" do
+      source = <<~JS.chomp
+        // discourse-skip-module
+        console.log("hello world");
+      JS
+      expect(DiscourseJsProcessor.transpile(source, "test", "test")).to eq(source)
+    end
+  end
+
+  it "passes through modern JS syntaxes which are supported in our target browsers" do
+    script = <<~JS.chomp
+      optional?.chaining;
+      const template = func`test`;
+      let numericSeparator = 100_000_000;
+      logicalAssignment ||= 2;
+      nullishCoalescing ?? 'works';
+      try {
+        "optional catch binding";
+      } catch {
+        "works";
+      }
+      async function* asyncGeneratorFunction() {
+        yield await Promise.resolve('a');
+      }
+      let a = {
+        x,
+        y,
+        ...spreadRest
+      };
+    JS
+
+    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    expect(result).to eq <<~JS.strip
+      define("blah/mymodule", [], function () {
+        "use strict";
+
+      #{script.indent(2)}
+      });
+    JS
+  end
+
+  it "supports decorators and class properties without error" do
+    script = <<~JS.chomp
+      class MyClass {
+        classProperty = 1;
+        #privateProperty = 1;
+        #privateMethod() {
+          console.log("hello world");
+        }
+        @decorated
+        myMethod(){
+        }
+      }
+    JS
+
+    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    expect(result).to include("_applyDecoratedDescriptor")
   end
 
   it "correctly transpiles widget hbs" do
@@ -71,7 +129,7 @@ RSpec.describe DiscourseJsProcessor do
         {
           "id": null,
           "block": "[[[1,[34,0]]],[],false,[\\"somevalue\\"]]",
-          "moduleName": "(unknown template module)",
+          "moduleName": "/blah/mymodule",
           "isStrictMode": false
         });
       });

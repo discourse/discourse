@@ -21,14 +21,13 @@ hy:
       joined: "միացել է"
       email_frequency:
         never: "Երբեք"
+      header_indicator_preference:
+        never: "Երբեք"
       flag: "Դրոշակավորել"
       join: "Միանալ"
+      last_visit: "վերջին այցելությունը"
       mention_warning:
         dismiss: "չեղարկել"
-        groups:
-          users_limit:
-            one: "%{count} օգտատեր"
-            other: "%{count} օգտատեր"
       reply: "Պատասխանել"
       edit: "Խմբագրել"
       rebake_message: "Վերակառուցել HTML-ը"
@@ -57,6 +56,8 @@ hy:
           about: Մասին
           members: Անդամներ
           settings: Կարգավորումներ
+      new_message_modal:
+        no_items: "Տարրեր չկան"
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"
@@ -68,11 +69,13 @@ hy:
       composer:
         italic_text: "շեղ տեքստ"
         bold_text: "թավ տեքստ"
+        send: "Ուղարկել"
       notification_levels:
         never: "Երբեք"
       settings:
         follow: "Միանալ"
         followed: "Միացել է"
+        threading_disabled: "Անջատված"
         notifications: "Ծանուցումներ"
         preview: "Նախադիտում"
         save: "Պահպանել"
@@ -104,6 +107,18 @@ hy:
         activities: "Ակտիվություն"
         flags: "Դրոշակներ"
         symbols: "Նշաններ"
+      thread:
+        title: "Վերնագիր"
+        replies:
+          one: "%{count} պատասխան"
+          other: "%{count} պատասխան"
+        settings: "Կարգավորումներ"
+        last_reply: "վերջին պատասխանը"
+        notifications:
+          regular:
+            title: "Նորմալ"
+          tracking:
+            title: "Հետևում Եմ"
       draft_channel_screen:
         header: "Նոր Հաղորդագրություն"
         cancel: "Չեղարկել"
@@ -115,7 +130,3 @@ hy:
           fields:
             message:
               label: Նոր Հաղորդագրություն
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Դրոշակավորել է"

@@ -21,15 +21,13 @@ bs_BA:
       joined: "pridružio se"
       email_frequency:
         never: "Nikad"
+      header_indicator_preference:
+        never: "Nikad"
       flag: "Prijavi"
       join: "Učlani se"
+      last_visit: "zadnja posjeta"
       mention_warning:
         dismiss: "odbaci"
-        groups:
-          users_limit:
-            one: "%{count} korisnik"
-            few: "%{count} korisnika"
-            other: "%{count} korisnika"
       reply: "Odgovori"
       edit: "Edit"
       rebake_message: "Popravi HTML"
@@ -58,6 +56,8 @@ bs_BA:
           about: O nama
           members: Članovi
           settings: Postavke
+      new_message_modal:
+        no_items: "Nema stavki"
       direct_message_creator:
         title: Nova poruka
         prefix: "Za:"
@@ -69,11 +69,14 @@ bs_BA:
       composer:
         italic_text: "ukošen tekst"
         bold_text: "bold tekst"
+        send: "Pošalji"
       notification_levels:
         never: "Nikad"
       settings:
         follow: "Učlani se"
         followed: "Pridružio se"
+        threading_enabled: "Omogućen"
+        threading_disabled: "Neomogućen"
         notifications: "Obavijest"
         preview: "Pregled"
         save: "Save"
@@ -105,6 +108,19 @@ bs_BA:
         activities: "Aktivnosti"
         flags: "Flags"
         symbols: "Simboli"
+      thread:
+        title: "Naslov"
+        replies:
+          one: "%{count} odgovor"
+          few: "%{count} odgovora"
+          other: "%{count} odgovora"
+        settings: "Postavke"
+        last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Normalno"
+          tracking:
+            title: "Praćenje"
       draft_channel_screen:
         header: "Nova poruka"
         cancel: "Odustani"
@@ -116,7 +132,3 @@ bs_BA:
           fields:
             message:
               label: Privatna Poruka
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Kaznio je"

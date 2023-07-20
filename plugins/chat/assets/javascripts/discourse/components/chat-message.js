@@ -1,27 +1,20 @@
-import Bookmark from "discourse/models/bookmark";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
-import { isTesting } from "discourse-common/config/environment";
-import Component from "@ember/component";
+import { action } from "@ember/object";
+import Component from "@glimmer/component";
 import I18n from "I18n";
-import getURL from "discourse-common/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
-import discourseComputed, {
-  afterRender,
-  bind,
-} from "discourse-common/utils/decorators";
-import EmberObject, { action, computed } from "@ember/object";
-import { and, not } from "@ember/object/computed";
-import { ajax } from "discourse/lib/ajax";
-import { cancel, once } from "@ember/runloop";
-import { clipboardCopy } from "discourse/lib/utilities";
+import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import showModal from "discourse/lib/show-modal";
-import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
+import { getOwner } from "discourse-common/lib/get-owner";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
+import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import { tracked } from "@glimmer/tracking";
 
 let _chatMessageDecorators = [];
+let _tippyInstances = [];
 
 export function addChatMessageDecorator(decorator) {
   _chatMessageDecorators.push(decorator);
@@ -32,791 +25,399 @@ export function resetChatMessageDecorators() {
 }
 
 export const MENTION_KEYWORDS = ["here", "all"];
+export const MESSAGE_CONTEXT_THREAD = "thread";
 
-export default Component.extend({
-  ADD_REACTION: "add",
-  REMOVE_REACTION: "remove",
-  SHOW_LEFT: "showLeft",
-  SHOW_RIGHT: "showRight",
-  canInteractWithChat: false,
-  isHovered: false,
-  onHoverMessage: null,
-  chatEmojiReactionStore: service("chat-emoji-reaction-store"),
-  chatEmojiPickerManager: service("chat-emoji-picker-manager"),
-  chatChannelsManager: service("chat-channels-manager"),
-  adminTools: optionalService(),
-  _hasSubscribedToAppEvents: false,
-  tagName: "",
-  chat: service(),
-  dialog: service(),
-  chatMessageActionsMobileAnchor: null,
-  chatMessageActionsDesktopAnchor: null,
-  chatMessageEmojiPickerAnchor: null,
-  cachedFavoritesReactions: null,
+export default class ChatMessage extends Component {
+  @service site;
+  @service dialog;
+  @service currentUser;
+  @service appEvents;
+  @service capabilities;
+  @service chat;
+  @service chatApi;
+  @service chatEmojiReactionStore;
+  @service chatEmojiPickerManager;
+  @service chatChannelPane;
+  @service chatThreadPane;
+  @service chatChannelsManager;
+  @service router;
 
-  init() {
-    this._super(...arguments);
+  @tracked isActive = false;
 
-    this.set("_loadingReactions", []);
-    this.message.set("reactions", EmberObject.create(this.message.reactions));
-    this.message.id
-      ? this._subscribeToAppEvents()
-      : this._waitForIdToBePopulated();
-    if (this.message.bookmark) {
-      this.set("message.bookmark", Bookmark.create(this.message.bookmark));
-    }
-  },
+  @optionalService adminTools;
 
-  didInsertElement() {
-    this._super(...arguments);
+  constructor() {
+    super(...arguments);
+    this.initMentionedUsers();
+  }
 
-    this.set(
-      "chatMessageActionsMobileAnchor",
-      document.querySelector(".chat-message-actions-mobile-anchor")
+  get pane() {
+    return this.args.context === MESSAGE_CONTEXT_THREAD
+      ? this.chatThreadPane
+      : this.chatChannelPane;
+  }
+
+  get messageInteractor() {
+    return new ChatMessageInteractor(
+      getOwner(this),
+      this.args.message,
+      this.args.context
     );
-    this.set(
-      "chatMessageActionsDesktopAnchor",
-      document.querySelector(".chat-message-actions-desktop-anchor")
-    );
+  }
 
-    this.set("cachedFavoritesReactions", this.chatEmojiReactionStore.favorites);
-  },
+  get deletedAndCollapsed() {
+    return this.args.message?.deletedAt && this.collapsed;
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
-    if (this.message.stagedId) {
-      this.appEvents.off(
-        `chat-message-staged-${this.message.stagedId}:id-populated`,
-        this,
-        "_subscribeToAppEvents"
-      );
-    }
+  get hiddenAndCollapsed() {
+    return this.args.message?.hidden && this.collapsed;
+  }
 
-    this.appEvents.off("chat:refresh-message", this, "_refreshedMessage");
+  get collapsed() {
+    return !this.args.message?.expanded;
+  }
 
-    this.appEvents.off(
-      `chat-message-${this.message.id}:reaction`,
-      this,
-      "_handleReactionMessage"
-    );
+  get deletedMessageLabel() {
+    let count = 1;
 
-    cancel(this._invitationSentTimer);
-  },
-
-  didReceiveAttrs() {
-    this._super(...arguments);
-
-    if (!this.show || this.deletedAndCollapsed) {
-      this._decoratedMessageCooked = null;
-    } else if (this.message.cooked !== this._decoratedMessageCooked) {
-      once("afterRender", this.decorateMessageCooked);
-      this._decoratedMessageCooked = this.message.cooked;
-    }
-  },
-
-  @bind
-  _refreshedMessage(message) {
-    if (message.id === this.message.id) {
-      this.decorateMessageCooked();
-    }
-  },
-
-  @bind
-  decorateMessageCooked() {
-    if (!this.messageContainer) {
-      return;
-    }
-
-    _chatMessageDecorators.forEach((decorator) => {
-      decorator.call(this, this.messageContainer, this.chatChannel);
-    });
-  },
-
-  @computed("message.{id,stagedId}")
-  get messageContainer() {
-    const id = this.message?.id || this.message?.stagedId;
-    return (
-      id && document.querySelector(`.chat-message-container[data-id='${id}']`)
-    );
-  },
-
-  _subscribeToAppEvents() {
-    if (!this.message.id || this._hasSubscribedToAppEvents) {
-      return;
-    }
-
-    this.appEvents.on("chat:refresh-message", this, "_refreshedMessage");
-
-    this.appEvents.on(
-      `chat-message-${this.message.id}:reaction`,
-      this,
-      "_handleReactionMessage"
-    );
-    this._hasSubscribedToAppEvents = true;
-  },
-
-  _waitForIdToBePopulated() {
-    this.appEvents.on(
-      `chat-message-staged-${this.message.stagedId}:id-populated`,
-      this,
-      "_subscribeToAppEvents"
-    );
-  },
-
-  @discourseComputed("canInteractWithChat", "message.staged", "isHovered")
-  showActions(canInteractWithChat, messageStaged, isHovered) {
-    return canInteractWithChat && !messageStaged && isHovered;
-  },
-
-  deletedAndCollapsed: and("message.deleted_at", "collapsed"),
-  hiddenAndCollapsed: and("message.hidden", "collapsed"),
-  collapsed: not("message.expanded"),
-
-  @discourseComputed(
-    "selectingMessages",
-    "canFlagMessage",
-    "showDeleteButton",
-    "showRestoreButton",
-    "showEditButton",
-    "showRebakeButton"
-  )
-  secondaryButtons() {
-    const buttons = [];
-
-    buttons.push({
-      id: "copyLinkToMessage",
-      name: I18n.t("chat.copy_link"),
-      icon: "link",
-    });
-
-    if (this.showEditButton) {
-      buttons.push({
-        id: "edit",
-        name: I18n.t("chat.edit"),
-        icon: "pencil-alt",
-      });
-    }
-
-    if (!this.selectingMessages) {
-      buttons.push({
-        id: "selectMessage",
-        name: I18n.t("chat.select"),
-        icon: "tasks",
-      });
-    }
-
-    if (this.canFlagMessage) {
-      buttons.push({
-        id: "flag",
-        name: I18n.t("chat.flag"),
-        icon: "flag",
-      });
-    }
-
-    if (this.showDeleteButton) {
-      buttons.push({
-        id: "deleteMessage",
-        name: I18n.t("chat.delete"),
-        icon: "trash-alt",
-      });
-    }
-
-    if (this.showRestoreButton) {
-      buttons.push({
-        id: "restore",
-        name: I18n.t("chat.restore"),
-        icon: "undo",
-      });
-    }
-
-    if (this.showRebakeButton) {
-      buttons.push({
-        id: "rebakeMessage",
-        name: I18n.t("chat.rebake_message"),
-        icon: "sync-alt",
-      });
-    }
-
-    return buttons;
-  },
-
-  get messageActions() {
-    return {
-      reply: this.reply,
-      react: this.react,
-      copyLinkToMessage: this.copyLinkToMessage,
-      edit: this.edit,
-      selectMessage: this.selectMessage,
-      flag: this.flag,
-      deleteMessage: this.deleteMessage,
-      restore: this.restore,
-      rebakeMessage: this.rebakeMessage,
-      toggleBookmark: this.toggleBookmark,
-      startReactionForMessageActions: this.startReactionForMessageActions,
+    const recursiveCount = (message) => {
+      const previousMessage = message.previousMessage;
+      if (previousMessage?.deletedAt) {
+        count++;
+        recursiveCount(previousMessage);
+      }
     };
-  },
 
-  get messageCapabilities() {
-    return {
-      canReact: this.canReact,
-      canReply: this.canReply,
-      canBookmark: this.showBookmarkButton,
-    };
-  },
+    recursiveCount(this.args.message);
 
-  @discourseComputed("message", "details.can_moderate")
-  show(message, canModerate) {
+    return I18n.t("chat.deleted", { count });
+  }
+
+  get shouldRender() {
     return (
-      !message.deleted_at ||
-      this.currentUser.id === this.message.user.id ||
-      this.currentUser.staff ||
-      canModerate
+      this.args.message.expanded ||
+      !this.args.message.deletedAt ||
+      (this.args.message.deletedAt && !this.args.message.nextMessage?.deletedAt)
     );
-  },
+  }
+
+  get shouldRenderOpenEmojiPickerButton() {
+    return this.chat.userCanInteractWithChat && this.site.desktopView;
+  }
 
   @action
-  handleTouchStart() {
-    // if zoomed don't track long press
-    if (isZoomed()) {
-      return;
+  expand() {
+    const recursiveExpand = (message) => {
+      const previousMessage = message.previousMessage;
+      if (previousMessage?.deletedAt) {
+        previousMessage.expanded = true;
+        recursiveExpand(previousMessage);
+      }
+    };
+
+    this.args.message.expanded = true;
+    this.refreshStatusOnMentions();
+    recursiveExpand(this.args.message);
+  }
+
+  @action
+  toggleChecked(event) {
+    if (event.shiftKey) {
+      this.messageInteractor.bulkSelect(event.target.checked);
     }
 
-    if (!this.isHovered) {
-      // when testing this must be triggered immediately because there
-      // is no concept of "long press" there, the Ember `tap` test helper
-      // does send the touchstart/touchend events but immediately, see
-      // https://github.com/emberjs/ember-test-helpers/blob/master/API.md#tap
-      if (isTesting()) {
-        this._handleLongPress();
+    this.messageInteractor.select(event.target.checked);
+  }
+
+  @action
+  willDestroyMessage() {
+    cancel(this._invitationSentTimer);
+    cancel(this._disableMessageActionsHandler);
+    cancel(this._makeMessageActiveHandler);
+    this.#teardownMentionedUsers();
+  }
+
+  #destroyTippyInstances() {
+    _tippyInstances.forEach((instance) => {
+      instance.destroy();
+    });
+    _tippyInstances = [];
+  }
+
+  @action
+  refreshStatusOnMentions() {
+    schedule("afterRender", () => {
+      this.args.message.mentionedUsers.forEach((user) => {
+        const href = `/u/${user.username.toLowerCase()}`;
+        const mentions = this.messageContainer.querySelectorAll(
+          `a.mention[href="${href}"]`
+        );
+
+        mentions.forEach((mention) => {
+          updateUserStatusOnMention(mention, user.status, _tippyInstances);
+        });
+      });
+    });
+  }
+
+  @action
+  didInsertMessage(element) {
+    this.messageContainer = element;
+    this.decorateCookedMessage();
+    this.refreshStatusOnMentions();
+  }
+
+  @action
+  didUpdateMessageId() {
+    this.decorateCookedMessage();
+  }
+
+  @action
+  didUpdateMessageVersion() {
+    this.decorateCookedMessage();
+    this.refreshStatusOnMentions();
+    this.initMentionedUsers();
+  }
+
+  @action
+  decorateCookedMessage() {
+    schedule("afterRender", () => {
+      _chatMessageDecorators.forEach((decorator) => {
+        decorator.call(this, this.messageContainer, this.args.message.channel);
+      });
+    });
+  }
+
+  @action
+  initMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      if (user.isTrackingStatus()) {
+        return;
       }
 
-      this._isPressingHandler = discourseLater(this._handleLongPress, 500);
+      user.trackStatus();
+      user.on("status-changed", this, "refreshStatusOnMentions");
+    });
+  }
+
+  get show() {
+    return (
+      !this.args.message?.deletedAt ||
+      this.currentUser.id === this.args.message?.user?.id ||
+      this.currentUser.staff ||
+      this.args.message?.channel?.canModerate
+    );
+  }
+
+  @action
+  onMouseEnter() {
+    if (this.site.mobileView) {
+      return;
     }
-  },
 
-  @action
-  handleTouchMove() {
-    if (!this.isHovered) {
-      cancel(this._isPressingHandler);
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+      return;
     }
-  },
+
+    this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
+      this,
+      this._debouncedOnHoverMessage,
+      250
+    );
+  }
 
   @action
-  handleTouchEnd() {
-    cancel(this._isPressingHandler);
-  },
+  onMouseMove() {
+    if (this.site.mobileView) {
+      return;
+    }
+
+    if (this.chat.activeMessage?.model?.id === this.args.message.id) {
+      return;
+    }
+
+    this._setActiveMessage();
+  }
 
   @action
-  _handleLongPress() {
+  onMouseLeave(event) {
+    cancel(this._onMouseEnterMessageDebouncedHandler);
+
+    if (this.site.mobileView) {
+      return;
+    }
+
+    if (
+      (event.toElement || event.relatedTarget)?.closest(
+        ".chat-message-actions-container"
+      )
+    ) {
+      return;
+    }
+
+    this.chat.activeMessage = null;
+  }
+
+  @bind
+  _debouncedOnHoverMessage() {
+    this._setActiveMessage();
+  }
+
+  _setActiveMessage() {
+    cancel(this._onMouseEnterMessageDebouncedHandler);
+
+    if (!this.chat.userCanInteractWithChat) {
+      return;
+    }
+
+    if (!this.args.message.expanded) {
+      return;
+    }
+
+    this.chat.activeMessage = {
+      model: this.args.message,
+      context: this.args.context,
+    };
+  }
+
+  @action
+  onLongPressStart(element, event) {
+    if (!this.args.message.expanded) {
+      return;
+    }
+
+    if (event.target.tagName === "IMG") {
+      return;
+    }
+
+    // prevents message to show as active when starting scroll
+    // at this moment scroll has no momentum and the row can
+    // capture the touch event instead of a scroll
+    this._makeMessageActiveHandler = discourseLater(() => {
+      this.isActive = true;
+    }, 125);
+  }
+
+  @action
+  onLongPressCancel() {
+    cancel(this._makeMessageActiveHandler);
+    this.isActive = false;
+
+    // this a tricky bit of code which is needed to prevent the long press
+    // from triggering a click on the message actions panel when releasing finger press
+    // we can't prevent default as we need to keep the event passive for performance reasons
+    // this class will prevent any click from being triggered until removed
+    // this number has been chosen from testing but might need to be increased
+    this._disableMessageActionsHandler = discourseLater(() => {
+      document.documentElement.classList.remove(
+        "disable-message-actions-touch"
+      );
+    }, 200);
+  }
+
+  @action
+  onLongPressEnd(element, event) {
+    if (event.target.tagName === "IMG") {
+      return;
+    }
+
+    cancel(this._makeMessageActiveHandler);
+    this.isActive = false;
+
     if (isZoomed()) {
       // if zoomed don't handle long press
       return;
     }
 
+    document.documentElement.classList.add("disable-message-actions-touch");
     document.activeElement.blur();
-    document.querySelector(".chat-composer-input")?.blur();
+    document.querySelector(".chat-composer__input")?.blur();
 
-    this.onHoverMessage(this.message);
-  },
+    this._setActiveMessage();
+  }
 
-  @discourseComputed("message.hideUserInfo", "message.chat_webhook_event")
-  hideUserInfo(hide, webhookEvent) {
-    return hide && !webhookEvent;
-  },
-
-  @discourseComputed(
-    "message.staged",
-    "message.deleted_at",
-    "message.in_reply_to",
-    "message.error",
-    "message.bookmark",
-    "isHovered"
-  )
-  chatMessageClasses(staged, deletedAt, inReplyTo, error, bookmark, isHovered) {
-    let classNames = ["chat-message"];
-
-    if (staged) {
-      classNames.push("chat-message-staged");
-    }
-    if (deletedAt) {
-      classNames.push("deleted");
-    }
-    if (inReplyTo) {
-      classNames.push("is-reply");
-    }
-    if (this.hideUserInfo) {
-      classNames.push("user-info-hidden");
-    }
-    if (error) {
-      classNames.push("errored");
-    }
-    if (isHovered) {
-      classNames.push("chat-message-selected");
-    }
-    if (bookmark) {
-      classNames.push("chat-message-bookmarked");
-    }
-    return classNames.join(" ");
-  },
-
-  @discourseComputed("message", "message.deleted_at", "chatChannel.status")
-  showEditButton(message, deletedAt) {
+  get hasActiveState() {
     return (
-      !deletedAt &&
-      this.currentUser.id === message.user?.id &&
-      this.chatChannel.canModifyMessages(this.currentUser)
+      this.isActive ||
+      this.chat.activeMessage?.model?.id === this.args.message.id
     );
-  },
+  }
 
-  @discourseComputed(
-    "message",
-    "message.user_flag_status",
-    "details.can_flag",
-    "message.deleted_at"
-  )
-  canFlagMessage(message, userFlagStatus, canFlag, deletedAt) {
-    return (
-      this.currentUser?.id !== message.user?.id &&
-      userFlagStatus === undefined &&
-      canFlag &&
-      !message.chat_webhook_event &&
-      !deletedAt
-    );
-  },
+  get hasReply() {
+    return this.args.message.inReplyTo && !this.hideReplyToInfo;
+  }
 
-  @discourseComputed("message")
-  canManageDeletion(message) {
-    return this.currentUser?.id === message.user?.id
-      ? this.details.can_delete_self
-      : this.details.can_delete_others;
-  },
+  get hideUserInfo() {
+    const message = this.args.message;
 
-  @discourseComputed("message.deleted_at", "chatChannel.status")
-  canReply(deletedAt) {
-    return !deletedAt && this.chatChannel.canModifyMessages(this.currentUser);
-  },
+    const previousMessage = message.previousMessage;
 
-  @discourseComputed("message.deleted_at", "chatChannel.status")
-  canReact(deletedAt) {
-    return !deletedAt && this.chatChannel.canModifyMessages(this.currentUser);
-  },
-
-  @discourseComputed(
-    "canManageDeletion",
-    "message.deleted_at",
-    "chatChannel.status"
-  )
-  showDeleteButton(canManageDeletion, deletedAt) {
-    return (
-      canManageDeletion &&
-      !deletedAt &&
-      this.chatChannel.canModifyMessages(this.currentUser)
-    );
-  },
-
-  @discourseComputed(
-    "canManageDeletion",
-    "message.deleted_at",
-    "chatChannel.status"
-  )
-  showRestoreButton(canManageDeletion, deletedAt) {
-    return (
-      canManageDeletion &&
-      deletedAt &&
-      this.chatChannel.canModifyMessages(this.currentUser)
-    );
-  },
-
-  @discourseComputed("chatChannel.status")
-  showBookmarkButton() {
-    return this.chatChannel.canModifyMessages(this.currentUser);
-  },
-
-  @discourseComputed("chatChannel.status")
-  showRebakeButton() {
-    return (
-      this.currentUser?.staff &&
-      this.chatChannel.canModifyMessages(this.currentUser)
-    );
-  },
-
-  @discourseComputed("message.reactions.@each")
-  hasReactions(reactions) {
-    return Object.values(reactions).some((r) => r.count > 0);
-  },
-
-  @discourseComputed("message.mentionWarning")
-  mentionWarning() {
-    return this.message.mentionWarning;
-  },
-
-  @discourseComputed("mentionWarning.cannot_see")
-  mentionedCannotSeeText(users) {
-    return I18n.t("chat.mention_warning.cannot_see", {
-      username: users[0].username,
-      count: users.length,
-      others: this._othersTranslation(users.length - 1),
-    });
-  },
-
-  @discourseComputed("mentionWarning.without_membership")
-  mentionedWithoutMembershipText(users) {
-    return I18n.t("chat.mention_warning.without_membership", {
-      username: users[0].username,
-      count: users.length,
-      others: this._othersTranslation(users.length - 1),
-    });
-  },
-
-  @discourseComputed("mentionWarning.group_mentions_disabled")
-  groupsWithDisabledMentions(groups) {
-    return I18n.t("chat.mention_warning.group_mentions_disabled", {
-      group_name: groups[0],
-      count: groups.length,
-      others: this._othersTranslation(groups.length - 1),
-    });
-  },
-
-  @discourseComputed("mentionWarning.groups_with_too_many_members")
-  groupsWithTooManyMembers(groups) {
-    return I18n.t("chat.mention_warning.too_many_members", {
-      group_name: groups[0],
-      count: groups.length,
-      others: this._othersTranslation(groups.length - 1),
-    });
-  },
-
-  _othersTranslation(othersCount) {
-    return I18n.t("chat.mention_warning.warning_multiple", {
-      count: othersCount,
-    });
-  },
-
-  @action
-  inviteMentioned() {
-    const user_ids = this.mentionWarning.without_membership.mapBy("id");
-
-    ajax(`/chat/${this.details.chat_channel_id}/invite`, {
-      method: "PUT",
-      data: { user_ids, chat_message_id: this.message.id },
-    }).then(() => {
-      this.message.set("mentionWarning.invitationSent", true);
-      this._invitationSentTimer = discourseLater(() => {
-        this.message.set("mentionWarning", null);
-      }, 3000);
-    });
-
-    return false;
-  },
-
-  @action
-  dismissMentionWarning() {
-    this.message.set("mentionWarning", null);
-  },
-
-  @action
-  startReactionForMessageActions() {
-    this.chatEmojiPickerManager.startFromMessageActions(
-      this.message,
-      this.site.desktopView,
-      this.selectReaction
-    );
-  },
-
-  @action
-  startReactionForReactionList() {
-    this.chatEmojiPickerManager.startFromMessageReactionList(
-      this.message,
-      this.site.desktopView,
-      this.selectReaction
-    );
-  },
-
-  deselectReaction(emoji) {
-    if (!this.canInteractWithChat) {
-      return;
+    if (!previousMessage) {
+      return false;
     }
 
-    this.react(emoji, this.REMOVE_REACTION);
-    this.notifyPropertyChange("emojiReactions");
-  },
-
-  @action
-  selectReaction(emoji) {
-    if (!this.canInteractWithChat) {
-      return;
+    // this is a micro optimization to avoid layout changes when we load more messages
+    if (message.firstOfResults) {
+      return false;
     }
 
-    this.react(emoji, this.ADD_REACTION);
-    this.notifyPropertyChange("emojiReactions");
-  },
-
-  @bind
-  _handleReactionMessage(busData) {
-    const loadingReactionIndex = this._loadingReactions.indexOf(busData.emoji);
-    if (loadingReactionIndex > -1) {
-      return this._loadingReactions.splice(loadingReactionIndex, 1);
+    if (message.chatWebhookEvent) {
+      return false;
     }
 
-    this._updateReactionsList(busData.emoji, busData.action, busData.user);
-    this.afterReactionAdded();
-  },
-
-  @action
-  react(emoji, reactAction) {
-    if (!this.canInteractWithChat || this._loadingReactions.includes(emoji)) {
-      return;
+    if (previousMessage.deletedAt) {
+      return false;
     }
 
-    if (this.capabilities.canVibrate && !isTesting()) {
-      navigator.vibrate(5);
+    if (
+      Math.abs(
+        new Date(message.createdAt) - new Date(previousMessage.createdAt)
+      ) > 300000
+    ) {
+      return false;
     }
 
-    if (this.site.mobileView) {
-      this.set("isHovered", false);
-    }
-
-    this._loadingReactions.push(emoji);
-    this._updateReactionsList(emoji, reactAction, this.currentUser);
-
-    if (reactAction === this.ADD_REACTION) {
-      this.chatEmojiReactionStore.track(`:${emoji}:`);
-    }
-
-    return this._publishReaction(emoji, reactAction).then(() => {
-      this.notifyPropertyChange("emojiReactions");
-
-      // creating reaction will create a membership if not present
-      // so we will fully refresh if we were not members of the channel
-      // already
-      if (!this.chatChannel.isFollowing || this.chatChannel.isDraft) {
-        return this.chatChannelsManager
-          .getChannel(this.chatChannel.id)
-          .then((reactedChannel) => {
-            this.onSwitchChannel(reactedChannel);
-          });
-      }
-    });
-  },
-
-  _updateReactionsList(emoji, reactAction, user) {
-    const selfReacted = this.currentUser.id === user.id;
-    if (this.message.reactions[emoji]) {
-      if (
-        selfReacted &&
-        reactAction === this.ADD_REACTION &&
-        this.message.reactions[emoji].reacted
-      ) {
-        // User is already has reaction added; do nothing
+    if (message.inReplyTo) {
+      if (message.inReplyTo?.id === previousMessage.id) {
+        return message.user?.id === previousMessage.user?.id;
+      } else {
         return false;
       }
-
-      let newCount =
-        reactAction === this.ADD_REACTION
-          ? this.message.reactions[emoji].count + 1
-          : this.message.reactions[emoji].count - 1;
-
-      this.message.reactions.set(`${emoji}.count`, newCount);
-      if (selfReacted) {
-        this.message.reactions.set(
-          `${emoji}.reacted`,
-          reactAction === this.ADD_REACTION
-        );
-      } else {
-        this.message.reactions[emoji].users.pushObject(user);
-      }
-    } else {
-      if (reactAction === this.ADD_REACTION) {
-        this.message.reactions.set(emoji, {
-          count: 1,
-          reacted: selfReacted,
-          users: selfReacted ? [] : [user],
-        });
-      }
     }
-    this.message.notifyPropertyChange("reactions");
-  },
 
-  _publishReaction(emoji, reactAction) {
-    return ajax(
-      `/chat/${this.details.chat_channel_id}/react/${this.message.id}`,
-      {
-        type: "PUT",
-        data: {
-          react_action: reactAction,
-          emoji,
-        },
-      }
-    ).catch((errResult) => {
-      popupAjaxError(errResult);
-      this._updateReactionsList(emoji, this.REMOVE_REACTION, this.currentUser);
-    });
-  },
+    return message.user?.id === previousMessage.user?.id;
+  }
 
-  // TODO(roman): For backwards-compatibility.
-  //   Remove after the 3.0 release.
-  _legacyFlag() {
-    this.dialog.yesNoConfirm({
-      message: I18n.t("chat.confirm_flag", {
-        username: this.message.user?.username,
-      }),
-      didConfirm: () => {
-        return ajax("/chat/flag", {
-          method: "PUT",
-          data: {
-            chat_message_id: this.message.id,
-            flag_type_id: 7, // notify_moderators
-          },
-        }).catch(popupAjaxError);
-      },
-    });
-  },
-
-  @action
-  reply() {
-    this.setReplyTo(this.message.id);
-  },
-
-  @action
-  viewReply() {
-    this.replyMessageClicked(this.message.in_reply_to);
-  },
-
-  @action
-  edit() {
-    this.editButtonClicked(this.message.id);
-  },
-
-  @action
-  flag() {
-    const targetFlagSupported =
-      requirejs.entries["discourse/lib/flag-targets/flag"];
-
-    if (targetFlagSupported) {
-      const model = EmberObject.create(this.message);
-      model.set("username", model.get("user.username"));
-      model.set("user_id", model.get("user.id"));
-      let controller = showModal("flag", { model });
-
-      controller.setProperties({ flagTarget: new ChatMessageFlag() });
-    } else {
-      this._legacyFlag();
-    }
-  },
-
-  @action
-  expand() {
-    this.message.set("expanded", true);
-  },
-
-  @action
-  restore() {
-    return ajax(
-      `/chat/${this.details.chat_channel_id}/restore/${this.message.id}`,
-      {
-        type: "PUT",
-      }
-    ).catch(popupAjaxError);
-  },
-
-  @action
-  toggleBookmark() {
-    return openBookmarkModal(
-      this.message.bookmark ||
-        Bookmark.createFor(this.currentUser, "ChatMessage", this.message.id),
-      {
-        onAfterSave: (savedData) => {
-          const bookmark = Bookmark.create(savedData);
-          this.set("message.bookmark", bookmark);
-          this.appEvents.trigger(
-            "bookmarks:changed",
-            savedData,
-            bookmark.attachedTo()
-          );
-        },
-        onAfterDelete: () => {
-          this.set("message.bookmark", null);
-        },
-      }
+  get hideReplyToInfo() {
+    return (
+      this.args.context === MESSAGE_CONTEXT_THREAD ||
+      this.args.message?.inReplyTo?.id ===
+        this.args.message?.previousMessage?.id ||
+      this.threadingEnabled
     );
-  },
+  }
 
-  @action
-  rebakeMessage() {
-    return ajax(
-      `/chat/${this.details.chat_channel_id}/${this.message.id}/rebake`,
-      {
-        type: "PUT",
-      }
-    ).catch(popupAjaxError);
-  },
-
-  @action
-  deleteMessage() {
-    return ajax(`/chat/${this.details.chat_channel_id}/${this.message.id}`, {
-      type: "DELETE",
-    }).catch(popupAjaxError);
-  },
-
-  @action
-  selectMessage() {
-    this.message.set("selected", true);
-    this.onStartSelectingMessages(this.message);
-  },
-
-  @action
-  @afterRender
-  toggleChecked(e) {
-    if (e.shiftKey) {
-      this.bulkSelectMessages(this.message, e.target.checked);
-    }
-
-    this.onSelectMessage(this.message);
-  },
-
-  @action
-  copyLinkToMessage() {
-    if (!this.messageContainer) {
-      return;
-    }
-
-    this.messageContainer
-      .querySelector(".link-to-message-btn")
-      ?.classList?.add("copied");
-
-    const { protocol, host } = window.location;
-    let url = getURL(
-      `/chat/channel/${this.details.chat_channel_id}/-?messageId=${this.message.id}`
+  get threadingEnabled() {
+    return (
+      this.args.message?.channel?.threadingEnabled &&
+      !!this.args.message?.thread
     );
-    url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
-    clipboardCopy(url);
+  }
 
-    discourseLater(() => {
-      this.messageContainer
-        ?.querySelector(".link-to-message-btn")
-        ?.classList?.remove("copied");
-    }, 250);
-  },
+  get showThreadIndicator() {
+    return (
+      this.args.context !== MESSAGE_CONTEXT_THREAD &&
+      this.threadingEnabled &&
+      this.args.message?.thread &&
+      this.args.message?.thread.preview.replyCount > 0
+    );
+  }
 
-  @computed
-  get emojiReactions() {
-    const favorites = this.cachedFavoritesReactions;
-
-    // may be a {} if no defaults defined in some production builds
-    if (!favorites || !favorites.slice) {
-      return [];
-    }
-
-    const userReactions = Object.keys(this.message.reactions).filter((key) => {
-      return this.message.reactions[key].reacted;
+  #teardownMentionedUsers() {
+    this.args.message.mentionedUsers.forEach((user) => {
+      user.stopTrackingStatus();
+      user.off("status-changed", this, "refreshStatusOnMentions");
     });
-
-    return favorites.slice(0, 3).map((emoji) => {
-      if (userReactions.includes(emoji)) {
-        return { emoji, reacted: true };
-      } else {
-        return { emoji, reacted: false };
-      }
-    });
-  },
-});
+    this.#destroyTippyInstances();
+  }
+}

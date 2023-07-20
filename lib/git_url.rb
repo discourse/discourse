@@ -10,7 +10,7 @@ module GitUrl
       end
 
       if url.start_with?("https://github.com/") && !url.end_with?(".git")
-        url = url.gsub(%r{/$}, "")
+        url = url.gsub(%r{/\z}, "")
         url += ".git"
       end
 

@@ -117,6 +117,9 @@
                 "can_recover": {
                   "type": "boolean"
                 },
+                "can_see_hidden_post": {
+                  "type": "boolean"
+                },
                 "can_wiki": {
                   "type": "boolean"
                 },
@@ -712,6 +715,9 @@
         "null"
       ]
     },
+    "summarizable": {
+      "type": "boolean"
+    },
     "details": {
       "type": "object",
       "additionalProperties": false,
@@ -823,6 +829,12 @@
                   ]
                 },
                 "flair_bg_color": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "flair_group_id": {
                   "type": [
                     "string",
                     "null"
@@ -976,6 +988,7 @@
     "show_read_indicator",
     "thumbnails",
     "slow_mode_enabled_until",
+    "summarizable",
     "details"
   ]
 }

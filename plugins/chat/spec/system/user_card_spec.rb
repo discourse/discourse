@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User card", type: :system, js: true do
+RSpec.describe "User card", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:topic_1) { Fabricate(:topic) }
 
@@ -10,13 +10,13 @@ RSpec.describe "User card", type: :system, js: true do
 
   shared_examples "not showing chat button" do
     it "doesn’t show the chat buttton" do
-      expect(page).to have_no_css(".user-card-chat-btn")
+      expect(page).to have_no_css(".chat-user-card-btn")
     end
   end
 
   shared_examples "showing chat button" do
     it "shows the chat buttton" do
-      expect(page).to have_css(".user-card-chat-btn")
+      expect(page).to have_css(".chat-user-card-btn")
     end
   end
 
@@ -49,13 +49,13 @@ RSpec.describe "User card", type: :system, js: true do
         include_examples "showing chat button"
 
         context "when clicking chat button" do
-          before { find(".user-card-chat-btn").click }
+          before { find(".chat-user-card-btn").click }
 
           it "opens correct channel" do
             # at this point the ChatChannel is not created yet
             expect(page).to have_css(".chat-drawer.is-expanded")
             expect(page).to have_css(
-              ".chat-drawer.is-expanded[data-chat-channel-id='#{ChatChannel.last.id}']",
+              ".chat-drawer.is-expanded[data-chat-channel-id='#{Chat::Channel.last.id}']",
             )
           end
         end

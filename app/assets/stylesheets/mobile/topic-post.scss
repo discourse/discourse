@@ -199,6 +199,16 @@ a.reply-to-tab {
     background: var(--blend-primary-secondary-5);
     width: 100%;
   }
+
+  .toggle-summary {
+    .summarization-buttons {
+      flex-direction: column;
+
+      .top-replies {
+        margin-top: 10px;
+      }
+    }
+  }
 }
 
 #topic-footer-buttons {
@@ -328,7 +338,7 @@ pre.codeblock-buttons code {
 }
 
 span.highlighted {
-  background-color: var(--highlight-low);
+  background-color: var(--highlight-bg);
 }
 
 .topic-avatar {

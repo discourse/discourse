@@ -10,7 +10,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
 import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
-import getURL from "discourse-common/lib/get-url";
 import Session from "discourse/models/session";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
@@ -57,7 +56,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
         this.topics.filter((topic) => topic_ids.includes(topic.id))
       );
 
-      const url = `${getURL("/")}latest.json?topic_ids=${topic_ids.join(",")}`;
+      const url = `/latest.json?topic_ids=${topic_ids.join(",")}`;
 
       return ajax({ url, data: this.params }).then((result) => {
         const topicIds = new Set();
@@ -150,7 +149,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
 
   @action
   reorderCategories() {
-    showModal("reorderCategories");
+    showModal("reorder-categories");
   },
 
   @action

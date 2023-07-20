@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.4.3"
+  rails_version = "7.0.5.1"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -32,8 +32,8 @@ end
 gem "json"
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
-# This is a desired upgrade we should get to.
-gem "sprockets", "3.7.2"
+# We intend to drop sprockets rather than upgrade to 4.x
+gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -41,7 +41,7 @@ gem "actionview_precompiler", require: false
 
 gem "discourse-seed-fu"
 
-gem "mail", git: "https://github.com/discourse/mail.git"
+gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
@@ -71,8 +71,6 @@ gem "rails_multisite"
 
 gem "fast_xs", platform: :ruby
 
-gem "xorcist"
-
 gem "fastimage"
 
 gem "aws-sdk-s3", require: false
@@ -98,14 +96,13 @@ gem "omniauth-oauth2", require: false
 
 gem "omniauth-google-oauth2"
 
-# pending: https://github.com/ohler55/oj/issues/789
-gem "oj", "3.13.14"
+gem "oj"
 
 gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
-gem "r2", require: false
+gem "rtlcss", require: false
 gem "rake"
 
 gem "thor", require: false
@@ -147,6 +144,7 @@ group :test do
   gem "selenium-webdriver", require: false
   gem "test-prof"
   gem "webdrivers", require: false
+  gem "rails-dom-testing", require: false
 end
 
 group :test, :development do
@@ -180,6 +178,7 @@ group :development do
   gem "better_errors", platform: :mri, require: !!ENV["BETTER_ERRORS"]
   gem "binding_of_caller"
   gem "yaml-lint"
+  gem "yard"
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
@@ -229,10 +228,9 @@ gem "logstash-event", require: false
 gem "logstash-logger", require: false
 gem "logster"
 
-# NOTE: later versions of sassc are causing a segfault, possibly dependent on processer architecture
-# and until resolved should be locked at 2.0.1
-gem "sassc", "2.0.1", require: false
-gem "sassc-rails"
+# These are forks of sassc and sassc-rails with dart-sass support
+gem "dartsass-ruby"
+gem "dartsass-sprockets"
 
 gem "rotp", require: false
 
@@ -279,3 +277,5 @@ gem "webrick", require: false
 
 # Workaround until Ruby ships with cgi version 0.3.6 or higher.
 gem "cgi", ">= 0.3.6", require: false
+
+gem "tzinfo-data"

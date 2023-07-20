@@ -27,8 +27,8 @@
             {{#if this.siteSettings.enable_backups}}
               <NavItem @route="admin.backups" @label="admin.backups.title" />
             {{/if}}
+            <NavItem @route="adminPlugins" @label="admin.plugins.title" />
           {{/if}}
-          <NavItem @route="adminPlugins" @label="admin.plugins.title" />
           <PluginOutlet @name="admin-menu" />
         </ul>
       </div>

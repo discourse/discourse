@@ -277,8 +277,12 @@ task "assets:precompile" => "assets:precompile:before" do
       puts "Downloading MaxMindDB..."
       mmdb_thread =
         Thread.new do
+          name = "unknown"
           begin
-            geolite_dbs.each { |db| DiscourseIpInfo.mmdb_download(db) }
+            geolite_dbs.each do |db|
+              name = db
+              DiscourseIpInfo.mmdb_download(db)
+            end
 
             if GlobalSetting.maxmind_backup_path.present?
               copy_maxmind(DiscourseIpInfo.path, GlobalSetting.maxmind_backup_path)
@@ -307,7 +311,8 @@ task "assets:precompile" => "assets:precompile:before" do
       concurrent? do |proc|
         manifest
           .files
-          .select { |k, v| k =~ /\.js$/ }
+          .select { |k, v| k =~ /\.js\z/ }
+          .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
             _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"

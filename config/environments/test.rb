@@ -44,7 +44,7 @@ Discourse::Application.configure do
   config.assets.compile = true
   config.assets.digest = false
 
-  config.eager_load = false
+  config.eager_load = ENV["DISCOURSE_ZEITWERK_EAGER_LOAD"] == "1"
 
   if ENV["RAILS_ENABLE_TEST_LOG"]
     config.logger = Logger.new(STDOUT)

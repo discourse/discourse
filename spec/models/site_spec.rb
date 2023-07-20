@@ -157,6 +157,32 @@ RSpec.describe Site do
 
       expect(site.categories.map { |c| c[:can_edit] }).to contain_exactly(true, true)
     end
+
+    describe "site_all_categories_cache_query modifier" do
+      fab!(:cool_category) { Fabricate(:category, name: "Cool category") }
+      fab!(:boring_category) { Fabricate(:category, name: "Boring category") }
+
+      it "allows changing the query" do
+        prefetched_categories = Site.new(Guardian.new(user)).categories.map { |c| c[:id] }
+        expect(prefetched_categories).to include(cool_category.id, boring_category.id)
+
+        # we need to clear the cache to ensure that the categories list will be updated
+        Site.clear_cache
+
+        Plugin::Instance
+          .new
+          .register_modifier(:site_all_categories_cache_query) do |query|
+            query.where("categories.name LIKE 'Cool%'")
+          end
+
+        prefetched_categories = Site.new(Guardian.new(user)).categories.map { |c| c[:id] }
+
+        expect(prefetched_categories).to include(cool_category.id)
+        expect(prefetched_categories).not_to include(boring_category.id)
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
   end
 
   it "omits groups user can not see" do
@@ -174,6 +200,31 @@ RSpec.describe Site do
     expect(site.groups.pluck(:name)).to include(staff_group.name, public_group.name, "everyone")
   end
 
+  describe "site_groups_query modifier" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+    fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+    it "allows changing the query" do
+      prefetched_groups = Site.new(Guardian.new(user)).groups.map { |c| c[:id] }
+      expect(prefetched_groups).to include(cool_group.id, boring_group.id)
+
+      # we need to clear the cache to ensure that the groups list will be updated
+      Site.clear_cache
+
+      Plugin::Instance
+        .new
+        .register_modifier(:site_groups_query) { |query| query.where("groups.name LIKE 'cool%'") }
+
+      prefetched_groups = Site.new(Guardian.new(user)).groups.map { |c| c[:id] }
+
+      expect(prefetched_groups).to include(cool_group.id)
+      expect(prefetched_groups).not_to include(boring_group.id)
+    ensure
+      DiscoursePluginRegistry.clear_modifiers!
+    end
+  end
+
   it "includes all enabled authentication providers" do
     SiteSetting.enable_twitter_logins = true
     SiteSetting.enable_facebook_logins = true
@@ -187,68 +238,5 @@ RSpec.describe Site do
     SiteSetting.enable_facebook_logins = true
     data = JSON.parse(Site.json_for(Guardian.new))
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
-  end
-
-  describe ".show_welcome_topic_banner?" do
-    it "returns false when the user is not admin" do
-      first_post = Fabricate(:post, created_at: 25.days.ago)
-      SiteSetting.welcome_topic_id = first_post.topic.id
-
-      expect(Site.show_welcome_topic_banner?(Guardian.new(Fabricate(:user)))).to eq(false)
-    end
-
-    it "returns false when the user is not first admin who logs in" do
-      admin = Fabricate(:admin)
-      first_post = Fabricate(:post, created_at: 25.days.ago)
-      SiteSetting.welcome_topic_id = first_post.topic.id
-
-      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
-      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
-    end
-
-    it "returns true when welcome topic is less than month old" do
-      admin = Fabricate(:admin)
-      UserAuthToken.generate!(user_id: admin.id)
-
-      first_post = Fabricate(:post, created_at: 25.days.ago)
-      SiteSetting.welcome_topic_id = first_post.topic.id
-
-      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(true)
-      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(true)
-    end
-
-    it "returns false when welcome topic is more than month old" do
-      admin = Fabricate(:admin)
-      UserAuthToken.generate!(user_id: admin.id)
-
-      first_post = Fabricate(:post, created_at: 35.days.ago)
-      SiteSetting.welcome_topic_id = first_post.topic.id
-
-      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
-      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
-    end
-
-    it "returns false when welcome topic has been edited" do
-      admin = Fabricate(:admin)
-      UserAuthToken.generate!(user_id: admin.id)
-
-      first_post = Fabricate(:post, version: 2, created_at: 25.days.ago)
-      SiteSetting.welcome_topic_id = first_post.topic.id
-
-      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
-      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
-    end
-
-    it "returns false when welcome topic has been deleted" do
-      admin = Fabricate(:admin)
-      UserAuthToken.generate!(user_id: admin.id)
-
-      topic = Fabricate(:topic, deleted_at: 1.minute.ago)
-      first_post = Fabricate(:post, topic: topic, created_at: 25.days.ago)
-      SiteSetting.welcome_topic_id = topic.id
-
-      expect(Site.show_welcome_topic_banner?(Guardian.new(admin))).to eq(false)
-      expect(Discourse.cache.read(Site.welcome_topic_banner_cache_key(admin.id))).to eq(false)
-    end
   end
 end

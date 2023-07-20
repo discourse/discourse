@@ -825,6 +825,25 @@ RSpec.describe TopicView do
             it { is_expected.not_to include(tag1.name) }
             it { is_expected.not_to include(tag2.name) }
           end
+
+          context "with restricted tags" do
+            let(:tag_group) { Fabricate.build(:tag_group) }
+            let(:tag_group_permission) do
+              Fabricate.build(:tag_group_permission, tag_group: tag_group)
+            end
+
+            before do
+              SiteSetting.tagging_enabled = true
+              # avoid triggering a `before_create` callback in `TagGroup` which
+              # messes with permissions
+              tag_group.tag_group_permissions << tag_group_permission
+              tag_group.save!
+              tag_group_permission.tag_group.tags << tag2
+            end
+
+            it { is_expected.not_to include(tag2.name) }
+            it { is_expected.to include(tag1.name) }
+          end
         end
       end
     end
@@ -1070,6 +1089,32 @@ RSpec.describe TopicView do
       context "when category is not moderated" do
         it { expect(topic_view.queued_posts_enabled?).to be(nil) }
       end
+    end
+  end
+
+  describe "with topic_view_suggested_topics_options modifier" do
+    let!(:topic1) { Fabricate(:topic) }
+    let!(:topic2) { Fabricate(:topic) }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows disabling of random suggested" do
+      topic_view = TopicView.new(topic1)
+
+      Plugin::Instance
+        .new
+        .register_modifier(
+          :topic_view_suggested_topics_options,
+        ) do |suggested_options, inner_topic_view|
+          expect(inner_topic_view).to eq(topic_view)
+          suggested_options.merge(include_random: false)
+        end
+
+      expect(topic_view.suggested_topics.topics.count).to eq(0)
+
+      DiscoursePluginRegistry.clear_modifiers!
+
+      expect(TopicView.new(topic1).suggested_topics.topics.count).to be > 0
     end
   end
 end

@@ -54,16 +54,24 @@ zh_CN:
     deleted_chat_username: 已删除
     errors:
       channel_exists_for_category: "此类别和名称的频道已经存在"
-      channel_new_message_disallowed: "频道的状态为%{status}，无法发送新消息"
-      channel_modify_message_disallowed: "频道的状态为%{status}，无法编辑或删除消息"
+      channel_new_message_disallowed:
+        archived: "该频道已被存档，无法发送新消息"
+        closed: "该频道已关闭，无法发送新消息"
+        read_only: "该频道是只读的，不能发送新消息"
+      channel_modify_message_disallowed:
+        archived: "频道已关闭，无法编辑或删除任何消息"
+        closed: "频道已关闭，无法编辑或删除任何消息"
+        read_only: "该频道为只读频道，无法编辑或删除任何消息"
       user_cannot_send_message: "您目前无法发送消息。"
       rate_limit_exceeded: "超过了 30 秒内可发送的聊天消息的上限"
       auto_silence_from_flags: "聊天消息被举报的分数高到足以将用户禁言。"
       channel_cannot_be_archived: "目前无法归档该频道，必须将其关闭或打开才能归档。"
       duplicate_message: "您在短时间内发布了一条相同的消息。"
       delete_channel_failed: "删除频道失败，请重试。"
-      minimum_length_not_met: "消息太短，必须至少有 %{minimum} 个字符。"
-      message_too_long: "消息过长，最多只能包含 %{maximum} 个字符。"
+      minimum_length_not_met:
+        other: "消息太短，必须至少有 %{count} 个字符。"
+      message_too_long:
+        other: "消息过长，最多只能包含 %{count} 个字符。"
       draft_too_long: "草稿太长了。"
       max_reactions_limit_reached: "此消息不允许有新的回应。"
       message_move_invalid_channel: "源频道和目标频道必须是公共频道。"
@@ -75,8 +83,10 @@ zh_CN:
       actor_disallowed_dms: "您已选择阻止用户向您发送私人和直接消息，因此您无法创建新的直接消息。"
       actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和直接消息，因此您无法创建给他们的新直接消息。"
       user_cannot_send_direct_messages: "抱歉，您无法发送直接消息。"
+      over_chat_max_direct_message_users_allow_self: "你只能创建一个与自己的直接信息。"
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
+      original_message_not_found: "无法找到您要回复信息的内容，或已被删除。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
@@ -113,19 +123,15 @@ zh_CN:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "只读"
-        archived: "已归档"
-        closed: "已关闭"
-        open: "开放"
       archive:
         first_post_raw: "此话题是[%{channel_name}](%{channel_url})聊天频道的归档。"
       messages_moved:
         other: "@%{acting_username} 将 %{count} 条消息移至[%{channel_name}](%{first_moved_message_url})频道。"
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} 和其他 %{leftover} 人"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          other: "%{comma_separated_usernames} 和其他 %{count} 人"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "包含非 ASCII 字符"

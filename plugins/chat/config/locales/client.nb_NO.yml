@@ -21,14 +21,13 @@ nb_NO:
       joined: "medlem fra"
       email_frequency:
         never: "Aldri"
+      header_indicator_preference:
+        never: "Aldri"
       flag: "Flagg"
       join: "Bli medlem"
+      last_visit: "siste besøk"
       mention_warning:
         dismiss: "forkast"
-        groups:
-          users_limit:
-            one: "%{count} bruker"
-            other: "%{count} brukere"
       reply: "Svar"
       edit: "Endre"
       rebake_message: "Generer HTML på nytt"
@@ -69,6 +68,7 @@ nb_NO:
       composer:
         italic_text: "kursiv tekst"
         bold_text: "sterk tekst"
+        send: "Send"
       notification_levels:
         never: "Aldri"
       settings:
@@ -76,6 +76,8 @@ nb_NO:
         channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
         follow: "Bli medlem"
         followed: "Medlem fra"
+        threading_enabled: "Aktivert"
+        threading_disabled: "Deaktivert"
         notifications: "Varsler"
         preview: "Forhåndsvis"
         save: "Lagre"
@@ -107,6 +109,21 @@ nb_NO:
         activities: "Aktiviteter"
         flags: "Flagg"
         symbols: "Symboler"
+      thread:
+        title: "Tittel"
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        settings: "Instillinger"
+        last_reply: "siste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Overvåkning"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ny Melding"
         cancel: "Avbryt"
@@ -118,7 +135,3 @@ nb_NO:
           fields:
             message:
               label: Send
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Rapportert av"

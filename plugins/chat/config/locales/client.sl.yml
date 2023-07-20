@@ -21,16 +21,13 @@ sl:
       joined: "pridružen"
       email_frequency:
         never: "Nikoli"
+      header_indicator_preference:
+        never: "Nikoli"
       flag: "Prijavi"
       join: "Pridruži se"
+      last_visit: "zadnji obisk"
       mention_warning:
         dismiss: "opusti"
-        groups:
-          users_limit:
-            one: "%{count} uporabnik"
-            two: "%{count} uporabnika"
-            few: "%{count} uporabniki"
-            other: "%{count} uporabnikov"
       reply: "Odgovori"
       edit: "Uredi"
       rebake_message: "Obnovi HTML"
@@ -75,6 +72,8 @@ sl:
       settings:
         follow: "Pridruži se"
         followed: "Pridružen"
+        threading_enabled: "Vključeno"
+        threading_disabled: "Onemogočeno"
         notifications: "Obvestila"
         preview: "Predogled"
         save: "Shrani"
@@ -106,6 +105,25 @@ sl:
         activities: "Dejavnosti"
         flags: "Zastave"
         symbols: "Simboli"
+      thread:
+        title: "Naziv"
+        replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        settings: "Nastavitve"
+        last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Običajna"
+          tracking:
+            title: "Sledim"
+        participants_other_count:
+          one: "+%{count}"
+          two: "+%{count}"
+          few: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Novo zasebno sporočilo"
         cancel: "Prekliči"
@@ -117,7 +135,3 @@ sl:
           fields:
             message:
               label: Opozorilo
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Prijavljen od"

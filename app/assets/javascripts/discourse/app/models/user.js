@@ -2,15 +2,7 @@ import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { camelize } from "@ember/string";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
-import {
-  alias,
-  equal,
-  filterBy,
-  gt,
-  mapBy,
-  or,
-  readOnly,
-} from "@ember/object/computed";
+import { alias, equal, filterBy, gt, mapBy, or } from "@ember/object/computed";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import { A } from "@ember/array";
 import Badge from "discourse/models/badge";
@@ -45,7 +37,6 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 import {
-  hideAllUserTips,
   hideUserTip,
   showNextUserTip,
   showUserTip,
@@ -137,7 +128,9 @@ let userOptionFields = [
   "seen_popups",
   "default_calendar",
   "bookmark_auto_delete_preference",
-  "sidebar_list_destination",
+  "sidebar_link_to_filtered_list",
+  "sidebar_show_count_of_new_items",
+  "watched_precedence_over_muted",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -368,9 +361,9 @@ const User = RestModel.extend({
   },
 
   isBasic: equal("trust_level", 0),
-  isLeader: equal("trust_level", 3),
-  isElder: equal("trust_level", 4),
-  canManageTopic: or("staff", "isElder"),
+  isRegular: equal("trust_level", 3),
+  isLeader: equal("trust_level", 4),
+  canManageTopic: or("staff", "isLeader"),
 
   @discourseComputed("previous_visit_at")
   previousVisitAt(previous_visit_at) {
@@ -407,8 +400,9 @@ const User = RestModel.extend({
     });
   },
 
+  sidebarSections: alias("sidebar_sections"),
+
   sidebarTagNames: mapBy("sidebarTags", "name"),
-  sidebarListDestination: readOnly("sidebar_list_destination"),
 
   changeUsername(new_username) {
     return ajax(userPath(`${this.username_lower}/preferences/username`), {
@@ -421,6 +415,12 @@ const User = RestModel.extend({
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "POST",
       data: { email },
+    }).then(() => {
+      if (!this.unconfirmed_emails) {
+        this.set("unconfirmed_emails", []);
+      }
+
+      this.unconfirmed_emails.pushObject(email);
     });
   },
 
@@ -428,11 +428,13 @@ const User = RestModel.extend({
     return ajax(userPath(`${this.username_lower}/preferences/email`), {
       type: "PUT",
       data: { email },
-    });
-  },
+    }).then(() => {
+      if (!this.unconfirmed_emails) {
+        this.set("unconfirmed_emails", []);
+      }
 
-  copy() {
-    return User.create(this.getProperties(Object.keys(this)));
+      this.unconfirmed_emails.pushObject(email);
+    });
   },
 
   save(fields) {
@@ -676,11 +678,6 @@ const User = RestModel.extend({
     return groups.length === 0 ? null : groups;
   },
 
-  @discourseComputed("filteredGroups", "numGroupsToDisplay")
-  showMoreGroupsLink(filteredGroups, numGroupsToDisplay) {
-    return filteredGroups.length > numGroupsToDisplay;
-  },
-
   // NOTE: This only includes groups *visible* to the user via the serializer,
   // so be wary when using this.
   isInAnyGroups(groupIds) {
@@ -834,17 +831,6 @@ const User = RestModel.extend({
     });
   },
 
-  generateMultipleUseInviteLink(
-    group_ids,
-    max_redemptions_allowed,
-    expires_at
-  ) {
-    return ajax("/invites", {
-      type: "POST",
-      data: { group_ids, max_redemptions_allowed, expires_at },
-    });
-  },
-
   @dependentKeyCompat
   get mutedCategories() {
     return Category.findByIds(this.get("muted_category_ids"));
@@ -903,6 +889,16 @@ const User = RestModel.extend({
   @discourseComputed("can_delete_account")
   canDeleteAccount(canDeleteAccount) {
     return !this.siteSettings.enable_discourse_connect && canDeleteAccount;
+  },
+
+  @dependentKeyCompat
+  get sidebarLinkToFilteredList() {
+    return this.get("user_option.sidebar_link_to_filtered_list");
+  },
+
+  @dependentKeyCompat
+  get sidebarShowCountOfNewItems() {
+    return this.get("user_option.sidebar_show_count_of_new_items");
   },
 
   delete() {
@@ -1175,81 +1171,70 @@ const User = RestModel.extend({
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
   },
 
-  showUserTip(options) {
+  canSeeUserTip(id) {
     const userTips = Site.currentProp("user_tips");
-    if (!userTips || this.skip_new_user_tips) {
-      return;
+    if (!userTips || this.user_option?.skip_new_user_tips) {
+      return false;
     }
 
-    if (!userTips[options.id]) {
+    if (!userTips[id]) {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
-        console.warn("Cannot show user tip with type =", options.id);
+        console.warn("Cannot show user tip with type =", id);
       }
-      return;
+      return false;
     }
 
-    const seenUserTips = this.seen_popups || [];
-    if (
-      seenUserTips.includes(-1) ||
-      seenUserTips.includes(userTips[options.id])
-    ) {
-      return;
+    const seenUserTips = this.user_option?.seen_popups || [];
+    if (seenUserTips.includes(-1) || seenUserTips.includes(userTips[id])) {
+      return false;
     }
 
-    showUserTip({
-      ...options,
-      onDismiss: () => this.hideUserTipForever(options.id),
-      onDismissAll: () => this.hideUserTipForever(),
-    });
+    return true;
+  },
+
+  showUserTip(options) {
+    if (this.canSeeUserTip(options.id)) {
+      showUserTip({
+        ...options,
+        onDismiss: () => {
+          options.onDismiss?.();
+          this.hideUserTipForever(options.id);
+        },
+      });
+    }
   },
 
   hideUserTipForever(userTipId) {
     const userTips = Site.currentProp("user_tips");
-    if (!userTips || this.skip_new_user_tips) {
+    if (!userTips || this.user_option?.skip_new_user_tips) {
       return;
     }
 
     // Empty userTipId means all user tips.
-    if (userTipId && !userTips[userTipId]) {
+    if (!userTips[userTipId]) {
       // eslint-disable-next-line no-console
       console.warn("Cannot hide user tip with type =", userTipId);
       return;
     }
 
     // Hide user tips and maybe show the next one.
-    if (userTipId) {
-      hideUserTip(userTipId);
-      showNextUserTip();
-    } else {
-      hideAllUserTips();
-    }
+    hideUserTip(userTipId, true);
+    showNextUserTip();
 
     // Update list of seen user tips.
-    let seenUserTips = this.seen_popups || [];
-    if (userTipId) {
-      if (seenUserTips.includes(userTips[userTipId])) {
-        return;
-      }
-      seenUserTips.push(userTips[userTipId]);
-    } else {
-      if (seenUserTips.includes(-1)) {
-        return;
-      }
-      seenUserTips = [-1];
+    let seenUserTips = this.user_option?.seen_popups || [];
+    if (seenUserTips.includes(userTips[userTipId])) {
+      return;
     }
+    seenUserTips.push(userTips[userTipId]);
 
     // Save seen user tips on the server.
     if (!this.user_option) {
       this.set("user_option", {});
     }
     this.set("user_option.seen_popups", seenUserTips);
-    if (userTipId) {
-      return this.save(["seen_popups"]);
-    } else {
-      this.set("user_option.skip_new_user_tips", true);
-      return this.save(["seen_popups", "skip_new_user_tips"]);
-    }
+    return this.save(["seen_popups"]);
   },
 });
 
@@ -1364,9 +1349,7 @@ User.reopenClass(Singleton, {
       data: { timezone: user.user_option.timezone },
     });
   },
-});
 
-User.reopenClass({
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);
@@ -1399,6 +1382,13 @@ User.reopen(Evented, {
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
+    if (!this.id) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "It's impossible to track user status on a user model that doesn't have id. This user model won't be receiving live user status updates."
+      );
+    }
+
     if (this._subscribersCount === 0) {
       this.addObserver("status", this, "_statusChanged");
 
@@ -1425,6 +1415,10 @@ User.reopen(Evented, {
     }
 
     this._subscribersCount--;
+  },
+
+  isTrackingStatus() {
+    return this._subscribersCount > 0;
   },
 
   _statusChanged(sender, key) {

@@ -4,12 +4,10 @@ import {
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import QUnit, { module, test } from "qunit";
-import { buildQuote } from "discourse/lib/quote";
 import { deepMerge } from "discourse-common/lib/object";
 import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import { registerEmoji } from "pretty-text/emoji";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 const rawOpts = {
   siteSettings: {
@@ -18,7 +16,7 @@ const rawOpts = {
     enable_mentions: true,
     emoji_set: "twitter",
     external_emoji_url: "",
-    highlighted_languages: "json|ruby|javascript",
+    highlighted_languages: "json|ruby|javascript|xml",
     default_code_lang: "auto",
     enable_markdown_linkify: true,
     markdown_linkify_tlds: "com",
@@ -439,6 +437,24 @@ eviltrout</p>
 </blockquote>
 </aside>`,
       "quote has group class"
+    );
+
+    assert.cooked(
+      "[quote]\ntest\n[/quote]",
+      '<aside class="quote no-group">\n<blockquote>\n<p>test</p>\n</blockquote>\n</aside>',
+      "it supports quotes without params"
+    );
+
+    assert.cooked(
+      "[quote]\n*test*\n[/quote]",
+      '<aside class="quote no-group">\n<blockquote>\n<p><em>test</em></p>\n</blockquote>\n</aside>',
+      "it doesn't insert a new line for italics"
+    );
+
+    assert.cooked(
+      "[quote=,script='a'><script>alert('test');//':a]\n[/quote]",
+      '<aside class="quote no-group">\n<blockquote></blockquote>\n</aside>',
+      "It will not create a script tag within an attribute"
     );
   });
 
@@ -973,6 +989,24 @@ eviltrout</p>
       '<p><a href="http://discourse.org" data-bbcode="true">discourse</a></p>',
       "named links are properly parsed"
     );
+
+    assert.cooked(
+      "[url]https://discourse.org/path[/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true">https://discourse.org/path</a></p>',
+      "paths are correctly handled"
+    );
+
+    assert.cooked(
+      "[url]discourse.org/path[/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true">discourse.org/path</a></p>',
+      "paths are correctly handled"
+    );
+
+    assert.cooked(
+      "[url][b]discourse.org/path[/b][/url]",
+      '<p><a href="https://discourse.org/path" data-bbcode="true"><span class="bbcode-b">discourse.org/path</span></a></p>',
+      "paths are correctly handled"
+    );
   });
 
   test("images", function (assert) {
@@ -1200,7 +1234,7 @@ eviltrout</p>
     );
     assert.cookedPara(
       "[url]abc.com[/url]",
-      '<a href="http://abc.com">abc.com</a>',
+      '<a href="https://abc.com" data-bbcode="true">abc.com</a>',
       "it magically links using linkify"
     );
     assert.cookedPara(
@@ -1270,90 +1304,6 @@ eviltrout</p>
       "[b]first[/b] [b]second[/b]",
       '<span class="bbcode-b">first</span> <span class="bbcode-b">second</span>',
       "can bold two things on the same line"
-    );
-  });
-
-  test("quotes", function (assert) {
-    const store = getOwner(this).lookup("service:store");
-    const post = store.createRecord("post", {
-      cooked: "<p><b>lorem</b> ipsum</p>",
-      username: "eviltrout",
-      post_number: 1,
-      topic_id: 2,
-    });
-
-    function formatQuote(val, expected, text, opts) {
-      assert.strictEqual(buildQuote(post, val, opts), expected, text);
-    }
-
-    formatQuote(undefined, "", "empty string for undefined content");
-    formatQuote(null, "", "empty string for null content");
-    formatQuote("", "", "empty string for empty string content");
-
-    formatQuote(
-      "lorem",
-      '[quote="eviltrout, post:1, topic:2"]\nlorem\n[/quote]\n\n',
-      "correctly formats quotes"
-    );
-
-    formatQuote(
-      "  lorem \t  ",
-      '[quote="eviltrout, post:1, topic:2"]\nlorem\n[/quote]\n\n',
-      "trims white spaces before & after the quoted contents"
-    );
-
-    formatQuote(
-      "lorem ipsum",
-      '[quote="eviltrout, post:1, topic:2, full:true"]\nlorem ipsum\n[/quote]\n\n',
-      "marks quotes as full if the `full` option is passed",
-      { full: true }
-    );
-
-    formatQuote(
-      "**lorem** ipsum",
-      '[quote="eviltrout, post:1, topic:2"]\n**lorem** ipsum\n[/quote]\n\n',
-      "keeps BBCode formatting"
-    );
-
-    assert.cooked(
-      "[quote]\ntest\n[/quote]",
-      '<aside class="quote no-group">\n<blockquote>\n<p>test</p>\n</blockquote>\n</aside>',
-      "it supports quotes without params"
-    );
-
-    assert.cooked(
-      "[quote]\n*test*\n[/quote]",
-      '<aside class="quote no-group">\n<blockquote>\n<p><em>test</em></p>\n</blockquote>\n</aside>',
-      "it doesn't insert a new line for italics"
-    );
-
-    assert.cooked(
-      "[quote=,script='a'><script>alert('test');//':a]\n[/quote]",
-      '<aside class="quote no-group">\n<blockquote></blockquote>\n</aside>',
-      "It will not create a script tag within an attribute"
-    );
-  });
-
-  test("quoting a quote", function (assert) {
-    const store = getOwner(this).lookup("service:store");
-    const post = store.createRecord("post", {
-      cooked: new PrettyText(defaultOpts).cook(
-        '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'
-      ),
-      username: "eviltrout",
-      post_number: 1,
-      topic_id: 2,
-    });
-
-    const quote = buildQuote(
-      post,
-      '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]'
-    );
-
-    assert.strictEqual(
-      quote,
-      '[quote="eviltrout, post:1, topic:2"]\n[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n[/quote]\n\n',
-      "allows quoting a quote"
     );
   });
 
@@ -1640,6 +1590,8 @@ var bar = 'bar';
     assert.cookedOptions("a --> b", enabledTypographer, "<p>a \u2192 b</p>");
     assert.cookedOptions("-->", enabledTypographer, "<p> \u2192 </p>");
     assert.cookedOptions("<--", enabledTypographer, "<p> \u2190 </p>");
+    assert.cookedOptions("<->", enabledTypographer, "<p> \u2194 </p>");
+    assert.cookedOptions("<-->", enabledTypographer, "<p> \u2194 </p>");
 
     // Don't replace arrows
     assert.cookedOptions("<!-- an html comment -->", enabledTypographer, "");
@@ -1648,7 +1600,6 @@ var bar = 'bar';
       enabledTypographer,
       "<p>(&lt;–not an arrow)</p>"
     );
-    assert.cookedOptions("<-->", enabledTypographer, "<p>&lt;–&gt;</p>");
     assert.cookedOptions("asd-->", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd--> ", enabledTypographer, "<p>asd–&gt;</p>");
     assert.cookedOptions(" asd-->", enabledTypographer, "<p>asd–&gt;</p>");
@@ -1732,6 +1683,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsReplace: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "times",
           case_sensitive: false,
         },
@@ -1746,6 +1698,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsLink: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "https://discourse.org",
           case_sensitive: false,
         },
@@ -1760,19 +1713,85 @@ var bar = 'bar';
   });
 
   test("watched words replace with bad regex", function (assert) {
-    const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
       watchedWordsReplace: {
-        "(\\bu?\\b)": { replacement: "you", case_sensitive: false },
+        "(\\bu?\\b)": {
+          word: "(\\bu?\\b)",
+          replacement: "you",
+          case_sensitive: false,
+        },
       },
     };
 
     assert.cookedOptions(
       "one",
       opts,
-      `<p>${"you".repeat(maxMatches)}one</p>`,
+      `<p>youoneyou</p>`,
       "does not loop infinitely"
+    );
+  });
+
+  test("highlighted aliased languages", function (assert) {
+    // "js" is an alias of "javascript"
+    assert.cooked(
+      "```js\nvar foo ='foo';\nvar bar = 'bar';\n```",
+      `<pre><code class=\"lang-js\">var foo ='foo';
+var bar = 'bar';
+</code></pre>`,
+      "code block with js alias works"
+    );
+
+    // "html" is an alias of "xml"
+    assert.cooked(
+      "```html\n<strong>fun</strong> times\n```",
+      `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
+</code></pre>`,
+      "code block with html alias work"
+    );
+  });
+
+  test("image grid", function (assert) {
+    assert.cooked(
+      "[grid]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>
+</div>`,
+      "image grid works"
+    );
+
+    assert.cooked(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png)
+![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with 3 images works"
+    );
+
+    assert.cooked(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with mixed block and inline images works"
+    );
+
+    assert.cooked(
+      "[grid]![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)[/grid]",
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"></p>
+</div>`,
+      "image grid with inline images works"
     );
   });
 });

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  Class: Chat::Service::UpdateChannel
+  
+    &mdash; Documentation by YARD 0.9.28
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" />
+
+<script type="text/javascript">
+  pathId = "Chat::Service::UpdateChannel";
+  relpath = '../../';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="../../class_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="../../_index.html">Index (U)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span>
+     &raquo; 
+    <span class="title">UpdateChannel</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><h1>Class: Chat::Service::UpdateChannel
+  
+  
+  
+</h1>
+<div class="box_info">
+  
+  <dl>
+    <dt>Inherits:</dt>
+    <dd>
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Chat::Service::UpdateChannel</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+    </dd>
+  </dl>
+  
+
+  
+  
+  
+  
+  <dl>
+      <dt>Includes:</dt>
+      <dd><span class='object_link'><a href="Base.html" title="Chat::Service::Base (module)">Base</a></span></dd>
+  </dl>
+  
+  
+
+  
+
+  
+  <dl>
+    <dt>Defined in:</dt>
+    <dd>plugins/chat/app/services/update_channel.rb</dd>
+  </dl>
+  
+</div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Service responsible for updating a chat channel’s name, slug, and description.</p>
+
+<p>For a CategoryChannel, the settings for auto_join_users and allow_channel_wide_mentions are also editable.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code><span class='const'><span class='object_link'><a href="../../Chat.html" title="Chat (module)">Chat</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="../Service.html" title="Chat::Service (module)">Service</a></span></span><span class='op'>::</span><span class='const'>UpdateChannel</span><span class='period'>.</span><span class='id identifier rubyid_call'><span class='object_link'><a href="#call-instance_method" title="Chat::Service::UpdateChannel#call (method)">call</a></span></span><span class='lparen'>(</span>
+ <span class='label'>channel_id:</span> <span class='int'>2</span><span class='comma'>,</span>
+ <span class='label'>guardian:</span> <span class='id identifier rubyid_guardian'>guardian</span><span class='comma'>,</span>
+ <span class='label'>name:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SuperChannel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+ <span class='label'>description:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>This is the best channel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+ <span class='label'>slug:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>super-channel</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+<span class='rparen'>)</span></code></pre>
+    
+  </div>
+
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small><a href="#" class="summary_toggle">collapse</a></small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#call-instance_method" title="#call (instance method)">#<strong>call</strong>(channel_id: , guardian: , **params_to_edit)  &#x21d2; Chat::Service::Base::Context </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Base.html" title="Chat::Service::Base (module)">Base</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Base.html#contract-class_method" title="Chat::Service::Base.contract (method)">contract</a></span>, <span class='object_link'><a href="Base.html#model-class_method" title="Chat::Service::Base.model (method)">model</a></span>, <span class='object_link'><a href="Base.html#policy-class_method" title="Chat::Service::Base.policy (method)">policy</a></span>, <span class='object_link'><a href="Base.html#step-class_method" title="Chat::Service::Base.step (method)">step</a></span>, <span class='object_link'><a href="Base.html#transaction-class_method" title="Chat::Service::Base.transaction (method)">transaction</a></span></p>
+
+  
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="call-instance_method">
+  
+    #<strong>call</strong>(channel_id: , guardian: , **params_to_edit)  &#x21d2; <tt><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Chat::Service::Base::Context</a></span></tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>channel_id</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt></tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>guardian</span>
+      
+      
+        <span class='type'>(<tt>Guardian</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt></tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>params_to_edit</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    
+    
+    
+    
+    <p class="tag_title">Options Hash (<tt>**params_to_edit</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">name</span>
+          <span class="type">(<tt>String</tt>, <tt>nil</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">description</span>
+          <span class="type">(<tt>String</tt>, <tt>nil</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">slug</span>
+          <span class="type">(<tt>String</tt>, <tt>nil</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">auto_join_users</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Only valid for CategoryChannel. Whether active users with permission to see the category should automatically join the channel.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">allow_channel_wide_mentions</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Allow the use of @here and @all in the channel.</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Base/Context.html" title="Chat::Service::Base::Context (class)">Chat::Service::Base::Context</a></span></tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+  </div>
+
+</div>
+
+      
+<div id="footer">
+  Generated by
+  <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.9.28.
+</div>
+
+    </div>
+  </body>
+</html>

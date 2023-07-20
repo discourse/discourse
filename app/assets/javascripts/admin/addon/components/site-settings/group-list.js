@@ -1,25 +1,25 @@
+import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { computed } from "@ember/object";
 
-export default Component.extend({
-  tokenSeparator: "|",
+export default class GroupList extends Component {
+  tokenSeparator = "|";
+  nameProperty = "name";
+  valueProperty = "id";
 
-  nameProperty: "name",
-  valueProperty: "id",
-
-  groupChoices: computed("site.groups", function () {
+  @computed("site.groups")
+  get groupChoices() {
     return (this.site.groups || []).map((g) => {
       return { name: g.name, id: g.id.toString() };
     });
-  }),
+  }
 
-  settingValue: computed("value", function () {
+  @computed("value")
+  get settingValue() {
     return (this.value || "").split(this.tokenSeparator).filter(Boolean);
-  }),
+  }
 
-  actions: {
-    onChangeGroupListSetting(value) {
-      this.set("value", value.join(this.tokenSeparator));
-    },
-  },
-});
+  @action
+  onChangeGroupListSetting(value) {
+    this.set("value", value.join(this.tokenSeparator));
+  }
+}

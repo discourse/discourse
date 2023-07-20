@@ -1,6 +1,7 @@
 en:
   site_settings:
     chat_enabled: "Enable the chat plugin."
+    enable_public_channels: "Enable public channels based on categories."
     chat_allowed_groups: "Users in these groups can chat. Note that staff can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."
@@ -20,6 +21,7 @@ en:
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
+    enable_experimental_chat_threaded_discussions: "EXPERIMENTAL: Allow staff to enable threading on chat channels, which allows for parallel discussions to occur in a channel when users reply to one another."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
@@ -49,16 +51,26 @@ en:
     deleted_chat_username: deleted
     errors:
       channel_exists_for_category: "A channel already exists for this category and name"
-      channel_new_message_disallowed: "The channel is %{status}, no new messages can be sent"
-      channel_modify_message_disallowed: "The channel is %{status}, no messages can be edited or deleted"
+      channel_new_message_disallowed:
+        archived: "The channel is archived, no new messages can be sent"
+        closed: "The channel is closed, no new messages can be sent"
+        read_only: "The channel is read only, no new messages can be sent"
+      channel_modify_message_disallowed:
+        archived: "The channel is archived, no messages can be edited or deleted"
+        closed: "The channel is closed, no messages can be edited or deleted"
+        read_only: "The channel is read only, no messages can be edited or deleted"
       user_cannot_send_message: "You cannot send messages at this time."
       rate_limit_exceeded: "Exceeded the limit of chat messages that can be sent within 30 seconds"
       auto_silence_from_flags: "Chat message flagged with score high enough to silence user."
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
       duplicate_message: "You posted an identical message too recently."
       delete_channel_failed: "Delete channel failed, please try again."
-      minimum_length_not_met: "Message is too short, must have a minimum of %{minimum} characters."
-      message_too_long: "Message is too long, messages must be a maximum of %{maximum} characters."
+      minimum_length_not_met:
+        one: "Message is too short, must have a minimum of %{count} character."
+        other: "Message is too short, must have a minimum of %{count} characters."
+      message_too_long:
+        one: "Message is too long, messages must be a maximum of %{count} characters."
+        other: "Message is too long, messages must be a maximum of %{count} characters."
       draft_too_long: "Draft is too long."
       max_reactions_limit_reached: "New reactions are not allowed on this message."
       message_move_invalid_channel: "The source and destination channel must be public channels."
@@ -70,9 +82,13 @@ en:
       actor_disallowed_dms: "You have chosen to prevent users from sending you private and direct messages, so you cannot create new direct messages."
       actor_preventing_target_user_from_dm: "You have chosen to prevent %{username} from sending you private and direct messages, so you cannot create new direct messages to them."
       user_cannot_send_direct_messages: "Sorry, you cannot send direct messages."
+      over_chat_max_direct_message_users_allow_self: "You can only create a direct message with yourself."
       over_chat_max_direct_message_users:
-        one: "You can only create a direct message with yourself."
+        one: "You can't create a direct message with more than %{count} other user."
         other: "You can't create a direct message with more than %{count} other users."
+      original_message_not_found: "The ancestor of the message you are replying cannot be found or has been deleted."
+      thread_invalid_for_channel: "Thread is not part of the provided channel."
+      thread_does_not_match_parent: "Thread does not match parent message."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
@@ -109,20 +125,17 @@ en:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Read Only"
-        archived: "Archived"
-        closed: "Closed"
-        open: "Open"
       archive:
         first_post_raw: "This topic is an archive of the [%{channel_name}](%{channel_url}) chat channel."
       messages_moved:
         one: "@%{acting_username} moved a message to the [%{channel_name}](%{first_moved_message_url}) channel."
         other: "@%{acting_username} moved %{count} messages to the [%{channel_name}](%{first_moved_message_url}) channel."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} and %{leftover} others"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} and %{count} other"
+          other: "%{comma_separated_usernames} and %{count} others"
 
     category_channel:
       errors:
@@ -146,6 +159,9 @@ en:
       and_x_others:
         one: "and %{count} other"
         other: "and %{count} others"
+
+    summaries:
+      no_targets: "There were no messages during the selected period."
 
   discourse_push_notifications:
     popup:

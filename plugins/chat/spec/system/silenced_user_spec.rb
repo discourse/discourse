@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Silenced user", type: :system, js: true do
+RSpec.describe "Silenced user", type: :system do
   fab!(:channel_1) { Fabricate(:category_channel) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -27,10 +27,10 @@ RSpec.describe "Silenced user", type: :system, js: true do
       )
     end
 
-    it "removes the send button" do
+    it "disables the send button" do
       chat.visit_channel(channel_1)
 
-      expect(page).to have_css(".send-btn[disabled]")
+      expect(page).to have_css(".chat-composer-button.-send[disabled]")
     end
 
     it "prevents reactions" do

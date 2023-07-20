@@ -131,10 +131,17 @@ RSpec.describe CategoriesController do
       category_list = response.parsed_body["category_list"]
 
       category_response = category_list["categories"].find { |c| c["id"] == category.id }
-      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(topic1.id)
+      expect(category_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic1.id,
+        topic2.id,
+        topic3.id,
+      )
 
       subcategory_response = category_response["subcategory_list"][0]
-      expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(topic2.id)
+      expect(subcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(
+        topic2.id,
+        topic3.id,
+      )
 
       subsubcategory_response = subcategory_response["subcategory_list"][0]
       expect(subsubcategory_response["topics"].map { |c| c["id"] }).to contain_exactly(topic3.id)
@@ -237,6 +244,23 @@ RSpec.describe CategoriesController do
             [topic1.id, topic3.id, topic2.id],
           )
         end
+
+        it "does not include the sort parameter in more_topics_url" do
+          # we need to create more topics for more_topics_url to be serialized
+          SiteSetting.categories_topics = 5
+          Fabricate.times(
+            5,
+            :topic,
+            category: category,
+            created_at: 1.day.ago,
+            bumped_at: 1.day.ago,
+          )
+
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/latest")
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).not_to include("sort")
+        end
       end
 
       context "when order is set to created" do
@@ -251,74 +275,23 @@ RSpec.describe CategoriesController do
             [topic3.id, topic2.id, topic1.id],
           )
         end
-      end
-    end
 
-    describe "welcome topic" do
-      fab!(:category) { Fabricate(:category) }
-      fab!(:topic1) do
-        Fabricate(
-          :topic,
-          category: category,
-          created_at: 5.days.ago,
-          updated_at: Time.now,
-          bumped_at: Time.now,
-        )
-      end
-      fab!(:topic2) do
-        Fabricate(:topic, category: category, created_at: 2.days.ago, bumped_at: 2.days.ago)
-      end
-      fab!(:topic3) do
-        Fabricate(:topic, category: category, created_at: 1.day.ago, bumped_at: 1.day.ago)
-      end
-      fab!(:welcome_topic) { Fabricate(:topic) }
-      fab!(:post) { Fabricate(:post, topic: welcome_topic) }
+        it "includes the sort parameter in more_topics_url" do
+          # we need to create more topics for more_topics_url to be serialized
+          SiteSetting.categories_topics = 5
+          Fabricate.times(
+            5,
+            :topic,
+            category: category,
+            created_at: 1.day.ago,
+            bumped_at: 1.day.ago,
+          )
 
-      before do
-        SiteSetting.desktop_category_page_style = "categories_and_latest_topics"
-        SiteSetting.welcome_topic_id = welcome_topic.id
-        SiteSetting.editing_grace_period = 1.minute.to_i
-        SiteSetting.bootstrap_mode_enabled = true
-      end
-
-      it "is hidden for non-admins" do
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).not_to include(
-          welcome_topic.id,
-        )
-      end
-
-      it "is shown to non-admins when there is an edit" do
-        post.revise(post.user, { raw: "#{post.raw}2" }, revised_at: post.updated_at + 2.minutes)
-        post.reload
-        expect(post.version).to eq(2)
-
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to include(
-          welcome_topic.id,
-        )
-      end
-
-      it "is hidden to admins" do
-        sign_in(admin)
-
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).not_to include(
-          welcome_topic.id,
-        )
-      end
-
-      it "is shown to users when bootstrap mode is disabled" do
-        SiteSetting.bootstrap_mode_enabled = false
-
-        get "/categories_and_latest.json"
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to include(
-          welcome_topic.id,
-        )
+          get "/categories_and_latest.json"
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/latest")
+          expect(response.parsed_body["topic_list"]["more_topics_url"]).to include("sort=created")
+        end
       end
     end
 
@@ -674,6 +647,8 @@ RSpec.describe CategoriesController do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
           tag_group = Fabricate(:tag_group)
+          form_template_1 = Fabricate(:form_template)
+          form_template_2 = Fabricate(:form_template)
 
           put "/categories/#{category.id}.json",
               params: {
@@ -693,6 +668,7 @@ RSpec.describe CategoriesController do
                 minimum_required_tags: "",
                 allow_global_tags: "true",
                 required_tag_groups: [{ name: tag_group.name, min_count: 2 }],
+                form_template_ids: [form_template_1.id, form_template_2.id],
               }
 
           expect(response.status).to eq(200)
@@ -713,6 +689,7 @@ RSpec.describe CategoriesController do
           expect(category.category_required_tag_groups.count).to eq(1)
           expect(category.category_required_tag_groups.first.tag_group.id).to eq(tag_group.id)
           expect(category.category_required_tag_groups.first.min_count).to eq(2)
+          expect(category.form_template_ids).to eq([form_template_1.id, form_template_2.id])
         end
 
         it "logs the changes correctly" do
@@ -839,6 +816,7 @@ RSpec.describe CategoriesController do
           expect(category.tag_groups).to be_blank
           expect(category.category_required_tag_groups).to eq([])
           expect(category.custom_fields).to eq({ "field_1" => "hi" })
+          expect(category.form_template_ids.count).to eq(0)
         end
       end
     end
@@ -939,6 +917,25 @@ RSpec.describe CategoriesController do
       expect(
         response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
       ).not_to include(uncategorized.id)
+    end
+
+    it "includes more_topics_url in the response to /categories_and_latest" do
+      SiteSetting.categories_topics = 5
+
+      get "/categories_and_latest.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/latest")
+    end
+
+    it "includes more_topics_url in the response to /categories_and_top" do
+      SiteSetting.categories_topics = 5
+
+      Fabricate.times(10, :topic, category: category, like_count: 1000, posts_count: 100)
+      TopTopic.refresh!
+
+      get "/categories_and_top.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/top")
     end
 
     describe "Showing top topics from private categories" do

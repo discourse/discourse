@@ -1,7 +1,6 @@
 import { click, fillIn, triggerEvent } from "@ember/test-helpers";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
-import { moduleForComponent } from "ember-qunit";
 import jQuery from "jquery";
 
 function checkSelectKitIsNotExpanded(selector) {
@@ -305,21 +304,6 @@ export default function selectKit(selector) {
       return exists(selector);
     },
   };
-}
-
-export function testSelectKitModule(moduleName, options = {}) {
-  moduleForComponent(`select-kit/${moduleName}`, {
-    integration: true,
-
-    beforeEach() {
-      this.set("subject", selectKit());
-      options.beforeEach?.call(this);
-    },
-
-    afterEach() {
-      options.afterEach?.call(this);
-    },
-  });
 }
 
 export const DEFAULT_CONTENT = [

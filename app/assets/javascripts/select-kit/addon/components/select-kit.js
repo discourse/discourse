@@ -188,6 +188,14 @@ export default Component.extend(
       this.handleDeprecations();
     },
 
+    didInsertElement() {
+      this._super(...arguments);
+
+      if (this.selectKit.options.expandedOnInsert) {
+        this._open();
+      }
+    },
+
     click(event) {
       event.preventDefault();
       event.stopPropagation();
@@ -207,10 +215,16 @@ export default Component.extend(
     didReceiveAttrs() {
       this._super(...arguments);
 
+      const deprecatedOptions = this._resolveDeprecatedOptions();
       const mergedOptions = Object.assign({}, ...this.selectKitOptions);
       Object.keys(mergedOptions).forEach((key) => {
         if (isPresent(this.options[key])) {
           this.selectKit.options.set(key, this.options[key]);
+          return;
+        }
+
+        if (isPresent(deprecatedOptions[`options.${key}`])) {
+          this.selectKit.options.set(key, deprecatedOptions[`options.${key}`]);
           return;
         }
 
@@ -296,6 +310,8 @@ export default Component.extend(
       desktopPlacementStrategy: null,
       hiddenValues: null,
       disabled: false,
+      expandedOnInsert: false,
+      formName: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -837,7 +853,7 @@ export default Component.extend(
       this.clearErrors();
 
       const inModal = this.element.closest("#discourse-modal");
-      if (inModal && this?.site?.mobileView) {
+      if (inModal && this.site.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
       }
@@ -860,7 +876,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal");
+        const inModal = this.element.closest("#discourse-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
@@ -1046,7 +1062,7 @@ export default Component.extend(
     handleDeprecations() {
       this._deprecateValueAttribute();
       this._deprecateMutations();
-      this._deprecateOptions();
+      this._handleDeprecatedArgs();
     },
 
     _computePlacementStrategy() {
@@ -1056,7 +1072,7 @@ export default Component.extend(
         return placementStrategy;
       }
 
-      if (this.capabilities?.isIpadOS || this.site?.mobileView) {
+      if (this.capabilities.isIpadOS || this.site.mobileView) {
         placementStrategy =
           this.selectKit.options.mobilePlacementStrategy || "absolute";
       } else {
@@ -1068,17 +1084,11 @@ export default Component.extend(
     },
 
     _deprecated(text) {
-      const discourseSetup = document.getElementById("data-discourse-setup");
-      if (
-        discourseSetup &&
-        discourseSetup.getAttribute("data-environment") === "development"
-      ) {
-        deprecated(text, {
-          since: "v2.4.0",
-          dropFrom: "2.9.0.beta1",
-          id: "discourse.select-kit",
-        });
-      }
+      deprecated(text, {
+        since: "v2.4.0",
+        dropFrom: "2.9.0.beta1",
+        id: "discourse.select-kit",
+      });
     },
 
     _deprecateValueAttribute() {
@@ -1107,11 +1117,8 @@ export default Component.extend(
       }
     },
 
-    _deprecateOptions() {
+    _resolveDeprecatedOptions() {
       const migrations = {
-        headerIcon: "icon",
-        onExpand: "onOpen",
-        onCollapse: "onClose",
         allowAny: "options.allowAny",
         allowCreate: "options.allowAny",
         filterable: "options.filterable",
@@ -1129,7 +1136,31 @@ export default Component.extend(
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
         i18nPrefix: "options.i18nPrefix",
+        btnCustomClasses: "options.btnCustomClasses",
         castInteger: "options.castInteger",
+      };
+
+      const resolvedDeprecations = {};
+
+      Object.keys(migrations).forEach((from) => {
+        const to = migrations[from];
+        if (this.get(from) && !this.get(to)) {
+          this._deprecated(
+            `The \`${from}\` attribute is deprecated. Use \`${to}\` instead`
+          );
+
+          resolvedDeprecations[(to, this.get(from))];
+        }
+      });
+
+      return resolvedDeprecations;
+    },
+
+    _handleDeprecatedArgs() {
+      const migrations = {
+        headerIcon: "icon",
+        onExpand: "onOpen",
+        onCollapse: "onClose",
       };
 
       Object.keys(migrations).forEach((from) => {

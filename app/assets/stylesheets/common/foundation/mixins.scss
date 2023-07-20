@@ -5,6 +5,8 @@
 // Media queries
 // --------------------------------------------------
 
+@use "sass:math";
+
 $breakpoints: (
   mobile-small: 320px,
   mobile-medium: 350px,
@@ -17,7 +19,13 @@ $breakpoints: (
 );
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
-  @media #{$type} and (#{$rule}: map-get($breakpoints, $bp)) {
+  $bp-value: map-get($breakpoints, $bp);
+
+  @if $rule == min-width {
+    $bp-value: calc(#{$bp-value} + 1px);
+  }
+
+  @media #{$type} and (#{$rule}: #{$bp-value}) {
     @content;
   }
 
@@ -54,6 +62,14 @@ $breakpoints: (
 @mixin linear-gradient($start-color, $end-color) {
   background-color: $start-color;
   background-image: linear-gradient(to bottom, $start-color, $end-color);
+}
+
+@mixin darken-background($background-color, $amt) {
+  $overlay: dark-light-choose(
+    rgba(var(--primary-rgb), $amt),
+    rgba(var(--secondary-rgb), $amt)
+  );
+  background-image: linear-gradient(to bottom, $overlay 100%, $overlay 100%);
 }
 
 // Visibility
@@ -124,7 +140,7 @@ $hpad: 0.65em;
 
 // Stuff we repeat
 @mixin post-aside {
-  border-left: 5px solid var(--primary-low);
+  border-left: 5px solid var(--primary-300);
   background-color: var(--blend-primary-secondary-5);
 }
 
@@ -162,7 +178,7 @@ $hpad: 0.65em;
   $encoded: "";
   $slice: 2000;
   $index: 0;
-  $loops: ceil(str-length($svg) / $slice);
+  $loops: ceil(math.div(str-length($svg), $slice));
 
   @for $i from 1 through $loops {
     $chunk: str-slice($svg, $index, $index + $slice - 1);
@@ -241,7 +257,7 @@ $hpad: 0.65em;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
-  padding: 0 0.3em 0.07em;
+  padding: 0 0.4em 0.07em;
   background: var(--primary-low);
   border-radius: 0.6em;
   text-decoration: none;

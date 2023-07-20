@@ -1,0 +1,11 @@
+<div class="user-profile-avatar">
+  {{bound-avatar @user "huge"}}
+  <UserAvatarFlair @user={{@user}} />
+  <div>
+    <PluginOutlet
+      @name="user-profile-avatar-flair"
+      @connectorTagName="div"
+      @outletArgs={{hash model=@user}}
+    />
+  </div>
+</div>

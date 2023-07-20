@@ -1,22 +1,26 @@
-import Component from "@ember/component";
+import { action } from "@ember/object";
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { alias } from "@ember/object/computed";
+import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 
 const PAGES_LIMIT = 8;
 
-export default Component.extend({
-  classNameBindings: ["sortable", "twoColumns"],
-  classNames: ["admin-report-table"],
-  sortable: false,
-  sortDirection: 1,
-  perPage: alias("options.perPage"),
-  page: 0,
+@classNameBindings("sortable", "twoColumns")
+@classNames("admin-report-table")
+export default class AdminReportTable extends Component {
+  sortable = false;
+  sortDirection = 1;
+
+  @alias("options.perPage") perPage;
+
+  page = 0;
 
   @discourseComputed("model.computedLabels.length")
   twoColumns(labelsLength) {
     return labelsLength === 2;
-  },
+  }
 
   @discourseComputed(
     "totalsForSample",
@@ -31,12 +35,12 @@ export default Component.extend({
       .reduce((s, v) => s + v, 0);
 
     return sum >= 1 && total && datesFiltering;
-  },
+  }
 
   @discourseComputed("model.total", "options.total", "twoColumns")
   showTotal(reportTotal, total, twoColumns) {
     return reportTotal && total && twoColumns;
-  },
+  }
 
   @discourseComputed(
     "model.{average,data}",
@@ -50,17 +54,17 @@ export default Component.extend({
       sampleTotalValue &&
       hasTwoColumns
     );
-  },
+  }
 
   @discourseComputed("totalsForSample.1.value", "model.data.length")
   averageForSample(totals, count) {
     return (totals / count).toFixed(0);
-  },
+  }
 
   @discourseComputed("model.data.length")
   showSortingUI(dataLength) {
     return dataLength >= 5;
-  },
+  }
 
   @discourseComputed("totalsForSampleRow", "model.computedLabels")
   totalsForSample(row, labels) {
@@ -70,7 +74,7 @@ export default Component.extend({
       computedLabel.property = label.mainProperty;
       return computedLabel;
     });
-  },
+  }
 
   @discourseComputed("model.data", "model.computedLabels")
   totalsForSampleRow(rows, labels) {
@@ -98,7 +102,7 @@ export default Component.extend({
     });
 
     return totalsRow;
-  },
+  }
 
   @discourseComputed("sortLabel", "sortDirection", "model.data.[]")
   sortedData(sortLabel, sortDirection, data) {
@@ -118,7 +122,7 @@ export default Component.extend({
     }
 
     return data;
-  },
+  }
 
   @discourseComputed("sortedData.[]", "perPage", "page")
   paginatedData(data, perPage, page) {
@@ -128,7 +132,7 @@ export default Component.extend({
     }
 
     return data;
-  },
+  }
 
   @discourseComputed("model.data", "perPage", "page")
   pages(data, perPage, page) {
@@ -156,19 +160,19 @@ export default Component.extend({
     }
 
     return pages;
-  },
+  }
 
-  actions: {
-    changePage(page) {
-      this.set("page", page);
-    },
+  @action
+  changePage(page) {
+    this.set("page", page);
+  }
 
-    sortByLabel(label) {
-      if (this.sortLabel === label) {
-        this.set("sortDirection", this.sortDirection === 1 ? -1 : 1);
-      } else {
-        this.set("sortLabel", label);
-      }
-    },
-  },
-});
+  @action
+  sortByLabel(label) {
+    if (this.sortLabel === label) {
+      this.set("sortDirection", this.sortDirection === 1 ? -1 : 1);
+    } else {
+      this.set("sortLabel", label);
+    }
+  }
+}

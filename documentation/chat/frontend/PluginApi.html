@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Discourse: PluginApi</title>
+    
+      <link type="text/css" rel="stylesheet" href="styles/vendor/prism-custom.css">
+    
+    <link type="text/css" rel="stylesheet" href="styles/styles.css">
+    
+</head>
+<body>
+
+<header class="layout-header">
+  
+  <h1>
+    <a href="./index.html">
+      Discourse
+    </a>
+  </h1>
+  <nav class="layout-nav">
+    <ul><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class" title="class">C</span><span class="nav-item-name is-class"><a href="PluginApi.html">PluginApi</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="PluginApi.html#decorateChatMessage">decorateChatMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="PluginApi.html#registerChatComposerButton">registerChatComposerButton</a></span></li><li class="nav-heading"><span class="nav-item-type type-class" title="class">C</span><span class="nav-item-name is-class"><a href="module.exports.html">exports</a></span></li></ul><ul><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module" title="module">M</span><span class="nav-item-name is-module"><a href="module-ChatApi.html">ChatApi</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#categoryPermissions">categoryPermissions</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#channel">channel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#channels">channels</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#createChannel">createChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#createChannelArchive">createChannelArchive</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#destroyChannel">destroyChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#followChannel">followChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#listChannelMemberships">listChannelMemberships</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#listCurrentUserChannels">listCurrentUserChannels</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#moveChannelMessages">moveChannelMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#sendMessage">sendMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#unfollowChannel">unfollowChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateChannel">updateChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateChannelStatus">updateChannelStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateCurrentUserChannelNotificationsSettings">updateCurrentUserChannelNotificationsSettings</a></span></li></ul><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="global.html#load">load</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="global.html#loadMore">loadMore</a></span></li>
+  </nav>
+</header>
+
+
+<main class="layout-main ">
+  <div class="container">
+    <p class="page-kind">Class</p>
+    <h1 class="page-title">PluginApi</h1>
+    
+
+
+
+
+<section>
+
+
+<header class="class">
+
+
+    
+        
+        <!-- <h2>PluginApi</h2> -->
+
+        
+
+        
+
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+
+
+
+    
+        
+
+
+
+
+
+    
+
+
+    
+
+    <div class="method-type">
+    
+    </div>
+
+    <h4 class="method-name" id="PluginApi">new PluginApi<span class="signature">()</span><span class="return-type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="method-description">
+    
+    Class exposing the javascript API available to plugins and themes.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h4 class="method-heading">Source</h4>
+    <ul>
+        <li class="method-source">
+            <a href="pre-initializers_chat-plugin-api.js.html">pre-initializers/chat-plugin-api.js</a><a href="pre-initializers_chat-plugin-api.js.html#source.8">, line 8</a>
+        </li>
+    </ul>
+
+
+
+    
+    </div>
+
+    
+
+    
+
+     
+
+    
+
+    
+
+
+    
+
+    
+        <h3 class="subtitle">Methods</h3>
+
+        
+            
+
+
+    <article class="method">
+
+
+
+
+    
+
+
+    
+
+    <div class="method-type">
+    
+    </div>
+
+    <h4 class="method-name" id="decorateChatMessage">decorateChatMessage<span class="signature">(decorator)</span><span class="return-type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="method-description">
+    
+    Decorate a chat message
+</div>
+
+
+
+
+
+
+
+
+
+    <h4 class="method-heading">Parameters</h4>
+    
+
+<ul class="method-params">
+    
+
+        <li>
+            
+                <span class="param-name">decorator</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code><a href="PluginApi.html#~decorateChatMessageCallback">PluginApi~decorateChatMessageCallback</a></code>
+    </span>
+    
+
+            
+
+            
+
+            
+
+            <div class="param-description"></div>
+            
+        </li>
+
+    
+</ul>
+
+
+
+
+
+<div class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</div>
+
+
+
+
+
+
+    <h4 class="method-heading">Example</h4>
+    
+    <pre><code class="language-js">api.decorateChatMessage((chatMessage, messageContainer) => {
+  messageContainer.dataset.foo = chatMessage.id;
+});</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h4 class="method-heading">Source</h4>
+    <ul>
+        <li class="method-source">
+            <a href="pre-initializers_chat-plugin-api.js.html">pre-initializers/chat-plugin-api.js</a><a href="pre-initializers_chat-plugin-api.js.html#source.22">, line 22</a>
+        </li>
+    </ul>
+
+
+
+    </article>
+
+        
+            
+
+
+    <article class="method">
+
+
+
+
+    
+
+
+    
+
+    <div class="method-type">
+    
+    </div>
+
+    <h4 class="method-name" id="registerChatComposerButton">registerChatComposerButton<span class="signature">(options)</span><span class="return-type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="method-description">
+    
+    Register a button in the chat composer
+</div>
+
+
+
+
+
+
+
+
+
+    <h4 class="method-heading">Parameters</h4>
+    
+
+<ul class="method-params">
+    
+
+        <li>
+            
+                <span class="param-name">options</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>Object</code>
+    </span>
+    
+
+            
+
+            
+
+            
+
+            <div class="param-description"></div>
+            
+                <p class="param-properties">Properties</p>
+                
+
+<ul class="method-params">
+    
+
+        <li>
+            
+                <span class="param-name">id</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>number</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">The id of the button</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">action</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>function</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">An action name or an anonymous function called when the button is pressed, eg: "onFooClicked" or `() => { console.log("clicked") }`</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">icon</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">A valid font awesome icon name, eg: "far fa-image"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">label</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Text displayed on the button, a translatable key, eg: "foo.bar"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">translatedLabel</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Text displayed on the button, a string, eg: "Add gifs"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">position</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Can be "inline" or "dropdown", defaults to "inline"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">title</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Title attribute of the button, a translatable key, eg: "foo.bar"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">translatedTitle</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Title attribute of the button, a string, eg: "Add gifs"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">ariaLabel</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">aria-label attribute of the button, a translatable key, eg: "foo.bar"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">translatedAriaLabel</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">aria-label attribute of the button, a string, eg: "Add gifs"</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">classNames</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>string</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Additional names to add to the button’s class attribute, eg: ["foo", "bar"]</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">displayed</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>boolean</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Hide or show the button</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">disabled</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>boolean</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">Sets the disabled attribute on the button</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">priority</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>number</code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">An integer defining the order of the buttons, higher comes first, eg: `700`</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">dependentKeys</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>Array.&lt;string></code>
+    </span>
+    
+
+            
+
+            
+                <span class="param-attributes">
+                
+                    &lt;optional&gt;<br>
+                
+
+                
+
+                
+                </span>
+            
+
+            
+
+            <div class="param-description">List of property names which should trigger a refresh of the buttons when changed, eg: `["foo.bar", "bar.baz"]`</div>
+            
+        </li>
+
+    
+</ul>
+            
+        </li>
+
+    
+</ul>
+
+
+
+
+
+<div class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</div>
+
+
+
+
+
+
+    <h4 class="method-heading">Example</h4>
+    
+    <pre><code class="language-js">api.registerChatComposerButton({
+  id: "foo",
+  displayed() {
+    return this.site.mobileView &amp;&amp; this.canAttachUploads;
+  }
+});</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h4 class="method-heading">Source</h4>
+    <ul>
+        <li class="method-source">
+            <a href="pre-initializers_chat-plugin-api.js.html">pre-initializers/chat-plugin-api.js</a><a href="pre-initializers_chat-plugin-api.js.html#source.36">, line 36</a>
+        </li>
+    </ul>
+
+
+
+    </article>
+
+        
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        
+                
+
+
+    <article class="method">
+
+
+
+
+    
+
+
+    
+
+    <div class="method-type">
+    
+    </div>
+
+    <h4 class="method-name" id="~decorateChatMessageCallback">decorateChatMessageCallback<span class="signature">(chatMessage, messageContainer, chatChannel)</span><span class="return-type-signature"></span>
+    </h4>
+
+
+
+
+
+<div class="method-description">
+    
+    Callback used to decorate a chat message
+</div>
+
+
+
+
+
+
+
+
+
+    <h4 class="method-heading">Parameters</h4>
+    
+
+<ul class="method-params">
+    
+
+        <li>
+            
+                <span class="param-name">chatMessage</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>ChatMessage</code>
+    </span>
+    
+
+            
+
+            
+
+            
+
+            <div class="param-description">model</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">messageContainer</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>HTMLElement</code>
+    </span>
+    
+
+            
+
+            
+
+            
+
+            <div class="param-description">DOM node</div>
+            
+        </li>
+
+    
+
+        <li>
+            
+                <span class="param-name">chatChannel</span>
+            
+
+            
+                
+
+
+    <span class="param-type">
+        <code>ChatChannel</code>
+    </span>
+    
+
+            
+
+            
+
+            
+
+            <div class="param-description">model</div>
+            
+        </li>
+
+    
+</ul>
+
+
+
+
+
+<div class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h4 class="method-heading">Source</h4>
+    <ul>
+        <li class="method-source">
+            <a href="pre-initializers_chat-plugin-api.js.html">pre-initializers/chat-plugin-api.js</a><a href="pre-initializers_chat-plugin-api.js.html#source.13">, line 13</a>
+        </li>
+    </ul>
+
+
+
+    </article>
+
+            
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+  </div>
+</main>
+
+<footer class="layout-footer">
+  <div class="container">
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a>
+  </div>
+</footer>
+
+
+
+<script src="scripts/prism.dev.js"></script>
+</body>
+</html>

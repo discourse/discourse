@@ -39,7 +39,7 @@ class StylesheetsController < ApplicationController
 
     cache_time = request.env["HTTP_IF_MODIFIED_SINCE"]
 
-    if cache_time
+    if cache_time.present?
       begin
         cache_time = Time.rfc2822(cache_time)
       rescue ArgumentError
@@ -59,16 +59,16 @@ class StylesheetsController < ApplicationController
     cache_path = Stylesheet::Manager.cache_fullpath
     location = "#{cache_path}/#{target}#{underscore_digest}#{extension}"
 
-    stylesheet_time = query.pluck_first(:created_at)
+    stylesheet_time = query.pick(:created_at)
 
     handle_missing_cache(location, target, digest) if !stylesheet_time
 
-    if cache_time && stylesheet_time && stylesheet_time <= cache_time
+    if cache_time.present? && stylesheet_time && stylesheet_time <= cache_time
       return render body: nil, status: 304
     end
 
     unless File.exist?(location)
-      if current = query.pluck_first(source_map ? :source_map : :content)
+      if current = query.pick(source_map ? :source_map : :content)
         FileUtils.mkdir_p(cache_path)
         File.write(location, current)
       else

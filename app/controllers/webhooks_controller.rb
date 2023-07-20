@@ -6,12 +6,20 @@ class WebhooksController < ActionController::Base
   skip_before_action :verify_authenticity_token
 
   def mailgun
-    return mailgun_failure if SiteSetting.mailgun_api_key.blank?
+    return signature_failure if SiteSetting.mailgun_api_key.blank?
 
     params["event-data"] ? handle_mailgun_new(params) : handle_mailgun_legacy(params)
   end
 
   def sendgrid
+    if SiteSetting.sendgrid_verification_key.present?
+      return signature_failure if !valid_sendgrid_signature?
+    else
+      Rails.logger.warn(
+        "Received a Sendgrid webhook, but no verification key has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
+    end
+
     events = params["_json"] || [params]
     events.each do |event|
       message_id = Email::MessageIdService.message_id_clean((event["smtp-id"] || ""))
@@ -32,6 +40,14 @@ class WebhooksController < ActionController::Base
   end
 
   def mailjet
+    if SiteSetting.mailjet_webhook_token.present?
+      return signature_failure if !valid_mailjet_token?
+    else
+      Rails.logger.warn(
+        "Received a Mailjet webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
+    end
+
     events = params["_json"] || [params]
     events.each do |event|
       message_id = event["CustomID"]
@@ -48,20 +64,46 @@ class WebhooksController < ActionController::Base
     success
   end
 
-  def mandrill
-    events = JSON.parse(params["mandrill_events"])
-    events.each do |event|
-      message_id = event.dig("msg", "metadata", "message_id")
-      to_address = event.dig("msg", "email")
-      error_code = event.dig("msg", "diag")
+  def mailpace
+    # see https://docs.mailpace.com/guide/webhooks#email-events
 
-      case event["event"]
-      when "hard_bounce"
-        process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
-      when "soft_bounce"
-        process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
-      end
+    message_id = Email::MessageIdService.message_id_clean(params["payload"]["message_id"])
+    to_address = params["payload"]["to"]
+    status = params["payload"]["status"]
+
+    case status
+    when "bounced"
+      process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
+    when "deferred"
+      process_bounce(message_id, to_address, SiteSetting.soft_bounce_score)
     end
+
+    success
+  end
+
+  def mandrill
+    if SiteSetting.mandrill_authentication_key.present?
+      return signature_failure if !valid_mandrill_signature?
+    else
+      Rails.logger.warn(
+        "Received a Mandrill webhook, but no authentication key has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
+    end
+
+    JSON
+      .parse(params["mandrill_events"])
+      .each do |event|
+        message_id = event.dig("msg", "metadata", "message_id")
+        to_address = event.dig("msg", "email")
+        error_code = event.dig("msg", "diag")
+
+        case event["event"]
+        when "hard_bounce"
+          process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
+        when "soft_bounce"
+          process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
+        end
+      end
 
     success
   end
@@ -73,6 +115,14 @@ class WebhooksController < ActionController::Base
   end
 
   def postmark
+    if SiteSetting.postmark_webhook_token.present?
+      return signature_failure if !valid_postmark_token?
+    else
+      Rails.logger.warn(
+        "Received a Postmark webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
+    end
+
     # see https://postmarkapp.com/developer/webhooks/bounce-webhook#bounce-webhook-data
     # and https://postmarkapp.com/developer/api/bounce-api#bounce-types
 
@@ -90,6 +140,14 @@ class WebhooksController < ActionController::Base
   end
 
   def sparkpost
+    if SiteSetting.sparkpost_webhook_token.present?
+      return signature_failure if !valid_sparkpost_token?
+    else
+      Rails.logger.warn(
+        "Received a Sparkpost webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
+    end
+
     events = params["_json"] || [params]
     events.each do |event|
       message_event = event.dig("msys", "message_event")
@@ -131,7 +189,7 @@ class WebhooksController < ActionController::Base
 
   private
 
-  def mailgun_failure
+  def signature_failure
     render body: nil, status: 406
   end
 
@@ -158,7 +216,7 @@ class WebhooksController < ActionController::Base
 
   def handle_mailgun_legacy(params)
     unless valid_mailgun_signature?(params["token"], params["timestamp"], params["signature"])
-      return mailgun_failure
+      return signature_failure
     end
 
     event = params["event"]
@@ -185,7 +243,7 @@ class WebhooksController < ActionController::Base
              signature["timestamp"],
              signature["signature"],
            )
-      return mailgun_failure
+      return signature_failure
     end
 
     data = params["event-data"]
@@ -203,6 +261,58 @@ class WebhooksController < ActionController::Base
     end
 
     success
+  end
+
+  def valid_sendgrid_signature?
+    signature = request.headers["X-Twilio-Email-Event-Webhook-Signature"]
+    timestamp = request.headers["X-Twilio-Email-Event-Webhook-Timestamp"]
+    request.body.rewind
+    payload = request.body.read
+
+    hashed_payload = Digest::SHA256.digest("#{timestamp}#{payload}")
+    decoded_signature = Base64.decode64(signature)
+
+    begin
+      public_key = OpenSSL::PKey::EC.new(Base64.decode64(SiteSetting.sendgrid_verification_key))
+    rescue StandardError => err
+      Rails.logger.error("Invalid Sendgrid verification key")
+      return false
+    end
+
+    public_key.dsa_verify_asn1(hashed_payload, decoded_signature)
+  end
+
+  def valid_mailjet_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.mailjet_webhook_token)
+  end
+
+  def valid_mandrill_signature?
+    signature = request.headers["X-Mandrill-Signature"]
+
+    payload = "#{Discourse.base_url}/webhooks/mandrill"
+    params
+      .permit(:mandrill_events)
+      .to_h
+      .sort_by(&:first)
+      .each do |key, value|
+        payload += key.to_s
+        payload += value
+      end
+
+    payload_signature =
+      OpenSSL::HMAC.digest("sha1", SiteSetting.mandrill_authentication_key, payload)
+    ActiveSupport::SecurityUtils.secure_compare(
+      signature,
+      Base64.strict_encode64(payload_signature),
+    )
+  end
+
+  def valid_postmark_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.postmark_webhook_token)
+  end
+
+  def valid_sparkpost_token?
+    ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.sparkpost_webhook_token)
   end
 
   def process_bounce(message_id, to_address, bounce_score, bounce_error_code = nil)

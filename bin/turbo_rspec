@@ -1,78 +1,90 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-ENV['RAILS_ENV'] ||= 'test'
+ENV["RAILS_ENV"] ||= "test"
 
-require './lib/turbo_tests'
-require 'optparse'
+require "./lib/turbo_tests"
+require "optparse"
 
 requires = []
 formatters = []
 verbose = false
 fail_fast = nil
+seed = rand(2**16)
+profile = false
+profile_print_slowest_examples_count = 10
+use_runtime_info = nil
 
-OptionParser.new do |opts|
-  opts.on("-r", "--require PATH", "Require a file.") do |filename|
-    requires << filename
-  end
+OptionParser
+  .new do |opts|
+    opts.on("-r", "--require PATH", "Require a file.") { |filename| requires << filename }
 
-  opts.on("-f", "--format FORMATTER", "Choose a formatter.") do |name|
-    formatters << {
-      name: name,
-      outputs: []
-    }
-  end
-
-  opts.on("-o", "--out FILE", "Write output to a file instead of $stdout") do |filename|
-    if formatters.empty?
-      formatters << {
-        name: "progress",
-        outputs: []
-      }
+    opts.on("-f", "--format FORMATTER", "Choose a formatter.") do |name|
+      formatters << { name: name, outputs: [] }
     end
-    formatters.last[:outputs] << filename
-  end
 
-  opts.on("-v", "--verbose", "More output") do
-    verbose = true
-  end
+    opts.on("-o", "--out FILE", "Write output to a file instead of $stdout") do |filename|
+      formatters << { name: "progress", outputs: [] } if formatters.empty?
+      formatters.last[:outputs] << filename
+    end
 
-  opts.on("--fail-fast=[N]") do |n|
-    n = Integer(n) rescue nil
-    fail_fast = (n.nil? || n < 1) ? 1 : n
-  end
+    opts.on("-v", "--verbose", "More output") { verbose = true }
 
-end.parse!(ARGV)
+    opts.on(
+      "-p",
+      "--profile=[COUNT]",
+      "Benchmark the runtime of each example and list the slowest examples (default: 10)",
+    ) do |count|
+      profile = true
+      profile_print_slowest_examples_count = count.to_i if count
+    end
+
+    opts.on("--fail-fast=[N]") do |n|
+      n =
+        begin
+          Integer(n)
+        rescue StandardError
+          nil
+        end
+      fail_fast = (n.nil? || n < 1) ? 1 : n
+    end
+
+    opts.on("--seed SEED", "The seed for the random order") { |s| seed = s.to_i }
+
+    opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
+      use_runtime_info = true
+    end
+  end
+  .parse!(ARGV)
 
 requires.each { |f| require(f) }
 
-if formatters.empty?
-  formatters << {
-    name: "progress",
-    outputs: []
-  }
+formatters << { name: "progress", outputs: [] } if formatters.empty?
+
+formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
+
+if ARGV.empty?
+  files = TurboTests::Runner.default_spec_folders
+  use_runtime_info = true if use_runtime_info.nil?
+else
+  files = ARGV
+  use_runtime_info = false if use_runtime_info.nil?
 end
 
-formatters.each do |formatter|
-  if formatter[:outputs].empty?
-    formatter[:outputs] << '-'
-  end
-end
+puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
+puts "Running turbo_rspec (seed: #{seed}) using files in: #{files}"
+puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
 
-# We do not want to include system specs by default, they are super
-# slow and require a selenium server to be running.
-default_spec_dirs = Dir.entries("#{Rails.root}/spec").reject do |entry|
-  !File.directory?("spec/#{entry}") || ["..", ".", "system"].include?(entry)
-end.map { |entry| "spec/#{entry}" }
-files = ARGV.empty? ? default_spec_dirs : ARGV
-
-puts "Running turbo_rspec using files in #{files}"
 success =
   TurboTests::Runner.run(
     formatters: formatters,
     files: files,
     verbose: verbose,
-    fail_fast: fail_fast
+    fail_fast: fail_fast,
+    use_runtime_info: use_runtime_info,
+    seed: seed.to_s,
+    profile:,
+    profile_print_slowest_examples_count:,
   )
 
 if success

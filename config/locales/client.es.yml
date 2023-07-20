@@ -144,6 +144,8 @@ es:
       facebook: "Compartir en Facebook"
       email: "Enviar por correo electrónico"
       url: "Copiar y compartir la URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Hizo este tema público %{when}"
       open_topic: "Convirtió esto en un tema %{when}"
@@ -179,17 +181,12 @@ es:
       forwarded: "Reenvió el correo electrónico de arriba"
     topic_admin_menu: "acciones del tema"
     skip_to_main_content: "Saltar al contenido principal"
+    skip_user_nav: "Saltar al contenido del perfil"
     emails_are_disabled: "Todos los correos electrónicos salientes han sido desactivados globalmente por un administrador. No se enviarán notificaciones por correo electrónico de ningún tipo."
     emails_are_disabled_non_staff: "El correo electrónico saliente se ha desactivado para los usuarios que no pertenecen al personal."
     software_update_prompt:
       message: "Hemos actualizado este sitio, <span>vuelve a cargarlo</span>, o podrías experimentar un comportamiento inesperado."
       dismiss: "Descartar"
-    bootstrap_mode_enabled:
-      one: "Para hacer que la inauguración de tu sitio sea más fácil, el modo de arranque está activado. Todas las cuentas tendrán nivel de confianza 1 y los correos electrónicos de resumen diarios están activados. Esto se desactivará automáticamente cuando se haya registrado %{count} usuario."
-      other: "Para hacer que la inauguración de tu sitio sea más fácil, el modo arranque está activado. Todas las cuentas tendrán nivel de confianza 1 y los correos electrónicos de resumen diarios están activados. Esto se desactivará automáticamente cuando se hayan registrado %{count} usuarios."
-    bootstrap_mode_disabled: "El modo de arranque se desactivará dentro de las próximas 24 horas."
-    bootstrap_invite_button_title: "Enviar invitaciones"
-    bootstrap_wizard_link_title: "Finalizar asistente de configuración"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Puede que tu sitio no funcione, un tema o componente está causando errores."
@@ -302,11 +299,9 @@ es:
       edit_bookmark: "Editar marcador"
       clear_bookmarks: "Quitar marcadores"
       help:
-        bookmark: "Haz clic para añadir a marcadores la primera publicación de este tema"
-        edit_bookmark: "Haga clic para editar el marcador sobre este tema"
         edit_bookmark_for_topic: "Haz clic para editar el marcador de este tema"
         unbookmark: "Haz clic para eliminar todos los marcadores de este tema"
-        unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema."
+        unbookmark_with_reminder: "Haz clic para eliminar todos los marcadores y recordatorios de este tema"
     bookmarks:
       created: "Has guardado esta publicación en marcadores. %{name}"
       created_generic: "Has añadido esto a marcadores. %{name}"
@@ -350,7 +345,6 @@ es:
       new_topic: "Nuevo borrador de tema"
       new_private_message: "Nuevo borrador de mensaje personal"
       abandon:
-        confirm: "Tienes un borrador en curso para este tema. ¿Qué te gustaría hacer?"
         yes_value: "Descartar"
         no_value: "Reanudar edición"
     topic_count_categories:
@@ -403,6 +397,8 @@ es:
         search: "Busca un mensaje"
         placeholder: "escribe el título, URL ID del mensaje aquí"
     review:
+      show_more: "Mostrar más"
+      show_less: "Mostrar menos"
       order_by: "Ordenar por"
       date_filter: "Publicado entre"
       in_reply_to: "en respuesta a"
@@ -523,11 +519,11 @@ es:
       scores:
         about: "Esta puntuación se calcula en función del nivel de confianza de quien denuncia, la precisión de sus denuncias anteriores y la prioridad del elemento que se denuncia."
         score: "Puntuación"
-        date: "Fecha"
-        type: "Tipo"
+        type: "Motivo"
         status: "Estado"
-        submitted_by: "Enviado por"
+        submitted_by: "Denunciado por"
         reviewed_by: "Revisado por"
+        reviewed_timestamp: "Fecha de revisión"
       statuses:
         pending:
           title: "Pendiente"
@@ -535,14 +531,12 @@ es:
           title: "Aprobado"
         rejected:
           title: "Rechazado"
-        ignored:
-          title: "Ignorado"
-        deleted:
-          title: "Eliminado"
         reviewed:
-          title: "(todo revisado)"
+          title: "Todo revisado"
         all:
-          title: "(todo)"
+          title: "Todo"
+      context_question:
+        delimiter: "o"
       types:
         reviewable_flagged_post:
           title: "Publicación denunciada"
@@ -555,6 +549,8 @@ es:
           title: "Usuario"
         reviewable_post:
           title: "Publicación"
+        reviewable_chat_message:
+          title: "Mensaje de chat marcado"
       approval:
         title: "La publicación requiere aprobación"
         description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor, ten paciencia."
@@ -849,6 +845,7 @@ es:
         make_all_primary_description: "Hacer este grupo el principal de todos los usuarios seleccionados"
         remove_all_primary: "Quitar como principal"
         remove_all_primary_description: "Quitar este grupo como principal"
+        status: "Estado"
         owner: "Propietario"
         primary: "Principal"
         forbidden: "No tienes permitido ver los miembros del grupo."
@@ -977,10 +974,12 @@ es:
       mute: "Silenciar"
       edit: "Editar preferencias"
       download_archive:
-        button_text: "Descargar todo"
-        confirm: "¿Seguro de que quieres descargar tus publicaciones?"
-        success: "Descarga iniciada, se te notificará por mensaje cuando el proceso se haya completado."
-        rate_limit_error: "Solo se pueden descargar las publicaciones una vez al día. Inténtalo de nuevo mañana."
+        title: "Exporta tus datos"
+        description: "Descarga un archivo con la actividad y preferencias de tu cuenta."
+        button_text: "Solicitar archivo"
+        confirm: "¿Realmente quieres descargar un archivo con la actividad y preferencias de tu cuenta?"
+        success: "Hemos empezado a recopilar tu archivo, recibirás un mensaje cuando se complete el proceso."
+        rate_limit_error: "Los archivos de cuenta solo pueden descargarse una vez al día, inténtalo de nuevo mañana."
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
@@ -1033,6 +1032,7 @@ es:
           warning: "¿Estás seguro de que quieres quitar tu tema destacado?"
       use_current_timezone: "Usar zona horaria actual"
       profile_hidden: "El perfil público de este usuario está oculto."
+      inactive_user: "Este usuario está inactivo"
       expand_profile: "Expandir"
       sr_expand_profile: "Expandir detalles del perfil"
       collapse_profile: "Contraer"
@@ -1052,7 +1052,7 @@ es:
         perm_denied_expl: "Has denegado el permiso para las notificaciones. Configura tu navegador para permitir notificaciones. "
         disable: "Desactivar notificaciones"
         enable: "Activar notificaciones"
-        each_browser_note: 'Nota: Hay que cambiar esta configuración en cada navegador que utilices. Todas las notificaciones se desactivarán si pausas las notificaciones desde el menú de usuario, independientemente de este ajuste.'
+        each_browser_note: "Nota: Hay que cambiar esta configuración en cada navegador que utilices. Todas las notificaciones se desactivarán si pausas las notificaciones desde el menú de usuario, independientemente de este ajuste."
         consent_prompt: "¿Quieres recibir notificaciones en tiempo real cuando alguien responda a tus mensajes?"
       dismiss: "Descartar"
       dismiss_notifications: "Descartar todo"
@@ -1103,14 +1103,7 @@ es:
       experimental_sidebar:
         enable: "Activar barra lateral"
         options: "Opciones"
-        categories_section: "Sección de categorías"
-        categories_section_instruction: "Las categorías que elijas aparecerán en esta categoría de la barra lateral."
-        tags_section: "Sección de etiquetas"
-        tags_section_instruction: "Las etiquetas seleccionadas aparecerán en esta sección de la barra lateral."
         navigation_section: "Navegación"
-        list_destination_instruction: "Cuando hay contenido nuevo en la barra lateral..."
-        list_destination_default: "usar el enlace por defecto y mostrar una insignia para nuevos elementos"
-        list_destination_unread_new: "vincular a no leído/nuevo y mostrar un recuento de elementos nuevos"
       change: "cambio"
       featured_topic: "Tema destacado"
       moderator: "%{user} es un moderador"
@@ -1149,6 +1142,7 @@ es:
       watched_first_post_categories_instructions: "Se te notificará la primera publicación en cada tema nuevo en estas categorías."
       watched_first_post_tags: "Vigilando la primera publicación"
       watched_first_post_tags_instructions: "Se te notificará la primera publicación en cada tema nuevo con estas etiquetas."
+      watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy viendo y que también pertenezcan a una que haya silenciado"
       muted_categories: "Silenciado"
       muted_categories_instructions: "No se te notificará acerca de ningún tema en estas categorías y no aparecerán en la página de categorías o mensajes recientes."
       muted_categories_instructions_dont_hide: "No se te notificará nada acerca de temas nuevos en estas categorías."
@@ -1180,13 +1174,6 @@ es:
       save_to_change_theme: 'Este tema se actualizará después de que hagas clic en «%{save_text}»'
       home: "Página de inicio por defecto"
       staged: "Temporal"
-      staff_counters:
-        flags_given: "denuncias útiles"
-        flagged_posts: "publicaciones denunciadas"
-        deleted_posts: "publicaciones eliminadas"
-        suspensions: "suspensiones"
-        warnings_received: "avisos"
-        rejected_posts: "publicaciones rechazadas"
       messages:
         all: "todas las bandejas de entrada"
         inbox: "Bandeja de entrada"
@@ -1279,7 +1266,6 @@ es:
         tags: "Etiquetas"
         interface: "Interfaz"
         apps: "Aplicaciones"
-        sidebar: "Barra lateral"
       change_password:
         success: "(correo electrónico enviado)"
         in_progress: "(enviando correo electrónico)"
@@ -1293,11 +1279,9 @@ es:
         title: "Códigos de respaldo de la verificación en dos factores"
         regenerate: "Generar nuevos"
         disable: "Desactivar"
-        enable: "Activar"
-        enable_long: "Activar códigos de respaldo"
         manage:
-          one: "Gestiona tus códigos de respaldo. Te queda <strong>%{count}</strong> código sin usar."
-          other: "Gestiona tus códigos de respaldo. Te quedan <strong>%{count}</strong> códigos sin usar."
+          one: "Te queda <strong>%{count}</strong> código de copia de seguridad sin usar todavía."
+          other: "Te quedan <strong>%{count}</strong> códigos de respaldo sin usar todavía."
         copy_to_clipboard: "Copiar al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
@@ -1381,6 +1365,7 @@ es:
         success: "Te hemos enviado un correo electrónico a esa dirección. Sigue las instrucciones de confirmación."
         success_via_admin: "Hemos enviado un correo electrónico a esa dirección. El usuario tendrá que seguir las instrucciones de confirmación."
         success_staff: "Hemos enviado un correo electrónico a tu dirección actual. Sigue las instrucciones de confirmación."
+        back_to_preferences: "Volver a preferencias"
       change_avatar:
         title: "Cambiar tu imagen de perfil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, basado en"
@@ -1786,23 +1771,6 @@ es:
       logout_disabled: "No se puede cerrar sesión mientras el sitio se encuentre en modo de solo lectura."
     staff_writes_only_mode:
       enabled: "Este sitio está en modo solo para el personal. Sigue navegando, pero las respuestas, los «me gusta» y otras acciones están limitadas solo a los miembros del personal."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">¡Comencemos la discusión!</a> Hay { currentTopics, plural,
-          one {<strong>#</strong> tema}
-        other {<strong>#</strong> temas}
-      } y { currentPosts, plural,
-          one {<strong>#</strong> publicación}
-        other {<strong>#</strong> publicaciones}
-      }. Los visitantes necesitan más contenido para leer y responder: nosotros recomendamos al menos { requiredTopics, plural,
-          one {<strong>#</strong> tema}
-        other {<strong>#</strong> temas}
-      } y { requiredPosts, plural,
-          one {<strong>#</strong> publicación}
-        other {<strong>#</strong> publicaciones}
-      }. Solo los miembros del equipo pueden ver este mensaje.
-    too_few_topics_notice_MF: "<a href=\"https://blog.discourse.org/2014/08/building-a-discourse-community/\" target=\"_blank\" rel=\"noopener noreferrer\">¡Comencemos la discusión!</a> Hay { currentTopics, plural, \n    one {<strong>#</strong> tema}\n  other {<strong>#</strong> temas}}.\nLos visitantes necesitan más contenido para leer y responder: nosotros recomendamos al menos { requiredTopics, plural, \n    one {<strong>#</strong> tema} \n  other {<strong>#</strong> temas}}. \nSolo los miembros del equipo pueden ver este mensaje.\n"
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">¡Comencemos la discusión!</a> Hay { currentPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Los visitantes necesitan más contenido para leer y responder – nosotros recomendamos al menos { requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicaciones}}. Solo los miembros del equipo pueden ver este mensaje.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errores/hora}}</a> alcanzó el límite de la configuración del sitio de {limit, plural, one {# error/hora} other {# errores/hora}}.
@@ -1832,6 +1800,9 @@ es:
       hidden_for_session: "Vale, te preguntamos mañana. También puedes darle a «Iniciar sesión» para crear tu cuenta."
       intro: "¡Hola! Parece que estás disfrutando del tema, pero no has creado una cuenta todavía."
       value_prop: "¿Cansado de recorrer las mismas publicaciones? Si creas una cuenta, siempre volverás al punto donde lo dejaste. Con una cuenta también puedes recibir notificaciones de nuevas respuestas, guardar marcadores y utilizar los «me gusta» para dar las gracias a los demás. Podemos trabajar todos juntos para hacer grande esta comunidad :heart:"
+    offline_indicator:
+      no_internet: "Sin conexión a Internet."
+      refresh_page: "Actualizar página"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: las publicaciones más interesantes de acuerdo a la comunidad."
       description:
@@ -1839,7 +1810,6 @@ es:
         other: "Hay <b>%{count}</b> respuestas."
       description_time_MF: |
         Hay {replyCount, plural, one {Hay <b>#</b> respuesta} other {Hay <b>#</b> respuestas}} con un tiempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
-      enable: "Resumir este tema"
       disable: "Mostrar todas las publicaciones"
       short_label: "Resumir"
       short_title: "Muestra un resumen de este tema: los mensajes más interesantes según la comunidad"
@@ -2141,8 +2111,6 @@ es:
         topic_template_not_modified: "Añade detalles y especificaciones a tu tema editando la plantilla de tema."
       save_edit: "Guardar edición"
       overwrite_edit: "Sobrescribir edición"
-      reply_original: "Responder en el tema original"
-      reply_here: "Responder aquí"
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
@@ -2307,6 +2275,7 @@ es:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
       new_features: "¡Nuevas características disponibles!"
+      admin_problems: "Nuevos consejos en tu panel del sitio"
       dismiss_confirmation:
         body:
           default:
@@ -2572,6 +2541,11 @@ es:
         dismiss_tooltip: "Descartar solamente las nuevas publicaciones o dejar de seguir los temas"
         also_dismiss_topics: "Dejar de seguir estos temas para que no aparezcan más en mis mensajes no leídos"
         dismiss_new: "Descartar nuevos"
+        dismiss_new_modal:
+          title: "Descartar nuevo"
+          topics: "Descartar nuevos temas"
+          posts: "Rechazar nuevos mensajes"
+          untrack: "Dejar de seguir estos temas para que dejen de aparecer en mi nueva lista"
         dismiss_new_with_selected:
           one: "Descartar nuevo (%{count})"
           other: "Descartar nuevos (%{count})"
@@ -2609,9 +2583,10 @@ es:
         bookmarks: "Todavía no tienes temas guardados en marcadores."
         category: "No hay temas con la categoría %{category}."
         top: "No hay temas destacados."
+        filter: "No hay temas."
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
-          unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 4 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
+          unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 5 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -2623,11 +2598,13 @@ es:
         tag: "No hay más temas con la etiqueta %{tag}."
         top: "No hay más temas destacados."
         bookmarks: "No hay más temas guardados en marcadores."
+        filter: "No hay más temas."
     topic:
       filter_to:
         one: "%{count} publicación en el tema"
         other: "%{count} publicaciones en el tema"
       create: "Nuevo tema"
+      create_disabled_category: "No tienes permiso para crear temas en esta categoría."
       create_long: "Crear un tema nuevo"
       open_draft: "Abrir borrador"
       private_message: "Comenzar un mensaje"
@@ -2674,6 +2651,7 @@ es:
       read_more_in_category: "¿Quieres leer más? Explora otros temas en %{categoryLink} o <a href='%{latestLink}'>consulta los últimos temas</a>."
       read_more: "¿Quieres leer más? <a href='%{categoryLink}'>Examina todas las categorías</a> o <a href='%{latestLink}'>consulta los últimos temas</a>."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
+      participant_groups: "Grupos participantes"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -2714,8 +2692,6 @@ es:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Explorar todas las categorías</a>, <a href='%{basePath}/latest'>ver los temas más recientes</a> o ver la parte superior:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Explorar todas las etiquetas</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."
       suggest_create_topic: '¿Listo para <a href>iniciar una nueva conversación?</a>'
-      jump_reply_up: saltar a la primera respuesta
-      jump_reply_down: saltar a la última respuesta
       deleted: "El tema ha sido eliminado"
       slow_mode_update:
         title: "Modo lento"
@@ -2983,6 +2959,7 @@ es:
         instructions:
           one: "Escoge el tema al que quieres mover esa publicación."
           other: "Escoge el tema al que quieres mover estas <b>%{count}</b> publicaciones."
+        chronological_order: "preservar el orden cronológico tras la fusión"
       move_to_new_message:
         title: "Mover a un mensaje nuevo"
         action: "mover a un mensaje nuevo"
@@ -3080,9 +3057,6 @@ es:
       collapse: "contraer"
       sr_collapse_replies: "Contraer respuestas inscrustadas"
       sr_date: "Fecha de publicación"
-      sr_expand_replies:
-        one: "Esta publicación tiene %{count} respuesta. Haz clic para expandir"
-        other: "Esta publicación tiene %{count} respuestas. Haz clic para expandir"
       expand_collapse: "expandir/contraer"
       sr_below_embedded_posts_description: "respuestas de la publicación n.º %{post_number}"
       sr_embedded_reply_description: "respuesta de @%{username} a la publicación n.º %{post_number}"
@@ -3311,7 +3285,6 @@ es:
       back: "Volver a la categoría"
       general: "General"
       settings: "Ajustes"
-      topic_template: "Plantilla de tema"
       tags: "Etiquetas"
       tags_allowed_tags: "Restringir estas etiquetas a esta categoría:"
       tags_allowed_tag_groups: "Restringir estos grupos de etiquetas a esta categoría:"
@@ -3370,8 +3343,6 @@ es:
       email_in: "Dirección de correo electrónico personalizada para el correo entrante:"
       email_in_tooltip: "Puedes separar varias direcciones de correo electrónico con el carácter |."
       email_in_allow_strangers: "Aceptar correo electrónicos de usuarios anónimos sin cuenta"
-      email_in_disabled: "La posibilidad de publicar temas nuevos por correo electrónico está desactivada en los ajustes del sitio. Para activar la publicación de temas nuevos por correo electrónico,"
-      email_in_disabled_click: 'activa la opción «correo electrónico»'
       mailinglist_mirror: "La categoría es el reflejo de una lista de correo"
       show_subcategory_list: "Mostrar la lista de subcategorías arriba de la lista de temas en esta categoría."
       read_only_banner: "Texto de banner cuando un usuario no pueda crear un tema en esta categoría:"
@@ -3579,6 +3550,10 @@ es:
     filters:
       with_topics: "%{filter} temas"
       with_category: "%{filter} Foro de %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Recientes"
         title_with_count:
@@ -3649,7 +3624,6 @@ es:
         this_week: "Semana"
         today: "Hoy"
     browser_update: 'Por desgracia, <a href="https://www.discourse.org/faq/#browser">tu navegador no es compatible</a>. Por favor, <a href="https://browsehappy.com">usa otro navegador</a> para ver el contenido completo, iniciar sesión y responder.'
-    safari_13_warning: Este sitio pronto dejará de ser compatible con las versiones 13 y anteriores de iOS y Safari. En su lugar, verás una versión simplificada y de solo lectura. (<a href="https://meta.discourse.org/t/224747">más información</a>)
     permission_types:
       full: "Crear / Responder / Ver"
       create_post: "Responder / Ver"
@@ -3756,7 +3730,9 @@ es:
         one: "Insignia ganada %{count} vez"
         other: "Insignia ganada %{count} veces"
       granted_on: "Concedido hace %{date}"
-      others_count: "Otras personas con esta insignia (%{count})"
+      others_count:
+        one: "Concedido a otros %{count} vez"
+        other: "Concedido a otros %{count} veces"
       title: Insignias
       allow_title: "Puedes usar esta insignia como título"
       multiple_grant: "Puedes ganar esta insignia varias veces"
@@ -3939,13 +3915,11 @@ es:
     pause_notifications:
       title: "Pausar notificaciones para..."
       label: "Pausar notificaciones"
-      remaining: "%{remaining} restante"
       options:
         half_hour: "30 minutos"
         one_hour: "1 hora"
         two_hours: "2 horas"
         tomorrow: "Hasta mañana"
-        custom: "Personalizado"
       set_schedule: "Establecer un horario de notificaciones"
     trust_levels:
       names:
@@ -3994,7 +3968,50 @@ es:
       more: "Más"
       all_categories: "Todas las categorías"
       all_tags: "Todas las etiquetas"
+      categories_form_modal:
+        title: "Editar navegación de las categorías"
+        filter_placeholder: "Filtrar categorías"
+        no_categories: "No hay categorías que coincidan con el término proporcionado."
+      tags_form_modal:
+        title: "Editar etiquetas navegación"
+        filter_placeholder: "Filtrar etiquetas"
+        no_tags: "No hay etiquetas que coincidan con el término dado."
+        subtitle:
+          text: "y mostraremos automáticamente las etiquetas principales de este sitio"
+      edit_navigation_modal_form:
+        deselect_button_text: "Deseleccionar todo"
+        reset_to_defaults: "Restablecer valores por defecto"
+        filter_dropdown:
+          all: "Todos"
+          selected: "Seleccionado"
+          unselected: "No seleccionado"
       sections:
+        custom:
+          save: "Guardar"
+          delete: "Eliminar"
+          delete_confirm: "¿Realmente quieres eliminar esta sección?"
+          reset_confirm: "¿Está seguro de que desea restablecer esta sección a los valores predeterminados?"
+          more_menu: "Más opciones menú"
+          links:
+            add: "Añadir otro enlace"
+            reset: "Restablecer valores por defecto"
+            icon:
+              label: "Icono"
+              validation:
+                blank: "El icono no puede estar en blanco"
+            name:
+              label: "Nombre"
+              validation:
+                blank: "El nombre no puede estar en blanco"
+            value:
+              label: "Enlace"
+              validation:
+                blank: "El enlace no puede estar en blanco"
+                invalid: "El formato no es válido"
+          title:
+            label: "Título de la sección"
+            validation:
+              blank: "El título no puede estar en blanco"
         about:
           header_link_text: "Acerca de"
         messages:
@@ -4009,28 +4026,20 @@ es:
             unread_with_count: "Sin leer (%{count})"
             archive: "Archivo"
         tags:
-          links:
-            add_tags:
-              content: "Añadir etiquetas"
-              title: "No has añadido ninguna etiqueta. Haz clic para empezar."
           none: "No has añadido ninguna etiqueta."
           click_to_get_started: "Haz clic aquí para empezar."
           header_link_text: "Etiquetas"
           header_action_title: "Editar las etiquetas de tu barra lateral"
           configure_defaults: "Configurar valores predeterminados"
         categories:
-          links:
-            add_categories:
-              content: "Añadir categorías"
-              title: "No has añadido ninguna categoría. Haz clic para empezar."
           none: "No has añadido ninguna categoría."
           click_to_get_started: "Haz clic aquí para empezar."
           header_link_text: "Categorías"
           header_action_title: "Editar las categorías de tu barra lateral"
           configure_defaults: "Configurar valores predeterminados"
         community:
-          header_link_text: "Comunidad"
-          header_action_title: "Crear un tema"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Acerca de"
@@ -4041,8 +4050,8 @@ es:
             badges:
               content: "Insignias"
               title: "Todas las insignias disponibles para ganar"
-            everything:
-              content: "Todo"
+            topics:
+              content: "Temas"
               title: "Todos los temas"
             faq:
               content: "Preguntas frecuentes"
@@ -4055,6 +4064,7 @@ es:
               title: "Lista de todos los usuarios"
             my_posts:
               content: "Mis publicaciones"
+              content_drafts: "Mis borradores"
               title: "Mi actividad de tema reciente"
               title_drafts: "Mis borradores no publicados"
               draft_count:
@@ -4064,11 +4074,38 @@ es:
               content: "Revisión"
               title: "Publicaciones denunciadas y otros elementos en cola"
               pending_count: "%{count} pendiente(s)"
+        global_section: "Sección global, visible para todos"
     welcome_topic_banner:
       title: "Crea tu tema de bienvenida"
       description: "Tu tema de bienvenida es lo primero que leerán los nuevos miembros. Piensa en él como tu «discurso breve» o una «declaración de misión». Haz que todos sepan para quién es esta comunidad, qué pueden esperar encontrar aquí y qué te gustaría que hicieran primero."
       button_title: "Empezar a editar"
     until: "Hasta:"
+    form_template_chooser:
+      select_template: "Seleccionar plantillas de formulario"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Rellena este campo."
+          text: "Rellena este campo."
+          select-one: "Selecciona un elemento de la lista."
+          select-multiple: "Selecciona al menos un elemento de la lista."
+          checkbox: "Marca esta casilla si quieres continuar."
+        typeMismatch:
+          default: "Por favor, introduce un valor válido."
+          color: "Por favor, introduce un color."
+          date: "Por favor, introduce una fecha."
+          email: "Introduce una dirección de correo electrónico válida."
+          number: "Introduce un número."
+          password: "Introduce una contraseña válida."
+          tel: "Introduce un número de teléfono válido."
+          text: "Introduce un valor de texto."
+          url: "Por favor, introduce una URL válida."
+        tooShort: "La entrada debe tener %{minLength} caracteres o más."
+        tooLong: "La entrada debe tener menos de %{maxLength} caracteres."
+        rangeOverflow: "La entrada debe ser inferior a %{max}."
+        rangeUnderflow: "La entrada debe ser superior a %{min}."
+        patternMismatch: "Utiliza el formato solicitado."
+        badInput: "Por favor, introduce una entrada válida."
   admin_js:
     type_to_filter: "filtrar opciones..."
     admin:
@@ -4227,10 +4264,6 @@ es:
         about: "Edita la membresía de tu grupo y sus nombres aquí"
         group_members: "Miembros del grupo"
         delete: "Eliminar"
-        delete_confirm: "¿Seguro que quieres eliminar este grupo?"
-        delete_with_messages_confirm:
-          one: "Al eliminar este grupo, %{count} mensaje se quedará huérfano, y los miembros del grupo dejarán de tener acceso a él."
-          other: "Al eliminar este grupo, %{count} mensajes se quedará huérfanos, y los miembros del grupo dejarán de tener acceso a ellos."
         delete_failed: "No se pudo eliminar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_automatic_group: Este grupo se ha creado automáticamente y no se puede eliminar.
         delete_owner_confirm: "¿Quitar los privilegios de propietario a «%{username}»?"
@@ -4295,10 +4328,12 @@ es:
             topics:
               read: Leer un tema o una publicación específica del mismo. También usando RSS.
               write: Crear un nuevo tema o publicar en uno existente.
-              update: Actualizar un tema. Cambiar el título, categoría, etiquetas, etc.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
             posts:
               edit: Edita cualquier publicación o una específica.
+              list: Listar los últimos mensajes y mensajes privados. RSS también es compatible.
+            tags:
+              list: Listar etiquetas.
             categories:
               list: Obtener la lista de categorías.
               show: Obtener una sola categoría por id.
@@ -4312,6 +4347,7 @@ es:
               update: Actualizar información del perfil de usuario.
               log_out: Cerrar sesión todas las sesiones del usuario.
               anonymize: Anonimizar cuentas de usuario.
+              suspend: Suspender cuentas de usuario.
               delete: Eliminar cuentas de usuario.
               list: Obtener una lista de usuarios.
             user_status:
@@ -4392,9 +4428,6 @@ es:
         user_promoted_event:
           name: "Evento por ascenso de usuario"
           details: "Cuando un usuario asciende de nivel de confianza."
-        user_badge_event:
-          name: "Evento por obtención de insignia"
-          details: "Cuando un usuario recibe una insignia."
         group_user_event:
           name: "Evento de usuario de grupo"
           details: "Cuando se agrega o elimina un usuario en un grupo."
@@ -4437,7 +4470,6 @@ es:
         enabled: "¿Activado?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Cambiar ajustes"
         change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"
         official: "Plugin oficial"
@@ -4769,6 +4801,8 @@ es:
           love:
             name: "me encanta"
             description: "El color del botón de me gusta"
+          selected:
+            name: "seleccionado"
         robots:
           title: "Sobrescribe el archivo robots.txt de tu sitio:"
           warning: "Esto sobrescribirá permanentemente cualquier configuración del sitio relacionada."
@@ -4932,6 +4966,7 @@ es:
             revoke_moderation: "revocar moderación"
             backup_create: "crear copia de seguridad"
             deleted_tag: "etiqueta eliminada"
+            update_directory_columns: "actualizar columnas del directorio"
             deleted_unused_tags: "etiquetas sin usar eliminadas"
             renamed_tag: "etiqueta renombrada"
             revoke_email: "revocar correo electrónico"
@@ -5053,14 +5088,8 @@ es:
           silence: "Silenciar"
           link: "Enlace"
         action_descriptions:
-          block: "Impedir la publicación de mensajes que contengan estas palabras. El usuario verá un mensaje de error cuando trate de publicar su mensaje."
-          censor: "Permitir mensajes que contengan estas palabras, pero reemplazar estas palabras por caracteres que las censuren."
-          require_approval: "Las publicaciones que contengan estas palabras deberán ser aprobadas por el personal antes de que se puedan visualizar."
-          flag: "Permitir publicaciones que contengan estas palabras, pero denunciar el mensaje como inapropiado para que los moderadores puedan revisarlo."
-          replace: "Reemplazar palabras en publicaciones por otras palabras"
-          tag: "Etiquetar temas automáticamente basándose en su primera publicación."
-          silence: "Las primeras publicaciones de usuarios que contengan estas palabras deberán ser aprobadas por el personal antes de que se puedan ver, y el usuario será silenciado automáticamente."
-          link: "Reemplazar palabras en publicaciones por enlaces"
+          replace: "Reemplazar palabras en publicaciones por otras palabras."
+          link: "Reemplazar palabras en publicaciones por enlaces."
         form:
           label: "Contiene palabra o frase"
           placeholder: "Escribe una palabra o frase (* es un comodín)"
@@ -5083,6 +5112,50 @@ es:
           description: "Escribe el texto más abajo para buscar coincidencias con las palabras vigiladas"
           found_matches: "Coincidencias encontradas:"
           no_matches: "No se encontraron coincidencias"
+      form_templates:
+        nav_title: "Plantillas"
+        list_table:
+          headings:
+            name: "Nombre"
+            actions: "Acciones"
+        view_template:
+          close: "Cerrar"
+          edit: "Editar"
+          delete: "Eliminar"
+        new_template_form:
+          submit: "Guardar"
+          cancel: "Cancelar"
+          preview: "Vista previa"
+        quick_insert_fields:
+          add_new_field: "Añadir"
+          input: "Respuesta corta"
+          textarea: "Respuesta larga"
+          dropdown: "Desplegable"
+          upload: "Subir un archivo"
+          multiselect: "Opción múltiple"
+        validations_modal:
+          button_title: "Validaciones"
+          modal_title: "Opciones de validación"
+          table_headers:
+            key: "Clave"
+            type: "Tipo"
+            description: "Descripción"
+          validations:
+            required:
+              key: "obligatorio"
+            minimum:
+              key: "mínimo"
+            maximum:
+              key: "máximo"
+            pattern:
+              key: "patrón"
+            type:
+              key: "tipo"
+        field_placeholders:
+          choices:
+            first: "Opción 1"
+            second: "Opción 2"
+            third: "Opción 3"
       impersonate:
         title: "Suplantar"
         help: "Utiliza esta herramienta para suplantar una cuenta de usuario con fines de depuración. Tendrás que cerrar sesión al terminar."
@@ -5095,6 +5168,7 @@ es:
         not_found: "Lo sentimos, ese usuario no existe en nuestro sistema."
         id_not_found: "Lo sentimos, esa ID de usuario no existe en nuestro sistema."
         active: "Activados"
+        status: "Estado"
         show_emails: "Mostrar correos electrónicos"
         hide_emails: "Ocultar correos electrónicos"
         nav:
@@ -5183,7 +5257,6 @@ es:
         show_admin_profile: "Administrador"
         manage_user: "Administrar usuario"
         show_public_profile: "Ver perfil público"
-        impersonate: "Suplantar"
         action_logs: "Registros de acciones"
         ip_lookup: "Búsqueda de IP"
         log_out: "Cerrar sesión"
@@ -5433,7 +5506,6 @@ es:
             label: "Añadir emoji"
         title: "Ajustes"
         no_results: "No se encontró ningún resultado."
-        more_than_30_results: "Hay más de 30 resultados. Por favor, afina tu búsqueda o selecciona una categoría."
         clear_filter: "Quitar filtros"
         add_url: "añadir URL"
         add_host: "añadir host"
@@ -5520,7 +5592,7 @@ es:
         allow_title: Permitir que se use la insignia como título
         multiple_grant: Se puede conceder varias veces
         listable: Mostrar insignia en la página pública de insignias
-        enabled: Activar insignias
+        disabled: desactivado
         icon: Icono
         image: Imagen
         graphic: Gráfico
@@ -5590,10 +5662,8 @@ es:
       embedding:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
-        sample: "Incluye el siguiente código HTML en tu página para crear e incrustar en ella temas de Discourse. Sustituye <b>REPLACE_ME</b> con la dirección URL real de la página en la que estés incrustando el código."
         title: "Incrustado"
         host: "Hosts permitidos"
-        class_name: "Nombre de clase"
         allowed_paths: "Lista de rutas permitidas"
         edit: "editar"
         category: "Publicar en categoría"

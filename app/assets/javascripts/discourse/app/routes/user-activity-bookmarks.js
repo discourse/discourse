@@ -2,8 +2,11 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
 import { Promise } from "rsvp";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
+  templateName: "user/bookmarks",
+
   queryParams: {
     acting_username: { refreshModel: true },
     q: { refreshModel: true },
@@ -22,7 +25,6 @@ export default DiscourseRoute.extend({
 
     this.session.setProperties({
       bookmarksModel: null,
-      bookmarkListScrollPosition: null,
     });
 
     controller.set("loading", true);
@@ -46,8 +48,8 @@ export default DiscourseRoute.extend({
       .finally(() => controller.set("loading", false));
   },
 
-  renderTemplate() {
-    this.render("user_bookmarks");
+  titleToken() {
+    return I18n.t("user_action_groups.3");
   },
 
   @action

@@ -5,7 +5,7 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import discourseComputed from "discourse-common/utils/decorators";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 import { isEmpty } from "@ember/utils";
 import { next } from "@ember/runloop";
 
@@ -22,6 +22,7 @@ export default Controller.extend(ModalFunctionality, {
   newMessage: equal("selection", "new_message"),
   existingMessage: equal("selection", "existing_message"),
   participants: null,
+  chronologicalOrder: false,
 
   init() {
     this._super(...arguments);
@@ -81,6 +82,8 @@ export default Controller.extend(ModalFunctionality, {
       topicName: "",
       tags: null,
       participants: [],
+      selectedTopicId: null,
+      chronologicalOrder: false,
     });
 
     const isPrivateMessage = this.get("model.isPrivateMessage");
@@ -125,7 +128,10 @@ export default Controller.extend(ModalFunctionality, {
       let mergeOptions, moveOptions;
 
       if (type === "existingTopic") {
-        mergeOptions = { destination_topic_id: this.selectedTopicId };
+        mergeOptions = {
+          destination_topic_id: this.selectedTopicId,
+          chronological_order: this.chronologicalOrder,
+        };
         moveOptions = Object.assign(
           { post_ids: this.get("topicController.selectedPostIds") },
           mergeOptions
@@ -135,6 +141,7 @@ export default Controller.extend(ModalFunctionality, {
           destination_topic_id: this.selectedTopicId,
           participants: this.participants.join(","),
           archetype: "private_message",
+          chronological_order: this.chronologicalOrder,
         };
         moveOptions = Object.assign(
           { post_ids: this.get("topicController.selectedPostIds") },
@@ -168,9 +175,7 @@ export default Controller.extend(ModalFunctionality, {
           this.topicController.send("toggleMultiSelect");
           DiscourseURL.routeTo(result.url);
         })
-        .catch((xhr) => {
-          this.flash(extractError(xhr, I18n.t("topic.move_to.error")), "error");
-        })
+        .catch(flashAjaxError(this, I18n.t("topic.move_to.error")))
         .finally(() => {
           this.set("saving", false);
         });

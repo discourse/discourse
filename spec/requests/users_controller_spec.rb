@@ -327,10 +327,9 @@ RSpec.describe UsersController do
       end
 
       context "with rate limiting" do
-        before do
-          RateLimiter.clear_all!
-          RateLimiter.enable
-        end
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
 
         it "rate limits reset passwords" do
           freeze_time
@@ -907,7 +906,7 @@ RSpec.describe UsersController do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
-          #Sidekiq::Client.expects(:enqueue).never
+          # Sidekiq::Client.expects(:enqueue).never
           post "/u.json",
                params: post_user_params.merge(approved: true, active: true),
                headers: {
@@ -1630,6 +1629,33 @@ RSpec.describe UsersController do
         created_user.reload
         expect(created_user.email).to eq("staged@account.com")
         expect(response.status).to eq(403)
+      end
+
+      it "works with custom fields" do
+        tennis_field = Fabricate(:user_field, show_on_profile: true, name: "Favorite tennis player")
+
+        post "/u.json",
+             params:
+               honeypot_magic(
+                 email: staged.email,
+                 username: "dude",
+                 password: "P4ssw0rd$$",
+                 user_fields: {
+                   [tennis_field.id] => "Nadal",
+                 },
+               )
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result["success"]).to eq(true)
+
+        created_user = User.find_by_email(staged.email)
+        expect(created_user.staged).to eq(false)
+        expect(created_user.active).to eq(false)
+        expect(created_user.registration_ip_address).to be_present
+        expect(!!created_user.custom_fields["from_staged"]).to eq(true)
+
+        expect(created_user.custom_fields["user_field_#{tennis_field.id}"]).to eq("Nadal")
       end
     end
   end
@@ -2871,7 +2897,7 @@ RSpec.describe UsersController do
         end
 
         it "doesn't clear user status if it wasn't sent in the payload" do
-          new_status = { emoji: "off to dentist", description: "tooth" }
+          new_status = { emoji: "tooth", description: "off to dentist" }
           user.set_status!(new_status[:description], new_status[:emoji])
           user.reload
 
@@ -2973,6 +2999,32 @@ RSpec.describe UsersController do
         end
       end
     end
+
+    context "when a plugin introduces a users_controller_update_user_params modifier" do
+      before { sign_in(user) }
+
+      after { DiscoursePluginRegistry.clear_modifiers! }
+
+      it "allows the plugin to modify the user params" do
+        block_called = false
+
+        plugin = Plugin::Instance.new
+        plugin.register_modifier(
+          :users_controller_update_user_params,
+        ) do |result, current_user, params|
+          block_called = true
+          expect(current_user.id).to eq(user.id)
+          result[:location] = params[:plugin_location_alias]
+          result
+        end
+
+        put "/u/#{user.username}.json", params: { location: "abc", plugin_location_alias: "xyz" }
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_profile.location).to eq("xyz")
+        expect(block_called).to eq(true)
+      end
+    end
   end
 
   describe "#badge_title" do
@@ -2996,7 +3048,6 @@ RSpec.describe UsersController do
           }
 
       expect(user1.reload.title).to eq(badge.display_name)
-      expect(user1.user_profile.badge_granted_title).to eq(true)
       expect(user1.user_profile.granted_title_badge_id).to eq(badge.id)
 
       badge.update allow_title: false
@@ -3009,7 +3060,6 @@ RSpec.describe UsersController do
       user1.reload
       user1.user_profile.reload
       expect(user1.title).to eq("")
-      expect(user1.user_profile.badge_granted_title).to eq(false)
       expect(user1.user_profile.granted_title_badge_id).to eq(nil)
     end
 
@@ -4155,6 +4205,8 @@ RSpec.describe UsersController do
     end
 
     context "with a session variable" do
+      use_redis_snapshotting
+
       it "raises an error with an invalid session value" do
         post_user
 
@@ -4226,7 +4278,6 @@ RSpec.describe UsersController do
 
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
-        RateLimiter.clear_all!
         freeze_time
 
         user = post_user
@@ -4328,7 +4379,6 @@ RSpec.describe UsersController do
 
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
-        RateLimiter.clear_all!
         freeze_time
 
         user = inactive_user
@@ -4594,13 +4644,13 @@ RSpec.describe UsersController do
       before { sign_in(user1) }
 
       it "works correctly" do
-        get "/u/#{user1.username}/card.json"
+        get "/u/#{user.username}/card.json"
         expect(response.status).to eq(200)
 
         json = response.parsed_body
 
         expect(json["user"]["associated_accounts"]).to eq(nil) # Not serialized in card
-        expect(json["user"]["username"]).to eq(user1.username)
+        expect(json["user"]["username"]).to eq(user.username)
       end
 
       it "returns not found when the username doesn't exist" do
@@ -4608,9 +4658,23 @@ RSpec.describe UsersController do
         expect(response).not_to be_successful
       end
 
+      it "returns partial response when inactive user" do
+        user.update!(active: false)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["inactive"]).to eq(true)
+      end
+
+      it "returns partial response when hidden users" do
+        user.user_option.update!(hide_profile_and_presence: true)
+        get "/u/#{user.username}/card.json"
+        expect(response).to be_successful
+        expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+      end
+
       it "raises an error on invalid access" do
-        Guardian.any_instance.expects(:can_see?).with(user1).returns(false)
-        get "/u/#{user1.username}/card.json"
+        Guardian.any_instance.expects(:can_see?).with(user).returns(false)
+        get "/u/#{user.username}/card.json"
         expect(response).to be_forbidden
       end
     end
@@ -4911,6 +4975,51 @@ RSpec.describe UsersController do
           expect(groups).to eq([{ "name" => "admins", "full_name" => nil }])
 
           DiscoursePluginRegistry.reset!
+        end
+
+        it "allows plugins to use apply modifiers to the groups filter" do
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+
+          expect(response.status).to eq(200)
+          initial_groups = response.parsed_body["groups"]
+          expect(initial_groups.count).to eq(6)
+
+          Plugin::Instance
+            .new
+            .register_modifier(:groups_for_users_search) do |groups|
+              groups.where(name: initial_groups.first["name"])
+            end
+
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["groups"].count).to eq(1)
+
+          DiscoursePluginRegistry.reset!
+        end
+
+        it "works when the modifier to the groups filter introduces a join with a conflicting name fields like `id` for example" do
+          %i[
+            include_groups
+            include_mentionable_groups
+            include_messageable_groups
+          ].each do |param_name|
+            get "/u/search/users.json", params: { param_name => "true", :term => "a" }
+
+            expect(response.status).to eq(200)
+
+            Plugin::Instance
+              .new
+              .register_modifier(:groups_for_users_search) do |groups|
+                # a join with a conflicting name field (id) is introduced here
+                # we expect the query to work correctly
+                groups.left_joins(:users).where(users: { admin: true })
+              end
+
+            get "/u/search/users.json", params: { param_name => "true", :term => "a" }
+            expect(response.status).to eq(200) # the conflict would cause a 500 error
+
+            DiscoursePluginRegistry.reset!
+          end
         end
 
         it "doesn't search for groups" do
@@ -5241,6 +5350,8 @@ RSpec.describe UsersController do
   describe "#enable_second_factor_totp" do
     before { sign_in(user1) }
 
+    use_redis_snapshotting
+
     def create_totp
       stub_secure_session_confirmed
       post "/users/create_second_factor_totp.json"
@@ -5263,7 +5374,6 @@ RSpec.describe UsersController do
 
     it "rate limits by IP address" do
       RateLimiter.enable
-      RateLimiter.clear_all!
 
       create_totp
       staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
@@ -5282,7 +5392,6 @@ RSpec.describe UsersController do
 
     it "rate limits by username" do
       RateLimiter.enable
-      RateLimiter.clear_all!
 
       create_totp
       staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
@@ -5635,6 +5744,7 @@ RSpec.describe UsersController do
           Class
             .new(Auth::Authenticator) do
               attr_accessor :can_revoke
+
               def name
                 "testprovider"
               end
@@ -5947,7 +6057,7 @@ RSpec.describe UsersController do
       bookmark3 && bookmark4
     end
 
-    after { Bookmark.registered_bookmarkables = [] }
+    after { DiscoursePluginRegistry.reset! }
 
     let(:bookmark1) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:post)) }
     let(:bookmark2) { Fabricate(:bookmark, user: user1, bookmarkable: Fabricate(:topic)) }
@@ -6528,24 +6638,31 @@ RSpec.describe UsersController do
         )
       end
 
-      it "responds with an array of PM topics that are not associated with any of the unread private_message notifications" do
+      it "responds with an array of personal messages and user watching group messages that are not associated with any of the unread private_message notifications" do
         group_message1.update!(bumped_at: 1.minutes.ago)
         message_without_notification.update!(bumped_at: 3.minutes.ago)
         group_message2.update!(bumped_at: 6.minutes.ago)
         message_with_read_notification.update!(bumped_at: 10.minutes.ago)
         read_group_message_summary_notification.destroy!
 
+        TopicUser.create!(
+          user: user,
+          topic: group_message1,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+        TopicUser.create!(
+          user: user,
+          topic: group_message2,
+          notification_level: TopicUser.notification_levels[:regular],
+        )
+
         get "/u/#{user.username}/user-menu-private-messages"
         expect(response.status).to eq(200)
 
         topics = response.parsed_body["topics"]
+
         expect(topics.map { |topic| topic["id"] }).to eq(
-          [
-            group_message1.id,
-            message_without_notification.id,
-            group_message2.id,
-            message_with_read_notification.id,
-          ],
+          [group_message1.id, message_without_notification.id, message_with_read_notification.id],
         )
       end
 

@@ -2,11 +2,12 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import Mobile from "discourse/lib/mobile";
 import { bind } from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import { guidFor } from "@ember/object/internals";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { getOwner } from "discourse-common/lib/get-owner";
+import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 
 // Use to attach copy/fullscreen buttons to a block of code, either
 // within the post stream or for a regular element that contains
@@ -113,6 +114,9 @@ export default class CodeblockButtons {
         copyButton.ariaLabel = I18n.t("copy_codeblock.copy");
         copyButton.innerHTML = iconHTML("copy");
         wrapperEl.appendChild(copyButton);
+        wrapperEl.style.right = `${
+          codeBlock.offsetWidth - codeBlock.clientWidth
+        }px`;
       }
 
       if (
@@ -169,9 +173,12 @@ export default class CodeblockButtons {
           this._copyComplete(button);
         }
       } else if (action === "fullscreen") {
-        showModal("fullscreen-code").setProperties({
-          code: text,
-          codeClasses: codeEl.className,
+        const modal = getOwner(this).lookup("service:modal");
+        modal.show(FullscreenCodeModal, {
+          model: {
+            code: text,
+            codeClasses: codeEl.className,
+          },
         });
       }
     }

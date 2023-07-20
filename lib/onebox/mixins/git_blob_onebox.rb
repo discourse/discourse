@@ -119,16 +119,16 @@ module Onebox
           a_lines = str.lines
           a_lines.each do |l|
             l = l.chomp("\n") # remove new line
-            m = l.match(/^[ ]*/) # find leading spaces 0 or more
-            unless m.nil? || l.size == m[0].size || l.size == 0 # no match | only spaces in line | empty line
+            m = l.match(/\A[ ]*/) # find leading spaces 0 or more
+            if m.nil? || l.size == m[0].size || l.size == 0
+              next # SKIP no match or line is only spaces
+            else # no match | only spaces in line | empty line
               m_str_length = m[0].size
               if m_str_length <= 1 # minimum space is 1 or nothing we can break we found our minimum
                 min_space = m_str_length
                 break #stop iteration
               end
               min_space = m_str_length if m_str_length < min_space
-            else
-              next # SKIP no match or line is only spaces
             end
           end
           a_lines.each do |l|
@@ -166,7 +166,7 @@ module Onebox
             @file = m[:file]
             @lang = Onebox::FileTypeFinder.from_file_name(m[:file])
 
-            if @lang == "stl" && link.match?(%r{^https?://(www\.)?github\.com.*/blob/})
+            if @lang == "stl" && link.match?(%r{\Ahttps?://(www\.)?github\.com.*/blob/})
               @model_file = @lang.dup
               @raw = "https://render.githubusercontent.com/view/solid?url=" + self.raw_template(m)
             else

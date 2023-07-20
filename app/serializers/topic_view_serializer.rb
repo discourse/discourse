@@ -78,6 +78,7 @@ class TopicViewSerializer < ApplicationSerializer
     :user_last_posted_at,
     :is_shared_draft,
     :slow_mode_enabled_until,
+    :summarizable,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -283,7 +284,7 @@ class TopicViewSerializer < ApplicationSerializer
           owner: true,
         },
       )
-      .pluck_first(:name)
+      .pick(:name)
   end
 
   def include_requested_group_name?
@@ -310,5 +311,9 @@ class TopicViewSerializer < ApplicationSerializer
 
   def slow_mode_enabled_until
     object.topic.slow_mode_topic_timer&.execute_at
+  end
+
+  def summarizable
+    object.summarizable?
   end
 end

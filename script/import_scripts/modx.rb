@@ -382,7 +382,9 @@ FROM #{TABLE_PREFIX}discuss_users
           title_username_of_pm_first_post[[title, participants]] ||= m["pmtextid"]
         end
 
-        unless topic_id
+        if topic_id
+          mapped[:topic_id] = topic_id
+        else
           mapped[:title] = title
           mapped[:archetype] = Archetype.private_message
           mapped[:target_usernames] = target_usernames.join(",")
@@ -392,8 +394,6 @@ FROM #{TABLE_PREFIX}discuss_users
             mapped[:target_usernames] = "system"
             puts "pm-#{m["pmtextid"]} has no target (#{m["touserarray"]})"
           end
-        else
-          mapped[:topic_id] = topic_id
         end
 
         skip ? nil : mapped

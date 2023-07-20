@@ -29,6 +29,7 @@ export default MultiSelectComponent.extend({
     groupMembersOf: undefined,
     excludeCurrentUser: false,
     customSearchOptions: undefined,
+    excludedUsernames: undefined,
   },
 
   content: computed("value.[]", function () {

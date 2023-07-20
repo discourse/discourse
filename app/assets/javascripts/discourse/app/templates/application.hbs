@@ -1,10 +1,11 @@
 <DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
+  <PageLoadingSlider />
   <PluginOutlet
     @name="above-site-header"
     @connectorTagName="div"
-    @args={{hash currentPath=this.router._router.currentPath}}
+    @outletArgs={{hash currentPath=this.router._router.currentPath}}
   />
 
   {{#if this.showSiteHeader}}
@@ -17,6 +18,7 @@
       @toggleAnonymous={{route-action "toggleAnonymous"}}
       @logout={{route-action "logout"}}
       @sidebarEnabled={{this.sidebarEnabled}}
+      @navigationMenuQueryParamOverride={{this.navigationMenuQueryParamOverride}}
       @showSidebar={{this.showSidebar}}
       @toggleSidebar={{action "toggleSidebar"}}
     />
@@ -24,10 +26,14 @@
 
   <SoftwareUpdatePrompt />
 
+  {{#if this.siteSettings.enable_offline_indicator}}
+    <OfflineIndicator />
+  {{/if}}
+
   <PluginOutlet
     @name="below-site-header"
     @connectorTagName="div"
-    @args={{hash currentPath=this.router._router.currentPath}}
+    @outletArgs={{hash currentPath=this.router._router.currentPath}}
   />
 
   <div id="main-outlet-wrapper" class="wrap" role="main">
@@ -39,6 +45,10 @@
       {{/if}}
     </div>
 
+    <LoadingSliderFallbackSpinner />
+
+    <PluginOutlet @name="before-main-outlet" />
+
     <div id="main-outlet">
       <PluginOutlet @name="above-main-container" @connectorTagName="div" />
       <div class="container" id="main-container">
@@ -47,27 +57,31 @@
         {{/if}}
         <NotificationConsentBanner />
         <PwaInstallBanner />
-        {{#if this.showBootstrapModeNotice}}
-          <BootstrapModeNotice />
-        {{/if}}
         <GlobalNotice />
-        <CreateTopicsNotice />
         <PluginOutlet
           @name="top-notices"
           @connectorTagName="div"
-          @args={{hash currentPath=this.router._router.currentPath}}
+          @outletArgs={{hash currentPath=this.router._router.currentPath}}
         />
       </div>
 
       {{outlet}}
-      {{outlet "user-card"}}
+
+      <CardContainer />
+      <PluginOutlet
+        @name="main-outlet-bottom"
+        @outletArgs={{hash showFooter=this.showFooter}}
+      />
     </div>
+
+    <PluginOutlet @name="after-main-outlet" />
+
   </div>
 
   <PluginOutlet
     @name="above-footer"
     @connectorTagName="div"
-    @args={{hash showFooter=this.showFooter}}
+    @outletArgs={{hash showFooter=this.showFooter}}
   />
   {{#if this.showFooter}}
     <CustomHtml
@@ -79,13 +93,14 @@
   <PluginOutlet
     @name="below-footer"
     @connectorTagName="div"
-    @args={{hash showFooter=this.showFooter}}
+    @outletArgs={{hash showFooter=this.showFooter}}
   />
 
-  {{outlet "modal"}}
+  <DLightbox />
+  <ModalContainer />
   <DialogHolder />
   <TopicEntrance />
-  {{outlet "composer"}}
+  <ComposerContainer />
 
   {{#if this.showFooterNav}}
     <FooterNav />

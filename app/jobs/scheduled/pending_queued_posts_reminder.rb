@@ -5,7 +5,7 @@ module Jobs
     every 15.minutes
 
     def execute(args)
-      return true unless SiteSetting.notify_about_queued_posts_after > 0
+      return true if SiteSetting.notify_about_queued_posts_after.zero?
 
       queued_post_ids = should_notify_ids
 

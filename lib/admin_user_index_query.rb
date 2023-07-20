@@ -50,7 +50,7 @@ class AdminUserIndexQuery
 
     custom_order = params[:order]
     if custom_order.present? &&
-         without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)$/, "")]
+         without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)\z/, "")]
       order << "#{without_dir} #{custom_direction}"
     end
 

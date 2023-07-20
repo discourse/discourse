@@ -46,8 +46,8 @@ sv:
       invalid: |-
         Förlåt, men det är inte matematiskt möjligt att kombinera tärningarna så. :confounded:
       not_enough_dice:
-        one: "Jag har bara %{count} tärning. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jag vet!"
-        other: "Jag har bara %{count} tärningar. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), jag vet!"
+        one: "Jag har bara %{count} tärning. Skamligt, jag vet!"
+        other: "Jag har bara %{count} tärningar. Skamligt, jag vet!"
       out_of_range: |-
         Visste du att [maximalt antal sidor](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematiskt rättvis tärning är 120?
       results: |-

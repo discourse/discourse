@@ -38,10 +38,6 @@ class SiteSettings::YamlLoader
   private
 
   def load_yaml(path)
-    if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("3.1.0")
-      YAML.load_file(path, aliases: true)
-    else
-      YAML.load_file(path)
-    end
+    YAML.load_file(path, aliases: true)
   end
 end

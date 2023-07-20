@@ -10,7 +10,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
 function setupGroupPretender(server, helper) {
-  server.post("/groups/Macdonald/request_membership", () => {
+  server.post("/groups/Macdonald/request_membership.json", () => {
     return helper.response({
       relative_url: "/t/internationalization-localization/280",
     });
@@ -275,7 +275,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-details-button button.btn-danger");
 
     assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
+      query(".dialog-body p:nth-of-type(2)").textContent.trim(),
       I18n.t("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),

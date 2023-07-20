@@ -64,7 +64,6 @@ class UserSerializer < UserCardSerializer
                      :use_logo_small_as_avatar,
                      :sidebar_tags,
                      :sidebar_category_ids,
-                     :sidebar_list_destination,
                      :display_sidebar_tags
 
   untrusted_attributes :bio_raw, :bio_cooked, :profile_background_upload_url

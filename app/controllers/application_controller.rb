@@ -346,7 +346,13 @@ class ApplicationController < ActionController::Base
   # disabled. This allows plugins to be disabled programmatically.
   def self.requires_plugin(plugin_name)
     before_action do
-      raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
+      if plugin = Discourse.plugins_by_name[plugin_name]
+        raise PluginDisabled.new if !plugin.enabled?
+      elsif Rails.env.test?
+        raise "Required plugin '#{plugin_name}' not found. The string passed to requires_plugin should match the plugin's name at the top of plugin.rb"
+      else
+        Rails.logger.warn("Required plugin '#{plugin_name}' not found")
+      end
     end
   end
 
@@ -645,21 +651,21 @@ class ApplicationController < ActionController::Base
           current_user,
           scope: guardian,
           root: false,
-          enable_sidebar_param: params[:enable_sidebar],
+          navigation_menu_param: params[:navigation_menu],
         ),
       ),
     )
 
     report = TopicTrackingState.report(current_user)
+    serializer = TopicTrackingStateSerializer.new(report, scope: guardian, root: false)
 
-    serializer =
-      ActiveModel::ArraySerializer.new(
-        report,
-        each_serializer: TopicTrackingStateSerializer,
-        scope: guardian,
-      )
+    hash = serializer.as_json
 
-    store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
+    store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
+    store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
+
+    # This is used in the wizard so we can preload fonts using the FontMap JS API.
+    store_preloaded("fontMap", MultiJson.dump(load_font_map)) if current_user.admin?
   end
 
   def custom_html_json
@@ -679,7 +685,7 @@ class ApplicationController < ActionController::Base
 
     DiscoursePluginRegistry.html_builders.each do |name, _|
       if name.start_with?("client:")
-        data[name.sub(/^client:/, "")] = DiscoursePluginRegistry.build_html(name, self)
+        data[name.sub(/\Aclient:/, "")] = DiscoursePluginRegistry.build_html(name, self)
       end
     end
 
@@ -691,16 +697,15 @@ class ApplicationController < ActionController::Base
   end
 
   def banner_json
-    json = ApplicationController.banner_json_cache["json"]
     return "{}" if !current_user && SiteSetting.login_required?
 
-    unless json
-      topic = Topic.where(archetype: Archetype.banner).first
-      banner = topic.present? ? topic.banner : {}
-      ApplicationController.banner_json_cache["json"] = json = MultiJson.dump(banner)
-    end
-
-    json
+    ApplicationController
+      .banner_json_cache
+      .defer_get_set("json") do
+        topic = Topic.where(archetype: Archetype.banner).first
+        banner = topic.present? ? topic.banner : {}
+        MultiJson.dump(banner)
+      end
   end
 
   def custom_emoji
@@ -1064,5 +1069,19 @@ class ApplicationController < ActionController::Base
 
   def spa_boot_request?
     request.get? && !(request.format && request.format.json?) && !request.xhr?
+  end
+
+  def load_font_map
+    DiscourseFonts
+      .fonts
+      .each_with_object({}) do |font, font_map|
+        next if !font[:variants]
+        font_map[font[:key]] = font[:variants].map do |v|
+          {
+            url: "#{Discourse.base_url}/fonts/#{v[:filename]}?v=#{DiscourseFonts::VERSION}",
+            weight: v[:weight],
+          }
+        end
+      end
   end
 end

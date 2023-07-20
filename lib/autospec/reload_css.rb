@@ -10,11 +10,11 @@ class Autospec::ReloadCss
   end
 
   # css, scss, sass or handlebars
-  watch(/\.css$/)
-  watch(/\.ca?ss\.erb$/)
-  watch(/\.s[ac]ss$/)
-  watch(/\.hbs$/)
-  watch(/\.hbr$/)
+  watch(/\.css\z/)
+  watch(/\.ca?ss\.erb\z/)
+  watch(/\.s[ac]ss\z/)
+  watch(/\.hbs\z/)
+  watch(/\.hbr\z/)
 
   def self.message_bus
     MessageBus::Instance.new.tap do |bus|
@@ -44,7 +44,7 @@ class Autospec::ReloadCss
       p = p.sub(/\.sass\.erb/, "")
       p = p.sub(/\.sass/, "")
       p = p.sub(/\.scss/, "")
-      p = p.sub(%r{^app/assets/stylesheets}, "assets")
+      p = p.sub(%r{\Aapp/assets/stylesheets}, "assets")
       { name: p, hash: hash || SecureRandom.hex }
     end
     message_bus.publish "/file-change", paths

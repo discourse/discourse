@@ -2,14 +2,14 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.categoryChatChannel = fabricators.chatChannel();
-    this.directMessageChatChannel = fabricators.directMessageChatChannel();
+    this.categoryChatChannel = fabricators.channel();
+    this.directMessageChannel = fabricators.directMessageChannel();
   });
 
   test("links to correct channel", async function (assert) {
@@ -17,7 +17,10 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert
       .dom(".chat-channel-row")
-      .hasAttribute("href", `/chat/channel/${this.categoryChatChannel.id}/-`);
+      .hasAttribute(
+        "href",
+        `/chat/c/${this.categoryChatChannel.slugifiedTitle}/${this.categoryChatChannel.id}`
+      );
   });
 
   test("allows tabbing", async function (assert) {
@@ -44,12 +47,15 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("renders correct channel metadata", async function (assert) {
+    this.categoryChatChannel.lastMessage = fabricators.message({
+      created_at: moment().toISOString(),
+    });
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
     assert
       .dom(".chat-channel-metadata")
       .hasText(
-        moment(this.categoryChatChannel.last_message_sent_at).format("l")
+        moment(this.categoryChatChannel.lastMessage.createdAt).format("h:mm A")
       );
   });
 
@@ -130,7 +136,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     assert.dom(".chat-channel-row").doesNotHaveClass("has-unread");
 
-    this.categoryChatChannel.currentUserMembership.unread_count = 1;
+    this.categoryChatChannel.tracking.unreadCount = 1;
 
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
@@ -144,11 +150,14 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("user status with direct message channel", async function (assert) {
+    this.directMessageChannel.chatable = fabricators.directMessage({
+      users: [fabricators.user()],
+    });
     const status = { description: "Off to dentist", emoji: "tooth" };
-    this.directMessageChatChannel.chatable.users[0].status = status;
+    this.directMessageChannel.chatable.users[0].status = status;
 
     await render(
-      hbs`<ChatChannelRow @channel={{this.directMessageChatChannel}} />`
+      hbs`<ChatChannelRow @channel={{this.directMessageChannel}} />`
     );
 
     assert.dom(".user-status-message").exists();
@@ -156,9 +165,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
   test("user status with direct message channel and multiple users", async function (assert) {
     const status = { description: "Off to dentist", emoji: "tooth" };
-    this.directMessageChatChannel.chatable.users[0].status = status;
+    this.directMessageChannel.chatable.users[0].status = status;
 
-    this.directMessageChatChannel.chatable.users.push({
+    this.directMessageChannel.chatable.users.push({
       id: 2,
       username: "bill",
       name: null,
@@ -166,7 +175,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     });
 
     await render(
-      hbs`<ChatChannelRow @channel={{this.directMessageChatChannel}} />`
+      hbs`<ChatChannelRow @channel={{this.directMessageChannel}} />`
     );
 
     assert.dom(".user-status-message").doesNotExist();

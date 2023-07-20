@@ -203,7 +203,7 @@ pre.codeblock-buttons:hover {
     margin-left: var(--topic-avatar-width);
     width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-        var(--topic-avatar-width) - (var(--topic-avatar-width + 2px))
+        var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
     ); // 2px accounts for left and right borders
     .row {
       border-bottom: none;
@@ -324,6 +324,14 @@ pre.codeblock-buttons:hover {
       color: var(--primary);
       background: var(--primary-low);
     }
+  }
+
+  .toggle-summary .summarization-buttons .top-replies {
+    margin-left: 10px;
+  }
+
+  .toggle-summary .summary-box {
+    margin-top: 10px;
   }
 }
 
@@ -543,7 +551,7 @@ blockquote {
   width: 200px;
   position: fixed;
   z-index: z("dropdown") + 1; // 1 higher than .select-posts
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   padding: 0.714em;
   margin-bottom: 5px;
   right: 10px;

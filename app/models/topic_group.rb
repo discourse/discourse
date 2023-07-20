@@ -51,8 +51,7 @@ class TopicGroup < ActiveRecord::Base
         AND tag.topic_id = :topic_id
     SQL
 
-    query +=
-      "AND NOT(tag.group_id IN (:already_updated_groups))" unless updated_group_ids.length.zero?
+    query += "AND NOT(tag.group_id IN (:already_updated_groups))" if updated_group_ids.present?
 
     query += <<~SQL
       ON CONFLICT(topic_id, group_id)

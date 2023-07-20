@@ -1,9 +1,0 @@
-{{#if this.reviewable.reviewable_scores}}
-  <table class="reviewable-scores">
-    <tbody>
-      {{#each this.reviewable.reviewable_scores as |rs|}}
-        <ReviewableScore @rs={{rs}} @reviewable={{this.reviewable}} />
-      {{/each}}
-    </tbody>
-  </table>
-{{/if}}

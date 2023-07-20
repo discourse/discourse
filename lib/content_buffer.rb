@@ -48,7 +48,7 @@ class ContentBuffer
           @lines.insert(start_row + i, line)
           i += 1
         end
-        @lines.insert(i, "") unless @lines.length > i
+        @lines.insert(i, "") if @lines.length <= i
         @lines[i] = split[-1] + @lines[i]
       end
     end

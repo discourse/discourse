@@ -91,18 +91,20 @@
   {{/if}}
 </div>
 
-<PluginOutlet
-  @name="user-preferences-categories"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=@model save=@save}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-categories"
+    @connectorTagName="div"
+    @outletArgs={{hash model=@model save=@save}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=@model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=@model}}
+  />
+</span>

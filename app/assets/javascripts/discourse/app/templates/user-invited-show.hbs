@@ -2,6 +2,7 @@
   {{#if this.canInviteToForum}}
     <LoadMore
       @class="user-content"
+      @id="user-content"
       @selector=".user-invite-list tr"
       @action={{action "loadMore"}}
     >
@@ -183,24 +184,26 @@
                       {{/if}}
                     </td>
 
-                    <td class="invite-actions">
-                      <DButton
-                        @class="btn-default"
-                        @icon="pencil-alt"
-                        @action={{action "editInvite" invite}}
-                        @title="user.invited.edit"
-                      />
-                      <DButton
-                        @icon="trash-alt"
-                        @class="cancel"
-                        @action={{action "destroyInvite" invite}}
-                        @title={{if
-                          invite.destroyed
-                          "user.invited.removed"
-                          "user.invited.remove"
-                        }}
-                      />
-                    </td>
+                    {{#if invite.can_delete_invite}}
+                      <td class="invite-actions">
+                        <DButton
+                          @class="btn-default"
+                          @icon="pencil-alt"
+                          @action={{action "editInvite" invite}}
+                          @title="user.invited.edit"
+                        />
+                        <DButton
+                          @icon="trash-alt"
+                          @class="cancel"
+                          @action={{action "destroyInvite" invite}}
+                          @title={{if
+                            invite.destroyed
+                            "user.invited.removed"
+                            "user.invited.remove"
+                          }}
+                        />
+                      </td>
+                    {{/if}}
                   </tr>
                 {{/each}}
               </tbody>

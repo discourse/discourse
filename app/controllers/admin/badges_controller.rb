@@ -15,7 +15,7 @@ class Admin::BadgesController < Admin::AdminController
           .includes(:badge_grouping)
           .includes(:badge_type, :image_upload)
           .references(:badge_grouping)
-          .order("badge_groupings.position, badge_type_id, badges.name")
+          .order("enabled DESC", "badge_groupings.position, badge_type_id, badges.name")
           .to_a,
       protected_system_fields: Badge.protected_system_fields,
       triggers: Badge.trigger_hash,

@@ -1,3 +1,4 @@
+import { not } from "@ember/object/computed";
 import { A } from "@ember/array";
 import ArrayProxy from "@ember/array/proxy";
 import ColorSchemeColor from "admin/models/color-scheme-color";
@@ -5,26 +6,56 @@ import EmberObject from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
-import { not } from "@ember/object/computed";
 
-const ColorScheme = EmberObject.extend({
+class ColorSchemes extends ArrayProxy {}
+
+export default class ColorScheme extends EmberObject {
+  static findAll() {
+    const colorSchemes = ColorSchemes.create({ content: [], loading: true });
+    return ajax("/admin/color_schemes").then((all) => {
+      all.forEach((colorScheme) => {
+        colorSchemes.pushObject(
+          ColorScheme.create({
+            id: colorScheme.id,
+            name: colorScheme.name,
+            is_base: colorScheme.is_base,
+            theme_id: colorScheme.theme_id,
+            theme_name: colorScheme.theme_name,
+            base_scheme_id: colorScheme.base_scheme_id,
+            user_selectable: colorScheme.user_selectable,
+            colors: colorScheme.colors.map((c) => {
+              return ColorSchemeColor.create({
+                name: c.name,
+                hex: c.hex,
+                default_hex: c.default_hex,
+                is_advanced: c.is_advanced,
+              });
+            }),
+          })
+        );
+      });
+      return colorSchemes;
+    });
+  }
+
+  @not("id") newRecord;
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.startTrackingChanges();
-  },
+  }
 
   @discourseComputed
   description() {
     return "" + this.name;
-  },
+  }
 
   startTrackingChanges() {
     this.set("originals", {
       name: this.name,
       user_selectable: this.user_selectable,
     });
-  },
+  }
 
   schemeJson() {
     const buffer = [];
@@ -33,7 +64,7 @@ const ColorScheme = EmberObject.extend({
     });
 
     return [`"${this.name}": {`, buffer.join(",\n"), "}"].join("\n");
-  },
+  }
 
   copy() {
     const newScheme = ColorScheme.create({
@@ -47,7 +78,7 @@ const ColorScheme = EmberObject.extend({
       );
     });
     return newScheme;
-  },
+  }
 
   @discourseComputed(
     "name",
@@ -70,7 +101,7 @@ const ColorScheme = EmberObject.extend({
     }
 
     return false;
-  },
+  }
 
   @discourseComputed("changed")
   disableSave(changed) {
@@ -79,9 +110,7 @@ const ColorScheme = EmberObject.extend({
     }
 
     return !changed || this.saving || this.colors.any((c) => !c.get("valid"));
-  },
-
-  newRecord: not("id"),
+  }
 
   save(opts) {
     if (this.is_base || this.disableSave) {
@@ -124,7 +153,7 @@ const ColorScheme = EmberObject.extend({
       this.setProperties({ savingStatus: I18n.t("saved"), saving: false });
       this.notifyPropertyChange("description");
     });
-  },
+  }
 
   updateUserSelectable(value) {
     if (!this.id) {
@@ -137,45 +166,11 @@ const ColorScheme = EmberObject.extend({
       dataType: "json",
       contentType: "application/json",
     });
-  },
+  }
 
   destroy() {
     if (this.id) {
       return ajax(`/admin/color_schemes/${this.id}`, { type: "DELETE" });
     }
-  },
-});
-
-const ColorSchemes = ArrayProxy.extend({});
-
-ColorScheme.reopenClass({
-  findAll() {
-    const colorSchemes = ColorSchemes.create({ content: [], loading: true });
-    return ajax("/admin/color_schemes").then((all) => {
-      all.forEach((colorScheme) => {
-        colorSchemes.pushObject(
-          ColorScheme.create({
-            id: colorScheme.id,
-            name: colorScheme.name,
-            is_base: colorScheme.is_base,
-            theme_id: colorScheme.theme_id,
-            theme_name: colorScheme.theme_name,
-            base_scheme_id: colorScheme.base_scheme_id,
-            user_selectable: colorScheme.user_selectable,
-            colors: colorScheme.colors.map((c) => {
-              return ColorSchemeColor.create({
-                name: c.name,
-                hex: c.hex,
-                default_hex: c.default_hex,
-                is_advanced: c.is_advanced,
-              });
-            }),
-          })
-        );
-      });
-      return colorSchemes;
-    });
-  },
-});
-
-export default ColorScheme;
+  }
+}

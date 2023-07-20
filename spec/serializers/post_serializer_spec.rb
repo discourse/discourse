@@ -68,35 +68,35 @@ RSpec.describe PostSerializer do
   end
 
   context "with a post by a nuked user" do
-    before { post.update!(user_id: nil, deleted_at: Time.zone.now) }
-
-    subject do
+    subject(:serializer) do
       PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
     end
 
+    before { post.update!(user_id: nil, deleted_at: Time.zone.now) }
+
     it "serializes correctly" do
       %i[name username display_username avatar_template user_title trust_level].each do |attr|
-        expect(subject[attr]).to be_nil
+        expect(serializer[attr]).to be_nil
       end
-      %i[moderator staff yours].each { |attr| expect(subject[attr]).to eq(false) }
+      %i[moderator staff yours].each { |attr| expect(serializer[attr]).to eq(false) }
     end
   end
 
   context "with a post by a suspended user" do
-    def subject
+    def serializer
       PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
     end
 
     it "serializes correctly" do
-      expect(subject[:user_suspended]).to be_nil
+      expect(serializer[:user_suspended]).to be_nil
 
       post.user.update!(suspended_till: 1.month.from_now)
 
-      expect(subject[:user_suspended]).to eq(true)
+      expect(serializer[:user_suspended]).to eq(true)
 
       freeze_time (2.months.from_now)
 
-      expect(subject[:user_suspended]).to be_nil
+      expect(serializer[:user_suspended]).to be_nil
     end
   end
 
@@ -139,6 +139,13 @@ RSpec.describe PostSerializer do
           hidden: true,
           hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
         )
+      end
+
+      it "includes if the user can see it" do
+        expect(serialized_post_for_user(Fabricate(:moderator))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:admin))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(user)[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:user))[:can_see_hidden_post]).to eq(false)
       end
 
       it "shows the raw post only if authorized to see it" do

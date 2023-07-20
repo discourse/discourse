@@ -1,45 +1,61 @@
 {{#if this.displaySection}}
-  <div class={{concat "sidebar-section-wrapper sidebar-section-" @sectionName}}>
-    <div class="sidebar-section-header-wrapper sidebar-row">
-      <Sidebar::SectionHeader
-        @collapsable={{@collapsable}}
-        @sidebarSectionContentID={{this.sidebarSectionContentID}}
-        @toggleSectionDisplay={{this.toggleSectionDisplay}}
-        @isExpanded={{this.displaySectionContent}}
-      >
-        {{#if @collapsable}}
-          <span class="sidebar-section-header-caret">
-            {{d-icon this.headerCaretIcon}}
+  <div
+    class={{concat-class "sidebar-section-wrapper sidebar-section" @class}}
+    data-section-name={{@sectionName}}
+  >
+    {{#unless @hideSectionHeader}}
+      <div class="sidebar-section-header-wrapper sidebar-row">
+        <Sidebar::SectionHeader
+          @collapsable={{@collapsable}}
+          @sidebarSectionContentID={{this.sidebarSectionContentID}}
+          @toggleSectionDisplay={{this.toggleSectionDisplay}}
+          @isExpanded={{this.displaySectionContent}}
+        >
+          {{#if @collapsable}}
+            <span class="sidebar-section-header-caret">
+              {{d-icon this.headerCaretIcon}}
+            </span>
+          {{/if}}
+
+          <span class="sidebar-section-header-text">
+            {{@headerLinkText}}
           </span>
+          {{#if @indicatePublic}}
+            <span class="sidebar-section-header-global-indicator">
+              {{d-icon "globe"}}
+              <DTooltip @placement="top">{{d-icon "shield-alt"}}
+                {{i18n "sidebar.sections.global_section"}}
+              </DTooltip>
+            </span>
+          {{/if}}
+        </Sidebar::SectionHeader>
+
+        {{#if this.isSingleHeaderAction}}
+          {{#each @headerActions as |headerAction|}}
+            <button
+              type="button"
+              class="sidebar-section-header-button"
+              {{on "click" headerAction.action}}
+              title={{headerAction.title}}
+            >
+              {{d-icon @headerActionsIcon}}
+            </button>
+          {{/each}}
         {{/if}}
 
-        <span class="sidebar-section-header-text">
-          {{@headerLinkText}}
-        </span>
-      </Sidebar::SectionHeader>
-
-      {{#if this.isSingleHeaderAction}}
-        {{#each @headerActions as |headerAction|}}
-          <button
-            type="button"
-            class="sidebar-section-header-button"
-            {{on "click" headerAction.action}}
-            title={{headerAction.title}}
-          >
-            {{d-icon @headerActionsIcon}}
-          </button>
-        {{/each}}
-      {{/if}}
-
-      {{#if this.isMultipleHeaderActions}}
-        <DropdownSelectBox
-          @options={{hash icon=@headerActionsIcon placementStrategy="absolute"}}
-          @content={{@headerActions}}
-          @onChange={{action "handleMultipleHeaderActions"}}
-          @class="sidebar-section-header-dropdown"
-        />
-      {{/if}}
-    </div>
+        {{#if this.isMultipleHeaderActions}}
+          <DropdownSelectBox
+            @options={{hash
+              icon=@headerActionsIcon
+              placementStrategy="absolute"
+            }}
+            @content={{@headerActions}}
+            @onChange={{action "handleMultipleHeaderActions"}}
+            @class="sidebar-section-header-dropdown"
+          />
+        {{/if}}
+      </div>
+    {{/unless}}
 
     {{#if this.displaySectionContent}}
       <ul class="sidebar-section-content" id={{this.sidebarSectionContentID}}>

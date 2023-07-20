@@ -122,6 +122,22 @@ RSpec.describe StaticController do
         File.delete(file_path)
       end
     end
+
+    it "can serve sourcemaps on adjacent paths" do
+      assets_path = Rails.root.join("public/assets")
+
+      FileUtils.mkdir_p(assets_path)
+
+      file_path = assets_path.join("test.map")
+      File.write(file_path, "fake source map")
+      GlobalSetting.stubs(:cdn_url).returns("https://www.example.com/")
+
+      get "/brotli_asset/test.map"
+
+      expect(response.status).to eq(200)
+    ensure
+      File.delete(file_path)
+    end
   end
 
   describe "#cdn_asset" do
@@ -170,7 +186,7 @@ RSpec.describe StaticController do
       ["tos", :tos_url, I18n.t("js.tos")],
       ["privacy", :privacy_policy_url, I18n.t("js.privacy")],
     ].each do |id, setting_name, text|
-      context "#{id}" do
+      context "with #{id}" do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
             get "/#{id}"
@@ -273,9 +289,9 @@ RSpec.describe StaticController do
         Discourse::Application.routes.send(:eval_block, routes)
 
         topic_id = Fabricate(:post, cooked: "contact info").topic_id
-        SiteSetting.setting(:test_contact_topic_id, topic_id)
+        SiteSetting.test_some_topic_id = topic_id
 
-        Plugin::Instance.new.add_topic_static_page("contact", topic_id: "test_contact_topic_id")
+        Plugin::Instance.new.add_topic_static_page("contact", topic_id: "test_some_topic_id")
 
         get "/contact"
 
@@ -285,14 +301,15 @@ RSpec.describe StaticController do
 
       it "replaces existing topic-backed pages" do
         topic_id = Fabricate(:post, cooked: "Regular FAQ").topic_id
-        SiteSetting.setting(:test_faq_topic_id, topic_id)
+        SiteSetting.test_some_topic_id = topic_id
+
         polish_topic_id = Fabricate(:post, cooked: "Polish FAQ").topic_id
-        SiteSetting.setting(:test_polish_faq_topic_id, polish_topic_id)
+        SiteSetting.test_some_other_topic_id = polish_topic_id
 
         Plugin::Instance
           .new
           .add_topic_static_page("faq") do
-            current_user&.locale == "pl" ? "test_polish_faq_topic_id" : "test_faq_topic_id"
+            current_user&.locale == "pl" ? "test_some_other_topic_id" : "test_some_topic_id"
           end
 
         get "/faq"

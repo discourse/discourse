@@ -7,22 +7,21 @@ import { outputExportResult } from "discourse/lib/export-result";
 import { scheduleOnce } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 
-export default Controller.extend({
-  queryParams: ["filters"],
-
-  model: null,
-  filters: null,
-  userHistoryActions: null,
+export default class AdminLogsStaffActionLogsController extends Controller {
+  queryParams = ["filters"];
+  model = null;
+  filters = null;
+  userHistoryActions = null;
 
   @discourseComputed("filters.action_name")
   actionFilter(name) {
     return name ? I18n.t("admin.logs.staff_actions.actions." + name) : null;
-  },
+  }
 
   @discourseComputed("filters")
   filtersExists(filters) {
     return filters && Object.keys(filters).length > 0;
-  },
+  }
 
   _refresh() {
     this.store.findAll("staff-action-log", this.filters).then((result) => {
@@ -44,11 +43,11 @@ export default Controller.extend({
         );
       }
     });
-  },
+  }
 
   scheduleRefresh() {
     scheduleOnce("afterRender", this, this._refresh);
-  },
+  }
 
   resetFilters() {
     this.setProperties({
@@ -56,7 +55,7 @@ export default Controller.extend({
       filters: EmberObject.create(),
     });
     this.scheduleRefresh();
-  },
+  }
 
   changeFilters(props) {
     this.set("model", EmberObject.create({ loadingMore: true }));
@@ -76,7 +75,7 @@ export default Controller.extend({
 
     this.send("onFiltersChange", this.filters);
     this.scheduleRefresh();
-  },
+  }
 
   @action
   filterActionIdChanged(filterActionId) {
@@ -87,7 +86,7 @@ export default Controller.extend({
           .action_id,
       });
     }
-  },
+  }
 
   @action
   clearFilter(key, event) {
@@ -102,14 +101,14 @@ export default Controller.extend({
     } else {
       this.changeFilters({ [key]: null });
     }
-  },
+  }
 
   @action
   clearAllFilters(event) {
     event?.preventDefault();
     this.set("filterActionId", null);
     this.resetFilters();
-  },
+  }
 
   @action
   filterByAction(logItem, event) {
@@ -119,35 +118,35 @@ export default Controller.extend({
       action_id: logItem.get("action"),
       custom_type: logItem.get("custom_type"),
     });
-  },
+  }
 
   @action
   filterByStaffUser(acting_user, event) {
     event?.preventDefault();
     this.changeFilters({ acting_user: acting_user.username });
-  },
+  }
 
   @action
   filterByTargetUser(target_user, event) {
     event?.preventDefault();
     this.changeFilters({ target_user: target_user.username });
-  },
+  }
 
   @action
   filterBySubject(subject, event) {
     event?.preventDefault();
     this.changeFilters({ subject });
-  },
+  }
 
   @action
   exportStaffActionLogs() {
     exportEntity("staff_action").then(outputExportResult);
-  },
+  }
 
   @action
   loadMore() {
     this.model.loadMore();
-  },
+  }
 
   @action
   showDetailsModal(model, event) {
@@ -157,7 +156,7 @@ export default Controller.extend({
       admin: true,
       modalClass: "log-details-modal",
     });
-  },
+  }
 
   @action
   showCustomDetailsModal(model, event) {
@@ -168,5 +167,5 @@ export default Controller.extend({
       modalClass: "history-modal",
     });
     modal.loadDiff();
-  },
-});
+  }
+}

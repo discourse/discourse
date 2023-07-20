@@ -92,3 +92,5 @@ fi:
           description: "Kuvaus"
           header: "Yläpalkki"
           hover_to_see: "Katso työkaluvihje osoittamalla"
+        char_counter:
+          placeholder: "Kirjoita tekstisi tähän..."

@@ -402,10 +402,12 @@ export default Mixin.create({
       plainText = plainText.replace(/\r/g, "");
       const table = this.extractTable(plainText);
       if (table) {
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:insert-text`,
-          table
-        );
+        this.composerEventPrefix
+          ? this.appEvents.trigger(
+              `${this.composerEventPrefix}:insert-text`,
+              table
+            )
+          : this.insertText(table);
         handled = true;
       }
     }
@@ -457,10 +459,12 @@ export default Mixin.create({
         }
 
         if (isComposer) {
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:insert-text`,
-            markdown
-          );
+          this.composerEventPrefix
+            ? this.appEvents.trigger(
+                `${this.composerEventPrefix}:insert-text`,
+                markdown
+              )
+            : this.insertText(markdown);
           handled = true;
         }
       }

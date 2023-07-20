@@ -99,7 +99,16 @@ RSpec.describe Promotion do
         stat.posts_read_count = SiteSetting.tl1_requires_read_posts
         stat.time_read = SiteSetting.tl1_requires_time_spent_mins * 60
         Promotion.recalculate(user)
+
+        expect(user.trust_level).to eq(1)
+
         expect(Jobs::SendSystemMessage.jobs.length).to eq(0)
+      end
+
+      it "respects default trust level" do
+        SiteSetting.default_trust_level = 2
+        Promotion.recalculate(user)
+        expect(user.trust_level).to eq(2)
       end
 
       it "can be turned off" do
@@ -261,6 +270,20 @@ RSpec.describe Promotion do
         expect { promotion.review_tl2 }.to change {
           UserHistory.where(action: UserHistory.actions[:auto_trust_level_change]).count
         }.by(1)
+      end
+    end
+  end
+
+  describe "#change_trust_level!" do
+    fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
+    let(:promotion) { Promotion.new(user) }
+
+    context "when the user has no emails" do
+      before { user.user_emails.delete_all }
+
+      it "does not error" do
+        expect { promotion.change_trust_level!(TrustLevel[1]) }.not_to raise_error
+        expect(user.reload.trust_level).to eq(TrustLevel[1])
       end
     end
   end

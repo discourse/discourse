@@ -52,6 +52,11 @@ de:
   remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
   redirect_warning: "Wir konnten nicht überprüfen, dass der ausgewählte Link tatsächlich im Forum geteilt wurde. Wenn du trotzdem fortfahren möchtest, wähle den Link unten aus."
   on_another_topic: "Zu einem anderen Thema"
+  topic_category_changed: "Von %{from} bis %{to}"
+  topic_tag_changed:
+    added_and_removed: "%{added} hinzugefügt und %{removed}entfernt"
+    added: "%{added} hinzugefügt"
+    removed: "%{removed} entfernt"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} von %{username}"
@@ -191,8 +196,8 @@ de:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen '%{name}' vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
       invalid_choice:
-        one: "Du hast die ungültige Auswahl %{name} getroffen"
-        other: "Du hast die ungültigen Auswahlen %{name} getroffen"
+        one: "'%{name}' ist eine ungültige Wahl."
+        other: "'%{name}' sind ungültige Optionen."
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird."
       default_tags_already_selected: "Du kannst kein Schlagwort wählen, das in einer anderen Liste verwendet wird."
       s3_upload_bucket_is_required: "Uploads auf S3 können nicht aktiviert werden, bevor der „s3_upload_bucket“ eingetragen wurde."
@@ -200,7 +205,8 @@ de:
       page_publishing_requirements: "Die Veröffentlichung von Seiten kann nicht aktiviert werden, wenn sichere Medien aktiviert sind."
       s3_backup_requires_s3_settings: "Du kannst S3 nicht als Backup-Ort verwenden, solange du „%{setting_name}“ nicht festgelegt hast."
       s3_bucket_reused: "Du kannst nicht denselben Bucket für „s3_upload_bucket“ und „s3_backup_bucket“ verwenden. Bitte verwende einen anderen Bucket oder verwende für jeden Bucket einen anderen Pfad."
-      secure_uploads_requirements: "S3-Uploads müssen vor dem Aktivieren sicherer Uploads aktiviert sein."
+      secure_uploads_requirements: "S3 Uploads und S3 ACLs müssen aktiviert sein, bevor du sichere Uploads aktivieren kannst."
+      s3_use_acls_requirements: "Du musst S3 ACLs aktiviert haben, wenn sichere Uploads aktiviert sind."
       share_quote_facebook_requirements: "Du musst eine Facebook-App-ID festlegen, um das Teilen von Zitaten für Facebook zu aktivieren."
       second_factor_cannot_enforce_with_socials: "Du kannst 2FA nicht erzwingen, wenn die Anmeldung über soziale Netzwerke aktiviert ist. Du musst zuerst die Anmeldung über %{auth_provider_names} deaktivieren"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kannst 2FA nicht erzwingen, wenn lokale Anmeldungen deaktiviert sind."
@@ -221,6 +227,10 @@ de:
         other: "Leider konnten wir keine Vorschau für diese Webseite erstellen, da die folgenden oEmbed-/OpenGraph-Tags nicht gefunden werden konnten: %{missing_attributes}"
   word_connector:
     comma: ", "
+  custom_fields:
+    validations:
+      max_items: "Die maximale Anzahl der benutzerdefinierten Felder für diese Entität wurde erreicht (%{max_items_number})"
+      max_value_length: "Die maximale Länge für einen benutzerdefinierten Feldwert wurde erreicht (%{max_value_length})"
   invite:
     expired: "Dein Einladungstoken ist abgelaufen. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
     not_found: "Dein Einladungstoken ist ungültig. Bitte <a href='%{base_url}/about'>kontaktiere das Team</a>."
@@ -239,6 +249,7 @@ de:
     user_exists: "Es ist nicht nötig, <b>%{email}</b> einzuladen. Die Person hat bereits ein Konto!"
     invite_exists: "Du hast <b>%{email}</b> bereits eingeladen."
     invalid_email: "%{email} ist keine gültige E-Mail-Adresse."
+    generic_error_response: "Es gab ein Problem mit deiner Anfrage."
     rate_limit:
       one: "Du hast in den letzten 24 Stunden bereits %{count} Einladung verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
       other: "Du hast in den letzten 24 Stunden bereits %{count} Einladungen verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
@@ -400,6 +411,7 @@ de:
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
   edit_conflict: "Dieser Beitrag wurde von einem anderen Benutzer bearbeitet und deine Änderungen können nicht länger gespeichert werden."
   revert_version_same: "Die aktuelle Version entspricht der Version, zu der du zurückkehren möchtest."
+  reverted_to_version: "auf Version #%{version} zurückgesetzt"
   cannot_edit_on_slow_mode: "Dieses Thema befindet sich im langsamen Modus. Um durchdachte, überlegte Diskussionen anzuregen, ist das Bearbeiten alter Beiträge in diesem Thema während des langsamen Modus nicht zulässig."
   excerpt_image: "Bild"
   bookmarks:
@@ -502,6 +514,7 @@ de:
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
     dominating_topic: Du hast in diesem Thema schon eine Menge gepostet! Gib doch auch anderen die Möglichkeit, hier zu antworten und miteinander zu diskutieren.
     get_a_room: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
+    dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation markiert. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
 
@@ -591,7 +604,9 @@ de:
         translation_overrides:
           attributes:
             value:
-              invalid_interpolation_keys: 'Die folgenden Variablennamen sind ungültig: „%{keys}“'
+              invalid_interpolation_keys:
+                one: "Der folgende Variablenname ist ungültig: %{keys}"
+                other: "Die folgenden Variablennamen sind ungültig: %{keys}"
         watched_word:
           attributes:
             word:
@@ -612,22 +627,21 @@ de:
   staff_category_name: "Team"
   staff_category_description: "Private Kategorie für Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
   discourse_welcome_topic:
-    title: "Willkommen in unserer Community!"
-    body: |2
+    title: "Willkommen bei %{site_title}! :wave:"
+    body: |
+      Wir freuen uns sehr, dass du dabei bist.
 
-      Der erste Absatz dieses angehefteten Themas wird allen neuen Besuchern als Begrüßungsnachricht angezeigt. Er ist wichtig!
+      %{site_info_quote}
 
-      **Bearbeite dies** und erstelle eine kurze Beschreibung deiner Community:
+      Hier sind einige Dinge, die du tun kannst, um loszulegen:
 
-      - Für wen ist sie?
-      - Was findet man hier?
-      - Warum sollte man hier vorbeischauen?
-      - Wo kann man mehr erfahren (Links, Dokumente usw.)?
+      :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einstellst. Worüber würdest du gerne befragt werden?
 
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+      :open_book: **Lerne die Gemeinschaft** kennen, indem du [in den Diskussionen](%{base_path}/top) stöberst, die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze die :heart: , um deine Wertschätzung oder Unterstützung zu zeigen!
 
-      Du solltest dieses Thema eventuell mittels Themen-Administration :wrench: (oben rechts oder unten) schließen, damit sich bei dieser Ankündigung nicht die Antworten anhäufen.
-  admin_quick_start_title: "ZUERST LESEN: Administrator-Kurzanleitung"
+      :handshake: **Beitrage** bei, indem du kommentierst, deine eigene Sichtweise mitteilst, Fragen stellst oder in der Diskussion Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community Guidelines](%{base_path}/faq).
+
+      > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) oder [contact the admins](%{base_path}/about) fragen.
   category:
     topic_prefix: "Über die Kategorie %{category}"
     replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Orientierung wird in der Kategorienauswahl angezeigt, versuche also, weniger als 200 Zeichen zu benutzen.)"
@@ -646,6 +660,7 @@ de:
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
       slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
       is_already_in_use: "wird bereits verwendet"
+      move_topic_to_category_disallowed: "Du kannst dieses Thema nicht in eine Kategorie verschieben, in der du keine Berechtigung hast, neue Themen zu erstellen."
     cannot_delete:
       uncategorized: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben, und kann nicht gelöscht werden."
       has_subcategories: "Diese Kategorie kann nicht gelöscht werden, weil sie Unterkategorien enthält."
@@ -1109,7 +1124,7 @@ de:
       title: "TAB/MAB"
       xaxis: "Tag"
       yaxis: "TAB/MAB"
-      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 30 % oder mehr."
+      description: "Anzahl der Mitglieder, die sich innerhalb des letzten Tages angemeldet haben, geteilt durch die Anzahl der Mitglieder, die sich im letzten Monat angemeldet haben – liefert eine Prozentzahl, welche die „Bindung“ der Community angibt. Erstrebenswert sind 20 % oder mehr."
     daily_engaged_users:
       title: "Täglich engagierte Benutzer"
       xaxis: "Tag"
@@ -1378,6 +1393,7 @@ de:
     image_magick_warning: 'Der Server ist so konfiguriert, dass er Vorschaubilder von großen Bildern erstellt, aber ImageMagick ist nicht installiert. Installiere ImageMagick mit deinem bevorzugten Paketmanager oder <a href="https://www.imagemagick.org/script/download.php" target="_blank">lade die aktuelle Version herunter</a>.'
     failing_emails_warning: '%{num_failed_jobs} E-Mail-Jobs sind fehlgeschlagen. Überprüfe deine app.yml und stelle sicher, dass die Mailservereinstellungen korrekt sind. <a href="%{base_path}/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq anzeigen</a>.'
     subfolder_ends_in_slash: "Deine Unterordner-Konfiguration ist fehlerhaft; DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
+    outdated_translations_warning: "Einige deiner Übersetzungsüberschreibungen sind nicht mehr aktuell. Bitte überprüfe deine <a href='%{base_path}/admin/customize/site_texts?outdated=true'>Textanpassungen</a>."
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
       other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
@@ -1389,6 +1405,7 @@ de:
     out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
+    v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a> , um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1454,8 +1471,11 @@ de:
     fixed_category_positions_on_create: "Wenn diese Option aktiviert ist, wird die Reihenfolge der Kategorien im Dialog zur Themenerstellung beibehalten (erfordert fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Füge mit Ausnahme interner Links (schließt übergeordnete Domains ein) allen benutzergenerierten Inhalten „rel nofollow“ hinzu. Die Änderung dieser Einstellung erfordert, dass du sämtliche Beiträge aktualisierst: „rake posts:rebake“'
     exclude_rel_nofollow_domains: "Eine Liste von Domains, bei denen nofollow bei Links nicht hinzugefügt werden soll. example.com wird automatisch auch Subdomains wie sub.example.com erlauben. Zumindest solltest du die Domain dieser Website hinzufügen, um Webcrawlern zu helfen, alle Inhalte zu finden. Wenn andere Teile der Website auf anderen Domains liegen, füge auch diese hinzu."
+    max_form_template_title_length: "Maximal zulässige Länge für Titel von Formularvorlagen."
+    max_form_template_content_length: "Maximal zulässige Länge für den Inhalt der Formularvorlage."
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
     topic_excerpt_maxlength: "Maximale Länge eines Themenauszugs/einer Zusammenfassung, generiert aus dem ersten Beitrag eines Themas."
+    default_subcategory_on_read_only_category: "Aktiviert die Schaltfläche \"Neues Thema\" und wählt eine Standard-Unterkategorie aus, um in Kategorien zu posten, in denen der Nutzer kein neues Thema erstellen darf."
     show_pinned_excerpt_mobile: "Zeige einen Auszug angehefteter Themen in der mobilen Ansicht."
     show_pinned_excerpt_desktop: "Zeige einen Auszug angehefteter Themen in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
@@ -1477,7 +1497,7 @@ de:
     manifest_icon: "Das Bild, das als Logo/Splash-Bild auf Android benutzt wird. Es wird automatisch auf 512 x 512 gesetzt. Falls leer, wird large_icon genutzt."
     manifest_screenshots: "Screenshots, die die Merkmale und Funktionen deiner Instanz auf der Seite mit der Installationsaufforderung zeigen. Alle Bilder sollten lokal hochgeladen werden und die gleichen Abmessungen haben."
     favicon: "Ein Favicon für die Website, siehe <a href='https://de.wikipedia.org/wiki/Favicon' target='_blank'>https://de.wikipedia.org/wiki/Favicon</a>. Damit es auch über eine CDN richtig funktioniert, muss es ein PNG sein. Wird auf eine Größe von 32 x 32 gesetzt. Falls leer, wird large_icon verwendet."
-    apple_touch_icon: "Icon für Apple-Touch-Geräte. Wird automatisch auf eine Größe von 180 x 180 gesetzt. Falls leer, wird large_icon verwendet."
+    apple_touch_icon: "Das Symbol wird für Apple Touch-Geräte verwendet. Ein transparenter Hintergrund ist nicht empfehlenswert. Die Größe wird automatisch auf 180x180 angepasst. Wenn du nichts angibst, wird large_icon verwendet."
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
     twitter_summary_large_image: "Twitter-Karte „summary large image“ (sollte mindestens 280 Pixel in der Breite und mindestens 150 Pixel in der Höhe sein, keine .svg-Datei). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt"
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
@@ -1493,6 +1513,8 @@ de:
     summary_percent_filter: "Zeige die Top-% der Beiträge eines Themas in der „Dieses Thema zusammenfassen“-Ansicht."
     summary_max_results: "Maximale Anzahl der Beiträge in der „Dieses Thema zusammenfassen“-Ansicht"
     summary_timeline_button: "Schaltfläche „Zusammenfassen“ in der Zeitleiste anzeigen"
+    summarization_strategy: "Zusätzliche Möglichkeiten, von Plugins registrierte Inhalte zusammenzufassen"
+    custom_summarization_allowed_groups: "Gruppen, die Inhalte mit der `Summarization_strategy` zusammenfassen können."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
     personal_message_enabled_groups: "Benutzern innerhalb dieser Gruppen erlauben, Nachrichten zu erstellen und auf Nachrichten zu antworten. Vertrauensstufengruppen umfassen alle Vertrauensstufen über dieser Nummer, zum Beispiel erlaubt die Wahl von trust_level_1 auch Benutzern mit trust_level_2, 3, 4 private Nachrichten zu senden. Team-Mitglieder können immer Nachrichten senden."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
@@ -1587,6 +1609,7 @@ de:
     enable_badges: "Abzeichen aktivieren"
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     whispers_allowed_groups: "Private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen erlauben."
+    hidden_post_visible_groups: "Erlaube Mitgliedern dieser Gruppen, versteckte Beiträge einzusehen. Mitarbeiter können jederzeit versteckte Beiträge einsehen."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
     blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domänen, bei denen Benutzer keine Konten registrieren dürfen. Subdomains werden automatisch für die angegebenen Domains behandelt. Wildcard-Symbole * und ? werden nicht unterstützt. Beispiel: mailinator.com|trashmail.net"
     allowed_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domänen, bei denen Benutzer Konten registrieren MÜSSEN. Subdomains werden automatisch für die angegebenen Domains behandelt. Wildcard-Symbole * und ? werden nicht unterstützt. WARNUNG: Benutzer mit anderen als den aufgeführten E-Mail-Domänen sind nicht zugelassen!"
@@ -1613,7 +1636,7 @@ de:
     enable_discourse_connect: "Aktiviere die Anmeldung über DiscourseConnect (ehemals „Discourse SSO“) (WARNUNG: E-MAIL-ADRESSEN DER BENUTZER *MÜSSEN* VON DER EXTERNEN WEBSITE VALIDIERT WERDEN!)"
     verbose_discourse_connect_logging: "Protokolliere ausführliche DiscourseConnect-bezogene Diagnose in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementiere das DiscourseConnect-Anbieter-Protokoll (früher „Discourse SSO“) am Endpunkt /session/sso_provider; discourse_connect_provider_secrets muss festgelegt sein"
-    discourse_connect_url: "URL des DiscourseConnect-Endpunkts (muss http:// oder https:// enthalten)"
+    discourse_connect_url: "URL des DiscourseConnect-Endpunkts (muss http:// oder https:// enthalten und darf keinen abschließenden Schrägstrich enthalten)"
     discourse_connect_secret: "Geheime Zeichenfolge zur kryptografischen Authentifizierung von DiscourseConnect-Informationen. Stelle sicher, dass sie 10 Zeichen oder länger ist"
     discourse_connect_provider_secrets: "Eine Liste von Domain-Geheimnis-Paaren, die DiscourseConnect verwenden. Stelle sicher, dass das DiscourseConnect-Geheimnis 10 Zeichen oder länger ist. Das Platzhaltersymbol * kann verwendet werden, um eine Domain oder nur einen Teil davon auszuwählen (z. B. * .example.com)."
     discourse_connect_overrides_bio: "Überschreibt die Benutzerbiografie im Benutzerprofil und verhindert, dass der Benutzer sie ändert"
@@ -1627,7 +1650,7 @@ de:
     discourse_connect_overrides_profile_background: "Überschreibt den Hintergrund des Benutzerprofils mit dem Wert aus dem DiscourseConnect-Payload."
     discourse_connect_overrides_card_background: "Überschreibt den Hintergrund der Benutzerkarte mit dem Wert aus dem DiscourseConnect-Payload."
     discourse_connect_not_approved_url: "Nicht genehmigte DiscourseConnect-Konten zu dieser URL weiterleiten"
-    discourse_connect_allows_all_return_paths: "Beschränke die von DiscourseConnect bereitgestellte Domain für return_paths nicht (standardmäßig muss der Return-Path auf der aktuellen Website liegen)"
+    discourse_connect_allowed_redirect_domains: "Beschränke die von DiscourseConnect zur Verfügung gestellten return_paths auf diese Domains (standardmäßig muss der return path auf der aktuellen Site liegen). Verwende *, um jede beliebige Domain als Rückgabepfad zuzulassen. Platzhalter für Subdomains (`*.foobar.com`) sind nicht erlaubt."
     enable_local_logins: "Aktiviert lokale Konten mit Anmeldung über Benutzername und Passwort. WARNUNG: Wenn deaktiviert, kannst du dich möglicherweise nicht mehr anmelden, wenn du nicht vorher mindestens eine alternative Anmeldemethode konfiguriert hast."
     enable_local_logins_via_email: "Erlaube Benutzern, einen Ein-Klick-Anmelde-Link anzufordern, der ihnen per E-Mail zugeschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
@@ -1663,6 +1686,7 @@ de:
     s3_configure_tombstone_policy: "Aktiviere die automatische Löschregel für Uploads im Papierkorb. WICHTIG: Wenn deaktiviert, wird kein Speicherplatz freigegeben, wenn Uploads gelöscht werden."
     s3_disable_cleanup: "Verhindere das Entfernen von alten Backups aus S3, wenn es mehr Backups als das erlaubte Maximum gibt."
     enable_s3_inventory: "Erstelle Berichte und überprüfe Uploads mit Amazon-S3-Bestand. WICHTIG: Benötigt gültige S3-Anmeldedaten (sowohl „access key id“ als auch „secret access key“)."
+    s3_use_acls: "AWS empfiehlt, keine ACLs auf S3-Buckets zu verwenden; wenn du diesem Rat folgst, deaktiviere diese Option. Diese Option muss aktiviert sein, wenn du sichere Uploads verwendest."
     backup_time_of_day: "Uhrzeit in UTC, zu der Backups ausgeführt werden sollen."
     backup_with_uploads: "Hochgeladene Dateien bei geplanten Backups einschließen. Wenn diese Einstellung deaktiviert ist, wird nur die Datenbank gesichert."
     backup_location: "Ort, an dem die Backups abgelegt werden. WICHTIG: S3 erfordert gültige S3-Anmeldedaten in den Datei-Einstellungen."
@@ -1731,7 +1755,7 @@ de:
     composer_media_optimization_image_bytes_optimization_threshold: "Mindestgröße der Bilddatei, um die clientseitige Optimierung auszulösen"
     composer_media_optimization_image_resize_dimensions_threshold: "Mindestbreite des Bildes, um die clientseitige Skalierung auszulösen"
     composer_media_optimization_image_resize_width_target: "Bilder, die breiter als `composer_media_optimization_image_dimensions_resize_threshold` sind, werden auf diese Breite angepasst. Muss >= `composer_media_optimization_image_dimensions_resize_threshold` sein."
-    composer_media_optimization_image_encode_quality: "JPEG-Encoding-Qualität, die im Re-Encoding-Prozess verwendet wird."
+    composer_media_optimization_image_encode_quality: "Qualität der JPG-Kodierung, die bei der Neukodierung verwendet wird."
     min_ratio_to_crop: "Seitenverhältnis zum Ausschneiden hoher Bilder. Angabe als Ergebnis von Breite geteilt durch Höhe."
     simultaneous_uploads: "Maximale Anzahl an Dateien, die per Drag-and-drop in den Editor gezogen werden können."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0–4)."
@@ -1760,7 +1784,9 @@ de:
     tl3_requires_likes_given: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen vergeben werden muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_requires_likes_received: "Die Mindestanzahl an „Gefällt mir“, die in den letzten (tl3 time period) Tagen eingehen muss, um sich für die Beförderung auf Vertrauensstufe 3 zu qualifizieren."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
-    trusted_users_can_edit_others: "Erlaube Benutzern mit hohen Vertrauensstufen, Inhalte von anderen Benutzern zu bearbeiten."
+    tl4_delete_posts_and_topics: "Erlaube TL4-Nutzern, Beiträge und Themen zu löschen, die von anderen Nutzern erstellt wurden. TL4-Nutzer/innen können auch gelöschte Themen und Beiträge sehen."
+    edit_all_topic_groups: "Nutzern in dieser Gruppe erlauben, die Thementitel, Schlagwörter und Kategorien anderer Nutzer zu bearbeiten"
+    edit_all_post_groups: "Nutzern in dieser Gruppe erlauben, die Beiträge anderer Nutzer zu bearbeiten"
     min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
     allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
     min_trust_to_edit_wiki_post: "Minimale Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
@@ -1876,6 +1902,11 @@ de:
     block_auto_generated_emails: "Eingehende E-Mails blockieren, die als automatisch generiert erkannt werden."
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
     mailgun_api_key: "Geheimer Mailgun-API-Schlüssel, um Webhook-Nachrichten zu überprüfen."
+    sendgrid_verification_key: "Sendgrid-Verifizierungsschlüssel, der zur Verifizierung von Webhook-Nachrichten verwendet wird."
+    mailjet_webhook_token: "Token, das zur Überprüfung der Webhook-Nutzdaten verwendet wird. Es muss als 't' Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/mailjet?t=supersecret"
+    mandrill_authentication_key: "Mandrill-Authentifizierungsschlüssel, der zur Verifizierung von Webhook-Nachrichten verwendet wird."
+    postmark_webhook_token: "Token, das zur Überprüfung der Webhook-Nutzdaten verwendet wird. Es muss als 't' Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/postmark?t=supersecret"
+    sparkpost_webhook_token: "Token, das zur Überprüfung der Webhook-Nutzdaten verwendet wird. Es muss als 't' Abfrageparameter des Webhooks übergeben werden, zum Beispiel: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "Der Bounce-Score des Benutzers wird um diesen Wert erhöht, wenn eine E-Mail vorübergehend nicht zugestellt werden kann."
     hard_bounce_score: "Der Bounce-Score des Benutzers wird um diesen Wert erhöht, wenn eine E-Mail dauerhaft nicht zugestellt werden konnte."
     bounce_score_threshold: "Bounce-Score, ab dem wir einem Benutzer keine E-Mails mehr senden."
@@ -1903,7 +1934,7 @@ de:
     pop3_polling_password: "Passwort für die POP3-Abfrage."
     pop3_polling_delete_from_server: "E-Mails vom Server löschen. HINWEIS: Wenn du dies deaktivierst, solltest du deinen E-Mail-Posteingang manuell aufräumen"
     log_mail_processing_failures: "Protokolliere alle Fehler bei der E-Mail-Verarbeitung unter <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Erlaube Benutzern, neue Themen per E-Mail einzutragen (erfordert manuelles oder POP3-Polling). Konfiguriere die Adressen in der „Einstellungen“-Registerkarte in jeder Kategorie.'
+    email_in: "Erlaube Benutzern, neue Themen per E-Mail zu posten. Nachdem du diese Einstellung aktiviert hast, kannst du eingehende E-Mail-Adressen für Gruppen und Kategorien konfigurieren."
     email_in_min_trust: "Minimale Vertrauensstufe, um neue Themen per E-Mail erstellen zu können."
     email_in_authserv_id: "Die Kennung des Dienstes, der Authentifizierungsprüfungen für eingehende E-Mails durchführt. Siehe <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> für Hinweise zur Konfiguration."
     email_in_spam_header: "Die E-Mail-Kopfzeile, um Spam zu erkennen."
@@ -1967,6 +1998,7 @@ de:
     allow_profile_backgrounds: "Benutzern erlauben, Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl an aufeinanderfolgenden Beiträgen, die ein Benutzer in einem Thema schreiben kann, bevor er eine entsprechende Benachrichtigung diesbezüglich erhält."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im selben Thema an dieselbe Person schreiben kann, bevor er gewarnt wird."
+    dont_feed_the_trolls_threshold: "Anzahl der Flaggen von anderen Nutzern, bevor sie verwarnt werden."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit, zur vollständigen Website zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Fully-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Beiträge eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihren Avatar ändern können."
@@ -1976,22 +2008,22 @@ de:
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw., um Teilausdrücke zu verwenden"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-Meldung in Form eines nicht ausblendbaren, global sichtbaren Banners an. Leere den Inhalt, um sie wieder auszublenden (HTML ist erlaubt)."
     disable_system_edit_notifications: "Unterdrückt Bearbeitungsbenachrichtigungen durch den System-Benutzer, wenn die „download_remote_images_to_local“-Einstellung aktiviert ist."
-    disable_category_edit_notifications: "Benachrichtigungen über Kategorie-Änderungen bei Themen deaktivieren."
-    disable_tags_edit_notifications: "Benachrichtigungen über Schlagwort-Änderungen bei Themen deaktivieren."
+    disable_category_edit_notifications: "Deaktiviere Benachrichtigungen für die Bearbeitung von Themenkategorien."
+    disable_tags_edit_notifications: "Deaktiviere Benachrichtigungen für Änderungen von Themen-Schlagwörtern."
     notification_consolidation_threshold: "Anzahl von „Gefällt mir“- oder Mitgliedschaftsanfragen-Benachrichtigungen, bevor die Benachrichtigungen zu einer einzelnen zusammengefasst werden. Zum Deaktivieren auf 0 setzen."
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere „Gefällt mir“-Benachrichtigungen zu einer einzelnen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann mittels `SiteSetting.notification_consolidation_threshold` eingestellt werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>„title“-Tag</a> der Themen-Seite enthält einen Kategorienamen."
-    native_app_install_banner_ios: "Zeigt das DiscourseHub-App-Banner auf iOS-Geräten für Stammgäste (Vertrauensstufe 1 und höher) an."
-    native_app_install_banner_android: "Zeigt das DiscourseHub-App-Banner auf Android-Geräten für Stammgäste (Vertrauensstufe 1 und höher) an."
+    native_app_install_banner_ios: "Zeigt das DiscourseHub-App-Banner auf iOS-Geräten für einfache Nutzer (Vertrauensstufe 1) und höher an."
+    native_app_install_banner_android: "Zeigt das DiscourseHub-App-Banner auf Android-Geräten für einfache Nutzer (Vertrauensstufe 1) und höher an."
     app_association_android: "Inhalte des Endpunkts <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, verwendet für die Digital Asset Links API von Google."
     app_association_ios: "Inhalt des Endpunkts <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, der verwendet wird, um Universal Links zwischen dieser Website und iOS-Apps zu erstellen."
     share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignoriert. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     penalty_step_hours: "Standardstrafen für das Stummschalten oder Sperren von Benutzern in Stunden. Beim ersten Verstoß wird standardmäßig der erste Wert verwendet, beim zweiten Verstoß standardmäßig der zweite Wert usw."
     svg_icon_subset: "Füge zusätzliche „FontAwesome 5“-Symbole hinzu, die du in deine Assets einbinden möchtest. Verwende das Präfix „fa-“ für einfarbige Symbole, „far-“ für normale Symbole und „fab-“ für Markensymbole."
-    max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der /print-Seite (zum Deaktivieren auf 0 setzen)"
+    max_prints_per_hour_per_user: "Maximale Anzahl von /print Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
     full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollständigen Namen des Benutzers bei seinen Beiträgen."
@@ -2012,17 +2044,13 @@ de:
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge, die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig."
-    notify_about_flags_after: "Wenn es Meldungen gibt, die nicht innerhalb der angegebenen Anzahl von Stunden bearbeitet wurden, sende eine persönliche Nachricht an die Moderatoren. Zum Deaktivieren auf 0 setzen."
-    show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
+    notify_about_reviewable_item_after: "Wenn es überprüfbare Beiträge gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, schicke eine persönliche Nachricht an die Moderatoren. Zum Deaktivieren auf 0 setzen."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die älter als (n) Tage sind."
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
-    bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen)"
+    bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Bootstrap-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
-    secure_media: "VERALTET: Verwende stattdessen die Einstellung secure_uploads, wird in Discourse 3.0 entfernt."
     secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
-    secure_media_allow_embed_images_in_emails: "VERALTET: secure_uploads_allow_embed_images_in_emails verwenden, wird in Discourse 3.0 entfernt."
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
-    secure_media_max_email_embed_image_size_kb: "DEPRECATED: secure_uploads_max_email_embed_image_size_kb verwenden, wird in Discourse 3.0 entfernt."
     secure_uploads_max_email_embed_image_size_kb: "Der Größengrenzwert für sichere Bilder, die in E-Mails eingebettet werden, wenn die Einstellung „secure uploads allow embed in emails“ aktiviert ist. Anderweitig hat diese Einstellung keine Auswirkung."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. „encoded“ erzeugt einen Prozent-encodierten String, bei „none“ wird kein Kürzel verwendet."
     enable_emoji: "Emoji aktivieren"
@@ -2030,6 +2058,7 @@ de:
     emoji_set: "Welche Emojis sollen es sein?"
     emoji_autocomplete_min_chars: "Mindestanzahl von Zeichen, um das Pop-up-Fenster zur Emoji-Autovervollständigung zu öffnen."
     enable_inline_emoji_translation: "Aktiviert die Übersetzung von Inline-Emojis (ohne ein Leerzeichen oder Satzzeichen davor)"
+    emoji_deny_list: "Diese Emoji können nicht in Menüs oder Shortcodes verwendet werden."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzers oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     approve_new_topics_unless_trust_level: "Neue Themen von Benutzern unterhalb dieser Vertrauensstufe müssen genehmigt werden"
@@ -2084,18 +2113,25 @@ de:
     default_tags_watching_first_post: "Liste der Schlagwörter, deren erster Beitrag pro Thema standardmäßig beobachtet wird."
     default_text_size: "Schriftgröße, die standardmäßig ausgewählt ist"
     default_title_count_mode: "Standardmodus für den Seitentitel-Zähler"
+    enable_offline_indicator: "Zeigt Benutzern eine Meldung an, wenn festgestellt wird, dass sie keine Netzwerkverbindung haben"
+    default_sidebar_link_to_filtered_list: "Verbinde die Links im Navigationsmenü standardmäßig mit der gefilterten Liste."
+    default_sidebar_show_count_of_new_items: "Die Links im Navigationsmenü zeigen jetzt standardmäßig die Anzahl der neuen Artikel anstelle von Abzeichen an."
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
     revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"
     allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
     allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
-    min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API-Schlüsseln"
+    min_trust_level_for_user_api_key: |
+      Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
+      <b>WARNUNG</b>: Die Änderung der Vertrauensstufe verhindert, dass sich Nutzer mit einer niedrigeren Vertrauensstufe über Discourse Hub anmelden können.
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z. B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URLs für Server-Push zur Benutzer-API"
     expire_user_api_keys_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch abläuft (0 für niemals)"
     tagging_enabled: "Schlagwörter für Themen aktivieren?"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
+    enable_max_tags_per_email_subject: "Verwende max_tags_per_email_subject beim Erstellen des Betreffs einer E-Mail"
+    max_tags_per_email_subject: "Die maximale Anzahl von Tags, die im Betreff einer E-Mail enthalten sein können"
     max_tag_length: "Die maximale Anzahl von Zeichen, die in einem Schlagwort verwendet werden kann."
     max_tag_search_results: "Maximale Ergebnisanzahl bei der Suche nach Schlagwörtern."
     max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in der Filter-Drop-down-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
@@ -2107,6 +2143,8 @@ de:
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
+    create_post_for_category_and_tag_changes: "Erstelle einen kleinen Aktionsbeitrag, wenn sich die Kategorie oder die Tags eines Themas ändern"
+    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
@@ -2121,7 +2159,7 @@ de:
     enable_sitemap: "Generiere eine Sitemap für deine Website und füge sie in die robots.txt-Datei ein."
     sitemap_page_size: "Anzahl der URLs, die auf jeder Sitemap-Seite enthalten sein sollen. Max 50.000"
     enable_user_status: "(Experimentell) Erlaubt es Benutzern, eine eigene Statusnachricht (Emoji + Beschreibung) einzustellen."
-    enable_user_tips: "(Experimentell) Tipps für neue Benutzer aktivieren, die den Benutzern wichtige Funktionen beschreiben"
+    enable_user_tips: "Aktiviere neue Benutzertipps, die Benutzern die wichtigsten Funktionen beschreiben"
     short_title: "Der Kurztitel wird beim Benutzer auf dem Startbildschirm, im Startmenü oder an anderen Stellen mit begrenztem Platz verwendet. Er sollte auf 12 Zeichen begrenzt sein."
     dashboard_hidden_reports: "Erlaube das Ausblenden der angegebenen Berichte im Dashboard."
     dashboard_visible_tabs: "Wähle aus, welche Dashboard-Registerkarten sichtbar sind."
@@ -2138,11 +2176,14 @@ de:
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
     navigation_menu: "Legt fest, welches Navigationsmenü verwendet werden soll. Die Seitenleisten- und Kopfzeilennavigation kann von den Benutzern angepasst werden. Die Legacy-Option ist zur Abwärtskompatibilität verfügbar."
-    default_sidebar_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ der Seitenleiste angezeigt."
-    default_sidebar_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ der Seitenleiste angezeigt."
-    enable_new_user_profile_nav_groups: "EXPERIMENTELL: Benutzern der ausgewählten Gruppen wird das neue Benutzerprofil-Navigationsmenü angezeigt"
-    enable_experimental_topic_timeline_groups: "EXPERIMENTELL: Benutzern der ausgewählten Gruppen wird die umgestaltete Themenzeitleiste angezeigt"
+    default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt \"Kategorien\" des Navigationsmenüs angezeigt."
+    default_navigation_menu_tags: "Ausgewählte Tags werden standardmäßig unter dem Abschnitt Tags im Navigationsmenü angezeigt."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELL: Das neue #hashtag-Autovervollständigungssystem für Kategorien und Schlagwörter, das das ausgewählte Element anders darstellt und eine bessere Suche aufweist, verwenden"
+    experimental_new_new_view_groups: 'EXPERIMENTELL: Aktiviere eine neue Themenliste, die ungelesene und neue Themen kombiniert, und verlinke den Link „Alles“ in der Seitenleiste darauf.'
+    enable_custom_sidebar_sections: "EXPERIMENTELL: Aktiviere benutzerdefinierte Seitenleistenabschnitte"
+    experimental_topics_filter: "EXPERIMENTELL: Aktiviert die Filterroute für experimentelle Themen unter /filter"
+    experimental_search_menu_groups: "EXPERIMENTELL: Aktiviert das neue Suchmenü, das für die Verwendung von Glimmer aktualisiert wurde"
+    page_loading_indicator: "Konfiguriere die Ladeanzeige, die bei der Seitennavigation in Discourse erscheint. \"Spinner\" ist ein ganzseitiger Indikator. \"Slider\" zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2168,7 +2209,7 @@ de:
       pop3_polling_password_is_empty: "Du musst „pop3 polling password“ definieren, um POP3-Abfragen zu aktivieren."
       pop3_polling_authentication_failed: "POP3-Authentifizierung ist fehlgeschlagen. Bitte überprüfe die POP3-Anmeldedaten."
       reply_by_email_address_is_empty: "Du musst „reply by email address“ definieren, bevor Antworten per E-Mail aktiviert wird."
-      email_polling_disabled: "Du musst entweder manuelle oder POP3-Abfragen aktivieren, bevor Antworten per E-Mail aktiviert wird."
+      email_polling_disabled: "Du musst entweder die manuelle Abfrage, die POP3-Abfrage oder eine benutzerdefinierte E-Mail-Abfrage aktivieren, bevor du die Antwort per E-Mail aktivieren kannst."
       user_locale_not_enabled: "Du musst erst „allow user locale“ aktivieren, bevor du diese Einstellung aktivierst."
       personal_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass jemand außer den Team-Mitgliedern private Nachrichten verschickt, wähle die Team-Gruppe aus."
       invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
@@ -2177,7 +2218,6 @@ de:
       staged_users_disabled: "Du musst erst „staged users“ aktivieren, bevor du diese Einstellung aktivierst."
       reply_by_email_disabled: "Du musst erst „reply by email“ aktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_url_is_empty: "Du musst eine „discourse connect url'“ festlegen, bevor du diese Einstellung aktivierst."
-      discourse_connect_invite_only: "Du kannst DiscourseConnect und „invite only“ nicht gleichzeitig aktivieren."
       enable_local_logins_disabled: "Du musst erst „enable local logins“ aktivieren, bevor du diese Einstellung aktivierst."
       min_username_length_exists: "Du kannst die Mindestlänge von Benutzernamen nicht über den kürzesten Benutzernamen (%{username}) setzen."
       min_username_length_range: "Du kannst das Minimum nicht über das Maximum setzen."
@@ -2199,7 +2239,8 @@ de:
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
       delete_rejected_email_after_days: "Diese Einstellung kann nicht niedriger als die Einstellung delete_email_logs_after_days oder höher als %{max} gesetzt werden"
-      invalid_uncategorized_category_setting: "Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht zulässig ist"
+      invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
+      invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: '{0.1,0.2,0.3,1.0}'. Beachte, dass der Maximalwert für jedes Gewicht 1,0 beträgt."
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2394,7 +2435,6 @@ de:
     activated_by_staff: "Aktiviert vom Team"
     new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
     content_matches_auto_silence_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Stummschaltung überein"
-    content_matches_auto_block_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Block überein"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
       long: "darf nicht länger als %{max} Zeichen sein"
@@ -3138,7 +3178,7 @@ de:
 
         Der neue Benutzer [%{username}](%{user_url}) wurde automatisch stummgeschaltet, weil mehrere Benutzer Beiträge von %{username} gemeldet haben.
 
-        Bitte [überprüfe die Meldungen](%{base_url}/admin/flags). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
+        Bitte [überprüfe die Meldungen](%{base_url}/review). Wenn %{username} fälschlich stummgeschaltet wurde, so klicke die „Stummschaltung aufheben“-Schaltfläche auf der [Administrationsseite dieses Benutzers](%{user_url}).
 
         Der Schwellenwert kann über die Einstellung `silence_new_user` geändert werden.
     spam_post_blocked:
@@ -3174,15 +3214,6 @@ de:
       title: "Download von externen Bildern deaktiviert"
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die Einstellung `download_remote_images_to_local` wurde deaktiviert, da das Speicherplatzlimit von `download_remote_images_threshold` erreicht wurde."
-    dashboard_problems:
-      title: "Dashboard-Probleme"
-      subject_template: "Neue Ratschläge auf deinem Website-Dashboard"
-      text_body_template: |
-        Basierend auf deinen aktuellen Website-Einstellungen haben wir einige neue Ratschläge und Empfehlungen für dich.
-
-        [Besuche das Dashboard deiner Website](%{base_url}/admin), um sie zu sehen.
-
-        Sollte im Dashboard nichts sichtbar sein, hat bereits ein anderes Team-Mitglied auf die Ratschläge reagiert. Eine Liste der Team-Aktionen findest du in den [Protokollen für Team-Aktionen](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Du bist ein neuer Benutzer des Monats!"
       subject_template: "Du bist ein neuer Benutzer des Monats!"
@@ -3219,9 +3250,6 @@ de:
       one: "Achtung: Wir senden maximal %{count} E-Mail pro Tag. Überprüfe die Website, um möglicherweise zurückgehaltene E-Mails zu sehen."
       other: "Achtung: Wir senden maximal %{count} E-Mails pro Tag. Überprüfe die Website, um möglicherweise zurückgehaltene E-Mails zu sehen. PS: Danke, dass du so beliebt bist!"
     in_reply_to: "Als Antwort auf"
-    unsubscribe:
-      title: "Abbestellen"
-      description: "Nicht interessiert an diesen E-Mails? Kein Problem! Klicke unten, um sie sofort abzubestellen:"
     reply_by_email: "[Rufe das Thema auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um zu antworten."
     reply_by_email_pm: "[Rufe die Nachricht auf](%{base_url}%{url}) oder antworte auf diese E-Mail, um %{participants} zu antworten."
     only_reply_by_email: "Antworte auf diese E-Mail, um zu antworten."
@@ -3518,7 +3546,6 @@ de:
       liked_received: "Erhaltene „Gefällt mir“"
       new_users: "Neue Benutzer"
       popular_topics: "Beliebte Themen"
-      follow_topic: "Diesem Thema folgen"
       join_the_discussion: "Mehr lesen"
       popular_posts: "Beliebte Beiträge"
       more_new: "Neu für dich"
@@ -3714,14 +3741,7 @@ de:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
   login_required:
-    welcome_message: |
-      ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte erstelle ein Konto oder melde dich an, um fortzufahren.
-    welcome_message_invite_only: |
-      ## [Willkommen bei %{title}](#welcome)
-      Ein Konto ist erforderlich. Bitte frage ein existierendes Mitglied nach einer Einladung oder melde dich an, um fortzufahren.
-  deleted: "gelöscht"
-  image: "Bild"
+    welcome_message: "# [Willkommen bei %{title}] (#welcome)"
   upload:
     edit_reason: "lokale Kopien von Bildern heruntergeladen"
     unauthorized: "Entschuldige, die Datei, die du hochladen möchtest, ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
@@ -3923,7 +3943,11 @@ de:
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
-      Diese Bedingungen regeln die Nutzung des Internetforums unter <%{base_url}>. Um das Forum zu nutzen, musst du diesen Bedingungen gegenüber %{company_name} zustimmen, dem Betreiber des Forums.
+      <h2 id="heading--change-me"><a href="#heading--change-me">Ändere mich</a></h2>
+
+      Unten findest du eine Beispielvorlage für Nutzungsbedingungen, die du an die Bedürfnisse deiner Website anpassen solltest.
+
+      Diese Bedingungen regeln nicht die Nutzung des Internetforums unter <%{base_url}>, könnten aber eines Tages in Kraft treten. In diesem Fall musst du, um das Forum nutzen zu können, diesen Bedingungen gegenüber %{company_name}, dem Betreiber dieses Forums, zustimmen.
 
       Der Betreiber kann andere Produkte und Dienstleistungen zu unterschiedlichen Bedingungen anbieten. Diese Bedingungen gelten nur für die Nutzung des Forums.
 
@@ -4091,12 +4115,14 @@ de:
 
       <h2 id="heading--changes"><a href="#heading--changes">Änderungen</a></h2>
 
-      Der Betreiber hat diese Bedingungen zuletzt am 12. Juli 2018 aktualisiert und kann diese Bedingungen erneut aktualisieren. Der Betreiber wird alle Aktualisierungen im Forum veröffentlichen. Bei Aktualisierungen, die wesentliche Änderungen enthalten, erklärt sich der Betreiber damit einverstanden, dir eine E-Mail zu senden, wenn du ein Konto erstellt und eine gültige E-Mail-Adresse angegeben hast. Der Betreiber kann auch Aktualisierungen mit speziellen Nachrichten oder Warnungen im Forum ankündigen.
+      Der Betreiber hat diese Bedingungen zuletzt am [DATUM DER LETZTEN ÄNDERUNG HIER EINFÜGEN] aktualisiert und kann diese Bedingungen erneut aktualisieren. Der Betreiber wird alle Aktualisierungen im Forum veröffentlichen. Bei Aktualisierungen, die wesentliche Änderungen enthalten, erklärt sich der Betreiber damit einverstanden, dir eine E-Mail zu senden, wenn du ein Konto erstellt und eine gültige E-Mail-Adresse angegeben hast. Der Betreiber kann auch Aktualisierungen mit speziellen Nachrichten oder Warnungen im Forum ankündigen.
 
       Sobald du von einer Aktualisierung dieser Bedingungen Kenntnis erlangst, musst du den neuen Bedingungen zustimmen, um das Forum weiterhin nutzen zu können.
   privacy_topic:
     title: "Datenschutzerklärung"
     body: |
+      ## [Unten findest du eine Beispielvorlage für eine Datenschutzerklärung, die du an die Bedürfnisse deiner Website anpassen solltest.]
+
       <a name="collect"></a>
 
       ## [Welche Informationen sammeln wir?](#collect)
@@ -4130,8 +4156,7 @@ de:
 
       Wir bemühen uns nach bestem Wissen und Gewissen:
 
-      * Serverprotokolle, die IP-Adressen aller Anfragen an unseren Server enthalten, nicht länger als 90 Tage zu speichern.
-      * IP-Adressen, die mit registrierten Benutzern und ihren Beiträgen verknüpft sind, nicht länger als 5 Jahre zu speichern.
+      * Serverprotokolle, die IP-Adressen aller Anfragen an unseren Server enthalten, nicht länger als [ANZAHL TAGE] Tage zu speichern.
 
       <a name="cookies"></a>
 
@@ -4177,7 +4202,7 @@ de:
 
       Wenn wir uns dazu entscheiden, unsere Datenschutzerklärung zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
 
-      Dieses Dokument ist als CC-BY-SA lizenziert. Es wurde zuletzt aktualisiert am 31. Mai 2013.
+      Dieses Dokument ist als CC-BY-SA lizenziert. Es wurde zuletzt aktualisiert am [DATUM DER LETZTEN ÄNDERUNG HIER EINFÜGEN].
   badges:
     mass_award:
       errors:
@@ -4464,6 +4489,7 @@ de:
     required_tags_from_group:
       one: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwort hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
       other: "Du musst mindestens %{count} „%{tag_group_name}“-Schlagwörter hinzufügen. Die Schlagwörter in dieser Gruppe sind: %{tags}."
+    limited_to_one_tag_from_group: "Die Tags %{tags} können nicht gleichzeitig verwendet werden. Bitte füge nur einen von ihnen ein."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
@@ -4482,10 +4508,10 @@ de:
       message: "<p>Wir haben die Aktivierungs-E-Mail noch einmal an <b>%{email}</b> gesendet"
   safe_mode:
     title: "Abgesicherten Modus betreten"
-    description: "Der abgesicherte Modus ermöglicht es dir, deine Website zu testen, ohne Plug-ins oder Themes zu laden."
+    description: "Im abgesicherten Modus kannst du deine Website testen, ohne Themes oder clientseitige Plugin-Anpassungen zu laden. Server-seitige Plugin-Anpassungen bleiben aktiviert."
     no_themes: "Themes und Theme-Komponente deaktivieren"
-    no_unofficial_plugins: "Inoffizielle Plug-ins deaktivieren"
-    no_plugins: "Alle Plug-ins deaktivieren"
+    no_unofficial_plugins: "Deaktiviere inoffizielle clientseitige Plugin-Anpassungen"
+    no_plugins: "Deaktiviere alle clientseitigen Plugin-Anpassungen"
     enter: "Abgesicherten Modus betreten"
     must_select: "Du musst mindestens eine Option auswählen, um den abgesicherten Modus zu betreten."
   wizard:
@@ -4600,7 +4626,9 @@ de:
           <p>Viel Spaß und viel Erfolg <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>beim Aufbau deiner neuen Community!</a></p>
   search_logs:
     graph_title: "Anzahl Suchen"
-  joined: "Beigetreten"
+  onebox:
+    discourse:
+      user_joined_community: "Beigetreten %{date}"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} hat dich erwähnt in „%{topic}“ – %{site_title}'
@@ -4663,10 +4691,10 @@ de:
         category: Kategorie-Einstellungen
     actions:
       agree:
-        title: "Zustimmen …"
+        title: "Ja"
       agree_and_keep:
         title: "Beitrag behalten"
-        description: "Meldung zustimmen und den Beitrag unbearbeitet lassen."
+        description: "Meldung zustimmen aber diesen Beitrag unbearbeitet lassen."
       agree_and_keep_hidden:
         title: "Beitrag ausgeblendet lassen"
         description: "Meldung zustimmen und den Beitrag ausgeblendet lassen."
@@ -4681,32 +4709,35 @@ de:
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
       agree_and_hide:
         title: "Beitrag verstecken"
-        description: "Verstecke diesen Beitrag und sende dem Benutzer automatisch eine Nachricht mit der Bitte, ihn zu bearbeiten."
+        description: "Stimme der Meldung zu und verstecke diesen Beitrag + sende dem Benutzer automatisch eine Nachricht mit der Bitte, ihn zu bearbeiten."
       delete_single:
         title: "Löschen"
       delete:
         title: "Löschen …"
       delete_and_ignore:
-        title: "Beitrag löschen und ignorieren"
-        description: "Lösche Beitrag; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Meldung ignorieren und Beitrag löschen"
+        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag löschst; wenn es der erste Beitrag ist, lösche auch das Thema. "
       delete_and_ignore_replies:
-        title: "Lösche Beitrag + Antworten und ignoriere"
-        description: "Lösche Beitrag und alle Antworten; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Meldung ignorieren, Beitrag und Antworten löschen"
+        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, lösche den Beitrag und alle seine Antworten; wenn es der erste Beitrag ist, lösche auch das Thema"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
       delete_and_agree:
-        title: "Beitrag löschen und zustimmen"
-        description: "Lösche Beitrag; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Beitrag löschen"
+        description: "Stimme der Meldung zu und lösche diesen Beitrag; wenn es der erste Beitrag ist, lösche auch das Thema."
       delete_and_agree_replies:
-        title: "Lösche Beitrag + Antworten und akzeptiere"
-        description: "Lösche Beitrag und alle Antworten; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
+        title: "Beitrag und Antworten löschen"
+        description: "Stimme der Meldung zu und lösche diesen Beitrag und alle seine Antworten; wenn es der erste Beitrag ist, lösche auch das Thema."
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
       disagree_and_restore:
-        title: "Ablehnen und Beitrag wiederherstellen"
+        title: "Nein, Beitrag wiederherstellen"
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
       disagree:
-        title: "Ablehnen"
+        title: "Nein"
       ignore:
         title: "Ignorieren"
+      ignore_and_do_nothing:
+        title: "Nichts tun"
+        description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen. Versteckte Beiträge bleiben versteckt und werden von den Auto-Tools bearbeitet."
       approve:
         title: "Genehmigen"
       approve_post:
@@ -4772,6 +4803,11 @@ de:
     payload_url:
       blocked_or_internal: "Payload-URL kann nicht verwendet werden, da sie in eine blockierte oder interne IP aufgelöst wird"
       unsafe: "Payload-URL kann nicht verwendet werden, da sie unsicher ist"
+  form_templates:
+    errors:
+      invalid_yaml: "ist keine gültige YAML-Zeichenfolge"
+      invalid_type: "enthält einen ungültigen Vorlagentyp: %{type} (gültige Typen sind: %{valid_types})"
+      missing_type: "fehlt ein Feldtyp"
   activemodel:
     errors:
       <<: *errors

@@ -46,7 +46,7 @@ zh_CN:
       invalid: |-
         抱歉，数学上无法掷出该骰子组合。:confounded:
       not_enough_dice:
-        other: "我只有 %{count} 个骰子。[Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php)，我知道！"
+        other: "我的骰子只有 %{count} 点。羞，我知道!"
       out_of_range: |-
         你知道数学上公平的骰子[最多有 120 个面](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)吗？
       results: |-

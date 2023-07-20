@@ -83,13 +83,13 @@ class TopicsController < ApplicationController
 
     # Special case: a slug with a number in front should look by slug first before looking
     # up that particular number
-    if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
+    if params[:id] && params[:id] =~ /\A\d+[^\d\\]+\z/
       topic = Topic.find_by_slug(params[:id])
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic
     end
 
     if opts[:print]
-      raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
+      raise Discourse::InvalidAccess if SiteSetting.max_prints_per_hour_per_user.zero?
       begin
         unless @guardian.is_admin?
           RateLimiter.new(
@@ -361,7 +361,14 @@ class TopicsController < ApplicationController
         category = Category.find_by(id: params[:category_id])
 
         if category || (params[:category_id].to_i == 0)
-          guardian.ensure_can_move_topic_to_category!(category)
+          begin
+            guardian.ensure_can_move_topic_to_category!(category)
+          rescue Discourse::InvalidAccess
+            return(
+              render_json_error I18n.t("category.errors.move_topic_to_category_disallowed"),
+                                status: :forbidden
+            )
+          end
         else
           return render_json_error(I18n.t("category.errors.not_found"))
         end
@@ -479,7 +486,12 @@ class TopicsController < ApplicationController
     enabled = params[:enabled] == "true"
 
     check_for_status_presence(:status, status)
-    @topic = Topic.find_by(id: topic_id)
+    @topic =
+      if params[:category_id]
+        Topic.find_by(id: topic_id, category_id: params[:category_id].to_i)
+      else
+        Topic.find_by(id: topic_id)
+      end
 
     case status
     when "closed"
@@ -644,7 +656,9 @@ class TopicsController < ApplicationController
     force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
 
     if force_destroy
-      if !guardian.can_permanently_delete?(topic)
+      if !topic
+        raise Discourse::InvalidAccess
+      elsif !guardian.can_permanently_delete?(topic)
         return render_json_error topic.cannot_permanently_delete_reason(current_user), status: 403
       end
     else
@@ -789,8 +803,16 @@ class TopicsController < ApplicationController
   end
 
   def set_notifications
+    user =
+      if is_api? && @guardian.is_admin? &&
+           (params[:username].present? || params[:external_id].present?)
+        fetch_user_from_params
+      else
+        current_user
+      end
+
     topic = Topic.find(params[:topic_id].to_i)
-    TopicUser.change(current_user, topic.id, notification_level: params[:notification_level].to_i)
+    TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
 
@@ -798,6 +820,7 @@ class TopicsController < ApplicationController
     topic_id = params.require(:topic_id)
     destination_topic_id = params.require(:destination_topic_id)
     params.permit(:participants)
+    params.permit(:chronological_order)
     params.permit(:archetype)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
@@ -810,6 +833,7 @@ class TopicsController < ApplicationController
 
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
+    args[:chronological_order] = params[:chronological_order] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]
@@ -827,6 +851,7 @@ class TopicsController < ApplicationController
     params.permit(:category_id)
     params.permit(:tags)
     params.permit(:participants)
+    params.permit(:chronological_order)
     params.permit(:archetype)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
@@ -836,7 +861,7 @@ class TopicsController < ApplicationController
 
     if params[:title].present?
       # when creating a new topic, ensure the 1st post is a regular post
-      if Post.where(topic: topic, id: post_ids).order(:post_number).pluck_first(:post_type) !=
+      if Post.where(topic: topic, id: post_ids).order(:post_number).pick(:post_type) !=
            Post.types[:regular]
         return(
           render_json_error(
@@ -1020,7 +1045,20 @@ class TopicsController < ApplicationController
   end
 
   def reset_new
-    topic_scope = TopicQuery.new(current_user).new_results(limit: false)
+    topic_scope =
+      if current_user.new_new_view_enabled?
+        if (params[:dismiss_topics] && params[:dismiss_posts])
+          TopicQuery.new(current_user).new_and_unread_results(limit: false)
+        elsif params[:dismiss_topics]
+          TopicQuery.new(current_user).new_results(limit: false)
+        elsif params[:dismiss_posts]
+          TopicQuery.new(current_user).unread_results(limit: false)
+        else
+          Topic.none
+        end
+      else
+        TopicQuery.new(current_user).new_results(limit: false)
+      end
     if tag_name = params[:tag_id]
       tag_name = DiscourseTagging.visible_tags(guardian).where(name: tag_name).pluck(:name).first
     end
@@ -1060,11 +1098,30 @@ class TopicsController < ApplicationController
       topic_scope = topic_scope.where(id: topic_ids)
     end
 
-    dismissed_topic_ids =
-      TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
-    TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+    dismissed_topic_ids = []
+    dismissed_post_topic_ids = []
 
-    render body: nil
+    if !current_user.new_new_view_enabled? || params[:dismiss_topics]
+      dismissed_topic_ids =
+        TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
+    end
+
+    if params[:dismiss_posts]
+      if params[:untrack]
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(
+            current_user,
+            topic_scope.pluck(:id),
+            type: "change_notification_level",
+            notification_level_id: NotificationLevels.topic_levels[:regular],
+          ).perform!
+      else
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_posts").perform!
+      end
+    end
+
+    render_json_dump topic_ids: dismissed_topic_ids.concat(dismissed_post_topic_ids).uniq
   end
 
   def convert_topic
@@ -1109,6 +1166,28 @@ class TopicsController < ApplicationController
     topic.set_or_create_timer(slow_mode_type, time, by_user: timer&.user)
 
     head :ok
+  end
+
+  def summary
+    topic = Topic.find(params[:topic_id])
+    guardian.ensure_can_see!(topic)
+    strategy = Summarization::Base.selected_strategy
+
+    if strategy.nil? || !Summarization::Base.can_see_summary?(topic, current_user)
+      raise Discourse::NotFound
+    end
+
+    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
+
+    hijack do
+      summary = TopicSummarization.new(strategy).summarize(topic, current_user)
+
+      render json: {
+               summary: summary.summarized_text,
+               summarized_on: summary.updated_at,
+               summarized_by: summary.algorithm,
+             }
+    end
   end
 
   private
@@ -1232,7 +1311,7 @@ class TopicsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags : []
+        @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
         @description_meta =
           @topic_view.topic.excerpt.present? ? @topic_view.topic.excerpt : @topic_view.summary
@@ -1259,6 +1338,7 @@ class TopicsController < ApplicationController
       :destination_topic_id
     ].present?
     args[:tags] = params[:tags] if params[:tags].present?
+    args[:chronological_order] = params[:chronological_order] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]

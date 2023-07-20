@@ -48,8 +48,10 @@ class UserUpdater
     skip_new_user_tips
     seen_popups
     default_calendar
-    sidebar_list_destination
     bookmark_auto_delete_preference
+    sidebar_link_to_filtered_list
+    sidebar_show_count_of_new_items
+    watched_precedence_over_muted
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -237,6 +239,7 @@ class UserUpdater
           attributes.fetch(:name) { "" },
         )
       end
+      DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
     rescue Addressable::URI::InvalidURIError => e
       # Prevent 500 for crazy url input
       return saved
@@ -251,7 +254,11 @@ class UserUpdater
         end
       end
       if attributes.key?(:seen_popups) || attributes.key?(:skip_new_user_tips)
-        MessageBus.publish("/user-tips", user.user_option.seen_popups, user_ids: [user.id])
+        MessageBus.publish(
+          "/user-tips/#{user.id}",
+          user.user_option.seen_popups,
+          user_ids: [user.id],
+        )
       end
       DiscourseEvent.trigger(:user_updated, user)
     end
@@ -347,6 +354,6 @@ class UserUpdater
 
   def format_url(website)
     return nil if website.blank?
-    website =~ /^http/ ? website : "http://#{website}"
+    website =~ /\Ahttp/ ? website : "http://#{website}"
   end
 end

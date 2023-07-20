@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Info pages", type: :system, js: true do
+RSpec.describe "Info pages", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
   fab!(:current_user) { Fabricate(:user) }
@@ -8,8 +8,8 @@ RSpec.describe "Info pages", type: :system, js: true do
 
   before do
     chat_system_bootstrap
-    sign_in(current_user)
     channel_1.add(current_user)
+    sign_in(current_user)
   end
 
   context "when visiting from browse page" do
@@ -31,7 +31,7 @@ RSpec.describe "Info pages", type: :system, js: true do
         find(".chat-channel-title-wrapper").click
         find(".chat-full-page-header__back-btn").click
 
-        expect(page).to have_current_path(chat.channel_path(channel_1.id, channel_1.slug))
+        expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
       end
     end
   end

@@ -21,14 +21,13 @@ gl:
       joined: "uniuse"
       email_frequency:
         never: "Nunca"
+      header_indicator_preference:
+        never: "Nunca"
       flag: "Sinalar"
       join: "Participar"
+      last_visit: "última visita"
       mention_warning:
         dismiss: "desbotar"
-        groups:
-          users_limit:
-            one: "%{count} usuario"
-            other: "%{count} usuarios"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruír HTML"
@@ -57,6 +56,8 @@ gl:
           about: Verbo de
           members: Membros
           settings: Configuración
+      new_message_modal:
+        no_items: "Sen elementos"
       direct_message_creator:
         title: Nova mensaxe
         prefix: "A:"
@@ -68,11 +69,14 @@ gl:
       composer:
         italic_text: "texto recalcado"
         bold_text: "texto groso"
+        send: "Enviar"
       notification_levels:
         never: "Nunca"
       settings:
         follow: "Participar"
         followed: "Uniuse"
+        threading_enabled: "Activado"
+        threading_disabled: "Desactivado"
         notifications: "Notificacións"
         preview: "Visualizar"
         save: "Gardar"
@@ -104,6 +108,21 @@ gl:
         activities: "Actividades"
         flags: "Alertas"
         symbols: "Símbolos"
+      thread:
+        title: "Título"
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} repostas"
+        settings: "Configuración"
+        last_reply: "última resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguimento"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nova mensaxe"
         cancel: "Cancelar"
@@ -115,7 +134,3 @@ gl:
           fields:
             message:
               label: Mensaxe
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Sinalado por"

@@ -20,14 +20,13 @@ et:
       joined: "liitus"
       email_frequency:
         never: "Mitte kunagi"
+      header_indicator_preference:
+        never: "Mitte kunagi"
       flag: "Tähis"
       join: "Liitu"
+      last_visit: "viimane visiit"
       mention_warning:
         dismiss: "ignoreeri"
-        groups:
-          users_limit:
-            one: "%{count} kasutaja"
-            other: "%{count} kasutajat"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"
@@ -67,11 +66,14 @@ et:
       composer:
         italic_text: "esiletõstetud tekst"
         bold_text: "rasvane tekst"
+        send: "Saada"
       notification_levels:
         never: "Mitte kunagi"
       settings:
         follow: "Liitu"
         followed: "Liitus"
+        threading_enabled: "Sisse lülitatud"
+        threading_disabled: "Välja lülitatud"
         notifications: "Teavitus"
         preview: "Eelvaade"
         save: "Salvesta"
@@ -101,6 +103,21 @@ et:
       emoji_picker:
         objects: "Objektid"
         flags: "Tähised"
+      thread:
+        title: "Pealkiri"
+        replies:
+          one: "%{count} vastus"
+          other: "%{count} vastust"
+        settings: "Sätted"
+        last_reply: "viimane vastus"
+        notifications:
+          regular:
+            title: "Normaalne"
+          tracking:
+            title: "Jälgimine"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Uus sõnum"
         cancel: "Tühista"

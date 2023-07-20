@@ -175,8 +175,6 @@ vi:
       load_from_remote: "Đã xảy ra lỗi khi tải bài viết."
     site_settings:
       invalid_category_id: "Bạn đã chỉ định một danh mục không tồn tại"
-      invalid_choice:
-        other: "Bạn đã chỉ định các lựa chọn không hợp lệ %{name}"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
@@ -485,10 +483,6 @@ vi:
           attributes:
             execute_at:
               in_the_past: "phải ở trong tương lai."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '(Các) khóa nội suy sau không hợp lệ: "%{keys}"'
       <<: *errors
   uncategorized_category_name: "Chưa phân loại"
   general_category_name: "Chung"
@@ -496,22 +490,6 @@ vi:
   meta_category_description: "Thảo luận về site này, tổ chức của nó, làm sao nó hoạt động, và làm sao chúng tôi có thể cải tiến nó tốt hơn."
   staff_category_name: "Nhân viên"
   staff_category_description: "Chuyên mục riêng dành cho nhân viên. Các chủ đề chỉ hiển thị với quản trị viên và điều hành viên."
-  discourse_welcome_topic:
-    body: |2
-
-      Đoạn đầu tiên của chủ đề được ghim này sẽ hiển thị như một thông điệp chào mừng cho tất cả những khách truy cập mới trên trang chủ của bạn. Nó quan trọng!
-
-      ** Chỉnh sửa ** này thành mô tả ngắn gọn về cộng đồng của bạn:
-
-      - Nó dành cho ai?
-      - Họ có thể tìm thấy gì ở đây?
-      - Tại sao họ phải đến đây?
-      - Họ có thể đọc thêm ở đâu (liên kết, tài nguyên, v.v.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Bạn có thể muốn đóng chủ đề này thông qua quản trị viên :wrench: (ở phía trên bên phải và phía dưới), để các câu trả lời không bị dồn vào một thông báo.
-  admin_quick_start_title: "ĐỌC TÔI ĐẦU TIÊN: Hướng dẫn Bắt đầu Nhanh dành cho Quản trị viên"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
     replace_paragraph: "(Thay thế đoạn đầu tiên này bằng một mô tả ngắn gọn về danh mục mới của bạn. Hướng dẫn này sẽ xuất hiện trong vùng chọn danh mục, vì vậy hãy cố gắng giữ cho nó dưới 200 ký tự.)"
@@ -1331,10 +1309,7 @@ vi:
     embed_truncate: "Cắt ngắn các bài viết được nhúng."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
-    notify_about_flags_after: "Nếu có cờ chưa được xử lý sau nhiều giờ này, hãy gửi tin nhắn cá nhân cho người điều hành. Đặt thành 0 để tắt."
-    show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: "Xóa các bản nháp cũ hơn (n) ngày."
-    bootstrap_mode_min_users: "Số thành viên tối thiểu được yêu cầu để tắt chế độ bootstrap (đặt thành 0 để tắt)"
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
     enable_emoji: "Kích hoạt emoji"
     emoji_set: "Bạn thích dùng gói emoji nào?"
@@ -1370,13 +1345,11 @@ vi:
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
     enable_user_status: "(thử nghiệm) Cho phép người dùng đặt thông báo trạng thái tùy chỉnh (biểu tượng cảm xúc + mô tả)."
-    enable_user_tips: "(thử nghiệm) Bật mẹo người dùng mới mô tả các tính năng chính cho người dùng"
     short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
     dashboard_general_tab_activity_metrics: "Chọn các báo cáo sẽ được hiển thị dưới dạng chỉ số hoạt động trên tab chung."
     suggest_weekends_in_date_pickers: "Bao gồm các ngày cuối tuần (Thứ Bảy và Chủ Nhật) trong đề xuất chọn ngày (tắt tính năng này nếu bạn chỉ sử dụng Discourse vào các ngày trong tuần, thứ Hai đến thứ Sáu)."
-    enable_new_user_profile_nav_groups: "THỬ NGHIỆM: Người dùng của các nhóm đã chọn sẽ được hiển thị menu điều hướng hồ sơ người dùng mới"
     errors:
       invalid_email: "Địa chỉ email sai"
       invalid_username: "Không có thành viên với tên đăng nhập này"
@@ -1396,7 +1369,6 @@ vi:
       pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
-      email_polling_disabled: "Bạn phải kích hoạt bằng tay hoặc POP3 polling trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
       personal_message_enabled_groups_invalid: "Bạn phải chỉ định ít nhất một nhóm cho cài đặt này. Nếu bạn không muốn bất kỳ ai ngoại trừ nhân viên gửi PM, hãy chọn nhóm nhân viên."
       min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
@@ -1514,7 +1486,6 @@ vi:
       other: "Tự động vô hiệu hóa sau %{count} ngày không hoạt động"
     activated_by_staff: "Kích hoạt bởi nhân viên"
     new_user_typed_too_fast: "Người dùng mới nhập quá nhanh"
-    content_matches_auto_block_regex: "Nội dung khớp với regex khối tự động"
     username:
       short: "phải dài ít nhất %{min} ký tự"
       long: "không được dài hơn %{max} ký tự"
@@ -1769,14 +1740,6 @@ vi:
     download_remote_images_disabled:
       subject_template: "Download ảnh từ xa đã bị vô hiệu"
       text_body_template: "Thiết lập `download_remote_images_to_local` đã bị vô hiệu do khoảng trống ổ cứng `download_remote_images_threshold` đã đạt mức giới hạn."
-    dashboard_problems:
-      subject_template: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
-      text_body_template: |
-        Chúng tôi có một số lời khuyên & đề xuất mới cho bạn dựa trên cài đặt trang web hiện tại của bạn.
-
-        [Truy cập bảng điều khiển trang web của bạn](%{base_url}/admin) để xem nó.
-
-        Nếu không có gì hiển thị trên bảng điều khiển của bạn, một nhân viên khác có thể đã thực hiện theo lời khuyên này. Bạn có thể tìm thấy danh sách các hành động của nhân viên trong [Nhật ký hành động của nhân viên](%{base_url}/admin/logs/staff_action_logs) của bạn.
     new_user_of_the_month:
       title: "Bạn là thành viên mới của tháng!"
       subject_template: "Bạn là một thành viên mới của tháng!"
@@ -1802,9 +1765,6 @@ vi:
     reached_limit:
       other: "Lưu ý: Chúng tôi gửi tối đa %{count} email hàng ngày. Kiểm tra trang web để xem những trang có thể bị giữ lại. PS cảm ơn!"
     in_reply_to: "Trong Trả Lời Tới"
-    unsubscribe:
-      title: "Bỏ theo dõi"
-      description: "Bạn không thích nhận mail giống mail này? Nhấn vào bỏ theo dõi để bỏ đăng ký ngay lập tức:"
     reply_by_email: "[Truy cập Chủ đề] (%{base_url}%{url}) hoặc trả lời email này để phản hồi."
     reply_by_email_pm: "[Ghé thăm Tin nhắn] (%{base_url}%{url}) hoặc trả lời email này để trả lời %{participants}."
     only_reply_by_email: "Trả lời email này để phản hồi."
@@ -1954,12 +1914,6 @@ vi:
     see_more: "Thêm"
     search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
-  login_required:
-    welcome_message: |
-      ## [Chào mừng tới %{title}] (#welcome)
-      Một tài khoản là bắt buộc. Vui lòng tạo một tài khoản hoặc đăng nhập để tiếp tục.
-  deleted: "đã bị xóa "
-  image: "hình ảnh"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
     unauthorized: "Xin lỗi, tập tin của bạn tải lên không được cho phép (định dạng cho phép: %{authorized_extensions})."
@@ -2214,7 +2168,6 @@ vi:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Đã tham gia"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nhắc đến bạn trong "%{topic}" - %{site_title}'
@@ -2247,16 +2200,8 @@ vi:
       post_count: "Một vài bài viết đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
       fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
-      agree_and_keep:
-        title: "Giữ bài viết"
-        description: "Đồng ý với cờ và giữ nguyên bài viết."
-      agree_and_keep_hidden:
-        title: "Giữ bài đăng ẩn"
-        description: "Đồng ý với cờ và để bài viết ẩn."
-      agree_and_suspend:
-        title: "Tạm khóa Thành viên"
-      agree_and_silence:
-        title: "Người dùng im lặng"
+      agree:
+        title: "Đồng ý"
       delete_single:
         title: "Xóa"
       delete_and_ignore_replies:
@@ -2264,9 +2209,11 @@ vi:
       delete_and_agree_replies:
         confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
       disagree:
-        title: "Không đồng ý"
+        title: "Không"
       ignore:
         title: "Bỏ qua"
+      ignore_and_do_nothing:
+        title: "Không làm gì cả"
       approve:
         title: "Duyệt"
       approve_post:

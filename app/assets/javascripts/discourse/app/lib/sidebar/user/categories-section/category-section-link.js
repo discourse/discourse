@@ -5,7 +5,17 @@ import { get, set } from "@ember/object";
 
 import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
+
+const UNREAD_AND_NEW_COUNTABLE = {
+  propertyName: "unreadAndNewCount",
+  badgeTextFunction: (count) => count.toString(),
+  route: "discovery.newCategory",
+  refreshCountFunction: ({ topicTrackingState, category }) => {
+    return topicTrackingState.countNewAndUnread({
+      categoryId: category.id,
+    });
+  },
+};
 
 const DEFAULT_COUNTABLES = [
   {
@@ -61,6 +71,39 @@ export function resetCustomCountables() {
   customCountables.length = 0;
 }
 
+let customCategoryLockIcon;
+
+export function registerCustomCategoryLockIcon(icon) {
+  customCategoryLockIcon = icon;
+}
+
+export function resetCustomCategoryLockIcon() {
+  customCategoryLockIcon = null;
+}
+
+let customCategoryPrefixes = {};
+
+export function registerCustomCategorySectionLinkPrefix({
+  categoryId,
+  prefixValue,
+  prefixType,
+  prefixColor,
+}) {
+  customCategoryPrefixes[categoryId] = {
+    prefixValue,
+    prefixType,
+    prefixColor,
+  };
+}
+
+export function resetCustomCategorySectionLinkPrefix() {
+  for (let key in customCategoryPrefixes) {
+    if (customCategoryPrefixes.hasOwnProperty(key)) {
+      delete customCategoryPrefixes[key];
+    }
+  }
+}
+
 export default class CategorySectionLink {
   @tracked activeCountable;
 
@@ -74,7 +117,13 @@ export default class CategorySectionLink {
   }
 
   #countables() {
-    const countables = [...DEFAULT_COUNTABLES];
+    const countables = [];
+
+    if (this.#newNewViewEnabled) {
+      countables.push(UNREAD_AND_NEW_COUNTABLE);
+    } else {
+      countables.push(...DEFAULT_COUNTABLES);
+    }
 
     if (customCountables.length > 0) {
       customCountables.forEach((customCountable) => {
@@ -99,8 +148,8 @@ export default class CategorySectionLink {
     return countables;
   }
 
-  get hideCount() {
-    return this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
+  get showCount() {
+    return this.currentUser?.sidebarShowCountOfNewItems;
   }
 
   @bind
@@ -139,25 +188,39 @@ export default class CategorySectionLink {
   }
 
   get prefixType() {
-    return "span";
+    return customCategoryPrefixes[this.category.id]?.prefixType || "span";
   }
 
-  get prefixElementColors() {
-    return [this.category.parentCategory?.color, this.category.color];
+  get prefixValue() {
+    const customPrefixValue =
+      customCategoryPrefixes[this.category.id]?.prefixValue;
+
+    if (customPrefixValue) {
+      return customPrefixValue;
+    }
+
+    if (this.category.parentCategory?.color) {
+      return [this.category.parentCategory?.color, this.category.color];
+    } else {
+      return [this.category.color];
+    }
   }
 
   get prefixColor() {
-    return this.category.color;
+    return (
+      customCategoryPrefixes[this.category.id]?.prefixColor ||
+      this.category.color
+    );
   }
 
   get prefixBadge() {
     if (this.category.read_restricted) {
-      return "lock";
+      return customCategoryLockIcon || "lock";
     }
   }
 
   get badgeText() {
-    if (this.hideCount) {
+    if (!this.showCount) {
       return;
     }
 
@@ -171,7 +234,7 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+    if (this.currentUser?.sidebarLinkToFilteredList) {
       const activeCountable = this.activeCountable;
 
       if (activeCountable) {
@@ -183,7 +246,7 @@ export default class CategorySectionLink {
   }
 
   get query() {
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+    if (this.currentUser?.sidebarLinkToFilteredList) {
       const activeCountable = this.activeCountable;
 
       if (activeCountable?.routeQuery) {
@@ -201,8 +264,12 @@ export default class CategorySectionLink {
   }
 
   get suffixValue() {
-    if (this.hideCount && this.activeCountable) {
+    if (!this.showCount && this.activeCountable) {
       return "circle";
     }
+  }
+
+  get #newNewViewEnabled() {
+    return !!this.currentUser?.new_new_view_enabled;
   }
 }

@@ -98,10 +98,25 @@
   .row div[data-schematype="array"] {
     padding: 0.5em;
     background-color: var(--primary-very-low);
+
+    > .card-title {
+      width: 100%;
+      border-bottom: 1px solid var(--primary-low);
+      > .json-editor-btn-collapse {
+        float: right;
+      }
+    }
   }
 
   .desktop-view & .modal-inner-container {
     --modal-max-width: 75vw;
     min-width: 55vw;
+  }
+
+  .card-title.level-1,
+  .card-title.je-object__title {
+    > .json-editor-btn-collapse {
+      display: none;
+    }
   }
 }

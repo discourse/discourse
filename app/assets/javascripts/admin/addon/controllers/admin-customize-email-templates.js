@@ -1,18 +1,13 @@
+import { sort } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { sort } from "@ember/object/computed";
 
-export default Controller.extend({
-  sortedTemplates: sort("emailTemplates", "titleSorting"),
-
-  init() {
-    this._super(...arguments);
-
-    this.set("titleSorting", ["title"]);
-  },
+export default class AdminCustomizeEmailTemplatesController extends Controller {
+  titleSorting = ["title"];
+  @sort("emailTemplates", "titleSorting") sortedTemplates;
 
   @action
   onSelectTemplate(template) {
     this.transitionToRoute("adminCustomizeEmailTemplates.edit", template);
-  },
-});
+  }
+}

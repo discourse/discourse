@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import {
   acceptance,
   exists,
@@ -14,7 +15,7 @@ acceptance("User Card - Show Local Time", function (needs) {
   needs.settings({ display_local_time_in_user_card: true });
 
   test("user card local time - does not update timezone for another user", async function (assert) {
-    User.current().timezone = "Australia/Brisbane";
+    User.current().user_option.timezone = "Australia/Brisbane";
 
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');
@@ -36,7 +37,7 @@ acceptance(
       server.get("/u/eviltrout/card.json", () => helper.response(cardResponse));
     });
 
-    test("it displays the person's username followed by ther fullname", async function (assert) {
+    test("it displays the person's username followed by their fullname", async function (assert) {
       await visit("/t/this-is-a-test-topic/9");
       await click('a[data-user-card="eviltrout"]');
 
@@ -96,5 +97,70 @@ acceptance("User Card - User Status", function (needs) {
     await click('a[data-user-card="charlie"]');
 
     assert.notOk(exists(".user-card h3.user-status"));
+  });
+});
+
+acceptance("User Card - Hidden Profile", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/u/eviltrout/card.json", () =>
+      helper.response({
+        user: {
+          id: 6,
+          username: "eviltrout",
+          name: null,
+          avatar_template: "/letter_avatar_proxy/v4/letter/f/8edcca/{size}.png",
+          profile_hidden: true,
+          title: null,
+          primary_group_name: null,
+        },
+      })
+    );
+  });
+
+  test("it shows less information", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click('a[data-user-card="eviltrout"]');
+
+    assert.equal(
+      query(".user-card .name-username-wrapper").innerText,
+      "eviltrout"
+    );
+    assert.equal(
+      query(".user-card .profile-hidden").innerText,
+      I18n.t("user.profile_hidden")
+    );
+  });
+});
+
+acceptance("User Card - Inactive user", function (needs) {
+  needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/u/eviltrout/card.json", () =>
+      helper.response({
+        user: {
+          id: 6,
+          username: "eviltrout",
+          name: null,
+          avatar_template: "/letter_avatar_proxy/v4/letter/f/8edcca/{size}.png",
+          inactive: true,
+        },
+      })
+    );
+  });
+
+  test("it shows less information", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await click('a[data-user-card="eviltrout"]');
+
+    assert.equal(
+      query(".user-card .name-username-wrapper").innerText,
+      "eviltrout"
+    );
+
+    assert.equal(
+      query(".user-card .inactive-user").innerText,
+      I18n.t("user.inactive_user")
+    );
   });
 });

@@ -41,7 +41,7 @@ class TopicEmbed < ActiveRecord::Base
 
   # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
-    return unless url =~ %r{^https?\://}
+    return unless url =~ %r{\Ahttps?\://}
 
     contents = first_paragraph_from(contents) if SiteSetting.embed_truncate && cook_method.nil?
     contents ||= ""
@@ -118,10 +118,8 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   def self.find_remote(url)
-    require "ruby-readability"
-
     url = UrlHelper.normalized_encode(url)
-    original_uri = URI.parse(url)
+    URI.parse(url) # ensure url parses, will raise if not
     fd = FinalDestination.new(url, validate_uri: true, max_redirects: 5, follow_canonical: true)
 
     uri = fd.resolve
@@ -140,7 +138,7 @@ class TopicEmbed < ActiveRecord::Base
     require "ruby-readability"
 
     opts = {
-      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote],
+      tags: %w[div p code pre h1 h2 h3 b em i strong a img ul li ol blockquote figure figcaption],
       attributes: %w[href src class],
       remove_empty_nodes: false,
     }
@@ -214,7 +212,7 @@ class TopicEmbed < ActiveRecord::Base
           end
       end
 
-    response.body = doc.to_html
+    response.body = doc.at("body").children.to_html
     response
   end
 
@@ -302,7 +300,7 @@ class TopicEmbed < ActiveRecord::Base
     Discourse
       .cache
       .fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
-        url = TopicEmbed.where(topic_id: post.topic_id).pluck_first(:embed_url)
+        url = TopicEmbed.where(topic_id: post.topic_id).pick(:embed_url)
         response = TopicEmbed.find_remote(url)
 
         body = response.body

@@ -6,6 +6,8 @@
 // Layout dimensions
 // --------------------------------------------------
 
+@use "sass:math";
+
 $small-width: 800px !default;
 $medium-width: 995px !default;
 $large-width: 1110px !default;
@@ -15,7 +17,8 @@ $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
 $reply-area-max-width: 1475px !default;
 
-$d-sidebar-width: 16em !default;
+$d-sidebar-width: 17em !default;
+$d-sidebar-narrow-width: 14em !default;
 
 // Brand color variables
 // --------------------------------------------------
@@ -129,30 +132,6 @@ $z-layers: (
   @return map-deep-get($z-layers, $layers...);
 }
 
-// Box-shadow
-// --------------------------------------------------
-
-$box-shadow: (
-  "modal": 0 8px 60px rgba(0, 0, 0, 0.6),
-  "composer": 0 -1px 40px rgba(0, 0, 0, 0.12),
-  "menu-panel": 0 12px 12px rgba(0, 0, 0, 0.15),
-  "card": 0 4px 14px rgba(0, 0, 0, 0.15),
-  "dropdown": 0 2px 3px 0 rgba(0, 0, 0, 0.2),
-  "dropdown-lite": 0px 2px 12px 0px rgba(0, 0, 0, 0.1),
-  "header": 0 2px 4px -1px rgba(0, 0, 0, 0.25),
-  "footer-nav": 0 0 2px 0 rgba(0, 0, 0, 0.25),
-  "kbd": (
-    0 2px 0 rgba(0, 0, 0, 0.2),
-    0 0 0 1px dark-light-choose(#fff, #000) inset,
-  ),
-  "focus": 0 0 3px 0 $tertiary,
-  "focus-danger": 0 0 6px 0 $danger,
-);
-
-@function shadow($key) {
-  @return map-get($box-shadow, $key);
-}
-
 // Color utilities
 // --------------------------------------------------
 
@@ -165,7 +144,7 @@ $box-shadow: (
 
 // Uses an approximation of sRGB blending, GAMMA=2 instead of GAMMA=2.2
 @function srgb-scale($foreground, $background, $percent) {
-  $ratio: ($percent / 100%);
+  $ratio: math.div($percent, 100%);
   $iratio: 1 - $ratio;
   $f_r2: red($foreground) * red($foreground);
   $f_g2: green($foreground) * green($foreground);

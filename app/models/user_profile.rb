@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UserProfile < ActiveRecord::Base
+  # TODO Remove `badge_granted_title` after 2023-09-01
+  self.ignored_columns = ["badge_granted_title"]
+
   BAKED_VERSION = 1
 
   belongs_to :user, inverse_of: :user_profile
@@ -45,7 +48,7 @@ class UserProfile < ActiveRecord::Base
 
   def bio_excerpt(length = 350, opts = {})
     return nil if bio_cooked.blank?
-    excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>$/, "")
+    excerpt = PrettyText.excerpt(bio_cooked, length, opts).sub(/<br>\z/, "")
     return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(excerpt)
   end
@@ -227,7 +230,6 @@ end
 #  bio_cooked                   :text
 #  dismissed_banner_key         :integer
 #  bio_cooked_version           :integer
-#  badge_granted_title          :boolean          default(FALSE)
 #  views                        :integer          default(0), not null
 #  profile_background_upload_id :integer
 #  card_background_upload_id    :integer

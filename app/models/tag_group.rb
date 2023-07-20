@@ -5,6 +5,10 @@ class TagGroup < ActiveRecord::Base
 
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
+  has_many :none_synonym_tags,
+           -> { where(target_tag_id: nil) },
+           through: :tag_group_memberships,
+           source: "tag"
   has_many :category_tag_groups, dependent: :destroy
   has_many :category_required_tag_groups, dependent: :destroy
   has_many :categories, through: :category_tag_groups

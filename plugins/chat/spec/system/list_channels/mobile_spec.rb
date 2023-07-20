@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | mobile", type: :system, js: true, mobile: true do
+RSpec.describe "List channels | mobile", type: :system, mobile: true do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
     chat_system_bootstrap
@@ -120,8 +121,8 @@ RSpec.describe "List channels | mobile", type: :system, js: true, mobile: true d
 
   it "has a new dm channel button" do
     visit("/chat")
-    find(".open-draft-channel-page-btn").click
+    find(".open-new-message-btn").click
 
-    expect(page).to have_current_path("/chat/draft-channel")
+    expect(chat.message_creator).to be_opened
   end
 end

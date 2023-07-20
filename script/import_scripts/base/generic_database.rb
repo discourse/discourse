@@ -4,7 +4,7 @@ require "sqlite3"
 
 module ImportScripts
   class GenericDatabase
-    def initialize(directory, batch_size:, recreate: false, numeric_keys: false)
+    def initialize(directory, batch_size: 1000, recreate: false, numeric_keys: false)
       filename = "#{directory}/index.db"
       File.delete(filename) if recreate && File.exist?(filename)
 
@@ -14,10 +14,13 @@ module ImportScripts
 
       configure_database
       create_category_table
+      create_upload_table
       create_like_table
       create_user_table
       create_topic_table
       create_post_table
+      create_pm_topic_table
+      create_pm_post_table
     end
 
     def insert_category(category)
@@ -27,11 +30,20 @@ module ImportScripts
       SQL
     end
 
+    def insert_upload(upload)
+      @db.execute(<<-SQL, prepare(upload))
+        INSERT OR REPLACE INTO upload (id, user_id, original_filename,
+        filename, description, url)
+        VALUES (:id, :user_id, :original_filename,
+        :filename, :description, :url)
+      SQL
+    end
+
     def insert_user(user)
       @db.execute(<<-SQL, prepare(user))
         INSERT OR REPLACE
-        INTO user (id, email, username, name, bio, avatar_path, created_at, last_seen_at, active)
-        VALUES (:id, :email, :username, :name, :bio, :avatar_path, :created_at, :last_seen_at, :active)
+        INTO user (id, email, username, name, bio, avatar_path, created_at, last_seen_at, active, staged, admin)
+        VALUES (:id, :email, :username, :name, :bio, :avatar_path, :created_at, :last_seen_at, :active, :staged, :admin)
       SQL
     end
 
@@ -49,8 +61,8 @@ module ImportScripts
 
       @db.transaction do
         @db.execute(<<-SQL, prepare(topic))
-          INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count)
-          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count)
+          INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count, tags)
+          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count, :tags)
         SQL
 
         attachments&.each do |attachment|
@@ -67,6 +79,16 @@ module ImportScripts
           SQL
         end
       end
+    end
+
+    def insert_pm_topic(topic)
+      attachments = topic.delete(:attachments)
+      topic[:upload_count] = attachments&.size || 0
+
+      @db.execute(<<-SQL, prepare(topic))
+        INSERT OR REPLACE INTO pm_topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count, target_users)
+        VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count, :target_users)
+      SQL
     end
 
     def insert_post(post)
@@ -92,6 +114,16 @@ module ImportScripts
       end
     end
 
+    def insert_pm_post(post)
+      attachments = post.delete(:attachments)
+      post[:upload_count] = attachments&.size || 0
+
+      @db.execute(<<-SQL, prepare(post))
+        INSERT OR REPLACE INTO pm_post (id, raw, topic_id, user_id, created_at, reply_to_post_id, url, upload_count)
+        VALUES (:id, :raw, :topic_id, :user_id, :created_at, :reply_to_post_id, :url, :upload_count)
+      SQL
+    end
+
     def sort_posts_by_created_at
       @db.execute "DELETE FROM post_order"
 
@@ -114,6 +146,28 @@ module ImportScripts
             SELECT 1
             FROM post
             WHERE post.user_id = user.id
+        )
+      SQL
+    end
+
+    def calculate_user_last_seen_at_dates
+      @db.execute <<~SQL
+        UPDATE user
+        SET last_seen_at = (
+          SELECT MAX(created_at)
+          FROM post
+          WHERE post.user_id = user.id
+        )
+      SQL
+    end
+
+    def calculate_user_created_at_dates
+      @db.execute <<~SQL
+        UPDATE user
+        SET created_at = (
+          SELECT MIN(created_at)
+          FROM post
+          WHERE post.user_id = user.id
         )
       SQL
     end
@@ -160,10 +214,29 @@ module ImportScripts
       SQL
     end
 
+    def count_pm_topics
+      @db.get_first_value(<<-SQL)
+        SELECT COUNT(*)
+        FROM pm_topic
+      SQL
+    end
+
     def fetch_topics(last_id)
       rows = @db.execute(<<-SQL, last_id)
         SELECT *
         FROM topic
+        WHERE id > :last_id
+        ORDER BY id
+        LIMIT #{@batch_size}
+      SQL
+
+      add_last_column_value(rows, "id")
+    end
+
+    def fetch_pm_topics(last_id)
+      rows = @db.execute(<<-SQL, last_id)
+        SELECT *
+        FROM pm_topic
         WHERE id > :last_id
         ORDER BY id
         LIMIT #{@batch_size}
@@ -187,10 +260,37 @@ module ImportScripts
       SQL
     end
 
+    def count_pm_posts
+      @db.get_first_value(<<-SQL)
+        SELECT COUNT(*)
+        FROM pm_post
+      SQL
+    end
+
+    def fetch_upload(id)
+      @db.execute(<<-SQL, id)
+        SELECT *
+        FROM upload
+        WHERE id = :id
+      SQL
+    end
+
     def fetch_posts(last_row_id)
       rows = @db.execute(<<-SQL, last_row_id)
         SELECT ROWID AS rowid, *
         FROM post
+        WHERE ROWID > :last_row_id
+        ORDER BY ROWID
+        LIMIT #{@batch_size}
+      SQL
+
+      add_last_column_value(rows, "rowid")
+    end
+
+    def fetch_pm_posts(last_row_id)
+      rows = @db.execute(<<-SQL, last_row_id)
+        SELECT ROWID AS rowid, *
+        FROM pm_post
         WHERE ROWID > :last_row_id
         ORDER BY ROWID
         LIMIT #{@batch_size}
@@ -247,6 +347,48 @@ module ImportScripts
       @db.get_first_value(sql)
     end
 
+    def create_missing_topics
+      posts = @db.execute(<<~SQL)
+          WITH missing_topics AS (SELECT *, RANK() OVER ( PARTITION BY topic_id ORDER BY created_at ) AS post_number
+                                    FROM post p
+                                   WHERE NOT EXISTS (SELECT 1 FROM topic t WHERE t.id = p.topic_id))
+        SELECT *
+          FROM missing_topics
+         WHERE post_number = 1
+      SQL
+
+      posts.each do |post|
+        @db.execute("DELETE FROM post WHERE id = ?", post["id"])
+
+        topic = post.except("post_number", "reply_to_post_id")
+        topic["id"] = topic.delete("topic_id")
+        topic = yield(topic)
+
+        @db.execute(<<-SQL, prepare(topic))
+          INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count, tags)
+          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count, :tags)
+        SQL
+
+        @db.execute("DELETE FROM post WHERE id = ?", post["id"])
+
+        @db.execute(<<-SQL, topic_id: topic["id"], post_id: post["id"])
+          INSERT OR REPLACE INTO topic_upload (topic_id, path)
+          SELECT :topic_id, path
+          FROM post_upload
+          WHERE post_id = :post_id
+        SQL
+
+        @db.execute("DELETE FROM post_upload WHERE post_id = ?", post["id"])
+
+        @db.execute(<<-SQL, topic_id: topic["id"], post_id: post["id"])
+          UPDATE like
+          SET topic_id = :topic_id,
+              post_id = NULL
+          WHERE post_id = :post_id
+        SQL
+      end
+    end
+
     private
 
     def configure_database
@@ -265,6 +407,19 @@ module ImportScripts
           name TEXT NOT NULL,
           description TEXT,
           position INTEGER,
+          url TEXT
+        )
+      SQL
+    end
+
+    def create_upload_table
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS upload (
+          id #{key_data_type} NOT NULL PRIMARY KEY,
+          user_id INTEGER,
+          original_filename TEXT,
+          filename TEXT,
+          description TEXT,
           url TEXT
         )
       SQL
@@ -291,7 +446,9 @@ module ImportScripts
           avatar_path TEXT,
           created_at DATETIME,
           last_seen_at DATETIME,
-          active BOOLEAN NOT NULL DEFAULT true
+          active BOOLEAN NOT NULL DEFAULT true,
+          staged BOOLEAN NOT NULL DEFAULT false,
+          admin BOOLEAN NOT NULL DEFAULT false
         )
       SQL
 
@@ -309,7 +466,8 @@ module ImportScripts
           user_id #{key_data_type} NOT NULL,
           created_at DATETIME,
           url TEXT,
-          upload_count INTEGER DEFAULT 0
+          upload_count INTEGER DEFAULT 0,
+          tags JSON
         )
       SQL
 
@@ -323,6 +481,23 @@ module ImportScripts
       SQL
 
       @db.execute "CREATE UNIQUE INDEX IF NOT EXISTS topic_upload_unique ON topic_upload(topic_id, path)"
+    end
+
+    def create_pm_topic_table
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS pm_topic (
+          id #{key_data_type} NOT NULL PRIMARY KEY,
+          title TEXT,
+          raw TEXT,
+          category_id #{key_data_type},
+          closed BOOLEAN NOT NULL DEFAULT false,
+          user_id #{key_data_type} NOT NULL,
+          target_users TEXT,
+          created_at DATETIME,
+          url TEXT,
+          upload_count INTEGER DEFAULT 0
+        )
+      SQL
     end
 
     def create_post_table
@@ -357,12 +532,29 @@ module ImportScripts
       @db.execute "CREATE UNIQUE INDEX IF NOT EXISTS post_upload_unique ON post_upload(post_id, path)"
     end
 
+    def create_pm_post_table
+      @db.execute <<-SQL
+        CREATE TABLE IF NOT EXISTS pm_post (
+          id #{key_data_type} NOT NULL PRIMARY KEY,
+          raw TEXT,
+          topic_id #{key_data_type} NOT NULL,
+          user_id #{key_data_type} NOT NULL,
+          created_at DATETIME,
+          reply_to_post_id #{key_data_type},
+          url TEXT,
+          upload_count INTEGER DEFAULT 0
+        )
+      SQL
+    end
+
     def prepare(hash)
       hash.each do |key, value|
         if value.is_a?(TrueClass) || value.is_a?(FalseClass)
           hash[key] = value ? 1 : 0
         elsif value.is_a?(Date)
           hash[key] = value.to_s
+        elsif value.is_a?(Time)
+          hash[key] = value.utc.iso8601
         end
       end
     end

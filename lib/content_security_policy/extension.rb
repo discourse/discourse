@@ -27,7 +27,7 @@ class ContentSecurityPolicy
 
     def theme_extensions(theme_id)
       key = "theme_extensions_#{theme_id}"
-      cache[key] ||= find_theme_extensions(theme_id)
+      cache.defer_get_set(key) { find_theme_extensions(theme_id) }
     end
 
     def clear_theme_extensions_cache!
@@ -80,7 +80,7 @@ class ContentSecurityPolicy
 
           uri.query = nil # CSP should not include query part of url
 
-          uri_string = uri.to_s.sub(%r{^//}, "") # Protocol-less CSP should not have // at beginning of URL
+          uri_string = uri.to_s.sub(%r{\A//}, "") # Protocol-less CSP should not have // at beginning of URL
 
           auto_script_src_extension[:script_src] << uri_string
         rescue URI::Error

@@ -9,6 +9,10 @@ class User < ActiveRecord::Base
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
 
+  PASSWORD_SALT_LENGTH = 16
+  TARGET_PASSWORD_ALGORITHM =
+    "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+
   # not deleted on user delete
   has_many :posts
   has_many :topics
@@ -49,7 +53,7 @@ class User < ActiveRecord::Base
   has_many :pending_posts,
            -> { merge(Reviewable.pending) },
            class_name: "ReviewableQueuedPost",
-           foreign_key: :created_by_id
+           foreign_key: :target_created_by_id
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -82,6 +86,7 @@ class User < ActiveRecord::Base
   has_many :muted_user_records, class_name: "MutedUser", dependent: :delete_all
   has_many :ignored_user_records, class_name: "IgnoredUser", dependent: :delete_all
   has_many :do_not_disturb_timings, dependent: :delete_all
+  has_many :sidebar_sections, dependent: :destroy
   has_one :user_status, dependent: :destroy
 
   # dependent deleting handled via before_destroy (special cases)
@@ -148,7 +153,7 @@ class User < ActiveRecord::Base
   validate :name_validator, if: :will_save_change_to_name?
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create, message: :signup_not_allowed }
-  validates :primary_email, presence: true
+  validates :primary_email, presence: true, unless: :skip_email_validation
   validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
   validates_associated :primary_email,
                        message: ->(_, user_email) { user_email[:value]&.errors[:email]&.first }
@@ -175,6 +180,7 @@ class User < ActiveRecord::Base
                if: Proc.new { self.human? && self.saved_change_to_uploaded_avatar_id? }
 
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
+  after_update :change_display_name, if: :saved_change_to_name?
 
   before_save :update_usernames
   before_save :ensure_password_is_hashed
@@ -293,7 +299,7 @@ class User < ActiveRecord::Base
         ->(filter) {
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
-            if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pluck_first(:user_id)
+            if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
               return where("users.id = ?", user_id)
             end
           end
@@ -350,6 +356,7 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
+        admin_guide: 6,
       )
   end
 
@@ -396,7 +403,7 @@ class User < ActiveRecord::Base
       .reserved_usernames
       .unicode_normalize
       .split("|")
-      .any? { |reserved| username.match?(/^#{Regexp.escape(reserved).gsub('\*', ".*")}$/) }
+      .any? { |reserved| username.match?(/\A#{Regexp.escape(reserved).gsub('\*', ".*")}\z/) }
   end
 
   def self.editable_user_custom_fields(by_staff: false)
@@ -587,7 +594,6 @@ class User < ActiveRecord::Base
     @unread_pms = nil
     @unread_bookmarks = nil
     @unread_high_prios = nil
-    @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
@@ -602,7 +608,7 @@ class User < ActiveRecord::Base
     @muted_user_ids ||= muted_users.pluck(:id)
   end
 
-  def unread_notifications_of_type(notification_type)
+  def unread_notifications_of_type(notification_type, since: nil)
     # perf critical, much more efficient than AR
     sql = <<~SQL
         SELECT COUNT(*)
@@ -612,10 +618,11 @@ class User < ActiveRecord::Base
            AND n.notification_type = :notification_type
            AND n.user_id = :user_id
            AND NOT read
+           #{since ? "AND n.created_at > :since" : ""}
     SQL
 
     # to avoid coalesce we do to_i
-    DB.query_single(sql, user_id: id, notification_type: notification_type)[0].to_i
+    DB.query_single(sql, user_id: id, notification_type: notification_type, since: since)[0].to_i
   end
 
   def unread_notifications_of_priority(high_priority:)
@@ -652,11 +659,11 @@ class User < ActiveRecord::Base
     results.to_h
   end
 
-  ###
-  # DEPRECATED: This is only maintained for backwards compat until v2.5. There
-  # may be inconsistencies with counts in the UI because of this, because unread
-  # high priority includes PMs AND bookmark reminders.
   def unread_private_messages
+    Discourse.deprecate(
+      "#unread_private_messages is deprecated, use #unread_high_priority_notifications instead.",
+      drop_from: "2.5.0",
+    )
     @unread_pms ||= unread_high_priority_notifications
   end
 
@@ -755,7 +762,7 @@ class User < ActiveRecord::Base
   end
 
   def reviewable_count
-    Reviewable.list_for(self, include_claimed_by_others: !redesigned_user_menu_enabled?).count
+    Reviewable.list_for(self, include_claimed_by_others: false).count
   end
 
   def saw_notification_id(notification_id)
@@ -802,20 +809,8 @@ class User < ActiveRecord::Base
     MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])
   end
 
-  TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
-
   def read_first_notification?
-    if (
-         trust_level > TrustLevel[1] ||
-           (
-             first_seen_at.present? &&
-               first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago
-           ) || user_option.skip_new_user_tips
-       )
-      return true
-    end
-
-    self.seen_notification_id == 0 ? false : true
+    self.seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
   def publish_notifications_state
@@ -862,13 +857,9 @@ class User < ActiveRecord::Base
       seen_notification_id: seen_notification_id,
     }
 
-    if self.redesigned_user_menu_enabled?
-      payload[:all_unread_notifications_count] = all_unread_notifications_count
-      payload[:grouped_unread_notifications] = grouped_unread_notifications
-      payload[
-        :new_personal_messages_notifications_count
-      ] = new_personal_messages_notifications_count
-    end
+    payload[:all_unread_notifications_count] = all_unread_notifications_count
+    payload[:grouped_unread_notifications] = grouped_unread_notifications
+    payload[:new_personal_messages_notifications_count] = new_personal_messages_notifications_count
 
     MessageBus.publish("/notification/#{id}", payload, user_ids: [id])
   end
@@ -926,8 +917,20 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
-    return false unless password_hash && salt
-    self.password_hash == hash_password(password, salt)
+    return false unless password_hash && salt && password_algorithm
+    confirmed = self.password_hash == hash_password(password, salt, password_algorithm)
+
+    if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
+      # Regenerate password_hash with new algorithm and persist
+      salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
+      update_columns(
+        password_algorithm: TARGET_PASSWORD_ALGORITHM,
+        salt: salt,
+        password_hash: hash_password(password, salt, TARGET_PASSWORD_ALGORITHM),
+      )
+    end
+
+    confirmed
   end
 
   def new_user_posting_on_first_day?
@@ -1117,7 +1120,7 @@ class User < ActiveRecord::Base
     # TODO it may be worth caching this in a distributed cache, should be benched
     if SiteSetting.external_system_avatars_enabled
       url = SiteSetting.external_system_avatars_url.dup
-      url = +"#{Discourse.base_path}#{url}" unless url =~ %r{^https?://}
+      url = +"#{Discourse.base_path}#{url}" unless url =~ %r{\Ahttps?://}
       url.gsub! "{color}", letter_avatar_color(normalized_username)
       url.gsub! "{username}", UrlHelper.encode_component(username)
       url.gsub! "{first_letter}",
@@ -1501,15 +1504,7 @@ class User < ActiveRecord::Base
   def user_fields(field_ids = nil)
     field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
 
-    @user_fields_cache ||= {}
-
-    # Memoize based on requested fields
-    @user_fields_cache[field_ids.join(":")] ||= {}.tap do |hash|
-      field_ids.each do |fid|
-        # The hash keys are strings for backwards compatibility
-        hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
-      end
-    end
+    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
   end
 
   def validatable_user_fields_values
@@ -1522,7 +1517,9 @@ class User < ActiveRecord::Base
 
   def apply_watched_words
     validatable_user_fields.each do |id, value|
-      set_user_field(id, WordWatcher.apply_to_text(value))
+      field = WordWatcher.censor_text(value)
+      field = WordWatcher.replace_text(field)
+      set_user_field(id, field)
     end
   end
 
@@ -1682,11 +1679,11 @@ class User < ActiveRecord::Base
       group_titles_query.order("groups.id = #{primary_group_id} DESC") if primary_group_id
     group_titles_query = group_titles_query.order("groups.primary_group DESC").limit(1)
 
-    if next_best_group_title = group_titles_query.pluck_first(:title)
+    if next_best_group_title = group_titles_query.pick(:title)
       return next_best_group_title
     end
 
-    next_best_badge_title = badges.where(allow_title: true).pluck_first(:name)
+    next_best_badge_title = badges.where(allow_title: true).pick(:name)
     next_best_badge_title ? Badge.display_name(next_best_badge_title) : nil
   end
 
@@ -1807,8 +1804,20 @@ class User < ActiveRecord::Base
     user_status && !user_status.expired?
   end
 
-  def redesigned_user_menu_enabled?
-    !SiteSetting.legacy_navigation_menu?
+  def new_new_view_enabled?
+    in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
+  end
+
+  def experimental_search_menu_groups_enabled?
+    in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
+  end
+
+  def watched_precedence_over_muted
+    if user_option.watched_precedence_over_muted.nil?
+      SiteSetting.watched_precedence_over_muted
+    else
+      user_option.watched_precedence_over_muted
+    end
   end
 
   protected
@@ -1855,8 +1864,9 @@ class User < ActiveRecord::Base
 
   def ensure_password_is_hashed
     if @raw_password
-      self.salt = SecureRandom.hex(16)
-      self.password_hash = hash_password(@raw_password, salt)
+      self.salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
+      self.password_algorithm = TARGET_PASSWORD_ALGORITHM
+      self.password_hash = hash_password(@raw_password, salt, password_algorithm)
     end
   end
 
@@ -1872,14 +1882,9 @@ class User < ActiveRecord::Base
     end
   end
 
-  def hash_password(password, salt)
+  def hash_password(password, salt, algorithm)
     raise StandardError.new("password is too long") if password.size > User.max_password_length
-    Pbkdf2.hash_password(
-      password,
-      salt,
-      Rails.configuration.pbkdf2_iterations,
-      Rails.configuration.pbkdf2_algorithm,
-    )
+    PasswordHasher.hash_password(password: password, salt: salt, algorithm: algorithm)
   end
 
   def add_trust_level
@@ -1961,7 +1966,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    CategoryUser.insert_all!(values) if values.present?
+    CategoryUser.insert_all(values) if values.present?
   end
 
   def set_default_tags_preferences
@@ -2029,9 +2034,7 @@ class User < ActiveRecord::Base
   def match_primary_group_changes
     return unless primary_group_id_changed?
 
-    if title == Group.where(id: primary_group_id_was).pluck_first(:title)
-      self.title = primary_group&.title
-    end
+    self.title = primary_group&.title if Group.exists?(id: primary_group_id_was, title: title)
 
     self.flair_group_id = primary_group&.id if flair_group_id == primary_group_id_was
   end
@@ -2042,7 +2045,7 @@ class User < ActiveRecord::Base
       .human_users
       .joins(:user_auth_tokens)
       .order("user_auth_tokens.created_at")
-      .pluck_first(:id)
+      .pick(:id)
   end
 
   private
@@ -2051,8 +2054,8 @@ class User < ActiveRecord::Base
     return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
-    if SiteSetting.default_sidebar_categories.present?
-      categories_to_update = SiteSetting.default_sidebar_categories.split("|")
+    if SiteSetting.default_navigation_menu_categories.present?
+      categories_to_update = SiteSetting.default_navigation_menu_categories.split("|")
 
       if update
         filtered_default_category_ids =
@@ -2070,8 +2073,8 @@ class User < ActiveRecord::Base
       )
     end
 
-    if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      tags_to_update = SiteSetting.default_sidebar_tags.split("|")
+    if SiteSetting.tagging_enabled && SiteSetting.default_navigation_menu_tags.present?
+      tags_to_update = SiteSetting.default_navigation_menu_tags.split("|")
 
       if update
         default_tag_ids = Tag.where(name: tags_to_update).pluck(:id)
@@ -2125,10 +2128,7 @@ class User < ActiveRecord::Base
           badges.find do |badge|
             badge.allow_title? && (badge.display_name == title || badge.name == title)
           end
-      user_profile.update(
-        badge_granted_title: badge_matching_title.present?,
-        granted_title_badge_id: badge_matching_title&.id,
-      )
+      user_profile.update!(granted_title_badge_id: badge_matching_title&.id)
     end
   end
 
@@ -2139,6 +2139,10 @@ class User < ActiveRecord::Base
   def update_previous_visit(timestamp)
     update_visit_record!(timestamp.to_date)
     update_column(:previous_visit_at, last_seen_at) if previous_visit_at_update_required?(timestamp)
+  end
+
+  def change_display_name
+    Jobs.enqueue(:change_display_name, user_id: id, old_name: name_before_last_save, new_name: name)
   end
 
   def trigger_user_created_event
@@ -2226,15 +2230,18 @@ end
 #  secure_identifier         :string
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
+#  password_algorithm        :string(64)
 #
 # Indexes
 #
-#  idx_users_admin                    (id) WHERE admin
-#  idx_users_moderator                (id) WHERE moderator
-#  index_users_on_last_posted_at      (last_posted_at)
-#  index_users_on_last_seen_at        (last_seen_at)
-#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
-#  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
-#  index_users_on_username            (username) UNIQUE
-#  index_users_on_username_lower      (username_lower) UNIQUE
+#  idx_users_admin                     (id) WHERE admin
+#  idx_users_moderator                 (id) WHERE moderator
+#  index_users_on_last_posted_at       (last_posted_at)
+#  index_users_on_last_seen_at         (last_seen_at)
+#  index_users_on_name_trgm            (name) USING gist
+#  index_users_on_secure_identifier    (secure_identifier) UNIQUE
+#  index_users_on_uploaded_avatar_id   (uploaded_avatar_id)
+#  index_users_on_username             (username) UNIQUE
+#  index_users_on_username_lower       (username_lower) UNIQUE
+#  index_users_on_username_lower_trgm  (username_lower) USING gist
 #

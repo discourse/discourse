@@ -165,6 +165,7 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "email_wrongfix",
+                count: 1,
               )
             }",
           ]
@@ -183,6 +184,7 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
               )
             }",
           ]
@@ -201,12 +203,14 @@ RSpec.describe Admin::EmailTemplatesController do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
               )
             }",
             "<b>Body</b>: #{
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "invalid",
+                count: 1,
               )
             }",
           ]
@@ -446,7 +450,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
   it "uses only existing email templates" do
     Admin::EmailTemplatesController.email_keys.each do |key|
-      expect(I18n.t(key)).to_not include("translation missing")
+      expect(I18n.t(key)).to_not include("Translation missing")
     end
   end
 end

@@ -1,9 +1,6 @@
-$avatar_width: 120px;
-
 // shared styles for user and group cards
 .user-card,
 .group-card {
-  position: fixed;
   // mobile cards should always be on top of everything - 1102
   z-index: z("mobile-composer") + 2;
   max-width: 95vw;
@@ -13,13 +10,16 @@ $avatar_width: 120px;
   .first-row {
     flex-wrap: wrap;
     .names {
-      flex: 1 1 calc(100% - #{$avatar_width});
+      flex: 1 1 auto;
       box-sizing: border-box;
     }
+    .user-card-avatar {
+      flex: 0 0 auto;
+    }
     .usercard-controls {
+      width: 100%; // always wraps to next line
       --usercard-control-margin: 0.25em;
       display: flex;
-      flex: 1;
       flex-wrap: wrap;
       margin: 1em calc(var(--usercard-control-margin) * -1) 0;
       li {

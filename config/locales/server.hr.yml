@@ -195,10 +195,6 @@ hr:
       load_from_remote: "Dogodila se greška pri učitavanju objave."
     site_settings:
       invalid_category_id: "Naveli ste kategoriju koja ne postoji"
-      invalid_choice:
-        one: "Naveli ste nevažeći izbor %{name}"
-        few: "Naveli ste nevažeći izbor %{name}"
-        other: "Naveli ste nevažeće izbore %{name}"
       default_categories_already_selected: "Ne možete odabrati kategoriju koja se koristi na drugom popisu."
       default_tags_already_selected: "Ne možete odabrati oznaku koja se koristi na drugom popisu."
       s3_upload_bucket_is_required: "Ne možete omogućiti prijenose na S3 osim ako niste naveli 's3_upload_bucket'."
@@ -453,7 +449,6 @@ hr:
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
-  admin_quick_start_title: "PROČITATI PRVO: brzi vodič za administratore"
   category:
     topic_prefix: "O %{category} kategoriji"
     errors:
@@ -1195,7 +1190,6 @@ hr:
     enable_discourse_connect: "Omogućite prijavu putem DiscourseConnect (ranije 'Discourse SSO') (UPOZORENJE: ADRESE E-POŠTE KORISNIKA *MORAJU* BITI POTVRĐENE NA VANJSKOJ MJESTO!)"
     verbose_discourse_connect_logging: "Zabilježite opširnu dijagnostiku vezanu uz DiscourseConnect na <a href='%{base_path}/logs' target='_blank'>/zapisuje</a>"
     enable_discourse_connect_provider: "Implementacija protokola pružatelja usluga DiscourseConnect (prije 'Discourse SSO') na krajnjoj točki /session/sso_provider, zahtijeva postavljanje discourse_connect_provider_secrets"
-    discourse_connect_url: "URL krajnje točke DiscourseConnect (mora sadržavati http:// ili https://)"
     discourse_connect_secret: "Tajni niz koji se koristi za kriptografsku provjeru autentičnosti informacija DiscourseConnecta, pazite da ima 10 znakova ili više"
     discourse_connect_provider_secrets: "Popis parova domena-tajna koji koriste DiscourseConnect. Provjerite ima li DiscourseConnect tajna 10 znakova ili više. Zamjenski simbol * može se koristiti za podudaranje bilo koje domene ili samo njenog dijela (npr. *.example.com)."
     discourse_connect_overrides_bio: "Nadjačava korisničku biografiju u korisničkom profilu i sprječava korisnika da je promijeni"
@@ -1209,7 +1203,6 @@ hr:
     discourse_connect_overrides_profile_background: "Nadjačava pozadinu korisničkog profila vrijednošću iz nosivosti DiscourseConnecta."
     discourse_connect_overrides_card_background: "Zamjenjuje pozadinu korisničke kartice s vrijednošću iz sadržaja DiscourseConnect."
     discourse_connect_not_approved_url: "Preusmjerite neodobrene DiscourseConnect račune na ovaj URL"
-    discourse_connect_allows_all_return_paths: "Nemojte ograničavati domenu za return_paths koje pruža DiscourseConnect (prema zadanim postavkama povratna staza mora biti na trenutnom mjestu)"
     enable_local_logins: "Omogućite račune temeljene na prijavi s lokalnim korisničkim imenom i lozinkom. UPOZORENJE: ako je onemogućeno, možda se nećete moći prijaviti ako prethodno niste konfigurirali barem jedan alternativni način prijave."
     enable_local_logins_via_email: "Omogućite korisnicima da zatraže vezu za prijavu jednim klikom da im se pošalje putem e-pošte."
     allow_new_registrations: "Dopusti registracije novih korisnika. Poništite ovu opciju kako biste spriječili bilo koga da stvori novi račun."
@@ -1263,7 +1256,6 @@ hr:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimalna veličina slikovne datoteke za pokretanje optimizacije na strani klijenta"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimalna širina slike za pokretanje promjene veličine na strani klijenta"
     composer_media_optimization_image_resize_width_target: "Slikama čija je širina veća od `composer_media_optimization_image_dimensions_resize_threshold` bit će promijenjena veličina na ovu širinu. Mora biti >= od `composer_media_optimization_image_dimensions_resize_threshold`."
-    composer_media_optimization_image_encode_quality: "Kvaliteta JPEG kodiranja koja se koristi u procesu ponovnog kodiranja."
     min_ratio_to_crop: "Omjer koji se koristi za obrezivanje visokih slika. Unesite rezultat širine / visine."
     simultaneous_uploads: "Maksimalni broj datoteka koje se mogu povući i ispustiti u skladatelj"
     default_invitee_trust_level: "Zadana razina povjerenja (0-4) za pozvane korisnike."
@@ -1335,7 +1327,6 @@ hr:
     pop3_polling_password: "Lozinka za POP3 račun za anketu za e-poštu."
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
-    email_in: 'Omogućite korisnicima objavljivanje novih tema putem e-pošte (zahtijeva ručno ili pop3 prozivanje). Konfigurirajte adrese u kartici "Postavke" svake kategorije.'
     email_in_min_trust: "Minimalna razina povjerenja koju korisnik mora imati da bi mu se omogućilo objavljivanje novih tema putem e-pošte."
     email_in_authserv_id: "Identifikator usluge koja vrši provjeru autentičnosti dolazne e-pošte. Pogledajte <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> za upute o tome kako to konfigurirati."
     email_in_spam_header: "Zaglavlje e-pošte za otkrivanje neželjene pošte."
@@ -1394,17 +1385,11 @@ hr:
     allowed_href_schemes: "Sheme dopuštene u vezama uz http i https."
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
-    notify_about_flags_after: "Ako postoje zastavice koje nisu obrađene nakon toliko sati, pošaljite osobnu poruku moderatorima. Postavite na 0 za onemogućavanje."
-    show_create_topics_notice: "Ako stranica ima manje od 5 javnih tema, pokažite obavijest u kojoj se od administratora traži da kreiraju neke teme."
     delete_drafts_older_than_n_days: "Izbriši skice starije od (n) dana."
     delete_merged_stub_topics_after_days: "Broj dana čekanja prije automatskog brisanja potpuno spojenih tema. Postavite na 0 da nikada ne brišete nezavršene teme."
-    bootstrap_mode_min_users: "Minimalan broj korisnika potreban za onemogućavanje načina pokretanja (postavite na 0 za onemogućavanje)"
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
-    secure_media: "ZASTARJELO: Umjesto toga koristite postavku secure_uploads, bit će uklonjena u Discourse 3.0."
     secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
-    secure_media_allow_embed_images_in_emails: "ZASTARJELO: Koristite secure_uploads_allow_embed_images_in_emails, uklonit će se u Discourse 3.0."
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
-    secure_media_max_email_embed_image_size_kb: "ZASTARJELO: Koristite secure_uploads_max_email_embed_image_size_kb, bit će uklonjeno u Discourse 3.0."
     secure_uploads_max_email_embed_image_size_kb: "Ograničenje veličine za sigurne slike koje će biti ugrađene u e-poštu ako je omogućena postavka \"sigurni prijenosi dopuštaju ugradnju u e-poštu\". Bez uključene te postavke, ova postavka nema učinka."
     slug_generation_method: "Odaberite metodu stvaranja puževa. 'encoded' će generirati niz postotnog kodiranja. 'none' će uopće onemogućiti puž."
     enable_emoji: "Omogući emoji"
@@ -1453,7 +1438,6 @@ hr:
     enable_sitemap: "Generirajte kartu web stranice za svoju web stranicu i uključite je u datoteku robots.txt."
     sitemap_page_size: "Broj URL-ova koje treba uključiti u svaku stranicu karte web-lokacije. Najviše 50.000"
     enable_user_status: "(eksperimentalno) Omogućuje korisnicima postavljanje prilagođene statusne poruke (emoji + opis)."
-    enable_user_tips: "(eksperimentalno) Omogućite nove korisničke savjete koji korisnicima opisuju ključne značajke"
     short_title: "Kratki naslov koristit će se na korisničkom početnom zaslonu, pokretaču ili drugim mjestima gdje je prostor ograničen. Trebao bi biti ograničen na 12 znakova."
     dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
     dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
@@ -1470,10 +1454,6 @@ hr:
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
     navigation_menu: "Odredite koji navigacijski izbornik koristiti. Bočnu traku i navigaciju u zaglavlju korisnici mogu prilagoditi. Naslijeđena opcija dostupna je za kompatibilnost s prethodnim verzijama."
-    default_sidebar_categories: "Odabrane kategorije će prema zadanim postavkama biti prikazane u odjeljku Kategorije na bočnoj traci."
-    default_sidebar_tags: "Odabrane oznake će prema zadanim postavkama biti prikazane u odjeljku Oznake bočne trake."
-    enable_new_user_profile_nav_groups: "EKSPERIMENTALNO: Korisnicima odabranih grupa bit će prikazan novi navigacijski izbornik korisničkog profila"
-    enable_experimental_topic_timeline_groups: "EKSPERIMENTALNO: Korisnicima odabranih grupa prikazat će se refaktorirana vremenska traka teme"
     enable_experimental_hashtag_autocomplete: "EKSPERIMENTALNO: Upotrijebite novi #hashtag sustav automatskog dovršavanja za kategorije i oznake koji drugačije prikazuje odabranu stavku i ima poboljšano pretraživanje"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
@@ -1633,7 +1613,6 @@ hr:
     email:
       sent_test: "poslano!"
   user:
-    content_matches_auto_block_regex: "Sadržaj odgovara regularnom izrazu automatskog blokiranja"
     username:
       short: "mora imati najmanje %{min} znakova"
       long: "ne smije imati više od %{max} znakova"
@@ -1778,12 +1757,7 @@ hr:
       subject_template: "Dobrodošli na %{site_name}"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
-    dashboard_problems:
-      title: "Problemi nadzorne ploče"
-      subject_template: "Novi savjeti na vašoj nadzornoj ploči"
   user_notifications:
-    unsubscribe:
-      title: "Odjava"
     user_quoted:
       title: "Korisnik je citirao"
     digest:
@@ -1803,15 +1777,6 @@ hr:
     see_more: "Više"
     search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
-  login_required:
-    welcome_message: |
-      ## [Dobrodošli na %{title}](#welcome)
-      Nužno je prijaviti se korisničkim računom. Molimo učlanite se ili prijavite za nastavak.
-    welcome_message_invite_only: |
-      ## [Dobrodošli na %{title}] (#welcome)
-      Nužno je prijaviti se korisničkim računom. Molimo upitajte postojećeg korisnika za pozivnicu ili se prijavite za nastavak.
-  deleted: "izbrisao"
-  image: "slika"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
@@ -1921,7 +1886,6 @@ hr:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
-  joined: "Prijavljen"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'
@@ -1948,16 +1912,16 @@ hr:
       medium: "Srednji"
       high: "Visok"
     actions:
-      agree_and_suspend:
-        title: "Suspendiraj korisnika"
-      agree_and_silence:
-        title: "Ušuti korisnika"
+      agree:
+        title: "Da"
       delete_single:
         title: "Pobriši"
       disagree:
-        title: "Odbaci"
+        title: "Ne"
       ignore:
         title: "Zanemari"
+      ignore_and_do_nothing:
+        title: "Ne radi ništa"
       approve:
         title: "Odobri"
       reject_user:

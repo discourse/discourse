@@ -4,13 +4,35 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
-acceptance("Post inline mentions test", function (needs) {
+function topicWithoutUserStatus(topicId, mentionedUserId) {
+  const topic = cloneJSON(topicFixtures[`/t/${topicId}.json`]);
+  topic.archetype = "regular";
+  const firstPost = topic.post_stream.posts[0];
+  firstPost.cooked =
+    '<p>I am mentioning <a class="mention" href="/u/user1">@user1</a> again.</p>';
+  firstPost.mentioned_users = [
+    {
+      id: mentionedUserId,
+      username: "user1",
+      avatar_template: "/letter_avatar_proxy/v4/letter/a/bbce88/{size}.png",
+    },
+  ];
+  return topic;
+}
+
+function topicWithUserStatus(topicId, mentionedUserId, status) {
+  const topic = topicWithoutUserStatus(topicId, mentionedUserId);
+  topic.post_stream.posts[0].mentioned_users[0].status = status;
+  return topic;
+}
+
+acceptance("Post inline mentions", function (needs) {
   needs.user();
 
   const topicId = 130;
@@ -21,43 +43,19 @@ acceptance("Post inline mentions test", function (needs) {
     ends_at: null,
   };
 
-  function topicWithoutUserStatus() {
-    const topic = cloneJSON(topicFixtures[`/t/${topicId}.json`]);
-    const firstPost = topic.post_stream.posts[0];
-    firstPost.cooked =
-      '<p>I am mentioning <a class="mention" href="/u/user1">@user1</a> again.</p>';
-    firstPost.mentioned_users = [
-      {
-        id: mentionedUserId,
-        username: "user1",
-        avatar_template: "/letter_avatar_proxy/v4/letter/a/bbce88/{size}.png",
-      },
-    ];
-    return topic;
-  }
-
-  function topicWithUserStatus() {
-    const topic = topicWithoutUserStatus();
-    topic.post_stream.posts[0].mentioned_users[0].status = status;
-    return topic;
-  }
-
   test("shows user status on inline mentions", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
-      return response(topicWithUserStatus());
+      return response(topicWithUserStatus(topicId, mentionedUserId, status));
     });
 
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
-    const statusElement = query(".topic-post .cooked .mention .user-status");
-    assert.equal(
-      statusElement.title,
-      status.description,
-      "status description is correct"
+    const statusElement = query(
+      ".topic-post .cooked .mention .user-status-message img"
     );
     assert.ok(
       statusElement.src.includes(status.emoji),
@@ -67,12 +65,12 @@ acceptance("Post inline mentions test", function (needs) {
 
   test("inserts user status on message bus message", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
-      return response(topicWithoutUserStatus());
+      return response(topicWithoutUserStatus(topicId, mentionedUserId));
     });
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.notOk(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status isn't shown"
     );
 
@@ -84,14 +82,11 @@ acceptance("Post inline mentions test", function (needs) {
     });
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "user status is shown"
     );
-    const statusElement = query(".topic-post .cooked .mention .user-status");
-    assert.equal(
-      statusElement.title,
-      status.description,
-      "status description is correct"
+    const statusElement = query(
+      ".topic-post .cooked .mention .user-status-message img"
     );
     assert.ok(
       statusElement.src.includes(status.emoji),
@@ -101,12 +96,12 @@ acceptance("Post inline mentions test", function (needs) {
 
   test("updates user status on message bus message", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
-      return response(topicWithUserStatus());
+      return response(topicWithUserStatus(topicId, mentionedUserId, status));
     });
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "initial user status is shown"
     );
 
@@ -122,14 +117,11 @@ acceptance("Post inline mentions test", function (needs) {
     });
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "updated user status is shown"
     );
-    const statusElement = query(".topic-post .cooked .mention .user-status");
-    assert.equal(
-      statusElement.title,
-      newStatus.description,
-      "updated status description is correct"
+    const statusElement = query(
+      ".topic-post .cooked .mention .user-status-message img"
     );
     assert.ok(
       statusElement.src.includes(newStatus.emoji),
@@ -139,12 +131,12 @@ acceptance("Post inline mentions test", function (needs) {
 
   test("removes user status on message bus message", async function (assert) {
     pretender.get(`/t/${topicId}.json`, () => {
-      return response(topicWithUserStatus());
+      return response(topicWithUserStatus(topicId, mentionedUserId, status));
     });
     await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
 
     assert.ok(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "initial user status is shown"
     );
 
@@ -153,8 +145,94 @@ acceptance("Post inline mentions test", function (needs) {
     });
 
     assert.notOk(
-      exists(".topic-post .cooked .mention .user-status"),
+      exists(".topic-post .cooked .mention .user-status-message"),
       "updated user has disappeared"
+    );
+  });
+});
+
+acceptance("Post inline mentions – user status tooltip", function (needs) {
+  needs.user();
+
+  const topicId = 130;
+  const mentionedUserId = 1;
+  const status = {
+    description: "Surfing",
+    emoji: "surfing_man",
+    ends_at: null,
+  };
+
+  async function mouseEnter(selector) {
+    await triggerEvent(query(selector), "mouseenter");
+  }
+
+  test("shows user status tooltip", async function (assert) {
+    pretender.get(`/t/${topicId}.json`, () => {
+      return response(topicWithUserStatus(topicId, mentionedUserId, status));
+    });
+
+    await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
+    assert.ok(
+      exists(".topic-post .cooked .mention .user-status-message"),
+      "user status is shown"
+    );
+
+    await mouseEnter(".user-status-message");
+    const statusTooltip = document.querySelector(
+      ".user-status-message-tooltip"
+    );
+    assert.ok(statusTooltip, "status tooltip is shown");
+    assert.ok(
+      statusTooltip.querySelector("img").src.includes(status.emoji),
+      "emoji is correct"
+    );
+    assert.equal(
+      statusTooltip.querySelector(".user-status-tooltip-description").innerText,
+      status.description,
+      "status description is correct"
+    );
+  });
+});
+
+acceptance("Post inline mentions as an anonymous user", function () {
+  const topicId = 130;
+  const mentionedUserId = 1;
+  const status = {
+    description: "Surfing",
+    emoji: "surfing_man",
+    ends_at: null,
+  };
+
+  test("an anonymous user can see user status on mentions", async function (assert) {
+    pretender.get(`/t/${topicId}.json`, () => {
+      const topic = topicWithUserStatus(topicId, mentionedUserId, status);
+      return response(topic);
+    });
+    await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
+
+    assert.ok(
+      exists(".topic-post .cooked .mention .user-status-message"),
+      "user status is shown"
+    );
+  });
+
+  test("an anonymous user can see user status with an end date on mentions", async function (assert) {
+    pretender.get(`/t/${topicId}.json`, () => {
+      const statusWithEndDate = Object.assign(status, {
+        ends_at: "2100-02-01T09:00:00.000Z",
+      });
+      const topic = topicWithUserStatus(
+        topicId,
+        mentionedUserId,
+        statusWithEndDate
+      );
+      return response(topic);
+    });
+    await visit(`/t/lorem-ipsum-dolor-sit-amet/${topicId}`);
+
+    assert.ok(
+      exists(".topic-post .cooked .mention .user-status-message"),
+      "user status is shown"
     );
   });
 });

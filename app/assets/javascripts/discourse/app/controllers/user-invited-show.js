@@ -30,6 +30,10 @@ export default Controller.extend({
   },
 
   @observes("searchTerm")
+  searchTermChanged() {
+    this._searchTermChanged();
+  },
+
   @debounce(INPUT_DELAY)
   _searchTermChanged() {
     Invite.findInvitedBy(this.user, this.filter, this.searchTerm).then(

@@ -1,0 +1,51 @@
+body.static-login {
+  background-color: var(--primary-very-low);
+
+  .d-header {
+    display: none;
+  }
+
+  .body-page {
+    margin: 15% auto;
+  }
+
+  .logo-container {
+    border-bottom: 1px solid var(--primary-low);
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    display: block;
+  }
+
+  .site-logo {
+    width: auto;
+    object-fit: contain;
+    max-width: 60%;
+    max-height: 150px;
+  }
+
+  .waving-hand {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 1em;
+  }
+
+  .login-welcome {
+    background-color: var(--secondary);
+    border: 1px solid var(--primary-low);
+    text-align: center;
+    padding: 2em;
+    box-shadow: var(--shadow-card);
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+
+    &__text {
+      order: 4;
+      color: var(--primary-medium);
+    }
+
+    .body-page-button-container {
+      order: 3;
+    }
+  }
+}

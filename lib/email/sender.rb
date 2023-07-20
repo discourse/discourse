@@ -122,7 +122,7 @@ module Email
           if from_address.blank?
             nil
           else
-            Group.where(email_username: from_address, smtp_enabled: true).pluck_first(:id)
+            Group.where(email_username: from_address, smtp_enabled: true).pick(:id)
           end
         )
 
@@ -294,6 +294,8 @@ module Email
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
       end
 
+      DiscourseEvent.trigger(:after_email_send, @message, @email_type)
+
       email_log.save!
       email_log
     end
@@ -361,7 +363,7 @@ module Email
             if attached_upload.local?
               Discourse.store.path_for(attached_upload)
             else
-              Discourse.store.download(attached_upload).path
+              Discourse.store.download!(attached_upload).path
             end
 
           @message_attachments_index[original_upload.sha1] = @message.attachments.size

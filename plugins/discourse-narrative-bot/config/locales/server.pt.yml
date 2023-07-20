@@ -45,9 +45,6 @@ pt:
       trigger: "rolar"
       invalid: |-
         Sinto muito, é matematicamente impossível rolar essa combinação de dados. :confounded:
-      not_enough_dice:
-        one: "Eu só tenho %{count} dado. [Vergonhoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), eu sei!"
-        other: "Eu só tenho %{count} dados. [Vergonhoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), eu sei!"
       out_of_range: |-
         Você sabia que [o número máximo de lados] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) de um dado matematicamente justo é 120?
       results: |-

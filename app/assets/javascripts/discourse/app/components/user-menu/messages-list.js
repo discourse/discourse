@@ -1,7 +1,6 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
-import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
@@ -47,6 +46,12 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     // we can stop using `get()` when the User model is refactored into native
     // class with @tracked properties.
     return this.currentUser.get(key) || 0;
+  }
+
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.messages", {
+      count: this.#unreadMessagesNotifications,
+    });
   }
 
   async fetchItems() {
@@ -96,16 +101,5 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     });
 
     return content;
-  }
-
-  dismissWarningModal() {
-    const modalController = showModal("dismiss-notification-confirmation");
-    modalController.set(
-      "confirmationMessage",
-      I18n.t("notifications.dismiss_confirmation.body.messages", {
-        count: this.#unreadMessagesNotifications,
-      })
-    );
-    return modalController;
   }
 }

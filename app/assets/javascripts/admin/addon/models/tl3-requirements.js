@@ -1,21 +1,21 @@
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default EmberObject.extend({
+export default class Tl3Requirements extends EmberObject {
   @discourseComputed("days_visited", "time_period")
   days_visited_percent(daysVisited, timePeriod) {
     return Math.round((daysVisited * 100) / timePeriod);
-  },
+  }
 
   @discourseComputed("min_days_visited", "time_period")
   min_days_visited_percent(minDaysVisited, timePeriod) {
     return Math.round((minDaysVisited * 100) / timePeriod);
-  },
+  }
 
   @discourseComputed("num_topics_replied_to", "min_topics_replied_to")
   capped_topics_replied_to(numReplied, minReplied) {
     return numReplied > minReplied;
-  },
+  }
 
   @discourseComputed(
     "days_visited",
@@ -71,5 +71,5 @@ export default EmberObject.extend({
       silenced: this.get("penalty_counts.silenced") === 0,
       suspended: this.get("penalty_counts.suspended") === 0,
     };
-  },
-});
+  }
+}

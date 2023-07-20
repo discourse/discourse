@@ -1,3 +1,5 @@
+<PluginOutlet @name="admin-users-list-show-before" />
+
 <div class="admin-title">
   <h2>{{this.title}}</h2>
   {{#if this.canCheckEmails}}
@@ -24,170 +26,254 @@
     @title={{this.searchHint}}
   />
 </div>
-
 <LoadMore
   @class="users-list-container"
-  @selector=".users-list tr"
+  @selector=".directory-table .directory-table__cell"
   @action={{action "loadMore"}}
 >
   {{#if this.model}}
-    <table class="table users-list grid" role="table" aria-label={{this.title}}>
-      <thead>
-        <tr>
-          <TableHeaderToggle
-            @field="username"
-            @labelKey="username"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <TableHeaderToggle
-            @class={{if this.showEmails "" "hidden"}}
-            @field="email"
-            @labelKey="email"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <TableHeaderToggle
-            @field="last_emailed"
-            @labelKey="admin.users.last_emailed"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <TableHeaderToggle
-            @field="seen"
-            @labelKey="last_seen"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <TableHeaderToggle
-            @field="topics_viewed"
-            @labelKey="admin.user.topics_entered"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <TableHeaderToggle
-            @field="posts_read"
-            @labelKey="admin.user.posts_read_count"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <TableHeaderToggle
-            @field="read_time"
-            @labelKey="admin.user.time_read"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <TableHeaderToggle
-            @field="created"
-            @labelKey="created"
-            @order={{this.order}}
-            @asc={{this.asc}}
-            @automatic={{true}}
-          />
-          <PluginOutlet
-            @name="admin-users-list-thead-after"
-            @args={{hash order=this.order asc=this.asc}}
-          />
 
-          {{#if this.siteSettings.must_approve_users}}
-            <th>{{i18n "admin.users.approved"}}</th>
-          {{/if}}
-          <th>&nbsp;</th>
-        </tr>
-      </thead>
-      <tbody>
+    <ResponsiveTable
+      @className="users-list"
+      @aria-label={{this.title}}
+      @style={{html-safe
+        (concat
+          "grid-template-columns: minmax(min-content, 2fr) repeat("
+          (html-safe this.columnCount)
+          ", minmax(min-content, 1fr))"
+        )
+      }}
+      @updates={{this.model.email}}
+    >
+
+      <:header>
+        <TableHeaderToggle
+          @class="directory-table__column-header--username"
+          @field="username"
+          @labelKey="username"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <TableHeaderToggle
+          @class={{if
+            this.showEmails
+            "directory-table__column-header--email"
+            "hidden"
+          }}
+          @field="email"
+          @labelKey="email"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <TableHeaderToggle
+          @field="last_emailed"
+          @labelKey="admin.users.last_emailed"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <TableHeaderToggle
+          @field="seen"
+          @labelKey="last_seen"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <TableHeaderToggle
+          @field="topics_viewed"
+          @labelKey="admin.user.topics_entered"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <TableHeaderToggle
+          @field="posts_read"
+          @labelKey="admin.user.posts_read_count"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <TableHeaderToggle
+          @field="read_time"
+          @labelKey="admin.user.time_read"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <TableHeaderToggle
+          @field="created"
+          @labelKey="created"
+          @order={{this.order}}
+          @asc={{this.asc}}
+          @automatic={{true}}
+        />
+        <PluginOutlet
+          @name="admin-users-list-thead-after"
+          @outletArgs={{hash order=this.order asc=this.asc}}
+        />
+
+        {{#if this.siteSettings.must_approve_users}}
+          <div class="directory-table__column-header">{{i18n
+              "admin.users.approved"
+            }}</div>
+        {{/if}}
+        <div class="directory-table__column-header">&nbsp;</div>
+
+      </:header>
+
+      <:body>
         {{#each this.model as |user|}}
-          <tr
+          <div
             class="user
               {{user.selected}}
-              {{unless user.active 'not-activated'}}"
+              {{unless user.active 'not-activated'}}
+              directory-table__row"
           >
-            <td class="username">
-              <a href={{user.path}} data-user-card={{user.username}}>
+            <div class="directory-table__cell username">
+              <a
+                class="avatar"
+                href={{user.path}}
+                data-user-card={{user.username}}
+              >
                 {{avatar user imageSize="small"}}
               </a>
-              <LinkTo
-                @route="adminUser"
-                @model={{user}}
-              >{{user.username}}</LinkTo>
+              <LinkTo @route="adminUser" @model={{user}}>
+                {{user.username}}
+              </LinkTo>
               {{#if user.staged}}
                 {{d-icon "far-envelope" title="user.staged"}}
               {{/if}}
-            </td>
-            <td class="email {{if this.showEmails '' 'hidden'}}">
-              {{~user.email~}}
-            </td>
+            </div>
+            <div
+              class="directory-table__cell email
+                {{if this.showEmails '' 'hidden'}}"
+            >
+              <span class="directory-table__value">
+                {{~user.email~}}
+              </span>
+            </div>
 
             {{#if user.last_emailed_at}}
-              <td class="last-emailed" title={{raw-date user.last_emailed_at}}>
-                <div class="label">{{i18n "admin.users.last_emailed"}}</div>
-                <div>{{format-duration user.last_emailed_age}}</div>
-              </td>
+              <div
+                class="directory-table__cell last-emailed"
+                title={{raw-date user.last_emailed_at}}
+              >
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.last_emailed"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{format-duration user.last_emailed_age}}
+                </span>
+              </div>
             {{else}}
-              <td class="last-emailed">
-                <div class="label">{{i18n "admin.users.last_emailed"}}</div>
-                <div>{{format-duration user.last_emailed_age}}</div>
-              </td>
+              <div class="directory-table__cell last-emailed">
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.last_emailed"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{format-duration user.last_emailed_age}}
+                </span>
+              </div>
             {{/if}}
 
-            <td class="last-seen" title={{raw-date user.last_seen_at}}>
-              <div class="label">{{i18n "last_seen"}}</div>
-              <div>{{format-duration user.last_seen_age}}</div>
-            </td>
-            <td class="topics-entered">
-              <div class="label">{{i18n "admin.user.topics_entered"}}</div>
-              <div>{{number user.topics_entered}}</div>
-            </td>
-            <td class="posts-read">
-              <div class="label">{{i18n "admin.user.posts_read_count"}}</div>
-              <div>{{number user.posts_read_count}}</div>
-            </td>
-            <td class="time-read">
-              <div class="label">{{i18n "admin.user.time_read"}}</div>
-              <div>{{format-duration user.time_read}}</div>
-            </td>
-
-            <td class="created" title={{raw-date user.created_at}}>
-              <div class="label">{{i18n "created"}}</div>
-              <div>{{format-duration user.created_at_age}}</div>
-            </td>
+            <div
+              class="directory-table__cell last-seen"
+              title={{raw-date user.last_seen_at}}
+            >
+              <span class="directory-table__label">
+                <span>{{i18n "last_seen"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{format-duration user.last_seen_age}}
+              </span>
+            </div>
+            <div class="directory-table__cell topics-entered">
+              <span class="directory-table__label">
+                <span>{{i18n "admin.user.topics_entered"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{number user.topics_entered}}
+              </span>
+            </div>
+            <div class="directory-table__cell posts-read">
+              <span class="directory-table__label">
+                <span>{{i18n "admin.user.posts_read_count"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{number user.posts_read_count}}
+              </span>
+            </div>
+            <div class="directory-table__cell time-read">
+              <span class="directory-table__label">
+                <span>{{i18n "admin.user.time_read"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{format-duration user.time_read}}
+              </span>
+            </div>
+            <div
+              class="directory-table__cell created"
+              title={{raw-date user.created_at}}
+            >
+              <span class="directory-table__label">
+                <span>{{i18n "created"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{format-duration user.created_at_age}}
+              </span>
+            </div>
 
             <PluginOutlet
               @name="admin-users-list-td-after"
-              @args={{hash user=user query=this.query}}
+              @outletArgs={{hash user=user query=this.query}}
             />
 
             {{#if this.siteSettings.must_approve_users}}
-              <td>{{i18n-yes-no user.approved}}</td>
+              <div class="directory-table__cell">
+                <span class="directory-table__label">
+                  <span>{{i18n "admin.users.approved"}}</span>
+                </span>
+                <span class="directory-table__value">
+                  {{i18n-yes-no user.approved}}
+                </span>
+              </div>
             {{/if}}
 
-            <td class="user-status">
-              {{#if user.admin}}
-                {{d-icon "shield-alt" title="admin.title"}}
-              {{/if}}
-              {{#if user.moderator}}
-                {{d-icon "shield-alt" title="admin.moderator"}}
-              {{/if}}
-              {{#if user.second_factor_enabled}}
-                {{d-icon "lock" title="admin.user.second_factor_enabled"}}
-              {{/if}}
+            <div
+              class="directory-table__cell user-role{{if
+                  (or user.admin user.moderator user.second_factor_enabled)
+                  ''
+                  '--empty'
+                }}"
+            >
+              <span class="directory-table__label">
+                <span>{{i18n "admin.users.status"}}</span>
+              </span>
+              <span class="directory-table__value">
+                {{#if user.admin}}
+                  {{d-icon "shield-alt" title="admin.title"}}
+                {{/if}}
+                {{#if user.moderator}}
+                  {{d-icon "shield-alt" title="admin.moderator"}}
+                {{/if}}
+                {{#if user.second_factor_enabled}}
+                  {{d-icon "lock" title="admin.user.second_factor_enabled"}}
+                {{/if}}
+              </span>
               <PluginOutlet
                 @name="admin-users-list-icon"
                 @connectorTagName="div"
-                @args={{hash user=user query=this.query}}
+                @outletArgs={{hash user=user query=this.query}}
               />
-            </td>
-          </tr>
+            </div>
+          </div>
         {{/each}}
-      </tbody>
-    </table>
+      </:body>
+
+    </ResponsiveTable>
+
     <ConditionalLoadingSpinner @condition={{this.refreshing}} />
   {{else}}
     <p>{{i18n "search.no_results"}}</p>

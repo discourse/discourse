@@ -22,6 +22,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_svg = options[:keep_svg] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
+    @start_hashtag_icon = false
     @in_details_depth = 0
     @summary_contents = +""
     @detail_contents = +""
@@ -98,7 +99,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       end
     when "aside"
       attributes = Hash[*attributes.flatten]
-      unless (@keep_onebox_source || @keep_onebox_body) && attributes["class"]&.include?("onebox")
+      if !(@keep_onebox_source || @keep_onebox_body) || !attributes["class"]&.include?("onebox")
         @in_quote = true
       end
 
@@ -112,10 +113,14 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "header"
       @in_quote = !@keep_onebox_source if attributes.include?(%w[class source])
     when "div", "span"
-      if attributes.include?(%w[class excerpt])
+      attributes = Hash[*attributes.flatten]
+      if attributes["class"]&.include?("excerpt")
         @excerpt = +""
         @current_length = 0
         @start_excerpt = true
+      elsif attributes["class"]&.include?("hashtag-icon-placeholder")
+        @start_hashtag_icon = true
+        include_tag(name, attributes)
       end
     when "details"
       @detail_contents = +"" if @in_details_depth == 0
@@ -180,6 +185,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
+      characters("</span>", truncate: false, count_it: false, encode: false) if @start_hashtag_icon
     when "svg"
       characters("</svg>", truncate: false, count_it: false, encode: false) if @keep_svg
       @in_svg = false

@@ -138,7 +138,6 @@ sq:
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
-    bootstrap_invite_button_title: "Dërgo ftesa"
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -220,7 +219,6 @@ sq:
       title: "Të preferuarat"
       clear_bookmarks: "Pastro të preferuarat"
       help:
-        bookmark: "Kliko për të shtuar tek të preferuarat e tua postimin e parë të kësaj teme."
         unbookmark: "Kliko për të hequr të preferuarat nga kjo temë"
     bookmarks:
       not_bookmarked: "shto postimin tek të preferuarat"
@@ -280,7 +278,7 @@ sq:
         refresh: "Rifresko"
         category: "Kategori"
       scores:
-        type: "Lloji"
+        type: "Arsye"
       statuses:
         pending:
           title: "Në pritje"
@@ -288,6 +286,8 @@ sq:
           title: "Aprovuar më"
         rejected:
           title: "Rejected"
+      context_question:
+        delimiter: "ose"
       types:
         reviewable_user:
           title: "User"
@@ -498,10 +498,6 @@ sq:
       profile: "Profili"
       mute: "Hesht"
       edit: "Ndrysho preferencat"
-      download_archive:
-        confirm: "Vërtet doni t'i shkarkoni postimet tuaja?"
-        success: "Shkarkimi filloi, do të njoftoheni me një mesazh kur të jetë gati. "
-        rate_limit_error: "Postimet mund të shkarkohen një herë në ditë, provoni përsëri nesër. "
       new_private_message: "Mesazh i ri"
       private_message: "Mesazh"
       private_messages: "Mesazhet"
@@ -592,12 +588,6 @@ sq:
       api_approved: "Aprovuar më:"
       theme: "Tema"
       staged: "Staged"
-      staff_counters:
-        flags_given: "sinjalizime të dobishme"
-        flagged_posts: "postimet e sinjalizuara"
-        deleted_posts: "postimet e fshira"
-        suspensions: "pezullimet"
-        warnings_received: "paralajmërimet"
       messages:
         inbox: "Inbox"
         latest: "Të fundit"
@@ -639,7 +629,6 @@ sq:
       second_factor_backup:
         regenerate: "Rigjenero"
         disable: "Çaktivizo"
-        enable: "Aktivizo"
       second_factor:
         name: "Emri"
         disable: "Çaktivizo"
@@ -912,7 +901,6 @@ sq:
       hide_forever: "jo faleminderit"
     summary:
       enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
-      enable: "Përmblidhe këtë Temë"
       disable: "Shfaq të gjithë postimet"
     deleted_filter:
       enabled_description: "Kjo temë përmban postime të fshira, që tani janë fshehur."
@@ -1032,8 +1020,6 @@ sq:
         title_missing: "Titulli është i nevojshëm"
         category_missing: "Duhet të zgjidhni një kategori"
       save_edit: "Ruani modifikimet"
-      reply_original: "Përgjigjuni temës origjinale"
-      reply_here: "Përgjigju këtu"
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Krijo temën"
@@ -1240,8 +1226,6 @@ sq:
       back_to_list: "Kthehu tek lista e temave"
       options: "Opsionet e temës"
       show_links: "trego lidhjet në këtë temë"
-      jump_reply_up: hidhe tek përgjigja paraardhëse
-      jump_reply_down: hidhu tek përgjigja pasardhëse
       deleted: "Tema është fshirë"
       slow_mode_update:
         enable: "Aktivizo"
@@ -1539,7 +1523,6 @@ sq:
       view: "Shiko temat në kategorinë"
       general: "Karakteristika të përgjithshme"
       settings: "Rregullimet"
-      topic_template: "Shabllon i Temës"
       tags: "Etiketat"
       tags_placeholder: "(Opsionale) lista e etiketave të lejuara"
       tag_groups_placeholder: "(Opsionale) lista e grupeve të etiketave"
@@ -1577,8 +1560,6 @@ sq:
       images: "Imazhet"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
-      email_in_disabled: "Postimi i temave të reja me email është çaktivizuar në Rregullimet e faqes. Për të aktivizuar postimet e temave të reja me email,"
-      email_in_disabled_click: 'aktivizo rregullimin "email in".'
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       edit_permissions: "Ndryshoni autorizimet"
       review_group_name: "emri i grupit"
@@ -1712,6 +1693,10 @@ sq:
     filters:
       with_topics: "Temat nga %{filter}"
       with_category: "Temat nga: %{filter}, %{category}"
+      filter:
+        title: "Filtro"
+        button:
+          label: "Filtro"
       latest:
         title: "Më të fundit"
         title_with_count:
@@ -1839,7 +1824,6 @@ sq:
         one: "Kjo stemë është fituar %{count} herë"
         other: "Kjo stemë është fituar %{count} herë"
       granted_on: "Atribuar më %{date}"
-      others_count: "Të tjerë me këtë stemë (%{count})"
       title: Stemat
       allow_title: "Mund t'a përdorësh këtë stemë si titull"
       multiple_grant: "Kjo stemë mund të fitohet disa herë"
@@ -1923,10 +1907,6 @@ sq:
       back: "Kthehu mbrapa"
       share: "Shpërndaje"
       dismiss: "Hiqe"
-    pause_notifications:
-      remaining: "edhe %{remaining} gërmë"
-      options:
-        custom: "Grupet e krijuara"
     trust_levels:
       names:
         newuser: "anëtar i ri"
@@ -1943,7 +1923,18 @@ sq:
         other: "%{count} të reja"
       more: "Më shumë"
       all_categories: "Të gjitha kategoritë"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Të Gjithë"
       sections:
+        custom:
+          save: "Ruaj"
+          delete: "Fshij"
+          links:
+            icon:
+              label: "Ikonë"
+            name:
+              label: "Emri juaj"
         about:
           header_link_text: "Rreth"
         messages:
@@ -1961,7 +1952,8 @@ sq:
         categories:
           header_link_text: "Categories"
         community:
-          header_link_text: "Komuniteti"
+          edit_section:
+            header_dropdown: "Personalizo"
           links:
             about:
               content: "Rreth"
@@ -1969,6 +1961,8 @@ sq:
               content: "Admin"
             badges:
               content: "Stemat"
+            topics:
+              content: "Topics"
             faq:
               content: "Pyetje të shpeshta"
             groups:
@@ -1977,6 +1971,11 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Ju lutem shkruani një vlerë të vlefshme."
+          email: "Ju lutemi të vendosni një email të vlefshëm."
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:
@@ -2104,7 +2103,6 @@ sq:
         enabled: "Aktivizuar?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Ndrysho Rregullimet"
         change_settings_short: "Rregullimet"
         howto: "Si mund të instaloj një plugin?"
       backups:
@@ -2414,6 +2412,32 @@ sq:
           flag: "Sinjalizoni"
         form:
           add: "Shto"
+      form_templates:
+        nav_title: "Shabllonet"
+        list_table:
+          headings:
+            name: "Emri"
+            actions: "Veprimet"
+        view_template:
+          close: "Mbyll"
+          edit: "Redakto"
+          delete: "Fshij"
+        new_template_form:
+          submit: "Ruaj"
+          cancel: "Anulo"
+          preview: "Parashikimi"
+        quick_insert_fields:
+          add_new_field: "Shto"
+          dropdown: "Listë Dropdown"
+        validations_modal:
+          table_headers:
+            type: "Lloji"
+            description: "Përshkrimi"
+          validations:
+            required:
+              key: "i nevojshëm"
+            type:
+              key: "lloji"
       impersonate:
         title: "Personifiko"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -2465,7 +2489,6 @@ sq:
         staged: "Staged?"
         show_admin_profile: "Admin"
         show_public_profile: "Shfaq Profilin Publik"
-        impersonate: "Personifiko"
         ip_lookup: "Shiko IP"
         log_out: "Shkëputu"
         logged_out: "Përdoruesi i shkëput nga të gjitha paisjet"
@@ -2697,7 +2720,7 @@ sq:
         allow_title: Lejoni stemën të përdoret si titull
         multiple_grant: Mund të akordohet disa herë
         listable: Shfaqni stemën në faqen publike të stemave
-        enabled: Aktivizoni stemën
+        enabled: aktivizuar
         icon: Ikonë
         image: Imazh
         query: Query Steme (SQL)

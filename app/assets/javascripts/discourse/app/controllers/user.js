@@ -194,11 +194,8 @@ export default Controller.extend(CanCheckEmails, {
     if (!this.currentUser?.staff) {
       return false;
     }
-    if (this.currentUser?.redesigned_user_page_nav_enabled) {
-      return this.site.desktopView;
-    } else {
-      return true;
-    }
+
+    return this.site.desktopView;
   },
 
   @action

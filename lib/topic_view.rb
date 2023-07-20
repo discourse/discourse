@@ -31,8 +31,6 @@ class TopicView
     :personal_message,
     :can_review_topic,
     :page,
-    :mentioned_users,
-    :mentions,
   )
   alias queued_posts_enabled? queued_posts_enabled
 
@@ -144,9 +142,6 @@ class TopicView
       end
     end
 
-    parse_mentions
-    load_mentioned_users
-
     TopicView.preload(self)
 
     @draft_key = @topic.draft_key
@@ -249,9 +244,9 @@ class TopicView
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id &&
            @topic.category
         title += " - #{@topic.category.name}"
-      elsif SiteSetting.tagging_enabled && @topic.tags.exists?
+      elsif SiteSetting.tagging_enabled && visible_tags.exists?
         title +=
-          " - #{@topic.tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
+          " - #{visible_tags.order("tags.#{Tag.topic_count_column(@guardian)} DESC").first.name}"
       end
     end
     title
@@ -610,7 +605,16 @@ class TopicView
 
   def suggested_topics
     if @include_suggested
-      @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+      @suggested_topics ||=
+        begin
+          kwargs =
+            DiscoursePluginRegistry.apply_modifier(
+              :topic_view_suggested_topics_options,
+              { include_random: true, pm_params: pm_params },
+              self,
+            )
+          TopicQuery.new(@user).list_suggested_for(topic, **kwargs)
+        end
     else
       nil
     end
@@ -676,7 +680,7 @@ class TopicView
   end
 
   def filtered_post_id(post_number)
-    @filtered_posts.where(post_number: post_number).pluck_first(:id)
+    @filtered_posts.where(post_number: post_number).pick(:id)
   end
 
   def is_mega_topic?
@@ -684,7 +688,7 @@ class TopicView
   end
 
   def last_post_id
-    @filtered_posts.reverse_order.pluck_first(:id)
+    @filtered_posts.reverse_order.pick(:id)
   end
 
   def current_post_number
@@ -701,17 +705,25 @@ class TopicView
     @topic.published_page
   end
 
-  def parse_mentions
-    @mentions = @posts.to_h { |p| [p.id, p.mentions] }.reject { |_, v| v.empty? }
+  def mentioned_users
+    @mentioned_users ||=
+      begin
+        mentions = @posts.to_h { |p| [p.id, p.mentions] }.reject { |_, v| v.empty? }
+        usernames = mentions.values
+        usernames.flatten!
+        usernames.uniq!
+
+        users = User.where(username: usernames).includes(:user_status).index_by(&:username)
+
+        mentions.reduce({}) do |hash, (post_id, post_mentioned_usernames)|
+          hash[post_id] = post_mentioned_usernames.map { |username| users[username] }.compact
+          hash
+        end
+      end
   end
 
-  def load_mentioned_users
-    usernames = @mentions.values.flatten.uniq
-    mentioned_users = User.where(username: usernames)
-
-    mentioned_users = mentioned_users.includes(:user_status) if SiteSetting.enable_user_status
-
-    @mentioned_users = mentioned_users.to_h { |u| [u.username, u] }
+  def summarizable?
+    Summarization::Base.can_see_summary?(@topic, @user)
   end
 
   protected
@@ -815,13 +827,9 @@ class TopicView
   end
 
   def find_topic(topic_or_topic_id)
-    if topic_or_topic_id.is_a?(Topic)
-      topic_or_topic_id
-    else
-      # with_deleted covered in #check_and_raise_exceptions
-      finder = Topic.with_deleted.where(id: topic_or_topic_id).includes(:category)
-      finder.first
-    end
+    return topic_or_topic_id if topic_or_topic_id.is_a?(Topic)
+    # with_deleted covered in #check_and_raise_exceptions
+    Topic.with_deleted.includes(:category).find_by(id: topic_or_topic_id)
   end
 
   def unfiltered_posts
@@ -990,5 +998,9 @@ class TopicView
         StaffActionLogger.new(@user).log_check_personal_message(@topic)
       end
     end
+  end
+
+  def visible_tags
+    @visible_tags ||= topic.tags.visible(guardian)
   end
 end

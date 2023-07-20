@@ -1,0 +1,20 @@
+@mixin chat-height($inset: 0px) {
+  // desktop and mobile
+  height: calc(
+    var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+      var(--composer-height, 0px)
+  );
+
+  // mobile with keyboard opened
+  .keyboard-visible & {
+    height: calc(var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px));
+  }
+
+  // ipad
+  .footer-nav-ipad & {
+    height: calc(
+      var(--chat-vh, 1vh) * 100 - var(--header-offset, 0px) -
+        var(--composer-height, 0px)
+    );
+  }
+}

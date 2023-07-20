@@ -8,6 +8,21 @@ class CategoryList
 
   attr_accessor :categories, :uncategorized
 
+  def self.register_included_association(association)
+    @included_assocations ||= []
+    @included_assocations << association if !@included_assocations.include?(association)
+  end
+
+  def self.included_associations
+    [
+      :uploaded_background,
+      :uploaded_logo,
+      :uploaded_logo_dark,
+      :topic_only_relative_url,
+      subcategories: [:topic_only_relative_url],
+    ].concat(@included_assocations || [])
+  end
+
   def initialize(guardian = nil, options = {})
     @guardian = guardian || Guardian.new
     @options = options
@@ -71,12 +86,17 @@ class CategoryList
 
     if @guardian.authenticated?
       @all_topics =
-        @all_topics.joins(
-          "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
-        ).where(
-          "COALESCE(tu.notification_level,1) > :muted",
-          muted: TopicUser.notification_levels[:muted],
-        )
+        @all_topics
+          .joins(
+            "LEFT JOIN topic_users tu ON topics.id = tu.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
+          )
+          .joins(
+            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{@guardian.user.id}",
+          )
+          .where(
+            "COALESCE(tu.notification_level,1) > :muted",
+            muted: TopicUser.notification_levels[:muted],
+          )
     end
 
     @all_topics = TopicQuery.remove_muted_tags(@all_topics, @guardian.user).includes(:last_poster)
@@ -104,24 +124,19 @@ class CategoryList
   end
 
   def find_categories
-    @categories =
-      Category.includes(
-        :uploaded_background,
-        :uploaded_logo,
-        :uploaded_logo_dark,
-        :topic_only_relative_url,
-        subcategories: [:topic_only_relative_url],
-      ).secured(@guardian)
+    query = Category.includes(CategoryList.included_associations).secured(@guardian)
 
-    @categories =
-      @categories.where(
+    query =
+      query.where(
         "categories.parent_category_id = ?",
         @options[:parent_category_id].to_i,
       ) if @options[:parent_category_id].present?
 
-    @categories = self.class.order_categories(@categories)
+    query = self.class.order_categories(query)
+    query =
+      DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
-    @categories = @categories.to_a
+    @categories = query.to_a
 
     include_subcategories = @options[:include_subcategories] == true
 

@@ -134,12 +134,14 @@ class Draft < ActiveRecord::Base
   end
 
   def self.clear(user, key, sequence)
-    return if !user || !user.id || !User.human_user_id?(user.id)
+    if !user || !user.id || !User.human_user_id?(user.id)
+      raise StandardError.new("user not present")
+    end
 
     current_sequence = DraftSequence.current(user, key)
 
     # bad caller is a reason to complain
-    raise Draft::OutOfSequence if sequence != current_sequence
+    raise Draft::OutOfSequence.new("bad draft sequence") if sequence != current_sequence
 
     # corrupt data is not a reason not to leave data
     Draft.where(user_id: user.id, draft_key: key).destroy_all
@@ -252,7 +254,7 @@ class Draft < ActiveRecord::Base
     reply = JSON.parse(data)["reply"] || ""
     return if reply.length < SiteSetting.backup_drafts_to_pm_length
 
-    post_id = BackupDraftPost.where(user_id: user.id, key: key).pluck_first(:post_id)
+    post_id = BackupDraftPost.where(user_id: user.id, key: key).pick(:post_id)
     post = Post.where(id: post_id).first if post_id
 
     BackupDraftPost.where(user_id: user.id, key: key).delete_all if post_id && !post
@@ -305,7 +307,7 @@ class Draft < ActiveRecord::Base
   end
 
   def self.ensure_draft_topic!(user)
-    topic_id = BackupDraftTopic.where(user_id: user.id).pluck_first(:topic_id)
+    topic_id = BackupDraftTopic.where(user_id: user.id).pick(:topic_id)
     topic = Topic.find_by(id: topic_id) if topic_id
 
     BackupDraftTopic.where(user_id: user.id).delete_all if topic_id && !topic

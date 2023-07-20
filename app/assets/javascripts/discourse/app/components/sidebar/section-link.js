@@ -1,6 +1,24 @@
 import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
 
+/**
+ * Checks if a given string is a valid color hex code.
+ *
+ * @param {String|undefined} input Input string to check if it is a valid color hex code. Can be in the form of "FFFFFF" or "#FFFFFF" or "FFF" or "#FFF".
+ * @returns {String|undefined} Returns the matching color hex code without the leading `#` if it is valid, otherwise returns undefined. Example: "FFFFFF" or "FFF".
+ */
+export function isHex(input) {
+  const match = input?.match(/^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/);
+
+  if (match) {
+    return match[1];
+  } else {
+    return;
+  }
+}
 export default class SectionLink extends Component {
+  @service currentUser;
+
   willDestroy() {
     if (this.args.willDestroy) {
       this.args.willDestroy();
@@ -22,17 +40,22 @@ export default class SectionLink extends Component {
   }
 
   get classNames() {
-    let classNames = [
-      "sidebar-section-link",
-      `sidebar-section-link-${this.args.linkName}`,
-      "sidebar-row",
-    ];
+    let classNames = ["sidebar-section-link", "sidebar-row"];
 
     if (this.args.class) {
       classNames.push(this.args.class);
     }
 
     return classNames.join(" ");
+  }
+
+  get target() {
+    if (this.args.fullReload) {
+      return "_self";
+    }
+    return this.currentUser?.user_option?.external_links_in_new_tab
+      ? "_blank"
+      : "_self";
   }
 
   get models() {
@@ -48,28 +71,12 @@ export default class SectionLink extends Component {
   }
 
   get prefixColor() {
-    const color = this.args.prefixColor;
+    const hexCode = isHex(this.args.prefixColor);
 
-    if (!color || !color.match(/^\w{6}$/)) {
-      return "";
-    }
-
-    return "#" + color;
-  }
-
-  get prefixElementColors() {
-    if (!this.args.prefixElementColors) {
+    if (hexCode) {
+      return `#${hexCode}`;
+    } else {
       return;
     }
-
-    const prefixElementColors = this.args.prefixElementColors.filter((color) =>
-      color?.slice(0, 6)
-    );
-
-    if (prefixElementColors.length === 1) {
-      prefixElementColors.push(prefixElementColors[0]);
-    }
-
-    return prefixElementColors.map((color) => `#${color} 50%`).join(", ");
   }
 }

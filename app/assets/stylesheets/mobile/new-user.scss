@@ -1,33 +1,4 @@
 .new-user-wrapper {
-  .user-navigation {
-    width: 100%;
-
-    .nav-pills {
-      overflow-x: auto;
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-  }
-
-  // For backwards compatibility with legacy design
-  .user-secondary-navigation {
-    margin-top: 1.5em;
-  }
-
-  .user-navigation-secondary {
-    font-size: var(--font-up-1);
-
-    .nav-pills {
-      flex-wrap: nowrap;
-      li {
-        flex: 1 0 auto;
-      }
-    }
-  }
-
   .user-messages-page & {
     .user-navigation-secondary {
       display: grid;
@@ -83,43 +54,10 @@
       }
     }
   }
-
-  .user-nav-dropdown-list-item {
-    flex-direction: column;
-  }
-
-  .user-nav-dropdown-chevron {
-    margin-left: auto;
-  }
-
-  .user-nav-dropdown-button {
-    width: 100%;
-  }
-
-  .user-nav-dropdown-submenu {
-    box-sizing: border-box;
-    position: relative;
-    top: 0;
-    box-shadow: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
-    padding: 0.5em 0 1em 1.65em;
-
-    li a {
-      box-sizing: border-box;
-      padding: 0.75em 1em;
-      width: 100%;
-      @include ellipsis;
-    }
-  }
-
-  #navigation-bar {
-    flex-wrap: nowrap;
-  }
 }
 
 .new-user-content-wrapper {
   .user-content {
-    margin-top: 2em;
+    margin-top: 1em;
   }
 }

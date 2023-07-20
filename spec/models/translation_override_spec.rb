@@ -27,6 +27,7 @@ RSpec.describe TranslationOverride do
             I18n.t(
               "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
               keys: "key, omg",
+              count: 2,
             ),
           )
         end
@@ -61,6 +62,7 @@ RSpec.describe TranslationOverride do
                 I18n.t(
                   "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                   keys: "something",
+                  count: 1,
                 ),
               )
             end
@@ -78,9 +80,23 @@ RSpec.describe TranslationOverride do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "topic_title_url_encoded",
+                count: 1,
               ),
             )
           end
+        end
+      end
+
+      describe "with valid custom interpolation keys" do
+        it "works" do
+          translation_override =
+            TranslationOverride.upsert!(
+              I18n.locale,
+              "system_messages.welcome_user.text_body_template",
+              "Hello %{name} %{username} %{name_or_username} and welcome to %{site_name}!",
+            )
+
+          expect(translation_override.errors).to be_empty
         end
       end
 
@@ -119,6 +135,7 @@ RSpec.describe TranslationOverride do
               I18n.t(
                 "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
                 keys: "key3, key4",
+                count: 2,
               ),
             )
           end
@@ -264,6 +281,67 @@ RSpec.describe TranslationOverride do
         )
         TranslationOverride.revert!(:de, ["likes"])
       end
+    end
+  end
+
+  describe "#original_translation_deleted?" do
+    context "when the original translation still exists" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }
+
+      it { expect(translation.original_translation_deleted?).to eq(false) }
+    end
+
+    context "when the original translation has been turned into a nested key" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }
+
+      before { translation.update_attribute("translation_key", "dates") }
+
+      it { expect(translation.original_translation_deleted?).to eq(true) }
+    end
+
+    context "when the original translation no longer exists" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "foo.bar") }
+
+      it { expect(translation.original_translation_deleted?).to eq(true) }
+    end
+  end
+
+  describe "#original_translation_updated?" do
+    context "when the translation is up to date" do
+      fab!(:translation) { Fabricate(:translation_override, translation_key: "title") }
+
+      it { expect(translation.original_translation_updated?).to eq(false) }
+    end
+
+    context "when the translation is outdated" do
+      fab!(:translation) do
+        Fabricate(:translation_override, translation_key: "title", original_translation: "outdated")
+      end
+
+      it { expect(translation.original_translation_updated?).to eq(true) }
+    end
+
+    context "when we can't tell because the translation is too old" do
+      fab!(:translation) do
+        Fabricate(:translation_override, translation_key: "title", original_translation: nil)
+      end
+
+      it { expect(translation.original_translation_updated?).to eq(false) }
+    end
+  end
+
+  describe "invalid_interpolation_keys" do
+    fab!(:translation) do
+      Fabricate(
+        :translation_override,
+        translation_key: "system_messages.welcome_user.subject_template",
+      )
+    end
+
+    it "picks out invalid keys and ignores known and custom keys" do
+      translation.update_attribute("value", "Hello, %{name}! Welcome to %{site_name}. %{foo}")
+
+      expect(translation.invalid_interpolation_keys).to contain_exactly("foo")
     end
   end
 end

@@ -38,10 +38,6 @@ export default class SidebarUserMessagesSection extends Component {
       this._refreshSectionLinksDisplayState
     );
 
-    this.pmTopicTrackingState
-      .startTracking()
-      .then(this._refreshSectionLinkCounts);
-
     this._pmTopicTrackingStateKey = "messages-section";
 
     this.pmTopicTrackingState.onStateChange(

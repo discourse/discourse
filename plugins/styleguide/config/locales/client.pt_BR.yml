@@ -92,3 +92,6 @@ pt_BR:
           description: "Descrição"
           header: "Cabeçalho"
           hover_to_see: "Passe o mouse para ver uma dica"
+        char_counter:
+          title: "Contador de Caracteres"
+          placeholder: "Insira seu texto aqui..."

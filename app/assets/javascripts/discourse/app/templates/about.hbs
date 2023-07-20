@@ -18,12 +18,16 @@
                 "faq"
               }}</LinkTo></li>
         {{/if}}
-        <li class="nav-item-tos"><LinkTo @route="tos">{{i18n
-              "tos"
-            }}</LinkTo></li>
-        <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n
-              "privacy"
-            }}</LinkTo></li>
+        {{#if this.site.tos_url}}
+          <li class="nav-item-tos"><LinkTo @route="tos">{{i18n
+                "tos"
+              }}</LinkTo></li>
+        {{/if}}
+        {{#if this.site.privacy_policy_url}}
+          <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n
+                "privacy"
+              }}</LinkTo></li>
+        {{/if}}
       </ul>
 
       <section class="about description">
@@ -34,7 +38,7 @@
       <PluginOutlet
         @name="about-after-description"
         @connectorTagName="section"
-        @args={{hash model=this.model}}
+        @outletArgs={{hash model=this.model}}
       />
 
       {{#if this.model.admins}}
@@ -46,12 +50,13 @@
         </section>
       {{/if}}
 
-      <PluginOutlet
-        @name="about-after-admins"
-        @tagName="span"
-        @connectorTagName="section"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="about-after-admins"
+          @connectorTagName="section"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
 
       {{#if this.model.moderators}}
         <section class="about moderators">
@@ -64,12 +69,13 @@
         </section>
       {{/if}}
 
-      <PluginOutlet
-        @name="about-after-moderators"
-        @tagName="span"
-        @connectorTagName="section"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="about-after-moderators"
+          @connectorTagName="section"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
 
       {{#if this.model.category_moderators.length}}
         {{#each this.model.category_moderators as |cm|}}

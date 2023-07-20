@@ -17,10 +17,10 @@ import TopicFixtures from "discourse/tests/fixtures/topic";
 import { Promise } from "rsvp";
 import { later } from "@ember/runloop";
 import I18n from "I18n";
+import DButton from "discourse/components/d-button";
 
 acceptance("User menu", function (needs) {
   needs.user({
-    redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 73,
     trust_level: 3,
     grouped_unread_notifications: {
@@ -120,9 +120,19 @@ acceptance("User menu", function (needs) {
 
   test("clicking on user menu items", async function (assert) {
     updateCurrentUser({ reviewable_count: 1 });
+
     await visit("/");
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-review-queue");
+
+    assert.strictEqual(
+      query(
+        "#user-menu-button-review-queue .badge-notification"
+      ).textContent.trim(),
+      "8",
+      "updates user's reviewable count based on request's response"
+    );
+
     await click("#quick-access-review-queue li.reviewable.pending a");
 
     assert.strictEqual(
@@ -168,7 +178,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
 
           get title() {
@@ -236,7 +246,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
         };
       });
@@ -256,7 +266,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
         };
       });
@@ -656,6 +666,49 @@ acceptance("User menu", function (needs) {
     );
   });
 
+  test("Extra items added to profile tab via plugin API are rendered properly", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.addQuickAccessProfileItem({
+        className: "test-1-item",
+        icon: "wrench",
+        content: "test 1",
+        href: "/test_1_path",
+      });
+
+      api.addQuickAccessProfileItem({
+        className: "test-2-item",
+        content: "test 2",
+        href: "/test_2_path",
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-profile");
+
+    const item1 = query("#quick-access-profile ul li.test-1-item");
+
+    assert.ok(
+      item1.querySelector(".d-icon-wrench"),
+      "The first item's icon is rendered"
+    );
+    assert.ok(
+      item1.querySelector("a").href.endsWith("/test_1_path"),
+      "The first item's link is present with correct href"
+    );
+
+    const item2 = query("#quick-access-profile ul li.test-2-item");
+
+    assert.notOk(
+      item2.querySelector(".d-icon"),
+      "The second item doesn't have an icon"
+    );
+    assert.ok(
+      item2.querySelector("a").href.endsWith("/test_2_path"),
+      "The second item's link is present with correct href"
+    );
+  });
+
   test("the active tab can be clicked again to navigate to a page", async function (assert) {
     updateCurrentUser({ reviewable_count: 1 });
     withPluginApi("0.1", (api) => {
@@ -670,7 +723,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
 
           get linkWhenActive() {
@@ -690,7 +743,7 @@ acceptance("User menu", function (needs) {
           }
 
           get panelComponent() {
-            return "d-button";
+            return DButton;
           }
         };
       });
@@ -738,11 +791,38 @@ acceptance("User menu", function (needs) {
       await click("#site-logo");
     }
   });
+
+  test("tabs have hrefs and can be opened in new window/tab", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    assert
+      .dom("#user-menu-button-replies")
+      .hasAttribute("href", "/u/eviltrout/notifications/responses");
+
+    // Add a top-level click listener to stub attempts to open a new window/tab
+    const newWindowOpenedAssertion = assert.async();
+    const interceptor = (event) => {
+      event.preventDefault();
+
+      newWindowOpenedAssertion();
+      const target = event.target;
+      assert.strictEqual(target.tagName, "A");
+      assert.true(target.href.endsWith("/u/eviltrout/notifications/responses"));
+    };
+
+    window.addEventListener("click", interceptor);
+
+    try {
+      await click("#user-menu-button-replies", { shiftKey: true });
+    } finally {
+      window.removeEventListener("click", interceptor);
+    }
+  });
 });
 
 acceptance("User menu - Dismiss button", function (needs) {
   needs.user({
-    redesigned_user_menu_enabled: true,
     unread_high_priority_notifications: 10,
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.bookmark_reminder]: 103,
@@ -802,7 +882,9 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click(".user-menu .notifications-dismiss");
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .modal-body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.default", { count: 10 }),
       "confirmation modal is shown when there are unread high pri notifications"
     );
@@ -838,7 +920,9 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".user-menu .notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .modal-body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
         count: 103,
       }),
@@ -892,7 +976,9 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".user-menu .notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .modal-body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.messages", {
         count: 89,
       }),

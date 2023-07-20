@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="admin-controls">
+    <nav>
+      <ul class="nav nav-pills">
+        <li>
+          <LinkTo
+            @route="adminCustomizeEmailStyle.edit"
+            @model="html"
+            @replace={{true}}
+          >
+            {{i18n "admin.customize.email_style.html"}}
+          </LinkTo>
+        </li>
+        <li>
+          <LinkTo
+            @route="adminCustomizeEmailStyle.edit"
+            @model="css"
+            @replace={{true}}
+          >
+            {{i18n "admin.customize.email_style.css"}}
+          </LinkTo>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<AceEditor
+  @content={{this.editorContents}}
+  @mode={{this.currentEditorMode}}
+  @editorId={{this.editorId}}
+  @save={{@save}}
+/>
+
+<div class="admin-footer">
+  <div class="buttons">
+    <DButton
+      @action={{action "reset"}}
+      @disabled={{this.resetDisabled}}
+      @class="btn-default"
+      @label="admin.customize.email_style.reset"
+    />
+  </div>
+</div>

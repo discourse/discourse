@@ -32,26 +32,23 @@ class SvgSpriteController < ApplicationController
   end
 
   def search
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      keyword = params.require(:keyword)
-      data = SvgSprite.search(keyword)
+    keyword = params.require(:keyword)
+    data = SvgSprite.search(keyword)
 
-      if data.blank?
-        render body: nil, status: 404
-      else
-        render plain: data.inspect, disposition: nil, content_type: "text/plain"
-      end
+    if data.blank?
+      render body: nil, status: 404
+    else
+      render plain: data.inspect, disposition: nil, content_type: "text/plain"
     end
   end
 
   def icon_picker_search
-    RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
-      params.permit(:filter)
-      filter = params[:filter] || ""
+    params.permit(:filter, :only_available)
+    filter = params[:filter] || ""
+    only_available = params[:only_available]
 
-      icons = SvgSprite.icon_picker_search(filter)
-      render json: icons.take(200), root: false
-    end
+    icons = SvgSprite.icon_picker_search(filter, only_available)
+    render json: icons.take(200), root: false
   end
 
   def svg_icon

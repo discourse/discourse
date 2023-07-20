@@ -8,13 +8,13 @@
         {{this.warningHeaderText}}
       </div>
       <ul class={{this.listStyleClass}}>
-        {{#if @tooManyMentions}}
+        {{#if this.hasTooManyMentions}}
           <li>{{this.tooManyMentionsBody}}</li>
         {{else}}
-          {{#if @unreachableGroupMentions}}
+          {{#if this.hasUnreachableGroupMentions}}
             <li>{{this.unreachableBody}}</li>
           {{/if}}
-          {{#if @overMembersLimitGroupMentions}}
+          {{#if this.hasOverMembersLimitGroupMentions}}
             <li>{{this.overMembersLimitBody}}</li>
           {{/if}}
         {{/if}}

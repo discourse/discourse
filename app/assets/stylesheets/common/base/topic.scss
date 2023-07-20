@@ -50,9 +50,6 @@ $topic-progress-height: 42px;
       align-self: start;
       @include sticky;
       top: calc(var(--header-offset, 60px) + 2em);
-      .footer-nav-ipad & {
-        top: calc(var(--header-offset, 60px) + var(--footer-nav-height) + 2em);
-      }
       margin-left: 1em;
       z-index: z("timeline");
 
@@ -72,7 +69,7 @@ $topic-progress-height: 42px;
       overflow-y: auto;
       z-index: z("timeline");
       padding: 10px 10px 35px 10px;
-      box-shadow: shadow("dropdown");
+      box-shadow: var(--shadow-dropdown);
       background: var(--tertiary-low);
 
       .close {
@@ -364,7 +361,7 @@ a.badge-category {
   justify-content: space-between;
 
   padding: 0.5em;
-  background-color: var(--highlight-medium);
+  background-color: var(--highlight-bg);
   margin-top: 1em;
   max-width: 757px;
 }

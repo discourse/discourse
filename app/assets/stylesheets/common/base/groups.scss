@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .groups-header {
   display: flex;
   flex-wrap: wrap;
@@ -44,7 +46,7 @@
       transition: all 0.25s;
 
       &:hover {
-        box-shadow: shadow("card");
+        box-shadow: var(--shadow-card);
         border-color: var(--primary-low-mid-or-secondary-high);
       }
     }
@@ -114,7 +116,7 @@
     }
 
     $size: 40px;
-    $icon-size: $size / 1.8;
+    $icon-size: math.div($size, 1.8);
 
     .group-avatar-flair {
       display: inline-block;

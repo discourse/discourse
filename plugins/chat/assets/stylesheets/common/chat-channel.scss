@@ -1,0 +1,100 @@
+.chat-channel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 1px;
+  position: relative;
+  overflow: hidden;
+  grid-area: main;
+  min-width: 250px;
+  @include chat-height;
+
+  .chat-messages-scroll {
+    flex-grow: 1;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column-reverse;
+    z-index: 1;
+    margin: 0 1px 0 0;
+    will-change: transform;
+    @include chat-scrollbar();
+
+    .join-channel-btn.in-float {
+      position: absolute;
+      transform: translateX(-50%);
+      left: 50%;
+      top: 10px;
+      z-index: 10;
+    }
+
+    .all-loaded-message {
+      text-align: center;
+      color: var(--primary-medium);
+      font-size: var(--font-down-1);
+      padding: 0.5em 0.25em 0.25em;
+    }
+  }
+
+  .scroll-stick-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 0 1rem;
+    position: relative;
+  }
+
+  .chat-scroll-to-bottom {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    z-index: 1;
+    flex-direction: column;
+    bottom: -25px;
+    background: none;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.5s ease;
+    transform: scale(0.1);
+    padding: 0;
+
+    > * {
+      pointer-events: none;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: none !important;
+    }
+
+    &.visible {
+      transform: translateY(-32px) scale(1);
+      opacity: 0.8;
+    }
+
+    &__arrow {
+      display: flex;
+      background: var(--primary-medium);
+      border-radius: 100%;
+      align-items: center;
+      justify-content: center;
+      height: 32px;
+      width: 32px;
+      position: relative;
+
+      .d-icon {
+        color: var(--secondary);
+        margin-left: 1px; // "fixes" the 1px svg shift
+      }
+    }
+
+    &:hover {
+      opacity: 1;
+
+      .chat-scroll-to-bottom__arrow {
+        .d-icon {
+          color: var(--secondary);
+        }
+      }
+    }
+  }
+}

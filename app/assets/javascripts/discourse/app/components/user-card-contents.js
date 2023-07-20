@@ -30,6 +30,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     "usernameClass",
     "primaryGroup",
   ],
+  attributeBindings: ["labelledBy:aria-labelledby"],
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
 
@@ -45,6 +46,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showMoreBadges: gt("moreBadgesCount", 0),
   showDelete: and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: not("user.isBasic"),
+
+  @discourseComputed("user")
+  labelledBy(user) {
+    return user ? "discourse-user-card-title" : null;
+  },
 
   @discourseComputed("user")
   hasLocaleOrWebsite(user) {
@@ -176,6 +182,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   @discourseComputed("user.primary_group_name")
   primaryGroup(primaryGroup) {
     return `group-${primaryGroup}`;
+  },
+
+  @discourseComputed("user.profile_hidden", "user.inactive")
+  contentHidden(profileHidden, inactive) {
+    return profileHidden || inactive;
   },
 
   _showCallback(username, $target) {

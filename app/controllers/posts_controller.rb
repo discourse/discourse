@@ -183,26 +183,25 @@ class PostsController < ApplicationController
   end
 
   def create
-    @manager_params = create_params
-    @manager_params[:first_post_checks] = !is_api?
-    @manager_params[:advance_draft] = !is_api?
+    manager_params = create_params
+    manager_params[:first_post_checks] = !is_api?
+    manager_params[:advance_draft] = !is_api?
 
-    manager = NewPostManager.new(current_user, @manager_params)
+    manager = NewPostManager.new(current_user, manager_params)
 
-    if is_api?
-      memoized_payload =
-        DistributedMemoizer.memoize(signature_for(@manager_params), 120) do
-          result = manager.perform
-          MultiJson.dump(serialize_data(result, NewPostResultSerializer, root: false))
-        end
+    json =
+      if is_api?
+        memoized_payload =
+          DistributedMemoizer.memoize(signature_for(manager_params), 120) do
+            MultiJson.dump(serialize_data(manager.perform, NewPostResultSerializer, root: false))
+          end
 
-      parsed_payload = JSON.parse(memoized_payload)
-      backwards_compatible_json(parsed_payload, parsed_payload["success"])
-    else
-      result = manager.perform
-      json = serialize_data(result, NewPostResultSerializer, root: false)
-      backwards_compatible_json(json, result.success?)
-    end
+        JSON.parse(memoized_payload)
+      else
+        serialize_data(manager.perform, NewPostResultSerializer, root: false)
+      end
+
+    backwards_compatible_json(json)
   end
 
   def update
@@ -466,6 +465,33 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def permanently_delete_revisions
+    guardian.ensure_can_permanently_delete_post_revisions!
+
+    post = find_post_from_params
+    raise Discourse::InvalidParameters.new(:post) if post.blank?
+    raise Discourse::NotFound unless post.revisions.present?
+
+    RateLimiter.new(
+      current_user,
+      "admin_permanently_delete_post_revisions",
+      20,
+      1.minute,
+      apply_limit_to_staff: true,
+    ).performed!
+
+    ActiveRecord::Base.transaction do
+      updated_at = Time.zone.now
+      post.revisions.destroy_all
+      post.update(version: 1, public_version: 1, last_version_at: updated_at)
+      StaffActionLogger.new(current_user).log_permanently_delete_post_revisions(post)
+    end
+
+    post.rebake!
+
+    render body: nil
+  end
+
   def show_revision
     post_revision = find_post_revision_from_params
     guardian.ensure_can_show_post_revision!(post_revision)
@@ -515,8 +541,10 @@ class PostsController < ApplicationController
       ] if post_revision.modifications["category_id"].present? &&
         post_revision.modifications["category_id"][0] != topic.category.id
     end
-    return render_json_error(I18n.t("revert_version_same")) unless changes.length > 0
-    changes[:edit_reason] = "reverted to version ##{post_revision.number.to_i - 1}"
+    return render_json_error(I18n.t("revert_version_same")) if changes.length <= 0
+    changes[:edit_reason] = I18n.with_locale(SiteSetting.default_locale) do
+      I18n.t("reverted_to_version", version: post_revision.number.to_i - 1)
+    end
 
     revisor = PostRevisor.new(post, topic)
     revisor.revise!(current_user, changes)
@@ -587,7 +615,7 @@ class PostsController < ApplicationController
         bookmarkable_id: params[:post_id],
         bookmarkable_type: "Post",
         user_id: current_user.id,
-      ).pluck_first(:id)
+      ).pick(:id)
     destroyed_bookmark = BookmarkManager.new(current_user).destroy(bookmark_id)
 
     render json:
@@ -634,32 +662,6 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def flagged_posts
-    Discourse.deprecate(
-      "PostsController#flagged_posts is deprecated. Please use /review instead.",
-      since: "2.8.0.beta4",
-      drop_from: "2.9",
-    )
-
-    params.permit(:offset, :limit)
-    guardian.ensure_can_see_flagged_posts!
-
-    user = fetch_user_from_params
-    offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
-
-    posts =
-      user_posts(guardian, user.id, offset: offset, limit: limit).where(
-        id:
-          PostAction
-            .where(post_action_type_id: PostActionType.notify_flag_type_ids)
-            .where(disagreed_at: nil)
-            .select(:post_id),
-      )
-
-    render_serialized(posts, AdminUserActionSerializer)
-  end
-
   def deleted_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_deleted_posts!
@@ -698,9 +700,13 @@ class PostsController < ApplicationController
   # We can't break the API for making posts. The new, queue supporting API
   # doesn't return the post as the root JSON object, but as a nested object.
   # If a param is present it uses that result structure.
-  def backwards_compatible_json(json_obj, success)
+  def backwards_compatible_json(json_obj)
     json_obj.symbolize_keys!
-    if params[:nested_post].blank? && json_obj[:errors].blank? && json_obj[:action] != :enqueued
+
+    success = json_obj[:success]
+
+    if params[:nested_post].blank? && json_obj[:errors].blank? &&
+         json_obj[:action].to_s != "enqueued"
       json_obj = json_obj[:post]
     end
 
@@ -777,27 +783,25 @@ class PostsController < ApplicationController
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: "private_message")
       topics = topics.secured(guardian)
 
-      posts = posts.where(topic_id: topics.pluck(:id))
+      posts = posts.where(topic_id: topics)
     end
 
     posts.offset(opts[:offset]).limit(opts[:limit])
   end
 
   def create_params
-    permitted = [
-      :raw,
-      :topic_id,
-      :archetype,
-      :category,
-      # TODO remove together with 'targetUsername' deprecations
-      :target_usernames,
-      :target_recipients,
-      :reply_to_post_number,
-      :auto_track,
-      :typing_duration_msecs,
-      :composer_open_duration_msecs,
-      :visible,
-      :draft_key,
+    permitted = %i[
+      raw
+      topic_id
+      archetype
+      category
+      target_recipients
+      reply_to_post_number
+      auto_track
+      typing_duration_msecs
+      composer_open_duration_msecs
+      visible
+      draft_key
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -885,15 +889,7 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
-    if recipients = result[:target_usernames]
-      Discourse.deprecate(
-        "`target_usernames` is deprecated, use `target_recipients` instead.",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-    else
-      recipients = result[:target_recipients]
-    end
+    recipients = result[:target_recipients]
 
     if recipients
       recipients = recipients.split(",").map(&:downcase)

@@ -3,8 +3,6 @@
 RSpec.describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
-  before { Middleware::AnonymousCache.enable_anon_cache }
-
   def env(opts = {})
     create_request_env(path: opts.delete(:path) || "http://test.com/path?bla=1").merge(opts)
   end
@@ -218,9 +216,9 @@ RSpec.describe Middleware::AnonymousCache do
   describe "#force_anonymous!" do
     before { RateLimiter.enable }
 
-    it "will revert to anonymous once we reach the limit" do
-      RateLimiter.clear_all!
+    use_redis_snapshotting
 
+    it "will revert to anonymous once we reach the limit" do
       is_anon = false
 
       app =

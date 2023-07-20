@@ -8,7 +8,10 @@
 <div class="control-group pref-email-settings">
   <label class="control-label">{{i18n "user.email_settings"}}</label>
 
-  <div class="controls controls-dropdown">
+  <div
+    class="controls controls-dropdown"
+    data-setting-name="user-email-messages-level"
+  >
     <label for="user-email-messages-level">{{i18n
         "user.email_messages_level"
       }}</label>
@@ -24,7 +27,7 @@
     {{/if}}
   </div>
 
-  <div class="controls controls-dropdown">
+  <div class="controls controls-dropdown" data-setting-name="user-email-level">
     <label for="user-email-level">{{i18n "user.email_level.title"}}</label>
     <ComboBox
       @valueProperty="value"
@@ -38,7 +41,10 @@
     {{/if}}
   </div>
 
-  <div class="controls controls-dropdown">
+  <div
+    class="controls controls-dropdown"
+    data-setting-name="user-email-previous-replies"
+  >
     <label>{{i18n "user.email_previous_replies.title"}}</label>
     <ComboBox
       @valueProperty="value"
@@ -48,28 +54,34 @@
     />
   </div>
   <PreferenceCheckbox
+    data-setting-name="user-email-in-reply-to"
     @labelKey="user.email_in_reply_to"
     @checked={{this.model.user_option.email_in_reply_to}}
   />
 
-  <PluginOutlet
-    @name="user-preferences-emails-pref-email-settings"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model save=(action "save")}}
-  />
+  <span>
+    <PluginOutlet
+      @name="user-preferences-emails-pref-email-settings"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model save=(action "save")}}
+    />
+  </span>
 </div>
 
 {{#unless this.siteSettings.disable_digest_emails}}
   <div class="control-group pref-activity-summary">
     <label class="control-label">{{i18n "user.email_activity_summary"}}</label>
     <PreferenceCheckbox
+      data-setting-name="user-email-digests"
       @labelKey="user.email_digests.title"
       @disabled={{this.model.user_option.mailing_list_mode}}
       @checked={{this.model.user_option.email_digests}}
     />
     {{#if this.model.user_option.email_digests}}
-      <div class="controls controls-dropdown">
+      <div
+        class="controls controls-dropdown"
+        data-setting-name="user-email-digests-frequency"
+      >
         <ComboBox
           @valueProperty="value"
           @content={{this.digestFrequencies}}
@@ -79,6 +91,7 @@
         />
       </div>
       <PreferenceCheckbox
+        data-setting-name="user-include-tl0-in-digests"
         @labelKey="user.include_tl0_in_digests"
         @disabled={{this.model.user_option.mailing_list_mode}}
         @checked={{this.model.user_option.include_tl0_in_digests}}
@@ -91,14 +104,18 @@
   <div class="control-group pref-mailing-list-mode">
     <label class="control-label">{{i18n "user.mailing_list_mode.label"}}</label>
     <PreferenceCheckbox
+      data-setting-name="user-mailing-list-mode-enabled"
       @labelKey="user.mailing_list_mode.enabled"
       @checked={{this.model.user_option.mailing_list_mode}}
     />
-    <div class="instructions">{{html-safe
-        (i18n "user.mailing_list_mode.instructions")
-      }}</div>
+    <div class="instructions">
+      {{html-safe (i18n "user.mailing_list_mode.instructions")}}
+    </div>
     {{#if this.model.user_option.mailing_list_mode}}
-      <div class="controls controls-dropdown">
+      <div
+        class="controls controls-dropdown"
+        data-setting-name="user-mailing-list-mode-options"
+      >
         <ComboBox
           @valueProperty="value"
           @content={{this.mailingListModeOptions}}
@@ -112,21 +129,23 @@
   </div>
 {{/unless}}
 
-<PluginOutlet
-  @name="user-preferences-emails"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-emails"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

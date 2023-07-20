@@ -46,6 +46,42 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
+    describe "the within_user_updater_transaction event" do
+      it "allows plugins to perform additional updates" do
+        update_attributes = { name: "Jimmmy Johnny" }
+        handler =
+          Proc.new do |user, attrs|
+            user.user_profile.update!(bio_raw: "hello world I'm Jimmmy")
+            expect(attrs).to eq(update_attributes)
+          end
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
+
+        updater = UserUpdater.new(user, user)
+        updater.update(update_attributes)
+
+        expect(user.reload.name).to eq("Jimmmy Johnny")
+        expect(user.user_profile.bio_raw).to eq("hello world I'm Jimmmy")
+      ensure
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
+      end
+
+      it "can cancel the whole update transaction if a handler raises" do
+        error_class = Class.new(StandardError)
+        handler = Proc.new { raise error_class.new }
+
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
+
+        old_name = user.name
+        updater = UserUpdater.new(user, user)
+
+        expect { updater.update(name: "Failure McClario") }.to raise_error(error_class)
+
+        expect(user.reload.name).to eq(old_name)
+      ensure
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
+      end
+    end
+
     it "can update categories and tags" do
       updater = UserUpdater.new(user, user)
       updater.update(watched_tags: "#{tag.name},#{tag2.name}", muted_category_ids: [category.id])
@@ -456,12 +492,12 @@ RSpec.describe UserUpdater do
       context "when badge can be used as a title" do
         before { badge.update(allow_title: true) }
 
-        it "can use as title, sets badge_granted_title" do
+        it "can use as title, sets granted_title_badge_id" do
           BadgeGranter.grant(badge, user)
           updater = UserUpdater.new(user, user)
           updater.update(title: badge.name)
           user.reload
-          expect(user.user_profile.badge_granted_title).to eq(true)
+          expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
         end
 
         it "badge has not been granted, does not change title" do
@@ -470,12 +506,12 @@ RSpec.describe UserUpdater do
           updater.update(title: badge.name)
           user.reload
           expect(user.title).not_to eq(badge.name)
-          expect(user.user_profile.badge_granted_title).to eq(false)
+          expect(user.user_profile.granted_title_badge_id).to be_nil
         end
 
-        it "changing to a title that is not from a badge, unsets badge_granted_title" do
+        it "changing to a title that is not from a badge, unsets granted_title_badge_id" do
           user.update(title: badge.name)
-          user.user_profile.update(badge_granted_title: true)
+          user.user_profile.update(granted_title_badge_id: badge.id)
 
           Guardian.any_instance.stubs(:can_grant_title?).with(user, "Dancer").returns(true)
 
@@ -483,7 +519,7 @@ RSpec.describe UserUpdater do
           updater.update(title: "Dancer")
           user.reload
           expect(user.title).to eq("Dancer")
-          expect(user.user_profile.badge_granted_title).to eq(false)
+          expect(user.user_profile.granted_title_badge_id).to be_nil
         end
       end
 
@@ -493,7 +529,7 @@ RSpec.describe UserUpdater do
         updater.update(title: badge.name)
         user.reload
         expect(user.title).not_to eq(badge.name)
-        expect(user.user_profile.badge_granted_title).to eq(false)
+        expect(user.user_profile.granted_title_badge_id).to be_nil
       end
     end
 
@@ -551,7 +587,7 @@ RSpec.describe UserUpdater do
     context "when skip_new_user_tips is edited" do
       it "updates seen_popups too" do
         messages =
-          MessageBus.track_publish("/user-tips") do
+          MessageBus.track_publish("/user-tips/#{user.id}") do
             UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
           end
 
@@ -573,7 +609,7 @@ RSpec.describe UserUpdater do
     context "when seen_popups is edited" do
       it "publishes a message" do
         messages =
-          MessageBus.track_publish("/user-tips") do
+          MessageBus.track_publish("/user-tips/#{user.id}") do
             UserUpdater.new(Discourse.system_user, user).update(seen_popups: [1])
           end
 

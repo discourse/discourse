@@ -6,7 +6,6 @@ export default class extends NotificationTypeBase {
     if (this.notification.data.title) {
       return I18n.t(this.notification.data.title);
     }
-    return super.linkTitle;
   }
 
   get icon() {

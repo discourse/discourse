@@ -28,7 +28,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
+  attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
 
   def self.max_fancy_title_length
     400
@@ -58,7 +58,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
-    return nil unless original.filesize < SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
     return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
@@ -99,7 +99,7 @@ class Topic < ActiveRecord::Base
   def generate_thumbnails!(extra_sizes: [])
     return nil unless SiteSetting.create_thumbnails
     return nil unless original = image_upload
-    return nil unless original.filesize < SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
     return nil unless original.width && original.height
     extra_sizes = [] unless extra_sizes.kind_of?(Array)
 
@@ -293,6 +293,7 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :posters # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
+  attr_accessor :participant_groups
   attr_accessor :topic_list
   attr_accessor :meta_data
   attr_accessor :include_last_poster
@@ -893,7 +894,7 @@ class Topic < ActiveRecord::Base
 
   # If a post is deleted we have to update our highest post counters and last post information
   def self.reset_highest(topic_id)
-    archetype = Topic.where(id: topic_id).pluck_first(:archetype)
+    archetype = Topic.where(id: topic_id).pick(:archetype)
 
     # ignore small_action replies for private messages
     post_type =
@@ -1103,14 +1104,13 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
-        topic_user.destroy
-
         if user.id == removed_by&.id
           add_small_action(removed_by, "user_left", user.username)
         else
           add_small_action(removed_by, "removed_user", user.username)
         end
 
+        topic_user.destroy
         return true
       end
     end
@@ -1200,7 +1200,7 @@ class Topic < ActiveRecord::Base
       else
         !!invite_to_topic(invited_by, target_user, group_ids, guardian)
       end
-    elsif username_or_email =~ /^.+@.+$/ && guardian.can_invite_via_email?(self)
+    elsif username_or_email =~ /\A.+@.+\z/ && guardian.can_invite_via_email?(self)
       !!Invite.generate(
         invited_by,
         email: username_or_email,
@@ -1237,7 +1237,11 @@ class Topic < ActiveRecord::Base
       )
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
+      topic =
+        post_mover.to_topic(
+          opts[:destination_topic_id],
+          **opts.slice(:participants, :chronological_order),
+        )
 
       DiscourseEvent.trigger(:topic_merged, post_mover.original_topic, post_mover.destination_topic)
 
@@ -1269,6 +1273,10 @@ class Topic < ActiveRecord::Base
 
   def participants_summary(options = {})
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
+  end
+
+  def participant_groups_summary(options = {})
+    @participant_groups_summary ||= TopicParticipantGroupsSummary.new(self, options).summary
   end
 
   def make_banner!(user, bannered_until = nil)
@@ -1895,8 +1903,6 @@ class Topic < ActiveRecord::Base
   def incoming_email_addresses(group: nil, received_before: Time.zone.now)
     email_addresses = Set.new
 
-    # TODO(martin) Look at improving this N1, it will just get slower the
-    # more replies/incoming emails there are for the topic.
     self
       .incoming_email
       .where("created_at <= ?", received_before)
@@ -2033,6 +2039,10 @@ class Topic < ActiveRecord::Base
         MessageBus.publish("/topic/#{topic_id}", message, opts.merge(secure_audience))
       end
     end
+  end
+
+  def group_pm?
+    private_message? && all_allowed_users.count > 2
   end
 
   private

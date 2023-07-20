@@ -51,6 +51,9 @@ zh_TW:
   remove_posts_deleted_by_author: "已由作者刪除"
   redirect_warning: "我們無法確認您選擇的連結是否已被發送到論壇上，若您想繼續此動作，選擇以下的連結。"
   on_another_topic: "在另一個話題中"
+  topic_tag_changed:
+    added: "已新增 %{added}"
+    removed: "已移除 %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} %{username}"
   themes:
@@ -157,8 +160,6 @@ zh_TW:
     embed:
       load_from_remote: "載入貼文時發生了錯誤"
     site_settings:
-      invalid_choice:
-        other: "您定義了無效的選擇%{name}"
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
       enable_s3_uploads_is_required: "您無法啟用資料庫到 S3，除非您已啟用了 S3 的上傳檔案。"
@@ -413,10 +414,6 @@ zh_TW:
           attributes:
             execute_at:
               in_the_past: "在未來必須是"
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: '以下的插入操作無效："%{keys}"'
         watched_word:
           attributes:
             word:
@@ -433,23 +430,6 @@ zh_TW:
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
-  discourse_welcome_topic:
-    title: "歡迎來到我們的社群！"
-    body: |2
-
-      置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
-
-      **編輯**它作為社群的簡要介紹：
-
-      - 什麼人想參與？
-      - 他們能在這找到什麼？
-      - 為什麼他們要來這？
-      - 他們能在哪裡閲讀更多的內容（連結、資源等）？
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      你可能想要在管理 :wrench: （右上角）中關閉這個主題，這樣回覆就不會積壓在這個通告下。
-  admin_quick_start_title: "請先閱讀這個：管理員快速啟用導覽"
   category:
     topic_prefix: "對於分類：%{category} 的定義"
     replace_paragraph: "（以新分類的簡短說明文字取代此段落。這段說明會出現在選擇分類的區塊，因此請將內容限於 200 字以內。）"
@@ -800,7 +780,7 @@ zh_TW:
       title: "DAU/MAU"
       xaxis: "天"
       yaxis: "\\bDAU/MAU"
-      description: "在最後一天登入的會員數除以上個月登入會員數，返回的%數表示社群黏著度。目標為＞30%。"
+      description: "在最後一天登入的會員數除以上個月登入會員數，返回的%數表示社群黏著度。目標為＞20%。"
     daily_engaged_users:
       title: "每日活躍的使用者"
       xaxis: "天"
@@ -1119,7 +1099,6 @@ zh_TW:
     large_icon: "用作其他Metadata Icon的基礎圖示。 理想情況下應大於512 x 512。如果留空，將使用logo_small來顯示。"
     manifest_icon: "在Android上用作Logo或啟動顯示畫面的圖片。 將自動調整為512×512。如果留空，將使用large_icon。"
     favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
-    apple_touch_icon: "Icon 用於Apple觸控裝置的圖示，將自動調整為180x180。 如果留空，將使用large_icon。"
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
@@ -1301,7 +1280,6 @@ zh_TW:
     tl3_requires_likes_given: "要升到信任等級3所需要的，在最近考察時間段內使用者必須要給出的贊（設置為 0 或更高）"
     tl3_requires_likes_received: "要升到信任等級3所需要的，在最近考察時間段內使用者必須要收到的贊（設置為 0 或更高）"
     tl3_links_no_follow: "禁止從信任等級 3 之使用者所發表的連結中刪除 rel=nofollow 標籤"
-    trusted_users_can_edit_others: "允許具有高信任等級的使用者編輯其他使用者的內容"
     min_trust_to_create_topic: "建立話題最低所需的信任等級"
     allow_flagging_staff: "如果設定為已啟用，使用者可以標記具有管理權限的帳戶中的話題。"
     min_trust_to_edit_wiki_post: "編輯被標示為維基的貼文所需之最低信任等級。"
@@ -1408,7 +1386,6 @@ zh_TW:
     pop3_polling_password: "POP3 帳戶用來輪詢電子郵件的密碼。"
     pop3_polling_delete_from_server: "從Server端刪除電子郵件。注意：如果禁用此功能，則需要手動清理收件匣。"
     log_mail_processing_failures: "將所有電子郵件處理失敗記錄到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: '允許使用者通過電子郵件建立討論話題（需要手動設定或定期從pop3向伺服器擷取訊息）。在每個類別的“設定”選項中設定地址。'
     email_in_min_trust: "能使用 EMail 發表新話題的最低的使用者信任等級"
     email_in_spam_header: "電子郵件標頭以偵測垃圾郵件"
     email_prefix: "EMail主題中使用的 [ 標籤 ]，留空將預設使用 'title'"
@@ -1465,12 +1442,9 @@ zh_TW:
     disable_system_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
-    native_app_install_banner_ios: "將iOS裝置上的DiscourseHub 橫幅主題顯示給一般使用者（信任等級1以上）。"
-    native_app_install_banner_android: "將Android裝置上的 DiscourseHub 橫幅主題顯示給一般使用者（信任等級1以上）。"
     share_anonymized_statistics: "分享匿名使用統計"
     auto_handle_queued_age: "等待多天後系統將自動處理等待審核的記錄，投訴將被忽略。尚未審核的討論話題及使用者將被拒絕。設定為0，可禁用此功能。"
     svg_icon_subset: "用前綴詞'fa-'、'far-'、'fab-'加入你喜歡的 FontAwesome 5 icons\\b 圖案。'fa-'表示實心圖案，'far-'表示一般圖案，'fab-'表示品牌圖案。"
-    max_prints_per_hour_per_user: "/print 頁面的每小時最大展示量（設置為 0 禁用）"
     full_name_required: "全名是使用者個人信息的必填項。"
     enable_names: "在使用者的個人信息、使用者卡片和郵件中顯示全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
@@ -1485,10 +1459,7 @@ zh_TW:
     allowed_href_schemes: "除了 http 和 https 外允許的連結協議。"
     embed_post_limit: "貼文內 embed 的最大數量"
     embed_username_required: "創建主題需要使用者名。"
-    notify_about_flags_after: "如果有投訴沒有在設定的時數內處理，將私訊給版主。設為 0 將禁用。"
-    show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: "刪除超過 n 天得草稿。"
-    bootstrap_mode_min_users: "禁用摘要模式的使用者數下限（0 為禁用）。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
     enable_emoji_shortcuts: "常見的顏文字，例如：「 :)、:p、:( 」，將轉換為表情符號"
@@ -1536,7 +1507,6 @@ zh_TW:
     retry_web_hook_events: "自動重試失敗的Web hook事件，最大重試為4次。 重試之間的時間間隔為1、5、25及125分鐘"
     allow_user_api_keys: "允許生成使用者API密鑰"
     allow_user_api_key_scopes: "使用者API授權範圍列表"
-    min_trust_level_for_user_api_key: "生成使用者 API 密鑰所需的信任等級"
     allowed_user_api_auth_redirects: "允許身份驗證URL用於導向使用者API 密鑰（Keys），使用星號「*」將代入所有字詞，並找到最適合的配對（例如：www.example.com/*）。"
     allowed_user_api_push_urls: "允許使用伺服器推送至使用者 API 的 URL"
     tagging_enabled: "啟用話題標籤功能？"
@@ -1558,8 +1528,6 @@ zh_TW:
     push_notifications_prompt: "顯示使用者同意提示"
     short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
-    default_sidebar_categories: "選定的分類將預設顯示在側選單的分類段落中。"
-    default_sidebar_tags: "選定的標籤將預設顯示在側選單的標籤段落中。"
     errors:
       invalid_email: "無效的電子郵件地址"
       invalid_username: "沒有使用者使用該使用者名稱。"
@@ -1581,7 +1549,6 @@ zh_TW:
       pop3_polling_password_is_empty: "在啟用 POP3 輪詢前，你必須設置 'pop3 polling password'。"
       pop3_polling_authentication_failed: "POP3 驗證失敗。請驗證你的 pop3 帳號信息。"
       reply_by_email_address_is_empty: "在啟用郵件回覆之前，你必須設置“reply by email address”。"
-      email_polling_disabled: "在啟用郵件回覆功能前，你必須啟用手動或者 POP3 輪詢。"
       user_locale_not_enabled: "你必須先設置 'allow user locale' 再啟用該設置。"
       invalid_regex: "正則表達式非法或者不允許。"
       email_editable_enabled: "在啟用此設定之前，您必須禁用「電子郵件可編輯」選項"
@@ -1712,7 +1679,6 @@ zh_TW:
     deactivated_by_staff: "已由管理員撤銷"
     activated_by_staff: "已由管理員啟動"
     new_user_typed_too_fast: "新的使用者輸入太快"
-    content_matches_auto_block_regex: "內容符合正規表達式"
     username:
       short: "必須至少 %{min} 個字"
       long: "不能超過 %{max} 個字"
@@ -2165,14 +2131,6 @@ zh_TW:
     user_automatically_silenced:
       title: "使用者自動被禁言"
       subject_template: "新使用者%{username}由於社群投訴而被禁言"
-      text_body_template: |
-        這是自動發出的訊息。
-
-        因多位使用者投訴 %{username} 的文章，新使用者 [%{username}](%{base_url}) 已被禁言。
-
-        請[查看這些投訴](%{base_url}/admin/flags)。如果 %{username} 被不合理地阻止貼文，點擊[該用戶管理頁面](%{base_url}%{user_url})內的解除封鎖按鈕。
-
-        您可以調整網站設定中的 `block_new_user` 以變更封鎖門檻值。
     spam_post_blocked:
       title: "因垃圾貼文而被封鎖"
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
@@ -2197,9 +2155,6 @@ zh_TW:
       title: "停用遠端圖片下載"
       subject_template: "停用下載遠端圖片"
       text_body_template: "`download_remote_images_to_local` 設定已被禁用，因為已經達到 ``download_remote_images_threshold` 設定中的磁碟空間限制。"
-    dashboard_problems:
-      title: "控制台問題"
-      subject_template: "有新的建議出現在後台儀表板"
     new_user_of_the_month:
       title: "你是本月最佳新人！"
       subject_template: "你是本月最佳新人！"
@@ -2234,9 +2189,6 @@ zh_TW:
     reached_limit:
       other: "注意：你達到了每日郵件限額（%{count}），到網站看看哪些訊息可能被延遲了。BTW，感謝你經營的這麼熱絡！"
     in_reply_to: "回覆給"
-    unsubscribe:
-      title: "取消訂閱"
-      description: "不再對這些郵件感興趣？沒問題！點擊以立即取消訂閱："
     reply_by_email: "[訪問主題](%{base_url}%{url})或者發郵件回覆。"
     reply_by_email_pm: "[查看訊息](%{base_url}%{url}) 或回覆此電子郵件以回應%{participants}。"
     only_reply_by_email: "發郵件回覆。"
@@ -2458,7 +2410,6 @@ zh_TW:
       liked_received: "獲得贊"
       new_users: "新使用者"
       popular_topics: "熱門主題"
-      follow_topic: "關注主題"
       join_the_discussion: "閲讀更多"
       popular_posts: "熱門貼文"
       more_new: "新內容與你分享"
@@ -2568,15 +2519,6 @@ zh_TW:
   offline:
     title: "無法載入App"
     offline_page_message: "你似乎離線了！請檢查您的網路連接狀態，並重試。"
-  login_required:
-    welcome_message: |
-      ## [歡迎來到 %{title}](#welcome)
-      你需要一個帳號。請創設一個帳號，或者登入以繼續。
-    welcome_message_invite_only: |
-      ## [歡迎來到 %{title}](#welcome)
-      必須要有一個帳戶，請向現有會員請求邀請或登入以繼續。
-  deleted: "已刪除"
-  image: "圖片"
   upload:
     edit_reason: "下載外部圖片留做存檔"
     unauthorized: "抱歉，你沒有上傳檔案的權限（驗證擴展：%{authorized_extensions}）。"
@@ -2652,88 +2594,6 @@ zh_TW:
     title: "服務條款"
   privacy_topic:
     title: "隱私政策"
-    body: |
-      <a name="collect"></a>
-
-      ## [我們收集什麼信息？](#collect)
-
-      我們從你在我們站點註冊開始從你那開始收集信息，並收集關於你在論壇的閲讀和寫作的數據，並評估分享的內容。
-
-      當在我們站點註冊時，你可能被要求輸入你的名字和郵件地址。然而你可以在不用註冊的情況下訪問站點。你的郵件地將通過一個獨一無二的連結驗證。如果連結被訪問了，我們就知道你控制了該郵件地址。
-
-      當已註冊和發帖時，我們記錄發佈貼文時的 IP 地址。我們也可能保留伺服器日誌，其中包括了每一個向我們伺服器的請求。
-
-      <a name="use"></a>
-
-      ## [我們如何使用你的信息？](#use)
-
-      從你那收集的任何數據將以以下方式使用：
-
-      * 改進你的個人體驗 &mdash; 你的信息幫助我們更好地滿足你的個人需求。
-      * 改進我們的站點 &mdash; 我們基于信息和我們從你那收到的反饋不斷地試圖改進我們的站點。
-      * 改善我們的客戶服務 &mdash; 你的信息幫助我們更有效地回應使用者服務請求和支持。
-      * 用於發送階段性的郵件 &mdash; 你提供的郵件地址可能用於接受信息、你想看到的通知或與你使用者名有關的回覆和詢問，或是其他的請求和問題。
-
-      <a name="protect"></a>
-
-      ## [我們如何保護你的信息?](#protect)
-
-      我們實現了一系列的安全措施保證你輸入、提交或者訪問你個人信息的數據安全。
-
-      <a name="data-retention"></a>
-
-      ## [數據保存政策是什麼？](#data-retention)
-
-      我們將善意地：
-
-      * 保存 90 天內的所有向伺服器的包含 IP 地址的請求。
-      * 保存 5 年內已註冊使用者和與他們的貼文有關的 IP 地址。
-
-      <a name="cookies"></a>
-
-      ## [我們使用 Cookie 嗎？](#cookies)
-
-      是的。Cookie 是網站或它的服務商通過網頁瀏覽器存儲在你電腦硬碟上的小檔案（如果你同意）。這些 Cookie 使站點能分辨你的瀏覽器，並且，如果你註冊了一個賬戶，與你的註冊賬戶關聯。
-
-      我們使用 Cookie 為之後的訪問和編譯一小段關於站點流量和交互的數據來判斷並保存你的個人設置，這樣我們可以在之後提供更好的站點體驗和工具。我們可能使用第三方服務商來幫助我們更好地理解我們的站點訪客。這些服務商是不允許代表我們使用收集的信息，除非是在幫助我們執行和改進我們的站點。
-
-      <a name="disclose"></a>
-
-      ## [我們會在站外提供任何信息嗎？](#disclose)
-
-      我們絶不銷售、教育或任何向外轉移你個人信息的行為。這不包括幫助我們管理站點、改進站定或給你提供服務的第三方團體，這些團體需要保證對這些信息保密。當我們認為提交你的信息符合法律、我們的站點政策或保護我們或其他人的權利、知識產權或安全時，我們也可能提交你的信息。然而，非個人訪問信息可能供其他團體使用，用於市場、廣告或其他用途。
-
-      <a name="third-party"></a>
-
-      ## [第三方連結](#third-party)
-
-      偶爾地，根據我們的判斷，我們可能在我們的站點上包括或提供第三方團體的產品或服務。這些第三方站點用於獨立和不同的隱私政策。因此我們對連結到的站點或活動沒有責任和權利。儘管如此，我們尋求保護我們的整個站點冰鞋歡迎你給這些站點反饋。
-
-      <a name="coppa"></a>
-
-      ## [兒童在綫隱私保護法案合規](#coppa)
-
-      我們的站點、產品和服務提供給 13 歲以上的人們。如果伺服器位於美國，並且你小於 13 歲，根據[兒童在綫隱私保護法案合規](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)，不要使用這個站點。
-
-      <a name="online"></a>
-
-      ## [僅用於在綫隱私政策](#online)
-
-      這個線上隱私政策只適用於通過我們站點收集到的信息，並不包括線下收集的信息。
-
-      <a name="consent"></a>
-
-      ## [你的同意](#consent)
-
-      你使用站點的同時，代表你同意了我們網站的隱私政策。
-
-      <a name="changes"></a>
-
-      ## [隱私政策的更改](#changes)
-
-      如果我們決定更改我們的隱私政策，我們將在此頁更新這些改變。
-
-      文檔以 CC-BY-SA 發佈。最後更新時間為2013年5月31日。
   badges:
     editor:
       name: 編輯
@@ -3001,8 +2861,6 @@ zh_TW:
       message: "<p>我們已重發啟用信件至 <b>%{email}</b>"
   safe_mode:
     title: "進入安全模式"
-    no_unofficial_plugins: "停用非官方套件"
-    no_plugins: "停用所有套件"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
   wizard:
@@ -3057,7 +2915,6 @@ zh_TW:
         title: "你的 Discourse 已經準備就緒！"
   search_logs:
     graph_title: "搜尋計數"
-  joined: "建立日期"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'
@@ -3093,47 +2950,30 @@ zh_TW:
     conflict: "有一個更新衝突阻止您這樣做"
     actions:
       agree:
-        title: "同意..."
-      agree_and_keep:
-        title: "保留貼文"
-        description: "同意檢舉但不改變貼文"
+        title: "是"
       agree_and_suspend:
-        title: "將使用者停權"
         description: "同意檢舉並停權使用者"
       agree_and_silence:
-        title: "將使用者禁言"
+        title: "使用者靜音"
         description: "同意檢舉並禁止使用者發文"
       agree_and_restore:
-        title: "復原貼文"
         description: "將話題變更為對所有人顯示。"
-      agree_and_hide:
-        title: "隱藏貼文"
-        description: "隱藏此貼文並自動傳送訊息通知使用者重新編輯貼文內容。"
       delete_single:
         title: "刪除"
       delete:
         title: "刪除..."
-      delete_and_ignore:
-        title: "刪除貼文並忽略"
-        description: "刪除貼文，如果刪除的是話題的第一則貼文，討論話題也將一併刪除"
       delete_and_ignore_replies:
-        title: "刪除貼文及留言，並忽略"
-        description: "刪除貼文和其所有的留言；如果是第一個貼文，則刪除整個討論話題。"
         confirm: "您確定要刪除對該貼文的留言嗎？"
-      delete_and_agree:
-        title: "刪除貼文並同意"
-        description: "刪除貼文，如果刪除的是話題的第一則貼文，討論話題也將一併刪除"
       delete_and_agree_replies:
-        title: "刪除貼文及留言，並同意"
-        description: "刪除貼文和其所有的留言；如果刪除的是話題的第一則貼文，討論話題也將一併刪除"
         confirm: "您確定要刪除對該貼文的留言嗎？"
       disagree_and_restore:
-        title: "不同意及還原貼文"
         description: "將話題變更為對所有人顯示。"
       disagree:
-        title: "不同意"
+        title: "否"
       ignore:
         title: "忽略"
+      ignore_and_do_nothing:
+        title: "不做任何動作"
       approve:
         title: "批准"
       approve_post:

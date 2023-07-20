@@ -63,18 +63,26 @@ class CurrentUserSerializer < BasicUserSerializer
              :pending_posts_count,
              :status,
              :grouped_unread_notifications,
-             :redesigned_user_menu_enabled,
-             :redesigned_user_page_nav_enabled,
-             :redesigned_topic_timeline_enabled,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
-             :sidebar_list_destination
+             :sidebar_sections,
+             :new_new_view_enabled?,
+             :experimental_search_menu_groups_enabled?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
+
+  def sidebar_sections
+    SidebarSection
+      .public_sections
+      .or(SidebarSection.where(user_id: object.id))
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
 
   def groups
     owned_group_ids = GroupUser.where(user_id: id, owner: true).pluck(:group_id).to_set
@@ -270,43 +278,5 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(object)
-  end
-
-  def redesigned_user_menu_enabled
-    object.redesigned_user_menu_enabled?
-  end
-
-  def include_all_unread_notifications_count?
-    redesigned_user_menu_enabled
-  end
-
-  def include_grouped_unread_notifications?
-    redesigned_user_menu_enabled
-  end
-
-  def include_unseen_reviewable_count?
-    redesigned_user_menu_enabled
-  end
-
-  def include_new_personal_messages_notifications_count?
-    redesigned_user_menu_enabled
-  end
-
-  def redesigned_user_page_nav_enabled
-    if SiteSetting.enable_new_user_profile_nav_groups.present?
-      object.in_any_groups?(SiteSetting.enable_new_user_profile_nav_groups_map)
-    else
-      false
-    end
-  end
-
-  def redesigned_topic_timeline_enabled
-    if SiteSetting.enable_experimental_topic_timeline_groups.present?
-      object.in_any_groups?(
-        SiteSetting.enable_experimental_topic_timeline_groups.split("|").map(&:to_i),
-      )
-    else
-      false
-    end
   end
 end

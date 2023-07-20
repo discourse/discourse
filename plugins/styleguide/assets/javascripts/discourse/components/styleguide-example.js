@@ -1,12 +1,11 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 
-export default Component.extend({
-  tagName: "section",
-  classNames: ["styleguide-example"],
-  value: null,
+export default class StyleguideExample extends Component {
+  @tracked value = null;
 
-  init() {
-    this._super(...arguments);
-    this.value = this.initialValue;
-  },
-});
+  constructor() {
+    super(...arguments);
+    this.value = this.args.initialValue;
+  }
+}

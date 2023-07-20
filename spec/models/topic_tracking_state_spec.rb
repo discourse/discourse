@@ -788,4 +788,20 @@ RSpec.describe TopicTrackingState do
     include_examples("publishes message to right groups and users", "/destroy", :publish_destroy)
     include_examples("does not publish message for private topics", :publish_destroy)
   end
+
+  describe "#publish_dismiss_new_posts" do
+    it "publishes the right message to the right users" do
+      messages =
+        MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
+          TopicTrackingState.publish_dismiss_new_posts(user.id, topic_ids: [topic.id])
+        end
+
+      expect(messages.size).to eq(1)
+
+      message = messages.first
+
+      expect(message.data["payload"]["topic_ids"]).to contain_exactly(topic.id)
+      expect(message.user_ids).to eq([user.id])
+    end
+  end
 end

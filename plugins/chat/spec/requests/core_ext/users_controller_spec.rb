@@ -18,7 +18,7 @@ describe UsersController do
       put "/u/activate-account/#{email_token.token}"
 
       expect(response.status).to eq(200)
-      membership = UserChatChannelMembership.find_by(user: user, chat_channel: channel)
+      membership = Chat::UserChatChannelMembership.find_by(user: user, chat_channel: channel)
       expect(membership.following).to eq(true)
     end
   end

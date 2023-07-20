@@ -74,7 +74,7 @@ module UserGuardian
   end
 
   def can_anonymize_user?(user)
-    is_staff? && !user.nil? && !user.staff?
+    is_staff? && !user.nil? && !user.staff? && !user.email&.ends_with?(UserAnonymizer::EMAIL_SUFFIX)
   end
 
   def can_merge_user?(user)
@@ -116,6 +116,10 @@ module UserGuardian
 
   def can_disable_second_factor?(user)
     user && can_administer_user?(user)
+  end
+
+  def can_see_user?(_user)
+    true
   end
 
   def can_see_profile?(user)

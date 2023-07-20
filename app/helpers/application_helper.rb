@@ -50,7 +50,7 @@ module ApplicationHelper
 
   def google_universal_analytics_json(ua_domain_name = nil)
     result = {}
-    result[:cookieDomain] = ua_domain_name.gsub(%r{^http(s)?://}, "") if ua_domain_name
+    result[:cookieDomain] = ua_domain_name.gsub(%r{\Ahttp(s)?://}, "") if ua_domain_name
     result[:userId] = current_user.id if current_user.present?
     result[:allowLinker] = true if SiteSetting.ga_universal_auto_link_domains.present?
     result.to_json
@@ -64,10 +64,8 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def google_tag_manager_nonce_placeholder
-    placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
-    response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
-    placeholder
+  def self.google_tag_manager_nonce(env)
+    env[:discourse_content_security_policy_nonce] ||= SecureRandom.hex
   end
 
   def shared_session_key
@@ -119,9 +117,9 @@ module ApplicationHelper
       # seconds.
       if !script.start_with?("discourse/tests/")
         if is_brotli_req?
-          path = path.gsub(/\.([^.]+)$/, '.br.\1')
+          path = path.gsub(/\.([^.]+)\z/, '.br.\1')
         elsif is_gzip_req?
-          path = path.gsub(/\.([^.]+)$/, '.gz.\1')
+          path = path.gsub(/\.([^.]+)\z/, '.gz.\1')
         end
       end
     elsif GlobalSetting.cdn_url&.start_with?("https") && is_brotli_req? &&
@@ -192,7 +190,7 @@ module ApplicationHelper
     result << "category-#{@category.slug_path.join("-")}" if @category && @category.url.present?
 
     if current_user.present? && current_user.primary_group_id &&
-         primary_group_name = Group.where(id: current_user.primary_group_id).pluck_first(:name)
+         primary_group_name = Group.where(id: current_user.primary_group_id).pick(:name)
       result << "primary-group-#{primary_group_name.downcase}"
     end
 
@@ -313,6 +311,15 @@ module ApplicationHelper
         result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, true)
       end
     end
+    Array
+      .wrap(opts[:breadcrumbs])
+      .each do |breadcrumb|
+        result << tag(:meta, property: "og:article:section", content: breadcrumb[:name])
+        result << tag(:meta, property: "og:article:section:color", content: breadcrumb[:color])
+      end
+    Array
+      .wrap(opts[:tags])
+      .each { |tag_name| result << tag(:meta, property: "og:article:tag", content: tag_name) }
 
     if opts[:read_time] && opts[:read_time] > 0 && opts[:like_count] && opts[:like_count] > 0
       result << tag(:meta, name: "twitter:label1", value: I18n.t("reading_time"))
@@ -406,6 +413,10 @@ module ApplicationHelper
           end
         end
       end
+  end
+
+  def waving_hand_url
+    UrlHelper.cook_url(Emoji.url_for(":wave:t#{rand(2..6)}:"))
   end
 
   def login_path
@@ -537,7 +548,7 @@ module ApplicationHelper
 
     return if theme_id.blank?
 
-    @scheme_id = Theme.where(id: theme_id).pluck_first(:color_scheme_id)
+    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
   def dark_scheme_id

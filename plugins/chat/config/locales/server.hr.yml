@@ -27,9 +27,8 @@ hr:
         ignore:
           title: "Zanemari"
     channel:
-      statuses:
-        closed: "Zatvoreno"
-        open: "Otvori"
+      dm_title:
+        single_user: "%{username}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "sadrži ne-ascii znakove"

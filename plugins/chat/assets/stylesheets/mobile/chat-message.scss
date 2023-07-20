@@ -1,10 +1,44 @@
-.chat-message *,
-.chat-composer-row,
-.chat-reply,
-.replying-text {
-  @include unselectable;
-}
+.mobile-view.has-full-page-chat {
+  &.disable-message-actions-touch {
+    .chat-message-actions {
+      > * {
+        pointer-events: none;
+      }
+    }
+  }
 
-.chat-message-container {
-  transform: translateZ(0);
+  #skip-link {
+    @include user-select(none);
+  }
+
+  #skip-link,
+  .d-header,
+  .chat-message-actions-mobile-outlet,
+  .chat-channel,
+  .chat-thread {
+    > * {
+      @include user-select(none);
+    }
+  }
+
+  .chat-message-container {
+    transition: transform 400ms;
+    transform: scale(1);
+
+    &.-active {
+      animation: scale-animation 400ms;
+    }
+  }
+
+  @keyframes scale-animation {
+    0% {
+      transform: scale(1);
+    }
+    80% {
+      transform: scale(0.95);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
 }

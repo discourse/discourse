@@ -44,16 +44,15 @@ tr_TR:
     deleted_chat_username: silindi
     errors:
       channel_exists_for_category: "Bu kategori ve ada sahip bir kanal zaten var"
-      channel_new_message_disallowed: "Kanal %{status}, yeni mesaj gönderilemiyor"
-      channel_modify_message_disallowed: "Kanal %{status}, mesaj düzenlenemez veya silinemez"
       user_cannot_send_message: "Şu anda mesaj gönderemezsiniz."
       rate_limit_exceeded: "30 saniye içinde gönderilebilecek sohbet mesajı limiti aşıldı"
       auto_silence_from_flags: "Kullanıcıyı susturmaya yetecek kadar yüksek puanla bayrak eklenen sohbet mesajı."
       channel_cannot_be_archived: "Kanal şu anda arşivlenemez, arşivlemek için kapalı veya açık olmalı."
       duplicate_message: "Çok yakın zamanda aynı mesajı gönderdiniz."
       delete_channel_failed: "Kanal silinemedi, lütfen tekrar deneyin."
-      minimum_length_not_met: "Mesaj çok kısa, en az %{minimum} karakter içermeli."
-      message_too_long: "Mesaj çok uzun, mesajlar maksimum %{maximum} karakter olmalı."
+      message_too_long:
+        one: "Mesaj çok uzun, mesajlar en çok %{count} karakter olmalı."
+        other: "Mesaj çok uzun, mesajlar en çok %{count} karakter olmalı."
       draft_too_long: "Taslak pek uzun."
       max_reactions_limit_reached: "Bu mesajda yeni tepkilere izin verilmiyor."
       message_move_invalid_channel: "Kaynak ve hedef kanal herkese açık kanallar olmalıdır."
@@ -65,9 +64,7 @@ tr_TR:
       actor_disallowed_dms: "Kullanıcıların size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla yeni doğrudan mesaj oluşturamazsınız."
       actor_preventing_target_user_from_dm: "%{username} adlı kullanıcının size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla ona yeni doğrudan mesaj oluşturamazsınız."
       user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
-      over_chat_max_direct_message_users:
-        one: "Yalnızca kendinizle bir doğrudan mesaj oluşturabilirsiniz."
-        other: "%{count} üzeri başka kullanıcıyla doğrudan mesaj oluşturamazsınız."
+      over_chat_max_direct_message_users_allow_self: "Yalnızca kendinizle bir doğrudan mesaj oluşturabilirsiniz."
     reviewables:
       message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
       actions:
@@ -104,20 +101,16 @@ tr_TR:
         transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
         transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Salt Okunur"
-        archived: "Arşivlendi"
-        closed: "Kapalı"
-        open: "Aç"
       archive:
         first_post_raw: "Bu konu, [%{channel_name}](%{channel_url}) sohbet kanalının bir arşividir."
       messages_moved:
         one: "@%{acting_username} bir mesajı [%{channel_name}](%{first_moved_message_url}) kanalına taşıdı."
         other: "@%{acting_username} , %{count} mesajı [%{channel_name}](%{first_moved_message_url}) kanalına taşıdı."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} ve %{leftover} kişi daha"
+        single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ve %{count} kişi daha"
+          other: "%{comma_separated_usernames} ve %{count} kişi daha"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"

@@ -397,6 +397,46 @@ RSpec.describe GroupsController do
         end
       end
     end
+
+    describe "groups_index_query modifier" do
+      fab!(:user) { Fabricate(:user) }
+      fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+      fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+      it "allows changing the query" do
+        get "/groups.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(
+          cool_group.id,
+          boring_group.id,
+        )
+
+        get "/groups.json", params: { filter: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(boring_group.id)
+
+        Plugin::Instance
+          .new
+          .register_modifier(:groups_index_query) do |query|
+            query.where("groups.name LIKE 'cool%'")
+          end
+
+        get "/groups.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(boring_group.id)
+
+        get "/groups.json", params: { filter: "boring" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(
+          cool_group.id,
+          boring_group.id,
+        )
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
   end
 
   describe "#show" do
@@ -1638,6 +1678,164 @@ RSpec.describe GroupsController do
       end
     end
 
+    describe "#add_owners" do
+      context "when logged in as an admin" do
+        before { sign_in(admin) }
+
+        it "should work" do
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username].join(","),
+              }
+
+          expect(response.status).to eq(200)
+
+          response_body = response.parsed_body
+
+          expect(response_body["usernames"]).to contain_exactly(user.username, admin.username)
+
+          expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user, admin)
+        end
+
+        it "returns not-found error when there is no group" do
+          group.destroy!
+
+          put "/groups/#{group.id}/owners.json", params: { usernames: user.username }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "does not allow adding owners to an automatic group" do
+          group.update!(automatic: true)
+
+          expect do
+            put "/groups/#{group.id}/owners.json", params: { usernames: user.username }
+          end.to_not change { group.group_users.count }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to eq(
+            [I18n.t("groups.errors.can_not_modify_automatic")],
+          )
+        end
+
+        it "does not notify users when the param is not present" do
+          put "/groups/#{group.id}/owners.json", params: { usernames: user.username }
+          expect(response.status).to eq(200)
+
+          topic =
+            Topic.find_by(
+              title:
+                I18n.t(
+                  "system_messages.user_added_to_group_as_owner.subject_template",
+                  group_name: group.name,
+                ),
+              archetype: "private_message",
+            )
+          expect(topic.nil?).to eq(true)
+        end
+
+        it "notifies users when the param is present" do
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: user.username,
+                notify_users: true,
+              }
+          expect(response.status).to eq(200)
+
+          topic =
+            Topic.find_by(
+              title:
+                I18n.t(
+                  "system_messages.user_added_to_group_as_owner.subject_template",
+                  group_name: group.name,
+                ),
+              archetype: "private_message",
+            )
+          expect(topic.nil?).to eq(false)
+          expect(topic.topic_users.map(&:user_id)).to include(-1, user.id)
+        end
+      end
+
+      context "when logged in as a moderator" do
+        before { sign_in(moderator) }
+
+        context "with moderators_manage_categories_and_groups enabled" do
+          before { SiteSetting.moderators_manage_categories_and_groups = true }
+
+          it "adds owners" do
+            put "/groups/#{group.id}/owners.json",
+                params: {
+                  usernames: [user.username, admin.username, moderator.username].join(","),
+                }
+
+            response_body = response.parsed_body
+
+            expect(response.status).to eq(200)
+            expect(response_body["usernames"]).to contain_exactly(
+              user.username,
+              admin.username,
+              moderator.username,
+            )
+            expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(
+              user,
+              admin,
+              moderator,
+            )
+          end
+        end
+
+        context "with moderators_manage_categories_and_groups disabled" do
+          before { SiteSetting.moderators_manage_categories_and_groups = false }
+
+          it "prevents adding of owners with a 403 response" do
+            put "/groups/#{group.id}/owners.json",
+                params: {
+                  usernames: [user.username, admin.username, moderator.username].join(","),
+                }
+
+            expect(response.status).to eq(403)
+            expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+            expect(group.group_users.where(owner: true).map(&:user)).to be_empty
+          end
+        end
+      end
+
+      context "when logged in as a non-owner" do
+        before { sign_in(user) }
+
+        it "prevents adding of owners with a 403 response" do
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username].join(","),
+              }
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+          expect(group.group_users.where(owner: true).map(&:user)).to be_empty
+        end
+      end
+
+      context "when logged in as an owner" do
+        before { sign_in(user) }
+
+        it "allows adding new owners" do
+          group.add_owner(user)
+
+          put "/groups/#{group.id}/owners.json",
+              params: {
+                usernames: [user.username, admin.username].join(","),
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["usernames"]).to contain_exactly(
+            user.username,
+            admin.username,
+          )
+          expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user, admin)
+        end
+      end
+    end
+
     describe "#join" do
       let(:public_group) { Fabricate(:public_group) }
 
@@ -2050,7 +2248,7 @@ RSpec.describe GroupsController do
 
       expect(response.status).to eq(422)
       expect(response.parsed_body["errors"]).to contain_exactly(
-        "Reason is too long (maximum is 280 characters)",
+        "Reason is too long (maximum is 5000 characters)",
       )
     end
 
@@ -2168,6 +2366,36 @@ RSpec.describe GroupsController do
         expect(groups.length).to eq(2)
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
+      end
+    end
+
+    describe "groups_search_query modifier" do
+      fab!(:user) { Fabricate(:user) }
+      fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+      fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+      before { sign_in(user) }
+
+      it "allows changing the query" do
+        get "/groups/search.json", params: { term: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body.map { |g| g["id"] }).not_to include(boring_group.id)
+
+        Plugin::Instance
+          .new
+          .register_modifier(:groups_search_query) do |query|
+            query.where("groups.name LIKE 'boring%'")
+          end
+
+        get "/groups/search.json", params: { term: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |g| g["id"] }).not_to include(
+          cool_group.id,
+          boring_group.id,
+        )
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
       end
     end
   end
@@ -2380,9 +2608,10 @@ RSpec.describe GroupsController do
       end
 
       context "when rate limited" do
+        use_redis_snapshotting
+
         it "rate limits anon searches per user" do
           RateLimiter.enable
-          RateLimiter.clear_all!
 
           5.times { post "/groups/#{group.id}/test_email_settings.json", params: params }
           post "/groups/#{group.id}/test_email_settings.json", params: params

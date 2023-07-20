@@ -1,4 +1,4 @@
-<DSection @pageClass="user-badges" @class="user-content">
+<DSection @pageClass="user-badges" @class="user-content" id="user-content">
   <p class="favorite-count">
     {{i18n
       "badges.favorite_count"
@@ -22,7 +22,7 @@
     {{/each}}
     <PluginOutlet
       @name="after-user-profile-badges"
-      @args={{hash user=this.user.model}}
+      @outletArgs={{hash user=this.user.model}}
     />
   </div>
 </DSection>

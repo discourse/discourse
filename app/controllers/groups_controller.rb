@@ -59,7 +59,8 @@ class GroupsController < ApplicationController
 
     if !guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
-      groups = groups.where("automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
+      groups =
+        groups.where("groups.automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
       type_filters.delete(:automatic)
     end
 
@@ -79,6 +80,8 @@ class GroupsController < ApplicationController
     else
       type_filters = type_filters - %i[my owner]
     end
+
+    groups = DiscoursePluginRegistry.apply_modifier(:groups_index_query, groups, self)
 
     type_filters.delete(:non_automatic)
 
@@ -122,7 +125,10 @@ class GroupsController < ApplicationController
         groups = Group.visible_groups(current_user)
         if !guardian.is_staff?
           groups =
-            groups.where("automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
+            groups.where(
+              "groups.automatic IS FALSE OR groups.id = ?",
+              Group::AUTO_GROUPS[:moderators],
+            )
         end
 
         render_json_dump(
@@ -236,14 +242,6 @@ class GroupsController < ApplicationController
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
     dir = (params[:asc] && params[:asc].present?) ? "ASC" : "DESC"
-    if params[:desc]
-      Discourse.deprecate(
-        ":desc is deprecated please use :asc instead",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-      dir = (params[:desc] && params[:desc].present?) ? "DESC" : "ASC"
-    end
     order = "NOT group_users.owner"
 
     if params[:requesters]
@@ -383,6 +381,32 @@ class GroupsController < ApplicationController
 
       render json: success_json.merge!(usernames: uniq_users.map(&:username), emails: emails)
     end
+  end
+
+  def add_owners
+    group = Group.find_by(id: params.require(:id))
+    raise Discourse::NotFound unless group
+
+    return can_not_modify_automatic if group.automatic
+    guardian.ensure_can_edit_group!(group)
+
+    users = users_from_params
+    group_action_logger = GroupActionLogger.new(current_user, group)
+
+    users.each do |user|
+      if !group.users.include?(user)
+        group.add(user)
+        group_action_logger.log_add_user_to_group(user)
+      end
+      group.group_users.where(user_id: user.id).update_all(owner: true)
+      group_action_logger.log_make_user_group_owner(user)
+
+      group.notify_added_to_group(user, owner: true) if params[:notify_users].to_s == "true"
+    end
+
+    group.restore_user_count!
+
+    render json: success_json.merge!(usernames: users.pluck(:username))
   end
 
   def join
@@ -587,10 +611,12 @@ class GroupsController < ApplicationController
         .order(:name)
 
     if (term = params[:term]).present?
-      groups = groups.where("name ILIKE :term OR full_name ILIKE :term", term: "%#{term}%")
+      groups =
+        groups.where("groups.name ILIKE :term OR groups.full_name ILIKE :term", term: "%#{term}%")
     end
 
     groups = groups.where(automatic: false) if params[:ignore_automatic].to_s == "true"
+    groups = DiscoursePluginRegistry.apply_modifier(:groups_search_query, groups, self)
 
     if Group.preloaded_custom_field_names.present?
       Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)
@@ -665,6 +691,12 @@ class GroupsController < ApplicationController
         render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
       end
     end
+  end
+
+  protected
+
+  def can_not_modify_automatic
+    render_json_error(I18n.t("groups.errors.can_not_modify_automatic"))
   end
 
   private

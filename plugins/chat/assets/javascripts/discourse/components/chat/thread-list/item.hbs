@@ -1,0 +1,43 @@
+<div
+  class={{concat-class
+    "chat-thread-list-item"
+    (if (gt @thread.tracking.unreadCount 0) "-is-unread")
+  }}
+  data-thread-id={{@thread.id}}
+  ...attributes
+>
+  <div class="chat-thread-list-item__main">
+    <div
+      title={{i18n "chat.thread.view_thread"}}
+      role="button"
+      class="chat-thread-list-item__open-button"
+      {{on "click" (fn this.openThread @thread) passive=true}}
+    >
+      <div class="chat-thread-list-item__header">
+        <div class="chat-thread-list-item__om-user-avatar">
+          <Chat::UserAvatar @user={{@thread.originalMessage.user}} />
+        </div>
+        <div class="chat-thread-list-item__title overflow-ellipsis">
+          {{replace-emoji this.title}}
+        </div>
+        <div class="chat-thread-list-item__unread-indicator">
+          <Chat::ThreadList::Item::UnreadIndicator @thread={{@thread}} />
+        </div>
+      </div>
+
+      <div class="chat-thread-list-item__body">
+        {{replace-emoji (html-safe @thread.originalMessage.excerpt)}}
+      </div>
+
+      <div class="chat-thread-list-item__metadata">
+        <div class="chat-thread-list-item__participants"></div>
+        <div class="chat-thread-list-item__last-reply">
+          {{#if @thread.preview.lastReplyCreatedAt}}
+            {{i18n "chat.thread.last_reply"}}
+            {{format-date @thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

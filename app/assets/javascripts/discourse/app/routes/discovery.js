@@ -5,9 +5,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import OpenComposer from "discourse/mixins/open-composer";
 import User from "discourse/models/user";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { action } from "@ember/object";
+import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 
 export default DiscourseRoute.extend(OpenComposer, {
   queryParams: {
@@ -56,9 +56,6 @@ export default DiscourseRoute.extend(OpenComposer, {
   @action
   loadingComplete() {
     this.controllerFor("discovery").loadingComplete();
-    if (!this.session.get("topicListScrollPosition")) {
-      scrollTop();
-    }
   },
 
   @action
@@ -97,5 +94,15 @@ export default DiscourseRoute.extend(OpenComposer, {
       categoryId: controller.get("category.id"),
       includeSubcategories: !controller.noSubcategories,
     });
+  },
+
+  refresh() {
+    resetCachedTopicList(this.session);
+    this._super();
+  },
+
+  @action
+  triggerRefresh() {
+    this.refresh();
   },
 });

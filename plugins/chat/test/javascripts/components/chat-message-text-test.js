@@ -22,7 +22,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
   test("shows collapsed", async function (assert) {
     this.set(
       "cooked",
-      '<div class="onebox lazyYT lazyYT-container" data-youtube-id="WaT_rLGuUr8" data-youtube-title="Japanese Katsu Curry (Pork Cutlet)"/>'
+      '<div class="youtube-onebox lazy-video-container" data-video-id="WaT_rLGuUr8" data-video-title="Japanese Katsu Curry (Pork Cutlet)" data-provider-name="youtube"/>'
     );
 
     await render(
@@ -51,7 +51,10 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
   });
 
   test("shows edits - collapsible message", async function (assert) {
-    this.set("cooked", '<div class="onebox lazyYT-container"></div>');
+    this.set(
+      "cooked",
+      '<div class="youtube-onebox lazy-video-container"></div>'
+    );
 
     await render(
       hbs`<ChatMessageText @cooked={{this.cooked}} @edited={{true}} />`

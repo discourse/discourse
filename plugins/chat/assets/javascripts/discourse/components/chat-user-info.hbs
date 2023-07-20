@@ -1,0 +1,8 @@
+{{#if @user}}
+  <a href={{this.userPath}} data-user-card={{@user.username}}>
+    <Chat::UserAvatar @user={{@user}} @avatarSize="medium" />
+  </a>
+  <a href={{this.userPath}} data-user-card={{@user.username}}>
+    <ChatUserDisplayName @user={{@user}} />
+  </a>
+{{/if}}

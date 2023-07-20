@@ -1,6 +1,6 @@
 <meta id="data-google-tag-manager"
   data-data-layer="<%= google_tag_manager_json %>"
-  data-nonce="<%= google_tag_manager_nonce_placeholder %>"
+  data-nonce="<%= ApplicationHelper.google_tag_manager_nonce(request.env) %>"
   data-container-id="<%= SiteSetting.gtm_container_id %>" />
 
 <%= preload_script 'google-tag-manager' %>

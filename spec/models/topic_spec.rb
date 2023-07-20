@@ -16,6 +16,8 @@ RSpec.describe Topic do
     Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite)
   end
 
+  it_behaves_like "it has custom fields"
+
   describe "Validations" do
     let(:topic) { Fabricate.build(:topic) }
 
@@ -653,8 +655,9 @@ RSpec.describe Topic do
 
     context "with a similar topic" do
       fab!(:post) do
-        SearchIndexer.enable
-        create_post(title: "Evil trout is the dude who posted this topic")
+        with_search_indexer_enabled do
+          create_post(title: "Evil trout is the dude who posted this topic")
+        end
       end
 
       let(:topic) { post.topic }
@@ -786,7 +789,7 @@ RSpec.describe Topic do
         Group.refresh_automatic_groups!
       end
 
-      after { RateLimiter.clear_all! }
+      use_redis_snapshotting
 
       context "when per day" do
         before { SiteSetting.max_topic_invitations_per_day = 1 }
@@ -2681,8 +2684,9 @@ RSpec.describe Topic do
       SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
       RateLimiter.stubs(:rate_limit_create_topic).returns(100)
       RateLimiter.enable
-      RateLimiter.clear_all!
     end
+
+    use_redis_snapshotting
 
     it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
       start = Time.now.tomorrow.beginning_of_day
@@ -2735,7 +2739,7 @@ RSpec.describe Topic do
       RateLimiter.enable
     end
 
-    after { RateLimiter.clear_all! }
+    use_redis_snapshotting
 
     it "limits according to max_personal_messages_per_day" do
       Group.refresh_automatic_groups!
@@ -3136,9 +3140,20 @@ RSpec.describe Topic do
 
   describe "#remove_allowed_user" do
     fab!(:topic) { Fabricate(:topic) }
+    fab!(:private_topic) do
+      Fabricate(
+        :private_message_topic,
+        title: "Private message",
+        user: admin,
+        topic_allowed_users: [
+          Fabricate.build(:topic_allowed_user, user: admin),
+          Fabricate.build(:topic_allowed_user, user: user1),
+        ],
+      )
+    end
 
     describe "removing oneself" do
-      it "should remove onself" do
+      it "should remove oneself" do
         topic.allowed_users << user1
 
         expect(topic.remove_allowed_user(user1, user1)).to eq(true)
@@ -3149,6 +3164,12 @@ RSpec.describe Topic do
         expect(post.user).to eq(user1)
         expect(post.post_type).to eq(Post.types[:small_action])
         expect(post.action_code).to eq("user_left")
+      end
+
+      it "should show a small action when user removes themselves from pm" do
+        expect do private_topic.remove_allowed_user(user1, user1) end.to change {
+          private_topic.posts.where(action_code: "user_left").count
+        }.by(1)
       end
     end
   end
@@ -3493,6 +3514,30 @@ RSpec.describe Topic do
 
         stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
         expect(stats_message).to be_blank
+      end
+    end
+  end
+
+  describe "#group_pm?" do
+    context "when topic is not a private message" do
+      subject(:public_topic) { Fabricate(:topic) }
+
+      it { is_expected.not_to be_a_group_pm }
+    end
+
+    context "when topic is a private message" do
+      subject(:pm_topic) { Fabricate(:private_message_topic) }
+
+      context "when more than two people have access" do
+        let(:other_user) { Fabricate(:user) }
+
+        before { pm_topic.allowed_users << other_user }
+
+        it { is_expected.to be_a_group_pm }
+      end
+
+      context "when no more than two people have access" do
+        it { is_expected.not_to be_a_group_pm }
       end
     end
   end

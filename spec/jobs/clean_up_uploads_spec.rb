@@ -137,9 +137,16 @@ RSpec.describe Jobs::CleanUpUploads do
       Jobs::CleanUpUploads.new.execute(nil)
 
       [
-        logo_upload, logo_small_upload, digest_logo_upload, mobile_logo_upload, large_icon_upload,
-        opengraph_image_upload, twitter_summary_large_image_upload, favicon_upload,
-        apple_touch_icon_upload, system_upload,
+        logo_upload,
+        logo_small_upload,
+        digest_logo_upload,
+        mobile_logo_upload,
+        large_icon_upload,
+        opengraph_image_upload,
+        twitter_summary_large_image_upload,
+        favicon_upload,
+        apple_touch_icon_upload,
+        system_upload,
       ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
 
       fabricate_upload

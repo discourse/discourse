@@ -6,16 +6,12 @@ module Onebox
       include Engine
       include LayoutSupport
       include HTML
+      include ActionView::Helpers::NumberHelper
 
       matches_regexp(
         %r{^https?://(mobile\.|www\.)?twitter\.com/.+?/status(es)?/\d+(/(video|photo)/\d?+)?+(/?\?.*)?/?$},
       )
       always_https
-
-      def self.===(other)
-        client = Onebox.options.twitter_client
-        client && !client.twitter_credentials_missing? && super
-      end
 
       def http_params
         { "User-Agent" => "DiscourseBot/1.0" }
@@ -27,8 +23,44 @@ module Onebox
 
       private
 
+      def get_twitter_data
+        response =
+          begin
+            Onebox::Helpers.fetch_response(url, headers: http_params)
+          rescue StandardError
+            return nil
+          end
+        html = Nokogiri.HTML(response)
+        twitter_data = {}
+        html
+          .css("meta")
+          .each do |m|
+            if m.attribute("property") && m.attribute("property").to_s.match(/^og:/i)
+              m_content = m.attribute("content").to_s.strip
+              m_property = m.attribute("property").to_s.gsub("og:", "").gsub(":", "_")
+              twitter_data[m_property.to_sym] = m_content
+            end
+          end
+        twitter_data
+      end
+
       def match
         @match ||= @url.match(%r{twitter\.com/.+?/status(es)?/(?<id>\d+)})
+      end
+
+      def twitter_data
+        @twitter_data ||= get_twitter_data
+      end
+
+      def guess_tweet_index
+        usernames = meta_tags_data("additionalName").compact
+        usernames.each_with_index do |username, index|
+          return index if twitter_data[:url].to_s.include?(username)
+        end
+      end
+
+      def tweet_index
+        @tweet_index ||= guess_tweet_index
       end
 
       def client
@@ -39,66 +71,145 @@ module Onebox
         client && !client.twitter_credentials_missing?
       end
 
-      def raw
-        @raw ||= client.status(match[:id]).to_hash if twitter_api_credentials_present?
+      def symbolize_keys(obj)
+        case obj
+        when Array
+          obj.map { |item| symbolize_keys(item) }
+        when Hash
+          obj.each_with_object({}) do |(key, value), result|
+            result[key.to_sym] = symbolize_keys(value)
+          end
+        else
+          obj
+        end
       end
 
-      def access(*keys)
-        keys.reduce(raw) do |memo, key|
-          next unless memo
-          memo[key] || memo[key.to_s]
+      def raw
+        if twitter_api_credentials_present?
+          @raw ||= symbolize_keys(client.status(match[:id]))
+        else
+          super
         end
       end
 
       def tweet
-        client.prettify_tweet(raw)&.strip
+        if twitter_api_credentials_present?
+          client.prettify_tweet(raw)&.strip
+        else
+          twitter_data[:description].gsub(/“(.+?)”/im) { $1 } if twitter_data[:description]
+        end
       end
 
       def timestamp
-        date = DateTime.strptime(access(:created_at), "%a %b %d %H:%M:%S %z %Y")
-        user_offset = access(:user, :utc_offset).to_i
-        offset = (user_offset >= 0 ? "+" : "-") + Time.at(user_offset.abs).gmtime.strftime("%H%M")
-        date.new_offset(offset).strftime("%-l:%M %p - %-d %b %Y")
+        if twitter_api_credentials_present? && (created_at = raw.dig(:data, :created_at))
+          date = DateTime.strptime(created_at, "%Y-%m-%dT%H:%M:%S.%L%z")
+          date.strftime("%-l:%M %p - %-d %b %Y")
+        end
       end
 
       def title
-        access(:user, :name)
+        if twitter_api_credentials_present?
+          raw.dig(:includes, :users)&.first&.dig(:name)
+        else
+          meta_tags_data("givenName")[tweet_index]
+        end
       end
 
       def screen_name
-        access(:user, :screen_name)
+        if twitter_api_credentials_present?
+          raw.dig(:includes, :users)&.first&.dig(:username)
+        else
+          meta_tags_data("additionalName")[tweet_index]
+        end
       end
 
       def avatar
-        access(:user, :profile_image_url_https).sub("normal", "400x400")
+        if twitter_api_credentials_present?
+          raw.dig(:includes, :users)&.first&.dig(:profile_image_url)
+        end
       end
 
       def likes
-        prettify_number(access(:favorite_count).to_i)
+        if twitter_api_credentials_present?
+          prettify_number(raw.dig(:data, :public_metrics, :like_count).to_i)
+        end
       end
 
       def retweets
-        prettify_number(access(:retweet_count).to_i)
+        if twitter_api_credentials_present?
+          prettify_number(raw.dig(:data, :public_metrics, :retweet_count).to_i)
+        end
+      end
+
+      def is_reply
+        if twitter_api_credentials_present?
+          raw.dig(:data, :referenced_tweets)&.any? { |tweet| tweet.dig(:type) == "replied_to" }
+        end
       end
 
       def quoted_full_name
-        access(:quoted_status, :user, :name)
+        if twitter_api_credentials_present? && quoted_tweet_author.present?
+          quoted_tweet_author[:name]
+        end
       end
 
       def quoted_screen_name
-        access(:quoted_status, :user, :screen_name)
+        if twitter_api_credentials_present? && quoted_tweet_author.present?
+          quoted_tweet_author[:username]
+        end
       end
 
-      def quoted_tweet
-        access(:quoted_status, :full_text)
+      def quoted_text
+        quoted_tweet[:text] if twitter_api_credentials_present? && quoted_tweet.present?
       end
 
       def quoted_link
-        "https://twitter.com/#{quoted_screen_name}/status/#{access(:quoted_status, :id)}"
+        if twitter_api_credentials_present?
+          "https://twitter.com/#{quoted_screen_name}/status/#{quoted_status_id}"
+        end
+      end
+
+      def quoted_status_id
+        raw.dig(:data, :referenced_tweets)&.find { |ref| ref[:type] == "quoted" }&.dig(:id)
+      end
+
+      def quoted_tweet
+        raw.dig(:includes, :tweets)&.find { |tweet| tweet[:id] == quoted_status_id }
+      end
+
+      def quoted_tweet_author
+        raw.dig(:includes, :users)&.find { |user| user[:id] == quoted_tweet&.dig(:author_id) }
       end
 
       def prettify_number(count)
-        count > 0 ? client.prettify_number(count) : nil
+        if count > 0
+          number_to_human(
+            count,
+            format: "%n%u",
+            precision: 2,
+            units: {
+              thousand: "K",
+              million: "M",
+              billion: "B",
+            },
+          )
+        end
+      end
+
+      def attr_at_css(css_property, attribute_name)
+        raw.at_css(css_property)&.attr(attribute_name)
+      end
+
+      def meta_tags_data(attribute_name)
+        data = []
+        raw
+          .css("meta")
+          .each do |m|
+            if m.attribute("itemprop") && m.attribute("itemprop").to_s.strip == attribute_name
+              data.push(m.attribute("content").to_s.strip)
+            end
+          end
+        data
       end
 
       def data
@@ -111,7 +222,8 @@ module Onebox
           avatar: avatar,
           likes: likes,
           retweets: retweets,
-          quoted_tweet: quoted_tweet,
+          is_reply: is_reply,
+          quoted_text: quoted_text,
           quoted_full_name: quoted_full_name,
           quoted_screen_name: quoted_screen_name,
           quoted_link: quoted_link,

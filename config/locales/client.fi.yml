@@ -144,6 +144,8 @@ fi:
       facebook: "Jaa Facebookissa"
       email: "Lähetä sähköpostitse"
       url: "Kopioi ja jaa URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Muutettu ketju julkiseksi %{when}"
       open_topic: "Muunsi tämän ketjuksi %{when}"
@@ -155,6 +157,8 @@ fi:
       removed_user: "Poistettu käyttäjä %{who} %{when}"
       removed_group: "Poistettu käyttäjä %{who} %{when}"
       autobumped: "Nostettu automaattisesti %{when}"
+      tags_changed: "Tunnisteet on päivitetty %{when}"
+      category_changed: "Alue on päivitetty %{when}"
       autoclosed:
         enabled: "Suljettu %{when}"
         disabled: "Avattu %{when}"
@@ -179,17 +183,12 @@ fi:
       forwarded: "Välitetty yllä oleva sähköposti"
     topic_admin_menu: "ketjun toiminnot"
     skip_to_main_content: "Siirry pääsisältöön"
+    skip_user_nav: "Siirry profiilin sisältöön"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     emails_are_disabled_non_staff: "Lähtevät sähköpostit on poistettu käytöstä muilta kuin henkilökunnan käyttäjiltä."
     software_update_prompt:
       message: "Sivusto on juuri päivitetty, <span>päivitä sivu</span>, tai sivusto voi käyttäytyä odottamattomasti."
       dismiss: "Sulje"
-    bootstrap_mode_enabled:
-      one: "Jotta sivusto saisi lentävämmän lähdön, olet aloitustilassa. Kaikki käyttäjät nousevat heti luottamustasolle 1, ja päivittäiset sähköpostitiivistelmät kytketään päälle. Tila kytkeytyy pois päältä, kun %{count} käyttäjä on liittynyt."
-      other: "Jotta sivusto saisi lentävämmän lähdön, olet aloitustilassa. Kaikki käyttäjät nousevat heti luottamustasolle 1, ja päivittäiset sähköpostitiivistelmät kytketään päälle. Tila kytkeytyy pois päältä, kun %{count} käyttäjää on liittynyt."
-    bootstrap_mode_disabled: "Aloitustila poistetaan käytöstä seuraavan 24 tunnin aikana."
-    bootstrap_invite_button_title: "Lähetä kutsuja"
-    bootstrap_wizard_link_title: "Viimeistele ohjattu määritys"
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei välttämättä toimi, koska teemassa tai komponentissa on virheitä."
@@ -302,11 +301,9 @@ fi:
       edit_bookmark: "Muokkaa kirjanmerkkiä"
       clear_bookmarks: "Tyhjennä kirjanmerkit"
       help:
-        bookmark: "Klikkaa lisätäksesi ketjun ensimmäisen viestin kirjanmerkkeihin"
-        edit_bookmark: "Klikkaa muokataksesi tämän ketjun kirjanmerkkiä"
         edit_bookmark_for_topic: "Klikkaa muokataksesi tämän ketjun kirjanmerkkiä"
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
-        unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset."
+        unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset"
     bookmarks:
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       created_generic: "Olet kirjanmerkinnyt tämän. %{name}"
@@ -350,7 +347,7 @@ fi:
       new_topic: "Uusi ketjuluonnos"
       new_private_message: "Uusi yksityisviestin luonnos"
       abandon:
-        confirm: "Sinulla on meneillään luonnos tätä ketjua varten. Mitä haluaisit tehdä sen kanssa?"
+        confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
     topic_count_categories:
@@ -523,11 +520,9 @@ fi:
       scores:
         about: "Pisteet perustuvat ilmoittajan luottamustasoon, heidän aiempien liputusten osuvuuteen ja raportoidun asian prioriteettiin."
         score: "Arvo"
-        date: "Päivämäärä"
-        type: "Tyyppi"
+        type: "Syy"
         status: "Tila"
-        submitted_by: "Lähettäjä"
-        reviewed_by: "Käsittelijä"
+        submitted_by: "Ilmoittaja"
       statuses:
         pending:
           title: "Odottaa"
@@ -535,14 +530,12 @@ fi:
           title: "Hyväksytty"
         rejected:
           title: "Hylätty"
-        ignored:
-          title: "Sivuutettu"
-        deleted:
-          title: "Poistettu"
         reviewed:
-          title: "(kaikki käsitellyt)"
+          title: "Kaikki käsitellyt"
         all:
-          title: "(kaikki)"
+          title: "Kaikki"
+      context_question:
+        delimiter: "tai"
       types:
         reviewable_flagged_post:
           title: "Liputettu viesti"
@@ -555,6 +548,8 @@ fi:
           title: "Käyttäjä"
         reviewable_post:
           title: "Viesti"
+        reviewable_chat_message:
+          title: "Liputettu chat-viesti"
       approval:
         title: "Viesti odottaa hyväksyntää"
         description: "Viestisi saapui perille, mutta valvojan on vielä hyväksyttävä se, jotta se näkyy sivustolla. Ole kärsivällinen."
@@ -849,6 +844,7 @@ fi:
         make_all_primary_description: "Aseta tämä ryhmä ensisijaiseksi kaikille valituille käyttäjille"
         remove_all_primary: "Poista kaikilta ensisijaisuus"
         remove_all_primary_description: "Poista tämä ryhmä kaikilta ensisijaisena ryhmänä"
+        status: "Tila"
         owner: "Isäntä"
         primary: "Ensisijainen"
         forbidden: "Et voi tarkastella jäseniä."
@@ -976,11 +972,6 @@ fi:
       profile: "Profiili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
-      download_archive:
-        button_text: "Lataa kaikki"
-        confirm: "Haluatko varmasti ladata viestisi?"
-        success: "Lataus aloitettu. Saat ilmoituksen yksityisviestinä, kun prosessi on valmis."
-        rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Yritä huomenna uudelleen."
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
@@ -1033,6 +1024,7 @@ fi:
           warning: "Haluatko varmasti nollata valikoimasi ketjun?"
       use_current_timezone: "Käytä nykyistä aikavyöhykettäni"
       profile_hidden: "Käyttäjän julkinen profiili ei ole nähtävillä."
+      inactive_user: "Käyttäjä ei ole enää aktiivinen."
       expand_profile: "Laajenna"
       sr_expand_profile: "Laajenna profiilin tiedot"
       collapse_profile: "Supista"
@@ -1052,7 +1044,7 @@ fi:
         perm_denied_expl: "Olet kieltänyt ilmoitukset. Salli ilmoitukset selaimesi asetuksista."
         disable: "Poista ilmoitukset käytöstä"
         enable: "Näytä ilmoituksia"
-        each_browser_note: 'Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun keskeytät ilmoitukset käyttäjävalikosta riippumatta tästä asetuksesta.'
+        each_browser_note: "Huomautus: Tätä asetusta on muutettava jokaisessa käyttämässäsi selaimessa. Kaikki ilmoitukset poistetaan käytöstä, kun keskeytät ilmoitukset käyttäjävalikosta riippumatta tästä asetuksesta."
         consent_prompt: "Haluatko reaaliaikaisia ilmoituksia, kun ihmiset vastaavat viesteihisi?"
       dismiss: "Kuittaa"
       dismiss_notifications: "Kuittaa kaikki"
@@ -1103,14 +1095,10 @@ fi:
       experimental_sidebar:
         enable: "Ota sivupalkki käyttöön"
         options: "Asetukset"
-        categories_section: "Alueet-osio"
-        categories_section_instruction: "Valitut alueet näkyvät sivupalkin alueet-osiossa."
-        tags_section: "Tunnisteet-osio"
-        tags_section_instruction: "Valitut tunnisteet näkyvät sivupalkin tunnisteet-osiossa."
         navigation_section: "Navigointi"
-        list_destination_instruction: "Kun sivupalkissa on uutta sisältöä..."
-        list_destination_default: "käytä oletuslinkkiä ja näytä merkki uusissa kohteissa"
-        list_destination_unread_new: "linkki lukemattomiin/uusiin ja näytä uusien kohteiden määrä"
+        navigation_section_instruction: "Kun navigointivalikon aihelistalla on uusia tai lukemattomia kohteita…"
+        link_to_filtered_list_checkbox_description: "Linkki suodatettuun listaan"
+        show_count_new_items_checkbox_description: "Näytä uusien kohteiden lukumäärä"
       change: "vaihda"
       featured_topic: "Valikoitu ketju"
       moderator: "%{user} on valvoja"
@@ -1181,12 +1169,21 @@ fi:
       home: "Oletusaloitussivu"
       staged: "Esikäyttäjä"
       staff_counters:
-        flags_given: "hyödyllistä liputusta"
-        flagged_posts: "liputettua viestiä"
-        deleted_posts: "poistettua viestiä"
-        suspensions: "estoa"
-        warnings_received: "varoituksia"
-        rejected_posts: "hylättyjä viestejä"
+        flagged_posts:
+          one: '<span class="%{className}">%{count}</span> merkitty julkaisu'
+          other: '<span class="%{className}">%{count}</span> merkittyä julkaisua'
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> poistettu julkaisu'
+          other: '<span class="%{className}">%{count}</span> poistettua julkaisua'
+        suspensions:
+          one: '<span class="%{className}">%{count}</span> jäädytys'
+          other: '<span class="%{className}">%{count}</span> jäädytystä'
+        warnings_received:
+          one: '<span class="%{className}">%{count}</span> varoitus'
+          other: '<span class="%{className}">%{count}</span> varoitusta'
+        rejected_posts:
+          one: '<span class="%{className}">%{count}</span> hylätty julkaisu'
+          other: '<span class="%{className}">%{count}</span> hylättyä julkaisua'
       messages:
         all: "kaikki postilaatikot"
         inbox: "Saapuneet"
@@ -1279,7 +1276,6 @@ fi:
         tags: "Tunnisteet"
         interface: "Käyttöliittymä"
         apps: "Sovellukset"
-        sidebar: "Sivupalkki"
       change_password:
         success: "(sähköposti lähetetty)"
         in_progress: "(sähköpostia lähetetään)"
@@ -1293,11 +1289,9 @@ fi:
         title: "Kaksivaiheisen tunnistuksen varakoodit"
         regenerate: "Tee uusi"
         disable: "Poista käytöstä"
-        enable: "Ota käyttöön"
-        enable_long: "Ota varakoodit käyttöön"
         manage:
-          one: "Hallitse varakoodeja. Sinulla on <strong>%{count}</strong> varakoodi jäljellä."
-          other: "Hallitse varakoodeja. Sinulla on <strong>%{count}</strong> varakoodia jäljellä."
+          one: "<strong>%{count}</strong> varakoodi jäljellä."
+          other: "<strong>%{count}</strong> varakoodia jäljellä."
         copy_to_clipboard: "Kopioi leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
@@ -1786,36 +1780,6 @@ fi:
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
     staff_writes_only_mode:
       enabled: "Sivusto on vain henkilökunta -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on rajoitettu vain henkilökunnan jäsenille."
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Aloitetaan keskustelu!</a> Sivustolla on { currentTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      } ja { currentPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vierailijat tarvitsevat enemmän luettavaa ja vastattavaa – suosittelemme, että sivustolla olisi vähintään { requiredTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      } ja { requiredPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vain henkilökunta voi nähdä tämän viestin.
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Aloitetaan keskustelu!</a> Sivustolla on { currentTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      }. Vierailijat tarvitset enemmän luettavaa ja vastattavaa – suosittelemme, että sivustolla olisi vähintään { requiredTopics, plural,
-          one {<strong>#</strong> ketju}
-        other {<strong>#</strong> ketjua}
-      }. Vain henkilökunta voi nähdä tämän viestin.
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">Aloitetaan keskustelu!</a> Sivustolla on { currentPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vierailijat tarvitset enemmän luettavaa ja vastattavaa – suosittelemme, että sivustolla olisi vähintään { requiredPosts, plural,
-          one {<strong>#</strong> viesti}
-        other {<strong>#</strong> viestiä}
-      }. Vain henkilökunta voi nähdä tämän viestin.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# virhe/tunti} other {# virhettä/tunti}}</a> saavutti sivustoasetusrajan {limit, plural, one {# virhe/tunti} other {# virhettä/tunti}}.
@@ -1845,6 +1809,9 @@ fi:
       hidden_for_session: "OK, kysymme sinulta huomenna. Voit myös aina käyttää 'Kirjaudu sisään' -linkkiä tilin luomiseen."
       intro: "Hei! Vaikuttaa siltä, että olet pitänyt keskusteluista, muttet ole luonut käyttäjätiliä."
       value_prop: "Oletko kyllästynyt selaamaan samoja viestejä? Kun luot tilin, palaat aina siihen, mihin jäit. Tilin avulla voit myös saada ilmoituksia uusista vastauksista, tallentaa kirjanmerkkejä ja käyttää tykkäyksiä kiittääksesi muita. Voimme kaikki työskennellä yhdessä tehdäksemme tästä yhteisöstä mahtavan. :heart:"
+    offline_indicator:
+      no_internet: "Ei Internet-yhteyttä."
+      refresh_page: "Päivitä sivu"
     summary:
       enabled_description: "Tarkastelet yhteenvetoa tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description:
@@ -1852,7 +1819,6 @@ fi:
         other: "Ketjussa on <b>%{count}</b> vastausta."
       description_time_MF: |
         Ketjussa {replyCount, plural, one {on <b>#</b> vastaus} other {on <b>#</b> vastausta}}, joiden arvioitu lukuaika on <b>{readingTime, plural, one {# minuutti} other {# minuuttia}}</b>.
-      enable: "Näytä ketjun tiivistelmä"
       disable: "Näytä kaikki viestit"
       short_label: "Tee yhteenveto"
       short_title: "Näytä tämän ketjun yhteenveto: mielenkiintoisimmat viestit käyttäjien toiminnan perusteella"
@@ -2154,8 +2120,6 @@ fi:
         topic_template_not_modified: "Lisää ketjuun tietoja ja yksityiskohtia muokkaamalla ketjun mallipohjaa."
       save_edit: "Tallenna muokkaus"
       overwrite_edit: "Korvaa muokkaus"
-      reply_original: "Vastaa alkuperäiseen ketjuun"
-      reply_here: "Vastaa tänne"
       reply: "Vastaa"
       cancel: "Peruuta"
       create_topic: "Aloita ketju"
@@ -2320,6 +2284,7 @@ fi:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} – valmis"
       new_features: "Uusia ominaisuuksia saatavilla!"
+      admin_problems: "Uusia suosituksia sivustosi hallintapaneelissa"
       dismiss_confirmation:
         body:
           default:
@@ -2624,7 +2589,7 @@ fi:
         top: "Suosittuja ketjuja ei ole."
         educate:
           new: '<p>Sinulle uudet ketjut näytetään tässä. Oletuksena ketju tulkitaan uudeksi ja sen yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>-merkintä, jos se on aloitettu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
-          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge unread-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvälä painikkeella.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
+          unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge unread-posts badge-notification">1</span>, jos olet:</p><ul><li>aloittanut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään kuin 5 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvälä painikkeella.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         posted: "Ketjuja, joihin olet kirjoittanut, ei ole enempää."
@@ -2687,6 +2652,7 @@ fi:
       read_more_in_category: "Haluatko lukea lisää? Selaa muita ketjuja alueelta %{categoryLink} tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       read_more: "Haluatko lukea lisää? <a href='%{categoryLink}'>Selaa kaikkia alueita</a> tai <a href='%{latestLink}'>katso viimeisimmät ketjut</a>."
       unread_indicator: "Kukaan jäsen ei ole lukenut ketjun viimeistä viestiä vielä."
+      participant_groups: "Osallistujaryhmät"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -2727,8 +2693,6 @@ fi:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a>, <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a> tai katso suosituimmat:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Selaa kaikkia tunnisteita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
       suggest_create_topic: Valmiina <a href>aloittamaan uuden keskustelun?</a>
-      jump_reply_up: siirry aiempaan vastaukseen
-      jump_reply_down: siirry myöhempään vastaukseen
       deleted: "Tämä ketju on poistettu"
       slow_mode_update:
         title: "Hidas tila"
@@ -2996,6 +2960,7 @@ fi:
         instructions:
           one: "Valitse ketju, johon haluat siirtää valitun viestin."
           other: "Valitse ketju, johon haluat siirtää valitut <b>%{count}</b> viestiä."
+        chronological_order: "säilytä kronologinen järjestys yhdistämisen jälkeen"
       move_to_new_message:
         title: "Siirrä uuteen viestiin"
         action: "siirrä uuteen viestiin"
@@ -3093,9 +3058,6 @@ fi:
       collapse: "kutista"
       sr_collapse_replies: "Kutista upotetut vastaukset"
       sr_date: "Viestin päivämäärä"
-      sr_expand_replies:
-        one: "Tällä viestillä on %{count} vastaus. Laajenna klikkaamalla."
-        other: "Tällä viestillä on %{count} vastausta. Laajenna klikkaamalla."
       expand_collapse: "laajenna/kutista"
       sr_below_embedded_posts_description: "viestin %{post_number} vastaukset"
       sr_embedded_reply_description: "käyttäjän %{username} vastaus viestiin %{post_number}"
@@ -3324,7 +3286,6 @@ fi:
       back: "Takaisin alueelle"
       general: "Yleistä"
       settings: "Asetukset"
-      topic_template: "Ketjun mallipohja"
       tags: "Tunnisteet"
       tags_allowed_tags: "Rajaa nämä tunnisteet tälle alueelle:"
       tags_allowed_tag_groups: "Rajaa nämä tunnisteryhmät tälle alueelle:"
@@ -3383,8 +3344,6 @@ fi:
       email_in: "Mukautettu saapuvan postin sähköpostiosoite:"
       email_in_tooltip: "Voit erottaa useita sähköpostiosoitteita |-merkillä."
       email_in_allow_strangers: "Hyväksy sähköpostit anonyymeiltä käyttäjiltä, joilla ei ole tiliä"
-      email_in_disabled: "Uusien ketjujen aloittaminen sähköpostitse on poistettu käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
-      email_in_disabled_click: 'ota käyttöön saapuvien sähköpostien asetus.'
       mailinglist_mirror: "Alue jäljittelee postituslistaa"
       show_subcategory_list: "Näytä ala-alueiden luettelo ketjujen yläpuolella tällä alueella."
       read_only_banner: "Banneriteksti, joka näytetään, jos käyttäjä ei voi aloittaa ketjua tälle alueelle:"
@@ -3592,6 +3551,10 @@ fi:
     filters:
       with_topics: "%{filter} ketjut"
       with_category: "%{filter} %{category} ketjut"
+      filter:
+        title: "Suodatin"
+        button:
+          label: "Suodatin"
       latest:
         title: "Tuoreimmat"
         title_with_count:
@@ -3662,7 +3625,6 @@ fi:
         this_week: "Viikko"
         today: "Tänään"
     browser_update: 'Valitettavasti <a href="https://www.discourse.org/faq/#browser">selaintasi ei tueta</a>. <a href="https://browsehappy.com">Vaihda tuettuun selaimeen</a>, niin voit katsella monipuolista sisältöä, kirjautua sisään ja vastata.'
-    safari_13_warning: Tämä sivusto poistaa pian iOS:n ja Safarin version 13 ja sitä vanhempien versioiden tuen. Yksinkertaistettu vain luku -versio on edelleen käytettävissä. (<a href="https://meta.discourse.org/t/224747">Lisätietoja</a>)
     permission_types:
       full: "Luoda / Vastata / Nähdä"
       create_post: "Vastata / Nähdä"
@@ -3769,7 +3731,9 @@ fi:
         one: "On ansainnut tämän kunniamerkin %{count} kerran"
         other: "On ansainnut tämän kunniamerkin %{count} kertaa"
       granted_on: "Myönnetty %{date}"
-      others_count: "Muita, joilla on tämä kunniamerkki (%{count})"
+      others_count:
+        one: "Myönnetty muille %{count} kerran"
+        other: "Myönnetty muille %{count} kertaa"
       title: Kunniamerkit
       allow_title: "Voit käyttää tätä kunniamerkkiä tittelinä"
       multiple_grant: "Voit ansaita tämän useasti"
@@ -3952,13 +3916,11 @@ fi:
     pause_notifications:
       title: "Keskeytä ilmoitukset..."
       label: "Keskeytä ilmoitukset"
-      remaining: "%{remaining} jäljellä"
       options:
         half_hour: "30 minuuttiin"
         one_hour: "1 tuntiin"
         two_hours: "2 tuntiin"
         tomorrow: "Ennen huomista"
-        custom: "Mukautettu"
       set_schedule: "Aseta ilmoitusten aikataulu"
     trust_levels:
       names:
@@ -4007,7 +3969,23 @@ fi:
       more: "Lisää"
       all_categories: "Kaikki alueet"
       all_tags: "Kaikki tunnisteet"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Kaikki"
       sections:
+        custom:
+          save: "Tallenna"
+          delete: "Poista"
+          reset_confirm: "Haluatko varmasti palauttaa osion oletukset?"
+          more_menu: "Lisää-valikko"
+          links:
+            reset: "Palauta oletukset"
+            icon:
+              label: "Kuvake"
+            name:
+              label: "Nimi"
+            value:
+              label: "Linkki"
         about:
           header_link_text: "Tietoa"
         messages:
@@ -4022,28 +4000,21 @@ fi:
             unread_with_count: "Lukematta (%{count})"
             archive: "Arkisto"
         tags:
-          links:
-            add_tags:
-              content: "Lisää tunnisteita"
-              title: "Et ole lisännyt tunnisteita. Aloita klikkaamalla."
           none: "Et ole lisännyt tunnisteita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Tunnisteet"
           header_action_title: "Muokkaa sivupalkin tunnisteitasi"
           configure_defaults: "Määritä oletukset"
         categories:
-          links:
-            add_categories:
-              content: "Lisää alueita"
-              title: "Et ole lisännyt alueita. Aloita klikkaamalla."
           none: "Et ole lisännyt alueita."
           click_to_get_started: "Aloita klikkaamalla tätä."
           header_link_text: "Alueet"
           header_action_title: "Muokkaa sivupalkin alueitasi"
           configure_defaults: "Määritä oletukset"
         community:
-          header_link_text: "Yhteisö"
-          header_action_title: "Aloita ketju"
+          edit_section:
+            sidebar: "Mukauta osiota"
+            header_dropdown: "Mukauta"
           links:
             about:
               content: "Tietoa"
@@ -4054,8 +4025,8 @@ fi:
             badges:
               content: "Kunniamerkit"
               title: "Kaikki ansaittavissa olevat kunniamerkit"
-            everything:
-              content: "Kaikki"
+            topics:
+              content: "Ketjut"
               title: "Kaikki ketjut"
             faq:
               content: "UKK"
@@ -4082,6 +4053,13 @@ fi:
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
       button_title: "Aloita muokkaaminen"
     until: "Asti:"
+    form_template_chooser:
+      select_template: "Valitse malleista"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Anna kelvollinen arvo."
+          email: "Anna kelvollinen sähköpostiosoite."
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:
@@ -4240,10 +4218,6 @@ fi:
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmän jäsenet"
         delete: "Poista"
-        delete_confirm: "Oletko varma, että haluat poistaa tämän ryhmän?"
-        delete_with_messages_confirm:
-          one: "Tämän ryhmän poistaminen aiheuttaa %{count} viestin orpoutumisen, ja ryhmän jäsenillä ei ole tämän jälkeen pääsyä siihen."
-          other: "Tämän ryhmän poistaminen aiheuttaa %{count} viestin orpoutumisen, ja ryhmän jäsenillä ei ole tämän jälkeen pääsyä siihen."
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
         delete_automatic_group: Tämä on automaattisesti luotu ryhmä, eikä sitä voi poistaa.
         delete_owner_confirm: "Perutaanko käyttäjältä '%{username}' isännyys?"
@@ -4308,10 +4282,10 @@ fi:
             topics:
               read: Lue ketjua tai tiettyä sen viestiä. RSS on myös tuettu.
               write: Aloita uusi ketju tai kirjoita olemassa olevaan.
-              update: Päivitä ketju. Muuta otsikkoa, aluetta, tunnisteita jne.
               read_lists: Lue ketjuluetteloita, kuten suositut, uudet, tuoreimmat jne. RSS on myös tuettu.
             posts:
               edit: Muokkaa mitä tahansa viestiä tai tiettyä viestiä.
+              list: Listaa viimeisimmät viestit ja yksityisviestit. Myös RSS on tuettu.
             categories:
               list: Hae luettelo alueista.
               show: Hae yksittäinen alue tunnuksen perusteella.
@@ -4406,8 +4380,8 @@ fi:
           name: "Käyttäjän ylennustapahtuma"
           details: "Kun käyttäjä ylennetään luottamustasolta toiselle."
         user_badge_event:
-          name: "Kunniamerkin myöntämistapahtuma"
-          details: "Kun käyttäjä saa kunniamerkin."
+          name: "Merkittävä tapahtuma"
+          details: "Kun kunniamerkki myönnetään tai mitätöidään."
         group_user_event:
           name: "Käyttäjäryhmän tapahtuma"
           details: "Kun käyttäjä lisätään tai poistetaan ryhmästä."
@@ -4450,7 +4424,6 @@ fi:
         enabled: "Otettu käyttöön?"
         is_enabled: "K"
         not_enabled: "E"
-        change_settings: "Muuta asetuksia"
         change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"
         official: "Virallinen lisäosa"
@@ -4782,6 +4755,8 @@ fi:
           love:
             name: "tykkäys"
             description: "Tykkäyspainikkeen väri."
+          selected:
+            name: "valittu"
         robots:
           title: "Ohita sivustosi robots.txt-tiedosto:"
           warning: "Tämä ohittaa pysyvästi kaikki asiaankuuluvat sivuston asetukset."
@@ -5066,14 +5041,8 @@ fi:
           silence: "Hiljennä"
           link: "Linkki"
         action_descriptions:
-          block: "Estä lähettämästä viestiä, jossa esiintyy joku näistä sanoista. Käyttäjälle näytetään virheilmoitus, kun hän yrittää lähettää viestinsä."
-          censor: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta korvaa ne merkeillä, jotka piilottavat sensuroidut sanat."
-          require_approval: "Viesti, jossa esiintyy joku näistä sanoista, tarvitsee henkilökunnan hyväksynnän ennen sen julkaisemista."
-          flag: "Salli viesti, jossa esiintyy joku näistä sanoista, mutta liputa se sopimattomaksi, jotta valvojat voivat tarkastella sitä."
-          replace: "Korvaa sanoja viesteissä vaihtoehtoisilla sanoilla"
-          tag: "Merkitse automaattisesti ketjuja tunnisteilla ensimmäisen viestin perusteella"
-          silence: "Ensimmäiset käyttäjän viestit, jotka sisältävät nämä sanat, tarvitsevat henkilökunnan hyväksynnän ennen kuin ne voidaan nähdä, ja käyttäjä hiljennetään automaattisesti."
-          link: "Korvaa sanoja viesteissä linkeillä"
+          replace: "Korvaa sanoja viesteissä vaihtoehtoisilla sanoilla."
+          link: "Korvaa sanoja viesteissä linkeillä."
         form:
           label: "Sisältää sanan tai lauseen"
           placeholder: "Syötä sana tai lause (* on jokerimerkki)"
@@ -5096,6 +5065,37 @@ fi:
           description: "Tarkastele tekstin osuvuutta tarkkailtuihin sanoihin kirjoittamalla alle"
           found_matches: "Löytyneitä osumia:"
           no_matches: "Ei osumia"
+      form_templates:
+        nav_title: "Mallit"
+        list_table:
+          headings:
+            name: "Nimi"
+            actions: "Toiminnot"
+        view_template:
+          close: "Sulje"
+          edit: "Muokkaa"
+          delete: "Poista"
+        new_template_form:
+          submit: "Tallenna"
+          cancel: "Peruuta"
+          preview: "Esikatselu"
+        quick_insert_fields:
+          add_new_field: "Lisää"
+          dropdown: "Pudotusvalikko"
+        validations_modal:
+          table_headers:
+            key: "Avain"
+            type: "Tyyppi"
+            description: "Kuvaus"
+          validations:
+            required:
+              key: "pakollinen"
+            minimum:
+              key: "vähintään"
+            maximum:
+              key: "enintään"
+            type:
+              key: "tyyppi"
       impersonate:
         title: "Esiinny käyttäjänä"
         help: "Tällä työkalulla voi esiintyä toisena käyttäjänä virheiden paikantamista varten. Sinun täytyy kirjautua ulos, kun olet valmis."
@@ -5108,6 +5108,7 @@ fi:
         not_found: "Tätä käyttäjätunnusta ei löydy järjestelmästä."
         id_not_found: "Tätä käyttäjän tunnusta ei löydy järjestelmästä."
         active: "Aktivoitu"
+        status: "Tila"
         show_emails: "Näytä sähköpostit"
         hide_emails: "Piilota sähköpostit"
         nav:
@@ -5196,7 +5197,6 @@ fi:
         show_admin_profile: "Ylläpito"
         manage_user: "Hallitse käyttäjää"
         show_public_profile: "Näytä julkinen profiili"
-        impersonate: "Esiinny käyttäjänä"
         action_logs: "Toimintaloki"
         ip_lookup: "IP-haku"
         log_out: "Kirjaa ulos"
@@ -5446,7 +5446,9 @@ fi:
             label: "Lisää Emoji"
         title: "Asetukset"
         no_results: "Ei tuloksia."
-        more_than_30_results: "Tuloksia on yli 30. Rajaa hakuasi tai valitse luokka."
+        more_site_setting_results:
+          one: "Tuloksia on enemmän kuin %{count}. Rajaa hakua tai valitse kategoria."
+          other: "Tuloksia on enemmän kuin %{count}. Rajaa hakua tai valitse kategoria."
         clear_filter: "Tyhjennä"
         add_url: "lisää URL"
         add_host: "lisää isäntä"
@@ -5533,7 +5535,8 @@ fi:
         allow_title: Salli kunniamerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja
         listable: Näytä kunniamerkki julkisella kunniamerkkisivulla
-        enabled: Ota kunniamerkki käyttöön
+        enabled: otettu käyttöön
+        disabled: poistettu käytöstä
         icon: Kuvake
         image: Kuva
         graphic: Kuvake
@@ -5603,10 +5606,8 @@ fi:
       embedding:
         get_started: "Jos haluat upottaa Discoursen toiselle sivustolle, aloita lisäämällä sen isäntä."
         confirm_delete: "Oletko varma, että haluat poistaa tämän isännän?"
-        sample: "Liitä seuraava HTML-koodi sivustollesi, jotta voit luoda ja upottaa Discourse-ketjuja. Korvaa <b>REPLACE_ME</b> sen sivun kanonisella URL-osoitteella, jolle upotat sen."
         title: "Upottaminen"
         host: "Sallitut isännät"
-        class_name: "Luokan nimi"
         allowed_paths: "Sallittu polkulistaus"
         edit: "muokkaa"
         category: "Julkaise alueelle"

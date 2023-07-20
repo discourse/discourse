@@ -71,5 +71,11 @@ te:
           title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
       emoji_picker:
         flags: "కేతనాలు"
+      thread:
+        title: "శీర్షిక"
+        settings: "అమరికలు"
+        notifications:
+          tracking:
+            title: "గమనిస్తున్నారు"
       draft_channel_screen:
         cancel: "రద్దుచేయి"

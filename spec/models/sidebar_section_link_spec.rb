@@ -47,4 +47,28 @@ RSpec.describe SidebarSectionLink do
       end
     end
   end
+
+  it "uses section user for links belonging to private sections" do
+    private_section = Fabricate(:sidebar_section, public: false)
+    sidebar_section_link =
+      Fabricate(
+        :sidebar_section_link,
+        sidebar_section: private_section,
+        linkable_id: 1,
+        linkable_type: "Tag",
+      )
+    expect(sidebar_section_link.user_id).to eq(private_section.user_id)
+  end
+
+  it "uses system user for links belonging to public sections" do
+    public_section = Fabricate(:sidebar_section, public: true)
+    sidebar_section_link =
+      Fabricate(
+        :sidebar_section_link,
+        sidebar_section: public_section,
+        linkable_id: 1,
+        linkable_type: "Tag",
+      )
+    expect(sidebar_section_link.user_id).to eq(Discourse.system_user.id)
+  end
 end

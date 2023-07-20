@@ -37,11 +37,12 @@
           @route="adminSiteSettingsCategory"
           @model={{category.nameKey}}
           class={{category.nameKey}}
+          title={{category.name}}
         >
           {{category.name}}
-          {{#if category.count}}<span
-              class="count"
-            >({{category.count}})</span>{{/if}}
+          {{#if category.count}}
+            <span class="count">({{category.count}})</span>
+          {{/if}}
         </LinkTo>
       </li>
     {{/each}}

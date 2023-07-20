@@ -3,9 +3,13 @@
 RSpec.describe Post do
   fab!(:coding_horror) { Fabricate(:coding_horror) }
 
+  let(:upload_path) { Discourse.store.upload_path }
+
   before { Oneboxer.stubs :onebox }
 
-  let(:upload_path) { Discourse.store.upload_path }
+  it_behaves_like "it has custom fields"
+
+  it { is_expected.to have_many(:reviewables).dependent(:destroy) }
 
   describe "#hidden_reasons" do
     context "when verifying enum sequence" do
@@ -198,7 +202,7 @@ RSpec.describe Post do
 
     it "is_flagged? is true if flag was deferred" do
       result = PostActionCreator.off_topic(user, post)
-      result.reviewable.perform(admin, :ignore)
+      result.reviewable.perform(admin, :ignore_and_do_nothing)
       expect(post.reload.is_flagged?).to eq(true)
     end
 
@@ -212,7 +216,7 @@ RSpec.describe Post do
       result = PostActionCreator.spam(user, post)
       expect(post.reviewable_flag).to eq(result.reviewable)
 
-      result.reviewable.perform(admin, :ignore)
+      result.reviewable.perform(admin, :ignore_and_do_nothing)
       expect(post.reviewable_flag).to be_nil
     end
 
@@ -1527,6 +1531,78 @@ RSpec.describe Post do
     post.revisions.create!(user_id: 1, post_id: post.id, number: 2)
     post.revisions.create!(user_id: 1, post_id: post.id, number: 1)
     expect(post.revisions.pluck(:number)).to eq([1, 2])
+  end
+
+  describe "video_thumbnails" do
+    fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
+    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:image_upload_2) { Fabricate(:upload) }
+    let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
+    let(:video_url) { "#{base_url}#{video_upload.url}" }
+
+    let(:raw_video) { <<~RAW }
+      <video width="100%" height="100%" controls>
+        <source src="#{video_url}">
+        <a href="#{video_url}">#{video_url}</a>
+      </video>
+      RAW
+
+    let(:post) { Fabricate(:post, raw: raw_video) }
+
+    before { SiteSetting.video_thumbnails_enabled = true }
+
+    it "has a topic thumbnail" do
+      # Thumbnails are tied to a specific video file by using the
+      # video's sha1 as the image filename
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(1)
+    end
+
+    it "only applies for video uploads" do
+      image_upload.original_filename = "#{image_upload_2.sha1}.png"
+      image_upload.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(0)
+    end
+
+    it "does not overwrite existing thumbnails" do
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      post.topic.image_upload_id = image_upload_2.id
+      post.topic.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
+
+    it "uses the newest thumbnail" do
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      image_upload_2.original_filename = "#{video_upload.sha1}.png"
+      image_upload_2.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(1)
+      expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
+
+    it "does not create thumbnails when disabled" do
+      SiteSetting.video_thumbnails_enabled = false
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(0)
+    end
   end
 
   describe "uploads" do

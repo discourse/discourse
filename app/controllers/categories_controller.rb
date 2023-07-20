@@ -196,6 +196,7 @@ class CategoriesController < ApplicationController
       category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
+      old_permissions = { "everyone" => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
         Scheduler::Defer.later "Log staff action change category settings" do
@@ -257,7 +258,8 @@ class CategoriesController < ApplicationController
 
   def find_by_slug
     params.require(:category_slug)
-    @category = Category.find_by_slug_path(params[:category_slug].split("/"))
+    @category =
+      Category.includes(:category_setting).find_by_slug_path(params[:category_slug].split("/"))
 
     raise Discourse::NotFound unless @category.present?
 
@@ -325,11 +327,16 @@ class CategoriesController < ApplicationController
 
     if topics_filter == :latest
       result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
+      result.topic_list.more_topics_url =
+        url_for(
+          public_send("latest_path", sort: topic_options[:order] == "created" ? :created : nil),
+        )
     elsif topics_filter == :top
       result.topic_list =
         TopicQuery.new(current_user, topic_options).list_top_for(
           SiteSetting.top_page_default_timeframe.to_sym,
         )
+      result.topic_list.more_topics_url = url_for(public_send("top_path"))
     end
 
     render_serialized(result, CategoryAndTopicListsSerializer, root: false)
@@ -364,7 +371,7 @@ class CategoriesController < ApplicationController
         if SiteSetting.enable_category_group_moderation?
           params[:reviewable_by_group_id] = Group.where(
             name: params[:reviewable_by_group_name],
-          ).pluck_first(:id) if params[:reviewable_by_group_name]
+          ).pick(:id) if params[:reviewable_by_group_name]
         end
 
         result =
@@ -404,11 +411,13 @@ class CategoriesController < ApplicationController
             :read_only_banner,
             :default_list_filter,
             :reviewable_by_group_id,
+            category_setting_attributes: %i[auto_bump_cooldown_days],
             custom_fields: [custom_field_params],
             permissions: [*p.try(:keys)],
             allowed_tags: [],
             allowed_tag_groups: [],
             required_tag_groups: %i[name min_count],
+            form_template_ids: [],
           )
 
         if result[:required_tag_groups] && !result[:required_tag_groups].is_a?(Array)

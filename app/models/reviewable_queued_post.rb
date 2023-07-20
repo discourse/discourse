@@ -16,6 +16,12 @@ class ReviewableQueuedPost < Reviewable
 
   after_commit :compute_user_stats, only: %i[create update]
 
+  def updatable_reviewable_scores
+    # Approvals are possible for already rejected queued posts. We need the
+    # scores to be updated when this happens.
+    reviewable_scores.pending.or(reviewable_scores.disagreed)
+  end
+
   def build_actions(actions, guardian, args)
     unless approved?
       if topic&.closed?
@@ -25,37 +31,41 @@ class ReviewableQueuedPost < Reviewable
           a.confirm_message = "reviewables.actions.approve_post.confirm_closed"
         end
       else
-        actions.add(:approve_post) do |a|
-          a.icon = "check"
-          a.label = "reviewables.actions.approve_post.title"
+        if target_created_by.present?
+          actions.add(:approve_post) do |a|
+            a.icon = "check"
+            a.label = "reviewables.actions.approve_post.title"
+          end
         end
       end
     end
 
-    unless rejected?
+    if pending?
       actions.add(:reject_post) do |a|
         a.icon = "times"
         a.label = "reviewables.actions.reject_post.title"
       end
     end
 
-    delete_user_actions(actions) if pending? && guardian.can_delete_user?(created_by)
+    delete_user_actions(actions) if pending? && guardian.can_delete_user?(target_created_by)
 
     actions.add(:delete) if guardian.can_delete?(self)
   end
 
   def build_editable_fields(fields, guardian, args)
-    # We can edit category / title if it's a new topic
-    if topic_id.blank?
-      # Only staff can edit category for now, since in theory a category group reviewer could
-      # post in a category they don't have access to.
-      fields.add("category_id", :category) if guardian.is_staff?
+    if pending?
+      # We can edit category / title if it's a new topic
+      if topic_id.blank?
+        # Only staff can edit category for now, since in theory a category group reviewer could
+        # post in a category they don't have access to.
+        fields.add("category_id", :category) if guardian.is_staff?
 
-      fields.add("payload.title", :text)
-      fields.add("payload.tags", :tags)
+        fields.add("payload.title", :text)
+        fields.add("payload.tags", :tags)
+      end
+
+      fields.add("payload.raw", :editor)
     end
-
-    fields.add("payload.raw", :editor)
   end
 
   def create_options
@@ -77,7 +87,7 @@ class ReviewableQueuedPost < Reviewable
       )
     opts.merge!(guardian: Guardian.new(performed_by)) if performed_by.staff?
 
-    creator = PostCreator.new(created_by, opts)
+    creator = PostCreator.new(target_created_by, opts)
     created_post = creator.create
 
     unless created_post && creator.errors.blank?
@@ -88,7 +98,7 @@ class ReviewableQueuedPost < Reviewable
     self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
-    UserSilencer.unsilence(created_by, performed_by) if created_by.silenced?
+    UserSilencer.unsilence(target_created_by, performed_by) if target_created_by.silenced?
 
     StaffActionLogger.new(performed_by).log_post_approved(created_post) if performed_by.staff?
 
@@ -97,7 +107,7 @@ class ReviewableQueuedPost < Reviewable
 
     Notification.create!(
       notification_type: Notification.types[:post_approved],
-      user_id: created_by.id,
+      user_id: target_created_by.id,
       data: { post_url: created_post.url }.to_json,
       topic_id: created_post.topic_id,
       post_number: created_post.post_number,
@@ -146,9 +156,12 @@ class ReviewableQueuedPost < Reviewable
   private
 
   def delete_user(performed_by, delete_options)
-    reviewable_ids = Reviewable.where(created_by: created_by).pluck(:id)
-    UserDestroyer.new(performed_by).destroy(created_by, delete_options)
-    create_result(:success) { |r| r.remove_reviewable_ids = reviewable_ids }
+    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
+
+    UserDestroyer.new(performed_by).destroy(target_created_by, delete_options)
+    update_column(:target_created_by_id, nil)
+
+    create_result(:success, :rejected) { |r| r.remove_reviewable_ids += reviewable_ids }
   end
 
   def delete_opts
@@ -162,7 +175,7 @@ class ReviewableQueuedPost < Reviewable
 
   def compute_user_stats
     return unless status_changed_from_or_to_pending?
-    created_by.user_stat.update_pending_posts
+    target_created_by&.user_stat&.update_pending_posts
   end
 
   def status_changed_from_or_to_pending?

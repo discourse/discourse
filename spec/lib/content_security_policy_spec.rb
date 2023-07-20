@@ -85,6 +85,8 @@ RSpec.describe ContentSecurityPolicy do
       before { SiteSetting.ga_universal_tracking_code = "UA-12345678-9" }
 
       it "allowlists Google Analytics v3 when integrated" do
+        SiteSetting.ga_version = "v3_analytics"
+
         script_srcs = parse(policy)["script-src"]
         expect(script_srcs).to include("https://www.google-analytics.com/analytics.js")
         expect(script_srcs).not_to include("https://www.googletagmanager.com/gtag/js")
@@ -104,9 +106,7 @@ RSpec.describe ContentSecurityPolicy do
 
       script_srcs = parse(policy)["script-src"]
       expect(script_srcs).to include("https://www.googletagmanager.com/gtm.js")
-      # nonce is added by the GtmScriptNonceInjector middleware to prevent the
-      # nonce from getting cached by AnonymousCache
-      expect(script_srcs.to_s).not_to include("nonce-")
+      expect(script_srcs.to_s).to include("nonce-")
     end
 
     it "allowlists CDN assets when integrated" do

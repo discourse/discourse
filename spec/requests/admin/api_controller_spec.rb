@@ -423,13 +423,40 @@ RSpec.describe Admin::ApiController do
           "users",
           "email",
           "posts",
+          "tags",
           "uploads",
           "user_status",
           "global",
           "badges",
+          "groups",
           "categories",
+          "search",
+          "invites",
           "wordpress",
         )
+
+        topic_routes = [
+          "/t/:id (GET)",
+          "/t/external_id/:external_id (GET)",
+          "/t/:slug/:topic_id/print (GET)",
+          "/t/:slug/:topic_id/summary (GET)",
+          "/t/:topic_id/summary (GET)",
+          "/t/:topic_id/:post_number (GET)",
+          "/t/:topic_id/last (GET)",
+          "/t/:slug/:topic_id.rss (GET)",
+          "/t/:slug/:topic_id (GET)",
+          "/t/:slug/:topic_id/:post_number (GET)",
+          "/t/:slug/:topic_id/last (GET)",
+          "/t/:topic_id/posts (GET)",
+          "/latest.rss (GET)",
+        ]
+
+        topic_routes.each do |route|
+          expect(scopes["topics"].any? { |h| h["urls"].include?(route) }).to be_truthy
+        end
+
+        expect(scopes["posts"].any? { |h| h["urls"].include?("/posts (GET)") }).to be_truthy
+        expect(scopes["posts"].any? { |h| h["urls"].include?("/private-posts (GET)") }).to be_truthy
       end
     end
 

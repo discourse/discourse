@@ -3,22 +3,24 @@
 require "site_settings/validations"
 
 RSpec.describe SiteSettings::Validations do
-  subject { Class.new.include(described_class).new }
+  subject(:validations) { Class.new.include(described_class).new }
 
   describe "default_categories" do
     fab!(:category) { Fabricate(:category) }
 
     it "supports valid categories" do
-      expect { subject.validate_default_categories_watching("#{category.id}") }.not_to raise_error
+      expect {
+        validations.validate_default_categories_watching("#{category.id}")
+      }.not_to raise_error
     end
 
     it "won't allow you to input junk categories" do
-      expect { subject.validate_default_categories_watching("junk") }.to raise_error(
+      expect { validations.validate_default_categories_watching("junk") }.to raise_error(
         Discourse::InvalidParameters,
       )
 
       expect {
-        subject.validate_default_categories_watching("#{category.id}|12312323")
+        validations.validate_default_categories_watching("#{category.id}|12312323")
       }.to raise_error(Discourse::InvalidParameters)
     end
 
@@ -26,6 +28,10 @@ RSpec.describe SiteSettings::Validations do
       SiteSetting.default_categories_watching = "#{category.id}"
 
       expect { SiteSetting.default_categories_tracking = "#{category.id}" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+
+      expect { SiteSetting.default_categories_normal = "#{category.id}" }.to raise_error(
         Discourse::InvalidParameters,
       )
     end
@@ -81,7 +87,7 @@ RSpec.describe SiteSettings::Validations do
       let(:other_setting_name) { "s3_upload_bucket" }
 
       def validate(new_value)
-        subject.validate_s3_backup_bucket(new_value)
+        validations.validate_s3_backup_bucket(new_value)
       end
 
       it_behaves_like "s3 bucket validation"
@@ -99,7 +105,7 @@ RSpec.describe SiteSettings::Validations do
       let(:other_setting_name) { "s3_backup_bucket" }
 
       def validate(new_value)
-        subject.validate_s3_upload_bucket(new_value)
+        validations.validate_s3_upload_bucket(new_value)
       end
 
       it_behaves_like "s3 bucket validation"
@@ -138,7 +144,7 @@ RSpec.describe SiteSettings::Validations do
         before { SiteSetting.enable_local_logins = false }
 
         it "should raise an error" do
-          expect { subject.validate_enforce_second_factor("t") }.to raise_error(
+          expect { validations.validate_enforce_second_factor("t") }.to raise_error(
             Discourse::InvalidParameters,
             error_message,
           )
@@ -149,7 +155,7 @@ RSpec.describe SiteSettings::Validations do
         before { SiteSetting.enable_local_logins = true }
 
         it "should be ok" do
-          expect { subject.validate_enforce_second_factor("t") }.not_to raise_error
+          expect { validations.validate_enforce_second_factor("t") }.not_to raise_error
         end
       end
 
@@ -166,7 +172,7 @@ RSpec.describe SiteSettings::Validations do
         end
 
         it "raises and error, and specifies the auth providers" do
-          expect { subject.validate_enforce_second_factor("all") }.to raise_error(
+          expect { validations.validate_enforce_second_factor("all") }.to raise_error(
             Discourse::InvalidParameters,
             error_message,
           )
@@ -185,7 +191,7 @@ RSpec.describe SiteSettings::Validations do
         end
 
         it "should raise an error" do
-          expect { subject.validate_enforce_second_factor("t") }.to raise_error(
+          expect { validations.validate_enforce_second_factor("t") }.to raise_error(
             Discourse::InvalidParameters,
             error_message,
           )
@@ -203,7 +209,7 @@ RSpec.describe SiteSettings::Validations do
           before { SiteSetting.enforce_second_factor = "all" }
 
           it "should raise an error" do
-            expect { subject.validate_enable_local_logins("f") }.to raise_error(
+            expect { validations.validate_enable_local_logins("f") }.to raise_error(
               Discourse::InvalidParameters,
               error_message,
             )
@@ -214,14 +220,14 @@ RSpec.describe SiteSettings::Validations do
           before { SiteSetting.enforce_second_factor = "no" }
 
           it "should be ok" do
-            expect { subject.validate_enable_local_logins("f") }.not_to raise_error
+            expect { validations.validate_enable_local_logins("f") }.not_to raise_error
           end
         end
       end
 
       context "when the new value is true" do
         it "should be ok" do
-          expect { subject.validate_enable_local_logins("t") }.not_to raise_error
+          expect { validations.validate_enable_local_logins("t") }.not_to raise_error
         end
       end
     end
@@ -233,7 +239,7 @@ RSpec.describe SiteSettings::Validations do
 
       context "when the new value has trailing slash" do
         it "should raise an error" do
-          expect { subject.validate_cors_origins("https://www.rainbows.com/") }.to raise_error(
+          expect { validations.validate_cors_origins("https://www.rainbows.com/") }.to raise_error(
             Discourse::InvalidParameters,
             error_message,
           )
@@ -244,7 +250,7 @@ RSpec.describe SiteSettings::Validations do
     describe "#validate_enable_page_publishing" do
       context "when the new value is true" do
         it "is ok" do
-          expect { subject.validate_enable_page_publishing("t") }.not_to raise_error
+          expect { validations.validate_enable_page_publishing("t") }.not_to raise_error
         end
 
         context "if secure uploads is enabled" do
@@ -252,7 +258,33 @@ RSpec.describe SiteSettings::Validations do
           before { enable_secure_uploads }
 
           it "is not ok" do
-            expect { subject.validate_enable_page_publishing("t") }.to raise_error(
+            expect { validations.validate_enable_page_publishing("t") }.to raise_error(
+              Discourse::InvalidParameters,
+              error_message,
+            )
+          end
+        end
+      end
+    end
+
+    describe "#validate_s3_use_acls" do
+      context "when the new value is true" do
+        it "is ok" do
+          expect { validations.validate_s3_use_acls("t") }.not_to raise_error
+        end
+      end
+
+      context "when the new value is false" do
+        it "is ok" do
+          expect { validations.validate_s3_use_acls("f") }.not_to raise_error
+        end
+
+        context "if secure uploads is enabled" do
+          let(:error_message) { I18n.t("errors.site_settings.s3_use_acls_requirements") }
+          before { enable_secure_uploads }
+
+          it "is not ok" do
+            expect { validations.validate_s3_use_acls("f") }.to raise_error(
               Discourse::InvalidParameters,
               error_message,
             )
@@ -264,12 +296,12 @@ RSpec.describe SiteSettings::Validations do
     describe "#validate_secure_uploads" do
       let(:error_message) { I18n.t("errors.site_settings.secure_uploads_requirements") }
 
-      context "when the new value is true" do
+      context "when the new secure uploads value is true" do
         context "if site setting for enable_s3_uploads is enabled" do
           before { SiteSetting.enable_s3_uploads = true }
 
           it "should be ok" do
-            expect { subject.validate_secure_uploads("t") }.not_to raise_error
+            expect { validations.validate_secure_uploads("t") }.not_to raise_error
           end
         end
 
@@ -277,7 +309,7 @@ RSpec.describe SiteSettings::Validations do
           before { SiteSetting.enable_s3_uploads = false }
 
           it "is not ok" do
-            expect { subject.validate_secure_uploads("t") }.to raise_error(
+            expect { validations.validate_secure_uploads("t") }.to raise_error(
               Discourse::InvalidParameters,
               error_message,
             )
@@ -287,8 +319,19 @@ RSpec.describe SiteSettings::Validations do
             before { GlobalSetting.stubs(:use_s3?).returns(true) }
 
             it "should be ok" do
-              expect { subject.validate_secure_uploads("t") }.not_to raise_error
+              expect { validations.validate_secure_uploads("t") }.not_to raise_error
             end
+          end
+        end
+
+        context "if site setting for s3_use_acls is not enabled" do
+          before { SiteSetting.s3_use_acls = false }
+
+          it "is not ok" do
+            expect { validations.validate_secure_uploads("t") }.to raise_error(
+              Discourse::InvalidParameters,
+              error_message,
+            )
           end
         end
       end
@@ -304,7 +347,7 @@ RSpec.describe SiteSettings::Validations do
           before { GlobalSetting.stubs(:use_s3?).returns(true) }
 
           it "is not ok" do
-            expect { subject.validate_enable_s3_uploads("t") }.to raise_error(
+            expect { validations.validate_enable_s3_uploads("t") }.to raise_error(
               Discourse::InvalidParameters,
               error_message,
             )
@@ -315,7 +358,7 @@ RSpec.describe SiteSettings::Validations do
           before { GlobalSetting.stubs(:use_s3?).returns(false) }
 
           it "should be ok" do
-            expect { subject.validate_enable_s3_uploads("t") }.not_to raise_error
+            expect { validations.validate_enable_s3_uploads("t") }.not_to raise_error
           end
         end
 
@@ -325,7 +368,7 @@ RSpec.describe SiteSettings::Validations do
           before { SiteSetting.s3_upload_bucket = nil }
 
           it "is not ok" do
-            expect { subject.validate_enable_s3_uploads("t") }.to raise_error(
+            expect { validations.validate_enable_s3_uploads("t") }.to raise_error(
               Discourse::InvalidParameters,
               error_message,
             )
@@ -336,7 +379,7 @@ RSpec.describe SiteSettings::Validations do
           before { SiteSetting.s3_upload_bucket = "some-bucket" }
 
           it "should be ok" do
-            expect { subject.validate_enable_s3_uploads("t") }.not_to raise_error
+            expect { validations.validate_enable_s3_uploads("t") }.not_to raise_error
           end
         end
       end
@@ -358,49 +401,47 @@ RSpec.describe SiteSettings::Validations do
     end
 
     it "cannot contain a user agent that's shorter than 3 characters" do
-      expect { subject.validate_slow_down_crawler_user_agents("ao|acsw") }.to raise_error(
+      expect { validations.validate_slow_down_crawler_user_agents("ao|acsw") }.to raise_error(
         Discourse::InvalidParameters,
         too_short_message,
       )
-      expect { subject.validate_slow_down_crawler_user_agents("up") }.to raise_error(
+      expect { validations.validate_slow_down_crawler_user_agents("up") }.to raise_error(
         Discourse::InvalidParameters,
         too_short_message,
       )
-      expect { subject.validate_slow_down_crawler_user_agents("a|") }.to raise_error(
+      expect { validations.validate_slow_down_crawler_user_agents("a|") }.to raise_error(
         Discourse::InvalidParameters,
         too_short_message,
       )
-      expect { subject.validate_slow_down_crawler_user_agents("|a") }.to raise_error(
+      expect { validations.validate_slow_down_crawler_user_agents("|a") }.to raise_error(
         Discourse::InvalidParameters,
         too_short_message,
       )
     end
 
     it "allows user agents that are 3 characters or longer" do
-      expect { subject.validate_slow_down_crawler_user_agents("aoc") }.not_to raise_error
-      expect { subject.validate_slow_down_crawler_user_agents("anuq") }.not_to raise_error
-      expect { subject.validate_slow_down_crawler_user_agents("pupsc|kcx") }.not_to raise_error
+      expect { validations.validate_slow_down_crawler_user_agents("aoc") }.not_to raise_error
+      expect { validations.validate_slow_down_crawler_user_agents("anuq") }.not_to raise_error
+      expect { validations.validate_slow_down_crawler_user_agents("pupsc|kcx") }.not_to raise_error
     end
 
     it "allows the setting to be empty" do
-      expect { subject.validate_slow_down_crawler_user_agents("") }.not_to raise_error
+      expect { validations.validate_slow_down_crawler_user_agents("") }.not_to raise_error
     end
 
     it "cannot contain a token of a popular browser user agent" do
-      expect { subject.validate_slow_down_crawler_user_agents("mOzilla") }.to raise_error(
+      expect { validations.validate_slow_down_crawler_user_agents("mOzilla") }.to raise_error(
         Discourse::InvalidParameters,
         popular_browser_message,
       )
 
-      expect { subject.validate_slow_down_crawler_user_agents("chRome|badcrawler") }.to raise_error(
-        Discourse::InvalidParameters,
-        popular_browser_message,
-      )
+      expect {
+        validations.validate_slow_down_crawler_user_agents("chRome|badcrawler")
+      }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
 
-      expect { subject.validate_slow_down_crawler_user_agents("html|badcrawler") }.to raise_error(
-        Discourse::InvalidParameters,
-        popular_browser_message,
-      )
+      expect {
+        validations.validate_slow_down_crawler_user_agents("html|badcrawler")
+      }.to raise_error(Discourse::InvalidParameters, popular_browser_message)
     end
   end
 
@@ -417,7 +458,7 @@ RSpec.describe SiteSettings::Validations do
           before { SiteSetting.composer_media_optimization_image_enabled = true }
 
           it "should raise an error" do
-            expect { subject.validate_strip_image_metadata("f") }.to raise_error(
+            expect { validations.validate_strip_image_metadata("f") }.to raise_error(
               Discourse::InvalidParameters,
               error_message,
             )
@@ -428,14 +469,14 @@ RSpec.describe SiteSettings::Validations do
           before { SiteSetting.composer_media_optimization_image_enabled = false }
 
           it "should be ok" do
-            expect { subject.validate_strip_image_metadata("f") }.not_to raise_error
+            expect { validations.validate_strip_image_metadata("f") }.not_to raise_error
           end
         end
       end
 
       context "when the new value is true" do
         it "should be ok" do
-          expect { subject.validate_strip_image_metadata("t") }.not_to raise_error
+          expect { validations.validate_strip_image_metadata("t") }.not_to raise_error
         end
       end
     end
@@ -444,13 +485,13 @@ RSpec.describe SiteSettings::Validations do
   describe "#twitter_summary_large_image" do
     it "does not allow SVG image files" do
       upload = Fabricate(:upload, url: "/images/logo-dark.svg", extension: "svg")
-      expect { subject.validate_twitter_summary_large_image(upload.id) }.to raise_error(
+      expect { validations.validate_twitter_summary_large_image(upload.id) }.to raise_error(
         Discourse::InvalidParameters,
         I18n.t("errors.site_settings.twitter_summary_large_image_no_svg"),
       )
       upload.update!(url: "/images/logo-dark.png", extension: "png")
-      expect { subject.validate_twitter_summary_large_image(upload.id) }.not_to raise_error
-      expect { subject.validate_twitter_summary_large_image(nil) }.not_to raise_error
+      expect { validations.validate_twitter_summary_large_image(upload.id) }.not_to raise_error
+      expect { validations.validate_twitter_summary_large_image(nil) }.not_to raise_error
     end
   end
 end

@@ -36,11 +36,8 @@ ko:
         ignore:
           title: "무시"
     channel:
-      statuses:
-        read_only: "읽기 전용"
-        archived: "저장됨"
-        closed: "닫힘"
-        open: "열기"
+      dm_title:
+        single_user: "%{username}"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "비 ASCII 문자 포함"

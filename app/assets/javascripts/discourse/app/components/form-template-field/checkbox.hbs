@@ -1,0 +1,14 @@
+<div class="control-group form-template-field" data-field-type="checkbox">
+  <label class="form-template-field__label">
+    <Input
+      name={{@attributes.label}}
+      class="form-template-field__checkbox"
+      @type="checkbox"
+      required={{if @validations.required "required" ""}}
+    />
+    {{@attributes.label}}
+    {{#if @validations.required}}
+      {{d-icon "asterisk" class="form-template-field__required-indicator"}}
+    {{/if}}
+  </label>
+</div>

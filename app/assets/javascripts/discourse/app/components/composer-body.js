@@ -7,7 +7,6 @@ import discourseComputed, {
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
 import KeyEnterEscape from "discourse/mixins/key-enter-escape";
-import afterTransition from "discourse/lib/after-transition";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import positioningWorkaround from "discourse/lib/safari-hacks";
@@ -118,14 +117,15 @@ export default Component.extend(KeyEnterEscape, {
   @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
   _triggerComposerResized() {
     schedule("afterRender", () => {
-      if (!this.element || this.isDestroying || this.isDestroyed) {
-        return;
-      }
       discourseDebounce(this, this.composerResized, 300);
     });
   },
 
   composerResized() {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     this.appEvents.trigger("composer:resized");
   },
 
@@ -181,8 +181,10 @@ export default Component.extend(KeyEnterEscape, {
     };
     triggerOpen();
 
-    afterTransition($(this.element), () => {
-      triggerOpen();
+    this.element.addEventListener("transitionend", (event) => {
+      if (event.propertyName === "height") {
+        triggerOpen();
+      }
     });
 
     positioningWorkaround(this.element);

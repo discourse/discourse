@@ -46,10 +46,10 @@ he:
       invalid: |-
         עוד לא נוסח הכלל במתמטיקה שמאפשר שילוב כזה של קוביות, עמך הסליחה. :confounded:
       not_enough_dice:
-        one: "הוגבלתי לקובייה %{count}. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
-        two: "הוגבלתי ל־%{count} קוביות. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
-        many: "הוגבלתי ל־%{count} קוביות. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
-        other: "הוגבלתי ל־%{count} קוביות. [מביש](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), מסכים אתך!"
+        one: "יש לי קובייה אחת בלבד. מביך, אני יודע!"
+        two: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
+        many: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
+        other: "יש לי %{count} קוביות בלבד. מביך, אני יודע!"
       out_of_range: |-
         ידעת ש[מספר הפאות המרבי](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) לקובייה הוגנת מתמטית הוא 120?
       results: |-

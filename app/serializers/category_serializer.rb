@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 class CategorySerializer < SiteCategorySerializer
+  class CategorySettingSerializer < ApplicationSerializer
+    attributes :auto_bump_cooldown_days,
+               :num_auto_bump_daily,
+               :require_reply_approval,
+               :require_topic_approval
+  end
+
   attributes :read_restricted,
              :available_groups,
              :auto_close_hours,
@@ -22,12 +29,18 @@ class CategorySerializer < SiteCategorySerializer
              :reviewable_by_group_name,
              :default_slow_mode_seconds
 
+  has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
+
   def reviewable_by_group_name
     object.reviewable_by_group.name
   end
 
   def include_reviewable_by_group_name?
     SiteSetting.enable_category_group_moderation? && object.reviewable_by_group_id.present?
+  end
+
+  def include_category_setting?
+    object.association(:category_setting).loaded?
   end
 
   def group_permissions

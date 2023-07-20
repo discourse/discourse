@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("2.7.0")
-  STDERR.puts "Discourse requires Ruby 2.7 or above"
+if Gem::Version.new(RUBY_VERSION) < Gem::Version.new("3.2.0")
+  STDERR.puts "Discourse requires Ruby 3.2 or above"
   exit 1
 end
 
@@ -94,7 +94,6 @@ module Discourse
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
-    config.active_record.legacy_connection_handling = true
     config.active_record.yaml_column_permitted_classes = [
       Hash,
       HashWithIndifferentAccess,
@@ -144,7 +143,7 @@ module Discourse
     config.active_record.use_schema_cache_dump = false
 
     # per https://www.owasp.org/index.php/Password_Storage_Cheat_Sheet
-    config.pbkdf2_iterations = 64_000
+    config.pbkdf2_iterations = 600_000
     config.pbkdf2_algorithm = "sha256"
 
     # rack lock is nothing but trouble, get rid of it
@@ -167,9 +166,6 @@ module Discourse
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
-
-    require "middleware/gtm_script_nonce_injector"
-    config.middleware.insert_after(ActionDispatch::Flash, Middleware::GtmScriptNonceInjector)
 
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)

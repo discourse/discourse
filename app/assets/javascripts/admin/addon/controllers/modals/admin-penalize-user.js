@@ -1,29 +1,31 @@
+import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import I18n from "I18n";
 
-export default Controller.extend(ModalFunctionality, {
-  dialog: service(),
+export default class AdminPenalizeUserController extends Controller.extend(
+  ModalFunctionality
+) {
+  @service dialog;
 
-  loadingUser: false,
-  errorMessage: null,
-  penaltyType: null,
-  penalizeUntil: null,
-  reason: null,
-  message: null,
-  postId: null,
-  postAction: null,
-  postEdit: null,
-  user: null,
-  otherUserIds: null,
-  loading: false,
-  confirmClose: false,
+  loadingUser = false;
+  errorMessage = null;
+  penaltyType = null;
+  penalizeUntil = null;
+  reason = null;
+  message = null;
+  postId = null;
+  postAction = null;
+  postEdit = null;
+  user = null;
+  otherUserIds = null;
+  loading = false;
+  confirmClose = false;
 
   onShow() {
     this.setProperties({
@@ -44,11 +46,11 @@ export default Controller.extend(ModalFunctionality, {
       message: null,
       confirmClose: false,
     });
-  },
+  }
 
   finishedSetup() {
     this.set("penalizeUntil", this.user?.next_penalty);
-  },
+  }
 
   beforeClose() {
     if (this.confirmClose) {
@@ -73,7 +75,7 @@ export default Controller.extend(ModalFunctionality, {
 
       return false;
     }
-  },
+  }
 
   @discourseComputed("penaltyType")
   modalTitle(penaltyType) {
@@ -82,7 +84,7 @@ export default Controller.extend(ModalFunctionality, {
     } else if (penaltyType === "silence") {
       return "admin.user.silence_modal_title";
     }
-  },
+  }
 
   @discourseComputed("penaltyType")
   buttonLabel(penaltyType) {
@@ -91,7 +93,7 @@ export default Controller.extend(ModalFunctionality, {
     } else if (penaltyType === "silence") {
       return "admin.user.silence";
     }
-  },
+  }
 
   @discourseComputed(
     "user.penalty_counts.suspended",
@@ -102,7 +104,7 @@ export default Controller.extend(ModalFunctionality, {
       SUSPENDED: suspendedCount,
       SILENCED: silencedCount,
     });
-  },
+  }
 
   @discourseComputed("penaltyType", "user.canSuspend", "user.canSilence")
   canPenalize(penaltyType, canSuspend, canSilence) {
@@ -113,12 +115,12 @@ export default Controller.extend(ModalFunctionality, {
     }
 
     return false;
-  },
+  }
 
   @discourseComputed("penalizing", "penalizeUntil", "reason")
   submitDisabled(penalizing, penalizeUntil, reason) {
     return penalizing || isEmpty(penalizeUntil) || !reason || reason.length < 1;
-  },
+  }
 
   @action
   async penalizeUser() {
@@ -164,5 +166,5 @@ export default Controller.extend(ModalFunctionality, {
     } finally {
       this.set("penalizing", false);
     }
-  },
-});
+  }
+}

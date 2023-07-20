@@ -24,11 +24,10 @@ vi:
         ignore:
           title: "Bỏ qua"
     channel:
-      statuses:
-        closed: "Đã "
-        open: "Mở"
       dm_title:
-        multi_user_truncated: "%{users} và %{leftover} khác"
+        single_user: "%{username}"
+        multi_user_truncated:
+          other: "%{comma_separated_usernames} và %{count} khác"
   discourse_push_notifications:
     popup:
       chat_mention:

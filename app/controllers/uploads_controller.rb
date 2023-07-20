@@ -221,13 +221,25 @@ class UploadsController < ApplicationController
   def validate_file_size(file_name:, file_size:)
     raise ExternalUploadValidationError.new(I18n.t("upload.size_zero_failure")) if file_size.zero?
 
-    if file_size_too_big?(file_name, file_size)
+    if attachment_too_big?(file_name, file_size)
       raise ExternalUploadValidationError.new(
               I18n.t(
                 "upload.attachments.too_large_humanized",
                 max_size:
                   ActiveSupport::NumberHelper.number_to_human_size(
                     SiteSetting.max_attachment_size_kb.kilobytes,
+                  ),
+              ),
+            )
+    end
+
+    if image_too_big?(file_name, file_size)
+      raise ExternalUploadValidationError.new(
+              I18n.t(
+                "upload.images.too_large_humanized",
+                max_size:
+                  ActiveSupport::NumberHelper.number_to_human_size(
+                    SiteSetting.max_image_size_kb.kilobytes,
                   ),
               ),
             )
@@ -306,12 +318,18 @@ class UploadsController < ApplicationController
 
   private
 
-  # We can pre-emptively check size for attachments, but not for images
+  # We can preemptively check size for attachments, but not for (most) images
   # as they may be further reduced in size by UploadCreator (at this point
   # they may have already been reduced in size by preprocessors)
-  def file_size_too_big?(file_name, file_size)
+  def attachment_too_big?(file_name, file_size)
     !FileHelper.is_supported_image?(file_name) &&
       file_size >= SiteSetting.max_attachment_size_kb.kilobytes
+  end
+
+  # Gifs are not resized on the client and not reduced in size by UploadCreator
+  def image_too_big?(file_name, file_size)
+    FileHelper.is_supported_image?(file_name) && File.extname(file_name) == ".gif" &&
+      file_size >= SiteSetting.max_image_size_kb.kilobytes
   end
 
   def send_file_local_upload(upload)

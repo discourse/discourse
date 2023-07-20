@@ -4,12 +4,15 @@ import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseDebounce from "discourse-common/lib/debounce";
-import showModal from "discourse/lib/show-modal";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import ChatModalCreateChannel from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
 
 const TABS = ["all", "open", "closed", "archived"];
 
 export default class ChatBrowseView extends Component {
   @service chatApi;
+  @service modal;
+
   tagName = "";
 
   didReceiveAttrs() {
@@ -39,10 +42,15 @@ export default class ChatBrowseView extends Component {
   }
 
   @action
+  showChatNewMessageModal() {
+    this.modal.show(ChatModalNewMessage);
+  }
+
+  @action
   onScroll() {
     discourseDebounce(
       this,
-      this.channelsCollection.loadMore,
+      this.channelsCollection.load,
       { filter: this.filter, status: this.status },
       INPUT_DELAY
     );
@@ -50,6 +58,8 @@ export default class ChatBrowseView extends Component {
 
   @action
   debouncedFiltering(event) {
+    this.set("channelsCollection", this.chatApi.channels());
+
     discourseDebounce(
       this,
       this.channelsCollection.load,
@@ -60,7 +70,7 @@ export default class ChatBrowseView extends Component {
 
   @action
   createChannel() {
-    showModal("create-channel");
+    this.modal.show(ChatModalCreateChannel);
   }
 
   @action

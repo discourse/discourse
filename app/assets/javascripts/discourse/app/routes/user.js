@@ -1,5 +1,4 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import User from "discourse/models/user";
 import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
@@ -45,7 +44,7 @@ export default DiscourseRoute.extend({
 
   setupController(controller, user) {
     controller.set("model", user);
-    this.searchService.set("searchContext", user.searchContext);
+    this.searchService.searchContext = user.searchContext;
   },
 
   activate() {
@@ -74,7 +73,7 @@ export default DiscourseRoute.extend({
     user.stopTrackingStatus();
 
     // Remove the search context
-    this.searchService.set("searchContext", null);
+    this.searchService.searchContext = null;
   },
 
   @bind
@@ -98,9 +97,7 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     const username = this.modelFor("user").username;
-    if (username) {
-      return [I18n.t("user.profile"), username];
-    }
+    return username ? username : null;
   },
 
   @action

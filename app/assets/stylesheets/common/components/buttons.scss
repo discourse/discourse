@@ -20,10 +20,15 @@
   margin: 0;
   font-weight: normal;
   color: $text-color;
-  background: $bg-color;
+  background-color: $bg-color;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0)
+  );
   border-radius: var(--d-button-border-radius);
+  transition: background 0.25s, color 0.25s;
   cursor: pointer;
-  transition: all 0.25s;
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
@@ -43,7 +48,7 @@
     }
   }
   @include hover {
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -55,7 +60,7 @@
   }
   &:focus {
     outline: none;
-    background: $hover-bg-color;
+    background-color: $hover-bg-color;
     color: $hover-text-color;
     .d-icon {
       color: $hover-icon-color;
@@ -67,10 +72,25 @@
   &[href] {
     color: $text-color;
   }
+  .discourse-no-touch &:active:not(:hover):not(:focus),
+  .discourse-no-touch &.btn-active:not(:hover):not(:focus),
+  &:active:not(:hover):not(:focus),
+  &.btn-active:not(:hover):not(:focus) {
+    @include darken-background($bg-color, 0.6);
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
+  }
+  .discourse-no-touch &:active,
+  .discourse-no-touch &.btn-active,
   &:active,
   &.btn-active {
-    @include linear-gradient($hover-bg-color 0%, $bg-color 100%);
-    border-bottom-color: $bg-color;
+    @include darken-background($bg-color, 0.3);
+    color: $hover-text-color;
+    .d-icon {
+      color: $hover-icon-color;
+    }
   }
   &[disabled],
   &.disabled {
@@ -182,7 +202,7 @@
   border-radius: var(--d-border-radius);
   &:hover,
   &:focus {
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     outline: 1px solid #000;
   }
   &[href] {
@@ -274,9 +294,10 @@
   background: transparent;
   border: 0;
   line-height: var(--line-height-small);
-  transition: color 0.25s, background 0.25s;
+  transition: background 0.25s, color 0.25s;
   .d-icon {
     color: var(--primary-low-mid);
+    transition: color 0.25s;
   }
   @include hover {
     background: transparent;
@@ -318,10 +339,7 @@
 
       &:active,
       &.btn-active {
-        @include linear-gradient(
-          var(--primary-low-mid) 0%,
-          var(--primary-very-low) 100%
-        );
+        @include darken-background(transparent, 0.2);
       }
     }
   }

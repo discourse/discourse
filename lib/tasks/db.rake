@@ -109,7 +109,7 @@ class SeedHelper
   def self.filter
     # Allows a plugin to exclude any specified seed data files from running
     if DiscoursePluginRegistry.seedfu_filter.any?
-      /^(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*$/
+      /\A(?!.*(#{DiscoursePluginRegistry.seedfu_filter.to_a.join("|")})).*\z/
     else
       nil
     end
@@ -574,4 +574,19 @@ task "db:status:json" do
   else
     puts({ status: "ok" }.to_json)
   end
+end
+
+desc "Grow notification id column to a big int in case of overflow"
+task "db:resize:notification_id" => :environment do
+  sql = <<~SQL
+    SELECT table_name, column_name FROM INFORMATION_SCHEMA.columns
+    WHERE (column_name like '%notification_id' OR column_name = 'id' and table_name = 'notifications') AND data_type = 'integer'
+  SQL
+
+  DB
+    .query(sql)
+    .each do |row|
+      puts "Changing #{row.table_name}(#{row.column_name}) to a bigint"
+      DB.exec("ALTER table #{row.table_name} ALTER COLUMN #{row.column_name} TYPE BIGINT")
+    end
 end

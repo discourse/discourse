@@ -64,7 +64,7 @@ class ImportScripts::Disqus < ImportScripts::Base
 
       topic_user = find_existing_user(t[:author_email], t[:author_username])
       begin
-        post = TopicEmbed.import_remote(topic_user, t[:link], title: title)
+        post = TopicEmbed.import_remote(t[:link], title: title, user: topic_user)
         post.topic.update_column(:category_id, @category.id)
       rescue OpenURI::HTTPError
         post = nil

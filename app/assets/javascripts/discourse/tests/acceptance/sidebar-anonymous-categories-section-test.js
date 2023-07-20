@@ -12,13 +12,13 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     navigation_menu: "sidebar",
   });
 
-  test("category section links ordered by category's topic count when default_sidebar_categories has not been configured and site setting to fix categories positions is disabled", async function (assert) {
+  test("category section links ordered by category's topic count when default_navigation_menu_categories has not been configured and site setting to fix categories positions is disabled", async function (assert) {
     this.siteSettings.fixed_category_positions = false;
 
     await visit("/");
 
     const categorySectionLinks = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const sidebarCategories = Site.current()
@@ -53,18 +53,18 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     );
 
     assert.ok(
-      exists("a.sidebar-section-link-all-categories"),
+      exists("a.sidebar-section-link[data-link-name='all-categories']"),
       "all categories link is visible"
     );
   });
 
-  test("category section links ordered by default category's position when default_sidebar_categories has not been configured and site setting to fix categories positions is enabled", async function (assert) {
+  test("category section links ordered by default category's position when default_navigation_menu_categories has not been configured and site setting to fix categories positions is enabled", async function (assert) {
     this.siteSettings.fixed_category_positions = true;
 
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     const siteCategories = Site.current().categories;
@@ -97,19 +97,19 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     );
 
     assert.ok(
-      exists("a.sidebar-section-link-all-categories"),
+      exists("a.sidebar-section-link[data-link-name='all-categories']"),
       "all categories link is visible"
     );
   });
 
-  test("category section links in sidebar when default_sidebar_categories site setting has been configured and site setting to fix category position is enabled", async function (assert) {
+  test("category section links in sidebar when default_navigation_menu_categories site setting has been configured and site setting to fix category position is enabled", async function (assert) {
     this.siteSettings.fixed_category_positions = true;
-    this.siteSettings.default_sidebar_categories = "1|3|13";
+    this.siteSettings.default_navigation_menu_categories = "1|3|13";
 
     await visit("/");
 
     const categories = queryAll(
-      ".sidebar-section-categories .sidebar-section-link-wrapper"
+      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper"
     );
 
     assert.strictEqual(categories.length, 4);
@@ -118,7 +118,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     assert.strictEqual(categories[2].textContent.trim(), "bug");
 
     assert.ok(
-      exists("a.sidebar-section-link-all-categories"),
+      exists("a.sidebar-section-link[data-link-name='all-categories']"),
       "all categories link is visible"
     );
   });
@@ -138,7 +138,7 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     assert.notOk(
       exists(
-        `.sidebar-section-categories .sidebar-section-link-${firstCategory.slug}`
+        `.sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='${firstCategory.slug}']`
       ),
       "category section link is not shown in sidebar after being marked as uncategorized"
     );

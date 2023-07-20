@@ -35,12 +35,11 @@
         class="quick-access-panel"
         tabindex="-1"
       >
-        {{component
-          this.currentPanelComponent
-          closeUserMenu=@closeUserMenu
-          filterByTypes=this.currentNotificationTypes
-          ariaLabelledby=(concat "user-menu-button-" this.currentTabId)
-        }}
+        <this.currentPanelComponent
+          @closeUserMenu={{@closeUserMenu}}
+          @filterByTypes={{this.currentNotificationTypes}}
+          @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}}
+        />
       </div>
     </div>
   </div>

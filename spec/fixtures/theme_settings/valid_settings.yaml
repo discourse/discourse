@@ -71,7 +71,7 @@ enum_setting_03:
 
 upload_setting:
   type: upload
-  default: ""
+  default: "default-upload"
 
 invalid_json_schema_setting:
   default: ""

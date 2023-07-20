@@ -38,7 +38,7 @@ export function getURLWithCDN(url) {
   // only relative urls
   if (cdn && /^\/[^\/]/.test(url)) {
     url = cdn + url;
-  } else if (S3CDN) {
+  } else if (S3CDN && url.startsWith(S3BaseUrl)) {
     url = url.replace(S3BaseUrl, S3CDN);
   }
   return url;

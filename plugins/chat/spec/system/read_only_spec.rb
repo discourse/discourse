@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Read only", type: :system, js: true do
+RSpec.describe "Read only", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -30,7 +30,7 @@ RSpec.describe "Read only", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       expect(page).to have_field(
-        placeholder: I18n.t("js.chat.placeholder_new_message_disallowed", status: "read only"),
+        placeholder: I18n.t("js.chat.placeholder_new_message_disallowed.read_only"),
         disabled: true,
       )
     end
@@ -50,7 +50,7 @@ RSpec.describe "Read only", type: :system, js: true do
       chat.visit_channel(channel_1)
 
       expect(page).to have_field(
-        placeholder: I18n.t("js.chat.placeholder_new_message_disallowed", status: "read only"),
+        placeholder: I18n.t("js.chat.placeholder_new_message_disallowed.read_only"),
         disabled: true,
       )
     end

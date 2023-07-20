@@ -143,7 +143,7 @@ class UploadSecurity
           LEFT JOIN posts ON upload_references.target_type = 'Post' AND upload_references.target_id = posts.id
         SQL
         .where("posts.deleted_at IS NULL")
-        .order(created_at: :asc)
+        .order("upload_references.created_at ASC, upload_references.id ASC")
         .first
     return false if first_reference.blank?
     PUBLIC_UPLOAD_REFERENCE_TYPES.include?(first_reference.target_type)

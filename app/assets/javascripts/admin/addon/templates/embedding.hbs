@@ -2,10 +2,9 @@
   {{#if this.embedding.embeddable_hosts}}
     <table class="embedding grid">
       <thead>
-        <th style="width: 25%">{{i18n "admin.embedding.host"}}</th>
-        <th style="width: 15%">{{i18n "admin.embedding.class_name"}}</th>
-        <th style="width: 25%">{{i18n "admin.embedding.allowed_paths"}}</th>
-        <th style="width: 25%">{{i18n "admin.embedding.category"}}</th>
+        <th style="width: 30%">{{i18n "admin.embedding.host"}}</th>
+        <th style="width: 30%">{{i18n "admin.embedding.allowed_paths"}}</th>
+        <th style="width: 30%">{{i18n "admin.embedding.category"}}</th>
         <th style="width: 10%">&nbsp;</th>
       </thead>
       <tbody>
@@ -28,7 +27,7 @@
 
 {{#if this.showSecondary}}
   <div class="embedding-secondary">
-    <p>{{html-safe (i18n "admin.embedding.sample")}}</p>
+    {{html-safe (i18n "admin.embedding.sample")}}
     <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
   </div>
 

@@ -24,12 +24,6 @@ export default UserTopicListRoute.extend({
       });
   },
 
-  afterModel(model, transition) {
-    if (!this.isPoppedState(transition)) {
-      this.session.set("topicListScrollPosition", null);
-    }
-  },
-
   emptyState() {
     const user = this.modelFor("user");
     let title, body;
@@ -48,6 +42,10 @@ export default UserTopicListRoute.extend({
     }
 
     return { title, body };
+  },
+
+  titleToken() {
+    return I18n.t("user_action_groups.4");
   },
 
   @action

@@ -54,6 +54,8 @@ module TurboTests
           shared_group_inclusion_backtrace:
             example.metadata[:shared_group_inclusion_backtrace].map(&method(:stack_frame_to_json)),
           extra_failure_lines: example.metadata[:extra_failure_lines],
+          run_duration_ms: example.metadata[:run_duration_ms],
+          process_pid: Process.pid,
         },
         location_rerun_argument: example.location_rerun_argument,
       }

@@ -317,6 +317,15 @@ RSpec.describe EmailController do
         expect(response.body).not_to include("unwatch_category")
       end
 
+      it "displays form even if topic is deleted" do
+        post.topic.trash!
+
+        navigate_to_unsubscribe
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(I18n.t("unsubscribe.all", sitename: SiteSetting.title))
+      end
+
       def create_category_user(notification_level)
         CategoryUser.create!(
           user_id: user.id,

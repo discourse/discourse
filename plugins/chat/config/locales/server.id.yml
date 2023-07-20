@@ -54,16 +54,24 @@ id:
     deleted_chat_username: dihapus
     errors:
       channel_exists_for_category: "Kanal sudah ada untuk kategori dan nama ini"
-      channel_new_message_disallowed: "Kanalnya %{status}, tidak ada pesan baru yang dapat dikirim"
-      channel_modify_message_disallowed: "Kanalnya %{status}, tidak ada pesan yang dapat diedit atau dihapus"
+      channel_new_message_disallowed:
+        archived: "Kanal diarsipkan, tidak ada pesan baru yang dapat dikirim"
+        closed: "Kanal ditutup, tidak ada pesan baru yang dapat dikirim"
+        read_only: "Kanal hanya dapat dibaca, tidak ada pesan baru yang dapat dikirim"
+      channel_modify_message_disallowed:
+        archived: "Kanal diarsipkan, tidak ada pesan yang dapat diedit atau dihapus"
+        closed: "Kanal ditutup, tidak ada pesan yang dapat diedit atau dihapus"
+        read_only: "Kanal hanya dapat dibaca, tidak ada pesan yang dapat diedit atau dihapus"
       user_cannot_send_message: "Anda tidak dapat mengirim pesan saat ini."
       rate_limit_exceeded: "Melebihi batas pesan obrolan yang dapat dikirim dalam waktu 30 detik"
       auto_silence_from_flags: "Pesan obrolan ditandai dengan skor yang cukup tinggi untuk membuat senyap pengguna."
       channel_cannot_be_archived: "Kanal tidak dapat diarsipkan saat ini, harus ditutup atau dibuka untuk diarsipkan."
       duplicate_message: "Anda mengirim pesan yang sama baru-baru ini."
       delete_channel_failed: "Hapus kanal gagal, harap coba lagi."
-      minimum_length_not_met: "Pesan terlalu singkat, minimal harus berisi %{minimum} karakter."
-      message_too_long: "Pesan terlalu panjang, pesan harus maksimal %{maximum} karakter."
+      minimum_length_not_met:
+        other: "Pesan terlalu singkat, minimal harus berisi %{count} karakter."
+      message_too_long:
+        other: "Pesan terlalu panjang, pesan harus maksimal %{count} karakter."
       draft_too_long: "Draf terlalu panjang."
       max_reactions_limit_reached: "Reaksi baru tidak diperbolehkan pada pesan ini."
       message_move_invalid_channel: "Kanal sumber dan tujuan harus kanal publik."
@@ -75,8 +83,10 @@ id:
       actor_disallowed_dms: "Anda telah memilih untuk mencegah pengguna mengirimi Anda pesan langsung dan pribadi, sehingga Anda tidak dapat membuat pesan langsung baru."
       actor_preventing_target_user_from_dm: "Anda telah memilih untuk mencegah %{username} mengirimi Anda pesan langsung dan pribadi, sehingga Anda tidak dapat membuat pesan langsung baru untuk dia."
       user_cannot_send_direct_messages: "Maaf, Anda tidak dapat mengirim pesan langsung."
+      over_chat_max_direct_message_users_allow_self: "Anda hanya dapat membuat pesan langsung dengan diri Anda sendiri."
       over_chat_max_direct_message_users:
         other: "Anda tidak dapat membuat pesan langsung dengan lebih dari %{count} pengguna lain."
+      original_message_not_found: "Nenek moyang pesan yang Anda balas tidak dapat ditemukan atau telah dihapus."
     reviewables:
       message_already_handled: "Terima kasih, tetapi kami telah meninjau pesan ini dan memutuskan bahwa pesan ini tidak perlu ditandai lagi."
       actions:
@@ -113,19 +123,15 @@ id:
         transcript_title: "Transkrip pesan sebelumnya di %{channel_name}"
         transcript_body: "Untuk memberi Anda lebih banyak konteks, kami menyertakan transkrip pesan sebelumnya dalam percakapan ini (hingga sepuluh):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Hanya Baca"
-        archived: "Diarsipkan"
-        closed: "Tertutup"
-        open: "Buka"
       archive:
         first_post_raw: "Topik ini adalah arsip dari kanal obrolan [%{channel_name}](%{channel_url})."
       messages_moved:
         other: "@%{acting_username} memindahkan %{count} pesan ke kanal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} dan %{leftover} lainnya"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          other: "%{comma_separated_usernames} dan %{count} lainnya"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "berisi karakter non-ascii"

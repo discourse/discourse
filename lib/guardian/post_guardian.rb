@@ -25,7 +25,7 @@ module PostGuardian
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts: {}, can_see_post: nil)
-    return false unless (can_see_post.nil? && can_see_post?(post)) || can_see_post
+    return false if !(can_see_post.nil? && can_see_post?(post)) && !can_see_post
 
     # no warnings except for staff
     if action_key == :notify_user &&
@@ -129,11 +129,7 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    if (
-         is_staff? ||
-           (SiteSetting.trusted_users_can_edit_others? && @user.has_trust_level?(TrustLevel[4])) ||
-           is_category_group_moderator?(post.topic&.category)
-       )
+    if (is_staff? || is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category))
       return can_create_post?(post.topic)
     end
 
@@ -173,6 +169,11 @@ module PostGuardian
     false
   end
 
+  def is_in_edit_post_groups?
+    SiteSetting.edit_all_post_groups.present? &&
+      user.in_any_groups?(SiteSetting.edit_all_post_groups.to_s.split("|").map(&:to_i))
+  end
+
   def can_edit_hidden_post?(post)
     return false if post.nil?
     post.hidden_at.nil? ||
@@ -190,6 +191,8 @@ module PostGuardian
     return false if post.is_first_post?
 
     return true if is_staff? || is_category_group_moderator?(post.topic&.category)
+
+    return true if SiteSetting.tl4_delete_posts_and_topics && user.has_trust_level?(TrustLevel[4])
 
     # Can't delete posts in archived topics unless you are staff
     return false if post.topic&.archived?
@@ -247,6 +250,18 @@ module PostGuardian
       !post_action.post&.topic&.archived?
   end
 
+  def can_receive_post_notifications?(post)
+    return false if !authenticated?
+
+    if is_admin? && SiteSetting.suppress_secured_categories_from_admin
+      topic = post.topic
+      if !topic.private_message? && topic.category.read_restricted
+        return secure_category_ids.include?(topic.category_id)
+      end
+    end
+    can_see_post?(post)
+  end
+
   def can_see_post?(post)
     return false if post.blank?
     return true if is_admin?
@@ -255,7 +270,10 @@ module PostGuardian
       return false
     end
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
-    return true if !post.trashed? || can_see_deleted_post?(post)
+    if (!post.trashed? || can_see_deleted_post?(post)) &&
+         (!post.hidden? || can_see_hidden_post?(post))
+      return true
+    end
     false
   end
 
@@ -264,6 +282,15 @@ module PostGuardian
     return false if @user.anonymous?
     return true if is_staff?
     post.deleted_by_id == @user.id && @user.has_trust_level?(TrustLevel[4])
+  end
+
+  def can_see_hidden_post?(post)
+    if SiteSetting.hidden_post_visible_groups_map.include?(Group::AUTO_GROUPS[:everyone])
+      return true
+    end
+    return false if anonymous?
+    return true if is_staff?
+    post.user_id == @user.id || @user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
   end
 
   def can_view_edit_history?(post)
@@ -311,7 +338,8 @@ module PostGuardian
   end
 
   def can_see_deleted_posts?(category = nil)
-    is_staff? || is_category_group_moderator?(category)
+    is_staff? || is_category_group_moderator?(category) ||
+      (SiteSetting.tl4_delete_posts_and_topics && @user.has_trust_level?(TrustLevel[4]))
   end
 
   def can_view_raw_email?(post)

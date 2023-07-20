@@ -1,19 +1,15 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { isEmpty } from "@ember/utils";
-import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 
 export default class ChatChannelPreviewCard extends Component {
   @service chat;
-  tagName = "";
 
-  channel = null;
+  get showJoinButton() {
+    return this.args.channel?.isOpen && this.args.channel?.canJoin;
+  }
 
-  @readOnly("channel.isOpen") showJoinButton;
-
-  @computed("channel.description")
   get hasDescription() {
-    return !isEmpty(this.channel.description);
+    return !isEmpty(this.args.channel?.description);
   }
 }

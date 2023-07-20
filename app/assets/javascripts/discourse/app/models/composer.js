@@ -5,11 +5,8 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import {
-  emailValid,
-  escapeExpression,
-  tinyAvatar,
-} from "discourse/lib/utilities";
+import { emailValid, escapeExpression } from "discourse/lib/utilities";
+import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import Draft from "discourse/models/draft";
 import I18n from "I18n";
 import { Promise } from "rsvp";
@@ -142,7 +139,9 @@ const Composer = RestModel.extend({
     set(categoryId) {
       const oldCategoryId = this._categoryId;
 
-      if (isEmpty(categoryId)) {
+      if (this.privateMessage) {
+        categoryId = null;
+      } else if (isEmpty(categoryId)) {
         // Check if there is a default composer category to set
         const defaultComposerCategoryId = parseInt(
           this.siteSettings.default_composer_category,
@@ -923,7 +922,6 @@ const Composer = RestModel.extend({
         if (!this.canEditTopicFeaturedLink) {
           this.set("featuredLink", null);
         }
-
         return this.editingPost ? this.editPost(opts) : this.createPost(opts);
       }
     });
@@ -1063,6 +1061,7 @@ const Composer = RestModel.extend({
       wiki: false,
       typingTime: this.typingTime,
       composerTime: this.composerTime,
+      metaData: this.metaData,
     });
 
     this.serialize(_create_serializer, createdPost);

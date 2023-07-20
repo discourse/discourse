@@ -1,4 +1,5 @@
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import domFromString from "discourse-common/lib/dom-from-string";
 import discourseLater from "discourse-common/lib/later";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
@@ -13,6 +14,40 @@ import {
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { emojiUnescape } from "discourse/lib/text";
 import { htmlSafe } from "@ember/template";
+
+let hashtagTypeClasses = {};
+export function registerHashtagType(type, typeClassInstance) {
+  hashtagTypeClasses[type] = typeClassInstance;
+}
+export function cleanUpHashtagTypeClasses() {
+  hashtagTypeClasses = {};
+}
+export function getHashtagTypeClasses() {
+  return hashtagTypeClasses;
+}
+export function decorateHashtags(element, site) {
+  element.querySelectorAll(".hashtag-cooked").forEach((hashtagEl) => {
+    // Replace the empty icon placeholder span with actual icon HTML.
+    const iconPlaceholderEl = hashtagEl.querySelector(
+      ".hashtag-icon-placeholder"
+    );
+    const hashtagType = hashtagEl.dataset.type;
+    const hashtagTypeClass = getHashtagTypeClasses()[hashtagType];
+    if (iconPlaceholderEl && hashtagTypeClass) {
+      const hashtagIconHTML = hashtagTypeClass
+        .generateIconHTML({
+          icon: site.hashtag_icons[hashtagType],
+          id: hashtagEl.dataset.id,
+        })
+        .trim();
+      iconPlaceholderEl.replaceWith(domFromString(hashtagIconHTML)[0]);
+    }
+
+    // Add an aria-label to the hashtag element so that screen readers
+    // can read the hashtag text.
+    hashtagEl.setAttribute("aria-label", `${hashtagEl.innerText.trim()}`);
+  });
+}
 
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
@@ -205,12 +240,18 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
     data: { term, order: contextualHashtagConfiguration },
   });
   currentSearch
-    .then((r) => {
-      r.results?.forEach((result) => {
+    .then((response) => {
+      response.results?.forEach((result) => {
         // Convert :emoji: in the result text to HTML safely.
         result.text = htmlSafe(emojiUnescape(escapeExpression(result.text)));
+
+        const hashtagType = getHashtagTypeClasses()[result.type];
+        result.icon = hashtagType.generateIconHTML({
+          icon: result.icon,
+          id: result.id,
+        });
       });
-      resultFunc(r.results || CANCELLED_STATUS);
+      resultFunc(response.results || CANCELLED_STATUS);
     })
     .finally(() => {
       currentSearch = null;
@@ -224,7 +265,7 @@ function _findAndReplaceSeenHashtagPlaceholder(
   hashtagSpan
 ) {
   contextualHashtagConfiguration.forEach((type) => {
-    // replace raw span for the hashtag with a cooked one
+    // Replace raw span for the hashtag with a cooked one
     const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
       // NOTE: When changing the HTML structure here, you must also change
@@ -233,8 +274,12 @@ function _findAndReplaceSeenHashtagPlaceholder(
       link.classList.add("hashtag-cooked");
       link.href = matchingSeenHashtag.relative_url;
       link.dataset.type = type;
+      link.dataset.id = matchingSeenHashtag.id;
       link.dataset.slug = matchingSeenHashtag.slug;
-      link.innerHTML = `<svg class="fa d-icon d-icon-${matchingSeenHashtag.icon} svg-icon svg-node"><use href="#${matchingSeenHashtag.icon}"></use></svg><span>${matchingSeenHashtag.text}</span>`;
+      const hashtagType = new getHashtagTypeClasses()[type];
+      link.innerHTML = `${hashtagType.generateIconHTML(
+        matchingSeenHashtag
+      )}<span>${emojiUnescape(matchingSeenHashtag.text)}</span>`;
       hashtagSpan.replaceWith(link);
     }
   });

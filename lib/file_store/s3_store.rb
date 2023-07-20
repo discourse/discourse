@@ -87,7 +87,7 @@ module FileStore
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       options = {
-        acl: opts[:private_acl] ? "private" : "public-read",
+        acl: SiteSetting.s3_use_acls ? (opts[:private_acl] ? "private" : "public-read") : nil,
         cache_control: "max-age=31556952, public, immutable",
         content_type:
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
@@ -216,7 +216,7 @@ module FileStore
 
     def path_for(upload)
       url = upload&.url
-      FileStore::LocalStore.new.path_for(upload) if url && url[%r{^/[^/]}]
+      FileStore::LocalStore.new.path_for(upload) if url && url[%r{\A/[^/]}]
     end
 
     def url_for(upload, force_download: false)
@@ -226,6 +226,8 @@ module FileStore
           force_download: force_download,
           filename: upload.original_filename,
         )
+      elsif SiteSetting.s3_use_cdn_url_for_all_uploads
+        cdn_url(upload.url)
       else
         upload.url
       end
@@ -233,7 +235,7 @@ module FileStore
 
     def cdn_url(url)
       return url if SiteSetting.Upload.s3_cdn_url.blank?
-      schema = url[%r{^(https?:)?//}, 1]
+      schema = url[%r{\A(https?:)?//}, 1]
       folder = s3_bucket_folder_path.nil? ? "" : "#{s3_bucket_folder_path}/"
       url.sub(
         File.join("#{schema}#{absolute_base_url}", folder),
@@ -262,7 +264,7 @@ module FileStore
         expires_in: expires_in,
         opts: {
           metadata: metadata,
-          acl: "private",
+          acl: SiteSetting.s3_use_acls ? "private" : nil,
         },
       )
     end
@@ -309,23 +311,27 @@ module FileStore
       key = get_upload_key(upload)
       update_ACL(key, upload.secure?)
 
-      # if we do find_each when the images have already been preloaded with
+      # If we do find_each when the images have already been preloaded with
       # includes(:optimized_images), then the optimized_images are fetched
       # from the database again, negating the preloading if this operation
       # is done on a large amount of uploads at once (see Jobs::SyncAclsForUploads)
       if optimized_images_preloaded
         upload.optimized_images.each do |optimized_image|
-          optimized_image_key = get_path_for_optimized_image(optimized_image)
-          update_ACL(optimized_image_key, upload.secure?)
+          update_optimized_image_acl(optimized_image, secure: upload.secure)
         end
       else
         upload.optimized_images.find_each do |optimized_image|
-          optimized_image_key = get_path_for_optimized_image(optimized_image)
-          update_ACL(optimized_image_key, upload.secure?)
+          update_optimized_image_acl(optimized_image, secure: upload.secure)
         end
       end
 
       true
+    end
+
+    def update_optimized_image_acl(optimized_image, secure: false)
+      optimized_image_key = get_path_for_optimized_image(optimized_image)
+      optimized_image_key.prepend(File.join(upload_path, "/")) if Rails.configuration.multisite
+      update_ACL(optimized_image_key, secure)
     end
 
     def download_file(upload, destination_path)
@@ -393,7 +399,9 @@ module FileStore
 
     def update_ACL(key, secure)
       begin
-        object_from_path(key).acl.put(acl: secure ? "private" : "public-read")
+        object_from_path(key).acl.put(
+          acl: SiteSetting.s3_use_acls ? (secure ? "private" : "public-read") : nil,
+        )
       rescue Aws::S3::Errors::NoSuchKey
         Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
       end
@@ -409,7 +417,7 @@ module FileStore
         verified_ids = []
 
         files.each do |f|
-          id = model.where("url LIKE '%#{f.key}' AND etag = '#{f.etag}'").pluck_first(:id)
+          id = model.where("url LIKE '%#{f.key}' AND etag = '#{f.etag}'").pick(:id)
           verified_ids << id if id.present?
           marker = f.key
         end

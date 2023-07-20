@@ -24,12 +24,16 @@
     <SharedDraftControls @topic={{this.model}} />
   {{/if}}
 
-  <PluginOutlet
-    @name="topic-above-post-stream"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash model=this.model editFirstPost=(action "editFirstPost")}}
-  />
+  <span>
+    <PluginOutlet
+      @name="topic-above-post-stream"
+      @connectorTagName="div"
+      @outletArgs={{hash
+        model=this.model
+        editFirstPost=(action "editFirstPost")
+      }}
+    />
+  </span>
 
   {{#if this.model.postStream.loaded}}
     {{#if this.model.postStream.firstPostPresent}}
@@ -72,12 +76,13 @@
               />
             {{/if}}
 
-            <PluginOutlet
-              @name="edit-topic"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model buffered=this.buffered}}
-            />
+            <span>
+              <PluginOutlet
+                @name="edit-topic"
+                @connectorTagName="div"
+                @outletArgs={{hash model=this.model buffered=this.buffered}}
+              />
+            </span>
 
             <div class="edit-controls">
               <DButton
@@ -148,8 +153,7 @@
 
             <PluginOutlet
               @name="topic-title-suffix"
-              @tagName=""
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </h1>
 
@@ -216,74 +220,38 @@
         <PluginOutlet
           @name="topic-navigation"
           @connectorTagName="div"
-          @args={{hash topic=this.model}}
+          @outletArgs={{hash topic=this.model}}
         />
 
         {{#if info.renderTimeline}}
-          {{#if this.currentUser.redesigned_topic_timeline_enabled}}
-            <GlimmerTopicTimeline
-              @info={{info}}
-              @model={{this.model}}
-              @replyToPost={{action "replyToPost"}}
-              @showSummary={{action "showSummary"}}
-              @jumpToPostPrompt={{action "jumpToPostPrompt"}}
-              @enteredIndex={{this.enteredIndex}}
-              @prevEvent={{info.prevEvent}}
-              @jumpTop={{action "jumpTop"}}
-              @jumpBottom={{action "jumpBottom"}}
-              @jumpEnd={{action "jumpEnd"}}
-              @jumpToIndex={{action "jumpToIndex"}}
-              @toggleMultiSelect={{action "toggleMultiSelect"}}
-              @showTopicSlowModeUpdate={{route-action
-                "showTopicSlowModeUpdate"
-              }}
-              @deleteTopic={{action "deleteTopic"}}
-              @recoverTopic={{action "recoverTopic"}}
-              @toggleClosed={{action "toggleClosed"}}
-              @toggleArchived={{action "toggleArchived"}}
-              @toggleVisibility={{action "toggleVisibility"}}
-              @showTopicTimerModal={{route-action "showTopicTimerModal"}}
-              @showFeatureTopic={{route-action "showFeatureTopic"}}
-              @showChangeTimestamp={{route-action "showChangeTimestamp"}}
-              @resetBumpDate={{action "resetBumpDate"}}
-              @convertToPublicTopic={{action "convertToPublicTopic"}}
-              @convertToPrivateMessage={{action "convertToPrivateMessage"}}
-              @fullscreen={{info.topicProgressExpanded}}
-              @mobileView={{this.site.mobileView}}
-            />
-          {{else}}
-            <TopicTimeline
-              @topic={{this.model}}
-              @notificationLevel={{this.model.details.notification_level}}
-              @prevEvent={{info.prevEvent}}
-              @fullscreen={{info.topicProgressExpanded}}
-              @enteredIndex={{this.enteredIndex}}
-              @loading={{this.model.postStream.loading}}
-              @jumpToPost={{action "jumpToPost"}}
-              @jumpTop={{action "jumpTop"}}
-              @jumpBottom={{action "jumpBottom"}}
-              @jumpEnd={{action "jumpEnd"}}
-              @jumpToPostPrompt={{action "jumpToPostPrompt"}}
-              @jumpToIndex={{action "jumpToIndex"}}
-              @replyToPost={{action "replyToPost"}}
-              @showSummary={{action "showSummary"}}
-              @toggleMultiSelect={{action "toggleMultiSelect"}}
-              @showTopicSlowModeUpdate={{route-action
-                "showTopicSlowModeUpdate"
-              }}
-              @deleteTopic={{action "deleteTopic"}}
-              @recoverTopic={{action "recoverTopic"}}
-              @toggleClosed={{action "toggleClosed"}}
-              @toggleArchived={{action "toggleArchived"}}
-              @toggleVisibility={{action "toggleVisibility"}}
-              @showTopicTimerModal={{route-action "showTopicTimerModal"}}
-              @showFeatureTopic={{route-action "showFeatureTopic"}}
-              @showChangeTimestamp={{route-action "showChangeTimestamp"}}
-              @resetBumpDate={{action "resetBumpDate"}}
-              @convertToPublicTopic={{action "convertToPublicTopic"}}
-              @convertToPrivateMessage={{action "convertToPrivateMessage"}}
-            />
-          {{/if}}
+          <TopicTimeline
+            @info={{info}}
+            @model={{this.model}}
+            @replyToPost={{action "replyToPost"}}
+            @showTopReplies={{action "showTopReplies"}}
+            @jumpToPostPrompt={{action "jumpToPostPrompt"}}
+            @enteredIndex={{this.enteredIndex}}
+            @prevEvent={{info.prevEvent}}
+            @jumpTop={{action "jumpTop"}}
+            @jumpBottom={{action "jumpBottom"}}
+            @jumpEnd={{action "jumpEnd"}}
+            @jumpToIndex={{action "jumpToIndex"}}
+            @toggleMultiSelect={{action "toggleMultiSelect"}}
+            @showTopicSlowModeUpdate={{route-action "showTopicSlowModeUpdate"}}
+            @deleteTopic={{action "deleteTopic"}}
+            @recoverTopic={{action "recoverTopic"}}
+            @toggleClosed={{action "toggleClosed"}}
+            @toggleArchived={{action "toggleArchived"}}
+            @toggleVisibility={{action "toggleVisibility"}}
+            @showTopicTimerModal={{route-action "showTopicTimerModal"}}
+            @showFeatureTopic={{route-action "showFeatureTopic"}}
+            @showChangeTimestamp={{route-action "showChangeTimestamp"}}
+            @resetBumpDate={{action "resetBumpDate"}}
+            @convertToPublicTopic={{action "convertToPublicTopic"}}
+            @convertToPrivateMessage={{action "convertToPrivateMessage"}}
+            @fullscreen={{info.topicProgressExpanded}}
+            @mobileView={{this.site.mobileView}}
+          />
         {{else}}
           <TopicProgress
             @prevEvent={{info.prevEvent}}
@@ -291,12 +259,16 @@
             @expanded={{info.topicProgressExpanded}}
             @jumpToPost={{action "jumpToPost"}}
           >
-            <PluginOutlet
-              @name="before-topic-progress"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model jumpToPost=(action "jumpToPost")}}
-            />
+            <span>
+              <PluginOutlet
+                @name="before-topic-progress"
+                @connectorTagName="div"
+                @outletArgs={{hash
+                  model=this.model
+                  jumpToPost=(action "jumpToPost")
+                }}
+              />
+            </span>
             <TopicAdminMenuButton
               @topic={{this.model}}
               @openUpwards="true"
@@ -329,12 +301,13 @@
               @condition={{this.model.postStream.loadingAbove}}
             />
 
-            <PluginOutlet
-              @name="topic-above-posts"
-              @tagName="span"
-              @connectorTagName="div"
-              @args={{hash model=this.model}}
-            />
+            <span>
+              <PluginOutlet
+                @name="topic-above-posts"
+                @connectorTagName="div"
+                @outletArgs={{hash model=this.model}}
+              />
+            </span>
 
             {{#unless this.model.postStream.loadingFilter}}
               <ScrollingPostStream
@@ -369,7 +342,7 @@
                 @unhidePost={{action "unhidePost"}}
                 @replyToPost={{action "replyToPost"}}
                 @toggleWiki={{action "toggleWiki"}}
-                @showSummary={{action "showSummary"}}
+                @showTopReplies={{action "showTopReplies"}}
                 @cancelFilter={{action "cancelFilter"}}
                 @removeAllowedUser={{action "removeAllowedUser"}}
                 @removeAllowedGroup={{action "removeAllowedGroup"}}
@@ -519,12 +492,13 @@
         <SignupCta />
       {{else}}
         {{#if this.currentUser}}
-          <PluginOutlet
-            @name="topic-above-footer-buttons"
-            @tagName="span"
-            @connectorTagName="div"
-            @args={{hash model=this.model}}
-          />
+          <span>
+            <PluginOutlet
+              @name="topic-above-footer-buttons"
+              @connectorTagName="div"
+              @outletArgs={{hash model=this.model}}
+            />
+          </span>
 
           <TopicFooterButtons
             @topic={{this.model}}
@@ -560,12 +534,13 @@
         {{/if}}
       {{/if}}
 
-      <PluginOutlet
-        @name="topic-above-suggested"
-        @tagName="span"
-        @connectorTagName="div"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="topic-above-suggested"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
       <div
         class="{{if
             this.model.relatedMessages.length

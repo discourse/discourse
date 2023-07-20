@@ -1,0 +1,44 @@
+{{#if @tagName}}
+  {{!
+    Older outlets have a wrapper tagName. RFC0389 proposes an interface for dynamic tag names, which we may want to use in future.
+    But for now, this classic component wrapper takes care of the tagName.
+  }}
+  <this.wrapperComponent @tagName={{@tagName}}>
+    {{#each this.connectors as |c|}}
+      {{#if c.componentClass}}
+        <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}} />
+      {{else if @defaultGlimmer}}
+        <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}} />
+      {{else}}
+        <PluginConnector
+          @connector={{c}}
+          @args={{this.outletArgs}}
+          @deprecatedArgs={{@deprecatedArgs}}
+          @outletArgs={{this.outletArgsWithDeprecations}}
+          @class={{c.classicClassNames}}
+          @tagName={{or @connectorTagName ""}}
+          @layout={{c.template}}
+        />
+      {{/if}}
+    {{/each}}
+  </this.wrapperComponent>
+{{else}}
+  {{! The modern path: no wrapper element = no classic component }}
+  {{#each this.connectors as |c|}}
+    {{#if c.componentClass}}
+      <c.componentClass @outletArgs={{this.outletArgsWithDeprecations}} />
+    {{else if @defaultGlimmer}}
+      <c.templateOnly @outletArgs={{this.outletArgsWithDeprecations}} />
+    {{else}}
+      <PluginConnector
+        @connector={{c}}
+        @args={{this.outletArgs}}
+        @deprecatedArgs={{@deprecatedArgs}}
+        @outletArgs={{this.outletArgsWithDeprecations}}
+        @class={{c.classicClassNames}}
+        @tagName={{or @connectorTagName ""}}
+        @layout={{c.template}}
+      />
+    {{/if}}
+  {{/each}}
+{{/if}}

@@ -1,0 +1,19 @@
+{{#if this.site.mobileView}}
+  <div class="card-cloak hidden"></div>
+{{/if}}
+
+<UserCardContents
+  @topic={{this.topic.model}}
+  @showUser={{this.showUser}}
+  @filterPosts={{this.filterPosts}}
+  @composePrivateMessage={{route-action "composePrivateMessage"}}
+  @createNewMessageViaParams={{route-action "createNewMessageViaParams"}}
+  role="dialog"
+/>
+
+<GroupCardContents
+  @topic={{this.topic.model}}
+  @showUser={{this.showUser}}
+  @showGroup={{this.showGroup}}
+  @createNewMessageViaParams={{route-action "createNewMessageViaParams"}}
+/>

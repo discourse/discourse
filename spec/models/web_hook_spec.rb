@@ -7,30 +7,30 @@ RSpec.describe WebHook do
   it { is_expected.to validate_presence_of :web_hook_event_types }
 
   describe "#content_types" do
-    subject { WebHook.content_types }
+    subject(:content_types) { WebHook.content_types }
 
     it "'json' (application/json) should be at 1st position" do
-      expect(subject["application/json"]).to eq(1)
+      expect(content_types["application/json"]).to eq(1)
     end
 
     it "'url_encoded' (application/x-www-form-urlencoded) should be at 2st position" do
-      expect(subject["application/x-www-form-urlencoded"]).to eq(2)
+      expect(content_types["application/x-www-form-urlencoded"]).to eq(2)
     end
   end
 
   describe "#last_delivery_statuses" do
-    subject { WebHook.last_delivery_statuses }
+    subject(:statuses) { WebHook.last_delivery_statuses }
 
     it "inactive should be at 1st position" do
-      expect(subject[:inactive]).to eq(1)
+      expect(statuses[:inactive]).to eq(1)
     end
 
     it "failed should be at 2st position" do
-      expect(subject[:failed]).to eq(2)
+      expect(statuses[:failed]).to eq(2)
     end
 
     it "successful should be at 3st position" do
-      expect(subject[:successful]).to eq(3)
+      expect(statuses[:successful]).to eq(3)
     end
   end
 
@@ -217,6 +217,29 @@ RSpec.describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(topic_id)
       expect(payload["tags"]).to contain_exactly(tag.name)
+    end
+
+    it "should not log a personal message view when processing new topic" do
+      SiteSetting.log_personal_messages_views = true
+      Fabricate(:topic_web_hook)
+
+      post =
+        PostCreator.create!(
+          user,
+          raw: "raw",
+          title: "title",
+          skip_validations: true,
+          archetype: Archetype.private_message,
+          target_usernames: user.username,
+        )
+      topic_id = post.topic.id
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
+
+      expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(0)
     end
 
     describe "when topic has been deleted" do
@@ -558,7 +581,10 @@ RSpec.describe WebHook do
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
       expect(job_args["event_name"]).to eq("user_added_to_group")
+      expect(job_args["group_ids"]).to contain_exactly(group.id)
+
       payload = JSON.parse(job_args["payload"])
+
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
       expect(payload["notification_level"]).to eq(group.default_notification_level)
@@ -577,7 +603,10 @@ RSpec.describe WebHook do
 
       job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
       expect(job_args["event_name"]).to eq("user_removed_from_group")
+      expect(job_args["group_ids"]).to contain_exactly(group.id)
+
       payload = JSON.parse(job_args["payload"])
+
       expect(payload["group_id"]).to eq(group.id)
       expect(payload["user_id"]).to eq(user.id)
     end

@@ -92,7 +92,7 @@ class Admin::BackupsController < Admin::AdminController
       StaffActionLogger.new(current_user).log_backup_download(backup)
 
       if store.remote?
-        redirect_to backup.source
+        redirect_to backup.source, allow_other_host: true
       else
         headers["Content-Length"] = File.size(backup.source).to_s
         send_file backup.source
@@ -246,11 +246,11 @@ class Admin::BackupsController < Admin::AdminController
   end
 
   def valid_extension?(filename)
-    /\.(tar\.gz|t?gz)$/i =~ filename
+    /\.(tar\.gz|t?gz)\z/i =~ filename
   end
 
   def valid_filename?(filename)
-    !!(/^[a-zA-Z0-9\._\-]+$/ =~ filename)
+    !!(/\A[a-zA-Z0-9\._\-]+\z/ =~ filename)
   end
 
   def render_error(message_key)

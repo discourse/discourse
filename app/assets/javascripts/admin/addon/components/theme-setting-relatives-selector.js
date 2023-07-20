@@ -1,15 +1,11 @@
-import BufferedContent from "discourse/mixins/buffered-content";
-import Component from "@ember/component";
-import SettingComponent from "admin/mixins/setting-component";
+import SiteSettingComponent from "./site-setting";
 
-export default Component.extend(BufferedContent, SettingComponent, {
-  layoutName: "admin/templates/components/site-setting",
-
+export default class ThemeSettingRelativesSelectorComponent extends SiteSettingComponent {
   _save() {
     return this.model
       .save({ [this.setting.setting]: this.convertNamesToIds() })
       .then(() => this.store.findAll("theme"));
-  },
+  }
 
   convertNamesToIds() {
     return this.get("buffered.value")
@@ -23,5 +19,5 @@ export default Component.extend(BufferedContent, SettingComponent, {
         }
         return themeName;
       });
-  },
-});
+  }
+}

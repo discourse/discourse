@@ -38,7 +38,7 @@ module Compression
 
     def build_entry_path(dest_path, _, compressed_file_path)
       basename = File.basename(compressed_file_path)
-      basename.gsub!(/#{Regexp.escape(extension)}$/, "")
+      basename.gsub!(/#{Regexp.escape(extension)}\z/, "")
       File.join(dest_path, basename)
     end
 

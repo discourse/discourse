@@ -6,7 +6,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def index
-    render_json_dump(site_settings: SiteSetting.all_settings, diags: SiteSetting.diags)
+    render_json_dump(site_settings: SiteSetting.all_settings)
   end
 
   def update
@@ -229,7 +229,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   private
 
   def is_sidebar_default_setting?(setting_name)
-    %w[default_sidebar_categories default_sidebar_tags].include?(setting_name.to_s)
+    %w[default_navigation_menu_categories default_navigation_menu_tags].include?(setting_name.to_s)
   end
 
   def user_options
@@ -255,13 +255,20 @@ class Admin::SiteSettingsController < Admin::AdminController
       default_text_size: "text_size_key",
       default_title_count_mode: "title_count_mode_key",
       default_hide_profile_and_presence: "hide_profile_and_presence",
+      default_sidebar_link_to_filtered_list: "sidebar_link_to_filtered_list",
+      default_sidebar_show_count_of_new_items: "sidebar_show_count_of_new_items",
     }
   end
 
   def raise_access_hidden_setting(id)
-    # note, as of Ruby 2.3 symbols are GC'd so this is considered safe
-    if SiteSetting.hidden_settings.include?(id.to_sym)
+    id = id.to_sym
+
+    if SiteSetting.hidden_settings.include?(id)
       raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
+    end
+
+    if SiteSetting.plugins[id] && !Discourse.plugins_by_name[SiteSetting.plugins[id]].configurable?
+      raise Discourse::InvalidParameters, "You are not allowed to change unconfigurable settings"
     end
   end
 

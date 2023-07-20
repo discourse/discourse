@@ -1,12 +1,13 @@
-<PluginOutlet
-  @name="user-preferences-interface-top"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-interface-top"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 {{#if this.showThemeSelector}}
-  <div class="control-group theme">
+  <div class="control-group theme" data-setting-name="user-theme">
     <label class="control-label">{{i18n "user.theme"}}</label>
     <div class="controls">
       <ComboBox
@@ -32,41 +33,41 @@
 {{/if}}
 
 {{#if this.showColorSchemeSelector}}
-  <fieldset class="control-group color-scheme">
+  <fieldset
+    class="control-group color-scheme"
+    data-setting-name="user-color-scheme"
+  >
     <legend class="control-label">{{i18n "user.color_scheme"}}</legend>
-    <div class="control-subgroup light-color-scheme">
-      {{#if this.showDarkColorSchemeSelector}}
-        <div class="instructions">{{i18n "user.color_schemes.regular"}}</div>
-      {{/if}}
-      <div class="controls">
-        <ComboBox
-          @content={{this.userSelectableColorSchemes}}
-          @value={{this.selectedColorSchemeId}}
-          @onChange={{action "loadColorScheme"}}
-          @options={{hash
-            translatedNone=this.selectedColorSchemeNoneLabel
-            autoInsertNoneItem=this.showColorSchemeNoneItem
-          }}
-        />
-      </div>
-    </div>
-    {{#if this.showDarkColorSchemeSelector}}
-      <div class="control-subgroup dark-color-scheme">
-        <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
+    <div class="controls">
+      <div class="control-subgroup light-color-scheme">
+        {{#if this.showDarkColorSchemeSelector}}
+          <div class="instructions">{{i18n "user.color_schemes.regular"}}</div>
+        {{/if}}
         <div class="controls">
           <ComboBox
-            @content={{this.userSelectableDarkColorSchemes}}
-            @value={{this.selectedDarkColorSchemeId}}
-            @onChange={{action "loadDarkColorScheme"}}
+            @content={{this.userSelectableColorSchemes}}
+            @value={{this.selectedColorSchemeId}}
+            @onChange={{action "loadColorScheme"}}
+            @options={{hash
+              translatedNone=this.selectedColorSchemeNoneLabel
+              autoInsertNoneItem=this.showColorSchemeNoneItem
+            }}
           />
         </div>
       </div>
-
-      <div class="instructions">
-        {{i18n "user.color_schemes.dark_instructions"}}
-      </div>
-    {{/if}}
-
+      {{#if this.showDarkColorSchemeSelector}}
+        <div class="control-subgroup dark-color-scheme">
+          <div class="instructions">{{i18n "user.color_schemes.dark"}}</div>
+          <div class="controls">
+            <ComboBox
+              @content={{this.userSelectableDarkColorSchemes}}
+              @value={{this.selectedDarkColorSchemeId}}
+              @onChange={{action "loadDarkColorScheme"}}
+            />
+          </div>
+        </div>
+      {{/if}}
+    </div>
     {{#if this.previewingColorScheme}}
       {{#if this.previewingColorScheme}}
         <DButton
@@ -76,7 +77,6 @@
           @class="btn-default btn-small undo-preview"
         />
       {{/if}}
-
       <div class="controls color-scheme-checkbox">
         <PreferenceCheckbox
           @labelKey="user.color_scheme_default_on_all_devices"
@@ -84,11 +84,16 @@
         />
       </div>
     {{/if}}
+    {{#if this.showDarkColorSchemeSelector}}
+      <div class="instructions">
+        {{i18n "user.color_schemes.dark_instructions"}}
+      </div>
+    {{/if}}
   </fieldset>
 {{/if}}
 
 {{#if this.showDarkModeToggle}}
-  <div class="control-group dark-mode">
+  <div class="control-group dark-mode" data-setting-name="user-dark-mode">
     <label class="control-label">{{i18n "user.dark_mode"}}</label>
     <div class="controls">
       <PreferenceCheckbox
@@ -99,7 +104,7 @@
   </div>
 {{/if}}
 
-<div class="control-group text-size">
+<div class="control-group text-size" data-setting-name="user-text-size">
   <label for="text-size-selector" class="control-label">{{i18n
       "user.text_size.title"
     }}</label>
@@ -123,7 +128,7 @@
 </div>
 
 {{#if this.siteSettings.allow_user_locale}}
-  <div class="control-group pref-locale">
+  <div class="control-group pref-locale" data-setting-name="user-locale">
     <label for="locale-selector" class="control-label">{{i18n
         "user.locale.title"
       }}</label>
@@ -144,7 +149,7 @@
   </div>
 {{/if}}
 
-<div class="control-group home">
+<div class="control-group home" data-setting-name="user-home">
   <label for="home-selector" class="control-label">{{i18n "user.home"}}</label>
   <div class="controls">
     <ComboBox
@@ -157,29 +162,33 @@
   </div>
 </div>
 
-<fieldset class="control-group other">
+<fieldset class="control-group other" data-setting-name="user-other-settings">
   <legend class="control-label">{{i18n "user.other_settings"}}</legend>
 
   <PreferenceCheckbox
     @labelKey="user.external_links_in_new_tab"
     @checked={{this.model.user_option.external_links_in_new_tab}}
     @class="pref-external-links"
+    data-setting-name="user-external-links"
   />
   <PreferenceCheckbox
     @labelKey="user.enable_quoting"
     @checked={{this.model.user_option.enable_quoting}}
     @class="pref-enable-quoting"
+    data-setting-name="user-enable-quoting"
   />
   <PreferenceCheckbox
     @labelKey="user.enable_defer"
     @checked={{this.model.user_option.enable_defer}}
     @class="pref-defer-unread"
+    data-setting-name="user-enable-defer"
   />
   {{#if this.siteSettings.automatically_unpin_topics}}
     <PreferenceCheckbox
       @labelKey="user.automatically_unpin_topics"
       @checked={{this.model.user_option.automatically_unpin_topics}}
       @class="pref-auto-unpin"
+      data-setting-name="user-auto-unpin"
     />
   {{/if}}
   {{#if this.siteSettings.allow_users_to_hide_profile}}
@@ -187,14 +196,19 @@
       @labelKey="user.hide_profile_and_presence"
       @checked={{this.model.user_option.hide_profile_and_presence}}
       @class="pref-hide-profile"
+      data-setting-name="user-hide-profile"
     />
   {{/if}}
   <PreferenceCheckbox
     @labelKey="user.dynamic_favicon"
     @checked={{this.model.user_option.dynamic_favicon}}
     @class="pref-dynamic-favicon"
+    data-setting-name="user-dynamic-favicon"
   />
-  <div class="controls controls-dropdown pref-page-title">
+  <div
+    class="controls controls-dropdown pref-page-title"
+    data-setting-name="user-page-title"
+  >
     <label for="user-title-count-mode">{{i18n
         "user.title_count_mode.title"
       }}</label>
@@ -206,7 +220,10 @@
       @onChange={{action (mut this.model.user_option.title_count_mode)}}
     />
   </div>
-  <div class="controls controls-dropdown pref-bookmark-after-notification">
+  <div
+    class="controls controls-dropdown pref-bookmark-after-notification"
+    data-setting-name="user-bookmark-after-notification"
+  >
     <label for="bookmark-after-notification-mode">{{i18n
         "user.bookmark_after_notification.title"
       }}</label>
@@ -214,7 +231,7 @@
       @valueProperty="value"
       @content={{this.bookmarkAfterNotificationModes}}
       @value={{this.model.user_option.bookmark_auto_delete_preference}}
-      @id="boookmark-after-notification-mode"
+      @id="bookmark-after-notification-mode"
       @onChange={{action
         (mut this.model.user_option.bookmark_auto_delete_preference)
       }}
@@ -224,30 +241,34 @@
     @labelKey="user.skip_new_user_tips.description"
     @checked={{this.model.user_option.skip_new_user_tips}}
     @class="pref-new-user-tips"
+    data-setting-name="user-new-user-tips"
   />
   {{#if this.site.user_tips}}
     <DButton
       @class="pref-reset-seen-user-tips"
       @action={{action "resetSeenUserTips"}}
+      data-setting-name="user-reset-seen-user-tips"
     >{{i18n "user.reset_seen_user_tips"}}</DButton>
   {{/if}}
 </fieldset>
 
-<PluginOutlet
-  @name="user-preferences-interface"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-interface"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

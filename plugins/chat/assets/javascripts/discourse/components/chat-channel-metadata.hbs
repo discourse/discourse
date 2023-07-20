@@ -1,9 +1,12 @@
 <div class="chat-channel-metadata">
-  <div class="chat-channel-metadata__date">
-    {{this.lastMessageFormatedDate}}
-  </div>
+  {{#if @channel.lastMessage}}
+    <div class="chat-channel-metadata__date">
+      {{this.lastMessageFormattedDate}}
+    </div>
+  {{/if}}
 
-  {{#if @unreadIndicator}}
+  {{! TODO (martin) We need to have the thread unread count in the mobile channel row too }}
+  {{#if this.unreadIndicator}}
     <ChatChannelUnreadIndicator @channel={{@channel}} />
   {{/if}}
 </div>

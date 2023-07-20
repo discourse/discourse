@@ -32,14 +32,14 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
   test("second factor backup", async function (assert) {
     updateCurrentUser({ second_factor_enabled: true });
     await visit("/u/eviltrout/preferences/second-factor");
-    await click(".edit-2fa-backup");
+    await click(".new-second-factor-backup");
 
     assert.ok(
-      exists(".second-factor-backup-preferences"),
+      exists(".second-factor-backup-edit-modal"),
       "shows the 2fa backup panel"
     );
 
-    await click(".second-factor-backup-preferences .btn-primary");
+    await click(".second-factor-backup-edit-modal .btn-primary");
 
     assert.ok(exists(".backup-codes-area"), "shows backup codes");
   });
@@ -47,10 +47,14 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
   test("delete backup codes", async function (assert) {
     updateCurrentUser({ second_factor_enabled: true });
     await visit("/u/eviltrout/preferences/second-factor");
-    await click(".edit-2fa-backup");
-    await click(".second-factor-backup-preferences .btn-primary");
-    await click(".modal-close");
-    await click(".pref-second-factor-backup .btn-danger");
+
+    // create backup codes
+    await click(".new-second-factor-backup");
+    await click(".second-factor-backup-edit-modal .btn-primary");
+    await click(".second-factor-backup-edit-modal .modal-close");
+
+    await click(".two-factor-backup-dropdown .select-kit-header");
+    await click("li[data-name='Disable'");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting backup codes"

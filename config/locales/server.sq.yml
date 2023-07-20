@@ -795,7 +795,6 @@ sq:
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
-    show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: "Delete drafts older than (n) days."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
     enable_emoji: "Enable emoji"
@@ -977,9 +976,6 @@ sq:
   user_notifications:
     previous_discussion: "Përgjigjet e mëparshme"
     in_reply_to: "Në Përgjigje Të"
-    unsubscribe:
-      title: "Çregjistrohuni"
-      description: "Nuk të interesojnë këto emaila? S'ka problem! Kliko më poshtë për të anuluar abonimin:"
     reply_by_email: "[Shiko Temën](%{base_url}%{url}) ose përgjigjju këtij email-i për të postuar."
     only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
@@ -1181,8 +1177,6 @@ sq:
     see_more: "Më shumë"
     search_title: "Kërko në këtë faqe"
     search_button: "Kërko"
-  deleted: "deleted"
-  image: "imazh"
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
@@ -1400,7 +1394,6 @@ sq:
                 label: "Kategoritë dhe temat e zgjedhura"
               categories_and_latest_topics:
                 label: "Kategoritë dhe temat e fundit"
-  joined: "Anëtarësuar"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ju përmendi në "%{topic}" - %{site_title}'
@@ -1411,12 +1404,12 @@ sq:
       linked: '%{username} vendosi një lidhje për postimin tuaj nga "%{topic}" - %{site_title}'
   reviewables:
     actions:
-      agree_and_suspend:
-        title: "Pezullo anëtarin"
+      agree:
+        title: "Po"
       delete_single:
         title: "Fshij"
       disagree:
-        title: "Jo dakord"
+        title: "Jo"
       approve:
         title: "Aprovo"
       reject_user:

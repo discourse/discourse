@@ -1,0 +1,38 @@
+{{#if this.shouldRender}}
+  <div
+    class="chat-thread-list"
+    {{did-insert this.subscribe}}
+    {{did-insert this.loadThreads}}
+    {{did-update this.loadThreads @channel}}
+    {{did-update this.subscribe @channel}}
+    {{will-destroy this.teardown}}
+  >
+    {{#if @includeHeader}}
+      <Chat::ThreadList::Header @channel={{@channel}} />
+    {{/if}}
+
+    <div class="chat-thread-list__items">
+      {{#each this.sortedThreads as |thread|}}
+        <Chat::ThreadList::Item
+          @thread={{thread}}
+          {{chat/track-message
+            (if
+              (eq thread this.sortedThreads.lastObject)
+              this.loadThreads
+              (fn (noop))
+            )
+          }}
+        />
+      {{else}}
+        {{#if this.threadsCollection.fetchedOnce}}
+          <div class="chat-thread-list__no-threads">
+            {{i18n "chat.threads.none"}}
+          </div>
+        {{/if}}
+      {{/each}}
+      <ConditionalLoadingSpinner
+        @condition={{this.threadsCollection.loading}}
+      />
+    </div>
+  </div>
+{{/if}}

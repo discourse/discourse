@@ -10,20 +10,19 @@ RSpec.describe SearchController do
   end
 
   fab!(:awesome_post) do
-    SearchIndexer.enable
-    Fabricate(:post, topic: awesome_topic, raw: "this is my really awesome post")
+    with_search_indexer_enabled do
+      Fabricate(:post, topic: awesome_topic, raw: "this is my really awesome post")
+    end
   end
 
   fab!(:awesome_post_2) do
-    SearchIndexer.enable
-    Fabricate(:post, raw: "this is my really awesome post 2")
+    with_search_indexer_enabled { Fabricate(:post, raw: "this is my really awesome post 2") }
   end
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { with_search_indexer_enabled { Fabricate(:user) } }
 
   fab!(:user_post) do
-    SearchIndexer.enable
-    Fabricate(:post, raw: "#{user.username} is a cool person")
+    with_search_indexer_enabled { Fabricate(:post, raw: "#{user.username} is a cool person") }
   end
 
   context "with integration" do
@@ -229,6 +228,10 @@ RSpec.describe SearchController do
     end
 
     context "when rate limited" do
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
+
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search/query.json", params: { term: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -247,8 +250,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         start = Time.now
         freeze_time start
@@ -269,8 +270,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -290,8 +289,6 @@ RSpec.describe SearchController do
 
         it "rate limits logged in searches" do
           SiteSetting.rate_limit_search_user = 3
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           3.times do
             get "/search/query.json", params: { term: "wookie" }
@@ -368,6 +365,10 @@ RSpec.describe SearchController do
     end
 
     context "when rate limited" do
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
+
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search.json", params: { q: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -386,8 +387,6 @@ RSpec.describe SearchController do
       it "rate limits anon searches per user" do
         SiteSetting.rate_limit_search_anon_user_per_second = 2
         SiteSetting.rate_limit_search_anon_user_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
 
         t = Time.now
         freeze_time t
@@ -406,15 +405,14 @@ RSpec.describe SearchController do
       it "rate limits anon searches globally" do
         SiteSetting.rate_limit_search_anon_global_per_second = 2
         SiteSetting.rate_limit_search_anon_global_per_minute = 3
-        RateLimiter.enable
-        RateLimiter.clear_all!
+
+        t = Time.now
+        freeze_time t
 
         unlimited_request("1.1.1.1")
         unlimited_request("2.2.2.2")
         limited_request("3.3.3.3")
 
-        t = Time.now
-        freeze_time t
         freeze_time(t + 2)
 
         unlimited_request("4.4.4.4")
@@ -426,8 +424,6 @@ RSpec.describe SearchController do
 
         it "rate limits searches" do
           SiteSetting.rate_limit_search_user = 3
-          RateLimiter.enable
-          RateLimiter.clear_all!
 
           3.times do
             get "/search.json", params: { q: "bantha" }
@@ -469,35 +465,37 @@ RSpec.describe SearchController do
     fab!(:very_high_priority_topic) { Fabricate(:topic, category: very_high_priority_category) }
 
     fab!(:very_low_priority_post) do
-      SearchIndexer.enable
-      Fabricate(:post, topic: very_low_priority_topic, raw: "This is a very Low Priority Post")
+      with_search_indexer_enabled do
+        Fabricate(:post, topic: very_low_priority_topic, raw: "This is a very Low Priority Post")
+      end
     end
 
     fab!(:low_priority_post) do
-      SearchIndexer.enable
-
-      Fabricate(
-        :post,
-        topic: low_priority_topic,
-        raw: "This is a Low Priority Post",
-        created_at: 1.day.ago,
-      )
+      with_search_indexer_enabled do
+        Fabricate(
+          :post,
+          topic: low_priority_topic,
+          raw: "This is a Low Priority Post",
+          created_at: 1.day.ago,
+        )
+      end
     end
 
     fab!(:high_priority_post) do
-      SearchIndexer.enable
-      Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
+      with_search_indexer_enabled do
+        Fabricate(:post, topic: high_priority_topic, raw: "This is a High Priority Post")
+      end
     end
 
     fab!(:very_high_priority_post) do
-      SearchIndexer.enable
-
-      Fabricate(
-        :post,
-        topic: very_high_priority_topic,
-        raw: "This is a Old but Very High Priority Post",
-        created_at: 2.days.ago,
-      )
+      with_search_indexer_enabled do
+        Fabricate(
+          :post,
+          topic: very_high_priority_topic,
+          raw: "This is a Old but Very High Priority Post",
+          created_at: 2.days.ago,
+        )
+      end
     end
 
     it "sort posts with search priority when search term is empty" do

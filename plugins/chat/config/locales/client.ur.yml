@@ -21,14 +21,15 @@ ur:
       joined: "شمولیت اختیار کی"
       email_frequency:
         never: "کبھی نہیں"
+      header_indicator_preference:
+        never: "کبھی نہیں"
       flag: "فلَیگ"
       join: "شمولیت اختیار کریں"
+      last_visit: "آخری وزٹ"
+      summarization:
+        summarize: "خلاصہ"
       mention_warning:
         dismiss: "بر خاست کریں"
-        groups:
-          users_limit:
-            one: "%{count} صارف"
-            other: "%{count} صارفین"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
@@ -58,6 +59,8 @@ ur:
           about: بارے میں
           members: ممبران
           settings: ترتیبات
+      new_message_modal:
+        no_items: "کوئی اشیاء نہیں"
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"
@@ -69,11 +72,13 @@ ur:
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
         bold_text: "گہرا ٹَیکسٹ"
+        send: "بھیجیں"
       notification_levels:
         never: "کبھی نہیں"
       settings:
         follow: "شمولیت اختیار کریں"
         followed: "شمولیت اختیار کی"
+        threading_disabled: "غیر فعال"
         notifications: "اطلاعات"
         preview: "پیشگی دیکھیں"
         save: "محفوظ کریں"
@@ -105,6 +110,21 @@ ur:
         activities: "سرگرمیاں"
         flags: "فلَیگز"
         symbols: "علامات"
+      thread:
+        title: "عنوان"
+        replies:
+          one: "%{count} جواب"
+          other: "%{count} جوابات"
+        settings: "ترتیبات"
+        last_reply: "آخری جواب"
+        notifications:
+          regular:
+            title: "عمومی"
+          tracking:
+            title: "ٹریک کیا جا رہا"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "نیا پیغام"
         cancel: "منسوخ"
@@ -116,7 +136,3 @@ ur:
           fields:
             message:
               label: پیغام
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "کی طرف سے فلَیگ کردہ"

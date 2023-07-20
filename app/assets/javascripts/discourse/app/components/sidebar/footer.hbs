@@ -3,6 +3,15 @@
     <div class="sidebar-footer-actions">
       <PluginOutlet @name="sidebar-footer-actions" />
 
+      {{#if this.currentUser}}
+        <DButton
+          @icon="plus"
+          @action={{action this.addSection}}
+          @class="btn-flat add-section"
+          @title="sidebar.sections.custom.add"
+        />
+      {{/if}}
+
       {{#if
         (or
           this.site.mobileView
@@ -22,7 +31,7 @@
           @action={{route-action "showKeyboardShortcutsHelp"}}
           @title="keyboard_shortcuts_help.title"
           @icon="keyboard"
-          @class="sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
+          @class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
         />
       {{/if}}
     </div>

@@ -1,10 +1,15 @@
-import { visit } from "@ember/test-helpers";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
+import {
+  acceptance,
+  exists,
+  query,
+} from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
-acceptance("Topic Timeline", function (needs) {
-  needs.user();
-
+acceptance("Glimmer Topic Timeline", function (needs) {
+  needs.user({
+    admin: true,
+  });
   needs.pretender((server, helper) => {
     server.get("/t/129.json", () => {
       return helper.response({
@@ -332,8 +337,64 @@ acceptance("Topic Timeline", function (needs) {
     });
   });
 
+  test("it has a topic admin menu", async function (assert) {
+    await visit("/t/internationalization-localization");
+    assert.ok(
+      exists(".timeline-controls .topic-admin-menu-button"),
+      "admin menu is present"
+    );
+  });
+
+  test("it has a reply-to-post button", async function (assert) {
+    await visit("/t/internationalization-localization");
+    assert.ok(
+      exists(".timeline-footer-controls .reply-to-post"),
+      "reply to post button is present"
+    );
+  });
+
+  test("it has a topic notification button", async function (assert) {
+    await visit("/t/internationalization-localization");
+    assert.ok(
+      exists(".timeline-footer-controls .topic-notifications-button"),
+      "topic notifications button is present"
+    );
+  });
+
   test("Shows dates of first and last posts", async function (assert) {
     await visit("/t/deleted-topic-with-whisper-post/129");
-    assert.strictEqual(query(".now-date").innerText, "Jul 2020");
+    assert.strictEqual(
+      query(".timeline-date-wrapper .now-date").innerText,
+      "Jul 2020"
+    );
+  });
+
+  test("selecting start-date navigates you to the first post", async function (assert) {
+    await visit("/t/internationalization-localization/280/2");
+    await click(".timeline-date-wrapper .start-date");
+    assert.strictEqual(
+      currentURL(),
+      "/t/internationalization-localization/280/1",
+      "navigates to the first post"
+    );
+  });
+
+  test("selecting now-date navigates you to the last post", async function (assert) {
+    await visit("/t/internationalization-localization/280/1");
+    await click(".timeline-date-wrapper .now-date");
+    assert.strictEqual(
+      currentURL(),
+      "/t/internationalization-localization/280/11",
+      "navigates to the latest post"
+    );
+  });
+
+  test("clicking the timeline padding updates the position", async function (assert) {
+    await visit("/t/internationalization-localization/280/2");
+    await click(".timeline-scrollarea .timeline-padding");
+    assert.notOk(
+      currentURL().includes("/280/2"),
+      "The position of the currently viewed post has been updated from it's initial position"
+    );
   });
 });

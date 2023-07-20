@@ -40,6 +40,47 @@ RSpec.describe CategoryHashtagDataSource do
       group.add(user)
       expect(described_class.lookup(Guardian.new(user), ["secret"]).first).not_to eq(nil)
     end
+
+    context "with sub-sub-categories" do
+      before { SiteSetting.max_category_nesting = 3 }
+
+      it "returns the first matching grandchild category (ordered by IDs) when there are multiple categories with the same slug" do
+        parent1 = Fabricate(:category, slug: "parent1")
+        parent2 = Fabricate(:category, slug: "parent2")
+
+        parent1_child = Fabricate(:category, slug: "child", parent_category_id: parent1.id)
+        parent1_child_grandchild =
+          Fabricate(:category, slug: "grandchild", parent_category_id: parent1_child.id)
+
+        parent2_child = Fabricate(:category, slug: "child", parent_category_id: parent2.id)
+        parent2_child_grandchild =
+          Fabricate(:category, slug: "grandchild", parent_category_id: parent2_child.id)
+
+        result = described_class.lookup(guardian, ["child:grandchild"])
+        expect(result.map(&:relative_url)).to eq([parent1_child_grandchild.url])
+
+        parent1_child.destroy
+        parent1_child = Fabricate(:category, slug: "child", parent_category_id: parent1.id)
+
+        result = described_class.lookup(guardian, ["child:grandchild"])
+        expect(result.map(&:relative_url)).to eq([parent2_child_grandchild.url])
+      end
+
+      it "returns the correct grandchild category when there are multiple children with the same slug and only one of them has the correct grandchild" do
+        parent1 = Fabricate(:category, slug: "parent1")
+        parent1_child = Fabricate(:category, slug: "child", parent_category_id: parent1.id)
+        parent1_child_grandchild =
+          Fabricate(:category, slug: "another-grandchild", parent_category_id: parent1_child.id)
+
+        parent2 = Fabricate(:category, slug: "parent2")
+        parent2_child = Fabricate(:category, slug: "child", parent_category_id: parent2.id)
+        parent2_child_grandchild =
+          Fabricate(:category, slug: "grandchild", parent_category_id: parent2_child.id)
+
+        result = described_class.lookup(guardian, ["child:grandchild"])
+        expect(result.map(&:relative_url)).to eq([parent2_child_grandchild.url])
+      end
+    end
   end
 
   describe "#search" do

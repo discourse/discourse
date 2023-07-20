@@ -6,7 +6,6 @@
 
   {{#each this.sectionLinks as |sectionLink|}}
     <Sidebar::SectionLink
-      @linkName={{sectionLink.name}}
       @route={{sectionLink.route}}
       @title={{sectionLink.title}}
       @content={{sectionLink.text}}
@@ -15,7 +14,7 @@
       @prefixType={{sectionLink.prefixType}}
       @prefixValue={{sectionLink.prefixValue}}
       @prefixColor={{sectionLink.prefixColor}}
-      @prefixElementColors={{sectionLink.prefixElementColors}}
+      data-category-id={{sectionLink.category.id}}
     />
   {{/each}}
 

@@ -2,6 +2,9 @@ chat:
   chat_enabled:
     default: true
     client: true
+  enable_public_channels:
+    default: true
+    client: true
   chat_allowed_groups:
     client: true
     type: group_list
@@ -59,7 +62,7 @@ chat:
   chat_default_channel_id:
     default: ""
     client: true
-    validator: "ChatDefaultChannelValidator"
+    validator: "Chat::DefaultChannelValidator"
   chat_duplicate_message_sensitivity:
     type: float
     default: 0.5
@@ -85,7 +88,7 @@ chat:
   chat_allow_uploads:
     default: true
     client: true
-    validator: "ChatAllowUploadsValidator"
+    validator: "Chat::AllowUploadsValidator"
   max_chat_auto_joined_users:
     min: 0
     default: 10000
@@ -97,7 +100,7 @@ chat:
     client: true
     allow_any: false
     refresh: true
-    validator: "DirectMessageEnabledGroupsValidator"
+    validator: "Chat::DirectMessageEnabledGroupsValidator"
   chat_message_flag_allowed_groups:
     default: "11" # @trust_level_1
     type: group_list
@@ -113,3 +116,6 @@ chat:
   max_chat_draft_length:
     default: 50_000
     hidden: true
+  enable_experimental_chat_threaded_discussions:
+    default: false
+    client: true

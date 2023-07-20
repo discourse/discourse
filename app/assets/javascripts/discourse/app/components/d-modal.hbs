@@ -1,0 +1,102 @@
+{{! template-lint-disable no-pointer-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
+
+<ConditionalInElement
+  @element={{this.modal.containerElement}}
+  @inline={{@inline}}
+>
+  <this.dynamicElement
+    class={{concat-class
+      "modal"
+      "d-modal"
+      (if @inline "inline-modal" "fixed-modal")
+    }}
+    data-keyboard="false"
+    aria-modal="true"
+    role="dialog"
+    aria-labelledby={{if @title "discourse-modal-title"}}
+    ...attributes
+    {{did-insert this.setupListeners}}
+    {{will-destroy this.cleanupListeners}}
+    {{on "mouseup" this.handleMouseUp}}
+  >
+    <div class="modal-outer-container">
+      <div class="modal-middle-container">
+        <div class="modal-inner-container">
+          {{yield to="aboveHeader"}}
+
+          {{#if
+            (or
+              this.dismissable
+              @title
+              (has-block "headerBelowTitle")
+              (has-block "headerAboveTitle")
+            )
+          }}
+            <div class={{concat-class "modal-header" @headerClass}}>
+              {{#if this.dismissable}}
+                <DButton
+                  @icon="times"
+                  @action={{this.handleCloseButton}}
+                  @class="btn-flat modal-close close"
+                  @title="modal.close"
+                />
+              {{/if}}
+
+              {{yield to="headerAboveTitle"}}
+
+              <div class="modal-title-wrapper">
+                {{#if @title}}
+                  <div class="title">
+                    <h3 id="discourse-modal-title">{{@title}}</h3>
+
+                    {{#if @subtitle}}
+                      <p class="subtitle">{{@subtitle}}</p>
+                    {{/if}}
+                  </div>
+                {{/if}}
+
+                {{yield to="headerBelowTitle"}}
+              </div>
+            </div>
+          {{/if}}
+
+          {{yield to="belowHeader"}}
+
+          {{this.validateFlashType @flashType}}
+          {{#if @flash}}
+            <div
+              id="modal-alert"
+              role="alert"
+              class={{concat-class
+                "alert"
+                (if @flashType (concat "alert-" @flashType))
+              }}
+            >
+              {{~@flash~}}
+            </div>
+          {{/if}}
+
+          <div class={{concat-class "modal-body" @bodyClass}} tabindex="-1">
+            {{#if (has-block "body")}}
+              {{yield to="body"}}
+            {{else}}
+              {{yield}}
+            {{/if}}
+          </div>
+
+          {{#if (has-block "footer")}}
+            <div class="modal-footer">
+              {{yield to="footer"}}
+            </div>
+          {{/if}}
+
+          {{yield to="belowFooter"}}
+        </div>
+      </div>
+    </div>
+  </this.dynamicElement>
+  {{#unless @inline}}
+    <div class="modal-backdrop"></div>
+  {{/unless}}
+</ConditionalInElement>

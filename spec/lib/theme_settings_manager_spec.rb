@@ -161,12 +161,30 @@ RSpec.describe ThemeSettingsManager do
       ).to be_truthy
     end
 
-    it "returns the CDN URL" do
-      upload_setting = find_by_name(:upload_setting)
-      upload_setting.value = upload.url
-      theme.reload
+    describe "#value" do
+      context "when it's changed to a custom upload" do
+        it "returns CDN URL" do
+          upload_setting = find_by_name(:upload_setting)
+          upload_setting.value = upload.url
+          theme.reload
 
-      expect(upload_setting.value).to eq(Discourse.store.cdn_url(upload.url))
+          expect(upload_setting.value).to eq(Discourse.store.cdn_url(upload.url))
+        end
+      end
+
+      context "when there's a default upload" do
+        it "returns CDN URL" do
+          theme.set_field(
+            target: :common,
+            name: "default-upload",
+            type: :theme_upload_var,
+            upload_id: upload.id,
+          )
+          theme.save!
+          upload_setting = find_by_name(:upload_setting)
+          expect(upload_setting.value).to eq(Discourse.store.cdn_url(upload.url))
+        end
+      end
     end
   end
 end

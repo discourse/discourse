@@ -334,7 +334,7 @@ class S3Inventory
     objects = []
 
     hive_path = File.join(inventory_path, bucket_name, inventory_id, "hive")
-    @s3_helper.list(hive_path).each { |obj| objects << obj if obj.key.match?(/symlink\.txt$/i) }
+    @s3_helper.list(hive_path).each { |obj| objects << obj if obj.key.match?(/symlink\.txt\z/i) }
 
     objects
   rescue Aws::Errors::ServiceError => e

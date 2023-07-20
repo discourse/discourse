@@ -1,18 +1,23 @@
-import BufferedContent from "discourse/mixins/buffered-content";
-import Component from "@ember/component";
-import SettingComponent from "admin/mixins/setting-component";
+import SiteSettingComponent from "./site-setting";
+import { ajax } from "discourse/lib/ajax";
+import { url } from "discourse/lib/computed";
 import { alias } from "@ember/object/computed";
 
-export default Component.extend(BufferedContent, SettingComponent, {
-  layoutName: "admin/templates/components/site-setting",
-  setting: alias("translation"),
-  type: "string",
-  settingName: alias("translation.key"),
+export default class ThemeTranslation extends SiteSettingComponent {
+  @alias("translation") setting;
+  @alias("translation.key") settingName;
+  @url("model.id", "/admin/themes/%@") updateUrl;
+
+  type = "string";
 
   _save() {
-    return this.model.saveTranslation(
-      this.get("translation.key"),
-      this.get("buffered.value")
-    );
-  },
-});
+    const translations = {
+      [this.get("translation.key")]: this.get("buffered.value"),
+    };
+
+    return ajax(this.updateUrl, {
+      type: "PUT",
+      data: { theme: { translations } },
+    });
+  }
+}

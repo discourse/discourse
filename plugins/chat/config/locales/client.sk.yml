@@ -20,16 +20,13 @@ sk:
       joined: "vytvorený"
       email_frequency:
         never: "Nikdy"
+      header_indicator_preference:
+        never: "Nikdy"
       flag: "Označenie"
       join: "Pridať sa"
+      last_visit: "posledná návševa"
       mention_warning:
         dismiss: "zahodiť"
-        groups:
-          users_limit:
-            one: "%{count} používateľ"
-            few: "%{count} používatelia"
-            many: "%{count} používateľov"
-            other: "%{count} používateľov"
       reply: "Odpoveď"
       edit: "Upraviť"
       rebake_message: "Pregenerovať HTML"
@@ -58,6 +55,8 @@ sk:
           about: O stránke
           members: Členovia
           settings: Nastavenia
+      new_message_modal:
+        no_items: "Žiadne položky"
       direct_message_creator:
         title: Nová správa
         prefix: "Komu:"
@@ -74,6 +73,8 @@ sk:
       settings:
         follow: "Pridať sa"
         followed: "Vytvorený"
+        threading_enabled: "Povolené"
+        threading_disabled: "Vypnuté"
         notifications: "Upozornenia"
         preview: "Ukážka"
         save: "Uložiť"
@@ -101,6 +102,20 @@ sk:
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"
+      thread:
+        title: "Názov"
+        replies:
+          one: "%{count} odpoveď"
+          few: "%{count} odpovede"
+          many: "%{count} odpovedí"
+          other: "%{count} odpovedí"
+        settings: "Nastavenia"
+        last_reply: "posledná odpoveď"
+        notifications:
+          regular:
+            title: "Normálne"
+          tracking:
+            title: "Pozorovať"
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"

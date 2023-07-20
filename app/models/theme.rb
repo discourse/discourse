@@ -6,15 +6,15 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 69
+  BASE_COMPILER_VERSION = 71
 
   attr_accessor :child_components
 
-  @cache = DistributedCache.new("theme:compiler#{BASE_COMPILER_VERSION}")
+  @cache = DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
 
   belongs_to :user
   belongs_to :color_scheme
-  has_many :theme_fields, dependent: :destroy
+  has_many :theme_fields, dependent: :destroy, validate: false
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
   has_many :child_theme_relation,
@@ -33,6 +33,7 @@ class Theme < ActiveRecord::Base
   has_many :color_schemes
   belongs_to :remote_theme, dependent: :destroy
   has_one :theme_modifier_set, dependent: :destroy
+  has_one :theme_svg_sprite, dependent: :destroy
 
   has_one :settings_field,
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },
@@ -58,6 +59,7 @@ class Theme < ActiveRecord::Base
            class_name: "ThemeField"
 
   validate :component_validations
+  validate :validate_theme_fields
 
   after_create :update_child_components
 
@@ -115,7 +117,7 @@ class Theme < ActiveRecord::Base
     update_javascript_cache!
 
     remove_from_cache!
-    DB.after_commit { ColorScheme.hex_cache.clear }
+    ColorScheme.hex_cache.clear
     notify_theme_change(with_scheme: notify_with_scheme)
 
     if theme_setting_requests_refresh
@@ -299,6 +301,12 @@ class Theme < ActiveRecord::Base
     errors.add(:base, I18n.t("themes.errors.component_no_default")) if default?
   end
 
+  def validate_theme_fields
+    theme_fields.each do |field|
+      field.errors.full_messages.each { |message| errors.add(:base, message) } unless field.valid?
+    end
+  end
+
   def switch_to_component!
     return if component
 
@@ -330,13 +338,11 @@ class Theme < ActiveRecord::Base
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
     cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}"
-    lookup = @cache[cache_key]
-    return lookup.html_safe if lookup
 
-    target = target.to_sym
-    val = resolve_baked_field(theme_ids, target, field)
-
-    get_set_cache(cache_key) { val || "" }.html_safe
+    get_set_cache(cache_key) do
+      target = target.to_sym
+      resolve_baked_field(theme_ids, target, field) || ""
+    end.html_safe
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)
@@ -352,7 +358,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    DB.after_commit { @cache.clear }
+    @cache.clear
   end
 
   def self.targets
@@ -495,11 +501,11 @@ class Theme < ActiveRecord::Base
 
     value ||= ""
 
-    field =
-      theme_fields.find { |f| f.name == name && f.target_id == target_id && f.type_id == type_id }
+    field = theme_fields.find_by(name: name, target_id: target_id, type_id: type_id)
+
     if field
       if value.blank? && !upload_id
-        theme_fields.delete field.destroy
+        field.destroy
       else
         if field.value != value || field.upload_id != upload_id
           field.value = value
@@ -519,6 +525,16 @@ class Theme < ActiveRecord::Base
         )
       end
     end
+  end
+
+  def child_theme_ids=(theme_ids)
+    super(theme_ids)
+    Theme.clear_cache!
+  end
+
+  def parent_theme_ids=(theme_ids)
+    super(theme_ids)
+    Theme.clear_cache!
   end
 
   def add_relative_theme!(kind, theme)
@@ -762,12 +778,13 @@ class Theme < ActiveRecord::Base
     return if !keys
 
     current_values = CSV.parse(setting_row.value, **{ col_sep: "|" }).flatten
-    new_values = []
-    current_values.each do |item|
-      parts = CSV.parse(item, **{ col_sep: "," }).flatten
-      props = parts.map.with_index { |p, idx| [keys[idx], p] }.to_h
-      new_values << props
-    end
+
+    new_values =
+      current_values.map do |item|
+        parts = CSV.parse(item, **{ col_sep: "," }).flatten
+        raise "Schema validation failed" if keys.size < parts.size
+        parts.zip(keys).map(&:reverse).to_h
+      end
 
     schemer = JSONSchemer.schema(schema)
     raise "Schema validation failed" if !schemer.valid?(new_values)

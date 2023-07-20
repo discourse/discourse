@@ -160,11 +160,15 @@ module BadgeQueries
         FROM invites i
         JOIN invited_users iu ON iu.invite_id = i.id
         JOIN users u2 ON u2.id = iu.user_id
-        WHERE i.deleted_at IS NULL AND u2.active AND u2.trust_level >= #{trust_level.to_i} AND u2.silenced_till IS NULL
+        WHERE i.deleted_at IS NULL
+        AND i.invited_by_id <> u2.id
+        AND u2.active
+        AND u2.trust_level >= #{trust_level.to_i}
+        AND u2.silenced_till IS NULL
         GROUP BY invited_by_id
         HAVING COUNT(*) >= #{count.to_i}
       ) AND u.active AND u.silenced_till IS NULL AND u.id > 0 AND
-        (:backfill OR u.id IN (:user_ids) )
+      (:backfill OR u.id IN (:user_ids) )
     SQL
   end
 
@@ -269,6 +273,34 @@ module BadgeQueries
            , "start" + interval '#{days} days' "granted_at"
         FROM visits
        WHERE "rank" = 1
+    SQL
+  end
+
+  def self.anniversaries(start_date, end_date)
+    start_date = start_date.iso8601(6)
+    end_date = end_date.iso8601(6)
+
+    <<~SQL
+      SELECT u.id
+        FROM users AS u
+        JOIN posts AS p ON p.user_id = u.id
+        JOIN topics AS t ON p.topic_id = t.id
+       WHERE u.id > 0
+         AND u.active
+         AND NOT u.staged
+         AND (u.silenced_till IS NULL OR u.silenced_till < '#{start_date}')
+         AND (u.suspended_till IS NULL OR u.suspended_till < '#{start_date}')
+         AND u.created_at <= '#{start_date}'
+         AND NOT p.hidden
+         AND p.deleted_at IS NULL
+         AND p.created_at BETWEEN '#{start_date}' AND '#{end_date}'
+         AND t.visible
+         AND t.archetype <> 'private_message'
+         AND t.deleted_at IS NULL
+         AND NOT EXISTS (SELECT 1 FROM user_badges AS ub WHERE ub.user_id = u.id AND ub.badge_id = #{Badge::Anniversary} AND ub.granted_at BETWEEN '#{start_date}' AND '#{end_date}')
+         AND NOT EXISTS (SELECT 1 FROM anonymous_users AS au WHERE au.user_id = u.id)
+       GROUP BY u.id
+      HAVING COUNT(p.id) > 0
     SQL
   end
 end

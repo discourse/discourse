@@ -20,7 +20,7 @@ module HasCustomFields
 
       sorted_types = types.keys.select { |k| k.end_with?("*") }.sort_by(&:length).reverse
 
-      sorted_types.each { |t| return types[t] if key =~ /^#{t}/i }
+      sorted_types.each { |t| return types[t] if key =~ /\A#{t}/i }
 
       types[key]
     end
@@ -60,11 +60,18 @@ module HasCustomFields
     end
   end
 
-  included do
-    has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
-    after_save :save_custom_fields
+  CUSTOM_FIELDS_MAX_ITEMS = 100
+  CUSTOM_FIELDS_MAX_VALUE_LENGTH = 10_000_000
 
+  included do
     attr_reader :preloaded_custom_fields
+
+    has_many :_custom_fields, dependent: :destroy, class_name: "#{name}CustomField"
+
+    validate :custom_fields_max_items, unless: :custom_fields_clean?
+    validate :custom_fields_value_length, unless: :custom_fields_clean?
+
+    after_save :save_custom_fields
 
     def custom_fields_fk
       @custom_fields_fk ||= "#{_custom_fields.reflect_on_all_associations(:belongs_to)[0].name}_id"
@@ -132,6 +139,28 @@ module HasCustomFields
             HasCustomFields::Helpers.append_field(preloaded, name, value, @custom_field_types)
           end
       end
+    end
+
+    private
+
+    def custom_fields_max_items
+      if custom_fields.size > CUSTOM_FIELDS_MAX_ITEMS
+        errors.add(
+          :base,
+          I18n.t("custom_fields.validations.max_items", max_items_number: CUSTOM_FIELDS_MAX_ITEMS),
+        )
+      end
+    end
+
+    def custom_fields_value_length
+      return if custom_fields.values.all? { _1.to_s.size <= CUSTOM_FIELDS_MAX_VALUE_LENGTH }
+      errors.add(
+        :base,
+        I18n.t(
+          "custom_fields.validations.max_value_length",
+          max_value_length: CUSTOM_FIELDS_MAX_VALUE_LENGTH,
+        ),
+      )
     end
   end
 

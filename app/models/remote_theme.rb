@@ -13,10 +13,19 @@ class RemoteTheme < ActiveRecord::Base
   class ImportError < StandardError
   end
 
-  ALLOWED_FIELDS = %w[scss embedded_scss head_tag header after_header body_tag footer]
+  ALLOWED_FIELDS = %w[
+    scss
+    embedded_scss
+    embedded_header
+    head_tag
+    header
+    after_header
+    body_tag
+    footer
+  ]
 
-  GITHUB_REGEXP = %r{^https?://github\.com/}
-  GITHUB_SSH_REGEXP = %r{^ssh://git@github\.com:}
+  GITHUB_REGEXP = %r{\Ahttps?://github\.com/}
+  GITHUB_SSH_REGEXP = %r{\Assh://git@github\.com:}
 
   has_one :theme, autosave: false
   scope :joined_remotes,
@@ -329,7 +338,7 @@ class RemoteTheme < ActiveRecord::Base
 
   def github_diff_link
     if github_repo_url.present? && local_version != remote_version
-      "#{github_repo_url.gsub(/\.git$/, "")}/compare/#{local_version}...#{remote_version}"
+      "#{github_repo_url.gsub(/\.git\z/, "")}/compare/#{local_version}...#{remote_version}"
     end
   end
 

@@ -52,6 +52,8 @@ export default function () {
       });
     });
 
+    this.route("filter", { path: "/filter" });
+
     this.route("categories");
 
     // default filter for a category
@@ -173,11 +175,10 @@ export default function () {
         this.route("tags");
         this.route("interface");
         this.route("apps");
-        this.route("sidebar");
+        this.route("navigation-menu");
 
         this.route("email");
         this.route("second-factor");
-        this.route("second-factor-backup");
       });
 
       this.route(
@@ -203,12 +204,14 @@ export default function () {
   this.route("associate-account", { path: "/associate/:token" });
   this.route("login-preferences");
   this.route("forgot-password", { path: "/password-reset" });
+
   this.route("faq", { path: "/faq" });
+  this.route("guidelines", { path: "/guidelines" });
+  this.route("conduct", { path: "/conduct" });
+  this.route("rules", { path: "/rules" });
+
   this.route("tos", { path: "/tos" });
   this.route("privacy", { path: "/privacy" });
-  this.route("guidelines", { path: "/guidelines" });
-  this.route("rules", { path: "/rules" });
-  this.route("conduct", { path: "/conduct" });
 
   this.route("new-topic", { path: "/new-topic" });
   this.route("new-message", { path: "/new-message" });

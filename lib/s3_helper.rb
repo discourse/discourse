@@ -175,12 +175,9 @@ class S3Helper
           cors_rules: final_rules,
         },
       )
-    rescue Aws::S3::Errors::AccessDenied => err
-      # TODO (martin) Remove this warning log level once we are sure this new
-      # ensure_cors! rule is functioning correctly.
-      Discourse.warn_exception(
-        err,
-        message: "Could not PutBucketCors rules for #{@s3_bucket_name}, rules: #{final_rules}",
+    rescue Aws::S3::Errors::AccessDenied
+      Rails.logger.info(
+        "Could not PutBucketCors rules for #{@s3_bucket_name}, rules: #{final_rules}",
       )
       return false
     end
@@ -296,7 +293,7 @@ class S3Helper
   def create_multipart(key, content_type, metadata: {})
     response =
       s3_client.create_multipart_upload(
-        acl: "private",
+        acl: SiteSetting.s3_use_acls ? "private" : nil,
         bucket: s3_bucket_name,
         key: key,
         content_type: content_type,

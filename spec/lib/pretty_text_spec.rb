@@ -28,14 +28,34 @@ RSpec.describe PrettyText do
 
       before { User.stubs(:default_template).returns(default_avatar) }
 
+      it "correctly extracts usernames from the new quote format" do
+        topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
+        expected = <<~HTML
+          <aside class="quote no-group" data-username="codinghorror" data-post="2" data-topic="#{topic.id}">
+          <div class="title">
+          <div class="quote-controls"></div>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a></div>
+          <blockquote>
+          <p>ddd</p>
+          </blockquote>
+          </aside>
+        HTML
+
+        expect(
+          cook(
+            "[quote=\"Jeff, post:2, topic:#{topic.id}, username:codinghorror\"]\nddd\n[/quote]",
+            topic_id: 1,
+          ),
+        ).to eq(n(expected))
+      end
+
       it "do off topic quoting with emoji unescape" do
         topic = Fabricate(:topic, title: "this is a test topic :slight_smile:")
         expected = <<~HTML
           <aside class="quote no-group" data-username="EvilTrout" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a>
-          </div>
+          <a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic <img width="20" height="20" src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title="slight_smile" loading="lazy" alt="slight_smile" class="emoji"></a></div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -200,8 +220,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a>
-          </div>
+          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a></div>
           <blockquote>
           <p>I have nothing to say.</p>
           </blockquote>
@@ -223,8 +242,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/this-is-an-off-topic-topic/#{topic.id}/3">#{topic.title}</a>
-          </div>
+          <a href="http://test.localhost/t/this-is-an-off-topic-topic/#{topic.id}/3">#{topic.title}</a></div>
           <blockquote>
           <p>I have nothing to say.</p>
           </blockquote>
@@ -251,7 +269,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -273,7 +291,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="123" data-topic="456" data-full="true">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -294,7 +312,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="#{user.username}" data-post="555" data-topic="666">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"> #{user.username}:</div>
+          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"> #{user.username}:</div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -320,8 +338,7 @@ RSpec.describe PrettyText do
           <aside class="quote group-#{group.name}" data-username="#{user.username}" data-post="2" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <img loading="lazy" alt="" width="20" height="20" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a>
-          </div>
+          <img loading="lazy" alt="" width="24" height="24" src="//test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/48.png" class="avatar"><a href="http://test.localhost/t/this-is-a-test-topic/#{topic.id}/2">This is a test topic</a></div>
           <blockquote>
           <p>ddd</p>
           </blockquote>
@@ -542,6 +559,45 @@ RSpec.describe PrettyText do
         expect(
           PrettyText.cook("Hello @狮子"),
         ).to match_html '<p>Hello <span class="mention">@狮子</span></p>'
+      end
+    end
+
+    context "with pretty_text_extract_mentions modifier" do
+      it "allows changing the mentions extracted" do
+        cooked_html = <<~HTML
+        <p>
+          <a class="mention" href="/u/test">@test</a>,
+          <a class="mention-group" href="/g/test-group">@test-group</a>,
+          <a class="custom-mention" href="/custom-mention">@test-custom</a>,
+          this is a test
+        </p>
+        HTML
+
+        extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
+        expect(extracted_mentions).to include("test", "test-group")
+        expect(extracted_mentions).not_to include("test-custom")
+
+        Plugin::Instance
+          .new
+          .register_modifier(:pretty_text_extract_mentions) do |mentions, cooked_text|
+            custom_mentions =
+              cooked_text
+                .css(".custom-mention")
+                .map do |e|
+                  if (name = e.inner_text)
+                    name = name[1..-1]
+                    name = User.normalize_username(name)
+                    name
+                  end
+                end
+
+            mentions + custom_mentions
+          end
+
+        extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
+        expect(extracted_mentions).to include("test", "test-group", "test-custom")
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
       end
     end
   end
@@ -1019,12 +1075,30 @@ RSpec.describe PrettyText do
       expect(extract_urls(html)).to eq(["https://example.com"])
     end
 
-    it "should lazyYT videos" do
-      expect(
-        extract_urls(
-          "<div class=\"lazyYT\" data-youtube-id=\"yXEuEUQIP3Q\" data-youtube-title=\"Mister Rogers defending PBS to the US Senate\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>",
-        ),
-      ).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
+    context "when lazy-videos" do
+      it "should extract youtube url" do
+        expect(
+          extract_urls(
+            "<div class=\"lazy-video-container\" data-video-id=\"yXEuEUQIP3Q\" data-video-title=\"Mister Rogers defending PBS to the US Senate\" data-provider-name=\"youtube\"></div>",
+          ),
+        ).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
+      end
+
+      it "should extract vimeo url" do
+        expect(
+          extract_urls(
+            "<div class=\"lazy-video-container\" data-video-id=\"786646692\" data-video-title=\"Dear Rich\" data-provider-name=\"vimeo\"></div>",
+          ),
+        ).to eq(["https://vimeo.com/786646692"])
+      end
+
+      it "should extract tiktok url" do
+        expect(
+          extract_urls(
+            "<div class=\"lazy-video-container\" data-video-id=\"6718335390845095173\" data-video-title=\"Scramble up ur name &amp;amp; I’ll try to guess it😍❤️ #foryoupage #petsoftiktok...\" data-provider-name=\"tiktok\"></div>",
+          ),
+        ).to eq(["https://m.tiktok.com/v/6718335390845095173"])
+      end
     end
 
     it "should extract links to posts" do
@@ -1298,6 +1372,14 @@ RSpec.describe PrettyText do
       )
     end
 
+    it "creates a valid URL when data-original-href is missing from Vimeo link" do
+      html =
+        '<iframe src="https://player.vimeo.com/video/508864124?h=fcbbcc92fa" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>'
+      expect(PrettyText.format_for_email(html, post)).to match(
+        "https://vimeo.com/508864124/fcbbcc92fa",
+      )
+    end
+
     describe "#convert_vimeo_iframes" do
       it "converts <iframe> to <a>" do
         html = <<~HTML
@@ -1453,7 +1535,7 @@ RSpec.describe PrettyText do
 
     it "replaces some glyphs that are not in the emoji range" do
       expect(PrettyText.cook("☹")).to match(/\:frowning\:/)
-      expect(PrettyText.cook("☺")).to match(/\:relaxed\:/)
+      expect(PrettyText.cook("☺")).to match(/\:smiling_face\:/)
       expect(PrettyText.cook("☻")).to match(/\:slight_smile\:/)
       expect(PrettyText.cook("♡")).to match(/\:heart\:/)
       expect(PrettyText.cook("❤")).to match(/\:heart\:/)
@@ -1507,6 +1589,27 @@ RSpec.describe PrettyText do
 
     it "replaces Emoji from Unicode 14.0" do
       expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
+    end
+
+    context "with subfolder" do
+      it "prepends the subfolder path to the emoji url" do
+        set_subfolder "/forum"
+
+        expected = "src=\"/forum/images/emoji/twitter/grinning.png?v=#{Emoji::EMOJI_VERSION}\""
+
+        expect(PrettyText.cook("😀")).to include(expected)
+        expect(PrettyText.cook(":grinning:")).to include(expected)
+      end
+
+      it "prepends the subfolder path even if it is part of the emoji url" do
+        set_subfolder "/info"
+
+        expected =
+          "src=\"/info/images/emoji/twitter/information_source.png?v=#{Emoji::EMOJI_VERSION}\""
+
+        expect(PrettyText.cook("ℹ️")).to include(expected)
+        expect(PrettyText.cook(":information_source:")).to include(expected)
+      end
     end
   end
 
@@ -1668,28 +1771,65 @@ RSpec.describe PrettyText do
     category2 = Fabricate(:category, name: "known", slug: "known")
     group = Fabricate(:group)
     private_category = Fabricate(:private_category, name: "secret", group: group, slug: "secret")
-    Fabricate(:topic, tags: [Fabricate(:tag, name: "known")])
+    tag = Fabricate(:tag, name: "known")
+    Fabricate(:topic, tags: [tag])
 
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
 
-    expect(cooked).to include("<span class=\"hashtag-raw\">#unknown::tag</span>")
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{category2.url}\" data-type=\"category\" data-slug=\"known\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>known</span></a>",
-    )
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"/tag/known\" data-type=\"tag\" data-slug=\"known\" data-ref=\"known::tag\"><svg class=\"fa d-icon d-icon-tag svg-icon svg-node\"><use href=\"#tag\"></use></svg><span>known</span></a>",
-    )
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"testing\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>testing</span></a>",
-    )
-    expect(cooked).to include("<span class=\"hashtag-raw\">#secret</span>")
+    expect(cooked).to have_tag("span", text: "#unknown::tag", with: { class: "hashtag-raw" })
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: category2.url,
+        "data-type": "category",
+        "data-slug": category2.slug,
+        "data-id": category2.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": category.slug,
+        "data-id": category.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+    expect(cooked).to have_tag("span", text: "#secret", with: { class: "hashtag-raw" })
 
     # If the user hash access to the private category it should be cooked with the details + icon
     group.add(user)
     cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing #secret", user_id: user.id)
-    expect(cooked).to include(
-      "<a class=\"hashtag-cooked\" href=\"#{private_category.url}\" data-type=\"category\" data-slug=\"secret\"><svg class=\"fa d-icon d-icon-folder svg-icon svg-node\"><use href=\"#folder\"></use></svg><span>secret</span></a>",
-    )
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: private_category.url,
+        "data-type": "category",
+        "data-slug": private_category.slug,
+        "data-id": private_category.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
 
     cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)", user_id: user.id)
 
@@ -1705,10 +1845,18 @@ RSpec.describe PrettyText do
     expect(cooked).to eq(html.strip)
 
     cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag", user_id: user.id)
-    html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag-cooked" href="/tag/known" data-type="tag" data-slug="known" data-ref="known::tag"><svg class="fa d-icon d-icon-tag svg-icon svg-node"><use href="#tag"></use></svg><span>known</span></a></p>
-    HTML
-    expect(cooked).to eq(html.strip)
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
 
     # ensure it does not fight with the autolinker
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
@@ -1947,22 +2095,35 @@ HTML
         replacement: "discourse",
       )
 
-      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
-        <p>
-          <a class="mention" href="/u/test">@test</a>
-          <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
-          tdiscourset
-        </p>
-      HTML
+      cooked = PrettyText.cook("@test #test test")
+      expect(cooked).to have_tag("a", text: "@test", with: { class: "mention", href: "/u/test" })
+      expect(cooked).to have_tag(
+        "a",
+        text: "#test",
+        with: {
+          class: "hashtag",
+          href: "/c/test/#{category.id}",
+        },
+      )
+      expect(cooked).to include("tdiscourset")
 
       SiteSetting.enable_experimental_hashtag_autocomplete = true
-      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
-        <p>
-          <a class="mention" href="/u/test">@test</a>
-          <a class="hashtag-cooked" href="#{category.url}" data-type="category" data-slug="test"><svg class="fa d-icon d-icon-folder svg-icon svg-node"><use href="#folder"></use></svg><span>test</span></a>
-          tdiscourset
-        </p>
-      HTML
+      cooked = PrettyText.cook("@test #test test")
+      expect(cooked).to have_tag("a", text: "@test", with: { class: "mention", href: "/u/test" })
+      expect(cooked).to have_tag(
+        "a",
+        text: "test",
+        with: {
+          class: "hashtag-cooked",
+          href: "/c/test/#{category.id}",
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
+      expect(cooked).to include("tdiscourset")
     end
 
     it "supports overlapping words" do
@@ -2096,11 +2257,11 @@ HTML
     expect(cooked).to eq(html)
   end
 
-  it "provides safety for img bbcode" do
-    cooked = PrettyText.cook "[img]http://aaa.com<script>alert(1);</script>[/img]"
-    html =
-      '<p><img src="http://aaa.com&lt;script&gt;alert(1);&lt;/script&gt;" alt="" role="presentation"></p>'
-    expect(cooked).to eq(html)
+  it "supports img bbcode entities in attributes" do
+    actual = PrettyText.cook "[img]http://aaa.com/?a=1&b=<script>alert(1);</script>[/img]"
+    expected =
+      '<p><img src="http://aaa.com/?a=1&b=&lt;script&gt;alert(1);&lt;/script&gt;" alt="" role="presentation"></p>'
+    expect(expected).to be_same_dom(actual)
   end
 
   it "supports email bbcode" do
@@ -2173,6 +2334,13 @@ HTML
 
   it "should strip SCRIPT" do
     expect(PrettyText.cook("<script>alert(42)</script>")).to eq ""
+    expect(PrettyText.cook("<div><script>alert(42)</script></div>")).to eq "<div></div>"
+  end
+
+  it "strips script regardless of sanitize" do
+    expect(
+      PrettyText.cook("<div><script>alert(42)</script></div>", sanitize: false),
+    ).to eq "<div></div>"
   end
 
   it "should allow sanitize bypass" do
@@ -2317,6 +2485,21 @@ HTML
     cooked = PrettyText.cook(raw).strip
 
     expect(cooked).to eq(html.strip)
+  end
+
+  it "can skip relative paths in allowlist iframes" do
+    SiteSetting.allowed_iframes = "https://bob.com/abc/def"
+    raw = <<~HTML
+      <iframe src='https://bob.com/abc/def'></iframe>
+      <iframe src='https://bob.com/abc/def/../ghi'></iframe>
+      <iframe src='https://bob.com/abc/def/ghi/../../jkl'></iframe>
+    HTML
+
+    html = <<~HTML
+      <iframe src="https://bob.com/abc/def"></iframe>
+    HTML
+
+    expect(PrettyText.cook(raw).strip).to eq(html.strip)
   end
 
   it "You can disable linkify" do
@@ -2526,5 +2709,19 @@ HTML
 
       expect(cooked).to eq("<p>:grin: <span class=\"mention\">@mention</span></p>")
     end
+  end
+
+  it "does not amend HTML when scrubbing" do
+    md = <<~MD
+      <s>\n\nhello\n\n</s>
+    MD
+
+    html = <<~HTML
+      <s>\n<p>hello</p>\n</s>
+    HTML
+
+    cooked = PrettyText.cook(md)
+
+    expect(cooked.strip).to eq(html.strip)
   end
 end

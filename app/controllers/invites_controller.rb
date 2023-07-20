@@ -87,7 +87,6 @@ class InvitesController < ApplicationController
       render json: failed_json, status: 422
     end
   rescue Invite::UserExists => e
-    return render json: {}, status: 200 if SiteSetting.hide_email_address_taken?
     render_json_error(e.message)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
@@ -206,9 +205,6 @@ class InvitesController < ApplicationController
           params.permit(:email, :custom_message, :max_redemptions_allowed, :expires_at),
         )
       rescue ActiveRecord::RecordInvalid => e
-        if SiteSetting.hide_email_address_taken? && e.record.email_already_exists?
-          return render json: {}, status: 200
-        end
         return render_json_error(e.record.errors.full_messages.first)
       end
     end

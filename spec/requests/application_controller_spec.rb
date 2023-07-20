@@ -637,63 +637,36 @@ RSpec.describe ApplicationController do
 
     it "when GTM is enabled it adds the same nonce to the policy and the GTM tag" do
       SiteSetting.content_security_policy = true
-      SiteSetting.content_security_policy_report_only = true
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
 
       get "/latest"
 
+      expect(response.headers).to include("Content-Security-Policy")
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
-      report_only_script_src =
-        parse(response.headers["Content-Security-Policy-Report-Only"])["script-src"]
-
       nonce = extract_nonce_from_script_src(script_src)
-      report_only_nonce = extract_nonce_from_script_src(report_only_script_src)
-
-      expect(nonce).to eq(report_only_nonce)
 
       gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
       expect(gtm_meta_tag["data-nonce"]).to eq(nonce)
     end
 
-    it "doesn't reuse nonces between requests" do
-      global_setting :anon_cache_store_threshold, 1
-      Middleware::AnonymousCache.enable_anon_cache
-      Middleware::AnonymousCache.clear_all_cache!
-
+    it "doesn't reuse CSP nonces between requests" do
       SiteSetting.content_security_policy = true
-      SiteSetting.content_security_policy_report_only = true
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
 
       get "/latest"
 
-      expect(response.headers["X-Discourse-Cached"]).to eq("store")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
-
+      expect(response.headers).to include("Content-Security-Policy")
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
-      report_only_script_src =
-        parse(response.headers["Content-Security-Policy-Report-Only"])["script-src"]
-
       first_nonce = extract_nonce_from_script_src(script_src)
-      first_report_only_nonce = extract_nonce_from_script_src(report_only_script_src)
-
-      expect(first_nonce).to eq(first_report_only_nonce)
 
       gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
       expect(gtm_meta_tag["data-nonce"]).to eq(first_nonce)
 
       get "/latest"
 
-      expect(response.headers["X-Discourse-Cached"]).to eq("true")
-      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
-
+      expect(response.headers).to include("Content-Security-Policy")
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
-      report_only_script_src =
-        parse(response.headers["Content-Security-Policy-Report-Only"])["script-src"]
-
       second_nonce = extract_nonce_from_script_src(script_src)
-      second_report_only_nonce = extract_nonce_from_script_src(report_only_script_src)
-
-      expect(second_nonce).to eq(second_report_only_nonce)
 
       expect(first_nonce).not_to eq(second_nonce)
       gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
@@ -814,10 +787,9 @@ RSpec.describe ApplicationController do
     after { I18n.reload! }
 
     context "with rate limits" do
-      before do
-        RateLimiter.clear_all!
-        RateLimiter.enable
-      end
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
 
       it "serves a LimitExceeded error in the preferred locale" do
         SiteSetting.max_likes_per_day = 1
@@ -1032,10 +1004,9 @@ RSpec.describe ApplicationController do
   describe "Discourse-Rate-Limit-Error-Code header" do
     fab!(:admin) { Fabricate(:admin) }
 
-    before do
-      RateLimiter.clear_all!
-      RateLimiter.enable
-    end
+    before { RateLimiter.enable }
+
+    use_redis_snapshotting
 
     it "is included when API key is rate limited" do
       global_setting :max_admin_api_reqs_per_minute, 1
@@ -1079,10 +1050,9 @@ RSpec.describe ApplicationController do
   end
 
   describe "crawlers in slow_down_crawler_user_agents site setting" do
-    before do
-      RateLimiter.enable
-      RateLimiter.clear_all!
-    end
+    before { RateLimiter.enable }
+
+    use_redis_snapshotting
 
     it "are rate limited" do
       SiteSetting.slow_down_crawler_rate = 128
@@ -1191,6 +1161,98 @@ RSpec.describe ApplicationController do
       it "shouldn't have the Link header on xhr api requests" do
         get("/latest.json")
         expect(response.headers).not_to include("Link")
+      end
+    end
+  end
+
+  describe "preloading data" do
+    def preloaded_json
+      JSON.parse(
+        Nokogiri::HTML5.fragment(response.body).css("div#data-preloaded").first["data-preloaded"],
+      )
+    end
+
+    context "when user is anon" do
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+          ],
+        )
+      end
+    end
+
+    context "when user is regular user" do
+      fab!(:user) { Fabricate(:user) }
+
+      before { sign_in(user) }
+
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "currentUser",
+            "topicTrackingStates",
+            "topicTrackingStateMeta",
+          ],
+        )
+      end
+    end
+
+    context "when user is admin" do
+      fab!(:user) { Fabricate(:admin) }
+
+      before { sign_in(user) }
+
+      it "preloads the relevant JSON data" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        expect(preloaded_json.keys).to match_array(
+          [
+            "site",
+            "siteSettings",
+            "customHTML",
+            "banner",
+            "customEmoji",
+            "isReadOnly",
+            "isStaffWritesOnly",
+            "activatedThemes",
+            "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "currentUser",
+            "topicTrackingStates",
+            "topicTrackingStateMeta",
+            "fontMap",
+          ],
+        )
+      end
+
+      it "generates a fontMap" do
+        get "/latest"
+        expect(response.status).to eq(200)
+        font_map = JSON.parse(preloaded_json["fontMap"])
+        expect(font_map.keys).to match_array(
+          DiscourseFonts.fonts.filter { |f| f[:variants].present? }.map { |f| f[:key] },
+        )
       end
     end
   end

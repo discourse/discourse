@@ -1,0 +1,39 @@
+<div class='autocomplete ac-user'>
+  <ul>
+    {{#each options as |item|}}
+      {{#if item.isUser}}
+        <li data-index={{item.index}}>
+          <a href title="{{item.name}}" class="{{item.cssClasses}}">
+            {{avatar item imageSize="tiny"}}
+            <span class='username'>{{format-username item.username}}</span>
+            {{#if item.name}}
+              <span class='name'>{{item.name}}</span>
+            {{/if}}
+            {{#if item.status}}
+              <span class='user-status'></span>
+            {{/if}}
+          </a>
+        </li>
+      {{/if}}
+
+      {{#if item.isEmail}}
+        <li>
+          <a href title="{{item.username}}">
+            {{d-icon 'envelope'}}
+            <span class='username'>{{format-username item.username}}</span>
+          </a>
+        </li>
+      {{/if}}
+
+      {{#if item.isGroup}}
+        <li>
+          <a href title="{{item.full_name}}">
+            {{d-icon "users"}}
+            <span class='username'>{{item.name}}</span>
+            <span class='name'>{{item.full_name}}</span>
+          </a>
+        </li>
+      {{/if}}
+    {{/each}}
+  </ul>
+</div>

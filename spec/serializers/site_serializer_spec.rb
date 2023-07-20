@@ -15,6 +15,8 @@ RSpec.describe SiteSerializer do
     end
 
     it "is not included if enable_user_tips is disabled" do
+      SiteSetting.enable_user_tips = false
+
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:user_tips]).to eq(nil)
     end
@@ -129,20 +131,7 @@ RSpec.describe SiteSerializer do
     expect(serialized[:shared_drafts_category_id]).to eq(nil)
   end
 
-  it "includes show_welcome_topic_banner" do
-    admin = Fabricate(:admin)
-    admin_guardian = Guardian.new(admin)
-    UserAuthToken.generate!(user_id: admin.id)
-
-    first_post = Fabricate(:post, created_at: 25.days.ago)
-    SiteSetting.welcome_topic_id = first_post.topic.id
-
-    serialized =
-      described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
-    expect(serialized[:show_welcome_topic_banner]).to eq(true)
-  end
-
-  describe "#anonymous_default_sidebar_tags" do
+  describe "#anonymous_default_navigation_menu_tags" do
     fab!(:user) { Fabricate(:user) }
     fab!(:tag) { Fabricate(:tag, name: "dev") }
     fab!(:tag2) { Fabricate(:tag, name: "random") }
@@ -154,7 +143,7 @@ RSpec.describe SiteSerializer do
     before do
       SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = true
-      SiteSetting.default_sidebar_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
+      SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
     end
 
     it "is not included in the serialised object when tagging is not enabled" do
@@ -162,33 +151,95 @@ RSpec.describe SiteSerializer do
       guardian = Guardian.new(user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialised object when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialised object when user is not anonymous" do
       guardian = Guardian.new(user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialisd object when default sidebar tags have not been configured" do
-      SiteSetting.default_sidebar_tags = ""
+      SiteSetting.default_navigation_menu_tags = ""
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "includes only tags user can see in the serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(%w[dev random])
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(%w[dev random])
+    end
+  end
+
+  describe "#anonymous_sidebar_sections" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:public_sidebar_section) do
+      Fabricate(:sidebar_section, title: "Public section", public: true)
+    end
+    fab!(:private_sidebar_section) do
+      Fabricate(:sidebar_section, title: "Private section", user: user, public: false)
+    end
+
+    it "is not included in the serialised object when user is not anonymous" do
+      guardian = Guardian.new(user)
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+    end
+
+    it "includes only public sidebar sections serialised object when user is anonymous" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(
+        ["Community", "Public section"],
+      )
+    end
+
+    it "eager loads sidebar_urls" do
+      public_section_link =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: public_sidebar_section)
+      # warmup
+      described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      initial_count =
+        track_sql_queries do
+          serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+          expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
+
+          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
+            [public_section_link.linkable.id],
+          )
+        end.count
+
+      public_section_link_2 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: public_sidebar_section)
+      public_section_link_3 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: public_sidebar_section)
+
+      final_count =
+        track_sql_queries do
+          serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+          expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
+
+          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
+            [
+              public_section_link.linkable.id,
+              public_section_link_2.linkable.id,
+              public_section_link_3.linkable.id,
+            ],
+          )
+        end.count
+      expect(final_count).to eq(initial_count)
     end
   end
 

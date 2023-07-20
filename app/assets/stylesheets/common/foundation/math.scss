@@ -4,6 +4,8 @@
 // https://github.com/terkel/mathsass
 
 // Constants
+@use "sass:math";
+
 $E: 2.718281828459045;
 $PI: 3.141592653589793;
 $LN2: 0.6931471805599453;
@@ -48,7 +50,7 @@ $SQRT2: 1.4142135623730951;
     }
   } @else if $x >= 1 {
     @while $x >= 1 {
-      $x: $x / 2;
+      $x: $x * 0.5;
       $exp: $exp + 1;
     }
   }
@@ -59,7 +61,7 @@ $SQRT2: 1.4142135623730951;
 // @param {Number} $x
 // @param {Number} $exp
 @function ldexp($x, $exp) {
-  $b: if($exp >= 0, 2, 1 / 2);
+  $b: if($exp >= 0, 2, 1 * 0.5);
   @if $exp < 0 {
     $exp: $exp * -1;
   }
@@ -80,11 +82,11 @@ $SQRT2: 1.4142135623730951;
 //     log(10) // 2.30259
 @function log($x) {
   @if $x <= 0 {
-    @return 0 / 0;
+    @return math.div(0, 0);
   }
-  $k: nth(frexp($x / $SQRT2), 2);
-  $x: $x / ldexp(1, $k);
-  $x: ($x - 1) / ($x + 1);
+  $k: nth(frexp(math.div($x, $SQRT2)), 2);
+  $x: math.div($x, ldexp(1, $k));
+  $x: math.div($x - 1, $x + 1);
   $x2: $x * $x;
   $i: 1;
   $s: $x;
@@ -93,7 +95,7 @@ $SQRT2: 1.4142135623730951;
     $x: $x * $x2;
     $i: $i + 2;
     $sp: $s;
-    $s: $s + $x / $i;
+    $s: $s + math.div($x, $i);
   }
   @return $LN2 * $k + 2 * $s;
 }
@@ -115,7 +117,7 @@ $SQRT2: 1.4142135623730951;
     $exp: floor($exp * 0.5);
     $base: $base * $base;
   }
-  @return if($s != 0, 1 / $r, $r);
+  @return if($s != 0, math.div(1, $r), $r);
 }
 
 // Returns E^x, where x is the argument, and E is Euler's constant, the base of the natural logarithms.
@@ -126,7 +128,7 @@ $SQRT2: 1.4142135623730951;
 @function exp($x) {
   $ret: 0;
   @for $n from 0 to 24 {
-    $ret: $ret + ipow($x, $n) / fact($n);
+    $ret: $ret + math.div(ipow($x, $n), fact($n));
   }
   @return $ret;
 }
@@ -158,7 +160,7 @@ $SQRT2: 1.4142135623730951;
   }
   $ret: 1;
   @for $i from 1 through 24 {
-    $ret: $ret - (pow($ret, 2) - $x) / (2 * $ret);
+    $ret: $ret - math.div(pow($ret, 2) - $x, 2 * $ret);
   }
   @return $ret;
 }

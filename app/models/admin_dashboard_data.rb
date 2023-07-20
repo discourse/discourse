@@ -205,7 +205,10 @@ class AdminDashboardData
                       :email_polling_errored_recently,
                       :out_of_date_themes,
                       :unreachable_themes,
-                      :watched_words_check
+                      :watched_words_check,
+                      :google_analytics_version_check,
+                      :translation_overrides_check,
+                      :legacy_navigation_menu_check
 
     register_default_scheduled_problem_checks
 
@@ -295,7 +298,7 @@ class AdminDashboardData
 
   def queue_size_check
     queue_size = Jobs.queued
-    I18n.t("dashboard.queue_size_warning", queue_size: queue_size) unless queue_size < 100_000
+    I18n.t("dashboard.queue_size_warning", queue_size: queue_size) if queue_size >= 100_000
   end
 
   def ram_check
@@ -359,6 +362,18 @@ class AdminDashboardData
     end
   end
 
+  def translation_overrides_check
+    if TranslationOverride.exists?(status: %i[outdated invalid_interpolation_keys])
+      I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path)
+    end
+  end
+
+  def legacy_navigation_menu_check
+    if SiteSetting.navigation_menu == "legacy"
+      I18n.t("dashboard.legacy_navigation_menu_deprecated", base_path: Discourse.base_path)
+    end
+  end
+
   def image_magick_check
     if SiteSetting.create_thumbnails && !system("command -v convert >/dev/null;")
       I18n.t("dashboard.image_magick_warning")
@@ -377,7 +392,11 @@ class AdminDashboardData
   end
 
   def subfolder_ends_in_slash_check
-    I18n.t("dashboard.subfolder_ends_in_slash") if Discourse.base_path =~ %r{/$}
+    I18n.t("dashboard.subfolder_ends_in_slash") if Discourse.base_path =~ %r{/\z}
+  end
+
+  def google_analytics_version_check
+    I18n.t("dashboard.v3_analytics_deprecated") if SiteSetting.ga_version == "v3_analytics"
   end
 
   def email_polling_errored_recently

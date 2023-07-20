@@ -249,8 +249,8 @@ class HtmlPrettify < String
     # Special case if the very first character is a quote followed by
     # punctuation at a non-word-break. Close the quotes by brute
     # force:
-    str.gsub!(/^'(?=#{punct_class}\B)/, entity(:single_right_quote))
-    str.gsub!(/^"(?=#{punct_class}\B)/, entity(:double_right_quote))
+    str.gsub!(/\A'(?=#{punct_class}\B)/, entity(:single_right_quote))
+    str.gsub!(/\A"(?=#{punct_class}\B)/, entity(:double_right_quote))
 
     # Special case for double sets of quotes, e.g.:
     #   <p>He said, "'Quoted' words in a larger quote."</p>

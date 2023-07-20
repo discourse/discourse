@@ -61,6 +61,7 @@ class Post < ActiveRecord::Base
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
+  has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
 
@@ -436,7 +437,7 @@ class Post < ActiveRecord::Base
     # percent rank has tons of ties
     where(topic_id: topic_id).where(
       [
-        "id = ANY(
+        "posts.id = ANY(
           (
             SELECT posts.id
             FROM posts
@@ -549,10 +550,14 @@ class Post < ActiveRecord::Base
   end
 
   def is_flagged?
+    flags.count != 0
+  end
+
+  def flags
     post_actions.where(
       post_action_type_id: PostActionType.flag_types_without_custom.values,
       deleted_at: nil,
-    ).count != 0
+    )
   end
 
   def reviewable_flag
@@ -1006,6 +1011,29 @@ class Post < ActiveRecord::Base
       upload = nil
       upload = Upload.find_by(sha1: sha1) if sha1.present?
       upload ||= Upload.get_from_url(src)
+
+      # Link any video thumbnails
+      if SiteSetting.video_thumbnails_enabled && upload.present? &&
+           FileHelper.supported_video.include?(upload.extension&.downcase)
+        # Video thumbnails have the filename of the video file sha1 with a .png or .jpg extension.
+        # This is because at time of upload in the composer we don't know the topic/post id yet
+        # and there is no thumbnail info added to the markdown to tie the thumbnail to the topic/post after
+        # creation.
+        thumbnail =
+          Upload
+            .where("original_filename like ?", "#{upload.sha1}.%")
+            .order(id: :desc)
+            .first if upload.sha1.present?
+        if thumbnail.present? && self.is_first_post? && !self.topic.image_upload_id
+          upload_ids << thumbnail.id
+          self.topic.update_column(:image_upload_id, thumbnail.id)
+          extra_sizes =
+            ThemeModifierHelper.new(
+              theme_ids: Theme.user_selectable.pluck(:id),
+            ).topic_thumbnail_sizes
+          self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+        end
+      end
       upload_ids << upload.id if upload.present?
     end
 
@@ -1034,7 +1062,7 @@ class Post < ActiveRecord::Base
   end
 
   def update_uploads_secure_status(source:)
-    if Discourse.store.external?
+    if Discourse.store.external? && SiteSetting.secure_uploads?
       Jobs.enqueue(:update_post_uploads_secure_status, post_id: self.id, source: source)
     end
   end
@@ -1084,8 +1112,8 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-      unless Discourse.store.has_been_uploaded?(src) || Upload.secure_uploads_url?(src) ||
-               (include_local_upload && src =~ %r{\A/[^/]}i)
+      if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
+           !(include_local_upload && src =~ %r{\A/[^/]}i)
         next
       end
 
@@ -1148,7 +1176,7 @@ class Post < ActiveRecord::Base
             end
 
             upload_id = nil
-            upload_id = Upload.where(sha1: sha1).pluck_first(:id) if sha1.present?
+            upload_id = Upload.where(sha1: sha1).pick(:id) if sha1.present?
             upload_id ||= yield(post, src, path, sha1)
 
             if upload_id.blank?
@@ -1284,16 +1312,17 @@ end
 #
 # Indexes
 #
-#  idx_posts_created_at_topic_id             (created_at,topic_id) WHERE (deleted_at IS NULL)
-#  idx_posts_deleted_posts                   (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
-#  idx_posts_user_id_deleted_at              (user_id) WHERE (deleted_at IS NULL)
-#  index_for_rebake_old                      (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
-#  index_posts_on_id_and_baked_version       (id DESC,baked_version) WHERE (deleted_at IS NULL)
-#  index_posts_on_image_upload_id            (image_upload_id)
-#  index_posts_on_reply_to_post_number       (reply_to_post_number)
-#  index_posts_on_topic_id_and_percent_rank  (topic_id,percent_rank)
-#  index_posts_on_topic_id_and_post_number   (topic_id,post_number) UNIQUE
-#  index_posts_on_topic_id_and_sort_order    (topic_id,sort_order)
-#  index_posts_on_user_id_and_created_at     (user_id,created_at)
-#  index_posts_user_and_likes                (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
+#  idx_posts_created_at_topic_id                          (created_at,topic_id) WHERE (deleted_at IS NULL)
+#  idx_posts_deleted_posts                                (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
+#  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
+#  index_for_rebake_old                                   (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
+#  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
+#  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
+#  index_posts_on_image_upload_id                         (image_upload_id)
+#  index_posts_on_reply_to_post_number                    (reply_to_post_number)
+#  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
+#  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)
+#  index_posts_on_user_id_and_created_at                  (user_id,created_at)
+#  index_posts_user_and_likes                             (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
 #

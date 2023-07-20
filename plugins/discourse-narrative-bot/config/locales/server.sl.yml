@@ -45,11 +45,6 @@ sl:
       trigger: "kocke"
       invalid: |-
         Oprostite, matematično ni mogoče vreči to kombinacijo kock. :confounded:
-      not_enough_dice:
-        one: "Imam samo %{count} kocko. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), vem!"
-        two: "Imam samo %{count} kocki. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), vem!"
-        few: "Imam samo %{count} kocke. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), vem!"
-        other: "Imam samo %{count} kock. [Shameful](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), vem!"
       out_of_range: |-
         Ali ste vedeli da je [največje število stranic](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) za matematično pravično kocko 120?
       results: |-

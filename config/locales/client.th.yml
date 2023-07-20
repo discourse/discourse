@@ -153,7 +153,6 @@ th:
     software_update_prompt:
       message: "เราอัปเดตไซต์นี้เมื่อสักครู่ โปรด<span>รีเฟรช</span>หน้านี้ หรือคุณอาจเกิดเหตุการณ์ที่ไม่ตรงตามต้องการ"
       dismiss: "ซ่อน"
-    bootstrap_invite_button_title: "ส่งคำเชิญ"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -257,7 +256,6 @@ th:
       edit_bookmark: "แก้ไขบุ๊กมาร์ก"
       clear_bookmarks: "ล้างบุ๊กมาร์ก"
       help:
-        bookmark: "คลิกเพื่อ บุ๊คมาร์ค ที่โพสแรกของกระทู้นี้"
         unbookmark: "คลิกเพื่อลบบุ๊กมาร์กทั้งหมดในกระทู้นี้"
     bookmarks:
       created: "คุณได้บุ๊กมาร์กโพสต์นี้ %{name}"
@@ -395,11 +393,8 @@ th:
         view_full: "ดูบทสนทนาทั้งหมด"
       scores:
         score: "คะแนน"
-        date: "วันที่"
-        type: "ชนิด"
+        type: "เหตุผล"
         status: "สถานะ"
-        submitted_by: "ยืนยันโดย"
-        reviewed_by: "รีวิวโดย"
       statuses:
         pending:
           title: "อยู่ระหว่างการพิจารณา"
@@ -407,14 +402,12 @@ th:
           title: "อนุมัติ"
         rejected:
           title: "ปฏิเสธ"
-        ignored:
-          title: "ละเว้น"
-        deleted:
-          title: "ลบ"
         reviewed:
-          title: "(ถูกรีวิวทั้งหมด)"
+          title: "ถูกรีวิวทั้งหมด"
         all:
-          title: "(ทุกสิ่ง)"
+          title: "ทุกสิ่ง"
+      context_question:
+        delimiter: "หรือ"
       types:
         reviewable_flagged_post:
           title: "โพสต์ที่ถูกปักธง"
@@ -595,6 +588,7 @@ th:
         make_owner_description: "แต่งตั้ง<b>%{username}</b>เป็นเจ้าของกลุ่มนี้"
         remove_owner: "ลบในสถานะเจ้าของ"
         remove_owner_description: "ลบ<b>%{username}</b>ในสถานะเจ้าของกลุ่มนี้"
+        status: "สถานะ"
         owner: "เจ้าของ"
         forbidden: "คุณไม่ได้รับอนุญาตให้ดูสมาชิก"
       topics: "กระทู้"
@@ -697,11 +691,6 @@ th:
       profile: "โปรไฟล์"
       mute: "ปิด"
       edit: "แก้ไขการตั้งค่า"
-      download_archive:
-        button_text: "ดาวน์โหลดทั้งหมด"
-        confirm: "คุณแน่ใจหรือว่าต้องการดาวน์โหลดโพสต์ของคุณ"
-        success: "เริ่มดาวน์โหลด คุณจะได้รับการแจ้งเตือนทางข้อความเมื่อขั้นตอนเสร็จสิ้น"
-        rate_limit_error: "สามารถดาวน์โหลดโพสต์ได้วันละหนึ่งครั้งเท่านั้น กรุณาลองใหม่พรุ่งนี้"
       new_private_message: "สร้างข้อความส่วนตัวใหม่"
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
@@ -821,13 +810,6 @@ th:
       theme: "ธีม"
       save_to_change_theme: 'ธีมจะถูกอัปเดตเมื่อคุณคลิก "%{save_text}"'
       home: "หน้าเริ่มต้น"
-      staff_counters:
-        flags_given: "ธงที่เป็นประโยชน์"
-        flagged_posts: "โพสต์ที่ปักธง"
-        deleted_posts: "โพสต์ที่ลบ"
-        suspensions: "ระงับการใช้งาน"
-        warnings_received: "คำเตือน"
-        rejected_posts: "โพสต์ที่ถูกปฏิเสธ"
       messages:
         inbox: "กล่องจดหมายเข้า"
         latest: "ล่าสุด"
@@ -866,7 +848,6 @@ th:
         choose: "เลือกรหัสผ่าน"
       second_factor_backup:
         disable: "ปิดใช้งาน"
-        enable: "เปิดใช้งาน"
       second_factor:
         forgot_password: "ลืมรหัสผ่านใช่ไหม"
         confirm_password_description: "กรุณายืนยันรหัสผ่านเพื่อดำเนินการต่อ"
@@ -1198,7 +1179,6 @@ th:
       enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
       description:
         other: "มี <b>%{count}</b> คำตอบ"
-      enable: "สรุปกระทู้นี้"
       disable: "แสดงโพสต์ทั้งหมด"
     deleted_filter:
       enabled_description: "กระทู้นี้ซ่อนโพสต์ที่ถูกลบไปแล้ว"
@@ -1381,8 +1361,6 @@ th:
         tags_missing:
           other: "คุณต้องเลือกอย่างน้อย %{count} แท็ก"
       save_edit: "บันทึกการแก้ไข"
-      reply_original: "ตอบบนกระทู้ต้นฉบับ"
-      reply_here: "ตอบที่นี่"
       reply: "ตอบกลับ"
       cancel: "ยกเลิก"
       create_topic: "สร้างกระทู้"
@@ -1693,8 +1671,6 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
-      jump_reply_up: ข้ามไปยังคำตอบก่อนหน้านี้
-      jump_reply_down: ข้ามไปยังคำตอบหลังจากนี้
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
         enable: "เปิดใช้งาน"
@@ -2059,7 +2035,6 @@ th:
       view: "ดูกระทู้ในหมวดหมู่"
       general: "ทั่วไป"
       settings: "การตั้งค่า"
-      topic_template: "รูปแบบกระทู้"
       tags: "แท็ก"
       allow_global_tags_label: "อนุญาตแท็กอื่นด้วย"
       required_tag_group:
@@ -2432,8 +2407,6 @@ th:
       forward: "ส่งต่อ"
       share: "แบ่งปัน"
       dismiss: "ซ่อน"
-    pause_notifications:
-      remaining: "เหลืออีก %{remaining}"
     trust_levels:
       names:
         member: "สมาชิก"
@@ -2445,7 +2418,20 @@ th:
         other: "%{count} ใหม่"
       more: "อื่น"
       all_categories: "หมวดหมู่ทั้งหมด"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "ทั้งหมด"
       sections:
+        custom:
+          save: "บันทึก"
+          delete: "ลบ"
+          links:
+            icon:
+              label: "ไอคอน"
+            name:
+              label: "ชื่อ"
+            value:
+              label: "ลิงก์"
         about:
           header_link_text: "เกี่ยวกับ"
         messages:
@@ -2463,7 +2449,8 @@ th:
         categories:
           header_link_text: "หมวดหมู่"
         community:
-          header_link_text: "ชุมชน"
+          edit_section:
+            header_dropdown: "การปรับแต่ง"
           links:
             about:
               content: "เกี่ยวกับ"
@@ -2471,8 +2458,8 @@ th:
               content: "แอดมิน"
             badges:
               content: "เหรียญ"
-            everything:
-              content: "ทุกสิ่ง"
+            topics:
+              content: "หัวข้อ"
             faq:
               content: "คำถามที่พบบ่อย"
             groups:
@@ -2486,6 +2473,11 @@ th:
             review:
               content: "รีวิว"
     until: "จนถึง:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "กรอกค่าที่ถูกต้อง"
+          email: "กรุณาใส่อีเมลที่ถูกต้อง."
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:
@@ -2614,8 +2606,6 @@ th:
         save: "บันทึก"
         wildcard_event: "ส่งทุกอย่างหาฉัน"
         active: "ใช้งานอยู่"
-        user_badge_event:
-          details: "เมื่อผู้ใช้ได้รับเหรียญ"
         delivery_status:
           title: "สถานะการส่ง"
           inactive: "ไม่ใช้งาน"
@@ -2638,7 +2628,6 @@ th:
         enabled: "เปิดใช้"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "การตั้งค่าการเปลี่ยนแปลง"
         change_settings_short: "การตั้งค่า"
       backups:
         title: "สำรอง"
@@ -2732,6 +2721,8 @@ th:
             name: "หลัก"
           success:
             name: "สำเร็จ"
+          selected:
+            name: "เลือกแล้ว"
         email_style:
           css: "CSS"
           save_error_with_reason: "การเปลี่ยนแปลงไม่ได้ถูกบันทึก %{error}"
@@ -2885,12 +2876,39 @@ th:
           upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
         test:
           no_matches: "ไม่พบผลลัพธ์ที่ตรงกัน"
+      form_templates:
+        nav_title: "รูปแบบ"
+        list_table:
+          headings:
+            name: "ชื่อ"
+            actions: "การกระทำ"
+        view_template:
+          close: "ปิด"
+          edit: "แก้ไข"
+          delete: "ลบ"
+        new_template_form:
+          submit: "บันทึก"
+          cancel: "ยกเลิก"
+          preview: "แสดงตัวอย่าง"
+        quick_insert_fields:
+          add_new_field: "เพิ่ม"
+          dropdown: "ดร็อปดาวน์"
+        validations_modal:
+          table_headers:
+            type: "ชนิด"
+            description: "รายละเอียด"
+          validations:
+            required:
+              key: "ต้องการ"
+            type:
+              key: "ชนิด"
       impersonate:
         not_found: "ไม่พบผู้ใช้นั้น"
       users:
         title: "ผู้ใช้"
         last_emailed: "อีเมลล่าสุด"
         active: "เปิดใช้งานแล้ว"
+        status: "สถานะ"
         show_emails: "แสดงอีเมล"
         hide_emails: "ซ่อนอีเมล"
         nav:
@@ -3121,6 +3139,7 @@ th:
         revoke: เอาออก
         reason: เหตุผล
         edit_badges: แก้ไขเหรียญ
+        disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ
         trigger_type:

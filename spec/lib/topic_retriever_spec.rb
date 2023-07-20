@@ -2,8 +2,7 @@
 
 RSpec.describe TopicRetriever do
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
-  let(:author_username) { "eviltrout" }
-  let(:topic_retriever) { TopicRetriever.new(embed_url, author_username: author_username) }
+  let(:topic_retriever) { TopicRetriever.new(embed_url) }
 
   it "can initialize without optional parameters" do
     t = TopicRetriever.new(embed_url)

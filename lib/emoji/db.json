@@ -58,7 +58,7 @@
     },
     {
       "code": "263a",
-      "name": "relaxed"
+      "name": "smiling_face"
     },
     {
       "code": "1f60b",
@@ -8310,6 +8310,9 @@
     ],
     "frowning_with_open_mouth": [
       "frowning_face_with_open_mouth"
+    ],
+    "smiling_face": [
+      "relaxed"
     ]
   },
   "searchAliases": {

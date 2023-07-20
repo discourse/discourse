@@ -1,23 +1,22 @@
-{{#if
-  (and this.showMobileDirectMessageButton this.canCreateDirectMessageChannel)
-}}
-  <LinkTo
-    @route="chat.draft-channel"
-    class="btn-flat open-draft-channel-page-btn keep-mobile-sidebar-open btn-floating"
+{{#if this.showMobileDirectMessageButton}}
+  <DButton
+    @icon="plus"
+    class="no-text btn-flat open-new-message-btn keep-mobile-sidebar-open btn-floating"
+    @action={{this.openNewMessageModal}}
     title={{i18n this.createDirectMessageChannelLabel}}
-  >
-    {{d-icon "plus"}}
-  </LinkTo>
+  />
 {{/if}}
 
 <div
   role="region"
   aria-label={{i18n "chat.aria_roles.channels_list"}}
-  class="channels-list"
+  class={{concat-class "channels-list" (if this.hasScrollbar "has-scrollbar")}}
   {{on
     "scroll"
     (if this.chatStateManager.isFullPageActive this.storeScrollPosition (noop))
   }}
+  {{did-insert this.computeHasScrollbar}}
+  {{chat/on-resize this.computeResizedEntries}}
 >
   {{#if this.displayPublicChannels}}
     <div class="chat-channel-divider public-channels-section">
@@ -60,13 +59,14 @@
           />
         {{/each}}
       {{/if}}
+
     </div>
   {{/if}}
 
   <PluginOutlet
     @name="below-public-chat-channels"
     @tagName=""
-    @args={{hash inSidebar=this.inSidebar}}
+    @outletArgs={{hash inSidebar=this.inSidebar}}
   />
 
   {{#if this.showDirectMessageChannels}}
@@ -94,13 +94,12 @@
           (not this.showMobileDirectMessageButton)
         )
       }}
-        <LinkTo
-          @route="chat.draft-channel"
-          class="btn no-text btn-flat open-draft-channel-page-btn"
+        <DButton
+          @icon="plus"
+          class="no-text btn-flat open-new-message-btn"
+          @action={{this.openNewMessageModal}}
           title={{i18n this.createDirectMessageChannelLabel}}
-        >
-          {{d-icon "plus"}}
-        </LinkTo>
+        />
       {{/if}}
     </div>
   {{/if}}

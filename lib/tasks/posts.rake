@@ -543,7 +543,7 @@ def recover_uploads_from_index(path)
     .pluck(:post_id, :value)
     .each do |post_id, uploads|
       uploads = JSON.parse(uploads)
-      raw = Post.where(id: post_id).pluck_first(:raw)
+      raw = Post.where(id: post_id).pick(:raw)
       uploads.map! do |upload|
         orig = upload
         if raw.scan(upload).length == 0

@@ -44,6 +44,30 @@ RSpec.describe UserOption do
       expect(user.user_option.email_digests).to eq(false)
       expect(user.user_option.digest_after_minutes).to eq(0)
     end
+
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is enabled" do
+      SiteSetting.default_sidebar_link_to_filtered_list = true
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_link_to_filtered_list).to eq(true)
+    end
+
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is disabled" do
+      SiteSetting.default_sidebar_link_to_filtered_list = false
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_link_to_filtered_list).to eq(false)
+    end
+
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is enabled" do
+      SiteSetting.default_sidebar_show_count_of_new_items = true
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_show_count_of_new_items).to eq(true)
+    end
+
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is disabled" do
+      SiteSetting.default_sidebar_show_count_of_new_items = false
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
+    end
   end
 
   describe "site settings" do
@@ -176,6 +200,13 @@ RSpec.describe UserOption do
       it "returns the expect timezone" do
         expect(UserOption.user_tzinfo(user.id)).to eq(
           ActiveSupport::TimeZone.find_tzinfo("Europe/Paris"),
+        )
+      end
+
+      it "works for Europe/Kyiv" do
+        user.user_option.update(timezone: "Europe/Kyiv")
+        expect(UserOption.user_tzinfo(user.id)).to eq(
+          ActiveSupport::TimeZone.find_tzinfo("Europe/Kyiv"),
         )
       end
     end

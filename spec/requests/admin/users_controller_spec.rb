@@ -302,7 +302,7 @@ RSpec.describe Admin::UsersController do
             "user.already_suspended",
             staff: admin.username,
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 user.suspend_record.created_at,
                 true,
                 scope: :"datetime.distance_in_words_verbose",
@@ -1430,7 +1430,7 @@ RSpec.describe Admin::UsersController do
     end
 
     shared_examples "user log out not allowed" do
-      it "prevents loging out of user with a 404 response" do
+      it "prevents logging out of user with a 404 response" do
         post "/admin/users/#{reg_user.id}/log_out.json"
 
         expect(response.status).to eq(404)
@@ -1539,7 +1539,7 @@ RSpec.describe Admin::UsersController do
             "user.already_silenced",
             staff: admin.username,
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 user.silenced_record.created_at,
                 true,
                 scope: :"datetime.distance_in_words_verbose",
@@ -2262,6 +2262,33 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
         expect(response.parsed_body["username"]).to be_nil
+      end
+    end
+  end
+
+  describe "#reset_bounce_score" do
+    before { user.user_stat.update!(bounce_score: 10) }
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "will reset the bounce score" do
+        post "/admin/users/#{user.id}/reset-bounce-score.json"
+
+        expect(response.status).to eq(200)
+        expect(user.reload.user_stat.bounce_score).to eq(0)
+        expect(UserHistory.last.action).to eq(UserHistory.actions[:reset_bounce_score])
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "prevents resetting the bounce score with a 404 response" do
+        post "/admin/users/#{user.id}/reset-bounce-score.json"
+
+        expect(response.status).to eq(404)
+        expect(user.reload.user_stat.bounce_score).to eq(10)
       end
     end
   end

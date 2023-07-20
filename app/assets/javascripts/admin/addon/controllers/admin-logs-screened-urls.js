@@ -1,10 +1,11 @@
+import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import ScreenedUrl from "admin/models/screened-url";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 
-export default Controller.extend({
-  loading: false,
+export default class AdminLogsScreenedUrlsController extends Controller {
+  loading = false;
 
   show() {
     this.set("loading", true);
@@ -12,11 +13,10 @@ export default Controller.extend({
       this.set("model", result);
       this.set("loading", false);
     });
-  },
+  }
 
-  actions: {
-    exportScreenedUrlList() {
-      exportEntity("screened_url").then(outputExportResult);
-    },
-  },
-});
+  @action
+  exportScreenedUrlList() {
+    exportEntity("screened_url").then(outputExportResult);
+  }
+}

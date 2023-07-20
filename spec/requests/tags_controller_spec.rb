@@ -167,9 +167,10 @@ RSpec.describe TagsController do
 
       it "works for tags in groups" do
         tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
-        get "/tags.json"
-        expect(response.status).to eq(200)
 
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
         tags = response.parsed_body["tags"]
         expect(tags.length).to eq(0)
         group = response.parsed_body.dig("extras", "tag_groups")&.first
@@ -177,11 +178,143 @@ RSpec.describe TagsController do
         expect(group["tags"].length).to eq(2)
         expect(group["tags"].map { |t| t["id"] }).to contain_exactly(test_tag.name, topic_tag.name)
       end
+
+      it "does not result in N+1 queries with multiple tag_groups" do
+        tag_group1 = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+
+        # warm up
+        get "/tags.json"
+        expect(response.status).to eq(200)
+
+        initial_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tag_groups = response.parsed_body.dig("extras", "tag_groups")
+
+            expect(tag_groups.length).to eq(1)
+            expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
+              tag_group1.name,
+            )
+          end.length
+
+        tag_group2 = Fabricate(:tag_group, tags: [topic_tag])
+
+        new_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tag_groups = response.parsed_body.dig("extras", "tag_groups")
+
+            expect(tag_groups.length).to eq(2)
+            expect(tag_groups.map { |tag_group| tag_group["name"] }).to contain_exactly(
+              tag_group1.name,
+              tag_group2.name,
+            )
+          end.length
+
+        expect(new_sql_queries_count).to be <= initial_sql_queries_count
+      end
     end
 
     context "with tags_listed_by_group disabled" do
       before { SiteSetting.tags_listed_by_group = false }
       include_examples "retrieves the right tags"
+
+      it "returns the right tags and categories tags for admin user" do
+        category.update!(tags: [test_tag])
+
+        sign_in(admin)
+
+        get "/tags.json"
+
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags.length).to eq(2)
+
+        expect(tags[0]["name"]).to eq(test_tag.name)
+        expect(tags[0]["text"]).to eq(test_tag.name)
+        expect(tags[0]["description"]).to eq(test_tag.description)
+        expect(tags[0]["count"]).to eq(0)
+        expect(tags[0]["pm_count"]).to eq(nil)
+        expect(tags[0]["target_tag"]).to eq(nil)
+
+        expect(tags[1]["name"]).to eq(topic_tag.name)
+
+        categories = response.parsed_body["extras"]["categories"]
+
+        expect(categories[0]["id"]).to eq(category.id)
+        expect(categories[0]["tags"].length).to eq(1)
+        expect(categories[0]["tags"][0]["name"]).to eq(test_tag.name)
+        expect(categories[0]["tags"][0]["text"]).to eq(test_tag.name)
+        expect(categories[0]["tags"][0]["description"]).to eq(test_tag.description)
+        expect(categories[0]["tags"][0]["count"]).to eq(0)
+        expect(categories[0]["tags"][0]["pm_count"]).to eq(nil)
+        expect(categories[0]["tags"][0]["target_tag"]).to eq(nil)
+      end
+
+      it "does not result in N+1 queries when there are multiple categories configured with tags for an admin user" do
+        category.update!(tags: [test_tag])
+
+        sign_in(admin)
+
+        # warm up
+        get "/tags.json"
+        expect(response.status).to eq(200)
+
+        tags = response.parsed_body["tags"]
+
+        expect(tags.length).to eq(2)
+        expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+        initial_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tags = response.parsed_body["tags"]
+
+            expect(tags.length).to eq(2)
+            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+            categories = response.parsed_body["extras"]["categories"]
+
+            expect(categories.length).to eq(1)
+            expect(categories[0]["id"]).to eq(category.id)
+            expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
+          end.length
+
+        category2 = Fabricate(:category, tags: [topic_tag])
+
+        new_sql_queries_count =
+          track_sql_queries do
+            get "/tags.json"
+
+            expect(response.status).to eq(200)
+
+            tags = response.parsed_body["tags"]
+
+            expect(tags.length).to eq(2)
+            expect(tags.map { |tag| tag["name"] }).to eq([test_tag.name, topic_tag.name])
+
+            categories = response.parsed_body["extras"]["categories"]
+
+            expect(categories.length).to eq(2)
+            expect(categories[0]["id"]).to eq(category.id)
+            expect(categories[0]["tags"].map { |tag| tag["name"] }).to eq([test_tag.name])
+            expect(categories[1]["id"]).to eq(category2.id)
+            expect(categories[1]["tags"].map { |tag| tag["name"] }).to eq([topic_tag.name])
+          end.length
+
+        expect(new_sql_queries_count).to eq(initial_sql_queries_count)
+      end
     end
 
     context "with hidden tags" do
@@ -299,6 +432,28 @@ RSpec.describe TagsController do
 
       get "/tag/test"
       expect(response.status).to eq(200)
+    end
+
+    it "can handle additional tags in query params" do
+      tag2 = Fabricate(:tag)
+      topic_with_two_tags = Fabricate(:topic, tags: [tag, tag2])
+
+      get "/tag/test.json?match_all_tags=true&tags[]=#{tag2.name}"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        topic_with_two_tags.id,
+      )
+    end
+
+    it "can handle duplicate tags in query params" do
+      tag2 = Fabricate(:tag)
+      topic_with_two_tags = Fabricate(:topic, tags: [tag, tag2])
+
+      get "/tag/test.json?match_all_tags=true&tags[]=test&tags[]=#{tag2.name}"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["topics"].map { |t| t["id"] }).to contain_exactly(
+        topic_with_two_tags.id,
+      )
     end
 
     it "handles special tag 'none'" do
@@ -957,6 +1112,15 @@ RSpec.describe TagsController do
         )
       end
 
+      it "returns error 400 for suspicious limit" do
+        get "/tags/filter/search.json", params: { q: "", limit: "1; SELECT 1" }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("invalid_params", message: "limit"),
+        )
+      end
+
       it "includes required tag group information" do
         tag1 = Fabricate(:tag)
         tag2 = Fabricate(:tag)
@@ -1183,18 +1347,19 @@ RSpec.describe TagsController do
   end
 
   describe "#destroy_synonym" do
+    subject(:destroy_synonym) { delete("/tag/#{tag.name}/synonyms/#{synonym.name}.json") }
+
     fab!(:tag) { Fabricate(:tag) }
     fab!(:synonym) { Fabricate(:tag, target_tag: tag, name: "synonym") }
-    subject { delete("/tag/#{tag.name}/synonyms/#{synonym.name}.json") }
 
     it "fails if not logged in" do
-      subject
+      destroy_synonym
       expect(response.status).to eq(403)
     end
 
     it "fails if not staff user" do
       sign_in(user)
-      subject
+      destroy_synonym
       expect(response.status).to eq(403)
     end
 
@@ -1203,7 +1368,7 @@ RSpec.describe TagsController do
 
       it "can remove a synonym from a tag" do
         synonym2 = Fabricate(:tag, target_tag: tag, name: "synonym2")
-        expect { subject }.to_not change { Tag.count }
+        expect { destroy_synonym }.to_not change { Tag.count }
         expect_same_tag_names(tag.reload.synonyms, [synonym2])
         expect(synonym.reload).to_not be_synonym
       end
@@ -1274,6 +1439,146 @@ RSpec.describe TagsController do
       tag_user = user.tag_users.last
 
       expect(tag_user.notification_level).to eq(NotificationLevels.all[:muted])
+    end
+  end
+
+  describe "#list" do
+    fab!(:tag3) { Fabricate(:tag, name: "tag3") }
+    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+    fab!(:tag1) { Fabricate(:tag, name: "tag") }
+
+    fab!(:staff_only_tag) { Fabricate(:tag, name: "tag4") }
+
+    let!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [staff_only_tag.name])
+    end
+
+    it "should return 403 for an anonymous user" do
+      get "/tags/list.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "should return 404 when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      sign_in(user)
+
+      get "/tags/list.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "should only return tags that are visible to the user for non admin users" do
+      stub_const(TagsController, "LIST_LIMIT", 2) do
+        sign_in(user)
+
+        get "/tags/list.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+          [tag1.name, tag2.name],
+        )
+
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(3)
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=1",
+        )
+
+        get response.parsed_body["meta"]["load_more_list_tags"]
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq([tag3.name])
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(3)
+
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=2",
+        )
+      end
+    end
+
+    it "should return all tags for admin users" do
+      stub_const(TagsController, "LIST_LIMIT", 2) do
+        sign_in(admin)
+
+        get "/tags/list.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+          [tag1.name, tag2.name],
+        )
+
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(4)
+
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=1",
+        )
+
+        get response.parsed_body["meta"]["load_more_list_tags"]
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+          [tag3.name, staff_only_tag.name],
+        )
+
+        expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(4)
+
+        expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+          "/tags/list.json?offset=2",
+        )
+      end
+    end
+
+    it "accepts a `filter` param and filters the tags by tag name" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { filter: "3" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq([tag3.name])
+      expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(1)
+
+      expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+        "/tags/list.json?offset=1&filter=3",
+      )
+    end
+
+    it "accepts a `only_tags` param and filters the tags by the given tags" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { only_tags: "#{tag1.name},#{tag3.name}" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
+        [tag1.name, tag3.name],
+      )
+
+      expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(2)
+
+      expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+        "/tags/list.json?offset=1&only_tags=#{tag1.name}%2C#{tag3.name}",
+      )
+    end
+
+    it "accepts a `exclude_tags` params and filters tags excluding the given tags" do
+      sign_in(user)
+
+      get "/tags/list.json", params: { exclude_tags: "#{tag1.name},#{tag3.name}" }
+
+      expect(response.status).to eq(200)
+
+      expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq([tag2.name])
+
+      expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(1)
+
+      expect(response.parsed_body["meta"]["load_more_list_tags"]).to eq(
+        "/tags/list.json?offset=1&exclude_tags=#{tag1.name}%2C#{tag3.name}",
+      )
     end
   end
 end

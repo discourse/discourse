@@ -2,10 +2,12 @@ import { test } from "qunit";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import {
   acceptance,
+  emulateAutocomplete,
   exists,
   fakeTime,
   loggedInUser,
   query,
+  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { setCaretPosition } from "discourse/lib/utilities";
 
@@ -43,6 +45,17 @@ acceptance("Composer - editor mentions", function (needs) {
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
           },
+          {
+            username: "foo",
+            avatar_template:
+              "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+          },
+        ],
+        groups: [
+          {
+            name: "user_group",
+            full_name: "Group",
+          },
         ],
       });
     });
@@ -52,19 +65,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    // Emulate user pressing backspace in the editor
-    const editor = query(".d-editor-input");
-
-    await triggerKeyEvent(".d-editor-input", "keydown", "@");
-    await fillIn(".d-editor-input", "abc @");
-    await setCaretPosition(editor, 5);
-    await triggerKeyEvent(".d-editor-input", "keyup", "@");
-
-    await triggerKeyEvent(".d-editor-input", "keydown", "U");
-    await fillIn(".d-editor-input", "abc @u");
-    await setCaretPosition(editor, 6);
-    await triggerKeyEvent(".d-editor-input", "keyup", "U");
-
+    await emulateAutocomplete(".d-editor-input", "abc @u");
     await click(".autocomplete.ac-user .selected");
 
     assert.strictEqual(
@@ -133,28 +134,37 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    // emulate typing in "abc @u"
-    const editor = query(".d-editor-input");
-    await fillIn(".d-editor-input", "@");
-    await setCaretPosition(editor, 5);
-    await triggerKeyEvent(".d-editor-input", "keyup", "@");
-    await fillIn(".d-editor-input", "@u");
-    await setCaretPosition(editor, 6);
-    await triggerKeyEvent(".d-editor-input", "keyup", "U");
+    await emulateAutocomplete(".d-editor-input", "@u");
 
     assert.ok(
-      exists(`.autocomplete .emoji[title='${status.emoji}']`),
+      exists(`.autocomplete .emoji[alt='${status.emoji}']`),
       "status emoji is shown"
     );
     assert.equal(
-      query(".autocomplete .status-description").textContent.trim(),
+      query(
+        ".autocomplete .user-status-message-description"
+      ).textContent.trim(),
       status.description,
       "status description is shown"
     );
-    assert.equal(
-      query(".autocomplete .relative-date").textContent.trim(),
-      "1h",
-      "status expiration time is shown"
+  });
+
+  test("metadata matches are moved to the end", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    await emulateAutocomplete(".d-editor-input", "abc @u");
+
+    assert.deepEqual(
+      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      ["user", "user2", "user_group", "foo"]
+    );
+
+    await emulateAutocomplete(".d-editor-input", "abc @f");
+
+    assert.deepEqual(
+      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      ["foo", "user_group", "user", "user2"]
     );
   });
 });
