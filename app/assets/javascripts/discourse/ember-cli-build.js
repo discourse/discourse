@@ -12,6 +12,8 @@ const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
 const generateWorkboxTree = require("./lib/workbox-tree-builder");
 
+process.env.BROCCOLI_ENABLED_MEMOIZE = true;
+
 module.exports = function (defaults) {
   const discourseRoot = resolve("../../../..");
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
