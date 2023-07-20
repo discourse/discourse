@@ -1,0 +1,34 @@
+<DModalBody
+  @title={{html-safe
+    i18n
+    "admin.user.merge.prompt.title"
+    username=@model.username
+  }}
+>
+  <:body>
+    <p>{{html-safe
+        (i18n "admin.user.merge.prompt.description" username=@model.username)
+      }}</p>
+    <EmailGroupUserChooser
+      @value={{this.targetUsername}}
+      @options={{hash
+        maximum=1
+        filterPlaceholder="admin.user.merge.prompt.target_username_placeholder"
+      }}
+      {{on "change" this.updateUsername}}
+    />
+  </:body>
+  <:footer>
+    <DButton
+      class="btn-primary"
+      @action={{this.showConfirmation}}
+      @icon="trash-alt"
+      @disabled={{this.mergeDisabled}}
+      @label={{i18n
+        "admin.user.merge.confirmation.transfer_and_delete"
+        username=@model.username
+      }}
+    />
+    <DButton @action={{@closeModal}} @label="admin.user.merge.prompt.cancel" />
+  </:footer>
+</DModalBody>

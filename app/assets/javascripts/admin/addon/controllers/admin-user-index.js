@@ -472,9 +472,7 @@ export default class AdminUserIndexController extends Controller.extend(
       .merge(formData)
       .then((response) => {
         if (response.success) {
-          this.modal.show(MergeUsersProgressModal, {
-            model: this.model,
-          });
+          this.modal.show(MergeUsersProgressModal);
         } else {
           this.dialog.alert(I18n.t("admin.user.merge_failed"));
         }
