@@ -252,9 +252,9 @@ class ImportScripts::Slack < ImportScripts::Base
 
     # Mentions
     text.gsub!(/<@(\w+)>/) do
-      user_id = $1
-      username = @lookup.find_username_by_import_id(user_id)
-      username ? "@#{username}" : "`@#{user_id}`"
+      mentioned_user_id = $1
+      username = @lookup.find_username_by_import_id(mentioned_user_id)
+      username ? "@#{username}" : "`@#{mentioned_user_id}`"
     end
 
     # Links
