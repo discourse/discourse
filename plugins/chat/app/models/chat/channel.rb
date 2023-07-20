@@ -122,7 +122,7 @@ module Chat
     def joined_by?(user)
       user.user_chat_channel_memberships.strict_loading.any? do |membership|
         predicate = membership.chat_channel_id == id
-        predicate = predicate && membership.following == true if public_channel?
+        predicate = predicate && membership.following if public_channel?
         predicate
       end
     end
