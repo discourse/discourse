@@ -8435,10 +8435,10 @@ sane@^5.0.1:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.63.6:
-  version "1.63.6"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.63.6.tgz#481610e612902e0c31c46b46cf2dad66943283ea"
-  integrity sha512-MJuxGMHzaOW7ipp+1KdELtqKbfAWbH7OLIdoSMnVe3EXPMTmxTmlaZDCTsgIpPCs3w99lLo9/zDKkOrJuT5byw==
+sass@^1.64.0:
+  version "1.64.0"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.64.0.tgz#9ca8d0acb1a704b86b7f1197dc310f568fb34638"
+  integrity sha512-m7YtAGmQta9uANIUJwXesAJMSncqH+3INc8kdVXs6eV6GUC8Qu2IYKQSN8PRLgiQfpca697G94klm2leYMxSHw==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
