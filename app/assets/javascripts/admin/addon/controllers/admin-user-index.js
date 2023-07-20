@@ -12,7 +12,9 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
+import MergeUsersConfirmationModal from "../components/modals/merge-users-confirmation";
+import MergeUsersPromptModal from "../components/modals/merge-users-prompt";
+import MergeUsersProgressModal from "../components/modals/merge-users-progress";
 import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 
 export default class AdminUserIndexController extends Controller.extend(
@@ -438,19 +440,19 @@ export default class AdminUserIndexController extends Controller.extend(
 
   @action
   promptTargetUser() {
-    showModal("admin-merge-users-prompt", {
-      admin: true,
+    this.modal.show(MergeUsersPromptModal, {
       model: this.model,
+      showMergeConfirmation: this.showMergeConfirmation,
     });
   }
 
   @action
   showMergeConfirmation(targetUsername) {
-    showModal("admin-merge-users-confirmation", {
-      admin: true,
+    this.modal.show(MergeUsersConfirmationModal, {
       model: {
         username: this.model.username,
         targetUsername,
+        merge: this.merge,
       },
     });
   }
@@ -470,8 +472,7 @@ export default class AdminUserIndexController extends Controller.extend(
       .merge(formData)
       .then((response) => {
         if (response.success) {
-          showModal("admin-merge-users-progress", {
-            admin: true,
+          this.modal.show(MergeUsersProgressModal, {
             model: this.model,
           });
         } else {
