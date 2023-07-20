@@ -2160,6 +2160,13 @@ navigation:
     type: tag_list
     default: ""
     client: true
+  default_sidebar_switch_panel_position:
+    default: "bottom"
+    type: enum
+    client: true
+    choices:
+      - "top"
+      - "bottom"
 
 embedding:
   embed_by_username:

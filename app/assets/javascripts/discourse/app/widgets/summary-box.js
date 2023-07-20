@@ -24,7 +24,7 @@ createWidget("summary-skeleton", {
       h("span", {}, [
         iconNode("magic", { class: "rotate-center" }),
         h(
-          "p.placeholder-generating-summary-text",
+          "div.placeholder-generating-summary-text",
           {},
           I18n.t("summary.in_progress")
         ),
@@ -51,7 +51,11 @@ export default createWidget("summary-box", {
     const html = [];
 
     if (attrs.summary) {
-      html.push(new RawHtml({ html: `<div>${attrs.summary}</div>` }));
+      html.push(
+        new RawHtml({
+          html: `<div class="generated-summary">${attrs.summary}</div>`,
+        })
+      );
       html.push(
         h("div.summarized-on", {}, [
           new RenderGlimmer(

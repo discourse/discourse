@@ -19,7 +19,7 @@ class MainSidebarPanel {
   }
 
   get switchButtonDefaultUrl() {
-    return "/latest";
+    return "/";
   }
 }
 

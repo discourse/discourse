@@ -206,6 +206,28 @@ acceptance("Sidebar - Plugin API", function (needs) {
                     return "hover button title attribute";
                   }
                 })(),
+
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return "homepage";
+                  }
+
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
+                  get href() {
+                    return "https://www.discourse.org";
+                  }
+
+                  get title() {
+                    return "Homepage";
+                  }
+
+                  get text() {
+                    return "Homepage";
+                  }
+                })(),
               ];
             }
           };
@@ -347,6 +369,18 @@ acceptance("Sidebar - Plugin API", function (needs) {
       links[2].children[0].children[0].getAttribute("src"),
       "/test.png",
       "uses correct prefix image url"
+    );
+
+    assert.strictEqual(
+      links[3].title,
+      "Homepage",
+      "displays external link with correct title attribute"
+    );
+
+    assert.strictEqual(
+      links[3].href,
+      "https://www.discourse.org/",
+      "displays external link with correct href attribute"
     );
 
     assert.strictEqual(
@@ -991,5 +1025,23 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert
       .dom(".sidebar-section[data-section-name='test-chat-channels']")
       .doesNotExist();
+    assert.dom(".sidebar-sections + button").exists();
+
+    assert
+      .dom("#d-sidebar .sidebar-sections + .sidebar__panel-switch-button")
+      .exists();
+    assert
+      .dom("#d-sidebar .sidebar__panel-switch-button + .sidebar-sections")
+      .doesNotExist();
+
+    this.siteSettings.default_sidebar_switch_panel_position = "top";
+    await visit("/");
+
+    assert
+      .dom("#d-sidebar .sidebar-sections + .sidebar__panel-switch-button")
+      .doesNotExist();
+    assert
+      .dom("#d-sidebar .sidebar__panel-switch-button + .sidebar-sections")
+      .exists();
   });
 });

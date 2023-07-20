@@ -74,8 +74,8 @@ module Service
     # Internal module to define available steps as DSL
     # @!visibility private
     module StepsHelpers
-      def model(name = :model, step_name = :"fetch_#{name}")
-        steps << ModelStep.new(name, step_name)
+      def model(name = :model, step_name = :"fetch_#{name}", optional: false)
+        steps << ModelStep.new(name, step_name, optional: optional)
       end
 
       def contract(name = :default, class_name: self::Contract, default_values_from: nil)
@@ -131,9 +131,16 @@ module Service
 
     # @!visibility private
     class ModelStep < Step
+      attr_reader :optional
+
+      def initialize(name, method_name = name, class_name: nil, optional: nil)
+        super(name, method_name, class_name: class_name)
+        @optional = optional.present?
+      end
+
       def call(instance, context)
         context[name] = super
-        raise ArgumentError, "Model not found" if context[name].blank?
+        raise ArgumentError, "Model not found" if !optional && context[name].blank?
         if context[name].try(:invalid?)
           context[result_key].fail(invalid: true)
           context.fail!
@@ -232,9 +239,10 @@ module Service
     end
 
     # @!scope class
-    # @!method model(name = :model, step_name = :"fetch_#{name}")
+    # @!method model(name = :model, step_name = :"fetch_#{name}", optional: false)
     # @param name [Symbol] name of the model
     # @param step_name [Symbol] name of the method to call for this step
+    # @param optional [Boolean] if +true+, then the step won’t fail if its return value is falsy.
     # Evaluates arbitrary code to build or fetch a model (typically from the
     # DB). If the step returns a falsy value, then the step will fail.
     #
