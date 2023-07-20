@@ -103,6 +103,40 @@ RSpec.describe Discourse::VERSION do
         YML
       include_examples "test compatible resource"
     end
+
+    context "with different version operators" do
+      let(:version_list) { <<~YML }
+        3.2.0.beta1: threePointTwoPointZeroBetaOne
+        <= 3.2.0.beta2: threePointTwoPointZeroBetaTwo
+        ~> 3.1.0: threePointOnePointZero
+      YML
+
+      it "supports ~> and <= operators" do
+        expect(Discourse.find_compatible_resource(version_list, "2.9.0")).to eq(
+          "threePointOnePointZero",
+        )
+        expect(Discourse.find_compatible_resource(version_list, "3.0.0")).to eq(
+          "threePointOnePointZero",
+        )
+        expect(Discourse.find_compatible_resource(version_list, "3.0.1")).to eq(
+          "threePointOnePointZero",
+        )
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta1")).to eq(
+          "threePointTwoPointZeroBetaOne",
+        )
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta2")).to eq(
+          "threePointTwoPointZeroBetaTwo",
+        )
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta3")).to eq(nil)
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0")).to eq(nil)
+      end
+
+      it "raises error for >= operator" do
+        expect { Discourse.find_compatible_resource(">= 3.1.0", "3.1.0") }.to raise_error(
+          Discourse::InvalidVersionListError,
+        )
+      end
+    end
   end
 
   describe ".find_compatible_git_resource" do

@@ -41,18 +41,33 @@ module Discourse
 
     raise InvalidVersionListError unless version_list.is_a?(Hash)
 
-    version_list = version_list.sort_by { |v, pin| Gem::Version.new(v) }.reverse
+    version_list =
+      version_list
+        .sort_by do |v, pin|
+          op, v = Gem::Requirement.parse(v)
+          v
+        end
+        .reverse
+
+    parsed_version = Gem::Version.new(version)
 
     # If plugin compat version is listed as less than current Discourse version, take the version/hash listed before.
     checkout_version = nil
     version_list.each do |core_compat, target|
-      if Gem::Version.new(core_compat) == Gem::Version.new(version) # Exact version match - return it
-        checkout_version = target
-        break
-      elsif Gem::Version.new(core_compat) < Gem::Version.new(version) # Core is on a higher version than listed, use a later version
-        break
+      compat_op, compat_version = Gem::Requirement.parse(core_compat)
+
+      if !%w[= <= ~>].include?(compat_op)
+        raise InvalidVersionListError,
+              "Invalid version specifier operator for #{core_compat}. Operator must be one of <= or ~>"
       end
-      checkout_version = target
+
+      defined_requirement = Gem::Requirement.new(core_compat)
+      less_than_defined_requirement = Gem::Requirement.new("<= #{compat_version}")
+
+      if defined_requirement.satisfied_by?(parsed_version) ||
+           less_than_defined_requirement.satisfied_by?(parsed_version)
+        checkout_version = target
+      end
     end
 
     return if checkout_version.nil?
