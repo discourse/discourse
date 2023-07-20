@@ -6,7 +6,10 @@ desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
 task "plugin:install_all_official" do
   skip = Set.new(%w[customer-flair poll])
 
-  map = { "Canned Replies" => "https://github.com/discourse/discourse-canned-replies" }
+  map = {
+    "Canned Replies" => "https://github.com/discourse/discourse-canned-replies",
+    "discourse-encrypt" => "https://github.com/chancancode/discourse-encrypt",
+  }
 
   STDERR.puts "Allowing write to all repos!" if ENV["GIT_WRITE"]
 
