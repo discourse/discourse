@@ -112,27 +112,66 @@ export function showUserTip(options) {
   showNextUserTip();
 }
 
-export function hideUserTip(userTipId, force = false) {
-  // Tippy instances are not destroyed immediately because sometimes there
-  // user tip is recreated immediately. This happens when Ember components
-  // are re-rendered because a parent component has changed
+class Zomg {
+  hideUserTip(userTipId, force = false) {
+    // Tippy instances are not destroyed immediately because sometimes there
+    // user tip is recreated immediately. This happens when Ember components
+    // are re-rendered because a parent component has changed
 
-  const instance = instancesMap[userTipId];
-  if (!instance) {
-    return;
-  }
+    const instance = instancesMap[userTipId];
+    if (!instance) {
+      return;
+    }
 
-  if (force) {
-    destroyInstance(instance);
-    delete instancesMap[userTipId];
-    showNextUserTip();
-  } else if (!instance.destroyTimeout) {
-    instance.destroyTimeout = setTimeout(() => {
-      destroyInstance(instancesMap[userTipId]);
+    if (force) {
+      destroyInstance(instance);
       delete instancesMap[userTipId];
       showNextUserTip();
-    }, TIPPY_DELAY);
+    } else if (!instance.destroyTimeout) {
+      instance.destroyTimeout = setTimeout(() => {
+        destroyInstance(instancesMap[userTipId]);
+        delete instancesMap[userTipId];
+        showNextUserTip();
+      }, TIPPY_DELAY);
+    }
   }
+
+  showNextUserTip() {
+    const instances = Object.values(instancesMap);
+
+    // Return early if a user tip is already visible and it is in viewport
+    if (
+      instances.find(
+        (instance) =>
+          instance.state.isVisible && isElementInViewport(instance.reference)
+      )
+    ) {
+      return;
+    }
+
+    // Otherwise, try to find a user tip in the viewport
+    const idx = instances.findIndex((instance) =>
+      isElementInViewport(instance.reference)
+    );
+
+    // If no instance was found, select first user tip
+    const newInstance = instances[idx === -1 ? 0 : idx];
+
+    // Show only selected instance and hide all the other ones
+    instances.forEach((instance) => {
+      if (instance === newInstance) {
+        showInstance(instance);
+      } else {
+        hideInstance(instance);
+      }
+    });
+  }
+}
+
+export let __ZOMG__ = new Zomg();
+
+export function hideUserTip(...args) {
+  return __ZOMG__.hideUserTip(...args);
 }
 
 export function hideAllUserTips() {
@@ -143,32 +182,5 @@ export function hideAllUserTips() {
 }
 
 export function showNextUserTip() {
-  const instances = Object.values(instancesMap);
-
-  // Return early if a user tip is already visible and it is in viewport
-  if (
-    instances.find(
-      (instance) =>
-        instance.state.isVisible && isElementInViewport(instance.reference)
-    )
-  ) {
-    return;
-  }
-
-  // Otherwise, try to find a user tip in the viewport
-  const idx = instances.findIndex((instance) =>
-    isElementInViewport(instance.reference)
-  );
-
-  // If no instance was found, select first user tip
-  const newInstance = instances[idx === -1 ? 0 : idx];
-
-  // Show only selected instance and hide all the other ones
-  instances.forEach((instance) => {
-    if (instance === newInstance) {
-      showInstance(instance);
-    } else {
-      hideInstance(instance);
-    }
-  });
+  return __ZOMG__.showNextUserTip();
 }

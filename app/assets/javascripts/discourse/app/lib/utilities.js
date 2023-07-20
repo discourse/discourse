@@ -265,11 +265,19 @@ export function determinePostReplaceSelection({
   }
 }
 
+class Zomg {
+  isAppleDevice() {
+    // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
+    // This will apply hack on all iDevices
+    let caps = capabilities;
+    return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
+  }
+}
+
+export let __ZOMG__ = new Zomg();
+
 export function isAppleDevice() {
-  // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
-  // This will apply hack on all iDevices
-  let caps = capabilities;
-  return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
+  return __ZOMG__.isAppleDevice();
 }
 
 let iPadDetected = undefined;

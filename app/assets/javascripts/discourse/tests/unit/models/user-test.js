@@ -6,7 +6,7 @@ import { settled } from "@ember/test-helpers";
 import User from "discourse/models/user";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { getOwner } from "discourse-common/lib/get-owner";
-import * as userTips from "discourse/lib/user-tips";
+import { __ZOMG__ } from "discourse/lib/user-tips";
 
 module("Unit | Model | user", function (hooks) {
   setupTest(hooks);
@@ -228,8 +228,8 @@ module("Unit | Model | user", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", { username: "eviltrout" });
 
-    const hideSpy = sinon.spy(userTips, "hideUserTip");
-    const showNextSpy = sinon.spy(userTips, "showNextUserTip");
+    const hideSpy = sinon.spy(__ZOMG__, "hideUserTip");
+    const showNextSpy = sinon.spy(__ZOMG__, "showNextUserTip");
     await user.hideUserTipForever("first_notification");
 
     assert.ok(hideSpy.calledWith("first_notification"));
