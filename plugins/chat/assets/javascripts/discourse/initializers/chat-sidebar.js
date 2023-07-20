@@ -23,6 +23,44 @@ export default {
 
     this.siteSettings = container.lookup("service:site-settings");
 
+    withPluginApi("1.8.0", (api) => {
+      /**
+       * Sidebar panel is a wrapper around sidebar sections.
+       * By default, core has only one panel, called "main".
+       * When more than 1 panel is registered, we display the switch panel button at the bottom or top of the sidebar - depending on site setting.
+       * Switch mechanism is also tracking last URL in specific panel.
+       */
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
+          get key() {
+            return "chat";
+          }
+          get switchButtonLabel() {
+            return I18n.t("sidebar.panels.chat.label");
+          }
+
+          get switchButtonIcon() {
+            return "d-chat";
+          }
+
+          get switchButtonDefaultUrl() {
+            return "/chat";
+          }
+        };
+
+        return ChatSidebarPanel;
+      });
+
+      /**
+       * By default, "main" panel is loaded.
+       * When chat detects that it is active, it should change panel to "chat".
+       * It is only required to support full reload to get the correct panel.
+       */
+      if (window.location.pathname.startsWith("/chat")) {
+        api.setSidebarPanel("chat");
+      }
+    });
+
     withPluginApi("1.3.0", (api) => {
       if (this.siteSettings.enable_public_channels) {
         api.addSidebarSection(
@@ -178,7 +216,9 @@ export default {
             };
 
             return SidebarChatChannelsSection;
-          }
+          },
+          "chat"
+          // By default, addSidebarSection adds sections to "main" panel. Now it accepts optional parameter to specify panel key.
         );
       }
 
@@ -411,7 +451,9 @@ export default {
           };
 
           return SidebarChatDirectMessagesSection;
-        }
+        },
+        "chat"
+        // By default, addSidebarSection adds sections to "main" panel. Now it accepts optional parameter to specify panel key.
       );
     });
   },

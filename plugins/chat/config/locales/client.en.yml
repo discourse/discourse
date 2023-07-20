@@ -687,3 +687,8 @@ en:
       sections:
         chat:
           title: Chat
+    # Translation for change panel button
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"
