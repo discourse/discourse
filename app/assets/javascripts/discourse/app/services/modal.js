@@ -14,7 +14,6 @@ const KNOWN_LEGACY_MODALS = [
   "associate-account-confirm",
   "auth-token",
   "avatar-selector",
-  "bulk-actions-buttons",
   "bulk-change-category",
   "bulk-notification-level",
   "bulk-progress",
