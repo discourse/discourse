@@ -71,6 +71,19 @@ jobs:
         with:
           fetch-depth: 1
 
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install awscli
+
+      - name: Create minio test bucket
+        run: |
+          aws --endpoint-url http://127.0.0.1:9000/ s3 mb s3://discoursetest
+
       # - name: Install jq
       #   run: |
       #     sudo apt-get -y update
@@ -80,11 +93,6 @@ jobs:
         run: |
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
-
-      - name: Create minio test bucket
-        run: |
-          pip3 install awscli
-          aws --endpoint-url http://127.0.0.1:9000/ s3 mb s3://discoursetest
 
       - name: Setup Git
         run: |
