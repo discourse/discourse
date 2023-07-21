@@ -368,7 +368,7 @@ RSpec.describe "users" do
 
       produces "application/json"
       response "200", "response" do
-        let(:id) { Fabricate(:user).id }
+        let(:id) { Fabricate(:user, active: false).id }
 
         expected_response_schema = load_spec_schema("success_ok_response")
         schema(expected_response_schema)
