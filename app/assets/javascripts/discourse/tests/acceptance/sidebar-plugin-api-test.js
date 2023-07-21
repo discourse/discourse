@@ -251,6 +251,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "displays header with correct text"
     );
 
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-caret"
+      )
+      .exists();
+
     await click(
       ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown summary"
     );
