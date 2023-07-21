@@ -60,8 +60,9 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
 
     const openLightboxSpy = sinon.spy(this.lightbox, "openLightbox");
     const removeEventListenerSpy = sinon.spy(container, "removeEventListener");
+    const clickTarget = container.querySelector(selector);
 
-    await this.lightbox.setupLightboxes({ container, selector });
+    await this.lightbox.setupLightboxes({ container, selector, clickTarget });
 
     await click(container.querySelector(selector));
 
@@ -70,7 +71,7 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
     await click(container.querySelector("p"));
 
     assert.strictEqual(
-      openLightboxSpy.calledWith({ container, selector }),
+      openLightboxSpy.calledWith({ container, selector, clickTarget }),
       true,
       "calls openLightbox on lightboxed element click"
     );

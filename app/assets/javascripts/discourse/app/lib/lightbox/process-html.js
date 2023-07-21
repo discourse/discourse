@@ -2,14 +2,12 @@ import { SELECTORS } from "./constants";
 import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
 
-export async function processHTML({ container, selector }) {
+export async function processHTML({ container, selector, clickTarget }) {
   selector ??= SELECTORS.DEFAULT_ITEM_SELECTOR;
 
   const items = [...container.querySelectorAll(selector)];
 
-  let _startingIndex = items.findIndex(
-    (item) => item === document.activeElement
-  );
+  let _startingIndex = items.findIndex((item) => item === clickTarget);
 
   if (_startingIndex === -1) {
     _startingIndex = 0;
