@@ -81,19 +81,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install awscli
 
-      - name: Create minio test bucket
-        run: |
-          aws --endpoint-url http://minio.local:9000/ s3 mb s3://discoursetest
-
-      # - name: Install jq
-      #   run: |
-      #     sudo apt-get -y update
-      #     sudo apt-get -y install jq
-
       - name: Add hosts to /etc/hosts
         run: |
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+
+      - name: Create minio test bucket
+        run: |
+          aws --endpoint-url http://minio.local:9000/ s3 mb s3://discoursetest
 
       - name: Setup Git
         run: |
