@@ -30,6 +30,9 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
+      # Only used for minio, we are not actually connecting to AWS in tests!
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
 
     strategy:
       fail-fast: false
@@ -55,8 +58,6 @@ jobs:
           MINIO_SECRET_KEY: minioadmin
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
-          AWS_ACCESS_KEY_ID: minioadmin
-          AWS_SECRET_ACCESS_KEY: minioadmin
           MINIO_DOMAIN: minio.local
         volumes:
           - ${{ github.workspace }}/data:/data
