@@ -384,7 +384,7 @@
                       @model={{this.model.invited_by}}
                     >{{this.model.invited_by.username}}</LinkTo></dd></div>
               {{/if}}
-              {{#if this.model.trust_level}}
+              {{#if this.hasTrustLevel}}
                 <div><dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd
                     class="trust-level"
                   >{{this.model.trustLevel.name}}</dd></div>
