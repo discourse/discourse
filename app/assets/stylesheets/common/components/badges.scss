@@ -21,10 +21,32 @@
   position: relative;
   display: inline-flex;
   align-items: baseline;
+  + * {
+    margin-left: 0.666em;
+  }
 
   .badge-category {
     display: inline-flex;
     align-items: baseline;
+    &:before {
+      content: "";
+      flex: 0 0 auto;
+      width: 0.666rem;
+      height: 0.666rem;
+      background: var(--category-badge-color);
+      margin-right: 0.4em;
+    }
+
+    &.badge-subcategory {
+      &:before {
+        background: linear-gradient(
+          90deg,
+          var(--parent-category-badge-color) 50%,
+          var(--category-badge-color) 50%
+        );
+      }
+    }
+
     .category-name {
       text-overflow: ellipsis;
       overflow: hidden;
@@ -33,117 +55,36 @@
       margin-right: 3px;
       width: 0.74em;
       height: 0.74em;
-      color: inherit;
-    }
-  }
-
-  // ----- Bullet
-
-  &.bullet {
-    margin-right: 12px;
-    span.badge-category {
-      color: var(--primary-high);
-      overflow: hidden;
-      .extra-info-wrapper & {
-        color: var(--header-primary);
-      }
-    }
-    .badge-category-parent-bg,
-    .badge-category-bg {
-      flex: 0 0 auto;
-      width: 9px;
-      height: 9px;
-      margin-right: 5px;
-      display: inline-block;
-    }
-    .badge-category-parent-bg {
-      // Subcategories
-      width: 5px;
-      margin-right: 0;
-      + .badge-category-bg {
-        width: 5px;
-      }
-    }
-    .d-icon {
       color: var(--primary-medium);
     }
   }
 
-  // ----- Box
-
-  &.box {
-    margin-right: 5px;
-    padding: 2px 4px 2px 4px;
-    display: inline-flex;
-    span {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      &.badge-category-bg,
-      &.badge-category-parent-bg {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-
-      &.badge-category-parent-bg {
-        // Subcategories
-        width: calc(100% - 5px);
-        & + .badge-category-bg {
-          left: 5px;
-          width: calc(100% - 5px);
-          & + .badge-category {
-            margin-left: 5px;
-          }
-        }
-      }
-
-      &.badge-category {
-        position: relative;
-      }
-    }
-    + .topic-header-extra {
-      padding: 2px 4px 2px 4px;
-    }
-  }
-
-  // ----- Bar
-
-  &.bar {
-    margin-right: 5px;
-
-    span.badge-category {
-      color: var(--primary-high);
-      padding-left: 4px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      .extra-info-wrapper & {
-        color: var(--header-primary);
-      }
-    }
-
-    .badge-category-parent-bg,
-    .badge-category-bg {
-      display: inline-block;
-      padding-left: 1px;
-      padding-right: 1px;
-
-      &:before {
-        content: "\a0";
-      }
-    }
-  }
-
-  // ----- No category style
-
-  &.none {
+  span.badge-category {
     color: var(--primary-high);
-    margin-right: 5px;
-    .badge-category {
-      overflow: hidden;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    .extra-info-wrapper & {
+      color: var(--header_primary-high);
     }
+  }
+  .badge-category-parent-bg,
+  .badge-category-bg {
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    margin-right: 5px;
+    display: inline-block;
+  }
+  .badge-category-parent-bg {
+    // Subcategories
+    width: 5px;
+    margin-right: 0;
+    + .badge-category-bg {
+      width: 5px;
+    }
+  }
+  .d-icon {
+    color: var(--primary-medium);
   }
 }
 
