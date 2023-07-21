@@ -51,8 +51,12 @@ jobs:
           - 9000:9000
           - 9001:9001
         env:
-          MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
-          MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+          MINIO_ACCESS_KEY: minioadmin
+          MINIO_SECRET_KEY: minioadmin
+          # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+          # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+          AWS_ACCESS_KEY_ID: minioadmin
+          AWS_SECRET_ACCESS_KEY: minioadmin
           MINIO_DOMAIN: minio.local
         volumes:
           - ${{ github.workspace }}/data:/data
@@ -67,121 +71,123 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Install jq
-        run: |
-          sudo apt-get -y update
-          sudo apt-get -y install jq
+      # - name: Install jq
+      #   run: |
+      #     sudo apt-get -y update
+      #     sudo apt-get -y install jq
 
       - name: Add hosts to /etc/hosts
         run: |
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-      - uses: valeriangalliat/action-sshd-cloudflared@v1
+      - name: Create minio test bucket
+        run: |
+          aws --endpoint-url http://127.0.0.1:9000/ s3 mb s3://discoursetest
 
-      # - name: Setup Git
-      #   run: |
-      #     git config --global user.email "ci@ci.invalid"
-      #     git config --global user.name "Discourse CI"
+      - name: Setup Git
+        run: |
+          git config --global user.email "ci@ci.invalid"
+          git config --global user.name "Discourse CI"
 
-      # - name: Start redis
-      #   run: |
-      #     redis-server /etc/redis/redis.conf &
+      - name: Start redis
+        run: |
+          redis-server /etc/redis/redis.conf &
 
-      # - name: Start Postgres
-      #   run: |
-      #     chown -R postgres /var/run/postgresql
-      #     sudo -E -u postgres script/start_test_db.rb
-      #     sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
+      - name: Start Postgres
+        run: |
+          chown -R postgres /var/run/postgresql
+          sudo -E -u postgres script/start_test_db.rb
+          sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
-      # - name: Bundler cache
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: vendor/bundle
-      #     key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-      #     restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
+      - name: Bundler cache
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
 
-      # - name: Setup gems
-      #   run: |
-      #     gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
-      #     bundle config --local path vendor/bundle
-      #     bundle config --local deployment true
-      #     bundle config --local without development
-      #     bundle install --jobs 4
-      #     bundle clean
+      - name: Setup gems
+        run: |
+          gem install bundler --conservative -v $(awk '/BUNDLED WITH/ { getline; gsub(/ /,""); print $0 }' Gemfile.lock)
+          bundle config --local path vendor/bundle
+          bundle config --local deployment true
+          bundle config --local without development
+          bundle install --jobs 4
+          bundle clean
 
-      # - name: Get yarn cache directory
-      #   id: yarn-cache-dir
-      #   run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Get yarn cache directory
+        id: yarn-cache-dir
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      # - name: Yarn cache
-      #   uses: actions/cache@v3
-      #   id: yarn-cache
-      #   with:
-      #     path: ${{ steps.yarn-cache-dir.outputs.dir }}
-      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      #     restore-keys: ${{ runner.os }}-yarn-
+      - name: Yarn cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: ${{ runner.os }}-yarn-
 
-      # - name: Yarn install
-      #   run: yarn install --frozen-lockfile
+      - name: Yarn install
+        run: yarn install --frozen-lockfile
 
-      # - name: Checkout official plugins
-      #   if: matrix.target == 'plugins'
-      #   run: bin/rake plugin:install_all_official
+      - name: Checkout official plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:install_all_official
 
-      # - name: Pull compatible versions of plugins
-      #   if: matrix.target == 'plugins'
-      #   run: bin/rake plugin:pull_compatible_all
+      - name: Pull compatible versions of plugins
+        if: matrix.target == 'plugins'
+        run: bin/rake plugin:pull_compatible_all
 
-      # - name: Fetch app state cache
-      #   uses: actions/cache@v3
-      #   id: app-cache
-      #   with:
-      #     path: tmp/app-cache
-      #     key: >-
-      #       ${{ runner.os }}-
-      #       ${{ hashFiles('.github/workflows/tests.yml') }}-
-      #       ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-      #       ${{ env.USES_PARALLEL_DATABASES }}
+      - name: Fetch app state cache
+        uses: actions/cache@v3
+        id: app-cache
+        with:
+          path: tmp/app-cache
+          key: >-
+            ${{ runner.os }}-
+            ${{ hashFiles('.github/workflows/tests.yml') }}-
+            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ env.USES_PARALLEL_DATABASES }}
 
-      # - name: Restore database from cache
-      #   if: steps.app-cache.outputs.cache-hit == 'true'
-      #   run: psql -f tmp/app-cache/cache.sql postgres
+      - name: Restore database from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: psql -f tmp/app-cache/cache.sql postgres
 
-      # - name: Restore uploads from cache
-      #   if: steps.app-cache.outputs.cache-hit == 'true'
-      #   run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+      - name: Restore uploads from cache
+        if: steps.app-cache.outputs.cache-hit == 'true'
+        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
 
-      # - name: Create and migrate database
-      #   if: steps.app-cache.outputs.cache-hit != 'true'
-      #   run: |
-      #     bin/rake db:create
-      #     bin/rake db:migrate
+      - name: Create and migrate database
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: |
+          bin/rake db:create
+          bin/rake db:migrate
 
-      # - name: Create and migrate parallel databases
-      #   if: >-
-      #     env.USES_PARALLEL_DATABASES == 'true' &&
-      #     steps.app-cache.outputs.cache-hit != 'true'
-      #   run: |
-      #     bin/rake parallel:create
-      #     bin/rake parallel:migrate
+      - name: Create and migrate parallel databases
+        if: >-
+          env.USES_PARALLEL_DATABASES == 'true' &&
+          steps.app-cache.outputs.cache-hit != 'true'
+        run: |
+          bin/rake parallel:create
+          bin/rake parallel:migrate
 
-      # - name: Dump database for cache
-      #   if: steps.app-cache.outputs.cache-hit != 'true'
-      #   run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
+      - name: Dump database for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
 
-      # - name: Dump uploads for cache
-      #   if: steps.app-cache.outputs.cache-hit != 'true'
-      #   run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
+      - name: Dump uploads for cache
+        if: steps.app-cache.outputs.cache-hit != 'true'
+        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-      # - name: Fetch turbo_rspec_runtime.log cache
-      #   uses: actions/cache@v3
-      #   id: test-runtime-cache
-      #   if: matrix.build_type == 'backend' || matrix.build_type == 'system'
-      #   with:
-      #     path: tmp/turbo_rspec_runtime.log
-      #     key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-      #     restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
+      - name: Fetch turbo_rspec_runtime.log cache
+        uses: actions/cache@v3
+        id: test-runtime-cache
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        with:
+          path: tmp/turbo_rspec_runtime.log
+          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
+          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       # - name: Check Zeitwerk eager_load
       #   if: matrix.build_type == 'backend'
@@ -227,105 +233,105 @@ jobs:
       #   run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
       #   timeout-minutes: 30
 
-      # - name: Ember Build for System Tests
-      #   if: matrix.build_type == 'system'
-      #   run: bin/ember-cli --build
+      - name: Ember Build for System Tests
+        if: matrix.build_type == 'system'
+        run: bin/ember-cli --build
 
-      # - name: Setup Webdriver
-      #   if: matrix.build_type == 'system'
-      #   run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.required_version='114.0.5735.90'; Webdrivers::Chromedriver.update"
+      - name: Setup Webdriver
+        if: matrix.build_type == 'system'
+        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.required_version='114.0.5735.90'; Webdrivers::Chromedriver.update"
 
-      # - name: Core System Tests
-      #   if: matrix.build_type == 'system' && matrix.target == 'core'
-      #   run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+      - name: Core System Tests
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system/s3_uploads_spec.rb
 
       # - name: Plugin System Tests
       #   if: matrix.build_type == 'system' && matrix.target == 'plugins'
       #   run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
       #   timeout-minutes: 30
 
-      # - name: Upload failed system test screenshots
-      #   uses: actions/upload-artifact@v3
-      #   if: matrix.build_type == 'system' && failure()
-      #   with:
-      #     name: failed-system-test-screenshots
-      #     path: tmp/capybara/*.png
+      - name: Upload failed system test screenshots
+        uses: actions/upload-artifact@v3
+        if: matrix.build_type == 'system' && failure()
+        with:
+          name: failed-system-test-screenshots
+          path: tmp/capybara/*.png
 
-      # - name: Check Annotations
-      #   if: matrix.build_type == 'annotations'
-      #   run: |
-      #     bin/rake annotate:ensure_all_indexes
-      #     bin/annotate --models --model-dir app/models
+#       - name: Check Annotations
+#         if: matrix.build_type == 'annotations'
+#         run: |
+#           bin/rake annotate:ensure_all_indexes
+#           bin/annotate --models --model-dir app/models
 
-      #     if [ ! -z "$(git status --porcelain app/models/)" ]; then
-      #       echo "Core annotations are not up to date. To resolve, run:"
-      #       echo "  bin/rake annotate:clean"
-      #       echo
-      #       echo "Or manually apply the diff printed below:"
-      #       echo "---------------------------------------------"
-      #       git -c color.ui=always diff app/models/
-      #       exit 1
-      #     fi
-      #   timeout-minutes: 30
+#           if [ ! -z "$(git status --porcelain app/models/)" ]; then
+#             echo "Core annotations are not up to date. To resolve, run:"
+#             echo "  bin/rake annotate:clean"
+#             echo
+#             echo "Or manually apply the diff printed below:"
+#             echo "---------------------------------------------"
+#             git -c color.ui=always diff app/models/
+#             exit 1
+#           fi
+#         timeout-minutes: 30
 
-  # core_frontend_tests:
-    # if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    # name: core frontend (${{ matrix.browser }})
-    # runs-on: ubuntu-20.04-8core
-    # container:
-      # image: discourse/discourse_test:slim-browsers
-      # options: --user discourse
+#   core_frontend_tests:
+#     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+#     name: core frontend (${{ matrix.browser }})
+#     runs-on: ubuntu-20.04-8core
+#     container:
+#       image: discourse/discourse_test:slim-browsers
+#       options: --user discourse
 
-    # timeout-minutes: 35
+#     timeout-minutes: 35
 
-    # strategy:
-      # fail-fast: false
-      # matrix:
-      #   browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+#     strategy:
+#       fail-fast: false
+#       matrix:
+#         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
 
-    # env:
-      # TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-      # TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+#     env:
+#       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
+#       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
-    # steps:
-      # - uses: actions/checkout@v3
-      #   with:
-      #     fetch-depth: 1
+#     steps:
+#       - uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 1
 
-      # - name: Setup Git
-      #   run: |
-      #     git config --global user.email "ci@ci.invalid"
-      #     git config --global user.name "Discourse CI"
+#       - name: Setup Git
+#         run: |
+#           git config --global user.email "ci@ci.invalid"
+#           git config --global user.name "Discourse CI"
 
-      # - name: Get yarn cache directory
-      #   id: yarn-cache-dir
-      #   run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+#       - name: Get yarn cache directory
+#         id: yarn-cache-dir
+#         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-      # - name: Yarn cache
-      #   uses: actions/cache@v3
-      #   id: yarn-cache
-      #   with:
-      #     path: ${{ steps.yarn-cache-dir.outputs.dir }}
-      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      #     restore-keys: ${{ runner.os }}-yarn-
+#       - name: Yarn cache
+#         uses: actions/cache@v3
+#         id: yarn-cache
+#         with:
+#           path: ${{ steps.yarn-cache-dir.outputs.dir }}
+#           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#           restore-keys: ${{ runner.os }}-yarn-
 
-      # - name: Yarn install
-      #   working-directory: ./app/assets/javascripts/discourse
-      #   run: yarn install --frozen-lockfile
+#       - name: Yarn install
+#         working-directory: ./app/assets/javascripts/discourse
+#         run: yarn install --frozen-lockfile
 
-      # - name: Ember Build
-      #   working-directory: ./app/assets/javascripts/discourse
-      #   run: |
-      #     mkdir /tmp/emberbuild
-      #     yarn ember build --environment=test -o /tmp/emberbuild
+#       - name: Ember Build
+#         working-directory: ./app/assets/javascripts/discourse
+#         run: |
+#           mkdir /tmp/emberbuild
+#           yarn ember build --environment=test -o /tmp/emberbuild
 
-      # - name: Core QUnit
-      #   working-directory: ./app/assets/javascripts/discourse
-      #   run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
-      #   timeout-minutes: 15
+#       - name: Core QUnit
+#         working-directory: ./app/assets/javascripts/discourse
+#         run: yarn ember exam --path /tmp/emberbuild --load-balance --parallel=5 --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+#         timeout-minutes: 15
 
-      # - uses: actions/upload-artifact@v3
-      #   if: ${{ always() }}
-      #   with:
-      #     name: ember-exam-execution-${{ matrix.browser }}
-      #     path: ./app/assets/javascripts/discourse/test-execution-*.json
+#       - uses: actions/upload-artifact@v3
+#         if: ${{ always() }}
+#         with:
+#           name: ember-exam-execution-${{ matrix.browser }}
+#           path: ./app/assets/javascripts/discourse/test-execution-*.json
