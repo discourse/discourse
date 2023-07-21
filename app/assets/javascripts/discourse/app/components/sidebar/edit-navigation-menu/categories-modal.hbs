@@ -1,0 +1,74 @@
+<Sidebar::EditNavigationMenu::Modal
+  @class="sidebar__edit-navigation-menu__categories-modal"
+  @title="sidebar.categories_form_modal.title"
+  @disableSaveButton={{this.saving}}
+  @save={{this.save}}
+  @showResetDefaultsButton={{(gt
+    this.siteSettings.default_navigation_menu_categories.length 0
+  )}}
+  @resetToDefaults={{this.resetToDefaults}}
+  @deselectAll={{this.deselectAll}}
+  @deselectAllText={{i18n "sidebar.categories_form_modal.subtitle.text"}}
+  @inputFilterPlaceholder={{i18n
+    "sidebar.categories_form_modal.filter_placeholder"
+  }}
+  @onFilterInput={{this.onFilterInput}}
+  @resetFilter={{this.resetFilter}}
+  @filterSelected={{this.filterSelected}}
+  @filterUnselected={{this.filterUnselected}}
+  @closeModal={{@closeModal}}
+>
+  <form class="sidebar-categories-form">
+    {{#if (gt this.filteredCategoriesGroupings.length 0)}}
+      {{#each this.filteredCategoriesGroupings as |categories|}}
+        <div
+          class="sidebar-categories-form__row"
+          style={{html-safe (border-color categories.0.color "left")}}
+        >
+
+          {{#each categories as |category|}}
+            <div
+              class="sidebar-categories-form__category-row"
+              data-category-id={{category.id}}
+              data-category-level={{category.level}}
+            >
+              <label
+                class="sidebar-categories-form__category-label"
+                for={{concat "sidebar-categories-form__input--" category.id}}
+              >
+                <div class="sidebar-categories-form__category-wrapper">
+                  <div class="sidebar-categories-form__category-badge">
+                    {{category-badge category}}
+                  </div>
+                  {{#unless category.parentCategory}}
+                    <div class="sidebar-categories-form__category-description">
+                      {{dir-span category.description_excerpt htmlSafe="true"}}
+                    </div>
+                  {{/unless}}
+                </div>
+
+                <Input
+                  id={{concat "sidebar-categories-form__input--" category.id}}
+                  class="sidebar-categories-form__input"
+                  @type="checkbox"
+                  @checked={{includes
+                    this.selectedSidebarCategoryIds
+                    category.id
+                  }}
+                  disabled={{(not
+                    (includes this.filteredCategoryIds category.id)
+                  )}}
+                  {{on "click" (action "toggleCategory" category.id)}}
+                />
+              </label>
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
+    {{else}}
+      <div class="sidebar-categories-form__no-categories">
+        {{i18n "sidebar.categories_form_modal.no_categories"}}
+      </div>
+    {{/if}}
+  </form>
+</Sidebar::EditNavigationMenu::Modal>

@@ -393,6 +393,13 @@ basic:
     client: true
     default: true
     refresh: true
+  page_loading_indicator:
+    client: true
+    type: enum
+    default: "slider"
+    choices:
+      - spinner
+      - slider
 
 login:
   invite_only:
@@ -1111,6 +1118,13 @@ posting:
   max_draft_length:
     default: 400_000
     hidden: true
+  max_form_template_title_length:
+    default: 100
+    min: 5
+    max: 255
+  max_form_template_content_length:
+    default: 2000
+    max: 150000
 
 email:
   email_time_window_mins:
@@ -1451,6 +1465,8 @@ files:
   s3_cdn_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+  s3_use_cdn_url_for_all_uploads:
+    default: false
   s3_configure_tombstone_policy:
     default: true
   s3_use_acls:
@@ -1687,8 +1703,12 @@ trust:
   tl4_delete_posts_and_topics:
     default: false
     client: true
-  trusted_users_can_edit_others:
-    default: true
+  edit_all_topic_groups:
+    default: "13"
+    type: group_list
+  edit_all_post_groups:
+    default: "14"
+    type: group_list
 
 security:
   detailed_404: false
@@ -2004,6 +2024,7 @@ rate_limits:
   max_allowed_secondary_emails:
     default: 10
     hidden: true
+    client: true
   max_batch_presign_multipart_per_minute:
     default: 20
     hidden: true
@@ -2112,17 +2133,20 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  enable_experimental_lightbox:
+    default: false
+    client: true
   experimental_topics_filter:
     client: true
     default: false
-  experimental_post_image_grid:
-    client: true
-    default: false
-  new_edit_sidebar_categories_tags_interface_groups:
+  experimental_search_menu_groups:
     type: group_list
     list_type: compact
     default: ""
     allow_any: false
+    refresh: true
+  max_sidebar_section_links:
+    default: 50
     hidden: true
 
 navigation:
@@ -2139,13 +2163,13 @@ navigation:
     type: tag_list
     default: ""
     client: true
-  default_sidebar_list_destination:
-    hidden: true
-    default: "default"
-    type: "list"
+  default_sidebar_switch_panel_position:
+    default: "bottom"
+    type: enum
+    client: true
     choices:
-      - "default"
-      - "unread_new"
+      - "top"
+      - "bottom"
 
 embedding:
   embed_by_username:
@@ -2363,7 +2387,7 @@ uncategorized:
     client: true
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|13" # 3: @staff, 13: @trust_level_3
 
   automatic_topic_heat_values: true
 
@@ -2726,6 +2750,9 @@ user_preferences:
   enable_offline_indicator:
     default: false
     client: true
+  default_sidebar_link_to_filtered_list: false
+  default_sidebar_show_count_of_new_items: false
+
 api:
   retain_web_hook_events_period_days:
     default: 30
@@ -2827,6 +2854,10 @@ tags:
     type: enum
     default: always
     enum: RemoveMutedTagsFromLatestSiteSetting
+  watched_precedence_over_muted:
+    client: true
+    default: false
+
   force_lowercase_tags:
     default: true
     client: true

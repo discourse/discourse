@@ -9,10 +9,9 @@ RSpec.describe PostActionCreator do
   before { Group.refresh_automatic_groups! }
 
   describe "rate limits" do
-    before do
-      RateLimiter.clear_all!
-      RateLimiter.enable
-    end
+    before { RateLimiter.enable }
+
+    use_redis_snapshotting
 
     it "limits redo/undo" do
       PostActionCreator.like(user, post)

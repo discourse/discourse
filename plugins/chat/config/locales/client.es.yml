@@ -104,6 +104,8 @@ es:
       heading: "Chat"
       join: "Unirse"
       last_visit: "última visita"
+      summarization:
+        summarize: "Resumir"
       mention_warning:
         dismiss: "descartar"
         invitations_sent:
@@ -209,6 +211,8 @@ es:
           about: Acerca de
           members: Miembros
           settings: Ajustes
+      new_message_modal:
+        no_items: "No hay elementos"
       channel_edit_name_slug_modal:
         title: Editar canal
         input_placeholder: Añade un nombre
@@ -222,9 +226,6 @@ es:
         prefix: "Para:"
         no_results: No hay resultados
         selected_user_title: "Deseleccionar %{username}"
-      channel_selector:
-        title: "Ir al canal"
-        no_channels: "Ningún canal coincide con tu búsqueda"
       channel:
         no_memberships: Este canal no tiene miembros
         no_memberships_found: No se ha encontrado ningún miembro
@@ -274,6 +275,7 @@ es:
         followed: "Se unió"
         mobile_notification_level: "Notificaciones móviles"
         mute: "Silenciar canal"
+        threading_disabled: "Desactivado"
         muted_on: "Activado"
         muted_off: "Desactivado"
         notifications: "Notificaciones"
@@ -284,6 +286,11 @@ es:
         admin_title: "Administrador"
       admin:
         title: "Chat"
+        export_messages:
+          title: "Exportar mensajes de chat"
+          description: "Actualmente, la exportación está limitada a los 10000 mensajes más recientes de los últimos 6 meses."
+          create_export: "Crear exportación"
+          export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
       direct_messages:
         title: "Chat personal"
         new: "Crear un chat personal"
@@ -377,6 +384,14 @@ es:
           started_by: "Iniciado por"
         settings: "Ajustes"
         last_reply: "última respuesta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguir"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         list: "Debates en curso"
         none: "No participas en ningún hilo de este canal."

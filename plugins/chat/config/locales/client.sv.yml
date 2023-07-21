@@ -116,6 +116,13 @@ sv:
       heading: "Chatt"
       join: "Gå med"
       last_visit: "senaste besök"
+      summarization:
+        title: "Sammanfatta meddelanden"
+        description: "Välj ett alternativ nedan för att sammanfatta samtalet som skickades under den önskade tidsramen."
+        summarize: "Sammanfatta"
+        since:
+          one: "Senaste timmen"
+          other: "Senaste %{count} timmarna"
       mention_warning:
         dismiss: "avfärda"
         cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
@@ -310,6 +317,15 @@ sv:
           about: Om
           members: Medlemmar
           settings: Inställningar
+      new_message_modal:
+        title: Skicka meddelande
+        add_user_long: <kbd>skift + klicka</kbd> eller <kbd>skift + enter</kbd><span>Lägg till @%{username}</span>
+        add_user_short: <span>Lägg till användare</span>
+        open_channel: <span>Öppna kanal</span>
+        default_search_placeholder: "#a-kanal, @någon eller något"
+        user_search_placeholder: "...lägg till fler användare"
+        disabled_user: "har inaktiverat chatten"
+        no_items: "Inga objekt"
       channel_edit_name_slug_modal:
         title: Redigera kanal
         input_placeholder: Lägg till ett namn
@@ -325,9 +341,6 @@ sv:
         prefix: "Till:"
         no_results: Inga resultat
         selected_user_title: "Avmarkera %{username}"
-      channel_selector:
-        title: "Byt till kanal"
-        no_channels: "Inga kanaler matchar din sökning"
       channel:
         no_memberships: Denna kanal har inga medlemmar
         no_memberships_found: Inga medlemmar hittades
@@ -335,6 +348,8 @@ sv:
           one: "%{count} medlem"
           other: "%{count} medlemmar"
       create_channel:
+        threading:
+          label: "Aktivera trådning"
         auto_join_users:
           public_category_warning: "%{category} är en offentlig kategori. Vill du automatiskt lägga till alla nyligen aktiva användare till den här kanalen?"
           warning_1_group:
@@ -406,6 +421,8 @@ sv:
       settings:
         channel_wide_mentions_label: "Tillåt @all och @here omnämnanden"
         channel_wide_mentions_description: "Tillåt användare att avisera alla #%{channel}-medlemmar med @all eller bara de som är aktiva för tillfället med @here"
+        channel_threading_label: "Trådning"
+        channel_threading_description: "När trådning är aktiverat kommer svar på ett chattmeddelande att skapa ett separat samtal som existerar parallellt med huvudkanalen."
         auto_join_users_label: "Lägg till användare automatiskt"
         auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till kategorin %{category}."
         auto_join_users_info_no_category: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till vald kategori."
@@ -415,6 +432,8 @@ sv:
         followed: "Gick med"
         mobile_notification_level: "Mobila push-meddelanden"
         mute: "Tysta kanal"
+        threading_enabled: "Aktiverad"
+        threading_disabled: "Inaktiverad"
         muted_on: "På"
         muted_off: "Av"
         notifications: "Aviseringar"
@@ -425,6 +444,11 @@ sv:
         admin_title: "Admin"
       admin:
         title: "Chatt"
+        export_messages:
+          title: "Exportera chattmeddelanden"
+          description: "Exporten är för närvarande begränsad till de 10 000 senaste meddelanden under de senaste 6 månaderna."
+          create_export: "Skapa export"
+          export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
       direct_messages:
         title: "Personlig chatt"
         new: "Skapa en personlig chatt"
@@ -530,6 +554,16 @@ sv:
           started_by: "Startad av"
         settings: "Webbplatsinställningar"
         last_reply: "senaste svar"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Du aviseras om någon nämner ditt @namn i den här tråden."
+          tracking:
+            title: "Följer"
+            description: "Ett antal nya svar för denna tråd kommer att visas i trådlistan och kanalen. Du aviseras om någon nämner ditt @namn i denna tråd."
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Öppna tråd"
         list: "Pågående diskussioner"

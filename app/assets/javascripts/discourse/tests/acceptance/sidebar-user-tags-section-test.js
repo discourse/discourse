@@ -13,6 +13,8 @@ import {
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import Site from "discourse/models/site";
+import { TOP_SITE_TAGS_TO_SHOW } from "discourse/components/sidebar/common/tags-section";
 
 acceptance(
   "Sidebar - Logged on user - Tags section - tagging disabled",
@@ -102,62 +104,41 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("clicking on section header button", async function (assert) {
+  test("tags section is displayed with site's top tags when user has not added any tags and there are no default tags configured", async function (assert) {
+    updateCurrentUser({
+      sidebar_tags: [],
+    });
+
+    Site.current().top_tags = [
+      "test1",
+      "test2",
+      "test3",
+      "test4",
+      "test5",
+      "test6",
+    ];
+
     await visit("/");
-    await click(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-header-button"
+
+    assert.ok(
+      exists(".sidebar-section[data-section-name='tags']"),
+      "tags section is displayed"
     );
 
     assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/navigation-menu",
-      "it should transition to user preferences navigation menu page"
-    );
-  });
-
-  test("tags section is hidden when user has not added any tags and there are no default tags configured", async function (assert) {
-    updateCurrentUser({
-      sidebar_tags: [],
-    });
-
-    await visit("/");
-
-    assert.notOk(
-      exists(".sidebar-section[data-section-name='tags']"),
-      "tags section is not displayed"
-    );
-  });
-
-  test("tags section is shown when user has not added any tags but default tags have been configured", async function (assert) {
-    updateCurrentUser({
-      sidebar_tags: [],
-    });
-
-    this.siteSettings.default_navigation_menu_tags = "tag1|tag2";
-
-    await visit("/");
-
-    assert.ok(
-      exists(".sidebar-section[data-section-name='tags']"),
-      "tags section is shown"
-    );
-
-    assert.ok(
-      exists(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
+      count(
+        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]"
       ),
-      "section link to add tags to sidebar is displayed"
+      TOP_SITE_TAGS_TO_SHOW,
+      "right number of tag section links are displayed"
     );
 
-    await click(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-link[data-link-name='configure-tags']"
-    );
-
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/preferences/navigation-menu",
-      "it should transition to user preferences navigation menu page"
-    );
+    ["test1", "test2", "test3", "test4", "test5"].forEach((tagName) => {
+      assert.ok(
+        exists(`.sidebar-section-link-wrapper[data-tag-name=${tagName}]`),
+        `${tagName} tag section link is displayed`
+      );
+    });
   });
 
   test("tag section links are sorted alphabetically by tag's name", async function (assert) {
@@ -256,9 +237,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("clicking tag section links - sidebar_list_destination set to unread/new and no unread or new topics", async function (assert) {
+  test("clicking tag section links - sidebar_link_to_filtered_list set to true and no unread or new topics", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
 
     await visit("/");
@@ -284,9 +267,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("clicking tag section links - sidebar_list_destination set to unread/new with new topics", async function (assert) {
+  test("clicking tag section links - sidebar_link_to_filtered_list set to true with new topics", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -326,9 +311,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     );
   });
 
-  test("clicking tag section links - sidebar_list_destination set to unread/new with unread topics", async function (assert) {
+  test("clicking tag section links - sidebar_link_to_filtered_list set to true with unread topics", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_link_to_filtered_list: true,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -446,7 +433,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
   test("show suffix indicator for new content on tag section links", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "default",
+      user_option: {
+        sidebar_show_count_of_new_items: false,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -543,7 +532,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
   test("new and unread count for tag section links", async function (assert) {
     updateCurrentUser({
-      sidebar_list_destination: "unread_new",
+      user_option: {
+        sidebar_show_count_of_new_items: true,
+      },
     });
 
     this.container.lookup("service:topic-tracking-state").loadStates([
@@ -682,13 +673,13 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.ok(
       exists(
-        ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+        ".sidebar-section-link[data-link-name='configure-default-navigation-menu-tags']"
       ),
       "section link to configure default sidebar tags is shown"
     );
 
     await click(
-      ".sidebar-section-link[data-link-name='configure-default-sidebar-tags']"
+      ".sidebar-section-link[data-link-name='configure-default-navigation-menu-tags']"
     );
 
     assert.strictEqual(
@@ -717,7 +708,13 @@ acceptance(
       ],
     });
 
-    test("count shown next to tag link", async function (assert) {
+    test("count shown next to tag link when sidebar_show_count_of_new_items is true", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_show_count_of_new_items: true,
+        },
+      });
+
       this.container.lookup("service:topic-tracking-state").loadStates([
         {
           topic_id: 1,
@@ -781,7 +778,66 @@ acceptance(
       );
     });
 
-    test("tag link href", async function (assert) {
+    test("dot shown next to tag link when sidebar_show_count_of_new_items is false", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_show_count_of_new_items: false,
+        },
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag2"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert
+        .dom(
+          '.sidebar-section-link-wrapper[data-tag-name="tag1"] .sidebar-section-link-suffix.icon.unread'
+        )
+        .exists("tag1 has a dot because it has a new topic");
+      assert
+        .dom(
+          '.sidebar-section-link-wrapper[data-tag-name="tag2"] .sidebar-section-link-suffix.icon.unread'
+        )
+        .exists("tag2 has a dot because it has an unread topic");
+      assert
+        .dom(
+          '.sidebar-section-link-wrapper[data-tag-name="tag3"] .sidebar-section-link-suffix.icon.unread'
+        )
+        .doesNotExist(
+          "tag3 doesn't have a dot because it has no new or unread topics"
+        );
+    });
+
+    test("tag link href is to the new topics list when sidebar_link_to_filtered_list is true and there are unread/new topics with the tag", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_link_to_filtered_list: true,
+        },
+      });
+
       this.container.lookup("service:topic-tracking-state").loadStates([
         {
           topic_id: 1,
@@ -840,6 +896,65 @@ acceptance(
         ).href.endsWith("/tag/tag3"),
         "links to the latest topics list for the tag because there are no unread or new topics"
       );
+    });
+
+    test("tag link href is always to the latest topics list when sidebar_link_to_filtered_list is false", async function (assert) {
+      updateCurrentUser({
+        user_option: {
+          sidebar_link_to_filtered_list: false,
+        },
+      });
+
+      this.container.lookup("service:topic-tracking-state").loadStates([
+        {
+          topic_id: 1,
+          highest_post_number: 1,
+          last_read_post_number: null,
+          created_at: "2022-05-11T03:09:31.959Z",
+          category_id: 1,
+          notification_level: null,
+          created_in_new_period: true,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag1"],
+        },
+        {
+          topic_id: 2,
+          highest_post_number: 12,
+          last_read_post_number: 11,
+          created_at: "2020-02-09T09:40:02.672Z",
+          category_id: 2,
+          notification_level: 2,
+          created_in_new_period: false,
+          treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
+          tags: ["tag2"],
+        },
+      ]);
+
+      await visit("/");
+
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag1"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag1",
+          "tag1 links to the latest topics list for the tag"
+        );
+
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag2"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag2",
+          "tag2 links to the latest topics list for the tag"
+        );
+
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag3"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag3",
+          "tag3 links to the latest topics list for the tag"
+        );
     });
   }
 );

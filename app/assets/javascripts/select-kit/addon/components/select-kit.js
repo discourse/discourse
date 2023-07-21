@@ -311,6 +311,7 @@ export default Component.extend(
       hiddenValues: null,
       disabled: false,
       expandedOnInsert: false,
+      formName: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -875,7 +876,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal");
+        const inModal = this.element.closest("#discourse-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
@@ -1135,6 +1136,7 @@ export default Component.extend(
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
         i18nPrefix: "options.i18nPrefix",
+        btnCustomClasses: "options.btnCustomClasses",
         castInteger: "options.castInteger",
       };
 

@@ -70,14 +70,17 @@ RSpec.describe Chat::IncomingWebhooksController do
       )
     end
 
-    it "rate limits" do
-      RateLimiter.enable
-      RateLimiter.clear_all!
-      10.times { post "/chat/hooks/#{webhook.key}.json", params: valid_payload }
-      expect(response.status).to eq(200)
+    describe "rate limiting" do
+      use_redis_snapshotting
 
-      post "/chat/hooks/#{webhook.key}.json", params: valid_payload
-      expect(response.status).to eq(429)
+      it "rate limits" do
+        RateLimiter.enable
+        10.times { post "/chat/hooks/#{webhook.key}.json", params: valid_payload }
+        expect(response.status).to eq(200)
+
+        post "/chat/hooks/#{webhook.key}.json", params: valid_payload
+        expect(response.status).to eq(429)
+      end
     end
   end
 

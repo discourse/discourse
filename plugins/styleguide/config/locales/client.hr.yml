@@ -88,5 +88,7 @@ hr:
         empty_state:
           title: "Prazno stanje"
         rich_tooltip:
+          title: "Bogati opis alata"
           description: "Opis"
           header: "Uzglavlje"
+          hover_to_see: "Zadržite pokazivač miša da biste vidjeli savjet alata"

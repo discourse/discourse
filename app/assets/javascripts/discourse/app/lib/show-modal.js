@@ -1,3 +1,5 @@
+// Remove when legacy modals are dropped (deprecation: discourse.modal-controllers)
+
 import { getOwner } from "discourse-common/lib/get-owner";
 
 /**
@@ -17,6 +19,11 @@ import { getOwner } from "discourse-common/lib/get-owner";
  * @returns {Controller} The modal controller instance
  */
 export default function showModal(name, opts) {
+  if (typeof name !== "string") {
+    throw new Error(
+      "`discourse/lib/show-modal` can only be used with the legacy controller-based API. To use the new component-based API, inject the modal service and call modal.show(). https://meta.discourse.org/t/268057"
+    );
+  }
   opts = opts || {};
 
   let container = getOwner(this);

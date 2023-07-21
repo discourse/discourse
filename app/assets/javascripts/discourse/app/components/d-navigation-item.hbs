@@ -1,3 +1,10 @@
-<LinkTo @route={{this.route}}>
-  {{yield}}
-</LinkTo>
+<li
+  aria-current={{this.ariaCurrent}}
+  title={{@title}}
+  class={{@class}}
+  ...attributes
+>
+  <LinkTo @route={{@route}}>
+    {{yield}}
+  </LinkTo>
+</li>

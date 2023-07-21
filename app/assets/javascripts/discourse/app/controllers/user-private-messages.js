@@ -46,7 +46,11 @@ export default class extends Controller {
     for (let i = this.messagesDropdownContent.length - 1; i >= 0; i--) {
       const row = this.messagesDropdownContent[i];
 
-      if (currentURL.includes(row.id.replace(this.router.rootURL, "/"))) {
+      if (
+        currentURL.includes(
+          row.id.toLowerCase().replace(this.router.rootURL, "/")
+        )
+      ) {
         value = row.id;
         break;
       }

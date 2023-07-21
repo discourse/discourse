@@ -55,6 +55,8 @@ sk:
           about: O stránke
           members: Členovia
           settings: Nastavenia
+      new_message_modal:
+        no_items: "Žiadne položky"
       direct_message_creator:
         title: Nová správa
         prefix: "Komu:"
@@ -71,6 +73,8 @@ sk:
       settings:
         follow: "Pridať sa"
         followed: "Vytvorený"
+        threading_enabled: "Povolené"
+        threading_disabled: "Vypnuté"
         notifications: "Upozornenia"
         preview: "Ukážka"
         save: "Uložiť"
@@ -107,6 +111,11 @@ sk:
           other: "%{count} odpovedí"
         settings: "Nastavenia"
         last_reply: "posledná odpoveď"
+        notifications:
+          regular:
+            title: "Normálne"
+          tracking:
+            title: "Pozorovať"
       draft_channel_screen:
         header: "Nová správa"
         cancel: "Zrušiť"

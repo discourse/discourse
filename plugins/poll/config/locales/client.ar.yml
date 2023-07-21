@@ -33,42 +33,16 @@ ar:
           title: "ستظهر النتائج بعد <strong>إغلاق الاستطلاع</strong>."
         staff:
           title: "تظهر النتائج لأعضاء <strong>فريق العمل</strong> فقط."
-      multiple:
-        help:
-          at_least_min_options:
-            zero: "حدِّد <strong>%{count} </strong> خيار على الأقل."
-            one: "حدِّد خيارًا واحدًا (<strong>%{count} </strong>) على الأقل."
-            two: "حدِّد خيارَين (<strong>%{count} </strong>) على الأقل."
-            few: "حدِّد <strong>%{count}</strong> خيارات على الأقل."
-            many: "حدِّد <strong>%{count}</strong> خيارًا على الأقل."
-            other: "حدِّد <strong>%{count}</strong> خيار على الأقل."
-          up_to_max_options:
-            zero: "حدِّد <strong>%{count}</strong> خيار كحد أقصى."
-            one: "حدِّد خيارًا واحدًا (<strong>%{count}</strong>) كحد أقصى."
-            two: "حدِّد خيارَين (<strong>%{count}</strong>) كحد أقصى."
-            few: "حدِّد <strong>%{count}</strong> خيارات كحد أقصى."
-            many: "حدِّد <strong>%{count}</strong> خيارًا كحد أقصى."
-            other: "حدِّد <strong>%{count}</strong> خيار كحد أقصى."
-          x_options:
-            zero: "حدِّد <strong>%{count}</strong> خيار."
-            one: "حدِّد خيارًا واحدًا (<strong>%{count}</strong>)."
-            two: "حدِّد خيارَين (<strong>%{count}</strong>)."
-            few: "حدِّد <strong>%{count}</strong> خيارات."
-            many: "حدِّد <strong>%{count}</strong> خيارًا."
-            other: "حدِّد <strong>%{count}</strong> خيار."
-          between_min_and_max_options: "حدِّد من بين <strong>%{min} </strong> إلى <strong>%{max} </strong> خيار."
       cast-votes:
         title: "الإدلاء بصوتك"
         label: "صوِّت اﻵن!"
       show-results:
         title: "عرض نتائج استطلاع الرأي"
-        label: "عرض النتائج"
+        label: "النتائج"
       remove-vote:
         title: "إزالة صوتك"
-        label: "إزالة التصويت"
       hide-results:
         title: "العودة إلى تصويتاتك"
-        label: "إظهار التصويت"
       group-results:
         title: "تجميع الأصوات حسب حقل المستخدم"
         label: "عرض التفاصيل"
@@ -92,6 +66,8 @@ ar:
         breakdown: "التفاصيل"
         percentage: "النسبة المئوية"
         count: "العدد"
+      options:
+        label: "الخيارات"
       error_while_toggling_status: "عذرًا، حدث خطأ أدى إلى تبديل حالة استطلاع الرأي هذا."
       error_while_casting_votes: "عذرًا، حدث خطأ في الإدلاء بأصواتك."
       error_while_fetching_voters: "عذرًا، حدث خطأ في عرض الناخبين."

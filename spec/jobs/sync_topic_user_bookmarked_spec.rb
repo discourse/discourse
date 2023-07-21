@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::SyncTopicUserBookmarked do
+  subject(:job) { described_class.new }
+
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post1) { Fabricate(:post, topic: topic) }
   fab!(:post2) { Fabricate(:post, topic: topic) }
@@ -16,7 +18,7 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
     Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
     Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
 
-    subject.execute(topic_id: topic.id)
+    job.execute(topic_id: topic.id)
 
     expect(tu1.reload.bookmarked).to eq(true)
     expect(tu2.reload.bookmarked).to eq(false)
@@ -31,7 +33,7 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
 
     post1.trash!
 
-    subject.execute(topic_id: topic.id)
+    job.execute(topic_id: topic.id)
 
     expect(tu1.reload.bookmarked).to eq(false)
     expect(tu2.reload.bookmarked).to eq(false)
@@ -41,7 +43,7 @@ RSpec.describe Jobs::SyncTopicUserBookmarked do
     Fabricate(:bookmark, user: tu1.user, bookmarkable: topic.posts.sample)
     Fabricate(:bookmark, user: tu4.user, bookmarkable: topic.posts.sample)
 
-    subject.execute
+    job.execute
 
     expect(tu1.reload.bookmarked).to eq(true)
     expect(tu2.reload.bookmarked).to eq(false)

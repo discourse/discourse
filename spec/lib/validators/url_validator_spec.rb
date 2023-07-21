@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe UrlValidator do
+  subject(:validate) { validator.validate_each(record, :website, record.website) }
+
   let(:record) { Fabricate.build(:user_profile, user: Fabricate.build(:user)) }
   let(:validator) { described_class.new(attributes: :website) }
-  subject(:validate) { validator.validate_each(record, :website, record.website) }
 
   [
     "http://https://google.com",

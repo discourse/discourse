@@ -11,6 +11,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
             channel: result.channel,
             tracking: result.tracking,
             memberships: result.memberships,
+            load_more_url: result.load_more_url,
           ),
           ::Chat::ThreadListSerializer,
           root: false,

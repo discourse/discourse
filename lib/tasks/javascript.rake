@@ -278,11 +278,7 @@ task "javascript:update" => "clean_up" do
 
     STDERR.puts "New dependency added: #{dest}" unless File.exist?(dest)
 
-    if f[:uglify]
-      File.write(dest, Uglifier.new.compile(File.read(src)))
-    else
-      FileUtils.cp_r(src, dest)
-    end
+    FileUtils.cp_r(src, dest)
   end
 
   write_template("discourse/app/lib/public-js-versions.js", "update", <<~JS)

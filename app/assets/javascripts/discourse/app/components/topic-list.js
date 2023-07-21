@@ -3,10 +3,12 @@ import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
-import { next, schedule } from "@ember/runloop";
-import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
+import TopicBulkActions from "./modal/topic-bulk-actions";
 
 export default Component.extend(LoadMore, {
+  modal: service(),
+
   tagName: "table",
   classNames: ["topic-list"],
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
@@ -65,26 +67,6 @@ export default Component.extend(LoadMore, {
     }
 
     onScroll.call(this);
-  },
-
-  scrollToLastPosition() {
-    if (!this.scrollOnLoad) {
-      return;
-    }
-
-    const scrollTo = this.session.topicListScrollPosition;
-    if (scrollTo >= 0) {
-      schedule("afterRender", () => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo));
-        }
-      });
-    }
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-    this.scrollToLastPosition();
   },
 
   _updateLastVisitedTopic(topics, order, ascending, top) {
@@ -165,47 +147,42 @@ export default Component.extend(LoadMore, {
       let target = e.target.closest(sel);
 
       if (target) {
-        callback.call(this, target);
+        callback(target);
       }
     };
 
-    onClick("button.bulk-select", function () {
+    onClick("button.bulk-select", () => {
       this.toggleBulkSelect();
       this.rerender();
     });
 
-    onClick("button.bulk-select-all", function () {
+    onClick("button.bulk-select-all", () => {
       this.updateAutoAddTopicsToBulkSelect(true);
       document
         .querySelectorAll("input.bulk-select:not(:checked)")
         .forEach((el) => el.click());
     });
 
-    onClick("button.bulk-clear-all", function () {
+    onClick("button.bulk-clear-all", () => {
       this.updateAutoAddTopicsToBulkSelect(false);
       document
         .querySelectorAll("input.bulk-select:checked")
         .forEach((el) => el.click());
     });
 
-    onClick("th.sortable", function (element) {
+    onClick("th.sortable", (element) => {
       this.changeSort(element.dataset.sortOrder);
       this.rerender();
     });
 
-    onClick("button.bulk-select-actions", function () {
-      const controller = showModal("topic-bulk-actions", {
+    onClick("button.bulk-select-actions", () => {
+      this.modal.show(TopicBulkActions, {
         model: {
           topics: this.selected,
           category: this.category,
+          refreshClosure: this.bulkSelectAction,
         },
-        title: "topics.bulk.actions",
       });
-
-      const action = this.bulkSelectAction;
-      if (action) {
-        controller.set("refreshClosure", () => action());
-      }
     });
   },
 

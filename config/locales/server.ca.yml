@@ -442,7 +442,6 @@ ca:
   meta_category_description: "Discussió sobre aquest lloc web, la seva organització, com funciona i com podem millorar-lo."
   staff_category_name: "Equip responsable"
   staff_category_description: "Categoria privada per a converses de l'equip responsable. Els temes només seran visibles per a discussions entre moderadors i administradors."
-  admin_quick_start_title: "LLEGIU-ME PRIMER DE TOT: Guia ràpida d'inici per a administradors"
   category:
     topic_prefix: "Quant a la categoria %{category} "
     replace_paragraph: "(Substituïu aquest primer paràgraf per una descripció breu de la vostra nova categoria. Aquesta guia apareixerà en l'àrea de selecció de categories, de manera que intenteu mantenir-la per sota dels 200 caràcters.)"
@@ -1371,7 +1370,6 @@ ca:
     tl3_requires_likes_given: "Nombre mínim de 'M'agrada' que cal donar durant els darrers dies (període de temps nivell 3) per a optar al nivell de confiança 3."
     tl3_requires_likes_received: "Nombre mínim de 'M'agrada' que cal rebre durant els darrers dies (període de temps nivell 3) per a optar al nivell de confiança 3."
     tl3_links_no_follow: "No elimineu l'atribut rel=\"nofollow\" dels enllaços publicats per usuaris de nivell de confiança 3."
-    trusted_users_can_edit_others: "Permet als usuaris amb nivells de confiança elevats editar contingut d'altres usuaris"
     min_trust_to_create_topic: "Nivell mínim de confiança necessària per a crear un tema nou."
     allow_flagging_staff: "Si està activat, els usuaris poden marcar amb bandera publicacions de comptes de l'equip responsable. "
     min_trust_to_edit_wiki_post: "Nivell de confiança mínim necessari per a editar una publicació marcada com a wiki."
@@ -1663,7 +1661,6 @@ ca:
       pop3_polling_password_is_empty: "Cal configurar 'pop3 polling password' abans d'activar la consulta POP3."
       pop3_polling_authentication_failed: "L'autenticació POP3 ha fallat. Verifiqueu les credencials POP3."
       reply_by_email_address_is_empty: "Cal definir 'reply by email address' abans de respondre per correu."
-      email_polling_disabled: "Cal activar la consulta manual o POP3 o manuals abans d'activar la resposta per correu."
       user_locale_not_enabled: "Cal configurar 'allow user locale' abans d'activar aquest paràmetre."
       invalid_regex: "L'expressió regular no és vàlida o no és permesa."
       email_editable_enabled: "Cal desactivar \"editable per correu\" abans d'activar aquest paràmetre."

@@ -20,6 +20,15 @@ RSpec.describe "Browse page", type: :system do
     end
   end
 
+  context "when public channels are disabled" do
+    before { SiteSetting.enable_public_channels = false }
+
+    it "redirects to homepage" do
+      visit("/chat/browse") # no page object here as we actually don't load it
+      expect(page).to have_current_path("/latest")
+    end
+  end
+
   context "when user has chat enabled" do
     context "when visiting browse page" do
       it "defaults to open filer" do

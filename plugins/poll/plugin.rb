@@ -7,8 +7,6 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/poll
 
 register_asset "stylesheets/common/poll.scss"
-register_asset "stylesheets/desktop/poll.scss", :desktop
-register_asset "stylesheets/mobile/poll.scss", :mobile
 register_asset "stylesheets/common/poll-ui-builder.scss"
 register_asset "stylesheets/desktop/poll-ui-builder.scss", :desktop
 register_asset "stylesheets/common/poll-breakdown.scss"
@@ -171,15 +169,13 @@ after_initialize do
   on(:merging_users) do |source_user, target_user|
     DB.exec(<<-SQL, source_user_id: source_user.id, target_user_id: target_user.id)
       DELETE FROM poll_votes
-      WHERE poll_id IN (
-        SELECT poll_id
-        FROM poll_votes
-        WHERE user_id = :source_user_id
-        INTERSECT
-        SELECT poll_id
+      WHERE user_id = :source_user_id
+      AND EXISTS (
+        SELECT 1
         FROM poll_votes
         WHERE user_id = :target_user_id
-      ) AND user_id = :source_user_id;
+          AND poll_votes.poll_id = poll_votes.poll_id
+      );
 
       UPDATE poll_votes
       SET user_id = :target_user_id

@@ -4,13 +4,10 @@ import { tracked } from "@glimmer/tracking";
 
 import { bind } from "discourse-common/utils/decorators";
 import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/navigation-menu";
 
 export default class TagSectionLink extends BaseTagSectionLink {
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
-  @tracked hideCount =
-    this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
 
   constructor({ topicTrackingState }) {
     super(...arguments);
@@ -24,11 +21,15 @@ export default class TagSectionLink extends BaseTagSectionLink {
       tagId: this.tagName,
     });
 
-    if (this.totalUnread === 0 || this.#linkToNew) {
+    if (this.totalUnread === 0 || this.#newNewViewEnabled) {
       this.totalNew = this.topicTrackingState.countNew({
         tagId: this.tagName,
       });
     }
+  }
+
+  get showCount() {
+    return this.currentUser?.sidebarShowCountOfNewItems;
   }
 
   get models() {
@@ -36,18 +37,12 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get route() {
-    if (this.#linkToNew) {
-      if (this.#unreadAndNewCount > 0) {
+    if (this.currentUser?.sidebarLinkToFilteredList) {
+      if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
         return "tag.showNew";
-      } else {
-        return "tag.show";
-      }
-    }
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
-      if (this.totalUnread > 0) {
+      } else if (this.totalUnread > 0) {
         return "tag.showUnread";
-      }
-      if (this.totalNew > 0) {
+      } else if (this.totalNew > 0) {
         return "tag.showNew";
       }
     }
@@ -59,17 +54,13 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get badgeText() {
-    if (this.#linkToNew) {
-      if (this.#unreadAndNewCount > 0) {
-        return this.#unreadAndNewCount.toString();
-      }
+    if (!this.showCount) {
       return;
     }
 
-    if (this.hideCount) {
-      return;
-    }
-    if (this.totalUnread > 0) {
+    if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
+      return this.#unreadAndNewCount.toString();
+    } else if (this.totalUnread > 0) {
       return I18n.t("sidebar.unread_count", {
         count: this.totalUnread,
       });
@@ -89,11 +80,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
   }
 
   get suffixValue() {
-    if (
-      this.hideCount &&
-      (this.totalUnread || this.totalNew) &&
-      !this.#linkToNew
-    ) {
+    if (!this.showCount && (this.totalUnread || this.totalNew)) {
       return "circle";
     }
   }
@@ -102,7 +89,7 @@ export default class TagSectionLink extends BaseTagSectionLink {
     return this.totalUnread + this.totalNew;
   }
 
-  get #linkToNew() {
+  get #newNewViewEnabled() {
     return !!this.currentUser?.new_new_view_enabled;
   }
 }

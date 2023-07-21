@@ -58,22 +58,29 @@ module PageObjects
         has_css?(".chat-selection-management")
       end
 
+      def expand_deleted_message(message)
+        message_by_id(message.id).find(".chat-message-expand").click
+      end
+
       def expand_message_actions(message)
         hover_message(message)
         click_more_button
       end
 
       def expand_message_actions_mobile(message, delay: 2)
-        message_by_id(message.id).click(delay: delay)
+        find(message_by_id_selector(message.id)).find(".chat-message-content").click(delay: delay)
       end
 
       def click_message_action_mobile(message, message_action)
-        expand_message_actions_mobile(message, delay: 0.6)
+        expand_message_actions_mobile(message, delay: 0.4)
         find(".chat-message-actions [data-id=\"#{message_action}\"]").click
       end
 
       def hover_message(message)
-        message_by_id(message.id).hover
+        message = message_by_id(message.id)
+        # Scroll to top of message so that the actions are not hidden
+        page.scroll_to(message, align: :top)
+        message.hover
       end
 
       def bookmark_message(message)
@@ -113,6 +120,12 @@ module PageObjects
         find("[data-value='delete']").click
       end
 
+      def restore_message(message)
+        hover_message(message)
+        click_more_button
+        find("[data-value='restore']").click
+      end
+
       def open_edit_message(message)
         hover_message(message)
         click_more_button
@@ -143,7 +156,7 @@ module PageObjects
       end
 
       def has_bookmarked_message?(message)
-        within(message_by_id(message.id)) { find(".chat-message-bookmarked") }
+        find(message_by_id_selector(message.id) + ".-bookmarked")
       end
 
       def find_reaction(message, emoji)
@@ -186,13 +199,6 @@ module PageObjects
 
       def has_no_message?(text: nil, id: nil)
         check_message_presence(exists: false, text: text, id: id)
-      end
-
-      def has_deleted_message?(message, count: 1)
-        has_css?(
-          ".chat-channel .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
-          text: I18n.t("js.chat.deleted", count: count),
-        )
       end
 
       def check_message_presence(exists: true, text: nil, id: nil)

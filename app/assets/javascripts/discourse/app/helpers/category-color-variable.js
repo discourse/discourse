@@ -1,3 +1,5 @@
-import { htmlHelper } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
 
-export default htmlHelper((color) => `--category-color: #${color};`);
+export default function categoryColorVariable(color) {
+  return htmlSafe(`--category-color: #${color};`);
+}

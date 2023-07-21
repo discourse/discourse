@@ -9,14 +9,14 @@
     <div
       role="button"
       class="collapse-area"
-      {{on "touchstart" this.collapseMenu passive=true bubbles=false}}
+      {{on "touchstart" this.collapseMenu passive=false bubbles=false}}
     >
     </div>
 
     <div class="chat-message-actions">
       <div class="selected-message-container">
         <div class="selected-message">
-          <ChatUserAvatar @user={{this.message.user}} />
+          <Chat::UserAvatar @user={{this.message.user}} />
           <span
             {{on "touchstart" this.expandReply passive=true}}
             role="button"

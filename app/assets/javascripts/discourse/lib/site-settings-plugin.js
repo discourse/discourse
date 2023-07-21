@@ -5,7 +5,7 @@ const concat = require("broccoli-concat");
 const mergeTrees = require("broccoli-merge-trees");
 const deepmerge = require("deepmerge");
 const glob = require("glob");
-const { shouldLoadPluginTestJs } = require("discourse-plugins");
+const { shouldLoadPlugins } = require("discourse-plugins");
 
 let built = false;
 
@@ -72,7 +72,7 @@ module.exports.parsePluginClientSettings = function (
 ) {
   let settings = [discourseRoot + "/config"];
 
-  if (shouldLoadPluginTestJs()) {
+  if (shouldLoadPlugins()) {
     const pluginInfos = app.project
       .findAddonByName("discourse-plugins")
       .pluginInfos();

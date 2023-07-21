@@ -29,6 +29,12 @@ module PageObjects
         staff_counters.find("a[href='/u/#{user.username}/messages/warnings']").click
         self
       end
+
+      def expand_info_panel
+        button = page.find("button[aria-controls='collapsed-info-panel']")
+        button.click if button["aria-expanded"] == "false"
+        self
+      end
     end
   end
 end

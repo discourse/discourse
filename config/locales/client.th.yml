@@ -1179,7 +1179,6 @@ th:
       enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
       description:
         other: "มี <b>%{count}</b> คำตอบ"
-      enable: "สรุปกระทู้นี้"
       disable: "แสดงโพสต์ทั้งหมด"
     deleted_filter:
       enabled_description: "กระทู้นี้ซ่อนโพสต์ที่ถูกลบไปแล้ว"
@@ -2419,8 +2418,9 @@ th:
         other: "%{count} ใหม่"
       more: "อื่น"
       all_categories: "หมวดหมู่ทั้งหมด"
-      categories_form:
-        save: "บันทึก"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "ทั้งหมด"
       sections:
         custom:
           save: "บันทึก"
@@ -2449,7 +2449,8 @@ th:
         categories:
           header_link_text: "หมวดหมู่"
         community:
-          header_link_text: "ชุมชน"
+          edit_section:
+            header_dropdown: "การปรับแต่ง"
           links:
             about:
               content: "เกี่ยวกับ"
@@ -2457,6 +2458,8 @@ th:
               content: "แอดมิน"
             badges:
               content: "เหรียญ"
+            topics:
+              content: "หัวข้อ"
             faq:
               content: "คำถามที่พบบ่อย"
             groups:
@@ -2470,6 +2473,11 @@ th:
             review:
               content: "รีวิว"
     until: "จนถึง:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "กรอกค่าที่ถูกต้อง"
+          email: "กรุณาใส่อีเมลที่ถูกต้อง."
   admin_js:
     type_to_filter: "พิมพ์เพื่อกรอง..."
     admin:

@@ -32,6 +32,18 @@ RSpec.describe Chat::ChannelHashtagDataSource do
     Group.refresh_automatic_groups!
   end
 
+  describe "#enabled?" do
+    it "returns false if public channels are disabled" do
+      SiteSetting.enable_public_channels = false
+      expect(described_class.enabled?).to eq(false)
+    end
+
+    it "returns true if public channels are disabled" do
+      SiteSetting.enable_public_channels = true
+      expect(described_class.enabled?).to eq(true)
+    end
+  end
+
   describe "#lookup" do
     it "finds a channel by a slug" do
       result = described_class.lookup(guardian, ["random"]).first

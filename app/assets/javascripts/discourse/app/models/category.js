@@ -198,6 +198,14 @@ const Category = RestModel.extend({
     return notificationLevel >= NotificationLevels.TRACKING;
   },
 
+  get unreadTopicsCount() {
+    return this.topicTrackingState.countUnread({ categoryId: this.id });
+  },
+
+  get newTopicsCount() {
+    return this.topicTrackingState.countNew({ categoryId: this.id });
+  },
+
   save() {
     const id = this.id;
     const url = id ? `/categories/${id}` : "/categories";
@@ -308,16 +316,6 @@ const Category = RestModel.extend({
     if (topics && topics.length) {
       return topics.slice(0, this.num_featured_topics || 2);
     }
-  },
-
-  @discourseComputed("id", "topicTrackingState.messageCount")
-  unreadTopics(id) {
-    return this.topicTrackingState.countUnread({ categoryId: id });
-  },
-
-  @discourseComputed("id", "topicTrackingState.messageCount")
-  newTopics(id) {
-    return this.topicTrackingState.countNew({ categoryId: id });
   },
 
   setNotification(notification_level) {

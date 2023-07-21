@@ -278,7 +278,7 @@ html.composer-open {
     }
   }
 
-  .with-tags {
+  .with-tags.with-category {
     .title-and-category {
       flex-wrap: wrap;
     }
@@ -319,7 +319,6 @@ html.composer-open {
 
   .mini-tag-chooser {
     flex-grow: 1;
-    max-width: calc(50% - 4px);
     margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
     .select-kit-header {
@@ -476,10 +475,17 @@ html.composer-open {
           color: var(--primary-high);
         }
 
-        .status-description {
-          @include ellipsis;
-          font-size: var(--font-down-2);
-          color: var(--primary-high);
+        .user-status-message {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+
+          .user-status-message-description {
+            @include ellipsis;
+            font-size: var(--font-down-2);
+            color: var(--primary-high);
+            margin: 0;
+          }
         }
 
         .relative-date {

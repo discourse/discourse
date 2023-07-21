@@ -109,6 +109,8 @@ fi:
       heading: "Chat"
       join: "Liity"
       last_visit: "edellinen vierailu"
+      summarization:
+        summarize: "Tee yhteenveto"
       mention_warning:
         dismiss: "hylkää"
         invitations_sent:
@@ -217,6 +219,8 @@ fi:
           about: Tietoja
           members: Jäsenet
           settings: Asetukset
+      new_message_modal:
+        no_items: "Ei kohteita"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
@@ -230,9 +234,6 @@ fi:
         prefix: "Vastaanottaja:"
         no_results: Ei tuloksia
         selected_user_title: "Poista käyttäjän %{username} valinta"
-      channel_selector:
-        title: "Siirry kanavalle"
-        no_channels: "Hakuasi vastaavia kanavia ei ole"
       channel:
         no_memberships: Tällä kanavalla ei ole jäseniä
         no_memberships_found: Jäseniä ei löytynyt
@@ -282,6 +283,8 @@ fi:
         followed: "Liittyi"
         mobile_notification_level: "Mobiili-push-ilmoitukset"
         mute: "Vaimenna kanava"
+        threading_enabled: "Otettu käyttöön"
+        threading_disabled: "Pois käytöstä"
         muted_on: "Käytössä"
         muted_off: "Pois käytöstä"
         notifications: "Ilmoitukset"
@@ -386,6 +389,14 @@ fi:
           started_by: "Aloittanut"
         settings: "Asetukset"
         last_reply: "viimeisin vastaus"
+        notifications:
+          regular:
+            title: "Normaali"
+          tracking:
+            title: "Seuranta"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Avaa ketju"
         list: "Käynnissä olevat keskustelut"

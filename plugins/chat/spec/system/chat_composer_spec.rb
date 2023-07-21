@@ -142,7 +142,7 @@ RSpec.describe "Chat composer", type: :system do
 
       expect(page).to have_css(".chat-composer-upload--in-progress")
       expect(page).to have_css(".chat-composer.is-send-disabled")
-
+    ensure
       page.driver.browser.network_conditions = { latency: 0 }
     end
   end

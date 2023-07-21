@@ -9,10 +9,11 @@ RSpec.describe BookmarksController do
   before { sign_in(current_user) }
 
   describe "#create" do
+    use_redis_snapshotting
+
     it "rate limits creates" do
       SiteSetting.max_bookmarks_per_day = 1
       RateLimiter.enable
-      RateLimiter.clear_all!
 
       post "/bookmarks.json",
            params: {

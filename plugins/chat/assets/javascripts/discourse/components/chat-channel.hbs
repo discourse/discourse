@@ -21,7 +21,7 @@
     @displayed={{this.includeHeader}}
   />
 
-  <ChatRetentionReminder @channel={{@channel}} />
+  <Chat::Notices @channel={{@channel}} />
 
   <ChatMentionWarnings />
 
@@ -36,14 +36,12 @@
       class="chat-messages-container"
       {{chat/on-resize this.didResizePane (hash delay=100 immediate=true)}}
     >
-
       {{#if this.loadedOnce}}
         {{#each @channel.messages key="id" as |message|}}
           <ChatMessage
             @message={{message}}
             @resendStagedMessage={{this.resendStagedMessage}}
-            @messageDidEnterViewport={{this.messageDidEnterViewport}}
-            @messageDidLeaveViewport={{this.messageDidLeaveViewport}}
+            @fetchMessagesByDate={{this.fetchMessagesByDate}}
             @context="channel"
           />
         {{/each}}
@@ -76,14 +74,14 @@
       @pane={{this.pane}}
     />
   {{else}}
-    {{#if (or @channel.isDraft @channel.isFollowing)}}
+    {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
+      <ChatChannelPreviewCard @channel={{@channel}} />
+    {{else}}
       <Chat::Composer::Channel
         @channel={{@channel}}
         @uploadDropZone={{this.uploadDropZone}}
         @onSendMessage={{this.onSendMessage}}
       />
-    {{else}}
-      <ChatChannelPreviewCard @channel={{@channel}} />
     {{/if}}
   {{/if}}
 

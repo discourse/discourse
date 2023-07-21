@@ -32,18 +32,6 @@ module UserSidebarMixin
     sidebar_navigation_menu?
   end
 
-  def sidebar_list_destination
-    if object.user_option.sidebar_list_none_selected?
-      SiteSetting.default_sidebar_list_destination
-    else
-      object.user_option.sidebar_list_destination
-    end
-  end
-
-  def include_sidebar_list_destination?
-    sidebar_navigation_menu?
-  end
-
   def sidebar_sections
     object
       .sidebar_sections

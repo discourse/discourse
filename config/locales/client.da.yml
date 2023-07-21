@@ -1649,7 +1649,6 @@ da:
         other: "Der er <b>%{count}</b> svar."
       description_time_MF: |
         Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>.
-      enable: "Opsummér dette emne"
       disable: "Vis alle indlæg"
     deleted_filter:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
@@ -3571,8 +3570,9 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
-      categories_form:
-        save: "Gem"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alle"
       sections:
         custom:
           save: "Gem"
@@ -3598,9 +3598,6 @@ da:
             unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
-          links:
-            add_tags:
-              content: "Tilføj mærker"
           click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
@@ -3609,7 +3606,8 @@ da:
           header_link_text: "Kategorier"
           configure_defaults: "Konfigurer standardindstillinger"
         community:
-          header_link_text: "Fællesskab"
+          edit_section:
+            header_dropdown: "Tilpasning"
           links:
             about:
               content: "Om"
@@ -3617,6 +3615,8 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
+            topics:
+              content: "Emner"
             faq:
               content: "OSS"
             groups:
@@ -3629,6 +3629,11 @@ da:
             review:
               content: "Anmeldelse"
     until: "Indtil:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Indtast venligst en gyldig værdi."
+          email: "Indtast venligst en gyldig email adresse."
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:

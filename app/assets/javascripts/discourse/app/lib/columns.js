@@ -4,7 +4,6 @@
  *
  * Inspired/adapted from https://github.com/mladenilic/columns.js
  *
- * TODO: Add unit tests
  */
 export default class Columns {
   constructor(container, options = {}) {
@@ -12,12 +11,9 @@ export default class Columns {
 
     this.options = {
       columns: 3,
-      columnClass: "d-image-grid-column",
       minCount: 2,
       ...options,
     };
-
-    this.excluded = ["BR", "P"];
 
     this.items = this._prepareItems();
 
@@ -56,7 +52,7 @@ export default class Columns {
     const columns = [];
     [...Array(count)].forEach(() => {
       const column = document.createElement("div");
-      column.classList.add(this.options.columnClass);
+      column.classList.add("d-image-grid-column");
       columns.push(column);
     });
 
@@ -78,7 +74,7 @@ export default class Columns {
     });
 
     return targets.filter((item) => {
-      return !this.excluded.includes(item.nodeName);
+      return !["BR", "P"].includes(item.nodeName);
     });
   }
 
@@ -111,7 +107,7 @@ export default class Columns {
       }
 
       // use aspect ratio to compare heights and append to shortest column
-      // if element is not an image, assue ratio is 1:1
+      // if element is not an image, assume ratio is 1:1
       const img = item.querySelector("img") || item;
       const aR = img.nodeName === "IMG" ? img.height / img.width : 1;
       columnHeights[shortest] += aR;

@@ -124,13 +124,10 @@
 }
 
 .d-header-icons {
-  text-align: center;
+  display: flex;
   margin: 0 0 0 0.5em;
   list-style: none;
 
-  > li {
-    float: left;
-  }
   .icon {
     box-sizing: content-box;
     appearance: none;
@@ -454,4 +451,9 @@ $mobile-avatar-height: 1.532em;
   font-size: var(--font-down-1);
   margin-left: 0.5em;
   padding: 0.25em 0.5em;
+
+  &:focus {
+    background-color: var(--primary-medium);
+    color: var(--secondary);
+  }
 }

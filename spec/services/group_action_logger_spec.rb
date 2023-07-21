@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupActionLogger do
+  subject(:logger) { described_class.new(group_owner, group) }
+
   fab!(:group_owner) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
   fab!(:user) { Fabricate(:user) }
-
-  subject { described_class.new(group_owner, group) }
 
   before { group.add_owner(group_owner) }
 
   describe "#log_make_user_group_owner" do
     it "should create the right record" do
-      subject.log_make_user_group_owner(user)
+      logger.log_make_user_group_owner(user)
 
       group_history = GroupHistory.last
 
@@ -23,7 +23,7 @@ RSpec.describe GroupActionLogger do
 
   describe "#log_remove_user_as_group_owner" do
     it "should create the right record" do
-      subject.log_remove_user_as_group_owner(user)
+      logger.log_remove_user_as_group_owner(user)
 
       group_history = GroupHistory.last
 
@@ -36,7 +36,7 @@ RSpec.describe GroupActionLogger do
   describe "#log_add_user_to_group" do
     context "as a group owner" do
       it "should create the right record" do
-        subject.log_add_user_to_group(user)
+        logger.log_add_user_to_group(user)
 
         group_history = GroupHistory.last
 
@@ -47,12 +47,12 @@ RSpec.describe GroupActionLogger do
     end
 
     context "as a normal user" do
-      subject { described_class.new(user, group) }
+      subject(:logger) { described_class.new(user, group) }
 
       before { group.update!(public_admission: true) }
 
       it "should create the right record" do
-        subject.log_add_user_to_group(user)
+        logger.log_add_user_to_group(user)
 
         group_history = GroupHistory.last
 
@@ -66,7 +66,7 @@ RSpec.describe GroupActionLogger do
   describe "#log_remove_user_from_group" do
     context "as group owner" do
       it "should create the right record" do
-        subject.log_remove_user_from_group(user)
+        logger.log_remove_user_from_group(user)
 
         group_history = GroupHistory.last
 
@@ -77,12 +77,12 @@ RSpec.describe GroupActionLogger do
     end
 
     context "as a normal user" do
-      subject { described_class.new(user, group) }
+      subject(:logger) { described_class.new(user, group) }
 
       before { group.update!(public_exit: true) }
 
       it "should create the right record" do
-        subject.log_remove_user_from_group(user)
+        logger.log_remove_user_from_group(user)
 
         group_history = GroupHistory.last
 
@@ -97,7 +97,7 @@ RSpec.describe GroupActionLogger do
     it "should create the right record" do
       group.update!(public_admission: true, created_at: Time.zone.now)
 
-      expect { subject.log_change_group_settings }.to change { GroupHistory.count }.by(1)
+      expect { logger.log_change_group_settings }.to change { GroupHistory.count }.by(1)
 
       group_history = GroupHistory.last
 

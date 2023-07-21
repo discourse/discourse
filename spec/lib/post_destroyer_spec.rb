@@ -735,20 +735,20 @@ RSpec.describe PostDestroyer do
     end
 
     context "as an admin" do
-      subject { PostDestroyer.new(admin, post).destroy }
+      subject(:destroyer) { PostDestroyer.new(admin, post).destroy }
 
       it "deletes the post" do
-        subject
+        destroyer
         expect(post.deleted_at).to be_present
         expect(post.deleted_by).to eq(admin)
       end
 
       it "creates a new user history entry" do
-        expect { subject }.to change { UserHistory.count }.by(1)
+        expect { destroyer }.to change { UserHistory.count }.by(1)
       end
 
       it "triggers a extensibility event" do
-        events = DiscourseEvent.track_events { subject }
+        events = DiscourseEvent.track_events { destroyer }
 
         expect(events[0][:event_name]).to eq(:post_destroyed)
         expect(events[0][:params].first).to eq(post)
@@ -768,34 +768,34 @@ RSpec.describe PostDestroyer do
     end
 
     context "as a moderator" do
-      subject { PostDestroyer.new(moderator, reply).destroy }
+      subject(:destroyer) { PostDestroyer.new(moderator, reply).destroy }
 
       it "deletes the reply" do
-        subject
+        destroyer
         expect(reply.deleted_at).to be_present
         expect(reply.deleted_by).to eq(moderator)
       end
 
       it "doesn't decrement post_count again" do
-        expect { subject }.to_not change { author.user_stat.post_count }
+        expect { destroyer }.to_not change { author.user_stat.post_count }
       end
     end
 
     context "as an admin" do
-      subject { PostDestroyer.new(admin, reply).destroy }
+      subject(:destroyer) { PostDestroyer.new(admin, reply).destroy }
 
       it "deletes the post" do
-        subject
+        destroyer
         expect(reply.deleted_at).to be_present
         expect(reply.deleted_by).to eq(admin)
       end
 
       it "doesn't decrement post_count again" do
-        expect { subject }.to_not change { author.user_stat.post_count }
+        expect { destroyer }.to_not change { author.user_stat.post_count }
       end
 
       it "creates a new user history entry" do
-        expect { subject }.to change { UserHistory.count }.by(1)
+        expect { destroyer }.to change { UserHistory.count }.by(1)
       end
     end
   end

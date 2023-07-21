@@ -137,18 +137,15 @@ acceptance("Composer - editor mentions", function (needs) {
     await emulateAutocomplete(".d-editor-input", "@u");
 
     assert.ok(
-      exists(`.autocomplete .emoji[title='${status.emoji}']`),
+      exists(`.autocomplete .emoji[alt='${status.emoji}']`),
       "status emoji is shown"
     );
     assert.equal(
-      query(".autocomplete .status-description").textContent.trim(),
+      query(
+        ".autocomplete .user-status-message-description"
+      ).textContent.trim(),
       status.description,
       "status description is shown"
-    );
-    assert.equal(
-      query(".autocomplete .relative-date").textContent.trim(),
-      "1h",
-      "status expiration time is shown"
     );
   });
 

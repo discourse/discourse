@@ -143,7 +143,7 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("admin/site_settings/category/basic?filter=menu");
     assert.strictEqual(
       currentURL(),
-      "admin/site_settings/category/basic?filter=menu"
+      "/admin/site_settings/category/basic?filter=menu"
     );
   });
 

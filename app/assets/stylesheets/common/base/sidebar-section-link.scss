@@ -1,6 +1,7 @@
 :root {
   --d-sidebar-section-link-prefix-margin-right: 0.35rem;
   --d-sidebar-section-link-prefix-width: 1.35rem;
+  --d-sidebar-section-link-icon-size: 0.8em;
 }
 
 .sidebar-section-link-wrapper {
@@ -49,6 +50,15 @@
     .sidebar-section-link-suffix {
       margin-left: 1em;
       font-size: var(--font-down-4);
+      &.icon {
+        &.urgent svg {
+          color: var(--success);
+        }
+
+        &.unread svg {
+          color: var(--tertiary-med-or-tertiary);
+        }
+      }
     }
 
     .sidebar-section-link-content-text {
@@ -69,6 +79,26 @@
           text-overflow: ellipsis;
         }
       }
+    }
+  }
+
+  .sidebar-section-link-button {
+    color: var(--d-sidebar-link-color);
+    background-color: var(--secondary);
+    width: 100%;
+    justify-content: flex-start;
+
+    &:hover {
+      color: var(--d-sidebar-link-color);
+      background-color: var(--primary-low);
+
+      .d-icon {
+        color: var(--d-sidebar-link-icon-color);
+      }
+    }
+
+    .d-icon {
+      color: var(--d-sidebar-link-icon-color);
     }
   }
 
@@ -121,7 +151,7 @@
       color: var(--d-sidebar-link-icon-color);
 
       svg {
-        font-size: 0.8em;
+        font-size: var(--d-sidebar-section-link-icon-size);
       }
 
       .prefix-badge {

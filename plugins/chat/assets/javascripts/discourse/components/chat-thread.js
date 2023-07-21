@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 import { Promise } from "rsvp";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -25,6 +27,7 @@ export default class ChatThreadPanel extends Component {
   @service chatThreadPaneSubscriptionsManager;
   @service appEvents;
   @service capabilities;
+  @service chatHistory;
 
   @tracked loading;
   @tracked uploadDropZone;
@@ -44,6 +47,7 @@ export default class ChatThreadPanel extends Component {
   @action
   didUpdateThread() {
     this.subscribeToUpdates();
+    this.chatThreadComposer.focus();
     this.loadMessages();
     this.resetComposerMessage();
   }
@@ -63,8 +67,6 @@ export default class ChatThreadPanel extends Component {
     this.chatThreadPaneSubscriptionsManager.unsubscribe();
   }
 
-  // TODO (martin) This needs to have the extended scroll/message visibility/
-  // mark read behaviour the same as the channel.
   @action
   computeScrollState() {
     cancel(this.onScrollEndedHandler);
@@ -115,7 +117,7 @@ export default class ChatThreadPanel extends Component {
         return;
       }
 
-      // TODO (martin) HACK: We don't have proper scroll visibility over
+      // HACK: We don't have proper scroll visibility over
       // what message we are looking at, don't have the lastReadMessageId
       // for the thread, and this updateLastReadMessage function is only
       // called when scrolling all the way to the bottom.
@@ -166,11 +168,20 @@ export default class ChatThreadPanel extends Component {
     return this.chatApi
       .channel(this.args.thread.channel.id, findArgs)
       .then((result) => {
-        if (
-          this._selfDeleted ||
-          this.args.thread.channel.id !== result.meta.channel_id
-        ) {
-          this.router.transitionTo("chat.channel", "-", result.meta.channel_id);
+        if (this._selfDeleted) {
+          return;
+        }
+
+        if (this.args.thread.channel.id !== result.meta.channel_id) {
+          if (this.chatHistory.previousRoute?.name === "chat.channel.index") {
+            this.router.transitionTo(
+              "chat.channel",
+              "-",
+              result.meta.channel_id
+            );
+          } else {
+            this.router.transitionTo("chat.channel.threads");
+          }
         }
 
         const [messages, meta] = this.afterFetchCallback(
@@ -263,6 +274,13 @@ export default class ChatThreadPanel extends Component {
           thread_id: message.thread.staged ? null : message.thread.id,
           staged_thread_id: message.thread.staged ? message.thread.id : null,
         })
+        .then((response) => {
+          this.args.thread.currentUserMembership ??=
+            UserChatThreadMembership.create({
+              notification_level: NotificationLevels.TRACKING,
+              last_read_message_id: response.message_id,
+            });
+        })
         .catch((error) => {
           this.#onSendError(message.id, error);
         })
@@ -327,45 +345,26 @@ export default class ChatThreadPanel extends Component {
   // we now use this hack to disable it
   @bind
   forceRendering(callback) {
-    schedule("afterRender", () => {
-      if (this._selfDeleted) {
-        return;
-      }
+    if (this.capabilities.isIOS) {
+      this.scrollable.style.overflow = "hidden";
+    }
 
-      if (!this.scrollable) {
-        return;
-      }
+    callback?.();
 
-      if (this.capabilities.isIOS) {
-        this.scrollable.style.overflow = "hidden";
-      }
-
-      callback?.();
-
-      if (this.capabilities.isIOS) {
-        discourseLater(() => {
-          if (!this.scrollable) {
+    if (this.capabilities.isIOS) {
+      next(() => {
+        schedule("afterRender", () => {
+          if (this._selfDeleted || !this.scrollable) {
             return;
           }
-
           this.scrollable.style.overflow = "auto";
-        }, 50);
-      }
-    });
+        });
+      });
+    }
   }
 
   @action
   resendStagedMessage() {}
-
-  @action
-  messageDidEnterViewport(message) {
-    message.visible = true;
-  }
-
-  @action
-  messageDidLeaveViewport(message) {
-    message.visible = false;
-  }
 
   #handleErrors(error) {
     switch (error?.jqXHR?.status) {

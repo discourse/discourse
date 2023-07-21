@@ -449,7 +449,6 @@ RSpec.describe UserSerializer do
 
       expect(serializer.as_json[:sidebar_category_ids]).to eq(nil)
       expect(serializer.as_json[:sidebar_tags]).to eq(nil)
-      expect(serializer.as_json[:sidebar_list_destination]).to eq(nil)
       expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
     end
   end

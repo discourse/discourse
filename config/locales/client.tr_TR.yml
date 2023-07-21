@@ -186,7 +186,7 @@ tr_TR:
     software_update_prompt:
       message: "Siteyi güncelledik, <span>lütfen sayfayı yenileyin</span>, aksi takdirde beklenmedik davranışlarla karşılaşabilirsiniz."
       dismiss: "Kapat"
-    bootstrap_mode: "Bootstrap modu"
+    bootstrap_mode: "Başlarken"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir temada / bileşende hata olduğu için siteniz çalışmayabilir."
@@ -1108,14 +1108,10 @@ tr_TR:
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
-        categories_section: "Kategoriler Bölümü"
-        categories_section_instruction: "Seçilen kategoriler Kenar Çubuğunun kategoriler bölümünde görüntülenir."
-        tags_section: "Etiketler Bölümü"
-        tags_section_instruction: "Seçilen etiketler Kenar Çubuğunun etiketler bölümünde görüntülenir."
         navigation_section: "Gezinti"
-        list_destination_instruction: "Kenar çubuğunda yeni içerik olduğunda..."
-        list_destination_default: "varsayılan bağlantıyı kullan ve yeni ögeler için bir rozet göster"
-        list_destination_unread_new: "okunmamış/yeniye bağla ve yeni ögelerin sayısını göster"
+        navigation_section_instruction: "Gezinme menüsündeki bir konu listesinde yeni veya okunmamış öğeler olduğunda…"
+        link_to_filtered_list_checkbox_description: "Filtrelenmiş liste bağlantısı"
+        show_count_new_items_checkbox_description: "Yeni öğelerin sayısını göster"
       change: "değiştir"
       featured_topic: "Öne Çıkan Konu"
       moderator: "%{user} bir moderatör"
@@ -1154,6 +1150,7 @@ tr_TR:
       watched_first_post_categories_instructions: "Bu kategorilerdeki tüm yeni konuların ilk gönderileri için bildirim alacaksınız."
       watched_first_post_tags: "İlk Gönderi izleniyor"
       watched_first_post_tags_instructions: "Bu etiketlere sahip olan her yeni konunun ilk gönderisi için bildirim alacaksınız."
+      watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendir"
       muted_categories: "Sessize alındı"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız ve kategorilerde ya da en son sayfalarda görünmeyecekler."
       muted_categories_instructions_dont_hide: "Bu kategorilerdeki yeni konular hakkında bildirim almayacaksınız."
@@ -1277,7 +1274,7 @@ tr_TR:
         tags: "Etiketler"
         interface: "Arayüz"
         apps: "Uygulamalar"
-        sidebar: "Kenar çubuğu"
+        navigation_menu: "Navigasyon Menüsü"
       change_password:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
@@ -1752,6 +1749,10 @@ tr_TR:
       suggested_topics:
         title: "Okumaya devam edin!"
         content: "İşte daha sonra okumak isteyebileceğinizi düşündüğümüz bazı konular."
+      admin_guide:
+        title: "Yeni sitenize hoş geldiniz!"
+        content: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için yönetici kılavuzunu okuyun."
+        primary: "Hadi başlayalım!"
     loading: "Yükleniyor..."
     errors:
       prev_page: "şunu yüklemeye çalışırken:"
@@ -1822,10 +1823,13 @@ tr_TR:
         other: "<b>%{count}</b> yanıt var."
       description_time_MF: |
         Tahmini okuma süresi <b>{readingTime, plural, one {# dakika} other {# dakika}}</b> olan {replyCount, plural, one {<b># yanıt</b>} other {<b># yanıt</b>}} var.
-      enable: "Bu Konuyu Özetle"
+      enable: "En iyi yanıtları göster"
       disable: "Tüm Gönderileri Göster"
       short_label: "Özetle"
       short_title: "Bu konunun özetini göster: Topluluk tarafından belirlenen en ilginç gönderiler"
+      strategy:
+        button_title: "Bu konuyu özetle"
+        title: "Konu özeti"
     deleted_filter:
       enabled_description: "Bu konu gizli durumdaki silinen gönderiler içeriyor."
       disabled_description: "Konudaki silinen gönderiler gösteriliyor."
@@ -3979,17 +3983,29 @@ tr_TR:
       more: "Daha fazla"
       all_categories: "Tüm kategoriler"
       all_tags: "Tüm etiketler"
-      categories_form:
-        save: "Kaydet"
+      categories_form_modal:
         title: "Kategorilerde gezinmeyi düzenle"
+        subtitle:
+          text: "ve bu sitenin en popüler kategorilerini otomatik olarak göstereceğiz"
         filter_placeholder: "Kategorileri filtrele"
         no_categories: "Bu terimle eşleşen kategori yok."
+      tags_form_modal:
+        subtitle:
+          text: "ve bu sitenin en popüler etiketlerini otomatik olarak göstereceğiz"
+      edit_navigation_modal_form:
+        deselect_button_text: "Hiçbirini seçme"
+        reset_to_defaults: "Varsayılanlara dön"
+        filter_dropdown:
+          all: "Hepsi"
+          selected: "Seçili"
+          unselected: "Seçilmemiş"
       sections:
         custom:
           save: "Kaydet"
           delete: "Sil"
           reset_confirm: "Bu bölümü varsayılana sıfırlamak istediğinizden emin misiniz?"
           public: "Bu bölümü herkese açık ve herkes tarafından görülebilir hale getir"
+          always_public: "Bu bölümdeki içerik her zaman herkese açıktır"
           more_menu: "Daha fazla menü"
           links:
             reset: "Varsayılana sıfırla"
@@ -4028,29 +4044,21 @@ tr_TR:
             unread_with_count: "Okunmamış (%{count})"
             archive: "Arşiv"
         tags:
-          links:
-            add_tags:
-              content: "Etiket ekle"
-              title: "Etiket eklemediniz. Başlamak için tıklayın."
           none: "Etiket eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Etiketler"
           header_action_title: "Kenar çubuğu etiketlerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         categories:
-          links:
-            add_categories:
-              content: "Kategori ekle"
-              title: "Kategori eklemediniz. Başlamak için tıklayın."
           none: "Kategori eklemediniz."
           click_to_get_started: "Başlamak için buraya tıklayın."
           header_link_text: "Kategoriler"
           header_action_title: "Kenar çubuğu kategorilerinizi düzenleyin"
           configure_defaults: "Varsayılanları yapılandır"
         community:
-          header_link_text: "Topluluk"
-          header_action_create_topic_title: "Yeni konu oluşturun"
-          header_action_edit_section_title: "Topluluk bölümünü düzenle"
+          edit_section:
+            sidebar: "Bu bölümü kişiselleştirin"
+            header_dropdown: "Kişiselleştir"
           links:
             about:
               content: "Hakkında"
@@ -4061,6 +4069,9 @@ tr_TR:
             badges:
               content: "Rozetler"
               title: "Kazanılabilecek tüm rozetler"
+            topics:
+              content: "Konular"
+              title: "Tüm konular"
             faq:
               content: "SSS"
               title: "Bu siteyi kullanmak için kılavuz"
@@ -4091,6 +4102,11 @@ tr_TR:
       exceeded: "İzin verilen maksimum karakter sayısı aşıldı."
     form_template_chooser:
       select_template: "Form şablonlarını seçin"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Lütfen geçerli bir değer girin."
+          email: "Lütfen geçerli bir e-posta adresi girin."
   admin_js:
     type_to_filter: "filtrelemek için yazın..."
     admin:
@@ -5501,6 +5517,7 @@ tr_TR:
         go_back: "Aramaya geri dön"
         recommended: "Aşağıdaki metni ihtiyaçlarınıza göre özelleştirmenizi öneririz:"
         show_overriden: "Yalnızca geçersiz kılınanları göster"
+        show_outdated: "Yalnızca eski/geçersiz olanları göster"
         locale: "Dil:"
         more_than_50_results: "50'den fazla sonuç var. Lütfen aramanızı daraltın."
       settings:

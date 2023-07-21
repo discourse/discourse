@@ -1,8 +1,4 @@
-{{#if
-  (and
-    this.chatStateManager.isFullPageActive this.displayed (not @channel.isDraft)
-  )
-}}
+{{#if (and this.chatStateManager.isFullPageActive this.displayed)}}
   <div
     class={{concat-class
       "chat-full-page-header"

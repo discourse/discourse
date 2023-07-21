@@ -29,14 +29,13 @@ export default class ChatMessage {
   @tracked draft;
   @tracked channelId;
   @tracked createdAt;
-  @tracked deletedAt;
   @tracked uploads;
   @tracked excerpt;
   @tracked reactions;
   @tracked reviewableId;
   @tracked user;
   @tracked inReplyTo;
-  @tracked expanded;
+  @tracked expanded = true;
   @tracked bookmark;
   @tracked userFlagStatus;
   @tracked hidden;
@@ -53,7 +52,9 @@ export default class ChatMessage {
   @tracked thread;
   @tracked manager;
   @tracked threadTitle;
+  @tracked deletedById;
 
+  @tracked _deletedAt;
   @tracked _cooked;
 
   constructor(channel, args = {}) {
@@ -69,7 +70,10 @@ export default class ChatMessage {
     this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
-    this.deletedAt = args.deletedAt || args.deleted_at;
+    this.deletedById = args.deletedById || args.deleted_by_id;
+    this._deletedAt = args.deletedAt || args.deleted_at;
+    this.expanded =
+      this.hidden || this._deletedAt ? false : args.expanded || true;
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
@@ -130,6 +134,16 @@ export default class ChatMessage {
     return !this.staged && !this.error;
   }
 
+  get deletedAt() {
+    return this._deletedAt;
+  }
+
+  set deletedAt(value) {
+    this._deletedAt = value;
+    this.incrementVersion();
+    return this._deletedAt;
+  }
+
   get cooked() {
     return this._cooked;
   }
@@ -182,7 +196,7 @@ export default class ChatMessage {
 
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
     }
 
     if (
@@ -191,7 +205,13 @@ export default class ChatMessage {
         new Date(this.createdAt)
       )
     ) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
+    }
+  }
+
+  get formattedFirstMessageDate() {
+    if (this.firstMessageOfTheDayAt) {
+      return this.#calendarDate(this.firstMessageOfTheDayAt);
     }
   }
 
@@ -350,5 +370,9 @@ export default class ChatMessage {
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate()
     );
+  }
+
+  #startOfDay(date) {
+    return moment(date).startOf("day").format();
   }
 }

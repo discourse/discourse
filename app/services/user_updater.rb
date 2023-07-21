@@ -48,8 +48,10 @@ class UserUpdater
     skip_new_user_tips
     seen_popups
     default_calendar
-    sidebar_list_destination
     bookmark_auto_delete_preference
+    sidebar_link_to_filtered_list
+    sidebar_show_count_of_new_items
+    watched_precedence_over_muted
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do

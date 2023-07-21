@@ -3,10 +3,10 @@
 require "seed_data/categories"
 
 RSpec.describe SeedData::Categories do
-  subject { SeedData::Categories.with_default_locale }
+  subject(:seeder) { SeedData::Categories.with_default_locale }
 
   def create_category(name = "staff_category_id")
-    subject.create(site_setting_names: [name])
+    seeder.create(site_setting_names: [name])
   end
 
   def description_post(category)
@@ -152,7 +152,7 @@ RSpec.describe SeedData::Categories do
 
   describe "#update" do
     def update_category(name = "staff_category_id", skip_changed: false)
-      subject.update(site_setting_names: [name], skip_changed: skip_changed)
+      seeder.update(site_setting_names: [name], skip_changed: skip_changed)
     end
 
     before do
@@ -211,7 +211,7 @@ RSpec.describe SeedData::Categories do
         { id: "general_category_id", name: I18n.t("general_category_name"), selected: false },
       ]
 
-      expect(subject.reseed_options).to eq(expected_options)
+      expect(seeder.reseed_options).to eq(expected_options)
     end
   end
 end

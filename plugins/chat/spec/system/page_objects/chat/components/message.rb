@@ -18,11 +18,20 @@ module PageObjects
         end
 
         def hover
-          message_by_id(message.id).hover
+          component.hover
+        end
+
+        def open_more_menu
+          hover
+          click_more_button
+        end
+
+        def expand
+          component.find(".chat-message-expand").click
         end
 
         def select(shift: false)
-          if component[:class].include?("selecting-message")
+          if component[:class].include?("-selectable")
             message_selector = component.find(".chat-message-selector")
             if shift
               message_selector.click(:shift)
@@ -37,7 +46,7 @@ module PageObjects
             component.click(delay: 0.6)
             page.find(".chat-message-actions [data-id=\"select\"]").click
           else
-            component.hover
+            hover
             click_more_button
             page.find("[data-value='select']").click
           end
@@ -85,10 +94,10 @@ module PageObjects
         def build_selector(**args)
           selector = SELECTOR
           selector += "[data-id=\"#{args[:id]}\"]" if args[:id]
-          selector += "[data-selected]" if args[:selected]
-          selector += ".is-persisted" if args[:persisted]
-          selector += ".is-staged" if args[:staged]
-          selector += ".is-deleted" if args[:deleted]
+          selector += ".-selected" if args[:selected]
+          selector += ".-persisted" if args[:persisted]
+          selector += ".-staged" if args[:staged]
+          selector += ".-deleted" if args[:deleted]
           selector
         end
       end

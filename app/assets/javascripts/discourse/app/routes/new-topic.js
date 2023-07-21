@@ -43,11 +43,16 @@ export default DiscourseRoute.extend({
           }
         });
       } else {
-        this.replaceWith("discovery.latest").then((e) => {
-          if (this.controllerFor("navigation/default").canCreateTopic) {
-            this._sendTransition(e, transition);
-          }
-        });
+        if (transition.from) {
+          transition.abort();
+          this.send("createNewTopicViaParams");
+        } else {
+          this.replaceWith("discovery.latest").then((e) => {
+            if (this.controllerFor("navigation/default").canCreateTopic) {
+              this._sendTransition(e, transition);
+            }
+          });
+        }
       }
     } else {
       // User is not logged in

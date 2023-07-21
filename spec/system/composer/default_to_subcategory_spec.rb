@@ -4,7 +4,7 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
   fab!(:user) { Fabricate(:user) }
   fab!(:group) { Fabricate(:group) }
   fab!(:group_user) { Fabricate(:group_user, user: user, group: group) }
-  fab!(:default_latest_category) { Fabricate(:category) }
+  fab!(:default_latest_category) { Fabricate(:category, name: "General") }
   fab!(:category) { Fabricate(:private_category, group: group, permission_type: 3) }
   fab!(:subcategory) do
     Fabricate(:private_category, parent_category_id: category.id, group: group, permission_type: 1)
@@ -25,28 +25,71 @@ describe "Default to Subcategory when parent Category doesn't allow posting", ty
   describe "logged in user" do
     before { sign_in(user) }
     describe "default_subcategory_on_read_only_category setting enabled and can't post on parent category" do
-      before do
-        SiteSetting.default_subcategory_on_read_only_category = true
-        SiteSetting.default_composer_category = default_latest_category.id
-      end
-      describe "Category has subcategory" do
-        it "should have 'New Topic' button enabled and default Subcategory set in the composer" do
-          category_page.visit(category)
-          expect(category_page).to have_button("New Topic", disabled: false)
-          category_page.new_topic_button.click
-          select_kit =
-            PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-          expect(select_kit).to have_selected_value(subcategory.id)
+      before { SiteSetting.default_subcategory_on_read_only_category = true }
+
+      describe "default_composer_category set" do
+        before { SiteSetting.default_composer_category = default_latest_category.id }
+        describe "Can't post on parent category" do
+          describe "Category has subcategory" do
+            it "should have 'New Topic' button enabled and default Subcategory set in the composer" do
+              category_page.visit(category)
+              expect(category_page).to have_button("New Topic", disabled: false)
+              category_page.new_topic_button.click
+              select_kit =
+                PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+              expect(select_kit).to have_selected_value(subcategory.id)
+            end
+          end
+          describe "Category does not have subcategory" do
+            it "should have the 'New Topic' button enabled and default Subcategory set to latest default subcategory" do
+              category_page.visit(category_with_no_subcategory)
+              expect(category_page).to have_button("New Topic", disabled: false)
+              category_page.new_topic_button.click
+              select_kit =
+                PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+              expect(select_kit).to have_selected_value(default_latest_category.id)
+            end
+          end
+        end
+        describe "Can post on home page" do
+          it "should have the default category set in the composer" do
+            page.visit("latest")
+            expect(page).to have_button("New Topic", disabled: false)
+            page.find("#create-topic").click
+            select_kit =
+              PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+            expect(select_kit).to have_selected_value(default_latest_category.id)
+          end
         end
       end
-      describe "Category does not have subcategory" do
-        it "should have the 'New Topic' button enabled and default Subcategory set to latest default subcategory" do
-          category_page.visit(category_with_no_subcategory)
-          expect(category_page).to have_button("New Topic", disabled: false)
-          category_page.new_topic_button.click
-          select_kit =
-            PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
-          expect(select_kit).to have_selected_value(default_latest_category.id)
+
+      describe "default_composer_category not set" do
+        before do
+          SiteSetting.default_composer_category = ""
+          SiteSetting.allow_uncategorized_topics = false
+        end
+        describe "Can't post on parent category" do
+          describe "Category does not have subcategory" do
+            it "should have the 'New Topic' button enabled and default Subcategory not set" do
+              category_page.visit(category_with_no_subcategory)
+              expect(category_page).to have_button("New Topic", disabled: false)
+              category_page.new_topic_button.click
+              select_kit =
+                PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+              expect(select_kit).to have_selected_name("category&hellip;")
+            end
+          end
+        end
+        describe "Can post on home page" do
+          it "composer should open" do
+            page.visit("latest")
+            expect(page).to have_button("New Topic", disabled: false)
+            page.find("#create-topic").click
+
+            select_kit =
+              PageObjects::Components::SelectKit.new("#reply-control.open .category-chooser")
+            expect(select_kit).to have_selected_name("category&hellip;")
+          end
         end
       end
     end

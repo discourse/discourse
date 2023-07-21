@@ -771,8 +771,14 @@
             "oldest_search_log_date": {
               "type": ["string", "null"]
             },
-            "sidebar_list_destination": {
-              "type": "string"
+            "sidebar_link_to_filtered_list": {
+              "type": "boolean"
+            },
+            "sidebar_show_count_of_new_items": {
+              "type": "boolean"
+            },
+            "watched_precedence_over_muted": {
+              "type": ["boolean", "null"]
             },
             "seen_popups": {
               "type": ["array", "null"]

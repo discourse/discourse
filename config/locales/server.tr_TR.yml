@@ -616,7 +616,7 @@ tr_TR:
   staff_category_description: "Personel tartışmaları için özel kategori. Konular sadece yöneticiler ve moderatörler tarafından görülebilir."
   discourse_welcome_topic:
     title: "Burası %{site_title}, hoş geldiniz! :wave:"
-  admin_quick_start_title: "ÖNCE BURAYI OKUYUN: Yönetici Hızlı Başlangıç Kılavuzu"
+  admin_quick_start_title: "Yönetici Kılavuzu: Başlarken"
   category:
     topic_prefix: "%{category} kategorisi hakkında"
     replace_paragraph: "(Bu ilk paragrafı yeni kategorinizin kısa bir açıklaması ile değiştirin. Bu kılavuz kategori seçim alanında görünecek, bu nedenle 200 karakterin altında tutmaya çalışın)."
@@ -1368,6 +1368,7 @@ tr_TR:
     image_magick_warning: 'Sunucu büyük resimlerin küçük resimlerini oluşturacak şekilde yapılandırılmış, ancak ImageMagick yüklü değil. ImageMagick''i favori paket yöneticinizi kullanarak yükleyin veya <a href="https://www.imagemagick.org/script/download.php" target="_blank">en son sürümü indirin</a>.'
     failing_emails_warning: 'Başarısız olan %{num_failed_jobs} e-posta işi var. App.yml dosyanızı kontrol edin ve posta sunucusu ayarlarının doğru olduğundan emin olun. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq''teki</a> başarısız işlere bakın.'
     subfolder_ends_in_slash: "Alt klasör kurulumunuz yanlış; DISCOURSE_RELATIVE_URL_ROOT bir eğik çizgi ile bitiyor."
+    outdated_translations_warning: "Kullandığınız bazı standart dışı çeviriler güncel değil. Lütfen <a href='%{base_path}/admin/customize/site_texts?outdated=true'>metin özelleştirmenizi</a> kontrol edin."
     email_polling_errored_recently:
       one: "E-posta yoklaması son 24 saat içinde bir hata oluşturdu. Daha fazla ayrıntı için <a href='%{base_path}/logs' target='_blank'>günlüklere</a> bakın."
       other: "E-posta yoklaması son 24 saat içinde %{count} hata oluşturdu. Daha fazla ayrıntı için <a href='%{base_path}/logs' target='_blank'>günlüklere</a> bakın."
@@ -1444,6 +1445,8 @@ tr_TR:
     fixed_category_positions_on_create: "İşaretlenirse kategori sıralaması konu oluşturma iletişim kutusunda korunur (fixed_category_positions gerektirir)."
     add_rel_nofollow_to_user_content: 'Dahili bağlantılar hariç (ana alan adları dahil) gönderilen tüm kullanıcı içeriğine rel nofollow ekleyin. Bunu değiştirirseniz tüm gönderileri şu şekilde yeniden oluşturmanız gerekir: "rake posts:rebake"'
     exclude_rel_nofollow_domains: "Bağlantılara nofollow eklenmemesi gereken alan adlarının bir listesi. example.com otomatik olarak sub.example.com'a da izin verir. Web tarayıcılarının tüm içeriği bulmasına yardımcı olmak için minimum olarak bu sitenin alan adını eklemelisiniz. Web sitenizin diğer bölümleri başka alan adlarındaysa bunları da ekleyin."
+    max_form_template_title_length: "Form şablonu başlıkları için izin verilen maksimum uzunluk."
+    max_form_template_content_length: "Form şablonu içeriği için izin verilen maksimum uzunluk."
     post_excerpt_maxlength: "Bir gönderi alıntısının / özetinin maksimum uzunluğu."
     topic_excerpt_maxlength: "Bir konudaki ilk gönderiden oluşturulan bir konu alıntısının / özetinin maksimum uzunluğu."
     show_pinned_excerpt_mobile: "Mobil görünümde sabitlenmiş konularda alıntıyı gösterin."
@@ -1483,6 +1486,8 @@ tr_TR:
     summary_percent_filter: "Bir kullanıcı \"Bu Konuyu Özetleyin\" seçeneğine tıkladığında, gönderilerin en popüler %'sini gösterin"
     summary_max_results: "\"Bu Konuyu Özetle\" ile döndürülen maksimum gönderi sayısı"
     summary_timeline_button: "Zaman çizelgesinde bir \"Özetle\" düğmesi gösterin"
+    summarization_strategy: "Eklentiler tarafından kaydedilen içeriği özetlemenin diğer yolları"
+    custom_summarization_allowed_groups: "`summarization_strategy` kullanarak içerikleri özetlemesine izin verilen gruplar."
     enable_personal_messages: "KALDIRILDI, bunun yerine \"kişisel mesaj etkin gruplar\" ayarını kullanın. Güven seviyesi 1 (mesaj göndermek için minimum güven ile yapılandırılabilir) kullanıcıların mesaj oluşturmasına ve mesajlara yanıt vermesine izin verin. Personelin ne olursa olsun her zaman mesaj gönderebileceğini unutmayın."
     personal_message_enabled_groups: "Bu gruplardaki kullanıcıların mesaj oluşturmasına ve mesajlara yanıt vermesine izin verin. Güven seviyesi grupları, bu sayının üzerindeki tüm güven seviyelerini içerir, örneğin trust_level_1'i seçmek, trust_level_2, 3, 4 kullanıcılarının kişisel mesaj göndermesine de izin verir. Personelin ne olursa olsun her zaman mesaj gönderebileceğini unutmayın."
     enable_system_message_replies: "Kişisel mesajlar devre dışı bırakılmış olsa bile kullanıcıların sistem mesajlarını yanıtlayabilmesine izin verir"
@@ -1746,7 +1751,8 @@ tr_TR:
     tl3_requires_likes_given: "Güven seviyesi 3'e yükselmeye hak kazanmak için son (gs3 zaman periyodu) gün içinde yapılması gereken minimum beğeni sayısı."
     tl3_requires_likes_received: "Güven seviyesi 3'e yükselmeye hak kazanmak için son (gs3 zaman dilimi) gün içinde alınması gereken minimum beğeni sayısı."
     tl3_links_no_follow: "Güven seviyesi 3 kullanıcılar tarafından gönderilen bağlantılardan rel=nofollow'u kaldırmayın."
-    trusted_users_can_edit_others: "Yüksek güven seviyesine sahip kullanıcıların diğer kullanıcıların içeriklerini düzenlemesine izin verin"
+    edit_all_topic_groups: "Bu gruptaki kullanıcıların diğer kullanıcıların konu başlıklarını, etiketlerini ve kategorilerini düzenlemesine izin ver"
+    edit_all_post_groups: "Bu gruptaki kullanıcıların diğer kullanıcıların gönderilerini düzenlemesine izin ver"
     min_trust_to_create_topic: "Yeni bir konu oluşturmak için gereken minimum güven seviyesi."
     allow_flagging_staff: "Etkinleştirilirse kullanıcılar personel hesaplarından gelen gönderilere bayrak ekleyebilir."
     min_trust_to_edit_wiki_post: "Viki olarak işaretlenmiş gönderiyi düzenlemek için gereken minimum güven seviyesi."
@@ -1963,8 +1969,6 @@ tr_TR:
     permalink_normalizations: "Kalıcı bağlantıları eşleştirmeden önce aşağıdaki regex'i uygulayın, örneğin: /(topic.*)\\?.*/\\1 sorgu dizelerini konu rotalarından söker. Format, regex+string ve yakalamalara erişmek için \\1 vb. kullanın"
     global_notice: "Tüm ziyaretçilere ACİL, ACİL DURUM, izin verilmeyen bir global banner bildirimi gösterin, gizlemek için boş olarak değiştirin (HTML'ye izin verilir)."
     disable_system_edit_notifications: "\"download_remote_images_to_local\" etkin olduğunda sistem kullanıcısı tarafından düzenleme bildirimlerini devre dışı bırakır."
-    disable_category_edit_notifications: "Konulardaki kategori düzenleme bildirimlerini devre dışı bırakın."
-    disable_tags_edit_notifications: "Konulardaki etiket düzenleme bildirimlerini devre dışı bırakın."
     notification_consolidation_threshold: "Bildirimler tek bir bildirimde birleştirilmeden önce alınan beğenme veya üyelik isteği bildirimlerinin sayısı. Devre dışı bırakmak için 0 olarak ayarlayın."
     likes_notification_consolidation_window_mins: "Eşiğe ulaşıldığında beğenilen bildirimlerin tek bir bildirimde birleştirildiği dakika cinsinden süre. Eşik, \"SiteSetting.notification_consolidation_threshold\" aracılığıyla yapılandırılabilir."
     automatically_unpin_topics: "Kullanıcı en alta ulaştığında konu sabitlemelerini otomatik olarak kaldırın."
@@ -2088,6 +2092,7 @@ tr_TR:
     remove_muted_tags_from_latest: "En son konu listesinde yalnızca sessize alınmış etiketlerle etiketlenmiş konuları göstermeyin."
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
     create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde küçük bir bilgi gönderisi oluştur"
+    watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendir"
     company_name: "Şirket Adı"
     governing_law: "Geçerli Kanun"
     city_for_disputes: "Anlaşmazlıklar için şehir"
@@ -2119,12 +2124,13 @@ tr_TR:
     suggest_weekends_in_date_pickers: "Tarih seçici önerilerine hafta sonlarını (cumartesi ve pazar) dahil edin (Discourse'u yalnızca hafta içi, pazartesiden cumaya kadar kullanıyorsanız bunu devre dışı bırakın)."
     splash_screen: "Site varlıkları yüklenirken geçici bir yükleme ekranı gösterir"
     navigation_menu: "Hangi gezinme menüsünün kullanılacağını belirleyin. Kenar çubuğu ve başlık gezinmesi, kullanıcılar tarafından özelleştirilebilir. Geriye dönük uyumluluk için eski seçenek mevcuttur."
-    default_sidebar_categories: "Seçilen kategoriler varsayılan olarak Kenar Çubuğunun Kategoriler bölümünde gösterilir."
-    default_sidebar_tags: "Seçilen etiketler varsayılan olarak Kenar Çubuğunun Etiketler bölümünde gösterilir."
+    default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde görüntülenecektir."
+    default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde görüntülenecektir."
     enable_experimental_hashtag_autocomplete: "DENEYSEL: Seçilen ögeyi farklı şekilde işleyen ve aramayı iyileştiren kategoriler ve etiketler için yeni #hashtag otomatik tamamlama sistemini kullanın"
     experimental_new_new_view_groups: 'DENEYSEL: Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştir"
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştirir"
+    page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. 'Spinner' tam sayfa görünür. 'Slider' ekranın üst kısmında dar bir çubuk şekilde görünür."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
       invalid_email: "Geçersiz e-posta adresi."
@@ -2150,7 +2156,6 @@ tr_TR:
       pop3_polling_password_is_empty: "POP3 yoklamasını etkinleştirmeden önce bir \"pop3 yoklama şifresi\" ayarlamanız gerekiyor."
       pop3_polling_authentication_failed: "POP3 kimlik doğrulaması başarısız oldu. Lütfen pop3 giriş bilgilerinizi doğrulayın."
       reply_by_email_address_is_empty: "E-posta ile yanıtlamayı etkinleştirmeden önce bir \"yanıtlama e-postası\" ayarlamanız gerekiyor."
-      email_polling_disabled: "E-posta ile yanıtlamayı etkinleştirmeden önce manuel veya POP3 yoklamasını etkinleştirmeniz gerekiyor."
       user_locale_not_enabled: "Bu ayarı etkinleştirmeden önce \"kullanıcı yerel ayarına izin ver\" seçeneğini etkinleştirmeniz gerekiyor."
       personal_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin kişisel mesaj göndermesini istemiyorsanız personel grubunu seçin."
       invalid_regex: "Regex geçersiz veya izin verilmiyor."

@@ -1486,7 +1486,6 @@ lv:
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
       enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
-      enable: "Tēmas kopsavilkums"
       disable: "Parādīt visus ierakstus"
     deleted_filter:
       enabled_description: "Šī tēma satur dzēstus ierakstus, kuri ir paslēpti."
@@ -2778,8 +2777,9 @@ lv:
         other: "%{count} jauna"
       more: "Vairāk"
       all_categories: "Visas sadaļas"
-      categories_form:
-        save: "Saglabāt"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Viss"
       sections:
         custom:
           save: "Saglabāt"
@@ -2807,7 +2807,8 @@ lv:
         categories:
           header_link_text: "Sadaļas"
         community:
-          header_link_text: "Kopiena"
+          edit_section:
+            header_dropdown: "Pielāgot"
           links:
             about:
               content: "Par"
@@ -2815,6 +2816,8 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
+            topics:
+              content: "Tēmas"
             faq:
               content: "BUJ"
             groups:
@@ -2825,6 +2828,11 @@ lv:
               content: "Mani ieraksti"
             review:
               content: "Pārskats"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Lūdzu ievadiet derīgu vērtību "
+          email: "Lūdzu ievadiet derīgu e-pasta adresi."
   admin_js:
     type_to_filter: "ievadiet, lai atlasītu..."
     admin:

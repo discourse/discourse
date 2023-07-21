@@ -30,7 +30,7 @@ RSpec.describe "Chat message - thread", type: :system do
       thread_page.hover_message(first_message)
 
       expect(page).to have_css(
-        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{first_message.id}'].chat-message-container.is-active",
+        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{first_message.id}'].chat-message-container.-active",
       )
     end
   end

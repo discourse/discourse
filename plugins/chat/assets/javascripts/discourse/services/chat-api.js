@@ -46,6 +46,10 @@ export default class ChatApi extends Service {
       if (data.threadId) {
         args.thread_id = data.threadId;
       }
+
+      if (data.targetDate) {
+        args.target_date = data.targetDate;
+      }
     }
 
     return this.#getRequest(`/channels/${channelId}`, args).then((result) => {
@@ -77,8 +81,11 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  threads(channelId) {
-    return this.#getRequest(`/channels/${channelId}/threads`);
+  threads(channelId, handler) {
+    return new Collection(
+      `${this.#basePath}/channels/${channelId}/threads`,
+      handler
+    );
   }
 
   /**
@@ -295,13 +302,28 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Update notifications settings of current user for a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} threadId - The ID of the thread.
+   * @param {object} data - The settings to modify.
+   * @param {boolean} [data.notification_level] - The new notification level, c.f. Chat::NotificationLevels. Threads only support
+   *  "regular" and "tracking" for now.
+   * @returns {Promise}
+   */
+  updateCurrentUserThreadNotificationsSettings(channelId, threadId, data) {
+    return this.#putRequest(
+      `/channels/${channelId}/threads/${threadId}/notifications-settings/me`,
+      { notification_level: data.notificationLevel }
+    );
+  }
+
+  /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
   saveDraft(channelId, data) {
-    // TODO (martin) Change this to postRequest after moving DraftsController into Api::DraftsController
     return ajax("/chat/drafts", {
       type: "POST",
       data: {
@@ -331,7 +353,6 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   publishReaction(channelId, messageId, emoji, reactAction) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
     return ajax(`/chat/${channelId}/react/${messageId}`, {
       type: "PUT",
       data: {
@@ -360,7 +381,6 @@ export default class ChatApi extends Service {
    * @param {number} messageId - The ID of the message being restored.
    */
   rebakeMessage(channelId, messageId) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
     return ajax(`/chat/${channelId}/${messageId}/rebake`, {
       type: "PUT",
     });
@@ -376,7 +396,6 @@ export default class ChatApi extends Service {
    * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
    */
   editMessage(channelId, messageId, data) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
     return ajax(`/chat/${channelId}/edit/${messageId}`, {
       type: "PUT",
       data,
@@ -390,6 +409,17 @@ export default class ChatApi extends Service {
    */
   markAllChannelsAsRead() {
     return this.#putRequest(`/channels/read`);
+  }
+
+  /**
+   * Lists all possible chatables.
+   *
+   * @param {term} string - The term to search for. # prefix will scope to channels, @ to users.
+   *
+   * @returns {Promise}
+   */
+  chatables(args = {}) {
+    return this.#getRequest("/chatables", args);
   }
 
   /**
@@ -442,6 +472,32 @@ export default class ChatApi extends Service {
       type: "POST",
       data: { message_ids: messageIds },
     });
+  }
+
+  /**
+   * Invite users to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {Array<number>} userIds - The IDs of the users to invite.
+   * @param {object} options
+   * @param {number} options.chat_message_id - A message ID to display in the invite.
+   */
+  invite(channelId, userIds, options = {}) {
+    return ajax(`/chat/${channelId}/invite`, {
+      type: "put",
+      data: { user_ids: userIds, chat_message_id: options.messageId },
+    });
+  }
+
+  /**
+   * Summarize a channel.
+   *
+   * @param {number} channelId - The ID of the channel to summarize.
+   * @param {object} options
+   * @param {number} options.since - Number of hours ago the summary should start (1, 3, 6, 12, 24, 72, 168).
+   */
+  summarize(channelId, options = {}) {
+    return this.#getRequest(`/channels/${channelId}/summarize`, options);
   }
 
   get #basePath() {

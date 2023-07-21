@@ -115,6 +115,8 @@ uk:
       heading: "Чат"
       join: "Приєднатися"
       last_visit: "останнє відвідування"
+      summarization:
+        summarize: "Підсумок"
       mention_warning:
         dismiss: "відкласти"
         cannot_see: "%{username} не має доступу до цього каналу і не отримав сповіщення."
@@ -270,6 +272,8 @@ uk:
           about: Про
           members: Учасники
           settings: Налаштування
+      new_message_modal:
+        no_items: "Немає елементів"
       channel_edit_name_slug_modal:
         title: Редагувати канал
         input_placeholder: Додайте назву
@@ -285,9 +289,6 @@ uk:
         prefix: "До:"
         no_results: Немає результатів
         selected_user_title: "Зніміть позначку з %{username}"
-      channel_selector:
-        title: "Перейти на канал"
-        no_channels: "Немає каналів, які відповідають вашому запиту"
       channel:
         no_memberships: Цей канал не має учасників
         no_memberships_found: Учасників не знайдено
@@ -352,6 +353,8 @@ uk:
         auto_join_users_info_no_category: "Погодинно перевіряйте, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до обраної категорії."
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
+        threading_enabled: "Включено"
+        threading_disabled: "Вимкнено"
         notifications: "Сповіщення"
         preview: "Попередній перегляд"
         save: "Зберегти"
@@ -451,6 +454,16 @@ uk:
           started_by: "Розпочато"
         settings: "Налаштування"
         last_reply: "остання відповідь"
+        notifications:
+          regular:
+            title: "Нормальний"
+          tracking:
+            title: "Стежити"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Відкрийте тему"
         list: "Поточні обговорення"

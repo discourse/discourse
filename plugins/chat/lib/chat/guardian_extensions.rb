@@ -103,6 +103,7 @@ module Chat
 
     def can_join_chat_channel?(chat_channel)
       return false if anonymous?
+      return false unless can_chat?
       can_preview_chat_channel?(chat_channel) &&
         (chat_channel.direct_message_channel? || can_post_in_category?(chat_channel.chatable))
     end
@@ -172,9 +173,9 @@ module Chat
       if message.user_id == current_user.id
         case chatable
         when Category
-          return can_see_category?(chatable)
+          return message.deleted_by_id == current_user.id || can_see_category?(chatable)
         when Chat::DirectMessage
-          return true
+          return message.deleted_by_id == current_user.id || is_staff?
         end
       end
 

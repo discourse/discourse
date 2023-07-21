@@ -77,7 +77,7 @@
         }
       }
 
-      .open-draft-channel-page-btn,
+      .open-new-message-btn,
       .open-browse-page-btn,
       .edit-channels-dropdown .select-kit-header,
       .chat-channel-leave-btn {
@@ -136,16 +136,6 @@
 }
 
 .chat-enabled {
-  .sidebar-section-link-suffix.icon {
-    &.urgent svg {
-      color: var(--success);
-    }
-
-    &.unread svg {
-      color: var(--tertiary-med-or-tertiary);
-    }
-  }
-
   .sidebar-section-link-prefix {
     .prefix-image {
       border: 1px solid transparent;

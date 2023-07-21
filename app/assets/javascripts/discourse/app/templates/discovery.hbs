@@ -22,13 +22,13 @@
   </div>
 </div>
 
-<ConditionalLoadingSpinner @condition={{this.loading}} />
+<ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}} />
 
 <span>
   <PluginOutlet @name="discovery-above" @connectorTagName="div" />
 </span>
 
-<div class="container list-container {{if this.loading 'hidden'}}">
+<div class="container list-container {{if this.showLoadingSpinner 'hidden'}}">
   <div class="row">
     <div class="full-width">
       <div id="header-list-area">

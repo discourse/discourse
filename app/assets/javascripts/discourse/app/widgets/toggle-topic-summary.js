@@ -34,15 +34,41 @@ createWidget("toggle-summary-description", {
 
 export default createWidget("toggle-topic-summary", {
   tagName: "section.information.toggle-summary",
-  html(attrs) {
+  buildKey: (attrs) => `toggle-topic-summary-${attrs.topicId}`,
+
+  defaultState() {
+    return {
+      expandSummaryBox: false,
+      summaryBoxHidden: true,
+      summary: "",
+      summarizedOn: null,
+      summarizedBy: null,
+    };
+  },
+
+  html(attrs, state) {
     const html = [];
     const summarizationButtons = [];
+
+    if (attrs.summarizable) {
+      const canRegenerate =
+        !state.regenerate &&
+        state.summary.outdated &&
+        state.summary.can_regenerate;
+      const canCollapse =
+        !canRegenerate && !this.loadingSummary() && this.summaryBoxVisble();
+      const summarizeButton = canCollapse
+        ? this.hideSummaryButton()
+        : this.generateSummaryButton(canRegenerate);
+
+      summarizationButtons.push(summarizeButton);
+    }
 
     if (attrs.hasTopRepliesSummary) {
       html.push(this.attach("toggle-summary-description", attrs));
       summarizationButtons.push(
         this.attach("button", {
-          className: "btn btn-primary",
+          className: "btn top-replies",
           icon: attrs.topicSummaryEnabled ? null : "layer-group",
           title: attrs.topicSummaryEnabled ? null : "summary.short_title",
           label: attrs.topicSummaryEnabled
@@ -53,22 +79,76 @@ export default createWidget("toggle-topic-summary", {
       );
     }
 
-    if (attrs.includeSummary) {
-      const title = I18n.t("summary.strategy.button_title");
-
-      summarizationButtons.push(
-        this.attach("button", {
-          className: "btn btn-primary topic-strategy-summarization",
-          icon: "magic",
-          translatedTitle: title,
-          translatedLabel: title,
-          action: "showSummary",
-        })
-      );
+    if (summarizationButtons) {
+      html.push(h("div.summarization-buttons", summarizationButtons));
     }
 
-    html.push(h("div.summarization-buttons", summarizationButtons));
+    if (this.summaryBoxVisble()) {
+      attrs.summary = state.summary;
+      attrs.skipAgeCheck = state.regenerate;
+
+      html.push(this.attach("summary-box", attrs));
+    }
 
     return html;
+  },
+
+  generateSummaryButton(canRegenerate) {
+    const title = canRegenerate
+      ? "summary.buttons.regenerate"
+      : "summary.buttons.generate";
+    const icon = canRegenerate ? "sync" : "magic";
+
+    return this.attach("button", {
+      className: "btn btn-primary topic-strategy-summarization",
+      icon,
+      title: I18n.t(title),
+      translatedTitle: I18n.t(title),
+      translatedLabel: I18n.t(title),
+      action: canRegenerate ? "regenerateSummary" : "expandSummaryBox",
+      disabled: this.loadingSummary(),
+    });
+  },
+
+  hideSummaryButton() {
+    return this.attach("button", {
+      className: "btn btn-primary topic-strategy-summarization",
+      icon: "chevron-up",
+      title: "summary.buttons.hide",
+      label: "summary.buttons.hide",
+      action: "toggleSummaryBox",
+      disabled: this.loadingSummary(),
+    });
+  },
+
+  loadingSummary() {
+    return (
+      this.summaryBoxVisble() && (!this.state.summary || this.state.regenerate)
+    );
+  },
+
+  summaryUpdatedEvent(summary) {
+    this.state.summary = summary;
+
+    if (summary.regenerated) {
+      this.state.regenerate = false;
+    }
+  },
+
+  summaryBoxVisble() {
+    return this.state.expandSummaryBox && !this.state.summaryBoxHidden;
+  },
+
+  expandSummaryBox() {
+    this.state.expandSummaryBox = true;
+    this.state.summaryBoxHidden = false;
+  },
+
+  regenerateSummary() {
+    this.state.regenerate = true;
+  },
+
+  toggleSummaryBox() {
+    this.state.summaryBoxHidden = !this.state.summaryBoxHidden;
   },
 });

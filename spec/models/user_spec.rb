@@ -13,7 +13,7 @@ RSpec.describe User do
 
   it do
     is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
-      :created_by_id,
+      :target_created_by_id,
     )
   end
 
@@ -157,6 +157,19 @@ RSpec.describe User do
 
         expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
         expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
+      end
+    end
+
+    describe "#change_display_name" do
+      it "enqueues a job to retroactively update display name in quotes, etc." do
+        expect_enqueued_with(
+          job: :change_display_name,
+          args: {
+            user_id: user.id,
+            old_name: "Bruce Wayne",
+            new_name: "Batman",
+          },
+        ) { user.update(name: "Batman") }
       end
     end
   end
@@ -628,35 +641,33 @@ RSpec.describe User do
   end
 
   describe "new" do
-    subject { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     it { is_expected.to be_valid }
     it { is_expected.not_to be_admin }
     it { is_expected.not_to be_approved }
 
     it "is properly initialized" do
-      expect(subject.approved_at).to be_blank
-      expect(subject.approved_by_id).to be_blank
+      expect(user.approved_at).to be_blank
+      expect(user.approved_by_id).to be_blank
     end
 
     it "triggers an extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.first
+      event = DiscourseEvent.track_events { user.save! }.first
 
       expect(event[:event_name]).to eq(:user_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(user)
     end
 
     context "with after_save" do
-      before { subject.save! }
+      before { user.save! }
 
       it "has correct settings" do
-        expect(subject.email_tokens).to be_present
-        expect(subject.user_stat).to be_present
-        expect(subject.user_profile).to be_present
-        expect(subject.user_option.email_messages_level).to eq(
-          UserOption.email_level_types[:always],
-        )
-        expect(subject.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
+        expect(user.email_tokens).to be_present
+        expect(user.user_stat).to be_present
+        expect(user.user_profile).to be_present
+        expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
+        expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
     end
 
@@ -743,41 +754,37 @@ RSpec.describe User do
   end
 
   describe "staff and regular users" do
-    let(:user) { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     describe "#staff?" do
-      subject { user.staff? }
-
-      it { is_expected.to eq(false) }
+      it { is_expected.not_to be_staff }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
     end
 
     describe "#regular?" do
-      subject { user.regular? }
-
-      it { is_expected.to eq(true) }
+      it { is_expected.to be_regular }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
     end
   end
@@ -2201,22 +2208,6 @@ RSpec.describe User do
       end
     end
 
-    describe "when user is trust level 2" do
-      it "should return the right value" do
-        user.update!(trust_level: TrustLevel[2])
-
-        expect(user.read_first_notification?).to eq(true)
-      end
-    end
-
-    describe "when user is an old user" do
-      it "should return the right value" do
-        user.update!(first_seen_at: 1.year.ago)
-
-        expect(user.read_first_notification?).to eq(true)
-      end
-    end
-
     describe "when user skipped new user tips" do
       it "should return the right value" do
         user.user_option.update!(skip_new_user_tips: true)
@@ -3238,7 +3229,7 @@ RSpec.describe User do
     end
 
     it "returns false if no whispers groups exist" do
-      expect(subject.whisperer?).to eq(false)
+      expect(user.whisperer?).to eq(false)
     end
   end
 
