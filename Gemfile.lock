@@ -518,7 +518,6 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    webrick (1.7.0)
     websocket (1.2.9)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -670,7 +669,6 @@ DEPENDENCIES
   web-push
   webdrivers
   webmock
-  webrick
   yaml-lint
   yard
 
