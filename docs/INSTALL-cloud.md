@@ -42,7 +42,7 @@ walkthrough will go through these in detail:
 
 - Already have a mail server? Great. Use your existing mail server credentials. (Free email services like Gmail/Outlook/Yahoo do not support transactional emails.)
 
-- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) in your DNS. See your mail provider instructions for specifics.
+- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) in your DNS. You'll need SMTP credentials from your email provider, which include an SMTP username and password. Log in to your email provider's account, go to SMTP settings or Email API section, and locate/generate your unique SMTP credentials. Keep them secure, as you'll use them during the Discourse configuration. See your mail provider instructions for specifics.
 
 - If you're having trouble getting emails to work, follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
 
