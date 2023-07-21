@@ -14,11 +14,6 @@ export function replaceCategoryLinkRenderer(fn) {
   _renderer = fn;
 }
 
-function categoryStripe(color, classes) {
-  let style = color ? "style='background-color: #" + color + ";'" : "";
-  return "<span class='" + classes + "' " + style + "></span>";
-}
-
 let _extraIconRenderers = [];
 
 export function addExtraIconRenderer(renderer) {
@@ -113,7 +108,6 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let href = opts.link === false ? "" : url;
   let tagName = opts.link === false || opts.link === "false" ? "span" : "a";
   let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
-  let color = get(category, "color");
   let html = "";
   let parentCat = null;
   let categoryDir = "";
@@ -124,29 +118,24 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   let siteSettings = helperContext().siteSettings;
 
-  const categoryStyle = opts.categoryStyle || siteSettings.category_style;
-  if (categoryStyle !== "none") {
-    if (parentCat && parentCat !== category) {
-      html += categoryStripe(
-        get(parentCat, "color"),
-        "badge-category-parent-bg"
-      );
-    }
-    html += categoryStripe(color, "badge-category-bg");
-  }
+  const categoryStyle = opts.categoryStyle;
 
-  let classNames = "badge-category clear-badge";
+  let classNames = "badge-category";
   if (restricted) {
     classNames += " restricted";
   }
 
-  let style = "";
-  if (categoryStyle === "box") {
-    style = `style="color: #${get(category, "text_color")};"`;
+  if (parentCat) {
+    classNames += " badge-subcategory";
+  }
+
+  let style = `--category-badge-color: var(--category-${category.id}-color); --category-badge-text-color: #${category.text_color};`;
+  if (parentCat) {
+    style += ` --parent-category-badge-color: var(--category-${parentCat.id}-color);`;
   }
 
   html +=
-    `<span ${style} ` +
+    `<span style="${style}" ` +
     'data-drop-close="true" class="' +
     classNames +
     '"' +
@@ -171,7 +160,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
   html += "</span>";
 
-  if (opts.topicCount && categoryStyle !== "box") {
+  if (opts.topicCount) {
     html += buildTopicCount(opts.topicCount);
   }
 
@@ -182,9 +171,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   extraClasses = categoryStyle ? categoryStyle + extraClasses : extraClasses;
 
   let afterBadgeWrapper = "";
-  if (opts.topicCount && categoryStyle === "box") {
-    afterBadgeWrapper += buildTopicCount(opts.topicCount);
-  }
+
   if (opts.plusSubcategories && opts.lastSubcategory) {
     afterBadgeWrapper += `<span class="plus-subcategories">${I18n.t(
       "category_row.plus_subcategories",
