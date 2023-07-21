@@ -84,10 +84,14 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
       .dom(".post-stream .topic-post.selected #post_1")
       .exists("first post is selected");
 
+    assert.dom(".post-stream .topic-post #post_4").exists();
     await triggerKeyEvent(document, "keypress", "J");
+
+    const selected = document.querySelector(".selected article");
     assert
       .dom(".post-stream .topic-post.selected #post_4")
       .exists("pressing j moves selection to next visible post");
+    console.log(`Selected element: #${selected.id} ${selected.className}`);
 
     await triggerKeyEvent(document, "keypress", "K");
     assert
