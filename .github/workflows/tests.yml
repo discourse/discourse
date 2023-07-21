@@ -83,6 +83,7 @@ jobs:
 
       - name: Create minio test bucket
         run: |
+          pip3 install awscli
           aws --endpoint-url http://127.0.0.1:9000/ s3 mb s3://discoursetest
 
       - name: Setup Git
