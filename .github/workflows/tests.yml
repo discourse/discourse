@@ -67,6 +67,10 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Install jq
+        run: |
+          sudo apt-get install jq
+
       - name: Add hosts to /etc/hosts
         run: |
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
