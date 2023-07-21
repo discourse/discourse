@@ -72,8 +72,7 @@ jobs:
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
+      - uses: valeriangalliat/action-sshd-cloudflared@v1
 
       # - name: Setup Git
       #   run: |
