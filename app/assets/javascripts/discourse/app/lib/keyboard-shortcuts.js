@@ -728,9 +728,20 @@ export default {
       }
     }
 
-    article = articles[index + direction];
-    if (!article) {
-      return;
+    let newIndex = index;
+    while (true) {
+      newIndex += direction;
+      article = articles[newIndex];
+
+      // Element doesn't exist
+      if (!article) {
+        return;
+      }
+
+      // Element is visible
+      if (article.getBoundingClientRect().height > 0) {
+        break;
+      }
     }
 
     for (const a of articles) {

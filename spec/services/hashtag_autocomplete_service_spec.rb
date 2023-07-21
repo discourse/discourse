@@ -14,6 +14,14 @@ RSpec.describe HashtagAutocompleteService do
 
   after { DiscoursePluginRegistry.reset! }
 
+  describe ".enabled_data_sources" do
+    it "only returns data sources that are enabled" do
+      expect(HashtagAutocompleteService.enabled_data_sources).to eq(
+        HashtagAutocompleteService::DEFAULT_DATA_SOURCES,
+      )
+    end
+  end
+
   describe ".contexts_with_ordered_types" do
     it "returns a hash of all the registered search contexts and their types in the defined priority order" do
       expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
@@ -29,6 +37,13 @@ RSpec.describe HashtagAutocompleteService do
       )
       expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
         { "topic-composer" => %w[category tag], "awesome-composer" => %w[tag category] },
+      )
+    end
+
+    it "does not return types which have been disabled" do
+      SiteSetting.tagging_enabled = false
+      expect(HashtagAutocompleteService.contexts_with_ordered_types).to eq(
+        { "topic-composer" => %w[category] },
       )
     end
   end
@@ -288,6 +303,13 @@ RSpec.describe HashtagAutocompleteService do
           ],
         )
       end
+
+      it "does not error if a type provided for priority order has been disabled" do
+        SiteSetting.tagging_enabled = false
+        expect(service.search(nil, %w[category tag]).map(&:ref)).to eq(
+          %w[book-dome book-zone media book uncategorized the-book-club],
+        )
+      end
     end
   end
 
@@ -463,7 +485,7 @@ RSpec.describe HashtagAutocompleteService do
         result = service.lookup(%w[the-book-club great-books fiction-books], %w[category tag])
         expect(result[:category].map(&:slug)).to eq(["the-book-club"])
         expect(result[:category].map(&:relative_url)).to eq(["/c/the-book-club/#{category1.id}"])
-        expect(result[:tag]).to eq([])
+        expect(result[:tag]).to eq(nil)
       end
     end
   end

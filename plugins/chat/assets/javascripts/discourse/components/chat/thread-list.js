@@ -19,7 +19,10 @@ export default class ChatThreadList extends Component {
   // are sent to the thread, and we want the list to react in realtime to this.
   get sortedThreads() {
     return this.threadsManager.threads
-      .filter((thread) => !thread.originalMessage.deletedAt)
+      .filter(
+        (thread) =>
+          thread.currentUserMembership && !thread.originalMessage.deletedAt
+      )
       .sort((threadA, threadB) => {
         // If both are unread we just want to sort by last reply date + time descending.
         if (threadA.tracking.unreadCount && threadB.tracking.unreadCount) {
@@ -140,6 +143,10 @@ export default class ChatThreadList extends Component {
 
   #unsubscribe() {
     // TODO (joffrey) In drawer we won't have channel anymore at this point
+    if (!this.args.channel) {
+      return;
+    }
+
     this.messageBus.unsubscribe(
       `/chat/${this.args.channel.id}`,
       this.onMessageBus

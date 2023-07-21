@@ -4,6 +4,10 @@
 # results when looking up a category slug via markdown or searching for
 # categories via the # autocomplete character.
 class CategoryHashtagDataSource
+  def self.enabled?
+    SiteSetting.enable_experimental_hashtag_autocomplete
+  end
+
   def self.icon
     "folder"
   end

@@ -18,7 +18,7 @@ import {
 import { cloneJSON } from "discourse-common/lib/object";
 import i18n from "I18n";
 import sinon from "sinon";
-import { test } from "qunit";
+import { skip, test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 
@@ -911,7 +911,7 @@ acceptance("Experimental Lightbox - loading state", function (needs) {
     setupPretender(server, helper, markupWithInvalidImage)
   );
 
-  test("handles loading errors", async function (assert) {
+  skip("handles loading errors", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);

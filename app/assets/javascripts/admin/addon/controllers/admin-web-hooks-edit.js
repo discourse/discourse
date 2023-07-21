@@ -9,6 +9,9 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class AdminWebHooksEditController extends Controller {
   @service dialog;
+  @service router;
+  @service siteSettings;
+
   @controller adminWebHooks;
 
   @alias("adminWebHooks.eventTypes") eventTypes;
@@ -94,7 +97,7 @@ export default class AdminWebHooksEditController extends Controller {
 
       this.set("saved", true);
       this.adminWebHooks.model.addObject(this.model);
-      this.transitionToRoute("adminWebHooks.show", this.model);
+      this.router.transitionTo("adminWebHooks.show", this.model);
     } catch (e) {
       popupAjaxError(e);
     }

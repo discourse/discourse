@@ -206,10 +206,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: auto;
-        height: auto;
-        min-width: 0.6em;
-        padding: 0.3em 0.5em;
+        width: 8px;
+        height: 8px;
+
+        &.-urgent {
+          width: auto;
+          height: auto;
+          min-width: 0.6em;
+          padding: 0.3em 0.5em;
+        }
       }
     }
 

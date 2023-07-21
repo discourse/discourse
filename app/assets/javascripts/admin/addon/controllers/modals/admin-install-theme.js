@@ -5,7 +5,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { observes } from "@ember-decorators/object";
 import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import { POPULAR_THEMES } from "discourse-common/helpers/popular-themes";
+import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, set } from "@ember/object";

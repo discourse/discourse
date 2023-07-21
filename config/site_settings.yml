@@ -2160,6 +2160,13 @@ navigation:
     type: tag_list
     default: ""
     client: true
+  default_sidebar_switch_panel_position:
+    default: "bottom"
+    type: enum
+    client: true
+    choices:
+      - "top"
+      - "bottom"
 
 embedding:
   embed_by_username:
@@ -2377,7 +2384,7 @@ uncategorized:
     client: true
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|13" # 3: @staff, 13: @trust_level_3
 
   automatic_topic_heat_values: true
 

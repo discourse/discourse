@@ -2040,12 +2040,21 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      in_progress: "Summary in progress..."
-      summarized_on: "Summarized on %{date}" 
+      in_progress: "Summarizing topic using AI..."
+      summarized_on: "Summarized with AI on %{date}"
+      model_used: "AI used: %{model}"
+      outdated: "Summary is outdated"
+      outdated_posts: 
+        one: "(%{count} post missing)"
+        other: "(%{count} posts missing)"
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
         other: "There are <b>%{count}</b> replies."
+      buttons:
+        hide: "Hide summary"
+        generate: "Summarize with AI"
+        regenerate: "Regenerate summary"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       description_time_MF: |
@@ -2061,10 +2070,6 @@ en:
       disable: "Show All Posts"
       short_label: "Top replies"
       short_title: "Show this topic top replies: the most interesting posts as determined by the community"
-      strategy:
-        hide_button_title: "Hide summary"
-        button_title: "Summarize this topic"
-        title: "Topic summary"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -4528,6 +4533,9 @@ en:
               title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
         global_section: "Global section, visible to everyone"
+      panels:
+        forum:
+          label: Forum
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -6095,6 +6103,12 @@ en:
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         interpolation_keys: "Available interpolation keys:"
+        outdated:
+          title: "This translation is outdated"
+          description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
+          old_default: "Old default"
+          new_default: "New default"
+          dismiss: "Dismiss"
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"

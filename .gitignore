@@ -54,6 +54,9 @@
 .ruby-version
 .ruby-gemset
 
+# Likewise, there is a .vscode-sample for VSCode config
+.vscode
+
 # Front-end
 dist
 node_modules

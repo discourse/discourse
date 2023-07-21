@@ -2,7 +2,7 @@
 
 module Chat
   class ViewSerializer < ApplicationSerializer
-    attributes :meta, :chat_messages, :threads, :tracking, :unread_thread_ids, :channel
+    attributes :meta, :chat_messages, :threads, :tracking, :unread_thread_overview, :channel
 
     def threads
       return [] if !object.threads
@@ -23,15 +23,15 @@ module Chat
       object.tracking || {}
     end
 
-    def unread_thread_ids
-      object.unread_thread_ids || []
+    def unread_thread_overview
+      object.unread_thread_overview || {}
     end
 
     def include_threads?
       include_thread_data?
     end
 
-    def include_unread_thread_ids?
+    def include_unread_thread_overview?
       include_thread_data?
     end
 

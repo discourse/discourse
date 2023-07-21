@@ -1,0 +1,17 @@
+<div class="fast-edit-container">
+  <textarea
+    {{auto-focus}}
+    {{on "input" this.updateValue}}
+    id="fast-edit-input"
+  >{{@initialValue}}</textarea>
+
+  <DButton
+    class="btn-small btn-primary save-fast-edit"
+    @action={{this.save}}
+    @icon="pencil-alt"
+    @label="composer.save_edit"
+    @translatedTitle={{this.buttonTitle}}
+    @isLoading={{this.isSaving}}
+    @disabled={{eq @initialValue this.value}}
+  />
+</div>

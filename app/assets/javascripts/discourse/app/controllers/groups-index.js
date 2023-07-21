@@ -4,8 +4,10 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  router: service(),
   application: controller(),
   queryParams: ["order", "asc", "filter", "type"],
   order: null,
@@ -55,7 +57,7 @@ export default Controller.extend({
 
   @action
   new() {
-    this.transitionToRoute("groups.new");
+    this.router.transitionTo("groups.new");
   },
 
   _debouncedFilter(filter) {

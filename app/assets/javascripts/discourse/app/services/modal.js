@@ -8,6 +8,77 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
 import deprecated from "discourse-common/lib/deprecated";
 
+// Known legacy modals in core. Silence deprecation warnings for these so the messages
+// don't cause unnecessary noise.
+const KNOWN_LEGACY_MODALS = [
+  "associate-account-confirm",
+  "auth-token",
+  "avatar-selector",
+  "bulk-actions-buttons",
+  "bulk-change-category",
+  "bulk-notification-level",
+  "bulk-progress",
+  "change-owner",
+  "change-post-notice",
+  "change-timestamp",
+  "convert-to-public-topic",
+  "create-account",
+  "create-invite-bulk",
+  "create-invite",
+  "delete-topic-confirm",
+  "delete-topic-disallowed",
+  "discard-draft",
+  "download-calendar",
+  "edit-slow-mode",
+  "edit-topic-timer",
+  "edit-user-directory-columns",
+  "explain-reviewable",
+  "feature-topic-on-profile",
+  "feature-topic",
+  "flag",
+  "forgot-password",
+  "grant-badge",
+  "group-default-notifications",
+  "history",
+  "ignore-duration-with-username",
+  "ignore-duration",
+  "insert-hyperlink",
+  "jump-to-post",
+  "login",
+  "move-to-topic",
+  "post-enqueued",
+  "publish-page",
+  "raw-email",
+  "reject-reason-reviewable",
+  "reorder-categories",
+  "request-group-membership-form",
+  "share-and-invite",
+  "tag-upload",
+  "topic-summary",
+  "user-status",
+  "admin-add-upload",
+  "admin-delete-posts-confirmation",
+  "admin-merge-users-prompt",
+  "admin-start-backup",
+  "admin-watched-word-test",
+  "admin-api-key-urls",
+  "admin-delete-user-posts-progress",
+  "admin-install-theme",
+  "admin-penalize-user",
+  "admin-theme-change",
+  "site-setting-default-categories",
+  "admin-badge-preview",
+  "admin-edit-badge-groupings",
+  "admin-merge-users-confirmation",
+  "admin-reseed",
+  "admin-theme-item",
+  "admin-color-scheme-select-base",
+  "admin-form-template-validation-options",
+  "admin-merge-users-progress",
+  "admin-staff-action-log-details",
+  "admin-uploaded-image-list",
+];
+
 const LEGACY_OPTS = new Set([
   "admin",
   "templateName",
@@ -120,15 +191,19 @@ export default class ModalServiceWithLegacySupport extends ModalService {
       return super.show(modal, opts);
     }
 
-    deprecated(
-      "Defining modals using a controller is deprecated. Use the component-based API instead.",
-      {
-        id: "discourse.modal-controllers",
-        since: "3.1",
-        dropFrom: "3.2",
-        url: "https://meta.discourse.org/t/268057",
-      }
-    );
+    this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
+
+    if (!KNOWN_LEGACY_MODALS.includes(modal)) {
+      deprecated(
+        `Defining modals using a controller is deprecated. Use the component-based API instead. (modal: ${modal})`,
+        {
+          id: "discourse.modal-controllers",
+          since: "3.1",
+          dropFrom: "3.2",
+          url: "https://meta.discourse.org/t/268057",
+        }
+      );
+    }
 
     const name = modal;
     const container = getOwner(this);

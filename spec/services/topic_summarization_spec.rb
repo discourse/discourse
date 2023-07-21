@@ -147,29 +147,42 @@ describe TopicSummarization do
         cached_summary.update!(summarized_text: cached_text, created_at: 24.hours.ago)
       end
 
-      context "when the summary targets changed" do
-        before { cached_summary.update!(content_range: (1..1)) }
+      context "when the user can requests new summaries" do
+        context "when there are no new posts" do
+          it "returns the cached summary" do
+            section = summarization.summarize(topic, user)
 
-        it "deletes existing summaries and create a new one" do
-          section = summarization.summarize(topic, user)
-
-          expect(section.summarized_text).to eq(summarized_text)
+            expect(section.summarized_text).to eq(cached_text)
+          end
         end
 
-        it "does nothing if the last summary is less than 12 hours old" do
-          cached_summary.update!(created_at: 6.hours.ago)
+        context "when there are new posts" do
+          before { cached_summary.update!(original_content_sha: "outdated_sha") }
 
-          section = summarization.summarize(topic, user)
+          it "returns a new summary" do
+            section = summarization.summarize(topic, user)
 
-          expect(section.summarized_text).to eq(cached_text)
-        end
-      end
+            expect(section.summarized_text).to eq(summarized_text)
+          end
 
-      context "when the summary targets are still the same" do
-        it "doesn't create a new summary" do
-          section = summarization.summarize(topic, user)
+          context "when the cached summary is less than one hour old" do
+            before { cached_summary.update!(created_at: 30.minutes.ago) }
 
-          expect(section.summarized_text).to eq(cached_text)
+            it "returns the cached summary" do
+              cached_summary.update!(created_at: 30.minutes.ago)
+
+              section = summarization.summarize(topic, user)
+
+              expect(section.summarized_text).to eq(cached_text)
+              expect(section.outdated).to eq(true)
+            end
+
+            it "returns a new summary if the skip_age_check flag is passed" do
+              section = summarization.summarize(topic, user, skip_age_check: true)
+
+              expect(section.summarized_text).to eq(summarized_text)
+            end
+          end
         end
       end
     end

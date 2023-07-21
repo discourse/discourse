@@ -5,14 +5,25 @@ class TopicSummarization
     @strategy = strategy
   end
 
-  def summarize(topic, user)
+  def summarize(topic, user, opts = {})
     existing_summary = SummarySection.find_by(target: topic, meta_section_id: nil)
 
-    # For users without permissions to generate a summary, we return what we have cached.
     # Existing summary shouldn't be nil in this scenario because the controller checks its existence.
-    return existing_summary if !user || !Summarization::Base.can_request_summary_for?(user)
+    return if !user && !existing_summary
 
-    return existing_summary if existing_summary && fresh?(existing_summary, topic)
+    targets_data = summary_targets(topic).pluck(:post_number, :raw, :username)
+
+    current_topic_sha = build_sha(targets_data.map(&:first))
+    can_summarize = Summarization::Base.can_request_summary_for?(user)
+
+    if use_cached?(existing_summary, can_summarize, current_topic_sha, !!opts[:skip_age_check])
+      # It's important that we signal a cached summary is outdated
+      if can_summarize && new_targets?(existing_summary, current_topic_sha)
+        existing_summary.mark_as_outdated
+      end
+
+      return existing_summary
+    end
 
     delete_cached_summaries_of(topic) if existing_summary
 
@@ -21,8 +32,6 @@ class TopicSummarization
       content_title: topic.title,
       contents: [],
     }
-
-    targets_data = summary_targets(topic).pluck(:post_number, :raw, :username)
 
     targets_data.map do |(pn, raw, username)|
       content[:contents] << { poster: username, id: pn, text: raw }
@@ -34,7 +43,7 @@ class TopicSummarization
   end
 
   def summary_targets(topic)
-    @targets ||= topic.has_summary? ? best_replies(topic) : pick_selection(topic)
+    topic.has_summary? ? best_replies(topic) : pick_selection(topic)
   end
 
   private
@@ -73,11 +82,17 @@ class TopicSummarization
     SummarySection.where(target: topic).destroy_all
   end
 
-  def fresh?(summary, topic)
-    return true if summary.created_at > 12.hours.ago
-    latest_post_to_summarize = summary_targets(topic).last.post_number
+  # For users without permissions to generate a summary or fresh summaries, we return what we have cached.
+  def use_cached?(existing_summary, can_summarize, current_sha, skip_age_check)
+    existing_summary &&
+      !(
+        can_summarize && new_targets?(existing_summary, current_sha) &&
+          (skip_age_check || existing_summary.created_at < 1.hour.ago)
+      )
+  end
 
-    latest_post_to_summarize <= summary.content_range.to_a.last
+  def new_targets?(summary, current_sha)
+    summary.original_content_sha != current_sha
   end
 
   def cache_summary(result, post_numbers, topic)
@@ -87,7 +102,7 @@ class TopicSummarization
         algorithm: strategy.model,
         content_range: (post_numbers.first..post_numbers.last),
         summarized_text: result[:summary],
-        original_content_sha: Digest::SHA256.hexdigest(post_numbers.join),
+        original_content_sha: build_sha(post_numbers),
       )
 
     result[:chunks].each do |chunk|
@@ -96,11 +111,15 @@ class TopicSummarization
         algorithm: strategy.model,
         content_range: chunk[:ids].min..chunk[:ids].max,
         summarized_text: chunk[:summary],
-        original_content_sha: Digest::SHA256.hexdigest(chunk[:ids].join),
+        original_content_sha: build_sha(chunk[:ids]),
         meta_section_id: main_summary.id,
       )
     end
 
     main_summary
+  end
+
+  def build_sha(ids)
+    Digest::SHA256.hexdigest(ids.join)
   end
 end

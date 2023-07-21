@@ -8,7 +8,8 @@ describe Chat::ChannelFetcher do
   fab!(:dm_channel2) { Fabricate(:direct_message) }
   fab!(:direct_message_channel1) { Fabricate(:direct_message_channel, chatable: dm_channel1) }
   fab!(:direct_message_channel2) { Fabricate(:direct_message_channel, chatable: dm_channel2) }
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:chatters) { Fabricate(:group) }
+  fab!(:user1) { Fabricate(:user, group_ids: [chatters.id]) }
   fab!(:user2) { Fabricate(:user) }
 
   def guardian
@@ -18,6 +19,8 @@ describe Chat::ChannelFetcher do
   def memberships
     Chat::UserChatChannelMembership.where(user: user1)
   end
+
+  before { SiteSetting.chat_allowed_groups = [chatters] }
 
   describe ".structured" do
     it "returns open channel only" do
