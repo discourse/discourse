@@ -310,7 +310,6 @@ class PostDestroyer
         .where.not(user_id: nil)
         .where.not(post_type: Post.types[:whisper])
         .order("created_at desc")
-        .limit(1)
         .first
 
     if last_post.present?
