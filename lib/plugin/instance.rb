@@ -971,36 +971,7 @@ class Plugin::Instance
   #
   # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
   # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
-  def add_api_parameter_route(
-    method: nil,
-    methods: nil,
-    route: nil,
-    actions: nil,
-    format: nil,
-    formats: nil
-  )
-    if Array(format).include?("*")
-      Discourse.deprecate(
-        "* is no longer a valid api_parameter_route format matcher. Use `nil` instead",
-        drop_from: "2.7",
-        raise_error: true,
-      )
-      # Old API used * as wildcard. New api uses `nil`
-      format = nil
-    end
-
-    # Backwards compatibility with old parameter names:
-    if method || route || format
-      Discourse.deprecate(
-        "method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.",
-        drop_from: "2.7",
-        raise_error: true,
-      )
-      methods ||= method
-      actions ||= route
-      formats ||= format
-    end
-
+  def add_api_parameter_route(methods: nil, actions: nil, formats: nil)
     DiscoursePluginRegistry.register_api_parameter_route(
       RouteMatcher.new(methods: methods, actions: actions, formats: formats),
       self,
