@@ -107,8 +107,12 @@ export default class LightboxService extends Service {
   }
 
   @bind
-  async openLightbox({ container, selector }) {
-    const { items, startingIndex } = await processHTML({ container, selector });
+  async openLightbox({ container, selector, clickTarget }) {
+    const { items, startingIndex } = await processHTML({
+      container,
+      selector,
+      clickTarget,
+    });
 
     if (!items.length) {
       return;
@@ -236,6 +240,7 @@ export default class LightboxService extends Service {
   }
 
   handleClickEvent(event, trigger) {
+    const closestTrigger = event.target.closest(trigger);
     const isLightboxClick = event
       .composedPath()
       .find(
@@ -254,6 +259,7 @@ export default class LightboxService extends Service {
     this.openLightbox({
       container: event.currentTarget,
       selector: trigger,
+      clickTarget: closestTrigger,
     });
 
     event.target.toggleAttribute(SELECTORS.DOCUMENT_LAST_FOCUSED_ELEMENT);
