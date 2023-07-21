@@ -16,7 +16,7 @@ export default class AdminCustomizeThemesEditRoute extends Route {
           target: params.target,
           field_name: params.field_name,
         }
-      : this.router.replaceWith("adminCustomizeThemes.index");
+      : this.replaceWith("adminCustomizeThemes.index");
   }
 
   serialize(wrapper) {

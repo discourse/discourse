@@ -25,7 +25,6 @@ const ALL = "all";
 
 export default DiscourseRoute.extend(FilterModeMixin, {
   composer: service(),
-  router: service(),
   navMode: "latest",
 
   queryParams,
@@ -100,7 +99,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.router.replaceWith(
+      return this.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
         tagId

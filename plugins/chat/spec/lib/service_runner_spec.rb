@@ -64,6 +64,18 @@ RSpec.describe ServiceRunner do
     end
   end
 
+  class FailureWithOptionalModelService
+    include Service::Base
+
+    model :fake_model, optional: true
+
+    private
+
+    def fetch_fake_model
+      nil
+    end
+  end
+
   class FailureWithModelErrorsService
     include Service::Base
 
@@ -284,6 +296,14 @@ RSpec.describe ServiceRunner do
         BLOCK
 
       context "when fetching a single model" do
+        context "when the service uses an optional model" do
+          let(:service) { FailureWithOptionalModelService }
+
+          it "does not run the provided block" do
+            expect(runner).not_to eq :no_model
+          end
+        end
+
         context "when the service fails without a model" do
           let(:service) { FailureWithModelService }
 

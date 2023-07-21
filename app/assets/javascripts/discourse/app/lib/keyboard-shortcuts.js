@@ -733,11 +733,13 @@ export default {
       newIndex += direction;
       article = articles[newIndex];
 
+      // Element doesn't exist
       if (!article) {
-        // Element doesn't exist
         return;
-      } else if (article.offsetParent !== null) {
-        // Element is not hidden
+      }
+
+      // Element is visible
+      if (article.getBoundingClientRect().height > 0) {
         break;
       }
     }

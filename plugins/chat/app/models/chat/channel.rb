@@ -119,6 +119,14 @@ module Chat
       update_user_counts
     end
 
+    def joined_by?(user)
+      user.user_chat_channel_memberships.strict_loading.any? do |membership|
+        predicate = membership.chat_channel_id == id
+        predicate = predicate && membership.following if public_channel?
+        predicate
+      end
+    end
+
     def self.update_message_counts
       # NOTE: Chat::Channel#messages_count is not updated every time
       # a message is created or deleted in a channel, so it should not

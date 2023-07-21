@@ -23,7 +23,6 @@ export default (filterArg, params) => {
   return DiscourseRoute.extend({
     queryParams,
     composer: service(),
-    router: service(),
 
     model(modelParams) {
       const category = Category.findBySlugPathWithID(
@@ -51,7 +50,7 @@ export default (filterArg, params) => {
 
     afterModel(model, transition) {
       if (!model) {
-        this.router.replaceWith("/404");
+        this.replaceWith("/404");
         return;
       }
 
@@ -65,7 +64,7 @@ export default (filterArg, params) => {
       ) {
         // TODO: avoid throwing away preload data by redirecting on the server
         PreloadStore.getAndRemove("topic_list");
-        return this.router.replaceWith(
+        return this.replaceWith(
           "discovery.categoryNone",
           modelParams.category_slug_path_with_id
         );

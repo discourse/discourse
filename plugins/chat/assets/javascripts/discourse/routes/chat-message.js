@@ -17,7 +17,7 @@ export default class ChatMessageRoute extends DiscourseRoute {
           params.messageId
         );
       })
-      .catch(() => this.router.replaceWith("/404"));
+      .catch(() => this.replaceWith("/404"));
   }
 
   beforeModel() {

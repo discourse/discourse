@@ -6,7 +6,7 @@
     @headerActionsIcon={{customSection.actionsIcon}}
     @headerActions={{customSection.actions}}
     @willDestroy={{customSection.willDestroy}}
-    @collapsable={{@collapsableSections}}
+    @collapsable={{@collapsable}}
     @displaySection={{customSection.displaySection}}
   >
 
@@ -17,6 +17,7 @@
         @route={{link.route}}
         @model={{link.model}}
         @models={{link.models}}
+        @href={{link.href}}
         @title={{link.title}}
         @contentCSSClass={{link.contentCSSClass}}
         @prefixColor={{link.prefixColor}}

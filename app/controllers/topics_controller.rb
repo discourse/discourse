@@ -1179,13 +1179,19 @@ class TopicsController < ApplicationController
 
     RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
 
+    opts = params.permit(:skip_age_check)
+
     hijack do
-      summary = TopicSummarization.new(strategy).summarize(topic, current_user)
+      summary = TopicSummarization.new(strategy).summarize(topic, current_user, opts)
 
       render json: {
                summary: summary.summarized_text,
                summarized_on: summary.updated_at,
                summarized_by: summary.algorithm,
+               outdated: summary.outdated,
+               can_regenerate: Summarization::Base.can_request_summary_for?(current_user),
+               new_posts_since_summary:
+                 topic.highest_post_number.to_i - summary.content_range&.max.to_i,
              }
     end
   end

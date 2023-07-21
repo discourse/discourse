@@ -2,17 +2,17 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 import {
   currentPanelKey,
   customPanels as sidebarCustomPanels,
 } from "discourse/lib/sidebar/custom-sections";
-import { action } from "@ember/object";
 
 export default class Sidebar extends Component {
   @service appEvents;
   @service site;
+  @service siteSettings;
   @service currentUser;
-  @service router;
   @tracked currentPanelKey = currentPanelKey;
 
   constructor() {
@@ -31,6 +31,10 @@ export default class Sidebar extends Component {
     return sidebarCustomPanels.find(
       (panel) => panel.key === this.currentPanelKey
     );
+  }
+
+  get showSwitchPanelButtonsOnTop() {
+    return this.siteSettings.default_sidebar_switch_panel_position === "top";
   }
 
   get switchPanelButtons() {
@@ -69,14 +73,7 @@ export default class Sidebar extends Component {
   }
 
   @action
-  switchPanel(panel) {
-    this.currentPanel.lastKnownURL = this.router.currentURL;
-    this.currentPanelKey = panel.key;
-    const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
-    if (url === "/") {
-      this.router.transitionTo("latest");
-    } else {
-      this.router.transitionTo(url);
-    }
+  setCurrentPanelKey(key) {
+    this.currentPanelKey = key;
   }
 }

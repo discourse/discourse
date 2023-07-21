@@ -257,6 +257,14 @@ Discourse::Application.routes.draw do
                  id: /[\w.\-\+\%\&]+/i,
                }
         delete "site_texts/:id" => "site_texts#revert", :constraints => { id: /[\w.\-\+\%\&]+/i }
+        put "site_texts/:id/dismiss_outdated" => "site_texts#dismiss_outdated",
+            :constraints => {
+              id: /[\w.\-\+\%\&]+/i,
+            }
+        put "site_texts/:id/dismiss_outdated.json" => "site_texts#dismiss_outdated",
+            :constraints => {
+              id: /[\w.\-\+\%\&]+/i,
+            }
 
         get "reseed" => "site_texts#get_reseed_options"
         post "reseed" => "site_texts#reseed"
