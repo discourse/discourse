@@ -47,22 +47,22 @@ jobs:
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
 
-    services:
-      minio:
-        image: minio/minio
-        ports:
-          - 9000:9000
-          - 9001:9001
-        env:
-          MINIO_ACCESS_KEY: minioadmin
-          MINIO_SECRET_KEY: minioadmin
-          # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
-          # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
-          MINIO_DOMAIN: minio.local
-        volumes:
-          - ${{ github.workspace }}/data:/data
-          - ${{ github.workspace }}/config:/root/.minio
-        options: --name=minio
+    # services:
+    #   minio:
+    #     image: minio/minio
+    #     ports:
+    #       - 9000:9000
+    #       - 9001:9001
+    #     env:
+    #       MINIO_ACCESS_KEY: minioadmin
+    #       MINIO_SECRET_KEY: minioadmin
+    #       # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+    #       # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+    #       MINIO_DOMAIN: minio.local
+    #     volumes:
+    #       - ${{ github.workspace }}/data:/data
+    #       - ${{ github.workspace }}/config:/root/.minio
+    #     options: --name=minio
 
     steps:
       - name: Set working directory owner
@@ -86,8 +86,15 @@ jobs:
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-      - name: Create minio test bucket
+      - name: Run minio and create minio test bucket
         run: |
+          docker run -d -p 9000:9000 -p 9001:90001 --name minio
+                     -e "MINIO_ACCESS_KEY=minioadmin"
+                     -e "MINIO_SECRET_KEY=minioadmin"
+                     -e "MINIO_DOMAIN=minio.local"
+                     -v /tmp/data:/data
+                     -v /tmp/config:/root/.minio
+                     minio/minio server /data --console-address ":9001"
           aws --endpoint-url http://minio.local:9000/ s3 mb s3://discoursetest
 
       - name: Setup Git
