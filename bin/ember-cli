@@ -64,7 +64,12 @@ if ARGV.include?("--forward-host")
 end
 
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
-  unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
+  unicorn_env = { 
+    "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200",
+    # fallback to development mode if not specify
+    # since RAILS_ENV is empty string by default in the discourse_dev docker container
+    "RAILS_ENV" => ENV["RAILS_ENV"].to_s.empty? ? 'development' : ENV["RAILS_ENV"]
+  }
   unicorn_pid = spawn(unicorn_env, __dir__ + "/unicorn")
   ember_cli_pid = nil
 
