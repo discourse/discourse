@@ -2,9 +2,9 @@ import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import { mentionRegex } from "pretty-text/mentions";
 import { cancel } from "@ember/runloop";
 import { tracked } from "@glimmer/tracking";
+import { parseMentionedUsernames } from "discourse/lib/parse-mentions";
 
 const MENTION_RESULT = {
   invalid: -1,
@@ -63,58 +63,36 @@ export default class ChatComposerWarningsTracker extends Service {
       return;
     }
 
-    const mentions = this._extractMentions(currentMessage.message);
-    this.mentionsCount = mentions?.length;
+    currentMessage.cook().then(() => {
+      const mentions = parseMentionedUsernames(currentMessage.cooked);
+      this.mentionsCount = mentions?.length;
 
-    if (this.mentionsCount > 0) {
-      this.tooManyMentions =
-        this.mentionsCount > this.siteSettings.max_mentions_per_chat_message;
+      if (this.mentionsCount > 0) {
+        this.tooManyMentions =
+          this.mentionsCount > this.siteSettings.max_mentions_per_chat_message;
 
-      if (!this.tooManyMentions) {
-        const newMentions = mentions.filter(
-          (mention) => !(mention in this._mentionWarningsSeen)
-        );
+        if (!this.tooManyMentions) {
+          const newMentions = mentions.filter(
+            (mention) => !(mention in this._mentionWarningsSeen)
+          );
 
-        this.channelWideMentionDisallowed =
-          !currentMessage.channel.allowChannelWideMentions &&
-          (mentions.includes("here") || mentions.includes("all"));
+          this.channelWideMentionDisallowed =
+            !currentMessage.channel.allowChannelWideMentions &&
+            (mentions.includes("here") || mentions.includes("all"));
 
-        if (newMentions?.length > 0) {
-          this._recordNewWarnings(newMentions, mentions);
-        } else {
-          this._rebuildWarnings(mentions);
-        }
-      }
-    } else {
-      this.tooManyMentions = false;
-      this.channelWideMentionDisallowed = false;
-      this.unreachableGroupMentions = [];
-      this.overMembersLimitGroupMentions = [];
-    }
-  }
-
-  _extractMentions(message) {
-    const regex = mentionRegex(this.siteSettings.unicode_usernames);
-    const mentions = [];
-    let mentionsLeft = true;
-
-    while (mentionsLeft) {
-      const matches = message.match(regex);
-
-      if (matches) {
-        const mention = matches[1] || matches[2];
-        mentions.push(mention);
-        message = message.replaceAll(`${mention}`, "");
-
-        if (mentions.length > this.siteSettings.max_mentions_per_chat_message) {
-          mentionsLeft = false;
+          if (newMentions?.length > 0) {
+            this._recordNewWarnings(newMentions, mentions);
+          } else {
+            this._rebuildWarnings(mentions);
+          }
         }
       } else {
-        mentionsLeft = false;
+        this.tooManyMentions = false;
+        this.channelWideMentionDisallowed = false;
+        this.unreachableGroupMentions = [];
+        this.overMembersLimitGroupMentions = [];
       }
-    }
-
-    return mentions;
+    });
   }
 
   _recordNewWarnings(newMentions, mentions) {
