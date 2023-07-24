@@ -91,7 +91,7 @@ export default class AdminDashboardController extends Controller {
         })
         .catch((e) => {
           this.exceptionController.set("thrown", e.jqXHR);
-          this.router.replaceRoute("exception");
+          this.router.replaceWith("exception");
         })
         .finally(() => {
           this.set("isLoading", false);
