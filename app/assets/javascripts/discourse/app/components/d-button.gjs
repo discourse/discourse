@@ -64,12 +64,12 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
             &hellip;
           {{~/if~}}
         </span>
-      {{~else if (has-block)~}}
-        {{yield}}
       {{~else~}}
         &#8203;
         {{! Zero-width space character, so icon-only button height = regular button height }}
       {{~/if~}}
+
+      {{yield}}
     </button>
   </template>
 
