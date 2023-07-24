@@ -85,7 +85,7 @@ jobs:
       - name: Fetch minio mc client and setup bucket alias
         run: |
           curl -o ./mc -# https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
-          ./mc alias set minio http://localhost:9000 minioadmin minioadmin
+          ./mc alias set minio http://minio.local:9000 minioadmin minioadmin
 
       - name: Setup Git
         run: |
