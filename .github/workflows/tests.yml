@@ -78,14 +78,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install awscli
 
-      - name: Create minio test bucket
-        run: |
-          aws --endpoint-url http://minio.local:9000/ s3 mb s3://discoursetest
+      # - name: Create minio test bucket
+      #   run: |
+      #     aws --endpoint-url http://minio.local:9000/ s3 mb s3://discoursetest
 
-      - name: Fetch minio mc client and setup bucket alias
+      - name: Fetch minio mc client and setup bucket
         run: |
           curl -o ./mc -# https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
           ./mc alias set minio http://minio.local:9000 minioadmin minioadmin
+          ./mc mb minio/discoursetest
 
       - name: Setup Git
         run: |
