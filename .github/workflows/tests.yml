@@ -59,9 +59,9 @@ jobs:
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
-        volumes:
-          - ${{ github.workspace }}/data:/data
-          - ${{ github.workspace }}/config:/root/.minio
+        # volumes:
+        #   - ${{ github.workspace }}/data:/data
+        #   - ${{ github.workspace }}/config:/root/.minio
         options: --name=minio.local --health-cmd "curl http://localhost:9000/minio/health/live"
 
     steps:
