@@ -686,8 +686,13 @@ def apply_base_chrome_options(options)
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
 
-  # Disable CORS checks.
-  options.add_argument("--disable-web-security")
+  if ENV["CHROME_DISABLE_CORS_CHECKS"]
+    # Disable CORS checks.
+    options.add_argument("--disable-web-security")
+
+    # Add data dir for CORS check disable.
+    options.add_argument("--user-data-dir=$HOME/.config/chromium-dev")
+  end
 
   # A file that contains just a list of paths like so:
   #
