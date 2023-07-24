@@ -78,17 +78,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install awscli
 
-      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
-        run: |
-          sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
-
       - name: Fetch minio mc client and setup bucket
         run: |
           curl -o ./mc -# https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
           ./mc alias set local http://minio.local:9000 minioadmin minioadmin
           ./mc mb local/discoursetest
           ./mc anonymous set public local/discoursetest
+
+      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+        run: |
+          sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
       - name: Setup Git
         run: |
