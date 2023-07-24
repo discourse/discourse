@@ -686,6 +686,9 @@ def apply_base_chrome_options(options)
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
 
+  # Disable CORS checks.
+  options.add_argument("--disable-web-security")
+
   # A file that contains just a list of paths like so:
   #
   # /home/me/.config/google-chrome/Default/Extensions/bmdblncegkenkacieihfhpjfppoconhi/4.9.1_0
