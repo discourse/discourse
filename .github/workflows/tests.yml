@@ -59,7 +59,7 @@ jobs:
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
-        options: --name=minio.local --health-cmd "curl http://localhost:9000/minio/health/live"
+        options: --name=minio.local --health-cmd "curl http://localhost:9000/minio/health/live" --console-address ":9001"
 
     steps:
       - name: Set working directory owner
@@ -85,8 +85,9 @@ jobs:
       - name: Fetch minio mc client and setup bucket
         run: |
           curl -o ./mc -# https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
-          ./mc alias set minio http://minio.local:9000 minioadmin minioadmin
-          ./mc mb minio/discoursetest
+          ./mc alias set local http://minio.local:9000 minioadmin minioadmin
+          ./mc mb local/discoursetest
+          ./mc anonymous set public local/discoursetest
 
       - name: Setup Git
         run: |
