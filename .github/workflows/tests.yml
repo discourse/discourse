@@ -59,9 +59,6 @@ jobs:
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
-        # volumes:
-        #   - ${{ github.workspace }}/data:/data
-        #   - ${{ github.workspace }}/config:/root/.minio
         options: --name=minio.local --health-cmd "curl http://localhost:9000/minio/health/live"
 
     steps:
@@ -81,13 +78,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install awscli
 
-      # - name: Add hosts to /etc/hosts
-      #   run: |
-      #     sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-      #     sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
       - name: Create minio test bucket
         run: |
           aws --endpoint-url http://minio.local:9000/ s3 mb s3://discoursetest
+
+      - name: Fetch minio mc client and setup bucket alias
+        run: |
+          curl -o ./mc -# https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
+          ./mc alias set minio http://localhost:9000 minioadmin minioadmin
 
       - name: Setup Git
         run: |
@@ -184,14 +182,14 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-      - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v3
-        id: test-runtime-cache
-        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
-        with:
-          path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
+      # - name: Fetch turbo_rspec_runtime.log cache
+      #   uses: actions/cache@v3
+      #   id: test-runtime-cache
+      #   if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+      #   with:
+      #     path: tmp/turbo_rspec_runtime.log
+      #     key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
+      #     restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       # - name: Check Zeitwerk eager_load
       #   if: matrix.build_type == 'backend'
