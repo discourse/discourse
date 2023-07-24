@@ -84,6 +84,9 @@ jobs:
           ./mc alias set local http://minio.local:9000 minioadmin minioadmin
           ./mc mb local/discoursetest
           ./mc anonymous set public local/discoursetest
+          ./mc admin config get local
+          ./mc admin config set local cors allow-origin="http://localhost:31338" allow-headers="*" expose-headers="ETag" --insecure
+          ./mc admin config reload local --insecure
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
