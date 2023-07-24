@@ -50,10 +50,6 @@ export default class ChatModalCreateChannel extends Component {
     return isPresent(this.category);
   }
 
-  get threadingAvailable() {
-    return this.categorySelected;
-  }
-
   get createDisabled() {
     return !this.categorySelected || isBlank(this.name);
   }
