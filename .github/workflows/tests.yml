@@ -62,7 +62,7 @@ jobs:
         volumes:
           - ${{ github.workspace }}/data:/data
           - ${{ github.workspace }}/config:/root/.minio
-        options: --name=minio.local
+        options: --name=minio.local --health-cmd "curl http://localhost:9000/minio/health/live"
 
     steps:
       - name: Set working directory owner
