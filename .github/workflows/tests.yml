@@ -61,9 +61,6 @@ jobs:
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
-        # volumes:
-        #   - ${{ github.workspace }}/data:/data
-        # options: --health-cmd "curl http://minio.local:9000/minio/health/live" --name=minio.local
 
     steps:
       - name: Set working directory owner
@@ -72,15 +69,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Install python dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install awscli
 
       - name: Fetch minio mc client and setup bucket
         run: |
