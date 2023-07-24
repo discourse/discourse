@@ -59,7 +59,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
     );
     newColorScheme.save().then(() => {
       this.allColors.pushObject(newColorScheme);
-      this.router.replaceRoute("adminCustomize.colors.show", newColorScheme);
+      this.router.replaceWith("adminCustomize.colors.show", newColorScheme);
     });
   }
 
@@ -80,7 +80,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
       didConfirm: () => {
         return this.model.destroy().then(() => {
           this.allColors.removeObject(this.model);
-          this.router.replaceRoute("adminCustomize.colors");
+          this.router.replaceWith("adminCustomize.colors");
         });
       },
     });

@@ -38,7 +38,7 @@ export default class AdminCustomizeColorsController extends Controller {
     newColorScheme.save().then(() => {
       this.model.pushObject(newColorScheme);
       newColorScheme.set("savingStatus", null);
-      this.router.replaceRoute("adminCustomize.colors.show", newColorScheme);
+      this.router.replaceWith("adminCustomize.colors.show", newColorScheme);
     });
   }
 
