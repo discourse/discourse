@@ -86,7 +86,6 @@ jobs:
           ./mc anonymous set public local/discoursetest
           ./mc admin config get local api
           ./mc admin config set local api cors_allow_origin="*"
-          ./mc admin config reload local --insecure
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
