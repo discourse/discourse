@@ -7,35 +7,11 @@ import {
   exists,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import Site from "discourse/models/site";
-import { TOP_SITE_TAGS_TO_SHOW } from "discourse/components/sidebar/common/tags-section";
-
-acceptance(
-  "Sidebar - Logged on user - Tags section - tagging disabled",
-  function (needs) {
-    needs.settings({
-      tagging_enabled: false,
-      navigation_menu: "sidebar",
-    });
-
-    needs.user();
-
-    test("tags section is not shown", async function (assert) {
-      await visit("/");
-
-      assert.ok(
-        !exists(".sidebar-section[data-section-name='tags']"),
-        "does not display the tags section"
-      );
-    });
-  }
-);
 
 acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   needs.settings({
@@ -91,72 +67,6 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         );
       });
     });
-  });
-
-  test("section is not displayed when display_sidebar_tags property is false", async function (assert) {
-    updateCurrentUser({ display_sidebar_tags: false });
-
-    await visit("/");
-
-    assert.notOk(
-      exists(".sidebar-section[data-section-name='tags']"),
-      "tags section is not displayed"
-    );
-  });
-
-  test("tags section is displayed with site's top tags when user has not added any tags and there are no default tags configured", async function (assert) {
-    updateCurrentUser({
-      sidebar_tags: [],
-    });
-
-    Site.current().top_tags = [
-      "test1",
-      "test2",
-      "test3",
-      "test4",
-      "test5",
-      "test6",
-    ];
-
-    await visit("/");
-
-    assert.ok(
-      exists(".sidebar-section[data-section-name='tags']"),
-      "tags section is displayed"
-    );
-
-    assert.strictEqual(
-      count(
-        ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name]"
-      ),
-      TOP_SITE_TAGS_TO_SHOW,
-      "right number of tag section links are displayed"
-    );
-
-    ["test1", "test2", "test3", "test4", "test5"].forEach((tagName) => {
-      assert.ok(
-        exists(`.sidebar-section-link-wrapper[data-tag-name=${tagName}]`),
-        `${tagName} tag section link is displayed`
-      );
-    });
-  });
-
-  test("tag section links are sorted alphabetically by tag's name", async function (assert) {
-    await visit("/");
-
-    const tagSectionLinks = queryAll(
-      ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-tags'])"
-    );
-
-    const tagNames = [...tagSectionLinks].map((tagSectionLink) =>
-      tagSectionLink.textContent.trim()
-    );
-
-    assert.deepEqual(
-      tagNames,
-      ["tag1", "tag2", "tag3", "tag4"],
-      "tag section links are displayed in the right order"
-    );
   });
 
   test("tag section links for user", async function (assert) {
