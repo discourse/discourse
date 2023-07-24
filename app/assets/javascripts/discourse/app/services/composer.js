@@ -34,6 +34,7 @@ import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
+import DiscardDraftModal from "discourse/components/modal/discard-draft";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -1498,36 +1499,36 @@ export default class ComposerController extends Controller {
 
     return new Promise((resolve) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const modal = showModal("discard-draft", {
-          model: this.model,
-          modalClass: "discard-draft-modal",
-        });
         const overridesDraft =
           this.model.composeState === Composer.OPEN &&
           this.model.draftKey === opts.draftKey &&
           [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
         const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
-        modal.setProperties({
-          showSaveDraftButton,
-          onDestroyDraft: () => {
-            return this.destroyDraft()
-              .then(() => {
+        getOwner(this)
+          .lookup("service:modal")
+          .show(DiscardDraftModal, {
+            model: {
+              allowSaveDraft: showSaveDraftButton,
+              onDestroyDraft: () => {
+                return this.destroyDraft()
+                  .then(() => {
+                    this.model.clearState();
+                    this.close();
+                  })
+                  .finally(() => {
+                    this.appEvents.trigger("composer:cancelled");
+                    resolve();
+                  });
+              },
+              onSaveDraft: () => {
+                this._saveDraft();
                 this.model.clearState();
                 this.close();
-              })
-              .finally(() => {
                 this.appEvents.trigger("composer:cancelled");
-                resolve();
-              });
-          },
-          onSaveDraft: () => {
-            this._saveDraft();
-            this.model.clearState();
-            this.close();
-            this.appEvents.trigger("composer:cancelled");
-            return resolve();
-          },
-        });
+                return resolve();
+              },
+            },
+          });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
