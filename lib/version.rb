@@ -31,7 +31,7 @@ module Discourse
   #  2.5.0.beta2: bbffee
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
-  def self.find_compatible_resource(version_list, version = ::Discourse::VERSION::STRING)
+  def self.find_compatible_resource(version_list, target_version = ::Discourse::VERSION::STRING)
     return unless version_list.present?
 
     begin
@@ -43,36 +43,35 @@ module Discourse
 
     version_list =
       version_list
-        .sort_by do |v, pin|
-          op, v = Gem::Requirement.parse(v)
-          v
-        rescue Gem::Requirement::BadRequirementError
+        .transform_keys do |v|
+          Gem::Requirement.parse(v)
+        rescue Gem::Requirement::BadRequirementError => e
           raise InvalidVersionListError, "Invalid version specifier: #{v}"
         end
-        .reverse
+        .sort_by do |parsed_requirement, _|
+          operator, version = parsed_requirement
+          [version, operator == "<" ? 0 : 1]
+        end
 
-    parsed_version = Gem::Version.new(version)
+    parsed_target_version = Gem::Version.new(target_version)
 
-    # If plugin compat version is listed as less than current Discourse version, take the version/hash listed before.
-    checkout_version = nil
-    version_list.each do |core_compat, target|
-      compat_op, compat_version = Gem::Requirement.parse(core_compat)
+    lowest_matching_entry =
+      version_list.find do |parsed_requirement, target|
+        req_operator, req_version = parsed_requirement
+        req_operator = "<=" if req_operator == "="
 
-      if !%w[= <= ~>].include?(compat_op)
-        raise InvalidVersionListError,
-              "Invalid version specifier operator for #{core_compat}. Operator must be one of <= or ~>"
+        if !%w[= <= <].include?(req_operator)
+          raise InvalidVersionListError,
+                "Invalid version specifier operator for '#{req_operator} #{req_version}'. Operator must be one of <= or <"
+        end
+
+        resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version.to_s}")
+        resolved_requirement.satisfied_by?(parsed_target_version)
       end
 
-      defined_requirement = Gem::Requirement.new(core_compat)
-      less_than_defined_requirement = Gem::Requirement.new("<= #{compat_version}")
+    return if lowest_matching_entry.nil?
 
-      if defined_requirement.satisfied_by?(parsed_version) ||
-           less_than_defined_requirement.satisfied_by?(parsed_version)
-        checkout_version = target
-      end
-    end
-
-    return if checkout_version.nil?
+    checkout_version = lowest_matching_entry[1]
 
     begin
       Discourse::Utils.execute_command "git",

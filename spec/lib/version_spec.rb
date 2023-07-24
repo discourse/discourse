@@ -106,33 +106,41 @@ RSpec.describe Discourse::VERSION do
 
     context "with different version operators" do
       let(:version_list) { <<~YML }
-        3.2.0.beta1: threePointTwoPointZeroBetaOne
-        <= 3.2.0.beta2: threePointTwoPointZeroBetaTwo
-        ~> 3.1.0: threePointOnePointZero
+        <= 3.2.0.beta1: lteBeta1
+        3.2.0.beta2: lteBeta2
+        < 3.2.0.beta4: ltBeta4
+        <= 3.2.0.beta4: lteBeta4
       YML
 
-      it "supports ~> and <= operators" do
-        expect(Discourse.find_compatible_resource(version_list, "2.9.0")).to eq(
-          "threePointOnePointZero",
-        )
-        expect(Discourse.find_compatible_resource(version_list, "3.0.0")).to eq(
-          "threePointOnePointZero",
-        )
-        expect(Discourse.find_compatible_resource(version_list, "3.0.1")).to eq(
-          "threePointOnePointZero",
-        )
-        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta1")).to eq(
-          "threePointTwoPointZeroBetaOne",
-        )
-        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta2")).to eq(
-          "threePointTwoPointZeroBetaTwo",
-        )
-        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta3")).to eq(nil)
-        expect(Discourse.find_compatible_resource(version_list, "3.2.0")).to eq(nil)
+      it "supports <= operator" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta1")).to eq("lteBeta1")
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta0")).to eq("lteBeta1")
+      end
+
+      it "defaults to <= operator" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta2")).to eq("lteBeta2")
+      end
+
+      it "supports < operator" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta3")).to eq("ltBeta4")
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta4")).not_to eq("ltBeta4")
+      end
+
+      it "prioritises <= over <, regardless of file order" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta3")).to eq("ltBeta4")
+        expect(
+          Discourse.find_compatible_resource(version_list.lines.reverse.join("\n"), "3.2.0.beta3"),
+        ).to eq("ltBeta4")
       end
 
       it "raises error for >= operator" do
         expect { Discourse.find_compatible_resource(">= 3.1.0: test", "3.1.0") }.to raise_error(
+          Discourse::InvalidVersionListError,
+        )
+      end
+
+      it "raises error for ~> operator" do
+        expect { Discourse.find_compatible_resource("~> 3.1.0: test", "3.1.0") }.to raise_error(
           Discourse::InvalidVersionListError,
         )
       end
