@@ -21,7 +21,7 @@ describe "Uploading files to S3", type: :system do
   describe "direct S3 uploads (non-multipart)" do
     before { SiteSetting.enable_direct_s3_uploads = true }
 
-    xit "uploads custom avatars to S3" do
+    it "uploads custom avatars to S3" do
       visit "/my/preferences/account"
 
       find("#edit-avatar").click
