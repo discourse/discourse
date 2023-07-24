@@ -49,13 +49,15 @@ jobs:
 
     services:
       minio.local:
-        image: minio/minio
+        image: bitnami/minio:latest
         ports:
           - 9000:9000
           - 9001:9001
         env:
           MINIO_ACCESS_KEY: minioadmin
           MINIO_SECRET_KEY: minioadmin
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
