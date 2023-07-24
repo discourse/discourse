@@ -59,7 +59,9 @@ jobs:
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
-        options: --name=minio.local --health-cmd "curl http://minio.local:9000/minio/health/live"
+        volumes:
+          - ${{ github.workspace }}/data:/data
+        options: --health-cmd "curl http://minio.local:9000/minio/health/live" --name=minio.local
 
     steps:
       - name: Set working directory owner
