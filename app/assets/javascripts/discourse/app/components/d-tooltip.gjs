@@ -7,6 +7,7 @@ import tippy from "tippy.js";
 
 export default class DiscourseTooltip extends Component {
   <template>
+    {{! template-lint-disable modifier-name-case }}
     <div {{didInsert this.initTippy}}>{{yield}}</div>
   </template>
 
