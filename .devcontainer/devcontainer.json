@@ -1,14 +1,29 @@
 {
   "name": "Discourse",
   "image": "discourse/discourse_dev:release",
-  "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/var/www/discourse,type=bind",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/var/www/discourse,type=bind",
   "workspaceFolder": "/var/www/discourse",
+  "mounts": [
+    {
+      "source": "${localWorkspaceFolder}/../discourse-plugins/",
+      "target": "/var/www/discourse-plugins",
+      "type": "bind"
+    },
+    {
+      "source": "discourse-data",
+      "target": "/shared/postgres_data",
+      "type": "volume"
+    }
+  ],
   "settings": {
     "search.followSymlinks": false
   },
-  "postStartCommand": "sudo /sbin/boot",
-  "extensions": ["rebornix.Ruby"],
-  "forwardPorts": [9292],
+  "postStartCommand": "nohup bash -c 'sudo /sbin/boot &' > tmp/nohup.out",
+  "extensions": [
+	"rebornix.Ruby",
+	"esbenp.prettier-vscode",
+	"dbaeumer.vscode-eslint"
+],
   "remoteUser": "discourse",
   "remoteEnv": {
     "DISCOURSE_DEV_HOSTS": ".githubpreview.dev"
