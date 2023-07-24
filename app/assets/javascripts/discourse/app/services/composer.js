@@ -102,6 +102,7 @@ export default class ComposerController extends Controller {
   @service store;
   @service appEvents;
   @service capabilities;
+  @service modal;
 
   checkedMessages = false;
   messageCount = null;
@@ -1504,31 +1505,29 @@ export default class ComposerController extends Controller {
           this.model.draftKey === opts.draftKey &&
           [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
         const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
-        getOwner(this)
-          .lookup("service:modal")
-          .show(DiscardDraftModal, {
-            model: {
-              allowSaveDraft: showSaveDraftButton,
-              onDestroyDraft: () => {
-                return this.destroyDraft()
-                  .then(() => {
-                    this.model.clearState();
-                    this.close();
-                  })
-                  .finally(() => {
-                    this.appEvents.trigger("composer:cancelled");
-                    resolve();
-                  });
-              },
-              onSaveDraft: () => {
-                this._saveDraft();
-                this.model.clearState();
-                this.close();
-                this.appEvents.trigger("composer:cancelled");
-                return resolve();
-              },
+        this.modal.show(DiscardDraftModal, {
+          model: {
+            showSaveDraftButton,
+            onDestroyDraft: () => {
+              return this.destroyDraft()
+                .then(() => {
+                  this.model.clearState();
+                  this.close();
+                })
+                .finally(() => {
+                  this.appEvents.trigger("composer:cancelled");
+                  resolve();
+                });
             },
-          });
+            onSaveDraft: () => {
+              this._saveDraft();
+              this.model.clearState();
+              this.close();
+              this.appEvents.trigger("composer:cancelled");
+              return resolve();
+            },
+          },
+        });
       } else {
         // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
