@@ -98,5 +98,21 @@ module(
         )
         .exists();
     });
+
+    test("global mentions disabled", async function (assert) {
+      this.message = fabricators.message();
+      this.message.mentionWarning = fabricators.messageMentionWarning(
+        this.message,
+        {
+          global_mentions_disabled: true,
+        }
+      );
+
+      await render(template);
+
+      assert
+        .dom(".chat-message-mention-warning__text.-global-mentions-disabled")
+        .exists();
+    });
   }
 );

@@ -394,7 +394,8 @@ module Chat
       cannot_chat_users,
       without_membership,
       too_many_members,
-      mentions_disabled
+      mentions_disabled,
+      global_mentions_disabled
     )
       MessageBus.publish(
         "/chat/#{chat_message.chat_channel_id}",
@@ -406,6 +407,7 @@ module Chat
             without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
           groups_with_too_many_members: too_many_members.map(&:name).as_json,
           group_mentions_disabled: mentions_disabled.map(&:name).as_json,
+          global_mentions_disabled: global_mentions_disabled,
         },
         user_ids: [user_id],
       )

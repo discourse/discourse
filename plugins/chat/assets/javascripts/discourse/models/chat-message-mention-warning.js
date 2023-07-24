@@ -10,6 +10,7 @@ export default class ChatMessageMentionWarning {
   @tracked withoutMembership;
   @tracked groupsWithTooManyMembers;
   @tracked groupWithMentionsDisabled;
+  @tracked globalMentionsDisabled;
 
   constructor(message, args = {}) {
     this.message = args.message;
@@ -17,5 +18,6 @@ export default class ChatMessageMentionWarning {
     this.withoutMembership = args.without_membership;
     this.groupsWithTooManyMembers = args.groups_with_too_many_members;
     this.groupWithMentionsDisabled = args.group_mentions_disabled;
+    this.globalMentionsDisabled = args.global_mentions_disabled;
   }
 }

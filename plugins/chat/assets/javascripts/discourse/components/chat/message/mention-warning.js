@@ -38,7 +38,8 @@ export default class ChatMessageMentionWarning extends Component {
       (this.mentionWarning.groupWithMentionsDisabled?.length ||
         this.mentionWarning.cannotSee?.length ||
         this.mentionWarning.withoutMembership?.length ||
-        this.mentionWarning.groupsWithTooManyMembers?.length)
+        this.mentionWarning.groupsWithTooManyMembers?.length ||
+        this.mentionWarning.globalMentionsDisabled)
     );
   }
 

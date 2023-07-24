@@ -51,6 +51,14 @@
           {{this.groupsWithTooManyMembers}}
         </p>
       {{/if}}
+
+      {{#if this.mentionWarning.globalMentionsDisabled}}
+        <p
+          class="chat-message-mention-warning__text -global-mentions-disabled"
+        >
+          {{i18n "chat.mention_warning.channel_wide_mentions_disallowed"}}
+        </p>
+      {{/if}}
     {{/if}}
   </div>
 {{/if}}

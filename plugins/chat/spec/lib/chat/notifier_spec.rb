@@ -58,6 +58,22 @@ describe Chat::Notifier do
         expect(to_notify[list_key]).to be_empty
       end
 
+      it "will publish a mention warning" do
+        channel.update!(allow_channel_wide_mentions: false)
+        msg = build_cooked_msg(mention, user_1)
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            to_notify = described_class.new(msg, msg.created_at).notify_new
+          end
+
+        global_mentions_disabled_message = messages.first
+
+        expect(global_mentions_disabled_message).to be_present
+        expect(global_mentions_disabled_message.data[:type].to_sym).to eq(:mention_warning)
+        expect(global_mentions_disabled_message.data[:global_mentions_disabled]).to eq(true)
+      end
+
       it "includes all members of a channel except the sender" do
         msg = build_cooked_msg(mention, user_1)
 
