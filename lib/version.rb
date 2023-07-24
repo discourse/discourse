@@ -46,6 +46,8 @@ module Discourse
         .sort_by do |v, pin|
           op, v = Gem::Requirement.parse(v)
           v
+        rescue Gem::Requirement::BadRequirementError
+          raise InvalidVersionListError, "Invalid version specifier: #{v}"
         end
         .reverse
 

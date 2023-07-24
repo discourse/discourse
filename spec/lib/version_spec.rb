@@ -132,7 +132,13 @@ RSpec.describe Discourse::VERSION do
       end
 
       it "raises error for >= operator" do
-        expect { Discourse.find_compatible_resource(">= 3.1.0", "3.1.0") }.to raise_error(
+        expect { Discourse.find_compatible_resource(">= 3.1.0: test", "3.1.0") }.to raise_error(
+          Discourse::InvalidVersionListError,
+        )
+      end
+
+      it "raises error for invalid version" do
+        expect { Discourse.find_compatible_resource("1.1.: test", "3.1.0") }.to raise_error(
           Discourse::InvalidVersionListError,
         )
       end
