@@ -49,7 +49,7 @@ jobs:
 
     services:
       minio.local:
-        image: minio/minio
+        image: minio/minio:edge-cicd
         ports:
           - 9000:9000
           - 9001:9001
