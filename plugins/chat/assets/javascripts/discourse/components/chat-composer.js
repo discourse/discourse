@@ -97,6 +97,7 @@ export default class ChatComposer extends Component {
     this.cancelPersistDraft();
     this.composer.textarea.value = this.currentMessage.message;
     this.persistDraft();
+    this.captureMentions({ skipDebounce: true });
   }
 
   @action
@@ -369,11 +370,15 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  captureMentions() {
+  captureMentions(opts = { skipDebounce: false }) {
     if (this.hasContent) {
       this.chatComposerWarningsTracker.trackMentions(
-        this.currentMessage.message
+        this.currentMessage.message,
+        this.args.channel.allowChannelWideMentions,
+        opts.skipDebounce
       );
+    } else {
+      this.chatComposerWarningsTracker.reset();
     }
   }
 

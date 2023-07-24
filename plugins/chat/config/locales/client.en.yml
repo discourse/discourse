@@ -140,6 +140,7 @@ en:
         group_mentions_disabled_multiple:
           one: "%{group_name} and %{count} other group don't allow mentions."
           other: "%{group_name} and %{count} other groups don't allow mentions."
+        channel_wide_mentions_disallowed: "@here and @all mentions are disabled in this channel."
         too_many_members: "%{group_name} has too many members. No one was notified."
         too_many_members_multiple:
           one: "%{group_name} and %{count} other group have too many members. No one was notified."

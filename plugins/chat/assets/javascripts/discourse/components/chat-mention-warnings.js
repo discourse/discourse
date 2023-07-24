@@ -21,6 +21,10 @@ export default class ChatMentionWarnings extends Component {
     return this.chatComposerWarningsTracker.tooManyMentions;
   }
 
+  get channelWideMentionDisallowed() {
+    return this.chatComposerWarningsTracker.channelWideMentionDisallowed;
+  }
+
   get mentionsCount() {
     return this.chatComposerWarningsTracker.mentionsCount;
   }
@@ -50,6 +54,7 @@ export default class ChatMentionWarnings extends Component {
   get show() {
     return (
       this.hasTooManyMentions ||
+      this.channelWideMentionDisallowed ||
       this.hasUnreachableGroupMentions ||
       this.hasOverMembersLimitGroupMentions
     );

@@ -21,6 +21,7 @@ export default class ChatComposerWarningsTracker extends Service {
   @tracked unreachableGroupMentions = [];
   @tracked overMembersLimitGroupMentions = [];
   @tracked tooManyMentions = false;
+  @tracked channelWideMentionDisallowed = false;
   @tracked mentionsCount = 0;
   @tracked mentionsTimer = null;
 
@@ -32,17 +33,33 @@ export default class ChatComposerWarningsTracker extends Service {
   }
 
   @bind
-  trackMentions(message) {
+  reset() {
+    this.unreachableGroupMentions = [];
+    this.unreachableGroupMentions = [];
+    this.overMembersLimitGroupMentions = [];
+    this.tooManyMentions = false;
+    this.channelWideMentionDisallowed = false;
+    this.mentionsCount = 0;
+    this.mentionsTimer = null;
+  }
+
+  @bind
+  trackMentions(message, allowChannelWideMentions, skipDebounce) {
+    if (skipDebounce) {
+      return this._trackMentions(message, allowChannelWideMentions);
+    }
+
     this.mentionsTimer = discourseDebounce(
       this,
       this._trackMentions,
       message,
+      allowChannelWideMentions,
       MENTION_DEBOUNCE_MS
     );
   }
 
   @bind
-  _trackMentions(message) {
+  _trackMentions(message, allowChannelWideMentions) {
     if (!this.siteSettings.enable_mentions) {
       return;
     }
@@ -59,6 +76,10 @@ export default class ChatComposerWarningsTracker extends Service {
           (mention) => !(mention in this._mentionWarningsSeen)
         );
 
+        this.channelWideMentionDisallowed =
+          !allowChannelWideMentions &&
+          (mentions.includes("here") || mentions.includes("all"));
+
         if (newMentions?.length > 0) {
           this._recordNewWarnings(newMentions, mentions);
         } else {
@@ -67,6 +88,7 @@ export default class ChatComposerWarningsTracker extends Service {
       }
     } else {
       this.tooManyMentions = false;
+      this.channelWideMentionDisallowed = false;
       this.unreachableGroupMentions = [];
       this.overMembersLimitGroupMentions = [];
     }
