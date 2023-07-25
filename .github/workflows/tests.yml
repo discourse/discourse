@@ -104,11 +104,11 @@ jobs:
 #             -e MINIO_DOMAIN=minio.local \
 #             bitnami/minio:latest
 
-      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
-        run: |
-          sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          # sudo echo "minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
-          sudo cat /etc/hosts
+      # - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+      #   run: |
+      #     sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
+      #     # sudo echo "minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
+      #     sudo cat /etc/hosts
 
       - name: Ping Minio container
         run: |
