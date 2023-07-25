@@ -2044,7 +2044,7 @@ en:
       summarized_on: "Summarized with AI on %{date}"
       model_used: "AI used: %{model}"
       outdated: "Summary is outdated"
-      outdated_posts: 
+      outdated_posts:
         one: "(%{count} post missing)"
         other: "(%{count} posts missing)"
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
@@ -3900,6 +3900,8 @@ en:
       personal_message:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
+    topic_edit:
+      tag_filter_placeholder: "+ tag"
     posts: "Posts"
     pending_posts:
       label: "Pending"

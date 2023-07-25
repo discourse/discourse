@@ -1485,7 +1485,6 @@ lv:
       hide_forever: "nē, paldies"
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
-      enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
       disable: "Parādīt visus ierakstus"
     deleted_filter:
       enabled_description: "Šī tēma satur dzēstus ierakstus, kuri ir paslēpti."
@@ -3579,6 +3578,8 @@ lv:
         go_back: "Atpakaļ pie meklētāja"
         recommended: "Iesakām pielāgot šo tekstu jūsu vajadzībām:"
         show_overriden: "Rādīt tikai aizstātos"
+        outdated:
+          dismiss: "Nerādīt"
       settings:
         show_overriden: "Rādīt tikai aizstātos"
         reset: "atiestatīt"

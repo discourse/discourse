@@ -1518,7 +1518,7 @@ ar:
         regenerate: "أعِد التوليد"
         disable: "إيقاف"
         manage:
-          zero: "متبقٍ لديك <strong>%{count}</strong> رمزًا احتياطيًا."
+          zero: "متبقٍ لديك <strong>%{count}</strong> رمز احتياطي."
           one: "متبقٍ لديك رمز احتياطي واحد (<strong>%{count}</strong>)."
           two: "متبقٍ لديك رمزان احتياطيان (<strong>%{count}</strong>)."
           few: "متبقٍ لديك <strong>%{count}</strong> رموز احتياطية."
@@ -2005,8 +2005,7 @@ ar:
       pause_notifications: "إيقاف الإشعارات مؤقتًا"
       remove_status: "إزالة الحالة"
     user_tips:
-      primary: "فهمت!"
-      secondary: "عدم عرض هذه النصائح لي"
+      button: "فهمت!"
       first_notification:
         title: "أول إشعار لك!"
         content: "تُستخدَم الإشعارات لإبقائك على اطِّلاع بما يحدث في المجتمع."
@@ -2090,7 +2089,6 @@ ar:
       intro: "مرحبًا! يبدو أنك تستمتع بالمناقشة، لكنك لم تشترك للحصول على حساب حتى الآن."
       value_prop: "هل سئمت من التمرير عبر المنشورات نفسها؟ عندما تُنشئ حسابًا، فستستأنف دائمًا من حيث توقفت. عند إنشاء حساب، ستتمكن أيضًا من تلقي إشعارات بالردود الجديدة وحفظ الإشارات المرجعية وتسجيل الإعجاب لشكر الآخرين. يمكننا جميعًا العمل معًا للارتقاء بهذا المجتمع. :heart:"
     summary:
-      enabled_description: "أنت تعرض ملخصًا لهذا الموضوع: المنشورات الأكثر إثارة للاهتمام وفقًا للمجتمع."
       description:
         zero: "هناك <b>%{count}</b> من الردود."
         one: "هناك رد واحد (<b>%{count}</b>)."
@@ -2101,8 +2099,6 @@ ar:
       description_time_MF: |
         هناك {replyCount, plural, zero {<strong>#</strong> رد} one {رد واحد (<strong>#</strong>)} two {ردَّان (<strong>#</strong>)} few {<strong>#</strong> ردود} many {<strong>#</strong> ردًا} other {<strong>#</strong> رد}} والوقت المقدَّر للقراءة هو <b>{readingTime, plural, zero {<strong>#</strong> دقيقة} one {دقيقة واحدة (<strong>#</strong>)} two {دقيقتان (<strong>#</strong>)} few {<strong>#</strong> دقائق} many {<strong>#</strong> دقيقة} other {<strong>#</strong> دقيقة}}</b>
       disable: "عرض كل المنشورات"
-      short_label: "تلخيص"
-      short_title: "إظهار ملخص لهذا الموضوع: المشاركات الأكثر إثارة للاهتمام كما يحددها المجتمع"
     deleted_filter:
       enabled_description: "يتتضمَّن هذا الموضوع منشورات محذوفة، والتي تم إخفاؤها."
       disabled_description: "يتم عرض المنشورات المحذوفة في الموضوع."
@@ -3038,7 +3034,7 @@ ar:
         top: "لا توجد موضوعات في الأكثر نشاطًا."
         educate:
           new: '<p>ستظهر موضوعاتك الجديدة هنا. تُعتبَر الموضوعات جديدة بشكلٍ افتراضي وستعرض مؤشر <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> إذا كان قد تم إنشاؤها في آخر يومين.</p><p>يمكنك الانتقال إلى <a href="%{userPrefsUrl}">تفضيلاتك</a> لتغيير ذلك.</p>'
-          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍ افتراضي وستعرض الأعداد غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 5 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
+          unread: "<p>ستظهر موضوعاتك غير المقروءة هنا.</p><p>تُعتبَر الموضوعات غير مقروءة بشكلٍ افتراضي وستعرض أعداد الموضوعات غير المقروءة <span class=\"badge unread-posts badge-notification\">1</span> إذا كنت قد:</p><ul><li>أنشأت الموضوع</li><li>رددت على الموضوع</li><li>قرأت الموضوع لأكثر من 5 دقائق</li></ul><p>أو إذا وضعت الموضوع صراحةً تحت \"المراقبة\" أو \"التتبُّع\" عبر \U0001F514 في كل موضوع.</p><p>يمكنك الانتقال إلى <a href=\"%{userPrefsUrl}\">التفضيلات</a> لتغيير ذلك.</p>"
       bottom:
         latest: "لا يوجد المزيد من الموضوعات الحديثة."
         posted: "لا يوجد المزيد من الموضوعات المنشورة."
@@ -3880,7 +3876,6 @@ ar:
       filtered_replies:
         viewing_posts_by: "يتم الآن عرض %{post_count} منشور بواسطة"
         viewing_subset: "بعض الردود مطوية"
-        viewing_summary: "يتم الآن عرض ملخص لهذا الموضوع"
         post_number: "%{username}، المنشور #%{post_number}"
         show_all: "إظهار الكل"
       share:
@@ -4310,6 +4305,9 @@ ar:
       close: "إغلاق (Esc)"
       content_load_error: 'تعذَّر تحميل <a href="%url%">المحتوى</a>.'
       image_load_error: 'تعذَّر تحميل <a href="%url%">الصورة</a>.'
+    experimental_lightbox:
+      buttons:
+        close: "إغلاق (Esc)"
     cannot_render_video: لا يمكن عرض هذا الفيديو لأن متصفحك لا يدعم برنامج الترميز.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -5018,7 +5016,7 @@ ar:
             topics:
               read: قراءة موضوع أو منشور محدَّد فيه. يتم دعم RSS أيضًا.
               write: إنشاء موضوع جديد أو النشر في موضوع موجود
-              update: تحديث موضوع. يمكنك تغيير العنوان، والفئة، والوسوم، والحالة، والنموذج البدائي، والرابط المميز، وما إلى ذلك.
+              update: تحديث موضوع. يمكنك تغيير العنوان، والفئة، والوسوم، والحالة، والنموذج الأولي، والرابط المميز، وما إلى ذلك.
               read_lists: قراءة قوائم الموضوعات مثل الأكثر نشاطًا، والجديدة، والحديثة، وما إلى ذلك. يتم دعم RSS أيضًا.
             posts:
               edit: تعديل أي منشور أو منشور معيَّن.
@@ -6203,6 +6201,8 @@ ar:
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         locale: "اللغة:"
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
+        outdated:
+          dismiss: "تجاهل"
       settings:
         show_overriden: "إظهار النصوص المخصَّصة فقط"
         history: "عرض سجل التغييرات"

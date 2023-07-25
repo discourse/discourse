@@ -1513,6 +1513,7 @@ he:
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
     v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
+    legacy_navigation_menu_deprecated: "ה־Discourse שלך משתמש עדיין בתפריט הניווט ה‚מיושן’ ש<a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>יוסר במהדורת הבטא הראשונה של Discourse 3.2</a>. כדי לעבור לתפריט הניווט החדש על ידי עדכון <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>הגדרת תפריט הניווט באתר</a> שלך ל־‚sidebar’ (סרגל צד) או ל־‚header dropdown’ (תפריט נגלל משורת הכותרת)."
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -1843,6 +1844,7 @@ he:
     s3_secret_access_key: "מפתח סוד הגישה ל־Amazon S3 שישמש להעלאת תמונות, קבצים מצורפים וגיבויים."
     s3_region: "שם האזור ב־Amazon S3 שישמש להעלאת תמונות וגיבויים."
     s3_cdn_url: "כתובת CDN לכל המשאבים ב־S3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו יש לאפות מחדש את כל הפוסטים הישנים."
+    s3_use_cdn_url_for_all_uploads: "להשתמש בכתובת CDN לכל הקבצים שהועלו ל־S3 במקום רק לתמונות."
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
@@ -1929,7 +1931,7 @@ he:
     title_min_entropy: "האנטרופיה (תווים ייחודים שאינם בשפת הכתיבה) המינימלית הנדרשת בכותרת נושא."
     body_min_entropy: "האנטרופיה (תוים ייחודיים, תווים שאינם באנגלית נחשבים יותר) המינימלית הנדרשת בגוף הפוסט."
     allow_uppercase_posts: "אפשרו אותיות אנגליות גדולות (Capitalized) בכותרת נושא או בגוף פוסט."
-    max_consecutive_replies: "מספר הפוסטים שמשתמש עושה ברצף בתוך נושא בטרם החלת איסור על הוספת תגובות."
+    max_consecutive_replies: "מספר הפוסטים שמשתמש יכול לפרסם ברצף בנושא מסוים לפני הגבלת הוספת תגובות נוספות. המגבלה הזאת לא חלה על בעלי הנושא, סגל האתר או מפקחי הקטגוריות."
     enable_filtered_replies_view: 'הכפתור „(n) תגובות” מצמצם את כל הפוסטים האחרים ומציג רק את הפוסט הנוכחי ואת התגובות עליו.'
     title_fancy_entities: "המרת תווי ASCII נפוצים ליישויות HTML מהודרות בכותרות הנושאים, בסגנון SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
@@ -2087,6 +2089,7 @@ he:
     enable_category_group_moderation: "לאפשר לקבוצות לסקור תוכן בקטגוריות מסוימות"
     group_in_subject: "ניתן להגדיר %%{optional_pm} בנושא הודעת הדוא״ל לשם הקבוצה הראשונה בהודעה הפרטית (PM), למידע נוסף: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>התאמת תבנית הנושא להודעות דוא״ל תקניות</a>"
     allow_anonymous_posting: "לאפשר למשתמשים לעבור למצב אלמוני"
+    allow_anonymous_likes: "לאפשר למשתמשים אלמוניים לסמן פוסטים בלייק"
     anonymous_posting_min_trust_level: "דרגת האמון המזערית הנדרשת כדי לאפשר פרסום אלמוני"
     anonymous_account_duration_minutes: "כדי להגן על האלמוניות יש ליצור חשבון אלמוני חדש כל N דקות עבור כל משתמש. למשל: אם ההגדרה היא 600, בחלוף 600 דקות מהפוסט האחרון וגם אם המשתמש עבר למצב אלמוני, ייווצר חשבון אלמוני חדש."
     hide_user_profiles_from_public: "להשבית כרטיסי משתמשים, פרופילי משתמשים וספריית משתמשים עבור משתמשים אלמוניים."
@@ -2223,6 +2226,7 @@ he:
     enable_offline_indicator: "להציג הודעה למשתמשים כאשר זוהה שהחיבור שלהם לאינטרנט נקטע."
     default_sidebar_link_to_filtered_list: "להפוך את קישור קישורי תפריט הניווט לרשימה מסוננת כברירת מחדל."
     default_sidebar_show_count_of_new_items: "להפוך את קישורי תפריט הניווט כך שיציגו מספר פריטים חדשים במקום עיטורים כברירת מחדל."
+    default_sidebar_switch_panel_position: "מיקום כפתורי החלפת לוח בסרגל הצד"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
     revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
@@ -2290,6 +2294,7 @@ he:
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     experimental_search_menu_groups: "ניסיוני: מאפשר את תפריט החיפוש החדש ששודרג כך שישתמש ב־glimmer"
+    enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
