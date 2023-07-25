@@ -108,8 +108,8 @@ export default class QuoteButton extends Component {
         return;
       }
 
-      firstRange = firstRange || range;
-      postId = postId || ancestor.closest(".boxed, .reply")?.dataset?.postId;
+      firstRange ||= range;
+      postId ||= ancestor.closest(".boxed, .reply")?.dataset?.postId;
 
       if (!ancestor.closest(".contents") || !postId) {
         if (this.visible) {
