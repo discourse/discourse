@@ -61,6 +61,12 @@ jobs:
           # MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
+        options: --name=minio.local
+        logging:
+          driver: json-file
+          options:
+            max-size: 10m
+            max-file: '5'
 
     steps:
       - name: Set working directory owner
@@ -69,6 +75,12 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
+
+      - name: Fetch and display the logs of the Minio container and ping
+        run: |
+          docker logs minio.local
+          RESPONSE_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://minio.local:9000)
+          echo "Minio Container Response Code: $RESPONSE_CODE"
 
       - name: Fetch minio mc client and setup bucket
         run: |
