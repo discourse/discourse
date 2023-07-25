@@ -307,10 +307,6 @@ export default class QuoteButton extends Component {
     this.teardownSelectionListeners();
   }
 
-  get privateCategory() {
-    return this.args.topic.category.read_restricted;
-  }
-
   get post() {
     return this.args.topic.postStream.findLoadedPost(
       this.args.quoteState.postId
@@ -318,19 +314,15 @@ export default class QuoteButton extends Component {
   }
 
   get quoteSharingEnabled() {
-    if (
-      this.site.mobileView ||
-      this.siteSettings.share_quote_visibility === "none" ||
-      (this.currentUser &&
-        this.siteSettings.share_quote_visibility === "anonymous") ||
-      this.quoteSharingSources.length === 0 ||
-      this.privateCategory ||
-      (this.currentUser && this.args.topic.invisible)
-    ) {
-      return false;
-    }
-
-    return true;
+    return (
+      this.site.desktopView &&
+      this.quoteSharingSources.length > 0 &&
+      !this.args.topic.invisible &&
+      !this.args.topic.category.read_restricted &&
+      (this.siteSettings.share_quote_visibility === "all" ||
+        (this.siteSettings.share_quote_visibility === "anonymous" &&
+          !this.currentUser))
+    );
   }
 
   get quoteSharingSources() {
