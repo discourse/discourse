@@ -240,7 +240,7 @@ de:
           members: Mitglieder
           settings: Einstellungen
       channel_edit_name_modal:
-        title: Name bearbeiten
+        title: Namen bearbeiten
         input_placeholder: Einen Namen hinzufügen
         description: Gib deinem Kanal einen kurzen aussagekräftigen Namen
       channel_edit_description_modal:

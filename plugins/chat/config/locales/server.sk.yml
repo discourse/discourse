@@ -5,8 +5,14 @@
 # https://translate.discourse.org/
 
 sk:
+  system_messages:
+    chat_channel_archive_failed_no_topic:
+      title: "Archív kanálov chatu zlyhal"
+      subject_template: "Archív kanálov chatu zlyhal"
   chat:
     deleted_chat_username: vymazané
+    errors:
+      draft_too_long: "Koncept je príliš dlhý."
     reviewables:
       actions:
         agree_and_suspend:

@@ -49,7 +49,7 @@ de:
 
           %{topic_validation_errors}
 
-        Besuche den Kanal unter %{channel_url} , um es erneut zu versuchen.
+        Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
   chat:
     deleted_chat_username: gelöscht
     errors:

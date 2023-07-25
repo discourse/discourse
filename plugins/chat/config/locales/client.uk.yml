@@ -296,24 +296,53 @@ uk:
           none: "виберіть..."
         create: "Створити канал"
         description: "Опис (необов'язково)"
+        name: "Назва каналу"
+        title: "Новий канал"
         type: "Тип"
         types:
           category: "Розділ"
           topic: "Тема"
+      reviewable:
+        type: "Повідомлення чату"
+      reactions:
+        only_you: "Ви відреагували :%{emoji}:"
+        and_others: "Ви та %{usernames} відреагували :%{emoji}:"
+        only_others: "%{usernames} відреагував :%{emoji}:"
+        others_and_more: "%{usernames} і ще %{more} відреагували :%{emoji}:"
+        you_others_and_more: "Ви, %{usernames} та %{more} інших відреагували :%{emoji}:"
       composer:
+        toggle_toolbar: "Перемикання панелі інструментів"
         italic_text: "виділення тексту курсивом"
         bold_text: "Сильне виділення тексту"
+        code_text: "текст коду"
+      quote:
+        original_channel: 'Спочатку надіслано в <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Цитату чату скопійовано в буфер обміну"
       notification_levels:
         never: "Ніколи"
+        mention: "Тільки для згадок"
+        always: "Для всіх дій"
       settings:
+        channel_wide_mentions_label: "Дозволити згадки @all та @here"
+        channel_wide_mentions_description: "Дозволити користувачам сповіщати всіх учасників #%{channel} за допомогою @all або лише тих, хто активний на даний момент, за допомогою @here"
+        auto_join_users_label: "Автоматично додавати користувачів"
+        auto_join_users_info: "Щогодини перевіряйте, які користувачі були активними протягом останніх 3 місяців, і, якщо вони мають доступ до категорії %{category} , додайте їх до цього каналу."
+        enable_auto_join_users: "Автоматично додавати всіх нещодавно активних користувачів"
+        auto_join_users_warning: "Кожен користувач, який не є учасником цього каналу і має доступ до категорії %{category} , приєднається до нього. Ви впевнені?"
+        desktop_notification_level: "Сповіщення на робочому столі"
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
+        mobile_notification_level: "Мобільні push-сповіщення"
+        mute: "Вимкнути канал"
+        muted_on: "Увімк"
+        muted_off: "Вимк."
         notifications: "Сповіщення"
         preview: "Попередній перегляд"
         save: "Зберегти"
         saved: "Збережено"
         unfollow: "Покинути"
         admin_title: "Адміністратор"
+        retention_info: "Історія чату зберігатиметься %{days} днів."
       incoming_webhooks:
         back: "Назад"
         description: "Опис"
@@ -444,8 +473,12 @@ uk:
     topic_statuses:
       chat:
         help: "Чат увімкнено для цієї теми"
+    user:
+      ignored_users_instructions: "Заборонити всі дописи, повідомлення, сповіщення, особисті повідомлення та прямі повідомлення в чаті від цих користувачів."
     user_menu:
       no_chat_notifications_title: "У вас ще немає сповіщень у чаті"
+      no_chat_notifications_body: >
+        Ви будете сповіщені на цій панелі, коли хтось надішле вам пряме повідомлення або <b>@згадає</b> вас у чаті. Сповіщення також надходитимуть на вашу електронну пошту, якщо ви деякий час не входите в систему. <br><br> Клацніть заголовок у верхній частині будь-якого каналу чату, щоб налаштувати, які сповіщення ви отримуватимете в цьому каналі. Щоб дізнатися більше, перегляньте свої <a href='%{preferencesUrl}'>налаштування сповіщень</a>.
       tabs:
         chat_notifications: "Сповіщення чату"
         chat_notifications_with_unread:
