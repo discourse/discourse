@@ -91,6 +91,20 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     }
 
     this._uppyInstance = new Uppy({
+      logger: {
+        debug: (...args) => {
+          // eslint-disable-next-line no-console
+          console.warn(...args);
+        },
+        warn: (...args) => {
+          // eslint-disable-next-line no-console
+          console.warn(...args);
+        },
+        error: (...args) => {
+          // eslint-disable-next-line no-console
+          console.warn(...args);
+        },
+      },
       id: this.id,
       autoProceed: this.autoStartUploads,
 
