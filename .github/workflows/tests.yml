@@ -16,9 +16,34 @@ permissions:
   contents: read
 
 jobs:
+  setup_minio:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Set up Minio
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Minio environment variables
+        run: |
+          echo "MINIO_ROOT_USER=minioadmin" >> $GITHUB_ENV
+          echo "MINIO_ROOT_PASSWORD=minioadmin" >> $GITHUB_ENV
+          echo "MINIO_DOMAIN=minio.local" >> $GITHUB_ENV
+
+      - name: Start Minio
+        run: |
+          docker run -d --name=minio.local \
+            -p 9000:9000 \
+            -p 9001:9001 \
+            -e MINIO_ROOT_USER=minioadmin \
+            -e MINIO_ROOT_PASSWORD=minioadmin \
+            -e MINIO_DOMAIN=minio.local \
+            bitnami/minio:latest
+
+      - name: Wait for Minio to Start
+        run: sleep 5  # Adjust the sleep duration as needed
+
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
+    needs: setup_minio
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -69,15 +94,15 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Start Minio
-        run: |
-          docker run -d --name=minio.local \
-            -p 9000:9000 \
-            -p 9001:9001 \
-            -e MINIO_ROOT_USER=minioadmin \
-            -e MINIO_ROOT_PASSWORD=minioadmin \
-            -e MINIO_DOMAIN=minio.local \
-            bitnami/minio:latest
+#       - name: Start Minio
+#         run: |
+#           docker run -d --name=minio.local \
+#             -p 9000:9000 \
+#             -p 9001:9001 \
+#             -e MINIO_ROOT_USER=minioadmin \
+#             -e MINIO_ROOT_PASSWORD=minioadmin \
+#             -e MINIO_DOMAIN=minio.local \
+#             bitnami/minio:latest
 
       - name: Ping Minio container
         run: |
