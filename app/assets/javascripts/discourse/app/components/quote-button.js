@@ -52,7 +52,6 @@ export default class QuoteButton extends Component {
 
   @tracked visible = false;
   @tracked animated = false;
-  @tracked canEditPost = false;
   @tracked isFastEditable = false;
   @tracked displayFastEditInput = false;
   @tracked fastEditInitialSelection;
@@ -155,27 +154,23 @@ export default class QuoteButton extends Component {
     quoteState.selected(postId, _selectedText, opts);
     this.visible = quoteState.buffer.length > 0;
 
-    if (this.siteSettings.enable_fast_edit) {
-      this.canEditPost = this.post?.can_edit;
+    if (this.canEditPost) {
+      const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
+      const matches = cooked.innerHTML.match(regexp);
+      const non_ascii_regex = /[^\x00-\x7F]/;
 
-      if (this.canEditPost) {
-        const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
-        const matches = cooked.innerHTML.match(regexp);
-        const non_ascii_regex = /[^\x00-\x7F]/;
-
-        if (
-          quoteState.buffer.length === 0 ||
-          quoteState.buffer.includes("|") || // tables are too complex
-          quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-          matches?.length > 1 || // duplicates are too complex
-          non_ascii_regex.test(quoteState.buffer) // non-ascii chars break fast-edit
-        ) {
-          this.isFastEditable = false;
-          this.fastEditInitialSelection = null;
-        } else if (matches?.length === 1) {
-          this.isFastEditable = true;
-          this.fastEditInitialSelection = quoteState.buffer;
-        }
+      if (
+        quoteState.buffer.length === 0 ||
+        quoteState.buffer.includes("|") || // tables are too complex
+        quoteState.buffer.match(/\n/g) || // linebreaks are too complex
+        matches?.length > 1 || // duplicates are too complex
+        non_ascii_regex.test(quoteState.buffer) // non-ascii chars break fast-edit
+      ) {
+        this.isFastEditable = false;
+        this.fastEditInitialSelection = null;
+      } else if (matches?.length === 1) {
+        this.isFastEditable = true;
+        this.fastEditInitialSelection = quoteState.buffer;
       }
     }
 
@@ -359,6 +354,10 @@ export default class QuoteButton extends Component {
       (canCreatePost || canReplyAsNewTopic) &&
       this.currentUser?.get("user_option.enable_quoting")
     );
+  }
+
+  get canEditPost() {
+    return this.siteSettings.enable_fast_edit && this.post?.can_edit;
   }
 
   @action
