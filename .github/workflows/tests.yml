@@ -62,11 +62,6 @@ jobs:
           # MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_DOMAIN: minio.local
         options: --name=minio.local
-        logging:
-          driver: json-file
-          options:
-            max-size: 10m
-            max-file: '5'
 
     steps:
       - name: Set working directory owner
