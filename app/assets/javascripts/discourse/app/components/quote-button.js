@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import {
   postUrl,
-  selectedElement,
+  selectedNode,
   selectedRange,
   selectedText,
   setCaretPosition,
@@ -84,8 +84,6 @@ export default class QuoteButton extends Component {
       return;
     }
 
-    const quoteState = this.args.quoteState;
-
     const selection = window.getSelection();
     if (selection.isCollapsed) {
       if (this.visible) {
@@ -98,17 +96,17 @@ export default class QuoteButton extends Component {
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-      const $selectionStart = $(range.startContainer);
-      const $ancestor = $(range.commonAncestorContainer);
+      const selectionStart = range.startContainer.parentElement;
+      const ancestor = range.commonAncestorContainer.parentElement;
 
-      if ($selectionStart.closest(".cooked").length === 0) {
+      if (!selectionStart.closest(".cooked")) {
         return;
       }
 
       firstRange = firstRange || range;
-      postId = postId || $ancestor.closest(".boxed, .reply").data("post-id");
+      postId = postId || ancestor.closest(".boxed, .reply")?.dataset.postId;
 
-      if ($ancestor.closest(".contents").length === 0 || !postId) {
+      if (!ancestor.closest(".contents") || !postId) {
         if (this.visible) {
           this.hideButton();
         }
@@ -116,13 +114,11 @@ export default class QuoteButton extends Component {
       }
     }
 
-    const _selectedElement = selectedElement();
+    const _selectedElement = selectedNode().parentElement;
     const _selectedText = selectedText();
-
-    const $selectedElement = $(_selectedElement);
     const cooked =
-      $selectedElement.find(".cooked")[0] ||
-      $selectedElement.closest(".cooked")[0];
+      _selectedElement.querySelector(".cooked") ||
+      _selectedElement.closest(".cooked");
 
     // computing markdown takes a lot of time on long posts
     // this code attempts to compute it only when we can't fast track
@@ -146,6 +142,7 @@ export default class QuoteButton extends Component {
       }
     }
 
+    const quoteState = this.args.quoteState;
     quoteState.selected(postId, _selectedText, opts);
     this.visible = quoteState.buffer.length > 0;
 
@@ -244,49 +241,55 @@ export default class QuoteButton extends Component {
     document.scrollingElement.removeEventListener("scroll", this.updateRect);
   }
 
+  @bind
+  onSelectionChanged() {
+    const { isWinphone, isAndroid } = this.capabilities;
+    const wait = isWinphone || isAndroid ? INPUT_DELAY : 25;
+    discourseDebounce(this, this.selectionChanged, wait);
+  }
+
+  @bind
+  mousedown(e) {
+    this.prevSelection = null;
+    this.isMouseDown = true;
+    this.reselected = false;
+
+    // prevents fast-edit input event from triggering mousedown
+    if (e.target.classList.contains("fast-edit-input")) {
+      return;
+    }
+
+    if (!e.target.closest(".quote-button, .create, .share, .reply-new")) {
+      this.hideButton();
+    }
+  }
+
+  @bind
+  mouseup(e) {
+    // prevents fast-edit input event from triggering mouseup
+    if (e.target.classList.contains("fast-edit-input")) {
+      return;
+    }
+
+    this.prevSelection = null;
+    this.isMouseDown = false;
+    this.onSelectionChanged();
+  }
+
+  @bind
+  selectionchange() {
+    if (!this.isMouseDown && !this.reselected) {
+      this.onSelectionChanged();
+    }
+  }
+
   @action
   didInsert(element) {
     this.element = element;
 
-    const { isWinphone, isAndroid } = this.capabilities;
-    const wait = isWinphone || isAndroid ? INPUT_DELAY : 25;
-    const onSelectionChanged = () => {
-      discourseDebounce(this, this.selectionChanged, wait);
-    };
-
-    $(document)
-      .on("mousedown.quote-button", (e) => {
-        this.prevSelection = null;
-        this.isMouseDown = true;
-        this.reselected = false;
-
-        // prevents fast-edit input event to trigger mousedown
-        if (e.target.classList.contains("fast-edit-input")) {
-          return;
-        }
-
-        if (
-          $(e.target).closest(".quote-button, .create, .share, .reply-new")
-            .length === 0
-        ) {
-          this.hideButton();
-        }
-      })
-      .on("mouseup.quote-button", (e) => {
-        // prevents fast-edit input event to trigger mouseup
-        if (e.target.classList.contains("fast-edit-input")) {
-          return;
-        }
-
-        this.prevSelection = null;
-        this.isMouseDown = false;
-        onSelectionChanged();
-      })
-      .on("selectionchange.quote-button", () => {
-        if (!this.isMouseDown && !this.reselected) {
-          onSelectionChanged();
-        }
-      });
+    document.addEventListener("mousedown", this.mousedown);
+    document.addEventListener("mouseup", this.mouseup);
+    document.addEventListener("selectionchange", this.selectionchange);
 
     this.appEvents.on("quote-button:quote", this, "insertQuote");
     this.appEvents.on("quote-button:edit", this, "toggleFastEditForm");
@@ -294,10 +297,11 @@ export default class QuoteButton extends Component {
 
   willDestroy() {
     this.popper?.destroy();
-    $(document)
-      .off("mousedown.quote-button")
-      .off("mouseup.quote-button")
-      .off("selectionchange.quote-button");
+
+    document.removeEventListener("mousedown", this.mousedown);
+    document.removeEventListener("mouseup", this.mouseup);
+    document.removeEventListener("selectionchange", this.selectionchange);
+
     this.appEvents.off("quote-button:quote", this, "insertQuote");
     this.appEvents.off("quote-button:edit", this, "toggleFastEditForm");
     this.teardownSelectionListeners();
