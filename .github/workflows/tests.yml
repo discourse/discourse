@@ -91,8 +91,7 @@ jobs:
 
       - name: Ping Minio containerxx
         run: |
-          RESPONSE_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://discoursetest.minio.local:9000/)
-          echo "discoursetest.minio.local Response Code: $RESPONSE_CODE"
+          curl -v http://discoursetest.minio.local:9000/
 
       - name: Setup Git
         run: |
