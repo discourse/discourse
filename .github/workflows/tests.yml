@@ -82,18 +82,17 @@ jobs:
           ./mc anonymous set public local/discoursetest
           ./mc admin config get local api
           ./mc admin config set local api cors_allow_origin="*"
-          mkdir $HOME/.config
-
-      - name: Ping Minio containerxx
-        run: |
-          RESPONSE_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://discoursetest.minio.local:9000/)
-          echo "discoursetest.minio.local Response Code: $RESPONSE_CODE"
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
           sudo cat /etc/hosts
+
+      - name: Ping Minio containerxx
+        run: |
+          RESPONSE_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://discoursetest.minio.local:9000/)
+          echo "discoursetest.minio.local Response Code: $RESPONSE_CODE"
 
       - name: Setup Git
         run: |
