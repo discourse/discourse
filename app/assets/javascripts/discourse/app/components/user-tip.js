@@ -29,7 +29,8 @@ export default class UserTip extends Component {
       this.currentUser.showUserTip({
         id,
         titleText: I18n.t(`user_tips.${id}.title`),
-        contentText: content || I18n.t(`user_tips.${id}.content`),
+        contentHtml: content,
+        contentText: I18n.t(`user_tips.${id}.content`),
         buttonLabel,
         buttonIcon,
         reference:

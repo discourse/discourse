@@ -1933,8 +1933,8 @@ en:
 
       admin_guide:
         title: "Welcome to your new site!"
-        content: "Read the admin guide to continue building your site and community."
-        button: "Let's go!"
+        content: "<a href='%{admin_guide_url}'>Read the admin guide</a> to continue building your site and community."
+        content_no_url: "Read the admin guide to continue building your site and community."
 
     loading: "Loading..."
     errors:

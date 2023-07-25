@@ -46,6 +46,11 @@
 
   &__content {
     margin-top: 0.25em;
+
+    a {
+      color: var(--secondary);
+      text-decoration: underline;
+    }
   }
 
   &__buttons {
