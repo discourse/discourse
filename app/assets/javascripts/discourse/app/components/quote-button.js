@@ -92,7 +92,7 @@ export default class QuoteButton extends Component {
     }
 
     // ensure we selected content inside 1 post *only*
-    let firstRange, postId;
+    let postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
       const selectionStart =
@@ -108,7 +108,6 @@ export default class QuoteButton extends Component {
         return;
       }
 
-      firstRange ||= range;
       postId ||= ancestor.closest(".boxed, .reply")?.dataset?.postId;
 
       if (!ancestor.closest(".contents") || !postId) {
