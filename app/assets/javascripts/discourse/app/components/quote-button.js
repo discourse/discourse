@@ -361,8 +361,9 @@ export default class QuoteButton extends Component {
   }
 
   @action
-  insertQuote() {
-    this.args.selectText().then(() => this.hideButton());
+  async insertQuote() {
+    await this.args.selectText();
+    this.hideButton();
   }
 
   @action
