@@ -71,8 +71,7 @@ jobs:
 
       - name: Ping Minio container
         run: |
-          RESPONSE_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://minio.local:9000)
-          echo "minio.local Response Code: $RESPONSE_CODE"
+          curl -v http://minio.local:9000
 
       - name: Fetch minio mc client and setup bucket
         run: |
@@ -89,7 +88,7 @@ jobs:
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
           sudo cat /etc/hosts
 
-      - name: Ping Minio containerxx
+      - name: Ping Minio subdomain
         run: |
           curl -v http://discoursetest.minio.local:9000/
 
