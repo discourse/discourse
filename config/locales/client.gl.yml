@@ -1534,7 +1534,6 @@ gl:
       hide_forever: "non grazas"
       intro: "Ola! Todo indica que goza coa discusión pero aínda non solicitou inscrición dunha conta."
     summary:
-      enabled_description: "Está vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade."
       description:
         one: "Hai <b>%{count}</b> resposta."
         other: "Hai <b>%{count}</b> respostas."
@@ -2716,7 +2715,6 @@ gl:
       filtered_replies:
         viewing_posts_by: "Vendo %{post_count} publicacións de"
         viewing_subset: "Algunhas respostas están repregadas"
-        viewing_summary: "Vendo un resumo deste tema"
         post_number: "%{username}, publicación #%{post_number}"
         show_all: "Amosar todas"
     category:
@@ -3059,6 +3057,9 @@ gl:
       close: "Pechar (Esc)"
       content_load_error: '<a href="%url%">O contido</a> non puido cargarse.'
       image_load_error: '<a href="%url%">A imaxe</a> non puido cargarse.'
+    experimental_lightbox:
+      buttons:
+        close: "Pechar (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4628,6 +4629,8 @@ gl:
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."
+        outdated:
+          dismiss: "Desbotar"
       settings:
         show_overriden: "Amosar só os cambios"
         history: "Ver o historial de cambios"

@@ -640,7 +640,6 @@ te:
     signup_cta:
       sign_up: "సైన్ అప్"
     summary:
-      enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
       disable: "అన్ని టపాలూ చూపు"
     deleted_filter:
       enabled_description: "ఈ విషయం తొలగించిన టపాలు కలిగి ఉంది. అవి దాయబడ్డాయి."

@@ -1549,8 +1549,7 @@ ko:
     user_status:
       save: "저장"
     user_tips:
-      primary: "알았어요!"
-      secondary: "이 도움말을 표시하지 않음"
+      button: "알았어요!"
       first_notification:
         title: "첫 번째 알림!"
       post_menu:
@@ -1615,12 +1614,9 @@ ko:
       hidden_for_session: "알겠습니다. 내일 알려드리겠습니다. 언제든 '로그인'을 통해서도 계정을 만들 수 있습니다."
       intro: "환영합니다! 토론에 관심이 있지만 아직 계정을 만들지 않은 것 같습니다."
     summary:
-      enabled_description: "이 주제의 요약을 보고 있습니다. 커뮤니티에서 선정한 가장 흥미로운 게시물입니다."
       description:
         other: "<b>%{count}</b>개의 댓글이 있습니다."
       disable: "모든 게시물 표시"
-      short_label: "요약하기"
-      short_title: "이 주제의 요약 표시: 커뮤니티에서 선정한 가장 흥미로운 게시물입니다"
     deleted_filter:
       enabled_description: "이 주제에는 숨김 처리된 삭제된 게시물이 있습니다."
       disabled_description: "주제에 삭제된 게시물이 표시됩니다."
@@ -2874,7 +2870,6 @@ ko:
       filtered_replies:
         viewing_posts_by: "다음 사용자의 %{post_count}개의 게시물 보기"
         viewing_subset: "일부 댓글이 접혀 있습니다"
-        viewing_summary: "이 주제의 요약 보기"
         post_number: "%{username}, 게시물 #%{post_number}"
         show_all: "모두 표시"
       share:
@@ -3218,6 +3213,9 @@ ko:
       close: "닫기(Esc)"
       content_load_error: '<a href="%url%">콘텐츠</a>를 로드할 수 없습니다.'
       image_load_error: '<a href="%url%">이미지</a>를 로드할 수 없습니다.'
+    experimental_lightbox:
+      buttons:
+        close: "닫기 (Esc)"
     cannot_render_video: 브라우저가 코덱을 지원하지 않기 때문에 이 비디오를 렌더링할 수 없습니다.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
@@ -4908,6 +4906,8 @@ ko:
         show_overriden: "오버라이드된 항목만 표시"
         locale: "언어:"
         more_than_50_results: "50개 이상의 결과가 있습니다. 검색 범위를 좁혀보세요."
+        outdated:
+          dismiss: "무시"
       settings:
         show_overriden: "오버라이드된 항목만 표시"
         history: "변경 히스토리 보기"

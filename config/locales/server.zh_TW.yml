@@ -1304,7 +1304,6 @@ zh_TW:
     title_min_entropy: "在主題的標題中，允許的最低熵值（單字）。"
     body_min_entropy: "在一個貼文內文中，允許的最低熵值（單字）。"
     allow_uppercase_posts: "允許標題和內容全大寫"
-    max_consecutive_replies: "在被提醒回覆了太多連續的回覆前，使用者在話題中可以連續回覆的數量。"
     title_fancy_entities: "將常見的ASCII字符轉換為酷炫HTML作為討論話題的標題，更多資訊請參考：<a href='https://daringfireball.net/projects/smartypants/' target='_blank'>SmartyPants https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "開始檢查相似主題的貼文標題的最少長度。"
     desktop_category_page_style: "/categories 頁面的視覺樣式。"

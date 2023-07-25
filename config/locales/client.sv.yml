@@ -1770,8 +1770,7 @@ sv:
       pause_notifications: "Pausa aviseringar"
       remove_status: "Ta bort status"
     user_tips:
-      primary: "Jag förstår!"
-      secondary: "visa mig inte dessa tips"
+      button: "Jag förstår!"
       first_notification:
         title: "Din första avisering!"
         content: "Aviseringar används för att hålla dig uppdaterad om vad som händer i samhället."
@@ -1790,7 +1789,7 @@ sv:
       admin_guide:
         title: "Välkommen till din nya webbplats!"
         content: "Läs administratörshandboken för att fortsätta bygga upp din webbplats och ditt forum."
-        primary: "Nu kör vi!"
+        button: "Nu kör vi!"
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1858,19 +1857,27 @@ sv:
       no_internet: "Ingen internetanslutning."
       refresh_page: "Uppdatera sida"
     summary:
-      enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
+      in_progress: "Sammanfatta ämne med hjälp av AI..."
+      summarized_on: "Sammanfattat med AI på %{date}"
+      model_used: "AI som används: %{model}"
+      outdated: "Sammanfattningen är inaktuell"
+      outdated_posts:
+        one: "(%{count} inlägg saknas)"
+        other: "(%{count} inlägg saknas)"
+      enabled_description: "Toppsvar i detta ämne som forumets användare tycker är mest intressanta."
       description:
         one: "Det finns <b>%{count}</b> svar."
         other: "Det finns <b>%{count}</b> svar."
+      buttons:
+        hide: "Dölj sammanfattning"
+        generate: "Sammanfatta med AI"
+        regenerate: "Generera ny sammanfattning"
       description_time_MF: |
         Det {replyCount, plural, one {finns <b>#</b> svar} other {finns <b>#</b> svar}} med en uppskattad lästid på <b>{readingTime, plural, one {# minut} other {# minuter}}</b>.
       enable: "Visa toppsvar"
       disable: "Visa alla inlägg"
-      short_label: "Sammanfatta"
-      short_title: "Visa en sammanfattning av detta ämne: de mest intressanta inläggen enligt forumet"
-      strategy:
-        button_title: "Sammanfatta detta ämne"
-        title: "Sammanfattning av ämne"
+      short_label: "Toppsvar"
+      short_title: "Visa toppsvaren i detta ämne som forumets användare tycker är mest intressanta"
     deleted_filter:
       enabled_description: "Det här ämnet innehåller borttagna inlägg som har dolts."
       disabled_description: "Raderade inlägg i ämnet visas."
@@ -3337,7 +3344,7 @@ sv:
       filtered_replies:
         viewing_posts_by: "Visar %{post_count} inlägg av"
         viewing_subset: "Vissa svar har förminskats"
-        viewing_summary: "Visar en sammanfattning av detta ämne"
+        viewing_summary: "Visa detta ämnes toppsvar"
         post_number: "%{username}, inlägg nr %{post_number}"
         show_all: "Visa alla"
       share:
@@ -3712,6 +3719,20 @@ sv:
       close: "Stäng (Esc)"
       content_load_error: '<a href="%url%">Innehållet</a> kunde inte laddas.'
       image_load_error: '<a href="%url%">Bilden</a> kunde inte laddas.'
+    experimental_lightbox:
+      image_load_error: "Bilden kunde inte laddas."
+      screen_reader_image_title: "Bild %{current} av %{total}: %{title}"
+      buttons:
+        next: "Nästa (höger- eller ner-piltangent)"
+        previous: "Föregående (vänster- eller upp-piltangent)"
+        close: "Stäng (Esc)"
+        download: "Ladda ner bild"
+        newtab: "Öppna bilden i en ny flik"
+        zoom: "Zooma in/ut bilden (Z-tangent)"
+        rotate: "Rotera bilden (R-tangent)"
+        fullscreen: "Växla webbläsarens helskärmsläge (M-tangent)"
+        carousel: "Visa alla bilder i en karusell (A-nyckel)"
+        retry: "Försök att ladda bilden igen"
     cannot_render_video: Den här videon kan inte renderas eftersom din webbläsare inte stöder denna kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4163,6 +4184,9 @@ sv:
               title: "Flaggade inlägg och andra objekt i kö"
               pending_count: "%{count} väntande"
         global_section: "Globalt avsnitt, synligt för alla"
+      panels:
+        forum:
+          label: Forum
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -5667,6 +5691,12 @@ sv:
         locale: "Språk:"
         more_than_50_results: "Det blev fler än 50 resultat. Förfina din sökning."
         interpolation_keys: "Tillgängliga interpolationsnycklar:"
+        outdated:
+          title: "Denna översättning är inaktuell"
+          description: "Standardöversättningen för denna nyckel har ändrats sedan denna åsidosättning skapades. Kontrollera nedan att din översättning matchar alla ändringar av den ursprungliga avsikten."
+          old_default: "Gammal standard"
+          new_default: "Ny standard"
+          dismiss: "Avfärda"
       settings:
         show_overriden: "Visa bara överskrivna"
         history: "Visa ändringshistorik"

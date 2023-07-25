@@ -1581,8 +1581,7 @@ pt:
       pause_notifications: "Pausar notificações"
       remove_status: "Remover status"
     user_tips:
-      primary: "Entendi!"
-      secondary: "não me mostre essas dicas"
+      button: "Entendi!"
       first_notification:
         title: "Sua primeira notificação!"
       topic_timeline:
@@ -1644,10 +1643,7 @@ pt:
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
-      enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
       disable: "Mostrar Todas As Publicações"
-      short_label: "Resumir"
-      short_title: "Mostrar um resumo deste tópico: as discussões mais interessantes conforme determinado pela comunidade"
     deleted_filter:
       enabled_description: "Este tópico contém respostas eliminadas, que foram ocultadas."
       disabled_description: "As publicações eliminadas no tópico são exibidas."
@@ -2877,7 +2873,6 @@ pt:
       filtered_replies:
         viewing_posts_by: "Visualizando %{post_count} posts por"
         viewing_subset: "Algumas respostas estão recolhidas"
-        viewing_summary: "Vendo um resumo deste tópico"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Mostrar tudo"
     category:
@@ -3201,6 +3196,9 @@ pt:
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
+    experimental_lightbox:
+      buttons:
+        close: "Fechar (Esc)"
     cannot_render_video: Este vídeo não pode ser renderizado porque seu navegador não suporta o codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4555,6 +4553,8 @@ pt:
         go_back: "De volta à Pesquisa"
         recommended: "Recomendamos personalizar o seguinte texto para que se aplique às suas necessidades."
         show_overriden: "Apenas mostrar valores alterados"
+        outdated:
+          dismiss: "Marcar Visto"
       settings:
         show_overriden: "Apenas mostrar valores alterados"
         history: "Ver histórico de alterações"

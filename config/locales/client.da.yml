@@ -1575,8 +1575,7 @@ da:
       save: "Gem"
       remove_status: "Fjern status"
     user_tips:
-      primary: "Forstået!"
-      secondary: "vis mig ikke disse tips"
+      button: "Forstået!"
       post_menu:
         content: "Se, hvordan du ellers kan interagere med indlægget ved at klikke på de tre prikker!"
       topic_notification_levels:
@@ -1643,7 +1642,6 @@ da:
       hide_forever: "nej tak"
       intro: "Hej! Det ser ud til, at du nyder diskussionen, men du har ikke tilmeldt dig en konto endnu."
     summary:
-      enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description:
         one: "Der er <b>%{count}</b> svar."
         other: "Der er <b>%{count}</b> svar."
@@ -2914,7 +2912,6 @@ da:
       filtered_replies:
         viewing_posts_by: "Viser %{post_count} indlæg af"
         viewing_subset: "Nogle svar er foldet sammen"
-        viewing_summary: "Viser en oversigt over dette emne"
         post_number: "%{username}, indlæg #%{post_number}"
         show_all: "Vis alle"
       share:
@@ -3268,6 +3265,9 @@ da:
       close: "Luk (Esc)"
       content_load_error: '<a href="%url%">Indholdet</a> kunne ikke indlæses.'
       image_load_error: '<a href="%url%">Billedet</a> kunne ikke indlæses.'
+    experimental_lightbox:
+      buttons:
+        close: "Luk (Esc)"
     cannot_render_video: Denne video kan ikke afspilles, fordi din browser ikke understøtter codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4943,6 +4943,8 @@ da:
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."
+        outdated:
+          dismiss: "Ignorer Alle"
       settings:
         show_overriden: "Vis kun tilsidesatte"
         history: "Vis ændringshistorik"
