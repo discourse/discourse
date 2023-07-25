@@ -29,7 +29,7 @@ export default class NetworkConnectivity extends Service {
 
   @bind
   async pingServerAndSetConnectivity() {
-    cancel(this._successTimer);
+    cancel(this._attemptReconnectTimer);
 
     if (this._request?.abort) {
       this._request.abort();
@@ -46,7 +46,7 @@ export default class NetworkConnectivity extends Service {
       }
     );
 
-    this._successTimer = discourseDebounce(
+    this._attemptReconnectTimer = discourseDebounce(
       this,
       this.checkPingStatusAndRerun,
       1000
