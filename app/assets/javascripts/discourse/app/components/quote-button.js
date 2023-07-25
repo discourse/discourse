@@ -96,8 +96,14 @@ export default class QuoteButton extends Component {
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-      const selectionStart = range.startContainer.parentElement;
-      const ancestor = range.commonAncestorContainer.parentElement;
+      const selectionStart =
+        range.startContainer.nodeType === Node.ELEMENT_NODE
+          ? range.startContainer
+          : range.startContainer.parentElement;
+      const ancestor =
+        range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+          ? range.commonAncestorContainer
+          : range.commonAncestorContainer.parentElement;
 
       if (!selectionStart.closest(".cooked")) {
         return;
@@ -114,7 +120,10 @@ export default class QuoteButton extends Component {
       }
     }
 
-    const _selectedElement = selectedNode().parentElement;
+    const _selectedElement =
+      selectedNode().nodeType === Node.ELEMENT_NODE
+        ? selectedNode()
+        : selectedNode().parentElement;
     const _selectedText = selectedText();
     const cooked =
       _selectedElement.querySelector(".cooked") ||
@@ -155,7 +164,7 @@ export default class QuoteButton extends Component {
         const non_ascii_regex = /[^\x00-\x7F]/;
 
         if (
-          quoteState.buffer.length < 1 ||
+          quoteState.buffer.length === 0 ||
           quoteState.buffer.includes("|") || // tables are too complex
           quoteState.buffer.match(/\n/g) || // linebreaks are too complex
           matches?.length > 1 || // duplicates are too complex
@@ -318,7 +327,7 @@ export default class QuoteButton extends Component {
       this.site.desktopView &&
       this.quoteSharingSources.length > 0 &&
       !this.args.topic.invisible &&
-      !this.args.topic.category.read_restricted &&
+      !this.args.topic.category?.read_restricted &&
       (this.siteSettings.share_quote_visibility === "all" ||
         (this.siteSettings.share_quote_visibility === "anonymous" &&
           !this.currentUser))
