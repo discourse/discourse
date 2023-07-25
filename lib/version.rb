@@ -60,7 +60,7 @@ module Discourse
         req_operator, req_version = parsed_requirement
         req_operator = "<=" if req_operator == "="
 
-        if !%w[= <= <].include?(req_operator)
+        if !%w[<= <].include?(req_operator)
           raise InvalidVersionListError,
                 "Invalid version specifier operator for '#{req_operator} #{req_version}'. Operator must be one of <= or <"
         end
