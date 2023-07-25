@@ -18,7 +18,7 @@
       />
     {{/if}}
 
-    {{#if (and this.siteSettings.enable_fast_edit this.canEditPost)}}
+    {{#if this.canEditPost}}
       <DButton
         @icon="pencil-alt"
         @action={{this.toggleFastEditForm}}
