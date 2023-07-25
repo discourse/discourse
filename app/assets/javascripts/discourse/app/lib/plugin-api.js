@@ -106,6 +106,10 @@ import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
+  addSidebarPanel,
+  addSidebarSection,
+} from "discourse/lib/sidebar/custom-sections";
+import {
   registerCustomCategoryLockIcon,
   registerCustomCategorySectionLinkPrefix,
   registerCustomCountable as registerUserCategorySectionLinkCountable,
@@ -2055,7 +2059,7 @@ class PluginApi {
    * ```
    */
   addSidebarPanel(func) {
-    this._lookupContainer("service:sidebar-state").addPanel(func);
+    addSidebarPanel(func);
   }
 
   /**
@@ -2202,10 +2206,7 @@ class PluginApi {
    * ```
    */
   addSidebarSection(func, panelKey = "main") {
-    this._lookupContainer("service:sidebar-state").addSidebarSection(
-      func,
-      panelKey
-    );
+    addSidebarSection(func, panelKey);
   }
 
   /**

@@ -81,6 +81,7 @@ import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderIcons } from "discourse/widgets/header";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
+import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
@@ -214,6 +215,7 @@ export function testCleanup(container, app) {
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
   resetNotificationTypeRenderers();
+  resetSidebarPanels();
   clearExtraHeaderIcons();
   resetOnKeyDownCallbacks();
   resetUserMenuTabs();
