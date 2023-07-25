@@ -299,6 +299,7 @@ export default class QuoteButton extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.popper?.destroy();
 
     document.removeEventListener("mousedown", this.mousedown);
