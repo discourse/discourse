@@ -694,7 +694,7 @@ def apply_base_chrome_options(options)
   #   options.add_argument("--disable-web-security")
 
   #   # Add data dir for CORS check disable.
-  options.add_argument("--user-data-dir=$HOME/.config/chromium-dev")
+  options.add_argument("--user-data-dir=#{ENV["HOME"]}/.config/chromium-dev")
   # end
 
   # A file that contains just a list of paths like so:
