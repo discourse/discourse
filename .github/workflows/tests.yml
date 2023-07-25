@@ -16,34 +16,34 @@ permissions:
   contents: read
 
 jobs:
-  setup_minio:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Set up Minio
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Minio environment variables
-        run: |
-          echo "MINIO_ROOT_USER=minioadmin" >> $GITHUB_ENV
-          echo "MINIO_ROOT_PASSWORD=minioadmin" >> $GITHUB_ENV
-          echo "MINIO_DOMAIN=minio.local" >> $GITHUB_ENV
+  # setup_minio:
+  #   if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+  #   name: Set up Minio
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Set up Minio environment variables
+  #       run: |
+  #         echo "MINIO_ROOT_USER=minioadmin" >> $GITHUB_ENV
+  #         echo "MINIO_ROOT_PASSWORD=minioadmin" >> $GITHUB_ENV
+  #         echo "MINIO_DOMAIN=minio.local" >> $GITHUB_ENV
 
-      - name: Start Minio
-        run: |
-          docker run -d --name=minio.local \
-            -p 9000:9000 \
-            -p 9001:9001 \
-            -e MINIO_ROOT_USER=minioadmin \
-            -e MINIO_ROOT_PASSWORD=minioadmin \
-            -e MINIO_DOMAIN=minio.local \
-            bitnami/minio:latest
+  #     - name: Start Minio
+  #       run: |
+  #         docker run -d --name=minio.local \
+  #           -p 9000:9000 \
+  #           -p 9001:9001 \
+  #           -e MINIO_ROOT_USER=minioadmin \
+  #           -e MINIO_ROOT_PASSWORD=minioadmin \
+  #           -e MINIO_DOMAIN=minio.local \
+  #           bitnami/minio:latest
 
-      - name: Wait for Minio to Start
-        run: sleep 5  # Adjust the sleep duration as needed
+  #     - name: Wait for Minio to Start
+  #       run: sleep 5  # Adjust the sleep duration as needed
 
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} ${{ matrix.ruby }}
-    needs: setup_minio
+    # needs: setup_minio
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
     timeout-minutes: 20
@@ -72,19 +72,19 @@ jobs:
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
 
-    # services:
-      # discoursetest.minio.local:
-      #   image: bitnami/minio:latest
-      #   ports:
-      #     - 9000:9000
-      #     - 9001:9001
-      #   env:
-      #     MINIO_ROOT_USER: minioadmin
-      #     MINIO_ROOT_PASSWORD: minioadmin
-      #     # MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
-      #     # MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
-      #     MINIO_DOMAIN: discoursetest.minio.local
-      #   options: --name=discoursetest.minio.local
+    services:
+      minio.local:
+        image: bitnami/minio:latest
+        ports:
+          - 9000:9000
+          - 9001:9001
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+          # MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
+          # MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
+          MINIO_DOMAIN: minio.local
+        options: --name=minio.local
 
     steps:
       - name: Set working directory owner
@@ -107,7 +107,7 @@ jobs:
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
           sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+          # sudo echo "minio.local discoursetest.minio.local" | sudo tee -a /etc/hosts
           sudo cat /etc/hosts
 
       - name: Ping Minio container
