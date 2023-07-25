@@ -384,7 +384,7 @@ export default class QuoteButton extends Component {
       return;
     }
 
-    const result = await ajax(`/posts/${this.post.id}`, { cache: false });
+    const result = await ajax(`/posts/${this.post.id}`);
     let bestIndex = 0;
     const rows = result.raw.split("\n");
 
