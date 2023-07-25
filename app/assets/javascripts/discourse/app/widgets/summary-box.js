@@ -22,12 +22,16 @@ createWidget("summary-skeleton", {
 
     html.push(
       h("span", {}, [
-        iconNode("magic", { class: "rotate-center" }),
         h(
           "div.placeholder-generating-summary-text",
           {},
           I18n.t("summary.in_progress")
         ),
+        h("span.ai-summarizing-indicator__wave", {}, [
+          h("span.ai-summarizing-indicator__dot", "."),
+          h("span.ai-summarizing-indicator__dot", "."),
+          h("span.ai-summarizing-indicator__dot", "."),
+        ]),
       ])
     );
 
