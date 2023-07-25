@@ -29,6 +29,7 @@ export default class History extends Component {
   @tracked postRevision;
   @tracked viewMode = this.site?.mobileView ? "inline" : "side_by_side";
   @tracked bodyDiff;
+  @tracked initialPaint = true;
 
   constructor() {
     super(...arguments);
@@ -166,11 +167,18 @@ export default class History extends Component {
     });
   }
 
+  get firstPaint() {
+    return this.loading && this.initialPaint;
+  }
+
   refresh(postId, postVersion) {
     this.loading = true;
     Post.loadRevision(postId, postVersion).then((result) => {
       this.postRevision = result;
       this.loading = false;
+      if (this.initialPaint) {
+        this.initialPaint = false;
+      }
     });
   }
 
