@@ -72,7 +72,9 @@ jobs:
       - name: Ping Minio container
         run: |
           RESPONSE_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://minio.local:9000)
-          echo "Minio Container Response Code: $RESPONSE_CODE"
+          echo "minio.local Response Code: $RESPONSE_CODE"
+          RESPONSE_CODE=$(curl -o /dev/null -s -w "%{http_code}" http://discoursetest.minio.local:9000/)
+          echo "discoursetest.minio.local Response Code: $RESPONSE_CODE"
 
       - name: Fetch minio mc client and setup bucket
         run: |
