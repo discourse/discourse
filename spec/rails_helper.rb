@@ -288,7 +288,7 @@ RSpec.configure do |config|
     Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
 
     # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
-    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
+    browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "ALL"
 
     chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
