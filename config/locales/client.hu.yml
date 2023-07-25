@@ -1687,8 +1687,7 @@ hu:
       pause_notifications: "Értesítések szüneteltetése"
       remove_status: "Állapot eltávolítása"
     user_tips:
-      primary: "Értem!"
-      secondary: "ne mutasd nekem ezeket a tippeket"
+      button: "Értem!"
       first_notification:
         title: "Az első értesítésed!"
         content: "Az értesítések arra szolgálnak, hogy naprakészen tájékoztassuk Önt arról, hogy mi történik a közösségben."
@@ -1763,15 +1762,12 @@ hu:
       intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
       value_prop: "Unja már, hogy ugyanazokat a bejegyzéseket görgeti? Ha létrehoz egy fiókot, mindig oda tér vissza, ahol abbahagyta. Egy fiókkal értesítést is kaphat az új válaszokról, könyvjelzőket menthet, és egy kedveléssel megköszönheti másoknak. Mindannyian együtt dolgozhatunk azon, hogy ezt a közösséget nagyszerűvé tegyük. :heart:"
     summary:
-      enabled_description: "A téma összefoglalását látja: a legérdekesebb bejegyzéseket a közösség határozta meg."
       description:
         one: "<b>%{count}</b> válasz van."
         other: "<b>%{count}</b> válasz van."
       description_time_MF: |
         {replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>.
       disable: "Összes bejegyzés megjelenítése"
-      short_label: "Összefoglalás"
-      short_title: "A téma összefoglalásának megjelenítése: a legérdekesebb bejegyzéseket a közösség határozta meg"
     deleted_filter:
       enabled_description: "Ez a téma törölt bejegyzéseket is tartalmaz, melyek el lettek rejtve."
       disabled_description: "A téma törölt bejegyzései is megjelennek."
@@ -3073,7 +3069,6 @@ hu:
             description: "Törölje az emlékeztető dátumát és időpontját"
       filtered_replies:
         viewing_subset: "Néhány válasz össze van csukva"
-        viewing_summary: "A téma összefoglalójának megtekintése"
         show_all: "Mutasd mindet"
     category:
       none: "(nincs kategória)"
@@ -3372,6 +3367,9 @@ hu:
       open: "eredeti kép"
       counter: "%curr% / %total%"
       close: "Bezárás (Esc)"
+    experimental_lightbox:
+      buttons:
+        close: "Bezárás (Esc)"
     cannot_render_video: A videó nem jeleníthető meg, mert a böngésző nem támogatja ezt a kodeket.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4810,6 +4808,8 @@ hu:
         recommended: "Azt tanácsoljuk, hogy módosítsd a következő szöveget az igényeidnek megfelelően:"
         show_overriden: "Csak a felülírtak megjelenítése"
         locale: "Nyelv:"
+        outdated:
+          dismiss: "Elvetés"
       settings:
         show_overriden: "Csak a felülírtak megjelenítése"
         reset: "alaphelyzet"

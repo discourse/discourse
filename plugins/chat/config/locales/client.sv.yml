@@ -323,6 +323,8 @@ sv:
         add_user_short: <span>Lägg till användare</span>
         open_channel: <span>Öppna kanal</span>
         default_search_placeholder: "#a-kanal, @någon eller något"
+        default_channel_search_placeholder: "#en-kanal"
+        default_user_search_placeholder: "@någon"
         user_search_placeholder: "...lägg till fler användare"
         disabled_user: "har inaktiverat chatten"
         no_items: "Inga objekt"

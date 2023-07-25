@@ -1655,7 +1655,6 @@ ur:
     title_min_entropy: "ایک ٹاپک کے عنوان میں کم از کم مطلوبہ اَینٹراپی (منفرد حروف، مزید کیلئے غیر انگریزی حروف)۔"
     body_min_entropy: "ایک پوسٹ کے متن میں کم از کم مطلوبہ اَینٹراپی (منفرد حروف، مزید کیلئے غیر انگریزی حروف)۔"
     allow_uppercase_posts: "ایک ٹاپک عنوان یا پوسٹ متن میں تمام کَیپس کی اجازت دیں۔"
-    max_consecutive_replies: "ایک ہی ٹاپک میں لگاتار کتنی پوسٹس ایک صارف شائع کرے اِس سے پہلے کہ اُسے ایک اور جواب شامل کرنے سے روک دیا جائے۔"
     title_fancy_entities: "ٹاپک عنوانات میں عام ASCII حروف کو شوخ HTML اشیاء میں تبدیل کریں، بذریعہ سمارٹی پینٹس <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "عنوان کی کم از کم لمبائی، اِس سے پہلے کہاُس کو اُسی طرح کے دوسرے ٹاپکس کیلئے چیک کیا جائے گا۔"
     desktop_category_page_style: "/ زمرہ جات صفحہ کے لیے بصری انداز۔"

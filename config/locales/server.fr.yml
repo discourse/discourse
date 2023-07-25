@@ -1762,7 +1762,6 @@ fr:
     title_min_entropy: "L'entropie minimale (caractères uniques, les caractères en langues étrangères comptent davantage) requise pour le titre d'un sujet."
     body_min_entropy: "L'entropie minimale (caractères uniques, les caractères en langues étrangères comptent davantage) requise pour le corps d'un message."
     allow_uppercase_posts: "Autoriser les messages ou les titres de sujets entièrement en majuscules."
-    max_consecutive_replies: "Nombre de messages consécutifs qu'un utilisateur peut publier dans un sujet avant de ne plus pouvoir ajouter de nouvelle réponse."
     enable_filtered_replies_view: 'Le bouton « (n) réponses » réduit tous les autres messages et n''affiche que le message actuel et ses réponses.'
     title_fancy_entities: "Convertir les caractères ASCII communs en jolies entités HTML dans les titres des sujets, comme SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "La taille minimale d'un titre avant que l'on vérifie l'existence de sujets identiques."

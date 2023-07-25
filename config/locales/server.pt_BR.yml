@@ -1773,7 +1773,6 @@ pt_BR:
     title_min_entropy: "A entropia mínima (caracteres únicos e em idioma diferente do inglês contam mais) necessária para o título de um tópico."
     body_min_entropy: "A entropia mínima (caracteres únicos e em idioma diferente do inglês contam mais) necessária para o corpo de uma postagem."
     allow_uppercase_posts: "Permita toda as letras maiúsculas no título de um tópico ou no corpo de uma postagem."
-    max_consecutive_replies: "Quantidade de postagens que um(a) usuário(a) precisa fazer de uma vez em um tópico antes de ser impedido(a) de adicionar outra resposta."
     enable_filtered_replies_view: 'o botão "(n) respostas" recolhe todas as outras postagens e exibe apenas a postagem atual e suas respostas.'
     title_fancy_entities: "Converter caracteres ASCII comuns para criar entidades HTML em títulos de tópicos, consulte SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "O tamanho mínimo de um título antes que seja verificado para tópicos semelhantes."

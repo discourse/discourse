@@ -87,6 +87,17 @@ id:
           about: Tentang
           members: Anggota
           settings: Pengaturan
+      new_message_modal:
+        title: Kirim pesan
+        add_user_long: <kbd>shift + click</kbd> atau <kbd>shift + enter</kbd><span>Tambahkan @%{username}</span>
+        add_user_short: <span>Tambahkan pengguna</span>
+        open_channel: <span>Buka saluran</span>
+        default_search_placeholder: "#a-channel, @somebody atau apapun"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@somebody"
+        user_search_placeholder: "...menambahkan lebih banyak pengguna"
+        disabled_user: "telah menonaktifkan obrolan"
+        no_items: "Tidak ada item"
       direct_message_creator:
         title: Pesan Baru
         prefix: "Kepada:"
@@ -147,6 +158,8 @@ id:
           tracking:
             title: "Pelacakan"
             description: "Jumlah balasan baru untuk utas ini akan ditampilkan di daftar utas dan kanal. Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+        participants_other_count:
+          other: "+%{count}"
       threads:
         list: "Diskusi yang sedang berlangsung"
         none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."

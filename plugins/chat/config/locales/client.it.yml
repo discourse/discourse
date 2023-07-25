@@ -230,6 +230,8 @@ it:
         read_only: "Sola lettura"
         archived_header: "Il canale è archiviato"
         archived: "Archiviati"
+        archive_failed: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati <a target=\"_blank\" href=\"%{topic_url}\">nell'argomento di destinazione</a>. Premi Riprova per tentare di completare l'archiviazione."
+        archive_failed_no_topic: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati e l'argomento di destinazione non è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_completed: "Vedi <a target=\"_blank\" href=\"%{topic_url}\">l'argomento di archiviazione</a>"
         closed_header: "Il canale è chiuso"
         closed: "Chiusi"
@@ -263,9 +265,12 @@ it:
           settings: Impostazioni
       new_message_modal:
         title: Invia messaggio
+        add_user_long: <kbd>MAIUSC + clic</kbd> o <kbd>MAIUSC + INVIO</kbd><span>Aggiunge @%{username}</span>
         add_user_short: <span>Aggiungi utente</span>
         open_channel: <span>Apri canale</span>
         default_search_placeholder: "#uncanale, @qualcuno o altro"
+        default_channel_search_placeholder: "#un-canale"
+        default_user_search_placeholder: "@qualcuno"
         user_search_placeholder: "...aggiungi altri utenti"
         disabled_user: "ha disabilitato la chat"
         no_items: "Nessun elemento"
@@ -301,10 +306,30 @@ it:
           warning_2_groups:
             one: "Aggiungere automaticamente %{count} utente da %{group1} e %{group2}?"
             other: "Aggiungere automaticamente %{count} utenti da %{group1} e %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Aggiungere automaticamente {userCount} utente di {groupName} e {groupCount} altro gruppo?}
+                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e {groupCount} altro gruppo ?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Aggiungere automaticamente {userCount} utente di {groupName} e di {groupCount} altri gruppi?}
+                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e di {groupCount} altri gruppi?}
+                      }
+                    }
+            }
         choose_category:
           label: "Scegli una categoria"
           none: "selezionane una..."
           default_hint: Gestisci l'accesso visitando le <a href=%{link} target="_blank">impostazioni di sicurezza di %{category}</a>
+          hint_1_group: 'Gli utenti in %{group} avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
+          hint_2_groups: 'Gli utenti in %{group1} e %{group2} avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
+          hint_multiple_groups:
+            one: 'Gli utenti in %{group} e un altro gruppo avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
+            other: 'Gli utenti in %{group} e altri %{count} gruppi avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
         create: "Crea canale"
         description: "Descrizione (facoltativa)"
         name: "Nome del canale"
@@ -324,6 +349,7 @@ it:
           one: "Tu, %{commaSeparatedUsernames} e %{count} altro avete reagito con :%{emoji}:"
           other: "Tu, %{commaSeparatedUsernames} e altri %{count} avete reagito con :%{emoji}:"
         single_user: "%{username} ha reagito con :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} e %{username} hanno reagito con :%{emoji}:"
         multiple_users_and_more:
           one: "%{commaSeparatedUsernames} e %{count} altro avete reagito con :%{emoji}:"
           other: "%{commaSeparatedUsernames} e altri %{count} avete reagito con :%{emoji}:"
@@ -368,7 +394,9 @@ it:
         title: "Chat"
         export_messages:
           title: "Esporta i messaggi della chat"
+          description: "L'esportazione è attualmente limitata a 10000 messaggi più recenti negli ultimi 6 mesi."
           create_export: "Crea esportazione"
+          export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
       direct_messages:
         title: "Chat personale"
         new: "Crea una chat personale"
@@ -485,6 +513,7 @@ it:
           one: "+%{count}"
           other: "+%{count}"
       threads:
+        open: "Apri Discussione"
         list: "Discussioni in corso"
         none: "Non stai partecipando a nessun thread in questo canale."
       draft_channel_screen:

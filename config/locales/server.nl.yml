@@ -1760,7 +1760,6 @@ nl:
     title_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor een topictitel is vereist."
     body_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor een berichttekst is vereist."
     allow_uppercase_posts: "Alles in hoofdletters in een topictitel of berichttekst toestaan."
-    max_consecutive_replies: "Aantal berichten dat een gebruiker achter elkaar in een topic moet plaatsen voordat het toevoegen van een ander antwoord wordt voorkomen."
     enable_filtered_replies_view: 'De knop "(n) antwoorden" vouwt alle andere berichten samen en toont alleen het huidige bericht en de bijbehorende antwoorden.'
     title_fancy_entities: "Algemene ASCII-tekens naar decoratieve HTML-entiteiten converteren in topictitels, zoals SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "De minimale lengte van een titel voordat er op vergelijkbare topics wordt gecontroleerd."

@@ -25,6 +25,18 @@ es:
           title: "Los resultados se mostrarán una vez que la encuesta esté <strong>cerrada</strong>."
         staff:
           title: "Los resultados solo se muestran a miembros del <strong>equipo</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Elige al menos <strong>%{count}</strong> opción."
+            other: "Elige al menos <strong>%{count} opciones</strong>."
+          up_to_max_options:
+            one: "Elige hasta <strong>%{count} opción</strong>."
+            other: "Elige hasta <strong>%{count} opciones</strong>."
+          x_options:
+            one: "Elige <strong>%{count}</strong> opción."
+            other: "Elige <strong>%{count} opciones</strong>."
+          between_min_and_max_options: "Elige entre <strong>%{min} y %{max} opciones</strong>."
       cast-votes:
         title: "Emite tus votos"
         label: "Votar"
@@ -33,8 +45,10 @@ es:
         label: "Resultados"
       remove-vote:
         title: "Retirar tu voto"
+        label: "Deshacer voto"
       hide-results:
         title: "Volver a tus votos"
+        label: "Votar"
       group-results:
         title: "Agrupar votos por campo de usuario"
         label: "Mostrar desglose"

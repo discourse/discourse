@@ -1147,7 +1147,6 @@ sk:
       sign_up: "Registrovať sa"
       hide_forever: "nie, ďakujem"
     summary:
-      enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -2850,6 +2849,9 @@ sk:
               key: "povinné"
             type:
               key: "typ"
+        edit_category:
+          select_template: "Výber šablón formulárov"
+          select_template_help: "Pridanie/úprava šablón formulárov"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -2861,6 +2863,7 @@ sk:
         last_emailed: "Posledný odemailovaný"
         not_found: "Prepáčte, toto používateľské meno sa nenachádza v našom systéme."
         id_not_found: "Prepáčte, toto používateľské id sa nenachádza v našom systéme."
+        status: "Stav"
         show_emails: "Ukázať Emaily"
         nav:
           new: "Nový"
@@ -3057,6 +3060,13 @@ sk:
         go_back: "Návrat na vyhľadávanie"
         recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
+        show_outdated: "Zobraziť len neaktuálne/neplatné"
+        interpolation_keys: "Dostupné interpolačné kľúče:"
+        outdated:
+          title: "Tento preklad je zastaraný"
+          old_default: "Staré predvolené nastavenie"
+          new_default: "Nové predvolené nastavenie"
+          dismiss: "Zahodiť"
       settings:
         show_overriden: "Ukázať iba zmenené"
         reset: "zrušiť"
