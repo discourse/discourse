@@ -71,6 +71,9 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Set up Docker
         uses: docker/build-push-action@v4
 
