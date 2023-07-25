@@ -47,19 +47,19 @@ jobs:
           - build_type: frontend
             target: core # Handled by core_frontend_tests job (below)
 
-    services:
-      discoursetest.minio.local:
-        image: bitnami/minio:latest
-        ports:
-          - 9000:9000
-          - 9001:9001
-        env:
-          MINIO_ROOT_USER: minioadmin
-          MINIO_ROOT_PASSWORD: minioadmin
-          # MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
-          # MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
-          MINIO_DOMAIN: discoursetest.minio.local
-        options: --name=discoursetest.minio.local
+    # services:
+      # discoursetest.minio.local:
+      #   image: bitnami/minio:latest
+      #   ports:
+      #     - 9000:9000
+      #     - 9001:9001
+      #   env:
+      #     MINIO_ROOT_USER: minioadmin
+      #     MINIO_ROOT_PASSWORD: minioadmin
+      #     # MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
+      #     # MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
+      #     MINIO_DOMAIN: discoursetest.minio.local
+      #   options: --name=discoursetest.minio.local
 
     steps:
       - name: Set working directory owner
@@ -69,27 +69,37 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Start Minio
+        run: |
+          /usr/bin/docker run -d --name=minio.local \
+            -p 9000:9000 \
+            -p 9001:9001 \
+            -e MINIO_ROOT_USER=minioadmin \
+            -e MINIO_ROOT_PASSWORD=minioadmin \
+            -e MINIO_DOMAIN=minio.local \
+            bitnami/minio:latest
+
       - name: Ping Minio container
         run: |
-          curl -v http://discoursetest.minio.local:9000
+          curl -v http://minio.local:9000
 
       - name: Fetch minio mc client and setup bucket
         run: |
           curl -o ./mc -# https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x ./mc
-          ./mc alias set local http://discoursetest.minio.local:9000 minioadmin minioadmin
+          ./mc alias set local http://minio.local:9000 minioadmin minioadmin
           ./mc mb local/discoursetest
           ./mc anonymous set public local/discoursetest
           ./mc admin config get local api
-          ./mc admin config set local api cors_allow_origin="*"
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
+          sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
           sudo cat /etc/hosts
 
-      # - name: Ping Minio subdomain
-      #   run: |
-      #     curl -v http://discoursetest.minio.local:9000/
+      - name: Ping Minio subdomain
+        run: |
+          curl -v http://discoursetest.minio.local:9000/
 
       - name: Setup Git
         run: |
