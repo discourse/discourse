@@ -690,7 +690,7 @@ def apply_base_chrome_options(options)
 
   # if ENV["CHROME_DISABLE_CORS_CHECKS"]
   #   # Disable CORS checks.
-  #   options.add_argument("--disable-web-security")
+  options.add_argument("--disable-web-security")
 
   #   # Add data dir for CORS check disable.
   options.add_argument("--user-data-dir=#{ENV["HOME"]}/.config/chromium-dev")

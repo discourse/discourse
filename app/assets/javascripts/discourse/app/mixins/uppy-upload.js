@@ -407,6 +407,18 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
               uniqueUploadIdentifier: response.unique_identifier,
             });
 
+            // eslint-disable-next-line no-console
+            console.log(`GENERATED PRESIGNED PUT URL AT ${response.url}`);
+            fetch(response.url)
+              .then((response2) => {
+                // eslint-disable-next-line no-console
+                console.log(`FETCHED PRESIGNED PUT URL ${response2.status}`);
+              })
+              .catch((error) => {
+                // eslint-disable-next-line no-console
+                console.log(`ERROR FETCHING PRESIGNED PUT URL ${error}`);
+              });
+
             return {
               method: "put",
               url: response.url,
