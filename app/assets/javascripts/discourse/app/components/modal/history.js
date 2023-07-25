@@ -167,10 +167,6 @@ export default class History extends Component {
     });
   }
 
-  get firstPaint() {
-    return this.loading && this.initialPaint;
-  }
-
   refresh(postId, postVersion) {
     this.loading = true;
     Post.loadRevision(postId, postVersion).then((result) => {
