@@ -1,5 +1,8 @@
 import Service from "@ember/service";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { ajax } from "discourse/lib/ajax";
+import { bind } from "discourse-common/utils/decorators";
+import { cancel } from "@ember/runloop";
 import { tracked } from "@glimmer/tracking";
 
 const CONNECTIVITY_ERROR_CLASS = "network-disconnected";
@@ -12,32 +15,55 @@ export default class NetworkConnectivity extends Service {
 
     this.setConnectivity(navigator.onLine);
 
-    window.addEventListener("offline", () => {
-      this.setConnectivity(false);
-    });
-
-    window.addEventListener(
-      "online",
-      this.pingServerAndSetConnectivity.bind(this)
-    );
-
-    window.addEventListener("visibilitychange", this.onFocus.bind(this));
+    window.addEventListener("offline", this.pingServerAndSetConnectivity);
+    window.addEventListener("online", this.pingServerAndSetConnectivity);
+    window.addEventListener("visibilitychange", this.onFocus);
   }
 
+  @bind
   onFocus() {
     if (!this.connected && document.visibilityState === "visible") {
       this.pingServerAndSetConnectivity();
     }
   }
 
+  @bind
   async pingServerAndSetConnectivity() {
-    let response = await ajax("/srv/status", { dataType: "text" }).catch(() => {
-      this.setConnectivity(false);
-    });
+    cancel(this._successTimer);
 
-    this.setConnectivity(response === "ok");
+    if (this._request?.abort) {
+      this._request.abort();
+    }
+
+    this._requesting = true;
+
+    this._request = ajax("/srv/status", { dataType: "text" }).then(
+      (response) => {
+        if (response === "ok") {
+          this._requesting = false;
+          return this.setConnectivity(true);
+        }
+      }
+    );
+
+    this._successTimer = discourseDebounce(
+      this,
+      this.checkPingStatusAndRerun,
+      1000
+    );
   }
 
+  @bind
+  async checkPingStatusAndRerun() {
+    if (this._requesting) {
+      this.setConnectivity(false);
+      this.pingServerAndSetConnectivity();
+    } else {
+      this.setConnectivity(true);
+    }
+  }
+
+  @bind
   setConnectivity(connected) {
     this.connected = connected;
 
