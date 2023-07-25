@@ -384,14 +384,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
           data.metadata = { "sha1-checksum": file.meta.sha1_checksum };
         }
 
-        return ajax(
-          this.uploadUrl ||
-            getUrl(`${this.uploadRootPath}/generate-presigned-put`),
-          {
-            type: "POST",
-            data,
-          }
-        )
+        return ajax(getUrl(`${this.uploadRootPath}/generate-presigned-put`), {
+          type: "POST",
+          data,
+        })
           .then((response) => {
             this._uppyInstance.setFileMeta(file.id, {
               uniqueUploadIdentifier: response.unique_identifier,

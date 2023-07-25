@@ -8,8 +8,6 @@ export default Component.extend(UppyUploadMixin, {
   tagName: "span",
   imageIsNotASquare: false,
 
-  uploadUrl: "http://minio.local:9000",
-
   @discourseComputed("uploading", "uploadedAvatarId")
   customAvatarUploaded() {
     return !this.uploading && !isBlank(this.uploadedAvatarId);

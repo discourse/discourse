@@ -249,7 +249,7 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: SELENIUM_BROWSER_LOG_LEVEL=ALL RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system/s3_uploads_spec.rb
+        run: CHROME_DEV_TOOLS=bottom SELENIUM_BROWSER_LOG_LEVEL=ALL RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system/s3_uploads_spec.rb
 
       # - name: Plugin System Tests
       #   if: matrix.build_type == 'system' && matrix.target == 'plugins'
