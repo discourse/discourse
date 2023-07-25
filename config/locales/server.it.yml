@@ -188,6 +188,7 @@ it:
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
     site_settings:
+      invalid_site_setting: "Non esiste alcuna impostazione di nome '%{name}'"
       invalid_category_id: "Hai specificato una categoria che non esiste"
       invalid_choice:
         one: "Hai specificato la scelta non valida %{name}"
@@ -1557,6 +1558,8 @@ it:
     content_security_policy_frame_ancestors: "Limita chi può incorporare questo sito in iframes tramite CSP. Controlla gli host ammessi su <a href='%{base_path}/admin/customize/embedding'>Incorporamenti</a>"
     content_security_policy_script_src: "Sorgenti di script aggiuntivi consentiti. L'host e la rete CDN correnti sono inclusi per impostazione predefinita. Consulta la sezione <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigare gli attacchi XSS con i criteri di sicurezza dei contenuti.</a>"
     invalidate_inactive_admin_email_after_days: "Gli account amministratore che non hanno visitato il sito in questo numero di giorni dovranno riconvalidare il proprio indirizzo email prima di accedere. Impostare su 0 per disabilitare."
+    include_secure_categories_in_tag_counts: "Se abilitato, il conteggio degli argomenti per un tag includerà gli argomenti che si trovano nelle categorie con restrizioni di lettura per tutti gli utenti. Se disabilitato, agli utenti normali viene mostrato solo un conteggio degli argomenti per un tag in cui tutti gli argomenti sono nelle categorie pubbliche."
+    display_personal_messages_tag_counts: "Se abilitato, verrà visualizzato il conteggio dei messaggi personali contrassegnati con un determinato tag."
     top_menu: "Determina quali oggetti appaiono nella navigazione della pagina iniziale, e in quale ordine. Esempio latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina quali elementi vengono mostrati nel menu del messaggio, e in quale ordine. Esempio like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Le voci di menu da nascondere per impostazione predefinita nel menu di composizione del messaggio, a meno che non vengano premuti i punti di sospensione per espanderle."
@@ -1585,7 +1588,10 @@ it:
     max_favorite_badges: "Numero massimo di distintivi che l'utente può selezionare"
     whispers_allowed_groups: "Consenti la comunicazione privata all'interno degli argomenti per i membri di gruppi specifici."
     allow_index_in_robots_txt: "Specifica in robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca. In casi eccezionali puoi permanentemente <a href='%{base_path}/admin/customize/robots'>ignorare robots.txt</a>."
+    blocked_email_domains: "Un elenco delimitato da barre verticali di domini email con cui gli utenti non sono autorizzati a registrare account. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati. Esempio: mailinator.com|trashmail.net"
+    allowed_email_domains: "Un elenco delimitato da barre verticali di domini email con cui gli utenti DEVONO registrare account. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati. ATTENZIONE: Non saranno ammessi utenti con domini email diversi da quelli elencati!"
     normalize_emails: "Controlla se l'email normalizzata è univoca. L'email normalizzata è il nome utente senza tutti i puntini e senza tutto ciò che è compreso tra i simboli + e @."
+    auto_approve_email_domains: "Gli utenti con indirizzi email appartenenti a questo elenco di domini verranno approvati automaticamente. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati."
     hide_email_address_taken: "Non informare gli utenti dell'esistenza di un account con un determinato indirizzo e-mail durante la registrazione o la procedura di reimpostazione della password. Richiede l'e-mail completa per le richieste di \"password dimenticata\"."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Controlla in Discourse Hub la presenza di aggiornamenti della versione e mostra i messaggi della nuova versione nel pannello <a href='%{base_path}/admin' target='_blank'>/admin</a>"
@@ -2401,6 +2407,7 @@ it:
       must_not_contain_two_special_chars_in_seq: "non deve contenere una sequenza di 2 o più caratteri speciali (.-_)"
       must_not_end_with_confusing_suffix: "non deve finire con un suffisso fuorviante come .json o .png ecc."
     email:
+      blank: "non può essere vuoto."
       invalid: "non valido."
       not_allowed: "non è permesso da quel fornitore di email. Per favore usa un altro indirizzo email."
       blocked: "non è permesso."

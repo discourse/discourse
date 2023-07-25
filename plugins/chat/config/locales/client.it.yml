@@ -206,6 +206,8 @@ it:
         read_only: "Sola lettura"
         archived_header: "Il canale è archiviato"
         archived: "Archiviati"
+        archive_failed: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati <a target=\"_blank\" href=\"%{topic_url}\">nell'argomento di destinazione</a>. Premi Riprova per tentare di completare l'archiviazione."
+        archive_failed_no_topic: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati e l'argomento di destinazione non è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_completed: "Vedi <a target=\"_blank\" href=\"%{topic_url}\">l'argomento di archiviazione</a>"
         closed_header: "Il canale è chiuso"
         closed: "Chiusi"
@@ -237,6 +239,10 @@ it:
           about: Informazioni
           members: Membri
           settings: Impostazioni
+      channel_edit_name_modal:
+        title: Modifica nome
+        input_placeholder: Aggiungi un nome
+        description: Assegna un breve nome descrittivo al tuo canale
       channel_edit_description_modal:
         title: Modifica descrizione
         input_placeholder: Aggiungi una descrizione

@@ -34,12 +34,22 @@ tr_TR:
     chat_channel_archive_complete:
       title: "Sohbet Kanalı Arşivlemesi Tamamlandı"
       subject_template: "Sohbet kanalı arşivlemesi başarıyla tamamlandı"
+      text_body_template: |
+        %{channel_hashtag_or_name} sohbet kanalının arşivlenmesi başarıyla tamamlandı. Mesajlar [%{topic_title}](%{topic_url}) konusuna kopyalandı.
     chat_channel_archive_failed:
       title: "Sohbet Kanalı Arşivleme Başarısız"
       subject_template: "Sohbet kanalı arşivleme başarısız"
+      text_body_template: |
+        %{channel_hashtag_or_name} sohbet kanalının arşivlenmesi başarısız oldu. %{messages_archived} mesaj arşivlendi. Kısmen arşivlenen mesajlar [%{topic_title}](%{topic_url}) konusuna kopyalandı. Yeniden denemek için %{channel_url} adresinden kanalı ziyaret edin.
     chat_channel_archive_failed_no_topic:
       title: "Sohbet Kanalı Arşivlenemedi"
       subject_template: "Sohbet kanalı arşivlenemedi"
+      text_body_template: |
+        %{channel_hashtag_or_name} adlı sohbet kanalının arşivlenmesi başarısız oldu. Hiçbir mesaj arşivlenmedi. Konu aşağıdaki nedenlerden dolayı başarıyla oluşturulamadı:
+
+          %{topic_validation_errors}
+
+        Yeniden denemek için %{channel_url} adresindeki kanalı ziyaret edin.
   chat:
     deleted_chat_username: silindi
     errors:

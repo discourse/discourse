@@ -34,9 +34,13 @@ it:
     chat_channel_archive_complete:
       title: "Archiviazione canale chat completata"
       subject_template: "Archiviazione del canale di chat completata correttamente"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name}** è stata completata con successo. I messaggi sono stati copiati nell'argomento [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Archiviazione canale chat non riuscita"
       subject_template: "Archiviazione canale chat non riuscita"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name} non è riuscita. %{messages_archived} messaggi sono stati archiviati. I messaggi parzialmente archiviati sono stati copiati nell'argomento [%{topic_title}](%{topic_url}). Visita il canale in %{channel_url} per riprovare.
     chat_channel_archive_failed_no_topic:
       title: "Archiviazione canale chat non riuscita"
       subject_template: "Archiviazione canale chat non riuscita"
@@ -54,6 +58,7 @@ it:
       delete_channel_failed: "Eliminazione del canale non riuscita, riprova."
       minimum_length_not_met: "Il messaggio è troppo breve, deve contenere almeno %{minimum} caratteri."
       message_too_long: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{maximum} caratteri."
+      draft_too_long: "La bozza è troppo lunga."
       max_reactions_limit_reached: "Non sono consentite nuove reazioni su questo messaggio."
       message_move_invalid_channel: "I canali di origine e di destinazione devono essere canali pubblici."
       message_move_no_messages_found: "Nessun messaggio è stato trovato con gli ID messaggio forniti."

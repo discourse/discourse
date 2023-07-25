@@ -1020,7 +1020,7 @@ pt_BR:
         sunday: "Domingo"
         to: "para"
       activity_stream: "Atividade"
-      read: "Lidos(as)"
+      read: "Lidos"
       read_help: "Tópicos lidos recentemente"
       preferences: "Preferências"
       feature_topic_on_profile:

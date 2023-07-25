@@ -289,6 +289,8 @@ ar:
           settings: الإعدادات
       channel_edit_name_modal:
         title: تعديل الاسم
+        input_placeholder: أضِف اسمًا
+        description: أدخل اسمًا وصفيًا قصيرًا لقناتك
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا
