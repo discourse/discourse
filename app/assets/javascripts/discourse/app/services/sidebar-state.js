@@ -42,6 +42,10 @@ export default class SidebarState extends Service {
     return this.mode === COMBINED_MODE;
   }
 
+  get showMainPanel() {
+    return this.currentPanelKey === "main";
+  }
+
   #reset() {
     this.currentPanelKey = currentPanelKey;
     this.panels = panels;

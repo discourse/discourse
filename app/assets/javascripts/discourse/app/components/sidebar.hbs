@@ -3,7 +3,7 @@
     <Sidebar::SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
   {{/if}}
 
-  {{#if this.showMainPanel}}
+  {{#if this.sidebarState.showMainPanel}}
     <Sidebar::Sections
       @currentUser={{this.currentUser}}
       @collapsableSections={{true}}

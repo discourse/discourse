@@ -17,10 +17,6 @@ export default class Sidebar extends Component {
     }
   }
 
-  get showMainPanel() {
-    return this.sidebarState.currentPanelKey === "main";
-  }
-
   get showSwitchPanelButtonsOnTop() {
     return this.siteSettings.default_sidebar_switch_panel_position === "top";
   }
