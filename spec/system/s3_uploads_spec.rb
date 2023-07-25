@@ -15,6 +15,8 @@ describe "Uploading files to S3", type: :system do
     SiteSetting.s3_secret_access_key = "minioadmin"
     SiteSetting.s3_endpoint = "http://minio.local:9000"
 
+    SiteSetting.content_security_policy = false
+
     sign_in(current_user)
   end
 

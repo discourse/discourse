@@ -252,6 +252,7 @@ jobs:
           CHROME_DEV_TOOLS=bottom SELENIUM_BROWSER_LOG_LEVEL=ALL RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system/s3_uploads_spec.rb
 
       - name: Read chrome logs
+        if: matrix.build_type == 'system' && failure()
         run: cat $HOME/.config/chromium-dev/chrome_debug.log
 
       # - name: Plugin System Tests

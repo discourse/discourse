@@ -687,7 +687,6 @@ def apply_base_chrome_options(options)
   options.add_argument("--mute-audio")
 
   options.add_argument("--enable-logging")
-  options.add_argument("--v=1")
 
   # if ENV["CHROME_DISABLE_CORS_CHECKS"]
   #   # Disable CORS checks.
