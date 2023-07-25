@@ -84,7 +84,7 @@ jobs:
           # MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           # MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
           MINIO_DOMAIN: minio.local
-        options: --name=minio.local
+        options: --network-alias discoursetest.minio.local
 
     steps:
       - name: Set working directory owner
