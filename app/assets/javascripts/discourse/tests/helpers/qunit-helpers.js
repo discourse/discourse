@@ -88,6 +88,7 @@ import { resetMentions } from "discourse/lib/link-mentions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -607,3 +608,5 @@ export function normalizeHtml(html) {
   resultElement.innerHTML = html;
   return resultElement.innerHTML;
 }
+
+export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };
