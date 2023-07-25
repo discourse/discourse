@@ -71,7 +71,7 @@ jobs:
 
       - name: Start Minio
         run: |
-          /usr/bin/docker run -d --name=minio.local \
+          docker run -d --name=minio.local \
             -p 9000:9000 \
             -p 9001:9001 \
             -e MINIO_ROOT_USER=minioadmin \
