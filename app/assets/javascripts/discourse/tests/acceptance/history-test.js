@@ -47,7 +47,11 @@ acceptance("History Modal - authorized", function (needs) {
     });
 
     server.get("/posts/419/revisions/1.json", () => {
-      return helper.response({ ...revisionResponse, current_revision: 1 });
+      return helper.response({
+        ...revisionResponse,
+        current_revision: 1,
+        previous_revision: null,
+      });
     });
   });
 
@@ -68,6 +72,15 @@ acceptance("History Modal - authorized", function (needs) {
       .doesNotExist(
         "hides the edit post button when not on the latest revision"
       );
+  });
+
+  test("previous revision button", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("article[data-post-id='419'] .edits button");
+
+    await click(".history-modal .previous-revision");
+
+    assert.dom(".history-modal .previous-revision").isDisabled();
   });
 });
 
