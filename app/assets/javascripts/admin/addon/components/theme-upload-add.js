@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
@@ -52,8 +51,6 @@ const SCSS_VARIABLE_NAMES = [
 ];
 
 export default class ThemeUploadAdd extends Component {
-  @controller adminCustomizeThemesShow;
-
   @tracked name;
   @tracked fileSelected = false;
   @tracked flash;
@@ -75,7 +72,7 @@ export default class ThemeUploadAdd extends Component {
       } else if (SCSS_VARIABLE_NAMES.includes(name.toLowerCase())) {
         return I18n.t("admin.customize.theme.variable_name_error.no_overwrite");
       } else if (
-        this.adminCustomizeThemesShow.model.theme_fields.some(
+        this.args.model.themeFields.some(
           (tf) =>
             THEME_FIELD_VARIABLE_TYPE_IDS.includes(tf.type_id) &&
             this.name === tf.name
@@ -104,7 +101,7 @@ export default class ThemeUploadAdd extends Component {
 
   @action
   async upload() {
-    const file = $("#file-input")[0].files[0];
+    const file = document.getElementById("file-input").files[0];
     const options = {
       type: "POST",
       processData: false,
@@ -120,7 +117,7 @@ export default class ThemeUploadAdd extends Component {
         name: this.name,
         original_filename: file.name,
       };
-      this.adminCustomizeThemesShow.send("addUpload", upload);
+      this.args.model.addUpload(upload);
       this.args.closeModal();
     } catch (e) {
       this.flash = e.jqXHR.responseJSON.errors.join(". ");
