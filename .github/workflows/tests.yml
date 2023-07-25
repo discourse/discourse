@@ -72,7 +72,7 @@ jobs:
           fetch-depth: 1
 
       - name: Set up Docker
-        uses: docker/setup-docker@v1
+        uses: docker/build-push-action@v4
 
       - name: Fetch and display the logs of the Minio container and ping
         run: |
