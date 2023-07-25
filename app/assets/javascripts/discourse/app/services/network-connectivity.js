@@ -42,7 +42,7 @@ export default class NetworkConnectivity extends Service {
       } else {
         throw "disconnected";
       }
-    } catch (e) {
+    } catch {
       // Either the request didn't go out at all or the response wasn't "ok". Both are failures.
       // Start the timer to check every second if `navigator.onLine` comes back online in the event that
       // we miss the `online` event firing
