@@ -8,7 +8,6 @@ import {
 } from "discourse/lib/utilities";
 import Component from "@ember/component";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import Sharing from "discourse/lib/sharing";
 import { action, computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
@@ -43,7 +42,7 @@ export function fixQuotes(str) {
   return str.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
 }
 
-export default Component.extend(KeyEnterEscape, {
+export default Component.extend({
   modal: service(),
 
   classNames: ["quote-button"],

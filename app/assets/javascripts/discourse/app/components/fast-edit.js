@@ -16,6 +16,15 @@ export default class FastEdit extends Component {
   });
 
   @action
+  onKeydown(event) {
+    if (event.key === "Escape") {
+      this.args.close();
+    } else if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+      this.save();
+    }
+  }
+
+  @action
   updateValue(event) {
     this.value = event.target.value;
   }
@@ -36,7 +45,7 @@ export default class FastEdit extends Component {
       popupAjaxError(error);
     } finally {
       this.isSaving = false;
-      this.args.afterSave?.();
+      this.args.close();
     }
   }
 }

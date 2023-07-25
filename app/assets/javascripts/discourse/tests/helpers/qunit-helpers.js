@@ -52,7 +52,10 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
-import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
+import {
+  PLATFORM_KEY_MODIFIER,
+  clearExtraKeyboardShortcutHelp,
+} from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
@@ -607,3 +610,5 @@ export function normalizeHtml(html) {
   resultElement.innerHTML = html;
   return resultElement.innerHTML;
 }
+
+export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };
