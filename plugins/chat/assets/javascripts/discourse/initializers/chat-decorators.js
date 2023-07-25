@@ -72,7 +72,7 @@ export default {
         (element) => {
           lightboxService.setupLightboxes({
             container: element,
-            selector: "img:not(.emoji, .avatar)",
+            selector: "img:not(.emoji, .avatar, .site-icon)",
           });
         },
         {
