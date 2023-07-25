@@ -275,7 +275,12 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   addUploadModal() {
-    this.modal.show(ThemeUploadAddModal, model: {themeFields: this.model.theme_fields, addUpload: this.addUpload});
+    this.modal.show(ThemeUploadAddModal, {
+      model: {
+        themeFields: this.model.theme_fields,
+        addUpload: this.addUpload,
+      },
+    });
   }
 
   @action
