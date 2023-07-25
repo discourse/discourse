@@ -184,7 +184,7 @@ module Chat
         context.threads =
           ::Chat::Thread
             .strict_loading
-            .includes(last_message: [:user], original_message_user: :user_status)
+            .includes(last_message: %i[user uploads], original_message_user: :user_status)
             .where(id: messages.map(&:thread_id).compact.uniq)
 
         # Saves us having to load the same message we already have.

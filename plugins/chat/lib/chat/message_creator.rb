@@ -48,8 +48,8 @@ module Chat
     def create
       begin
         validate_channel_status!
-        uploads = get_uploads
-        validate_message!(has_uploads: uploads.any?)
+        @chat_message.uploads = get_uploads
+        validate_message!
         validate_reply_chain!
         validate_existing_thread!
 
@@ -60,7 +60,6 @@ module Chat
 
         create_chat_webhook_event
         create_thread
-        @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
         post_process_resolved_thread
         update_channel_last_message
@@ -154,11 +153,9 @@ module Chat
       end
     end
 
-    def validate_message!(has_uploads:)
-      @chat_message.validate_message(has_uploads: has_uploads)
-      if @chat_message.errors.present?
-        raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
-      end
+    def validate_message!
+      return if @chat_message.valid?
+      raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
     end
 
     def create_chat_webhook_event
