@@ -29,7 +29,7 @@
           {{on "click" (fn this.onCategorySelection (concat "custom-" group))}}
           class="btn btn-default category-button emoji"
         >
-          {{replace-emoji (concat ":" emojis.firstObject.code ":")}}
+          {{replace-emoji (concat ":" (get emojis "0.code") ":")}}
         </button>
       {{/each-in}}
     </div>
