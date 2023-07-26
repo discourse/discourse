@@ -1,0 +1,19 @@
+<DModal
+  @title={{i18n "admin.backups.operations.backup.confirm"}}
+  @closeModal={{@closeModal}}
+>
+  {{#if this.warningMessage}}
+    <div class="alert alert-warning">{{html-safe this.warningMessage}}</div>
+  {{/if}}
+  <DButton
+    class="btn-primary backup-with-uploads"
+    @action={{this.startBackupWithUploads}}
+    @label="yes_value"
+  />
+  <DButton
+    class="backup-no-uploads"
+    @action={{this.startBackupWithoutUploads}}
+    @label="admin.backups.operations.backup.without_uploads"
+  />
+  <DButton class="btn-default" @action={{@closeModal}} @label="no_value" />
+</DModal>
