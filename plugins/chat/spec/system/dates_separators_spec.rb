@@ -15,8 +15,8 @@ RSpec.describe "Dates separators", type: :system do
 
   context "when today separator is out of screen" do
     before do
-      25.times { Fabricate(:chat_message, chat_channel: channel_1, created_at: 1.day.ago) }
-      20.times { Fabricate(:chat_message, chat_channel: channel_1) }
+      15.times { Fabricate(:chat_message, chat_channel: channel_1, created_at: 1.day.ago) }
+      30.times { Fabricate(:chat_message, chat_channel: channel_1) }
     end
 
     it "shows it as a sticky date" do

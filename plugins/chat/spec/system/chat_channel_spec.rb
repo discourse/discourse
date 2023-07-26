@@ -125,12 +125,7 @@ RSpec.describe "Chat channel", type: :system do
     it "doesn’t scroll the pane" do
       visit("/chat/message/#{message_1.id}")
 
-      new_message =
-        Chat::MessageCreator.create(
-          chat_channel: channel_1,
-          user: other_user,
-          content: "this is fine",
-        ).chat_message
+      new_message = Fabricate(:chat_message, chat_channel: channel_1)
 
       expect(page).to have_no_content(new_message.message)
     end
