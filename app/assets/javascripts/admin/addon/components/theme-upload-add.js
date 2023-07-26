@@ -55,40 +55,26 @@ export default class ThemeUploadAdd extends Component {
   @tracked fileSelected = false;
   @tracked flash;
 
-  get enabled() {
-    return this.nameValid && this.fileSelected;
-  }
-
   get disabled() {
-    return !this.enabled;
+    return this.errorMessage && this.fileSelected;
   }
 
   get errorMessage() {
-    if (this.name) {
-      if (!this.name.match(/^[a-z_][a-z0-9_-]*$/i)) {
-        return I18n.t(
-          "admin.customize.theme.variable_name_error.invalid_syntax"
-        );
-      } else if (SCSS_VARIABLE_NAMES.includes(name.toLowerCase())) {
-        return I18n.t("admin.customize.theme.variable_name_error.no_overwrite");
-      } else if (
-        this.args.model.themeFields.some(
-          (tf) =>
-            THEME_FIELD_VARIABLE_TYPE_IDS.includes(tf.type_id) &&
-            this.name === tf.name
-        )
-      ) {
-        return I18n.t(
-          "admin.customize.theme.variable_name_error.must_be_unique"
-        );
-      }
+    if (!this.name) {
+      return;
+    } else if (!this.name.match(/^[a-z_][a-z0-9_-]*$/i)) {
+      return I18n.t("admin.customize.theme.variable_name_error.invalid_syntax");
+    } else if (SCSS_VARIABLE_NAMES.includes(name.toLowerCase())) {
+      return I18n.t("admin.customize.theme.variable_name_error.no_overwrite");
+    } else if (
+      this.args.model.themeFields.some(
+        (tf) =>
+          THEME_FIELD_VARIABLE_TYPE_IDS.includes(tf.type_id) &&
+          this.name === tf.name
+      )
+    ) {
+      return I18n.t("admin.customize.theme.variable_name_error.must_be_unique");
     }
-
-    return null;
-  }
-
-  get nameValid() {
-    return null === this.errorMessage;
   }
 
   @action
