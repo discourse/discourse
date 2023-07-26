@@ -8,7 +8,7 @@
   <DButton
     class="btn-primary backup-with-uploads"
     @action={{this.startBackupWithUploads}}
-    @label="yes_value"
+    @label={{or this.yesLabel "yes_value"}}
   />
   <DButton
     class="backup-no-uploads"
