@@ -78,16 +78,13 @@
           width: auto;
           margin-left: 0.25em;
           position: static;
+          min-height: 28px;
           &.is-expanded {
             padding: 0;
           }
           .filter-input {
             font-size: var(--font-down-1);
-            min-height: 28px;
-            flex: 1;
-            display: block;
-            border: none;
-            min-width: 0;
+            min-height: auto;
           }
         }
       }
