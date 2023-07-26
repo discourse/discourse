@@ -118,7 +118,6 @@ RSpec.describe "Deleted message", type: :system do
 
     before do
       channel_1.update!(threading_enabled: true)
-      SiteSetting.enable_experimental_chat_threaded_discussions = true
       chat_system_user_bootstrap(user: other_user, channel: channel_1)
       Chat::Thread.update_counts
     end

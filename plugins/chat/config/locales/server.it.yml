@@ -27,7 +27,6 @@ it:
     max_mentions_per_chat_message: "Numero massimo di notifiche @name che un utente può utilizzare in un messaggio di chat."
     chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
     chat_allow_archiving_channels: "Consenti allo staff di archiviare i messaggi in un argomento alla chiusura di un canale."
-    enable_experimental_chat_threaded_discussions: "SPERIMENTALE: Consenti al personale di attivare il threading sui canali di chat, che permette di avere discussioni parallele in un canale quando gli utenti rispondono l'uno all'altro."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."

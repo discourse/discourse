@@ -21,7 +21,6 @@ en:
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
-    enable_experimental_chat_threaded_discussions: "EXPERIMENTAL: Allow staff to enable threading on chat channels, which allows for parallel discussions to occur in a channel when users reply to one another."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."

@@ -18,7 +18,6 @@ RSpec.describe "Chat message - thread", type: :system do
     channel_1.update!(threading_enabled: true)
     channel_1.add(current_user)
     channel_1.add(other_user)
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     sign_in(current_user)
   end
 
