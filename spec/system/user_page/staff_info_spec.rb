@@ -37,7 +37,12 @@ describe "Viewing user staff info as an admin", type: :system do
 
     context "when there are approved flagged posts" do
       before do
-        Fabricate.times(2, :reviewable_flagged_post, status: :approved, target_created_by: user)
+        2.times do
+          PostActionCreator
+            .off_topic(admin, Fabricate(:post, user: user))
+            .reviewable
+            .perform(admin, :agree_and_keep)
+        end
       end
 
       it "should show the right count in the flagged-posts staff counter" do

@@ -2002,23 +2002,41 @@ RSpec.describe User do
     end
 
     describe "#number_of_flagged_posts" do
-      it "counts approved flagged posts from the user" do
-        ReviewableFlaggedPost
-          .statuses
-          .except(:approved)
-          .keys
-          .map do |status|
-            Fabricate(:reviewable_flagged_post, status: status, target_created_by: user)
-          end
-        Fabricate.times(2, :reviewable_flagged_post, status: :approved, target_created_by: user)
+      fab!(:admin) { Fabricate(:admin) }
 
+      it "counts only approved standard flagged posts from the user" do
+        %i[disagree ignore delete_and_ignore].each do |review_action|
+          PostActionCreator
+            .off_topic(admin, Fabricate(:post, user: user))
+            .reviewable
+            .perform(admin, review_action)
+        end
+        PostActionCreator
+          .off_topic(admin, Fabricate(:post, user: user))
+          .reviewable
+          .perform(admin, :agree_and_keep)
+        PostActionCreator
+          .off_topic(admin, Fabricate(:post, user: user))
+          .reviewable
+          .perform(admin, :delete_and_agree)
         expect(user.number_of_flagged_posts).to eq 2
+      end
+
+      it "ignores custom flags from the user" do
+        PostActionCreator
+          .notify_moderators(admin, Fabricate(:post, user: user))
+          .reviewable
+          .perform(admin, :agree_and_keep)
+        expect(user.number_of_flagged_posts).to be_zero
       end
 
       it "ignores flagged posts from another user" do
         other_user = Fabricate(:user)
-        ReviewableFlaggedPost.statuses.keys.map do |status|
-          Fabricate(:reviewable_flagged_post, status: status, target_created_by: other_user)
+        %i[disagree ignore delete_and_ignore agree_and_keep].each do |review_action|
+          PostActionCreator
+            .off_topic(admin, Fabricate(:post, user: other_user))
+            .reviewable
+            .perform(admin, review_action)
         end
 
         expect(user.number_of_flagged_posts).to be_zero
