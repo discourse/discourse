@@ -120,46 +120,47 @@ export function selectedText() {
     return "";
   }
 
-  const $div = $("<div>");
+  const div = document.createElement("div");
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
-    const $ancestor = $(range.commonAncestorContainer);
+    const ancestor = range.commonAncestorContainer.parentElement;
 
     // ensure we never quote text in the post menu area
-    const $postMenuArea = $ancestor.find(".post-menu-area")[0];
-    if ($postMenuArea) {
-      range.setEndBefore($postMenuArea);
+    const postMenuArea = ancestor.querySelector(".post-menu-area");
+    if (postMenuArea) {
+      range.setEndBefore(postMenuArea);
     }
 
-    const $oneboxTest = $ancestor.closest("aside.onebox[data-onebox-src]");
-    const $codeBlockTest = $ancestor.parents("pre");
-    if ($codeBlockTest.length) {
-      const $code = $("<code>");
-      $code.append(range.cloneContents());
+    const oneboxTest = ancestor.closest("aside.onebox[data-onebox-src]");
+    const codeBlockTest = ancestor.closest("pre");
+    if (codeBlockTest) {
+      const code = document.createElement("code");
+      code.append(range.cloneContents());
+
       // Even though this was a code block, produce a non-block quote if it's a single line.
-      if (/\n/.test($code.text())) {
-        const $pre = $("<pre>");
-        $pre.append($code);
-        $div.append($pre);
+      if (/\n/.test(code.innerText)) {
+        const pre = document.createElement("pre");
+        pre.append(code);
+        div.append(pre);
       } else {
-        $div.append($code);
+        div.append(code);
       }
-    } else if ($oneboxTest.length) {
+    } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      const oneboxUrl = $($oneboxTest).data("onebox-src");
-      $div.append(oneboxUrl);
+      const oneboxUrl = oneboxTest.dataset.oneboxSrc;
+      div.append(oneboxUrl);
     } else {
-      $div.append(range.cloneContents());
+      div.append(range.cloneContents());
     }
   }
 
-  $div.find("aside.onebox[data-onebox-src]").each(function () {
-    const oneboxUrl = $(this).data("onebox-src");
-    $(this).replaceWith(oneboxUrl);
+  div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
+    const oneboxUrl = element.dataset.oneboxSrc;
+    element.replaceWith(oneboxUrl);
   });
 
-  return toMarkdown($div.html());
+  return toMarkdown(div.outerHTML);
 }
 
 export function selectedNode() {
@@ -211,14 +212,10 @@ export function setCaretPosition(ctrl, pos) {
 }
 
 export function initializeDefaultHomepage(siteSettings) {
-  let homepage;
-  let sel = document.querySelector("meta[name='discourse_current_homepage']");
-  if (sel) {
-    homepage = sel.getAttribute("content");
-  }
-  if (!homepage) {
-    homepage = siteSettings.top_menu.split("|")[0].split(",")[0];
-  }
+  const sel = document.querySelector("meta[name='discourse_current_homepage']");
+  const homepage =
+    sel?.getAttribute("content") ||
+    siteSettings.top_menu.split("|")[0].split(",")[0];
   setDefaultHomepage(homepage);
 }
 
