@@ -83,8 +83,10 @@ import { on } from "@ember/object/evented";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import {
+  registerHighlightJSConfigure,
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
+  registerHighlightJSSelector,
 } from "discourse/lib/highlight-syntax";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
@@ -129,7 +131,7 @@ import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.8.0";
+export const PLUGIN_API_VERSION = "1.8.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1481,6 +1483,40 @@ class PluginApi {
    **/
   registerHighlightJSPlugin(plugin) {
     registerHighlightJSPlugin(plugin);
+  }
+
+  /**
+   * Registers custom HighlightJS css selectors
+   *
+   * Apply highlight to selector
+   *
+   * See https://github.com/highlightjs/highlight.js#using-custom-html
+   * for the detail.
+   *
+   * Example:
+   *
+   * api.registerHighlightJSSelector('.foo, .bar');
+   * api.registerHighlightJSSelector('.foo');
+   * api.registerHighlightJSSelector('.bar');
+   *
+   */
+  registerHighlightJSSelector(selector) {
+    registerHighlightJSSelector(selector);
+  }
+
+  /**
+   * Registers global options to HighlightJS
+   *
+   * See https://highlightjs.readthedocs.io/en/latest/api.html#configure
+   * for instructions on how to define a options object
+   *
+   * Example:
+   *
+   * api.registerHighlightJSConfigure({ noHeighLightRe: /plain/ })
+   *
+   */
+  registerHighlightJSConfigure(options) {
+    registerHighlightJSConfigure(options);
   }
 
   /**

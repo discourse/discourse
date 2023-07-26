@@ -57,4 +57,58 @@ module("Unit | Utility | highlight-syntax", function () {
       3
     );
   });
+
+  test("highlighting custom HTML", async function (assert) {
+    fixture().innerHTML = `
+      <div class="language-ruby">
+        def code; puts 1 + 2 end
+      </div>
+    `;
+
+    await highlightSyntax(
+      fixture(),
+      siteSettings,
+      session,
+      "div.language-ruby"
+    );
+
+    assert.strictEqual(
+      document
+        .querySelector("div.language-ruby.hljs .hljs-keyword")
+        .innerText.trim(),
+      "def"
+    );
+  });
+
+  test("highlighting custom HTML with HTML intermingled", async function (assert) {
+    fixture().innerHTML = `
+      <div class="language-ruby">
+        <ol>
+        <li>def code</li>
+        <li>  puts 1 + 2</li>
+        <li>end</li>
+        </ol>
+      </div>
+    `;
+
+    await highlightSyntax(
+      fixture(),
+      siteSettings,
+      session,
+      "div.language-ruby"
+    );
+
+    assert.strictEqual(
+      document
+        .querySelector("div.language-ruby.hljs .hljs-keyword")
+        .innerText.trim(),
+      "def"
+    );
+
+    // Checks if HTML structure was preserved
+    assert.strictEqual(
+      document.querySelectorAll("div.language-ruby.hljs ol li").length,
+      3
+    );
+  });
 });
