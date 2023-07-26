@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { action, get } from "@ember/object";
+import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
 export default class MergeUsersPrompt extends Component {
@@ -19,6 +19,6 @@ export default class MergeUsersPrompt extends Component {
 
   @action
   updateUsername(selected) {
-    this.targetUsername = get(selected, "firstObject");
+    this.targetUsername = selected.firstObject;
   }
 }

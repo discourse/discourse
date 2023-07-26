@@ -1,14 +1,17 @@
-<DModalBody
+<DModal
   @title={{html-safe
     i18n
     "admin.user.merge.prompt.title"
     username=@model.username
   }}
+  @closeModal={{@closeModal}}
 >
   <:body>
-    <p>{{html-safe
+    <p>
+      {{html-safe
         (i18n "admin.user.merge.prompt.description" username=@model.username)
-      }}</p>
+      }}
+    </p>
     <EmailGroupUserChooser
       @value={{this.targetUsername}}
       @options={{hash
@@ -31,4 +34,4 @@
     />
     <DButton @action={{@closeModal}} @label="admin.user.merge.prompt.cancel" />
   </:footer>
-</DModalBody>
+</DModal>

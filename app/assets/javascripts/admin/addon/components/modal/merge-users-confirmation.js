@@ -3,7 +3,7 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
-export default class AdminMergeUsersConfirmationController extends Controller {
+export default class MergeUsersConfirmation extends Component {
   @tracked value = null;
 
   get mergeDisabled() {
