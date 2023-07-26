@@ -12,7 +12,7 @@ import {
   triggerEvent,
   triggerKeyEvent,
   visit,
-  waitUntil,
+  waitFor,
 } from "@ember/test-helpers";
 
 import { cloneJSON } from "discourse-common/lib/object";
@@ -23,12 +23,9 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 
 async function waitForLoad() {
-  return await waitUntil(
-    () => document.querySelector(".d-lightbox.is-finished-loading"),
-    {
-      timeout: 5000,
-    }
-  );
+  return await waitFor(".d-lightbox.is-finished-loading", {
+    timeout: 5000,
+  });
 }
 
 const singleLargeImageMarkup = `
@@ -39,14 +36,14 @@ ${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.smallerThanViewPort)}
 `;
 
 const multipleLargeImagesMarkup = `
-${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.first)} 
-${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.second)} 
+${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.first)}
+${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.second)}
 ${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.third)}
 `;
 
 const markupWithInvalidImage = `
-${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.first)} 
-${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.invalidImage)} 
+${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.first)}
+${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.invalidImage)}
 ${generateLightboxMarkup(LIGHTBOX_IMAGE_FIXTURES.second)}`;
 
 function setupPretender(server, helper, markup) {
