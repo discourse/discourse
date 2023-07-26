@@ -63,7 +63,7 @@ module Chat
     end
 
     def ensure_thread_enabled(thread:, **)
-      SiteSetting.enable_experimental_chat_threaded_discussions && thread.channel.threading_enabled
+      thread.channel.threading_enabled
     end
 
     def can_view_thread(guardian:, thread:, **)

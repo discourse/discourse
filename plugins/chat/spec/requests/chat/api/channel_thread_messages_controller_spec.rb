@@ -10,7 +10,6 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     thread.channel.add(current_user)
     sign_in(current_user)
@@ -67,20 +66,6 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
       fab!(:thread) do
         Fabricate(:chat_thread, channel: Fabricate(:chat_channel, threading_enabled: false))
       end
-
-      it "returns a 404" do
-        get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"
-
-        expect(response.status).to eq(404)
-      end
-    end
-
-    context "when threading is disabled" do
-      fab!(:thread) do
-        Fabricate(:chat_thread, channel: Fabricate(:chat_channel, threading_enabled: true))
-      end
-
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
 
       it "returns a 404" do
         get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"

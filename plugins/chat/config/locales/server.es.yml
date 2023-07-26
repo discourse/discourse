@@ -27,7 +27,6 @@ es:
     max_mentions_per_chat_message: "Número máximo de notificaciones de @name que un usuario puede usar en un mensaje de chat."
     chat_max_direct_message_users: "Los usuarios no pueden añadir más de este número de otros usuarios al crear un nuevo mensaje directo. Establece el valor 0 para permitir solo los mensajes a uno mismo. El personal está exento de este ajuste."
     chat_allow_archiving_channels: "Permitir al personal archivar mensajes en un tema al cerrar un canal."
-    enable_experimental_chat_threaded_discussions: "EXPERIMENTAL: Permitir que el personal habilite la creación de hilos en los canales de chat, lo que permite que se produzcan discusiones paralelas en un canal cuando los usuarios se responden unos a otros."
     errors:
       chat_default_channel: "El canal de chat por defecto debe ser un canal público."
       direct_message_enabled_groups_invalid: "Debes especificar al menos un grupo para esta configuración. Si no quieres que nadie, excepto el personal, envíe mensajes directos, elige el grupo del personal."

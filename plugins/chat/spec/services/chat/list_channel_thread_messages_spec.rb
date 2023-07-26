@@ -13,10 +13,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
   let(:optional_params) { {} }
   let(:params) { { guardian: guardian, thread_id: thread_id }.merge(optional_params) }
 
-  before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
-    thread.channel.add(user)
-  end
+  before { thread.channel.add(user) }
 
   context "when contract" do
     context "when thread_id is not present" do
@@ -41,29 +38,14 @@ RSpec.describe Chat::ListChannelThreadMessages do
   end
 
   context "when ensure_thread_enabled?" do
-    context "when site setting is disabled" do
-      before do
-        thread.channel.update!(threading_enabled: true)
-        SiteSetting.enable_experimental_chat_threaded_discussions = false
-      end
-
-      it { is_expected.to fail_a_policy(:ensure_thread_enabled) }
-    end
-
     context "when channel threading is disabled" do
-      before do
-        thread.channel.update!(threading_enabled: false)
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-      end
+      before { thread.channel.update!(threading_enabled: false) }
 
       it { is_expected.to fail_a_policy(:ensure_thread_enabled) }
     end
 
     context "when channel and site setting are enabling threading" do
-      before do
-        thread.channel.update!(threading_enabled: true)
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-      end
+      before { thread.channel.update!(threading_enabled: true) }
 
       it { is_expected.to be_a_success }
     end

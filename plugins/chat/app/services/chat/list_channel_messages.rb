@@ -67,8 +67,7 @@ module Chat
     end
 
     def enabled_threads?(channel:, **)
-      context.enabled_threads =
-        SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+      context.enabled_threads = channel.threading_enabled
     end
 
     def can_view_channel(guardian:, channel:, **)

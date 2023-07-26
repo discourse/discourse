@@ -52,22 +52,8 @@ RSpec.describe Chat::ListChannelMessages do
   end
 
   context "when enabled_threads?" do
-    context "when site setting is disabled" do
-      before do
-        channel.update!(threading_enabled: true)
-        SiteSetting.enable_experimental_chat_threaded_discussions = false
-      end
-
-      it "marks threads as disabled" do
-        expect(result.enabled_threads).to eq(false)
-      end
-    end
-
     context "when channel threading is disabled" do
-      before do
-        channel.update!(threading_enabled: false)
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-      end
+      before { channel.update!(threading_enabled: false) }
 
       it "marks threads as disabled" do
         expect(result.enabled_threads).to eq(false)
@@ -75,10 +61,7 @@ RSpec.describe Chat::ListChannelMessages do
     end
 
     context "when channel and site setting are enabling threading" do
-      before do
-        channel.update!(threading_enabled: true)
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-      end
+      before { channel.update!(threading_enabled: true) }
 
       it "marks threads as enabled" do
         expect(result.enabled_threads).to eq(true)
@@ -185,7 +168,6 @@ RSpec.describe Chat::ListChannelMessages do
       fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
 
       before do
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
         channel.update!(threading_enabled: true)
         thread_1.add(user)
       end

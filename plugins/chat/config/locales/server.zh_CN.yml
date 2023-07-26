@@ -27,7 +27,6 @@ zh_CN:
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
     chat_max_direct_message_users: "在创建新的直接消息时，用户无法添加超过此数量的其他用户。设置为 0 只允许给自己发送消息。管理人员不受此设置的影响。"
     chat_allow_archiving_channels: "允许管理人员在关闭频道时将消息归档到某个话题。"
-    enable_experimental_chat_threaded_discussions: "实验：允许工作人员在聊天频道上启用聊天串，这样当用户互相回复时，就可以在频道中进行并行讨论。"
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
