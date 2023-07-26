@@ -40,9 +40,7 @@
             {{#each this.fitzpatrickModifiers as |fitzpatrick|}}
 
               {{#if
-                (not
-                  (eq fitzpatrick.scale this.chatEmojiReactionStore.diversity)
-                )
+                (not-eq fitzpatrick.scale this.chatEmojiReactionStore.diversity)
               }}
                 <button
                   type="button"
@@ -82,7 +80,7 @@
     </div>
 
     {{#if this.chatEmojiPickerManager.sections.length}}
-      {{#if (not (gte this.filteredEmojis.length 0))}}
+      {{#if (lt this.filteredEmojis.length 0)}}
         <div class="chat-emoji-picker__sections-nav">
           <div
             class="chat-emoji-picker__sections-nav__indicator"
