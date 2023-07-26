@@ -5,8 +5,18 @@
     <div class="controls">
       <DButton
         @label="discourse_automation.fields.key_value.label"
-        @action={{action "openSchemaModal"}}
+        @action={{fn (mut this.showJsonEditorModal) true}}
       />
+
+      {{#if this.showJsonEditorModal}}
+        <Modal::JsonSchemaEditor
+          @updateValue={{this.handleValueChange}}
+          @value={{this.value}}
+          @settingName={{this.label}}
+          @jsonSchema={{this.jsonSchema}}
+          @closeModal={{fn (mut this.showJsonEditorModal) false}}
+        />
+      {{/if}}
 
       {{fields/da-field-description description=description}}
     </div>
