@@ -2,7 +2,7 @@
 {{! template-lint-disable no-invalid-interactive }}
 <div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
   <textarea
-    {{auto-focus}}
+    {{auto-focus cursorPosition="end"}}
     {{on "input" this.updateValue}}
     id="fast-edit-input"
   >{{@initialValue}}</textarea>
