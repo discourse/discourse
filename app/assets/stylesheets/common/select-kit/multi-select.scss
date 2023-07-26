@@ -85,6 +85,7 @@
           .filter-input {
             font-size: var(--font-down-1);
             min-height: auto;
+            margin-top: -2px; // better vertical alignment
           }
         }
       }
