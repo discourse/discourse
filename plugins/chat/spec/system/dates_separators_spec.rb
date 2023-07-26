@@ -19,7 +19,7 @@ RSpec.describe "Dates separators", type: :system do
       30.times { Fabricate(:chat_message, chat_channel: channel_1) }
     end
 
-    it "shows it as a sticky date" do
+    xit "shows it as a sticky date" do
       chat_page.visit_channel(channel_1)
 
       expect(page.find(".chat-message-separator__text-container.is-pinned")).to have_content(

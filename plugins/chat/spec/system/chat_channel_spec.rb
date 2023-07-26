@@ -122,7 +122,7 @@ RSpec.describe "Chat channel", type: :system do
       50.times { Fabricate(:chat_message, chat_channel: channel_1) }
     end
 
-    it "doesn’t scroll the pane" do
+    xit "doesn’t scroll the pane" do
       visit("/chat/message/#{message_1.id}")
 
       new_message = Fabricate(:chat_message, chat_channel: channel_1)

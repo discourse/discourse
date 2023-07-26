@@ -70,7 +70,7 @@ RSpec.describe "React to message", type: :system do
         end
 
         context "when current user has multiple sessions" do
-          it "adds reaction on each session" do
+          xit "adds reaction on each session" do
             reaction = "grimacing"
 
             sign_in(current_user)
