@@ -8,6 +8,7 @@ import I18n from "I18n";
 // The modal will display only if the topic exceeds a certain amount of views
 export default class DeleteTopicConfirm extends Component {
   @service currentUser;
+  @service siteSettings;
 
   @tracked deletingTopic = false;
   @tracked flash;
