@@ -3900,8 +3900,6 @@ en:
       personal_message:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
-    topic_edit:
-      tag_filter_placeholder: "+ tag"
     posts: "Posts"
     pending_posts:
       label: "Pending"
