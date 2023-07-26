@@ -1,4 +1,10 @@
-import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentURL,
+  triggerKeyEvent,
+  visit,
+  waitFor,
+} from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "I18n";
 import {
@@ -92,6 +98,21 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
       .dom(".post-stream .topic-post.selected #post_4")
       .exists("pressing j moves selection to next visible post");
     console.log(`Selected element: #${selected.id} ${selected.className}`);
+    console.log(
+      `post_4 height: #${
+        document.querySelector("#post_4").getBoundingClientRect().height
+      }`
+    );
+
+    await waitFor(".post-stream .topic-post.selected #post_4", {
+      timeout: 5000,
+    });
+    console.log(`Selected element: #${selected.id} ${selected.className}`);
+    console.log(
+      `post_4 height: #${
+        document.querySelector("#post_4").getBoundingClientRect().height
+      }`
+    );
 
     await triggerKeyEvent(document, "keypress", "K");
     assert
