@@ -206,6 +206,25 @@ module(
       assert.dom(".select-kit-collection").doesNotExist();
       assert.dom(".select-kit-header button[data-name='apple']").doesNotExist();
       assert.strictEqual(this.subject.header().value(), "orange,potato");
+
+      const filterInput = document.querySelector(
+        ".select-kit-header .filter-input"
+      );
+
+      assert.strictEqual(
+        filterInput.getAttribute("placeholder"),
+        "",
+        "Placeholder is empty when there is a selection"
+      );
+
+      await click(".select-kit-header button[data-name='orange']");
+      await click(".select-kit-header button[data-name='potato']");
+
+      assert.strictEqual(
+        filterInput.getAttribute("placeholder"),
+        "Search...",
+        "Placeholder is back to default when there is no selection"
+      );
     });
   }
 );
