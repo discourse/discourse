@@ -40,9 +40,7 @@
             {{#each this.fitzpatrickModifiers as |fitzpatrick|}}
 
               {{#if
-                (not
-                  (eq fitzpatrick.scale this.chatEmojiReactionStore.diversity)
-                )
+                (not-eq fitzpatrick.scale this.chatEmojiReactionStore.diversity)
               }}
                 <button
                   type="button"
@@ -82,7 +80,7 @@
     </div>
 
     {{#if this.chatEmojiPickerManager.sections.length}}
-      {{#if (not (gte this.filteredEmojis.length 0))}}
+      {{#if (eq this.filteredEmojis null)}}
         <div class="chat-emoji-picker__sections-nav">
           <div
             class="chat-emoji-picker__sections-nav__indicator"
@@ -129,7 +127,7 @@
           {{on "keydown" this.onSectionsKeyDown}}
           role="button"
         >
-          {{#if (gte this.filteredEmojis.length 0)}}
+          {{#if (not-eq this.filteredEmojis null)}}
             <div class="chat-emoji-picker__section filtered">
               {{#each this.filteredEmojis as |emoji|}}
                 <img
@@ -162,7 +160,7 @@
             <div
               class={{concat-class
                 "chat-emoji-picker__section"
-                (if (gte this.filteredEmojis.length 0) "hidden")
+                (if (not-eq this.filteredEmojis null) "hidden")
               }}
               data-section={{section}}
               role="region"
