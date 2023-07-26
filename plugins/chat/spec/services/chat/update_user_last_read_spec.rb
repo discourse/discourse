@@ -9,15 +9,18 @@ RSpec.describe Chat::UpdateUserLastRead do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:chatters) { Fabricate(:group) }
+    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
     fab!(:channel) { Fabricate(:chat_channel) }
-    fab!(:membership) do
+    let(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
     end
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: membership.chat_channel) }
+    let(:message_1) { Fabricate(:chat_message, chat_channel: membership.chat_channel) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:params) { { guardian: guardian, channel_id: channel.id, message_id: message_1.id } }
+
+    before { SiteSetting.chat_allowed_groups = [chatters] }
 
     context "when params are not valid" do
       before { params.delete(:message_id) }
@@ -108,6 +111,13 @@ RSpec.describe Chat::UpdateUserLastRead do
 
         it "publishes new last read to clients" do
           expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
+        end
+
+        it "updates the channel membership last_viewed_at datetime" do
+          membership.update!(last_viewed_at: 1.day.ago)
+          old_last_viewed_at = membership.last_viewed_at
+          result
+          expect(membership.reload.last_viewed_at).not_to eq_time(old_last_viewed_at)
         end
       end
     end

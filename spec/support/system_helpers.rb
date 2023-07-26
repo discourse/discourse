@@ -2,6 +2,8 @@
 require "highline/import"
 
 module SystemHelpers
+  PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+
   def pause_test
     result =
       ask(
@@ -12,11 +14,14 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit "/session/#{user.encoded_username}/become.json?redirect=false"
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
   end
 
   def sign_out
-    delete "/session"
+    delete File.join(GlobalSetting.relative_url_root || "", "/session")
   end
 
   def setup_system_test
@@ -30,7 +35,7 @@ module SystemHelpers
     SiteSetting.splash_screen = false
   end
 
-  def try_until_success(timeout: 2, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
     start ||= Time.zone.now
     backoff ||= frequency
     yield

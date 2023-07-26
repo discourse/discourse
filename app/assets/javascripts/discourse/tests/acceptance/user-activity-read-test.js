@@ -24,12 +24,11 @@ acceptance("User Activity / Read - bulk actions", function (needs) {
     await click(queryAll("input.bulk-select")[1]);
     await click("button.bulk-select-actions");
 
-    await click("div.bulk-buttons button:nth-child(2)"); // the Close Topics button
+    await click("div.bulk-buttons button.bulk-actions__close-topics");
 
-    assert.notOk(
-      exists("div.bulk-buttons"),
-      "The bulk actions modal was closed"
-    );
+    assert
+      .dom("div.bulk-buttons")
+      .doesNotExist("The bulk actions modal was closed");
   });
 });
 

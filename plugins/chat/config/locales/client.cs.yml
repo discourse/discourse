@@ -73,6 +73,8 @@ cs:
       settings:
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
+        threading_enabled: "Zapnutý"
+        threading_disabled: "Vypnuto"
         notifications: "Upozornění"
         preview: "Náhled"
         save: "Uložit"
@@ -109,6 +111,11 @@ cs:
           other: "%{count} odpovědí"
         settings: "Nastavení"
         last_reply: "poslední odpověď"
+        notifications:
+          regular:
+            title: "Normální"
+          tracking:
+            title: "Sledované"
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"

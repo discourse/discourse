@@ -5,8 +5,9 @@ RSpec.describe SpamRule::FlagSockpuppets do
   fab!(:post1) { Fabricate(:post, user: user1, topic: Fabricate(:topic, user: user1)) }
 
   describe "#perform" do
-    let(:rule) { described_class.new(post1) }
     subject(:perform) { rule.perform }
+
+    let(:rule) { described_class.new(post1) }
 
     it "does nothing if flag_sockpuppets is disabled" do
       SiteSetting.flag_sockpuppets = false

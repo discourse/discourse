@@ -1153,7 +1153,6 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
-        sidebar: "Barra Lateral"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -1582,8 +1581,7 @@ pt:
       pause_notifications: "Pausar notificações"
       remove_status: "Remover status"
     user_tips:
-      primary: "Entendi!"
-      secondary: "não me mostre essas dicas"
+      button: "Entendi!"
       first_notification:
         title: "Sua primeira notificação!"
       topic_timeline:
@@ -1645,11 +1643,7 @@ pt:
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
-      enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
-      enable: "Resumir Este Tópico"
       disable: "Mostrar Todas As Publicações"
-      short_label: "Resumir"
-      short_title: "Mostrar um resumo deste tópico: as discussões mais interessantes conforme determinado pela comunidade"
     deleted_filter:
       enabled_description: "Este tópico contém respostas eliminadas, que foram ocultadas."
       disabled_description: "As publicações eliminadas no tópico são exibidas."
@@ -2879,7 +2873,6 @@ pt:
       filtered_replies:
         viewing_posts_by: "Visualizando %{post_count} posts por"
         viewing_subset: "Algumas respostas estão recolhidas"
-        viewing_summary: "Vendo um resumo deste tópico"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Mostrar tudo"
     category:
@@ -3203,6 +3196,9 @@ pt:
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
+    experimental_lightbox:
+      buttons:
+        close: "Fechar (Esc)"
     cannot_render_video: Este vídeo não pode ser renderizado porque seu navegador não suporta o codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3462,8 +3458,9 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
-      categories_form:
-        save: "Guardar"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tudo"
       sections:
         custom:
           save: "Guardar"
@@ -3491,7 +3488,8 @@ pt:
         categories:
           header_link_text: "Categorias"
         community:
-          header_link_text: "Comunidade"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Sobre"
@@ -3499,8 +3497,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
-            everything:
-              content: "Tudo"
+            topics:
+              content: "Tópicos"
             faq:
               content: "FAQ"
             groups:
@@ -3512,6 +3510,11 @@ pt:
             review:
               content: "Revisão"
     until: "Até:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Por favor introduza um valor válido."
+          email: "Por favor introduza um endereço de email válido."
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -4550,6 +4553,8 @@ pt:
         go_back: "De volta à Pesquisa"
         recommended: "Recomendamos personalizar o seguinte texto para que se aplique às suas necessidades."
         show_overriden: "Apenas mostrar valores alterados"
+        outdated:
+          dismiss: "Marcar Visto"
       settings:
         show_overriden: "Apenas mostrar valores alterados"
         history: "Ver histórico de alterações"

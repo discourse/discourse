@@ -29,14 +29,13 @@ export default class ChatMessage {
   @tracked draft;
   @tracked channelId;
   @tracked createdAt;
-  @tracked deletedAt;
   @tracked uploads;
   @tracked excerpt;
   @tracked reactions;
   @tracked reviewableId;
   @tracked user;
   @tracked inReplyTo;
-  @tracked expanded;
+  @tracked expanded = true;
   @tracked bookmark;
   @tracked userFlagStatus;
   @tracked hidden;
@@ -51,10 +50,11 @@ export default class ChatMessage {
   @tracked firstOfResults;
   @tracked message;
   @tracked thread;
-  @tracked threadReplyCount;
   @tracked manager;
   @tracked threadTitle;
+  @tracked deletedById;
 
+  @tracked _deletedAt;
   @tracked _cooked;
 
   constructor(channel, args = {}) {
@@ -68,11 +68,12 @@ export default class ChatMessage {
     this.editing = args.editing || false;
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden || false;
-    this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
-    this.threadTitle = args.threadTitle || args.thread_title;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
     this.createdAt = args.createdAt || args.created_at;
-    this.deletedAt = args.deletedAt || args.deleted_at;
+    this.deletedById = args.deletedById || args.deleted_by_id;
+    this._deletedAt = args.deletedAt || args.deleted_at;
+    this.expanded =
+      this.hidden || this._deletedAt ? false : args.expanded || true;
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
@@ -104,7 +105,6 @@ export default class ChatMessage {
       edited: this.edited,
       availableFlags: this.availableFlags,
       hidden: this.hidden,
-      threadReplyCount: this.threadReplyCount,
       chatWebhookEvent: this.chatWebhookEvent,
       createdAt: this.createdAt,
       deletedAt: this.deletedAt,
@@ -132,6 +132,16 @@ export default class ChatMessage {
 
   get editable() {
     return !this.staged && !this.error;
+  }
+
+  get deletedAt() {
+    return this._deletedAt;
+  }
+
+  set deletedAt(value) {
+    this._deletedAt = value;
+    this.incrementVersion();
+    return this._deletedAt;
   }
 
   get cooked() {
@@ -186,7 +196,7 @@ export default class ChatMessage {
 
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
     }
 
     if (
@@ -195,7 +205,13 @@ export default class ChatMessage {
         new Date(this.createdAt)
       )
     ) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
+    }
+  }
+
+  get formattedFirstMessageDate() {
+    if (this.firstMessageOfTheDayAt) {
+      return this.#calendarDate(this.firstMessageOfTheDayAt);
     }
   }
 
@@ -354,5 +370,9 @@ export default class ChatMessage {
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate()
     );
+  }
+
+  #startOfDay(date) {
+    return moment(date).startOf("day").format();
   }
 }

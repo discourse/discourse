@@ -16,6 +16,7 @@ Fabricator(:reviewable_queued_post_topic, class_name: :reviewable_queued_post) d
   reviewable_by_moderator true
   type "ReviewableQueuedPost"
   created_by { Fabricate(:user) }
+  target_created_by { Fabricate(:user) }
   category
   payload do
     {
@@ -32,6 +33,7 @@ Fabricator(:reviewable_queued_post) do
   reviewable_by_moderator true
   type "ReviewableQueuedPost"
   created_by { Fabricate(:user) }
+  target_created_by { Fabricate(:user) }
   topic
   payload do
     {

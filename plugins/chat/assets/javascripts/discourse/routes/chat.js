@@ -28,7 +28,6 @@ export default class ChatRoute extends DiscourseRoute {
       "chat.channel-legacy",
       "chat",
       "chat.index",
-      "chat.draft-channel",
     ];
 
     if (

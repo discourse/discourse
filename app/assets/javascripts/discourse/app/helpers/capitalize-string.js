@@ -1,3 +1,9 @@
-import { htmlHelper } from "discourse-common/lib/helpers";
+import deprecated from "discourse-common/lib/deprecated";
 
-export default htmlHelper((str) => str[0].toUpperCase() + str.slice(1));
+export default function capitalizeString(str) {
+  deprecated("capitalize-string helper is deprecated", {
+    id: "discourse.capitalize-string",
+    since: "3.1.0.beta6",
+  });
+  return str[0].toUpperCase() + str.slice(1);
+}

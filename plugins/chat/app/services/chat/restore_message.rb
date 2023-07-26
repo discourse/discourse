@@ -22,6 +22,7 @@ module Chat
     policy :invalid_access
     transaction do
       step :restore_message
+      step :update_last_message_ids
       step :update_thread_reply_cache
     end
     step :publish_events
@@ -55,9 +56,18 @@ module Chat
       message.thread&.increment_replies_count_cache
     end
 
+    def update_last_message_ids(message:, **)
+      message.thread&.update_last_message_id!
+      message.chat_channel.update_last_message_id!
+    end
+
     def publish_events(guardian:, message:, **)
       DiscourseEvent.trigger(:chat_message_restored, message, message.chat_channel, guardian.user)
       Chat::Publisher.publish_restore!(message.chat_channel, message)
+
+      if message.thread.present?
+        Chat::Publisher.publish_thread_original_message_metadata!(message.thread)
+      end
     end
   end
 end

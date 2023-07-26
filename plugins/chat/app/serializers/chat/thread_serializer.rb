@@ -2,7 +2,6 @@
 
 module Chat
   class ThreadSerializer < ApplicationSerializer
-    has_one :original_message_user, serializer: BasicUserWithStatusSerializer, embed: :objects
     has_one :original_message, serializer: Chat::ThreadOriginalMessageSerializer, embed: :objects
 
     attributes :id,
@@ -36,7 +35,12 @@ module Chat
     end
 
     def preview
-      Chat::ThreadPreviewSerializer.new(object, scope: scope, root: false).as_json
+      Chat::ThreadPreviewSerializer.new(
+        object,
+        scope: scope,
+        root: false,
+        participants: @opts[:participants],
+      ).as_json
     end
 
     def include_current_user_membership?

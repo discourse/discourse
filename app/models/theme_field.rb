@@ -394,22 +394,22 @@ class ThemeField < ActiveRecord::Base
         translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = Theme.compiler_version
-      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
+      CSP::Extension.clear_theme_extensions_cache!
     elsif extra_js_field? || js_tests_field?
       self.error = nil
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     elsif basic_scss_field?
       ensure_scss_compiles!
-      DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
+      Stylesheet::Manager.clear_theme_cache!
     elsif settings_field?
       validate_yaml!
-      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
-      DB.after_commit { SvgSprite.expire_cache }
+      CSP::Extension.clear_theme_extensions_cache!
+      SvgSprite.expire_cache
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     elsif svg_sprite_field?
-      DB.after_commit { SvgSprite.expire_cache }
+      SvgSprite.expire_cache
       self.error = validate_svg_sprite_xml
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
@@ -682,7 +682,7 @@ class ThemeField < ActiveRecord::Base
 
     if upload && svg_sprite_field?
       upsert_svg_sprite!
-      DB.after_commit { SvgSprite.expire_cache }
+      SvgSprite.expire_cache
     end
   end
 
@@ -690,7 +690,7 @@ class ThemeField < ActiveRecord::Base
     if svg_sprite_field?
       ThemeSvgSprite.where(theme_id: theme_id).delete_all
 
-      DB.after_commit { SvgSprite.expire_cache }
+      SvgSprite.expire_cache
     end
   end
 

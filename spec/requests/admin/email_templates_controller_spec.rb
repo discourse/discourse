@@ -450,7 +450,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
   it "uses only existing email templates" do
     Admin::EmailTemplatesController.email_keys.each do |key|
-      expect(I18n.t(key)).to_not include("translation missing")
+      expect(I18n.t(key)).to_not include("Translation missing")
     end
   end
 end

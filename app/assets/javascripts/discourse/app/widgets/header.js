@@ -13,6 +13,7 @@ import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
 import { hideUserTip } from "discourse/lib/user-tips";
+import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 
 let _extraHeaderIcons = [];
 
@@ -24,7 +25,7 @@ export function clearExtraHeaderIcons() {
   _extraHeaderIcons = [];
 }
 
-const dropdown = {
+export const dropdown = {
   buildClasses(attrs) {
     let classes = attrs.classNames || [];
     if (attrs.active) {
@@ -81,9 +82,7 @@ createWidget("header-notifications", {
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
-      let ringClass = null;
       if (user.new_personal_messages_notifications_count) {
-        ringClass = "personal-messages";
         contents.push(
           this.attach("link", {
             action: attrs.action,
@@ -121,7 +120,6 @@ createWidget("header-notifications", {
           })
         );
       } else if (user.all_unread_notifications_count) {
-        ringClass = "regular-notifications";
         contents.push(
           this.attach("link", {
             action: attrs.action,
@@ -135,9 +133,6 @@ createWidget("header-notifications", {
             },
           })
         );
-      }
-      if (ringClass && this._shouldHighlightAvatar()) {
-        contents.push(h(`span.ring.revamped.${ringClass}`));
       }
     }
     return contents;
@@ -266,7 +261,7 @@ createWidget("header-icons", {
     const search = this.attach("header-dropdown", {
       title: "search.title",
       icon: "search",
-      iconId: "search-button",
+      iconId: SEARCH_BUTTON_ID,
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
       href: getURL("/search"),
@@ -385,6 +380,7 @@ createWidget("revamped-hamburger-menu-wrapper", {
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
+      event.target.closest(".sidebar-section-link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
       this.sendWidgetAction("toggleHamburger");
@@ -423,8 +419,47 @@ createWidget("revamped-user-menu-wrapper", {
   },
 });
 
+createWidget("glimmer-search-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true, "aria-live": "polite" };
+  },
+
+  buildClasses() {
+    return ["search-menu"];
+  },
+
+  html() {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<SearchMenu
+          @inTopicContext={{@data.inTopicContext}}
+          @searchVisible={{@data.searchVisible}}
+          @animationClass={{@data.animationClass}}
+          @closeSearchMenu={{@data.closeSearchMenu}}
+        />`,
+        {
+          closeSearchMenu: this.closeSearchMenu.bind(this),
+          inTopicContext: this.attrs.inTopicContext,
+          searchVisible: this.attrs.searchVisible,
+          animationClass: this.attrs.animationClass,
+        }
+      ),
+    ];
+  },
+
+  closeSearchMenu() {
+    this.sendWidgetAction("toggleSearchMenu");
+  },
+
+  clickOutside() {
+    this.closeSearchMenu();
+  },
+});
+
 export default createWidget("header", {
-  tagName: "header.d-header.clearfix",
+  tagName: "header.d-header",
   buildKey: () => `header`,
   services: ["router", "search"],
 
@@ -467,11 +502,21 @@ export default createWidget("header", {
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
-        panels.push(
-          this.attach("search-menu", {
-            inTopicContext: state.inTopicContext && inTopicRoute,
-          })
-        );
+        if (this.currentUser?.experimental_search_menu_groups_enabled) {
+          panels.push(
+            this.attach("glimmer-search-menu-wrapper", {
+              inTopicContext: state.inTopicContext && inTopicRoute,
+              searchVisible: state.searchVisible,
+              animationClass: this.animationClass(),
+            })
+          );
+        } else {
+          panels.push(
+            this.attach("search-menu", {
+              inTopicContext: state.inTopicContext && inTopicRoute,
+            })
+          );
+        }
       } else if (state.hamburgerVisible) {
         if (
           attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
@@ -520,6 +565,12 @@ export default createWidget("header", {
     if (!this.state.searchVisible) {
       this.search.set("highlightTerm", "");
     }
+  },
+
+  animationClass() {
+    return this.site.mobileView || this.site.narrowDesktopView
+      ? "slide-in"
+      : "drop-down";
   },
 
   closeAll() {
@@ -712,7 +763,12 @@ export default createWidget("header", {
   },
 
   focusSearchInput() {
-    if (this.state.searchVisible) {
+    // the glimmer search menu handles the focusing of the search
+    // input within the search component
+    if (
+      this.state.searchVisible &&
+      !this.currentUser?.experimental_search_menu_groups_enabled
+    ) {
       schedule("afterRender", () => {
         const searchInput = document.querySelector("#search-term");
         searchInput.focus();

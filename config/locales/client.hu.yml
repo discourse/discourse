@@ -184,7 +184,6 @@ hu:
     software_update_prompt:
       message: "Frissítettük a webhelyet, <span>frissítse az oldalt</span>, különben váratlan viselkedést tapasztalhat."
       dismiss: "Elvetés"
-    bootstrap_mode: "Bootstrap mód"
     themes:
       default_description: "Alapértelmezett"
       broken_theme_alert: "Lehet, hogy webhelye nem működik, mert a téma/összetevő hibába ütközött."
@@ -1108,12 +1107,7 @@ hu:
       experimental_sidebar:
         enable: "Oldalsáv engedélyezése"
         options: "Beállítások"
-        categories_section: "Kategóriák szakasz"
-        categories_section_instruction: "A kiválasztott kategóriák az oldalsáv kategóriák szakaszában jelennek meg."
-        tags_section: "Címkék szakasz"
-        tags_section_instruction: "A kiválasztott címkék az oldalsáv címkék szakaszában jelennek meg."
         navigation_section: "Navigáció"
-        list_destination_instruction: "Amikor új tartalom van az oldalsávon..."
       change: "módosítás"
       featured_topic: "Kiemelt téma"
       moderator: "%{user} egy moderátor"
@@ -1239,7 +1233,6 @@ hu:
         tags: "Címkék"
         interface: "Felület"
         apps: "Alkalmazások"
-        sidebar: "Oldalsáv"
       change_password:
         success: "(az e-mail elküldve)"
         in_progress: "(az e-mail küldése folyamatban)"
@@ -1694,8 +1687,7 @@ hu:
       pause_notifications: "Értesítések szüneteltetése"
       remove_status: "Állapot eltávolítása"
     user_tips:
-      primary: "Értem!"
-      secondary: "ne mutasd nekem ezeket a tippeket"
+      button: "Értem!"
       first_notification:
         title: "Az első értesítésed!"
         content: "Az értesítések arra szolgálnak, hogy naprakészen tájékoztassuk Önt arról, hogy mi történik a közösségben."
@@ -1770,16 +1762,12 @@ hu:
       intro: "Üdv! Úgy tűnik, hogy tetszik Önnek a fórumunk, de még nem regisztrált fiókot."
       value_prop: "Unja már, hogy ugyanazokat a bejegyzéseket görgeti? Ha létrehoz egy fiókot, mindig oda tér vissza, ahol abbahagyta. Egy fiókkal értesítést is kaphat az új válaszokról, könyvjelzőket menthet, és egy kedveléssel megköszönheti másoknak. Mindannyian együtt dolgozhatunk azon, hogy ezt a közösséget nagyszerűvé tegyük. :heart:"
     summary:
-      enabled_description: "A téma összefoglalását látja: a legérdekesebb bejegyzéseket a közösség határozta meg."
       description:
         one: "<b>%{count}</b> válasz van."
         other: "<b>%{count}</b> válasz van."
       description_time_MF: |
         {replyCount, plural, one {<b>#</b> válasz} other {<b>#</b> válasz}} található, a becsült olvasási idő <b>{readingTime, plural, one {# perc} other {# perc}}</b>.
-      enable: "Téma összefoglalása"
       disable: "Összes bejegyzés megjelenítése"
-      short_label: "Összefoglalás"
-      short_title: "A téma összefoglalásának megjelenítése: a legérdekesebb bejegyzéseket a közösség határozta meg"
     deleted_filter:
       enabled_description: "Ez a téma törölt bejegyzéseket is tartalmaz, melyek el lettek rejtve."
       disabled_description: "A téma törölt bejegyzései is megjelennek."
@@ -3081,7 +3069,6 @@ hu:
             description: "Törölje az emlékeztető dátumát és időpontját"
       filtered_replies:
         viewing_subset: "Néhány válasz össze van csukva"
-        viewing_summary: "A téma összefoglalójának megtekintése"
         show_all: "Mutasd mindet"
     category:
       none: "(nincs kategória)"
@@ -3380,6 +3367,9 @@ hu:
       open: "eredeti kép"
       counter: "%curr% / %total%"
       close: "Bezárás (Esc)"
+    experimental_lightbox:
+      buttons:
+        close: "Bezárás (Esc)"
     cannot_render_video: A videó nem jeleníthető meg, mert a böngésző nem támogatja ezt a kodeket.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3640,8 +3630,9 @@ hu:
       more: "Több"
       all_categories: "Minden kategória"
       all_tags: "Összes címke"
-      categories_form:
-        save: "Mentés"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Összes"
       sections:
         custom:
           save: "Mentés"
@@ -3684,26 +3675,18 @@ hu:
             unread_with_count: "Olvasatlan (%{count})"
             archive: "Archívum"
         tags:
-          links:
-            add_tags:
-              content: "Címkék hozzáadása"
-              title: "Még nem adott hozzá címkéket. Kattintson a kezdéshez."
           none: "Még nem adott hozzá címkéket."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Címkék"
           configure_defaults: "Alapértelmezések beállítása"
         categories:
-          links:
-            add_categories:
-              content: "Kategóriák hozzáadása"
-              title: "Még nem adott hozzá kategóriákat. Kattintson a kezdéshez."
           none: "Még nem adott hozzá kategóriákat."
           click_to_get_started: "Kattintson ide a kezdéshez."
           header_link_text: "Kategóriák"
           configure_defaults: "Alapértelmezések beállítása"
         community:
-          header_link_text: "Közösség"
-          header_action_create_topic_title: "Téma létrehozása"
+          edit_section:
+            header_dropdown: "Személyre szabás"
           links:
             about:
               content: "Névjegy"
@@ -3714,8 +3697,8 @@ hu:
             badges:
               content: "Jelvények"
               title: "Az összes megszerezhető jelvény"
-            everything:
-              content: "Összes"
+            topics:
+              content: "Témák"
               title: "Minden téma"
             faq:
               content: "GYIK"
@@ -3743,6 +3726,11 @@ hu:
       exceeded: "Túllépte a megengedett maximális karakterszámot."
     form_template_chooser:
       select_template: "Űrlapsablonok kiválasztása"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Adjon meg egy érvényes dátumot."
+          email: "Adjon meg egy érvényes e-mail-címet."
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     admin:
@@ -4820,6 +4808,8 @@ hu:
         recommended: "Azt tanácsoljuk, hogy módosítsd a következő szöveget az igényeidnek megfelelően:"
         show_overriden: "Csak a felülírtak megjelenítése"
         locale: "Nyelv:"
+        outdated:
+          dismiss: "Elvetés"
       settings:
         show_overriden: "Csak a felülírtak megjelenítése"
         reset: "alaphelyzet"

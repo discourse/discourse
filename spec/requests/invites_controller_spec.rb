@@ -554,25 +554,29 @@ RSpec.describe InvitesController do
         expect(Jobs::InviteEmail.jobs.size).to eq(0)
       end
 
-      it "can send invite email" do
-        sign_in(user)
-        RateLimiter.enable
-        RateLimiter.clear_all!
-
-        invite = Fabricate(:invite, invited_by: user, email: "test@example.com")
-
-        expect { put "/invites/#{invite.id}", params: { send_email: true } }.to change {
-          RateLimiter.new(user, "resend-invite-per-hour", 10, 1.hour).remaining
-        }.by(-1)
-        expect(response.status).to eq(200)
-        expect(Jobs::InviteEmail.jobs.size).to eq(1)
-      end
-
       it "cannot create duplicated invites" do
         Fabricate(:invite, invited_by: admin, email: "test2@example.com")
 
         put "/invites/#{invite.id}.json", params: { email: "test2@example.com" }
         expect(response.status).to eq(409)
+      end
+
+      describe "rate limiting" do
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "can send invite email" do
+          sign_in(user)
+
+          invite = Fabricate(:invite, invited_by: user, email: "test@example.com")
+
+          expect { put "/invites/#{invite.id}", params: { send_email: true } }.to change {
+            RateLimiter.new(user, "resend-invite-per-hour", 10, 1.hour).remaining
+          }.by(-1)
+          expect(response.status).to eq(200)
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
+        end
       end
 
       context "when providing an email belonging to an existing user" do
@@ -1361,7 +1365,12 @@ RSpec.describe InvitesController do
   describe "#resend_all_invites" do
     let(:admin) { Fabricate(:admin) }
 
-    before { SiteSetting.invite_expiry_days = 30 }
+    before do
+      SiteSetting.invite_expiry_days = 30
+      RateLimiter.enable
+    end
+
+    use_redis_snapshotting
 
     it "resends all non-redeemed invites by a user" do
       freeze_time
@@ -1384,8 +1393,6 @@ RSpec.describe InvitesController do
 
     it "errors if admins try to exceed limit of one bulk invite per day" do
       sign_in(admin)
-      RateLimiter.enable
-      RateLimiter.clear_all!
       start = Time.now
 
       freeze_time(start)

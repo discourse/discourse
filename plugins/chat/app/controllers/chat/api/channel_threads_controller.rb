@@ -11,6 +11,7 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
             channel: result.channel,
             tracking: result.tracking,
             memberships: result.memberships,
+            load_more_url: result.load_more_url,
           ),
           ::Chat::ThreadListSerializer,
           root: false,
@@ -32,6 +33,8 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
           ::Chat::ThreadSerializer,
           root: "thread",
           membership: result.membership,
+          include_preview: true,
+          participants: result.participants,
         )
       end
       on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }

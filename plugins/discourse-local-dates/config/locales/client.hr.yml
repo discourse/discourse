@@ -31,6 +31,7 @@ hr:
           format_title: Format datuma
           timezone: Vremenska zona
           until: Do...
+          current_timezone: "Trenutna vremenska zona:"
           recurring:
             every_day: "Svaki dan"
             every_week: "Svaki tjedan"
@@ -40,3 +41,4 @@ hr:
             every_three_months: "Svaka tri mjeseca"
             every_six_months: "Svakih šest mjeseci"
             every_year: "Svake godine"
+      default_title: "%{site_name} Događaj"

@@ -134,6 +134,8 @@ zh_TW:
           about: 關於
           members: 成員
           settings: 設定
+      new_message_modal:
+        no_items: "沒有物件"
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述
@@ -142,8 +144,6 @@ zh_TW:
         prefix: "發至:"
         no_results: 沒有結果
         selected_user_title: "取消選取 %{username}"
-      channel_selector:
-        title: "跳轉到頻道"
       create_channel:
         type: "類型"
         types:
@@ -158,6 +158,8 @@ zh_TW:
       settings:
         follow: "加入"
         followed: "建立日期"
+        threading_enabled: "啟用"
+        threading_disabled: "停用"
         notifications: "通知"
         preview: "預覽"
         save: "保存"
@@ -198,6 +200,11 @@ zh_TW:
           other: "%{count}個回覆"
         settings: "設定"
         last_reply: "最新回覆"
+        notifications:
+          regular:
+            title: "一般"
+          tracking:
+            title: "跟蹤"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"

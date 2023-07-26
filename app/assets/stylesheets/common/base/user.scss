@@ -647,6 +647,7 @@
   .save-button {
     display: flex;
     align-items: center;
+    gap: 1em;
   }
 }
 
@@ -823,6 +824,7 @@
   max-height: 350px;
   margin-bottom: 1em;
   text-align: justify;
+  overflow-y: auto;
   .selectable-avatar {
     margin: 5px;
     display: inline-block;

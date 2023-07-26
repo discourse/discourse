@@ -25,30 +25,16 @@ fi:
           title: "Tulokset näytetään kyselyn <strong>sulkeuduttua</strong>."
         staff:
           title: "Tulokset näytetään vain <strong>henkilökunnan</strong> jäsenille."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Valitse ainakin <strong>%{count}</strong> vaihtoehto."
-            other: "Valitse ainakin <strong>%{count}</strong> vaihtoehtoa."
-          up_to_max_options:
-            one: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa."
-            other: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa."
-          x_options:
-            one: "Valitse <strong>%{count}</strong> vaihtoehto."
-            other: "Valitse <strong>%{count}</strong> vaihtoehtoa."
-          between_min_and_max_options: "Valitse vähintään <strong>%{min}</strong> ja enintään <strong>%{max}</strong> vaihtoehtoa."
       cast-votes:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"
       show-results:
         title: "Näytä kyselyn tulos"
-        label: "Näytä tulokset"
+        label: "Tulokset"
       remove-vote:
         title: "Poista äänesi"
-        label: "Poista ääni"
       hide-results:
         title: "Palaa äänestysvalintaasi"
-        label: "Näytä äänestys"
       group-results:
         title: "Lajittele äänet käyttäjäkentän perusteella"
         label: "Näytä erittely"
@@ -72,6 +58,8 @@ fi:
         breakdown: "Erittely"
         percentage: "Prosenttiosuus"
         count: "Lukumäärä"
+      options:
+        label: "Asetukset"
       error_while_toggling_status: "Kyselyn tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Ääntä annettaessa tapahtui virhe."
       error_while_fetching_voters: "Äänestäneiden näyttämisessä tapahtui virhe."

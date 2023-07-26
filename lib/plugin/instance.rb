@@ -189,26 +189,8 @@ class Plugin::Instance
     end
   end
 
-  def whitelist_staff_user_custom_field(field)
-    Discourse.deprecate(
-      "whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.",
-      drop_from: "2.6",
-      raise_error: true,
-    )
-    allow_staff_user_custom_field(field)
-  end
-
   def allow_staff_user_custom_field(field)
     DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
-  end
-
-  def whitelist_public_user_custom_field(field)
-    Discourse.deprecate(
-      "whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.",
-      drop_from: "2.6",
-      raise_error: true,
-    )
-    allow_public_user_custom_field(field)
   end
 
   def allow_public_user_custom_field(field)
@@ -378,15 +360,6 @@ class Plugin::Instance
     end
   end
 
-  def topic_view_post_custom_fields_whitelister(&block)
-    Discourse.deprecate(
-      "topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.",
-      drop_from: "2.6",
-      raise_error: true,
-    )
-    topic_view_post_custom_fields_allowlister(&block)
-  end
-
   # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
   def topic_view_post_custom_fields_allowlister(&block)
     reloadable_patch do |plugin|
@@ -516,6 +489,19 @@ class Plugin::Instance
     initializers << block
   end
 
+  def commit_hash
+    git_repo.latest_local_commit
+  end
+
+  def commit_url
+    return if commit_hash.blank?
+    "#{git_repo.url}/commit/#{commit_hash}"
+  end
+
+  def git_repo
+    @git_repo ||= GitRepo.new(directory, name)
+  end
+
   def before_auth(&block)
     if @before_auth_complete
       raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!"
@@ -634,6 +620,11 @@ class Plugin::Instance
     end
   end
 
+  def register_email_poller(poller)
+    plugin = self
+    DiscoursePluginRegistry.register_mail_poller(poller) if plugin.enabled?
+  end
+
   def register_asset(file, opts = nil)
     raise <<~ERROR if file.end_with?(".hbs", ".handlebars")
         [#{name}] Handlebars templates can no longer be included via `register_asset`.
@@ -666,6 +657,7 @@ class Plugin::Instance
   end
 
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
+    name = name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
   end
@@ -979,36 +971,7 @@ class Plugin::Instance
   #
   # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
   # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
-  def add_api_parameter_route(
-    method: nil,
-    methods: nil,
-    route: nil,
-    actions: nil,
-    format: nil,
-    formats: nil
-  )
-    if Array(format).include?("*")
-      Discourse.deprecate(
-        "* is no longer a valid api_parameter_route format matcher. Use `nil` instead",
-        drop_from: "2.7",
-        raise_error: true,
-      )
-      # Old API used * as wildcard. New api uses `nil`
-      format = nil
-    end
-
-    # Backwards compatibility with old parameter names:
-    if method || route || format
-      Discourse.deprecate(
-        "method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.",
-        drop_from: "2.7",
-        raise_error: true,
-      )
-      methods ||= method
-      actions ||= route
-      formats ||= format
-    end
-
+  def add_api_parameter_route(methods: nil, actions: nil, formats: nil)
     DiscoursePluginRegistry.register_api_parameter_route(
       RouteMatcher.new(methods: methods, actions: actions, formats: formats),
       self,

@@ -69,6 +69,31 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
       "pressing k moves selection to previous post"
     );
   });
+
+  test("j/k navigation skips hidden elements", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    document.querySelector("#qunit-fixture").innerHTML = `
+      <style>
+        #post_2, #post_3 { display: none; }
+      </style>
+    `;
+
+    await triggerKeyEvent(document, "keypress", "J");
+    assert
+      .dom(".post-stream .topic-post.selected #post_1")
+      .exists("first post is selected");
+
+    await triggerKeyEvent(document, "keypress", "J");
+    assert
+      .dom(".post-stream .topic-post.selected #post_4")
+      .exists("pressing j moves selection to next visible post");
+
+    await triggerKeyEvent(document, "keypress", "K");
+    assert
+      .dom(".post-stream .topic-post.selected #post_1")
+      .exists("pressing k moves selection to previous visible post");
+  });
 });
 
 acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {

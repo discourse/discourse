@@ -237,8 +237,13 @@ describe Chat::MessageUpdater do
     end
 
     it "doesn't create mention notification in direct message for users without access" do
-      direct_message_channel =
-        Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
+      result =
+        Chat::CreateDirectMessageChannel.call(
+          guardian: user1.guardian,
+          target_usernames: [user1.username, user2.username],
+        )
+      service_failed!(result) if result.failure?
+      direct_message_channel = result.channel
       message = create_chat_message(user1, "ping nobody", direct_message_channel)
 
       Chat::MessageUpdater.update(
@@ -607,6 +612,29 @@ describe Chat::MessageUpdater do
         upload_ids: [upload1.id],
       )
       expect(chat_message.reload.message).to eq(new_message)
+    end
+  end
+
+  context "when the message is in a thread" do
+    fab!(:message) do
+      Fabricate(
+        :chat_message,
+        user: user1,
+        chat_channel: public_chat_channel,
+        thread: Fabricate(:chat_thread, channel: public_chat_channel),
+      )
+    end
+
+    it "publishes a MessageBus event to update the original message metadata" do
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          Chat::MessageUpdater.update(
+            guardian: guardian,
+            chat_message: message,
+            new_content: "some new updated content",
+          )
+        end
+      expect(messages.find { |m| m.data["type"] == "update_thread_original_message" }).to be_present
     end
   end
 

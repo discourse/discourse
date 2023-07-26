@@ -7,10 +7,11 @@ module Chat
                 :chat_messages,
                 :can_load_more_past,
                 :can_load_more_future,
-                :unread_thread_ids,
+                :unread_thread_overview,
                 :threads,
                 :tracking,
-                :thread_memberships
+                :thread_memberships,
+                :thread_participants
 
     def initialize(
       chat_channel:,
@@ -18,20 +19,22 @@ module Chat
       user:,
       can_load_more_past: nil,
       can_load_more_future: nil,
-      unread_thread_ids: nil,
+      unread_thread_overview: nil,
       threads: nil,
       tracking: nil,
-      thread_memberships: nil
+      thread_memberships: nil,
+      thread_participants: nil
     )
       @chat_channel = chat_channel
       @chat_messages = chat_messages
       @user = user
       @can_load_more_past = can_load_more_past
       @can_load_more_future = can_load_more_future
-      @unread_thread_ids = unread_thread_ids
+      @unread_thread_overview = unread_thread_overview
       @threads = threads
       @tracking = tracking
       @thread_memberships = thread_memberships
+      @thread_participants = thread_participants
     end
 
     def reviewable_ids

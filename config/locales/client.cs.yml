@@ -1023,12 +1023,7 @@ cs:
       experimental_sidebar:
         enable: "Povolit postranní panel"
         options: "Možnosti"
-        categories_section: "Sekce kategorií"
-        categories_section_instruction: "Vybrané kategorie se zobrazí v sekci Kategorie na postranním panelu."
-        tags_section: "Sekce štítků"
-        tags_section_instruction: "Vybrané štítky budou zobrazeny v sekci štítků postranního panelu."
         navigation_section: "Navigace"
-        list_destination_instruction: "Když je na postranním panelu nový obsah..."
       change: "změnit"
       featured_topic: "Doporučené téma"
       moderator: "%{user} je moderátor"
@@ -1128,7 +1123,6 @@ cs:
         tags: "Štítky"
         interface: "Rozhraní"
         apps: "Aplikace"
-        sidebar: "Postranní panel"
       change_password:
         success: "(email odeslán)"
         in_progress: "(odesílám)"
@@ -1530,8 +1524,6 @@ cs:
       hide_forever: "děkuji, ne"
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
     summary:
-      enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
-      enable: "Přepnout na \"nejlepší příspěvky\""
       disable: "Přepnout na normální zobrazení"
     deleted_filter:
       enabled_description: "Toto téma obsahuje schované smazané příspěvky."
@@ -2863,6 +2855,9 @@ cs:
       close: "Zavřít (Esc)"
       content_load_error: '<a href="%url%">Obsah</a> se nepodařilo načíst.'
       image_load_error: '<a href="%url%">Obrázek</a> se nepodařilo načíst.'
+    experimental_lightbox:
+      buttons:
+        close: "Zavřít (Esc)"
     cannot_render_video: Toto video nelze zobrazit, protože váš prohlížeč nepodporuje daný kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3090,8 +3085,9 @@ cs:
       more: "Více"
       all_categories: "Všechny kategorie"
       all_tags: "Všechny štítky"
-      categories_form:
-        save: "Uložit"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Celkem"
       sections:
         custom:
           save: "Uložit"
@@ -3118,7 +3114,8 @@ cs:
         categories:
           header_link_text: "Kategorie"
         community:
-          header_link_text: "Komunita"
+          edit_section:
+            header_dropdown: "Přizpůsobení"
           links:
             about:
               content: "O fóru"
@@ -3126,8 +3123,8 @@ cs:
               content: "Administrace"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Vše"
+            topics:
+              content: "Témata"
             faq:
               content: "FAQ"
             groups:
@@ -3137,6 +3134,11 @@ cs:
             my_posts:
               content: "Mé příspěvky"
     until: "dokud:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Prosím zadejte platnou hodnotu."
+          email: "Zadejte prosím správnou emailovou adresu."
   admin_js:
     type_to_filter: "text pro filtrování..."
     admin:
@@ -4081,6 +4083,8 @@ cs:
         go_back: "Zpět na hledání"
         recommended: "Doporučujeme uzpůsobit následující text tak, aby vám vyhovoval:"
         show_overriden: "Zobrazit pouze změněná nastavení"
+        outdated:
+          dismiss: "Označit jako přečtené"
       settings:
         show_overriden: "Zobrazit pouze přepsané"
         reset: "resetovat"

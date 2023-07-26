@@ -109,6 +109,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
 
       it "does not use deleted messages for the last_read_message_id" do
         message_2.trash!
+        message_2.chat_channel.update_last_message_id!
         result
         expect(membership_1.reload.last_read_message_id).to eq(message_1.id)
       end
@@ -136,18 +137,21 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
         expect(message.data).to eq(
           channel_1.id.to_s => {
             "last_read_message_id" => message_2.id,
+            "last_reply_created_at" => nil,
             "membership_id" => membership_1.id,
             "mention_count" => 0,
             "unread_count" => 0,
           },
           channel_2.id.to_s => {
             "last_read_message_id" => message_4.id,
+            "last_reply_created_at" => nil,
             "membership_id" => membership_2.id,
             "mention_count" => 0,
             "unread_count" => 0,
           },
           channel_3.id.to_s => {
             "last_read_message_id" => message_6.id,
+            "last_reply_created_at" => nil,
             "membership_id" => membership_3.id,
             "mention_count" => 0,
             "unread_count" => 0,

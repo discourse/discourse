@@ -20,6 +20,12 @@ import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import {
+  destroyTippyInstances,
+  initUserStatusHtml,
+  renderUserStatusHtml,
+} from "discourse/lib/user-status-on-autocomplete";
+import ChatModalChannelSummary from "discourse/plugins/chat/discourse/components/chat/modal/channel-summary";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -34,14 +40,11 @@ export default class ChatComposer extends Component {
   @service currentUser;
   @service chatApi;
   @service chatDraftsManager;
+  @service modal;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
-
-  get shouldRenderReplyingIndicator() {
-    return !this.args.channel?.isDraft;
-  }
 
   get shouldRenderMessageDetails() {
     return (
@@ -84,7 +87,7 @@ export default class ChatComposer extends Component {
   setupTextareaInteractor(textarea) {
     this.composer.textarea = new TextareaInteractor(getOwner(this), textarea);
 
-    if (this.site.desktopView) {
+    if (this.site.desktopView && this.args.autofocus) {
       this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
     }
   }
@@ -245,10 +248,6 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    if (this.args.channel.isDraft) {
-      return;
-    }
-
     this.chatComposerPresenceManager.notifyState(
       this.presenceChannelName,
       !this.currentMessage.editing && this.hasContent
@@ -277,9 +276,9 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    // hack to prevent the whole viewport
-    // to move on focus input
-    textarea = document.querySelector(".chat-composer__input");
+    // hack to prevent the whole viewport to move on focus input
+    // we need access to native node
+    textarea = this.composer.textarea.textarea;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {
@@ -380,8 +379,8 @@ export default class ChatComposer extends Component {
 
   @action
   showChannelSummaryModal() {
-    showModal("channel-summary").setProperties({
-      channelId: this.args.channel.id,
+    this.modal.show(ChatModalChannelSummary, {
+      model: { channelId: this.args.channel.id },
     });
   }
 
@@ -409,6 +408,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
+        destroyTippyInstances();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -418,9 +418,13 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
+            initUserStatusHtml(result.users);
           }
           return result;
         });
+      },
+      onRender: (options) => {
+        renderUserStatusHtml(options);
       },
       afterComplete: (text, event) => {
         event.preventDefault();
@@ -428,6 +432,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
+      onClose: destroyTippyInstances,
     });
   }
 

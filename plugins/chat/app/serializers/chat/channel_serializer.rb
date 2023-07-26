@@ -12,7 +12,6 @@ module Chat
                :description,
                :title,
                :slug,
-               :last_message_sent_at,
                :status,
                :archive_failed,
                :archive_completed,
@@ -24,9 +23,7 @@ module Chat
                :meta,
                :threading_enabled
 
-    def threading_enabled
-      SiteSetting.enable_experimental_chat_threaded_discussions && object.threading_enabled
-    end
+    has_one :last_message, serializer: Chat::LastMessageSerializer, embed: :objects
 
     def initialize(object, opts)
       super(object, opts)

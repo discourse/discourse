@@ -48,8 +48,8 @@ module Chat
     def create
       begin
         validate_channel_status!
-        uploads = get_uploads
-        validate_message!(has_uploads: uploads.any?)
+        @chat_message.uploads = get_uploads
+        validate_message!
         validate_reply_chain!
         validate_existing_thread!
 
@@ -60,18 +60,17 @@ module Chat
 
         create_chat_webhook_event
         create_thread
-        @chat_message.attach_uploads(uploads)
         Chat::Draft.where(user_id: @user.id, chat_channel_id: @chat_channel.id).destroy_all
+        post_process_resolved_thread
+        update_channel_last_message
         Chat::Publisher.publish_new!(
           @chat_channel,
           @chat_message,
           @staged_id,
           staged_thread_id: @staged_thread_id,
         )
-        post_process_resolved_thread
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_new(chat_message: @chat_message, timestamp: @chat_message.created_at)
-        @chat_channel.touch(:last_message_sent_at)
         DiscourseEvent.trigger(:chat_message_created, @chat_message, @chat_channel, @user)
       rescue => error
         @error = error
@@ -154,11 +153,9 @@ module Chat
       end
     end
 
-    def validate_message!(has_uploads:)
-      @chat_message.validate_message(has_uploads: has_uploads)
-      if @chat_message.errors.present?
-        raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
-      end
+    def validate_message!
+      return if @chat_message.valid?
+      raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
     end
 
     def create_chat_webhook_event
@@ -191,15 +188,6 @@ module Chat
         @chat_message.in_reply_to.thread_id = thread.id
       end
 
-      if @chat_message.chat_channel.threading_enabled
-        Chat::Publisher.publish_thread_created!(
-          @chat_message.chat_channel,
-          @chat_message.in_reply_to,
-          thread.id,
-          @staged_thread_id,
-        )
-      end
-
       @chat_message.thread_id = thread.id
 
       # NOTE: We intentionally do not try to correct thread IDs within the chain
@@ -223,6 +211,15 @@ module Chat
         FROM thread_updater
         WHERE thread_id IS NULL AND chat_messages.id = thread_updater.id
       SQL
+
+      if @chat_message.chat_channel.threading_enabled
+        Chat::Publisher.publish_thread_created!(
+          @chat_message.chat_channel,
+          @chat_message.in_reply_to,
+          thread.id,
+          @staged_thread_id,
+        )
+      end
     end
 
     def resolved_thread
@@ -231,15 +228,20 @@ module Chat
 
     def post_process_resolved_thread
       return if resolved_thread.blank?
+
+      resolved_thread.update!(last_message: @chat_message)
       resolved_thread.increment_replies_count_cache
-      Chat::UserChatThreadMembership.find_or_create_by!(user: @user, thread: resolved_thread)
+      current_user_thread_membership = resolved_thread.add(@user)
+      current_user_thread_membership.update!(last_read_message_id: @chat_message.id)
 
       if resolved_thread.original_message_user != @user
-        Chat::UserChatThreadMembership.find_or_create_by!(
-          user: resolved_thread.original_message_user,
-          thread: resolved_thread,
-        )
+        resolved_thread.add(resolved_thread.original_message_user)
       end
+    end
+
+    def update_channel_last_message
+      return if @chat_message.thread_reply?
+      @chat_channel.update!(last_message: @chat_message)
     end
   end
 end

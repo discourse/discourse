@@ -21,8 +21,7 @@
     >
       {{#if this.shouldRenderFavoriteReactions}}
         {{#each
-          this.messageInteractor.emojiReactions
-          key="emoji"
+          this.messageInteractor.emojiReactions key="emoji"
           as |reaction|
         }}
           <ChatMessageReaction

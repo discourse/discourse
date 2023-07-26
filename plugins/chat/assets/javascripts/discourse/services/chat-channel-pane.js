@@ -10,30 +10,27 @@ export default class ChatChannelPane extends Service {
   @tracked lastSelectedMessage = null;
   @tracked sending = false;
 
-  get selectedMessageIds() {
-    return this.chat.activeChannel?.selectedMessages?.mapBy("id") || [];
-  }
-
   get channel() {
     return this.chat.activeChannel;
   }
 
-  @action
-  cancelSelecting(selectedMessages) {
-    this.selectingMessages = false;
+  get selectedMessages() {
+    return this.channel?.selectedMessages;
+  }
 
-    selectedMessages.forEach((message) => {
-      message.selected = false;
-    });
+  get selectedMessageIds() {
+    return this.selectedMessages.mapBy("id");
+  }
+
+  @action
+  cancelSelecting() {
+    this.selectingMessages = false;
+    this.channel.clearSelectedMessages();
   }
 
   @action
   onSelectMessage(message) {
     this.lastSelectedMessage = message;
     this.selectingMessages = true;
-  }
-
-  get lastMessage() {
-    return this.chat.activeChannel.messages.lastObject;
   }
 }

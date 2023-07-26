@@ -114,6 +114,7 @@ export default Component.extend(
           highlightPrevious: bind(this, this._highlightPrevious),
           highlightLast: bind(this, this._highlightLast),
           highlightFirst: bind(this, this._highlightFirst),
+          deselectLast: bind(this, this._deselectLast),
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
@@ -295,6 +296,7 @@ export default Component.extend(
       minimum: null,
       autoInsertNoneItem: true,
       closeOnChange: true,
+      useHeaderFilter: false,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
       verticalOffset: 3,
@@ -311,6 +313,7 @@ export default Component.extend(
       hiddenValues: null,
       disabled: false,
       expandedOnInsert: false,
+      formName: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -800,6 +803,12 @@ export default Component.extend(
       }
     },
 
+    _deselectLast() {
+      if (this.selectKit.hasSelection) {
+        this.deselectByValue(this.value[this.value.length - 1]);
+      }
+    },
+
     select(value, item) {
       if (!isPresent(value)) {
         this._onClearSelection();
@@ -875,7 +884,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal");
+        const inModal = this.element.closest("#discourse-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
@@ -1135,6 +1144,7 @@ export default Component.extend(
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
         i18nPrefix: "options.i18nPrefix",
+        btnCustomClasses: "options.btnCustomClasses",
         castInteger: "options.castInteger",
       };
 

@@ -7,24 +7,6 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
   before { SiteSetting.navigation_menu = "sidebar" }
 
-  describe "#sidebar_list_destination" do
-    it "is not included when navigation menu is legacy" do
-      SiteSetting.navigation_menu = "legacy"
-
-      expect(serializer.as_json[:sidebar_list_destination]).to eq(nil)
-    end
-
-    it "returns choosen value or default" do
-      expect(serializer.as_json[:sidebar_list_destination]).to eq(
-        SiteSetting.default_sidebar_list_destination,
-      )
-
-      user.user_option.update!(sidebar_list_destination: "unread_new")
-
-      expect(serializer.as_json[:sidebar_list_destination]).to eq("unread_new")
-    end
-  end
-
   describe "#sidebar_category_ids" do
     fab!(:group) { Fabricate(:group) }
     fab!(:category) { Fabricate(:category) }
@@ -64,7 +46,7 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
   end
 
   describe "#sidebar_tags" do
-    fab!(:tag) { Fabricate(:tag, name: "foo") }
+    fab!(:tag) { Fabricate(:tag, name: "foo", description: "foo tag") }
     fab!(:pm_tag) do
       Fabricate(:tag, name: "bar", pm_topic_count: 5, staff_topic_count: 0, public_topic_count: 0)
     end
@@ -107,8 +89,8 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       json = serializer.as_json
 
       expect(json[:sidebar_tags]).to contain_exactly(
-        { name: tag.name, pm_only: false },
-        { name: pm_tag.name, pm_only: true },
+        { name: tag.name, pm_only: false, description: tag.description },
+        { name: pm_tag.name, pm_only: true, description: nil },
       )
 
       user.update!(admin: true)
@@ -116,9 +98,9 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       json = serializer.as_json
 
       expect(json[:sidebar_tags]).to contain_exactly(
-        { name: tag.name, pm_only: false },
-        { name: pm_tag.name, pm_only: true },
-        { name: hidden_tag.name, pm_only: false },
+        { name: tag.name, pm_only: false, description: tag.description },
+        { name: pm_tag.name, pm_only: true, description: nil },
+        { name: hidden_tag.name, pm_only: false, description: nil },
       )
     end
   end

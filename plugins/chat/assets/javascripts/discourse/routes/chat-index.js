@@ -6,6 +6,10 @@ export default class ChatIndexRoute extends DiscourseRoute {
   @service chatChannelsManager;
   @service router;
 
+  activate() {
+    this.chat.activeChannel = null;
+  }
+
   redirect() {
     // Always want the channel index on mobile.
     if (this.site.mobileView) {

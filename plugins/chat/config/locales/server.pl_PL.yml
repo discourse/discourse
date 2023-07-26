@@ -10,6 +10,13 @@ pl_PL:
     chat_allowed_groups: "Użytkownicy w tych grupach mogą rozmawiać. Pamiętaj, że personel zawsze ma dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_dm_retention_days: "Wiadomości czatu w osobistych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
+    chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
+    chat_allowed_messages_for_trust_level_0: "Liczba wiadomości, które użytkownicy o poziomie zaufania 0 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
+    chat_allowed_messages_for_other_trust_levels: "Liczba wiadomości, które użytkownicy z poziomami zaufania 1-4 mogą wysłać w ciągu 30 sekund. Ustaw na '0', aby wyłączyć limit."
+    chat_silence_user_sensitivity: "Prawdopodobieństwo, że użytkownik oflagowany na czacie zostanie automatycznie wyciszony."
+    chat_auto_silence_from_flags_duration: "Liczba minut, przez które użytkownicy będą wyciszeni, gdy zostaną automatycznie wyciszeni z powodu oflagowanych wiadomości na czacie."
+    chat_default_channel_id: "Kanał czatu, który zostanie domyślnie otwarty, gdy użytkownik nie ma nieprzeczytanych wiadomości ani wzmianek na innych kanałach."
+    chat_duplicate_message_sensitivity: "Prawdopodobieństwo, że zduplikowana wiadomość od tego samego nadawcy zostanie zablokowana w krótkim czasie. Liczba dziesiętna z zakresu od 0 do 1,0, gdzie 1,0 jest najwyższym ustawieniem (blokuje wiadomości częściej w krótszym czasie). Ustaw na „0”, aby zezwolić na duplikaty wiadomości."
     chat_minimum_message_length: "Minimalna liczba znaków wiadomości na czacie."
     chat_allow_uploads: "Zezwalaj na przesyłanie plików w publicznych kanałach czatu i kanałach wiadomości bezpośrednich."
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
@@ -89,6 +96,8 @@ pl_PL:
         many: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
         other: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
       original_message_not_found: "Nie można znaleźć przodka wiadomości, na którą odpowiadasz, lub został on usunięty."
+      thread_invalid_for_channel: "Wątek nie jest częścią udostępnionego kanału."
+      thread_does_not_match_parent: "Wątek nie pasuje do wiadomości nadrzędnej."
     reviewables:
       message_already_handled: "Dziękujemy, ale sprawdziliśmy już tę wiadomość i ustaliliśmy, że nie trzeba jej ponownie oznaczać."
       actions:

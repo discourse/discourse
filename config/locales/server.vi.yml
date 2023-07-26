@@ -490,7 +490,6 @@ vi:
   meta_category_description: "Thảo luận về site này, tổ chức của nó, làm sao nó hoạt động, và làm sao chúng tôi có thể cải tiến nó tốt hơn."
   staff_category_name: "Nhân viên"
   staff_category_description: "Chuyên mục riêng dành cho nhân viên. Các chủ đề chỉ hiển thị với quản trị viên và điều hành viên."
-  admin_quick_start_title: "ĐỌC TÔI ĐẦU TIÊN: Hướng dẫn Bắt đầu Nhanh dành cho Quản trị viên"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
     replace_paragraph: "(Thay thế đoạn đầu tiên này bằng một mô tả ngắn gọn về danh mục mới của bạn. Hướng dẫn này sẽ xuất hiện trong vùng chọn danh mục, vì vậy hãy cố gắng giữ cho nó dưới 200 ký tự.)"
@@ -1198,7 +1197,6 @@ vi:
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
-    max_consecutive_replies: "Số lượng bài đăng mà người dùng phải thực hiện liên tiếp trong một chủ đề trước khi bị ngăn không cho thêm câu trả lời khác."
     enable_filtered_replies_view: 'Nút "(n) trả lời" thu gọn tất cả các bài đăng khác và chỉ hiển thị bài đăng hiện tại và các câu trả lời của nó.'
     title_fancy_entities: "Chuyển đổi các ký tự ASCII phổ biến thành các thực thể HTML ưa thích trong tiêu đề chủ đề, xem SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
@@ -1370,7 +1368,6 @@ vi:
       pop3_polling_password_is_empty: "Bạn phải thiết lập 'pop3 polling password' trước khi kích hoạt POP3 polling."
       pop3_polling_authentication_failed: "Chứng thực POP3 thất bại, xin hãy kiểm tra lại thông tin."
       reply_by_email_address_is_empty: "Bạn phải thiết lập 'reply by email address' trước khi kích hoạt trả lời bằng email."
-      email_polling_disabled: "Bạn phải kích hoạt bằng tay hoặc POP3 polling trước khi kích hoạt trả lời bằng email."
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
       personal_message_enabled_groups_invalid: "Bạn phải chỉ định ít nhất một nhóm cho cài đặt này. Nếu bạn không muốn bất kỳ ai ngoại trừ nhân viên gửi PM, hãy chọn nhóm nhân viên."
       min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"

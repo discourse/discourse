@@ -11,8 +11,11 @@ import { hash } from "rsvp";
 import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 import Session from "discourse/models/session";
+import { inject as service } from "@ember/service";
 
 const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
+  router: service(),
+
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
     this.render("discovery/categories", { outlet: "list-container" });
@@ -144,7 +147,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
 
   @action
   createCategory() {
-    this.transitionTo("newCategory");
+    this.router.transitionTo("newCategory");
   },
 
   @action

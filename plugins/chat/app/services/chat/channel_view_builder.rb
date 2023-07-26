@@ -34,10 +34,12 @@ module Chat
     step :determine_threads_enabled
     step :determine_include_thread_messages
     step :fetch_messages
-    step :fetch_unread_thread_ids
+    step :fetch_unread_thread_overview
     step :fetch_threads_for_messages
     step :fetch_tracking
     step :fetch_thread_memberships
+    step :fetch_thread_participants
+    step :update_channel_last_viewed_at
     step :build_view
 
     class Contract
@@ -50,6 +52,7 @@ module Chat
       attribute :direction, :string # (optional)
       attribute :page_size, :integer # (optional)
       attribute :fetch_from_last_read, :boolean # (optional)
+      attribute :target_date, :string # (optional)
 
       validates :channel_id, presence: true
       validates :direction,
@@ -74,7 +77,7 @@ module Chat
     private
 
     def fetch_channel(contract:, **)
-      Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+      Chat::Channel.includes(:chatable, :last_message).find_by(id: contract.channel_id)
     end
 
     def can_view_channel(guardian:, channel:, **)
@@ -109,8 +112,7 @@ module Chat
     end
 
     def determine_threads_enabled(channel:, **)
-      context.threads_enabled =
-        SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+      context.threads_enabled = channel.threading_enabled
     end
 
     def determine_include_thread_messages(contract:, threads_enabled:, **)
@@ -127,16 +129,17 @@ module Chat
           include_thread_messages: include_thread_messages,
           page_size: contract.page_size,
           direction: contract.direction,
+          target_date: contract.target_date,
         )
 
       context.can_load_more_past = messages_data[:can_load_more_past]
       context.can_load_more_future = messages_data[:can_load_more_future]
 
-      if !messages_data[:target_message]
+      if !messages_data[:target_message] && !messages_data[:target_date]
         context.messages = messages_data[:messages]
       else
         messages_data[:target_message] = (
-          if !include_thread_messages && messages_data[:target_message].thread_reply?
+          if !include_thread_messages && messages_data[:target_message]&.thread_reply?
             []
           else
             [messages_data[:target_message]]
@@ -147,28 +150,29 @@ module Chat
           messages_data[:past_messages].reverse,
           messages_data[:target_message],
           messages_data[:future_messages],
-        ].reduce([], :concat)
+        ].reduce([], :concat).compact
       end
     end
 
-    # The thread tracking overview is a simple array of thread IDs
-    # that have unread messages, only threads with unread messages
-    # will be included in this array. This is a low-cost way to know
-    # how many threads the user has unread across the entire channel.
-    def fetch_unread_thread_ids(guardian:, channel:, threads_enabled:, **)
+    # The thread tracking overview is a simple array of hashes consisting
+    # of thread IDs that have unread messages as well as the datetime of the
+    # last reply in the thread.
+    #
+    # Only threads with unread messages will be included in this array.
+    # This is a low-cost way to know how many threads the user has unread
+    # across the entire channel.
+    def fetch_unread_thread_overview(guardian:, channel:, threads_enabled:, **)
       if !threads_enabled
-        context.unread_thread_ids = []
+        context.unread_thread_overview = {}
       else
-        context.unread_thread_ids =
-          ::Chat::TrackingStateReportQuery
-            .call(
-              guardian: guardian,
-              channel_ids: [channel.id],
-              include_threads: true,
-              include_read: false,
-            )
-            .find_channel_threads(channel.id)
-            .keys
+        context.unread_thread_overview =
+          ::Chat::TrackingStateReportQuery.call(
+            guardian: guardian,
+            channel_ids: [channel.id],
+            include_threads: true,
+            include_read: false,
+            include_last_reply_details: true,
+          ).find_channel_thread_overviews(channel.id)
       end
     end
 
@@ -177,9 +181,10 @@ module Chat
         context.threads = []
       else
         context.threads =
-          ::Chat::Thread.includes(original_message_user: :user_status).where(
-            id: messages.map(&:thread_id).compact.uniq,
-          )
+          ::Chat::Thread
+            .strict_loading
+            .includes(last_message: %i[user uploads], original_message_user: :user_status)
+            .where(id: messages.map(&:thread_id).compact.uniq)
 
         # Saves us having to load the same message we already have.
         context.threads.each do |thread|
@@ -218,16 +223,26 @@ module Chat
       end
     end
 
+    def fetch_thread_participants(threads:, **)
+      context.thread_participants =
+        ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
+    end
+
+    def update_channel_last_viewed_at(channel:, guardian:, **)
+      channel.membership_for(guardian.user)&.update!(last_viewed_at: Time.zone.now)
+    end
+
     def build_view(
       guardian:,
       channel:,
       messages:,
       threads:,
       tracking:,
-      unread_thread_ids:,
+      unread_thread_overview:,
       can_load_more_past:,
       can_load_more_future:,
       thread_memberships:,
+      thread_participants:,
       **
     )
       context.view =
@@ -237,10 +252,11 @@ module Chat
           user: guardian.user,
           can_load_more_past: can_load_more_past,
           can_load_more_future: can_load_more_future,
-          unread_thread_ids: unread_thread_ids,
+          unread_thread_overview: unread_thread_overview,
           threads: threads,
           tracking: tracking,
           thread_memberships: thread_memberships,
+          thread_participants: thread_participants,
         )
     end
   end

@@ -2,10 +2,14 @@
 
 module Chat
   class StructuredChannelSerializer < ApplicationSerializer
-    attributes :public_channels, :direct_message_channels, :tracking, :meta
+    attributes :public_channels, :direct_message_channels, :tracking, :meta, :unread_thread_overview
 
     def tracking
       object[:tracking]
+    end
+
+    def unread_thread_overview
+      object[:unread_thread_overview]
     end
 
     def public_channels

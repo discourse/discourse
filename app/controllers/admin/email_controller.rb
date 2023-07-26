@@ -167,21 +167,16 @@ class Admin::EmailController < Admin::AdminController
       end
     end
 
-    # TODO: 2022-05-01 Remove this route once all sites have migrated over
-    # to using the new email_encoded param.
     if deprecated_email_param_used
-      render plain:
-               "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing"
+      warning =
+        "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing"
+
+      Discourse.deprecate(warning, drop_from: "3.3.0")
+
+      render plain: warning
     else
       render plain: "email has been received and is queued for processing"
     end
-  end
-
-  def raw_email
-    params.require(:id)
-    incoming_email = IncomingEmail.find(params[:id].to_i)
-    text, html = Email.extract_parts(incoming_email.raw)
-    render json: { raw_email: incoming_email.raw, text_part: text, html_part: html }
   end
 
   def incoming

@@ -1336,6 +1336,14 @@ RSpec.describe TopicsFilter do
         include_examples "ordering topics filters", "category", "category name"
       end
 
+      describe "when ordering by topics's title" do
+        fab!(:topic3) { Fabricate(:topic, title: "This is topic number 1") }
+        fab!(:topic2) { Fabricate(:topic, title: "This is topic Number 3") }
+        fab!(:topic) { Fabricate(:topic, title: "This is topic number 2") }
+
+        include_examples "ordering topics filters", "title", "topic's title"
+      end
+
       describe "composing multiple order filters" do
         fab!(:topic) { Fabricate(:topic, created_at: Time.zone.local(2023, 1, 1), views: 2) }
         fab!(:topic2) { Fabricate(:topic, created_at: Time.zone.local(2024, 1, 1), views: 2) }

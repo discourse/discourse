@@ -3,7 +3,11 @@
     <CategoryTitleBefore @category={{this.category}} />
     {{category-link this.category hideParent="true"}}
     {{#unless this.hideUnread}}
-      <CategoryUnread @category={{this.category}} />
+      <CategoryUnread
+        @category={{this.category}}
+        @unreadTopicsCount={{this.unreadTopicsCount}}
+        @newTopicsCount={{this.newTopicsCount}}
+      />
     {{/unless}}
   </span>
 {{/unless}}

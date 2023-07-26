@@ -243,6 +243,10 @@ he:
         other: "מחילה אך לא הצלחנו לייצר תצוגה מקדימה של האתר הזה כיוון שלא ניתן היה למצוא את תגיות ה־oEmbed / OpenGraph הבאות: %{missing_attributes}"
   word_connector:
     comma: ", "
+  custom_fields:
+    validations:
+      max_items: "הגעת למספר המרבי של שדות מותאמים אישית עבור ישות זו (%{max_items_number})"
+      max_value_length: "הגעת לאורך המרבי עבור ערך שדה מותאם אישית (%{max_value_length})"
   invite:
     expired: "תוקף אסימון ההזמנה שלך פג. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
     not_found: "אסימון ההזמנה שלך שגוי. נא <a href='%{base_url}/about'>ליצור קשר עם הסגל</a>."
@@ -690,7 +694,7 @@ he:
       :handshake: **תרומה** על ידי תגובה, שיתוף נקודת המבט שלך, פרסום שאלות או הצעת משוב בדיון. בטרם פרסום תגובות או נושאים חדשים, נא לעיין ב[כללי הקהילה](%{base_path}/faq).
 
       > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך [‎#feedback](%{base_path}/c/site-feedback) או [ליצור קשר עם המנהלים](%{base_path}/about).
-  admin_quick_start_title: "לקרוא אותי קודם: מדריך זריז למנהלים מתחילים"
+  admin_quick_start_title: "מדריך למנהלים: איך מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
     replace_paragraph: "(מוטב להחליף את הפסקה הראשונה הזאת בתיאור קצר של הקטגוריה החדשה שלך. הנחיה זו תופיע באזור בחירת הקטגוריה, לכן עדיף להסתפק במלל שלא יעלה על 200 תווים.)"
@@ -1494,6 +1498,7 @@ he:
     image_magick_warning: 'השרת שלך מוגדר ליצור תמונות מוקטנות של תמונות גדולות אך אין התקנה של ImageMagick. יש להתקין את ImageMagick בעזרת מנהל החבילות החביב עליך או <a href="https://www.imagemagick.org/script/download.php" target="_blank">להוריד את הגרסה העדכנית ביותר</a>.'
     failing_emails_warning: 'ישנן %{num_failed_jobs} משימות דוא״ל שנכשלו. נא לבדוק את ה־app.yml שלך ולוודא שהגדרות כתובת שרת הדוא״ל נכונות. <a href="%{base_path}/sidekiq/retries" target="_blank">ניתן לעיין במשימות שנכשלו ב־Sidekiq</a>.'
     subfolder_ends_in_slash: "הגדרת תיקיית המשנה שלך שגויה, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
+    outdated_translations_warning: "חלק ממעקפי התרגומים שלך לא בתוקף. נא לבדוק את <a href='%{base_path}/admin/customize/site_texts?outdated=true'>התאמות הטקסט</a> שלך."
     email_polling_errored_recently:
       one: "ניסיונות שליפת הודעות דוא״ל יצרו תקלה ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
       two: "ניסיונות שליפת הודעות דוא״ל יצרו %{count} תקלות ב־24 השעות האחרונות. ניתן לעיין ב<a href='%{base_path}/logs' target='_blank'>יומנים</a> לפרטים נוספים."
@@ -1508,6 +1513,7 @@ he:
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
     v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
+    legacy_navigation_menu_deprecated: "ה־Discourse שלך משתמש עדיין בתפריט הניווט ה‚מיושן’ ש<a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>יוסר במהדורת הבטא הראשונה של Discourse 3.2</a>. כדי לעבור לתפריט הניווט החדש על ידי עדכון <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>הגדרת תפריט הניווט באתר</a> שלך ל־‚sidebar’ (סרגל צד) או ל־‚header dropdown’ (תפריט נגלל משורת הכותרת)."
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"
@@ -1573,6 +1579,8 @@ he:
     fixed_category_positions_on_create: "אם האפשרות תסומן, סדר הקטגוריות יוגדר בתפריט יצירת נושא (דורש fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'הוספת התווית rel nofollow לכל תוכן שפורסם על ידי המשתמש/ת, פרט לקישורים פנימיים (כולל מתחם הורה parent domains). אם תשנו אפשרות זו, עליכם לאפות מחדש את כל הפרסומים עם: "rake posts:rebake"'
     exclude_rel_nofollow_domains: "רשימת שמות התחום שאין להוסיף לקישורים אליהם nofollow. הוספת example.com תאפשר אוטומטית גם את sub.example.com. בתור התחלה, עליך להוסיף את שם התחום של האתר הזה כדי לסייע לסורקי רשת (crawlers) למצוא את כל התוכן. אם חלקים אחרים מהאתר שלך מתארחים בשמות תחום אחרים, אז גם אותם."
+    max_form_template_title_length: "האורך המרבי המותר לכותרות תבניות טפסים."
+    max_form_template_content_length: "האורך המרבי המותר לתוכן תבניות טפסים."
     post_excerpt_maxlength: "אורך מקסימלי של קטע פוסט / סיכום."
     topic_excerpt_maxlength: "האורך המרבי של מקטע מתוך / סיכום של נושא, נוצר מהפוסט הראשון בנושא."
     default_subcategory_on_read_only_category: "מפעיל את כפתור ‚נושא חדש’ ובוחר את תת־הקטגוריה כברירת מחדל לפרסום בקטגוריות בהן למשתמש אסור ליצור נושא חדש."
@@ -1613,6 +1621,8 @@ he:
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את % הפוסטים הראשונים"
     summary_max_results: "מספר הפוסטים המרבי שיוחזר על ידי ‚סיכום הנושא הזה’"
     summary_timeline_button: "הצגת כפתור ‚סיכום’ בציר הזמן"
+    summarization_strategy: "דרכים נוספות לסכם תוכן שנרשם על ידי תוספים"
+    custom_summarization_allowed_groups: "קבוצות שמורשות לסכם תכנים באמצעות `summarization_strategy` (אסטרטגיית תקצור)."
     enable_personal_messages: "יצא מכלל שימוש, יש להשתמש בהגדרה ‚קבוצות בהן מופעלות הודעות אישיות’. לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך אמון מזערי לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
     personal_message_enabled_groups: "לאפשר למשתמשים בקבוצות האלו ליצור הודעות ולהגיב להודעות. קבוצות דרגות אמון כוללות את כל דרגות האמון מעל המספר הזה, למשל בחירה ב־trust_level_1 (דרגת אמון 1) מאפשרת גם למשתמשים בדרגות 2, 3 ו־4 לשלוח הודעות פרטיות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות ללא תלות בהגדרות כאלו ואחרות."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
@@ -1834,6 +1844,7 @@ he:
     s3_secret_access_key: "מפתח סוד הגישה ל־Amazon S3 שישמש להעלאת תמונות, קבצים מצורפים וגיבויים."
     s3_region: "שם האזור ב־Amazon S3 שישמש להעלאת תמונות וגיבויים."
     s3_cdn_url: "כתובת CDN לכל המשאבים ב־S3 (למשל: https://cdn.somewhere.com). א-ז-ה-ר-ה: לאחר שינוי של הגדרה זו יש לאפות מחדש את כל הפוסטים הישנים."
+    s3_use_cdn_url_for_all_uploads: "להשתמש בכתובת CDN לכל הקבצים שהועלו ל־S3 במקום רק לתמונות."
     avatar_sizes: "רשימה של גדלי דמויות שנוצרת אוטומטית."
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
@@ -1883,7 +1894,8 @@ he:
     tl3_requires_likes_received: "מספר הלייקים המזערי שיש לקבל במשך (פרק זמן בדרגת אמון 3) הימים האחרונים כדי לעמוד בתנאי הקידום לדרגת אמון 3."
     tl3_links_no_follow: "מניעת הסרת rel=nofollow מקישורים שמפורסמים על ידי משתמשים בדרגת אמון 3."
     tl4_delete_posts_and_topics: "לאפשר למשתמשים בדרגת אמון 4 למחוק פוסטים ונושאים שנוצרו על ידי משתמשים אחרים. משתמשים בדרגת אמון 4 יוכלו גם לצפות בנושאים ובפוסטים שנמחקו."
-    trusted_users_can_edit_others: "לאפשר למשתמשים בדרגת אמון גבוהה לערוך תוכן של משתמשים אחרים"
+    edit_all_topic_groups: "לאפשר למשתמשים בקבוצה זו לערוך את כותרות הנושאים, התגיות והקטגוריות של משתמשים אחרים"
+    edit_all_post_groups: "לאפשר למשתמשים בקבוצה זו לערוך פוסטים של משתמשים אחרים"
     min_trust_to_create_topic: "דרגת האמון המזערית הנדרשת ליצירת נושא חדש."
     allow_flagging_staff: "אם אפשרות זו פעילה, משתמשים יכולים לסמן בדגל פוסטים שפורסמו על ידי חשבונות סגל."
     min_trust_to_edit_wiki_post: "דרגת האמון המזערית הנדרשת לעריכת פוסט המסומן כוויקי."
@@ -1919,7 +1931,7 @@ he:
     title_min_entropy: "האנטרופיה (תווים ייחודים שאינם בשפת הכתיבה) המינימלית הנדרשת בכותרת נושא."
     body_min_entropy: "האנטרופיה (תוים ייחודיים, תווים שאינם באנגלית נחשבים יותר) המינימלית הנדרשת בגוף הפוסט."
     allow_uppercase_posts: "אפשרו אותיות אנגליות גדולות (Capitalized) בכותרת נושא או בגוף פוסט."
-    max_consecutive_replies: "מספר הפוסטים שמשתמש עושה ברצף בתוך נושא בטרם החלת איסור על הוספת תגובות."
+    max_consecutive_replies: "מספר הפוסטים שמשתמש יכול לפרסם ברצף בנושא מסוים לפני הגבלת הוספת תגובות נוספות. המגבלה הזאת לא חלה על בעלי הנושא, סגל האתר או מפקחי הקטגוריות."
     enable_filtered_replies_view: 'הכפתור „(n) תגובות” מצמצם את כל הפוסטים האחרים ומציג רק את הפוסט הנוכחי ואת התגובות עליו.'
     title_fancy_entities: "המרת תווי ASCII נפוצים ליישויות HTML מהודרות בכותרות הנושאים, בסגנון SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
@@ -2077,6 +2089,7 @@ he:
     enable_category_group_moderation: "לאפשר לקבוצות לסקור תוכן בקטגוריות מסוימות"
     group_in_subject: "ניתן להגדיר %%{optional_pm} בנושא הודעת הדוא״ל לשם הקבוצה הראשונה בהודעה הפרטית (PM), למידע נוסף: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>התאמת תבנית הנושא להודעות דוא״ל תקניות</a>"
     allow_anonymous_posting: "לאפשר למשתמשים לעבור למצב אלמוני"
+    allow_anonymous_likes: "לאפשר למשתמשים אלמוניים לסמן פוסטים בלייק"
     anonymous_posting_min_trust_level: "דרגת האמון המזערית הנדרשת כדי לאפשר פרסום אלמוני"
     anonymous_account_duration_minutes: "כדי להגן על האלמוניות יש ליצור חשבון אלמוני חדש כל N דקות עבור כל משתמש. למשל: אם ההגדרה היא 600, בחלוף 600 דקות מהפוסט האחרון וגם אם המשתמש עבר למצב אלמוני, ייווצר חשבון אלמוני חדש."
     hide_user_profiles_from_public: "להשבית כרטיסי משתמשים, פרופילי משתמשים וספריית משתמשים עבור משתמשים אלמוניים."
@@ -2105,8 +2118,8 @@ he:
     permalink_normalizations: "החילו את הביטויים הרגולריים האלו לפני שמתאימים קישורים-קבועים, למשל: /(topic.*)\\?.*/\\1 יסיר מחרוזות שאילתה מנתיבי נושאים. הפורמט הוא regex+string משתמש ב \\1 וכד׳ כדי לגשת להתאמות"
     global_notice: "הצגת מודעה גלובלית דחופה בגדר חירום לכל המבקרים, יש להחליף בתוכן ריק כדי להסתיר אותה (מותר HTML)."
     disable_system_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
-    disable_category_edit_notifications: "השבתת התראות על עריכת קטגוריות בנושאים."
-    disable_tags_edit_notifications: "השבתת התראות על עריכת תגיות בנושאים."
+    disable_category_edit_notifications: "השבתת התראות על עריכות של קטגוריות נושא."
+    disable_tags_edit_notifications: "השבתת התראות על עריכות של תגיות נושא."
     notification_consolidation_threshold: "מספר ההתראות שסומנו בלייק או בקשות שהתקבלו לפני שההתראות קובצו להתראה אחת. יש להגדיר ל־0 כדי להשבית."
     likes_notification_consolidation_window_mins: "משך הזמן בשניות בו התראות מקובצות להתראה אחת לאחר שהגיעו לסף הזה. ניתן להגדיר את הסף דרך `SiteSetting.notification_consolidation_threshold` (סף קיבוץ התראות)."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
@@ -2211,6 +2224,9 @@ he:
     default_text_size: "גודל הטקסט שנבחר כברירת מחדל"
     default_title_count_mode: "מצב בררת מחדל למונה כותרות עמודים"
     enable_offline_indicator: "להציג הודעה למשתמשים כאשר זוהה שהחיבור שלהם לאינטרנט נקטע."
+    default_sidebar_link_to_filtered_list: "להפוך את קישור קישורי תפריט הניווט לרשימה מסוננת כברירת מחדל."
+    default_sidebar_show_count_of_new_items: "להפוך את קישורי תפריט הניווט כך שיציגו מספר פריטים חדשים במקום עיטורים כברירת מחדל."
+    default_sidebar_switch_panel_position: "מיקום כפתורי החלפת לוח בסרגל הצד"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
     revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
@@ -2225,6 +2241,8 @@ he:
     tagging_enabled: "לאפשר תגיות על נושאים?"
     min_trust_to_create_tag: "דרגת האמון המזערית שנדרשת כדי ליצור תגית."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
+    enable_max_tags_per_email_subject: "להשתמש ב־max_tags_per_email_subject (כמות תגיות מרבית לנושא הודעת דוא״ל) בעת יצירת נושא להודעת דוא״ל"
+    max_tags_per_email_subject: "מס׳ התגיות המרבי שיכול להיות בנושא של הודעת דוא״ל"
     max_tag_length: "אורך התג המקסימלי (מספר תווים)."
     max_tag_search_results: "בעת חיפוש אחר תגיות, כמה תוצאות תופענה לכל היותר."
     max_tags_in_filter_list: "מספר התגיות המרבי להצגה בתפריט המסננים הנגלל. התגיות השימושיות ביותר תופענה."
@@ -2237,6 +2255,7 @@ he:
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
     create_post_for_category_and_tag_changes: "ליצור פוסט פעולה קטן כאשר קטגוריה או תגיות של נושא משתנים"
+    watched_precedence_over_muted: "להודיע לי על נושאים בקטגוריות או תגיות שאני עוקב אחריהם שגם שייכים לזה שהשתקתי"
     company_name: "שם החברה"
     governing_law: "החוק המחייב"
     city_for_disputes: "עיר המחלוקת"
@@ -2268,12 +2287,15 @@ he:
     suggest_weekends_in_date_pickers: "לכלול סופי שבוע (שישי ושבת) בהצעות לבוחר התאריכים (כדאי להשבית זאת אם יוצא לך להשתמש ב־Discourse רק בימי חול, ראשון עד חמישי)."
     splash_screen: "מציג מסך טעינה בזמן שהמשאבים נטענים"
     navigation_menu: "קביעת תפריט הניווט לשימוש. המשתמשים יכולים להתאים את הניווט מסרגל הצד והכותרת. האפשרות הישנה זמינה לטובת תאימות לאחור."
-    default_sidebar_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של סרגל הצד כברירת מחדל."
-    default_sidebar_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של סרגל הצד כברירת מחדל."
+    default_navigation_menu_categories: "הקטגוריות הנבחרות תוצגנה תחת סעיף הקטגוריות של תפריט הניווט כברירת מחדל."
+    default_navigation_menu_tags: "התגיות הנבחרות תוצגנה תחת סעיף התגיות של תפריט הניווט כברירת מחדל."
     enable_experimental_hashtag_autocomplete: "ניסיוני: ניתן להשתמש במערכת אוטומטית להשלמת #תגיות עבור קטגוריות ותגיות שמעבדת את הפריט הנבחר באופן שונה והחיפוש בה משופר"
     experimental_new_new_view_groups: 'ניסיוני: לאפשר רשימת נושאים חדשה המשלבת נושאים שלא נקראו וחדשים ולקשר אליה את „הכול” בסרגל הצד.'
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
+    experimental_search_menu_groups: "ניסיוני: מאפשר את תפריט החיפוש החדש ששודרג כך שישתמש ב־glimmer"
+    enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
+    page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."
@@ -2299,7 +2321,7 @@ he:
       pop3_polling_password_is_empty: "עליכם לקבוע 'סיסמת תשאול pop3' לפני שתאפשרו תשאול POP3."
       pop3_polling_authentication_failed: "אימות POP3 נכשל. נא לאמת את פרטי הגישה שלך ל־pop3."
       reply_by_email_address_is_empty: "חובה להגדיר ‚מענה לפי כתובת דוא״ל’ בטרם הפעלת תגובה בדוא״ל."
-      email_polling_disabled: "יש לאפשר תשאול ידני או דרך POP3 בטרם הפעלת תגובה דרך דוא״ל."
+      email_polling_disabled: "צריך להפעיל תשאול ידני או POP3 או שיש לך דוגם דוא״ל פעיל משלך בטרם הפעלת תשובה בדוא״ל."
       user_locale_not_enabled: "לפני שתוכלו להפעיל אפשרות זאת, יש לאפשר \"הגדרות מקומיות מותאמות משתמש/ת\""
       personal_message_enabled_groups_invalid: "עליך לציין לפחות קבוצה אחת להגדרה זו. כדי למנוע מכולם לשלוח הודעות פרטיות למעט הסגל יש לבחור בקבוצת הסגל."
       invalid_regex: "ביטוי רגולרי לא תקין או לא מותר."

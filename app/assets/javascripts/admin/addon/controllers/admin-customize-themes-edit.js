@@ -3,8 +3,11 @@ import Controller from "@ember/controller";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { url } from "discourse/lib/computed";
+import { inject as service } from "@ember/service";
 
 export default class AdminCustomizeThemesEditController extends Controller {
+  @service router;
+
   section = null;
   currentTarget = 0;
   maximized = false;
@@ -48,7 +51,12 @@ export default class AdminCustomizeThemesEditController extends Controller {
 
   @action
   fieldAdded(target, name) {
-    this.replaceRoute(this.editRouteName, this.get("model.id"), target, name);
+    this.router.replaceWith(
+      this.editRouteName,
+      this.get("model.id"),
+      target,
+      name
+    );
   }
 
   @action
@@ -60,7 +68,7 @@ export default class AdminCustomizeThemesEditController extends Controller {
           (f) => f.edited
         );
 
-        this.replaceRoute(
+        this.router.replaceWith(
           this.editRouteName,
           this.get("model.id"),
           firstTarget.name,
@@ -72,6 +80,6 @@ export default class AdminCustomizeThemesEditController extends Controller {
 
   @action
   goBack() {
-    this.replaceRoute(this.showRouteName, this.model.id);
+    this.router.replaceWith(this.showRouteName, this.model.id);
   }
 }

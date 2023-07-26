@@ -43,7 +43,10 @@ module PostGuardian
     already_did_flagging = taken.any? && (taken & PostActionType.notify_flag_types.values).any?
 
     result =
-      if authenticated? && post && !@user.anonymous?
+      if authenticated? && post
+        # Allow anonymous users to like if feature is enabled and short-circuit otherwise
+        return SiteSetting.allow_anonymous_likes? && (action_key == :like) if @user.anonymous?
+
         # Silenced users can't flag
         return false if is_flag && @user.silenced?
 
@@ -129,11 +132,7 @@ module PostGuardian
     # Must be staff to edit a locked post
     return false if post.locked? && !is_staff?
 
-    if (
-         is_staff? ||
-           (SiteSetting.trusted_users_can_edit_others? && @user.has_trust_level?(TrustLevel[4])) ||
-           is_category_group_moderator?(post.topic&.category)
-       )
+    if (is_staff? || is_in_edit_post_groups? || is_category_group_moderator?(post.topic&.category))
       return can_create_post?(post.topic)
     end
 
@@ -171,6 +170,11 @@ module PostGuardian
     end
 
     false
+  end
+
+  def is_in_edit_post_groups?
+    SiteSetting.edit_all_post_groups.present? &&
+      user.in_any_groups?(SiteSetting.edit_all_post_groups.to_s.split("|").map(&:to_i))
   end
 
   def can_edit_hidden_post?(post)

@@ -790,20 +790,18 @@ class PostsController < ApplicationController
   end
 
   def create_params
-    permitted = [
-      :raw,
-      :topic_id,
-      :archetype,
-      :category,
-      # TODO remove together with 'targetUsername' deprecations
-      :target_usernames,
-      :target_recipients,
-      :reply_to_post_number,
-      :auto_track,
-      :typing_duration_msecs,
-      :composer_open_duration_msecs,
-      :visible,
-      :draft_key,
+    permitted = %i[
+      raw
+      topic_id
+      archetype
+      category
+      target_recipients
+      reply_to_post_number
+      auto_track
+      typing_duration_msecs
+      composer_open_duration_msecs
+      visible
+      draft_key
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -891,15 +889,7 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
-    if recipients = result[:target_usernames]
-      Discourse.deprecate(
-        "`target_usernames` is deprecated, use `target_recipients` instead.",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-    else
-      recipients = result[:target_recipients]
-    end
+    recipients = result[:target_recipients]
 
     if recipients
       recipients = recipients.split(",").map(&:downcase)

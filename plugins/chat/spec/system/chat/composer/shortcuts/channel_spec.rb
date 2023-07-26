@@ -7,7 +7,6 @@ RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
-  let(:key_modifier) { RUBY_PLATFORM =~ /darwin/i ? :meta : :control }
 
   before do
     chat_system_bootstrap
@@ -55,10 +54,7 @@ RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
       )
     end
 
-    before do
-      SiteSetting.enable_experimental_chat_threaded_discussions = true
-      channel_1.update!(threading_enabled: true)
-    end
+    before { channel_1.update!(threading_enabled: true) }
 
     it "directs the shortcut to the focused composer" do
       chat.visit_channel(channel_1)

@@ -22,10 +22,13 @@ export default function interceptClick(event, target) {
   }
 
   const href = target.getAttribute("href");
+  const linkTarget = target.getAttribute("target");
+  const targetingOtherFrame = linkTarget && linkTarget !== "_self";
 
   if (
     !href ||
     href.startsWith("#") ||
+    targetingOtherFrame ||
     target.getAttribute("target") ||
     target.dataset.emberAction ||
     target.dataset.autoRoute ||

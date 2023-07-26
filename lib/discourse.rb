@@ -773,14 +773,14 @@ module Discourse
   def self.received_postgres_readonly!
     time = Time.zone.now
     redis.set(LAST_POSTGRES_READONLY_KEY, time.to_i.to_s)
-    postgres_last_read_only.clear
+    postgres_last_read_only.clear(after_commit: false)
 
     time
   end
 
   def self.clear_postgres_readonly!
     redis.del(LAST_POSTGRES_READONLY_KEY)
-    postgres_last_read_only.clear
+    postgres_last_read_only.clear(after_commit: false)
   end
 
   def self.received_redis_readonly!
@@ -1141,6 +1141,7 @@ module Discourse
         Discourse.git_version
         Discourse.git_branch
         Discourse.full_version
+        Discourse.plugins.each { |p| p.commit_url }
       end,
       Thread.new do
         require "actionview_precompiler"

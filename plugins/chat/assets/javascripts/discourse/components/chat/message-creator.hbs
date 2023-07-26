@@ -1,0 +1,141 @@
+<div class="chat-message-creator__container">
+  <div class="chat-message-creator">
+    <div
+      class="chat-message-creator__selection-container"
+      {{did-insert this.focusInput}}
+      ...attributes
+    >
+      <div class="chat-message-creator__selection">
+        <div class="chat-message-creator__search-icon-container">
+          {{d-icon "search" class="chat-message-creator__search-icon"}}
+        </div>
+
+        {{#each this.selection as |selection|}}
+          <div
+            class={{concat-class
+              "chat-message-creator__selection-item"
+              (concat "-" selection.type)
+              (if
+                (includes this.activeSelectionIdentifiers selection.identifier)
+                "-active"
+              )
+            }}
+            tabindex="-1"
+            data-id={{selection.identifier}}
+            {{on "click" (fn this.removeSelection selection.identifier)}}
+          >
+            {{component
+              (concat "chat/message-creator/" selection.type "-selection")
+              selection=selection
+            }}
+            <i
+              class="chat-message-creator__selection__remove-btn"
+              aria-hidden="true"
+            >
+              {{d-icon "times"}}
+            </i>
+          </div>
+        {{/each}}
+
+        <Input
+          class="chat-message-creator__input"
+          {{did-insert this.setQueryElement}}
+          {{on "input" this.handleInput}}
+          {{on "keydown" this.handleKeydown}}
+          placeholder={{this.placeholder}}
+          @value={{readonly this.query}}
+          @type="text"
+        />
+      </div>
+
+      <DButton
+        class="chat-message-creator__close-btn btn-flat"
+        @icon="times"
+        @action={{@onClose}}
+      />
+    </div>
+
+    {{#if this.showResults}}
+      <div class="chat-message-creator__content-container" role="presentation">
+        <div
+          class="chat-message-creator__content"
+          role="listbox"
+          aria-multiselectable="true"
+          tabindex="-1"
+        >
+          {{#if this.searchRequest.loading}}
+            <div class="chat-message-creator__loader-container">
+              <div class="chat-message-creator__loader spinner small"></div>
+            </div>
+          {{else}}
+            {{#each this.searchRequest.value as |result|}}
+              <div
+                class={{concat-class
+                  "chat-message-creator__row"
+                  (concat "-" result.type)
+                  (unless result.enabled "-disabled")
+                  (if
+                    (eq this.activeResultIdentifier result.identifier) "-active"
+                  )
+                  (if
+                    (includes this.selectionIdentifiers result.identifier)
+                    "-selected"
+                  )
+                }}
+                data-id={{result.identifier}}
+                tabindex="-1"
+                role="option"
+                {{on "click" (fn this.handleRowClick result.identifier)}}
+                {{on "mousemove" (fn (mut this.activeResult) result)}}
+                {{on "keydown" this.handleKeydown}}
+                aria-selected={{if
+                  (includes this.selectionIdentifiers result.identifier)
+                  "true"
+                  "false"
+                }}
+              >
+                {{component
+                  (concat "chat/message-creator/" result.type "-row")
+                  content=result
+                  selected=(includes
+                    this.selectionIdentifiers result.identifier
+                  )
+                  active=(eq this.activeResultIdentifier result.identifier)
+                  hasSelectedUsers=this.hasSelectedUsers
+                }}
+              </div>
+            {{else}}
+              {{#if this.query.length}}
+                <div class="chat-message-creator__no-items-container">
+                  <span class="chat-message-creator__no-items">
+                    {{i18n "chat.new_message_modal.no_items"}}
+                  </span>
+                </div>
+              {{/if}}
+            {{/each}}
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if this.showFooter}}
+      <div class="chat-message-creator__footer-container">
+        <div class="chat-message-creator__footer">
+          {{#if this.showShortcut}}
+            <div class="chat-message-creator__shortcut">
+              {{this.shortcutLabel}}
+            </div>
+          {{/if}}
+
+          {{#if this.hasSelectedUsers}}
+            <DButton
+              class="chat-message-creator__open-dm-btn btn-primary"
+              @action={{fn this.openChannel this.selection}}
+              @translatedLabel={{this.openChannelLabel}}
+            />
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+</div>

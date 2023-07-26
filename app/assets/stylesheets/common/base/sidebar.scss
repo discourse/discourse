@@ -128,6 +128,7 @@
     }
   }
 }
+
 .sidebar-section-form-modal {
   .draggable {
     display: flex;
@@ -159,9 +160,18 @@
   input.warning {
     border: 1px solid var(--danger);
   }
+  .icon.warning,
   .value.warning {
     position: absolute;
   }
+  .sidebar-section-form__input-wrapper {
+    margin-bottom: 1em;
+
+    input {
+      width: 100%;
+    }
+  }
+
   .row-wrapper {
     display: grid;
     grid-template-columns: 2em 4.5em repeat(2, 1fr) 2em;
@@ -172,9 +182,10 @@
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
     margin-bottom: -2px;
+
     &.header {
       padding-bottom: 0;
-      padding-top: 1em;
+
       label {
         margin-bottom: 0;
       }
@@ -190,6 +201,11 @@
       grid-column: 2;
     }
     &.mark-public-wrapper {
+      margin-top: 1em;
+      padding-bottom: 0;
+      &.-disabled label {
+        cursor: not-allowed;
+      }
       label {
         grid-column: 1 / -1;
       }
@@ -263,5 +279,12 @@
         }
       }
     }
+  }
+}
+
+.sidebar__panel-switch-button {
+  margin: 1em 1.3em 0 1.3em;
+  &:last-of-type {
+    margin-bottom: 1em;
   }
 }

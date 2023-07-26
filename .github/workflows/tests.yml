@@ -156,7 +156,7 @@ jobs:
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
-      - name: Run Zeitwerk check
+      - name: Check Zeitwerk eager_load
         if: matrix.build_type == 'backend'
         env:
           LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
@@ -172,9 +172,24 @@ jobs:
             exit 1
           fi
 
+      - name: Check Zeitwerk reloading
+        if: matrix.build_type == 'backend'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
+        run: |
+          if ! bin/rails runner 'Rails.application.reloader.reload!'; then
+            echo
+            echo "---------------------------------------------"
+            echo
+            echo "::error::Zeitwerk reload failed - the app will not be able to reload properly in development."
+            echo "To reproduce locally, run \`bin/rails runner 'Rails.application.reloader.reload!'\`."
+            echo
+            exit 1
+          fi
+
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose
+        run: bin/turbo_rspec --use-runtime-info --verbose --format documentation
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
@@ -191,15 +206,15 @@ jobs:
 
       - name: Setup Webdriver
         if: matrix.build_type == 'system'
-        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.update"
+        run: bin/rails runner "require 'webdrivers'; Webdrivers::Chromedriver.required_version='114.0.5735.90'; Webdrivers::Chromedriver.update"
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
-        run: PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
-        run: LOAD_PLUGINS=1 PARALLEL_TEST_PROCESSORS=5 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         timeout-minutes: 30
 
       - name: Upload failed system test screenshots

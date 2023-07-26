@@ -13,6 +13,7 @@ class Plugin::Metadata
         "Canned Replies",
         "discourse-adplugin",
         "discourse-affiliate",
+        "discourse-ai",
         "discourse-akismet",
         "discourse-algolia",
         "discourse-apple-auth",

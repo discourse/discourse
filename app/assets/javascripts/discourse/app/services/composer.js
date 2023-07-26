@@ -34,6 +34,7 @@ import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
+import DiscardDraftModal from "discourse/components/modal/discard-draft";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -100,6 +101,8 @@ export default class ComposerController extends Controller {
   @service site;
   @service store;
   @service appEvents;
+  @service capabilities;
+  @service modal;
 
   checkedMessages = false;
   messageCount = null;
@@ -126,10 +129,6 @@ export default class ComposerController extends Controller {
 
   get topicController() {
     return getOwner(this).lookup("controller:topic");
-  }
-
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
   }
 
   @on("init")
@@ -237,10 +236,6 @@ export default class ComposerController extends Controller {
 
   @discourseComputed("model.canEditTitle", "model.creatingPrivateMessage")
   canEditTags(canEditTitle, creatingPrivateMessage) {
-    if (creatingPrivateMessage && this.site.mobileView) {
-      return false;
-    }
-
     const isPrivateMessage =
       creatingPrivateMessage || this.get("model.topic.isPrivateMessage");
 
@@ -1301,7 +1296,7 @@ export default class ComposerController extends Controller {
           }
         }
 
-        await this.cancelComposer();
+        await this.cancelComposer(opts);
         await this.open(opts);
         return;
       }
@@ -1496,7 +1491,7 @@ export default class ComposerController extends Controller {
     });
   }
 
-  cancelComposer() {
+  cancelComposer(opts = {}) {
     this.skipAutoSave = true;
 
     if (this._saveDraftDebounce) {
@@ -1505,28 +1500,32 @@ export default class ComposerController extends Controller {
 
     return new Promise((resolve) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const modal = showModal("discard-draft", {
-          model: this.model,
-          modalClass: "discard-draft-modal",
-        });
-        modal.setProperties({
-          onDestroyDraft: () => {
-            return this.destroyDraft()
-              .then(() => {
-                this.model.clearState();
-                this.close();
-              })
-              .finally(() => {
-                this.appEvents.trigger("composer:cancelled");
-                resolve();
-              });
-          },
-          onSaveDraft: () => {
-            this._saveDraft();
-            this.model.clearState();
-            this.close();
-            this.appEvents.trigger("composer:cancelled");
-            return resolve();
+        const overridesDraft =
+          this.model.composeState === Composer.OPEN &&
+          this.model.draftKey === opts.draftKey &&
+          [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
+        const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
+        this.modal.show(DiscardDraftModal, {
+          model: {
+            showSaveDraftButton,
+            onDestroyDraft: () => {
+              return this.destroyDraft()
+                .then(() => {
+                  this.model.clearState();
+                  this.close();
+                })
+                .finally(() => {
+                  this.appEvents.trigger("composer:cancelled");
+                  resolve();
+                });
+            },
+            onSaveDraft: () => {
+              this._saveDraft();
+              this.model.clearState();
+              this.close();
+              this.appEvents.trigger("composer:cancelled");
+              return resolve();
+            },
           },
         });
       } else {

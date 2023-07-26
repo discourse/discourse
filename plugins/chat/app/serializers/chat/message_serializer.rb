@@ -2,24 +2,31 @@
 
 module Chat
   class MessageSerializer < ::ApplicationSerializer
-    attributes :id,
-               :message,
-               :cooked,
-               :created_at,
-               :excerpt,
-               :deleted_at,
-               :deleted_by_id,
-               :reviewable_id,
-               :user_flag_status,
-               :edited,
-               :reactions,
-               :bookmark,
-               :available_flags,
-               :thread_id,
-               :thread_reply_count,
-               :thread_title,
-               :chat_channel_id,
-               :mentioned_users
+    BASIC_ATTRIBUTES = %i[
+      id
+      message
+      cooked
+      created_at
+      excerpt
+      deleted_at
+      deleted_by_id
+      thread_id
+      chat_channel_id
+    ]
+    attributes(
+      *(
+        BASIC_ATTRIBUTES +
+          %i[
+            mentioned_users
+            reactions
+            bookmark
+            available_flags
+            user_flag_status
+            reviewable_id
+            edited
+          ]
+      ),
+    )
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
     has_one :chat_webhook_event, serializer: Chat::WebhookEventSerializer, embed: :objects
@@ -104,8 +111,12 @@ module Chat
       object.revisions.any?
     end
 
+    def created_at
+      object.created_at.iso8601
+    end
+
     def deleted_at
-      object.user ? object.deleted_at : Time.zone.now
+      object.user ? object.deleted_at.iso8601 : Time.zone.now
     end
 
     def deleted_by_id
@@ -166,23 +177,11 @@ module Chat
     end
 
     def include_threading_data?
-      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+      channel.threading_enabled
     end
 
     def include_thread_id?
       include_threading_data?
-    end
-
-    def include_thread_reply_count?
-      include_threading_data? && object.thread_id.present?
-    end
-
-    def thread_reply_count
-      object.thread&.replies_count_cache || 0
-    end
-
-    def thread_title
-      object.thread&.title
     end
   end
 end

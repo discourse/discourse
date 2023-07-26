@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Thread do
-  before do
-    SiteSetting.chat_enabled = true
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
-  end
+  before { SiteSetting.chat_enabled = true }
 
   describe ".ensure_consistency!" do
     fab!(:channel) { Fabricate(:category_channel) }
@@ -63,12 +60,6 @@ RSpec.describe Chat::Thread do
       it "does not attempt to clear caches if no replies_count caches are updated" do
         described_class.ensure_consistency!
         Chat::Thread.expects(:clear_caches!).never
-        described_class.ensure_consistency!
-      end
-
-      it "does nothing if threads are disabled" do
-        SiteSetting.enable_experimental_chat_threaded_discussions = false
-        Chat::Thread.expects(:update_counts).never
         described_class.ensure_consistency!
       end
     end
@@ -211,6 +202,35 @@ RSpec.describe Chat::Thread do
           )
         end
       end
+    end
+  end
+
+  describe "#latest_not_deleted_message_id" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel, old_om: true) }
+    fab!(:old_message) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+
+    before { old_message.update!(created_at: 1.day.ago) }
+
+    it "accepts an anchor message to only get messages of a lower id" do
+      expect(thread.latest_not_deleted_message_id(anchor_message_id: message_1.id)).to eq(
+        old_message.id,
+      )
+    end
+
+    it "gets the latest message by created_at" do
+      expect(thread.latest_not_deleted_message_id).to eq(message_1.id)
+    end
+
+    it "does not get other channel messages" do
+      Fabricate(:chat_message)
+      expect(thread.latest_not_deleted_message_id).to eq(message_1.id)
+    end
+
+    it "does not get deleted messages" do
+      message_1.trash!
+      expect(thread.latest_not_deleted_message_id).to eq(old_message.id)
     end
   end
 end

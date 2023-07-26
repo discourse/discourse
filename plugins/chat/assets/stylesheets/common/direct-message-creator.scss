@@ -40,7 +40,7 @@
     margin: 1px 0.25rem 0.25rem 1px;
     padding: 0.25rem 0.5rem 0.25rem 0.25rem;
     background: var(--primary-very-low);
-    border-radius: 8px;
+    border-radius: var(--d-border-radius-large);
     border: 1px solid var(--primary-300);
     align-items: center;
     display: flex;
@@ -129,7 +129,7 @@
       padding: 0.25em 0.5em;
       margin: 0.25rem;
       align-items: center;
-      border-radius: 4px;
+      border-radius: var(--d-border-radius);
 
       .user-info {
         margin: 0;

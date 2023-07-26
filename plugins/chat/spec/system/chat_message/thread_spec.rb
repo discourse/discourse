@@ -18,7 +18,6 @@ RSpec.describe "Chat message - thread", type: :system do
     channel_1.update!(threading_enabled: true)
     channel_1.add(current_user)
     channel_1.add(other_user)
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     sign_in(current_user)
   end
 
@@ -30,7 +29,7 @@ RSpec.describe "Chat message - thread", type: :system do
       thread_page.hover_message(first_message)
 
       expect(page).to have_css(
-        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{first_message.id}'].chat-message-container.is-active",
+        ".chat-thread[data-id='#{thread_1.id}'] [data-id='#{first_message.id}'].chat-message-container.-active",
       )
     end
   end

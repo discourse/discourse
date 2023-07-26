@@ -1575,8 +1575,7 @@ da:
       save: "Gem"
       remove_status: "Fjern status"
     user_tips:
-      primary: "Forstået!"
-      secondary: "vis mig ikke disse tips"
+      button: "Forstået!"
       post_menu:
         content: "Se, hvordan du ellers kan interagere med indlægget ved at klikke på de tre prikker!"
       topic_notification_levels:
@@ -1643,13 +1642,11 @@ da:
       hide_forever: "nej tak"
       intro: "Hej! Det ser ud til, at du nyder diskussionen, men du har ikke tilmeldt dig en konto endnu."
     summary:
-      enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description:
         one: "Der er <b>%{count}</b> svar."
         other: "Der er <b>%{count}</b> svar."
       description_time_MF: |
         Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>.
-      enable: "Opsummér dette emne"
       disable: "Vis alle indlæg"
     deleted_filter:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
@@ -2915,7 +2912,6 @@ da:
       filtered_replies:
         viewing_posts_by: "Viser %{post_count} indlæg af"
         viewing_subset: "Nogle svar er foldet sammen"
-        viewing_summary: "Viser en oversigt over dette emne"
         post_number: "%{username}, indlæg #%{post_number}"
         show_all: "Vis alle"
       share:
@@ -3269,6 +3265,9 @@ da:
       close: "Luk (Esc)"
       content_load_error: '<a href="%url%">Indholdet</a> kunne ikke indlæses.'
       image_load_error: '<a href="%url%">Billedet</a> kunne ikke indlæses.'
+    experimental_lightbox:
+      buttons:
+        close: "Luk (Esc)"
     cannot_render_video: Denne video kan ikke afspilles, fordi din browser ikke understøtter codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3571,8 +3570,9 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
-      categories_form:
-        save: "Gem"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alle"
       sections:
         custom:
           save: "Gem"
@@ -3598,9 +3598,6 @@ da:
             unread_with_count: "Ulæst (%{count})"
             archive: "Arkiv"
         tags:
-          links:
-            add_tags:
-              content: "Tilføj mærker"
           click_to_get_started: "Klik her for at komme i gang."
           header_link_text: "Tags"
           configure_defaults: "Konfigurer standardindstillinger"
@@ -3609,7 +3606,8 @@ da:
           header_link_text: "Kategorier"
           configure_defaults: "Konfigurer standardindstillinger"
         community:
-          header_link_text: "Fællesskab"
+          edit_section:
+            header_dropdown: "Tilpasning"
           links:
             about:
               content: "Om"
@@ -3617,8 +3615,8 @@ da:
               content: "Admin"
             badges:
               content: "Emblemer"
-            everything:
-              content: "Alting"
+            topics:
+              content: "Emner"
             faq:
               content: "OSS"
             groups:
@@ -3631,6 +3629,11 @@ da:
             review:
               content: "Anmeldelse"
     until: "Indtil:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Indtast venligst en gyldig værdi."
+          email: "Indtast venligst en gyldig email adresse."
   admin_js:
     type_to_filter: "skriv for at filtrere…"
     admin:
@@ -4940,6 +4943,8 @@ da:
         show_overriden: "Vis kun tilsidesatte"
         locale: "Sprog:"
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."
+        outdated:
+          dismiss: "Ignorer Alle"
       settings:
         show_overriden: "Vis kun tilsidesatte"
         history: "Vis ændringshistorik"

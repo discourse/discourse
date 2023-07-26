@@ -51,16 +51,6 @@ describe "Composer Form Template Validations", type: :system, js: true do
   end
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:composer) { PageObjects::Components::Composer.new }
-
-  let(:error_types) do
-    {
-      required_error: "Please fill out this field.",
-      type_error: "Please include an '@' in the email address. 'Bruce Wayne' is missing an '@'.",
-      min_error:
-        "Please lengthen this text to 10 characters or more (you are currently using 7 characters).",
-      pattern_error: "Please match the requested format.",
-    }
-  end
   let(:topic_title) { "A topic about Batman" }
 
   before do
@@ -68,12 +58,20 @@ describe "Composer Form Template Validations", type: :system, js: true do
     sign_in user
   end
 
+  it "shows an asterisk on the label of the required fields" do
+    category_page.visit(category_with_template)
+    category_page.new_topic_button.click
+    expect(composer).to have_form_template_field_required_indicator("input")
+  end
+
   it "shows an error when a required input is not filled in" do
     category_page.visit(category_with_template)
     category_page.new_topic_button.click
     composer.fill_title(topic_title)
     composer.create
-    expect(composer).to have_form_template_field_error(error_types[:required_error])
+    expect(composer).to have_form_template_field_error(
+      I18n.t("js.form_templates.errors.valueMissing.default"),
+    )
   end
 
   it "shows an error when an input filled doesn't satisfy the type expected" do
@@ -82,7 +80,9 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.fill_title(topic_title)
     composer.create
     composer.fill_form_template_field("input", "Bruce Wayne")
-    expect(composer).to have_form_template_field_error(error_types[:type_error])
+    expect(composer).to have_form_template_field_error(
+      I18n.t("js.form_templates.errors.typeMismatch.email"),
+    )
   end
 
   it "shows an error when an input doesn't satisfy the min length expected" do
@@ -91,7 +91,9 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.fill_title(topic_title)
     composer.create
     composer.fill_form_template_field("input", "b@b.com")
-    expect(composer).to have_form_template_field_error(error_types[:min_error])
+    expect(composer).to have_form_template_field_error(
+      I18n.t("js.form_templates.errors.tooShort", minLength: 10),
+    )
   end
 
   it "shows an error when an input doesn't satisfy the requested pattern" do
@@ -100,6 +102,8 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "www.example.com")
     composer.create
-    expect(composer).to have_form_template_field_error(error_types[:pattern_error])
+    expect(composer).to have_form_template_field_error(
+      I18n.t("js.form_templates.errors.patternMismatch"),
+    )
   end
 end

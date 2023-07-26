@@ -9,6 +9,10 @@ class SiteCategorySerializer < BasicCategorySerializer
 
   has_many :category_required_tag_groups, key: :required_tag_groups, embed: :objects
 
+  def form_template_ids
+    object.form_template_ids.sort
+  end
+
   def include_allowed_tags?
     SiteSetting.tagging_enabled
   end

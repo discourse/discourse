@@ -1,0 +1,62 @@
+.topic-map {
+  .toggle-summary {
+    .summarization-buttons {
+      display: flex;
+    }
+
+    .placeholder-summary {
+      padding-top: 0.5em;
+    }
+
+    .placeholder-summary-text {
+      display: inline-block;
+      height: 1em;
+      margin-top: 0.6em;
+      width: 100%;
+    }
+
+    .placeholder-generating-summary-text {
+      display: inline-block;
+      margin-left: 3px;
+    }
+
+    .ai-summarizing-indicator__wave {
+      flex: 0 0 auto;
+      display: inline-flex;
+    }
+
+    .ai-summarizing-indicator__dot {
+      display: inline-block;
+      animation: ai-summarizing-indicator__wave 1.8s linear infinite;
+      &:nth-child(2) {
+        animation-delay: -1.6s;
+      }
+      &:nth-child(3) {
+        animation-delay: -1.4s;
+      }
+    }
+
+    .summarized-on {
+      text-align: right;
+
+      .info-icon {
+        margin-left: 3px;
+      }
+    }
+
+    .outdated-summary {
+      color: var(--primary-medium);
+    }
+  }
+}
+
+@keyframes ai-summarizing-indicator__wave {
+  0%,
+  60%,
+  100% {
+    transform: initial;
+  }
+  30% {
+    transform: translateY(-0.2em);
+  }
+}

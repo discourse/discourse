@@ -57,6 +57,12 @@ id:
         all_new: "Semua Pesan Baru"
         never: "Tidak pernah"
       join: "Gabung"
+      summarization:
+        title: "Meringkas pesan"
+        description: "Pilih opsi di bawah untuk meringkas percakapan yang dikirim selama jangka waktu yang diinginkan."
+        summarize: "Meringkas"
+        since:
+          other: "%{count} jam terakhir"
       mention_warning:
         dismiss: "bubar"
       reply: "Balas"
@@ -81,10 +87,23 @@ id:
           about: Tentang
           members: Anggota
           settings: Pengaturan
+      new_message_modal:
+        title: Kirim pesan
+        add_user_long: <kbd>shift + click</kbd> atau <kbd>shift + enter</kbd><span>Tambahkan @%{username}</span>
+        add_user_short: <span>Tambahkan pengguna</span>
+        open_channel: <span>Buka saluran</span>
+        default_search_placeholder: "#a-channel, @somebody atau apapun"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@somebody"
+        user_search_placeholder: "...menambahkan lebih banyak pengguna"
+        disabled_user: "telah menonaktifkan obrolan"
+        no_items: "Tidak ada item"
       direct_message_creator:
         title: Pesan Baru
         prefix: "Kepada:"
       create_channel:
+        threading:
+          label: "Aktifkan threading"
         type: "Tipe"
         types:
           category: "Kategori"
@@ -92,13 +111,23 @@ id:
       notification_levels:
         never: "Tidak pernah"
       settings:
+        channel_threading_label: "Threading"
+        channel_threading_description: "Ketika threading diaktifkan, balasan ke pesan obrolan akan membuat percakapan terpisah, yang akan ada di samping saluran utama."
         follow: "Gabung"
         followed: "Joined"
+        threading_enabled: "Diaktifkan"
+        threading_disabled: "Dinonaktifkan"
         notifications: "Pemberitahuan"
         save: "Simpan"
         saved: "Tersimpan"
         unfollow: "Keluar"
         admin_title: "Admin"
+      admin:
+        export_messages:
+          title: "Ekspor pesan obrolan"
+          description: "Ekspor saat ini dibatasi hingga 10.000 pesan terbaru dalam 6 bulan terakhir."
+          create_export: "Buat ekspor"
+          export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       incoming_webhooks:
         delete: "Hapus"
         name: "Name"
@@ -122,6 +151,15 @@ id:
           started_by: "Dimulai oleh"
         settings: "Pengaturan"
         last_reply: "balasan terakhir"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+          tracking:
+            title: "Pelacakan"
+            description: "Jumlah balasan baru untuk utas ini akan ditampilkan di daftar utas dan kanal. Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+        participants_other_count:
+          other: "+%{count}"
       threads:
         list: "Diskusi yang sedang berlangsung"
         none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."

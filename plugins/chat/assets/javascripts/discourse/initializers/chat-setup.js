@@ -18,7 +18,9 @@ export default {
   before: "hashtag-css-generator",
 
   initialize(container) {
+    this.router = container.lookup("service:router");
     this.chatService = container.lookup("service:chat");
+    this.chatHistory = container.lookup("service:chat-history");
     this.site = container.lookup("service:site");
     this.siteSettings = container.lookup("service:site-settings");
     this.currentUser = container.lookup("service:current-user");
@@ -30,6 +32,13 @@ export default {
     }
 
     withPluginApi("0.12.1", (api) => {
+      api.onPageChange((path) => {
+        const route = this.router.recognize(path);
+        if (route.name.startsWith("chat.")) {
+          this.chatHistory.visit(route);
+        }
+      });
+
       api.registerHashtagType("channel", new ChannelHashtagType(container));
 
       api.registerChatComposerButton({
@@ -90,7 +99,7 @@ export default {
       const summarizationAllowedGroups =
         this.siteSettings.custom_summarization_allowed_groups
           .split("|")
-          .map(parseInt);
+          .map((id) => parseInt(id, 10));
 
       const canSummarize =
         this.siteSettings.summarization_strategy &&

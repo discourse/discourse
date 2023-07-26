@@ -1,4 +1,4 @@
-{{#if (and @message.newest (not @message.firstMessageOfTheDayAt))}}
+{{#if (and @message.newest (not @message.formattedFirstMessageDate))}}
   <div class="chat-message-separator-new">
     <div class="chat-message-separator__text-container">
       <span class="chat-message-separator__text">

@@ -18,12 +18,13 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
   describe "reply to message" do
     it "renders text in the details" do
       message_1.update!(message: "<mark>not marked</mark>")
+      message_1.rebake!
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(message_1)
 
       expect(channel_page.composer.message_details).to have_message(
         id: message_1.id,
-        exact_text: "not marked",
+        exact_text: "<mark>not marked</mark>",
       )
     end
 
@@ -37,10 +38,7 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
     end
 
     context "when threading is enabled" do
-      before do
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-        channel_1.update!(threading_enabled: true)
-      end
+      before { channel_1.update!(threading_enabled: true) }
 
       it "replies in the thread" do
         chat_page.visit_channel(channel_1)

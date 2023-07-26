@@ -55,6 +55,42 @@
         @include ellipsis;
         display: inline-block;
       }
+
+      .select-kit-header--filter {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -0.25em;
+        margin-bottom: -0.45em;
+        position: relative;
+        .selected-choice {
+          margin: 0 0.25em 0.25em 0;
+          padding: 0.2em 0.3em;
+          font-size: var(--font-down-1);
+
+          &.selected-choice-color {
+            border-bottom: 2px solid transparent;
+          }
+        }
+
+        .select-kit-filter {
+          display: inline-flex;
+          flex: 1 1 30px;
+          width: auto;
+          margin-left: 0.25em;
+          position: static;
+          &.is-expanded {
+            padding: 0;
+          }
+          .filter-input {
+            font-size: var(--font-down-1);
+            min-height: 28px;
+            flex: 1;
+            display: block;
+            border: none;
+            min-width: 0;
+          }
+        }
+      }
     }
 
     &.is-expanded .multi-select-header,

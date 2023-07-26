@@ -327,10 +327,9 @@ RSpec.describe UsersController do
       end
 
       context "with rate limiting" do
-        before do
-          RateLimiter.clear_all!
-          RateLimiter.enable
-        end
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
 
         it "rate limits reset passwords" do
           freeze_time
@@ -907,7 +906,7 @@ RSpec.describe UsersController do
           SiteSetting.send_welcome_message = true
           SiteSetting.must_approve_users = true
 
-          #Sidekiq::Client.expects(:enqueue).never
+          # Sidekiq::Client.expects(:enqueue).never
           post "/u.json",
                params: post_user_params.merge(approved: true, active: true),
                headers: {
@@ -1630,6 +1629,33 @@ RSpec.describe UsersController do
         created_user.reload
         expect(created_user.email).to eq("staged@account.com")
         expect(response.status).to eq(403)
+      end
+
+      it "works with custom fields" do
+        tennis_field = Fabricate(:user_field, show_on_profile: true, name: "Favorite tennis player")
+
+        post "/u.json",
+             params:
+               honeypot_magic(
+                 email: staged.email,
+                 username: "dude",
+                 password: "P4ssw0rd$$",
+                 user_fields: {
+                   [tennis_field.id] => "Nadal",
+                 },
+               )
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result["success"]).to eq(true)
+
+        created_user = User.find_by_email(staged.email)
+        expect(created_user.staged).to eq(false)
+        expect(created_user.active).to eq(false)
+        expect(created_user.registration_ip_address).to be_present
+        expect(!!created_user.custom_fields["from_staged"]).to eq(true)
+
+        expect(created_user.custom_fields["user_field_#{tennis_field.id}"]).to eq("Nadal")
       end
     end
   end
@@ -4179,6 +4205,8 @@ RSpec.describe UsersController do
     end
 
     context "with a session variable" do
+      use_redis_snapshotting
+
       it "raises an error with an invalid session value" do
         post_user
 
@@ -4250,7 +4278,6 @@ RSpec.describe UsersController do
 
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
-        RateLimiter.clear_all!
         freeze_time
 
         user = post_user
@@ -4352,7 +4379,6 @@ RSpec.describe UsersController do
 
       it "tells the user to slow down after many requests" do
         RateLimiter.enable
-        RateLimiter.clear_all!
         freeze_time
 
         user = inactive_user
@@ -4951,6 +4977,51 @@ RSpec.describe UsersController do
           DiscoursePluginRegistry.reset!
         end
 
+        it "allows plugins to use apply modifiers to the groups filter" do
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+
+          expect(response.status).to eq(200)
+          initial_groups = response.parsed_body["groups"]
+          expect(initial_groups.count).to eq(6)
+
+          Plugin::Instance
+            .new
+            .register_modifier(:groups_for_users_search) do |groups|
+              groups.where(name: initial_groups.first["name"])
+            end
+
+          get "/u/search/users.json", params: { include_groups: "true", term: "a" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["groups"].count).to eq(1)
+
+          DiscoursePluginRegistry.reset!
+        end
+
+        it "works when the modifier to the groups filter introduces a join with a conflicting name fields like `id` for example" do
+          %i[
+            include_groups
+            include_mentionable_groups
+            include_messageable_groups
+          ].each do |param_name|
+            get "/u/search/users.json", params: { param_name => "true", :term => "a" }
+
+            expect(response.status).to eq(200)
+
+            Plugin::Instance
+              .new
+              .register_modifier(:groups_for_users_search) do |groups|
+                # a join with a conflicting name field (id) is introduced here
+                # we expect the query to work correctly
+                groups.left_joins(:users).where(users: { admin: true })
+              end
+
+            get "/u/search/users.json", params: { param_name => "true", :term => "a" }
+            expect(response.status).to eq(200) # the conflict would cause a 500 error
+
+            DiscoursePluginRegistry.reset!
+          end
+        end
+
         it "doesn't search for groups" do
           get "/u/search/users.json",
               params: {
@@ -5279,6 +5350,8 @@ RSpec.describe UsersController do
   describe "#enable_second_factor_totp" do
     before { sign_in(user1) }
 
+    use_redis_snapshotting
+
     def create_totp
       stub_secure_session_confirmed
       post "/users/create_second_factor_totp.json"
@@ -5301,7 +5374,6 @@ RSpec.describe UsersController do
 
     it "rate limits by IP address" do
       RateLimiter.enable
-      RateLimiter.clear_all!
 
       create_totp
       staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
@@ -5320,7 +5392,6 @@ RSpec.describe UsersController do
 
     it "rate limits by username" do
       RateLimiter.enable
-      RateLimiter.clear_all!
 
       create_totp
       staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
@@ -5673,6 +5744,7 @@ RSpec.describe UsersController do
           Class
             .new(Auth::Authenticator) do
               attr_accessor :can_revoke
+
               def name
                 "testprovider"
               end

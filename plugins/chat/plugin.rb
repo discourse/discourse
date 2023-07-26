@@ -32,6 +32,7 @@ module ::Chat
 end
 
 require_relative "lib/chat/engine"
+require_relative "lib/chat/types/array"
 
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
@@ -63,6 +64,7 @@ after_initialize do
     User.prepend Chat::UserExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
+    Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
@@ -235,6 +237,15 @@ after_initialize do
 
   add_to_serializer(:current_user, :chat_channels) do
     structured = Chat::ChannelFetcher.structured(self.scope)
+
+    structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
+      guardian: self.scope,
+      channel_ids: structured[:public_channels].map(&:id),
+      include_threads: true,
+      include_read: false,
+      include_last_reply_details: true,
+    ).thread_unread_overview_by_channel
+
     Chat::ChannelIndexSerializer.new(structured, scope: self.scope, root: false).as_json
   end
 

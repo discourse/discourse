@@ -148,6 +148,7 @@ export default function (options) {
 
   function closeAutocomplete() {
     _autoCompletePopper?.destroy();
+    options.onClose && options.onClose();
 
     if (div) {
       div.hide().remove();
@@ -402,6 +403,10 @@ export default function (options) {
 
     if (options.scrollElementSelector) {
       scrollElement = div.find(options.scrollElementSelector);
+    }
+
+    if (options.onRender) {
+      options.onRender(autocompleteOptions);
     }
 
     if (isInput || options.treatAsTextarea) {

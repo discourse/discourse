@@ -1,0 +1,26 @@
+<DModal
+  @closeModal={{@closeModal}}
+  class="chat-modal-thread-settings"
+  @inline={{@inline}}
+  @title={{i18n "chat.thread.settings"}}
+>
+  <:body>
+    <label for="thread-title" class="thread-title-label">
+      {{i18n "chat.thread.title"}}
+    </label>
+    <Input
+      name="thread-title"
+      class="chat-modal-thread-settings__title-input"
+      @type="text"
+      @value={{this.editedTitle}}
+    />
+  </:body>
+  <:footer>
+    <DButton
+      @class="btn-primary"
+      @disabled={{this.buttonDisabled}}
+      @action={{this.saveThread}}
+      @label="save"
+    />
+  </:footer>
+</DModal>

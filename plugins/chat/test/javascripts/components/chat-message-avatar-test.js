@@ -14,7 +14,7 @@ module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
       chat_webhook_event: { emoji: ":heart:" },
     });
 
-    await render(hbs`<ChatMessageAvatar @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Avatar @message={{this.message}} />`);
 
     assert.strictEqual(query(".chat-emoji-avatar .emoji").title, "heart");
   });
@@ -24,7 +24,7 @@ module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
       user: { username: "discobot" },
     });
 
-    await render(hbs`<ChatMessageAvatar @message={{this.message}} />`);
+    await render(hbs`<Chat::Message::Avatar @message={{this.message}} />`);
 
     assert.true(exists('.chat-user-avatar [data-user-card="discobot"]'));
   });
