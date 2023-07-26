@@ -61,7 +61,6 @@ const KNOWN_LEGACY_MODALS = [
   "admin-theme-item",
   "admin-color-scheme-select-base",
   "admin-form-template-validation-options",
-  "admin-merge-users-progress",
   "admin-staff-action-log-details",
   "admin-uploaded-image-list",
 ];
