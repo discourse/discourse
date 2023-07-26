@@ -157,7 +157,7 @@ de:
       removed_user: "Hat %{who} entfernt, %{when}"
       removed_group: "Hat %{who} entfernt, %{when}"
       autobumped: "Thema wurde automatisch nach oben geschoben, %{when}"
-      tags_changed: "Tags aktualisiert %{when}"
+      tags_changed: "Schlagwörter aktualisiert %{when}"
       category_changed: "Kategorie aktualisiert %{when}"
       autoclosed:
         enabled: "Geschlossen, %{when}"
@@ -189,6 +189,7 @@ de:
     software_update_prompt:
       message: "Wir haben ein Update dieser Website durchgeführt. <span>Bitte aktualisiere</span>, da es sonst zu unerwartetem Verhalten kommen kann."
       dismiss: "Verwerfen"
+    bootstrap_mode: "Erste Schritte"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Deine Website funktioniert vielleicht nicht, weil ein Theme/eine Komponente Fehler hat."
@@ -301,7 +302,7 @@ de:
       edit_bookmark: "Lesezeichen bearbeiten"
       clear_bookmarks: "Lesezeichen entfernen"
       help:
-        bookmark: "Klicken, um dieses Thema mit einem Lesezeichen zu markieren"
+        bookmark: "Klicke, um dieses Thema mit einem Lesezeichen zu markieren"
         edit_bookmark: "Klicke, um das Lesezeichen für einen Beitrag in diesem Thema zu bearbeiten"
         edit_bookmark_for_topic: "Klicke, um das Lesezeichen für dieses Thema zu bearbeiten"
         unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
@@ -349,7 +350,7 @@ de:
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
       abandon:
-        confirm: "Du hast bereits einen Entwurf in Arbeit. Was möchtest du gerne damit machen?"
+        confirm: "Du hast bereits einen Entwurf in Arbeit. Was möchtest du damit machen?"
         yes_value: "Verwerfen"
         no_value: "Bearbeitung fortsetzen"
     topic_count_categories:
@@ -524,7 +525,7 @@ de:
       scores:
         about: "Dieser Score wird basierend auf der Vertrauensstufe des Meldenden, der Richtigkeit der vorhergehenden Meldungen sowie der Priorität des gemeldeten Elements berechnet."
         score: "Score"
-        date: "Berichtsdatum"
+        date: "Datum der Meldung"
         type: "Grund"
         status: "Status"
         submitted_by: "Gemeldet von"
@@ -560,7 +561,7 @@ de:
       context_question:
         is_this_post: "Ist dieser Beitrag %{reviewable_human_score_types}?"
         delimiter: "oder"
-        something_else_wrong: "Ist an diesem Beitrag etwas falsch?"
+        something_else_wrong: "Stimmt etwas mit diesem Beitrag nicht?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -999,10 +1000,10 @@ de:
       edit: "Einstellungen bearbeiten"
       download_archive:
         title: "Exportiere deine Daten"
-        description: "Lade ein Archiv deiner Kontoaktivitäten und Präferenzen herunter."
+        description: "Lade ein Archiv deiner Kontoaktivitäten und Einstellungen herunter."
         button_text: "Archiv anfordern"
-        confirm: "Willst du wirklich ein Archiv deiner Kontoaktivitäten und Einstellungen herunterladen?"
-        success: "Wir haben mit dem Sammeln deines Archivs begonnen. Du erhältst eine Nachricht, wenn der Vorgang abgeschlossen ist."
+        confirm: "Möchtest du wirklich ein Archiv deiner Kontoaktivitäten und Einstellungen herunterladen?"
+        success: "Wir haben mit dem Zusammentragen deines Archivs begonnen. Du erhältst eine Nachricht, wenn der Vorgang abgeschlossen ist."
         rate_limit_error: "Kontoarchive können nur einmal pro Tag heruntergeladen werden, bitte versuche es morgen noch einmal."
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
@@ -1128,9 +1129,9 @@ de:
         enable: "Seitenleiste aktivieren"
         options: "Optionen"
         navigation_section: "Navigation"
-        navigation_section_instruction: "Wenn eine Themenliste im Navigationsmenü neue oder ungelesene Einträge enthält…"
-        link_to_filtered_list_checkbox_description: "Link zur gefilterten Liste"
-        show_count_new_items_checkbox_description: "Zählung der neuen Artikel anzeigen"
+        navigation_section_instruction: "Wenn eine Themenliste im Navigationsmenü neue oder ungelesene Elemente enthält …"
+        link_to_filtered_list_checkbox_description: "Gefilterte Liste verlinken"
+        show_count_new_items_checkbox_description: "Zähler für die neuen Elemente anzeigen"
       change: "ändern"
       featured_topic: "Hervorgehobenes Thema"
       moderator: "%{user} ist ein Moderator"
@@ -1169,7 +1170,7 @@ de:
       watched_first_post_categories_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
       watched_first_post_tags: "Ersten Beitrag beobachten"
       watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
-      watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
+      watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder mit Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden auch nicht in der Liste der Kategorien oder der aktuellen Themen erscheinen."
       muted_categories_instructions_dont_hide: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien."
@@ -1203,8 +1204,8 @@ de:
       staged: "Vorbereitet"
       staff_counters:
         flags_given:
-          one: '<span class="%{className}">%{count}</span> hilfreiche Flagge'
-          other: '<span class="%{className}">%{count}</span> hilfreiche Flaggen'
+          one: '<span class="%{className}">%{count}</span> hilfreiche Meldung'
+          other: '<span class="%{className}">%{count}</span> hilfreiche Meldungen'
         flagged_posts:
           one: '<span class="%{className}">%{count}</span> gemeldeter Beitrag'
           other: '<span class="%{className}">%{count}</span> gemeldete Beiträge'
@@ -1212,8 +1213,8 @@ de:
           one: '<span class="%{className}">%{count}</span> gelöschter Beitrag'
           other: '<span class="%{className}">%{count}</span> gelöschte Beiträge'
         suspensions:
-          one: '<span class="%{className}">%{count}</span> Suspendierung'
-          other: '<span class="%{className}">%{count}</span> Suspendierungen'
+          one: '<span class="%{className}">%{count}</span> Sperre'
+          other: '<span class="%{className}">%{count}</span> Sperren'
         warnings_received:
           one: '<span class="%{className}">%{count}</span> Warnung'
           other: '<span class="%{className}">%{count}</span> Warnungen'
@@ -1770,8 +1771,7 @@ de:
       pause_notifications: "Benachrichtigungen pausieren"
       remove_status: "Status entfernen"
     user_tips:
-      primary: "Verstanden!"
-      secondary: "diese Tipps nicht anzeigen"
+      button: "Verstanden!"
       first_notification:
         title: "Deine erste Benachrichtigung!"
         content: "Benachrichtigungen dienen dazu, dich auf dem Laufenden zu halten, was in der Community passiert."
@@ -1787,6 +1787,10 @@ de:
       suggested_topics:
         title: "Lies weiter!"
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
+      admin_guide:
+        title: "Willkommen auf deiner neuen Website!"
+        content: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
+        button: "Los geht's!"
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -1854,19 +1858,27 @@ de:
       no_internet: "Keine Internetverbindung."
       refresh_page: "Seite aktualisieren"
     summary:
-      enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
+      in_progress: "Thema wird mithilfe von KI zusammengefasst …"
+      summarized_on: "Zusammengefasst mit KI am %{date}"
+      model_used: "KI verwendet: %{model}"
+      outdated: "Zusammenfassung ist veraltet"
+      outdated_posts:
+        one: "(%{count} Beitrag fehlt)"
+        other: "(%{count} Beiträge fehlen)"
+      enabled_description: "Du siehst dir die Top-Antworten zu diesem Thema an: die interessantesten Beiträge, die von der Community ermittelt wurden."
       description:
         one: "Es gibt <b>%{count}</b> Antwort."
         other: "Es gibt <b>%{count}</b> Antworten."
+      buttons:
+        hide: "Zusammenfassung ausblenden"
+        generate: "Zusammenfassen mit KI"
+        regenerate: "Zusammenfassung neu generieren"
       description_time_MF: |
         Es gibt {replyCount, plural, one {<b>#</b> Antwort} other {<b>#</b> Antworten}} mit einer geschätzten Lesezeit von <b>{readingTime, plural, one {# Minute} other {# Minuten}}</b>.
       enable: "Top-Antworten anzeigen"
       disable: "Alle Beiträge anzeigen"
-      short_label: "Zusammenfassen"
-      short_title: "Eine Zusammenfassung dieses Themas anzeigen: die laut der Community interessantesten Beiträge"
-      strategy:
-        button_title: "Dieses Thema zusammenfassen"
-        title: "Zusammenfassung des Themas"
+      short_label: "Top Antworten"
+      short_title: "Top-Antworten zu diesem Thema anzeigen: die interessantesten Beiträge, wie von der Community ermittelt"
     deleted_filter:
       enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit versteckt sind."
       disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt."
@@ -3333,7 +3345,7 @@ de:
       filtered_replies:
         viewing_posts_by: "Zeige %{post_count} Beiträge von"
         viewing_subset: "Einige Antworten sind reduziert"
-        viewing_summary: "Eine Zusammenfassung dieses Themas anzeigen"
+        viewing_summary: "Top-Antworten zu diesem Thema anzeigen"
         post_number: "%{username}, Beitrag #%{post_number}"
         show_all: "Alle anzeigen"
       share:
@@ -3708,6 +3720,20 @@ de:
       close: "Schließen (Esc)"
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
       image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden.'
+    experimental_lightbox:
+      image_load_error: "Das Bild konnte nicht geladen werden."
+      screen_reader_image_title: "Bild %{current} von %{total}: %{title}"
+      buttons:
+        next: "Weiter (Pfeiltaste rechts oder unten)"
+        previous: "Zurück (Pfeiltaste nach links oder oben)"
+        close: "Schließen (Esc)"
+        download: "Bild herunterladen"
+        newtab: "Bild in einer neuen Registerkarte öffnen"
+        zoom: "Bild vergrößern/verkleinern (Taste Z)"
+        rotate: "Bild drehen (Taste R)"
+        fullscreen: "Umschalten des Browser-Vollbildmodus (Taste M)"
+        carousel: "Alle Bilder in einem Karussell anzeigen (Taste A)"
+        retry: "Versuche das Bild erneut zu laden"
     cannot_render_video: Dieses Video kann nicht gerendert werden, da dein Browser den Codec nicht unterstützt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4068,6 +4094,7 @@ de:
           delete_confirm: "Bist du sicher, dass du diesen Abschnitt löschen willst?"
           reset_confirm: "Bist du sicher, dass du diesen Abschnitt auf die Standardeinstellungen zurücksetzen willst?"
           public: "Mache diesen Bereich öffentlich und für alle sichtbar"
+          always_public: "Die Inhalte in diesem Bereich sind immer öffentlich"
           more_menu: "Mehr Menü"
           links:
             add: "Einen weiteren Link hinzufügen"
@@ -4121,6 +4148,7 @@ de:
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:
+            sidebar: "Diesen Abschnitt anpassen"
             header_dropdown: "Anpassen"
           links:
             about:
@@ -4157,6 +4185,9 @@ de:
               title: "Gemeldete Beiträge und andere Elemente in der Warteschlange"
               pending_count: "%{count} ausstehend"
         global_section: "Globaler Bereich, für alle sichtbar"
+      panels:
+        forum:
+          label: Forum
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -5287,31 +5318,31 @@ de:
           validations:
             required:
               key: "erforderlich"
-              type: "boolean"
+              type: "Boolescher Wert"
               description: "Das Feld muss ausgefüllt werden, um das Formular abzuschicken."
             minimum:
               key: "Minimum"
               type: "Ganzzahl"
-              description: "Legt für Textfeldern die Mindestanzahl der zulässigen Zeichen fest."
+              description: "Legt für Textfelder die zulässige Mindestanzahl von Zeichen fest."
             maximum:
               key: "Maximum"
               type: "Ganzzahl"
-              description: "Legt für Textfelder die maximal zulässige Anzahl von Zeichen fest."
+              description: "Legt für Textfelder die zulässige Höchstanzahl von Zeichen fest."
             pattern:
               key: "Muster"
               type: "Regex-Zeichenfolge"
-              description: "Für Textfelder ein regulärer Ausdruck, der die zulässige Eingabe angibt."
+              description: "Ein regulärer Ausdruck für Textfelder, der die zulässige Eingabe beschreibt."
             type:
-              key: "art"
+              key: "Art"
               type: "Zeichenfolge"
-              description: "Für Eingabefelder kannst du die Art der Eingabe angeben, die erwartet wird (Text|E-Mail|Datum|Nummer|Url|Tel|Farbe)"
+              description: "Für Eingabefelder kannst du die Art der Eingabe angeben, die erwartet wird (text|email|date|number|url|tel|color)"
         preview_modal:
-          title: "Vorschau Vorlage"
+          title: "Vorschau der Vorlage"
         field_placeholders:
           validations: "Validierungen hier eingeben"
-          label: "Etikett hier eingeben"
+          label: "Bezeichnung hier eingeben"
           placeholder: "Platzhalter hier eingeben"
-          none_label: "Wähle einen Artikel aus"
+          none_label: "Wähle ein Element aus"
           choices:
             first: "Option 1"
             second: "Option 2"
@@ -5657,10 +5688,16 @@ de:
         go_back: "Zurück zur Suche"
         recommended: "Wir empfehlen, dass du den folgenden Text an deine Bedürfnisse anpasst:"
         show_overriden: "Nur geänderte Texte anzeigen"
-        show_outdated: "Nur veraltet/ungültig anzeigen"
+        show_outdated: "Nur veraltete/ungültige Elemente anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
-        interpolation_keys: "Verfügbare Interpolationsschlüssel:"
+        interpolation_keys: "Verfügbare Variablennamen:"
+        outdated:
+          title: "Diese Übersetzung ist veraltet"
+          description: "Die Standardübersetzung für diesen Schlüssel hat sich geändert, seit diese Überschreibung erstellt wurde. Bitte überprüfe unten, ob deine Übersetzung mit den Änderungen übereinstimmt, die an der ursprünglichen Aussage vorgenommen wurden."
+          old_default: "Alter Standard"
+          new_default: "Neuer Standard"
+          dismiss: "Verwerfen"
       settings:
         show_overriden: "Nur geänderte Texte anzeigen"
         history: "Änderungsverlauf ansehen"
@@ -5838,7 +5875,7 @@ de:
 
           <p>Wenn du den Stil anpassen möchtest, dann entferne das Kommentarzeichen und ersetze <b>CLASS_NAME</b> durch eine CSS-Klasse, die in <i>Embedded CSS</i> deines Designs definiert ist.</p>
 
-          <p>Ersetze <b>DISCOURSE_USERNAME</b> durch den Discourse-Benutzernamen des Autors, der das Thema erstellen soll. Discourse sucht den Benutzer automatisch anhand des <code>content</code> Attributes in den <code>&lt;meta&gt;</code> Tags, wenn das Attribut <code>name</code> den Wert <code>discourse-username</code> oder <code>author</code> hat. Der Parameter <code>discourseUserName</code> ist veraltet und wird in Discourse 3.2 entfernt.</p>
+          <p>Ersetze <b>DISCOURSE_USERNAME</b> durch den Discourse-Benutzernamen des Autors, der das Thema erstellen soll. Discourse sucht den Benutzer automatisch anhand des <code>content</code>-Attributes in den <code>&lt;meta&gt;</code>-Schlagwörtern, wenn das Attribut <code>name</code> den Wert <code>discourse-username</code> oder <code>author</code> hat. Der Parameter <code>discourseUserName</code> ist veraltet und wird in Discourse 3.2 entfernt.</p>
         title: "Einbettung"
         host: "Erlaubte Hosts"
         allowed_paths: "Pfad-Positivliste"

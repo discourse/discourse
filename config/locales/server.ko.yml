@@ -1626,7 +1626,6 @@ ko:
     title_min_entropy: "주제 제목에 필요한 최소 엔트로피(고유 문자, 초과할 경우 영어가 아닌 문자 수)입니다."
     body_min_entropy: "게시물 본문에 필요한 최소 엔트로피(고유 문자, 초과할 경우 영어가 아닌 문자 수)입니다."
     allow_uppercase_posts: "주제 제목 또는 게시물 본문에서 모든 대문자를 허용합니다."
-    max_consecutive_replies: "사용자가 다른 댓글을 추가할 수 없도록 하기 전에 한 주제에서 연속으로 작성해야 하는 게시물 수입니다."
     enable_filtered_replies_view: '''(n)개의 댓글'' 버튼은 다른 모든 게시물을 접고 현재 게시물과 댓글만 표시합니다.'
     title_fancy_entities: "일반적인 ASCII 문자를 주제 제목의 멋진 HTML 엔티티로 변환합니다. 예: SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "유사 주제를 확인하기 전 최소 제목 길이입니다."

@@ -1,46 +1,6 @@
-{{#each @sections as |customSection|}}
-  <Sidebar::Section
-    @sectionName={{customSection.name}}
-    @headerLinkText={{customSection.text}}
-    @headerLinkTitle={{customSection.title}}
-    @headerActionsIcon={{customSection.actionsIcon}}
-    @headerActions={{customSection.actions}}
-    @willDestroy={{customSection.willDestroy}}
+{{#each this.sections as |sectionConfig|}}
+  <Sidebar::ApiSection
+    @sectionConfig={{sectionConfig}}
     @collapsable={{@collapsable}}
-    @displaySection={{customSection.displaySection}}
-  >
-
-    {{#each customSection.links as |link|}}
-      <Sidebar::SectionLink
-        @linkName={{link.name}}
-        @class={{link.classNames}}
-        @route={{link.route}}
-        @model={{link.model}}
-        @models={{link.models}}
-        @href={{link.href}}
-        @title={{link.title}}
-        @contentCSSClass={{link.contentCSSClass}}
-        @prefixColor={{link.prefixColor}}
-        @prefixBadge={{link.prefixBadge}}
-        @prefixType={{link.prefixType}}
-        @prefixValue={{link.prefixValue}}
-        @prefixCSSClass={{link.prefixCSSClass}}
-        @suffixType={{link.suffixType}}
-        @suffixValue={{link.suffixValue}}
-        @suffixCSSClass={{link.suffixCSSClass}}
-        @hoverType={{link.hoverType}}
-        @hoverValue={{link.hoverValue}}
-        @hoverAction={{link.hoverAction}}
-        @hoverTitle={{link.hoverTitle}}
-        @currentWhen={{link.currentWhen}}
-        @didInsert={{link.didInsert}}
-        @willDestroy={{link.willDestroy}}
-        @content={{link.text}}
-        @contentComponent={{component
-          link.contentComponent
-          status=link.contentComponentArgs
-        }}
-      />
-    {{/each}}
-  </Sidebar::Section>
+  />
 {{/each}}

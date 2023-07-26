@@ -6,15 +6,17 @@
   class="ignore-duration-with-username-modal"
 >
   <:body>
-    <div class="controls tracking-controls">
-      <label>{{d-icon "far-eye-slash" class="icon"}}
-        {{i18n "user.user_notifications.ignore_duration_username"}}</label>
-      <EmailGroupUserChooser
-        @value={{this.ignoredUsername}}
-        @onChange={{this.updateIgnoredUsername}}
-        @options={{hash excludeCurrentUser=true maximum=1}}
-      />
-    </div>
+    {{#if this.enableSelection}}
+      <div class="controls tracking-controls">
+        <label>{{d-icon "far-eye-slash" class="icon"}}
+          {{i18n "user.user_notifications.ignore_duration_username"}}</label>
+        <EmailGroupUserChooser
+          @value={{this.ignoredUsername}}
+          @onChange={{this.updateIgnoredUsername}}
+          @options={{hash excludeCurrentUser=true maximum=1}}
+        />
+      </div>
+    {{/if}}
     <FutureDateInput
       @label="user.user_notifications.ignore_duration_when"
       @input={{readonly this.ignoredUntil}}

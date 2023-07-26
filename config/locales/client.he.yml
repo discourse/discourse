@@ -1941,8 +1941,7 @@ he:
       pause_notifications: "השהיית התראות"
       remove_status: "הסרת מצב"
     user_tips:
-      primary: "הבנתי!"
-      secondary: "לא להציג יותר את העצות האלה"
+      button: "הבנתי!"
       first_notification:
         title: "ההתראה הראשונה שלך!"
         content: "התראות משמשות לעדכן אותך במה שקורה בקהילה."
@@ -1961,7 +1960,7 @@ he:
       admin_guide:
         title: "ברוך בואך לאתר החדש שלך!"
         content: "כדאי לקרוא את המדריך למנהלים בטרם בניית האתר והקהילה שלך."
-        primary: "קדימה!"
+        button: "קדימה!"
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -2031,21 +2030,31 @@ he:
       no_internet: "אין חיבור לאינטרנט."
       refresh_page: "רענון עמוד"
     summary:
-      enabled_description: "אתם צופים בסיכום נושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה."
+      in_progress: "הנושא מסוכם באמצעות בינה מלאכותית…"
+      summarized_on: "סוכם עם בינה מלאכותית ב־%{date}"
+      model_used: "בינה מלאכותית בשימוש: %{model}"
+      outdated: "הסיכום מיושן"
+      outdated_posts:
+        one: "(פוסט חסר)"
+        two: "(%{count} פוסטים חסרים)"
+        many: "(%{count} פוסטים חסרים)"
+        other: "(%{count} פוסטים חסרים)"
+      enabled_description: "בחרת לצפות בתגובות המובילות של הנושא הזה: הפוסטים המעניינים ביותר בהתאם להחלטות הקהילה."
       description:
         one: "יש תגובה <b>%{count}</b>."
         two: "יש <b>%{count}</b> תגובות."
         many: "יש <b>%{count}</b> תגובות."
         other: "יש <b>%{count}</b> תגובות."
+      buttons:
+        hide: "הסתרת סיכום"
+        generate: "לסכם עם בינה מלאכותית"
+        regenerate: "לסכם מחדש"
       description_time_MF: |
         יש {replyCount, plural, one {תגובה <b>אחת</b>} other {<b>#</b> תגובות}} עם זמן קריאה משוערך של <b>{readingTime, plural, one {דקה} other {# דקות}}</b>.
       enable: "הצגת תגובות מובילות"
       disable: "הצג את כל הפוסטים"
-      short_label: "סיכום"
-      short_title: "הצגת סיכום לנושא זה: הפוסטים המעניינים ביותר כפי שסומנו על ידי הקהילה"
-      strategy:
-        button_title: "סיכום נושא זה"
-        title: "סיכום הנושא"
+      short_label: "תגובות מובילות"
+      short_title: "להציג את התגובות המובילות של הנושא הזה: הפוסטים המעניינים ביותר בהתאם להחלטות הקהילה"
     deleted_filter:
       enabled_description: "נושא זה מכיל פוסטים שנמחקו ולכן אינם מוצגים."
       disabled_description: "פוסטים שנמחקו בנושא זה מוצגים כעת."
@@ -3682,7 +3691,7 @@ he:
       filtered_replies:
         viewing_posts_by: "מוצגים %{post_count} פוסטים מאת"
         viewing_subset: "חלק מהתגובות מצומצמות"
-        viewing_summary: "מוצג סיכום של הפוסט הזה"
+        viewing_summary: "צפייה בתגובות המובילות של הנושא הזה"
         post_number: "%{username}, פוסט מס׳ %{post_number}"
         show_all: "להציג הכול"
       share:
@@ -4087,6 +4096,20 @@ he:
       close: "סגירה (Esc)"
       content_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תוכן הזה</a>.'
       image_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תמונה הזו</a>.'
+    experimental_lightbox:
+      image_load_error: "לא ניתן לטעון את התמונה."
+      screen_reader_image_title: "תמונה %{current} מתוך %{total}: %{title}"
+      buttons:
+        next: "הבא (מקשים ימינה או למטה)"
+        previous: "הקודם (מקשים שמאלה או למעלה)"
+        close: "סגירה (Esc)"
+        download: "הורדת תמונה"
+        newtab: "פתיחת תמונה בלשונית חדשה"
+        zoom: "התקרבות/התרחקות מהתמונה (מקש Z)"
+        rotate: "סיבוב תמונה (מקש R)"
+        fullscreen: "החלפת מצב מסך מלא של דפדפן (מקש M)"
+        carousel: "הצגת כל התמונות בסחרחרה (מקש A)"
+        retry: "לנסות לטעון את התמונה שוב"
     cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4572,6 +4595,9 @@ he:
               title: "פוסטים מסומנים ופריטים אחרים בתור"
               pending_count: "%{count} ממתינים"
         global_section: "סעיף כללי, גלוי לכולם"
+      panels:
+        forum:
+          label: פורום
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -6102,6 +6128,12 @@ he:
         locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
         interpolation_keys: "מפתחות השילוב הזמינים:"
+        outdated:
+          title: "התרגום אינו עדכני"
+          description: "תרגום ברירת המחדל למפתח הזה נערך מאז שהעקיפה הזאת נוצרה. נא לבדוק להלן שהתרגום שלך תואם לשינויים שנערכו לכוונה המקורית."
+          old_default: "ברירת מחדל ישנה"
+          new_default: "ברירת מחדל חדשה"
+          dismiss: "התעלמות"
       settings:
         show_overriden: "להציג רק את אלו שנדרסו"
         history: "הצגת היסטוריית שינויים"

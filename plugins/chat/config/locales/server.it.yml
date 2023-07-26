@@ -7,6 +7,7 @@
 it:
   site_settings:
     chat_enabled: "Abilita il plug-in della chat."
+    enable_public_channels: "Abilita i canali pubblici in base alle categorie."
     chat_allowed_groups: "Gli utenti di questi gruppi possono chattare. Tieni presente che lo staff può sempre accedere alla chat."
     chat_channel_retention_days: "I messaggi di chat nei canali normali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
     chat_dm_retention_days: "I messaggi di chat nei canali di chat personali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
@@ -26,7 +27,6 @@ it:
     max_mentions_per_chat_message: "Numero massimo di notifiche @name che un utente può utilizzare in un messaggio di chat."
     chat_max_direct_message_users: "Gli utenti non possono aggiungere più utenti di quelli indicati da questa opzione durante la creazione di un nuovo messaggio diretto. Impostare l'opzione a 0 per consentire solo i messaggi a se stessi. Questa impostazione non si applica allo staff."
     chat_allow_archiving_channels: "Consenti allo staff di archiviare i messaggi in un argomento alla chiusura di un canale."
-    enable_experimental_chat_threaded_discussions: "SPERIMENTALE: Consenti al personale di attivare il threading sui canali di chat, che permette di avere discussioni parallele in un canale quando gli utenti rispondono l'uno all'altro."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
@@ -35,9 +35,13 @@ it:
     chat_channel_archive_complete:
       title: "Archiviazione canale chat completata"
       subject_template: "Archiviazione del canale di chat completata correttamente"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name}** è stata completata con successo. I messaggi sono stati copiati nell'argomento [%{topic_title}](%{topic_url}).
     chat_channel_archive_failed:
       title: "Archiviazione canale chat non riuscita"
       subject_template: "Archiviazione canale chat non riuscita"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name} non è riuscita. %{messages_archived} messaggi sono stati archiviati. I messaggi parzialmente archiviati sono stati copiati nell'argomento [%{topic_title}](%{topic_url}). Visita il canale in %{channel_url} per riprovare.
     chat_channel_archive_failed_no_topic:
       title: "Archiviazione canale chat non riuscita"
       subject_template: "Archiviazione canale chat non riuscita"
@@ -45,6 +49,14 @@ it:
     deleted_chat_username: eliminato
     errors:
       channel_exists_for_category: "Esiste già un canale per questa categoria e questo nome"
+      channel_new_message_disallowed:
+        archived: "Il canale è archiviato, non è possibile inviare nuovi messaggi"
+        closed: "Il canale è chiuso, non è possibile inviare nuovi messaggi"
+        read_only: "Il canale è di sola lettura, non è possibile inviare nuovi messaggi"
+      channel_modify_message_disallowed:
+        archived: "Il canale è archiviato, nessun messaggio può essere modificato o cancellato"
+        closed: "Il canale è chiuso, nessun messaggio può essere modificato o cancellato"
+        read_only: "Il canale è a sola lettura, nessun messaggio può essere modificato o cancellato"
       user_cannot_send_message: "In questo momento non puoi inviare messaggi."
       rate_limit_exceeded: "Superato il limite dei messaggi di chat che possono essere inviati in 30 secondi"
       auto_silence_from_flags: "Messaggio di chat contrassegnato con un punteggio sufficientemente alto per silenziare l'utente."
@@ -54,6 +66,7 @@ it:
       message_too_long:
         one: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{count} caratteri."
         other: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{count} caratteri."
+      draft_too_long: "La bozza è troppo lunga."
       max_reactions_limit_reached: "Non sono consentite nuove reazioni su questo messaggio."
       message_move_invalid_channel: "I canali di origine e di destinazione devono essere canali pubblici."
       message_move_no_messages_found: "Nessun messaggio è stato trovato con gli ID messaggio forniti."
@@ -65,6 +78,7 @@ it:
       actor_preventing_target_user_from_dm: "Hai scelto di impedire a %{username} di inviarti messaggi privati e diretti, quindi non puoi creare nuovi messaggi diretti per questo destinatario."
       user_cannot_send_direct_messages: "Spiacenti, non puoi inviare messaggi diretti."
       over_chat_max_direct_message_users_allow_self: "Puoi creare solo un messaggio diretto a te stesso."
+      original_message_not_found: "L'antenato del messaggio a cui stai rispondendo non è stato trovato o è stato eliminato."
       thread_invalid_for_channel: "Il thread non fa parte del canale fornito."
       thread_does_not_match_parent: "Il thread non corrisponde al messaggio principale."
     reviewables:
@@ -110,6 +124,7 @@ it:
         other: "@%{acting_username} ha spostato %{count} messaggi sul canale [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} e %{count} altro"
           other: "%{comma_separated_usernames} e altri %{count}"
@@ -130,6 +145,8 @@ it:
       and_x_others:
         one: "e %{count} altro"
         other: "e %{count} altri"
+    summaries:
+      no_targets: "Non ci sono stati messaggi durante il periodo selezionato."
   discourse_push_notifications:
     popup:
       chat_mention:

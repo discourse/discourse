@@ -1625,15 +1625,12 @@ ur:
       hidden_for_session: "ٹھیک ہے ، ہم کل آپ سے پوچھیں گے۔ آپ ہمیشہ بھی ایک اکاؤنٹ بنانے کے لئے 'لاگ ان' کا استعمال کرسکتے ہیں۔"
       intro: "ہیلو! ایسا لگتا ہے کہ آپ بحث سے لطف اندوز ہو رہے ہیں، لیکن آپ نے اکاؤنٹ کے لئے سائن اَپ نہیں کیا۔"
     summary:
-      enabled_description: "آپ اس ٹاپک کا خلاصہ ملاحظہ کررہے ہیں: سب سے دلچسپ پوسٹ کمیونٹی کی طرف سے متعین کی جاتی ہیں۔"
       description:
         one: "یہاں<b>%{count}</b> جواب ہے۔"
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
       description_time_MF: |
         وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
       disable: "تمام پوسٹیں دکھائیں"
-      short_label: "خلاصہ"
-      short_title: "اس موضوع کا خلاصہ دکھائیں: سب سے دلچسپ پوسٹس جیسا کہ کمیونٹی کے ذریعہ طے کیا گیا ہے۔"
     deleted_filter:
       enabled_description: "اِس ٹاپک میں حذف شدہ پوسٹ شامل ہیں، جو چھپا دی گئی ہیں۔"
       disabled_description: "ٹاپک کی حذف شدہ پوسٹ دکھائی گئی ہیں۔"
@@ -2915,7 +2912,6 @@ ur:
       filtered_replies:
         viewing_posts_by: "%{post_count} پوسٹس دیکھ رہے ہیں بذریعہ"
         viewing_subset: "کچھ جوابات سمٹ گئے"
-        viewing_summary: "اس موضوع کا خلاصہ دیکھنا"
         post_number: "%{username}، پوسٹ نمبر%{post_number}"
         show_all: "تمام دکھائیں"
       share:
@@ -3277,6 +3273,9 @@ ur:
       close: "بند (Esc)"
       content_load_error: '<a href="%url%">مواد</a> لوڈ نہیں کیا جا سکا۔'
       image_load_error: '<a href="%url%">تصویر</a> لوڈ نہیں کی جا سکی۔'
+    experimental_lightbox:
+      buttons:
+        close: "بند (Esc)"
     cannot_render_video: اس ویڈیو کو رینڈر نہیں کیا جا سکتا کیونکہ آپ کا براؤزر کوڈیک کو سپورٹ نہیں کرتا ہے۔
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "، "
@@ -4969,6 +4968,8 @@ ur:
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         locale: "زبان:"
         more_than_50_results: "50 سے زائد نتائج ہیں۔ برائے مہربانی اپنی تلاش کو تنگ کریں۔"
+        outdated:
+          dismiss: "بر خاست کریں"
       settings:
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         history: "تبدیلی کی تاریخ دیکھیں"

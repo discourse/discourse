@@ -220,6 +220,8 @@ fi:
           members: Jäsenet
           settings: Asetukset
       new_message_modal:
+        default_channel_search_placeholder: "#a-kanava"
+        default_user_search_placeholder: "@joku"
         no_items: "Ei kohteita"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa

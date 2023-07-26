@@ -86,6 +86,11 @@ uk:
       collapse: "Згорнути вікно чату"
       expand: "Розгорнути вікно чату"
       confirm_flag: "Ви впевнені, що хочете позначити прапором повідомлення %{username}?"
+      deleted:
+        one: "Повідомлення було видалено. [view]"
+        few: "%{count} повідомлення видалено. [view all]"
+        many: "%{count} повідомлень видалено. [view all]"
+        other: "%{count} повідомлень видалено. [view all]"
       hidden: "Повідомлення було приховано. [view]"
       delete: "Видалити"
       edited: "відредагований"
@@ -116,7 +121,14 @@ uk:
       join: "Приєднатися"
       last_visit: "останнє відвідування"
       summarization:
+        title: "Підсумкове повідомлення"
+        description: "Виберіть опцію нижче, щоб підсумувати розмову, надіслану протягом визначеного періоду."
         summarize: "Підсумок"
+        since:
+          one: "Остання година"
+          few: "Останні %{count} години"
+          many: "Останні %{count} годин"
+          other: "Останні %{count} годин"
       mention_warning:
         dismiss: "відкласти"
         cannot_see: "%{username} не має доступу до цього каналу і не отримав сповіщення."
@@ -273,6 +285,15 @@ uk:
           members: Учасники
           settings: Налаштування
       new_message_modal:
+        title: Надіслати повідомлення
+        add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Додати @%{username}</span>
+        add_user_short: <span>Додати користувача</span>
+        open_channel: <span>Відкрити канал</span>
+        default_search_placeholder: "#канал, @хтось або щось"
+        default_channel_search_placeholder: "#канал"
+        default_user_search_placeholder: "@хтось"
+        user_search_placeholder: "...додати більше користувачів"
+        disabled_user: "вимкнув чат"
         no_items: "Немає елементів"
       channel_edit_name_slug_modal:
         title: Редагувати канал
@@ -298,6 +319,8 @@ uk:
           many: "%{count} учасників"
           other: "%{count} учасників"
       create_channel:
+        threading:
+          label: "Увімкнути потоки/ланцюжки"
         auto_join_users:
           public_category_warning: "%{category} є публічною категорією. Автоматично додавати всіх нещодавно активних користувачів до цього каналу?"
           warning_1_group:
@@ -310,6 +333,41 @@ uk:
             few: "Автоматично додати %{count} користувачі з %{group1} та %{group2}?"
             many: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
             other: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача з {groupName} і {groupCount} інших груп?}
+                          few {Автоматично додавати {userCount} користувачі з {groupName} і {groupCount} інших груп?}
+                          many {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інших груп?}
+                          other {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інших груп?}
+                      }
+                    }
+              few {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача із {groupName} і {groupCount} інші групи?}
+                          few {Автоматично додавати {userCount} користувачі з {groupName} і {groupCount} інші групи?}
+                          many {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інші групи?}
+                          other {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інші групи?}
+                      }
+                    }
+                many {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача із {groupName} і {groupCount} інших груп?}
+                          few {Автоматично додавати {userCount} користувачі із {groupName} і {groupCount} інших груп?}
+                          many {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                          other {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача із {groupName} і {groupCount} інших груп?}
+                          few {Автоматично додавати {userCount} користувачі із {groupName} і {groupCount} інших груп?}
+                          many {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                          other {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                      }
+                    }
+            }
         choose_category:
           label: "Оберіть категорію"
           none: "виберіть..."
@@ -322,12 +380,17 @@ uk:
             other: 'Користувачі в %{group} і %{count} інших групах матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
         create: "Створити канал"
         description: "Опис (необов'язково)"
+        name: "Назва каналу"
         slug: "Slug каналу (опціонально)"
+        title: "Новий канал"
         type: "Тип"
         types:
           category: "Розділ"
           topic: "Тема"
+      reviewable:
+        type: "Повідомлення чату"
       reactions:
+        only_you: "Ви відреагували :%{emoji}:"
         you_and_single_user: "Ви та %{username} відреагували :%{emoji}:"
         you_and_multiple_users: "Ви, %{commaSeparatedUsernames} і %{username} відреагували :%{emoji}:"
         you_multiple_users_and_more:
@@ -343,24 +406,48 @@ uk:
           many: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
           other: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
       composer:
+        toggle_toolbar: "Перемикання панелі інструментів"
         italic_text: "виділення тексту курсивом"
         bold_text: "Сильне виділення тексту"
+        code_text: "текст коду"
         send: "Надіслати"
+      quote:
+        original_channel: 'Спочатку надіслано в <a href="%{channelLink}">%{channel}</a>'
+        copy_success: "Цитату чату скопійовано в буфер обміну"
       notification_levels:
         never: "Ніколи"
+        mention: "Тільки для згадок"
+        always: "Для всіх дій"
       settings:
+        channel_wide_mentions_label: "Дозволити згадки @all та @here"
+        channel_wide_mentions_description: "Дозволити користувачам сповіщати всіх учасників #%{channel} за допомогою @all або лише тих, хто активний на даний момент, за допомогою @here"
+        channel_threading_label: "Потоки/ланцюжки"
+        channel_threading_description: "Якщо ланцюжки увімкнено, відповіді на повідомлення чату створюватимуть окрему бесіду, яка існуватиме поряд з основним каналом."
+        auto_join_users_label: "Автоматично додавати користувачів"
         auto_join_users_info: "Перевіряйте погодинно, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до категорії %{category}."
         auto_join_users_info_no_category: "Погодинно перевіряйте, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до обраної категорії."
+        auto_join_users_warning: "Кожен користувач, який не є учасником цього каналу і має доступ до категорії %{category} , приєднається до нього. Ви впевнені?"
+        desktop_notification_level: "Сповіщення на робочому столі"
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
+        mobile_notification_level: "Мобільні push-сповіщення"
+        mute: "Вимкнути канал"
         threading_enabled: "Включено"
         threading_disabled: "Вимкнено"
+        muted_on: "Увімк"
+        muted_off: "Вимк."
         notifications: "Сповіщення"
         preview: "Попередній перегляд"
         save: "Зберегти"
         saved: "Збережено"
         unfollow: "Покинути"
         admin_title: "Адміністратор"
+      admin:
+        export_messages:
+          title: "Експорт повідомлень чату"
+          description: "Наразі експорт обмежено до 10 000 повідомлень за останні 6 місяців."
+          create_export: "Створити експорт"
+          export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
       incoming_webhooks:
         back: "Назад"
         description: "Опис"
@@ -457,8 +544,10 @@ uk:
         notifications:
           regular:
             title: "Нормальний"
+            description: "Ви отримаєте сповіщення, якщо хтось згадає ваш @name у цій темі."
           tracking:
             title: "Стежити"
+            description: "Кількість нових відповідей для цього ланцюжка буде показано в списку ланцюжків і на каналі. Ви отримаєте сповіщення, якщо хтось згадає ваше @name у цій темі."
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"
@@ -530,8 +619,12 @@ uk:
     topic_statuses:
       chat:
         help: "Чат увімкнено для цієї теми"
+    user:
+      ignored_users_instructions: "Заборонити всі дописи, повідомлення, сповіщення, особисті повідомлення та прямі повідомлення в чаті від цих користувачів."
     user_menu:
       no_chat_notifications_title: "У вас ще немає сповіщень у чаті"
+      no_chat_notifications_body: >
+        Ви будете сповіщені на цій панелі, коли хтось надішле вам пряме повідомлення або <b>@згадає</b> вас у чаті. Сповіщення також надходитимуть на вашу електронну пошту, якщо ви деякий час не входите в систему. <br><br> Клацніть заголовок у верхній частині будь-якого каналу чату, щоб налаштувати, які сповіщення ви отримуватимете в цьому каналі. Щоб дізнатися більше, перегляньте свої <a href='%{preferencesUrl}'>налаштування сповіщень</a>.
       tabs:
         chat_notifications: "Сповіщення чату"
         chat_notifications_with_unread:

@@ -1575,7 +1575,6 @@ nb_NO:
       hidden_for_session: "OK, vi vil spørre deg i morgen. Du kan alltid bruke \"Logg Inn\" for å opprette en konto."
       intro: "Hei! Ser ut som du liker diskusjonen, men du har ikke registrert deg for en konto ennå."
     summary:
-      enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge brukerne."
       description_time_MF: |
         Det {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svarer}} med en estimert lesetid på <b>{readingTime, plural, one {# minutt} other {# minutter}}</b>.
       disable: "Vis alle innlegg"
@@ -2755,7 +2754,6 @@ nb_NO:
       filtered_replies:
         viewing_posts_by: "Viser %{post_count} innlegg av"
         viewing_subset: "Noen svar er kollapset"
-        viewing_summary: "Vise et sammendrag av dette emnet"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Vis alle"
     category:
@@ -3101,6 +3099,9 @@ nb_NO:
       close: "Lukk (Esc)"
       content_load_error: '<a href="%url%">Innholdet</a> kunne ikke lastes.'
       image_load_error: '<a href="%url%">Bildet</a> kunne ikke lastes.'
+    experimental_lightbox:
+      buttons:
+        close: "Lukk (Esc)"
     cannot_render_video: Denne videoen kan ikke lages fordi nettleseren din ikke støtter koden.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4512,6 +4513,8 @@ nb_NO:
         go_back: "Tilbake til søk"
         recommended: "Skreddersøm av følgende tekst for å kle dine behov anbefales:"
         show_overriden: "Bare vis overstyrte"
+        outdated:
+          dismiss: "Avslå"
       settings:
         show_overriden: "Vis kun overstyrte"
         reset: "tilbakestill"

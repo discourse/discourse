@@ -32,7 +32,6 @@ describe Chat::Publisher do
 
     context "when the message is in a thread and the channel has threading_enabled" do
       before do
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
         thread = Fabricate(:chat_thread, channel: channel)
         message_1.update!(thread: thread)
         message_2.update!(thread: thread)
@@ -130,48 +129,8 @@ describe Chat::Publisher do
   end
 
   describe ".calculate_publish_targets" do
-    context "when enable_experimental_chat_threaded_discussions is false" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
-
-      context "when the message is the original message of a thread" do
-        fab!(:thread) { Fabricate(:chat_thread, original_message: message_1, channel: channel) }
-
-        it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message_1)
-          expect(targets).to contain_exactly("/chat/#{channel.id}")
-        end
-      end
-
-      context "when the message is a thread reply" do
-        fab!(:thread) do
-          Fabricate(
-            :chat_thread,
-            original_message: Fabricate(:chat_message, chat_channel: channel),
-            channel: channel,
-          )
-        end
-
-        before { message_1.update!(thread: thread) }
-
-        it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message_1)
-          expect(targets).to contain_exactly("/chat/#{channel.id}")
-        end
-      end
-
-      context "when the message is not part of a thread" do
-        it "generates the correct targets" do
-          targets = described_class.calculate_publish_targets(channel, message_1)
-          expect(targets).to contain_exactly("/chat/#{channel.id}")
-        end
-      end
-    end
-
     context "when threading_enabled is false for the channel" do
-      before do
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-        channel.update!(threading_enabled: false)
-      end
+      before { channel.update!(threading_enabled: false) }
 
       context "when the message is the original message of a thread" do
         fab!(:thread) { Fabricate(:chat_thread, original_message: message_1, channel: channel) }
@@ -207,11 +166,8 @@ describe Chat::Publisher do
       end
     end
 
-    context "when enable_experimental_chat_threaded_discussions is true and threading_enabled is true for the channel" do
-      before do
-        channel.update!(threading_enabled: true)
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-      end
+    context "when threading_enabled is true for the channel" do
+      before { channel.update!(threading_enabled: true) }
 
       context "when the message is the original message of a thread" do
         fab!(:thread) { Fabricate(:chat_thread, original_message: message_1, channel: channel) }
@@ -312,8 +268,8 @@ describe Chat::Publisher do
 
       before { message_1.update!(thread: thread) }
 
-      context "if enable_experimental_chat_threaded_discussions is false" do
-        before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
+      context "if threading_enabled is false for the channel" do
+        before { channel.update!(threading_enabled: false) }
 
         it "publishes to the new_messages_message_bus_channel" do
           messages =
@@ -321,22 +277,6 @@ describe Chat::Publisher do
               described_class.new_messages_message_bus_channel(channel.id),
             ) { described_class.publish_new!(channel, message_1, staged_id) }
           expect(messages).not_to be_empty
-        end
-      end
-
-      context "if enable_experimental_chat_threaded_discussions is true" do
-        before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
-
-        context "if threading_enabled is false for the channel" do
-          before { channel.update!(threading_enabled: false) }
-
-          it "publishes to the new_messages_message_bus_channel" do
-            messages =
-              MessageBus.track_publish(
-                described_class.new_messages_message_bus_channel(channel.id),
-              ) { described_class.publish_new!(channel, message_1, staged_id) }
-            expect(messages).not_to be_empty
-          end
         end
 
         context "if threading_enabled is true for the channel" do

@@ -26,7 +26,6 @@ pl_PL:
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
     chat_max_direct_message_users: "Użytkownicy nie mogą dodać więcej niż ta liczba innych użytkowników podczas tworzenia nowej wiadomości bezpośredniej. Ustaw na 0, aby zezwolić na wysyłanie wiadomości tylko do siebie. Personel jest zwolniony z tego ustawienia."
     chat_allow_archiving_channels: "Zezwól personelowi na archiwizowanie wiadomości w temacie podczas zamykania kanału."
-    enable_experimental_chat_threaded_discussions: "EKSPERYMENTALNE: Zezwól personelowi na włączanie wątków na kanałach czatu, co pozwala na prowadzenie równoległych dyskusji na kanale, gdy użytkownicy odpowiadają sobie nawzajem."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."

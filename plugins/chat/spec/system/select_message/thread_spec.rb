@@ -10,7 +10,6 @@ RSpec.describe "Chat | Select message | thread", type: :system do
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
@@ -26,10 +25,7 @@ RSpec.describe "Chat | Select message | thread", type: :system do
     Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
   end
 
-  before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
-    channel_1.update!(threading_enabled: true)
-  end
+  before { channel_1.update!(threading_enabled: true) }
 
   it "can select multiple messages" do
     chat_page.visit_thread(thread_message_1.thread)

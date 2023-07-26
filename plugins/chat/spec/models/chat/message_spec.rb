@@ -293,8 +293,7 @@ describe Chat::Message do
     it "excerpts upload file name if message is empty" do
       gif =
         Fabricate(:upload, original_filename: "cat.gif", width: 400, height: 300, extension: "gif")
-      message = Fabricate(:chat_message, message: "")
-      message.attach_uploads([gif])
+      message = Fabricate(:chat_message, message: "", uploads: [gif])
 
       expect(message.excerpt).to eq "cat.gif"
     end
@@ -377,7 +376,7 @@ describe Chat::Message do
         )
       image2 =
         Fabricate(:upload, original_filename: "meme.jpg", width: 10, height: 10, extension: "jpg")
-      message.attach_uploads([image, image2])
+      message.uploads = [image, image2]
       expect(message.to_markdown).to eq(<<~MSG.chomp)
       hey friend, what's up?!
 
@@ -410,7 +409,7 @@ describe Chat::Message do
       Fabricate(:chat_message, message: "this is duplicate", chat_channel: channel, user: user1)
       message =
         described_class.new(message: "this is duplicate", chat_channel: channel, user: user2)
-      message.validate_message(has_uploads: false)
+      message.valid?
       expect(message.errors.full_messages).to include(I18n.t("chat.errors.duplicate_message"))
     end
   end
@@ -523,30 +522,6 @@ describe Chat::Message do
         chat_message.rebake!
         expect(chat_message.reload.cooked).to include(secure_category.name)
       end
-    end
-  end
-
-  describe "#attach_uploads" do
-    fab!(:chat_message) { Fabricate(:chat_message) }
-    fab!(:upload_1) { Fabricate(:upload) }
-    fab!(:upload_2) { Fabricate(:upload) }
-
-    it "creates an UploadReference record for the provided uploads" do
-      chat_message.attach_uploads([upload_1, upload_2])
-      upload_references = UploadReference.where(upload_id: [upload_1, upload_2])
-      expect(upload_references.count).to eq(2)
-      expect(upload_references.map(&:target_id).uniq).to eq([chat_message.id])
-      expect(upload_references.map(&:target_type).uniq).to eq([described_class.polymorphic_name])
-    end
-
-    it "does nothing if the message record is new" do
-      expect { described_class.new.attach_uploads([upload_1, upload_2]) }.to not_change {
-        UploadReference.count
-      }
-    end
-
-    it "does nothing for an empty uploads array" do
-      expect { chat_message.attach_uploads([]) }.to not_change { UploadReference.count }
     end
   end
 

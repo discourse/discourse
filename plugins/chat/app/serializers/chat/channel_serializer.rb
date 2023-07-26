@@ -25,10 +25,6 @@ module Chat
 
     has_one :last_message, serializer: Chat::LastMessageSerializer, embed: :objects
 
-    def threading_enabled
-      SiteSetting.enable_experimental_chat_threaded_discussions && object.threading_enabled
-    end
-
     def initialize(object, opts)
       super(object, opts)
 

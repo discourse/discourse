@@ -6,8 +6,6 @@
 
   .modal-footer {
     margin: 0;
-    border-top: 0;
-    padding: 0 1em 1em 1em;
 
     .delete-bookmark {
       margin-left: auto;
@@ -22,6 +20,7 @@
   .modal-body {
     width: 375px;
     box-sizing: border-box;
+    max-height: 70dvh;
 
     @media (max-width: 600px) {
       width: 100%;

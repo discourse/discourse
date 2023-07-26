@@ -94,4 +94,4 @@ de:
           hover_to_see: "Bewege den Mauszeiger darüber, um einen Tooltipp zu sehen"
         char_counter:
           title: "Zeichenzähler"
-          placeholder: "Gib deinen Text hier ein..."
+          placeholder: "Gib deinen Text hier ein …"

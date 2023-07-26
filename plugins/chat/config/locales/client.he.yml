@@ -349,6 +349,8 @@ he:
         add_user_short: <span>הוספת משתמש</span>
         open_channel: <span>פתיחת ערוץ</span>
         default_search_placeholder: "#ערוץ, @מישהם או כל דבר אחר"
+        default_channel_search_placeholder: "#ערוץ"
+        default_user_search_placeholder: "@מישהם"
         user_search_placeholder: "…הוספת משתמשים נוספים"
         disabled_user: "השבית את הצ׳אט"
         no_items: "אין פריטים"

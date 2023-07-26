@@ -112,8 +112,7 @@ module Chat
     end
 
     def determine_threads_enabled(channel:, **)
-      context.threads_enabled =
-        SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+      context.threads_enabled = channel.threading_enabled
     end
 
     def determine_include_thread_messages(contract:, threads_enabled:, **)
@@ -184,7 +183,7 @@ module Chat
         context.threads =
           ::Chat::Thread
             .strict_loading
-            .includes(last_message: [:user], original_message_user: :user_status)
+            .includes(last_message: %i[user uploads], original_message_user: :user_status)
             .where(id: messages.map(&:thread_id).compact.uniq)
 
         # Saves us having to load the same message we already have.

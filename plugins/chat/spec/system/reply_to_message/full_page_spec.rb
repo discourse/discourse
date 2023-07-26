@@ -18,7 +18,6 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
   end
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)

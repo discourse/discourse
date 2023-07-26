@@ -24,7 +24,6 @@ module Chat
     #   @param [Integer] offset
     #   @return [Service::Base::Context]
 
-    policy :threaded_discussions_enabled
     contract
     step :set_limit
     step :set_offset
@@ -53,10 +52,6 @@ module Chat
 
     def set_offset(contract:, **)
       context.offset = [contract.offset || 0, 0].max
-    end
-
-    def threaded_discussions_enabled
-      ::SiteSetting.enable_experimental_chat_threaded_discussions
     end
 
     def fetch_channel(contract:, **)

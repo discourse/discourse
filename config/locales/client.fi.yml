@@ -1729,8 +1729,7 @@ fi:
       pause_notifications: "Keskeytä ilmoitukset"
       remove_status: "Poista tila"
     user_tips:
-      primary: "Selvä!"
-      secondary: "älä näytä minulle näitä vinkkejä"
+      button: "Selvä!"
       first_notification:
         title: "Ensimmäinen ilmoituksesi!"
         content: "Ilmoitusten avulla pysyt ajan tasalla siitä, mitä yhteisössä tapahtuu."
@@ -1746,6 +1745,8 @@ fi:
       suggested_topics:
         title: "Jatka lukemista!"
         content: "Tässä on muutamia ketjuja, joita saatat haluta lukea seuraavaksi."
+      admin_guide:
+        button: "Mennään!"
     loading: "Ladataan..."
     errors:
       prev_page: "yrittäessä ladata"
@@ -1813,15 +1814,18 @@ fi:
       no_internet: "Ei Internet-yhteyttä."
       refresh_page: "Päivitä sivu"
     summary:
-      enabled_description: "Tarkastelet yhteenvetoa tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
+      in_progress: "Tekoäly tiivistää aihetta..."
+      summarized_on: "Tiivistetty tekoälyllä %{date}"
+      model_used: "Käytetty tekoälyä: %{model}"
       description:
         one: "Ketjussa on <b>%{count}</b> vastaus."
         other: "Ketjussa on <b>%{count}</b> vastausta."
+      buttons:
+        hide: "Piilota yhteenveto"
+        generate: "Tekoälyn tiivistämä"
       description_time_MF: |
         Ketjussa {replyCount, plural, one {on <b>#</b> vastaus} other {on <b>#</b> vastausta}}, joiden arvioitu lukuaika on <b>{readingTime, plural, one {# minuutti} other {# minuuttia}}</b>.
       disable: "Näytä kaikki viestit"
-      short_label: "Tee yhteenveto"
-      short_title: "Näytä tämän ketjun yhteenveto: mielenkiintoisimmat viestit käyttäjien toiminnan perusteella"
     deleted_filter:
       enabled_description: "Tämä ketju sisältää poistettuja viestejä, jotka on piilotettu."
       disabled_description: "Ketjun poistetut viestit näytetään."
@@ -3269,7 +3273,6 @@ fi:
       filtered_replies:
         viewing_posts_by: "Katsellaan %{post_count} viestiä käyttäjältä"
         viewing_subset: "Jotkin vastaukset on kutistettu"
-        viewing_summary: "Katsellaan ketjun yhteenvetoa"
         post_number: "%{username}, viesti #%{post_number}"
         show_all: "Näytä kaikki"
       share:
@@ -3639,6 +3642,20 @@ fi:
       close: "Sulje (Esc)"
       content_load_error: '<a href="%url%">Sisällön</a> lataaminen ei onnistunut.'
       image_load_error: '<a href="%url%">Kuvan</a> lataaminen ei onnistunut.'
+    experimental_lightbox:
+      image_load_error: "Kuvaa ei voitu ladata."
+      screen_reader_image_title: "Kuva %{current}/%{total}: %{title}"
+      buttons:
+        next: "Seuraava (oikealle- tai alas-nuolinäppäin)"
+        previous: "Edellinen (vasemmalle- tai ylös-nuolinäppäin)"
+        close: "Sulje (Esc)"
+        download: "Lataa kuva"
+        newtab: "Avaa kuva uuteen välilehteen"
+        zoom: "Lähennä/loitonna kuvaa (Z-näppäin)"
+        rotate: "Kierrä kuvaa (R-näppäin)"
+        fullscreen: "Kytke selaimen koko näytön tila (M-näppäin)"
+        carousel: "Näytä kaikki kuvat karusellissa (A-näppäin)"
+        retry: "Yritä ladata kuva uudelleen"
     cannot_render_video: Tätä videota ei voida toistaa, koska selaimesi ei tue tarvittavaa koodekkia.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4048,6 +4065,9 @@ fi:
               content: "Käsittele"
               title: "Liputetut viestit ja muut jonossa olevat kohteet"
               pending_count: "%{count} odottaa"
+      panels:
+        forum:
+          label: Keskustelualuea
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
@@ -5434,6 +5454,12 @@ fi:
         show_overriden: "Näytä vain korvatut"
         locale: "Kieli:"
         more_than_50_results: "Hakutuloksia on yli 50. Rajaa hakuasi."
+        outdated:
+          title: "Käännös on vanhentunut"
+          description: "Avaimen oletuskäännös on muuttunut ohituksen luonnin jälkeen. Varmista alta, että käännöksesi vastaa avaimen alkuperäisen tarkoituksen muutoksia."
+          old_default: "Vanha oletus"
+          new_default: "Uusi oletus"
+          dismiss: "Selvä"
       settings:
         show_overriden: "Näytä vain korvatut"
         history: "Näytä muutoshistoria"

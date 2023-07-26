@@ -588,6 +588,7 @@ id:
       :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
 
       > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di [#feedback](%{base_path}/c/site-feedback) atau [hubungi admin](%{base_path}/about).
+  admin_quick_start_title: "Panduan Admin: Memulai"
   category:
     topic_prefix: "Tentang kategori %{category}"
     replace_paragraph: "(Ganti paragraf pertama ini dengan deskripsi singkat tentang kategori baru Anda. Panduan ini akan muncul di area pemilihan kategori, jadi cobalah membuatnya di bawah 200 karakter.)"
@@ -1178,10 +1179,12 @@ id:
     sidekiq_warning: 'Sidekiq tidak berjalan. Banyak tugas, seperti mengirim email, dijalankan secara asinkron oleh Sidekiq. Harap pastikan setidaknya satu proses Sidekiq sedang berjalan. <a href="https://github.com/mperham/sidekiq" target="_blank">Pelajari tentang Sidekiq di sini</a>.'
     queue_size_warning: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
     memory_warning: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
+    outdated_translations_warning: "Beberapa penggantian terjemahan Anda sudah usang. Silakan periksa <a href='%{base_path}/admin/customize/site_texts?outdated=true'>penyesuaian teks</a> Anda."
     email_polling_errored_recently:
       other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
     missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
     v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
+    legacy_navigation_menu_deprecated: "Discourse Anda saat ini menggunakan menu navigasi 'lama' yang <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>akan dihapus pada rilis beta pertama Discourse 3.2</a>. Migrasi ke menu navigasi yang baru dengan memperbarui pengaturan situs menu navigasi <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> ke 'sidebar' atau 'header dropdown'."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
@@ -1203,8 +1206,11 @@ id:
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
     s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
+    s3_use_cdn_url_for_all_uploads: "Gunakan URL CDN untuk semua file yang diunggah ke s3, bukan hanya untuk gambar."
     composer_media_optimization_image_encode_quality: "Kualitas penyandian JPG digunakan dalam proses penyandian ulang."
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
+    edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
+    edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
@@ -1214,6 +1220,8 @@ id:
     email_in: "Izinkan pengguna membuat topik baru melalui surel. Setelah mengaktifkan setelan ini, Anda akan dapat melakukan konfigurasi alamat surel masuk untuk grup dan kategori."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
     dont_feed_the_trolls_threshold: "Jumlah penanda dari pengguna lain sebelum diperingatkan."
+    disable_category_edit_notifications: "Nonaktifkan pemberitahuan untuk pengeditan kategori topik."
+    disable_tags_edit_notifications: "Nonaktifkan notifikasi untuk pengubahan tag topik."
     native_app_install_banner_ios: "Menampilkan spanduk aplikasi DiscourseHub di perangkat iOS ke pengguna dasar (trust level 1) dan lebih tinggi."
     native_app_install_banner_android: "Menampilkan spanduk aplikasi DiscourseHub di perangkat Android ke pengguna dasar (trust level 1) dan lebih tinggi."
     max_prints_per_hour_per_user: "Jumlah maksimum tayangan halaman /print (atur ke 0 untuk menonaktifkan pencetakan)"
@@ -1222,12 +1230,16 @@ id:
     emoji_set: "Bagaimana dengan emoji Anda?"
     emoji_deny_list: "Emoji ini tidak akan tersedia untuk digunakan dalam menu atau kode singkat."
     enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
+    default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
+    default_sidebar_show_count_of_new_items: "Jadikan tautan menu navigasi menampilkan jumlah item baru alih-alih lencana secara bawaan."
+    default_sidebar_switch_panel_position: "Posisi tombol panel sakelar bilah samping"
     min_trust_level_for_user_api_key: |
       Trust level diperlukan untuk membuat kunci API pengguna.<br>
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
     enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
     max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
     create_post_for_category_and_tag_changes: "Buat post tindakan kecil saat kategori atau tag topik berubah"
+    watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
     default_navigation_menu_tags: "Tag yang dipilih akan ditampilkan di bawah bagian Tag pada Menu Navigasi secara bawaan."
@@ -1235,6 +1247,8 @@ id:
     enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
     experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
     experimental_search_menu_groups: "EKSPERIMENTAL: Mengaktifkan menu pencarian baru yang telah ditingkatkan untuk menggunakan glimmer"
+    enable_experimental_lightbox: "EKSPERIMENTAL: Ganti lightbox gambar bawaan dengan desain yang diubah."
+    page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
       invalid_email: "Alamat email tidak valid."
       email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."

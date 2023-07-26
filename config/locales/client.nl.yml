@@ -1701,8 +1701,7 @@ nl:
       pause_notifications: "Meldingen pauzeren"
       remove_status: "Status verwijderen"
     user_tips:
-      primary: "Begrepen!"
-      secondary: "laat me deze tips niet zien"
+      button: "Begrepen!"
       first_notification:
         title: "Je eerste melding!"
         content: "Meldingen worden gebruikt om je op de hoogte te houden van wat er gaande is in de community."
@@ -1782,15 +1781,12 @@ nl:
       intro: "Hallo! Zo te zien heb je plezier aan de discussie, maar heb je je nog niet geregistreerd voor een account."
       value_prop: "Ben je het zat om door dezelfde berichten te scrollen? Wanneer je een account maakt, kom je altijd terug waar je was gebleven. Met een account kun je ook op de hoogte worden gehouden van nieuwe antwoorden, bladwijzers opslaan en likes gebruiken om anderen te bedanken. We kunnen allemaal samenwerken om deze community geweldig te maken. :heart:"
     summary:
-      enabled_description: "Je bekijkt een samenvatting van dit topic: de interessantste berichten volgens de community."
       description:
         one: "Er is <b>%{count}</b> antwoord."
         other: "Er zijn <b>%{count}</b> antwoorden."
       description_time_MF: |
         Er {replyCount, plural, one {is <b>#</b> antwoord} other {zijn <b>#</b> antwoorden}} met een geschatte leestijd van <b>{readingTime, plural, one {# minuut} other {# minuten}}</b>.
       disable: "Alle berichten weergeven"
-      short_label: "Samenvatten"
-      short_title: "Bekijk een samenvatting van dit topic: de interessantste berichten volgens de community"
     deleted_filter:
       enabled_description: "Dit topic bevat verwijderde berichten, die zijn verborgen."
       disabled_description: "Verwijderde berichten in het topic worden weergegeven."
@@ -3236,7 +3232,6 @@ nl:
       filtered_replies:
         viewing_posts_by: "%{post_count} berichten weergegeven van"
         viewing_subset: "Sommige antwoorden zijn samengevouwen"
-        viewing_summary: "Samenvatting van dit topic weergegeven"
         post_number: "%{username}, bericht #%{post_number}"
         show_all: "Alles weergeven"
       share:
@@ -3606,6 +3601,9 @@ nl:
       close: "Sluiten (Esc)"
       content_load_error: '<a href="%url%">De inhoud</a> kon niet worden geladen.'
       image_load_error: '<a href="%url%">De afbeelding</a> kon niet worden geladen.'
+    experimental_lightbox:
+      buttons:
+        close: "Sluiten (Esc)"
     cannot_render_video: Deze video kan niet worden weergegeven omdat je browser de codec niet ondersteunt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -5390,6 +5388,8 @@ nl:
         show_overriden: "Alleen aangepaste weergeven"
         locale: "Taal:"
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn je zoekopdracht."
+        outdated:
+          dismiss: "Sluiten"
       settings:
         show_overriden: "Alleen aangepaste weergeven"
         history: "Wijzigingsgeschiedenis weergeven"

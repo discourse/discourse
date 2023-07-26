@@ -25,6 +25,7 @@ module PageObjects
         def has_no_section_link?(name, href: nil, active: false)
           section_link_present?(name, href: href, active: active, present: false)
         end
+
         def has_section?(name)
           has_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
         end
@@ -59,6 +60,15 @@ module PageObjects
             )
 
           expect(tag_section_links.map(&:text)).to eq(tag_names)
+        end
+
+        def has_tag_section_link_with_title?(tag, title)
+          section_link =
+            find(
+              ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name='#{tag.name}'] .sidebar-section-link",
+            )
+
+          expect(section_link["title"]).to eq(title)
         end
 
         def primary_section_links(slug)

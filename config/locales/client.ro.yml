@@ -1470,7 +1470,6 @@ ro:
       hide_forever: "Nu, mulțumesc"
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
     summary:
-      enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
       disable: "Arată toate postările"
     deleted_filter:
       enabled_description: "Acest subiect conține postări șterse, care au fost ascunse. "
@@ -3818,6 +3817,8 @@ ro:
         go_back: "Înapoi la căutare"
         recommended: "Îți recomandăm să personalizezi următorul text pentru a se adapta nevoilor tale:"
         show_overriden: "Arată doar ignorate"
+        outdated:
+          dismiss: "Renunță"
       settings:
         show_overriden: "Arată doar ignorate"
         reset: "Resetează"

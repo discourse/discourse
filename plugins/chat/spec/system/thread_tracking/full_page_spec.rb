@@ -13,7 +13,6 @@ describe "Thread tracking state | full page", type: :system do
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap(current_user, [channel])
     sign_in(current_user)
     thread.add(current_user)
