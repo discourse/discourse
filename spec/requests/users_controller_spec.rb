@@ -2581,9 +2581,10 @@ RSpec.describe UsersController do
             end.to change { user.sidebar_section_links.count }.from(1).to(0)
           end
 
-          it "should allow user to modify category sidebar section links" do
+          it "should allow user to only modify category sidebar section links for categories they have access to" do
             category = Fabricate(:category)
-            restricted_category = Fabricate(:category, read_restricted: true)
+            group = Fabricate(:group)
+            restricted_category = Fabricate(:private_category, group: group)
             category_sidebar_section_link = Fabricate(:category_sidebar_section_link, user: user)
 
             put "/u/#{user.username}.json",
@@ -2598,6 +2599,21 @@ RSpec.describe UsersController do
             sidebar_section_link = user.sidebar_section_links.first
 
             expect(sidebar_section_link.linkable).to eq(category)
+
+            group.add(user)
+
+            expect do
+              put "/u/#{user.username}.json",
+                  params: {
+                    sidebar_category_ids: [category.id, restricted_category.id],
+                  }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(2)
+
+            expect(SidebarSectionLink.exists?(user: user, linkable: restricted_category)).to eq(
+              true,
+            )
           end
 
           it "should allow user to remove all tag sidebar section links" do
@@ -2623,15 +2639,18 @@ RSpec.describe UsersController do
             expect(user.reload.sidebar_section_links.count).to eq(0)
           end
 
-          it "should allow user to add tag sidebar section links" do
+          it "should allow user to add tag sidebar section links only for tags that are visible to the user" do
             SiteSetting.tagging_enabled = true
 
             tag = Fabricate(:tag)
             tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link, user: user)
 
+            hidden_tag = Fabricate(:tag)
+            Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+
             put "/u/#{user.username}.json",
                 params: {
-                  sidebar_tag_names: [tag.name, "somerandomtag"],
+                  sidebar_tag_names: [tag.name, "somerandomtag", hidden_tag.name],
                 }
 
             expect(response.status).to eq(200)
@@ -2641,6 +2660,19 @@ RSpec.describe UsersController do
             sidebar_section_link = user.sidebar_section_links.first
 
             expect(sidebar_section_link.linkable).to eq(tag)
+
+            user.update!(admin: true)
+
+            expect do
+              put "/u/#{user.username}.json",
+                  params: {
+                    sidebar_tag_names: [tag.name, "somerandomtag", hidden_tag.name],
+                  }
+
+              expect(response.status).to eq(200)
+            end.to change { user.sidebar_section_links.count }.from(1).to(2)
+
+            expect(SidebarSectionLink.exists?(user: user, linkable: hidden_tag)).to eq(true)
           end
         end
       end
