@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Site from "discourse/models/site";
 import getURL from "discourse-common/lib/get-url";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PREFERRED_MODE_KEY = "preferred_mode";
 const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
@@ -40,10 +41,23 @@ export default class ChatStateManager extends Service {
   }
 
   prefersFullPage() {
+    withPluginApi("1.8.0", (api) => {
+      /**
+       * When full page is prefered we have to set sidebar panel to "chat"
+       * When set panel function is used, sidebar by default goes to separate panels mode
+       */
+      api.setSidebarPanel("chat");
+    });
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: FULL_PAGE_CHAT });
   }
 
   prefersDrawer() {
+    withPluginApi("1.8.0", (api) => {
+      /**
+       * Analogically, when drawer is preferred, we have to switch to combined mode
+       */
+      api.setCombinedSidebarMode();
+    });
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
   }
 

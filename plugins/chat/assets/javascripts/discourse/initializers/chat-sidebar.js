@@ -51,6 +51,7 @@ export default {
         return ChatSidebarPanel;
       });
 
+      this.chatStateManager = container.lookup("service:chatStateManager");
       /**
        * By default, "main" panel is loaded.
        * When chat detects that it is active, it should change panel to "chat".
@@ -58,6 +59,12 @@ export default {
        */
       if (window.location.pathname.startsWith("/chat")) {
         api.setSidebarPanel("chat");
+      } else if (this.chatStateManager.isFullPagePreferred) {
+        /**
+         * By default combined panels sidebar mode is enabled
+         * When full page is preferred, we need need separated panels sidebar mode
+         */
+        api.setSeparatedSidebarMode();
       }
     });
 
