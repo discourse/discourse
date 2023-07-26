@@ -2040,7 +2040,7 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      in_progress: "Summarizing topic using AI..."
+      in_progress: "Summarizing topic using AI"
       summarized_on: "Summarized with AI on %{date}"
       model_used: "AI used: %{model}"
       outdated: "Summary is outdated"
