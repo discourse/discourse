@@ -16,16 +16,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when first batch of messages doesnt fill page" do
-    before do
-      50.times do
-        Fabricate(
-          :chat_message,
-          message: Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length),
-          user: current_user,
-          chat_channel: channel_1,
-        )
-      end
-    end
+    before { 30.times { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) } }
 
     it "autofills for more messages" do
       chat.prefers_full_page
@@ -105,7 +96,7 @@ RSpec.describe "Chat channel", type: :system do
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
 
-      find(".chat-scroll-to-bottom").click
+      find(".chat-scroll-to-bottom__button.visible").click
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")

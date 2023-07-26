@@ -7,6 +7,7 @@ import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
+import discourseLater from "discourse-common/lib/later";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -27,7 +28,6 @@ export default class ChatMessage {
   @tracked staged;
   @tracked draftSaved;
   @tracked draft;
-  @tracked channelId;
   @tracked createdAt;
   @tracked uploads;
   @tracked excerpt;
@@ -49,17 +49,18 @@ export default class ChatMessage {
   @tracked highlighted;
   @tracked firstOfResults;
   @tracked message;
-  @tracked thread;
   @tracked manager;
-  @tracked threadTitle;
   @tracked deletedById;
 
   @tracked _deletedAt;
   @tracked _cooked;
+  @tracked _thread;
 
   constructor(channel, args = {}) {
     // when modifying constructor, be sure to update duplicate function accordingly
     this.id = args.id;
+    this.channel = channel;
+    this.manager = args.manager;
     this.newest = args.newest || false;
     this.draftSaved = args.draftSaved || args.draft_saved || false;
     this.firstOfResults = args.firstOfResults || args.first_of_results || false;
@@ -69,7 +70,7 @@ export default class ChatMessage {
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
-    this.createdAt = args.createdAt || args.created_at;
+    this.createdAt = args.created_at ? new Date(args.created_at) : null;
     this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
@@ -80,18 +81,20 @@ export default class ChatMessage {
     this.draft = args.draft;
     this.message = args.message || "";
     this._cooked = args.cooked || "";
-    this.thread = args.thread;
     this.inReplyTo =
       args.inReplyTo ||
       (args.in_reply_to || args.replyToMsg
         ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
         : null);
-    this.channel = channel;
     this.reactions = this.#initChatMessageReactionModel(args.reactions);
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
+
+    if (args.thread) {
+      this.thread = args.thread;
+    }
   }
 
   duplicate() {
@@ -116,7 +119,6 @@ export default class ChatMessage {
       cooked: this.cooked,
     });
 
-    message.thread = this.thread;
     message.reactions = this.reactions;
     message.user = this.user;
     message.inReplyTo = this.inReplyTo;
@@ -132,6 +134,16 @@ export default class ChatMessage {
 
   get editable() {
     return !this.staged && !this.error;
+  }
+
+  get thread() {
+    return this._thread;
+  }
+
+  set thread(thread) {
+    this._thread = this.channel.threadsManager.add(this.channel, thread, {
+      replace: true,
+    });
   }
 
   get deletedAt() {
@@ -194,21 +206,20 @@ export default class ChatMessage {
     return this.channel.currentUserMembership?.lastReadMessageId >= this.id;
   }
 
+  @cached
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
       return this.#startOfDay(this.createdAt);
     }
 
     if (
-      !this.#areDatesOnSameDay(
-        new Date(this.previousMessage.createdAt),
-        new Date(this.createdAt)
-      )
+      !this.#areDatesOnSameDay(this.previousMessage.createdAt, this.createdAt)
     ) {
       return this.#startOfDay(this.createdAt);
     }
   }
 
+  @cached
   get formattedFirstMessageDate() {
     if (this.firstMessageOfTheDayAt) {
       return this.#calendarDate(this.firstMessageOfTheDayAt);
@@ -237,6 +248,18 @@ export default class ChatMessage {
   @cached
   get nextMessage() {
     return this.manager?.messages?.objectAt?.(this.index + 1);
+  }
+
+  highlight() {
+    this.highlighted = true;
+
+    discourseLater(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      this.highlighted = false;
+    }, 2000);
   }
 
   incrementVersion() {
