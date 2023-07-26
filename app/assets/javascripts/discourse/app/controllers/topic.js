@@ -1572,7 +1572,7 @@ export default Controller.extend(bufferedProperty("model"), {
   deleteTopicModal() {
     this.modal.show(DeleteTopicConfirmModal, { model: this.model });
   },
-)
+
   retryOnRateLimit(times, promise, topicId) {
     const currentTopicId = this.get("model.id");
     topicId = topicId || currentTopicId;
