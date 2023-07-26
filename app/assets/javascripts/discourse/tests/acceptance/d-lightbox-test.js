@@ -960,7 +960,7 @@ acceptance("Experimental Lightbox - conditional buttons", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
 
-    // it doesn not show the newtab or download button
+    // it does not show the newtab or download button
     assert.dom(SELECTORS.TAB_BUTTON).doesNotExist();
     assert.dom(SELECTORS.DOWNLOAD_BUTTON).doesNotExist();
   });

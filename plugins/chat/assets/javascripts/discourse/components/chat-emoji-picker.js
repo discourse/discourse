@@ -379,7 +379,7 @@ export default class ChatEmojiPicker extends Component {
     }
 
     schedule("afterRender", () => {
-      const firsEmoji = document.querySelector(
+      const firstEmoji = document.querySelector(
         `.chat-emoji-picker__section[data-section="${section}"] .emoji:nth-child(1)`
       );
 
@@ -388,7 +388,7 @@ export default class ChatEmojiPicker extends Component {
           ...document.querySelectorAll(
             `.chat-emoji-picker__section[data-section="${section}"] .emoji`
           ),
-        ].find((emoji) => emoji.offsetTop > firsEmoji.offsetTop) || firsEmoji;
+        ].find((emoji) => emoji.offsetTop > firstEmoji.offsetTop) || firstEmoji;
 
       targetEmoji.focus();
 
