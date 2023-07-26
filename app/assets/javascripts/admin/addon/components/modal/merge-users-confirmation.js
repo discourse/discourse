@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import I18n from "I18n";
 
 export default class MergeUsersConfirmation extends Component {
   @tracked value;
