@@ -13,9 +13,9 @@ import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
-import MergeUsersConfirmationModal from "../components/modals/merge-users-confirmation";
-import MergeUsersPromptModal from "../components/modals/merge-users-prompt";
-import MergeUsersProgressModal from "../components/modals/merge-users-progress";
+import MergeUsersConfirmationModal from "../components/modal/merge-users-confirmation";
+import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
+import MergeUsersProgressModal from "../components/modal/merge-users-progress";
 import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 
 export default class AdminUserIndexController extends Controller.extend(
@@ -442,8 +442,10 @@ export default class AdminUserIndexController extends Controller.extend(
   @action
   promptTargetUser() {
     this.modal.show(MergeUsersPromptModal, {
-      model: this.model,
-      showMergeConfirmation: this.showMergeConfirmation,
+      model: {
+        user: this.model,
+        showMergeConfirmation: this.showMergeConfirmation,
+      },
     });
   }
 

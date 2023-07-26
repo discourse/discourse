@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";

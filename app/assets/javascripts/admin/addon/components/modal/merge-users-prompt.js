@@ -1,24 +1,13 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
 export default class MergeUsersPrompt extends Component {
-  @tracked targetUsername = null;
+  @tracked targetUsername;
 
   get mergeDisabled() {
     return (
-      !this.targetUsername || this.args.model.username === this.targetUsername
+      !this.targetUsername ||
+      this.args.model.user.username === this.targetUsername[0]
     );
-  }
-
-  @action
-  showConfirmation() {
-    this.args.model.showMergeConfirmation(this.targetUsername);
-    this.args.closeModal();
-  }
-
-  @action
-  updateUsername(selected) {
-    this.targetUsername = selected.firstObject;
   }
 }

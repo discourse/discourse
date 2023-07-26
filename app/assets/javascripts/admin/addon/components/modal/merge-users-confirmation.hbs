@@ -1,33 +1,29 @@
 <DModal
   @title={{html-safe
-    i18n
-    "admin.user.merge.confirmation.title"
-    username=@model.username
+    (i18n "admin.user.merge.confirmation.title" username=@model.username)
   }}
   @closeModal={{this.closeModal}}
 >
   <:body>
-    <p>{{html-safe
+    <p>
+      {{html-safe
         (i18n
           "admin.user.merge.confirmation.description"
           username=@model.username
           targetUsername=@model.targetUsername
-          text=(i18n
-            "admin.user.merge.confirmation.text"
-            username=@model.username
-            targetUsername=@model.targetUsername
-          )
+          text=this.text
         )
-      }}</p>
+      }}
+    </p>
     <Input @type="text" @value={{this.value}} />
   </:body>
   <:footer>
     <DButton
       class="btn-danger"
-      @action={{this.confirm}}
+      @action={{fn @model.merge @model.targetUsername}}
       @icon="trash-alt"
       @disabled={{this.mergeDisabled}}
-      @label={{i18n
+      @translatedLabel={{i18n
         "admin.user.merge.confirmation.transfer_and_delete"
         username=@model.username
       }}
