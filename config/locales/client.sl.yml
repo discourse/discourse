@@ -1552,7 +1552,6 @@ sl:
       hide_forever: "ne, hvala"
       intro: "Pozdravljeni! Vidimo, da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
     summary:
-      enabled_description: "Ogledujete si povzetek teme: najbolj zanimive prispevke, kot jih je določila skupnost."
       description:
         one: "Obstaja <b>%{count}</b> odgovor."
         two: "Obstajata <b>%{count}</b> odgovora."
@@ -2726,7 +2725,6 @@ sl:
       filtered_replies:
         viewing_posts_by: "Ogled %{post_count} objav avtorja"
         viewing_subset: "Nekateri odgovori so strnjeni"
-        viewing_summary: "Ogled povzetka te teme"
         post_number: "%{username}, objava #%{post_number}"
         show_all: "Pokaži vse"
     category:
@@ -3077,6 +3075,9 @@ sl:
       close: "Zapri (Esc)"
       content_load_error: '<a href="%url%">Te vsebina</a> ne moremo naložiti.'
       image_load_error: '<a href="%url%">Te slike</a> ne moremo naložiti.'
+    experimental_lightbox:
+      buttons:
+        close: "Zapri (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4185,6 +4186,8 @@ sl:
         show_overriden: "Prikaži samo preglašene/spremenjene"
         locale: "Jezik:"
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."
+        outdated:
+          dismiss: "Opusti"
       settings:
         show_overriden: "Prikaži samo preglašene/spremenjene"
         history: "Ogled zgodovine sprememb"

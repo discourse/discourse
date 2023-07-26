@@ -1707,8 +1707,7 @@ fr:
       pause_notifications: "Suspendre les notifications"
       remove_status: "Supprimer le statut"
     user_tips:
-      primary: "J'ai compris !"
-      secondary: "ne me montrez pas ces conseils"
+      button: "J'ai compris !"
       first_notification:
         title: "Votre première notification !"
         content: "Les notifications sont utilisées pour vous tenir au courant de ce qui se passe dans la communauté."
@@ -1788,15 +1787,12 @@ fr:
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
       value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres utilisateurs. Nous pouvons travailler ensemble pour rendre cette communauté formidable. :heart:"
     summary:
-      enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description:
         one: "Il y a <b>%{count}</b> réponse."
         other: "Il y a <b>%{count}</b> réponses."
       description_time_MF: |
         Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>.
       disable: "Afficher tous les messages"
-      short_label: "Résumer"
-      short_title: "Afficher un résumé de ce sujet : les publications les plus intéressantes telles que déterminées par la communauté"
     deleted_filter:
       enabled_description: "Ce sujet contient des messages supprimés, qui ont été masqués."
       disabled_description: "Les messages supprimés du sujet sont visibles."
@@ -3242,7 +3238,6 @@ fr:
       filtered_replies:
         viewing_posts_by: "Affichage de %{post_count} messages par"
         viewing_subset: "Certaines réponses sont réduites"
-        viewing_summary: "Affichage d'un résumé de ce sujet"
         post_number: "%{username}, message #%{post_number}"
         show_all: "Tout afficher"
       share:
@@ -3612,6 +3607,9 @@ fr:
       close: "Fermer (Échap)"
       content_load_error: '<a href="%url%">Ce contenu</a> n''a pas pu être chargé.'
       image_load_error: '<a href="%url%">Cette image</a> n''a pas pu être chargée.'
+    experimental_lightbox:
+      buttons:
+        close: "Fermer (Échap)"
     cannot_render_video: Cette vidéo ne peut pas être lue car votre navigateur ne prend pas en charge le codec requis.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -5397,6 +5395,8 @@ fr:
         show_overriden: "Afficher uniquement les textes modifiés"
         locale: "Langue :"
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
+        outdated:
+          dismiss: "Fermer"
       settings:
         show_overriden: "Afficher uniquement les paramètres modifiés"
         history: "Afficher l'historique des modifications"

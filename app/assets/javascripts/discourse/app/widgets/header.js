@@ -82,9 +82,7 @@ createWidget("header-notifications", {
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
-      let ringClass = null;
       if (user.new_personal_messages_notifications_count) {
-        ringClass = "personal-messages";
         contents.push(
           this.attach("link", {
             action: attrs.action,
@@ -122,7 +120,6 @@ createWidget("header-notifications", {
           })
         );
       } else if (user.all_unread_notifications_count) {
-        ringClass = "regular-notifications";
         contents.push(
           this.attach("link", {
             action: attrs.action,
@@ -136,9 +133,6 @@ createWidget("header-notifications", {
             },
           })
         );
-      }
-      if (ringClass && this._shouldHighlightAvatar()) {
-        contents.push(h(`span.ring.revamped.${ringClass}`));
       }
     }
     return contents;

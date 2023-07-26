@@ -1,13 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 
 export default class QuoteState {
-  @tracked postId;
-  @tracked buffer;
-  @tracked opts;
-
-  constructor() {
-    this.clear();
-  }
+  @tracked postId = null;
+  @tracked buffer = "";
+  @tracked opts = null;
 
   selected(postId, buffer, opts) {
     this.postId = postId;

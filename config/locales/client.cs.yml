@@ -1524,7 +1524,6 @@ cs:
       hide_forever: "děkuji, ne"
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
     summary:
-      enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
       disable: "Přepnout na normální zobrazení"
     deleted_filter:
       enabled_description: "Toto téma obsahuje schované smazané příspěvky."
@@ -2856,6 +2855,9 @@ cs:
       close: "Zavřít (Esc)"
       content_load_error: '<a href="%url%">Obsah</a> se nepodařilo načíst.'
       image_load_error: '<a href="%url%">Obrázek</a> se nepodařilo načíst.'
+    experimental_lightbox:
+      buttons:
+        close: "Zavřít (Esc)"
     cannot_render_video: Toto video nelze zobrazit, protože váš prohlížeč nepodporuje daný kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -4081,6 +4083,8 @@ cs:
         go_back: "Zpět na hledání"
         recommended: "Doporučujeme uzpůsobit následující text tak, aby vám vyhovoval:"
         show_overriden: "Zobrazit pouze změněná nastavení"
+        outdated:
+          dismiss: "Označit jako přečtené"
       settings:
         show_overriden: "Zobrazit pouze přepsané"
         reset: "resetovat"

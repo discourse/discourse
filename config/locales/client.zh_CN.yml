@@ -367,6 +367,8 @@ zh_CN:
         search: "搜索消息"
         placeholder: "在此处输入消息标题、URL 或 ID"
     review:
+      show_more: "显示更多"
+      show_less: "显示更少"
       order_by: "排序依据"
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
@@ -529,6 +531,8 @@ zh_CN:
           title: "用户"
         reviewable_post:
           title: "帖子"
+        reviewable_chat_message:
+          title: "标记聊天消息"
       approval:
         title: "帖子需要审批"
         description: "我们已收到您的帖子，不过需要由版主批准才能显示。请耐心等待。"
@@ -997,6 +1001,7 @@ zh_CN:
           warning: "确定要清除精选话题吗？"
       use_current_timezone: "使用当前时区"
       profile_hidden: "此用户的公开个人资料已被隐藏。"
+      inactive_user: "该用户不再活跃。"
       expand_profile: "展开"
       sr_expand_profile: "展开个人资料详细信息"
       collapse_profile: "收起"
@@ -1236,6 +1241,7 @@ zh_CN:
         tags: "标签"
         interface: "界面"
         apps: "应用"
+        navigation_menu: "导航菜单"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -1681,8 +1687,7 @@ zh_CN:
       pause_notifications: "暂停通知"
       remove_status: "移除状态"
     user_tips:
-      primary: "知道了！"
-      secondary: "不要为我显示这些提示"
+      button: "我知道了！"
       first_notification:
         title: "您的第一个通知！"
         content: "通知用于让您了解社区中发生的最新情况。"
@@ -1701,7 +1706,7 @@ zh_CN:
       admin_guide:
         title: "欢迎来到你的新网站！"
         content: "阅读管理指南以继续构建你的网站和社区。"
-        primary: "让我们开始吧！"
+        button: "让我们开始吧！"
     loading: "正在加载…"
     errors:
       prev_page: "无法加载"
@@ -1764,15 +1769,29 @@ zh_CN:
       hidden_for_session: "好的，我们会在明天问您。您也可以随时使用“登录”来创建帐户。"
       intro: "您好！看起来您很喜欢讨论，但您还没有注册帐户。"
       value_prop: "厌倦了滚动浏览相同的帖子？当您创建帐户后，您将始终回到您离开的地方。使用帐户，您还可以收到新回复通知、保存书签，以及使用“赞”来感谢他人。我们可以共同努力，使这个社区变得更好。:heart:"
+    offline_indicator:
+      no_internet: "没有网络连接。"
+      refresh_page: "刷新页面"
     summary:
-      enabled_description: "您正在查看此话题的摘要：社区确定的最有趣的帖子。"
+      in_progress: "使用 AI 总结主题..."
+      summarized_on: "已使用 AI 在 %{date} 总结"
+      model_used: "使用的 AI：%{model}"
+      outdated: "摘要已过时"
+      outdated_posts:
+        other: "（%{count} 个帖子缺失）"
+      enabled_description: "你正在浏览的是该主题的热门回复：由社区决定的最有趣的帖子。"
       description:
         other: "有 <b>%{count}</b> 个回复。"
+      buttons:
+        hide: "隐藏摘要"
+        generate: "使用 AI 总结"
+        regenerate: "重新生成摘要"
       description_time_MF: |
         有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。
+      enable: "显示热门回复"
       disable: "显示所有帖子"
-      short_label: "摘要"
-      short_title: "显示此话题的摘要：由社区决定的最有趣的帖子"
+      short_label: "热门回复"
+      short_title: "显示此话题的热门回复：由社区决定的最有趣的帖子"
     deleted_filter:
       enabled_description: "此话题包含已删除的帖子，它们已被隐藏。"
       disabled_description: "已显示话题中已删除的帖子。"
@@ -2464,6 +2483,11 @@ zh_CN:
         dismiss_tooltip: "仅忽略新帖子或停止跟踪话题"
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
         dismiss_new: "忽略新话题"
+        dismiss_new_modal:
+          title: "忽略新话题"
+          topics: "忽略新话题"
+          posts: "忽略新帖子"
+          untrack: "停止跟踪这些话题，以便它们不再出现在我的新列表中"
         dismiss_new_with_selected:
           other: "忽略新话题（%{count} 个）…"
         toggle: "切换话题批量选择"
@@ -2561,6 +2585,7 @@ zh_CN:
       read_more_in_category: "想阅读更多？请浏览%{categoryLink}中的其他话题或<a href='%{latestLink}'>查看最新话题</a>。"
       read_more: "想阅读更多？请<a href='%{categoryLink}'>浏览所有类别</a>或<a href='%{latestLink}'>查看最新话题</a>。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
+      participant_groups: "参与群组"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -3148,7 +3173,7 @@ zh_CN:
       filtered_replies:
         viewing_posts_by: "正在查看此用户的 %{post_count} 个帖子："
         viewing_subset: "某些回复已被收起"
-        viewing_summary: "正在查看此话题的摘要"
+        viewing_summary: "查看此话题的热门回复"
         post_number: "%{username}，帖子 #%{post_number}"
         show_all: "全部显示"
       share:
@@ -3508,6 +3533,20 @@ zh_CN:
       close: "关闭 (Esc)"
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
+    experimental_lightbox:
+      image_load_error: "图片无法加载。"
+      screen_reader_image_title: "第 %{current} 张图片，共 %{total} 张： %{title}"
+      buttons:
+        next: "下一个 (向右或向下箭头键)"
+        previous: "上一页 (向左或向上箭头键)"
+        close: "关闭 (Esc)"
+        download: "下载图片"
+        newtab: "在新标签页中打开图片"
+        zoom: "放大/缩小图像(Z 键)"
+        rotate: "旋转图像(R键)"
+        fullscreen: "切换浏览器全屏模式(M 键)"
+        carousel: "显示轮播中的所有图像(A 键)"
+        retry: "重试加载图像"
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "，"
@@ -3830,6 +3869,12 @@ zh_CN:
           text: "我们将自动显示本网站最受欢迎的类别"
         filter_placeholder: "筛选类别"
         no_categories: "没有匹配到指定条件的类别。"
+      tags_form_modal:
+        title: "编辑标签导航"
+        filter_placeholder: "筛选标签"
+        no_tags: "没有匹配到指定的标签。"
+        subtitle:
+          text: "我们将自动显示本网站最受欢迎的标签"
       edit_navigation_modal_form:
         deselect_button_text: "取消全选"
         reset_to_defaults: "重置为默认值"
@@ -3936,6 +3981,9 @@ zh_CN:
               title: "被举报的帖子和其他排队的条目"
               pending_count: "%{count} 待处理"
         global_section: "全球部分，所有人可见"
+      panels:
+        forum:
+          label: 论坛
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -4855,6 +4903,7 @@ zh_CN:
             revoke_moderation: "撤消审核权限"
             backup_create: "创建备份"
             deleted_tag: "删除的标签"
+            update_directory_columns: "更新目录列"
             deleted_unused_tags: "已被删除的未使用的标签"
             renamed_tag: "重命名的标签"
             revoke_email: "撤消电子邮件"
@@ -5057,17 +5106,24 @@ zh_CN:
           validations:
             required:
               key: "必选"
+              type: "布尔值"
               description: "需要填写该字段才能提交表单。"
             minimum:
               key: "最小值"
               type: "整数"
+              description: "对于文本字段，指定允许的最小字符数。"
             maximum:
               key: "最大值"
               type: "整数"
+              description: "对于文本字段，指定允许的最大字符数。"
             pattern:
+              key: "模式"
               type: "正则表达式"
+              description: "对于文本字段，指定允许输入的正则表达式。"
             type:
               key: "类型"
+              type: "字符串"
+              description: "对于输入字段，你可以指定预期的输入类型(text|email|date|number|url|tel|color)。"
         preview_modal:
           title: "预览模板"
         field_placeholders:
@@ -5415,8 +5471,16 @@ zh_CN:
         go_back: "返回搜索"
         recommended: "我们建议自定义以下文本以符合您的需求："
         show_overriden: "只显示被替换"
+        show_outdated: "仅显示过期/无效"
         locale: "语言："
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
+        interpolation_keys: "可用的插值键："
+        outdated:
+          title: "此翻译已过时"
+          description: "自创建此替换以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"
+          old_default: "旧默认值"
+          new_default: "新默认值"
+          dismiss: "忽略"
       settings:
         show_overriden: "只显示被替换"
         history: "查看变更历史记录"

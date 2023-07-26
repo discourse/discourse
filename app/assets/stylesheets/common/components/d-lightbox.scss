@@ -1,7 +1,7 @@
 /* Main document */
 
 html.has-lightbox {
-  overflow-y: hidden;
+  overflow: hidden;
 
   &::-webkit-scrollbar {
     display: none;

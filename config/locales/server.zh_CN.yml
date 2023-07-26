@@ -219,6 +219,10 @@ zh_CN:
         other: "抱歉，我们无法为此网页生成预览，因为找不到以下 oEmbed / OpenGraph 标签：%{missing_attributes}"
   word_connector:
     comma: "，"
+  custom_fields:
+    validations:
+      max_items: "该实体的自定义字段已达到最大数量 (%{max_items_number})"
+      max_value_length: "已达到自定义字段值的最大长度 (%{max_value_length})"
   invite:
     expired: "您的邀请令牌已过期。请<a href='%{base_url}/about'>联系管理人员</a>。"
     not_found: "您的邀请令牌无效。请<a href='%{base_url}/about'>联系管理人员</a>。"
@@ -1325,6 +1329,7 @@ zh_CN:
     image_magick_warning: '服务器被配置为创建大图片缩略图，但是未安装 ImageMagick。使用您喜爱的软件包管理器安装 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
     failing_emails_warning: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
     subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
+    outdated_translations_warning: "您的某些自定义文本已过时。请检查您的 <a href='%{base_path}/admin/customize/site_texts?outdated=true'>自定义文本</a>。"
     email_polling_errored_recently:
       other: "电子邮件轮询在过去的 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>，了解更多详细信息。"
     missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
@@ -1336,6 +1341,7 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
     v3_analytics_deprecated: "你的Discourse目前使用的是Google Analytics 3，2023年7月后将不再支持。 <a href='https://meta.discourse.org/t/260498'>现在就升级到Google Analytics 4</a> ，以继续接收有价值的见解和分析，了解你的网站性能。"
+    legacy_navigation_menu_deprecated: "你的 Discourse 目前使用的是 \"传统 \"导航菜单， <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>该菜单将在 Discourse 3.2</a>的第一个测试版中移除。更新你的 <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>导航菜单网站设置</a> 为 \"边栏 \"或 \"标题下拉菜单\"，以迁移到新的导航菜单。"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1401,8 +1407,11 @@ zh_CN:
     fixed_category_positions_on_create: "如果选中，将在话题创建对话框中维护类别排序（需要 fixed_category_positions）。"
     add_rel_nofollow_to_user_content: '将 rel nofollow 属性添加到提交的所有用户内容，除了内部链接（包括父网域）。如果您更改此设置，则必须使用“rake posts:rebake”重新发布所有帖子。'
     exclude_rel_nofollow_domains: "不应将 nofollow 添加到链接的网域列表。example.com 也会自动允许 sub.example.com。至少，您应该添加此站点的网域以帮助网络抓取工具查找所有内容。如果您的网站的其他部分位于其他网域，也可以添加这些部分。"
+    max_form_template_title_length: "表单模板标题允许的最大长度。"
+    max_form_template_content_length: "表单模板内容允许的最大长度。"
     post_excerpt_maxlength: "帖子摘录/摘要的最大长度。"
     topic_excerpt_maxlength: "从话题中的第一个帖子生成的话题摘录/摘要的最大长度。"
+    default_subcategory_on_read_only_category: "在只读类别里启用 \"新主题 \"按钮，并选择一个允许用户发布的默认的子类别。"
     show_pinned_excerpt_mobile: "在移动视图中显示置顶话题的摘录。"
     show_pinned_excerpt_desktop: "在桌面视图中显示置顶话题的摘录。"
     post_onebox_maxlength: "Onebox Discourse 帖子的最大长度（以字符为单位）。"
@@ -1440,6 +1449,8 @@ zh_CN:
     summary_percent_filter: "当用户点击“总结此话题”时，显示前百分之几的帖子"
     summary_max_results: "“总结此话题”返回的最大帖子数量"
     summary_timeline_button: "在时间线中显示“摘要”按钮"
+    summarization_strategy: "总结插件注册内容的其他方法"
+    custom_summarization_allowed_groups: "允许使用“summarization_strategy”总结内容的群组。"
     enable_personal_messages: "已弃用，请改用 'personal message enabled groups' 设置。允许信任级别 1（可通过最小信任级别配置来发送消息）用户创建消息和回复消息。请注意，管理人员不受限制。"
     personal_message_enabled_groups: "允许这些组中的用户创建消息和回复消息。信任级别组包括高于该数字的所有信任级别，例如选择 trust_level_1 还允许 trust_level_2、3、4 用户发送 PM。请注意，管理人员不受限制。"
     enable_system_message_replies: "即使禁用了个人消息，也允许用户回复系统消息"
@@ -1611,6 +1622,7 @@ zh_CN:
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
     s3_disable_cleanup: "当备份的数量超出允许的最大值时，不移除 S3 中的旧备份。"
     enable_s3_inventory: "使用 Amazon S3 清单生成报告并验证上传。重要提示：需要有效的 S3 凭据（访问密钥 ID 和秘密访问密钥）。"
+    s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；如果您遵循此建议，请取消选中此选项。如果您使用安全上传，则必须启用此选项。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
     backup_location: "存储备份的位置。重要提示：S3 要求在“文件”设置中输入有效的 S3 凭据。"
@@ -1660,6 +1672,7 @@ zh_CN:
     s3_secret_access_key: "将用于上传图片、附件和备份的 Amazon S3 秘密访问密钥。"
     s3_region: "将用于上传图片和备份的 Amazon S3 区域名称。"
     s3_cdn_url: "用于所有 S3 资源的 CDN URL（例如：https://cdn.somewhere.com）。警告：更改此设置后，您必须重新发布所有旧帖子。"
+    s3_use_cdn_url_for_all_uploads: "对上传到 s3 的所有文件使用 CDN URL，而不仅仅对图像使用。"
     avatar_sizes: "自动生成的头像大小列表。"
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL。允许的替换为 {username} {first_letter} {color} {size}"
@@ -1746,7 +1759,7 @@ zh_CN:
     title_min_entropy: "话题标题所需的最小熵（唯一字符，非英语计数更多）。"
     body_min_entropy: "帖子正文所需的最小熵（唯一字符，非英语计数更多）。"
     allow_uppercase_posts: "允许在话题标题或帖子正文中全部使用大写字母。"
-    max_consecutive_replies: "用户在被阻止添加另一个回复之前必须在话题中连续发布的帖子数。"
+    max_consecutive_replies: "用户在被阻止添加另一个回复之前可以在主题中连续发布的帖子数。此限制不适用于主题所有者、站点工作人员或类别管理员。"
     enable_filtered_replies_view: '“(n) 回复”按钮会收起所有其他帖子，仅显示当前帖子及其回复。'
     title_fancy_entities: "将常见的 ASCII 字符转换为话题标题中的花哨 HTML 实体，又称为 SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "检查有无类似话题之前的标题的最小长度。"
@@ -1904,6 +1917,7 @@ zh_CN:
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为 PM 中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_posting: "允许用户切换至匿名模式"
+    allow_anonymous_likes: "允许匿名用户对帖子点赞"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
@@ -1947,6 +1961,7 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
+    max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_required: "全名是用户个人资料的必填字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
@@ -2036,6 +2051,10 @@ zh_CN:
     default_tags_watching_first_post: "默认将关注每个新话题中的第一个帖子的标签列表。"
     default_text_size: "默认选择的文本大小"
     default_title_count_mode: "页面标题计数器的默认模式"
+    enable_offline_indicator: "当检测到用户没有网络连接时，向他们显示一条消息"
+    default_sidebar_link_to_filtered_list: "默认情况下，将导航菜单链接设为链接到筛选后的列表。"
+    default_sidebar_show_count_of_new_items: "默认情况下，将导航菜单链接设为显示新条目的数量而非徽章的数量。"
+    default_sidebar_switch_panel_position: "边栏开关面板按钮的位置"
     retain_web_hook_events_period_days: "保留网络钩子事件记录的天数。"
     retry_web_hook_events: "自动重试失败的网络钩子事件 4 次。重试之间的时间间隔为 1、5、25 和 125 分钟。"
     revoke_api_keys_days: "未使用的 API 密钥被自动撤消前的天数（0 表示从不撤消）"
@@ -2096,11 +2115,15 @@ zh_CN:
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     splash_screen: "在加载站点资源时显示临时加载屏幕"
     navigation_menu: "确定要使用的导航菜单。边栏和标题导航可由用户自定义。旧版选项用于向后兼容。"
+    default_navigation_menu_categories: "所选类别将默认显示在导航菜单的“类别”版块下。"
+    default_navigation_menu_tags: "所选标签将默认显示在导航菜单的“标签”版块下。"
     enable_experimental_hashtag_autocomplete: "实验性：对类别和标签使用新的 #hashtag 自动补全系统，以不同方式呈现所选条目，并改进了搜索"
     experimental_new_new_view_groups: '试验性的：启用一个新的主题列表，将未读和新的主题合并，并使侧边栏中的 "一切 "链接指向它。'
     enable_custom_sidebar_sections: "实验：启用自定义侧边栏部分"
     experimental_topics_filter: "实验性：在 /filter 启用实验性主题过滤器"
     experimental_search_menu_groups: "实验性：启用升级为使用 glimmer 的新搜索菜单"
+    enable_experimental_lightbox: "实验性：将默认的图片灯箱替换为修订后的设计。"
+    page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“微调控件”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -4111,6 +4134,7 @@ zh_CN:
         other: '“%{category}”类别不允许使用“%{tags}”标签。请将其移除。'
     required_tags_from_group:
       other: "您必须至少包含 %{count} 个%{tag_group_name}标签。此组中的标签包括：%{tags}。"
+    limited_to_one_tag_from_group: "标签 %{tags} 不能同时使用。请仅包含其中一个标签。"
     invalid_target_tag: "不能是同义词的同义词"
     synonyms_exist: "存在同义词时不允许"
   rss_by_tag: "使用%{tag}标记的话题"

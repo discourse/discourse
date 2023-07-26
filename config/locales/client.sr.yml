@@ -1003,7 +1003,6 @@ sr:
     signup_cta:
       sign_up: "Registrujte se"
     summary:
-      enabled_description: "Gledate pregled ove teme: najzanimljivije poruke su odabrane od strane zajednice."
       disable: "Prikaži Sve Poruke"
     deleted_filter:
       enabled_description: "Ova tema sadrži brisane poruke, koji su skriveni."
@@ -2424,6 +2423,8 @@ sr:
       site_text:
         edit: "izmeni"
         show_overriden: "Pokazuj samo promenjeno"
+        outdated:
+          dismiss: "Одбаци"
       settings:
         show_overriden: "Pokazuj samo promenjeno"
         reset: "resetuj"
