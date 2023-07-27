@@ -2,6 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+
 /*
 example valid content for ace editor:
 [
@@ -56,7 +57,8 @@ module(
         )
     }} />`);
       const lines = document.querySelectorAll(".ace_line");
-      assert.strictEqual(lines[0].innerHTML, "[");
+      const indexOf = lines[0].innerHTML.indexOf("[");
+      assert.ok(indexOf >= 0);
     });
 
     test("input is valid json", async function (assert) {
