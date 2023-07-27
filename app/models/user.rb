@@ -1543,7 +1543,7 @@ class User < ActiveRecord::Base
   end
 
   def number_of_rejected_posts
-    ReviewableQueuedPost.rejected.where(created_by_id: self.id).count
+    ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
   end
 
   def number_of_flags_given

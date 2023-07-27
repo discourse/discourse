@@ -547,7 +547,7 @@ RSpec.describe User do
     fab!(:posts) { [post1, post2, post3] }
     fab!(:post_ids) { [post1.id, post2.id, post3.id] }
     let(:guardian) { Guardian.new(Fabricate(:admin)) }
-    fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, created_by: user) }
+    fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
 
     it "deletes only one batch of posts" do
       post2
@@ -1981,13 +1981,21 @@ RSpec.describe User do
 
     describe "#number_of_rejected_posts" do
       it "counts rejected posts" do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:rejected])
+        Fabricate(
+          :reviewable_queued_post,
+          target_created_by: user,
+          status: Reviewable.statuses[:rejected],
+        )
 
         expect(user.number_of_rejected_posts).to eq(1)
       end
 
       it "ignore non-rejected posts" do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
+        Fabricate(
+          :reviewable_queued_post,
+          target_created_by: user,
+          status: Reviewable.statuses[:approved],
+        )
 
         expect(user.number_of_rejected_posts).to eq(0)
       end

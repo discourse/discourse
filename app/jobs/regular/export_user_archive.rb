@@ -459,7 +459,7 @@ module Jobs
 
       # Most Reviewable fields staff-private, but post content needs to be exported.
       ReviewableQueuedPost
-        .where(created_by: @current_user.id)
+        .where(target_created_by_id: @current_user.id)
         .order(:created_at)
         .each do |rev|
           yield(
