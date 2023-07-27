@@ -26,13 +26,16 @@ $max_image_height: 150px;
         max-height: 100px;
         width: 20%;
         max-width: 60px;
+        margin-right: 0.5rem;
       }
     }
 
     @container (width < 400px) {
       .onebox-body {
-        display: flex;
-        flex-direction: column;
+        &:not(:has(.thumbnail.onebox-avatar)) {
+          display: flex;
+          flex-direction: column;
+        }
 
         h3 {
           margin-block: 0.75rem 0;
@@ -47,6 +50,7 @@ $max_image_height: 150px;
 
           &.onebox-avatar {
             max-width: 20%;
+            margin-right: 0.5rem;
           }
         }
       }
