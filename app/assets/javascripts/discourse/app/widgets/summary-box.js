@@ -11,35 +11,14 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 
 createWidget("summary-skeleton", {
-  tagName: "section.placeholder-summary",
+  tagName: "",
 
   html() {
-    const html = [];
-
-    html.push(this.buildPlaceholderDiv());
-    html.push(this.buildPlaceholderDiv());
-    html.push(this.buildPlaceholderDiv());
-
-    html.push(
-      h("span", {}, [
-        h(
-          "div.placeholder-generating-summary-text",
-          {},
-          I18n.t("summary.in_progress")
-        ),
-        h("span.ai-summarizing-indicator__wave", {}, [
-          h("span.ai-summarizing-indicator__dot", "."),
-          h("span.ai-summarizing-indicator__dot", "."),
-          h("span.ai-summarizing-indicator__dot", "."),
-        ]),
-      ])
+    return new RenderGlimmer(
+      this,
+      "div.ai-summary__container",
+      hbs`{{ai-summary}}`
     );
-
-    return html;
-  },
-
-  buildPlaceholderDiv() {
-    return h("div.placeholder-summary-text.placeholder-animation");
   },
 });
 
