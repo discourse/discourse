@@ -12,6 +12,7 @@ import {
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
 import { isTesting } from "discourse-common/config/environment";
+import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -395,6 +396,13 @@ registerButton("admin", (attrs) => {
 });
 
 registerButton("delete", (attrs) => {
+  return {
+    id: "delete_topic",
+    action: "showDeleteTopicModal",
+    title: "post.controls.delete_topic_disallowed",
+    icon: "far-trash-alt",
+    className: "delete",
+  };
   if (attrs.canRecoverTopic) {
     return {
       id: "recover_topic",
@@ -447,6 +455,7 @@ function replaceButton(buttons, find, replace) {
 
 export default createWidget("post-menu", {
   tagName: "section.post-menu-area.clearfix",
+  services: ["modal"],
 
   settings: {
     collapseButtons: true,
@@ -712,7 +721,7 @@ export default createWidget("post-menu", {
   },
 
   showDeleteTopicModal() {
-    showModal("delete-topic-disallowed");
+    this.modal.show(DeleteTopicDisallowedModal);
   },
 
   showMoreActions() {
