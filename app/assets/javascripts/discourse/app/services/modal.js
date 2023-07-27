@@ -20,7 +20,6 @@ const KNOWN_LEGACY_MODALS = [
   "change-owner",
   "change-post-notice",
   "change-timestamp",
-  "convert-to-public-topic",
   "create-account",
   "create-invite-bulk",
   "create-invite",

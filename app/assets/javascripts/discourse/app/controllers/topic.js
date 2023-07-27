@@ -36,6 +36,7 @@ import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
+import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 
 let customPostMessageCallbacks = {};
 
@@ -1185,9 +1186,8 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     convertToPublicTopic() {
-      showModal("convert-to-public-topic", {
-        model: this.model,
-        modalClass: "convert-to-public-topic",
+      this.modal.show(ConvertToPublicTopicModal, {
+        model: { topic: this.model },
       });
     },
 
