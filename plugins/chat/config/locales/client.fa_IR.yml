@@ -117,6 +117,9 @@ fa_IR:
       select: "انتخاب کنید"
       return_to_list: "بازگشت به فهرست کانال‌ها"
       return_to_threads_list: "بازگشت به گفتگوی جاری"
+      unread_threads_count:
+        one: "شما %{count} گفتگوی خوانده نشده دارید"
+        other: "شما %{count} گفتگوی خوانده نشده دارید"
       scroll_to_bottom: "حرکت به پایین"
       scroll_to_new_messages: "مشاهده پیام‌های جدید"
       sound:
@@ -178,8 +181,6 @@ fa_IR:
         title: پیام جدید
         prefix: "به:"
         no_results: هیج نتیجه‌ای نداشت
-      channel_selector:
-        no_channels: "هیچ کانالی با جستجوی شما مطابقت ندارد"
       channel:
         no_memberships: این کانال هنوز هیچ عضوی ندارد
         no_memberships_found: هیچ عضوی یافت نشد
@@ -220,6 +221,7 @@ fa_IR:
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"
         notifications: "اعلان‌ها"
@@ -281,13 +283,18 @@ fa_IR:
       thread:
         title: "عنوان"
         view_thread: مشاهده موضوع
-        default_title: "موضوع #%{thread_id}"
         replies:
           one: "%{count} پاسخ"
           other: "%{count} پاسخ"
         original_message:
           started_by: "شروع شده توسط"
         settings: "تنظیمات"
+        last_reply: "آخرین پاسخ"
+        notifications:
+          regular:
+            title: "معمولی"
+          tracking:
+            title: "پیگیری"
       threads:
         list: "گفتگوهای در حال انجام"
       draft_channel_screen:
@@ -343,3 +350,7 @@ fa_IR:
         chat_notifications_with_unread:
           one: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"
           other: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"
+    styleguide:
+      sections:
+        chat:
+          title: گفتگو

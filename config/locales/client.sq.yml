@@ -900,8 +900,6 @@ sq:
       sign_up: "Regjistrohu"
       hide_forever: "jo faleminderit"
     summary:
-      enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
-      enable: "Përmblidhe këtë Temë"
       disable: "Shfaq të gjithë postimet"
     deleted_filter:
       enabled_description: "Kjo temë përmban postime të fshira, që tani janë fshehur."
@@ -1924,6 +1922,9 @@ sq:
         other: "%{count} të reja"
       more: "Më shumë"
       all_categories: "Të gjitha kategoritë"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Të Gjithë"
       sections:
         custom:
           save: "Ruaj"
@@ -1950,7 +1951,8 @@ sq:
         categories:
           header_link_text: "Categories"
         community:
-          header_link_text: "Komuniteti"
+          edit_section:
+            header_dropdown: "Personalizo"
           links:
             about:
               content: "Rreth"
@@ -1958,6 +1960,8 @@ sq:
               content: "Admin"
             badges:
               content: "Stemat"
+            topics:
+              content: "Topics"
             faq:
               content: "Pyetje të shpeshta"
             groups:
@@ -1966,6 +1970,11 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Ju lutem shkruani një vlerë të vlefshme."
+          email: "Ju lutemi të vendosni një email të vlefshëm."
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:
@@ -2426,6 +2435,8 @@ sq:
           validations:
             required:
               key: "i nevojshëm"
+            type:
+              key: "lloji"
       impersonate:
         title: "Personifiko"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -2631,6 +2642,8 @@ sq:
         go_back: "Kthehu tek kërkimi"
         recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
         show_overriden: "Shfaq vetëm të ndryshuarat"
+        outdated:
+          dismiss: "Hiqe"
       settings:
         show_overriden: "Shfaq vetëm të ndryshuarat"
         reset: "rivendos"

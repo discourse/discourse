@@ -104,6 +104,8 @@ nl:
       heading: "Chat"
       join: "Deelnemen"
       last_visit: "laatste bezoek"
+      summarization:
+        summarize: "Samenvatten"
       mention_warning:
         dismiss: "negeren"
         invitations_sent:
@@ -205,6 +207,8 @@ nl:
           about: Over
           members: Leden
           settings: Instellingen
+      new_message_modal:
+        no_items: "Geen items"
       channel_edit_name_slug_modal:
         name: Kanaalnaam
       channel_edit_description_modal:
@@ -216,9 +220,6 @@ nl:
         prefix: "Aan:"
         no_results: Geen resultaten
         selected_user_title: "%{username} deselecteren"
-      channel_selector:
-        title: "Naar kanaal springen"
-        no_channels: "Er komen geen kanalen overeen met je zoekopdracht"
       channel:
         no_memberships: Dit kanaal heeft geen leden
         no_memberships_found: Geen leden gevonden
@@ -268,6 +269,8 @@ nl:
         followed: "Lid sinds"
         mobile_notification_level: "Mobiele pushmeldingen"
         mute: "Kanaal dempen"
+        threading_enabled: "Ingeschakeld"
+        threading_disabled: "Uitgeschakeld"
         muted_on: "Aan"
         muted_off: "Uit"
         notifications: "Meldingen"
@@ -367,6 +370,15 @@ nl:
           one: "%{count} antwoord"
           other: "%{count} antwoorden"
         settings: "Instellingen"
+        last_reply: "laatste antwoord"
+        notifications:
+          regular:
+            title: "Normaal"
+          tracking:
+            title: "Tracking"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
@@ -443,3 +455,7 @@ nl:
         chat_notifications_with_unread:
           one: "Chatmeldingen - %{count} ongelezen melding"
           other: "Chatmeldingen - %{count} ongelezen meldingen"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

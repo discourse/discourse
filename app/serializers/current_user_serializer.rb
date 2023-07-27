@@ -66,9 +66,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
-             :sidebar_list_destination,
              :sidebar_sections,
-             :new_new_view_enabled?
+             :new_new_view_enabled?,
+             :experimental_search_menu_groups_enabled?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -79,7 +79,7 @@ class CurrentUserSerializer < BasicUserSerializer
     SidebarSection
       .public_sections
       .or(SidebarSection.where(user_id: object.id))
-      .includes(sidebar_section_links: :linkable)
+      .includes(:sidebar_urls)
       .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
       .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end

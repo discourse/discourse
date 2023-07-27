@@ -9,7 +9,6 @@ RSpec.describe Chat::Api::ChannelThreadsController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     Group.refresh_automatic_groups!
     sign_in(current_user)
   end
@@ -55,15 +54,6 @@ RSpec.describe Chat::Api::ChannelThreadsController do
 
       context "when channel does not have threading enabled" do
         before { thread.channel.update!(threading_enabled: false) }
-
-        it "returns 404" do
-          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
-          expect(response.status).to eq(404)
-        end
-      end
-
-      context "when enable_experimental_chat_threaded_discussions is disabled" do
-        before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
 
         it "returns 404" do
           get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
@@ -124,6 +114,38 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       )
     end
 
+    it "has preloaded chat mentions and users for the thread original message" do
+      thread_1.original_message.update!(
+        message: "@#{current_user.username} hello and @#{thread_2.original_message_user.username}!",
+      )
+      thread_1.original_message.rebake!
+      thread_1.original_message.create_mentions
+
+      get "/chat/api/channels/#{public_channel.id}/threads"
+      expect(response.status).to eq(200)
+      expect(
+        response.parsed_body["threads"]
+          .find { |thread| thread["id"] == thread_1.id }
+          .dig("original_message", "mentioned_users"),
+      ).to eq(
+        [
+          {
+            "avatar_template" => User.system_avatar_template(current_user.username),
+            "id" => current_user.id,
+            "name" => current_user.name,
+            "username" => current_user.username,
+          },
+          {
+            "avatar_template" =>
+              User.system_avatar_template(thread_2.original_message_user.username),
+            "id" => thread_2.original_message_user.id,
+            "name" => thread_2.original_message_user.name,
+            "username" => thread_2.original_message_user.username,
+          },
+        ],
+      )
+    end
+
     context "when the channel is not accessible to the useer" do
       before do
         public_channel.update!(chatable: Fabricate(:private_category, group: Fabricate(:group)))
@@ -137,15 +159,6 @@ RSpec.describe Chat::Api::ChannelThreadsController do
 
     context "when channel does not have threading enabled" do
       before { public_channel.update!(threading_enabled: false) }
-
-      it "returns 404" do
-        get "/chat/api/channels/#{public_channel.id}/threads"
-        expect(response.status).to eq(404)
-      end
-    end
-
-    context "when enable_experimental_chat_threaded_discussions is disabled" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
 
       it "returns 404" do
         get "/chat/api/channels/#{public_channel.id}/threads"
@@ -209,15 +222,6 @@ RSpec.describe Chat::Api::ChannelThreadsController do
 
     context "when channel does not have threading enabled" do
       before { public_channel.update!(threading_enabled: false) }
-
-      it "returns 404" do
-        put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params
-        expect(response.status).to eq(404)
-      end
-    end
-
-    context "when enable_experimental_chat_threaded_discussions is disabled" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
 
       it "returns 404" do
         put "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}", params: params

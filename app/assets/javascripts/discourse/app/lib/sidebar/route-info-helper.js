@@ -1,6 +1,6 @@
 export default class RouteInfoHelper {
   constructor(router, url) {
-    this.routeInfo = router.recognize(url);
+    this.routeInfo = router.recognize(router.rootURL.replace(/\/$/, "") + url);
   }
 
   get route() {

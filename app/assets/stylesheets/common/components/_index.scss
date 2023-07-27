@@ -7,6 +7,7 @@
 @import "char-counter";
 @import "conditional-loading-section";
 @import "convert-to-public-topic-modal";
+@import "d-lightbox";
 @import "d-tooltip";
 @import "d-toggle-switch";
 @import "date-input";
@@ -14,6 +15,7 @@
 @import "date-time-input-range";
 @import "date-time-input";
 @import "footer-nav";
+@import "form-template-field";
 @import "group-member-dropdown";
 @import "groups-form-membership-fields";
 @import "hashtag";
@@ -22,10 +24,14 @@
 @import "ignored-user-list";
 @import "keyboard_shortcuts";
 @import "navs";
+@import "offline-indicator";
 @import "pick-files-button";
 @import "relative-time-picker";
 @import "share-and-invite-modal";
 @import "download-calendar";
+@import "sidebar/edit-navigation-menu/categories-modal";
+@import "sidebar/edit-navigation-menu/modal";
+@import "sidebar/edit-navigation-menu/tags-modal";
 @import "svg";
 @import "tap-tile";
 @import "time-input";

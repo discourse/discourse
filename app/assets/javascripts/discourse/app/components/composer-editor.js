@@ -6,8 +6,8 @@ import {
   caretPosition,
   formatUsername,
   inCodeBlock,
-  tinyAvatar,
 } from "discourse/lib/utilities";
+import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import discourseComputed, {
   bind,
   debounce,
@@ -42,6 +42,11 @@ import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
+import {
+  destroyTippyInstances,
+  initUserStatusHtml,
+  renderUserStatusHtml,
+} from "discourse/lib/user-status-on-autocomplete";
 
 // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
 // group 1 `image|foo=bar`
@@ -220,18 +225,27 @@ export default Component.extend(
       if (this.siteSettings.enable_mentions) {
         $input.autocomplete({
           template: findRawTemplate("user-selector-autocomplete"),
-          dataSource: (term) =>
-            userSearch({
+          dataSource: (term) => {
+            destroyTippyInstances();
+            return userSearch({
               term,
               topicId: this.topic?.id,
               categoryId: this.topic?.category_id || this.composer?.categoryId,
               includeGroups: true,
-            }),
+            }).then((result) => {
+              initUserStatusHtml(result.users);
+              return result;
+            });
+          },
+          onRender: (options) => {
+            renderUserStatusHtml(options);
+          },
           key: "@",
           transformComplete: (v) => v.username || v.name,
           afterComplete: this._afterMentionComplete,
           triggerRule: (textarea) =>
             !inCodeBlock(textarea.value, caretPosition(textarea)),
+          onClose: destroyTippyInstances,
         });
       }
 
@@ -742,12 +756,42 @@ export default Component.extend(
       );
     },
 
+    @bind
+    _handleImageGridButtonClick(event) {
+      if (!event.target.classList.contains("wrap-image-grid-button")) {
+        return;
+      }
+
+      const index = parseInt(
+        event.target.closest(".button-wrapper").dataset.imageIndex,
+        10
+      );
+      const reply = this.get("composer.reply");
+      const matches = reply.match(IMAGE_MARKDOWN_REGEX);
+      const closingIndex =
+        index + parseInt(event.target.dataset.imageCount, 10) - 1;
+
+      const textArea = this.element.querySelector(".d-editor-input");
+      textArea.selectionStart = reply.indexOf(matches[index]);
+      textArea.selectionEnd =
+        reply.indexOf(matches[closingIndex]) + matches[closingIndex].length;
+
+      this.appEvents.trigger(
+        `${this.composerEventPrefix}:apply-surround`,
+        "[grid]",
+        "[/grid]",
+        "grid_surround",
+        { useBlockMode: true }
+      );
+    },
+
     _registerImageAltTextButtonClick(preview) {
       preview.addEventListener("click", this._handleAltTextEditButtonClick);
       preview.addEventListener("click", this._handleAltTextOkButtonClick);
       preview.addEventListener("click", this._handleAltTextCancelButtonClick);
       preview.addEventListener("click", this._handleImageDeleteButtonClick);
       preview.addEventListener("keypress", this._handleAltTextInputKeypress);
+      preview.addEventListener("click", this._handleImageGridButtonClick);
     },
 
     @on("willDestroyElement")
@@ -773,6 +817,8 @@ export default Component.extend(
       preview?.removeEventListener("click", this._handleImageScaleButtonClick);
       preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
       preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
+      preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
+      preview?.removeEventListener("click", this._handleImageGridButtonClick);
       preview?.removeEventListener(
         "click",
         this._handleAltTextCancelButtonClick

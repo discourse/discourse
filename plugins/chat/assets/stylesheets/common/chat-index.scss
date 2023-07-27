@@ -1,4 +1,4 @@
-.btn-floating.open-draft-channel-page-btn {
+.btn-floating.open-new-message-btn {
   position: fixed;
   background: var(--tertiary);
   bottom: 2rem;
@@ -202,22 +202,18 @@
       }
 
       .chat-channel-unread-indicator {
+        @include chat-unread-indicator;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: auto;
-        min-width: 14px;
-        padding: 2px;
-        font-size: var(--font-down-3);
-        border-radius: 1em;
-        background: var(--tertiary-med-or-tertiary);
+        width: 8px;
+        height: 8px;
 
-        &.urgent {
-          background: var(--success);
-        }
-
-        .number {
-          line-height: 1rem;
+        &.-urgent {
+          width: auto;
+          height: auto;
+          min-width: 0.6em;
+          padding: 0.3em 0.5em;
         }
       }
     }

@@ -1,11 +1,9 @@
 import Service, { inject as service } from "@ember/service";
-import EmberObject from "@ember/object";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 
-// TODO (martin) This export can be removed once we move the handleSentMessage
-// code completely out of ChatLivePane
 export function handleStagedMessage(channel, messagesManager, data) {
   const stagedMessage = messagesManager.findStagedMessage(data.staged_id);
 
@@ -18,7 +16,7 @@ export function handleStagedMessage(channel, messagesManager, data) {
   stagedMessage.staged = false;
   stagedMessage.excerpt = data.chat_message.excerpt;
   stagedMessage.channel = channel;
-  stagedMessage.createdAt = data.chat_message.created_at;
+  stagedMessage.createdAt = new Date(data.chat_message.created_at);
   stagedMessage.cooked = data.chat_message.cooked;
 
   return stagedMessage;
@@ -27,7 +25,7 @@ export function handleStagedMessage(channel, messagesManager, data) {
 /**
  * Handles subscriptions for MessageBus messages sent from Chat::Publisher
  * to the channel and thread panes. There are individual services for
- * each (ChatChannelPaneSubscriptionsManager and ChatChannelThreadPaneSubscriptionsManager)
+ * each (ChatChannelPaneSubscriptionsManager and ChatThreadPaneSubscriptionsManager)
  * that implement their own logic where necessary. Functions which will
  * always be different between the two raise a "not implemented" error in
  * the base class, and the child class must define the associated function,
@@ -72,8 +70,6 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     this.model = null;
   }
 
-  // TODO (martin) This can be removed once we move the handleSentMessage
-  // code completely out of ChatLivePane
   handleStagedMessageInternal(channel, data) {
     return handleStagedMessage(channel, this.messagesManager, data);
   }
@@ -119,6 +115,9 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
         break;
       case "update_thread_original_message":
         this.handleThreadOriginalMessageUpdate(busData);
+        break;
+      case "notice":
+        this.handleNotice(busData);
         break;
     }
   }
@@ -178,10 +177,13 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
 
     if (this.currentUser.staff || this.currentUser.id === targetMsg.user.id) {
       targetMsg.deletedAt = data.deleted_at;
+      targetMsg.deletedById = data.deleted_by_id;
       targetMsg.expanded = false;
     } else {
       this.messagesManager.removeMessage(targetMsg);
     }
+
+    this._afterDeleteMessage(targetMsg, data);
   }
 
   handleRestoreMessage(data) {
@@ -189,16 +191,16 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     if (message) {
       message.deletedAt = null;
     } else {
-      this.messagesManager.addMessages([
-        ChatMessage.create(this.args.channel, data.chat_message),
-      ]);
+      const newMessage = ChatMessage.create(this.model, data.chat_message);
+      newMessage.manager = this.messagesManager;
+      this.messagesManager.addMessages([newMessage]);
     }
   }
 
   handleMentionWarning(data) {
     const message = this.messagesManager.findMessage(data.chat_message_id);
     if (message) {
-      message.mentionWarning = EmberObject.create(data);
+      message.mentionWarning = ChatMessageMentionWarning.create(message, data);
     }
   }
 
@@ -228,7 +230,17 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
           stagedThread.staged = false;
           stagedThread.id = data.thread_id;
           stagedThread.originalMessage.thread = stagedThread;
-          stagedThread.originalMessage.threadReplyCount ??= 1;
+          stagedThread.originalMessage.thread.preview.replyCount ??= 1;
+
+          // We have to do this because the thread manager cache is keyed by
+          // staged_thread_id, but the thread_id is what we want to use to
+          // look up the thread, otherwise calls to .find() will not return
+          // the thread by its actual ID, and we will end up with double-ups
+          // in places like the thread list when .add() is called.
+          this.model.threadsManager.remove({ id: data.staged_thread_id });
+          this.model.threadsManager.add(this.model, stagedThread, {
+            replace: true,
+          });
         } else if (data.thread_id) {
           this.model.threadsManager
             .find(this.model.id, data.thread_id, { fetchIfNotFound: true })
@@ -247,6 +259,14 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   }
 
   handleThreadOriginalMessageUpdate() {
+    throw "not implemented";
+  }
+
+  handleNotice() {
+    throw "not implemented";
+  }
+
+  _afterDeleteMessage() {
     throw "not implemented";
   }
 }

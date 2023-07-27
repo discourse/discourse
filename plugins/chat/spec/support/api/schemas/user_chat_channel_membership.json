@@ -6,7 +6,8 @@
     "muted",
     "desktop_notification_level",
     "mobile_notification_level",
-    "following"
+    "following",
+    "last_viewed_at"
   ],
   "properties": {
     "chat_channel_id": { "type": "number" },
@@ -14,9 +15,8 @@
     "muted": { "type": "boolean" },
     "desktop_notification_level": { "type": "string" },
     "mobile_notification_level": { "type": "string" },
+    "last_viewed_at": { "type": "string" },
     "following": { "type": "boolean" },
-    "unread_count": { "type": "number" },
-    "unread_mentions": { "type": "number" },
     "user": {
       "type": ["object", "null"],
       "required": ["id", "name", "avatar_template", "username"],
@@ -26,6 +26,7 @@
         "avatar_template": { "type": "string" },
         "username": { "type": "string" }
       }
-    }
+    },
+    "last_viewed_at": { "type": "datetime" }
   }
 }

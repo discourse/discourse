@@ -803,8 +803,16 @@ class TopicsController < ApplicationController
   end
 
   def set_notifications
+    user =
+      if is_api? && @guardian.is_admin? &&
+           (params[:username].present? || params[:external_id].present?)
+        fetch_user_from_params
+      else
+        current_user
+      end
+
     topic = Topic.find(params[:topic_id].to_i)
-    TopicUser.change(current_user, topic.id, notification_level: params[:notification_level].to_i)
+    TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
 
@@ -812,6 +820,7 @@ class TopicsController < ApplicationController
     topic_id = params.require(:topic_id)
     destination_topic_id = params.require(:destination_topic_id)
     params.permit(:participants)
+    params.permit(:chronological_order)
     params.permit(:archetype)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
@@ -824,6 +833,7 @@ class TopicsController < ApplicationController
 
     args = {}
     args[:destination_topic_id] = destination_topic_id.to_i
+    args[:chronological_order] = params[:chronological_order] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]
@@ -841,6 +851,7 @@ class TopicsController < ApplicationController
     params.permit(:category_id)
     params.permit(:tags)
     params.permit(:participants)
+    params.permit(:chronological_order)
     params.permit(:archetype)
 
     raise Discourse::InvalidAccess if params[:archetype] == "private_message" && !guardian.is_staff?
@@ -1035,25 +1046,46 @@ class TopicsController < ApplicationController
 
   def reset_new
     topic_scope =
+      if current_user.new_new_view_enabled?
+        if (params[:dismiss_topics] && params[:dismiss_posts])
+          TopicQuery.new(current_user).new_and_unread_results(limit: false)
+        elsif params[:dismiss_topics]
+          TopicQuery.new(current_user).new_results(limit: false)
+        elsif params[:dismiss_posts]
+          TopicQuery.new(current_user).unread_results(limit: false)
+        else
+          Topic.none
+        end
+      else
+        TopicQuery.new(current_user).new_results(limit: false)
+      end
+    if tag_name = params[:tag_id]
+      tag_name = DiscourseTagging.visible_tags(guardian).where(name: tag_name).pluck(:name).first
+    end
+    topic_scope =
       if params[:category_id].present?
-        category_ids = [params[:category_id]]
-        if params[:include_subcategories] == "true"
+        category_ids = [params[:category_id].to_i]
+        if ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
           category_ids =
             category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
         end
 
-        scope = Topic.where(category_id: category_ids)
-        scope = scope.joins(:tags).where(tags: { name: params[:tag_id] }) if params[:tag_id]
+        category_ids &= guardian.allowed_category_ids
+        if category_ids.blank?
+          scope = topic_scope.none
+        else
+          scope = topic_scope.where(category_id: category_ids)
+          scope = scope.joins(:tags).where(tags: { name: tag_name }) if tag_name
+        end
         scope
-      elsif params[:tag_id].present?
-        Topic.joins(:tags).where(tags: { name: params[:tag_id] })
+      elsif tag_name.present?
+        topic_scope.joins(:tags).where(tags: { name: tag_name })
       else
-        new_results = TopicQuery.new(current_user).new_results(limit: false)
         if params[:tracked].to_s == "true"
-          TopicQuery.tracked_filter(new_results, current_user.id)
+          TopicQuery.tracked_filter(topic_scope, current_user.id)
         else
           current_user.user_stat.update_column(:new_since, Time.zone.now)
-          new_results
+          topic_scope
         end
       end
 
@@ -1062,15 +1094,34 @@ class TopicsController < ApplicationController
         raise Discourse::InvalidParameters.new("Expecting topic_ids to contain a list of topic ids")
       end
 
-      topic_ids = params[:topic_ids].map { |t| t.to_i }
+      topic_ids = params[:topic_ids].map(&:to_i)
       topic_scope = topic_scope.where(id: topic_ids)
     end
 
-    dismissed_topic_ids =
-      TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
-    TopicTrackingState.publish_dismiss_new(current_user.id, topic_ids: dismissed_topic_ids)
+    dismissed_topic_ids = []
+    dismissed_post_topic_ids = []
 
-    render body: nil
+    if !current_user.new_new_view_enabled? || params[:dismiss_topics]
+      dismissed_topic_ids =
+        TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
+    end
+
+    if params[:dismiss_posts]
+      if params[:untrack]
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(
+            current_user,
+            topic_scope.pluck(:id),
+            type: "change_notification_level",
+            notification_level_id: NotificationLevels.topic_levels[:regular],
+          ).perform!
+      else
+        dismissed_post_topic_ids =
+          TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_posts").perform!
+      end
+    end
+
+    render_json_dump topic_ids: dismissed_topic_ids.concat(dismissed_post_topic_ids).uniq
   end
 
   def convert_topic
@@ -1115,6 +1166,34 @@ class TopicsController < ApplicationController
     topic.set_or_create_timer(slow_mode_type, time, by_user: timer&.user)
 
     head :ok
+  end
+
+  def summary
+    topic = Topic.find(params[:topic_id])
+    guardian.ensure_can_see!(topic)
+    strategy = Summarization::Base.selected_strategy
+
+    if strategy.nil? || !Summarization::Base.can_see_summary?(topic, current_user)
+      raise Discourse::NotFound
+    end
+
+    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
+
+    opts = params.permit(:skip_age_check)
+
+    hijack do
+      summary = TopicSummarization.new(strategy).summarize(topic, current_user, opts)
+
+      render json: {
+               summary: summary.summarized_text,
+               summarized_on: summary.updated_at,
+               summarized_by: summary.algorithm,
+               outdated: summary.outdated,
+               can_regenerate: Summarization::Base.can_request_summary_for?(current_user),
+               new_posts_since_summary:
+                 topic.highest_post_number.to_i - summary.content_range&.max.to_i,
+             }
+    end
   end
 
   private
@@ -1265,6 +1344,7 @@ class TopicsController < ApplicationController
       :destination_topic_id
     ].present?
     args[:tags] = params[:tags] if params[:tags].present?
+    args[:chronological_order] = params[:chronological_order] == "true"
 
     if params[:archetype].present?
       args[:archetype] = params[:archetype]

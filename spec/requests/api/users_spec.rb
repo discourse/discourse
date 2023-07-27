@@ -358,6 +358,52 @@ RSpec.describe "users" do
     end
   end
 
+  path "/admin/users/{id}/activate.json" do
+    put "Activate a user" do
+      tags "Users", "Admin"
+      operationId "activateUser"
+      consumes "application/json"
+      expected_request_schema = nil
+      parameter name: :id, in: :path, type: :integer, required: true
+
+      produces "application/json"
+      response "200", "response" do
+        let(:id) { Fabricate(:user, active: false).id }
+
+        expected_response_schema = load_spec_schema("success_ok_response")
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
+  path "/admin/users/{id}/deactivate.json" do
+    put "Deactivate a user" do
+      tags "Users", "Admin"
+      operationId "deactivateUser"
+      consumes "application/json"
+      expected_request_schema = nil
+      parameter name: :id, in: :path, type: :integer, required: true
+
+      produces "application/json"
+      response "200", "response" do
+        let(:id) { Fabricate(:user).id }
+
+        expected_response_schema = load_spec_schema("success_ok_response")
+        schema(expected_response_schema)
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
+    end
+  end
+
   path "/admin/users/{id}/suspend.json" do
     put "Suspend a user" do
       tags "Users", "Admin"
@@ -462,7 +508,7 @@ RSpec.describe "users" do
     before do
       stub_request(
         :get,
-        %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=360},
+        %r{https://www.gravatar.com/avatar/\w+.png\?d=404&reset_cache=\S+&s=#{Discourse.avatar_sizes.max}},
       ).with(
         headers: {
           "Accept" => "*/*",

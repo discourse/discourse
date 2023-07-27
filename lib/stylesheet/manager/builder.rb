@@ -35,11 +35,11 @@ class Stylesheet::Manager::Builder
       end
     end
 
-    rtl = @target.to_s =~ /_rtl\z/
+    rtl = @target.to_s.end_with?("_rtl")
     css, source_map =
       with_load_paths do |load_paths|
         Stylesheet::Compiler.compile_asset(
-          @target,
+          @target.to_s.gsub(/_rtl\z/, "").to_sym,
           rtl: rtl,
           theme_id: theme&.id,
           theme_variables: theme&.scss_variables.to_s,

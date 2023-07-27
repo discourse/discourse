@@ -144,6 +144,8 @@ fr:
       facebook: "Partager sur Facebook"
       email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "A rendu ce sujet public (%{when})"
       open_topic: "A converti ceci en sujet (%{when})"
@@ -155,6 +157,8 @@ fr:
       removed_user: "A retiré %{who} (%{when})"
       removed_group: "A retiré %{who} (%{when})"
       autobumped: "Remonté automatiquement dans la liste (%{when})"
+      tags_changed: "Tags mis à jour %{when}"
+      category_changed: "Catégorie mise à jour %{when}"
       autoclosed:
         enabled: "A fermé ce sujet (%{when})"
         disabled: "A ouvert ce sujet (%{when})"
@@ -179,6 +183,7 @@ fr:
       forwarded: "A transmis l'e-mail ci-dessus"
     topic_admin_menu: "actions du sujet"
     skip_to_main_content: "Passer au contenu principal"
+    skip_user_nav: "Aller au contenu du profil"
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
@@ -296,6 +301,7 @@ fr:
       edit_bookmark: "Modifier le signet"
       clear_bookmarks: "Retirer les signets"
       help:
+        bookmark: "Cliquez pour mettre ce sujet en favori"
         edit_bookmark_for_topic: "Cliquez pour modifier le signet associé à ce sujet"
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
@@ -1086,14 +1092,7 @@ fr:
       experimental_sidebar:
         enable: "Activer la barre latérale"
         options: "Options"
-        categories_section: "Section Catégories"
-        categories_section_instruction: "Les catégories sélectionnées seront affichées dans la section Catégories de la barre latérale."
-        tags_section: "Section Étiquettes"
-        tags_section_instruction: "Les étiquettes sélectionnées seront affichées dans la section Étiquettes de la barre latérale."
         navigation_section: "Navigation"
-        list_destination_instruction: "Quand il y a du nouveau contenu dans la barre latérale…"
-        list_destination_default: "utiliser le lien par défaut et afficher un badge pour les nouveaux éléments"
-        list_destination_unread_new: "lien vers les éléments non lus ou nouveaux et afficher le nombre de nouveaux éléments"
       change: "modifier"
       featured_topic: "Sujet vedette"
       moderator: "%{user} a le rôle de modérateur(rice)"
@@ -1255,7 +1254,6 @@ fr:
         tags: "Étiquettes"
         interface: "Interface"
         apps: "Applications"
-        sidebar: "Barre latérale"
       change_password:
         success: "(e-mail envoyé)"
         in_progress: "(e-mail en cours d'envoi)"
@@ -1709,8 +1707,7 @@ fr:
       pause_notifications: "Suspendre les notifications"
       remove_status: "Supprimer le statut"
     user_tips:
-      primary: "J'ai compris !"
-      secondary: "ne me montrez pas ces conseils"
+      button: "J'ai compris !"
       first_notification:
         title: "Votre première notification !"
         content: "Les notifications sont utilisées pour vous tenir au courant de ce qui se passe dans la communauté."
@@ -1760,36 +1757,6 @@ fr:
       logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
     staff_writes_only_mode:
       enabled: "Ce site est en mode réservé aux responsables. Vous pouvez continuer à naviguer, mais les réponses, les j'aime et les autres actions sont limitées aux responsables uniquement."
-    too_few_topics_and_posts_notice_MF: |
-      Commençons <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">la discussion !</a> Il y a { currentTopics, plural,
-          one {<strong>#</strong> sujet}
-        other {<strong>#</strong> sujets}
-      } et { currentPosts, plural,
-          one {<strong>#</strong> message}
-        other {<strong>#</strong> messages}
-      }. Il en faudrait davantage pour les visiteurs. Nous recommandons de proposer au moins { requiredTopics, plural,
-          one {<strong>#</strong> sujet}
-        other {<strong>#</strong> sujets}
-      } et { requiredPosts, plural,
-          one {<strong>#</strong> message}
-        other {<strong>#</strong> messages}
-      }. Seul les responsables peuvent voir ce message.
-    too_few_topics_notice_MF: |
-      Commençons <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">la discussion !</a> Il y a { currentTopics, plural,
-          one {<strong>#</strong> sujet}
-        other {<strong>#</strong> sujets}
-      }. Il en faudrait davantage pour les visiteurs. Nous recommandons de proposer au moins { requiredTopics, plural,
-          one {<strong>#</strong> sujet}
-        other {<strong>#</strong> sujets}
-      }. Seuls les responsables peuvent voir ce message.
-    too_few_posts_notice_MF: |
-      Commençons <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">la discussion !</a> Il y a { currentPosts, plural,
-          one {<strong>#</strong> message}
-        other {<strong>#</strong> messages}
-      }. Il en faudrait davantage pour les visiteurs. Nous recommandons de proposer au moins { requiredPosts, plural,
-          one {<strong>#</strong> message}
-        other {<strong>#</strong> messages}
-      }. Seuls les responsables peuvent voir ce message.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> arrive à la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}.
@@ -1820,16 +1787,12 @@ fr:
       intro: "Bonjour ! Vous semblez apprécier la discussion, mais n'avez pas encore créé de compte."
       value_prop: "Vous en avez assez de faire défiler les mêmes messages ? En créant un compte, vous pourrez toujours revenir là où vous en étiez. Avec un compte, vous pouvez aussi recevoir des notifications de nouvelles réponses, enregistrer des signets et utiliser des cœurs pour remercier les autres utilisateurs. Nous pouvons travailler ensemble pour rendre cette communauté formidable. :heart:"
     summary:
-      enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description:
         one: "Il y a <b>%{count}</b> réponse."
         other: "Il y a <b>%{count}</b> réponses."
       description_time_MF: |
         Il y a {replyCount, plural, one {<b>#</b> réponse} other {<b>#</b> réponses}} avec un temps de lecture estimé à <b>{readingTime, plural, one {# minute} other {# minutes}}</b>.
-      enable: "Résumer ce sujet"
       disable: "Afficher tous les messages"
-      short_label: "Résumer"
-      short_title: "Afficher un résumé de ce sujet : les publications les plus intéressantes telles que déterminées par la communauté"
     deleted_filter:
       enabled_description: "Ce sujet contient des messages supprimés, qui ont été masqués."
       disabled_description: "Les messages supprimés du sujet sont visibles."
@@ -2597,7 +2560,7 @@ fr:
         top: "Il n'y a pas de meilleurs sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
-          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge unread-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondu</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
+          unread: "<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class=\"badge unread-posts badge-notification\">1</span> sont ceux :</p> <ul><li>que vous avez créés</li><li>auxquels vous avez répondu</li><li>que vous avez lus plus de 5 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés via le menu \U0001F514 de chaque sujet.</p><p>Vous pouvez modifier cela dans vos <a href=\"%{userPrefsUrl}\">préférences</a>.</p>"
       bottom:
         latest: "Il n'y a pas d'autres sujets récents à consulter."
         posted: "Il n'y a pas d'autres sujets publiés à consulter."
@@ -3275,7 +3238,6 @@ fr:
       filtered_replies:
         viewing_posts_by: "Affichage de %{post_count} messages par"
         viewing_subset: "Certaines réponses sont réduites"
-        viewing_summary: "Affichage d'un résumé de ce sujet"
         post_number: "%{username}, message #%{post_number}"
         show_all: "Tout afficher"
       share:
@@ -3645,6 +3607,9 @@ fr:
       close: "Fermer (Échap)"
       content_load_error: '<a href="%url%">Ce contenu</a> n''a pas pu être chargé.'
       image_load_error: '<a href="%url%">Cette image</a> n''a pas pu être chargée.'
+    experimental_lightbox:
+      buttons:
+        close: "Fermer (Échap)"
     cannot_render_video: Cette vidéo ne peut pas être lue car votre navigateur ne prend pas en charge le codec requis.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3972,11 +3937,15 @@ fr:
       more: "Plus"
       all_categories: "Toutes les catégories"
       all_tags: "Toutes les étiquettes"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tout"
       sections:
         custom:
           save: "Enregistrer"
           delete: "Supprimer"
           links:
+            reset: "Rétablir les valeurs par défaut"
             icon:
               label: "Icône"
             name:
@@ -3997,28 +3966,20 @@ fr:
             unread_with_count: "Non lus (%{count})"
             archive: "Archivés"
         tags:
-          links:
-            add_tags:
-              content: "Ajouter des étiquettes"
-              title: "Vous n'avez ajouté aucune étiquette. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune étiquette."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Étiquettes"
           header_action_title: "Modifier les étiquettes de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         categories:
-          links:
-            add_categories:
-              content: "Ajouter des catégories"
-              title: "Vous n'avez ajouté aucune catégorie. Cliquez pour commencer."
           none: "Vous n'avez ajouté aucune catégorie."
           click_to_get_started: "Cliquez ici pour commencer."
           header_link_text: "Catégories"
           header_action_title: "Modifier les catégories de votre barre latérale"
           configure_defaults: "Configurer les valeurs par défaut"
         community:
-          header_link_text: "Communauté"
-          header_action_title: "Créer un sujet"
+          edit_section:
+            header_dropdown: "Personnaliser"
           links:
             about:
               content: "À propos"
@@ -4029,8 +3990,8 @@ fr:
             badges:
               content: "Badges"
               title: "Tous les badges disponibles à gagner"
-            everything:
-              content: "Tout"
+            topics:
+              content: "Sujets"
               title: "Tous les sujets"
             faq:
               content: "FAQ"
@@ -4057,6 +4018,11 @@ fr:
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
       button_title: "Commencer l'édition"
     until: "Jusqu'à :"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Veuillez saisir une valeur valide."
+          email: "Veuillez saisir une adresse e-mail valide."
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -5089,6 +5055,8 @@ fr:
               key: "minimum"
             maximum:
               key: "maximum"
+            type:
+              key: "type"
       impersonate:
         title: "Incarner"
         help: "Utilisez cet outil pour incarner un compte utilisateur à des fins de tests. Vous devrez vous déconnecter une fois que vous aurez terminé."
@@ -5427,6 +5395,8 @@ fr:
         show_overriden: "Afficher uniquement les textes modifiés"
         locale: "Langue :"
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
+        outdated:
+          dismiss: "Fermer"
       settings:
         show_overriden: "Afficher uniquement les paramètres modifiés"
         history: "Afficher l'historique des modifications"

@@ -274,10 +274,12 @@ class Invite < ActiveRecord::Base
   end
 
   def self.invalidate_for_email(email)
-    invite = Invite.find_by(email: Email.downcase(email))
-    invite.update!(invalidated_at: Time.zone.now) if invite
+    Invite.find_by(email: Email.downcase(email))&.invalidate!
+  end
 
-    invite
+  def invalidate!
+    update_attribute(:invalidated_at, Time.current)
+    self
   end
 
   def resend_invite

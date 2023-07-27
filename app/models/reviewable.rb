@@ -87,7 +87,7 @@ class Reviewable < ActiveRecord::Base
   def created_new!
     self.created_new = true
     self.topic = target.topic if topic.blank? && target.is_a?(Post)
-    self.target_created_by_id = target.is_a?(Post) ? target.user_id : nil
+    self.target_created_by_id ||= target.is_a?(Post) ? target.user_id : nil
     self.category_id = topic.category_id if category_id.blank? && topic.present?
   end
 
@@ -349,6 +349,12 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
+  # Override this in specific reviewable type to include scores for
+  # non-pending reviewables
+  def updatable_reviewable_scores
+    reviewable_scores.pending
+  end
+
   def transition_to(status_symbol, performed_by)
     self.status = status_symbol
     save!
@@ -357,7 +363,7 @@ class Reviewable < ActiveRecord::Base
     DiscourseEvent.trigger(:reviewable_transitioned_to, status_symbol, self)
 
     if score_status = ReviewableScore.score_transitions[status_symbol]
-      reviewable_scores.pending.update_all(
+      updatable_reviewable_scores.update_all(
         status: score_status,
         reviewed_by_id: performed_by.id,
         reviewed_at: Time.zone.now,
@@ -365,14 +371,6 @@ class Reviewable < ActiveRecord::Base
     end
 
     status_previously_changed?(from: "pending")
-  end
-
-  def post_options
-    Discourse.deprecate(
-      "Reviewable#post_options is deprecated. Please use #payload instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
   end
 
   def self.bulk_perform_targets(performed_by, action, type, target_ids, args = nil)
@@ -502,10 +500,11 @@ class Reviewable < ActiveRecord::Base
     end
 
     # If a reviewable doesn't have a target, allow us to filter on who created that reviewable.
+    # A ReviewableQueuedPost may have a target_created_by_id even before a target get's assigned
     if user_id
       result =
         result.where(
-          "(reviewables.target_created_by_id IS NULL AND reviewables.created_by_id = :user_id)
+          "(reviewables.target_id IS NULL AND reviewables.created_by_id = :user_id)
         OR (reviewables.target_created_by_id = :user_id)",
           user_id: user_id,
         )

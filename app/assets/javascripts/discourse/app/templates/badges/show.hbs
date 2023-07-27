@@ -54,10 +54,12 @@
               @class="badge-info"
               @date={{ub.granted_at}}
             >
-              <div class="granted-on">{{i18n
-                  "badges.granted_on"
-                  date=(inline-date ub.granted_at)
-                }}</div>
+              <div class="granted-on">
+                {{html-safe
+                  (i18n "badges.granted_on" date=(format-date ub.granted_at))
+                }}
+              </div>
+
               {{#if ub.post_number}}
                 <a
                   class="post-link"

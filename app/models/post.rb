@@ -437,7 +437,7 @@ class Post < ActiveRecord::Base
     # percent rank has tons of ties
     where(topic_id: topic_id).where(
       [
-        "id = ANY(
+        "posts.id = ANY(
           (
             SELECT posts.id
             FROM posts
@@ -1020,7 +1020,10 @@ class Post < ActiveRecord::Base
         # and there is no thumbnail info added to the markdown to tie the thumbnail to the topic/post after
         # creation.
         thumbnail =
-          Upload.where("original_filename like ?", "#{upload.sha1}.%").first if upload.sha1.present?
+          Upload
+            .where("original_filename like ?", "#{upload.sha1}.%")
+            .order(id: :desc)
+            .first if upload.sha1.present?
         if thumbnail.present? && self.is_first_post? && !self.topic.image_upload_id
           upload_ids << thumbnail.id
           self.topic.update_column(:image_upload_id, thumbnail.id)
@@ -1317,6 +1320,7 @@ end
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
 #  index_posts_on_reply_to_post_number                    (reply_to_post_number)
+#  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)

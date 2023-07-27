@@ -24,25 +24,17 @@ module Chat
 
     def update_last_read_message_ids(guardian:, **)
       updated_memberships = DB.query(<<~SQL, user_id: guardian.user.id)
-          UPDATE user_chat_channel_memberships
-          SET last_read_message_id = subquery.newest_message_id
-          FROM
-          (
-            SELECT chat_messages.chat_channel_id, MAX(chat_messages.id) AS newest_message_id
-            FROM chat_messages
-            LEFT JOIN chat_threads ON chat_threads.id = chat_messages.thread_id
-            WHERE chat_messages.deleted_at IS NULL
-            AND (chat_messages.thread_id IS NULL or chat_messages.id = chat_threads.original_message_id)
-            GROUP BY chat_messages.chat_channel_id
-          ) AS subquery
-          WHERE user_chat_channel_memberships.chat_channel_id = subquery.chat_channel_id AND
-            subquery.newest_message_id > COALESCE(user_chat_channel_memberships.last_read_message_id, 0) AND
-            user_chat_channel_memberships.user_id = :user_id AND
-            user_chat_channel_memberships.following
-          RETURNING user_chat_channel_memberships.id AS membership_id,
-                    user_chat_channel_memberships.chat_channel_id AS channel_id,
-                    user_chat_channel_memberships.last_read_message_id;
-        SQL
+        UPDATE user_chat_channel_memberships
+        SET last_read_message_id = chat_channels.last_message_id
+        FROM chat_channels
+        WHERE user_chat_channel_memberships.chat_channel_id = chat_channels.id AND
+          chat_channels.last_message_id > COALESCE(user_chat_channel_memberships.last_read_message_id, 0) AND
+          user_chat_channel_memberships.user_id = :user_id AND
+          user_chat_channel_memberships.following
+        RETURNING user_chat_channel_memberships.id AS membership_id,
+                  user_chat_channel_memberships.chat_channel_id AS channel_id,
+                  user_chat_channel_memberships.last_read_message_id;
+      SQL
       context[:updated_memberships] = updated_memberships
     end
 
@@ -63,7 +55,7 @@ module Chat
             membership_id: membership.membership_id,
           }
         end
-      Chat::Publisher.publish_bulk_user_tracking_state(guardian.user, data)
+      Chat::Publisher.publish_bulk_user_tracking_state!(guardian.user, data)
     end
   end
 end

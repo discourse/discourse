@@ -73,6 +73,7 @@ th:
       settings:
         follow: "เข้าร่วม"
         followed: "สมัครสมาชิกเมื่อ"
+        threading_disabled: "ปิดใช้งานแล้ว"
         notifications: "การแจ้งเตือน"
         preview: "แสดงตัวอย่าง"
         save: "บันทึก"
@@ -109,6 +110,12 @@ th:
         replies:
           other: "%{count} ตอบ"
         settings: "การตั้งค่า"
+        last_reply: "การตอบล่าสุด"
+        notifications:
+          regular:
+            title: "ปกติ"
+          tracking:
+            title: "ติดตาม"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"

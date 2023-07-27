@@ -1,8 +1,8 @@
 import { setOwner } from "@ember/application";
 
 export default class HashtagTypeBase {
-  constructor(container) {
-    setOwner(this, container);
+  constructor(owner) {
+    setOwner(this, owner);
   }
 
   get type() {
@@ -14,6 +14,10 @@ export default class HashtagTypeBase {
   }
 
   generateColorCssClasses() {
+    throw "not implemented";
+  }
+
+  generateIconHTML() {
     throw "not implemented";
   }
 }

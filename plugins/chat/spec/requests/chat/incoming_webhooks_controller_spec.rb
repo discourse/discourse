@@ -70,14 +70,17 @@ RSpec.describe Chat::IncomingWebhooksController do
       )
     end
 
-    it "rate limits" do
-      RateLimiter.enable
-      RateLimiter.clear_all!
-      10.times { post "/chat/hooks/#{webhook.key}.json", params: valid_payload }
-      expect(response.status).to eq(200)
+    describe "rate limiting" do
+      use_redis_snapshotting
 
-      post "/chat/hooks/#{webhook.key}.json", params: valid_payload
-      expect(response.status).to eq(429)
+      it "rate limits" do
+        RateLimiter.enable
+        10.times { post "/chat/hooks/#{webhook.key}.json", params: valid_payload }
+        expect(response.status).to eq(200)
+
+        post "/chat/hooks/#{webhook.key}.json", params: valid_payload
+        expect(response.status).to eq(429)
+      end
     end
   end
 
@@ -117,7 +120,7 @@ RSpec.describe Chat::IncomingWebhooksController do
         Chat::Message.where(chat_channel: chat_channel).count
       }.by(1)
       expect(Chat::Message.last.message).to eq(
-        "New alert: \"[StatusCake] https://www.test_notification.com (StatusCake Test Alert): Down,\" [46353](https://eu.opsg.in/a/i/test/blahguid)\nTags: ",
+        "New alert: \"[StatusCake] https://www.test_notification.com (StatusCake Test Alert): Down,\" [46353](https://eu.opsg.in/a/i/test/blahguid)\nTags:",
       )
       expect {
         post "/chat/hooks/#{webhook.key}/slack.json", params: { payload: payload_data }
@@ -142,7 +145,7 @@ RSpec.describe Chat::IncomingWebhooksController do
         post "/chat/hooks/#{webhook.key}/slack.json", params: { payload: payload_data.to_json }
       }.to change { Chat::Message.where(chat_channel: chat_channel).count }.by(1)
       expect(Chat::Message.last.message).to eq(
-        "New alert: \"[StatusCake] https://www.test_notification.com (StatusCake Test Alert): Down,\" [46353](https://eu.opsg.in/a/i/test/blahguid)\nTags: ",
+        "New alert: \"[StatusCake] https://www.test_notification.com (StatusCake Test Alert): Down,\" [46353](https://eu.opsg.in/a/i/test/blahguid)\nTags:",
       )
     end
   end

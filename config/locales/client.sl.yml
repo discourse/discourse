@@ -1552,13 +1552,11 @@ sl:
       hide_forever: "ne, hvala"
       intro: "Pozdravljeni! Vidimo, da uživate v branju razprave, vendar se še niste registrirali kot uporabnik."
     summary:
-      enabled_description: "Ogledujete si povzetek teme: najbolj zanimive prispevke, kot jih je določila skupnost."
       description:
         one: "Obstaja <b>%{count}</b> odgovor."
         two: "Obstajata <b>%{count}</b> odgovora."
         few: "Obstajajo <b>%{count}</b> odgovori."
         other: "Obstaja <b>%{count}</b> odgovorov."
-      enable: "Pripravi povzetek teme"
       disable: "Prikaži vse prispevke"
     deleted_filter:
       enabled_description: "Ta tema vsebuje izbrisane prispevke, ki so skriti."
@@ -2727,7 +2725,6 @@ sl:
       filtered_replies:
         viewing_posts_by: "Ogled %{post_count} objav avtorja"
         viewing_subset: "Nekateri odgovori so strnjeni"
-        viewing_summary: "Ogled povzetka te teme"
         post_number: "%{username}, objava #%{post_number}"
         show_all: "Pokaži vse"
     category:
@@ -3078,6 +3075,9 @@ sl:
       close: "Zapri (Esc)"
       content_load_error: '<a href="%url%">Te vsebina</a> ne moremo naložiti.'
       image_load_error: '<a href="%url%">Te slike</a> ne moremo naložiti.'
+    experimental_lightbox:
+      buttons:
+        close: "Zapri (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3355,6 +3355,9 @@ sl:
         other: "%{count} novih"
       more: "Več"
       all_categories: "Vse kategorije"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Vse"
       sections:
         custom:
           save: "Shrani"
@@ -3383,7 +3386,8 @@ sl:
         categories:
           header_link_text: "Kategorije"
         community:
-          header_link_text: "Skupnost"
+          edit_section:
+            header_dropdown: "Prilagodi"
           links:
             about:
               content: "O nas"
@@ -3391,8 +3395,8 @@ sl:
               content: "Admin"
             badges:
               content: "Značke"
-            everything:
-              content: "Vse"
+            topics:
+              content: "Tem"
             faq:
               content: "Pravila skupnosti"
             groups:
@@ -3404,6 +3408,10 @@ sl:
             review:
               content: "Pregled"
     until: "Do:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Vnesite veljavno vsebino"
   admin_js:
     type_to_filter: "vnesite za filter..."
     admin:
@@ -3934,6 +3942,8 @@ sl:
               key: "najmanj"
             maximum:
               key: "največ"
+            type:
+              key: "tip"
       impersonate:
         title: "Poosebi uporabnika"
         help: "Uporabljajte to orodje za poosebljanje uporabnika za iskanje in odpravljanje napak. Ko končate se morate odjaviti."
@@ -4176,6 +4186,8 @@ sl:
         show_overriden: "Prikaži samo preglašene/spremenjene"
         locale: "Jezik:"
         more_than_50_results: "Našli smo več kot 50 zadetkov. Določite bolj natančno iskalne kriterije."
+        outdated:
+          dismiss: "Opusti"
       settings:
         show_overriden: "Prikaži samo preglašene/spremenjene"
         history: "Ogled zgodovine sprememb"

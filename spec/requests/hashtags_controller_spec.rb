@@ -163,6 +163,7 @@ RSpec.describe HashtagsController do
                     "type" => "category",
                     "ref" => category.slug,
                     "slug" => category.slug,
+                    "id" => category.id,
                   },
                 ],
                 "tag" => [
@@ -175,6 +176,7 @@ RSpec.describe HashtagsController do
                     "ref" => tag.name,
                     "slug" => tag.name,
                     "secondary_text" => "x0",
+                    "id" => tag.id,
                   },
                 ],
               },
@@ -198,6 +200,7 @@ RSpec.describe HashtagsController do
                     "ref" => "#{tag.name}::tag",
                     "slug" => tag.name,
                     "secondary_text" => "x0",
+                    "id" => tag.id,
                   },
                 ],
               },
@@ -242,6 +245,7 @@ RSpec.describe HashtagsController do
                     "type" => "category",
                     "ref" => private_category.slug,
                     "slug" => private_category.slug,
+                    "id" => private_category.id,
                   },
                 ],
                 "tag" => [
@@ -254,6 +258,7 @@ RSpec.describe HashtagsController do
                     "ref" => hidden_tag.name,
                     "slug" => hidden_tag.name,
                     "secondary_text" => "x0",
+                    "id" => hidden_tag.id,
                   },
                 ],
               },
@@ -337,6 +342,7 @@ RSpec.describe HashtagsController do
               "type" => "category",
               "ref" => category.slug,
               "slug" => category.slug,
+              "id" => category.id,
             },
             {
               "relative_url" => tag_2.url,
@@ -347,6 +353,7 @@ RSpec.describe HashtagsController do
               "ref" => "#{tag_2.name}::tag",
               "slug" => tag_2.name,
               "secondary_text" => "x0",
+              "id" => tag_2.id,
             },
           ],
         )
@@ -379,6 +386,7 @@ RSpec.describe HashtagsController do
               "type" => "category",
               "ref" => private_category.slug,
               "slug" => private_category.slug,
+              "id" => private_category.id,
             },
           ],
         )
@@ -396,6 +404,7 @@ RSpec.describe HashtagsController do
               "ref" => "#{hidden_tag.name}",
               "slug" => hidden_tag.name,
               "secondary_text" => "x0",
+              "id" => hidden_tag.id,
             },
           ],
         )

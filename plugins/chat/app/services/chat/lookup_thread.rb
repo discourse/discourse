@@ -2,10 +2,7 @@
 
 module Chat
   # Finds a thread within a channel. The thread_id and channel_id must
-  # match. For now we do not want to allow fetching threads if the
-  # enable_experimental_chat_threaded_discussions hidden site setting
-  # is not turned on, and the channel must specifically have threading
-  # enabled.
+  # match, and the channel must specifically have threading enabled.
   #
   # @example
   #  Chat::LookupThread.call(thread_id: 88, channel_id: 2, guardian: guardian)
@@ -19,11 +16,12 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    policy :threaded_discussions_enabled
     contract
     model :thread, :fetch_thread
     policy :invalid_access
     policy :threading_enabled_for_channel
+    step :fetch_membership
+    step :fetch_participants
 
     # @!visibility private
     class Contract
@@ -34,10 +32,6 @@ module Chat
     end
 
     private
-
-    def threaded_discussions_enabled
-      SiteSetting.enable_experimental_chat_threaded_discussions
-    end
 
     def fetch_thread(contract:, **)
       Chat::Thread.includes(
@@ -53,6 +47,14 @@ module Chat
 
     def threading_enabled_for_channel(thread:, **)
       thread.channel.threading_enabled
+    end
+
+    def fetch_membership(thread:, guardian:, **)
+      context.membership = thread.membership_for(guardian.user)
+    end
+
+    def fetch_participants(thread:, **)
+      context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: [thread.id])[thread.id]
     end
   end
 end

@@ -155,6 +155,10 @@ const DiscourseURL = EmberObject.extend({
   },
 
   replaceState(path) {
+    if (path.startsWith("#")) {
+      path = this.router.currentURL.replace(/#.*$/, "") + path;
+    }
+
     if (this.router.currentURL !== path) {
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
@@ -460,7 +464,7 @@ const DiscourseURL = EmberObject.extend({
     transition._discourse_original_url = path;
 
     const promise = transition.promise || transition;
-    promise.then(() => this.jumpToElement(elementId));
+    return promise.then(() => this.jumpToElement(elementId));
   },
 
   jumpToElement(elementId) {

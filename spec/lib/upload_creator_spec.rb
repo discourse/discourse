@@ -375,6 +375,18 @@ RSpec.describe UploadCreator do
         expect(stored_upload.url).not_to eq(signed_url)
         expect(signed_url).to match(/Amz-Credential/)
       end
+
+      it "should return CDN URL when enabled" do
+        SiteSetting.s3_use_cdn_url_for_all_uploads = true
+        SiteSetting.authorized_extensions = "pdf"
+        SiteSetting.s3_cdn_url = "https://example-cdn.com"
+
+        upload = UploadCreator.new(pdf_file, pdf_filename, opts).create_for(user.id)
+        stored_upload = Upload.last
+        cdn_url = Discourse.store.url_for(stored_upload)
+
+        expect(cdn_url).to match(/example-cdn\.com/)
+      end
     end
 
     context "when the upload already exists based on the sha1" do
@@ -416,6 +428,18 @@ RSpec.describe UploadCreator do
         it "does not return the existing upload, as duplicate uploads are allowed" do
           expect(result).not_to eq(existing_upload)
         end
+      end
+    end
+
+    context "when the video thumbnail already exists based on the sha1" do
+      let(:filename) { "smallest.png" }
+      let(:file) { file_from_fixtures(filename, "images") }
+      let!(:existing_upload) { Fabricate(:upload, sha1: Upload.generate_digest(file)) }
+      let(:opts) { { type: "thumbnail" } }
+      let(:result) { UploadCreator.new(file, filename, opts).create_for(user.id) }
+
+      it "does not return the existing upload, as duplicate uploads are allowed" do
+        expect(result).not_to eq(existing_upload)
       end
     end
 

@@ -3,16 +3,16 @@
 require "rails_helper"
 
 describe Chat::ReviewQueue do
+  subject(:queue) { described_class.new }
+
   fab!(:message_poster) { Fabricate(:user) }
   fab!(:flagger) { Fabricate(:user) }
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:message) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
-
   fab!(:admin) { Fabricate(:admin) }
+
   let(:guardian) { Guardian.new(flagger) }
   let(:admin_guardian) { Guardian.new(admin) }
-
-  subject(:queue) { described_class.new }
 
   before do
     chat_channel.add(message_poster)
@@ -368,6 +368,18 @@ describe Chat::ReviewQueue do
         queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
 
         expect(message_poster.reload.silenced?).to eq(false)
+      end
+
+      context "when the target is an admin" do
+        it "does not silence the user" do
+          SiteSetting.chat_auto_silence_from_flags_duration = 1
+          flagger.update!(trust_level: TrustLevel[4]) # Increase Score due to TL Bonus.
+          message_poster.update!(admin: true)
+
+          queue.flag_message(message, guardian, ReviewableScore.types[:off_topic])
+
+          expect(message_poster.reload.silenced?).to eq(false)
+        end
       end
     end
 

@@ -74,6 +74,8 @@ lv:
       settings:
         follow: "Pievienojieties"
         followed: "Pievienojās"
+        threading_enabled: "Ieslēgts"
+        threading_disabled: "Atslēgt"
         notifications: "Paziņojumi"
         preview: "Priekšskatījums"
         save: "Saglabāt"
@@ -110,6 +112,12 @@ lv:
           one: "%{count} atbilde"
           other: "%{count} atbildes"
         settings: "Iestatījumi"
+        last_reply: "pēdējā atbilde"
+        notifications:
+          regular:
+            title: "Normāls"
+          tracking:
+            title: "Sekot"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

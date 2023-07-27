@@ -238,7 +238,7 @@ class ComposerMessagesFinder
 
     return if post.blank?
 
-    flags = post.flags.group(:user_id).count
+    flags = post.flags.active.group(:user_id).count
     flagged_by_replier = flags[@user.id].to_i > 0
     flagged_by_others = flags.values.sum >= SiteSetting.dont_feed_the_trolls_threshold
 
@@ -270,7 +270,7 @@ class ComposerMessagesFinder
           I18n.t(
             "education.reviving_old_topic",
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 @topic.last_posted_at,
                 false,
                 scope: :"datetime.distance_in_words_verbose",

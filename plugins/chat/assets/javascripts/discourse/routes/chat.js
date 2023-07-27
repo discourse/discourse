@@ -22,13 +22,14 @@ export default class ChatRoute extends DiscourseRoute {
     const INTERCEPTABLE_ROUTES = [
       "chat.channel",
       "chat.channel.thread",
+      "chat.channel.thread.index",
+      "chat.channel.thread.near-message",
       "chat.channel.threads",
       "chat.channel.index",
       "chat.channel.near-message",
       "chat.channel-legacy",
       "chat",
       "chat.index",
-      "chat.draft-channel",
     ];
 
     if (
@@ -62,12 +63,15 @@ export default class ChatRoute extends DiscourseRoute {
     schedule("afterRender", () => {
       document.body.classList.add("has-full-page-chat");
       document.documentElement.classList.add("has-full-page-chat");
+      scrollTop();
     });
   }
 
   deactivate(transition) {
-    const url = this.router.urlFor(transition.from.name);
-    this.chatStateManager.storeChatURL(url);
+    if (transition) {
+      const url = this.router.urlFor(transition.from.name);
+      this.chatStateManager.storeChatURL(url);
+    }
 
     this.chat.activeChannel = null;
     this.chat.updatePresence();
@@ -75,7 +79,6 @@ export default class ChatRoute extends DiscourseRoute {
     schedule("afterRender", () => {
       document.body.classList.remove("has-full-page-chat");
       document.documentElement.classList.remove("has-full-page-chat");
-      scrollTop();
     });
   }
 }

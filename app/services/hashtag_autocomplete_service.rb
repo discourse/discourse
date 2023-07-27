@@ -15,6 +15,8 @@ class HashtagAutocompleteService
 
   attr_reader :guardian
 
+  # NOTE: This is not meant to be called directly; use `enabled_data_sources`
+  # or the individual data_source_X methods instead.
   def self.data_sources
     # Category and Tag data sources are in core and always should be
     # included for searches and lookups.
@@ -30,16 +32,20 @@ class HashtagAutocompleteService
     )
   end
 
-  def self.data_source_types
-    data_sources.map(&:type)
+  def self.enabled_data_sources
+    self.data_sources.filter(&:enabled?)
   end
 
-  def self.data_source_icons
-    data_sources.map(&:icon)
+  def self.data_source_types
+    self.enabled_data_sources.map(&:type)
+  end
+
+  def self.data_source_icon_map
+    self.enabled_data_sources.map { |ds| [ds.type, ds.icon] }.to_h
   end
 
   def self.data_source_from_type(type)
-    data_sources.find { |ds| ds.type == type }
+    self.enabled_data_sources.find { |ds| ds.type == type }
   end
 
   def self.find_priorities_for_context(context)
@@ -51,7 +57,10 @@ class HashtagAutocompleteService
   end
 
   def self.ordered_types_for_context(context)
-    find_priorities_for_context(context).sort_by { |ctp| -ctp[:priority] }.map { |ctp| ctp[:type] }
+    find_priorities_for_context(context)
+      .sort_by { |ctp| -ctp[:priority] }
+      .map { |ctp| ctp[:type] }
+      .reject { |type| data_source_types.exclude?(type) }
   end
 
   def self.contexts_with_ordered_types
@@ -88,6 +97,10 @@ class HashtagAutocompleteService
     # item, used for the cooked hashtags, e.g. /c/2/staff
     attr_accessor :relative_url
 
+    # The ID of the resource that is represented by the autocomplete item,
+    # e.g. category.id, tag.id
+    attr_accessor :id
+
     def initialize(params = {})
       @relative_url = params[:relative_url]
       @text = params[:text]
@@ -96,6 +109,7 @@ class HashtagAutocompleteService
       @type = params[:type]
       @ref = params[:ref]
       @slug = params[:slug]
+      @id = params[:id]
     end
 
     def to_h
@@ -107,6 +121,7 @@ class HashtagAutocompleteService
         type: self.type,
         ref: self.ref,
         slug: self.slug,
+        id: self.id,
       }
     end
   end
@@ -218,16 +233,16 @@ class HashtagAutocompleteService
   )
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
     limit = [limit, SEARCH_MAX_LIMIT].min
+    types_in_priority_order =
+      types_in_priority_order.select do |type|
+        HashtagAutocompleteService.data_source_types.include?(type)
+      end
 
     return search_without_term(types_in_priority_order, limit) if term.blank?
 
     limited_results = []
     top_ranked_type = nil
     term = term.downcase
-    types_in_priority_order =
-      types_in_priority_order.select do |type|
-        HashtagAutocompleteService.data_source_types.include?(type)
-      end
 
     # Float exact matches by slug to the top of the list, any of these will be excluded
     # from further results.

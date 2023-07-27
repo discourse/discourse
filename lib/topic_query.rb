@@ -235,17 +235,27 @@ class TopicQuery
           builder.add_results(unread_messages(pm_params.merge(count: builder.results_left)))
         end
       else
-        builder.add_results(
-          unread_results(
-            topic: topic,
-            per_page: builder.results_left,
-            max_age: SiteSetting.suggested_topics_unread_max_days_old,
-          ),
-          :high,
-        )
+        if @user.new_new_view_enabled?
+          builder.add_results(
+            new_and_unread_results(
+              topic:,
+              per_page: builder.results_left,
+              max_age: SiteSetting.suggested_topics_unread_max_days_old,
+            ),
+          )
+        else
+          builder.add_results(
+            unread_results(
+              topic: topic,
+              per_page: builder.results_left,
+              max_age: SiteSetting.suggested_topics_unread_max_days_old,
+            ),
+            :high,
+          )
 
-        unless builder.full?
-          builder.add_results(new_results(topic: topic, per_page: builder.category_results_left))
+          unless builder.full?
+            builder.add_results(new_results(topic: topic, per_page: builder.category_results_left))
+          end
         end
       end
     end
@@ -498,7 +508,13 @@ class TopicQuery
     end
 
     topics.each do |t|
-      t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map { |u| u.id } : []
+      if filter == :private_messages
+        t.allowed_user_ids = t.allowed_users.map { |u| u.id }
+        t.allowed_group_ids = t.allowed_groups.map { |g| g.id }
+      else
+        t.allowed_user_ids = []
+        t.allowed_group_ids = []
+      end
     end
 
     list = TopicList.new(filter, @user, topics, options.merge(@options))
@@ -575,6 +591,7 @@ class TopicQuery
         base,
         treat_as_new_topic_start_date: @user.user_option.treat_as_new_topic_start_date,
       )
+
     new_results = remove_muted(new_results, @user, options)
     new_results = remove_dismissed(new_results, @user)
 
@@ -880,24 +897,42 @@ class TopicQuery
     category_id = get_category_id(opts[:exclude]) if opts
 
     if user
+      watched_tag_ids =
+        if user.watched_precedence_over_muted
+          TagUser
+            .where(user: user)
+            .where("notification_level >= ?", TopicUser.notification_levels[:watching])
+            .pluck(:tag_id)
+        else
+          []
+        end
+
+      # OR watched_topic_tags.id IS NOT NULL",
       list =
-        list
-          .references("cu")
-          .joins(
-            "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}",
+        list.references("cu").joins(
+          "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}",
+        )
+      if watched_tag_ids.present?
+        list =
+          list.joins(
+            "LEFT JOIN topic_tags watched_topic_tags ON watched_topic_tags.topic_id = topics.id AND #{DB.sql_fragment("watched_topic_tags.tag_id IN (?)", watched_tag_ids)}",
           )
-          .where(
-            "topics.category_id = :category_id
+      end
+
+      list =
+        list.where(
+          "topics.category_id = :category_id
                 OR
                 (COALESCE(category_users.notification_level, :default) <> :muted AND (topics.category_id IS NULL OR topics.category_id NOT IN(:indirectly_muted_category_ids)))
+                #{watched_tag_ids.present? ? "OR watched_topic_tags.id IS NOT NULL" : ""}
                 OR tu.notification_level > :regular",
-            category_id: category_id || -1,
-            default: CategoryUser.default_notification_level,
-            indirectly_muted_category_ids:
-              CategoryUser.indirectly_muted_category_ids(user).presence || [-1],
-            muted: CategoryUser.notification_levels[:muted],
-            regular: TopicUser.notification_levels[:regular],
-          )
+          category_id: category_id || -1,
+          default: CategoryUser.default_notification_level,
+          indirectly_muted_category_ids:
+            CategoryUser.indirectly_muted_category_ids(user).presence || [-1],
+          muted: CategoryUser.notification_levels[:muted],
+          regular: TopicUser.notification_levels[:regular],
+        )
     elsif SiteSetting.mute_all_categories_by_default
       category_ids = [
         SiteSetting.default_categories_watching.split("|"),
@@ -946,6 +981,19 @@ class TopicQuery
       end
     end
 
+    query_params = { tag_ids: muted_tag_ids }
+
+    if user && !opts[:skip_categories]
+      query_params[:regular] = CategoryUser.notification_levels[:regular]
+
+      query_params[:watching_or_infinite] = if user.watched_precedence_over_muted ||
+           SiteSetting.watched_precedence_over_muted
+        CategoryUser.notification_levels[:watching]
+      else
+        99
+      end
+    end
+
     if SiteSetting.remove_muted_tags_from_latest == "always"
       list =
         list.where(
@@ -954,8 +1002,9 @@ class TopicQuery
           SELECT 1
             FROM topic_tags tt
            WHERE tt.tag_id IN (:tag_ids)
-             AND tt.topic_id = topics.id)",
-          tag_ids: muted_tag_ids,
+             AND tt.topic_id = topics.id
+             #{user && !opts[:skip_categories] ? "AND COALESCE(category_users.notification_level, :regular) < :watching_or_infinite" : ""})",
+          query_params,
         )
     else
       list =
@@ -964,10 +1013,11 @@ class TopicQuery
         EXISTS (
           SELECT 1
             FROM topic_tags tt
-           WHERE tt.tag_id NOT IN (:tag_ids)
-             AND tt.topic_id = topics.id
+           WHERE (tt.tag_id NOT IN (:tag_ids)
+             AND tt.topic_id = topics.id)
+             #{user && !opts[:skip_categories] ? "OR COALESCE(category_users.notification_level, :regular) >= :watching_or_infinite" : ""}
         ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)",
-          tag_ids: muted_tag_ids,
+          query_params,
         )
     end
   end

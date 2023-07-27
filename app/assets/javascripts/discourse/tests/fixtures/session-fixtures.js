@@ -59,7 +59,7 @@ export default {
           links: [
             {
               id: 329,
-              name: "Everything",
+              name: "Topics",
               value: "/latest",
               icon: "layer-group",
               external: false,
@@ -75,7 +75,7 @@ export default {
             },
             {
               id: 331,
-              name: "Info",
+              name: "About",
               value: "/about",
               icon: "info-circle",
               external: false,

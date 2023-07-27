@@ -873,7 +873,7 @@ RSpec.describe PostsController do
         post "/posts.json",
              params: {
                raw: "this is test post #{SecureRandom.alphanumeric}",
-               title: "tthis is a test title #{SecureRandom.alphanumeric}",
+               title: "this is a test title #{SecureRandom.alphanumeric}",
              },
              headers: {
                HTTP_API_USERNAME: user.username,
@@ -1105,7 +1105,7 @@ RSpec.describe PostsController do
           user.reload
           expect(user).to be_silenced
 
-          rp = ReviewableQueuedPost.find_by(created_by: user)
+          rp = ReviewableQueuedPost.find_by(target_created_by: user)
           expect(rp.payload["typing_duration_msecs"]).to eq(100)
           expect(rp.payload["composer_open_duration_msecs"]).to eq(204)
           expect(rp.payload["reply_to_post_number"]).to eq(123)
@@ -1199,7 +1199,7 @@ RSpec.describe PostsController do
         parsed = response.parsed_body
 
         expect(parsed["action"]).to eq("enqueued")
-        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        reviewable = ReviewableQueuedPost.find_by(target_created_by: user)
         score = reviewable.reviewable_scores.first
         expect(score.reason).to eq("auto_silence_regex")
 
@@ -1222,7 +1222,7 @@ RSpec.describe PostsController do
         parsed = response.parsed_body
 
         expect(parsed["action"]).to eq("enqueued")
-        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        reviewable = ReviewableQueuedPost.find_by(target_created_by: user)
         score = reviewable.reviewable_scores.first
         expect(score.reason).to eq("auto_silence_regex")
 
@@ -2239,44 +2239,6 @@ RSpec.describe PostsController do
       get "/posts/#{post.id}/expand-embed.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["cooked"]).to eq("full content")
-    end
-  end
-
-  describe "#flagged_posts" do
-    include_examples "action requires login", :get, "/posts/system/flagged.json"
-
-    describe "when logged in" do
-      it "raises an error if the user doesn't have permission to see the flagged posts" do
-        sign_in(user)
-        get "/posts/system/flagged.json"
-        expect(response).to be_forbidden
-      end
-
-      it "can see the flagged posts when authorized" do
-        sign_in(moderator)
-        get "/posts/system/flagged.json"
-        expect(response.status).to eq(200)
-      end
-
-      it "only shows agreed and deferred flags" do
-        post_agreed = create_post(user: user)
-        post_deferred = create_post(user: user)
-        post_disagreed = create_post(user: user)
-
-        r0 = PostActionCreator.spam(moderator, post_agreed).reviewable
-        r1 = PostActionCreator.off_topic(moderator, post_deferred).reviewable
-        r2 = PostActionCreator.inappropriate(moderator, post_disagreed).reviewable
-
-        r0.perform(admin, :agree_and_keep)
-        r1.perform(admin, :ignore_and_do_nothing)
-        r2.perform(admin, :disagree)
-
-        sign_in(Fabricate(:moderator))
-        get "/posts/#{user.username}/flagged.json"
-        expect(response.status).to eq(200)
-
-        expect(response.parsed_body.length).to eq(2)
-      end
     end
   end
 

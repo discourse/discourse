@@ -3,6 +3,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Site from "discourse/models/site";
+import getURL from "discourse-common/lib/get-url";
 
 const PREFERRED_MODE_KEY = "preferred_mode";
 const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
@@ -20,11 +21,13 @@ export function resetChatDrawerStateCallbacks() {
 }
 export default class ChatStateManager extends Service {
   @service chat;
+  @service chatHistory;
   @service router;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
   @tracked isDrawerActive = false;
+
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -133,11 +136,11 @@ export default class ChatStateManager extends Service {
       url = this.router.urlFor(`discovery.${defaultHomepage()}`);
     }
 
-    return url;
+    return getURL(url);
   }
 
   get lastKnownChatURL() {
-    return this._chatURL || "/chat";
+    return getURL(this._chatURL || "/chat");
   }
 
   #publishStateChange() {

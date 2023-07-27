@@ -87,32 +87,6 @@ def dependencies
       source: "@discourse/moment-timezone-names-translations/locales/.",
       destination: "moment-timezone-names-locale",
     },
-    { source: "workbox-sw/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-routing/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    { source: "workbox-core/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-strategies/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-expiration/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-cacheable-response/build/.",
-      destination: "workbox",
-      skip_versioning: true,
-      public: true,
-    },
     {
       source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
       destination: "squoosh",
@@ -304,11 +278,7 @@ task "javascript:update" => "clean_up" do
 
     STDERR.puts "New dependency added: #{dest}" unless File.exist?(dest)
 
-    if f[:uglify]
-      File.write(dest, Uglifier.new.compile(File.read(src)))
-    else
-      FileUtils.cp_r(src, dest)
-    end
+    FileUtils.cp_r(src, dest)
   end
 
   write_template("discourse/app/lib/public-js-versions.js", "update", <<~JS)

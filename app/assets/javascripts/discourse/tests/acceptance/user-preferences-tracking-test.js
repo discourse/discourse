@@ -196,6 +196,22 @@ acceptance("User Preferences - Tracking", function (needs) {
     });
   });
 
+  test("additional precedence option when one category is watched and tag is muted", async function (assert) {
+    this.siteSettings.tagging_enabled = true;
+
+    await visit("/u/eviltrout/preferences/tracking");
+
+    const mutedTagsSelector = selectKit(
+      ".tracking-controls__muted-tags .tag-chooser"
+    );
+
+    assert.dom(".user-preferences__watched-precedence-over-muted").doesNotExist;
+    await mutedTagsSelector.expand();
+    await mutedTagsSelector.selectRowByValue("dog");
+
+    assert.dom(".user-preferences__watched-precedence-over-muted").exists();
+  });
+
   test("tracking category which is set to regular notification level for user when mute_all_categories_by_default site setting is disabled", async function (assert) {
     this.siteSettings.tagging_enabled = false;
 

@@ -104,9 +104,9 @@ module PrettyText
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/object")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/deprecated")
     apply_es6_file(ctx, root_path, "discourse-common/addon/lib/escape")
+    apply_es6_file(ctx, root_path, "discourse-common/addon/lib/avatar-utils")
     apply_es6_file(ctx, root_path, "discourse-common/addon/utils/watched-words")
     apply_es6_file(ctx, root_path, "discourse/app/lib/to-markdown")
-    apply_es6_file(ctx, root_path, "discourse/app/lib/utilities")
 
     ctx.load("#{Rails.root}/lib/pretty_text/shims.js")
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
@@ -208,6 +208,7 @@ module PrettyText
         __optInput.watchedWordsReplace = #{WordWatcher.word_matcher_regexps(:replace, engine: :js).to_json};
         __optInput.watchedWordsLink = #{WordWatcher.word_matcher_regexps(:link, engine: :js).to_json};
         __optInput.additionalOptions = #{Site.markdown_additional_options.to_json};
+        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
       JS
 
       buffer << "__optInput.topicId = #{opts[:topic_id].to_i};\n" if opts[:topic_id]
@@ -224,10 +225,8 @@ module PrettyText
           .ordered_types_for_context(opts[:hashtag_context])
           .map { |t| "'#{t}'" }
           .join(",")
-      hashtag_icons_as_js =
-        HashtagAutocompleteService.data_source_icons.map { |i| "'#{i}'" }.join(",")
       buffer << "__optInput.hashtagTypesInPriorityOrder = [#{hashtag_types_as_js}];\n"
-      buffer << "__optInput.hashtagIcons = [#{hashtag_icons_as_js}];\n"
+      buffer << "__optInput.hashtagIcons = #{HashtagAutocompleteService.data_source_icon_map.to_json};\n"
 
       buffer << "__textOptions = __buildOptions(__optInput);\n"
       buffer << ("__pt = new __PrettyText(__textOptions);")
@@ -258,8 +257,10 @@ module PrettyText
   # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
     protect { v8.eval(<<~JS) }
+        __optInput = {};
+        __optInput.avatar_sizes = #{SiteSetting.avatar_sizes.to_json};
         __paths = #{paths_json};
-        __utils.avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
+        require("discourse-common/lib/avatar-utils").avatarImg({size: #{size.inspect}, avatarTemplate: #{avatar_template.inspect}}, __getURL);
       JS
   end
 
@@ -311,7 +312,7 @@ module PrettyText
     add_mentions(doc, user_id: opts[:user_id]) if SiteSetting.enable_mentions
 
     scrubber = Loofah::Scrubber.new { |node| node.remove if node.name == "script" }
-    loofah_fragment = Loofah.fragment(doc.to_html)
+    loofah_fragment = Loofah.html5_fragment(doc.to_html)
     loofah_fragment.scrub!(scrubber).to_html
   end
 
@@ -455,6 +456,9 @@ module PrettyText
             name
           end
         end
+
+    mentions =
+      DiscoursePluginRegistry.apply_modifier(:pretty_text_extract_mentions, mentions, cooked)
 
     mentions.compact!
     mentions.uniq!

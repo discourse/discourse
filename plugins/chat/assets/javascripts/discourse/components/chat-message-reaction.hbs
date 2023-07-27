@@ -1,18 +1,17 @@
 {{#if (and @reaction this.emojiUrl)}}
   <button
     type="button"
-    {{on "touchstart" this.handleTouchStart}}
-    {{on "click" this.handleClick}}
     tabindex="0"
     class={{concat-class
       "chat-message-reaction"
       (if @reaction.reacted "reacted")
+      (if this.isActive "-active")
     }}
     data-emoji-name={{@reaction.emoji}}
     data-tippy-content={{this.popoverContent}}
     title={{this.emojiString}}
-    {{did-insert this.setupTooltip}}
-    {{will-destroy this.teardownTooltip}}
+    {{did-insert this.setup}}
+    {{will-destroy this.teardown}}
     {{did-update this.refreshTooltip this.popoverContent}}
   >
     <img

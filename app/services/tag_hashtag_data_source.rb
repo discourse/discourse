@@ -4,6 +4,10 @@
 # results when looking up a tag slug via markdown or searching for
 # tags via the # autocomplete character.
 class TagHashtagDataSource
+  def self.enabled?
+    SiteSetting.enable_experimental_hashtag_autocomplete && SiteSetting.tagging_enabled
+  end
+
   def self.icon
     "tag"
   end
@@ -27,12 +31,12 @@ class TagHashtagDataSource
       item.slug = tag.name
       item.relative_url = tag.url
       item.icon = icon
+      item.id = tag.id
     end
   end
   private_class_method :tag_to_hashtag_item
 
   def self.lookup(guardian, slugs)
-    return [] if !SiteSetting.tagging_enabled
     DiscourseTagging
       .filter_visible(Tag.where_name(slugs), guardian)
       .map { |tag| tag_to_hashtag_item(tag, guardian) }
@@ -44,8 +48,6 @@ class TagHashtagDataSource
     limit,
     condition = HashtagAutocompleteService.search_conditions[:contains]
   )
-    return [] if !SiteSetting.tagging_enabled
-
     tags_with_counts, _ =
       DiscourseTagging.filter_allowed_tags(
         guardian,
@@ -66,7 +68,11 @@ class TagHashtagDataSource
     TagsController
       .tag_counts_json(tags_with_counts, guardian)
       .take(limit)
-      .map { |tag| tag_to_hashtag_item(tag, guardian) }
+      .map do |tag|
+        # We want the actual ID here not the `name` as tag_counts_json gives us.
+        tag[:id] = tags_with_counts.find { |t| t.name == tag[:name] }.id
+        tag_to_hashtag_item(tag, guardian)
+      end
   end
 
   def self.search_sort(search_results, _)
@@ -74,8 +80,6 @@ class TagHashtagDataSource
   end
 
   def self.search_without_term(guardian, limit)
-    return [] if !SiteSetting.tagging_enabled
-
     tags_with_counts, _ =
       DiscourseTagging.filter_allowed_tags(
         guardian,

@@ -1147,8 +1147,6 @@ sk:
       sign_up: "Registrovať sa"
       hide_forever: "nie, ďakujem"
     summary:
-      enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -2291,6 +2289,9 @@ sk:
         other: "%{count} nových"
       more: "Viac"
       all_categories: "Všetky kategórie"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Všetky"
       sections:
         custom:
           save: "Uložiť"
@@ -2317,7 +2318,8 @@ sk:
         categories:
           header_link_text: "Kategórie"
         community:
-          header_link_text: "Komunita"
+          edit_section:
+            header_dropdown: "Upraviť"
           links:
             about:
               content: "O stránke"
@@ -2325,8 +2327,8 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Všetko"
+            topics:
+              content: "Témy"
             faq:
               content: "Časté otázky"
             groups:
@@ -2335,6 +2337,11 @@ sk:
               content: "Používatelia"
             my_posts:
               content: "Moje príspevky"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Prosím zadajte platnú hodnotu."
+          email: "Zadajte prosím platný email."
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:
@@ -2840,6 +2847,11 @@ sk:
           validations:
             required:
               key: "povinné"
+            type:
+              key: "typ"
+        edit_category:
+          select_template: "Výber šablón formulárov"
+          select_template_help: "Pridanie/úprava šablón formulárov"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -2851,6 +2863,7 @@ sk:
         last_emailed: "Posledný odemailovaný"
         not_found: "Prepáčte, toto používateľské meno sa nenachádza v našom systéme."
         id_not_found: "Prepáčte, toto používateľské id sa nenachádza v našom systéme."
+        status: "Stav"
         show_emails: "Ukázať Emaily"
         nav:
           new: "Nový"
@@ -3047,6 +3060,13 @@ sk:
         go_back: "Návrat na vyhľadávanie"
         recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
+        show_outdated: "Zobraziť len neaktuálne/neplatné"
+        interpolation_keys: "Dostupné interpolačné kľúče:"
+        outdated:
+          title: "Tento preklad je zastaraný"
+          old_default: "Staré predvolené nastavenie"
+          new_default: "Nové predvolené nastavenie"
+          dismiss: "Zahodiť"
       settings:
         show_overriden: "Ukázať iba zmenené"
         reset: "zrušiť"

@@ -1,9 +1,14 @@
+// Remove when legacy modals are dropped (deprecation: discourse.modal-controllers)
+
 import Component from "@glimmer/component";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-import { getOwner } from "@ember/application";
+import { DEBUG } from "@glimmer/env";
+
+const LEGACY_ERROR =
+  "d-modal-body should only be used inside a legacy controller-based d-modal. https://meta.discourse.org/t/268057";
 
 function pick(object, keys) {
   const result = {};
@@ -18,18 +23,27 @@ function pick(object, keys) {
 @disableImplicitInjections
 export default class DModalBody extends Component {
   @service appEvents;
+  @service modal;
 
   @tracked fixed = false;
 
   @action
   didInsert(element) {
+    if (element.closest(".d-modal:not(.d-modal-legacy)")) {
+      // eslint-disable-next-line no-console
+      console.error(LEGACY_ERROR);
+      if (DEBUG) {
+        throw new Error(LEGACY_ERROR);
+      }
+    }
+
     this.appEvents.trigger("modal-body:clearFlash");
 
     const fixedParent = element.closest(".d-modal.fixed-modal");
     if (fixedParent) {
       this.fixed = true;
       $(fixedParent).modal("show");
-      getOwner(this).lookup("controller:modal").hidden = false;
+      this.modal.hidden = false;
     }
 
     this.appEvents.trigger(

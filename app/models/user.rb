@@ -53,7 +53,7 @@ class User < ActiveRecord::Base
   has_many :pending_posts,
            -> { merge(Reviewable.pending) },
            class_name: "ReviewableQueuedPost",
-           foreign_key: :created_by_id
+           foreign_key: :target_created_by_id
 
   has_one :user_option, dependent: :destroy
   has_one :user_avatar, dependent: :destroy
@@ -137,13 +137,6 @@ class User < ActiveRecord::Base
   belongs_to :uploaded_avatar, class_name: "Upload"
 
   has_many :sidebar_section_links, dependent: :delete_all
-  has_many :category_sidebar_section_links,
-           -> { where(linkable_type: "Category") },
-           class_name: "SidebarSectionLink"
-  has_many :custom_sidebar_tags,
-           through: :sidebar_section_links,
-           source: :linkable,
-           source_type: "Tag"
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -170,16 +163,14 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
-  after_create :add_default_sidebar_section_links
-
-  after_update :update_default_sidebar_section_links, if: Proc.new { self.saved_change_to_admin? }
-
-  after_update :add_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
+  after_create :set_default_sidebar_section_links
+  after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
 
   after_update :trigger_user_updated_event,
                if: Proc.new { self.human? && self.saved_change_to_uploaded_avatar_id? }
 
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
+  after_update :change_display_name, if: :saved_change_to_name?
 
   before_save :update_usernames
   before_save :ensure_password_is_hashed
@@ -355,12 +346,26 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
+        admin_guide: 6,
       )
+  end
+
+  def secured_sidebar_category_ids(user_guardian = nil)
+    user_guardian ||= guardian
+
+    SidebarSectionLink.where(user_id: self.id, linkable_type: "Category").pluck(:linkable_id) &
+      user_guardian.allowed_category_ids
   end
 
   def visible_sidebar_tags(user_guardian = nil)
     user_guardian ||= guardian
-    DiscourseTagging.filter_visible(custom_sidebar_tags, user_guardian)
+
+    DiscourseTagging.filter_visible(
+      Tag.where(
+        id: SidebarSectionLink.where(user_id: self.id, linkable_type: "Tag").select(:linkable_id),
+      ),
+      user_guardian,
+    )
   end
 
   def self.max_password_length
@@ -592,7 +597,6 @@ class User < ActiveRecord::Base
     @unread_pms = nil
     @unread_bookmarks = nil
     @unread_high_prios = nil
-    @user_fields_cache = nil
     @ignored_user_ids = nil
     @muted_user_ids = nil
     @belonging_to_group_ids = nil
@@ -658,11 +662,11 @@ class User < ActiveRecord::Base
     results.to_h
   end
 
-  ###
-  # DEPRECATED: This is only maintained for backwards compat until v2.5. There
-  # may be inconsistencies with counts in the UI because of this, because unread
-  # high priority includes PMs AND bookmark reminders.
   def unread_private_messages
+    Discourse.deprecate(
+      "#unread_private_messages is deprecated, use #unread_high_priority_notifications instead.",
+      drop_from: "2.5.0",
+    )
     @unread_pms ||= unread_high_priority_notifications
   end
 
@@ -808,20 +812,8 @@ class User < ActiveRecord::Base
     MessageBus.publish("/reviewable_counts/#{self.id}", data, user_ids: [self.id])
   end
 
-  TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
-
   def read_first_notification?
-    if (
-         trust_level > TrustLevel[1] ||
-           (
-             first_seen_at.present? &&
-               first_seen_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago
-           ) || user_option.skip_new_user_tips
-       )
-      return true
-    end
-
-    self.seen_notification_id == 0 ? false : true
+    self.seen_notification_id != 0 || user_option.skip_new_user_tips
   end
 
   def publish_notifications_state
@@ -1515,15 +1507,7 @@ class User < ActiveRecord::Base
   def user_fields(field_ids = nil)
     field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
 
-    @user_fields_cache ||= {}
-
-    # Memoize based on requested fields
-    @user_fields_cache[field_ids.join(":")] ||= {}.tap do |hash|
-      field_ids.each do |fid|
-        # The hash keys are strings for backwards compatibility
-        hash[fid.to_s] = custom_fields["#{USER_FIELD_PREFIX}#{fid}"]
-      end
-    end
+    field_ids.map { |fid| [fid.to_s, custom_fields["#{USER_FIELD_PREFIX}#{fid}"]] }.to_h
   end
 
   def validatable_user_fields_values
@@ -1827,6 +1811,18 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
+  def experimental_search_menu_groups_enabled?
+    in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
+  end
+
+  def watched_precedence_over_muted
+    if user_option.watched_precedence_over_muted.nil?
+      SiteSetting.watched_precedence_over_muted
+    else
+      user_option.watched_precedence_over_muted
+    end
+  end
+
   protected
 
   def badge_grant
@@ -2061,18 +2057,8 @@ class User < ActiveRecord::Base
     return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
-    if SiteSetting.default_sidebar_categories.present?
-      categories_to_update = SiteSetting.default_sidebar_categories.split("|")
-
-      if update
-        filtered_default_category_ids =
-          Category.secured(self.guardian).where(id: categories_to_update).pluck(:id)
-        existing_category_ids =
-          SidebarSectionLink.where(user: self, linkable_type: "Category").pluck(:linkable_id)
-
-        categories_to_update =
-          existing_category_ids + (filtered_default_category_ids & self.secure_category_ids)
-      end
+    if SiteSetting.default_navigation_menu_categories.present?
+      categories_to_update = SiteSetting.default_navigation_menu_categories.split("|")
 
       SidebarSectionLinksUpdater.update_category_section_links(
         self,
@@ -2080,38 +2066,12 @@ class User < ActiveRecord::Base
       )
     end
 
-    if SiteSetting.tagging_enabled && SiteSetting.default_sidebar_tags.present?
-      tags_to_update = SiteSetting.default_sidebar_tags.split("|")
-
-      if update
-        default_tag_ids = Tag.where(name: tags_to_update).pluck(:id)
-        filtered_default_tags =
-          DiscourseTagging
-            .filter_visible(Tag, self.guardian)
-            .where(id: default_tag_ids)
-            .pluck(:name)
-
-        existing_tag_ids =
-          SidebarSectionLink.where(user: self, linkable_type: "Tag").pluck(:linkable_id)
-        existing_tags =
-          DiscourseTagging
-            .filter_visible(Tag, self.guardian)
-            .where(id: existing_tag_ids)
-            .pluck(:name)
-
-        tags_to_update = existing_tags + (filtered_default_tags & DiscourseTagging.hidden_tag_names)
-      end
-
-      SidebarSectionLinksUpdater.update_tag_section_links(self, tag_names: tags_to_update)
+    if SiteSetting.tagging_enabled && SiteSetting.default_navigation_menu_tags.present?
+      SidebarSectionLinksUpdater.update_tag_section_links(
+        self,
+        tag_ids: Tag.where(name: SiteSetting.default_navigation_menu_tags.split("|")).pluck(:id),
+      )
     end
-  end
-
-  def add_default_sidebar_section_links
-    set_default_sidebar_section_links
-  end
-
-  def update_default_sidebar_section_links
-    set_default_sidebar_section_links(update: true)
   end
 
   def stat
@@ -2146,6 +2106,10 @@ class User < ActiveRecord::Base
   def update_previous_visit(timestamp)
     update_visit_record!(timestamp.to_date)
     update_column(:previous_visit_at, last_seen_at) if previous_visit_at_update_required?(timestamp)
+  end
+
+  def change_display_name
+    Jobs.enqueue(:change_display_name, user_id: id, old_name: name_before_last_save, new_name: name)
   end
 
   def trigger_user_created_event

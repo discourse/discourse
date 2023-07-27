@@ -773,6 +773,16 @@ module DiscourseTagging
     successful = existing.select { |t| !t.errors.present? }
     synonyms_ids = successful.map(&:id)
     TopicTag.where(topic_id: target_tag.topics.with_deleted, tag_id: synonyms_ids).delete_all
+    TopicTag.joins(DB.sql_fragment(<<~SQL, synonyms_ids: synonyms_ids)).delete_all
+      INNER JOIN (
+        SELECT MIN(id) AS id, topic_id
+          FROM topic_tags
+          WHERE tag_id IN (:synonyms_ids)
+          GROUP BY topic_id
+      ) AS tt ON tt.id < topic_tags.id
+                  AND tt.topic_id = topic_tags.topic_id
+                  AND topic_tags.tag_id IN (:synonyms_ids)
+    SQL
     TopicTag.where(tag_id: synonyms_ids).update_all(tag_id: target_tag.id)
     Scheduler::Defer.later "Update tag topic counts" do
       Tag.ensure_consistency!

@@ -1246,13 +1246,13 @@ RSpec.describe TopicsFilter do
         end
 
         describe "when query string is `order:#{order}-invalid`" do
-          it "should return topics ordered by the default order" do
+          it "should return topics ordered by the database's default order" do
             expect(
               TopicsFilter
                 .new(guardian: Guardian.new)
                 .filter_from_query_string("order:#{order}-invalid")
                 .pluck(:id),
-            ).to eq(Topic.all.order(:id).pluck(:id))
+            ).to contain_exactly(*Topic.all.pluck(:id))
           end
         end
       end
@@ -1334,6 +1334,14 @@ RSpec.describe TopicsFilter do
         fab!(:topic3) { Fabricate(:topic, category: category) }
 
         include_examples "ordering topics filters", "category", "category name"
+      end
+
+      describe "when ordering by topics's title" do
+        fab!(:topic3) { Fabricate(:topic, title: "This is topic number 1") }
+        fab!(:topic2) { Fabricate(:topic, title: "This is topic Number 3") }
+        fab!(:topic) { Fabricate(:topic, title: "This is topic number 2") }
+
+        include_examples "ordering topics filters", "title", "topic's title"
       end
 
       describe "composing multiple order filters" do

@@ -8,6 +8,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";
 import { setting } from "discourse/lib/computed";
+import { inject as service } from "@ember/service";
 
 function staticReport(reportType) {
   return computed("reports.[]", function () {
@@ -18,6 +19,8 @@ function staticReport(reportType) {
 export default class AdminDashboardGeneralController extends Controller.extend(
   PeriodComputationMixin
 ) {
+  @service router;
+  @service siteSettings;
   @controller("exception") exceptionController;
 
   isLoading = false;
@@ -137,7 +140,7 @@ export default class AdminDashboardGeneralController extends Controller.extend(
         })
         .catch((e) => {
           this.exceptionController.set("thrown", e.jqXHR);
-          this.replaceRoute("exception");
+          this.router.replaceWith("exception");
         })
         .finally(() => this.set("isLoading", false));
     }

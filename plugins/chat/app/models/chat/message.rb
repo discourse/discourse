@@ -15,7 +15,7 @@ module Chat
     belongs_to :user
     belongs_to :in_reply_to, class_name: "Chat::Message"
     belongs_to :last_editor, class_name: "User"
-    belongs_to :thread, class_name: "Chat::Thread"
+    belongs_to :thread, class_name: "Chat::Thread", optional: true
 
     has_many :replies,
              class_name: "Chat::Message",
@@ -73,16 +73,21 @@ module Chat
 
     before_save { ensure_last_editor_id }
 
+    validate :validate_message
+
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
-    def validate_message(has_uploads:)
+    def validate_message
+      self.message =
+        TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
+
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")
         Chat::DuplicateMessageValidator.new(self).validate
       end
 
-      if !has_uploads && message_too_short?
+      if uploads.empty? && message_too_short?
         self.errors.add(
           :base,
           I18n.t(
@@ -100,23 +105,6 @@ module Chat
       end
     end
 
-    def attach_uploads(uploads)
-      return if uploads.blank? || self.new_record?
-
-      now = Time.now
-      ref_record_attrs =
-        uploads.map do |upload|
-          {
-            upload_id: upload.id,
-            target_id: self.id,
-            target_type: self.class.polymorphic_name,
-            created_at: now,
-            updated_at: now,
-          }
-        end
-      UploadReference.insert_all!(ref_record_attrs)
-    end
-
     def excerpt(max_length: 50)
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       return message if UrlHelper.relaxed_parse(message).is_a?(URI)
@@ -125,25 +113,11 @@ module Chat
       return uploads.first.original_filename if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(message, max_length, { text_entities: true })
+      PrettyText.excerpt(cooked, max_length)
     end
 
-    # TODO (martin) Replace the above #excerpt method usage with this one. The
-    # issue with the above one is that we cannot actually render nice HTML
-    # fore replies/excerpts in the UI because text_entitites: true will
-    # allow through even denied HTML because of 07ab20131a15ab907c1974fee405d9bdce0c0723.
-    #
-    # For now only the thread index uses this new version since it is not interactive,
-    # we can go back to the interactive reply/edit cases in another PR.
-    def rich_excerpt(max_length: 50)
-      # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
-      return message if UrlHelper.relaxed_parse(message).is_a?(URI)
-
-      # upload-only messages are better represented as the filename
-      return uploads.first.original_filename if cooked.blank? && uploads.present?
-
-      # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, max_length)
+    def censored_excerpt(max_length: 50)
+      WordWatcher.censor(excerpt(max_length: max_length))
     end
 
     def cooked_for_excerpt

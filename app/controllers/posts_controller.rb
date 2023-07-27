@@ -662,32 +662,6 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def flagged_posts
-    Discourse.deprecate(
-      "PostsController#flagged_posts is deprecated. Please use /review instead.",
-      since: "2.8.0.beta4",
-      drop_from: "2.9",
-    )
-
-    params.permit(:offset, :limit)
-    guardian.ensure_can_see_flagged_posts!
-
-    user = fetch_user_from_params
-    offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
-
-    posts =
-      user_posts(guardian, user.id, offset: offset, limit: limit).where(
-        id:
-          PostAction
-            .where(post_action_type_id: PostActionType.notify_flag_type_ids)
-            .where(disagreed_at: nil)
-            .select(:post_id),
-      )
-
-    render_serialized(posts, AdminUserActionSerializer)
-  end
-
   def deleted_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_deleted_posts!
@@ -809,27 +783,25 @@ class PostsController < ApplicationController
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: "private_message")
       topics = topics.secured(guardian)
 
-      posts = posts.where(topic_id: topics.pluck(:id))
+      posts = posts.where(topic_id: topics)
     end
 
     posts.offset(opts[:offset]).limit(opts[:limit])
   end
 
   def create_params
-    permitted = [
-      :raw,
-      :topic_id,
-      :archetype,
-      :category,
-      # TODO remove together with 'targetUsername' deprecations
-      :target_usernames,
-      :target_recipients,
-      :reply_to_post_number,
-      :auto_track,
-      :typing_duration_msecs,
-      :composer_open_duration_msecs,
-      :visible,
-      :draft_key,
+    permitted = %i[
+      raw
+      topic_id
+      archetype
+      category
+      target_recipients
+      reply_to_post_number
+      auto_track
+      typing_duration_msecs
+      composer_open_duration_msecs
+      visible
+      draft_key
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -917,15 +889,7 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
-    if recipients = result[:target_usernames]
-      Discourse.deprecate(
-        "`target_usernames` is deprecated, use `target_recipients` instead.",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-    else
-      recipients = result[:target_recipients]
-    end
+    recipients = result[:target_recipients]
 
     if recipients
       recipients = recipients.split(",").map(&:downcase)

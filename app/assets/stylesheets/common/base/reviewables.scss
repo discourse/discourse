@@ -232,8 +232,9 @@
       color: var(--secondary);
       border-radius: 8px;
       background-color: var(--secondary-high);
-      &.-flagged-post {
-        background-color: var(--danger-medium);
+      &.-flagged-post,
+      &.-flagged-chat-message {
+        background-color: var(--danger);
       }
       &.-queued-post,
       &.-queued-topic,
@@ -312,7 +313,7 @@
 }
 
 .reviewable-scores {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   min-width: 50%;
   color: var(--primary-high);
 
@@ -469,24 +470,50 @@
     max-width: var(--topic-body-width);
     margin-top: 0.5em;
 
-    &__scroll {
-      max-height: 300px;
-      overflow-y: auto;
+    &.is-collapsed {
+      max-height: 50vh;
+      overflow: hidden;
+
       &:after {
         content: "";
         position: absolute;
+        left: 0;
         bottom: 0;
+        height: 25%;
         width: 100%;
-        height: 1.5em;
-        background: linear-gradient(
-          to bottom,
-          rgba(var(--secondary-rgb), 0),
-          rgba(var(--secondary-rgb), 100%)
-        );
+        background: linear-gradient(to bottom, transparent, var(--secondary));
+      }
+
+      + .post-body__toggle-btn {
+        transform: translateX(-50%) translateY(-50%);
+      }
+    }
+    p {
+      margin-bottom: 0;
+    }
+    &__toggle-btn {
+      background: var(--primary-very-low);
+      color: var(--primary-high);
+      font-size: var(--font-down-2);
+      box-shadow: var(--shadow-dropdown);
+      margin-left: 50%;
+      transform: translateX(-50%);
+      border-radius: 4px;
+
+      .d-icon {
+        color: var(--primary-high);
+      }
+
+      &:hover {
+        background: var(--primary-very-low);
+        color: var(--tertiary);
+
+        .d-icon {
+          color: var(--tertiary);
+        }
       }
     }
 
-    p,
     aside {
       margin: 0 0 1em 0;
     }

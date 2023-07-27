@@ -1647,11 +1647,7 @@ lt:
       hidden_for_session: "Gerai, paklausime rytoj. Jūs taip pat visada galite naudoti „Prisijungti“, kad sukurtumėte paskyrą."
       intro: "Sveiki! Panašu, kad jums patinka diskusija, tačiau dar nesate prisiregistravę prie paskyros."
     summary:
-      enabled_description: "Tu šiuo metu žiūri temos aprašymą: pačius įdomiausius įrašus, kuriuos išrinko bendruomenė."
-      enable: "Apibendrinkite šią Temą"
       disable: "Peržiūrėti visus Įrašus"
-      short_label: "Apibendrinti"
-      short_title: "Rodyti šios temos santrauką: įdomiausius pranešimus, kuriuos nustato bendruomenė"
     deleted_filter:
       enabled_description: "Šioje temoje yra ištrintų įrašų, kurie yra paslėpti."
       disabled_description: "Ištrinti temos įrašai vėl rodomi."
@@ -2282,7 +2278,7 @@ lt:
         category: "Nėra jokių temų kategorijoje %{category}."
         top: "Nėra jokių TOP temų."
         educate:
-          unread: "<p>Jūsų neskaitytos temos rodomos čia.</p><p>Pagal numatytuosius nustatymus temos laikomos neskaitytomis ir bus rodomas neskaitytų skaičius <span class=\"badge unread-posts badge-notification\">1</span> jei:</p><ul><li>sukūrėte temą</li><li>atsakėte į temą</li><li>Temą skaitėte ilgiau nei 4 minutes</li></ul><p>Arba aiškiai kiekvienoje temoje nustatykite temą į Stebimą arba Stebimą naudodami \U0001F514.</p><p>Norėdami tai pakeisti, aplankykite savo <a href=\"%{userPrefsUrl}\">nustatymus</a></p>"
+          unread: "<p>Jūsų neskaitytos temos rodomos čia.</p><p>Pagal numatytuosius nustatymus temos laikomos neskaitytomis ir bus rodomas neskaitytų skaičius <span class=\"badge unread-posts badge-notification\">1</span> jei:</p><ul><li>sukūrėte temą</li><li>atsakėte į temą</li><li>Temą skaitėte ilgiau nei 5 minutes</li></ul><p>Arba aiškiai kiekvienoje temoje nustatykite temą į Stebimą arba Stebimą naudodami \U0001F514.</p><p>Norėdami tai pakeisti, aplankykite savo <a href=\"%{userPrefsUrl}\">nustatymus</a></p>"
       bottom:
         latest: "Daugiau nėra jokių naujausių temų."
         posted: "Daugiau nėra jokių paskelbtų temų."
@@ -2880,7 +2876,6 @@ lt:
             description: "Atsegti žymą. Jis nebebus rodoma jūsų žymų sąrašo viršuje."
       filtered_replies:
         viewing_posts_by: "Peržiūrimi %{post_count} pranešimai pagal"
-        viewing_summary: "Peržiūri šios temos santrauką"
         post_number: "%{username}, įrašas #%{post_number}"
         show_all: "Rodyti viską"
     category:
@@ -3250,6 +3245,9 @@ lt:
       counter: "%curr% iš %total%"
       close: "Uždaryti (Esc)"
       content_load_error: '<a href="%url%">Turinio</a> nepavyko įkelti.'
+    experimental_lightbox:
+      buttons:
+        close: "Uždaryti (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3531,11 +3529,15 @@ lt:
         other: "%{count} nauja"
       more: "Daugiau"
       all_categories: "Visos kategorijos"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Visos"
       sections:
         custom:
           save: "Išsaugoti"
           delete: "Pašalinti"
           links:
+            reset: "Atstatyti numatytuosius nustatymus"
             icon:
               label: "Ikona"
             name:
@@ -3559,7 +3561,8 @@ lt:
         categories:
           header_link_text: "Kategorijos"
         community:
-          header_link_text: "Bendruomenė"
+          edit_section:
+            header_dropdown: "Pakeisti"
           links:
             about:
               content: "Apie"
@@ -3567,8 +3570,8 @@ lt:
               content: "Adminas"
             badges:
               content: "Trofėjai"
-            everything:
-              content: "Viskas"
+            topics:
+              content: "Temos"
               title: "Visos temos"
             faq:
               content: "DUK"
@@ -3581,6 +3584,11 @@ lt:
             review:
               content: "Peržiūra"
     until: "Iki:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Prašome įrašyti tinkamą reikšmę."
+          email: "Prašom įrašyti teisingą elektroninį adresą."
   admin_js:
     type_to_filter: "įrašyk kažką dėl filtro..."
     admin:
@@ -4477,6 +4485,8 @@ lt:
               key: "minimumas"
             maximum:
               key: "maksimalus"
+            type:
+              key: "tipas"
       impersonate:
         title: "Apsimesti"
         help: "Naudok šį įrankį, kad pavaizduotum kito vartotojo paskyrą dėl klaidų paieškos ir sistemos atstatymo. Kai tik baigsi procedūrą, turėsi atsijungti."
@@ -4772,6 +4782,8 @@ lt:
         show_overriden: "Rodyti tik pakeistus"
         locale: "Kalba:"
         more_than_50_results: "Yra daugiau nei 50 rezultatų. Prašome patikslinti paiešką."
+        outdated:
+          dismiss: "Praleisti"
       settings:
         show_overriden: "Rodyti tik pakeistus"
         history: "Peržiūrėti pakeitimų istoriją"

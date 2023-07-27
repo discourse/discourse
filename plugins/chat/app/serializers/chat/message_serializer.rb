@@ -2,28 +2,47 @@
 
 module Chat
   class MessageSerializer < ::ApplicationSerializer
-    attributes :id,
-               :message,
-               :cooked,
-               :created_at,
-               :excerpt,
-               :deleted_at,
-               :deleted_by_id,
-               :reviewable_id,
-               :user_flag_status,
-               :edited,
-               :reactions,
-               :bookmark,
-               :available_flags,
-               :thread_id,
-               :thread_reply_count,
-               :thread_title,
-               :chat_channel_id
+    BASIC_ATTRIBUTES = %i[
+      id
+      message
+      cooked
+      created_at
+      excerpt
+      deleted_at
+      deleted_by_id
+      thread_id
+      chat_channel_id
+    ]
+    attributes(
+      *(
+        BASIC_ATTRIBUTES +
+          %i[
+            mentioned_users
+            reactions
+            bookmark
+            available_flags
+            user_flag_status
+            reviewable_id
+            edited
+            thread
+          ]
+      ),
+    )
 
     has_one :user, serializer: Chat::MessageUserSerializer, embed: :objects
     has_one :chat_webhook_event, serializer: Chat::WebhookEventSerializer, embed: :objects
     has_one :in_reply_to, serializer: Chat::InReplyToSerializer, embed: :objects
     has_many :uploads, serializer: ::UploadSerializer, embed: :objects
+
+    def mentioned_users
+      object
+        .chat_mentions
+        .map(&:user)
+        .compact
+        .sort_by(&:id)
+        .map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+        .as_json
+    end
 
     def channel
       @channel ||= @options.dig(:chat_channel) || object.chat_channel
@@ -34,7 +53,7 @@ module Chat
     end
 
     def excerpt
-      WordWatcher.censor(object.excerpt)
+      object.censored_excerpt
     end
 
     def reactions
@@ -93,8 +112,12 @@ module Chat
       object.revisions.any?
     end
 
+    def created_at
+      object.created_at.iso8601
+    end
+
     def deleted_at
-      object.user ? object.deleted_at : Time.zone.now
+      object.user ? object.deleted_at.iso8601 : Time.zone.now
     end
 
     def deleted_by_id
@@ -154,24 +177,24 @@ module Chat
       end
     end
 
-    def include_threading_data?
-      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    def include_thread?
+      include_thread_id? && object.thread_om? && object.thread.present?
     end
 
     def include_thread_id?
-      include_threading_data?
+      channel.threading_enabled
     end
 
-    def include_thread_reply_count?
-      include_threading_data? && object.thread_id.present?
-    end
-
-    def thread_reply_count
-      object.thread&.replies_count_cache || 0
-    end
-
-    def thread_title
-      object.thread&.title
+    def thread
+      Chat::ThreadSerializer.new(
+        object.thread,
+        scope: scope,
+        membership: @options[:thread_memberships]&.find { |m| m.thread_id == object.thread.id },
+        participants: @options[:thread_participants]&.dig(object.thread.id),
+        include_thread_preview: true,
+        include_thread_original_message: @options[:include_thread_original_message],
+        root: false,
+      )
     end
   end
 end

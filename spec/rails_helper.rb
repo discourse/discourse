@@ -63,6 +63,8 @@ require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
 
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
 Shoulda::Matchers.configure do |config|
@@ -77,6 +79,7 @@ end
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
+Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
@@ -149,7 +152,12 @@ module TestSetup
   end
 end
 
-TestProf::BeforeAll.configure { |config| config.before(:begin) { TestSetup.test_setup } }
+TestProf::BeforeAll.configure do |config|
+  config.after(:begin) do
+    DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+    TestSetup.test_setup
+  end
+end
 
 if ENV["PREFABRICATION"] == "0"
   module Prefabrication
@@ -162,6 +170,8 @@ if ENV["PREFABRICATION"] == "0"
 else
   TestProf::LetItBe.configure { |config| config.alias_to :fab!, refind: true }
 end
+
+PER_SPEC_TIMEOUT_SECONDS = 30
 
 RSpec.configure do |config|
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
@@ -249,7 +259,7 @@ RSpec.configure do |config|
     end
 
     Capybara.threadsafe = true
-    Capybara.disable_animation = false
+    Capybara.disable_animation = true
 
     # Click offsets is calculated from top left of element
     Capybara.w3c_click_offset = false
@@ -270,23 +280,16 @@ RSpec.configure do |config|
 
     Capybara::Session.class_eval { prepend IgnoreUnicornCapturedErrors }
 
-    # The valid values for SELENIUM_BROWSER_LOG_LEVEL are:
-    #
-    # OFF
-    # SEVERE
-    # WARNING
-    # INFO
-    # DEBUG
-    # ALL
+    # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
     browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
+
     chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
+          apply_base_chrome_options(options)
           options.add_argument("--window-size=1400,1400")
-          options.add_argument("--no-sandbox")
-          options.add_argument("--disable-dev-shm-usage")
-          options.add_argument("--mute-audio")
+          options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
     Capybara.register_driver :selenium_chrome do |app|
@@ -294,20 +297,17 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver :selenium_chrome_headless do |app|
-      chrome_browser_options.add_argument("--headless")
+      chrome_browser_options.add_argument("--headless=new")
 
       Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
     end
 
     mobile_chrome_browser_options =
       Selenium::WebDriver::Chrome::Options
-        .new(logging_prefs: { "browser" => "INFO", "driver" => "ALL" })
+        .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
-          options.add_argument("--window-size=390,960")
-          options.add_argument("--no-sandbox")
-          options.add_argument("--disable-dev-shm-usage")
           options.add_emulation(device_name: "iPhone 12 Pro")
-          options.add_argument("--mute-audio")
+          apply_base_chrome_options(options)
         end
 
     Capybara.register_driver :selenium_mobile_chrome do |app|
@@ -315,7 +315,7 @@ RSpec.configure do |config|
     end
 
     Capybara.register_driver :selenium_mobile_chrome_headless do |app|
-      mobile_chrome_browser_options.add_argument("--headless")
+      mobile_chrome_browser_options.add_argument("--headless=new")
       Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
     end
 
@@ -324,6 +324,9 @@ RSpec.configure do |config|
     else
       DB.exec "SELECT setval('uploads_id_seq', 1)"
     end
+
+    # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
+    SiteIconManager.clear_cache!
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
@@ -348,17 +351,12 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
-
-    if ActiveRecord::Base.connection_pool.stat[:busy] > 1
-      raise ActiveRecord::Base.connection_pool.stat.inspect
-    end
   end
 
   config.after(:suite) do
-    FileUtils.remove_dir(file_from_fixtures_tmp_folder, true) if SpecSecureRandom.value
+    FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
+    Downloads.clear
   end
-
-  config.before :each, &TestSetup.method(:test_setup)
 
   config.around :each do |example|
     before_event_count = DiscourseEvent.events.values.sum(&:count)
@@ -368,24 +366,46 @@ RSpec.configure do |config|
     "DiscourseEvent registrations were not cleaned up"
   end
 
+  if ENV["CI"]
+    class SpecTimeoutError < StandardError
+    end
+
+    config.around do |example|
+      Timeout.timeout(
+        PER_SPEC_TIMEOUT_SECONDS,
+        SpecTimeoutError,
+        "Spec timed out after #{PER_SPEC_TIMEOUT_SECONDS} seconds",
+      ) do
+        example.run
+      rescue SpecTimeoutError
+      end
+    end
+  end
+
+  if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]
+    config.around :each do |example|
+      measurement = Benchmark.measure { example.run }
+      RSpec.current_example.metadata[:run_duration_ms] = (measurement.real * 1000).round(2)
+    end
+  end
+
   config.before :each do
     # This allows DB.transaction_open? to work in tests. See lib/mini_sql_multisite_connection.rb
     DB.test_transaction = ActiveRecord::Base.connection.current_transaction
+    TestSetup.test_setup
   end
 
   # Match the request hostname to the value in `database.yml`
-  config.before(:all, type: %i[request multisite system]) { host! "test.localhost" }
   config.before(:each, type: %i[request multisite system]) { host! "test.localhost" }
 
   last_driven_by = nil
   config.before(:each, type: :system) do |example|
-    if example.metadata[:js]
-      driver = [:selenium]
-      driver << :mobile if example.metadata[:mobile]
-      driver << :chrome
-      driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
-      driven_by driver.join("_").to_sym
-    end
+    driver = [:selenium]
+    driver << :mobile if example.metadata[:mobile]
+    driver << :chrome
+    driver << :headless unless ENV["SELENIUM_HEADLESS"] == "0"
+    driven_by driver.join("_").to_sym
+
     setup_system_test
   end
 
@@ -421,13 +441,25 @@ RSpec.configure do |config|
           if logs.empty?
             lines << "(no logs)"
           else
-            logs.each { |log| lines << log.message }
+            logs.each do |log|
+              # System specs are full of image load errors that are just noise, no need
+              # to log this.
+              if (
+                   log.message.include?("Failed to load resource: net::ERR_CONNECTION_REFUSED") &&
+                     (log.message.include?("uploads") || log.message.include?("images"))
+                 ) || log.message.include?("favicon.ico")
+                next
+              end
+
+              lines << log.message
+            end
           end
           lines << "~~~~~ END JS LOGS ~~~~~"
         end
       end
     end
 
+    page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
     Capybara.reset_sessions!
     Capybara.use_default_driver
     Discourse.redis.flushdb
@@ -544,15 +576,27 @@ def unfreeze_time
 end
 
 def file_from_fixtures(filename, directory = "images")
-  SpecSecureRandom.value ||= SecureRandom.hex
-  FileUtils.mkdir_p(file_from_fixtures_tmp_folder) unless Dir.exist?(file_from_fixtures_tmp_folder)
-  tmp_file_path = File.join(file_from_fixtures_tmp_folder, SecureRandom.hex << filename)
+  tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
   File.new(tmp_file_path)
 end
 
-def file_from_fixtures_tmp_folder
-  File.join(Dir.tmpdir, "rspec_#{Process.pid}_#{SpecSecureRandom.value}")
+def plugin_from_fixtures(plugin_name)
+  tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
+
+  FileUtils.mkdir(tmp_plugins_dir) if !Dir.exist?(tmp_plugins_dir)
+  FileUtils.cp_r("#{Rails.root}/spec/fixtures/plugins/#{plugin_name}", tmp_plugins_dir)
+
+  plugin = Plugin::Instance.new
+  plugin.path = File.join(tmp_plugins_dir, plugin_name, "plugin.rb")
+  plugin
+end
+
+def concurrency_safe_tmp_dir
+  SpecSecureRandom.value ||= SecureRandom.hex
+  dir_path = File.join(Dir.tmpdir, "rspec_#{Process.pid}_#{SpecSecureRandom.value}")
+  FileUtils.mkdir_p(dir_path) unless Dir.exist?(dir_path)
+  dir_path
 end
 
 def has_trigger?(trigger_name)
@@ -614,6 +658,42 @@ def decrypt_auth_cookie(cookie)
   ).encrypted[
     :_t
   ].with_indifferent_access
+end
+
+def apply_base_chrome_options(options)
+  # possible values: undocked, bottom, right, left
+  chrome_dev_tools = ENV["CHROME_DEV_TOOLS"]
+
+  if chrome_dev_tools
+    options.add_argument("--auto-open-devtools-for-tabs")
+    options.add_preference(
+      "devtools",
+      "preferences" => {
+        "currentDockState" => "\"#{chrome_dev_tools}\"",
+        "panel-selectedTab" => '"console"',
+      },
+    )
+  end
+
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage")
+  options.add_argument("--mute-audio")
+
+  # A file that contains just a list of paths like so:
+  #
+  # /home/me/.config/google-chrome/Default/Extensions/bmdblncegkenkacieihfhpjfppoconhi/4.9.1_0
+  #
+  # These paths can be found for each individual extension via the
+  # chrome://extensions/ page.
+  if ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].present?
+    File
+      .readlines(ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"])
+      .each { |path| options.add_argument("--load-extension=#{path}") }
+  end
+
+  if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
+    options.add_argument("--force-device-scale-factor=1")
+  end
 end
 
 class SpecSecureRandom

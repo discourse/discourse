@@ -87,7 +87,7 @@ module FileStore
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       options = {
-        acl: opts[:private_acl] ? "private" : "public-read",
+        acl: SiteSetting.s3_use_acls ? (opts[:private_acl] ? "private" : "public-read") : nil,
         cache_control: "max-age=31556952, public, immutable",
         content_type:
           opts[:content_type].presence || MiniMime.lookup_by_filename(filename)&.content_type,
@@ -226,6 +226,8 @@ module FileStore
           force_download: force_download,
           filename: upload.original_filename,
         )
+      elsif SiteSetting.s3_use_cdn_url_for_all_uploads
+        cdn_url(upload.url)
       else
         upload.url
       end
@@ -262,7 +264,7 @@ module FileStore
         expires_in: expires_in,
         opts: {
           metadata: metadata,
-          acl: "private",
+          acl: SiteSetting.s3_use_acls ? "private" : nil,
         },
       )
     end
@@ -397,7 +399,9 @@ module FileStore
 
     def update_ACL(key, secure)
       begin
-        object_from_path(key).acl.put(acl: secure ? "private" : "public-read")
+        object_from_path(key).acl.put(
+          acl: SiteSetting.s3_use_acls ? (secure ? "private" : "public-read") : nil,
+        )
       rescue Aws::S3::Errors::NoSuchKey
         Rails.logger.warn("Could not update ACL on upload with key: '#{key}'. Upload is missing.")
       end

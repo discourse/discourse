@@ -13,6 +13,9 @@ import mobile from "discourse/lib/mobile";
 import { inject as service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
+import { action } from "@ember/object";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
+import NotActivatedModal from "../components/modal/not-activated";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -40,6 +43,22 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
   documentTitle: service(),
   dialog: service(),
   composer: service(),
+  modal: service(),
+  loadingSlider: service(),
+  router: service(),
+
+  @action
+  loading(transition) {
+    if (this.loadingSlider.enabled) {
+      this.loadingSlider.transitionStarted();
+      transition.promise.finally(() => {
+        this.loadingSlider.transitionEnded();
+      });
+      return false;
+    } else {
+      return true; // Use native ember loading implementation
+    }
+  },
 
   actions: {
     toggleAnonymous() {
@@ -106,7 +125,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       }
 
       if (xhrOrErr && xhrOrErr.status === 404) {
-        return this.transitionTo("exception-unknown");
+        return this.router.transitionTo("exception-unknown");
       }
 
       exceptionController.setProperties({
@@ -137,7 +156,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     showNotActivated(props) {
-      showModal("not-activated", { title: "log_in" }).setProperties(props);
+      this.modal.show(NotActivatedModal, { model: props });
     },
 
     showUploadSelector() {
@@ -145,52 +164,12 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     showKeyboardShortcutsHelp() {
-      showModal("keyboard-shortcuts-help", {
-        title: "keyboard_shortcuts_help.title",
-      });
+      this.modal.show(KeyboardShortcutsHelp);
     },
 
     // Close the current modal, and destroy its state.
     closeModal(initiatedBy) {
-      const route = getOwner(this).lookup("route:application");
-      let modalController = route.controllerFor("modal");
-      const controllerName = modalController.get("name");
-
-      if (controllerName) {
-        const controller = getOwner(this).lookup(
-          `controller:${controllerName}`
-        );
-        if (controller && controller.beforeClose) {
-          if (false === controller.beforeClose()) {
-            return;
-          }
-        }
-      }
-
-      this.render("hide-modal", { into: "modal", outlet: "modalBody" });
-
-      if (controllerName) {
-        const controller = getOwner(this).lookup(
-          `controller:${controllerName}`
-        );
-
-        if (controller) {
-          this.appEvents.trigger("modal:closed", {
-            name: controllerName,
-            controller,
-          });
-
-          if (controller.onClose) {
-            controller.onClose({
-              initiatedByCloseButton: initiatedBy === "initiatedByCloseButton",
-              initiatedByClickOut: initiatedBy === "initiatedByClickOut",
-              initiatedByESC: initiatedBy === "initiatedByESC",
-            });
-          }
-        }
-        modalController.set("name", null);
-      }
-      modalController.hidden = true;
+      return this.modal.close(initiatedBy);
     },
 
     /**
@@ -199,11 +178,11 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
     **/
     hideModal() {
-      $(".d-modal.fixed-modal").modal("hide");
+      return this.modal.hide();
     },
 
     reopenModal() {
-      $(".d-modal.fixed-modal").modal("show");
+      return this.modal.reopen();
     },
 
     editCategory(category) {
@@ -212,16 +191,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
 
     checkEmail(user) {
       user.checkEmail();
-    },
-
-    changeBulkTemplate(w) {
-      const controllerName = w.replace("modal/", "");
-      const controller = getOwner(this).lookup("controller:" + controllerName);
-      this.render(w, {
-        into: "modal/topic-bulk-actions",
-        outlet: "bulkOutlet",
-        controller: controller ? controllerName : "topic-bulk-actions",
-      });
     },
 
     createNewTopicViaParams(title, body, category_id, tags) {
@@ -235,7 +204,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     },
 
     createNewMessageViaParams({
-      recipients = [],
+      recipients = "",
       topicTitle = "",
       topicBody = "",
       hasGroups = false,
@@ -247,11 +216,6 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
         hasGroups,
       });
     },
-  },
-
-  renderTemplate() {
-    this.render("application");
-    this.render("modal", { into: "application", outlet: "modal" });
   },
 
   handleShowLogin() {

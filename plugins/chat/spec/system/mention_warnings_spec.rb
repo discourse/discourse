@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Mentions warnings", type: :system, js: true do
+RSpec.describe "Mentions warnings", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
 

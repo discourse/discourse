@@ -6,7 +6,7 @@ class ApiKeyScope < ActiveRecord::Base
 
   class << self
     def list_actions
-      actions = %w[list#category_feed list#category_default]
+      actions = %w[list#category_feed list#category_default list#latest_feed]
 
       %i[latest unread new top].each { |f| actions.concat(["list#category_#{f}", "list##{f}"]) }
 
@@ -35,8 +35,8 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[topics#destroy],
           },
           read: {
-            actions: %w[topics#show topics#feed topics#posts],
-            params: %i[topic_id],
+            actions: %w[topics#show topics#feed topics#posts topics#show_by_external_id],
+            params: %i[topic_id external_id],
             aliases: {
               topic_id: :id,
             },
@@ -60,6 +60,9 @@ class ApiKeyScope < ActiveRecord::Base
           },
           delete: {
             actions: %w[posts#destroy],
+          },
+          list: {
+            actions: %w[posts#latest],
           },
         },
         tags: {

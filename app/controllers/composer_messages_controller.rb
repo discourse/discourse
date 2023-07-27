@@ -36,7 +36,7 @@ class ComposerMessagesController < ApplicationController
       user_count: user_count,
       usernames: users,
       time_ago:
-        FreedomPatches::Rails4.time_ago_in_words(
+        AgeWords.time_ago_in_words(
           SiteSetting.pm_warn_user_last_seen_months_ago.month.ago,
           true,
           scope: :"datetime.distance_in_words_verbose",

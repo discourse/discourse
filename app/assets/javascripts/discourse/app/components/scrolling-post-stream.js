@@ -302,6 +302,7 @@ export default MountWidget.extend({
       }
     }
     this.queueRerender();
+    this._scrollTriggered();
   },
 
   @bind
@@ -361,6 +362,10 @@ export default MountWidget.extend({
     );
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
+  },
+
+  didUpdateAttrs() {
+    this._refresh({ force: true });
   },
 
   _handleWidgetButtonHoverState(event) {

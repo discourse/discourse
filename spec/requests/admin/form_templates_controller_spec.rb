@@ -31,7 +31,7 @@ RSpec.describe Admin::FormTemplatesController do
       end
     end
 
-    context "when experiemental form templates is disabled" do
+    context "when experimental form templates is disabled" do
       before do
         sign_in(admin)
         SiteSetting.experimental_form_templates = false

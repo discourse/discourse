@@ -9,6 +9,9 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
             user: guardian.user,
             threads: result.threads,
             channel: result.channel,
+            tracking: result.tracking,
+            memberships: result.memberships,
+            load_more_url: result.load_more_url,
           ),
           ::Chat::ThreadListSerializer,
           root: false,
@@ -24,7 +27,17 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
 
   def show
     with_service(::Chat::LookupThread) do
-      on_success { render_serialized(result.thread, ::Chat::ThreadSerializer, root: "thread") }
+      on_success do
+        render_serialized(
+          result.thread,
+          ::Chat::ThreadSerializer,
+          root: "thread",
+          membership: result.membership,
+          include_thread_preview: true,
+          include_thread_original_message: true,
+          participants: result.participants,
+        )
+      end
       on_failed_policy(:threaded_discussions_enabled) { raise Discourse::NotFound }
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_model_not_found(:thread) { raise Discourse::NotFound }

@@ -93,19 +93,17 @@ RSpec.describe PrettyText do
 
     expected = <<~HTML
       <div class="poll" data-poll-status="open" data-poll-type="multiple" data-poll-name="poll">
-      <div>
-      <div class="poll-container">
-      <ol>
-      <li data-poll-option-id="b6475cbf6acb8676b20c60582cfc487a">test 1 <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"> <b>test</b>
-      </li>
+      <div class="poll-container"><ol>
+      <li data-poll-option-id="b6475cbf6acb8676b20c60582cfc487a">test 1 <img src="/images/emoji/twitter/slight_smile.png?v=#{Emoji::EMOJI_VERSION}" title=":slight_smile:" class="emoji" alt=":slight_smile:" loading="lazy" width="20" height="20"> <b>test</b></li>
       <li data-poll-option-id="7158af352698eb1443d709818df097d4">test 2</li>
       </ol>
       </div>
       <div class="poll-info">
-      <p>
+      <div class="poll-info_counts">
+      <div class="poll-info_counts-count">
       <span class="info-number">0</span>
       <span class="info-label">voters</span>
-      </p>
+      </div>
       </div>
       </div>
       </div>
@@ -159,10 +157,9 @@ RSpec.describe PrettyText do
       [/poll]
     MD
 
-    expect(cooked).to include(<<~HTML)
-      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
-      </div>
-    HTML
+    expect(cooked).to include(
+      "<div class=\"poll-title\">What’s your favorite <em>berry</em>? <img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji\" alt=\":wink:\" loading=\"lazy\" width=\"20\" height=\"20\"> <a href=\"https://google.com/\" rel=\"noopener nofollow ugc\">https://google.com/</a></div>",
+    )
   end
 
   it "does not break when there are headings before/after a poll with a title" do
@@ -179,16 +176,15 @@ RSpec.describe PrettyText do
       # Post-heading
     MD
 
-    expect(cooked).to include(<<~HTML)
-      <div class="poll-title">What’s your favorite <em>berry</em>? <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <a href="https://google.com/" rel="noopener nofollow ugc">https://google.com/</a>
-      </div>
-    HTML
+    expect(cooked).to include(
+      "<div class=\"poll-title\">What’s your favorite <em>berry</em>? <img src=\"/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}\" title=\":wink:\" class=\"emoji\" alt=\":wink:\" loading=\"lazy\" width=\"20\" height=\"20\"> <a href=\"https://google.com/\" rel=\"noopener nofollow ugc\">https://google.com/</a></div>",
+    )
 
     expect(cooked).to include(
-      "<h1>\n<a name=\"pre-heading-1\" class=\"anchor\" href=\"#pre-heading-1\"></a>Pre-heading</h1>",
+      "<h1><a name=\"pre-heading-1\" class=\"anchor\" href=\"#pre-heading-1\"></a>Pre-heading</h1>",
     )
     expect(cooked).to include(
-      "<h1>\n<a name=\"post-heading-2\" class=\"anchor\" href=\"#post-heading-2\"></a>Post-heading</h1>",
+      "<h1><a name=\"post-heading-2\" class=\"anchor\" href=\"#post-heading-2\"></a>Post-heading</h1>",
     )
   end
 
@@ -211,10 +207,10 @@ RSpec.describe PrettyText do
     HTML
 
     expect(cooked).to include(
-      "<h1>\n<a name=\"pre-heading-1\" class=\"anchor\" href=\"#pre-heading-1\"></a>Pre-heading</h1>",
+      "<h1><a name=\"pre-heading-1\" class=\"anchor\" href=\"#pre-heading-1\"></a>Pre-heading</h1>",
     )
     expect(cooked).to include(
-      "<h1>\n<a name=\"post-heading-2\" class=\"anchor\" href=\"#post-heading-2\"></a>Post-heading</h1>",
+      "<h1><a name=\"post-heading-2\" class=\"anchor\" href=\"#post-heading-2\"></a>Post-heading</h1>",
     )
   end
 end

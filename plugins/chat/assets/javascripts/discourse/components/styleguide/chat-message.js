@@ -10,7 +10,11 @@ export default class ChatStyleguideChatMessage extends Component {
 
   manager = new ChatMessagesManager(getOwner(this));
 
-  message = fabricators.message({ user: this.currentUser });
+  constructor() {
+    super(...arguments);
+    this.message = fabricators.message({ user: this.currentUser });
+    this.message.cook();
+  }
 
   @action
   toggleDeleted() {
@@ -50,20 +54,19 @@ export default class ChatStyleguideChatMessage extends Component {
     if (this.message.thread) {
       this.message.channel.threadingEnabled = false;
       this.message.thread = null;
-      this.message.threadReplyCount = 0;
     } else {
       this.message.thread = fabricators.thread({
         channel: this.message.channel,
       });
-      this.message.threadReplyCount = 1;
+      this.message.thread.preview.replyCount = 1;
       this.message.channel.threadingEnabled = true;
     }
   }
 
   @action
-  updateMessage(event) {
+  async updateMessage(event) {
     this.message.message = event.target.value;
-    this.message.cook();
+    await this.message.cook();
   }
 
   @action

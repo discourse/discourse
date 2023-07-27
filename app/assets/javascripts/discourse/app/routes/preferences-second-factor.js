@@ -1,19 +1,19 @@
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default RestrictedUserRoute.extend({
+  currentUser: service(),
+  siteSettings: service(),
+
   showFooter: true,
 
   model() {
     return this.modelFor("user");
   },
 
-  renderTemplate() {
-    return this.render({ into: "user" });
-  },
-
   setupController(controller, model) {
-    controller.setProperties({ model, newUsername: model.get("username") });
+    controller.setProperties({ model, newUsername: model.username });
     controller.set("loading", true);
 
     model
@@ -39,17 +39,14 @@ export default RestrictedUserRoute.extend({
   willTransition(transition) {
     this._super(...arguments);
 
-    const controller = this.controllerFor("preferences/second-factor");
-    const user = controller.get("currentUser");
-    const settings = controller.get("siteSettings");
-
     if (
       transition.targetName === "preferences.second-factor" ||
-      !user ||
-      user.is_anonymous ||
-      user.second_factor_enabled ||
-      (settings.enforce_second_factor === "staff" && !user.staff) ||
-      settings.enforce_second_factor === "no"
+      !this.currentUser ||
+      this.currentUser.is_anonymous ||
+      this.currentUser.second_factor_enabled ||
+      (this.siteSettings.enforce_second_factor === "staff" &&
+        !this.currentUser.staff) ||
+      this.siteSettings.enforce_second_factor === "no"
     ) {
       return true;
     }

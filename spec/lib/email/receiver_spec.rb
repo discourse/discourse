@@ -218,14 +218,6 @@ RSpec.describe Email::Receiver do
     expect(IncomingEmail.last.error).to eq("RuntimeError")
   end
 
-  it "matches the correct user" do
-    user = Fabricate(:user)
-    email_log = Fabricate(:email_log, to_address: user.email, user: user, bounce_key: nil)
-    email, name = Email::Receiver.new(email(:existing_user)).parse_from_field
-    expect(email).to eq("existing@bar.com")
-    expect(name).to eq("Foo Bar")
-  end
-
   it "strips null bytes from the subject" do
     expect do process(:null_byte_in_subject) end.to raise_error(
       Email::Receiver::BadDestinationAddress,
@@ -512,9 +504,8 @@ RSpec.describe Email::Receiver do
       )
     end
 
-    it "handles invalid from header" do
-      expect { process(:invalid_from_1) }.to change { topic.posts.count }
-      expect(topic.posts.last.raw).to eq("This email was sent with an invalid from header field.")
+    it "raises a NoSenderDetectedError when the From header can't be parsed" do
+      expect { process(:invalid_from_1) }.to raise_error(Email::Receiver::NoSenderDetectedError)
     end
 
     it "raises a NoSenderDetectedError when the From header doesn't contain an email address" do
@@ -1993,6 +1984,38 @@ RSpec.describe Email::Receiver do
               Email::Receiver::BadDestinationAddress,
             )
       expect(IncomingEmail.last.message_id).to eq("9@foo.bar.mail")
+    end
+  end
+
+  describe "mailman mirror" do
+    fab!(:category) { Fabricate(:mailinglist_mirror_category) }
+
+    it "uses 'from' email address" do
+      expect { process(:mailman_1) }.to change { Topic.count }
+      user = Topic.last.user
+      expect(user.email).to eq("some@one.com")
+      expect(user.name).to eq("Some One")
+    end
+
+    it "uses 'reply-to' email address" do
+      expect { process(:mailman_2) }.to change { Topic.count }
+      user = Topic.last.user
+      expect(user.email).to eq("some@one.com")
+      expect(user.name).to eq("Some")
+    end
+
+    it "uses 'x-mailfrom' email address and name from CC" do
+      expect { process(:mailman_3) }.to change { Topic.count }
+      user = Topic.last.user
+      expect(user.email).to eq("some@one.com")
+      expect(user.name).to eq("Some One")
+    end
+
+    it "uses 'x-original-from' email address" do
+      expect { process(:mailman_4) }.to change { Topic.count }
+      user = Topic.last.user
+      expect(user.email).to eq("some@one.com")
+      expect(user.name).to eq("Some")
     end
   end
 

@@ -1,6 +1,7 @@
 <DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
+  <PageLoadingSlider />
   <PluginOutlet
     @name="above-site-header"
     @connectorTagName="div"
@@ -25,6 +26,10 @@
 
   <SoftwareUpdatePrompt />
 
+  {{#if this.siteSettings.enable_offline_indicator}}
+    <OfflineIndicator />
+  {{/if}}
+
   <PluginOutlet
     @name="below-site-header"
     @connectorTagName="div"
@@ -40,6 +45,10 @@
       {{/if}}
     </div>
 
+    <LoadingSliderFallbackSpinner />
+
+    <PluginOutlet @name="before-main-outlet" />
+
     <div id="main-outlet">
       <PluginOutlet @name="above-main-container" @connectorTagName="div" />
       <div class="container" id="main-container">
@@ -49,7 +58,6 @@
         <NotificationConsentBanner />
         <PwaInstallBanner />
         <GlobalNotice />
-        <CreateTopicsNotice />
         <PluginOutlet
           @name="top-notices"
           @connectorTagName="div"
@@ -60,7 +68,14 @@
       {{outlet}}
 
       <CardContainer />
+      <PluginOutlet
+        @name="main-outlet-bottom"
+        @outletArgs={{hash showFooter=this.showFooter}}
+      />
     </div>
+
+    <PluginOutlet @name="after-main-outlet" />
+
   </div>
 
   <PluginOutlet
@@ -81,7 +96,8 @@
     @outletArgs={{hash showFooter=this.showFooter}}
   />
 
-  {{outlet "modal"}}
+  <DLightbox />
+  <ModalContainer />
   <DialogHolder />
   <TopicEntrance />
   <ComposerContainer />

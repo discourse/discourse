@@ -35,11 +35,19 @@ export default class ChatChannelsManager extends Service {
     return Object.values(this._cached);
   }
 
-  store(channelObject) {
-    let model = this.#findStale(channelObject.id);
+  store(channelObject, options = {}) {
+    let model;
+
+    if (!options.replace) {
+      model = this.#findStale(channelObject.id);
+    }
 
     if (!model) {
-      model = ChatChannel.create(channelObject);
+      if (channelObject instanceof ChatChannel) {
+        model = channelObject;
+      } else {
+        model = ChatChannel.create(channelObject);
+      }
       this.#cache(model);
     }
 
@@ -59,16 +67,11 @@ export default class ChatChannelsManager extends Service {
 
     if (!model.currentUserMembership.following) {
       return this.chatApi.followChannel(model.id).then((membership) => {
-        model.currentUserMembership.following = membership.following;
-        model.currentUserMembership.muted = membership.muted;
-        model.currentUserMembership.desktopNotificationLevel =
-          membership.desktopNotificationLevel;
-        model.currentUserMembership.mobileNotificationLevel =
-          membership.mobileNotificationLevel;
+        model.currentUserMembership = membership;
         return model;
       });
     } else {
-      return Promise.resolve(model);
+      return model;
     }
   }
 
@@ -91,6 +94,16 @@ export default class ChatChannelsManager extends Service {
   remove(model) {
     this.chatSubscriptionsManager.stopChannelSubscription(model);
     delete this._cached[model.id];
+  }
+
+  get allChannels() {
+    return [...this.publicMessageChannels, ...this.directMessageChannels].sort(
+      (a, b) => {
+        return b?.currentUserMembership?.lastViewedAt?.localeCompare?.(
+          a?.currentUserMembership?.lastViewedAt
+        );
+      }
+    );
   }
 
   get publicMessageChannels() {
@@ -119,9 +132,8 @@ export default class ChatChannelsManager extends Service {
     return this.chatApi
       .channel(id)
       .catch(popupAjaxError)
-      .then((channel) => {
-        this.#cache(channel);
-        return channel;
+      .then((result) => {
+        return this.store(result.channel);
       });
   }
 
@@ -139,8 +151,17 @@ export default class ChatChannelsManager extends Service {
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
+      if (!a.lastMessage) {
+        return 1;
+      }
+
+      if (!b.lastMessage) {
+        return -1;
+      }
+
       if (a.tracking.unreadCount === b.tracking.unreadCount) {
-        return new Date(a.lastMessageSentAt) > new Date(b.lastMessageSentAt)
+        return new Date(a.lastMessage.createdAt) >
+          new Date(b.lastMessage.createdAt)
           ? -1
           : 1;
       } else {

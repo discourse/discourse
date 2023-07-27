@@ -82,6 +82,7 @@ module SvgSprite
         exclamation-circle
         exclamation-triangle
         external-link-alt
+        eye
         fab-android
         fab-apple
         fab-chrome
@@ -148,6 +149,7 @@ module SvgSprite
         hourglass-start
         id-card
         image
+        images
         inbox
         info-circle
         italic
@@ -186,6 +188,8 @@ module SvgSprite
         reply
         rocket
         search
+        search-plus
+        search-minus
         share
         shield-alt
         sign-in-alt
@@ -203,6 +207,7 @@ module SvgSprite
         tag
         tags
         tasks
+        th
         thermometer-three-quarters
         thumbs-down
         thumbs-up

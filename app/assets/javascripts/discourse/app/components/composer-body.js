@@ -117,14 +117,15 @@ export default Component.extend(KeyEnterEscape, {
   @observes("composeState", "composer.{action,canEditTopicFeaturedLink}")
   _triggerComposerResized() {
     schedule("afterRender", () => {
-      if (!this.element || this.isDestroying || this.isDestroyed) {
-        return;
-      }
       discourseDebounce(this, this.composerResized, 300);
     });
   },
 
   composerResized() {
+    if (!this.element || this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     this.appEvents.trigger("composer:resized");
   },
 
@@ -180,8 +181,10 @@ export default Component.extend(KeyEnterEscape, {
     };
     triggerOpen();
 
-    this.element.addEventListener("transitionend", () => {
-      triggerOpen();
+    this.element.addEventListener("transitionend", (event) => {
+      if (event.propertyName === "height") {
+        triggerOpen();
+      }
     });
 
     positioningWorkaround(this.element);

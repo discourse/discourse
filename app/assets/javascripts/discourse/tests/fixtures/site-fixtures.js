@@ -699,7 +699,7 @@ export default {
       ],
       displayed_about_plugin_stat_groups: ["chat_messages"],
       hashtag_configurations: { "topic-composer": ["category", "tag"] },
-      hashtag_icons: ["folder", "tag"],
+      hashtag_icons: { "category": "folder", "tag": "tag" },
       anonymous_sidebar_sections: [
         {
           id: 111,
@@ -707,7 +707,7 @@ export default {
           links: [
             {
               id: 329,
-              name: "Everything",
+              name: "Topics",
               value: "/latest",
               icon: "layer-group",
               external: false,
@@ -723,7 +723,7 @@ export default {
             },
             {
               id: 331,
-              name: "Info",
+              name: "About",
               value: "/about",
               icon: "info-circle",
               external: false,

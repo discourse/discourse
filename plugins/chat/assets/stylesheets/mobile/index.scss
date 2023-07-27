@@ -1,5 +1,6 @@
 @import "base-mobile";
 @import "chat-channel-info";
+@import "chat-channel";
 @import "chat-composer";
 @import "chat-index";
 @import "chat-message-actions";
@@ -10,4 +11,6 @@
 @import "chat-side-panel";
 @import "chat-thread";
 @import "chat-threads-list";
-@import "chat-thread-settings-modal";
+@import "chat-modal-thread-settings";
+@import "chat-message-thread-indicator";
+@import "chat-message-creator";

@@ -7,7 +7,8 @@ import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
 import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { next } from "@ember/runloop";
+import discourseLater from "discourse-common/lib/later";
+
 export default class ChatMessage {
   static cookFunction = null;
 
@@ -24,70 +25,76 @@ export default class ChatMessage {
   @tracked error;
   @tracked selected;
   @tracked channel;
-  @tracked staged = false;
-  @tracked draft = false;
-  @tracked channelId;
+  @tracked staged;
+  @tracked draftSaved;
+  @tracked draft;
   @tracked createdAt;
-  @tracked deletedAt;
   @tracked uploads;
   @tracked excerpt;
   @tracked reactions;
   @tracked reviewableId;
   @tracked user;
   @tracked inReplyTo;
-  @tracked expanded;
+  @tracked expanded = true;
   @tracked bookmark;
   @tracked userFlagStatus;
-  @tracked hidden = false;
+  @tracked hidden;
   @tracked version = 0;
-  @tracked edited = false;
-  @tracked editing = false;
+  @tracked edited;
+  @tracked editing;
   @tracked chatWebhookEvent = new TrackedObject();
   @tracked mentionWarning;
   @tracked availableFlags;
-  @tracked newest = false;
-  @tracked highlighted = false;
-  @tracked firstOfResults = false;
+  @tracked newest;
+  @tracked highlighted;
+  @tracked firstOfResults;
   @tracked message;
-  @tracked thread;
-  @tracked threadReplyCount;
-  @tracked manager = null;
-  @tracked threadTitle = null;
+  @tracked manager;
+  @tracked deletedById;
 
+  @tracked _deletedAt;
   @tracked _cooked;
+  @tracked _thread;
 
   constructor(channel, args = {}) {
     // when modifying constructor, be sure to update duplicate function accordingly
     this.id = args.id;
-    this.newest = args.newest;
-    this.firstOfResults = args.firstOfResults;
-    this.staged = args.staged;
-    this.edited = args.edited;
-    this.editing = args.editing;
+    this.channel = channel;
+    this.manager = args.manager;
+    this.newest = args.newest || false;
+    this.draftSaved = args.draftSaved || args.draft_saved || false;
+    this.firstOfResults = args.firstOfResults || args.first_of_results || false;
+    this.staged = args.staged || false;
+    this.edited = args.edited || false;
+    this.editing = args.editing || false;
     this.availableFlags = args.availableFlags || args.available_flags;
-    this.hidden = args.hidden;
-    this.threadReplyCount = args.threadReplyCount || args.thread_reply_count;
-    this.threadTitle = args.threadTitle || args.thread_title;
+    this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
-    this.createdAt = args.createdAt || args.created_at;
-    this.deletedAt = args.deletedAt || args.deleted_at;
+    this.createdAt = args.created_at ? new Date(args.created_at) : null;
+    this.deletedById = args.deletedById || args.deleted_by_id;
+    this._deletedAt = args.deletedAt || args.deleted_at;
+    this.expanded =
+      this.hidden || this._deletedAt ? false : args.expanded || true;
     this.excerpt = args.excerpt;
     this.reviewableId = args.reviewableId || args.reviewable_id;
     this.userFlagStatus = args.userFlagStatus || args.user_flag_status;
     this.draft = args.draft;
     this.message = args.message || "";
     this._cooked = args.cooked || "";
-    this.thread = args.thread;
     this.inReplyTo =
       args.inReplyTo ||
       (args.in_reply_to || args.replyToMsg
         ? ChatMessage.create(channel, args.in_reply_to || args.replyToMsg)
         : null);
-    this.channel = channel;
     this.reactions = this.#initChatMessageReactionModel(args.reactions);
     this.uploads = new TrackedArray(args.uploads || []);
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
+    this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
+
+    if (args.thread) {
+      this.thread = args.thread;
+    }
   }
 
   duplicate() {
@@ -101,7 +108,6 @@ export default class ChatMessage {
       edited: this.edited,
       availableFlags: this.availableFlags,
       hidden: this.hidden,
-      threadReplyCount: this.threadReplyCount,
       chatWebhookEvent: this.chatWebhookEvent,
       createdAt: this.createdAt,
       deletedAt: this.deletedAt,
@@ -113,7 +119,6 @@ export default class ChatMessage {
       cooked: this.cooked,
     });
 
-    message.thread = this.thread;
     message.reactions = this.reactions;
     message.user = this.user;
     message.inReplyTo = this.inReplyTo;
@@ -121,6 +126,34 @@ export default class ChatMessage {
     message.uploads = this.uploads;
 
     return message;
+  }
+
+  get replyable() {
+    return !this.staged && !this.error;
+  }
+
+  get editable() {
+    return !this.staged && !this.error;
+  }
+
+  get thread() {
+    return this._thread;
+  }
+
+  set thread(thread) {
+    this._thread = this.channel.threadsManager.add(this.channel, thread, {
+      replace: true,
+    });
+  }
+
+  get deletedAt() {
+    return this._deletedAt;
+  }
+
+  set deletedAt(value) {
+    this._deletedAt = value;
+    this.incrementVersion();
+    return this._deletedAt;
   }
 
   get cooked() {
@@ -136,54 +169,60 @@ export default class ChatMessage {
     }
   }
 
-  cook() {
-    next(() => {
-      const site = getOwner(this).lookup("service:site");
+  async cook() {
+    const site = getOwner(this).lookup("service:site");
 
-      const markdownOptions = {
-        featuresOverride:
-          site.markdown_additional_options?.chat?.limited_pretty_text_features,
-        markdownItRules:
-          site.markdown_additional_options?.chat
-            ?.limited_pretty_text_markdown_rules,
-        hashtagTypesInPriorityOrder:
-          site.hashtag_configurations?.["chat-composer"],
-        hashtagIcons: site.hashtag_icons,
+    if (this.isDestroyed || this.isDestroying) {
+      return;
+    }
+
+    const markdownOptions = {
+      featuresOverride:
+        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+      markdownItRules:
+        site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: site.hashtag_icons,
+    };
+
+    if (ChatMessage.cookFunction) {
+      this.cooked = ChatMessage.cookFunction(this.message);
+    } else {
+      const cookFunction = await generateCookFunction(markdownOptions);
+      ChatMessage.cookFunction = (raw) => {
+        return simpleCategoryHashMentionTransform(
+          cookFunction(raw),
+          site.categories
+        );
       };
 
-      if (ChatMessage.cookFunction) {
-        this.cooked = ChatMessage.cookFunction(this.message);
-      } else {
-        generateCookFunction(markdownOptions).then((cookFunction) => {
-          ChatMessage.cookFunction = (raw) => {
-            return simpleCategoryHashMentionTransform(
-              cookFunction(raw),
-              site.categories
-            );
-          };
-
-          this.cooked = ChatMessage.cookFunction(this.message);
-        });
-      }
-    });
+      this.cooked = ChatMessage.cookFunction(this.message);
+    }
   }
 
   get read() {
     return this.channel.currentUserMembership?.lastReadMessageId >= this.id;
   }
 
+  @cached
   get firstMessageOfTheDayAt() {
     if (!this.previousMessage) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
     }
 
     if (
-      !this.#areDatesOnSameDay(
-        new Date(this.previousMessage.createdAt),
-        new Date(this.createdAt)
-      )
+      !this.#areDatesOnSameDay(this.previousMessage.createdAt, this.createdAt)
     ) {
-      return this.#calendarDate(this.createdAt);
+      return this.#startOfDay(this.createdAt);
+    }
+  }
+
+  @cached
+  get formattedFirstMessageDate() {
+    if (this.firstMessageOfTheDayAt) {
+      return this.#calendarDate(this.firstMessageOfTheDayAt);
     }
   }
 
@@ -209,6 +248,18 @@ export default class ChatMessage {
   @cached
   get nextMessage() {
     return this.manager?.messages?.objectAt?.(this.index + 1);
+  }
+
+  highlight() {
+    this.highlighted = true;
+
+    discourseLater(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      this.highlighted = false;
+    }, 2000);
   }
 
   incrementVersion() {
@@ -245,6 +296,12 @@ export default class ChatMessage {
           username: this.inReplyTo.user.username,
         },
       };
+    }
+
+    if (this.editing) {
+      data.editing = true;
+      data.id = this.id;
+      data.excerpt = this.excerpt;
     }
 
     return JSON.stringify(data);
@@ -311,6 +368,17 @@ export default class ChatMessage {
     return reactions.map((reaction) => ChatMessageReaction.create(reaction));
   }
 
+  #initMentionedUsers(mentionedUsers) {
+    const map = new Map();
+    if (mentionedUsers) {
+      mentionedUsers.forEach((userData) => {
+        const user = User.create(userData);
+        map.set(user.id, user);
+      });
+    }
+    return map;
+  }
+
   #initUserModel(user) {
     if (!user || user instanceof User) {
       return user;
@@ -325,5 +393,9 @@ export default class ChatMessage {
       a.getMonth() === b.getMonth() &&
       a.getDate() === b.getDate()
     );
+  }
+
+  #startOfDay(date) {
+    return moment(date).startOf("day").format();
   }
 }

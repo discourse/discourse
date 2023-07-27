@@ -71,20 +71,27 @@ class Site
       .cache
       .fetch(categories_cache_key, expires_in: 30.minutes) do
         categories =
-          Category
-            .includes(
-              :uploaded_logo,
-              :uploaded_logo_dark,
-              :uploaded_background,
-              :tags,
-              :tag_groups,
-              :form_templates,
-              category_required_tag_groups: :tag_group,
-            )
-            .joins("LEFT JOIN topics t on t.id = categories.topic_id")
-            .select("categories.*, t.slug topic_slug")
-            .order(:position)
-            .to_a
+          begin
+            query =
+              Category
+                .includes(
+                  :uploaded_logo,
+                  :uploaded_logo_dark,
+                  :uploaded_background,
+                  :tags,
+                  :tag_groups,
+                  :form_templates,
+                  category_required_tag_groups: :tag_group,
+                )
+                .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+                .select("categories.*, t.slug topic_slug")
+                .order(:position)
+
+            query =
+              DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
+
+            query.to_a
+          end
 
         if preloaded_category_custom_fields.present?
           Category.preload_custom_fields(categories, preloaded_category_custom_fields)
@@ -151,7 +158,13 @@ class Site
   end
 
   def groups
-    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true).includes(:flair_upload)
+    query =
+      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(
+        :flair_upload,
+      )
+    query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
+
+    query
   end
 
   def archetypes

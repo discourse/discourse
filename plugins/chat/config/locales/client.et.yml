@@ -72,6 +72,8 @@ et:
       settings:
         follow: "Liitu"
         followed: "Liitus"
+        threading_enabled: "Sisse lülitatud"
+        threading_disabled: "Välja lülitatud"
         notifications: "Teavitus"
         preview: "Eelvaade"
         save: "Salvesta"
@@ -107,6 +109,15 @@ et:
           one: "%{count} vastus"
           other: "%{count} vastust"
         settings: "Sätted"
+        last_reply: "viimane vastus"
+        notifications:
+          regular:
+            title: "Normaalne"
+          tracking:
+            title: "Jälgimine"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Uus sõnum"
         cancel: "Tühista"

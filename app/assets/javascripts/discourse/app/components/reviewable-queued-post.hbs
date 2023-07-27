@@ -13,12 +13,15 @@
 </ReviewableTopicLink>
 
 <div class="post-contents-wrapper">
-  <ReviewableCreatedBy @user={{this.reviewable.created_by}} @tagName="" />
+  <ReviewableCreatedBy
+    @user={{this.reviewable.target_created_by}}
+    @tagName=""
+  />
 
   <div class="post-contents">
     <ReviewablePostHeader
       @reviewable={{this.reviewable}}
-      @createdBy={{this.reviewable.created_by}}
+      @createdBy={{this.reviewable.target_created_by}}
       @tagName=""
     />
 

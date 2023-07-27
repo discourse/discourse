@@ -1,6 +1,31 @@
+import { escape } from "pretty-text/sanitizer";
+
+let customTagSectionLinkPrefixIcons = {};
+
+export function registerCustomTagSectionLinkPrefixIcon({
+  tagName,
+  prefixValue,
+  prefixColor,
+}) {
+  customTagSectionLinkPrefixIcons[tagName] = {
+    prefixValue,
+    prefixColor,
+  };
+}
+
+export function resetCustomTagSectionLinkPrefixIcons() {
+  for (let key in customTagSectionLinkPrefixIcons) {
+    if (customTagSectionLinkPrefixIcons.hasOwnProperty(key)) {
+      delete customTagSectionLinkPrefixIcons[key];
+    }
+  }
+}
+
 export default class BaseTagSectionLink {
-  constructor({ tagName }) {
-    this.tagName = tagName;
+  constructor({ tag, currentUser }) {
+    this.tag = tag;
+    this.tagName = tag.name;
+    this.currentUser = currentUser;
   }
 
   get name() {
@@ -11,11 +36,19 @@ export default class BaseTagSectionLink {
     return this.tagName;
   }
 
+  get title() {
+    return escape(this.tag.description);
+  }
+
   get prefixType() {
     return "icon";
   }
 
   get prefixValue() {
-    return "tag";
+    return customTagSectionLinkPrefixIcons[this.tagName]?.prefixValue || "tag";
+  }
+
+  get prefixColor() {
+    return customTagSectionLinkPrefixIcons[this.tagName]?.prefixColor;
   }
 }

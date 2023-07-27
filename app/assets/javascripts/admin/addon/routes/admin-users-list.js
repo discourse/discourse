@@ -3,8 +3,11 @@ import AdminUser from "admin/models/admin-user";
 import DiscourseRoute from "discourse/routes/discourse";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
+import { inject as service } from "@ember/service";
 
 export default class AdminUsersListRoute extends DiscourseRoute {
+  @service router;
+
   @action
   exportUsers() {
     exportEntity("user_list", {
@@ -14,7 +17,7 @@ export default class AdminUsersListRoute extends DiscourseRoute {
 
   @action
   sendInvites() {
-    this.transitionTo("userInvited", this.currentUser);
+    this.router.transitionTo("userInvited", this.currentUser);
   }
 
   @action

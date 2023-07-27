@@ -16,9 +16,19 @@ html.composer-open {
   margin-right: auto;
   max-width: $reply-area-max-width;
   width: 100%;
+
   &.hide-preview {
     max-width: 740px;
   }
+
+  &:has(.has-form-template) {
+    max-width: 740px;
+
+    .toggle-preview {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
@@ -26,7 +36,7 @@ html.composer-open {
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
     max-width 250ms ease, padding-bottom 250ms ease;
   background-color: var(--secondary);
-  box-shadow: shadow("composer");
+  box-shadow: var(--shadow-composer);
 
   .reply-area {
     display: flex;
@@ -120,11 +130,9 @@ html.composer-open {
       width: auto;
       max-width: 100%;
 
-      .avatar {
-        width: 20px;
-      }
-
       .action-title {
+        display: flex;
+        align-items: center;
         line-height: normal;
         @include ellipsis;
       }
@@ -270,7 +278,7 @@ html.composer-open {
     }
   }
 
-  .with-tags {
+  .with-tags.with-category {
     .title-and-category {
       flex-wrap: wrap;
     }
@@ -311,7 +319,6 @@ html.composer-open {
 
   .mini-tag-chooser {
     flex-grow: 1;
-    max-width: calc(50% - 4px);
     margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
     .select-kit-header {
@@ -358,6 +365,10 @@ html.composer-open {
         color: var(--danger);
       }
     }
+
+    .preview-template {
+      margin-left: 0.5rem;
+    }
   }
 
   #draft-status,
@@ -394,6 +405,17 @@ html.composer-open {
   #file-uploader {
     display: none;
   }
+
+  .composer-select-form-template {
+    margin-bottom: 8px;
+    width: 100%;
+
+    .name,
+    .formatted-selection,
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
 }
 
 .autocomplete {
@@ -403,7 +425,7 @@ html.composer-open {
   width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("dropdown-lite");
+  box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
   ul {
@@ -453,10 +475,17 @@ html.composer-open {
           color: var(--primary-high);
         }
 
-        .status-description {
-          @include ellipsis;
-          font-size: var(--font-down-2);
-          color: var(--primary-high);
+        .user-status-message {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+
+          .user-status-message-description {
+            @include ellipsis;
+            font-size: var(--font-down-2);
+            color: var(--primary-high);
+            margin: 0;
+          }
         }
 
         .relative-date {

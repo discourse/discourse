@@ -118,10 +118,9 @@ RSpec.describe UsersEmailController do
         end
 
         context "with rate limiting" do
-          before do
-            RateLimiter.clear_all!
-            RateLimiter.enable
-          end
+          before { RateLimiter.enable }
+
+          use_redis_snapshotting
 
           it "rate limits by IP" do
             freeze_time

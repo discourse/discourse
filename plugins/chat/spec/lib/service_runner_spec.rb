@@ -64,6 +64,18 @@ RSpec.describe ServiceRunner do
     end
   end
 
+  class FailureWithOptionalModelService
+    include Service::Base
+
+    model :fake_model, optional: true
+
+    private
+
+    def fetch_fake_model
+      nil
+    end
+  end
+
   class FailureWithModelErrorsService
     include Service::Base
 
@@ -210,8 +222,22 @@ RSpec.describe ServiceRunner do
       context "when the service policy fails" do
         let(:service) { FailedPolicyService }
 
-        it "runs the provided block" do
-          expect(runner).to eq :policy_failure
+        context "when not using the block argument" do
+          it "runs the provided block" do
+            expect(runner).to eq :policy_failure
+          end
+        end
+
+        context "when using the block argument" do
+          let(:actions) { <<-BLOCK }
+              proc do
+                on_failed_policy(:test) { |policy| policy == result["result.policy.test"] }
+              end
+            BLOCK
+
+          it "runs the provided block" do
+            expect(runner).to be true
+          end
         end
       end
 
@@ -234,8 +260,22 @@ RSpec.describe ServiceRunner do
       context "when the service contract fails" do
         let(:service) { FailedContractService }
 
-        it "runs the provided block" do
-          expect(runner).to eq :contract_failure
+        context "when not using the block argument" do
+          it "runs the provided block" do
+            expect(runner).to eq :contract_failure
+          end
+        end
+
+        context "when using the block argument" do
+          let(:actions) { <<-BLOCK }
+              proc do
+                on_failed_contract { |contract| contract == result["result.contract.default"] }
+              end
+            BLOCK
+
+          it "runs the provided block" do
+            expect(runner).to be true
+          end
         end
       end
 
@@ -250,17 +290,39 @@ RSpec.describe ServiceRunner do
 
     context "when using the on_model_not_found action" do
       let(:actions) { <<-BLOCK }
-          ->(*) do
+          proc do
             on_model_not_found(:fake_model) { :no_model }
           end
         BLOCK
 
       context "when fetching a single model" do
+        context "when the service uses an optional model" do
+          let(:service) { FailureWithOptionalModelService }
+
+          it "does not run the provided block" do
+            expect(runner).not_to eq :no_model
+          end
+        end
+
         context "when the service fails without a model" do
           let(:service) { FailureWithModelService }
 
-          it "runs the provided block" do
-            expect(runner).to eq :no_model
+          context "when not using the block argument" do
+            it "runs the provided block" do
+              expect(runner).to eq :no_model
+            end
+          end
+
+          context "when using the block argument" do
+            let(:actions) { <<-BLOCK }
+                proc do
+                  on_model_not_found(:fake_model) { |model| model == result["result.model.fake_model"] }
+                end
+              BLOCK
+
+            it "runs the provided block" do
+              expect(runner).to be true
+            end
           end
         end
 
@@ -294,7 +356,7 @@ RSpec.describe ServiceRunner do
 
     context "when using the on_model_errors action" do
       let(:actions) { <<-BLOCK }
-          ->(*) do
+          proc do
             on_model_errors(:fake_model) { :model_errors }
           end
         BLOCK
@@ -302,8 +364,22 @@ RSpec.describe ServiceRunner do
       context "when the service fails with a model containing errors" do
         let(:service) { FailureWithModelErrorsService }
 
-        it "runs the provided block" do
-          expect(runner).to eq :model_errors
+        context "when not using the block argument" do
+          it "runs the provided block" do
+            expect(runner).to eq :model_errors
+          end
+        end
+
+        context "when using the block argument" do
+          let(:actions) { <<-BLOCK }
+              proc do
+                on_model_errors(:fake_model) { |model| model == OpenStruct.new(invalid?: true) }
+              end
+            BLOCK
+
+          it "runs the provided block" do
+            expect(runner).to be true
+          end
         end
       end
 

@@ -32,6 +32,15 @@ export default class ChatTrackingStateManager extends Service {
     });
   }
 
+  setupChannelThreadState(channel, threadTracking) {
+    channel.threadsManager.threads.forEach((thread) => {
+      const tracking = threadTracking[thread.id.toString()];
+      if (tracking) {
+        this.#setState(thread, tracking);
+      }
+    });
+  }
+
   get publicChannelUnreadCount() {
     return this.#publicChannels().reduce((unreadCount, channel) => {
       return unreadCount + channel.tracking.unreadCount;

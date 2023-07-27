@@ -198,7 +198,8 @@ id:
       page_publishing_requirements: "Penerbitan halaman tidak dapat diaktifkan jika media aman diaktifkan."
       s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
       s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
-      secure_uploads_requirements: "Unggahan S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
+      secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
+      s3_use_acls_requirements: "Anda harus mengaktifkan ACL S3 saat unggahan aman diaktifkan."
       share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
       second_factor_cannot_enforce_with_socials: "Anda tidak dapat menerapkan 2FA dengan login sosial diaktifkan. Anda harus terlebih dahulu menonaktifkan login melalui: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
@@ -218,6 +219,10 @@ id:
         other: "Maaf, kami tidak dapat membuat pratinjau untuk halaman web ini, karena tag oEmbed / OpenGraph berikut tidak dapat ditemukan: %{missing_attributes}"
   word_connector:
     comma: ", "
+  custom_fields:
+    validations:
+      max_items: "Jumlah maksimum bidang khusus untuk entitas ini telah tercapai (%{max_items_number})"
+      max_value_length: "Panjang maksimum untuk nilai bidang khusus telah tercapai (%{max_value_length})"
   invite:
     expired: "Token undangan Anda telah kedaluwarsa. Silahkan <a href='%{base_url}/about'>kontak staf</a>."
     not_found: "Token undangan Anda tidak valid. Silahkan <a href='%{base_url}/about'>kontak staf</a>."
@@ -466,6 +471,8 @@ id:
       - Kritik konstruktif diperbolehkan, tetapi kritik *ide*, bukan orang.
 
       Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
+    dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
+    get_a_room: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
     dont_feed_the_trolls: Posting ini telah ditandai untuk mendapat perhatian moderator. Apakah Anda yakin ingin membalasnya? Balasan ke konten negatif cenderung mendorong lebih banyak perilaku negatif.
   activerecord:
     attributes:
@@ -568,23 +575,35 @@ id:
   discourse_welcome_topic:
     title: "Selamat datang di %{site_title}! :wave:"
     body: |
-      Kami sangat senang Anda bergabung dengan kami. %{site_description}
+      Kami sangat senang Anda bergabung dengan kami.
+
+      %{site_info_quote}
 
       Berikut adalah beberapa hal yang dapat Anda lakukan untuk memulai:
 
       :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Apa satu hal yang ingin Anda tanyakan?
 
-      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan postingan yang menarik, informatif, atau menghibur, gunakan angka :heart: untuk menunjukkan penghargaan atau dukungan Anda!
+      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sudah berlangsung di sini. Saat Anda menemukan post yang menarik, informatif, atau menghibur, gunakan :heart: untuk menunjukkan penghargaan atau dukungan Anda!
 
       :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
 
       > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di [#feedback](%{base_path}/c/site-feedback) atau [hubungi admin](%{base_path}/about).
+  admin_quick_start_title: "Panduan Admin: Memulai"
   category:
     topic_prefix: "Tentang kategori %{category}"
+    replace_paragraph: "(Ganti paragraf pertama ini dengan deskripsi singkat tentang kategori baru Anda. Panduan ini akan muncul di area pemilihan kategori, jadi cobalah membuatnya di bawah 200 karakter.)"
+    post_template: "%{replace_paragraph}\n\nGunakan paragraf berikut untuk deskripsi yang lebih panjang, atau untuk menetapkan pedoman atau aturan kategori:\n\n- Mengapa orang harus menggunakan kategori ini? Untuk apa ini?\n\n- Bagaimana tepatnya ini berbeda dari kategori lain yang sudah kita miliki?\n\n- Topik apa yang harus ada dalam kategori ini secara umum?\n\n- Apakah kita membutuhkan kategori ini? Bisakah kita menggabungkan dengan kategori lain, atau subkategori?\n"
     errors:
+      not_found: "Kategori tidak ditemukan!"
+      uncategorized_parent: "Tidak dikategorikan tidak boleh memiliki kategori induk"
+      self_parent: "Induk subkategori tidak bisa dirinya sendiri"
+      depth: "Anda tidak dapat menyarangkan subkategori di bawah yang lain"
       invalid_email_in: "'%{email}' bukanlah alamat email yang valid."
       email_already_used_in_group: "'%{email}' telah digunakan oleh grup '%{group_name}'."
       email_already_used_in_category: "'%{email}' telah digunakan oleh kategori '%{category_name}'."
+      description_incomplete: "Post deskripsi kategori harus memiliki setidaknya satu paragraf."
+      disallowed_topic_tags: "Topik ini memiliki tag yang tidak diizinkan oleh kategori ini: '%{tags}'"
+      disallowed_tags_generic: "Topik ini memiliki tag yang tidak diizinkan."
       slug_contains_non_ascii_chars: "berisi karakter non-ascii"
       is_already_in_use: "sedang digunakan"
       move_topic_to_category_disallowed: "Anda tidak dapat memindahkan topik ini ke kategori di mana Anda tidak memiliki izin untuk membuat topik baru."
@@ -602,6 +621,9 @@ id:
       blocked_hotlinked: "Gambar Eksternal"
     media_placeholder:
       blocked_hotlinked_title: "Media dihosting di situs lain. Klik untuk membuka di tab baru."
+      blocked_hotlinked: "Media Eksternal"
+    has_likes:
+      other: "%{count} Suka"
   rate_limiter:
     hours:
       other: "%{count} jam"
@@ -609,6 +631,7 @@ id:
       other: "%{count} menit"
     seconds:
       other: "%{count} detik"
+    short_time: "beberapa detik"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
@@ -658,11 +681,19 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
+    no_token: 'Ups! Tautan yang Anda gunakan tidak berfungsi lagi. Anda dapat <a href="%{base_url}/login">Masuk</a> sekarang. Jika Anda lupa kata sandi, Anda dapat <a href="%{base_url}/password-reset">meminta tautan</a> untuk meresetnya.'
     title: "Atur Ulang Kata Sandi"
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
+  email_login:
+    invalid_token: 'Ups! Tautan yang Anda gunakan tidak berfungsi lagi. Anda dapat <a href="%{base_url}/login">Masuk</a> sekarang. Jika Anda lupa kata sandi, Anda dapat <a href="%{base_url}/password-reset">meminta tautan</a> untuk meresetnya.'
+    title: "Masuk melalui email"
   user_auth_tokens:
     browser:
+      chrome: "Google Chrome"
+      discoursehub: "Aplikasi DiscourseHub"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
       ie: "Internet Explorer"
       opera: "Opera"
       safari: "Safari"
@@ -697,8 +728,15 @@ id:
       title: "Konfirmasi email baru Anda"
       description: "Konfirmasikan bahwa Anda ingin alamat email Anda diubah menjadi:"
     authorizing_old:
+      title: "Ubah alamat email Anda"
+      description: "Harap konfirmasi perubahan alamat email Anda"
+      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
       old_email: "Email lama: %{email}"
       new_email: "Email baru: %{email}"
+      almost_done_title: "Konfirmasi alamat email baru"
+  associated_accounts:
+    revoke_failed: "Gagal mencabut akun Anda di %{provider_name}."
+    connected: "(terhubung)"
   activation:
     action: "Klik disini untuk mengaktifkan akun anda"
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
@@ -707,8 +745,12 @@ id:
     welcome_to: "Selamat datang ke %{site_name}!"
     approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
     missing_session: "Kami tidak dapat mendeteksi apakah akun anda telah dibuat, mohon pastikan cookies anda aktif."
+    activated: "Maaf, akun ini sudah diaktifkan."
     admin_confirm:
       title: "Konfirmasi Akun Admin"
+      description: "Anda yakin ingin <b>%{target_username} (%{target_email})</b> menjadi administrator?"
+      grant: "Berikan Akses Admin"
+      complete: "<b>%{target_username}</b> sekarang menjadi administrator."
       back_to: "Kembali ke %{title}"
   reviewable_score_types:
     needs_approval:
@@ -716,19 +758,64 @@ id:
   post_action_types:
     off_topic:
       title: "Diluar topik"
+      description: "Post ini tidak relevan dengan diskusi saat ini seperti yang didefinisikan oleh judul dan post pertama, dan mungkin harus dipindahkan ke tempat lain."
+      short_description: "Tidak relevan dengan diskusi"
     spam:
       title: "Spam"
+      description: "Postingan ini adalah iklan, atau vandalisme. Tidak berguna atau relevan dengan topik saat ini."
+      short_description: "Ini adalah iklan atau vandalisme"
+      email_title: '"%{title}" ditandai sebagai spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Tidak pantas"
+      description: 'Post ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
+      short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
     notify_user:
       title: "Kirim @%{username} sebuah pesan"
+      description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
+      short_description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
+      email_title: 'Post Anda di "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Hal Lain"
+      description: "Post ini membutuhkan perhatian staf karena alasan lain yang tidak tercantum di atas."
+      short_description: "Membutuhkan perhatian staf karena alasan lain"
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: "Penandaan"
+      description: "Bookmark post ini"
+      short_description: "Bookmark post ini"
+    like:
+      title: "Suka"
+      description: "Sukai post ini"
+      short_description: "Sukai post ini"
+  draft:
+    sequence_conflict_error:
+      title: "kesalahan draf"
+      description: "Draf sedang diedit di jendela lain. Muat ulang halaman ini."
+  draft_backup:
+    pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
+    pm_body: "Topik berisi draf cadangan"
+  email_settings:
+    smtp_server_busy_error: "Server SMTP sedang sibuk, coba lagi nanti."
+    smtp_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server SMTP. %{message}"
+    imap_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server IMAP. %{message}"
+    connection_error: "Terjadi masalah saat menghubungkan dengan server, periksa nama dan port server, lalu coba lagi."
+    timeout_error: "Waktu koneksi ke server habis, periksa nama server dan port, lalu coba lagi."
+    unhandled_error: "Kesalahan tidak tertangani saat menguji setelan email. %{message}"
+  webauthn:
+    validation:
+      invalid_type_error: "Jenis webauthn yang diberikan tidak valid. Jenis yang valid adalah webauthn.get dan webauthn.create."
+      malformed_attestation_error: "Terjadi kesalahan saat mengartikan data pengesahan."
+      user_verification_error: "Verifikasi pengguna diperlukan."
+      unsupported_public_key_algorithm_error: "Algoritma kunci publik yang disediakan tidak didukung oleh server."
+      unsupported_attestation_format_error: "Format pengesahan tidak didukung oleh server."
+      credential_id_in_use_error: "ID kredensial yang diberikan sudah digunakan."
+      public_key_error: "Verifikasi kunci publik untuk kredensial gagal."
+      ownership_error: "Kunci keamanan tidak dimiliki oleh pengguna."
+      not_found_error: "Kunci keamanan dengan ID kredensial yang diberikan tidak dapat ditemukan."
+      unknown_cose_algorithm_error: "Algoritma yang digunakan untuk kunci keamanan tidak dikenali."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -737,20 +824,49 @@ id:
       short_description: "Ini adalah iklan"
     inappropriate:
       title: "Tidak pantas"
+      description: 'Topik ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
       long_form: "menandai sebagai tidak pantas"
+      short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
     notify_moderators:
       title: "Hal Lain"
+      description: 'Topik ini memerlukan perhatian staf umum berdasarkan <a href="%{base_path}/guidelines">pedoman</a>, <a href="%{tos_url}">TOS</a>, atau karena alasan lain yang tidak tercantum di atas.'
       long_form: "menandai sebagai membutuhkan perhatian moderator"
+      short_description: "Membutuhkan perhatian staf karena alasan lain"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
       email_body: "%{link}\n\n%{message}"
+  ignored:
+    hidden_content: "<p>Konten yang diabaikan</p>"
   archetypes:
     regular:
       title: "Topik Reguler"
+    banner:
+      title: "Topik Spanduk"
+      message:
+        make: "Topik ini sekarang menjadi spanduk. Itu akan muncul di bagian atas setiap halaman sampai ditutup oleh pengguna."
+        remove: "Topik ini bukan lagi spanduk. Itu tidak akan lagi muncul di bagian atas setiap halaman."
+  unsubscribed:
+    title: "Preferensi email diperbarui!"
+    description: "Preferensi email untuk <b>%{email}</b> telah diperbarui. Untuk mengubah pengaturan email Anda <a href='%{url}'>kunjungi preferensi pengguna Anda</a>."
+    topic_description: "Untuk berlangganan ulang %{link}, gunakan kontrol notifikasi di bagian bawah atau kanan topik."
+    private_topic_description: "Untuk berlangganan kembali, gunakan kontrol notifikasi di bagian bawah atau kanan topik."
+  uploads:
+    marked_insecure_from_theme_component_reason: "upload digunakan dalam komponen tema"
   unsubscribe:
     title: "Berhenti berlangganan"
+    stop_watching_topic: "Berhenti mengikuti topik ini, %{link}"
+    mute_topic: "Nonaktifkan semua notifikasi untuk topik ini, %{link}"
+    unwatch_category: "Berhenti mengikuti semua topik di %{category}"
+    mailing_list_mode: "Nonaktifkan mode milis"
+    all: "Jangan kirimi saya email apa pun dari %{sitename}"
+    different_user_description: "Anda saat ini masuk sebagai pengguna yang berbeda dari yang kami kirimi email. Keluar, atau masuk ke mode anonim, dan coba lagi."
+    not_found_description: "Maaf, kami tidak dapat menemukan langganan tersebut. Mungkin tautan di email Anda terlalu lama dan telah kedaluwarsa?"
+    user_not_found_description: "Maaf, kami tidak dapat menemukan pengguna untuk langganan ini. Anda mungkin mencoba berhenti berlangganan akun yang sudah tidak ada lagi."
     log_out: "Keluar"
     submit: "Simpan preferensi"
     digest_frequency:
+      title: "Anda menerima email ringkasan %{frequency}"
+      never_title: "Anda tidak menerima email ringkasan"
+      select_title: "Atur frekuensi email ringkasan ke:"
       never: "tidak pernah"
       every_30_minutes: "setiap 30 menit"
       every_hour: "per jam"
@@ -763,54 +879,131 @@ id:
     authorize: "Izinkan"
     read: "baca"
     read_write: "baca/tulis"
+    description: '"%{application_name}" meminta akses berikut ke akun Anda:'
+    instructions: 'Kami baru saja membuat kunci API pengguna baru untuk Anda gunakan dengan "%{application_name}", harap tempelkan kunci berikut ke dalam aplikasi Anda:'
+    otp_description: 'Apakah Anda ingin mengizinkan "%{application_name}" untuk mengakses situs ini?'
     otp_confirmation:
       confirm_title: Lanjut ke %{site_name}
       logging_in_as: Masuk sebagai %{username}
       confirm_button: Selesai Login
+    no_trust_level: "Maaf, Anda tidak memiliki trust level yang diperlukan untuk mengakses API pengguna"
+    generic_error: "Maaf, kami tidak dapat mengeluarkan kunci API pengguna, fitur ini mungkin dinonaktifkan oleh admin situs"
+    scopes:
+      message_bus: "Pembaruan langsung"
+      notifications: "Baca dan hapus notifikasi"
+      push: "Pengiriman notifikasi ke layanan eksternal"
+      session_info: "Baca info sesi pengguna"
+      read: "Baca semua"
+      write: "Tulis semua"
+      one_time_password: "Membuat token masuk satu kali"
+      bookmarks_calendar: "Baca pengingat bookmark"
+      user_status: "Baca dan perbarui status pengguna"
+    invalid_public_key: "Maaf, kunci publik tidak valid."
+    invalid_auth_redirect: "Maaf, host auth_redirect ini tidak diizinkan."
+    invalid_token: "Token tidak ada, tidak valid, atau kedaluwarsa."
+  flags:
+    errors:
+      already_handled: "Penanda sudah ditangani"
   reports:
     default:
       labels:
         count: Menghitung
+        percent: Persen
         day: Hari
     post_edits:
+      title: "Pengeditan Post"
       labels:
         edited_at: Tanggal
         post: Postingan
+        editor: Editor
+        author: Pengarang
         edit_reason: Alasan
+      description: "Jumlah edit post baru."
     user_flagging_ratio:
+      title: "Rasio Penandaan Pengguna"
       labels:
         user: Pengguna
+        agreed_flags: Penanda yang disepakati
+        disagreed_flags: Penanda yang tidak disepakati
+        ignored_flags: Penanda yang diabaikan
         score: Skor
+      description: "Daftar pengguna yang diurutkan berdasarkan rasio respons staf terhadap penanda mereka (tidak setuju hingga setuju)."
     moderators_activity:
+      title: "Aktivitas Moderator"
       labels:
         moderator: Moderator
+        flag_count: Penanda ditinjau
+        time_read: Pembacaan waktu
+        topic_count: Topik dibuat
+        post_count: Post dibuat
+        pm_count: PM dibuat
+        revision_count: Revisi
+      description: Daftar aktivitas moderator termasuk penanda yang ditinjau, waktu pembacaan, topik yang dibuat, post yang dibuat, pesan pribadi yang dibuat, dan revisi.
     flags_status:
+      title: "Status Penanda"
+      values:
+        agreed: Setuju
+        disagreed: Tidak setuju
+        deferred: Ditangguhkan
+        no_action: Tidak ada tindakan
       labels:
         flag: Tipe
+        assigned: Ditugaskan
+        poster: Poster
+        flagger: Pemberi penanda
+        time_to_resolution: Waktu resolusi
     visits:
       title: "Kunjungan Pengguna"
       xaxis: "Haru"
       yaxis: "Jumlah kunjungan"
     signups:
       xaxis: "Hari"
+      yaxis: "Jumlah pendaftaran"
     new_contributors:
       xaxis: "Hari"
     trust_level_growth:
+      title: "Pertumbuhan Trust Level"
+      xaxis:
+        tl1_reached: "Mencapai TL1"
+        tl2_reached: "Mencapai TL2"
+        tl3_reached: "Mencapai TL3"
+        tl4_reached: "Mencapai TL4"
       yaxis: "Hari"
+      description: "Jumlah pengguna yang meningkatkan Trust Level mereka selama periode ini."
     consolidated_page_views:
+      title: "Tampilan Halaman Terkonsolidasi"
+      xaxis:
+        page_view_crawler: "Perayap"
+        page_view_anon: "Pengguna anonim"
+        page_view_logged_in: "Pengguna yang masuk"
       yaxis: "Hari"
       labels:
         post: Postingan
+        editor: Editor
+        author: Pengarang
         edit_reason: Alasan
     consolidated_api_requests:
+      title: "Permintaan API Terkonsolidasi"
+      xaxis:
+        api: "API"
+        user_api: "API Pengguna"
       yaxis: "Hari"
+      description: "Permintaan API untuk kunci API reguler dan kunci API pengguna."
     dau_by_mau:
+      title: "DAU/MAU"
       xaxis: "Hari"
+      yaxis: "DAU/MAU"
       description: "Jumlah anggota yang masuk pada hari terakhir dibagi dengan jumlah anggota yang masuk pada bulan lalu – menghasilkan % yang menunjukkan 'stickiness' komunitas. Bertujuan untuk >20%."
     daily_engaged_users:
+      title: "Pengguna yang Terlibat Harian"
       xaxis: "Hari"
+      yaxis: "Pengguna Terlibat"
+      description: "Jumlah pengguna yang menyukai atau memposting di sehari terakhir."
     profile_views:
+      title: "Penampilan Profil Pengguna"
       xaxis: "Hari"
+      yaxis: "Jumlah profil pengguna dilihat"
+      description: "Total penampilan baru dari profil pengguna."
     topics:
       title: "Topik"
       xaxis: "Hari"
@@ -836,6 +1029,9 @@ id:
       title: "Pengguna per Level Kepercayaan"
       xaxis: "Level Kepercayaan"
       yaxis: "Jumlah Pengguna"
+      labels:
+        level: Tingkat
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Tipe"
       yaxis: "Jumlah Pengguna"
@@ -894,28 +1090,43 @@ id:
     page_view_anon_reqs:
       title: "Anonim"
       xaxis: "Hari"
+      yaxis: "Penampilan-halaman Anonim"
+      description: "Jumlah penampilan-halaman baru oleh pengunjung yang tidak masuk ke akun."
     page_view_logged_in_reqs:
+      title: "Masuk"
       xaxis: "Hari"
     page_view_crawler_reqs:
       xaxis: "Hari"
     page_view_total_reqs:
+      title: "Tampilan halaman"
       xaxis: "Hari"
+      yaxis: "Total Penampilan-halaman"
     page_view_logged_in_mobile_reqs:
+      title: "Tampilan Halaman Masuk"
       xaxis: "Hari"
+      yaxis: "Tampilan Halaman Masuk Seluler"
+      description: "Jumlah tampilan halaman baru dari pengguna di perangkat seluler dan masuk ke akun."
     page_view_anon_mobile_reqs:
+      title: "Tampilan Halaman Anon"
       xaxis: "Hari"
+      yaxis: "Tampilan Halaman Anon Seluler"
+      description: "Jumlah tampilan halaman baru dari pengunjung di perangkat seluler yang tidak masuk."
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"
+      yaxis: "Permintaan digunakan untuk pembaruan dan pelacakan langsung"
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Hari"
       yaxis: "Permohonan Sukses (Status 2xx)"
     http_3xx_reqs:
+      title: "HTTP 3xx (Pengalihan)"
       xaxis: "Hari"
+      yaxis: "Permintaan pengalihan (Status 3xx)"
     http_4xx_reqs:
       title: "HTTP 4xx (Error pada Client)"
       xaxis: "Hari"
+      yaxis: "Kesalahan Klien (Status 4xx)"
     http_5xx_reqs:
       xaxis: "Hari"
     http_total_reqs:
@@ -934,43 +1145,72 @@ id:
       labels:
         user: Pengguna
         location: Lokasi
+        browser: Peramban
+        device: Perangkat
+        os: Sistem operasi
+        login_time: Waktu Masuk
     staff_logins:
       labels:
         user: Pengguna
         location: Lokasi
     top_users_by_likes_received:
+      title: "Pengguna Teratas berdasarkan suka yang diterima"
       labels:
         user: Pengguna
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas yang telah menerima suka."
     top_users_by_likes_received_from_inferior_trust_level:
+      title: "Pengguna Teratas berdasarkan suka yang diterima dari pengguna dengan trust level lebih rendah"
       labels:
         user: Pengguna
+        trust_level: Trust level
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas dengan trust level yang lebih tinggi disukai oleh orang-orang dengan tingkat kepercayaan yang lebih rendah."
     top_users_by_likes_received_from_a_variety_of_people:
+      title: "Pengguna Teratas berdasarkan suka yang diterima dari berbagai orang"
       labels:
         user: Pengguna
         qtt_like: Likes Diterima
+      description: "10 pengguna teratas yang memiliki suka dari banyak orang."
   dashboard:
+    group_email_credentials_warning: 'Ada masalah dengan kredensial email untuk grup <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Tidak ada email yang akan dikirim dari kotak masuk grup hingga masalah ini diatasi. %{error}'
     rails_env_warning: "Server Anda berjalan dalam modus %{env}."
     host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
+    sidekiq_warning: 'Sidekiq tidak berjalan. Banyak tugas, seperti mengirim email, dijalankan secara asinkron oleh Sidekiq. Harap pastikan setidaknya satu proses Sidekiq sedang berjalan. <a href="https://github.com/mperham/sidekiq" target="_blank">Pelajari tentang Sidekiq di sini</a>.'
+    queue_size_warning: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
     memory_warning: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
+    outdated_translations_warning: "Beberapa penggantian terjemahan Anda sudah usang. Silakan periksa <a href='%{base_path}/admin/customize/site_texts?outdated=true'>penyesuaian teks</a> Anda."
+    email_polling_errored_recently:
+      other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
+    missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
     v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
+    legacy_navigation_menu_deprecated: "Discourse Anda saat ini menggunakan menu navigasi 'lama' yang <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>akan dihapus pada rilis beta pertama Discourse 3.2</a>. Migrasi ke menu navigasi yang baru dengan memperbarui pengaturan situs menu navigasi <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> ke 'sidebar' atau 'header dropdown'."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
+    topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
+    max_form_template_title_length: "Panjang maksimum yang diperbolehkan untuk judul templat formulir."
+    max_form_template_content_length: "Panjang maksimum yang diperbolehkan untuk konten templat formulir."
     default_subcategory_on_read_only_category: "Mengaktifkan tombol 'Topik Baru' dan memilih subkategori bawaan untuk membuat post pada kategori di mana pengguna tidak diizinkan untuk membuat topik baru."
     apple_touch_icon: "Ikon yang digunakan untuk perangkat sentuh Apple. Backround transparan tidak disarankan. Akan secara otomatis diubah ukurannya menjadi 180x180. Jika dibiarkan kosong, large_icon akan digunakan."
+    summarization_strategy: "Cara tambahan untuk meringkas konten yang didaftarkan oleh plugin"
+    custom_summarization_allowed_groups: "Grup diizinkan untuk meringkas konten menggunakan `summarization_strategy`."
     include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
     display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
+    hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
     blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
     allowed_email_domains: "Daftar domain email yang dibatasi pipa yang HARUS digunakan pengguna untuk mendaftarkan akun. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. PERINGATAN: Pengguna dengan domain email selain yang terdaftar tidak akan diizinkan!"
     auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
+    s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
+    s3_use_cdn_url_for_all_uploads: "Gunakan URL CDN untuk semua file yang diunggah ke s3, bukan hanya untuk gambar."
     composer_media_optimization_image_encode_quality: "Kualitas penyandian JPG digunakan dalam proses penyandian ulang."
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
+    edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
+    edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
@@ -980,23 +1220,38 @@ id:
     email_in: "Izinkan pengguna membuat topik baru melalui surel. Setelah mengaktifkan setelan ini, Anda akan dapat melakukan konfigurasi alamat surel masuk untuk grup dan kategori."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
     dont_feed_the_trolls_threshold: "Jumlah penanda dari pengguna lain sebelum diperingatkan."
+    disable_category_edit_notifications: "Nonaktifkan pemberitahuan untuk pengeditan kategori topik."
+    disable_tags_edit_notifications: "Nonaktifkan notifikasi untuk pengubahan tag topik."
     native_app_install_banner_ios: "Menampilkan spanduk aplikasi DiscourseHub di perangkat iOS ke pengguna dasar (trust level 1) dan lebih tinggi."
     native_app_install_banner_android: "Menampilkan spanduk aplikasi DiscourseHub di perangkat Android ke pengguna dasar (trust level 1) dan lebih tinggi."
+    max_prints_per_hour_per_user: "Jumlah maksimum tayangan halaman /print (atur ke 0 untuk menonaktifkan pencetakan)"
     notify_about_reviewable_item_after: "Jika ada item yang dapat ditinjau yang belum ditangani setelah berjam-jam ini, kirim pesan pribadi ke moderator. Setel ke 0 untuk menonaktifkan."
     bootstrap_mode_min_users: "Jumlah minimum pengguna yang diperlukan untuk menonaktifkan mode bootstrap (diatur ke 0 untuk menonaktifkan, dapat memakan waktu hingga 24 jam)"
     emoji_set: "Bagaimana dengan emoji Anda?"
     emoji_deny_list: "Emoji ini tidak akan tersedia untuk digunakan dalam menu atau kode singkat."
+    enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
+    default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
+    default_sidebar_show_count_of_new_items: "Jadikan tautan menu navigasi menampilkan jumlah item baru alih-alih lencana secara bawaan."
+    default_sidebar_switch_panel_position: "Posisi tombol panel sakelar bilah samping"
     min_trust_level_for_user_api_key: |
       Trust level diperlukan untuk membuat kunci API pengguna.<br>
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
+    enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
+    max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
     create_post_for_category_and_tag_changes: "Buat post tindakan kecil saat kategori atau tag topik berubah"
+    watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
-    enable_new_notifications_menu: "Mengaktifkan menu notifikasi baru. Menonaktifkan setelan ini sudah usang. Menu notifikasi baru selalu digunakan untuk pilihan 'navigation menu' yang tidak usang. <a href='https://meta.discourse.org/t/260358'>Pelajari lebih lanjut</a>"
+    default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
+    default_navigation_menu_tags: "Tag yang dipilih akan ditampilkan di bawah bagian Tag pada Menu Navigasi secara bawaan."
     experimental_new_new_view_groups: 'EKSPERIMENTAL: Aktifkan daftar topik baru yang menggabungkan topik yang belum dibaca dan topik baru dan buat tautan "Everything" di tautan sidebar ke sana.'
     enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
     experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
+    experimental_search_menu_groups: "EKSPERIMENTAL: Mengaktifkan menu pencarian baru yang telah ditingkatkan untuk menggunakan glimmer"
+    enable_experimental_lightbox: "EKSPERIMENTAL: Ganti lightbox gambar bawaan dengan desain yang diubah."
+    page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
       invalid_email: "Alamat email tidak valid."
+      email_polling_disabled: "Anda harus mengaktifkan polling POP3 manual atau mengaktifkan poller email khusus sebelum mengaktifkan balasan melalui email."
       min_username_length_range: "Anda tidak boleh menentukan minimum lebih dari maksimum."
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
@@ -1376,6 +1631,10 @@ id:
     no_plugins: "Nonaktifkan semua penyesuaian plugin client-side"
   wizard:
     step:
+      introduction:
+        fields:
+          title:
+            label: "Nama komunitas"
       privacy:
         fields:
           login_required:

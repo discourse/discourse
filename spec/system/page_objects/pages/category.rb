@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def toggle_setting(setting, text = "")
-        find(".edit-category-tab .#{setting} label.checkbox-label", text: text).click
+        find(".edit-category-tab .#{setting} label.checkbox-label", text: text, visible: :all).click
         self
       end
 
@@ -51,7 +51,7 @@ module PageObjects
       end
 
       def has_selected_template?(template_name)
-        find(".select-category-template .select-kit-header")["data-name"] == template_name
+        has_css?(".select-category-template .select-kit-header[data-name='#{template_name}']")
       end
 
       def toggle_form_templates

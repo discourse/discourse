@@ -1,8 +1,4 @@
-{{#if
-  (and
-    this.chatStateManager.isFullPageActive this.displayed (not @channel.isDraft)
-  )
-}}
+{{#if (and this.chatStateManager.isFullPageActive this.displayed)}}
   <div
     class={{concat-class
       "chat-full-page-header"
@@ -35,20 +31,13 @@
             <DButton
               @icon="discourse-compress"
               @title="chat.close_full_page"
-              class="open-drawer-btn btn-flat no-text"
+              class="open-drawer-btn btn-flat"
               @action={{@onCloseFullScreen}}
             />
           {{/if}}
 
-          {{#if @channel.threadingEnabled}}
-            <LinkTo
-              @route="chat.channel.threads"
-              @models={{@channel.routeModels}}
-              title={{i18n "chat.threads.list"}}
-              class="open-thread-list-btn btn btn-flat"
-            >
-              {{d-icon "discourse-threads"}}
-            </LinkTo>
+          {{#if this.showThreadsListButton}}
+            <Chat::Thread::ThreadsListButton @channel={{@channel}} />
           {{/if}}
         </div>
       {{/if}}

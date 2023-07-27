@@ -1,0 +1,16 @@
+<div class="d-lightbox__screen-reader-announcer" tabindex="-1">
+  <h2
+    aria-live="polite"
+    aria-level="2"
+    aria-atomic="true"
+    class="d-lightbox__screen-reader-title"
+    id={{@titleElementId}}
+  >
+    {{i18n
+      "experimental_lightbox.screen_reader_image_title"
+      current=@counterIndex
+      total=@totalItemCount
+      title=@currentItem.title
+    }}
+  </h2>
+</div>

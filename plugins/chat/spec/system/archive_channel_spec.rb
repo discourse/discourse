@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Archive channel", type: :system, js: true do
+RSpec.describe "Archive channel", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -62,20 +62,6 @@ RSpec.describe "Archive channel", type: :system, js: true do
           click_button(I18n.t("js.chat.channel_archive.title"))
 
           expect(page).to have_css(".chat-channel-archive-status", wait: 15)
-        end
-
-        it "shows an error when the topic is invalid" do
-          Jobs.run_immediately!
-
-          chat.visit_channel_settings(channel_1)
-          click_button(I18n.t("js.chat.channel_settings.archive_channel"))
-          find("#split-topic-name").fill_in(
-            with: "An interesting topic for cats :cat: :cat2: :smile_cat:",
-          )
-          click_button(I18n.t("js.chat.channel_archive.title"))
-
-          expect(page).to have_no_content(I18n.t("js.chat.channel_archive.process_started"))
-          expect(page).to have_content("Title can't have more than 1 emoji")
         end
 
         context "when archived channels had unreads" do

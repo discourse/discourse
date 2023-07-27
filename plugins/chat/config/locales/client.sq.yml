@@ -64,6 +64,7 @@ sq:
         never: "Asnjëherë"
       settings:
         followed: "Anëtarësuar"
+        threading_enabled: "Aktivizuar"
         notifications: "Njoftimet"
         preview: "Parashikimi"
         save: "Ruaj"
@@ -95,6 +96,12 @@ sq:
           one: "%{count} përgjigje"
           other: "%{count} përgjigje"
         settings: "Rregullimet"
+        last_reply: "përgjigja e fundit"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Në gjurmim"
       draft_channel_screen:
         header: "Mesazh i ri"
         cancel: "Anulo"

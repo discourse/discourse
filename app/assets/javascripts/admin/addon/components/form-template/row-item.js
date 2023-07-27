@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,14 +14,6 @@ export default class FormTemplateRowItem extends Component {
     return this.site.categories?.filter((c) =>
       c["form_template_ids"].includes(this.args.template.id)
     );
-  }
-
-  @action
-  viewTemplate() {
-    showModal("customize-form-template-view", {
-      model: this.args.template,
-      refreshModel: this.args.refreshModel,
-    });
   }
 
   @action

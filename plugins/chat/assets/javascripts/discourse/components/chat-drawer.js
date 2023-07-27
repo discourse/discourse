@@ -5,6 +5,7 @@ import { cancel, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
+import DiscourseURL from "discourse/lib/url";
 
 export default Component.extend({
   tagName: "",
@@ -191,7 +192,7 @@ export default Component.extend({
     this.chatStateManager.prefersFullPage();
     this.chat.activeChannel = null;
 
-    return this.router.transitionTo(this.chatStateManager.lastKnownChatURL);
+    return DiscourseURL.routeTo(this.chatStateManager.lastKnownChatURL);
   },
 
   @action

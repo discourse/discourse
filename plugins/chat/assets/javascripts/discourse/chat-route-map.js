@@ -8,7 +8,9 @@ export default function () {
     this.route("channel", { path: "/c/:channelTitle/:channelId" }, function () {
       this.route("near-message", { path: "/:messageId" });
       this.route("threads", { path: "/t" });
-      this.route("thread", { path: "/t/:threadId" });
+      this.route("thread", { path: "/t/:threadId" }, function () {
+        this.route("near-message", { path: "/:messageId" });
+      });
     });
 
     this.route(
@@ -21,7 +23,6 @@ export default function () {
       }
     );
 
-    this.route("draft-channel", { path: "/draft-channel" });
     this.route("browse", { path: "/browse" }, function () {
       this.route("all", { path: "/all" });
       this.route("closed", { path: "/closed" });

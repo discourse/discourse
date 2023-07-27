@@ -1008,14 +1008,7 @@ vi:
       experimental_sidebar:
         enable: "Bật thanh bên"
         options: "Tùy chọn"
-        categories_section: "Phần danh mục"
-        categories_section_instruction: "Các danh mục đã chọn sẽ được hiển thị trong phần danh mục của Thanh bên."
-        tags_section: "Phần thẻ"
-        tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
         navigation_section: "Điều hướng"
-        list_destination_instruction: "Khi có nội dung mới trong thanh bên..."
-        list_destination_default: "sử dụng liên kết mặc định và hiển thị huy hiệu cho các mục mới"
-        list_destination_unread_new: "liên kết đến chưa đọc/mới và hiển thị số lượng mục mới"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1121,7 +1114,6 @@ vi:
         tags: "Thẻ"
         interface: "Giao diện"
         apps: "Ứng dụng"
-        sidebar: "Thanh bên"
       change_password:
         success: "(email đã gửi)"
         in_progress: "(đang gửi email)"
@@ -1572,8 +1564,6 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    too_few_posts_notice_MF: |
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}.
@@ -1603,13 +1593,9 @@ vi:
       intro: "Xin chào! Có vẻ như bạn đang quan tâm chủ đề này, nhưng bạn chưa đăng ký tài khoản."
       value_prop: "Bạn mệt mỏi khi phải cuộn qua các bài viết giống nhau? Khi tạo tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các câu trả lời mới, lưu dấu trang và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể làm việc cùng nhau để làm cho cộng đồng này trở nên tuyệt vời. :heart:"
     summary:
-      enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
       description:
         other: "Có <b>%{count}</b> trả lời."
-      enable: "Tóm tắt lại chủ đề"
       disable: "HIển thị tất cả các bài viết"
-      short_label: "Tóm tắt"
-      short_title: "Hiển thị tóm tắt về chủ đề này: các bài đăng thú vị nhất do cộng đồng xác định"
     deleted_filter:
       enabled_description: "Chủ để này có chứa các bài viết bị xoá, chúng đã bị ẩn đi"
       disabled_description: "Xoá các bài viết trong các chủ để được hiển thị"
@@ -2300,7 +2286,7 @@ vi:
         top: "Không có chủ đề top."
         educate:
           new: '<p>Các chủ đề mới của bạn sẽ xuất hiện ở đây. Theo mặc định, các chủ đề được coi là mới và sẽ hiển thị chỉ báo <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nếu chúng được tạo trong 2 ngày qua.</p><p>Truy cập <a href="%{userPrefsUrl}">tùy chọn</a> của bạn để thay đổi.</p>'
-          unread: "<p>Các chủ đề chưa đọc của bạn xuất hiện ở đây.</p><p>Theo mặc định, các chủ đề được coi là chưa đọc và sẽ hiển thị số lượng chưa đọc <span class=\"badge unread-posts badge-notification\">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 4 phút</li></ul><p>Hoặc nếu bạn đã đặt chủ đề một cách rõ ràng thành Theo dõi hoặc Đã theo dõi qua \U0001F514 trong mỗi chủ đề.</p><p>Truy cập <a href=\"%{userPrefsUrl}\">tùy chọn</a> của bạn để thay đổi điều này.</p>"
+          unread: "<p>Các chủ đề chưa đọc của bạn xuất hiện ở đây.</p><p>Theo mặc định, các chủ đề được coi là chưa đọc và sẽ hiển thị số lượng chưa đọc <span class=\"badge unread-posts badge-notification\">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 5 phút</li></ul><p>Hoặc nếu bạn đã đặt chủ đề một cách rõ ràng thành Theo dõi hoặc Đã theo dõi qua \U0001F514 trong mỗi chủ đề.</p><p>Truy cập <a href=\"%{userPrefsUrl}\">tùy chọn</a> của bạn để thay đổi điều này.</p>"
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         posted: "Ở đây không có thêm chủ đề nào được đăng."
@@ -2890,7 +2876,6 @@ vi:
       filtered_replies:
         viewing_posts_by: "Đang xem %{post_count} bài viết của"
         viewing_subset: "Một số câu trả lời bị thu gọn"
-        viewing_summary: "Xem tóm tắt về chủ đề này"
         post_number: "%{username}, bài số #%{post_number}"
         show_all: "Hiển thị tất cả"
       share:
@@ -3238,6 +3223,9 @@ vi:
       close: "Đóng (Esc)"
       content_load_error: '<a href="%url%">Không thể tải nội dung</a>.'
       image_load_error: '<a href="%url%">Không thể tải hình ảnh</a>.'
+    experimental_lightbox:
+      buttons:
+        close: "Đóng (Esc)"
     cannot_render_video: Không thể hiển thị video này vì trình duyệt của bạn không hỗ trợ codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3542,11 +3530,15 @@ vi:
       more: "Thêm"
       all_categories: "Tất cả danh mục"
       all_tags: "Tất cả các thẻ"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "All"
       sections:
         custom:
           save: "Lưu lại"
           delete: "Xóa"
           links:
+            reset: "Đặt lại về mặc định"
             icon:
               label: "Biểu tượng"
             name:
@@ -3574,7 +3566,8 @@ vi:
           click_to_get_started: "Bấm vào đây để bắt đầu."
           header_link_text: "Thư mục"
         community:
-          header_link_text: "Cộng đồng"
+          edit_section:
+            header_dropdown: "Tùy biến"
           links:
             about:
               content: "Giới thiệu"
@@ -3582,8 +3575,8 @@ vi:
               content: "Quản trị"
             badges:
               content: "Huy hiệu"
-            everything:
-              content: "Mọi thứ"
+            topics:
+              content: "Chủ đề"
               title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
@@ -3598,6 +3591,11 @@ vi:
             review:
               content: "Review"
     until: "Cho đến khi:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Hãy nhập giá trị hợp lệ."
+          email: "Vùi lòng nhập một thư điện tử hợp lệ."
   admin_js:
     type_to_filter: "gõ để lọc..."
     admin:
@@ -4573,6 +4571,8 @@ vi:
               key: "tối thiểu"
             maximum:
               key: "tối đa"
+            type:
+              key: "loại"
       impersonate:
         title: "Mạo danh"
         help: "Sử dụng công cụ này để mạo danh một tài khoản thành viên cho mục đích gỡ lỗi, bạn sẽ phải đăng xuất sau khi hoàn tất."
@@ -4877,6 +4877,8 @@ vi:
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         locale: "Ngôn ngữ:"
         more_than_50_results: "Có hơn 50 kết quả. Vui lòng tinh chỉnh tìm kiếm của bạn."
+        outdated:
+          dismiss: "Bỏ qua"
       settings:
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         history: "Xem lịch sử thay đổi"
