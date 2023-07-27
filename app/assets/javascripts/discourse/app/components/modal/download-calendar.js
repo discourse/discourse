@@ -10,11 +10,6 @@ export default class downloadCalendar extends Component {
   @tracked selectedCalendar = "ics";
   @tracked remember = false;
 
-  constructor() {
-    super(...arguments);
-    console.log(this.currentUser);
-  }
-
   @action
   downloadCalendar() {
     if (this.remember) {
