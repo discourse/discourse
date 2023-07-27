@@ -61,6 +61,11 @@ export default class extends Component {
       if (this.observer) {
         this.observer.disconnect();
       } else {
+        const root = document.querySelector(".modal-body");
+        const style = window.getComputedStyle(root);
+        const marginTop = parseFloat(style.marginTop);
+        const paddingTop = parseFloat(style.paddingTop);
+
         this.observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((entry) => {
@@ -71,6 +76,7 @@ export default class extends Component {
           },
           {
             root: document.querySelector(".modal-body"),
+            rootMargin: `0px 0px ${marginTop + paddingTop}px 0px`,
             threshold: 1.0,
           }
         );

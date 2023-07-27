@@ -23,6 +23,15 @@ zh_CN:
           title: "结果将在<strong>关闭</strong>后显示。"
         staff:
           title: "结果仅向<strong>管理人员</strong>成员显示。"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "至少选择 <strong>%{count} 个选项</strong>。"
+          up_to_max_options:
+            other: "最多选择 <strong>%{count} 个选项</strong>。"
+          x_options:
+            other: "选择 <strong>%{count} 个选项</strong>。"
+          between_min_and_max_options: "选择 <strong>%{min} 到 %{max} 个选项</strong>。"
       cast-votes:
         title: "投票"
         label: "立即投票！"
@@ -31,8 +40,10 @@ zh_CN:
         label: "结果"
       remove-vote:
         title: "移除您的投票"
+        label: "撤消投票"
       hide-results:
         title: "回到您的投票"
+        label: "投票"
       group-results:
         title: "按用户字段将投票分组"
         label: "显示细分"

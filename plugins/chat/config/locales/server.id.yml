@@ -7,6 +7,7 @@
 id:
   site_settings:
     chat_enabled: "Aktifkan plugin obrolan."
+    enable_public_channels: "Aktifkan saluran publik berdasarkan kategori."
     chat_allowed_groups: "Pengguna dalam grup ini dapat mengobrol. Perhatikan bahwa staf selalu dapat mengakses obrolan."
     chat_channel_retention_days: "Pesan obrolan di kanal reguler akan disimpan selama beberapa hari ini. Setel ke '0' untuk mempertahankan pesan selamanya."
     chat_dm_retention_days: "Pesan obrolan di kanal obrolan pribadi akan dipertahankan selama beberapa hari ini. Setel ke '0' untuk mempertahankan pesan selamanya."
@@ -87,6 +88,8 @@ id:
       over_chat_max_direct_message_users:
         other: "Anda tidak dapat membuat pesan langsung dengan lebih dari %{count} pengguna lain."
       original_message_not_found: "Nenek moyang pesan yang Anda balas tidak dapat ditemukan atau telah dihapus."
+      thread_invalid_for_channel: "Utas bukan bagian dari saluran yang disediakan."
+      thread_does_not_match_parent: "Utas tidak cocok dengan pesan induk."
     reviewables:
       message_already_handled: "Terima kasih, tetapi kami telah meninjau pesan ini dan memutuskan bahwa pesan ini tidak perlu ditandai lagi."
       actions:
@@ -147,6 +150,8 @@ id:
         other: "%{count} anggota"
       and_x_others:
         other: "dan %{count} lainnya"
+    summaries:
+      no_targets: "Tidak ada pesan selama periode yang dipilih."
   discourse_push_notifications:
     popup:
       chat_mention:

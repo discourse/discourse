@@ -1296,7 +1296,6 @@ hy:
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
     summary:
-      enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
       enabled_description: "Այս թեման պարունակում է հեռացված գրառումներ, որոնք թաքցվել են:"
@@ -2623,6 +2622,9 @@ hy:
       close: "Փակել (Esc)"
       content_load_error: '<a href="%url%"> Բովանդակությունը </a> հնարավոր չէ բեռնել:'
       image_load_error: '<a href="%url%"> Պատկերը </a> հնարավոր չէ բեռնել:'
+    experimental_lightbox:
+      buttons:
+        close: "Փակել (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -4049,6 +4051,8 @@ hy:
         recommended: "Մենք խորհուրդ ենք տալիս անհատականացնել հետևյալ տեքստը՝ Ձեր պահանջներին համապատասխանեցնելու համար՝ "
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         more_than_50_results: "Կա 50-ից ավել արդյունք: Խնդրում ենք հստակեցնել Ձեր որոնումը:"
+        outdated:
+          dismiss: "Չեղարկել"
       settings:
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         reset: "վերահաստատել"

@@ -39,10 +39,7 @@ RSpec.describe "Chat message - channel", type: :system do
     end
 
     context "when the message is part of a thread" do
-      before do
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-        channel_1.update!(threading_enabled: true)
-      end
+      before { channel_1.update!(threading_enabled: true) }
 
       fab!(:thread_1) do
         chat_thread_chain_bootstrap(

@@ -123,6 +123,28 @@
   <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
 </StyleguideExample>
 
+<StyleguideExample @title="<MiniTagChooser>">
+  <div class="inline-form">
+    <MiniTagChooser
+      @value={{@dummy.selectedTags}}
+      @options={{hash filterable=true}}
+    />
+  </div>
+</StyleguideExample>
+
+<StyleguideExample @title="<MiniTagChooser> with useHeaderFilter=true">
+  <div class="inline-form">
+    <MiniTagChooser
+      @value={{@dummy.selectedTags}}
+      @options={{hash
+        filterable=true
+        filterPlaceholder="tagging.choose_for_topic"
+        useHeaderFilter=true
+      }}
+    />
+  </div>
+</StyleguideExample>
+
 <StyleguideExample @title="admin <GroupChooser>">
   <GroupChooser
     @selected={{@dummy.selectedGroups}}

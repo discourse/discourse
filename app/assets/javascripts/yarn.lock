@@ -1940,12 +1940,12 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-a11y-dialog@7.5.2:
-  version "7.5.2"
-  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-7.5.2.tgz#8174d3f71a05d8d5a02ebae515384c747910391c"
-  integrity sha512-zfWtVvrbGbP3AFnEJ1aJFtu7GvedgjOEKbkyEUSeaNWDzmFJk9O5nuolDQrRDyRDE5fqSJRiBJtD5bUYKveoUg==
+a11y-dialog@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-8.0.0.tgz#e080be9b0bca2a3c22a526da3f4bca00c0e221ed"
+  integrity sha512-O0u7j+5bWik8B0SEmAJYZBgiVerGP3bvgtLeYVwv03Y2x5j/nqcRpZSibSjUWwmJ3rouo1M51Ly5i1didwLMgA==
   dependencies:
-    focusable-selectors "^0.4.0"
+    focusable-selectors "^0.8.0"
 
 abab@^2.0.6:
   version "2.0.6"
@@ -3784,10 +3784,10 @@ ember-cache-primitive-polyfill@^1.0.1:
     ember-compatibility-helpers "^1.2.1"
     silent-error "^1.1.1"
 
-ember-cached-decorator-polyfill@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/ember-cached-decorator-polyfill/-/ember-cached-decorator-polyfill-1.0.1.tgz#320abc0fe45338ee7c54777e32353023c48775c5"
-  integrity sha512-VDgrpIJ6rDDHIfkYrsFR1BM3fpcC0+zFWIOsX0qY44zPrIXjhQWVXs2iVXLIPHprSgf+tFQ3ESxwDscpeRe/0A==
+ember-cached-decorator-polyfill@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ember-cached-decorator-polyfill/-/ember-cached-decorator-polyfill-1.0.2.tgz#26445056ebee3776c340e28652ce59be73dd3958"
+  integrity sha512-hUX6OYTKltAPAu8vsVZK02BfMTV0OUXrPqvRahYPhgS7D0I6joLjlskd7mhqJMcaXLywqceIy8/s+x8bxF8bpQ==
   dependencies:
     "@embroider/macros" "^1.8.3"
     "@glimmer/tracking" "^1.1.2"
@@ -5180,10 +5180,10 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
-focusable-selectors@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/focusable-selectors/-/focusable-selectors-0.4.0.tgz#c93092bfe65c7cf7ef52aed82fb6f8df31072459"
-  integrity sha512-tc/236hUU3xemsRLu1RKhRQ5UWHjRM9iJTli1zdac43h7b1biRSgG0mILM0qrcsKaGCHcOPJ6NKbk12ouKHLpw==
+focusable-selectors@^0.8.0:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/focusable-selectors/-/focusable-selectors-0.8.1.tgz#ed50e1ace402a3769c203525cea616c80111ac76"
+  integrity sha512-QXOebaidkRK27TmfboyrJZwzNPYtvs01itWrXmSc7rd8/ORql9ZiM1fkQ1IZKcCjYp4J/lWCBkFLxuupvt3y9w==
 
 follow-redirects@^1.0.0:
   version "1.15.2"
@@ -7324,10 +7324,10 @@ node-fetch@^2.6.0:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.1.tgz#b3eea7b54b3a48020e46f4f88b9c5a7430d20b2e"
-  integrity sha512-cRVc/kyto/7E5shrWca1Wsea4y6tL9iYJE5FBCius3JQfb/4P4I295PfhgbJQBLTx6lATE4z+wK0rPM4VS2uow==
+node-fetch@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.2.tgz#d1e889bacdf733b4ff3b2b243eb7a12866a0b78b"
+  integrity sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==
   dependencies:
     data-uri-to-buffer "^4.0.0"
     fetch-blob "^3.1.4"

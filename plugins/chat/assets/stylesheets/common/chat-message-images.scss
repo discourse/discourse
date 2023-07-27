@@ -3,12 +3,10 @@ $max_image_height: 150px;
 .chat-message {
   // append selectors to set images to a
   // max height of $max_image_height
-  .chat-message-collapser
-    .onebox
-    img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
-  .chat-message-collapser img.onebox,
-  .chat-message-collapser .chat-uploads img,
-  .chat-message-collapser p img,
+  .onebox img:not(.ytp-thumbnail-image, .onebox-avatar-inline),
+  img.onebox,
+  .chat-uploads img,
+  p img,
   aside.onebox .onebox-body .aspect-image-full-size,
   aside.onebox .onebox-body .aspect-image-full-size img,
   .chat-message-text p img:not(.emoji) {
@@ -17,6 +15,46 @@ $max_image_height: 150px;
     max-width: 100%;
     width: unset;
     overflow: hidden;
+  }
+
+  .onebox {
+    container-type: inline-size;
+
+    .thumbnail {
+      max-width: 40% !important;
+      &.onebox-avatar {
+        max-height: 100px;
+        width: 20%;
+        max-width: 60px;
+        margin-right: 0.5rem;
+      }
+    }
+
+    @container (width < 400px) {
+      .onebox-body {
+        &:not(:has(.thumbnail.onebox-avatar)) {
+          display: flex;
+          flex-direction: column;
+        }
+
+        h3 {
+          margin-block: 0.75rem 0;
+        }
+        p {
+          margin-top: 0.5rem;
+        }
+
+        .thumbnail {
+          max-width: 100% !important;
+          margin: 0;
+
+          &.onebox-avatar {
+            max-width: 20%;
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
   }
 
   .chat-message-collapser

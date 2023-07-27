@@ -61,7 +61,7 @@ let alreadyRegistered = false;
  * https://guides.emberjs.com/release/applications/dependency-injection/
  *
  * Incremental migration to newer patterns can be achieved using the `@disableImplicitInjections`
- * helper (availble on `discourse/lib/implicit-injections')
+ * helper (available on `discourse/lib/implicit-injections')
  */
 export function registerDiscourseImplicitInjections() {
   if (alreadyRegistered) {

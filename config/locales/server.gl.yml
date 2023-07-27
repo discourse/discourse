@@ -1586,7 +1586,6 @@ gl:
     title_min_entropy: "A entropía mínima (caracteres únicos) que se require para o título do tema."
     body_min_entropy: "A entropía mínima (caracteres únicos) que se require para o corpo dunha publicación."
     allow_uppercase_posts: "Permitir todas en maiúsculas no título dun tema ou no corpo dunha publicación."
-    max_consecutive_replies: "Número de publicacións continuadas que un usuario ten que facer antes de que se lle prohiba engadir outra resposta."
     enable_filtered_replies_view: 'O botón «(n) respostas» contrae todas as demais publicacións e só amosa a publicación actual e as súas respostas.'
     title_fancy_entities: "Converter caracteres ASCII en entidades HTML elegantes no título dos temas, como SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "A lonxitude mínima dun título antes de se comprobar para temas similares."

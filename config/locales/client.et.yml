@@ -1193,7 +1193,6 @@ et:
       sign_up: "Liitu"
       hide_forever: "tänan, ei"
     summary:
-      enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
       disable: "Näita kõiki postitusi"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
@@ -2053,7 +2052,6 @@ et:
       filtered_replies:
         viewing_posts_by: "Vaatad %{post_count} sõnumit autorilt"
         viewing_subset: "Mõned vastused on peidetud"
-        viewing_summary: "Vaatad teema kokkuvõtet"
         show_all: "Näita kõiki"
     category:
       none: "(foorum puudub)"
@@ -3407,6 +3405,8 @@ et:
         go_back: "Tagasi otsingusse"
         recommended: "Soovitame järgnevat teksti oma vajadustele vastavalt kohandada:"
         show_overriden: "Näita vaid käsitsi muudetuid"
+        outdated:
+          dismiss: "Ignoreeri"
       settings:
         show_overriden: "Näita vaid käsitsi muudetuid"
         reset: "lähtesta"

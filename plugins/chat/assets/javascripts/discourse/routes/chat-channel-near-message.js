@@ -10,7 +10,14 @@ export default class ChatChannelNearMessage extends DiscourseRoute {
     const channel = this.modelFor("chat-channel");
     const { messageId } = this.paramsFor(this.routeName);
     this.controllerFor("chat-channel").set("messageId", null);
-    this.controllerFor("chat-channel").set("targetMessageId", messageId);
+
+    if (
+      messageId ||
+      this.controllerFor("chat-channel").get("targetMessageId")
+    ) {
+      this.controllerFor("chat-channel").set("targetMessageId", messageId);
+    }
+
     this.router.replaceWith("chat.channel", ...channel.routeModels);
   }
 }

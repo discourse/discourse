@@ -1,32 +1,36 @@
-import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { cached, tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
 
 export default class ChatMessagesManager {
-  @tracked messages = new TrackedArray();
-  @tracked canLoadMoreFuture;
-  @tracked canLoadMorePast;
+  @tracked messages = [];
 
   constructor(owner) {
     setOwner(this, owner);
   }
 
-  clearMessages() {
-    this.messages.forEach((message) => (message.manager = null));
-    this.messages.clear();
+  @cached
+  get stagedMessages() {
+    return this.messages.filterBy("staged");
+  }
 
-    this.canLoadMoreFuture = null;
-    this.canLoadMorePast = null;
+  @cached
+  get selectedMessages() {
+    return this.messages.filterBy("selected");
+  }
+
+  clearSelectedMessages() {
+    this.selectedMessages.forEach((message) => (message.selected = false));
+  }
+
+  clear() {
+    this.messages = [];
   }
 
   addMessages(messages = []) {
-    messages.forEach((message) => {
-      message.manager = this;
-    });
-
-    this.messages = new TrackedArray(
-      this.messages.concat(messages).uniqBy("id").sortBy("createdAt")
-    );
+    this.messages = this.messages
+      .concat(messages)
+      .uniqBy("id")
+      .sort((a, b) => a.createdAt - b.createdAt);
   }
 
   findMessage(messageId) {
@@ -35,10 +39,12 @@ export default class ChatMessagesManager {
     );
   }
 
-  findFirstMessageOfDay(messageDate) {
-    const targetDay = new Date(messageDate).toDateString();
+  findFirstMessageOfDay(a) {
     return this.messages.find(
-      (message) => new Date(message.createdAt).toDateString() === targetDay
+      (b) =>
+        a.getFullYear() === b.createdAt.getFullYear() &&
+        a.getMonth() === b.createdAt.getMonth() &&
+        a.getDate() === b.createdAt.getDate()
     );
   }
 
@@ -47,8 +53,8 @@ export default class ChatMessagesManager {
   }
 
   findStagedMessage(stagedMessageId) {
-    return this.messages.find(
-      (message) => message.staged && message.id === stagedMessageId
+    return this.stagedMessages.find(
+      (message) => message.id === stagedMessageId
     );
   }
 

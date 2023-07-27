@@ -54,24 +54,21 @@ function messageFabricator(args = {}) {
 function channelFabricator(args = {}) {
   const id = args.id || sequence++;
 
-  const channel = ChatChannel.create(
-    Object.assign(
-      {
-        id,
-        chatable_type:
-          args.chatable?.type ||
-          args.chatable_type ||
-          CHATABLE_TYPES.categoryChannel,
-        chatable_id: args.chatable?.id || args.chatable_id,
-        title: args.title || "General",
-        description: args.description,
-        chatable: args.chatable || categoryFabricator(),
-        status: CHANNEL_STATUSES.open,
-        slug: args.chatable?.slug || "general",
-      },
-      args
-    )
-  );
+  const channel = ChatChannel.create({
+    id,
+    chatable_type:
+      args.chatable?.type ||
+      args.chatable_type ||
+      CHATABLE_TYPES.categoryChannel,
+    chatable_id: args.chatable?.id || args.chatable_id,
+    title: args.title || "General",
+    description: args.description,
+    chatable: args.chatable || categoryFabricator(),
+    status: args.status || CHANNEL_STATUSES.open,
+    slug: args.chatable?.slug || "general",
+    meta: Object.assign({ can_delete_self: true }, args.meta || {}),
+    archive_failed: args.archive_failed ?? false,
+  });
 
   channel.lastMessage = messageFabricator({ channel });
 

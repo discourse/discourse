@@ -238,17 +238,24 @@ after_initialize do
   add_to_serializer(:current_user, :chat_channels) do
     structured = Chat::ChannelFetcher.structured(self.scope)
 
-    if SiteSetting.enable_experimental_chat_threaded_discussions
-      structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
-        guardian: self.scope,
-        channel_ids: structured[:public_channels].map(&:id),
-        include_threads: true,
-        include_read: false,
-        include_last_reply_details: true,
-      ).thread_unread_overview_by_channel
-    end
+    structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
+      guardian: self.scope,
+      channel_ids: structured[:public_channels].map(&:id),
+      include_threads: true,
+      include_read: false,
+      include_last_reply_details: true,
+    ).thread_unread_overview_by_channel
 
-    Chat::ChannelIndexSerializer.new(structured, scope: self.scope, root: false).as_json
+    category_ids = structured[:public_channels].map { |c| c.chatable_id }
+    post_allowed_category_ids =
+      Category.post_create_allowed(self.scope).where(id: category_ids).pluck(:id)
+
+    Chat::ChannelIndexSerializer.new(
+      structured,
+      scope: self.scope,
+      root: false,
+      post_allowed_category_ids: post_allowed_category_ids,
+    ).as_json
   end
 
   add_to_serializer(

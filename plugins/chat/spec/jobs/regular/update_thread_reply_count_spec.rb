@@ -5,16 +5,7 @@ RSpec.describe Jobs::Chat::UpdateThreadReplyCount do
   fab!(:message_1) { Fabricate(:chat_message, thread: thread) }
   fab!(:message_2) { Fabricate(:chat_message, thread: thread) }
 
-  before do
-    Chat::Thread.clear_caches!(thread.id)
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
-  end
-
-  it "does nothing if enable_experimental_chat_threaded_discussions is false" do
-    SiteSetting.enable_experimental_chat_threaded_discussions = false
-    Chat::Thread.any_instance.expects(:set_replies_count_cache).never
-    described_class.new.execute(thread_id: thread.id)
-  end
+  before { Chat::Thread.clear_caches!(thread.id) }
 
   it "does not error if the thread is deleted" do
     id = thread.id

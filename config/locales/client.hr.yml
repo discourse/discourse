@@ -1779,8 +1779,7 @@ hr:
       pause_notifications: "Pauziraj obavijesti"
       remove_status: "Ukloni status"
     user_tips:
-      primary: "Kužim!"
-      secondary: "ne pokazuj mi ove savjete"
+      button: "Kužim!"
       first_notification:
         title: "Vaša prva obavijest!"
         content: "Obavijesti se koriste kako biste bili u tijeku s onim što se događa u zajednici."
@@ -1861,7 +1860,6 @@ hr:
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
       value_prop: "Umorni ste od listanja istih postova? Kada kreirate račun uvijek ćete se vraćati tamo gdje ste stali. S računom također možete primati obavijesti o novim odgovorima, spremati oznake i koristiti lajkove da zahvalite drugima. Svi možemo raditi zajedno kako bismo ovu zajednicu učinili sjajnom. :heart:"
     summary:
-      enabled_description: "Gledate pregled ove teme: najzanimljivije članke odabire zajednica."
       description:
         one: "Postoji <b>%{count}</b> odgovor."
         few: "Postoji <b>%{count}</b> odgovora."
@@ -1869,8 +1867,6 @@ hr:
       description_time_MF: |
         Tamo {replyCount, plural, one {je <b>#</b> odgovor} few {su <b>#</b> odgovora} other {su <b>#</b> odgovora}} s predviđenim vremenom čitanja <b>{readingTime, plural, one {# minuta} few {# minuta} other {# minuta}}</b>.
       disable: "Prikaži sve članke"
-      short_label: "Rezimirati"
-      short_title: "Prikaži sažetak ove teme: najzanimljiviji postovi prema odluci zajednice"
     deleted_filter:
       enabled_description: "Ova tema sadrži prisane članke, koji su skriveni."
       disabled_description: "Obrisani članci u temi su prikazani."
@@ -3400,7 +3396,6 @@ hr:
       filtered_replies:
         viewing_posts_by: "Pregledavanje %{post_count} postova od"
         viewing_subset: "Neki odgovori su sažeti"
-        viewing_summary: "Pregled sažetka ove teme"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Prikaži sve"
       share:
@@ -3787,6 +3782,9 @@ hr:
       close: "Zatvori (Esc)"
       content_load_error: '<a href="%url%">Sadržaj</a> nije moguće učitati.'
       image_load_error: '<a href="%url%">Slika</a> nije mogla biti učitana.'
+    experimental_lightbox:
+      buttons:
+        close: "Zatvori (Esc)"
     cannot_render_video: Ovaj videozapis nije moguće prikazati jer vaš preglednik ne podržava kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -5625,6 +5623,8 @@ hr:
         show_overriden: "Pokazuj samo promijenjeno"
         locale: "Jezik:"
         more_than_50_results: "Postoji više od 50 rezultata. Molimo suzite kriterije vaše pretrage."
+        outdated:
+          dismiss: "Skloni"
       settings:
         show_overriden: "Pokazuj samo promijenjeno"
         history: "Prikaz povijesti promjena"

@@ -2040,11 +2040,11 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      in_progress: "Summarizing topic using AI..."
+      in_progress: "Summarizing topic using AI"
       summarized_on: "Summarized with AI on %{date}"
       model_used: "AI used: %{model}"
       outdated: "Summary is outdated"
-      outdated_posts: 
+      outdated_posts:
         one: "(%{count} post missing)"
         other: "(%{count} posts missing)"
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
@@ -4817,7 +4817,7 @@ en:
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               delete: Delete a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
-              status: "Update a topic's status. Status: closed, archive, visisble, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
+              status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.

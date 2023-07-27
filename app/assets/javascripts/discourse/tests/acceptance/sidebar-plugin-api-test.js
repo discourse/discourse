@@ -1049,5 +1049,23 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert
       .dom("#d-sidebar .sidebar__panel-switch-button + .sidebar-sections")
       .exists();
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      )
+      .doesNotExist();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setCombinedSidebarMode();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      )
+      .exists();
   });
 });

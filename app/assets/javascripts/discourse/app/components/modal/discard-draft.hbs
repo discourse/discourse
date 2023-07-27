@@ -1,4 +1,8 @@
-<DModal @closeModal={{@closeModal}} class="discard-draft-modal">
+<DModal
+  @closeModal={{@closeModal}}
+  class="discard-draft-modal"
+  @dismissable={{false}}
+>
   <:body>
     <div class="instructions">
       {{i18n "post.cancel_composer.confirm"}}

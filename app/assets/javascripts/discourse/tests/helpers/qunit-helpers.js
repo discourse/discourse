@@ -52,7 +52,10 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
-import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
+import {
+  PLATFORM_KEY_MODIFIER,
+  clearExtraKeyboardShortcutHelp,
+} from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
@@ -80,8 +83,8 @@ import {
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderIcons } from "discourse/widgets/header";
-import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
+import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
@@ -214,8 +217,8 @@ export function testCleanup(container, app) {
   clearResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
-  resetSidebarPanels();
   resetNotificationTypeRenderers();
+  resetSidebarPanels();
   clearExtraHeaderIcons();
   resetOnKeyDownCallbacks();
   resetUserMenuTabs();
@@ -607,3 +610,5 @@ export function normalizeHtml(html) {
   resultElement.innerHTML = html;
   return resultElement.innerHTML;
 }
+
+export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };

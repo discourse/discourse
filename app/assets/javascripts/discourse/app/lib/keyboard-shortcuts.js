@@ -106,7 +106,10 @@ const DEFAULT_BINDINGS = {
   "shift+k": { handler: "prevSection", anonymous: true },
   "shift+p": { handler: "pinUnpinTopic" },
   "shift+r": { handler: "replyToTopic" },
-  "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
+  "shift+s": {
+    click: "#topic-footer-buttons button.share-and-invite",
+    anonymous: true,
+  }, // share topic
   "shift+l": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
@@ -314,7 +317,7 @@ export default {
   },
 
   quoteReply() {
-    if (this.isPostTextSelected()) {
+    if (this.isPostTextSelected) {
       this.appEvents.trigger("quote-button:quote");
       return false;
     }
@@ -330,7 +333,7 @@ export default {
   },
 
   editPost() {
-    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected()) {
+    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected) {
       this.appEvents.trigger("quote-button:edit");
       return false;
     } else {
@@ -556,9 +559,9 @@ export default {
     }
   },
 
-  isPostTextSelected() {
+  get isPostTextSelected() {
     const topicController = getOwner(this).lookup("controller:topic");
-    return !!topicController?.get("quoteState")?.postId;
+    return !!topicController.quoteState.postId;
   },
 
   sendToSelectedPost(action, elem) {

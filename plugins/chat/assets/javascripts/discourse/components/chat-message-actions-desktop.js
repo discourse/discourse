@@ -43,6 +43,12 @@ export default class ChatMessageActionsDesktop extends Component {
   }
 
   @action
+  onWheel() {
+    // prevents menu to stop scroll on the list of messages
+    this.chat.activeMessage = null;
+  }
+
+  @action
   onMouseleave(event) {
     // if the mouse is leaving the actions menu for the actual menu, don't close it
     // this will avoid the menu rerendering
@@ -105,5 +111,6 @@ export default class ChatMessageActionsDesktop extends Component {
   @action
   teardown() {
     this.popper?.destroy();
+    this.popper = null;
   }
 }

@@ -245,6 +245,7 @@ pl_PL:
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>prosimy ją odświeżyć</span>, aby uniknąć nieoczekiwanego zachowania."
       dismiss: "Odrzuć"
+    bootstrap_mode: "Pierwsze kroki"
     themes:
       default_description: "Domyślny"
       broken_theme_alert: "Twoja strona może nie działać, ponieważ motyw / komponent ma błędy."
@@ -1937,8 +1938,7 @@ pl_PL:
       pause_notifications: "Wstrzymaj powiadomienia"
       remove_status: "Usuń status"
     user_tips:
-      primary: "Zrozumiano!"
-      secondary: "nie pokazuj mi tych wskazówek"
+      button: "Zrozumiano!"
       first_notification:
         title: "Twoje pierwsze powiadomienie!"
         content: "Powiadomienia służą do informowania na bieżąco o tym, co dzieje się w społeczności."
@@ -1954,6 +1954,8 @@ pl_PL:
       suggested_topics:
         title: "Czytaj dalej!"
         content: "Oto kilka tematów, które naszym zdaniem warto przeczytać w następnej kolejności."
+      admin_guide:
+        title: "Witaj w swojej nowej witrynie!"
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -2023,7 +2025,6 @@ pl_PL:
       no_internet: "Brak połączenia z internetem."
       refresh_page: "Odśwież stronę"
     summary:
-      enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description:
         one: "Jest <b>%{count}</b> odpowiedź."
         few: "Jest <b>%{count}</b> odpowiedzi."
@@ -2033,11 +2034,6 @@ pl_PL:
         Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>.
       enable: "Pokaż najlepsze odpowiedzi"
       disable: "Pokaż wszystkie posty"
-      short_label: "Podsumuj"
-      short_title: "Pokaż podsumowanie tego tematu: najciekawsze posty określone przez społeczność"
-      strategy:
-        button_title: "Podsumuj ten temat"
-        title: "Podsumowanie tematu"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
       disabled_description: "Usunięte wpisy w tym temacie są widoczne."
@@ -3673,7 +3669,6 @@ pl_PL:
       filtered_replies:
         viewing_posts_by: "Przeglądanie %{post_count} postów autorstwa"
         viewing_subset: "Niektóre odpowiedzi są zwinięte"
-        viewing_summary: "Przeglądanie podsumowania tego tematu"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Pokaż wszystkie"
       share:
@@ -4078,6 +4073,20 @@ pl_PL:
       close: "Zamknij (Esc)"
       content_load_error: '<a href="%url%">Zawartość</a> nie może zostać wczytana.'
       image_load_error: '<a href="%url%">Obraz</a> nie może zostać wczytany.'
+    experimental_lightbox:
+      image_load_error: "Nie można załadować obrazu."
+      screen_reader_image_title: "Obraz %{current} z %{total}: %{title}"
+      buttons:
+        next: "Następny (klawisz strzałki w prawo lub w dół)"
+        previous: "Poprzedni (klawisz strzałki w lewo lub w górę)"
+        close: "Zamknij (Esc)"
+        download: "Pobierz obraz"
+        newtab: "Otwórz obraz w nowej karcie"
+        zoom: "Powiększ/zmniejsz obraz (klawisz Z)"
+        rotate: "Obróć obraz (klawisz R)"
+        fullscreen: "Przełącz tryb pełnoekranowy przeglądarki (klawisz M)"
+        carousel: "Wyświetl wszystkie obrazy w karuzeli (klawisz A)"
+        retry: "Spróbuj ponownie załadować obraz"
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -6084,6 +6093,8 @@ pl_PL:
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         interpolation_keys: "Dostępne klucze interpolacji:"
+        outdated:
+          dismiss: "Odrzuć"
       settings:
         show_overriden: "Pokaż tylko nadpisane"
         history: "Wyświetl historię zmian"

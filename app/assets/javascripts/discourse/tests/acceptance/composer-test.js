@@ -7,7 +7,6 @@ import {
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { toggleCheckDraftPopup } from "discourse/services/composer";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
@@ -23,6 +22,7 @@ import {
   count,
   exists,
   invisible,
+  metaModifier,
   query,
   updateCurrentUser,
   visible,
@@ -217,15 +217,7 @@ acceptance("Composer", function (needs) {
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
 
-    // Testing keyboard events is tough!
-    const event = document.createEvent("Event");
-    event.initEvent("keydown", true, true);
-    event[`${PLATFORM_KEY_MODIFIER}Key`] = true;
-    event.key = "B";
-    event.keyCode = 66;
-
-    textarea.dispatchEvent(event);
-    await settled();
+    await triggerKeyEvent(textarea, "keydown", "B", metaModifier);
 
     const example = I18n.t(`composer.bold_text`);
     assert.strictEqual(
@@ -1373,12 +1365,10 @@ acceptance("Composer - current time", function (needs) {
 
     const date = moment().format("YYYY-MM-DD");
 
-    const eventOptions = {
+    await triggerKeyEvent(".d-editor-input", "keydown", ".", {
+      ...metaModifier,
       shiftKey: true,
-    };
-    eventOptions[`${PLATFORM_KEY_MODIFIER}Key`] = true;
-
-    await triggerKeyEvent(".d-editor-input", "keydown", ".", eventOptions);
+    });
 
     const inputValue = query("#reply-control .d-editor-input").value.trim();
 
