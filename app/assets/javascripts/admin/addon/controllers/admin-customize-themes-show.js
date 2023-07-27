@@ -15,6 +15,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { makeArray } from "discourse-common/lib/helpers";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
+import ThemeSettingsEditor from "admin/components/theme-settings-editor";
 import ThemeUploadAddModal from "../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;
@@ -252,6 +253,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   @action
+  refreshModel() {
+    this.send("routeRefreshModel");
+  }
+
+  @action
   updateToLatest() {
     this.set("updatingRemote", true);
     this.model
@@ -393,6 +399,16 @@ export default class AdminCustomizeThemesShowController extends Controller {
           this.router.transitionTo("adminCustomizeThemes");
         });
       },
+    });
+  }
+
+  @action
+  showThemeSettingsEditor() {
+    this.dialog.alert({
+      title: "Edit Settings",
+      bodyComponent: ThemeSettingsEditor,
+      bodyComponentModel: { model: this.model, controller: this },
+      class: "theme-settings-editor-dialog",
     });
   }
 
