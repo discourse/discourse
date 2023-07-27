@@ -396,13 +396,6 @@ registerButton("admin", (attrs) => {
 });
 
 registerButton("delete", (attrs) => {
-  return {
-    id: "delete_topic",
-    action: "showDeleteTopicModal",
-    title: "post.controls.delete_topic_disallowed",
-    icon: "far-trash-alt",
-    className: "delete",
-  };
   if (attrs.canRecoverTopic) {
     return {
       id: "recover_topic",
