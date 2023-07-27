@@ -268,7 +268,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       .hasText(I18n.t("post.share.title", { post_number: 2 }));
     await click(".modal-close");
 
-    await triggerKeyEvent(document, "keypress", "S", { shiftKey: true });
+    await triggerKeyEvent(document, "keydown", "S", { shiftKey: true });
     assert
       .dom(".d-modal.share-topic-modal")
       .exists("topic level share modal is open");
