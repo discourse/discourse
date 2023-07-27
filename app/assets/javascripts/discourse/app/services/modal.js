@@ -19,7 +19,6 @@ const KNOWN_LEGACY_MODALS = [
   "bulk-progress",
   "change-owner",
   "change-post-notice",
-  "change-timestamp",
   "create-account",
   "create-invite-bulk",
   "create-invite",
