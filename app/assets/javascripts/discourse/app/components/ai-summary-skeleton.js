@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 
-export default class AiSummary extends Component {
+export default class AiSummarySkeleton extends Component {
   intId = null;
 
   @action

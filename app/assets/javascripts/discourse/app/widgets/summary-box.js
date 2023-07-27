@@ -10,18 +10,6 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 
-createWidget("summary-skeleton", {
-  tagName: "",
-
-  html() {
-    return new RenderGlimmer(
-      this,
-      "div.ai-summary__container",
-      hbs`{{ai-summary}}`
-    );
-  },
-});
-
 export default createWidget("summary-box", {
   tagName: "article.summary-box",
   buildKey: (attrs) => `summary-box-${attrs.topicId}`,
@@ -55,11 +43,19 @@ export default createWidget("summary-box", {
 
       html.push(h("div.summarized-on", {}, summarizationInfo));
     } else {
-      html.push(this.attach("summary-skeleton"));
+      html.push(this.buildSummarySkeleton());
       this.fetchSummary(attrs.topicId, attrs.skipAgeCheck);
     }
 
     return html;
+  },
+
+  buildSummarySkeleton() {
+    return new RenderGlimmer(
+      this,
+      "div.ai-summary__container",
+      hbs`{{ai-summary-skeleton}}`
+    );
   },
 
   buildTooltip(attrs) {
