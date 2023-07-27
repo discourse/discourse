@@ -5,7 +5,7 @@ def dry_run?
 end
 
 def test_mode?
-  ENV["UNSAFE_SKIP_VERSION_BUMP_INTERACTIONS"] == "1"
+  ENV["UNSAFE_VERSION_BUMP_TEST_MODE"] == "1"
 end
 
 class PlannedTag
@@ -18,13 +18,18 @@ class PlannedTag
 end
 
 class PlannedCommit
-  attr_reader :version, :tags
-  attr_accessor :ref
+  attr_reader :version, :tags, :ref
 
-  def initialize(version:, tags: [], ref: nil)
+  def initialize(version:, tags: [])
     @version = version
     @tags = tags
-    @ref = ref
+  end
+
+  def perform!
+    write_version(@version)
+    git "add", "lib/version.rb"
+    git "commit", "-m", "Bump version to v#{@version}"
+    @ref = git("rev-parse", "HEAD").strip
   end
 end
 
@@ -82,12 +87,7 @@ def make_commits(commits:, branch:, base:)
   git "branch", "-D", branch if ref_exists?(branch)
   git "checkout", "-b", branch
 
-  commits.each do |commit|
-    write_version(commit.version)
-    git "add", "lib/version.rb"
-    git "commit", "-m", "Bump version to v#{commit.version}"
-    commit.ref = git("rev-parse", "HEAD").strip
-  end
+  commits.each(&:perform!)
 
   git("push", "-f", "--set-upstream", "origin", branch)
 
@@ -258,26 +258,18 @@ task "version_bump:major_stable_prepare", [:next_major_version_number] do |t, ar
       raise "Expected current version to end in -dev"
     end
 
-    beta_release_version = current_version.sub("-dev", "")
-    stable_release_version = beta_release_version.sub(/\.beta\d+\z/, "")
+    beta_release_version =
+      if is_31_release
+        # The 3.1.0 beta series didn't use the -dev suffix
+        current_version.sub(/beta(\d+)/) { "beta#{$1.to_i + 1}" }
+      else
+        current_version.sub("-dev", "")
+      end
+
     next_dev_version = args[:next_major_version_number] + ".beta1-dev"
 
-    commits = []
-    stable_commit = nil
-
-    if is_31_release
-      # The 3.1.0 beta series didn't use the -dev suffix, so we're jumping stright to
-      # the next stable version, and need to tag it with beta/latest-release
-      commits << stable_commit =
-        PlannedCommit.new(
-          version: stable_release_version,
-          tags: [
-            PlannedTag.new(name: "beta", message: "latest beta release"),
-            PlannedTag.new(name: "latest-release", message: "latest release"),
-          ],
-        )
-    else
-      commits << PlannedCommit.new(
+    final_beta_release =
+      PlannedCommit.new(
         version: beta_release_version,
         tags: [
           PlannedTag.new(name: "beta", message: "latest beta release"),
@@ -288,10 +280,8 @@ task "version_bump:major_stable_prepare", [:next_major_version_number] do |t, ar
           ),
         ],
       )
-      commits << stable_commit = PlannedCommit.new(version: stable_release_version)
-    end
 
-    commits << PlannedCommit.new(version: next_dev_version)
+    commits = [final_beta_release, PlannedCommit.new(version: next_dev_version)]
 
     make_commits(commits: commits, branch: branch, base: base)
     fastforward(base: base, branch: branch)
@@ -301,7 +291,7 @@ task "version_bump:major_stable_prepare", [:next_major_version_number] do |t, ar
     puts <<~MSG
       The #{base} branch is now ready for a stable release.
       Now run this command to merge the release into the stable branch:
-        bin/rake "version_bump:major_stable_merge[#{stable_commit.ref}]"
+        bin/rake "version_bump:major_stable_merge[#{final_beta_release.ref}]"
     MSG
   end
 end
@@ -329,23 +319,28 @@ task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
 
     merged_version = parse_current_version
     git "commit", "-m", "Merge v#{merged_version} into #{base}"
-    ref = git("rev-parse", "HEAD").strip
-
-    merge_commit =
-      PlannedCommit.new(
-        version: merged_version,
-        ref: ref,
-        tags: [PlannedTag.new(name: "v#{merged_version}", message: "version #{merged_version}")],
-      )
 
     diff_to_base = git("diff", merge_ref).strip
     raise "There are diffs remaining to #{merge_ref}" unless diff_to_base.empty?
+
+    stable_release_version = merged_version.sub(/\.beta\d+\z/, "")
+    stable_release_commit =
+      PlannedCommit.new(
+        version: stable_release_version,
+        tags: [
+          PlannedTag.new(
+            name: "v#{stable_release_version}",
+            message: "version #{stable_release_version}",
+          ),
+        ],
+      )
+    stable_release_commit.perform!
 
     git("push", "-f", "--set-upstream", "origin", branch)
 
     make_pr(base: base, branch: branch, title: "Merge v#{merged_version} into #{base}")
     fastforward(base: base, branch: branch)
-    stage_tags([merge_commit])
-    push_tags([merge_commit])
+    stage_tags([stable_release_commit])
+    push_tags([stable_release_commit])
   end
 end

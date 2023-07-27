@@ -16,7 +16,7 @@ RSpec.describe "tasks/version_bump" do
   let(:local_path) { "#{tmpdir}/local-repo" }
 
   before do
-    ENV["UNSAFE_SKIP_VERSION_BUMP_INTERACTIONS"] = "1"
+    ENV["UNSAFE_VERSION_BUMP_TEST_MODE"] = "1"
 
     Rake::Task.clear
     Discourse::Application.load_tasks
@@ -116,12 +116,7 @@ RSpec.describe "tasks/version_bump" do
     Dir.chdir(origin_path) do
       # Commits are present with correct messages
       expect(run("git", "log", "--pretty=%s").lines.map(&:strip)).to eq(
-        [
-          "Bump version to v3.3.0.beta1-dev",
-          "Bump version to v3.2.0",
-          "Bump version to v3.2.0.beta1",
-          "Initial commit",
-        ],
+        ["Bump version to v3.3.0.beta1-dev", "Bump version to v3.2.0.beta1", "Initial commit"],
       )
 
       # Expected tags present
@@ -140,9 +135,8 @@ RSpec.describe "tasks/version_bump" do
 
       # Version numbers in version.rb are correct at all commits
       expect(run "git", "show", "HEAD", "lib/version.rb").to include('STRING = "3.3.0.beta1-dev"')
-      expect(run "git", "show", "HEAD~1", "lib/version.rb").to include('STRING = "3.2.0"')
-      expect(run "git", "show", "HEAD~2", "lib/version.rb").to include('STRING = "3.2.0.beta1"')
-      expect(run "git", "show", "HEAD~3", "lib/version.rb").to include('STRING = "3.2.0.beta1-dev"')
+      expect(run "git", "show", "HEAD~1", "lib/version.rb").to include('STRING = "3.2.0.beta1"')
+      expect(run "git", "show", "HEAD~2", "lib/version.rb").to include('STRING = "3.2.0.beta1-dev"')
 
       # No changes to stable branch
       expect(run("git", "log", "--pretty=%s", "stable").lines.map(&:strip)).to eq(
@@ -162,26 +156,29 @@ RSpec.describe "tasks/version_bump" do
     Dir.chdir(origin_path) do
       # Commits on stable branch are present with correct messages
       expect(run("git", "log", "--pretty=%s", "stable").lines.map(&:strip)).to contain_exactly(
-        "Merge v3.2.0 into stable",
+        "Merge v3.2.0.beta1 into stable",
         "Bump version to v3.2.0",
         "Previous stable version bump",
         "Bump version to v3.2.0.beta1",
         "Initial commit",
       )
 
-      # Most recent commit is a merge commit
-      parents = run("git", "log", "--pretty=%P", "-n", "1", "stable").split(/\s+/).map(&:strip)
+      # Most recent commit is the version bump
+      expect(run("git", "log", "--pretty=%s", "-1", "stable").strip).to eq("Bump version to v3.2.0")
+
+      # Second most recent commit is a merge commit
+      parents = run("git", "log", "--pretty=%P", "-n", "1", "stable~1").split(/\s+/).map(&:strip)
       expect(parents.length).to eq(2)
 
+      # With correct parents
       parent_commit_messages = parents.map { |p| run("git", "log", "--pretty=%s", "-1", p).strip }
       expect(parent_commit_messages).to contain_exactly(
-        "Bump version to v3.2.0",
+        "Bump version to v3.2.0.beta1",
         "Previous stable version bump",
       )
 
-      expect(run("git", "log", "--pretty=%s", "-1", "v3.2.0").strip).to eq(
-        "Merge v3.2.0 into stable",
-      )
+      # Tag is applied to stable version bump commit
+      expect(run("git", "log", "--pretty=%s", "-1", "v3.2.0").strip).to eq("Bump version to v3.2.0")
     end
   end
 end
