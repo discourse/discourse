@@ -15,7 +15,7 @@ module Chat
     belongs_to :user
     belongs_to :in_reply_to, class_name: "Chat::Message"
     belongs_to :last_editor, class_name: "User"
-    belongs_to :thread, class_name: "Chat::Thread"
+    belongs_to :thread, class_name: "Chat::Thread", optional: true
 
     has_many :replies,
              class_name: "Chat::Message",

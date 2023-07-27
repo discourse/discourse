@@ -18,7 +18,8 @@ module Chat
       content:,
       staged_id: nil,
       incoming_chat_webhook: nil,
-      upload_ids: nil
+      upload_ids: nil,
+      created_at: nil
     )
       @chat_channel = chat_channel
       @user = user
@@ -42,6 +43,7 @@ module Chat
           last_editor_id: @user.id,
           in_reply_to_id: @in_reply_to_id,
           message: @content,
+          created_at: created_at,
         )
     end
 

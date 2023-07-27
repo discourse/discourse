@@ -130,6 +130,7 @@ RSpec.describe Chat::MessagesQuery do
         target_date: target_date,
         can_load_more_past: false,
         can_load_more_future: false,
+        target_message_id: message_2.id,
       )
     end
   end

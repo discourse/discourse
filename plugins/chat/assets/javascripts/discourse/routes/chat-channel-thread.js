@@ -11,7 +11,6 @@ export default class ChatChannelThread extends DiscourseRoute {
 
   model(params, transition) {
     const channel = this.modelFor("chat.channel");
-
     return channel.threadsManager
       .find(channel.id, params.threadId)
       .catch(() => {
@@ -28,7 +27,11 @@ export default class ChatChannelThread extends DiscourseRoute {
 
   @action
   willTransition(transition) {
-    if (transition.targetName === "chat.channel.index") {
+    if (
+      transition.targetName === "chat.channel.index" ||
+      transition.targetName === "chat.channel.near-message" ||
+      transition.targetName === "chat.index"
+    ) {
       this.chatStateManager.closeSidePanel();
     }
   }
@@ -46,8 +49,7 @@ export default class ChatChannelThread extends DiscourseRoute {
     // it happens after creating a new thread and having a temp ID in the URL
     // if users presses reload at this moment, we would have a 404
     // replacing the ID in the URL sooner would also cause a reload
-    const params = this.paramsFor("chat.channel.thread");
-    const threadId = params.threadId;
+    const { threadId } = this.paramsFor(this.routeName);
 
     if (threadId?.startsWith("staged-thread-")) {
       const mapping = this.chatStagedThreadMapping.getMapping();
@@ -55,10 +57,18 @@ export default class ChatChannelThread extends DiscourseRoute {
       if (mapping[threadId]) {
         transition.abort();
         return this.router.transitionTo(
-          "chat.channel.thread",
+          this.routeName,
           ...[...channel.routeModels, mapping[threadId]]
         );
       }
+    }
+
+    const { messageId } = this.paramsFor(this.routeName + ".near-message");
+    if (
+      !messageId &&
+      this.controllerFor("chat-channel-thread").get("targetMessageId")
+    ) {
+      this.controllerFor("chat-channel-thread").set("targetMessageId", null);
     }
 
     this.chatStateManager.openSidePanel();
