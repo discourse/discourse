@@ -12,16 +12,15 @@
     {{/if}}
 
     <div class="chat-thread-list__items">
-      {{#each this.sortedThreads as |thread|}}
+      {{#each this.sortedThreads as |thread index|}}
         <Chat::ThreadList::Item
           @thread={{thread}}
-          {{chat/track-message
+          {{(modifier
             (if
-              (eq thread this.sortedThreads.lastObject)
-              this.loadThreads
-              (fn (noop))
+              (eq (add index 1) this.sortedThreads.length) "chat/track-message"
             )
-          }}
+            this.loadThreads
+          )}}
         />
       {{else}}
         {{#if this.threadsCollection.fetchedOnce}}
