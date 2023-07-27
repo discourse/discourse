@@ -108,6 +108,24 @@
         animation: blink 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
       }
     }
+    &__generating-text {
+      display: inline-block;
+      margin-left: 3px;
+    }
+    &__indicator-wave {
+      flex: 0 0 auto;
+      display: inline-flex;
+    }
+    &__indicator-dot {
+      display: inline-block;
+      animation: ai-summary__indicator-wave 1.8s linear infinite;
+      &:nth-child(2) {
+        animation-delay: -1.6s;
+      }
+      &:nth-child(3) {
+        animation-delay: -1.4s;
+      }
+    }
   }
 
   .placeholder-summary {
@@ -119,27 +137,6 @@
     height: 1em;
     margin-top: 0.6em;
     width: 100%;
-  }
-
-  .placeholder-generating-summary-text {
-    display: inline-block;
-    margin-left: 3px;
-  }
-
-  .ai-summarizing-indicator__wave {
-    flex: 0 0 auto;
-    display: inline-flex;
-  }
-
-  .ai-summarizing-indicator__dot {
-    display: inline-block;
-    animation: ai-summarizing-indicator__wave 1.8s linear infinite;
-    &:nth-child(2) {
-      animation-delay: -1.6s;
-    }
-    &:nth-child(3) {
-      animation-delay: -1.4s;
-    }
   }
 
   .summarized-on {
@@ -155,7 +152,7 @@
   }
 }
 
-@keyframes ai-summarizing-indicator__wave {
+@keyframes ai-summary__indicator-wave {
   0%,
   60%,
   100% {
