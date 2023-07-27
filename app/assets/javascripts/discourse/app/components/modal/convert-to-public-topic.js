@@ -18,7 +18,7 @@ export default class ConvertToPublicTopic extends Component {
       });
       this.args.model.topic.set("archetype", "regular");
       this.args.model.topic.set("category_id", this.publicCategoryId);
-      this.appEvents.trigger("header:show-topic", topic);
+      this.appEvents.trigger("header:show-topic", this.args.model.topic);
       this.saving = false;
       this.args.closeModal();
     } catch (e) {
