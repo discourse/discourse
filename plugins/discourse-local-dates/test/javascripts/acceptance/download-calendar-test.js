@@ -27,6 +27,8 @@ acceptance(
       await click(".discourse-local-date");
       await click(".download-calendar");
 
+      pauseTest();
+
       assert
         .dom("#discourse-modal-title")
         .hasText(

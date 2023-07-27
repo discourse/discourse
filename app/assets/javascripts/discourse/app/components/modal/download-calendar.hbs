@@ -1,14 +1,17 @@
-<div>
-  <DModalBody @title="download_calendar.title">
+<DModal
+  @title={{i18n "download_calendar.title"}}
+  class="download-calendar-modal"
+>
+  <:body>
     <div class="control-group">
       <div class="ics">
         <label class="radio" for="ics">
           <RadioButton
+            id="ics"
             @name="select-calendar"
-            @id="ics"
             @value="ics"
             @selection={{this.selectedCalendar}}
-            @onChange={{action (mut this.selectedCalendar)}}
+            {{on "change" (fn this.selectCalendar "ics")}}
           />
           {{i18n "download_calendar.save_ics"}}
         </label>
@@ -16,11 +19,11 @@
       <div class="google">
         <label class="radio" for="google">
           <RadioButton
+            id="google"
             @name="select-calendar"
-            @id="google"
             @value="google"
             @selection={{this.selectedCalendar}}
-            @onChange={{action (mut this.selectedCalendar)}}
+            {{on "change" (fn this.selectCalendar "google")}}
           />
           {{i18n "download_calendar.save_google"}}
         </label>
@@ -34,13 +37,17 @@
       </label>
       <span>{{i18n "download_calendar.remember_explanation"}}</span>
     </div>
-  </DModalBody>
-  <div class="modal-footer">
+  </:body>
+  <:footer>
     <DButton
-      @class="btn-primary"
-      @action={{action "downloadCalendar"}}
+      class="btn-primary"
+      @action={{this.downloadCalendar}}
       @label="download_calendar.download"
     />
-    <DModalCancel @close={{route-action "closeModal"}} />
-  </div>
-</div>
+    <DButton
+      class="btn-flat d-modal-cancel"
+      @action={{@closeModal}}
+      @label={{"cancel"}}
+    />
+  </:footer>
+</DModal>
