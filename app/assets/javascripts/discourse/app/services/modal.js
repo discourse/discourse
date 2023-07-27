@@ -23,7 +23,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-account",
   "create-invite-bulk",
   "create-invite",
-  "download-calendar",
   "edit-topic-timer",
   "edit-user-directory-columns",
   "explain-reviewable",
