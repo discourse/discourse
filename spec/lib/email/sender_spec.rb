@@ -566,7 +566,6 @@ RSpec.describe Email::Sender do
     end
 
     it "changes the hashtags to the slug with a # symbol beforehand rather than the full name of the resource" do
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
       category = Fabricate(:category, slug: "dev")
       reply.update!(raw: reply.raw + "\n wow this is #dev")
       reply.rebake!

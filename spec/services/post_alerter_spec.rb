@@ -1312,8 +1312,7 @@ RSpec.describe PostAlerter do
       expect(JSON.parse(body)).to eq(payload)
     end
 
-    it "does not have invalid HTML in the excerpt when enable_experimental_hashtag_autocomplete is enabled" do
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
+    it "does not have invalid HTML in the excerpt" do
       Fabricate(:category, slug: "random")
       Jobs.run_immediately!
       body = nil

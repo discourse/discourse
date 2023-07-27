@@ -301,9 +301,7 @@ module Chat
     end
 
     def channel_hashtag_or_name
-      if chat_channel.slug.present? && SiteSetting.enable_experimental_hashtag_autocomplete
-        return "##{chat_channel.slug}::channel"
-      end
+      return "##{chat_channel.slug}::channel" if chat_channel.slug.present?
       chat_channel_title
     end
   end

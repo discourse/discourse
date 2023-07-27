@@ -439,6 +439,7 @@ export default Component.extend(TextareaTextManipulation, {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
 
+        // TODO (martin)  FIGURE
         linkSeenHashtags(cookedElement);
         linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);

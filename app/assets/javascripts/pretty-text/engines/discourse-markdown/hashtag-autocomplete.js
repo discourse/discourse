@@ -87,17 +87,12 @@ function addIconPlaceholder(buffer, state) {
 
 export function setup(helper) {
   helper.registerPlugin((md) => {
-    if (
-      md.options.discourse.limitedSiteSettings
-        .enableExperimentalHashtagAutocomplete
-    ) {
-      const rule = {
-        matcher: /#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})/,
-        onMatch: addHashtag,
-      };
+    const rule = {
+      matcher: /#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101})/,
+      onMatch: addHashtag,
+    };
 
-      md.core.textPostProcess.ruler.push("hashtag-autocomplete", rule);
-    }
+    md.core.textPostProcess.ruler.push("hashtag-autocomplete", rule);
   });
 
   helper.allowList([

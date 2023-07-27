@@ -1,3 +1,5 @@
+// TODO (martin) Can we delete?
+
 import deprecated from "discourse-common/lib/deprecated";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { ajax } from "discourse/lib/ajax";

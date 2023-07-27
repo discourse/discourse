@@ -96,21 +96,6 @@ module PrettyText
       end
     end
 
-    # TODO (martin) Remove this when everything is using hashtag_lookup
-    # after enable_experimental_hashtag_autocomplete is default.
-    def category_tag_hashtag_lookup(text)
-      is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}\z/
-
-      if !is_tag && category = Category.query_from_hashtag_slug(text)
-        [category.url, text]
-      elsif (!is_tag && tag = Tag.find_by(name: text)) ||
-            (is_tag && tag = Tag.find_by(name: text.gsub!(TAG_HASHTAG_POSTFIX, "")))
-        [tag.url, text]
-      else
-        nil
-      end
-    end
-
     def hashtag_lookup(slug, cooking_user_id, types_in_priority_order)
       # NOTE: This is _somewhat_ expected since we need to be able to cook posts
       # etc. without a user sometimes, but it is still an edge case.

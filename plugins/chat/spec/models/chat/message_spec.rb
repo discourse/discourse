@@ -228,22 +228,8 @@ describe Chat::Message do
       expect(cooked).to eq("<p><span class=\"mention\">@mention</span></p>")
     end
 
-    it "supports category-hashtag plugin" do
-      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-      SiteSetting.enable_experimental_hashtag_autocomplete = false
-
-      category = Fabricate(:category)
-
-      cooked = described_class.cook("##{category.slug}")
-
-      expect(cooked).to eq(
-        "<p><a class=\"hashtag\" href=\"#{category.url}\">#<span>#{category.slug}</span></a></p>",
-      )
-    end
-
     it "supports hashtag autocomplete" do
       SiteSetting.chat_enabled = true
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
 
       category = Fabricate(:category)
       user = Fabricate(:user)
@@ -504,7 +490,6 @@ describe Chat::Message do
 
       before do
         SiteSetting.chat_enabled = true
-        SiteSetting.enable_experimental_hashtag_autocomplete = true
         SiteSetting.suppress_secured_categories_from_admin = true
       end
 

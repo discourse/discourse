@@ -3,26 +3,7 @@
 module CategoryHashtag
   extend ActiveSupport::Concern
 
-  SEPARATOR = ":"
-
   class_methods do
-    # TODO (martin) Remove this when enable_experimental_hashtag_autocomplete
-    # becomes the norm, it is reimplemented below for CategoryHashtagDataSourcee
-    def query_from_hashtag_slug(category_slug)
-      slug_path = split_slug_path(category_slug)
-      return if slug_path.blank?
-
-      slug_path.map! { |slug| CGI.escape(slug) } if SiteSetting.slug_generation_method == "encoded"
-
-      parent_slug, child_slug = slug_path.last(2)
-      categories = Category.where(slug: parent_slug)
-      if child_slug
-        Category.where(slug: child_slug, parent_category_id: categories.select(:id)).first
-      else
-        categories.where(parent_category_id: nil).first
-      end
-    end
-
     ##
     # Finds any categories that match the provided slugs, supporting
     # the parent:child format for category slugs (only one level of
@@ -66,7 +47,7 @@ module CategoryHashtag
     end
 
     def split_slug_path(slug)
-      slug_path = slug.split(SEPARATOR)
+      slug_path = slug.split(Category::SLUG_REF_SEPARATOR)
       return if slug_path.empty? || slug_path.size > 2
       slug_path
     end

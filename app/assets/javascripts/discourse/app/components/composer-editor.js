@@ -15,10 +15,6 @@ import discourseComputed, {
   on,
 } from "discourse-common/utils/decorators";
 import {
-  fetchUnseenHashtags,
-  linkSeenHashtags,
-} from "discourse/lib/link-hashtags";
-import {
   fetchUnseenHashtagsInContext,
   linkSeenHashtagsInContext,
 } from "discourse/lib/hashtag-autocomplete";
@@ -500,24 +496,12 @@ export default Component.extend(
     },
 
     _renderUnseenHashtags(preview) {
-      let unseen;
       const hashtagContext = this.site.hashtag_configurations["topic-composer"];
-      if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-        unseen = linkSeenHashtagsInContext(hashtagContext, preview);
-      } else {
-        unseen = linkSeenHashtags(preview);
-      }
-
+      const unseen = linkSeenHashtagsInContext(hashtagContext, preview);
       if (unseen.length > 0) {
-        if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-          fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
-            linkSeenHashtagsInContext(hashtagContext, preview);
-          });
-        } else {
-          fetchUnseenHashtags(unseen).then(() => {
-            linkSeenHashtags(preview);
-          });
-        }
+        fetchUnseenHashtagsInContext(hashtagContext, unseen).then(() => {
+          linkSeenHashtagsInContext(hashtagContext, preview);
+        });
       }
     },
 
@@ -946,15 +930,9 @@ export default Component.extend(
         this._warnCannotSeeMention(preview);
 
         // Paint category, tag, and other data source hashtags
-        let unseenHashtags;
         const hashtagContext =
           this.site.hashtag_configurations["topic-composer"];
-        if (this.siteSettings.enable_experimental_hashtag_autocomplete) {
-          unseenHashtags = linkSeenHashtagsInContext(hashtagContext, preview);
-        } else {
-          unseenHashtags = linkSeenHashtags(preview);
-        }
-        if (unseenHashtags.length > 0) {
+        if (linkSeenHashtagsInContext(hashtagContext, preview).length > 0) {
           discourseDebounce(this, this._renderUnseenHashtags, preview, 450);
         }
 

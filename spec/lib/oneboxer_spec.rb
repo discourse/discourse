@@ -179,7 +179,6 @@ RSpec.describe Oneboxer do
     end
 
     it "includes hashtag HTML" do
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
       category = Fabricate(:category, slug: "random")
       tag = Fabricate(:tag, name: "bug")
       public_post = Fabricate(:post, raw: "This post has some hashtags, #random and #bug")

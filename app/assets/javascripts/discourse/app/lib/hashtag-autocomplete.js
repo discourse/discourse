@@ -11,7 +11,6 @@ import {
   escapeExpression,
   inCodeBlock,
 } from "discourse/lib/utilities";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { emojiUnescape } from "discourse/lib/text";
 import { htmlSafe } from "@ember/template";
 
@@ -76,16 +75,12 @@ export function setupHashtagAutocomplete(
   siteSettings,
   autocompleteOptions = {}
 ) {
-  if (siteSettings.enable_experimental_hashtag_autocomplete) {
-    _setupExperimental(
-      contextualHashtagConfiguration,
-      $textArea,
-      siteSettings,
-      autocompleteOptions
-    );
-  } else {
-    _setup($textArea, siteSettings, autocompleteOptions.afterComplete);
-  }
+  _setup(
+    contextualHashtagConfiguration,
+    $textArea,
+    siteSettings,
+    autocompleteOptions
+  );
 }
 
 export function hashtagTriggerRule(textarea) {
@@ -147,7 +142,7 @@ export function linkSeenHashtagsInContext(
     .filter((slug) => !checkedHashtags.has(slug));
 }
 
-function _setupExperimental(
+function _setup(
   contextualHashtagConfiguration,
   $textArea,
   siteSettings,
@@ -166,22 +161,6 @@ function _setupExperimental(
         return null;
       }
       return _searchGeneric(term, siteSettings, contextualHashtagConfiguration);
-    },
-    triggerRule: (textarea, opts) => hashtagTriggerRule(textarea, opts),
-  });
-}
-
-function _setup($textArea, siteSettings, afterComplete) {
-  $textArea.autocomplete({
-    template: findRawTemplate("category-tag-autocomplete"),
-    key: "#",
-    afterComplete,
-    transformComplete: (obj) => obj.text,
-    dataSource: (term) => {
-      if (term.match(/\s/)) {
-        return null;
-      }
-      return searchCategoryTag(term, siteSettings);
     },
     triggerRule: (textarea, opts) => hashtagTriggerRule(textarea, opts),
   });
@@ -219,10 +198,6 @@ function _searchGeneric(term, siteSettings, contextualHashtagConfiguration) {
       : discourseLater(() => {
           resolve(CANCELLED_STATUS);
         }, 5000);
-
-    if (!siteSettings.enable_experimental_hashtag_autocomplete && term === "") {
-      return resolve(CANCELLED_STATUS);
-    }
 
     const debouncedSearch = (q, ctx, resultFunc) => {
       discourseDebounce(this, _searchRequest, q, ctx, resultFunc, INPUT_DELAY);

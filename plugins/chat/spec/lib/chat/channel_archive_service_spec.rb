@@ -186,28 +186,24 @@ describe Chat::ChannelArchiveService do
         expect(pm_topic.first_post.raw).to include("Title can't have more than 1 emoji")
       end
 
-      context "when enable_experimental_hashtag_autocomplete" do
-        before { SiteSetting.enable_experimental_hashtag_autocomplete = true }
-
-        it "uses the channel slug to autolink a hashtag for the channel in the PM" do
-          create_messages(3) && start_archive
-          described_class.new(@channel_archive).execute
-          expect(@channel_archive.reload.complete?).to eq(true)
-          pm_topic = Topic.private_messages.last
-          expect(pm_topic.first_post.cooked).to have_tag(
-            "a",
-            with: {
-              class: "hashtag-cooked",
-              href: channel.relative_url,
-              "data-type": "channel",
-              "data-slug": channel.slug,
-              "data-id": channel.id,
-              "data-ref": "#{channel.slug}::channel",
-            },
-          ) do
-            with_tag("span", with: { class: "hashtag-icon-placeholder" })
-            with_tag("span", text: channel.title(user))
-          end
+      it "uses the channel slug to autolink a hashtag for the channel in the PM" do
+        create_messages(3) && start_archive
+        described_class.new(@channel_archive).execute
+        expect(@channel_archive.reload.complete?).to eq(true)
+        pm_topic = Topic.private_messages.last
+        expect(pm_topic.first_post.cooked).to have_tag(
+          "a",
+          with: {
+            class: "hashtag-cooked",
+            href: channel.relative_url,
+            "data-type": "channel",
+            "data-slug": channel.slug,
+            "data-id": channel.id,
+            "data-ref": "#{channel.slug}::channel",
+          },
+        ) do
+          with_tag("span", with: { class: "hashtag-icon-placeholder" })
+          with_tag("span", text: channel.title(user))
         end
       end
 

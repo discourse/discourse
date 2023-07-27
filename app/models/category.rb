@@ -19,6 +19,7 @@ class Category < ActiveRecord::Base
   REQUIRE_TOPIC_APPROVAL = "require_topic_approval"
   REQUIRE_REPLY_APPROVAL = "require_reply_approval"
   NUM_AUTO_BUMP_DAILY = "num_auto_bump_daily"
+  SLUG_REF_SEPARATOR = ":"
 
   register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
@@ -1051,6 +1052,20 @@ class Category < ActiveRecord::Base
       slug_path
     else
       [self.slug_for_url]
+    end
+  end
+
+  def slug_ref(depth: 1)
+    if self.parent_category_id.present?
+      built_ref = [self.slug]
+      parent = self.parent_category
+      while parent.present? && (built_ref.length < depth + 1)
+        built_ref << parent.slug
+        parent = parent.parent_category
+      end
+      built_ref.reverse.join(Category::SLUG_REF_SEPARATOR)
+    else
+      self.slug
     end
   end
 

@@ -3,7 +3,7 @@
 module Chat
   class ChannelHashtagDataSource
     def self.enabled?
-      SiteSetting.enable_experimental_hashtag_autocomplete && SiteSetting.enable_public_channels
+      SiteSetting.enable_public_channels
     end
 
     def self.icon

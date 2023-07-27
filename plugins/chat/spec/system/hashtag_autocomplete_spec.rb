@@ -15,8 +15,6 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
-
     chat_system_bootstrap(user, [channel1, channel2])
     sign_in(user)
   end
