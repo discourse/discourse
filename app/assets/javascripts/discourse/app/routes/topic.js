@@ -12,6 +12,7 @@ import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import HistoryModal from "discourse/components/modal/history";
 import PublishPageModal from "discourse/components/modal/publish-page";
+import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
 
 const SCROLL_DELAY = 500;
 
@@ -131,9 +132,9 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showTopicSlowModeUpdate() {
-    const model = this.modelFor("topic");
-
-    showModal("edit-slow-mode", { model });
+    this.modal.show(EditSlowModeModal, {
+      model: { topic: this.modelFor("topic") },
+    });
   },
 
   @action

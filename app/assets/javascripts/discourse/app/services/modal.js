@@ -25,7 +25,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-invite-bulk",
   "create-invite",
   "download-calendar",
-  "edit-slow-mode",
   "edit-topic-timer",
   "edit-user-directory-columns",
   "explain-reviewable",

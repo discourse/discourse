@@ -1,115 +1,99 @@
-import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
-import Controller from "@ember/controller";
-import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import Topic from "discourse/models/topic";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { equal, or } from "@ember/object/computed";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
+import I18n from "I18n";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
+import Topic from "discourse/models/topic";
+import { inject as service } from "@ember/service";
 
-export default Controller.extend(ModalFunctionality, {
-  selectedSlowMode: null,
-  hours: null,
-  minutes: null,
-  seconds: null,
-  saveDisabled: false,
-  showCustomSelect: equal("selectedSlowMode", "custom"),
-  durationIsSet: or("hours", "minutes", "seconds"),
-
-  init() {
-    this._super(...arguments);
-
-    this.set("slowModes", [
-      {
-        id: "600",
-        name: I18n.t("topic.slow_mode_update.durations.10_minutes"),
-      },
-      {
-        id: "900",
-        name: I18n.t("topic.slow_mode_update.durations.15_minutes"),
-      },
-      {
-        id: "1800",
-        name: I18n.t("topic.slow_mode_update.durations.30_minutes"),
-      },
-      {
-        id: "2700",
-        name: I18n.t("topic.slow_mode_update.durations.45_minutes"),
-      },
-      {
-        id: "3600",
-        name: I18n.t("topic.slow_mode_update.durations.1_hour"),
-      },
-      {
-        id: "7200",
-        name: I18n.t("topic.slow_mode_update.durations.2_hours"),
-      },
-      {
-        id: "14400",
-        name: I18n.t("topic.slow_mode_update.durations.4_hours"),
-      },
-      {
-        id: "28800",
-        name: I18n.t("topic.slow_mode_update.durations.8_hours"),
-      },
-      {
-        id: "43200",
-        name: I18n.t("topic.slow_mode_update.durations.12_hours"),
-      },
-      {
-        id: "86400",
-        name: I18n.t("topic.slow_mode_update.durations.24_hours"),
-      },
-      {
-        id: "custom",
-        name: I18n.t("topic.slow_mode_update.durations.custom"),
-      },
-    ]);
+const SLOW_MODE_OPTIONS = [
+  {
+    id: "600",
+    name: I18n.t("topic.slow_mode_update.durations.10_minutes"),
   },
+  {
+    id: "900",
+    name: I18n.t("topic.slow_mode_update.durations.15_minutes"),
+  },
+  {
+    id: "1800",
+    name: I18n.t("topic.slow_mode_update.durations.30_minutes"),
+  },
+  {
+    id: "2700",
+    name: I18n.t("topic.slow_mode_update.durations.45_minutes"),
+  },
+  {
+    id: "3600",
+    name: I18n.t("topic.slow_mode_update.durations.1_hour"),
+  },
+  {
+    id: "7200",
+    name: I18n.t("topic.slow_mode_update.durations.2_hours"),
+  },
+  {
+    id: "14400",
+    name: I18n.t("topic.slow_mode_update.durations.4_hours"),
+  },
+  {
+    id: "28800",
+    name: I18n.t("topic.slow_mode_update.durations.8_hours"),
+  },
+  {
+    id: "43200",
+    name: I18n.t("topic.slow_mode_update.durations.12_hours"),
+  },
+  {
+    id: "86400",
+    name: I18n.t("topic.slow_mode_update.durations.24_hours"),
+  },
+  {
+    id: "custom",
+    name: I18n.t("topic.slow_mode_update.durations.custom"),
+  },
+];
 
-  onShow() {
-    const currentDuration = parseInt(this.model.slow_mode_seconds, 10);
+export default class SlowModeEditorComponent extends Component {
+  @service currentUser;
 
+  @tracked selectedSlowMode;
+  @tracked hours;
+  @tracked minutes;
+  @tracked seconds;
+  @tracked saveDisabled = false;
+  @tracked flash;
+
+  constructor() {
+    super(...arguments);
+    this.slowModes = SLOW_MODE_OPTIONS;
+    const currentDuration = parseInt(
+      this.args.model.topic.slow_mode_seconds,
+      10
+    );
     if (currentDuration) {
-      const selectedDuration = this.slowModes.find((mode) => {
-        return mode.id === currentDuration.toString();
-      });
+      const selectedDuration = this.slowModes.find(
+        (mode) => mode.id === currentDuration.toString()
+      );
 
       if (selectedDuration) {
-        this.set("selectedSlowMode", currentDuration.toString());
+        this.selectedSlowMode = currentDuration.toString();
       } else {
-        this.set("selectedSlowMode", "custom");
+        this.selectedSlowMode = "custom";
       }
 
       this._setFromSeconds(currentDuration);
     }
-  },
+  }
 
-  @discourseComputed(
-    "saveDisabled",
-    "durationIsSet",
-    "model.slow_mode_enabled_until"
-  )
-  submitDisabled(saveDisabled, durationIsSet, enabledUntil) {
-    return saveDisabled || !durationIsSet || !enabledUntil;
-  },
-
-  @discourseComputed("model.slow_mode_seconds")
-  slowModeEnabled(slowModeSeconds) {
-    return slowModeSeconds && slowModeSeconds !== 0;
-  },
-
-  @discourseComputed("slowModeEnabled")
-  saveButtonLabel(slowModeEnabled) {
-    return slowModeEnabled
+  get saveButtonLabel() {
+    return this.args.model.topic.slow_mode_seconds &&
+      this.args.model.topic.slow_mode_seconds !== 0
       ? "topic.slow_mode_update.update"
       : "topic.slow_mode_update.enable";
-  },
+  }
 
-  @discourseComputed
-  timeShortcuts() {
+  get timeShortcuts() {
     const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
 
@@ -125,59 +109,72 @@ export default Controller.extend(ModalFunctionality, {
       shortcuts.nextMonth(),
       shortcuts.twoMonths(),
     ];
-  },
+  }
 
-  _setFromSeconds(seconds) {
-    this.setProperties(fromSeconds(seconds));
-  },
+  get showCustomSelect() {
+    return this.selectedSlowMode === "custom";
+  }
 
-  _parseValue(value) {
-    return parseInt(value, 10) || 0;
-  },
+  get durationIsSet() {
+    return this.hours || this.minutes || this.seconds;
+  }
 
   @action
   setSlowModeDuration(duration) {
     if (duration !== "custom") {
       let seconds = parseInt(duration, 10);
-
       this._setFromSeconds(seconds);
     }
 
-    this.set("selectedSlowMode", duration);
-  },
+    this.selectedSlowMode = duration;
+  }
 
   @action
-  enableSlowMode() {
-    this.set("saveDisabled", true);
-
+  async enableSlowMode() {
+    this.saveDisabled = true;
     const seconds = toSeconds(
       this._parseValue(this.hours),
       this._parseValue(this.minutes),
       this._parseValue(this.seconds)
     );
 
-    Topic.setSlowMode(
-      this.model.id,
-      seconds,
-      this.model.slow_mode_enabled_until
-    )
-      .catch(popupAjaxError)
-      .then(() => {
-        this.set("model.slow_mode_seconds", seconds);
-        this.send("closeModal");
-      })
-      .finally(() => this.set("saveDisabled", false));
-  },
+    try {
+      await Topic.setSlowMode(
+        this.args.model.topic.id,
+        seconds,
+        this.args.model.topic.slow_mode_enabled_until
+      );
+      this.args.model.topic.set("slow_mode_seconds", seconds);
+      this.args.closeModal();
+    } catch (e) {
+      this.flash = e;
+    } finally {
+      this.saveDisabled = false;
+    }
+  }
 
   @action
-  disableSlowMode() {
-    this.set("saveDisabled", true);
-    Topic.setSlowMode(this.model.id, 0)
-      .catch(popupAjaxError)
-      .then(() => {
-        this.set("model.slow_mode_seconds", 0);
-        this.send("closeModal");
-      })
-      .finally(() => this.set("saveDisabled", false));
-  },
-});
+  async disableSlowMode() {
+    this.saveDisabled = true;
+    try {
+      await Topic.setSlowMode(this.args.model.topic.id, 0);
+      this.args.model.topic.set("slow_mode_seconds", 0);
+      this.args.closeModal();
+    } catch (e) {
+      this.flash = e;
+    } finally {
+      this.saveDisabled = false;
+    }
+  }
+
+  _setFromSeconds(seconds) {
+    const { hours, minutes, seconds: componentSeconds } = fromSeconds(seconds);
+    this.hours = hours;
+    this.minutes = minutes;
+    this.seconds = componentSeconds;
+  }
+
+  _parseValue(value) {
+    return parseInt(value, 10) || 0;
+  }
+}
