@@ -21,9 +21,11 @@ $max_image_height: 150px;
     container-type: inline-size;
 
     .thumbnail {
-      max-width: 40%;
+      max-width: 40% !important;
       &.onebox-avatar {
         max-height: 100px;
+        width: 20%;
+        max-width: 60px;
       }
     }
 
@@ -40,7 +42,7 @@ $max_image_height: 150px;
         }
 
         .thumbnail {
-          max-width: 100%;
+          max-width: 100% !important;
           margin: 0;
 
           &.onebox-avatar {
