@@ -21,6 +21,7 @@ en:
       chat_users_count: "Chat Users"
 
     chat:
+      deleted_chat_username: deleted
       dates:
         time_tiny: "h:mm"
       all_loaded: "Showing all messages"
