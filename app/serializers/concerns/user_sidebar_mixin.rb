@@ -20,7 +20,7 @@ module UserSidebarMixin
   end
 
   def sidebar_category_ids
-    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
+    object.secured_sidebar_category_ids(scope)
   end
 
   def include_sidebar_category_ids?
