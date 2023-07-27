@@ -14,14 +14,14 @@ export default class DeleteTopicConfirm extends Component {
   @tracked flash;
 
   @action
-  deleteTopic() {
-    this.deletingTopic = true;
-    this.args.model
-      .destroy(this.currentUser)
-      .then(() => this.args.closeModal())
-      .catch(() => {
-        this.flash = I18n.t("post.controls.delete_topic_error");
-        this.deletingTopic = false;
-      });
+  async deleteTopic() {
+    try {
+      this.deletingTopic = true;
+      await this.args.model.topic.destroy(this.currentUser);
+      this.args.closeModal();
+    } catch {
+      this.flash = I18n.t("post.controls.delete_topic_error");
+      this.deletingTopic = false;
+    }
   }
 }

@@ -1570,7 +1570,7 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopicModal() {
-    this.modal.show(DeleteTopicConfirmModal, { model: this.model });
+    this.modal.show(DeleteTopicConfirmModal, { model: { topic: this.model } });
   },
 
   retryOnRateLimit(times, promise, topicId) {
