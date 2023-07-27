@@ -20,13 +20,20 @@ $max_image_height: 150px;
   .onebox {
     container-type: inline-size;
 
-    @container (width < 300px) {
+    .thumbnail {
+      max-width: 40%;
+      &.onebox-avatar {
+        max-height: 100px;
+      }
+    }
+
+    @container (width < 400px) {
       .onebox-body {
         display: flex;
         flex-direction: column;
 
         h3 {
-          margin-block: 0.75rem;
+          margin-block: 0.75rem 0;
         }
         p {
           margin-top: 0.5rem;
@@ -35,6 +42,10 @@ $max_image_height: 150px;
         .thumbnail {
           max-width: 100%;
           margin: 0;
+
+          &.onebox-avatar {
+            max-width: 20%;
+          }
         }
       }
     }
