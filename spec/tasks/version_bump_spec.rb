@@ -65,11 +65,11 @@ RSpec.describe "tasks/version_bump" do
       expect(run("git", "tag").lines.map(&:strip)).to contain_exactly(
         "latest-release",
         "beta",
-        "v=3.2.0.beta1",
+        "v3.2.0.beta1",
       )
 
       # Tags are all present and attached to the correct commit
-      %w[latest-release beta v=3.2.0.beta1].each do |tag_name|
+      %w[latest-release beta v3.2.0.beta1].each do |tag_name|
         expect(run("git", "log", "--pretty=%s", "-1", tag_name).strip).to eq(
           "Bump version to v3.2.0.beta1",
         )
@@ -90,7 +90,7 @@ RSpec.describe "tasks/version_bump" do
       expect(run("git", "log", "--pretty=%s").lines.map(&:strip)).to eq(["Initial commit"])
 
       # Expected tags present
-      expect(run("git", "tag").lines.map(&:strip)).to eq(["v=3.1.3"])
+      expect(run("git", "tag").lines.map(&:strip)).to eq(["v3.1.3"])
 
       run "git", "checkout", "stable"
 
@@ -100,9 +100,7 @@ RSpec.describe "tasks/version_bump" do
       )
 
       # Tag points to correct commit
-      expect(run("git", "log", "--pretty=%s", "-1", "v=3.1.3").strip).to eq(
-        "Bump version to v3.1.3",
-      )
+      expect(run("git", "log", "--pretty=%s", "-1", "v3.1.3").strip).to eq("Bump version to v3.1.3")
 
       # Version numbers in version.rb are correct at all commits
       expect(run "git", "show", "HEAD", "lib/version.rb").to include('STRING = "3.1.3"')
@@ -130,11 +128,11 @@ RSpec.describe "tasks/version_bump" do
       expect(run("git", "tag").lines.map(&:strip)).to contain_exactly(
         "latest-release",
         "beta",
-        "v=3.2.0.beta1",
+        "v3.2.0.beta1",
       )
 
       # Tags are all present and attached to the correct commit
-      %w[latest-release beta v=3.2.0.beta1].each do |tag_name|
+      %w[latest-release beta v3.2.0.beta1].each do |tag_name|
         expect(run("git", "log", "--pretty=%s", "-1", tag_name).strip).to eq(
           "Bump version to v3.2.0.beta1",
         )
@@ -181,7 +179,7 @@ RSpec.describe "tasks/version_bump" do
         "Previous stable version bump",
       )
 
-      expect(run("git", "log", "--pretty=%s", "-1", "v=3.2.0").strip).to eq(
+      expect(run("git", "log", "--pretty=%s", "-1", "v3.2.0").strip).to eq(
         "Merge v3.2.0 into stable",
       )
     end

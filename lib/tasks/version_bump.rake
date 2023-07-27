@@ -193,8 +193,8 @@ task "version_bump:beta" do
           PlannedTag.new(name: "beta", message: "latest beta release"),
           PlannedTag.new(name: "latest-release", message: "latest release"),
           PlannedTag.new(
-            name: "v=#{beta_release_version}",
-            message: "version v=#{beta_release_version}",
+            name: "v#{beta_release_version}",
+            message: "version #{beta_release_version}",
           ),
         ],
       ),
@@ -226,7 +226,7 @@ task "version_bump:minor_stable" do
     commits = [
       PlannedCommit.new(
         version: new_version,
-        tags: [PlannedTag.new(name: "v=#{new_version}", message: "version v=#{new_version}")],
+        tags: [PlannedTag.new(name: "v#{new_version}", message: "version #{new_version}")],
       ),
     ]
 
@@ -283,8 +283,8 @@ task "version_bump:major_stable_prepare", [:next_major_version_number] do |t, ar
           PlannedTag.new(name: "beta", message: "latest beta release"),
           PlannedTag.new(name: "latest-release", message: "latest release"),
           PlannedTag.new(
-            name: "v=#{beta_release_version}",
-            message: "version v=#{beta_release_version}",
+            name: "v#{beta_release_version}",
+            message: "version #{beta_release_version}",
           ),
         ],
       )
@@ -335,7 +335,7 @@ task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
       PlannedCommit.new(
         version: merged_version,
         ref: ref,
-        tags: [PlannedTag.new(name: "v=#{merged_version}", message: "version v=#{merged_version}")],
+        tags: [PlannedTag.new(name: "v#{merged_version}", message: "version #{merged_version}")],
       )
 
     diff_to_base = git("diff", merge_ref).strip
