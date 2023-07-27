@@ -106,7 +106,10 @@ const DEFAULT_BINDINGS = {
   "shift+k": { handler: "prevSection", anonymous: true },
   "shift+p": { handler: "pinUnpinTopic" },
   "shift+r": { handler: "replyToTopic" },
-  "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
+  "shift+s": {
+    click: "#topic-footer-buttons button.share-and-invite",
+    anonymous: true,
+  }, // share topic
   "shift+l": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
