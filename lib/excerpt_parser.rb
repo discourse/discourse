@@ -115,7 +115,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "div", "span"
       attributes = Hash[*attributes.flatten]
 
-      # Only match "excerpt" class if it does specifically equal "excerpt
+      # Only match "excerpt" class if it does not specifically equal "excerpt
       # hidden" in order to prevent internal links with GitHub oneboxes from
       # being empty https://meta.discourse.org/t/269436
       if attributes["class"]&.include?("excerpt") && !attributes["class"]&.match?("excerpt hidden")
