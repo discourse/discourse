@@ -1,28 +1,33 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import discourseLater from "discourse-common/lib/later";
 import { cancel } from "@ember/runloop";
 
 class Block {
-  @tracked show = true;
-  @tracked shown = true;
+  @tracked show = false;
+  @tracked shown = false;
   @tracked blinking = false;
+
+  constructor(args = {}) {
+    this.show = args.show ?? false;
+    this.shown = args.shown ?? false;
+  }
 }
 
 const ANIMATION_TIME = 500;
 const BLOCKS_SIZE = 20; // changing this requires to change css accordingly
 
 export default class AiSummarySkeleton extends Component {
-  @tracked blocks = new TrackedArray([]);
+  blocks = [...Array.from({ length: BLOCKS_SIZE }, () => new Block())];
 
   #onBlockBlinkingTimer;
-  #onBlockAddedTimer;
+  #onBlockShownTimer;
 
   @action
   setupAnimation() {
-    this.blocks.push(new Block());
+    this.blocks.firstObject.show = true;
+    this.blocks.firstObject.shown = true;
   }
 
   @action
@@ -37,11 +42,23 @@ export default class AiSummarySkeleton extends Component {
       this,
       () => {
         block.blinking = false;
-        const currentIndex = this.blocks.indexOf(block);
-        if (currentIndex === this.blocks.length - 1) {
+        this.#nextBlock(block).blinking = true;
+      },
+      ANIMATION_TIME
+    );
+  }
+
+  @action
+  onShowing(block) {
+    this.#onBlockShownTimer = discourseLater(
+      this,
+      () => {
+        this.#nextBlock(block).show = true;
+        this.#nextBlock(block).shown = true;
+
+        if (this.blocks.lastObject === block) {
           this.blocks.firstObject.blinking = true;
-        } else {
-          this.blocks.objectAt(currentIndex + 1).blinking = true;
+          return;
         }
       },
       ANIMATION_TIME
@@ -51,22 +68,14 @@ export default class AiSummarySkeleton extends Component {
   @action
   teardownAnimation() {
     cancel(this.#onBlockBlinkingTimer);
-    cancel(this.#onBlockAddedTimer);
+    cancel(this.onBlockShownTimer);
   }
 
-  @action
-  onBlockAdded() {
-    if (this.blocks.length === BLOCKS_SIZE) {
-      this.blocks.firstObject.blinking = true;
-      return;
+  #nextBlock(currentBlock) {
+    if (currentBlock === this.blocks.lastObject) {
+      return this.blocks.firstObject;
+    } else {
+      return this.blocks.objectAt(this.blocks.indexOf(currentBlock) + 1);
     }
-
-    this.#onBlockAddedTimer = discourseLater(
-      this,
-      () => {
-        this.blocks.push(new Block());
-      },
-      ANIMATION_TIME
-    );
   }
 }

@@ -8,7 +8,7 @@
         (if block.blinking "blink")
       }}
       {{did-update (fn this.onBlinking block) block.blinking}}
-      {{did-insert this.onBlockAdded}}
+      {{did-update (fn this.onShowing block) block.show}}
       {{will-destroy this.teardownAnimation}}
     ></li>
   {{/each}}
