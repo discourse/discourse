@@ -12,14 +12,6 @@ module(
     setupRenderingTest(hooks);
 
     const channelId = 1;
-    const channel = {
-      id: channelId,
-      chatable_id: 1,
-      chatable_type: "Category",
-      meta: { message_bus_last_ids: {} },
-      current_user_membership: { following: true },
-      chatable: { id: 1 },
-    };
     const actingUser = {
       id: 1,
       username: "acting_user",
@@ -45,6 +37,7 @@ module(
       message: `Hey @${mentionedUser.username}`,
       cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser.username}">@${mentionedUser.username}</a></p>`,
       mentioned_users: [mentionedUser],
+      created_at: "2020-08-04T15:00:00.000Z",
       user: {
         id: 1,
         username: "jesse",
@@ -52,10 +45,9 @@ module(
     };
 
     hooks.beforeEach(function () {
-      pretender.get(`/chat/api/channels/1`, () =>
+      pretender.get(`/chat/api/channels/1/messages`, () =>
         response({
-          channel,
-          chat_messages: [message],
+          messages: [message],
           meta: { can_delete_self: true },
         })
       );

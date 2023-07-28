@@ -4,10 +4,44 @@ module Chat
   module MessagesExporter
     LIMIT = 10_000
 
-    def chat_message_export
+    def chat_message_export(&block)
+      # perform 1 db query per month:
+      now = Time.now
+      from = 6.months.ago
+      while from <= now
+        export(from, from + 1.month, &block)
+        from = from + 1.month
+      end
+    end
+
+    def get_header(entity)
+      if entity === "chat_message"
+        %w[
+          id
+          chat_channel_id
+          chat_channel_name
+          user_id
+          username
+          message
+          cooked
+          created_at
+          updated_at
+          deleted_at
+          in_reply_to_id
+          last_editor_id
+          last_editor_username
+        ]
+      else
+        super
+      end
+    end
+
+    private
+
+    def export(from, to)
       Chat::Message
         .unscoped
-        .where(created_at: 6.months.ago..Time.current)
+        .where(created_at: from..to)
         .includes(:chat_channel)
         .includes(:user)
         .includes(:last_editor)
@@ -31,28 +65,6 @@ module Chat
             ]
           )
         end
-    end
-
-    def get_header(entity)
-      if entity === "chat_message"
-        %w[
-          id
-          chat_channel_id
-          chat_channel_name
-          user_id
-          username
-          message
-          cooked
-          created_at
-          updated_at
-          deleted_at
-          in_reply_to_id
-          last_editor_id
-          last_editor_username
-        ]
-      else
-        super
-      end
     end
   end
 end

@@ -24,8 +24,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-account",
   "create-invite-bulk",
   "create-invite",
-  "delete-topic-confirm",
-  "delete-topic-disallowed",
   "download-calendar",
   "edit-slow-mode",
   "edit-topic-timer",

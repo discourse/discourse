@@ -16,12 +16,12 @@ module Chat
   # It is assumed that the user's permission to view the channel has already been
   # established by the caller.
   class MessagesQuery
-    PAST_MESSAGE_LIMIT = 20
-    FUTURE_MESSAGE_LIMIT = 20
+    PAST_MESSAGE_LIMIT = 25
+    FUTURE_MESSAGE_LIMIT = 25
     PAST = "past"
     FUTURE = "future"
     VALID_DIRECTIONS = [PAST, FUTURE]
-    MAX_PAGE_SIZE = 100
+    MAX_PAGE_SIZE = 50
 
     # @param channel [Chat::Channel] The channel to query messages within.
     # @param guardian [Guardian] The guardian to use for permission checks.
@@ -82,7 +82,7 @@ module Chat
           .includes(:bookmarks)
           .includes(:uploads)
           .includes(chat_channel: :chatable)
-          .includes(:thread)
+          .includes(thread: %i[original_message last_message])
           .where(chat_channel_id: channel.id)
 
       if SiteSetting.enable_user_status
@@ -177,6 +177,7 @@ module Chat
       can_load_more_future = future_messages.size == FUTURE_MESSAGE_LIMIT
 
       {
+        target_message_id: future_messages.first&.id,
         past_messages: past_messages,
         future_messages: future_messages,
         target_date: target_date,
