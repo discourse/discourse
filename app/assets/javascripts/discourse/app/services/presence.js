@@ -562,6 +562,11 @@ export default class PresenceService extends Service {
         const waitSeconds = e.jqXHR.responseJSON?.extras?.wait_seconds || 10;
         this._presenceDebounceMs = waitSeconds * 1000;
       } else {
+        // Other error, exponential backoff capped at 30 seconds
+        this._presenceDebounceMs = Math.min(
+          this._presenceDebounceMs * 2,
+          PRESENCE_INTERVAL_S * 1000
+        );
         throw e;
       }
     } finally {
