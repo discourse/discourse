@@ -3972,8 +3972,32 @@ RSpec.describe TopicsController do
 
           put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
 
+          expect(response.status).to eq(200)
+
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id).sort).to eq(
             [category_topic.id, subcategory_topic.id].sort,
+          )
+        end
+
+        it "dismisses topics for main category, subcategories and sub-subcategories" do
+          SiteSetting.max_category_nesting = 3
+
+          sub_subcategory = Fabricate(:category, parent_category_id: subcategory.id)
+          sub_subcategory_topic = Fabricate(:topic, category: sub_subcategory)
+
+          TopicTrackingState.expects(:publish_dismiss_new).with(
+            user.id,
+            topic_ids: [category_topic.id, subcategory_topic.id, sub_subcategory_topic.id],
+          )
+
+          put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
+
+          expect(response.status).to eq(200)
+
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to contain_exactly(
+            category_topic.id,
+            subcategory_topic.id,
+            sub_subcategory_topic.id,
           )
         end
 
@@ -3993,16 +4017,17 @@ RSpec.describe TopicsController do
 
           it "doesn't dismiss topics in private child categories that the user can't see" do
             messages =
-              MessageBus.track_publish do
+              MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
                 put "/topics/reset-new.json",
                     params: {
                       category_id: category.id,
                       include_subcategories: true,
                     }
+
+                expect(response.status).to eq(200)
               end
-            expect(response.status).to eq(200)
+
             expect(messages.size).to eq(1)
-            expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
             expect(messages[0].user_ids).to eq([user.id])
             expect(messages[0].data["message_type"]).to eq(
               TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
@@ -4017,17 +4042,19 @@ RSpec.describe TopicsController do
 
           it "dismisses topics in private child categories that the user can see" do
             group.add(user)
+
             messages =
-              MessageBus.track_publish do
+              MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
                 put "/topics/reset-new.json",
                     params: {
                       category_id: category.id,
                       include_subcategories: true,
                     }
+
+                expect(response.status).to eq(200)
               end
-            expect(response.status).to eq(200)
+
             expect(messages.size).to eq(1)
-            expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
             expect(messages[0].user_ids).to eq([user.id])
             expect(messages[0].data["message_type"]).to eq(
               TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
