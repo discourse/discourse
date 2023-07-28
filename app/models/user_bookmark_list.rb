@@ -8,26 +8,32 @@ class UserBookmarkList
   attr_reader :bookmarks, :per_page, :has_more
   attr_accessor :more_bookmarks_url, :bookmark_serializer_opts
 
-  def initialize(user:, guardian:, params:)
+  def initialize(user:, guardian:, search_term: nil, per_page: nil, page: 0)
     @user = user
     @guardian = guardian
-    @params = params
 
-    @params.merge!(per_page: PER_PAGE) if params[:per_page].blank?
-    @params[:per_page] = PER_PAGE if @params[:per_page] > PER_PAGE
+    @per_page = per_page || PER_PAGE
+    @per_page = PER_PAGE if @per_page > PER_PAGE
+
+    @search_term = search_term
+    @page = page.to_i
 
     @bookmarks = []
     @bookmark_serializer_opts = {}
   end
 
   def load(&blk)
-    query = BookmarkQuery.new(user: @user, guardian: @guardian, params: @params)
-    @bookmarks = query.list_all(&blk)
-    @has_more = (@params[:page].to_i + 1) * @params[:per_page] < query.count
-    @bookmarks
-  end
+    query =
+      BookmarkQuery.new(
+        user: @user,
+        guardian: @guardian,
+        search_term: @search_term,
+        page: @page,
+        per_page: @per_page,
+      )
 
-  def per_page
-    @per_page ||= @params[:per_page]
+    @bookmarks = query.list_all(&blk)
+    @has_more = (@page.to_i + 1) * @per_page < query.count
+    @bookmarks
   end
 end

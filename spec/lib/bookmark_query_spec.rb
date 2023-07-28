@@ -4,10 +4,9 @@ RSpec.describe BookmarkQuery do
   before { SearchIndexer.enable }
 
   fab!(:user) { Fabricate(:user) }
-  let(:params) { {} }
 
-  def bookmark_query(user: nil, params: nil)
-    BookmarkQuery.new(user: user || self.user, params: params || self.params)
+  def bookmark_query(user: nil, search_term: nil, per_page: nil)
+    BookmarkQuery.new(user: user || self.user, search_term:, per_page:)
   end
 
   describe "#list_all" do
@@ -67,7 +66,7 @@ RSpec.describe BookmarkQuery do
       expect(bookmarks.map(&:id)).to eq([])
     end
 
-    context "when q param is provided" do
+    context "when search_term is provided" do
       let!(:post) do
         Fabricate(
           :post,
@@ -89,17 +88,17 @@ RSpec.describe BookmarkQuery do
       end
 
       it "can search by bookmark name" do
-        bookmarks = bookmark_query(params: { q: "check" }).list_all
+        bookmarks = bookmark_query(search_term: "check").list_all
         expect(bookmarks.map(&:id)).to eq([bookmark3.id])
       end
 
       it "can search by post content" do
-        bookmarks = bookmark_query(params: { q: "content" }).list_all
+        bookmarks = bookmark_query(search_term: "content").list_all
         expect(bookmarks.map(&:id)).to eq([bookmark4.id])
       end
 
       it "can search by topic title" do
-        bookmarks = bookmark_query(params: { q: "bugfix" }).list_all
+        bookmarks = bookmark_query(search_term: "bugfix").list_all
         expect(bookmarks.map(&:id)).to eq([bookmark4.id])
       end
 
@@ -111,7 +110,7 @@ RSpec.describe BookmarkQuery do
         end
 
         it "allows searching bookmarkables by fields in other tables" do
-          bookmarks = bookmark_query(params: { q: "bookmarkk" }).list_all
+          bookmarks = bookmark_query(search_term: "bookmarkk").list_all
           expect(bookmarks.map(&:id)).to eq([bookmark5.id])
         end
       end
@@ -205,10 +204,9 @@ RSpec.describe BookmarkQuery do
       end
     end
 
-    context "when the limit param is provided" do
-      let(:params) { { limit: 1 } }
+    context "when the per_page is provided" do
       it "is respected" do
-        expect(bookmark_query.list_all.count).to eq(1)
+        expect(bookmark_query(per_page: 1).list_all.count).to eq(1)
       end
     end
   end

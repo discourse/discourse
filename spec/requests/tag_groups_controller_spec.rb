@@ -48,6 +48,12 @@ RSpec.describe TagGroupsController do
     let(:full) { TagGroupPermission.permission_types[:full] }
     let(:readonly) { TagGroupPermission.permission_types[:readonly] }
 
+    describe "when limit params is invalid" do
+      include_examples "invalid limit params",
+                       "/tag_groups/filter/search.json",
+                       SiteSetting.max_tag_search_results
+    end
+
     context "for anons" do
       it "returns the tag group with the associated tag names" do
         tag_group = tag_group_with_permission(everyone, readonly)
